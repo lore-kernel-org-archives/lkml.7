@@ -2,190 +2,232 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82ECC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32081C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F27F216FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596525;
-	bh=gyBTngWHtRDO9vpVZZ8b+0cr76f93Uf0igsoq7QNkXo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OyHh5PNwC46R5o/DBEQApZMR+V+jcYumIcFuyLW6hFTXWTE9L+nJZhTYErAta7m5M
-	 xpih7ze6OqEXoG+FzhIYMHx7yqF7HJtGiSscMhln/q9e9VzvCGDxwXYwtQrsDj9geC
-	 L8lMIHYRuqZ4oT68evwjB42Ncg8w1rlivQ2BEwBI=
+	by mail.kernel.org (Postfix) with ESMTP id 0A1552082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfF0Ah6 (ORCPT
+        id S1728245AbfF0AtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728712AbfF0Ahx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:37:53 -0400
-Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C20F217F9;
-        Thu, 27 Jun 2019 00:37:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595872;
-        bh=gyBTngWHtRDO9vpVZZ8b+0cr76f93Uf0igsoq7QNkXo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dx13BFS9UpOkOdwpKMncIv+BvN79lCH20iR1m/TaFwZy6KW5dGqIcbgMbn+LqWOYK
-         U+aG1fyiMq5Go/6LwZCqwAEApBruVSUKqW57bOzGhImBN6xLV/WvY7p/EgEb373lTA
-         5D/N2Fm8mzv4xHdKd+6vZd192ocVzADL1mSUwoh4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 31/60] bpf: lpm_trie: check left child of last leftmost node for NULL
-Date:   Wed, 26 Jun 2019 20:35:46 -0400
-Message-Id: <20190627003616.20767-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
-References: <20190627003616.20767-1-sashal@kernel.org>
+        Wed, 26 Jun 2019 20:49:01 -0400
+Received: from lgeamrelo13.lge.com ([156.147.23.53]:55510 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726862AbfF0As7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:48:59 -0400
+Received: from unknown (HELO lgeamrelo01.lge.com) (156.147.1.125)
+        by 156.147.23.53 with ESMTP; 27 Jun 2019 09:48:56 +0900
+X-Original-SENDERIP: 156.147.1.125
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.125 with ESMTP; 27 Jun 2019 09:48:56 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Thu, 27 Jun 2019 09:48:16 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: Re: [RFC] rcu: Warn that rcu ktheads cannot be spawned
+Message-ID: <20190627004816.GA7427@X58A-UD3R>
+References: <1561364852-5113-1-git-send-email-byungchul.park@lge.com>
+ <20190624164624.GA41314@google.com>
+ <20190624172551.GI26519@linux.ibm.com>
+ <20190625024100.GA10912@X58A-UD3R>
+ <20190625133115.GV26519@linux.ibm.com>
+ <20190626025120.GA3452@X58A-UD3R>
+ <20190626163045.GB26519@linux.ibm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626163045.GB26519@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Lemon <jonathan.lemon@gmail.com>
+On Wed, Jun 26, 2019 at 09:30:45AM -0700, Paul E. McKenney wrote:
+> On Wed, Jun 26, 2019 at 11:51:20AM +0900, Byungchul Park wrote:
+> > On Tue, Jun 25, 2019 at 06:31:15AM -0700, Paul E. McKenney wrote:
+> > > On Tue, Jun 25, 2019 at 11:41:00AM +0900, Byungchul Park wrote:
+> > > > On Mon, Jun 24, 2019 at 10:25:51AM -0700, Paul E. McKenney wrote:
+> > > > > On Mon, Jun 24, 2019 at 12:46:24PM -0400, Joel Fernandes wrote:
+> > > > > > On Mon, Jun 24, 2019 at 05:27:32PM +0900, Byungchul Park wrote:
+> > > > > > > Hello rcu folks,
+> > > > > > > 
+> > > > > > > I thought it'd better to announce it if those spawnings fail because of
+> > > > > > > !rcu_scheduler_fully_active.
+> > > > > > > 
+> > > > > > > Of course, with the current code, it never happens though.
+> > > > > > > 
+> > > > > > > Thoughts?
+> > > > > > 
+> > > > > > It seems in the right spirit, but with your patch a warning always fires.
+> > > > > > rcu_prepare_cpu() is called multiple times, once from rcu_init() and then
+> > > > > > from hotplug paths.
+> > > > > > 
+> > > > > > Warning splat stack looks like:
+> > > > > > 
+> > > > > > [    0.398767] Call Trace:
+> > > > > > [    0.398775]  rcu_init+0x6aa/0x724
+> > > > > > [    0.398779]  start_kernel+0x220/0x4a2
+> > > > > > [    0.398780]  ? copy_bootdata+0x12/0xac
+> > > > > > [    0.398782]  secondary_startup_64+0xa4/0xb0
+> > > > > 
+> > > > > Thank you both, and I will remove this from my testing queue.
+> > > > > 
+> > > > > As Joel says, this is called at various points in the boot sequence, not
+> > > > > all of which are far enough along to support spawning kthreads.
+> > > > > 
+> > > > > The real question here is "What types of bugs are we trying to defend
+> > > > > against?"  But keeping in mind existing diagnostics.  For example, are
+> > > > > there any kthreads for which a persistent failure to spawn would not
+> > > > > emit any error message.  My belief is that any such persistent failure
+> > > > > would result in either an in-kernel diagnostic or an rcutorture failure,
+> > > > > but I might well be missing something.
+> > > > > 
+> > > > > Thoughts?  Or, more to the point, tests demonstrating silence in face
+> > > > > of such a persistent failure?
+> > > > 
+> > > > You are right. There wouldn't be a persistent failure because the path
+> > > > turning cpus on always tries to spawn them, *even* in case that the
+> > > > booting sequence is wrong. The current code anyway goes right though.
+> > > > 
+> > > > I thought a hole can be there if the code changes so that those kthreads
+> > > > cannot be spawned until the cpu being up, which is the case I was
+> > > > interested in. Again, it's gonna never happen with the current code
+> > > > because it spawns them after setting rcu_scheduler_fully_active to 1 in
+> > > > rcu_spawn_gp_kthead().
+> > > > 
+> > > > And I wrongly thought you placed the rcu_scheduler_fully_active check on
+> > > > spawning just in case. But it seems to be not the case.
+> > > > 
+> > > > So I'd better stop working on the warning patch. :) Instead, please
+> > > > check the following trivial fix.
+> > > > 
+> > > > Thanks,
+> > > > Byungchul
+> > > > 
+> > > > ---8<---
+> > > > >From 1293d19bb7abf7553d656c81182118eff54e7dc9 Mon Sep 17 00:00:00 2001
+> > > > From: Byungchul Park <byungchul.park@lge.com>
+> > > > Date: Mon, 24 Jun 2019 16:22:11 +0900
+> > > > Subject: [PATCH] rcu: Make rcu_spawn_one_boost_kthread() return void
+> > > > 
+> > > > The return value of rcu_spawn_one_boost_kthread() is not used any
+> > > > longer. Change the return type from int to void.
+> > > > 
+> > > > Signed-off-by: Byungchul Park <byungchul.park@lge.com>
+> > > 
+> > > Looks pretty good, just one comment below.  Plus could you please tell
+> > > me what you are developing this against?
+> > 
+> > Only for removing out-dated code. Not for funcational change.
+> 
+> I was actually expecting an answer of the form "current mainline",
+> "v5.2-rc3", "-rcu branch dev", or some such.  If need be, I will ask
+> again for your next version.  ;-)
 
-[ Upstream commit da2577fdd0932ea4eefe73903f1130ee366767d2 ]
+OMG. It was linux-rcu.git rcu/next. :(
 
-If the leftmost parent node of the tree has does not have a child
-on the left side, then trie_get_next_key (and bpftool map dump) will
-not look at the child on the right.  This leads to the traversal
-missing elements.
+Thank you!
+Byungchul
 
-Lookup is not affected.
-
-Update selftest to handle this case.
-
-Reproducer:
-
- bpftool map create /sys/fs/bpf/lpm type lpm_trie key 6 \
-     value 1 entries 256 name test_lpm flags 1
- bpftool map update pinned /sys/fs/bpf/lpm key  8 0 0 0  0   0 value 1
- bpftool map update pinned /sys/fs/bpf/lpm key 16 0 0 0  0 128 value 2
- bpftool map dump   pinned /sys/fs/bpf/lpm
-
-Returns only 1 element. (2 expected)
-
-Fixes: b471f2f1de8b ("bpf: implement MAP_GET_NEXT_KEY command for LPM_TRIE")
-Signed-off-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/bpf/lpm_trie.c                      |  9 +++--
- tools/testing/selftests/bpf/test_lpm_map.c | 41 ++++++++++++++++++++--
- 2 files changed, 45 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/bpf/lpm_trie.c b/kernel/bpf/lpm_trie.c
-index 4f3138e6ecb2..1a8b208f6c55 100644
---- a/kernel/bpf/lpm_trie.c
-+++ b/kernel/bpf/lpm_trie.c
-@@ -676,9 +676,14 @@ static int trie_get_next_key(struct bpf_map *map, void *_key, void *_next_key)
- 	 * have exact two children, so this function will never return NULL.
- 	 */
- 	for (node = search_root; node;) {
--		if (!(node->flags & LPM_TREE_NODE_FLAG_IM))
-+		if (node->flags & LPM_TREE_NODE_FLAG_IM) {
-+			node = rcu_dereference(node->child[0]);
-+		} else {
- 			next_node = node;
--		node = rcu_dereference(node->child[0]);
-+			node = rcu_dereference(node->child[0]);
-+			if (!node)
-+				node = rcu_dereference(next_node->child[1]);
-+		}
- 	}
- do_copy:
- 	next_key->prefixlen = next_node->prefixlen;
-diff --git a/tools/testing/selftests/bpf/test_lpm_map.c b/tools/testing/selftests/bpf/test_lpm_map.c
-index 02d7c871862a..006be3963977 100644
---- a/tools/testing/selftests/bpf/test_lpm_map.c
-+++ b/tools/testing/selftests/bpf/test_lpm_map.c
-@@ -573,13 +573,13 @@ static void test_lpm_get_next_key(void)
- 
- 	/* add one more element (total two) */
- 	key_p->prefixlen = 24;
--	inet_pton(AF_INET, "192.168.0.0", key_p->data);
-+	inet_pton(AF_INET, "192.168.128.0", key_p->data);
- 	assert(bpf_map_update_elem(map_fd, key_p, &value, 0) == 0);
- 
- 	memset(key_p, 0, key_size);
- 	assert(bpf_map_get_next_key(map_fd, NULL, key_p) == 0);
- 	assert(key_p->prefixlen == 24 && key_p->data[0] == 192 &&
--	       key_p->data[1] == 168 && key_p->data[2] == 0);
-+	       key_p->data[1] == 168 && key_p->data[2] == 128);
- 
- 	memset(next_key_p, 0, key_size);
- 	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
-@@ -592,7 +592,7 @@ static void test_lpm_get_next_key(void)
- 
- 	/* Add one more element (total three) */
- 	key_p->prefixlen = 24;
--	inet_pton(AF_INET, "192.168.128.0", key_p->data);
-+	inet_pton(AF_INET, "192.168.0.0", key_p->data);
- 	assert(bpf_map_update_elem(map_fd, key_p, &value, 0) == 0);
- 
- 	memset(key_p, 0, key_size);
-@@ -643,6 +643,41 @@ static void test_lpm_get_next_key(void)
- 	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == -1 &&
- 	       errno == ENOENT);
- 
-+	/* Add one more element (total five) */
-+	key_p->prefixlen = 28;
-+	inet_pton(AF_INET, "192.168.1.128", key_p->data);
-+	assert(bpf_map_update_elem(map_fd, key_p, &value, 0) == 0);
-+
-+	memset(key_p, 0, key_size);
-+	assert(bpf_map_get_next_key(map_fd, NULL, key_p) == 0);
-+	assert(key_p->prefixlen == 24 && key_p->data[0] == 192 &&
-+	       key_p->data[1] == 168 && key_p->data[2] == 0);
-+
-+	memset(next_key_p, 0, key_size);
-+	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
-+	assert(next_key_p->prefixlen == 28 && next_key_p->data[0] == 192 &&
-+	       next_key_p->data[1] == 168 && next_key_p->data[2] == 1 &&
-+	       next_key_p->data[3] == 128);
-+
-+	memcpy(key_p, next_key_p, key_size);
-+	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
-+	assert(next_key_p->prefixlen == 24 && next_key_p->data[0] == 192 &&
-+	       next_key_p->data[1] == 168 && next_key_p->data[2] == 1);
-+
-+	memcpy(key_p, next_key_p, key_size);
-+	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
-+	assert(next_key_p->prefixlen == 24 && next_key_p->data[0] == 192 &&
-+	       next_key_p->data[1] == 168 && next_key_p->data[2] == 128);
-+
-+	memcpy(key_p, next_key_p, key_size);
-+	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
-+	assert(next_key_p->prefixlen == 16 && next_key_p->data[0] == 192 &&
-+	       next_key_p->data[1] == 168);
-+
-+	memcpy(key_p, next_key_p, key_size);
-+	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == -1 &&
-+	       errno == ENOENT);
-+
- 	/* no exact matching key should return the first one in post order */
- 	key_p->prefixlen = 22;
- 	inet_pton(AF_INET, "192.168.1.0", key_p->data);
--- 
-2.20.1
-
+> > And simple answer below...
+> > 
+> > > 
+> > > 							Thanx, Paul
+> > > 
+> > > > ---
+> > > >  kernel/rcu/tree_plugin.h | 15 +++++++--------
+> > > >  1 file changed, 7 insertions(+), 8 deletions(-)
+> > > > 
+> > > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > > index 1102765..4e11aa4 100644
+> > > > --- a/kernel/rcu/tree_plugin.h
+> > > > +++ b/kernel/rcu/tree_plugin.h
+> > > > @@ -1131,7 +1131,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
+> > > >   * already exist.  We only create this kthread for preemptible RCU.
+> > > >   * Returns zero if all is well, a negated errno otherwise.
+> > > >   */
+> > > > -static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> > > > +static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> > > >  {
+> > > >  	int rnp_index = rnp - rcu_get_root();
+> > > >  	unsigned long flags;
+> > > > @@ -1139,25 +1139,24 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> > > >  	struct task_struct *t;
+> > > >  
+> > > >  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
+> > > > -		return 0;
+> > > > +		return;
+> > > >  
+> > > >  	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
+> > > > -		return 0;
+> > > > +		return;
+> > > >  
+> > > >  	rcu_state.boost = 1;
+> > > >  	if (rnp->boost_kthread_task != NULL)
+> > > > -		return 0;
+> > > > +		return;
+> > > >  	t = kthread_create(rcu_boost_kthread, (void *)rnp,
+> > > >  			   "rcub/%d", rnp_index);
+> > > >  	if (IS_ERR(t))
+> > > 
+> > > This would be a change in behavior, but it might be good to have a
+> > > WARN_ON_ONCE() above.  Assuming that it doesn't splat on every boot.  ;-)
+> > 
+> > Yes. Normally it shouldn't. Right? I will resend this after testing with
+> > my machine. :)
+> 
+> My guess is that it will not splat, but if it does, it would not be the
+> first time that RCU has surprised me.  ;-)
+> 
+> 							Thanx, Paul
+> 
+> > Thanks,
+> > Byungchul
+> > 
+> > > 
+> > > > -		return PTR_ERR(t);
+> > > > +		return;
+> > > >  	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+> > > >  	rnp->boost_kthread_task = t;
+> > > >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+> > > >  	sp.sched_priority = kthread_prio;
+> > > >  	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
+> > > >  	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
+> > > > -	return 0;
+> > > >  }
+> > > >  
+> > > >  static void rcu_cpu_kthread_setup(unsigned int cpu)
+> > > > @@ -1265,7 +1264,7 @@ static void __init rcu_spawn_boost_kthreads(void)
+> > > >  	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
+> > > >  		return;
+> > > >  	rcu_for_each_leaf_node(rnp)
+> > > > -		(void)rcu_spawn_one_boost_kthread(rnp);
+> > > > +		rcu_spawn_one_boost_kthread(rnp);
+> > > >  }
+> > > >  
+> > > >  static void rcu_prepare_kthreads(int cpu)
+> > > > @@ -1275,7 +1274,7 @@ static void rcu_prepare_kthreads(int cpu)
+> > > >  
+> > > >  	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
+> > > >  	if (rcu_scheduler_fully_active)
+> > > > -		(void)rcu_spawn_one_boost_kthread(rnp);
+> > > > +		rcu_spawn_one_boost_kthread(rnp);
+> > > >  }
+> > > >  
+> > > >  #else /* #ifdef CONFIG_RCU_BOOST */
+> > > > -- 
+> > > > 1.9.1
+> > > > 
+> > 
