@@ -8,63 +8,62 @@ X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8BDC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEBAC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA302086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4D820644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:46:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLc3SIuF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TAn9BeEB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfF0RqE (ORCPT
+        id S1727411AbfF0RqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:46:04 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40898 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfF0RqC (ORCPT
+        Thu, 27 Jun 2019 13:46:13 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39776 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbfF0RqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:46:02 -0400
-Received: by mail-pf1-f196.google.com with SMTP id p184so1589109pfp.7;
-        Thu, 27 Jun 2019 10:46:02 -0700 (PDT)
+        Thu, 27 Jun 2019 13:46:11 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b7so1680248pls.6;
+        Thu, 27 Jun 2019 10:46:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=o+36uH8gml1ZGrQYdSI5lxoYpgHdYwkkvcnlEpAcvxc=;
-        b=VLc3SIuFHR72K59KZtvjOHJR/Pb65re/R0PSiTa7GgEJCKa4LwkgAGkv6XffTvPnDf
-         1yTzNqpIX8etis+JYRNEEpn0giOtH+huaUymEw8KXFLfhhLQli1fNGNIVLxNQew4NGya
-         O1hpQd+hHdTsNy7wBMXxRnK+CXdZRODKyD+MP/oULWok3L2ZACH2gxxKUW4OLolSBmDj
-         X7jJ4/9ZbJDbA9Kj8BVHXQdKUPHKnQs1CUITfwxEmpWeWLPTazDx+Hf9v3G2I0ZZ0M5C
-         VDCtYrOmtFEn1WIKY+rtog90+Jas3FkIcB/2qNadRIW7WiD/dRYDtqpMehWVjAqDuezq
-         Stxg==
+        bh=7g1HWYlZ9UColNnnK/hHjFh9Cp1pGHshvxgfYaG8qpE=;
+        b=TAn9BeEBKkVQ/C2A+9fyNmSVI+kx7ZQTFKBiBGFa3jK9TegCwmJRrE3jXDCDYumqXs
+         gedeYJTtUtjZU9RSuKAWZrfhXFqp9UewwLJOEVsoYriiGL7u+HlhYNJwhnz4Oe4M+R6u
+         tkX1vylyK0epoPY+fUCbVlF0x51C8wO2BYmo1kIAow95Gdh9LQwM7qGudNLQE6k9o/gO
+         lRXBPdfnpA88ZGYiaRipzGY8OIt0ZHTwcgfN0OR9/NsIAY2C3CMXagQK7ZV6Y6+itPlb
+         W2alwl51ARR+dvvnzkunF+QdIlkSUiF9D8PrGt63q/D+MDff380OalPUwkZhdaUWmHso
+         s1dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=o+36uH8gml1ZGrQYdSI5lxoYpgHdYwkkvcnlEpAcvxc=;
-        b=qcbLcdhFrpMsN/+qhYLs6k89unRZGIyAPyRt+ZINbXy4+GqUAvvJp0IeQQ9XK9Hm/j
-         dm3A6UjHEEvzTUMsBDupny91k5zwL9tQiD4WqyCuv3MCEPxyOpqBIC30kIEpzw4hS/1p
-         RcNC9w1Tlaidv4xtynpM5/kPQx1TW+9qevFqDP6SVOMwzZ5+zlPpmEHQi43K1n6MMcE6
-         OXHO019AAyAEjcma4JkNU2x0bVcTPCkhk5RLtdkPv15IkA4KITPWBw43JPs9mK3IMcJ9
-         OIMLcH8ktEvjar0dro+sUD3VPiiT6kZgMexDsygTdHpLae40xMutM2yRybAKVGjRlDcf
-         tTTg==
-X-Gm-Message-State: APjAAAXQ8YOSrv9Js8TjTWuSs4HhHjQjuzXknFe6wk9RoAnqSiWazS64
-        YDZPKaTD+O5D3Q6HxIqDtkxUxbKTLU4mVg==
-X-Google-Smtp-Source: APXvYqy92XNMInm4ZAyBxfWWY7IUZN67sKW9UCkJ/NmXuwjrYc7ozMB0cXMD2ituSSV+LXP3GbuBfQ==
-X-Received: by 2002:a63:4d63:: with SMTP id n35mr4891540pgl.43.1561657561653;
-        Thu, 27 Jun 2019 10:46:01 -0700 (PDT)
+        bh=7g1HWYlZ9UColNnnK/hHjFh9Cp1pGHshvxgfYaG8qpE=;
+        b=Y0MmHLFOZeodqTpPQpaxFyyD6Xuobm7qrcwUi+spVBccdasEFzOndeGLbkrFF2qQC9
+         8zNbmZjliNmyc2YWq6CiMwvtEDQglTQrg4bdKK0z0C7vZAXlFmd8hHSJitXjUiq1QiIy
+         23qnbwArOjJmC6jrLyEh/iV5UtIZb1JW/GBVs+aAZJF625Q23Xdc0/FXDM/8wsDQP14K
+         P671azlhNF3q4P3s9u3B9gA7fm6IqW17mI4TmGKPaGeQE4Wxa94Y91tmdvxB8jHNC4Ca
+         UBwKMn8SU1L8a2pnMzTOwGwTDHwEVKTBCGqV3B074Vzv7cpLF40CzM0sJTumQFScrdBS
+         wIpg==
+X-Gm-Message-State: APjAAAWFbc3n9mMgersAx/87h0nHGam8ggD1J42I72oxq2zihNYhwbAN
+        DIkxJjxOGWhP1gr7zpQ+78E=
+X-Google-Smtp-Source: APXvYqw60Qomuysypn5jg3MoT4g+odVyVsYA8hzALKg4lqorUTTWcAW8ZSybIQa9SXqt2kske6H7xQ==
+X-Received: by 2002:a17:902:903:: with SMTP id 3mr6116213plm.281.1561657570934;
+        Thu, 27 Jun 2019 10:46:10 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id h1sm3452403pfo.152.2019.06.27.10.45.59
+        by smtp.googlemail.com with ESMTPSA id a21sm5015976pgd.45.2019.06.27.10.46.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:46:01 -0700 (PDT)
+        Thu, 27 Jun 2019 10:46:10 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Ching Huang <ching2048@areca.com.tw>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 69/87] scsi: arcmsr: remove memset after dma_coherent in arcmsr_hba.c
-Date:   Fri, 28 Jun 2019 01:45:53 +0800
-Message-Id: <20190627174554.6206-1-huangfq.daxian@gmail.com>
+Subject: [PATCH 70/87] scsi: aacraid: remove memset after dma_alloc_coherent in rx.c
+Date:   Fri, 28 Jun 2019 01:46:05 +0800
+Message-Id: <20190627174605.6260-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,21 +78,21 @@ So memset is not needed.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/scsi/arcmsr/arcmsr_hba.c | 1 -
+ drivers/scsi/aacraid/rx.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/scsi/arcmsr/arcmsr_hba.c b/drivers/scsi/arcmsr/arcmsr_hba.c
-index 88053b15c363..a0d0dc83184f 100644
---- a/drivers/scsi/arcmsr/arcmsr_hba.c
-+++ b/drivers/scsi/arcmsr/arcmsr_hba.c
-@@ -727,7 +727,6 @@ static int arcmsr_alloc_ccb_pool(struct AdapterControlBlock *acb)
- 	}
- 	acb->dma_coherent = dma_coherent;
- 	acb->dma_coherent_handle = dma_coherent_handle;
--	memset(dma_coherent, 0, acb->uncache_size);
- 	acb->ccbsize = roundup_ccbsize;
- 	ccb_tmp = dma_coherent;
- 	curr_phy_upper32 = upper_32_bits(dma_coherent_handle);
+diff --git a/drivers/scsi/aacraid/rx.c b/drivers/scsi/aacraid/rx.c
+index 3dea348bd25d..4d3484cbca26 100644
+--- a/drivers/scsi/aacraid/rx.c
++++ b/drivers/scsi/aacraid/rx.c
+@@ -353,7 +353,6 @@ static int aac_rx_check_health(struct aac_dev *dev)
+ 			dma_free_coherent(&dev->pdev->dev, 512, buffer, baddr);
+ 			return ret;
+ 		}
+-		memset(buffer, 0, 512);
+ 		post->Post_Command = cpu_to_le32(COMMAND_POST_RESULTS);
+ 		post->Post_Address = cpu_to_le32(baddr);
+ 		rx_writel(dev, MUnit.IMRx[0], paddr);
 -- 
 2.11.0
 
