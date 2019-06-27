@@ -2,84 +2,64 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC48C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D788FC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C642084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:03:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="y262Yvjp"
+	by mail.kernel.org (Postfix) with ESMTP id B9DD2208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfF0ODW (ORCPT
+        id S1727016AbfF0OE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 10:03:22 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:37024 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbfF0ODV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:03:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=redkA+CovLKkIpwZ1wU0Xkvse8YZ5XsqEc9J4PcUp3E=; b=y262YvjpBRgPISvI0ncYokuWF0
-        MZPHbH3jdRfr2batVnS6iSJovhZEb0LlkR0nSoqXJOlPhUwpbnEJvigs7kTl6fLDfs5P41654+Vbe
-        V2i5kllV703tjX1boaoAGm3ahO81ovLZcysz3RbZ2qw64mbQ9L9ud3/i5VcodPICzKuY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hgUzc-0000AY-Tq; Thu, 27 Jun 2019 16:03:16 +0200
-Date:   Thu, 27 Jun 2019 16:03:16 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH net-next 10/10] net: stmmac: Try to get C45 PHY if
- everything else fails
-Message-ID: <20190627140316.GF31189@lunn.ch>
-References: <cover.1561556555.git.joabreu@synopsys.com>
- <c7d1dbac1940853c22db8215ed60181b2abe3050.1561556556.git.joabreu@synopsys.com>
- <20190626200128.GH27733@lunn.ch>
- <BN8PR12MB3266A8396ACA97484A5E0CE7D3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190627132340.GC31189@lunn.ch>
- <BN8PR12MB32666DADBD1DD315026E9A2BD3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+        Thu, 27 Jun 2019 10:04:57 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46174 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfF0OE5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 10:04:57 -0400
+Received: from laptop.home (unknown [IPv6:2a01:cb19:8ad6:900:8ae7:f3be:9ccd:d8f9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: aragua)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 1BB30287D54;
+        Thu, 27 Jun 2019 15:04:55 +0100 (BST)
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     kernel@collabora.com,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Add protocol v3 support
+Date:   Thu, 27 Jun 2019 16:04:28 +0200
+Message-Id: <cover.1561642224.git.fabien.lahoudere@collabora.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN8PR12MB32666DADBD1DD315026E9A2BD3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 01:33:59PM +0000, Jose Abreu wrote:
-> From: Andrew Lunn <andrew@lunn.ch>
-> 
-> > There have been some drivers gaining patches for ACPI. That is
-> > probably the better long term solution, ask ACPI where is the PHY and
-> > what MDIO protocol to use to talk to it.
-> 
-> Hmmm, I'm not sure this is going to work that way ...
-> 
-> My setup is a PCI EP which is hot-pluggable and as far as I know ACPI 
-> has only static content (????)
+This series is a split of the following patch:
+https://lkml.org/lkml/2019/6/18/268
+To fix Enric comments from https://lkml.org/lkml/2019/6/25/949
+I extract it from the other serie to speed up acceptance because
+other patches need it to be upstreamed.
 
-I've wanted to improve the PHY probe code for a while. I was thinking
-we should add a flag to the MDIO bus driver structure indicating it
-can do C45. When that flag is present, we should also scan the bus for
-C45 devices, and register them as well.
+Fabien Lahoudere (2):
+  iio: common: cros_ec_sensors: determine protocol version
+  iio: common: cros_ec_sensors: set default frequencies
 
-With that in place, i think your problem goes away. Architecturally, i
-think it is wrong that a MAC driver is registering PHY devices. The
-MDIO core should do this.
+ .../cros_ec_sensors/cros_ec_sensors_core.c    | 80 ++++++++++++++++++-
+ .../linux/iio/common/cros_ec_sensors_core.h   |  3 +
+ 2 files changed, 82 insertions(+), 1 deletion(-)
 
-      Andrew
+-- 
+2.20.1
+
