@@ -2,181 +2,126 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21B9C5B54D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B25C4646D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A812075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:59:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eUeAq0Dt"
+	by mail.kernel.org (Postfix) with ESMTP id 255902075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfF0V7f (ORCPT
+        id S1726691AbfF0WAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 17:59:35 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42612 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfF0V7f (ORCPT
+        Thu, 27 Jun 2019 18:00:04 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:46740 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbfF0WAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 17:59:35 -0400
-Received: by mail-io1-f68.google.com with SMTP id u19so8130230ior.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QaSEBp6Yhtxm8oRt3JYTn5K/8+0bJg82hFF0+xAXHy8=;
-        b=eUeAq0DtkDIPxxvGHcp8prWEDPFYZfy5O0uXbCr+418Ik/+rKt42eqxHOpQbuYGhLt
-         VDg5HT/6dbGQZL+Dinh1JXGusovtQj2FHhwx7GB0ZF5nDGqoEomfbqCBtMxOi3GDD81A
-         ZpcbquExEShYsKCAdOOLauoFqte9EofLYGThQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QaSEBp6Yhtxm8oRt3JYTn5K/8+0bJg82hFF0+xAXHy8=;
-        b=qPOttWPsqdXn1K0ehpA2peOedRtzohlCebmxu1u++Dd6EdX4VJAje7/rzMvU1vNjA9
-         ZrVgtoJbrJ1WjuLJK6XS9ZKuRuLHaKRoMF3cxbNmt6pa8hF1WYzGMUPpQJ5EoKep3tQc
-         KIIWVKL4HrmDvntrBhYJat2cvwi+/o2dIZ84dB3x/nm1xgbqx2Zuo+6cqRyaC1YexUV7
-         7xIO/zvsKMUFhWrCYJmcLsr7G2erRdZdxldU/CwT+5pWac7VU7uMwX6guv/JK8XGaAJU
-         STFMH1yfD+mpkt/4MzoaE6370gJX7Gv1zNnjgIv9OS4dOaeJBt5KR+j9K2nG9Is2gIgD
-         OH1Q==
-X-Gm-Message-State: APjAAAXyK42CzSYs4vLW0YYlYHSVXVgGOZJkoUhu1yCm3vNyDaetK3za
-        Cj9OERPzkQK9fDC8H1SKU0ROMk9gY0UV1SqhXu3zcQ==
-X-Google-Smtp-Source: APXvYqyKad9J3h3Dp8aw2zqC6WqVToenx5Jd5isuEZnDmtZ57r14RAxzm8lwfP0NOAQnUQ1zG9fLHCzhCPO6+LfIXUA=
-X-Received: by 2002:a6b:8f93:: with SMTP id r141mr7315209iod.145.1561672773497;
- Thu, 27 Jun 2019 14:59:33 -0700 (PDT)
+        Thu, 27 Jun 2019 18:00:03 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id b993f47717c4d2a7; Fri, 28 Jun 2019 00:00:00 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc/power: Expose pfn_is_nosave prototype
+Date:   Fri, 28 Jun 2019 00:00:00 +0200
+Message-ID: <2178909.1BmBeJAm6j@kreacher>
+In-Reply-To: <20190524104418.17194-1-malat@debian.org>
+References: <20190523114736.30268-1-malat@debian.org> <20190524104418.17194-1-malat@debian.org>
 MIME-Version: 1.0
-References: <cover.1561642224.git.fabien.lahoudere@collabora.com>
- <4724b46665d919cae0ea3b60e334053b0b17d686.1561642224.git.fabien.lahoudere@collabora.com>
- <f8df78b4-8ae9-f292-cf70-ef682a4a47f4@collabora.com>
-In-Reply-To: <f8df78b4-8ae9-f292-cf70-ef682a4a47f4@collabora.com>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Thu, 27 Jun 2019 14:59:22 -0700
-Message-ID: <CAPUE2ut=imx=mhV_iyMwaYmfkFJ0zw3Jvsbxf+TbfqV1Sa_WJw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] iio: common: cros_ec_sensors: determine protocol version
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 8:59 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi,
->
-> cc'ing Doug, Gwendal and Enrico that might be interested to give a review.
->
-> This patch can be picked alone without 2/2, an is needed to have cros-ec-sensors
-> legacy support on ARM (see [1] and [2])
->
-> Jonathan, as [1] and [2] will go through the chrome-platform tree if you don't
-> mind I'd also like to carry with this patch once you're fine with it.
->
-> Thanks,
-> ~ Enric
->
-> [1] https://patchwork.kernel.org/patch/11014329/
-> [2] https://patchwork.kernel.org/patch/11014327/
->
-> On 27/6/19 16:04, Fabien Lahoudere wrote:
-> > This patch adds a function to determine which version of the
-> > protocol is used to communicate with EC.
-> >
-> > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> > Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
->
-> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->
-> > ---
-> >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 36 ++++++++++++++++++-
-> >  1 file changed, 35 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > index 130362ca421b..2e0f97448e64 100644
-> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > @@ -25,6 +25,31 @@ static char *cros_ec_loc[] = {
-> >       [MOTIONSENSE_LOC_MAX] = "unknown",
-> >  };
-> >
-> > +static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
-> > +                                          u16 cmd_offset, u16 cmd, u32 *mask)
-> > +{
-> > +     int ret;
-> > +     struct {
-> > +             struct cros_ec_command msg;
-> > +             union {
-> > +                     struct ec_params_get_cmd_versions params;
-> > +                     struct ec_response_get_cmd_versions resp;
-> > +             };
-> > +     } __packed buf = {
-> > +             .msg = {
-add
-.version = 0,
-As the variable is coming from the stack, the version should be set.
-> > +                     .command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
-> > +                     .insize = sizeof(struct ec_response_get_cmd_versions),
-> > +                     .outsize = sizeof(struct ec_params_get_cmd_versions)
-> > +                     },
-> > +             .params = {.cmd = cmd}
-> > +     };
-> > +
-> > +     ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-> > +     if (ret >= 0)
-It should be > 0: when the command is a success, it returns the number
-of byte in the response buffer. When don't expect == 0  here, because
-when successful, EC_CMD_GET_CMD_VERSIONS will return a mask.
-> > +             *mask = buf.resp.version_mask;
-> > +     return ret;
-> > +}
-> > +
-> >  int cros_ec_sensors_core_init(struct platform_device *pdev,
-> >                             struct iio_dev *indio_dev,
-> >                             bool physical_device)
-> > @@ -33,6 +58,8 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
-> >       struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
-> >       struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
-> >       struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
-> > +     u32 ver_mask;
-> > +     int ret;
-> >
-> >       platform_set_drvdata(pdev, indio_dev);
-> >
-> > @@ -47,8 +74,15 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
-> >
-> >       mutex_init(&state->cmd_lock);
-> >
-> > +     ret = cros_ec_get_host_cmd_version_mask(state->ec,
-> > +                                             ec->cmd_offset,
-> > +                                             EC_CMD_MOTION_SENSE_CMD,
-> > +                                             &ver_mask);
-> > +     if (ret < 0)
-Use:
-if (ret <= 0 || ver_mask == 0) {
-In case the EC is really old or misbehaving, we don't want to set an
-invalid version later.
-> > +             return ret;
-> > +
-> >       /* Set up the host command structure. */
-> > -     state->msg->version = 2;
-> > +     state->msg->version = fls(ver_mask) - 1;;
-> >       state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
-> >       state->msg->outsize = sizeof(struct ec_params_motion_sense);
-> >
-> >
+On Friday, May 24, 2019 12:44:18 PM CEST Mathieu Malaterre wrote:
+> The declaration for pfn_is_nosave is only available in
+> kernel/power/power.h. Since this function can be override in arch,
+> expose it globally. Having a prototype will make sure to avoid warning
+> (sometime treated as error with W=1) such as:
+> 
+>   arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
+> 
+> This moves the declaration into a globally visible header file and add
+> missing include to avoid a warning on powerpc. Also remove the
+> duplicated prototypes since not required anymore.
+> 
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> ---
+> v2: As suggestion by christophe remove duplicates prototypes
+> 
+>  arch/powerpc/kernel/suspend.c | 1 +
+>  arch/s390/kernel/entry.h      | 1 -
+>  include/linux/suspend.h       | 1 +
+>  kernel/power/power.h          | 2 --
+>  4 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/suspend.c b/arch/powerpc/kernel/suspend.c
+> index a531154cc0f3..9e1b6b894245 100644
+> --- a/arch/powerpc/kernel/suspend.c
+> +++ b/arch/powerpc/kernel/suspend.c
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #include <linux/mm.h>
+> +#include <linux/suspend.h>
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+>  
+> diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
+> index 20420c2b8a14..b2956d49b6ad 100644
+> --- a/arch/s390/kernel/entry.h
+> +++ b/arch/s390/kernel/entry.h
+> @@ -63,7 +63,6 @@ void __init startup_init(void);
+>  void die(struct pt_regs *regs, const char *str);
+>  int setup_profiling_timer(unsigned int multiplier);
+>  void __init time_init(void);
+> -int pfn_is_nosave(unsigned long);
+>  void s390_early_resume(void);
+>  unsigned long prepare_ftrace_return(unsigned long parent, unsigned long sp, unsigned long ip);
+>  
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index 6b3ea9ea6a9e..e8b8a7bede90 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -395,6 +395,7 @@ extern bool system_entering_hibernation(void);
+>  extern bool hibernation_available(void);
+>  asmlinkage int swsusp_save(void);
+>  extern struct pbe *restore_pblist;
+> +int pfn_is_nosave(unsigned long pfn);
+>  #else /* CONFIG_HIBERNATION */
+>  static inline void register_nosave_region(unsigned long b, unsigned long e) {}
+>  static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
+> diff --git a/kernel/power/power.h b/kernel/power/power.h
+> index 9e58bdc8a562..44bee462ff57 100644
+> --- a/kernel/power/power.h
+> +++ b/kernel/power/power.h
+> @@ -75,8 +75,6 @@ static inline void hibernate_reserved_size_init(void) {}
+>  static inline void hibernate_image_size_init(void) {}
+>  #endif /* !CONFIG_HIBERNATION */
+>  
+> -extern int pfn_is_nosave(unsigned long);
+> -
+>  #define power_attr(_name) \
+>  static struct kobj_attribute _name##_attr = {	\
+>  	.attr	= {				\
+> 
+
+Applied, thanks!
+
+
+
