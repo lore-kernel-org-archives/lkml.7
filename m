@@ -2,334 +2,193 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C0BC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501B3C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516002083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA902083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x6EPEtNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfF0NbT (ORCPT
+        id S1726987AbfF0Nbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:31:19 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45964 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbfF0NbS (ORCPT
+        Thu, 27 Jun 2019 09:31:37 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40063 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfF0Nbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:31:18 -0400
-Received: from laptop.home (unknown [IPv6:2a01:cb19:8ad6:900:8ae7:f3be:9ccd:d8f9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: aragua)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 43119285499;
-        Thu, 27 Jun 2019 14:31:16 +0100 (BST)
-Message-ID: <77a60b73ad65c9b8e11b6ca886433740eafd74a2.camel@collabora.com>
-Subject: Re: [PATCH v3 6/8] iio: common: cros_ec_sensors: support protocol
- v3 message
-From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Jonathan Cameron <jic23@kernel.org>
-Cc:     kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Enrico Granata <egranata@chromium.org>
-Date:   Thu, 27 Jun 2019 15:31:13 +0200
-In-Reply-To: <373ba164-d174-9a2e-f9eb-ed0d6b7b4bb8@collabora.com>
-References: <cover.1560848479.git.fabien.lahoudere@collabora.com>
-         <ac3cdc104e59565d178dfa86f2727045224dc4da.1560848479.git.fabien.lahoudere@collabora.com>
-         <20190622111509.314d25bf@archlinux>
-         <373ba164-d174-9a2e-f9eb-ed0d6b7b4bb8@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.2 (3.30.2-2.fc29) 
-Mime-Version: 1.0
+        Thu, 27 Jun 2019 09:31:37 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so5694347wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 06:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Nx/BmB272/6PyF4FOxhkypacNalTBHpVEwt1YIPfykc=;
+        b=x6EPEtNQL5Fyr7ieyN2u6aDL6cmkKfd8jtC+LIg8UHZEwgpB0cD3itFHjIJxKUbnpZ
+         eixhGc917sJpCC9hyflDHMTYy/UeCZlEGCZt/qwWHIVTL1C+x7le4IYLPWj2ctypfJYB
+         Zlr6ZH/hRMNqGLcx1XJhC4uRPQwqP1YKMluu9xOZ9vxiy9qFU2zgBB6iCb7o4Cp55Uc5
+         GPMO2ol/WIKqw9EdJ+hhRUBGFzjO1I6FBRklCy2I8F3PcT2iuqui1la/aXWJwmAuLxdr
+         ptA6UOGpxqpt1qM0Txpd5YHCWBjqPw8Lq+IkwRYAI97R3lXOJjlePjRCavyLCo/6BruO
+         eg4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Nx/BmB272/6PyF4FOxhkypacNalTBHpVEwt1YIPfykc=;
+        b=E33N5Jvlk871TOvhwqGylP/Yza6HgJcbfKFumo95LiqJwBRieMsb+JRG2Tv1aY4U90
+         asRWjOU454jpkxYOwjcukRGqZCetAcQswcQTXxce0a5XKbMnxA8tfS47jairl5uYv2bJ
+         F6PCxxIvqC+2SyleVQM8ZnmgMQ6SLQoC3h5UTINnlXiJEXYKuiKqb8aFEJz7RyGCII5o
+         6oEWLxIdWygN+jVnqTKBV7Uzm3HFUF9pTk0Fkp5LFN2YjaSAbkAWYGA8I/1bj+swGL0O
+         ZFHb14a8ouNDeQbOIyH/r9filuN2SNQyZiAR74BHWxilZyuj5O/AYviyK0u/CRkjFHyc
+         z7Qg==
+X-Gm-Message-State: APjAAAWhrkfF+TxjwNSNAoZ+d7lzcvnXZkcGp01lCCKSbqD15PfUhzbn
+        ITXPoHQZpFsfdSVi8SV97Mzf9A==
+X-Google-Smtp-Source: APXvYqyc/fXKU9GMvtCMKhPqHmVlROZqI7IiTjStg27VNonU/WmWmZuqFiYI9IaXijVX/Gwvwqm7xg==
+X-Received: by 2002:a1c:f102:: with SMTP id p2mr3192205wmh.126.1561642294185;
+        Thu, 27 Jun 2019 06:31:34 -0700 (PDT)
+Received: from [192.168.0.41] (113.102.130.77.rev.sfr.net. [77.130.102.113])
+        by smtp.googlemail.com with ESMTPSA id r6sm2425438wmh.11.2019.06.27.06.31.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 06:31:33 -0700 (PDT)
+Subject: Re: [PATCH 1/2] thermal/drivers/core: Add init section table for
+ self-encapsulation
+To:     Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        amit.kucheria@linaro.org
+References: <20190612201325.1150-1-daniel.lezcano@linaro.org>
+ <b6bbd5f4-a86a-d649-e3c0-2156f7975291@linaro.org>
+ <1561641692.2096.3.camel@intel.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <8be81390-a627-6bc9-1218-4d62f41eaeff@linaro.org>
+Date:   Thu, 27 Jun 2019 15:31:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <1561641692.2096.3.camel@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric
+On 27/06/2019 15:21, Zhang Rui wrote:
+> On 一, 2019-06-24 at 09:32 +0200, Daniel Lezcano wrote:
+>> Any chance this patch gets merged for v5.4?
+>>
+>> Thanks
+>>   -- Daniel
+>>
+> 
+> have you run compile test for the patch?
+> I got the following errors when compiling.
 
-I will split in two patches and send it soon.
-Nevertheless, I won't change the structure initialisation because it
-was requested on a previous comment.
-I will fix other comments.
+Yes I did and also booted, changed the governor at runtime, etc ... I
+already got this error and fixed it. I probably forgot to fold or commit
+the fix ... :/
 
-Thanks for reviewing
 
-Le mardi 25 juin 2019 à 19:04 +0200, Enric Balletbo i Serra a écrit :
-> Hi Fabien, Jonathan,
+> In file included from drivers/thermal/fair_share.c:16:0:
+> drivers/thermal/thermal_core.h:23:3: error: expected identifier or ‘(’
+> before ‘static’
+>   (static typeof(name) *__thermal_table_entry_##name \
+>    ^
+> drivers/thermal/thermal_core.h:26:40: note: in expansion of macro
+> ‘THERMAL_TABLE_ENTRY’
+>  #define THERMAL_GOVERNOR_DECLARE(name) THERMAL_TABLE_ENTRY(governor,
+> name)
+>                                         ^
+
+[ ... ]
+
+>                                 ^
+> make[2]: *** [drivers/thermal/gov_bang_bang.o] Error 1
+> make[1]: *** [drivers/thermal] Error 2
+> make[1]: *** Waiting for unfinished jobs....
+> make: *** [drivers] Error 2
 > 
-> cc'ing Gwendal and Enrico who might be interested on this patch.
-> 
-> It'd be nice if we can land this patch before [1], otherwise the
-> legacy support
-> for cros-ec sensors on veyron minnie won't work and we will mess the
-> kernel log
-> with a couple of errors.
-> 
-> I just have a few comments that I think should be quick to respin.
-> 
-> [1] https://lkml.org/lkml/2019/6/24/1464
-> 
-> On 22/6/19 12:15, Jonathan Cameron wrote:
-> > On Tue, 18 Jun 2019 11:06:37 +0200
-> > Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
-> > 
-> > > Version 3 of the EC protocol provides min and max frequencies for
-> > > EC sensors.
-> > > 
-> 
-> I think we are mixing two things. One is determine what version of
-> the
-> MOTIONSENSE command the EC has, and another one is add some default
-> values
-> supported by the third version. I'd split this in two separate
-> patches, and fix
-> the subject and the commit description.
-> 
-> 
-> > > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> > > Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
-> > Looks good to me. I'll pick up next time if no one else raises any
-> > issues on this one.
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> > 
-> > > ---
-> > >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 85
-> > > ++++++++++++++++++-
-> > >  .../linux/iio/common/cros_ec_sensors_core.h   |  3 +
-> > >  2 files changed, 87 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git
-> > > a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > > index 57034e212fe1..2ce077b576a4 100644
-> > > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > > @@ -26,6 +26,66 @@ static char *cros_ec_loc[] = {
-> > >  	[MOTIONSENSE_LOC_MAX] = "unknown",
-> > >  };
-> > >  
-> > > +static void get_default_min_max_freq(enum motionsensor_type
-> > > type,
-> > > +				     u32 *min_freq,
-> > > +				     u32 *max_freq)
-> > > +{
-> > > +	switch (type) {
-> > > +	case MOTIONSENSE_TYPE_ACCEL:
-> > > +	case MOTIONSENSE_TYPE_GYRO:
-> > > +		*min_freq = 12500;
-> > > +		*max_freq = 100000;
-> > > +		break;
-> > > +	case MOTIONSENSE_TYPE_MAG:
-> > > +		*min_freq = 5000;
-> > > +		*max_freq = 25000;
-> > > +		break;
-> > > +	case MOTIONSENSE_TYPE_PROX:
-> > > +	case MOTIONSENSE_TYPE_LIGHT:
-> > > +		*min_freq = 100;
-> > > +		*max_freq = 50000;
-> > > +		break;
-> > > +	case MOTIONSENSE_TYPE_BARO:
-> > > +		*min_freq = 250;
-> > > +		*max_freq = 20000;
-> > > +		break;
-> > > +	case MOTIONSENSE_TYPE_ACTIVITY:
-> > > +	default:
-> > > +		*min_freq = 0;
-> > > +		*max_freq = 0;
-> > > +		break;
-> > > +	}
-> > > +}
-> 
-> This is the second part. It adds default values for version 3. I'd
-> send this
-> part on the patch that adds support min/max freq.
-> 
-> > > +
-> > > +static int cros_ec_get_host_cmd_version_mask(struct
-> > > cros_ec_device *ec_dev,
-> > > +					     u16 cmd_offset, u16 cmd,
-> > > u32 *mask)
-> > > +{
-> > > +	int ret;
-> > > +	struct {
-> > > +		struct cros_ec_command msg;
-> > > +		union {
-> > > +			struct ec_params_get_cmd_versions params;
-> > > +			struct ec_response_get_cmd_versions resp;
-> > > +		};
-> > > +	} __packed buf = {
-> > > +		.msg = {
-> > > +			.command = EC_CMD_GET_CMD_VERSIONS +
-> > > cmd_offset,
-> > > +			.insize = sizeof(struct
-> > > ec_response_get_cmd_versions),
-> > > +			.outsize = sizeof(struct
-> > > ec_params_get_cmd_versions)
-> > > +			},
-> > > +		.params = {.cmd = cmd}
-> > > +	};
-> > > +
-> 
-> nit: Actually when someone is sending a command to the EC there is a
-> bit of mess
-> how to do it, some use dynamic allocations, other static. IMO is more
-> readable
-> have something that explicitly initializes the struct and then
-> assigns the
-> different fields. Something like this:
-> 
-> 
->         struct {
->                 struct cros_ec_command cmd;
->                 union {
->                         struct ec_params_get_cmd_versions params;
->                         struct ec_response_get_cmd_versions resp;
->                 };
->         } __packed msg = {};
->         int ret;
-> 
->         msg.cmd.command = EC_CMD_GET_CMD_VERSIONS + cmd_offset;
->         msg.cmd.insize = sizeof(msg.resp);
->         msg.cmd.outsize = sizeof(msg.params);
->         msg.params.cmd = cmd;
-> 
-> 
-> > > +	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-> > > +	if (ret >= 0) {
-> > > +		if (buf.msg.result == EC_RES_SUCCESS)
-> 
-> Note that cros_ec_cmd_xfer_status returns a <0 on error and 0 or
-> positive number
-> when EC_RES_SUCCESS. So no need to double check the result.
-> 
-> > > +			*mask = buf.resp.version_mask;
-> > > +		else
-> > > +			*mask = 0;
-> > > +	}
-> > > +	return ret;
-> 
-> So, I think that all this can be reworked as
-> 
->         ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
->         if (ret < 0)
->                 return ret;
-> 
->         *mask = msg.resp.version_mask;
-> 
->         return 0;
-> 
-> 
-> > > +}
-> > > +
-> > >  int cros_ec_sensors_core_init(struct platform_device *pdev,
-> > >  			      int num_channels,
-> > >  			      bool physical_device)
-> > > @@ -35,6 +95,8 @@ int cros_ec_sensors_core_init(struct
-> > > platform_device *pdev,
-> > >  	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
-> > >  	struct cros_ec_sensor_platform *sensor_platform =
-> > > dev_get_platdata(dev);
-> > >  	struct iio_dev *indio_dev;
-> > > +	u32 ver_mask;
-> > > +	int ret;
-> > >  
-> > >  	if (num_channels > CROS_EC_SENSORS_CORE_MAX_CHANNELS)
-> > >  		return -EINVAL;
-> > > @@ -57,8 +119,16 @@ int cros_ec_sensors_core_init(struct
-> > > platform_device *pdev,
-> > >  
-> > >  	mutex_init(&state->cmd_lock);
-> > >  
-> > > +	/* determine what version of MOTIONSENSE CMD EC has */
-> 
-> nit: Capitalize
-> 
-> > > +	ret = cros_ec_get_host_cmd_version_mask(state->ec,
-> > > +						ec->cmd_offset,
-> > > +						EC_CMD_MOTION_SENSE_CMD
-> > > ,
-> > > +						&ver_mask);
-> 
-> It will return <0 on error
-> 
-> > > +	if (ret < 0 || ver_mask == 0)
-> > > +		return -ENODEV;
-> > > +
-> 
-> so no need to check ver_mask
-> 
->         if (ret < 0)
-> 		return ret;
-> 
-> 
-> > >  	/* Set up the host command structure. */
-> > > -	state->msg->version = 2;
-> > > +	state->msg->version = fls(ver_mask) - 1;
-> > >  	state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
-> > >  	state->msg->outsize = sizeof(struct ec_params_motion_sense);
-> > >  
-> > > @@ -76,6 +146,19 @@ int cros_ec_sensors_core_init(struct
-> > > platform_device *pdev,
-> > >  		}
-> > >  		state->type = state->resp->info.type;
-> > >  		state->loc = state->resp->info.location;
-> > > +
-> > > +		/* Value to stop the device */
-> > > +		state->frequency_range[0] = 0;
-> > > +		if (state->msg->version < 3) {
-> > > +			get_default_min_max_freq(state->resp-
-> > > >info.type,
-> > > +						 &state-
-> > > >frequency_range[1],
-> > > +						 &state-
-> > > >frequency_range[2]);
-> > > +		} else {
-> > > +			state->frequency_range[1] =
-> > > +			    state->resp->info_3.min_frequency;
-> > > +			state->frequency_range[2] =
-> > > +			    state->resp->info_3.max_frequency;
-> > > +		}
-> 
-> This is part of the second patch.
-> 
-> > >  	}
-> > >  
-> > >  	indio_dev->info = &state->info;
-> > > diff --git a/include/linux/iio/common/cros_ec_sensors_core.h
-> > > b/include/linux/iio/common/cros_ec_sensors_core.h
-> > > index 3e6de427076e..89937ad242ef 100644
-> > > --- a/include/linux/iio/common/cros_ec_sensors_core.h
-> > > +++ b/include/linux/iio/common/cros_ec_sensors_core.h
-> > > @@ -74,6 +74,9 @@ struct cros_ec_sensors_core_state {
-> > >  	int curr_sampl_freq;
-> > >  	struct iio_info info;
-> > >  	struct iio_chan_spec
-> > > channels[CROS_EC_SENSORS_CORE_MAX_CHANNELS];
-> > > +
-> > > +	/* Disable, Min and Max Sampling Frequency in mHz */
-> > > +	int frequency_range[3];
-> > >  };
-> > >  
-> > >  /**
-> 
-> As I said I'd send a first patch with the EC protocol bits separated
-> of this
-> patchset and create a second patch into this patchset with the
-> min/max frequency
-> bits.
-> 
-> Thanks,
-> ~ Enric
+> Fix the problem by removing the round brackets
+> of THERMAL_TABLE_ENTRY(), and applied.
+
+Ok, thanks for fixing it!
+
+  -- Daniel
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
