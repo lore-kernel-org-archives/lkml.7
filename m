@@ -2,112 +2,528 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C7FC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8E4C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1236120989
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C34220989
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:08:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BpY0n3g7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfF0EHn (ORCPT
+        id S1727146AbfF0EIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 00:07:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:18794 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbfF0EHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 00:07:43 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3B8162F8BE2;
-        Thu, 27 Jun 2019 04:07:43 +0000 (UTC)
-Received: from x1.home (ovpn-117-35.phx2.redhat.com [10.3.117.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ED4311001281;
-        Thu, 27 Jun 2019 04:07:39 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 22:07:39 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Tina Zhang <tina.zhang@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kraxel@redhat.com,
-        zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
-        zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com
-Subject: Re: [RFC PATCH v3 1/4] vfio: Define device specific irq type
- capability
-Message-ID: <20190626220739.578c518b@x1.home>
-In-Reply-To: <20190627033802.1663-2-tina.zhang@intel.com>
-References: <20190627033802.1663-1-tina.zhang@intel.com>
-        <20190627033802.1663-2-tina.zhang@intel.com>
-Organization: Red Hat
+        Thu, 27 Jun 2019 00:08:24 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38957 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfF0EIX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 00:08:23 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x4so747056wrt.6
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 21:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=peYrxHEjDyab54KKexkbjmIh5vv0AqxnEkYF1zQ41/0=;
+        b=BpY0n3g7OCtKVTyCkELlz7i/FrshCPUMslUpgW0lb8ekxnEXA4BSzgMbmWKF1NUQTI
+         jJj5V7v0m8kA2DWAARDLGE3vckNQ+tJGdI8V+tSDMnEXkBmFw4ttG3VOMrwrkiiuYWYP
+         79yxurg3Ha9jaM9hueT207iXBaPs2Heqc5x+oNvdV0+0KsaO49EAcx7EXK7DZ6/jcvVT
+         jhHAH0WOymRIBeD9BdUknQ7spWDkW8bi44E3WoVtbrA+RqhLNRWPEgt9PRa90IoXoQrW
+         JQixu9ArqgQfXYU8KaOrBR8PpKWcdTjs11DCxn9p2a4UYFLd1HpNB8lG03iloBc4NxvB
+         rpMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=peYrxHEjDyab54KKexkbjmIh5vv0AqxnEkYF1zQ41/0=;
+        b=HJpS8OvEbcXAzHMOC+A5zUiCG6GE40/eCQAz/q4j8aiYHInMtB4FCL/KLdMmKk8MJw
+         dImmYQXrdjhmXZZIS1jsA7nV9tej4BWJkci6zvgD87+lCQnH8nXH0RhcCf/VffRT1g/m
+         N29X9s50+s+ZQi/6Gkpme/udBE73mqujOaxZy9J+7ACvLG1khuCU/i82XPo+pKrdGsR7
+         copQCi7bNZ7d3zRtym9x7YATfV0VIwSuM5dmYRmJQHpoKcPNjqIRoAItMCOkCo4RErTp
+         0j+YH0+EnYeSVzBN0iQbY3FANR1Fiv96vZlWWkQl0kg9GuBfFG50EcHMCWNToivg/MNC
+         Zrrw==
+X-Gm-Message-State: APjAAAXIcQ6fnEbwv9zV4hbjW3ZTBgq8647Jw5GUzk39DF0UIQWaocuL
+        BwGa+Qwfisxx62Hz1expP/EuHCxc3HkNZQ0Flvyi
+X-Google-Smtp-Source: APXvYqzJRzBUHyzbzCLyMW34lNC+PYJ6zOTaHEF91KW5X6rjaLo6CvfDngyrQpgoh96qd+IgLTc/PgkKeNkuHHkd+DI=
+X-Received: by 2002:adf:f649:: with SMTP id x9mr950139wrp.86.1561608499699;
+ Wed, 26 Jun 2019 21:08:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 27 Jun 2019 04:07:43 +0000 (UTC)
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-18-brendanhiggins@google.com> <20190626021744.GU19023@42.do-not-panic.com>
+In-Reply-To: <20190626021744.GU19023@42.do-not-panic.com>
+From:   Iurii Zaikin <yzaikin@google.com>
+Date:   Wed, 26 Jun 2019 21:07:43 -0700
+Message-ID: <CAAXuY3p+kVhjQ4LYtzormqVcH2vKu1abc_K9Z0XY=JX=bp8NcQ@mail.gmail.com>
+Subject: Re: [PATCH v5 17/18] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, Kees Cook <keescook@google.com>,
+        kieran.bingham@ideasonboard.com, peterz@infradead.org,
+        robh@kernel.org, Stephen Boyd <sboyd@kernel.org>, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        Daniel Vetter <daniel@ffwll.ch>, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, rdunlap@infradead.org, richard@nod.at,
+        David Rientjes <rientjes@google.com>, rostedt@goodmis.org,
+        wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019 11:37:59 +0800
-Tina Zhang <tina.zhang@intel.com> wrote:
+On Tue, Jun 25, 2019 at 7:17 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Mon, Jun 17, 2019 at 01:26:12AM -0700, Brendan Higgins wrote:
+> > From: Iurii Zaikin <yzaikin@google.com>
+> >
+> > KUnit tests for initialized data behavior of proc_dointvec that is
+> > explicitly checked in the code. Includes basic parsing tests including
+> > int min/max overflow.
+>
+> First, thanks for this work! My review below.
+> >
+> > Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> > ---
+> > Changes Since Last Revision:
+> >  - Iurii did some clean up (thanks Iurii!) as suggested by Stephen Boyd.
+> > ---
+> >  kernel/Makefile      |   2 +
+> >  kernel/sysctl-test.c | 242 +++++++++++++++++++++++++++++++++++++++++++
+> >  lib/Kconfig.debug    |  10 ++
+> >  3 files changed, 254 insertions(+)
+> >  create mode 100644 kernel/sysctl-test.c
+> >
+> > diff --git a/kernel/Makefile b/kernel/Makefile
+> > index a8d923b5481ba..50fd511cd0ee0 100644
+> > --- a/kernel/Makefile
+> > +++ b/kernel/Makefile
+> > @@ -114,6 +114,8 @@ obj-$(CONFIG_HAS_IOMEM) += iomem.o
+> >  obj-$(CONFIG_ZONE_DEVICE) += memremap.o
+> >  obj-$(CONFIG_RSEQ) += rseq.o
+> >
+> > +obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
+>
+> And we have lib/test_sysctl.c of selftests.
+>
+> I'm fine with this going in as-is to its current place, but if we have
+> to learn from selftests I'd say we try to stick to a convention so
+> folks know what framework a test is for, and to ensure folks can
+> easily tell if its test code or not.
+>
+> Perhaps simply a directory for kunit tests would suffice alone.
+>
+> > +
+> >  obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
+> >  KASAN_SANITIZE_stackleak.o := n
+> >  KCOV_INSTRUMENT_stackleak.o := n
+> > diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+> > new file mode 100644
+> > index 0000000000000..cb61ad3c7db63
+> > --- /dev/null
+> > +++ b/kernel/sysctl-test.c
+> > @@ -0,0 +1,242 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * KUnit test of proc sysctl.
+> > + */
+> > +
+> > +#include <kunit/test.h>
+> > +#include <linux/sysctl.h>
+> > +
+> > +static int i_zero;
+> > +static int i_one_hundred = 100;
+> > +
+> > +struct test_sysctl_data {
+> > +     int int_0001;
+> > +     int int_0002;
+> > +     int int_0003[4];
+> > +
+> > +     unsigned int uint_0001;
+> > +
+> > +     char string_0001[65];
+> > +};
+> > +
+> > +static struct test_sysctl_data test_data = {
+> > +     .int_0001 = 60,
+> > +     .int_0002 = 1,
+> > +
+> > +     .int_0003[0] = 0,
+> > +     .int_0003[1] = 1,
+> > +     .int_0003[2] = 2,
+> > +     .int_0003[3] = 3,
+> > +
+> > +     .uint_0001 = 314,
+> > +
+> > +     .string_0001 = "(none)",
+> > +};
+> > +
+> > +static void sysctl_test_dointvec_null_tbl_data(struct kunit *test)
+> > +{
+> > +     struct ctl_table table = {
+> > +             .procname = "foo",
+> > +             .data           = NULL,
+> > +             .maxlen         = sizeof(int),
+> > +             .mode           = 0644,
+> > +             .proc_handler   = proc_dointvec,
+> > +             .extra1         = &i_zero,
+> > +             .extra2         = &i_one_hundred,
+> > +     };
+> > +     void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > +     size_t len;
+> > +     loff_t pos;
+> > +
+> > +     len = 1234;
+> > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
+> > +     KUNIT_EXPECT_EQ(test, (size_t)0, len);
+>
+> It is a bit odd, but it does happen, for a developer to be calling
+> proc_dointvec() directly, instead typically folks just register a table
+> and let it do its thing.  That said, someone not too familiar with proc
+> code would see this and really have no clue exactly what is being
+> tested.
+>
+> Even as a maintainer, I had to read the code for proc_dointvec() a bit
+> to understand that the above is a *read* attempt to the .data field
+> being allocated. Because its a write, the len set to a bogus does not
+> matter as we are expecting the proc_dointvec() to update len for us.
+>
+> If a test fails, it would be good to for anyone to easily grasp what is
+> being tested. So... a few words documenting each test case would be nice.
+>
+> > +     len = 1234;
+> > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, buffer, &len, &pos));
+> > +     KUNIT_EXPECT_EQ(test, (size_t)0, len);
+>
+> And this is a write...
+>
+> A nice tests given the data on the table allocated is not assigned.
+>
+> I don't see any other areas in the kernel where we open code a
+> proc_dointvec() call where the second argument is a digit, it
+> always is with a variable. As such there would be no need for
+> us to expose helpers to make it clear if one is a read or write.
+> But for *this* case, I think it would be useful to add two wrappers
+> inside this kunit test module which sprinkles the 0 or 1, this way
+> a reader can easily know what mode is being tested.
+>
+> kunit_proc_dointvec_read()
+> kunit_proc_dointvec_write()
+>
+> Or just use #define KUNIT_PROC_READ 0, #define KUNIT_PROC_WRITE 1.
+> Whatever makes this code more legible.
+Went with the #define * suggestion above to keep it clear what
+function is being tested.
 
-> Cap the number of irqs with fixed indexes and use capability chains
-> to chain device specific irqs.
-> 
-> Signed-off-by: Tina Zhang <tina.zhang@intel.com>
-> ---
->  include/uapi/linux/vfio.h | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 02bb7ad6e986..600784acc4ac 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -444,11 +444,27 @@ struct vfio_irq_info {
->  #define VFIO_IRQ_INFO_MASKABLE		(1 << 1)
->  #define VFIO_IRQ_INFO_AUTOMASKED	(1 << 2)
->  #define VFIO_IRQ_INFO_NORESIZE		(1 << 3)
-> +#define VFIO_IRQ_INFO_FLAG_CAPS		(1 << 4) /* Info supports caps */
->  	__u32	index;		/* IRQ index */
-> +	__u32	cap_offset;	/* Offset within info struct of first cap */
->  	__u32	count;		/* Number of IRQs within this index */
->  };
-
-
-This cannot be inserted into the middle of the structure, it breaks
-compatibility with all existing userspace binaries.  I must be added to
-the end of the structure.
-
->  #define VFIO_DEVICE_GET_IRQ_INFO	_IO(VFIO_TYPE, VFIO_BASE + 9)
->  
-> +/*
-> + * The irq type capability allows irqs unique to a specific device or
-> + * class of devices to be exposed.
-> + *
-> + * The structures below define version 1 of this capability.
-> + */
-> +#define VFIO_IRQ_INFO_CAP_TYPE      3
-> +
-> +struct vfio_irq_info_cap_type {
-> +	struct vfio_info_cap_header header;
-> +	__u32 type;     /* global per bus driver */
-> +	__u32 subtype;  /* type specific */
-> +};
-> +
->  /**
->   * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct vfio_irq_set)
->   *
-> @@ -550,7 +566,8 @@ enum {
->  	VFIO_PCI_MSIX_IRQ_INDEX,
->  	VFIO_PCI_ERR_IRQ_INDEX,
->  	VFIO_PCI_REQ_IRQ_INDEX,
-> -	VFIO_PCI_NUM_IRQS
-> +	VFIO_PCI_NUM_IRQS = 5	/* Fixed user ABI, IRQ indexes >=5 use   */
-> +				/* device specific cap to define content */
->  };
->  
->  /*
-
+> > +}
+> > +
+> > +static void sysctl_test_dointvec_table_maxlen_unset(struct kunit *test)
+> > +{
+> > +     struct ctl_table table = {
+> > +             .procname = "foo",
+> > +             .data           = &test_data.int_0001,
+> > +             .maxlen         = 0,
+> > +             .mode           = 0644,
+> > +             .proc_handler   = proc_dointvec,
+> > +             .extra1         = &i_zero,
+> > +             .extra2         = &i_one_hundred,
+> > +     };
+> > +     void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > +     size_t len;
+> > +     loff_t pos;
+> > +
+> > +     len = 1234;
+> > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
+> > +     KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> > +     len = 1234;
+> > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, buffer, &len, &pos));
+> > +     KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> > +}
+>
+> In a way this is also testing for general kernel API changes. This is and the
+> last one were good examples. So this is not just testing functionality
+> here. There is no wrong or write answer if 0 or -EINVAL was returned
+> other than the fact that we have been doing this for years.
+>
+> Its a perhaps small but important difference for some of these tests.  I
+> *do* think its worth clarifying through documentation which ones are
+> testing for API consistency Vs proper correctness.
+>
+You make a good point that the test codifies the existing behavior of
+the function
+in lieu of formal documentation.
+However, the test cases were derived from examining the source code
+of the function under test and attempting to cover all branches. The
+assertions were added
+only for the values that appeared to be set deliberately in the
+implementation. And it makes
+sense to me to test that the code does exactly what the implementation
+author intended.
+> > +
+> > +static void sysctl_test_dointvec_table_len_is_zero(struct kunit *test)
+> > +{
+> > +     struct ctl_table table = {
+> > +             .procname = "foo",
+> > +             .data           = &test_data.int_0001,
+> > +             .maxlen         = sizeof(int),
+> > +             .mode           = 0644,
+> > +             .proc_handler   = proc_dointvec,
+> > +             .extra1         = &i_zero,
+> > +             .extra2         = &i_one_hundred,
+> > +     };
+> > +     void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > +     size_t len;
+> > +     loff_t pos;
+> > +
+> > +     len = 0;
+> > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
+> > +     KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, buffer, &len, &pos));
+> > +     KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> > +}
+>
+> Likewise an API change test.
+>
+Same as the above, if the implementation author meant the function to
+behave deterministically
+with the given input, it makes sense to test the behavior. Otherwise,
+why not just remove the branch in
+ the function under test and say that the given input results in
+undefined behavior?
+> > +
+> > +static void sysctl_test_dointvec_table_read_but_position_set(struct kunit *test)
+> > +{
+> > +     struct ctl_table table = {
+> > +             .procname = "foo",
+> > +             .data           = &test_data.int_0001,
+> > +             .maxlen         = sizeof(int),
+> > +             .mode           = 0644,
+> > +             .proc_handler   = proc_dointvec,
+> > +             .extra1         = &i_zero,
+> > +             .extra2         = &i_one_hundred,
+> > +     };
+> > +     void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > +     size_t len;
+> > +     loff_t pos;
+> > +
+> > +     len = 1234;
+> > +     pos = 1;
+> > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
+> > +     KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> > +}
+>
+> Likewise an API test.
+>
+> All the above kunit test cases are currently testing this call on
+> __do_proc_dointvec():
+>
+>         if (!tbl_data || !table->maxlen || !*lenp || (*ppos && !write))
+>         {
+>                 *lenp = 0;
+>                 return 0;
+>         }
+>
+> Just an API test.
+>
+> Perhaps use an api prefix or postfix for these to help distinguish
+> which are api tests Vs correctness. We want someone who runs into
+> a failure to *easily* determine *what* went wrong.
+>
+> Right now this kunit test leaves no leashes around to help the reader.
+>
+> > +
+> > +static void sysctl_test_dointvec_happy_single_positive(struct kunit *test)
+> > +{
+> > +     struct ctl_table table = {
+> > +             .procname = "foo",
+> > +             .data           = &test_data.int_0001,
+> > +             .maxlen         = sizeof(int),
+> > +             .mode           = 0644,
+> > +             .proc_handler   = proc_dointvec,
+> > +             .extra1         = &i_zero,
+> > +             .extra2         = &i_one_hundred,
+> > +     };
+> > +     char input[] = "9";
+> > +     size_t len = sizeof(input) - 1;
+> > +     loff_t pos = 0;
+> > +
+> > +     table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len, &pos));
+> > +     KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > +     KUNIT_EXPECT_EQ(test, sizeof(input) - 1, (size_t)pos);
+> > +     KUNIT_EXPECT_EQ(test, 9, ((int *)table.data)[0]);
+> > +}
+>
+> Yeap, running these kunit test cases will surely be faster than stupid
+> shell :) nice!
+>
+> > +static void sysctl_test_dointvec_happy_single_negative(struct kunit *test)
+> > +{
+> > +     struct ctl_table table = {
+> > +             .procname = "foo",
+> > +             .data           = &test_data.int_0001,
+> > +             .maxlen         = sizeof(int),
+> > +             .mode           = 0644,
+> > +             .proc_handler   = proc_dointvec,
+> > +             .extra1         = &i_zero,
+> > +             .extra2         = &i_one_hundred,
+> > +     };
+> > +     char input[] = "-9";
+> > +     size_t len = sizeof(input) - 1;
+> > +     loff_t pos = 0;
+> > +
+> > +     table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len, &pos));
+> > +     KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > +     KUNIT_EXPECT_EQ(test, sizeof(input) - 1, (size_t)pos);
+> > +     KUNIT_EXPECT_EQ(test, -9, ((int *)table.data)[0]);
+> > +}
+> > +
+> > +static void sysctl_test_dointvec_single_less_int_min(struct kunit *test)
+> > +{
+> > +     struct ctl_table table = {
+> > +             .procname = "foo",
+> > +             .data           = &test_data.int_0001,
+> > +             .maxlen         = sizeof(int),
+> > +             .mode           = 0644,
+> > +             .proc_handler   = proc_dointvec,
+> > +             .extra1         = &i_zero,
+> > +             .extra2         = &i_one_hundred,
+> > +     };
+> > +     char input[32];
+> > +     size_t len = sizeof(input) - 1;
+> > +     loff_t pos = 0;
+> > +     unsigned long abs_of_less_than_min = (unsigned long)INT_MAX
+> > +                                          - (INT_MAX + INT_MIN) + 1;
+> > +
+> > +     KUNIT_EXPECT_LT(test,
+> > +                     (size_t)snprintf(input, sizeof(input), "-%lu",
+> > +                                      abs_of_less_than_min),
+> > +                     sizeof(input));
+> > +
+> > +     table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > +     KUNIT_EXPECT_EQ(test, -EINVAL,
+> > +                     proc_dointvec(&table, 1, input, &len, &pos));
+> > +     KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > +     KUNIT_EXPECT_EQ(test, 0, ((int *)table.data)[0]);
+> > +}
+>
+> API test.
+>
+Not sure why. I believe there has been a real bug with int overflow in
+proc_dointvec.
+Covering it with test seems like a good idea.
+> > +static void sysctl_test_dointvec_single_greater_int_max(struct kunit *test)
+> > +{
+> > +     struct ctl_table table = {
+> > +             .procname = "foo",
+> > +             .data           = &test_data.int_0001,
+> > +             .maxlen         = sizeof(int),
+> > +             .mode           = 0644,
+> > +             .proc_handler   = proc_dointvec,
+> > +             .extra1         = &i_zero,
+> > +             .extra2         = &i_one_hundred,
+> > +     };
+> > +     char input[32];
+> > +     size_t len = sizeof(input) - 1;
+> > +     loff_t pos = 0;
+> > +     unsigned long greater_than_max = (unsigned long)INT_MAX + 1;
+> > +
+> > +     KUNIT_EXPECT_GT(test, greater_than_max, (unsigned long)INT_MAX);
+> > +     KUNIT_EXPECT_LT(test, (size_t)snprintf(input, sizeof(input), "%lu",
+> > +                                            greater_than_max),
+> > +                     sizeof(input));
+> > +     table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > +     KUNIT_EXPECT_EQ(test, -EINVAL,
+> > +                     proc_dointvec(&table, 1, input, &len, &pos));
+> > +     KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > +     KUNIT_EXPECT_EQ(test, 0, ((int *)table.data)[0]);
+> > +}
+> > +
+>
+> API test.
+>
+> > +static struct kunit_case sysctl_test_cases[] = {
+> > +     KUNIT_CASE(sysctl_test_dointvec_null_tbl_data),
+> > +     KUNIT_CASE(sysctl_test_dointvec_table_maxlen_unset),
+> > +     KUNIT_CASE(sysctl_test_dointvec_table_len_is_zero),
+> > +     KUNIT_CASE(sysctl_test_dointvec_table_read_but_position_set),
+> > +     KUNIT_CASE(sysctl_test_dointvec_happy_single_positive),
+> > +     KUNIT_CASE(sysctl_test_dointvec_happy_single_negative),
+> > +     KUNIT_CASE(sysctl_test_dointvec_single_less_int_min),
+> > +     KUNIT_CASE(sysctl_test_dointvec_single_greater_int_max),
+> > +     {}
+> > +};
+>
+> Oh all are API tests.. perhaps then just rename then
+> sysctl_test_cases to sysctl_api_test_cases.
+>
+> Would be good to add at least *two* other tests cases for this
+> example, one which does a valid read and one which does a valid write.
+Added valid reads. There already are 2 valid writes.
+> If that is done either we add another kunit test module for correctness
+> or just extend the above and use prefix / postfixes on the functions
+> to distinguish between API / correctness somehow.
+>
+> > +
+> > +static struct kunit_module sysctl_test_module = {
+> > +     .name = "sysctl_test",
+> > +     .test_cases = sysctl_test_cases,
+> > +};
+> > +
+> > +module_test(sysctl_test_module);
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index cbdfae3798965..389b8986f5b77 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -1939,6 +1939,16 @@ config TEST_SYSCTL
+> >
+> >         If unsure, say N.
+> >
+> > +config SYSCTL_KUNIT_TEST
+> > +     bool "KUnit test for sysctl"
+> > +     depends on KUNIT
+> > +     help
+> > +       This builds the proc sysctl unit test, which runs on boot. For more
+> > +       information on KUnit and unit tests in general please refer to the
+> > +       KUnit documentation in Documentation/dev-tools/kunit/.
+>
+> A little more description here would help. It is testing for API and
+> hopefully also correctness (if extended with those two examples I
+> mentioned).
+>
+Added "Tests the API contract and implementation correctness of sysctl."
+> > +
+> > +       If unsure, say N.
+> > +
+> >  config TEST_UDELAY
+> >       tristate "udelay test driver"
+> >       help
+> > --
+> > 2.22.0.410.gd8fdbe21b5-goog
+> >
+>
+> Thanks for the work, it is very much appreciated and gives a clearer
+> appreciation of value of kunit and what can be done and not. Another
+> random test idea that comes up, would be to use different memory types
+> for the table data. In case the kernel API users does something odd,
+> we should be ensuring we do something proper.
+>
+>   Luis
