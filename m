@@ -2,65 +2,98 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98929C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0F6C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB4A2085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFCD20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfF0IwH (ORCPT
+        id S1726601AbfF0Iwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 04:52:07 -0400
-Received: from verein.lst.de ([213.95.11.211]:50739 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbfF0IwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 04:52:07 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id B4FDB68B20; Thu, 27 Jun 2019 10:51:35 +0200 (CEST)
-Date:   Thu, 27 Jun 2019 10:51:35 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org
-Subject: Re: [PATCH 15/25] memremap: provide an optional internal refcount
- in struct dev_pagemap
-Message-ID: <20190627085135.GB11420@lst.de>
-References: <20190626122724.13313-1-hch@lst.de> <20190626122724.13313-16-hch@lst.de> <20190626214750.GC8399@iweiny-DESK2.sc.intel.com>
+        Thu, 27 Jun 2019 04:52:31 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:33327 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfF0Iwb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 04:52:31 -0400
+Received: from mc-bl-xps13.lan (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7CC8A200003;
+        Thu, 27 Jun 2019 08:52:27 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com
+Subject: [PATCH net-next v2] net: ethtool: Allow parsing ETHER_FLOW types when using flow_rule
+Date:   Thu, 27 Jun 2019 10:52:26 +0200
+Message-Id: <20190627085226.7658-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626214750.GC8399@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 02:47:50PM -0700, Ira Weiny wrote:
-> > +
-> > +		init_completion(&pgmap->done);
-> > +		error = percpu_ref_init(&pgmap->internal_ref,
-> > +				dev_pagemap_percpu_release, 0, GFP_KERNEL);
-> > +		if (error)
-> > +			return ERR_PTR(error);
-> > +		pgmap->ref = &pgmap->internal_ref;
-> > +	} else {
-> > +		if (!pgmap->ops || !pgmap->ops->kill || !pgmap->ops->cleanup) {
-> > +			WARN(1, "Missing reference count teardown definition\n");
-> > +			return ERR_PTR(-EINVAL);
-> > +		}
-> 
-> After this series are there any users who continue to supply their own
-> reference object and these callbacks?
+When parsing an ethtool_rx_flow_spec, users can specify an ethernet flow
+which could contain matches based on the ethernet header, such as the
+MAC address, the VLAN tag or the ethertype.
 
-Yes, fsdax uses the block layer request_queue reference count.
+ETHER_FLOW uses the src and dst ethernet addresses, along with the
+ethertype as keys. Matches based on the vlan tag are also possible, but
+they are specified using the special FLOW_EXT flag.
+
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+V2 : Add src and dst mac address parsing, as suggested by Pablo.
+
+ net/core/ethtool.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+index 4d1011b2e24f..6288e69e94fc 100644
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -2883,6 +2883,30 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
+ 	match->mask.basic.n_proto = htons(0xffff);
+ 
+ 	switch (fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT | FLOW_RSS)) {
++	case ETHER_FLOW: {
++		const struct ethhdr *ether_spec, *ether_m_spec;
++
++		ether_spec = &fs->h_u.ether_spec;
++		ether_m_spec = &fs->m_u.ether_spec;
++
++		if (!is_zero_ether_addr(ether_m_spec->h_source)) {
++			ether_addr_copy(match->key.eth_addrs.src,
++					ether_spec->h_source);
++			ether_addr_copy(match->mask.eth_addrs.src,
++					ether_m_spec->h_source);
++		}
++		if (!is_zero_ether_addr(ether_m_spec->h_dest)) {
++			ether_addr_copy(match->key.eth_addrs.dst,
++					ether_spec->h_dest);
++			ether_addr_copy(match->mask.eth_addrs.dst,
++					ether_m_spec->h_dest);
++		}
++		if (ether_m_spec->h_proto) {
++			match->key.basic.n_proto = ether_spec->h_proto;
++			match->mask.basic.n_proto = ether_m_spec->h_proto;
++		}
++		}
++		break;
+ 	case TCP_V4_FLOW:
+ 	case UDP_V4_FLOW: {
+ 		const struct ethtool_tcpip4_spec *v4_spec, *v4_m_spec;
+-- 
+2.20.1
+
