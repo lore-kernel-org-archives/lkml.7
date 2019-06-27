@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35192C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4BCC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092B5208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 557FA20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596483;
-	bh=pf3TY0qhiBRSgL4uXDgcr/l4Y53BKYcGEPOf2PFRwlE=;
+	s=default; t=1561596493;
+	bh=VePPAgNzl9cvWFPU4jZ/vJZ4UpG5DZzQSb54AbU1/6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D2MIRrTvI7fcu0Tn9X73CD821ZcM+VZabxHe7oIDdz2bvX+MtcV011tng0PHjz9o8
-	 CJHIMhqoH5C3uuDue808guvIhFWyWkBn0brnEB2JVSmXTjD39mEUTb96UcSYUdX4T+
-	 4x1L3bZOgbykqDFcsNAaU09pFEk5uVqBDylALY1g=
+	b=jOcwiOoWi3hDgBWAXdNrCc3uy0QLitVl3b28KOu4pQJLkBkJpV9bjoNrPh91FwOSu
+	 rr6ZmkKnjUw6Dn8bv7KucjmPZhRnyTxigl8YYxK3Vw7kro4OONZszmbpMvM/Qr0VF6
+	 Ha9nlbzNoJS/VhXkoFDspjddukullJgjxtX1Ogo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfF0Aik (ORCPT
+        id S1728844AbfF0Aia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:38:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42910 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:38:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727078AbfF0Aih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:38:37 -0400
+        id S1728820AbfF0Ai1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:38:27 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 865CC217F9;
-        Thu, 27 Jun 2019 00:38:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39D0A214AF;
+        Thu, 27 Jun 2019 00:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595916;
-        bh=pf3TY0qhiBRSgL4uXDgcr/l4Y53BKYcGEPOf2PFRwlE=;
+        s=default; t=1561595906;
+        bh=VePPAgNzl9cvWFPU4jZ/vJZ4UpG5DZzQSb54AbU1/6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GYCu65WGmmIADgoddOX2rVgEYgKbh5qZXL7lheJ4REsARGzghxodD6aCpkTNHP9/n
-         wEHSd7g/wCTsP/p7wH/CV0NY8mGG43GE9ATkpLygrgiK1+q5jcnxV3+UpBjSiCWASV
-         jY9yRRl8nRUVJtpeA7q6tih1KEKyE3QPCLpG3eEY=
+        b=XgMqiA847AfkaMMweOVAUXoJ3MgJrZ1HOoB8ByRtBvU4Dt94aRRders4lOojpfGg3
+         POI5dq84uZfIou5FmnfPWrDr7Um97c4aCU+lx6vnD8hCEiQ+jDZFyfxzgj3IrJM64d
+         XKgDh8cVabbUet7vzXEleQUpuZ3PI+r9tYuzsCO4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Toshiaki Makita <toshiaki.makita1@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 44/60] bpf, devmap: Add missing RCU read lock on flush
-Date:   Wed, 26 Jun 2019 20:35:59 -0400
-Message-Id: <20190627003616.20767-44-sashal@kernel.org>
+Cc:     Naftali Goldstein <naftali.goldstein@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 41/60] mac80211: do not start any work during reconfigure flow
+Date:   Wed, 26 Jun 2019 20:35:56 -0400
+Message-Id: <20190627003616.20767-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
 References: <20190627003616.20767-1-sashal@kernel.org>
@@ -61,59 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toshiaki Makita <toshiaki.makita1@gmail.com>
+From: Naftali Goldstein <naftali.goldstein@intel.com>
 
-[ Upstream commit 86723c8640633bee4b4588d3c7784ee7a0032f65 ]
+[ Upstream commit f8891461a277ec0afc493fd30cd975a38048a038 ]
 
-.ndo_xdp_xmit() assumes it is called under RCU. For example virtio_net
-uses RCU to detect it has setup the resources for tx. The assumption
-accidentally broke when introducing bulk queue in devmap.
+It is not a good idea to try to perform any work (e.g. send an auth
+frame) during reconfigure flow.
 
-Fixes: 5d053f9da431 ("bpf: devmap prepare xdp frames for bulking")
-Reported-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Prevent this from happening, and at the end of the reconfigure flow
+requeue all the works.
+
+Signed-off-by: Naftali Goldstein <naftali.goldstein@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/devmap.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/mac80211/ieee80211_i.h | 7 +++++++
+ net/mac80211/util.c        | 4 ++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 357d456d57b9..fc500ca464d0 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -282,6 +282,7 @@ void __dev_map_flush(struct bpf_map *map)
- 	unsigned long *bitmap = this_cpu_ptr(dtab->flush_needed);
- 	u32 bit;
+diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
+index 6ea64cadad00..ae9cce2d41da 100644
+--- a/net/mac80211/ieee80211_i.h
++++ b/net/mac80211/ieee80211_i.h
+@@ -1998,6 +1998,13 @@ void __ieee80211_flush_queues(struct ieee80211_local *local,
  
-+	rcu_read_lock();
- 	for_each_set_bit(bit, bitmap, map->max_entries) {
- 		struct bpf_dtab_netdev *dev = READ_ONCE(dtab->netdev_map[bit]);
- 		struct xdp_bulk_queue *bq;
-@@ -297,6 +298,7 @@ void __dev_map_flush(struct bpf_map *map)
- 
- 		__clear_bit(bit, bitmap);
+ static inline bool ieee80211_can_run_worker(struct ieee80211_local *local)
+ {
++	/*
++	 * It's unsafe to try to do any work during reconfigure flow.
++	 * When the flow ends the work will be requeued.
++	 */
++	if (local->in_reconfig)
++		return false;
++
+ 	/*
+ 	 * If quiescing is set, we are racing with __ieee80211_suspend.
+ 	 * __ieee80211_suspend flushes the workers after setting quiescing,
+diff --git a/net/mac80211/util.c b/net/mac80211/util.c
+index 3deaa01ebee4..f60e033f68c9 100644
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -2224,6 +2224,10 @@ int ieee80211_reconfig(struct ieee80211_local *local)
+ 		mutex_lock(&local->mtx);
+ 		ieee80211_start_next_roc(local);
+ 		mutex_unlock(&local->mtx);
++
++		/* Requeue all works */
++		list_for_each_entry(sdata, &local->interfaces, list)
++			ieee80211_queue_work(&local->hw, &sdata->work);
  	}
-+	rcu_read_unlock();
- }
  
- /* rcu_read_lock (from syscall and BPF contexts) ensures that if a delete and/or
-@@ -389,6 +391,7 @@ static void dev_map_flush_old(struct bpf_dtab_netdev *dev)
- 
- 		int cpu;
- 
-+		rcu_read_lock();
- 		for_each_online_cpu(cpu) {
- 			bitmap = per_cpu_ptr(dev->dtab->flush_needed, cpu);
- 			__clear_bit(dev->bit, bitmap);
-@@ -396,6 +399,7 @@ static void dev_map_flush_old(struct bpf_dtab_netdev *dev)
- 			bq = per_cpu_ptr(dev->bulkq, cpu);
- 			bq_xmit_all(dev, bq, XDP_XMIT_FLUSH, false);
- 		}
-+		rcu_read_unlock();
- 	}
- }
- 
+ 	ieee80211_wake_queues_by_reason(hw, IEEE80211_MAX_QUEUE_MAP,
 -- 
 2.20.1
 
