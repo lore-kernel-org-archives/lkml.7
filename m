@@ -2,133 +2,144 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8D5C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC72CC4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0430208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:37:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="q+695WZR"
+	by mail.kernel.org (Postfix) with ESMTP id B169321726
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfF0Xh4 (ORCPT
+        id S1726720AbfF0XiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:37:56 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:44273 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfF0Xhz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:37:55 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RNbdvM499762
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 27 Jun 2019 16:37:40 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RNbdvM499762
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561678660;
-        bh=zKjjz2KHt9JIXQHn3Vdzh7UkaWg5Tr1lSGwT0IfHfpo=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=q+695WZRlndnID2uOp3wyosxWyO2PDtrO4hA5kxb1gehzsJWMF/UKULP8oETfeWD3
-         9hzxNqgSTEKmvqDgUPMXIGwTZElyjes+Gv9tPibiPmX4Qr0xf/Q9rx5BEMR9KjtFCZ
-         1b8mc60AcPFqM1TSN+/EYxy95y7tr0vNV6Ocg9nMtX/zZax9qe8DqsWJMCe+bXcxub
-         RK9hlNtaUTQL/oYKB9t/U50OPkbaqsJOCRBh5VaEoXmhT3foJqs3JqdjXSMXyZ9XHi
-         5L9zoAprbfQLZ1LNZCKwOrQz3orBsz197WzqEg6rmks8AvkdL7fs0kFpnMYxAdM8jO
-         5lfHjPem6w3FA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RNbdPX499758;
-        Thu, 27 Jun 2019 16:37:39 -0700
-Date:   Thu, 27 Jun 2019 16:37:39 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-eb8ec32c45a87efbc6683b771597084c4d904a17@git.kernel.org>
-Cc:     eranian@google.com, ravi.v.shankar@intel.com,
-        ricardo.neri-calderon@linux.intel.com,
-        Suravee.Suthikulpanit@amd.com, ashok.raj@intel.com,
-        andi.kleen@intel.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, hpa@zytor.com, mingo@kernel.org,
-        peterz@infradead.org
-Reply-To: peterz@infradead.org, ricardo.neri-calderon@linux.intel.com,
-          mingo@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
-          tglx@linutronix.de, andi.kleen@intel.com,
-          ravi.v.shankar@intel.com, ashok.raj@intel.com,
-          eranian@google.com, Suravee.Suthikulpanit@amd.com
-In-Reply-To: <20190623132434.553729327@linutronix.de>
-References: <20190623132434.553729327@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/timers] x86/hpet: Remove the unused hpet_msi_read()
- function
-Git-Commit-ID: eb8ec32c45a87efbc6683b771597084c4d904a17
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 27 Jun 2019 19:38:14 -0400
+Received: from mga07.intel.com ([134.134.136.100]:21471 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbfF0XiO (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 19:38:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 16:38:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,425,1557212400"; 
+   d="scan'208";a="167595836"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga006.jf.intel.com with ESMTP; 27 Jun 2019 16:38:11 -0700
+Date:   Thu, 27 Jun 2019 16:38:11 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     Linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv5] mm/gup: speed up check_and_migrate_cma_pages() on huge
+ page
+Message-ID: <20190627233805.GA8695@iweiny-DESK2.sc.intel.com>
+References: <1561612545-28997-1-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1561612545-28997-1-git-send-email-kernelfans@gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  eb8ec32c45a87efbc6683b771597084c4d904a17
-Gitweb:     https://git.kernel.org/tip/eb8ec32c45a87efbc6683b771597084c4d904a17
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 23 Jun 2019 15:23:46 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 28 Jun 2019 00:57:16 +0200
+On Thu, Jun 27, 2019 at 01:15:45PM +0800, Pingfan Liu wrote:
+> Both hugetlb and thp locate on the same migration type of pageblock, since
+> they are allocated from a free_list[]. Based on this fact, it is enough to
+> check on a single subpage to decide the migration type of the whole huge
+> page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
+> similar on other archs.
+> 
+> Furthermore, when executing isolate_huge_page(), it avoid taking global
+> hugetlb_lock many times, and meanless remove/add to the local link list
+> cma_page_list.
+> 
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
 
-x86/hpet: Remove the unused hpet_msi_read() function
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-No users.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Andi Kleen <andi.kleen@intel.com>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Ravi Shankar <ravi.v.shankar@intel.com>
-Link: https://lkml.kernel.org/r/20190623132434.553729327@linutronix.de
-
----
- arch/x86/include/asm/hpet.h | 1 -
- arch/x86/kernel/hpet.c      | 7 -------
- 2 files changed, 8 deletions(-)
-
-diff --git a/arch/x86/include/asm/hpet.h b/arch/x86/include/asm/hpet.h
-index 67385d56d4f4..e3209f5de65d 100644
---- a/arch/x86/include/asm/hpet.h
-+++ b/arch/x86/include/asm/hpet.h
-@@ -81,7 +81,6 @@ struct irq_domain;
- extern void hpet_msi_unmask(struct irq_data *data);
- extern void hpet_msi_mask(struct irq_data *data);
- extern void hpet_msi_write(struct hpet_dev *hdev, struct msi_msg *msg);
--extern void hpet_msi_read(struct hpet_dev *hdev, struct msi_msg *msg);
- extern struct irq_domain *hpet_create_irq_domain(int hpet_id);
- extern int hpet_assign_irq(struct irq_domain *domain,
- 			   struct hpet_dev *dev, int dev_num);
-diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-index b2ec52a7773d..69cd0829f432 100644
---- a/arch/x86/kernel/hpet.c
-+++ b/arch/x86/kernel/hpet.c
-@@ -462,13 +462,6 @@ void hpet_msi_write(struct hpet_dev *hdev, struct msi_msg *msg)
- 	hpet_writel(msg->address_lo, HPET_Tn_ROUTE(hdev->num) + 4);
- }
- 
--void hpet_msi_read(struct hpet_dev *hdev, struct msi_msg *msg)
--{
--	msg->data = hpet_readl(HPET_Tn_ROUTE(hdev->num));
--	msg->address_lo = hpet_readl(HPET_Tn_ROUTE(hdev->num) + 4);
--	msg->address_hi = 0;
--}
--
- static int hpet_msi_shutdown(struct clock_event_device *evt)
- {
- 	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Cc: Linux-kernel@vger.kernel.org
+> ---
+> v3 -> v4: fix C language precedence issue
+> v4 -> v5: drop the check PageCompound() and improve notes
+>  mm/gup.c | 23 +++++++++++++++--------
+>  1 file changed, 15 insertions(+), 8 deletions(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index ddde097..1deaad2 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1336,25 +1336,30 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+>  					struct vm_area_struct **vmas,
+>  					unsigned int gup_flags)
+>  {
+> -	long i;
+> +	long i, step;
+>  	bool drain_allow = true;
+>  	bool migrate_allow = true;
+>  	LIST_HEAD(cma_page_list);
+>  
+>  check_again:
+> -	for (i = 0; i < nr_pages; i++) {
+> +	for (i = 0; i < nr_pages;) {
+> +
+> +		struct page *head = compound_head(pages[i]);
+> +
+> +		/*
+> +		 * gup may start from a tail page. Advance step by the left
+> +		 * part.
+> +		 */
+> +		step = (1 << compound_order(head)) - (pages[i] - head);
+>  		/*
+>  		 * If we get a page from the CMA zone, since we are going to
+>  		 * be pinning these entries, we might as well move them out
+>  		 * of the CMA zone if possible.
+>  		 */
+> -		if (is_migrate_cma_page(pages[i])) {
+> -
+> -			struct page *head = compound_head(pages[i]);
+> -
+> -			if (PageHuge(head)) {
+> +		if (is_migrate_cma_page(head)) {
+> +			if (PageHuge(head))
+>  				isolate_huge_page(head, &cma_page_list);
+> -			} else {
+> +			else {
+>  				if (!PageLRU(head) && drain_allow) {
+>  					lru_add_drain_all();
+>  					drain_allow = false;
+> @@ -1369,6 +1374,8 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+>  				}
+>  			}
+>  		}
+> +
+> +		i += step;
+>  	}
+>  
+>  	if (!list_empty(&cma_page_list)) {
+> -- 
+> 2.7.5
+> 
