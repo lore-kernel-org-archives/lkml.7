@@ -2,122 +2,97 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD5DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300D5C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DE2205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF3F0205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WeLP0sfO"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="suTzBU5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfF0HoX (ORCPT
+        id S1726620AbfF0Ho6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 03:44:23 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:13206 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726408AbfF0HoV (ORCPT
+        Thu, 27 Jun 2019 03:44:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39673 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbfF0Ho6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:44:21 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5R7gN3E025943;
-        Thu, 27 Jun 2019 09:44:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=GHcv4g6tr7JE6E7+aaabKzOIotaPQfNSAvXVtLgorgc=;
- b=WeLP0sfOhW5LidRnIOOUbwYUkRRVFFtqf7wvD0l13yXu7zKPLROx+PfklvQJksHQGRbB
- uUBAFNk6FjWRdovwpEkZSs19tmDBnSjTzooLXZ8FwITj6XUzzBAL6dmeP3WkLH9zBcvj
- A7HJAsA8pC3QL9ZV/kzlepGrV/Vd6ypMLwEbmRHHF59A3a0RqeV13h1xnFFKlJ2ABdcD
- TjAE1c5J88+KN/XvwUx3zJf/iY3BHpA3gSKSc7FSCfRPP9UBiXFu76C7q1q6PMVHytWf
- ul4ZNUojW7kDQJnhquxqjv4rvTLDfzTYZhhERa4ROz0wCkiy6tcWChWS7CtmKSFhsFaL VQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2t9d2gn3nf-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 27 Jun 2019 09:44:09 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7D2B83F;
-        Thu, 27 Jun 2019 07:44:07 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 47D1D157C;
-        Thu, 27 Jun 2019 07:44:07 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 27 Jun
- 2019 09:44:07 +0200
-Received: from lmecxl0923.lme.st.com (10.48.0.237) by Webmail-ga.st.com
- (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 27 Jun
- 2019 09:44:06 +0200
-From:   Ludovic Barre <ludovic.Barre@st.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH] spi: stm32-qspi: remove signal sensitive on completion
-Date:   Thu, 27 Jun 2019 09:43:59 +0200
-Message-ID: <1561621439-7305-2-git-send-email-ludovic.Barre@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561621439-7305-1-git-send-email-ludovic.Barre@st.com>
-References: <1561621439-7305-1-git-send-email-ludovic.Barre@st.com>
+        Thu, 27 Jun 2019 03:44:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x4so1311722wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 00:44:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fRhMiuM9D6lNqKr68YbS2wqBEbQrlCyklKLmB7I52L8=;
+        b=suTzBU5N6EkJIWq35Uka0kDQWuiTo+/EbommBMOxKid8dyF8atsySar5l1rISdF5JR
+         f1dVxxzOTVLOYT+9jr8Xo4LjspHImaKHMTyB3tKX9Ce0ynQZXuq4dQog6CKBQ/FuWkpu
+         fmX6UACWyV2k/iUc8MJXIX85prldCEDIXbgyUmFj/d8ufh7+mS+4TlexuAmELOZvsWNB
+         ahXwnfENQVhhSDaHIK9wn3UvyzUJjSN7R43zgCAiY0yxvErWtGnj5UyBLocx58h6VXlI
+         D70lvpUjxbHGtZuvXXGW0463m8XLAQZTViUjJOVU6cYzkKVa690fn0vm+sL1mmaW1hqq
+         7pPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fRhMiuM9D6lNqKr68YbS2wqBEbQrlCyklKLmB7I52L8=;
+        b=aIyfxQJiH14dbZRfRfhSRe93jaE770sVgHkQxxIiDtXNVpSs0f2+xJQbj5vLgjW0t0
+         wIIbC2s49UJXm3Ba4X0njIuMnupk9Me+riyLEJPwubciohwlN3Z+osF6o7t3HxtCO5S9
+         /C6whSX4wL11tsy9AzLbhcpijFRAqGouklek7ammWwNrc+T9ud6nt9hhUk4LGjwEj7mT
+         KE1JTuCSve1+aVuZUR4Y3pEgY1NBBV1QoCle9y/1xxqA+q6c+4+z6iS2mGqn/d2+gWSL
+         LsyuDro+5s+7hDzZjEitc8s90W5CBgGy5itC2CwBBxRnEiK3bnEdGJhU/4lTdqVXLfjp
+         xyow==
+X-Gm-Message-State: APjAAAUsWcAn+5vPTrxHNcbXzSKb5i4QAhVZFff3bONbyhau5QFyPtY3
+        FDuZ//shQfCwY/htUpuU4CE4wQ==
+X-Google-Smtp-Source: APXvYqy00J8Sq1s22y/DIkO4hpql2w3C4VePv+24bHNULGhow+wfUwNhXVnqYGuPu8qdzdLk1r7p7w==
+X-Received: by 2002:adf:ea92:: with SMTP id s18mr1831696wrm.257.1561621496090;
+        Thu, 27 Jun 2019 00:44:56 -0700 (PDT)
+Received: from localhost (ip-89-176-222-26.net.upcbroadband.cz. [89.176.222.26])
+        by smtp.gmail.com with ESMTPSA id g10sm1487752wrw.60.2019.06.27.00.44.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 00:44:55 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 09:44:55 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     David Miller <davem@davemloft.net>
+Cc:     yuehaibing@huawei.com, sdf@google.com, jianbol@mellanox.com,
+        jiri@mellanox.com, mirq-linux@rere.qmqm.pl, willemb@google.com,
+        sdf@fomichev.me, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2] flow_dissector: Fix vlan header offset in
+ __skb_flow_dissect
+Message-ID: <20190627074455.GE2424@nanopsycho>
+References: <20190622.161955.2030310177158651781.davem@davemloft.net>
+ <20190624034913.40328-1-yuehaibing@huawei.com>
+ <20190626.192829.1694521513812984310.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.237]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_03:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626.192829.1694521513812984310.davem@davemloft.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+Thu, Jun 27, 2019 at 04:28:29AM CEST, davem@davemloft.net wrote:
+>From: YueHaibing <yuehaibing@huawei.com>
+>Date: Mon, 24 Jun 2019 11:49:13 +0800
+>
+>> @@ -998,6 +998,9 @@ bool __skb_flow_dissect(const struct net *net,
+>>  		    skb && skb_vlan_tag_present(skb)) {
+>>  			proto = skb->protocol;
+>>  		} else {
+>> +			if (dissector_vlan == FLOW_DISSECTOR_KEY_MAX)
+>> +				nhoff -= sizeof(*vlan);
+>> +
+>
+>But this is wrong when we are being called via eth_get_headlen(), in
+>that case nhoff will be sizeof(struct ethhdr).
 
-On umount step a sigkill signal is set (without user specific
-action), due to sigkill signal the completion will be interrupted and
-the data transfer can't be finished if a sync is needed.
-
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/spi/spi-stm32-qspi.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 5dbb6a8..655e4af 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -245,12 +245,8 @@ static int stm32_qspi_tx_dma(struct stm32_qspi *qspi,
- 	writel_relaxed(cr | CR_DMAEN, qspi->io_base + QSPI_CR);
- 
- 	t_out = sgt.nents * STM32_COMP_TIMEOUT_MS;
--	if (!wait_for_completion_interruptible_timeout(&qspi->dma_completion,
--						       msecs_to_jiffies(t_out)))
--		err = -ETIMEDOUT;
--
--	if (dma_async_is_tx_complete(dma_ch, cookie,
--				     NULL, NULL) != DMA_COMPLETE)
-+	if (!wait_for_completion_timeout(&qspi->dma_completion,
-+					 msecs_to_jiffies(t_out)))
- 		err = -ETIMEDOUT;
- 
- 	if (err)
-@@ -304,7 +300,7 @@ static int stm32_qspi_wait_cmd(struct stm32_qspi *qspi,
- 	cr = readl_relaxed(qspi->io_base + QSPI_CR);
- 	writel_relaxed(cr | CR_TCIE | CR_TEIE, qspi->io_base + QSPI_CR);
- 
--	if (!wait_for_completion_interruptible_timeout(&qspi->data_completion,
-+	if (!wait_for_completion_timeout(&qspi->data_completion,
- 				msecs_to_jiffies(STM32_COMP_TIMEOUT_MS))) {
- 		err = -ETIMEDOUT;
- 	} else {
--- 
-2.7.4
-
+This patch was replaced by:
+[PATCH] bonding: Always enable vlan tx offload
+http://patchwork.ozlabs.org/patch/1122886/
