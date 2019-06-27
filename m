@@ -2,140 +2,100 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E27C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DC2C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E8B2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561631226;
-	bh=+aboWwW7RRRk1C/RYk5UOWQp4PDh2UA+to5qKLSsG5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ccBq5jTTSlubweNGQmiY4jcp0GfKtMdaAl74k8rY64R7r+mhzzNkfFjVak4qWrWVu
-	 gfYstQs7JoagmZipMYcy1RmuEZLz/yscX10T6UaBdVVgINBf1denHBqaXhzMq7ymVg
-	 2d7fqZEwzwfa1ufVlVMq9PvQafEM4Fj/Y5cm2Y6M=
+	by mail.kernel.org (Postfix) with ESMTP id 5AED020828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:27:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FNVHYVFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfF0K1F (ORCPT
+        id S1726622AbfF0K1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 06:27:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfF0K1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 06:27:04 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F00C420828;
-        Thu, 27 Jun 2019 10:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561631223;
-        bh=+aboWwW7RRRk1C/RYk5UOWQp4PDh2UA+to5qKLSsG5A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ufNNsQ7PR/cG5oM3QhBjje8hgBKvThE0uaI9H9xM3+okTUjOvbrBIYQPnqnHbRbNy
-         0t+KK8xaWhxO0Sb25thuG7jRqSWjh7gyuw+7eiQuFz4Jnys7TskYd/ZdNopyXT4nnP
-         fsmY0hf/CSX8CAYEu4OwsGjutyiF0uZfK+cHA1lY=
-Date:   Thu, 27 Jun 2019 11:26:57 +0100
-From:   Will Deacon <will@kernel.org>
-To:     "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>
-Cc:     Guo Ren <guoren@kernel.org>, Julien Grall <julien.grall@arm.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "julien.thierry@arm.com" <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Anup Patel <anup.Patel@wdc.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "gary@garyguo.net" <gary@garyguo.net>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "christoffer.dall@arm.com" <christoffer.dall@arm.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-Message-ID: <20190627102656.elizqwby4sw4vi5j@willie-the-truck>
-References: <20190321163623.20219-1-julien.grall@arm.com>
- <20190321163623.20219-12-julien.grall@arm.com>
- <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
- <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
- <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com>
- <CAJF2gTStSR7Jmu7=HaO5Wxz=Zn8A5-RD8ktori3oKEhM9vozAA@mail.gmail.com>
- <20190621141606.GF18954@arrakis.emea.arm.com>
- <CAJF2gTTVUToRkRtxTmtWDotMGXy5YQCpL1h_2neTBuN3e6oz1w@mail.gmail.com>
- <20190624102209.ngwtosgr5fvp3ler@willie-the-truck>
- <c5be6baa-91aa-c178-6698-c83d4d82a217@jp.fujitsu.com>
+        Thu, 27 Jun 2019 06:27:13 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47394 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfF0K1M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 06:27:12 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5RAQvPC015217;
+        Thu, 27 Jun 2019 05:26:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561631217;
+        bh=QyQZ1LuzFa7iQdI9xKG1JGokv1FyrU+3emS36t/clzQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FNVHYVFA3B5uIOP3tqDJMRSvCsxt3XNUwKYHvFDkEdqNkdc919jOpf9i2Gafv+0d7
+         DLH1tjlSxLJFEYZai8BxeGh5uZDzhsyEud5BYPFm9ACTocNbN/QaIM1eXnVXHisrpX
+         JFMb7/+PPElFf1FM+UJuNNT0C4nhKTUF28hmGkhU=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5RAQv1A025865
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Jun 2019 05:26:57 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 27
+ Jun 2019 05:26:56 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 27 Jun 2019 05:26:56 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5RAQs6p055909;
+        Thu, 27 Jun 2019 05:26:54 -0500
+Subject: Re: [PATCH v6 00/15] tc358767 driver improvements
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        <dri-devel@lists.freedesktop.org>
+CC:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>
+References: <20190619052716.16831-1-andrew.smirnov@gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <a3fdbb02-586b-66d3-1857-1ed6d90d2537@ti.com>
+Date:   Thu, 27 Jun 2019 13:26:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c5be6baa-91aa-c178-6698-c83d4d82a217@jp.fujitsu.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190619052716.16831-1-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 09:41:42AM +0000, qi.fuli@fujitsu.com wrote:
+On 19/06/2019 08:27, Andrey Smirnov wrote:
+> Everyone:
 > 
-> On 6/24/19 7:22 PM, Will Deacon wrote:
-> > On Mon, Jun 24, 2019 at 12:35:35AM +0800, Guo Ren wrote:
-> >> On Fri, Jun 21, 2019 at 10:16 PM Catalin Marinas
-> >> <catalin.marinas@arm.com> wrote:
-> >>> On Wed, Jun 19, 2019 at 07:51:03PM +0800, Guo Ren wrote:
-> >>>> On Wed, Jun 19, 2019 at 4:54 PM Julien Grall <julien.grall@arm.com> wrote:
-> >>>>> On 6/19/19 9:07 AM, Guo Ren wrote:
-> >>>>>> Move arm asid allocator code in a generic one is a agood idea, I've
-> >>>>>> made a patchset for C-SKY and test is on processing, See:
-> >>>>>> https://lore.kernel.org/linux-csky/1560930553-26502-1-git-send-email-guoren@kernel.org/
-> >>>>>>
-> >>>>>> If you plan to seperate it into generic one, I could co-work with you.
-> >>>>> Was the ASID allocator work out of box on C-Sky?
-> >>>> Almost done, but one question:
-> >>>> arm64 remove the code in switch_mm:
-> >>>>    cpumask_clear_cpu(cpu, mm_cpumask(prev));
-> >>>>    cpumask_set_cpu(cpu, mm_cpumask(next));
-> >>>>
-> >>>> Why? Although arm64 cache operations could affect all harts with CTC
-> >>>> method of interconnect, I think we should keep these code for
-> >>>> primitive integrity in linux. Because cpu_bitmap is in mm_struct
-> >>>> instead of mm->context.
-> >>> We didn't have a use for this in the arm64 code, so no point in
-> >>> maintaining the mm_cpumask. On some arm32 systems (ARMv6) with no
-> >>> hardware broadcast of some TLB/cache operations, we use it to track
-> >>> where the task has run to issue IPI for TLB invalidation or some
-> >>> deferred I-cache invalidation.
-> >> The operation of set/clear mm_cpumask was removed in arm64 compared to
-> >> arm32. It seems no side effect on current arm64 system, but from
-> >> software meaning it's wrong.
-> >> I think we should keep mm_cpumask just like arm32.
-> > It was a while ago now, but I remember the atomic update of the mm_cpumask
-> > being quite expensive when I was profiling this stuff, so I removed it
-> > because we don't need it for arm64 (at least, it doesn't allow us to
-> > optimise our shootdowns in practice).
+> This series contains various improvements (at least in my mind) and
+> fixes that I made to tc358767 while working with the code of the
+> driver. Hopefuly each patch is self explanatory.
 > 
-> I think mm_cpumask can be used for filtering the cpus that there are TBL 
-> entries on.
+> Feedback is welcome!
 
-I'm aware that you want to use IPIs for broadcasting TLB invalidation
-but that is only tangentially related to this thread, which is about the
-current ASID algorithm and the need to update mm_cpumask today.
+I think this looks fine, so:
 
-Please don't conflate the two threads; I already made my position reasonably
-clear:
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-https://lore.kernel.org/linux-arm-kernel/20190617170328.GJ30800@fuggles.cambridge.arm.com/
+Unfortunately I don't have my DP equipment for the time being, so I'm 
+not able to test this on our board. I'm fine with merging, as the 
+previous series worked ok after reverting the single regression (which 
+is fixed in this series).
 
-I will follow-up with another reply there.
+  Tomi
 
-Will
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
