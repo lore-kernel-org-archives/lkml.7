@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138DFC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0120C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4D8216E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F82216E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FnmR6S3U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDgKIYFv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfF0DZi (ORCPT
+        id S1726969AbfF0DZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 23:25:38 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45750 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfF0DZg (ORCPT
+        Wed, 26 Jun 2019 23:25:45 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36082 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfF0DZh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 23:25:36 -0400
-Received: by mail-oi1-f194.google.com with SMTP id m206so461604oib.12
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 20:25:36 -0700 (PDT)
+        Wed, 26 Jun 2019 23:25:37 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r6so788040oti.3;
+        Wed, 26 Jun 2019 20:25:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DspknQs36A/5uQZX53aWrrdTwDH7n/43l0dEQF/NX0g=;
-        b=FnmR6S3UdvxSAXrt4YakXY+vA/wkVhU4l9+b1MXMa7h47IiKVdslEShfoIOjhVAu+A
-         CHE+plwYBAfdLkY7mCGM2sBx+LHdtyh3KQNMcT1egYV6b3/82KUnTlGJIm9IcfZlGrvE
-         aYCkPHKdxlFQGh5+5WTbawbIFIJHDRsskbAp6a3oQn1XcLXFfDDAdcZXF3kIA9xExHUD
-         uW4jwOgqNAC5JiKaqpKFNetlim8XkuaYVoStRsdp9W9uFkc76yRwEJ+5UrYEF9VB67jy
-         YpT8T+29gg6/tS9FTzjwY9s/5T8VjnjN6HxxkfONF+7Hvs5DNjJdgS0MRRlk0Z3uH1Qc
-         IG9A==
+        bh=hc7mop8BgLXIBrsAE7S1CcsKtIxDEdShT9TGYrFuBVM=;
+        b=kDgKIYFvpCDd06zbFNhGDKpCEVgTWTHJedUq3olGtuZiBWkkL/5WYAk83Z5x0qurfn
+         ZoYhXj7MnMeA5n4IXjc4NT8TSzahy7sjeb/mSm9jMSgtFdiz6bEo7SUfnVJ7joymz6wr
+         axNSjCZB9zGaUh6CV1BwRDiMduet4in0XO+l+088UM4cN8pRdP4AlYl++CDSM0Wr4AfA
+         ++QB73ZAeYCfNiOaphzN5/9UGI3pq46goPKSWmwieRXbsk7mj4tNvnEMBvfazH1N85nh
+         etWSYB14oxkRmyvGx/nBhe7DgmUn8zMw19do81yz/KU/VIUWO6SXSn3p/WZA7dtA9MZU
+         rSpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DspknQs36A/5uQZX53aWrrdTwDH7n/43l0dEQF/NX0g=;
-        b=WsdDKHCt2z5C2fSRhie82IkTn0AbF08ribERrCe/y8moIL7qtMKNbBU+jN83tyD6Oa
-         kQoL9CGJSZbn0wkY8VCY2GcIlO5RjMuoVkpnDR4TdKVE1rqd6oHyYQgp82/4wxfDvY/Y
-         OxGtdkcA9ZbJJGQ/uuAeSoL+WOMssqPs4RAm+g/XMcTld3OHjhRrIOR1yd2j7ZuHFH2v
-         djIq1p9z0BXuMPXDrpaM7bH9qnWgDQCO+xvHPZjreYX3iBhyrofPozrEcL0jgtcpX0+h
-         hKuuFW/1jDvo0V2EWTjFDZNJHDof8YXh1cdkdetBI5ugvxKGRDkIcZyZX7enveutaePu
-         Hnqw==
-X-Gm-Message-State: APjAAAU10mAz/Oc8WHS+MQC/wWrJ0ywmkRRE5m3lCnD25v1MiQAEe4wd
-        +qGxrNwnTTw5x8E1Dt7UGDY=
-X-Google-Smtp-Source: APXvYqy3hg34R0jgTYAW4T1SMDgeAtq+nnmQVEoxqu2nLKH+jbuWe+E3KiBTJky9/6oXvYkKTVdf0Q==
-X-Received: by 2002:a54:4f95:: with SMTP id g21mr303543oiy.23.1561605935712;
-        Wed, 26 Jun 2019 20:25:35 -0700 (PDT)
+        bh=hc7mop8BgLXIBrsAE7S1CcsKtIxDEdShT9TGYrFuBVM=;
+        b=JYFgic/iocn1F21P7OPYNxT81LTcvX/erm0ZCLn1c0DyTvmB8qjWG9m6MVZfULU+eF
+         Yf/0pYJfvYoKEG0fzIdQ/Lw0o4NLhmj1q71YFZo6ApOkbhZX7o3tXd2YRIFp2bdq0W7x
+         1JYsb1aSsDAc9bbzIpFfESvprZHPEkJH5ZCNxZrpMp6FeU0cIWfLsrNyTPQYlwyT/g3T
+         oxMNzS6MDKnxa0Ycb5eTHnzu+ek+Srt1EgDPCF59ldaFpmgRCzYDHeMp7G6XJIG9oSqM
+         8fKBC15T9jgVrcDwEj1jH9blyXSPCF4xe0EGBa+tTz5yhRIgNRJagShhmRRquFa66q4A
+         qDuw==
+X-Gm-Message-State: APjAAAW1mddOUfq8xFYTSJbSJqortGT6ae5KKR/PlOeCTQjpmsCCKYv5
+        AfIzBvqaOTFaPiWST9f9Fss=
+X-Google-Smtp-Source: APXvYqyUkf1iuH/PhqzkOu7tkOamu6aAFWoqbQOhA5ot8fzzL2lRFkE9lDvw+U7oYWHLZ27WZXj8Qw==
+X-Received: by 2002:a9d:5e11:: with SMTP id d17mr1529107oti.50.1561605936459;
+        Wed, 26 Jun 2019 20:25:36 -0700 (PDT)
 Received: from rYz3n.attlocal.net ([2600:1700:210:3790::48])
-        by smtp.googlemail.com with ESMTPSA id y184sm417647oie.33.2019.06.26.20.25.34
+        by smtp.googlemail.com with ESMTPSA id y184sm417647oie.33.2019.06.26.20.25.35
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 20:25:35 -0700 (PDT)
+        Wed, 26 Jun 2019 20:25:36 -0700 (PDT)
 From:   Jiunn Chang <c0d1n61at3@gmail.com>
 To:     skhan@linuxfoundation.org
 Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        oded.gabbay@gmail.com
-Subject: [Linux-kernel-mentees][PATCH v2] drm/amdkfd: Fix undefined behavior in bit shift
-Date:   Wed, 26 Jun 2019 22:25:31 -0500
-Message-Id: <20190627032532.18374-3-c0d1n61at3@gmail.com>
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        johannes@sipsolutions.net
+Subject: [Linux-kernel-mentees][PATCH v2] nl80211: Fix undefined behavior in bit shift
+Date:   Wed, 26 Jun 2019 22:25:32 -0500
+Message-Id: <20190627032532.18374-4-c0d1n61at3@gmail.com>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190627010137.5612-3-c0d1n61at3@gmail.com>
-References: <20190627010137.5612-3-c0d1n61at3@gmail.com>
+In-Reply-To: <20190627010137.5612-4-c0d1n61at3@gmail.com>
+References: <20190627010137.5612-4-c0d1n61at3@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,22 +84,22 @@ Changes included in v2:
 
 Signed-off-by: Jiunn Chang <c0d1n61at3@gmail.com>
 ---
- include/uapi/linux/kfd_ioctl.h | 2 +-
+ include/uapi/linux/nl80211.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/kfd_ioctl.h b/include/uapi/linux/kfd_ioctl.h
-index dc067ed0b72d..ae5669272303 100644
---- a/include/uapi/linux/kfd_ioctl.h
-+++ b/include/uapi/linux/kfd_ioctl.h
-@@ -339,7 +339,7 @@ struct kfd_ioctl_acquire_vm_args {
- #define KFD_IOC_ALLOC_MEM_FLAGS_USERPTR		(1 << 2)
- #define KFD_IOC_ALLOC_MEM_FLAGS_DOORBELL	(1 << 3)
- /* Allocation flags: attributes/access options */
--#define KFD_IOC_ALLOC_MEM_FLAGS_WRITABLE	(1 << 31)
-+#define KFD_IOC_ALLOC_MEM_FLAGS_WRITABLE	(1U << 31)
- #define KFD_IOC_ALLOC_MEM_FLAGS_EXECUTABLE	(1 << 30)
- #define KFD_IOC_ALLOC_MEM_FLAGS_PUBLIC		(1 << 29)
- #define KFD_IOC_ALLOC_MEM_FLAGS_NO_SUBSTITUTE	(1 << 28)
+diff --git a/include/uapi/linux/nl80211.h b/include/uapi/linux/nl80211.h
+index 6f09d1500960..fa7ebbc6ff27 100644
+--- a/include/uapi/linux/nl80211.h
++++ b/include/uapi/linux/nl80211.h
+@@ -5314,7 +5314,7 @@ enum nl80211_feature_flags {
+ 	NL80211_FEATURE_TDLS_CHANNEL_SWITCH		= 1 << 28,
+ 	NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR		= 1 << 29,
+ 	NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR	= 1 << 30,
+-	NL80211_FEATURE_ND_RANDOM_MAC_ADDR		= 1 << 31,
++	NL80211_FEATURE_ND_RANDOM_MAC_ADDR		= 1U << 31,
+ };
+ 
+ /**
 -- 
 2.22.0
 
