@@ -2,93 +2,120 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F776C004E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A6DC004E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74CE02075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:37:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkX3/j7e"
+	by mail.kernel.org (Postfix) with ESMTP id 0E8D12075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfF0Uha (ORCPT
+        id S1726563AbfF0UiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 16:37:30 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:39061 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfF0Uh3 (ORCPT
+        Thu, 27 Jun 2019 16:38:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59801 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfF0UiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 16:37:29 -0400
-Received: by mail-yb1-f195.google.com with SMTP id k4so2259736ybo.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 13:37:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9nVOtlju8csIcNRRNwvhU29isQ3Rt4IPNLGyKSCvv90=;
-        b=gkX3/j7eA/9Dj6rOAXXvFLWl4m4E+rlkxxmn+g/fKNORNs1hO6b8z1g8OwGu/JGEfn
-         buOFuAB4ltgph5dqxxu2zCyygo9C3C1bhWaALqEyy8xYxfRQNeyhuGVEeopJSXCGMNDw
-         7f4ld/9jEGn1F3TSYnIdlNypUjmtsk2V/yBzgcGX9htotPephx45YpG5Q5gwIxSbl98V
-         kAzDXC8tariAgUcmYO2HvzQ1UKNLmSwHqdK26R++vTbGlUK0NWDBpMG+eTQ07E/8+0QR
-         0FNU8m3XuvAkTeL4NCOZkcW06+0L4mrrtFU8dGufBw7VzNqIEFaFMxG0gpmSSNbA+0Ax
-         sOyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9nVOtlju8csIcNRRNwvhU29isQ3Rt4IPNLGyKSCvv90=;
-        b=tSemAe2YAXborojtyigHSiUPSQ9ENSZ99+/aZKPybg7f5QUCJJG0hfLrQIR/UP7yV4
-         5PXzRWNEXvHVwbSqh9Z4OnOtaKlRj08p8blwQ9n1ktj5T/SZ9n03RGCZTQ1dC0irE8M5
-         V3+Y89jUfiokwj7/AOv29QgSRiPuPnL0Bnq9D2dK7TkdfSr9c7d7laDc59mtMRZ/Wyfx
-         9IuFhPRKhPOTglbsu2k72Yfbt1Wl20dHz/bfxVW5S/tIpVBA+dooSK/+BMf9yJaCJbVQ
-         NInqixY8JpKIZcRzyiRzwe/CIXge/UOB2X4koPRxBxsgswSYUNH0ylxqlL6RnNRb3erh
-         wSiA==
-X-Gm-Message-State: APjAAAWG009ZX8/IqYZVD3zM6sE44CWYxzPcJFf2sDBGeM8PpkkcJFy2
-        F+ed/TUG3RJlDzaVXMClverSC1ORsFeI0Vd9uZ8=
-X-Google-Smtp-Source: APXvYqxnZwKL8uAKFwqU1Al3NryHFgkeA2TGfrZeraalix6k1RfRY5XylEBxf580X2ZkhSDVbbQOmYYNQD9ZdNWnuKc=
-X-Received: by 2002:a25:7397:: with SMTP id o145mr218166ybc.329.1561667848946;
- Thu, 27 Jun 2019 13:37:28 -0700 (PDT)
+        Thu, 27 Jun 2019 16:38:23 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgb9r-0007t0-7w; Thu, 27 Jun 2019 22:38:15 +0200
+Date:   Thu, 27 Jun 2019 22:38:13 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Alan Cox <alan.cox@intel.com>, Tony Luck <tony.luck@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jordan Borgner <mail@jordan-borgner.de>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Mohammad Etemadi <mohammad.etemadi@intel.com>,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Feiner <pfeiner@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH 1/2] x86/cpu/intel: Clear cache self-snoop capability in
+ CPUs with known errata
+In-Reply-To: <1561660997-21562-2-git-send-email-ricardo.neri-calderon@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1906272231060.32342@nanos.tec.linutronix.de>
+References: <1561660997-21562-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1561660997-21562-2-git-send-email-ricardo.neri-calderon@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190627070052.8647-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190627070052.8647-1-yamada.masahiro@socionext.com>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Thu, 27 Jun 2019 13:37:17 -0700
-Message-ID: <CAMo8BfJe6va+=oB_VWG5F0xWFQv+Qbx5DXdjJbO2XLNh5rs3=g@mail.gmail.com>
-Subject: Re: [PATCH] xtensa: remove unneeded BITS_PER_LONG define
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Chris Zankel <chris@zankel.net>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
+Ricardo,
 
-On Thu, Jun 27, 2019 at 12:01 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Xtensa does not define CONFIG_64BIT. The generic definition in
-> include/asm-generic/bitsperlong.h should work.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
->  arch/xtensa/include/asm/types.h | 8 --------
->  1 file changed, 8 deletions(-)
+On Thu, 27 Jun 2019, Ricardo Neri wrote:
+>  
+> +/*
+> + * Processors which have self-snooping capability can handle conflicting
+> + * memory type across CPUs by snooping its own cache. However, there exists
+> + * CPU models in which having conflicting memory types still leads to
+> + * unpredictable behavior, machine check errors, or hangs. Clear this feature
+> + * to prevent its use. For instance, the algorithm to program the Memory Type
+> + * Region Registers and the Page Attribute Table MSR can skip expensive cache
+> + * flushes if self-snooping is supported.
 
-After this change the file arch/xtensa/include/asm/types.h is effectively
-empty, only including uapi/asm/types.h. Maybe it should be dropped
-altogether?
+I appreciate informative comments, but this is the part which disables a
+feature on errata inflicted CPUs. So the whole information about what
+self-snooping helps with is not that interesting here. It's broken, we
+disable it and be done with it.
 
--- 
-Thanks.
--- Max
+> + */
+> +static void check_memory_type_self_snoop_errata(struct cpuinfo_x86 *c)
+> +{
+> +	switch (c->x86_model) {
+> +	case INTEL_FAM6_CORE_YONAH:
+> +	case INTEL_FAM6_CORE2_MEROM:
+> +	case INTEL_FAM6_CORE2_MEROM_L:
+> +	case INTEL_FAM6_CORE2_PENRYN:
+> +	case INTEL_FAM6_CORE2_DUNNINGTON:
+> +	case INTEL_FAM6_NEHALEM:
+> +	case INTEL_FAM6_NEHALEM_G:
+> +	case INTEL_FAM6_NEHALEM_EP:
+> +	case INTEL_FAM6_NEHALEM_EX:
+> +	case INTEL_FAM6_WESTMERE:
+> +	case INTEL_FAM6_WESTMERE_EP:
+> +	case INTEL_FAM6_SANDYBRIDGE:
+> +		setup_clear_cpu_cap(X86_FEATURE_SELFSNOOP);
+> +	}
+> +}
+> +
+
+But looking at the actual interesting part of the 2nd patch:
+
+> @@ -743,7 +743,9 @@ static void prepare_set(void) __acquires(set_atomicity_lock)
+>        /* Enter the no-fill (CD=1, NW=0) cache mode and flush caches. */
+>        cr0 = read_cr0() | X86_CR0_CD;
+>        write_cr0(cr0);
+> -       wbinvd();
+> +
+> +       if (!static_cpu_has(X86_FEATURE_SELFSNOOP))
+> +               wbinvd();
+
+This part lacks any form of explanation. So I'd rather have the comment
+about why we can avoid the wbindv() here. I''d surely never would look at
+that errata handling function to get that information.
+
+Other than that detail, the patches are well done!
+
+Thanks,
+
+	tglx
