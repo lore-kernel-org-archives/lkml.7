@@ -2,104 +2,195 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8063DC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62394C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E216208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE282083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:29:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="TzU7ruEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfF0L1m convert rfc822-to-8bit (ORCPT
+        id S1726589AbfF0L3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 07:27:42 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27494 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726860AbfF0L1l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:27:41 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RBMp5u033753
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 07:27:39 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tct99yb0m-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 07:27:39 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Thu, 27 Jun 2019 12:27:36 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Jun 2019 12:27:33 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RBRWRZ47120586
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 11:27:33 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D886CAE057;
-        Thu, 27 Jun 2019 11:27:32 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7048FAE053;
-        Thu, 27 Jun 2019 11:27:32 +0000 (GMT)
-Received: from localhost (unknown [9.85.73.27])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Jun 2019 11:27:32 +0000 (GMT)
-Date:   Thu, 27 Jun 2019 16:57:31 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 2/7] x86/ftrace: Fix use of flags in
- ftrace_replace_code()
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <cover.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-        <abc56ad177f370ec423edcfc538d35b418c1808e.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-In-Reply-To: <abc56ad177f370ec423edcfc538d35b418c1808e.1561634177.git.naveen.n.rao@linux.v
-        net.ibm.com>
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+        Thu, 27 Jun 2019 07:29:51 -0400
+Received: from mail-eopbgr710139.outbound.protection.outlook.com ([40.107.71.139]:56850
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726429AbfF0L3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 07:29:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector1-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QDWKXlpxu98HCogElK4jEUKX/2hU/aZhK5XO2ZF0fFI=;
+ b=TzU7ruEtKE/Omz0K6G7YqA18Dw8stdbR2F0aIUKItNRrwnHabW6VXhRJc/htaV1RY8X5HSsSdZjZm2EcifUQ07qQQ5u7UYz/oKH47N6iBFA+yHqP+PSkuWuLYf+95Ty4lbuufm0nGhVD5+x4dOHtZJ2OvDSmPgzwSo/r8bvd554=
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com (20.179.22.213) by
+ MN2PR04MB6110.namprd04.prod.outlook.com (20.178.248.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.17; Thu, 27 Jun 2019 11:29:47 +0000
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::397b:3922:4027:f635]) by MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::397b:3922:4027:f635%3]) with mapi id 15.20.2032.016; Thu, 27 Jun 2019
+ 11:29:47 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Andrzej Hajda <a.hajda@samsung.com>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sjoerd.simons@collabora.co.uk" <sjoerd.simons@collabora.co.uk>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v1] Adjust analogix chip driver location
+Thread-Topic: [PATCH v1] Adjust analogix chip driver location
+Thread-Index: AQHVLNugE9/A6NeXyUKRWvLnNCDN2w==
+Date:   Thu, 27 Jun 2019 11:29:47 +0000
+Message-ID: <20190627112939.GA4832@xin-VirtualBox>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK0PR01CA0056.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::20) To MN2PR04MB5886.namprd04.prod.outlook.com
+ (2603:10b6:208:a3::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [114.247.245.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e06ecaa8-4e44-4947-5b6a-08d6faf2c2a9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR04MB6110;
+x-ms-traffictypediagnostic: MN2PR04MB6110:
+x-microsoft-antispam-prvs: <MN2PR04MB61106D0F54D9B3B1524CD31EC7FD0@MN2PR04MB6110.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:177;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(396003)(366004)(39840400004)(376002)(346002)(189003)(199004)(54906003)(110136005)(7736002)(316002)(25786009)(2906002)(476003)(53936002)(256004)(52116002)(486006)(6486002)(6436002)(99286004)(305945005)(4326008)(6512007)(9686003)(86362001)(14454004)(26005)(8676002)(66066001)(1076003)(107886003)(8936002)(81166006)(81156014)(33716001)(33656002)(66476007)(66556008)(64756008)(66446008)(66946007)(73956011)(5660300002)(71190400001)(186003)(71200400001)(2501003)(478600001)(6506007)(102836004)(6116002)(3846002)(386003)(68736007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6110;H:MN2PR04MB5886.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6LDYImq0SYySngHQljdx99KpHYWHZpZLYPnjGWiAQdmaRZG7MSn/Z/5vFdccvS6F8gnyFBElK8KZIZ7dRgVKdtsGEdOH8N9HZTpRzvVQ2zhPxoY3Wfu5MMsMEwB6IzYDegzjunjcKfo0YwaXM/hFlvbiNSVn7cuaU/RfuvAk4ACEUMH3oIuaj6GEaJOOwZRsjYRUCIlpEOuLbDxcSHows1gLeHmP83RskLEWW7va1CudoTWxB/hnH5ZOal+A9YgEUCQjp3a02zIpkpHdicOXfzIitU2ANPxX0OeIrH18YbvojNRzoq1dR9AzFcqmtt7ZYGJoAitIHunAhD62UqCVHvyCkS0xe1WPTw4XSJLZW290lJ0dxNtuK8WaBBK+2YbKob7cLcYSA+jI1R+43FgVnBh3bbJeLTuB56w2CpCSzyA=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <34B723CC14C47F4FB2A9966795AFA4EE@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19062711-0028-0000-0000-0000037E0DFC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062711-0029-0000-0000-0000243E37C5
-Message-Id: <1561634775.r2ibb8ft78.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=343 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906270133
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e06ecaa8-4e44-4947-5b6a-08d6faf2c2a9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 11:29:47.6990
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xji@analogixsemi.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Naveen N. Rao wrote:
-> In commit a0572f687fb3c ("ftrace: Allow ftrace_replace_code() to be
-> schedulable), the generic ftrace_replace_code() function was modified to
-> accept a flags argument in place of a single 'enable' flag. However, the
-> x86 version of this function was not updated. Fix the same.
-> 
-> Fixes: a0572f687fb3c ("ftrace: Allow ftrace_replace_code() to be schedulable")
-> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> ---
->  arch/x86/kernel/ftrace.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+Move analogix chip ANX78XX bridge driver into "analogix" directory.
 
-If the rest of this series is ok, and if Ingo and Steven are ok to have 
-this series go through the powerpc tree, then I can re-post this 
-particular patch for x86 after -rc1.
+Signed-off-by: Xin Ji <xji@analogixsemi.com>
+---
+ drivers/gpu/drm/bridge/Kconfig                           | 10 ----------
+ drivers/gpu/drm/bridge/Makefile                          |  3 +--
+ drivers/gpu/drm/bridge/analogix/Kconfig                  | 10 ++++++++++
+ drivers/gpu/drm/bridge/analogix/Makefile                 |  2 ++
+ drivers/gpu/drm/bridge/{ =3D> analogix}/analogix-anx78xx.c |  0
+ drivers/gpu/drm/bridge/{ =3D> analogix}/analogix-anx78xx.h |  0
+ 6 files changed, 13 insertions(+), 12 deletions(-)
+ rename drivers/gpu/drm/bridge/{ =3D> analogix}/analogix-anx78xx.c (100%)
+ rename drivers/gpu/drm/bridge/{ =3D> analogix}/analogix-anx78xx.h (100%)
 
-Thanks,
-Naveen
-
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfi=
+g
+index ee77746..862789b 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -16,16 +16,6 @@ config DRM_PANEL_BRIDGE
+ menu "Display Interface Bridges"
+ 	depends on DRM && DRM_BRIDGE
+=20
+-config DRM_ANALOGIX_ANX78XX
+-	tristate "Analogix ANX78XX bridge"
+-	select DRM_KMS_HELPER
+-	select REGMAP_I2C
+-	---help---
+-	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
+-	  designed for portable devices. The ANX78XX transforms
+-	  the HDMI output of an application processor to MyDP
+-	  or DisplayPort.
+-
+ config DRM_CDNS_DSI
+ 	tristate "Cadence DPI/DSI bridge"
+ 	select DRM_KMS_HELPER
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makef=
+ile
+index 4934fcf..02cb4cd 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -1,5 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) +=3D analogix-anx78xx.o
+ obj-$(CONFIG_DRM_CDNS_DSI) +=3D cdns-dsi.o
+ obj-$(CONFIG_DRM_DUMB_VGA_DAC) +=3D dumb-vga-dac.o
+ obj-$(CONFIG_DRM_LVDS_ENCODER) +=3D lvds-encoder.o
+@@ -12,8 +11,8 @@ obj-$(CONFIG_DRM_SII9234) +=3D sii9234.o
+ obj-$(CONFIG_DRM_THINE_THC63LVD1024) +=3D thc63lvd1024.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358764) +=3D tc358764.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358767) +=3D tc358767.o
+-obj-$(CONFIG_DRM_ANALOGIX_DP) +=3D analogix/
+ obj-$(CONFIG_DRM_I2C_ADV7511) +=3D adv7511/
+ obj-$(CONFIG_DRM_TI_SN65DSI86) +=3D ti-sn65dsi86.o
+ obj-$(CONFIG_DRM_TI_TFP410) +=3D ti-tfp410.o
+ obj-y +=3D synopsys/
++obj-y +=3D analogix/
+diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/brid=
+ge/analogix/Kconfig
+index e930ff9..dfe84f5 100644
+--- a/drivers/gpu/drm/bridge/analogix/Kconfig
++++ b/drivers/gpu/drm/bridge/analogix/Kconfig
+@@ -1,4 +1,14 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++config DRM_ANALOGIX_ANX78XX
++	tristate "Analogix ANX78XX bridge"
++	select DRM_KMS_HELPER
++	select REGMAP_I2C
++	---help---
++	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
++	  designed for portable devices. The ANX78XX transforms
++	  the HDMI output of an application processor to MyDP
++	  or DisplayPort.
++
+ config DRM_ANALOGIX_DP
+ 	tristate
+ 	depends on DRM
+diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bri=
+dge/analogix/Makefile
+index fdbf3fd..d4c54ac 100644
+--- a/drivers/gpu/drm/bridge/analogix/Makefile
++++ b/drivers/gpu/drm/bridge/analogix/Makefile
+@@ -1,3 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) +=3D analogix-anx78xx.o
++
+ analogix_dp-objs :=3D analogix_dp_core.o analogix_dp_reg.o
+ obj-$(CONFIG_DRM_ANALOGIX_DP) +=3D analogix_dp.o
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/br=
+idge/analogix/analogix-anx78xx.c
+similarity index 100%
+rename from drivers/gpu/drm/bridge/analogix-anx78xx.c
+rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/br=
+idge/analogix/analogix-anx78xx.h
+similarity index 100%
+rename from drivers/gpu/drm/bridge/analogix-anx78xx.h
+rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+--=20
+2.7.4
 
