@@ -4,62 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1248EC48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C3EC48BE7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE822208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F2E208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="kOhLm2YY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ApRrQeT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfF0Tzu (ORCPT
+        id S1726762AbfF0Tzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 15:55:50 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:23420 "EHLO
+        Thu, 27 Jun 2019 15:55:55 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:23412 "EHLO
         esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfF0Tz1 (ORCPT
+        with ESMTP id S1726426AbfF0Tz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Jun 2019 15:55:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1561665327; x=1593201327;
+  t=1561665325; x=1593201325;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=m7LM1Yn30CHGyuOfV/dUHRcNlm8MmSeMc/SCvDGd79w=;
-  b=kOhLm2YYedbcQQuLXwRONI3wcYawFo4DTW1nb8yprjr6P7UvS6kZzisQ
-   lJszPMWt6GtnfPBf5gtjBlbd2r4OIOPxBcsF3ty2it0n+bxrjbVOcA0wA
-   HsyQySiIhLzmdZIP0WR7IA7BhMjlXdqjKiOAMIF2gbGzAKznbaPDek8XO
-   8/hrB40Nm0lhVVNxfK0Z6Il12iMK/vcCV+Z0dDNK1x+SnA6X5KsLzDLkY
-   /EyldrEww9g6+XJP+5nMkOz3Qyb8oEL1b/mZ4QCZSNbkFwPHHlRyMsYvl
-   zpBGaEagCcq65ZlX7Fpvx+zuWpDOJAG7K0uChh9L8wuriTvoFTMDcUZPz
-   Q==;
+  bh=R4jfjZMxUWSzFwisiuVjBFLXxDAnXEO77dQqxAyI1wE=;
+  b=ApRrQeT5vkHaNV85HqQPY2zXfXYziGPf+zX8Gzv1Wn3JuIFpEzkpzDyt
+   KLKDYN6bXLIJeIhVduXnmpPuBo8lOshu/9oSoWSUC/1UX0+Qwe1QlAXFu
+   KDL255bFDnLn0Cx4p4pGueZiVPH0VusFbg+riW/K3YJdczEhz4qaR8T7y
+   7dhJze9I/JHHHgmrTjdzILbuJvXkksHbNvIIvekMFdwq3NZ98/8i2Iu1I
+   PCkySWk0TNP3rf2veFwD0CZ/jfJoCl+1gt1wXVX4egEG9PxC1Im/j53jq
+   A7dvTiaSAXPYxcnpzAcSPXBcUZemDDKLFP/74lAQ/SS44PU+mZv4OsGsJ
+   g==;
 X-IronPort-AV: E=Sophos;i="5.63,424,1557158400"; 
-   d="scan'208";a="112927448"
+   d="scan'208";a="112927434"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Jun 2019 03:55:26 +0800
-IronPort-SDR: 80C763LVYadaX9FIubogLoWZVOOUXIeHS1qKw2WrvCudwrnDmUMwe2gtH7ruJYAz4qLsLFhecy
- GDJUYcsTx3rra4+q3FTw65CRXS6hXjP0jOQ7iRwTHMDKmHl6hOObOma51ad51yCJNiE1mNobJM
- d9pkU6jsjUwa7u+4PhG3IVTMYMamySFMGvXBEWqvdYpK/HjX2goX+4TtJnxdpsAiPbYRaK7+X2
- 1+JT/T4zvL9llgd8tKP40dJTxD8iOk8pw4R08vJkFBoaELxxbEdWM1uiAHkQ09u0cRNFL6tCWz
- WJK7GdFHqvJO+57qwxgmSa4G
+  by ob1.hgst.iphmx.com with ESMTP; 28 Jun 2019 03:55:24 +0800
+IronPort-SDR: c3iIjetTeO8V+oB6XyRueLgF5WP/2xbKuT3StzNHVinKFVOFmt1MtwDjZaOHuLNAwHvin8fGP8
+ b62Vqaf+8v1NVijJpf5MA1oCueYFpno6VX3c778RA5zzu07gLvc8R1+BO9o2RgLM2iUp5wMxIe
+ zKXkG3fOt9qVbqaXvQqVIqMmaZVEOWGEgr3i46mE+lgVBdEuYbKjND7O4wngmks7aGPzBP/Y2C
+ Orfb6P8CA56W+Vj3eXpQGPPBLYnyy+4OVp2lScYowsUS4MMu8tiqSALJ8zYphYiwlOMpVcblr5
+ wPb5AUsA7Vi+6FBu3lW7foPh
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP; 27 Jun 2019 12:54:39 -0700
-IronPort-SDR: 4GoDamj7+XgyAJmdeE9KYznaHJBKqx0eZM/gumbXu9GISzR6wl+Al12ZO7VEaYZ9o17iRK85NI
- snHWMPUO3jXOxsfp9ZrwF0e/3XkAJaMcpG6hWNjupSKxOW9YFhdQc+KXaJnbOw2rDKaE2W2nE/
- ZjKCrMByiMMN1ru8MahcyfDkerbKQnSBdtfTTh5Cr10cHkA/s8uOjMeZFT9NlpjJhDhRP83ww0
- sDkRiZOStnKyqft5diKb3Tx4JsSSyxqcnei4vNkzOlVfrPtWM0XkJJhqgfqZp3xy28KIqs8A0H
- SS4=
+  by uls-op-cesaep02.wdc.com with ESMTP; 27 Jun 2019 12:54:38 -0700
+IronPort-SDR: zrZX6RAbOPoSs5QMZIqfjIVfLPRAfo+phS5jzwXRWAwg0bCtmLWKKOjf5WM/+ysKs88/8jV8D8
+ GgQ3+6aktI6mnATTDgLps2zNlvwrwikyl1o+hnJ9W+fsGZ8kFR5LOtP7IAZsespf9vIuLZjiYa
+ WFcPoI5TYkJVnyLYWLB8aMxqzD0vx1PP72A8kIWdiQUPlJGZpouXJXliay5wvI/nDfLD2olu4+
+ NeVibRmlcwz/JPb2fSEFN+IVh2bBKk6khcBif0vGeMBP6FlKZDMYZtGeJHolZ65m6FEoLDE2Ke
+ Vq0=
 Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip01.wdc.com with ESMTP; 27 Jun 2019 12:55:27 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 27 Jun 2019 12:55:25 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Anup Patel <anup@brainfault.org>,
+        Atish Patra <atish.patra@wdc.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         "David S. Miller" <davem@davemloft.net>,
         devicetree@vger.kernel.org,
@@ -82,9 +82,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v8 4/7] arm: Use common cpu_topology structure and functions.
-Date:   Thu, 27 Jun 2019 12:52:59 -0700
-Message-Id: <20190627195302.28300-5-atish.patra@wdc.com>
+Subject: [PATCH v8 1/7] Documentation: DT: arm: add support for sockets defining package boundaries
+Date:   Thu, 27 Jun 2019 12:52:56 -0700
+Message-Id: <20190627195302.28300-2-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190627195302.28300-1-atish.patra@wdc.com>
 References: <20190627195302.28300-1-atish.patra@wdc.com>
@@ -95,220 +95,282 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, ARM32 and ARM64 uses different data structures to represent
-their cpu topologies. Since, we are moving the ARM64 topology to common
-code to be used by other architectures, we can reuse that for ARM32 as
-well.
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-Take this opprtunity to remove the redundant functions from ARM32 and
-reuse the common code instead.
+The current ARM DT topology description provides the operating system
+with a topological view of the system that is based on leaf nodes
+representing either cores or threads (in an SMT system) and a
+hierarchical set of cluster nodes that creates a hierarchical topology
+view of how those cores and threads are grouped.
 
-To: Russell King <linux@armlinux.org.uk>
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Tested-by: Sudeep Holla <sudeep.holla@arm.com> (on TC2)
-Reviewed-by : Sudeep Holla <sudeep.holla@arm.com>
+However this hierarchical representation of clusters does not allow to
+describe what topology level actually represents the physical package or
+the socket boundary, which is a key piece of information to be used by
+an operating system to optimize resource allocation and scheduling.
+
+Lets add a new "socket" node type in the cpu-map node to describe the
+same.
+
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/include/asm/topology.h | 20 -----------
- arch/arm/kernel/topology.c      | 60 ++++-----------------------------
- drivers/base/arch_topology.c    |  4 ++-
- include/linux/arch_topology.h   |  6 ++--
- 4 files changed, 11 insertions(+), 79 deletions(-)
+ .../devicetree/bindings/arm/topology.txt      | 172 ++++++++++--------
+ 1 file changed, 99 insertions(+), 73 deletions(-)
 
-diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
-index 2a786f54d8b8..8a0fae94d45e 100644
---- a/arch/arm/include/asm/topology.h
-+++ b/arch/arm/include/asm/topology.h
-@@ -5,26 +5,6 @@
- #ifdef CONFIG_ARM_CPU_TOPOLOGY
+diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
+index b0d80c0fb265..3b8febb46dad 100644
+--- a/Documentation/devicetree/bindings/arm/topology.txt
++++ b/Documentation/devicetree/bindings/arm/topology.txt
+@@ -9,6 +9,7 @@ ARM topology binding description
+ In an ARM system, the hierarchy of CPUs is defined through three entities that
+ are used to describe the layout of physical CPUs in the system:
  
- #include <linux/cpumask.h>
--
--struct cputopo_arm {
--	int thread_id;
--	int core_id;
--	int socket_id;
--	cpumask_t thread_sibling;
--	cpumask_t core_sibling;
--};
--
--extern struct cputopo_arm cpu_topology[NR_CPUS];
--
--#define topology_physical_package_id(cpu)	(cpu_topology[cpu].socket_id)
--#define topology_core_id(cpu)		(cpu_topology[cpu].core_id)
--#define topology_core_cpumask(cpu)	(&cpu_topology[cpu].core_sibling)
--#define topology_sibling_cpumask(cpu)	(&cpu_topology[cpu].thread_sibling)
--
--void init_cpu_topology(void);
--void store_cpu_topology(unsigned int cpuid);
--const struct cpumask *cpu_coregroup_mask(int cpu);
--
- #include <linux/arch_topology.h>
++- socket
+ - cluster
+ - core
+ - thread
+@@ -63,21 +64,23 @@ nodes are listed.
  
- /* Replace task scheduler's default frequency-invariant accounting */
-diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-index 60e375ce1ab2..238f1da0219c 100644
---- a/arch/arm/kernel/topology.c
-+++ b/arch/arm/kernel/topology.c
-@@ -177,17 +177,6 @@ static inline void parse_dt_topology(void) {}
- static inline void update_cpu_capacity(unsigned int cpuid) {}
- #endif
+ 	The cpu-map node's child nodes can be:
  
-- /*
-- * cpu topology table
-- */
--struct cputopo_arm cpu_topology[NR_CPUS];
--EXPORT_SYMBOL_GPL(cpu_topology);
--
--const struct cpumask *cpu_coregroup_mask(int cpu)
--{
--	return &cpu_topology[cpu].core_sibling;
--}
--
- /*
-  * The current assumption is that we can power gate each core independently.
-  * This will be superseded by DT binding once available.
-@@ -197,32 +186,6 @@ const struct cpumask *cpu_corepower_mask(int cpu)
- 	return &cpu_topology[cpu].thread_sibling;
- }
+-	- one or more cluster nodes
++	- one or more cluster nodes or
++	- one or more socket nodes in a multi-socket system
  
--static void update_siblings_masks(unsigned int cpuid)
--{
--	struct cputopo_arm *cpu_topo, *cpuid_topo = &cpu_topology[cpuid];
--	int cpu;
--
--	/* update core and thread sibling masks */
--	for_each_possible_cpu(cpu) {
--		cpu_topo = &cpu_topology[cpu];
--
--		if (cpuid_topo->socket_id != cpu_topo->socket_id)
--			continue;
--
--		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
--		if (cpu != cpuid)
--			cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
--
--		if (cpuid_topo->core_id != cpu_topo->core_id)
--			continue;
--
--		cpumask_set_cpu(cpuid, &cpu_topo->thread_sibling);
--		if (cpu != cpuid)
--			cpumask_set_cpu(cpu, &cpuid_topo->thread_sibling);
--	}
--	smp_wmb();
--}
--
- /*
-  * store_cpu_topology is called at boot when only one cpu is running
-  * and with the mutex cpu_hotplug.lock locked, when several cpus have booted,
-@@ -230,7 +193,7 @@ static void update_siblings_masks(unsigned int cpuid)
-  */
- void store_cpu_topology(unsigned int cpuid)
- {
--	struct cputopo_arm *cpuid_topo = &cpu_topology[cpuid];
-+	struct cpu_topology *cpuid_topo = &cpu_topology[cpuid];
- 	unsigned int mpidr;
+ 	Any other configuration is considered invalid.
  
- 	/* If the cpu topology has been already set, just return */
-@@ -250,12 +213,12 @@ void store_cpu_topology(unsigned int cpuid)
- 			/* core performance interdependency */
- 			cpuid_topo->thread_id = MPIDR_AFFINITY_LEVEL(mpidr, 0);
- 			cpuid_topo->core_id = MPIDR_AFFINITY_LEVEL(mpidr, 1);
--			cpuid_topo->socket_id = MPIDR_AFFINITY_LEVEL(mpidr, 2);
-+			cpuid_topo->package_id = MPIDR_AFFINITY_LEVEL(mpidr, 2);
- 		} else {
- 			/* largely independent cores */
- 			cpuid_topo->thread_id = -1;
- 			cpuid_topo->core_id = MPIDR_AFFINITY_LEVEL(mpidr, 0);
--			cpuid_topo->socket_id = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-+			cpuid_topo->package_id = MPIDR_AFFINITY_LEVEL(mpidr, 1);
- 		}
- 	} else {
- 		/*
-@@ -265,7 +228,7 @@ void store_cpu_topology(unsigned int cpuid)
- 		 */
- 		cpuid_topo->thread_id = -1;
- 		cpuid_topo->core_id = 0;
--		cpuid_topo->socket_id = -1;
-+		cpuid_topo->package_id = -1;
- 	}
+-The cpu-map node can only contain three types of child nodes:
++The cpu-map node can only contain 4 types of child nodes:
  
- 	update_siblings_masks(cpuid);
-@@ -275,7 +238,7 @@ void store_cpu_topology(unsigned int cpuid)
- 	pr_info("CPU%u: thread %d, cpu %d, socket %d, mpidr %x\n",
- 		cpuid, cpu_topology[cpuid].thread_id,
- 		cpu_topology[cpuid].core_id,
--		cpu_topology[cpuid].socket_id, mpidr);
-+		cpu_topology[cpuid].package_id, mpidr);
- }
++- socket node
+ - cluster node
+ - core node
+ - thread node
  
- static inline int cpu_corepower_flags(void)
-@@ -298,18 +261,7 @@ static struct sched_domain_topology_level arm_topology[] = {
-  */
- void __init init_cpu_topology(void)
- {
--	unsigned int cpu;
+ whose bindings are described in paragraph 3.
+ 
+-The nodes describing the CPU topology (cluster/core/thread) can only
+-be defined within the cpu-map node and every core/thread in the system
+-must be defined within the topology.  Any other configuration is
++The nodes describing the CPU topology (socket/cluster/core/thread) can
++only be defined within the cpu-map node and every core/thread in the
++system must be defined within the topology.  Any other configuration is
+ invalid and therefore must be ignored.
+ 
+ ===========================================
+@@ -85,26 +88,44 @@ invalid and therefore must be ignored.
+ ===========================================
+ 
+ cpu-map child nodes must follow a naming convention where the node name
+-must be "clusterN", "coreN", "threadN" depending on the node type (ie
+-cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes which
+-are siblings within a single common parent node must be given a unique and
++must be "socketN", "clusterN", "coreN", "threadN" depending on the node type
++(ie socket/cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes
++which are siblings within a single common parent node must be given a unique and
+ sequential N value, starting from 0).
+ cpu-map child nodes which do not share a common parent node can have the same
+ name (ie same number N as other cpu-map child nodes at different device tree
+ levels) since name uniqueness will be guaranteed by the device tree hierarchy.
+ 
+ ===========================================
+-3 - cluster/core/thread node bindings
++3 - socket/cluster/core/thread node bindings
+ ===========================================
+ 
+-Bindings for cluster/cpu/thread nodes are defined as follows:
++Bindings for socket/cluster/cpu/thread nodes are defined as follows:
++
++- socket node
++
++	 Description: must be declared within a cpu-map node, one node
++		      per physical socket in the system. A system can
++		      contain single or multiple physical socket.
++		      The association of sockets and NUMA nodes is beyond
++		      the scope of this bindings, please refer [2] for
++		      NUMA bindings.
++
++	This node is optional for a single socket system.
++
++	The socket node name must be "socketN" as described in 2.1 above.
++	A socket node can not be a leaf node.
++
++	A socket node's child nodes must be one or more cluster nodes.
++
++	Any other configuration is considered invalid.
+ 
+ - cluster node
+ 
+ 	 Description: must be declared within a cpu-map node, one node
+ 		      per cluster. A system can contain several layers of
+-		      clustering and cluster nodes can be contained in parent
+-		      cluster nodes.
++		      clustering within a single physical socket and cluster
++		      nodes can be contained in parent cluster nodes.
+ 
+ 	The cluster node name must be "clusterN" as described in 2.1 above.
+ 	A cluster node can not be a leaf node.
+@@ -164,90 +185,93 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
+ 4 - Example dts
+ ===========================================
+ 
+-Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters):
++Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters in a single
++physical socket):
+ 
+ cpus {
+ 	#size-cells = <0>;
+ 	#address-cells = <2>;
+ 
+ 	cpu-map {
+-		cluster0 {
++		socket0 {
+ 			cluster0 {
+-				core0 {
+-					thread0 {
+-						cpu = <&CPU0>;
+-					};
+-					thread1 {
+-						cpu = <&CPU1>;
++				cluster0 {
++					core0 {
++						thread0 {
++							cpu = <&CPU0>;
++						};
++						thread1 {
++							cpu = <&CPU1>;
++						};
+ 					};
+-				};
+ 
+-				core1 {
+-					thread0 {
+-						cpu = <&CPU2>;
+-					};
+-					thread1 {
+-						cpu = <&CPU3>;
++					core1 {
++						thread0 {
++							cpu = <&CPU2>;
++						};
++						thread1 {
++							cpu = <&CPU3>;
++						};
+ 					};
+ 				};
+-			};
+ 
+-			cluster1 {
+-				core0 {
+-					thread0 {
+-						cpu = <&CPU4>;
+-					};
+-					thread1 {
+-						cpu = <&CPU5>;
++				cluster1 {
++					core0 {
++						thread0 {
++							cpu = <&CPU4>;
++						};
++						thread1 {
++							cpu = <&CPU5>;
++						};
+ 					};
+-				};
 -
--	/* init core mask and capacity */
--	for_each_possible_cpu(cpu) {
--		struct cputopo_arm *cpu_topo = &(cpu_topology[cpu]);
--
--		cpu_topo->thread_id = -1;
--		cpu_topo->core_id =  -1;
--		cpu_topo->socket_id = -1;
--		cpumask_clear(&cpu_topo->core_sibling);
--		cpumask_clear(&cpu_topo->thread_sibling);
--	}
-+	reset_cpu_topology();
- 	smp_wmb();
+-				core1 {
+-					thread0 {
+-						cpu = <&CPU6>;
+-					};
+-					thread1 {
+-						cpu = <&CPU7>;
+-					};
+-				};
+-			};
+-		};
  
- 	parse_dt_topology();
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 5781bb4c457c..797e3cd71bea 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -426,6 +426,7 @@ static int __init parse_dt_topology(void)
- 	of_node_put(cn);
- 	return ret;
- }
-+#endif
+-		cluster1 {
+-			cluster0 {
+-				core0 {
+-					thread0 {
+-						cpu = <&CPU8>;
+-					};
+-					thread1 {
+-						cpu = <&CPU9>;
+-					};
+-				};
+-				core1 {
+-					thread0 {
+-						cpu = <&CPU10>;
+-					};
+-					thread1 {
+-						cpu = <&CPU11>;
++					core1 {
++						thread0 {
++							cpu = <&CPU6>;
++						};
++						thread1 {
++							cpu = <&CPU7>;
++						};
+ 					};
+ 				};
+ 			};
  
- /*
-  * cpu topology table
-@@ -491,7 +492,7 @@ static void clear_cpu_topology(int cpu)
- 	cpumask_set_cpu(cpu, &cpu_topo->thread_sibling);
- }
- 
--static void __init reset_cpu_topology(void)
-+void __init reset_cpu_topology(void)
- {
- 	unsigned int cpu;
- 
-@@ -526,6 +527,7 @@ __weak int __init parse_acpi_topology(void)
- 	return 0;
- }
- 
-+#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
- void __init init_cpu_topology(void)
- {
- 	reset_cpu_topology();
-diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-index d4e76e0a283f..d4311127970d 100644
---- a/include/linux/arch_topology.h
-+++ b/include/linux/arch_topology.h
-@@ -54,11 +54,9 @@ extern struct cpu_topology cpu_topology[NR_CPUS];
- void init_cpu_topology(void);
- void store_cpu_topology(unsigned int cpuid);
- const struct cpumask *cpu_coregroup_mask(int cpu);
--#endif
--
--#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
- void update_siblings_masks(unsigned int cpu);
--#endif
- void remove_cpu_topology(unsigned int cpuid);
-+void reset_cpu_topology(void);
-+#endif
- 
- #endif /* _LINUX_ARCH_TOPOLOGY_H_ */
+ 			cluster1 {
+-				core0 {
+-					thread0 {
+-						cpu = <&CPU12>;
++				cluster0 {
++					core0 {
++						thread0 {
++							cpu = <&CPU8>;
++						};
++						thread1 {
++							cpu = <&CPU9>;
++						};
+ 					};
+-					thread1 {
+-						cpu = <&CPU13>;
++					core1 {
++						thread0 {
++							cpu = <&CPU10>;
++						};
++						thread1 {
++							cpu = <&CPU11>;
++						};
+ 					};
+ 				};
+-				core1 {
+-					thread0 {
+-						cpu = <&CPU14>;
++
++				cluster1 {
++					core0 {
++						thread0 {
++							cpu = <&CPU12>;
++						};
++						thread1 {
++							cpu = <&CPU13>;
++						};
+ 					};
+-					thread1 {
+-						cpu = <&CPU15>;
++					core1 {
++						thread0 {
++							cpu = <&CPU14>;
++						};
++						thread1 {
++							cpu = <&CPU15>;
++						};
+ 					};
+ 				};
+ 			};
+@@ -473,3 +497,5 @@ cpus {
+ ===============================================================================
+ [1] ARM Linux kernel documentation
+     Documentation/devicetree/bindings/arm/cpus.yaml
++[2] Devicetree NUMA binding description
++    Documentation/devicetree/bindings/numa.txt
 -- 
 2.21.0
 
