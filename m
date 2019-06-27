@@ -2,170 +2,186 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D5BC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6BAC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFF120828
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741722084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfF0Oha (ORCPT
+        id S1726750AbfF0Oid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 10:37:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34604 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726422AbfF0Oh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:37:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D104CAF31;
-        Thu, 27 Jun 2019 14:37:27 +0000 (UTC)
-Subject: Re: [PATCH v3 1/5] gem/vram: pin to vram in vmap
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
-References: <20190627122348.5833-1-kraxel@redhat.com>
- <20190627122348.5833-2-kraxel@redhat.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <8a52b578-b255-3e11-3a0c-0b68f0cb649e@suse.de>
-Date:   Thu, 27 Jun 2019 16:37:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 27 Jun 2019 10:38:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:55626 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbfF0Oic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 10:38:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D986360;
+        Thu, 27 Jun 2019 07:38:31 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABE3B3F246;
+        Thu, 27 Jun 2019 07:38:28 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 15:38:26 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, Shijith Thotton <sthotton@marvell.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Huw Davies <huw@codeweavers.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Will Deacon <will.deacon@arm.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v7 04/25] arm64: Substitute gettimeofday with C
+ implementation
+Message-ID: <20190627143826.GG2790@e103592.cambridge.arm.com>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-5-vincenzo.frascino@arm.com>
+ <20190625153336.GZ2790@e103592.cambridge.arm.com>
+ <f5ac379a-731d-0662-2f5b-bd046e3bd1c5@arm.com>
+ <20190626161413.GA2790@e103592.cambridge.arm.com>
+ <19ebd45a-b666-d7de-fd9e-2b72e18892d9@arm.com>
+ <20190627100150.GC2790@e103592.cambridge.arm.com>
+ <85808e79-27a0-d3ab-3fb0-445f79ff87a4@arm.com>
+ <20190627112731.GF2790@e103592.cambridge.arm.com>
+ <a07b66cb-186f-a743-4f1d-41227f23db74@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190627122348.5833-2-kraxel@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="FgEBem4jKFe78ayhhpxGcdcl9SQIEMWeE"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a07b66cb-186f-a743-4f1d-41227f23db74@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---FgEBem4jKFe78ayhhpxGcdcl9SQIEMWeE
-Content-Type: multipart/mixed; boundary="r18lT2MUcokctyjlOfA4f4xehRVx11tdy";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>,
- open list <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>,
- Sean Paul <sean@poorly.run>
-Message-ID: <8a52b578-b255-3e11-3a0c-0b68f0cb649e@suse.de>
-Subject: Re: [PATCH v3 1/5] gem/vram: pin to vram in vmap
-References: <20190627122348.5833-1-kraxel@redhat.com>
- <20190627122348.5833-2-kraxel@redhat.com>
-In-Reply-To: <20190627122348.5833-2-kraxel@redhat.com>
+On Thu, Jun 27, 2019 at 12:59:07PM +0100, Vincenzo Frascino wrote:
+> On 6/27/19 12:27 PM, Dave Martin wrote:
+> > On Thu, Jun 27, 2019 at 11:57:36AM +0100, Vincenzo Frascino wrote:
 
---r18lT2MUcokctyjlOfA4f4xehRVx11tdy
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-Hi
+> >> Disassembly of section .text:
+> >> 0000000000000000 show_it:
+> >>        0:	e8 03 1f aa 	mov	x8, xzr
+> >>        4:	09 68 68 38 	ldrb	w9, [x0, x8]
+> >>        8:	08 05 00 91 	add	x8, x8, #1
+> >>        c:	c9 ff ff 34 	cbz	w9, #-8 <show_it+0x4>
+> >>       10:	02 05 00 51 	sub	w2, w8, #1
+> >>       14:	e1 03 00 aa 	mov	x1, x0
+> >>       18:	08 08 80 d2 	mov	x8, #64
+> >>       1c:	01 00 00 d4 	svc	#0
+> >>       20:	c0 03 5f d6 	ret
+> >>
+> >> Commands used:
+> >>
+> >> $ clang -target aarch64-linux-gnueabi main.c -O -c -o main.clang.<x>.o
+> >> $ llvm-objdump -d main.clang.<x>.o
+> > 
+> > Actually, I'm not sure this is comparable with the reproducer I quoted
+> > in my last reply.
+> >
+> 
+> As explained in my previous email, this is the only case that can realistically
+> happen. vDSO has no dependency on any other library (i.e. libgcc you were
+> mentioning) and we are referring to the fallbacks which fall in this category.
 
-Am 27.06.19 um 14:23 schrieb Gerd Hoffmann:
-> drm clients like the generic framebuffer emulation keep a permanent
-> vmap active, which in turn has a permanent pin.  This pin needs to
-> be in vram, otherwise we can't display the framebuffer.
->=20
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/drm_gem_vram_helper.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/dr=
-m_gem_vram_helper.c
-> index 4de782ca26b2..c724876c6f2a 100644
-> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-> @@ -592,7 +592,7 @@ void *drm_gem_vram_driver_gem_prime_vmap(struct drm=
-_gem_object *gem)
->  	int ret;
->  	void *base;
-> =20
-> -	ret =3D drm_gem_vram_pin(gbo, 0);
-> +	ret =3D drm_gem_vram_pin(gbo, DRM_GEM_VRAM_PL_FLAG_VRAM);
+Outlining could also introduce a local function call where none exists
+explicitly in the program IIUC.
 
-I have a patch set that converts ast and mgag200 to generic framebuffer
-emulation with a shadow FB. The actual BO is mapped by the fbdev code on
-demand to update its content. Permanently mapping the fb console's BO
-would consume too much display memory. This requires the pin function's
-placement flag to be 0, so the BO is mapped in system memory by default.
-The proposed patch breaks this.
+My point is that the interaction between asm reg vars and machine-level
+procedure calls is at best ill-defined, and it is largely up to the
+compiler when to introduce such a call, even without LTO etc.
 
-Some ideas for solving this:
+So we should not be surprised to see variations in behaviour depending
+on compiler, compiler version and compiler flags.
 
- 1) Introduce a default_placement field in struct drm_gem_vram_helper
-where this flag can be configured. I'd favor this option.
+> > The compiler can see the definition of strlen and fully inlines it.
+> > I only ever saw the problem when the compiler emits an out-of-line
+> > implicit function call.
+> > > What does clang do with my example on 32-bit?
+> 
+> When clang is selected compat vDSOs are currently disabled on arm64, will be
+> introduced with a future patch series.
+> 
+> Anyway since I am curious as well, this is what happens with your example with
+> clang.8 target=arm-linux-gnueabihf:
+> 
+> dave-code.clang.8.o:	file format ELF32-arm-little
+> 
+> Disassembly of section .text:
+> 0000000000000000 foo:
+>        0:	00 00 00 ef 	svc	#0
+>        4:	1e ff 2f e1 	bx	lr
+> 
+> 0000000000000008 bar:
+>        8:	10 4c 2d e9 	push	{r4, r10, r11, lr}
+>        c:	08 b0 8d e2 	add	r11, sp, #8
+>       10:	00 40 a0 e1 	mov	r4, r0
+>       14:	fe ff ff eb 	bl	#-8 <bar+0xc>
+>       18:	00 10 a0 e1 	mov	r1, r0
+>       1c:	04 00 a0 e1 	mov	r0, r4
+>       20:	00 00 00 ef 	svc	#0
+>       24:	10 8c bd e8 	pop	{r4, r10, r11, pc}
 
- 2) Introduce a separate callback function for pinning to vram. The
-driver would have to set the correct function pointers.
+> Compiled with -O2, -O3, -Os never inlines.
 
- 3) Pin the fb console buffer manually from within the bochs driver.
+Looks sane, and is the behaviour we want.
 
-Best regards
-Thomas
+> Same thing happens for aarch64-linux-gnueabi:
+> 
+> dave-code.clang.8.o:	file format ELF64-aarch64-little
+> 
+> Disassembly of section .text:
+> 0000000000000000 foo:
+>        0:	e0 03 00 2a 	mov	w0, w0
+>        4:	e1 03 01 2a 	mov	w1, w1
+>        8:	01 00 00 d4 	svc	#0
+>        c:	c0 03 5f d6 	ret
+> 
+> 0000000000000010 bar:
+>       10:	01 0c c1 1a 	sdiv	w1, w0, w1
+>       14:	e0 03 00 2a 	mov	w0, w0
+>       18:	01 00 00 d4 	svc	#0
+>       1c:	c0 03 5f d6 	ret
 
->  	if (ret)
->  		return NULL;
->  	base =3D drm_gem_vram_kmap(gbo, true, NULL);
->=20
+Curious, clang seems to be inserting some seemingly redundant moves
+of its own here, though this shouldn't break anything.
 
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
+I suspect that clang might require an X-reg holding an int to have its
+top 32 bits zeroed for passing to an asm, whereas GCC does not.  I think
+this comes under "we should not be surprised to see variations".
+
+GCC 9 does this instead:
+
+0000000000000000 <foo>:
+   0:   d4000001        svc     #0x0
+   4:   d65f03c0        ret
+
+0000000000000008 <bar>:
+   8:   1ac10c01        sdiv    w1, w0, w1
+   c:   d4000001        svc     #0x0
+  10:   d65f03c0        ret
 
 
---r18lT2MUcokctyjlOfA4f4xehRVx11tdy--
+> Based on this I think we can conclude our investigation.
 
---FgEBem4jKFe78ayhhpxGcdcl9SQIEMWeE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+So we use non-reg vars and use the asm clobber list and explicit moves
+to get things into / out of the right registers?
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl0U1KYACgkQaA3BHVML
-eiNZ/Af9GJVlB6AmshA0bhFsXcLcJtL2JFVBIrT7KVI2N+SzdNurOHEjgebgrtJW
-a/QtPZNj/LuCy47s7CgCPPkd8zLuT05B2gwCGGvoUUs6TOQluBvk0LVj5LQjtju9
-zfZMP2JadLLFRtIcZxrRBJhdY6V22mz9F9TyUzrRjjSx58ANWWnd3oEmJoFZObaG
-qqmxtNCnzkYWZSkDhGyXIIHRKMmUOyaoGbibKX2JIAs45shwplnPDiNtrOQQf86R
-Z3jzEWgqlvQIWO0GqWvcSmH/Dn7Ehrci0nSPAJ/8+ubT0rkJui1mXwoLO83C099i
-V9pNLzX4xn/6M3kzmiqNqzrD1edpAg==
-=XfiM
------END PGP SIGNATURE-----
-
---FgEBem4jKFe78ayhhpxGcdcl9SQIEMWeE--
+Cheers
+---Dave
