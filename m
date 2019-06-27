@@ -7,79 +7,79 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53639C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C31C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248912182B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0930A21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:33:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="NAFslq//"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="02QsbCBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfF0Cdy (ORCPT
+        id S1727200AbfF0Cdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 22:33:54 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40553 "EHLO
+        Wed, 26 Jun 2019 22:33:55 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45867 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfF0Cdx (ORCPT
+        with ESMTP id S1726993AbfF0Cdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 22:33:53 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a21so638098ljh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 19:33:52 -0700 (PDT)
+        Wed, 26 Jun 2019 22:33:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m23so617691lje.12
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 19:33:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=QsUYJ0OixGvyGAqGjBHbqvL3FB6Bz7WIPxlK8Bq4u5w=;
-        b=NAFslq//TWZ2W+oopBubsqoa2BPr60n5Uj9J50JGDr4Kkr6fRmHugqxnjlVcxVPieI
-         AauNsl1vc7rn6ds5sc8Rjp8jfNAuE53Aa9QZ7YVjueWHYAgNGWhZQYOTcW6FmjzmFHlj
-         hLojqogqtp71w9KWWQIAIq60LAKW1O1/UMvxNPpXWkppOUqpe5P0wJBVW6fmPj2ARYXR
-         ADBBcT42pEjlyebqv9Xk4Rn87VkzvJsHGrSfaqQH+AIDa7MamyA9CWR4OT2YdacSa3WN
-         my1XzRBDNQMx/VW7jTJW7DVouQIYBhALjGUix56/lH8pQEcT04DPF9qQuP+fuTyoi0Ph
-         DAkg==
+        bh=yOkS90FW9m9qlm3iIe4o+JWVUiJoQWOdV+pN3v1fwq0=;
+        b=02QsbCBlA8GNeuMaJBwsbEV2R6pe97/6uMS0F3Yprjxq6bC0/OQ/JNV6Ro+POVzUQm
+         QtDJvRPFy/uJtB2214wa4MRddsoIU6izreBbqNvF9gXi6vDZfGVI00oPX0iDubtdZFsK
+         Z1cNUx5VbKMD6NPgJmOBzEB6u678aeNpXbIpu2IXRlUOyBkABEGIH3J5h+w3WyoA4rPy
+         n5LhBkNIPHE8ls3WdyofuWR8PJyCM1lR7H2nQgYd23fj0s7omlh5FVCwp0sSbJB0VwhS
+         2ItnQbm6lj5cu9esJhTcSMAtzengSHyTRq/h9676pmJfBUS/CuPwKCPnkWQQu54oEBqt
+         zkVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QsUYJ0OixGvyGAqGjBHbqvL3FB6Bz7WIPxlK8Bq4u5w=;
-        b=WyW7/FpEWMPxgq6U3Q5buzuWKKfYUOsjkmbbXFjnVDDaYl7QvdvPsDscP09wGqSy/+
-         WgeaSc/svw+bAYAxdgs3sjsbnmBT4IM08IoQMj8JJO7w0iHBYLFVsP+IxWTD65FAYu/e
-         DJaYoxr/S+SdnKwCrh8iSOagyr4/iuBpalaJXUbJXGprvIV2TEG3DhQcH0blw2lWivbZ
-         Bl9i/VM6oTk/4n1dnBf4mwm6mNyum72eJkjfsH5A2ZUp7kwHVVbLlKrie5nIhtMkDjCA
-         dIhhqj+FU1I4FlRogdQAzSYbAFMcM+2/AybmSsjCLrAPPECmQWktrZ+6J0fIG1E8nN7W
-         sAQw==
-X-Gm-Message-State: APjAAAU2+0bGF+pRqoX3TNYj7DZ9phbHnYskLyjZ4/WJWemgkl4Ljhcn
-        SE120Ra4OWdsjUjTcEwvSGUASQ==
-X-Google-Smtp-Source: APXvYqyh/a8j2yzQL0dk+k7+Q3KUqRAVUal00aYaGppig+X9K+BfCpTOWR8X2romBAWvRn/+S0Bzbg==
-X-Received: by 2002:a2e:7619:: with SMTP id r25mr841109ljc.199.1561602830482;
-        Wed, 26 Jun 2019 19:33:50 -0700 (PDT)
+        bh=yOkS90FW9m9qlm3iIe4o+JWVUiJoQWOdV+pN3v1fwq0=;
+        b=JJYLLpBd9TmoLW49s1lwt6IyiGocOXIw0rhdLnxa1hGGYwTy5NMdLvYgqiulC79ViO
+         jF9z8t9EA/Np2niJ3GzwBsmy9VaEItUuGGW/yxk6pXSeUP1aVYXhov8aywKLyaKg+7O3
+         yYmsT3A+/pL18d/DgC+DedYTu2vlhblhHU1XcLcU8BgRdu2JGbtMEMtSL8reuySsLaDv
+         gxkmUS+rml1dsjE5dA8sOtPLn5QB8dOPUjA8+9pH9l1O8uYTHu+9h09DqCJJ2f97pZb3
+         KRtun4etwwvh+TQo2VkwLzt6UDt5dMJufHggc80w09XQY8NvmsCNMursGZ8H/1GMT5u9
+         rhWA==
+X-Gm-Message-State: APjAAAXSAn6m5r+HKbRaQStLfStiU8CJkip9mPjQz7LIA/IRsdgyt9qe
+        TUmnvaASU4ms6dnLORqEks5Jwg==
+X-Google-Smtp-Source: APXvYqwZ4VGmnVUqovZXVKOQ+atp4tjYSsaXrcOjTRbWuBvLrRSQBn+AF+1AqmO9JXLGINO0/BwJWw==
+X-Received: by 2002:a2e:89d0:: with SMTP id c16mr825416ljk.219.1561602832318;
+        Wed, 26 Jun 2019 19:33:52 -0700 (PDT)
 Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id v15sm107799lfd.53.2019.06.26.19.33.49
+        by smtp.gmail.com with ESMTPSA id y5sm108248ljj.5.2019.06.26.19.33.51
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Jun 2019 19:33:49 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 19:22:02 -0700
+        Wed, 26 Jun 2019 19:33:51 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 19:22:36 -0700
 From:   Olof Johansson <olof@lixom.net>
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     arm-soc <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        masahiroy@kernel.org,
+Cc:     Arnd Bergmann <arnd@arndb.de>, arm-soc <arm@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [GIT PULL] ARM: dts: uniphier: UniPhier DT updates for v5.3
-Message-ID: <20190627022202.hyukmqxmxjxw3bu6@localhost>
-References: <CAK7LNASNhp2o9kboRMJ66UJy5Z+T28K6CHO_=c02MaGoFyy-5Q@mail.gmail.com>
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        masahiroy@kernel.org
+Subject: Re: [GIT PULL] arm64: dts: uniphier: UniPhier DT updates for v5.3
+Message-ID: <20190627022236.qi2fp6thvkoewwir@localhost>
+References: <CAK7LNAQKmSUkXtJOOcr1q8b_yTU_NRcgCvDAo8aZ+CkOXGTWNA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK7LNASNhp2o9kboRMJ66UJy5Z+T28K6CHO_=c02MaGoFyy-5Q@mail.gmail.com>
+In-Reply-To: <CAK7LNAQKmSUkXtJOOcr1q8b_yTU_NRcgCvDAo8aZ+CkOXGTWNA@mail.gmail.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 12:19:17AM +0900, Masahiro Yamada wrote:
+On Wed, Jun 26, 2019 at 12:21:42AM +0900, Masahiro Yamada wrote:
 > Hi Arnd, Olof,
 > 
-> Please pull UniPhier DT updates (32bit) for the v5.3 MW.
+> Please pull UniPhier DT updates (64bit) for the v5.3 MW.
 > 
 > Thanks.
 > 
@@ -91,17 +91,20 @@ On Wed, Jun 26, 2019 at 12:19:17AM +0900, Masahiro Yamada wrote:
 > are available in the Git repository at:
 > 
 >   git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
-> tags/uniphier-dt-v5.3
+> tags/uniphier-dt64-v5.3
 > 
-> for you to fetch changes up to bc8841f0c1e6945fd7fde6faad3300d1b08abd86:
+> for you to fetch changes up to aa38571246c6ac279ebebd141157297bcb959d76:
 > 
->   ARM: dts: uniphier: update to new Denali NAND binding (2019-06-26
-> 00:06:50 +0900)
+>   arm64: dts: uniphier: add reserved-memory for secure memory
+> (2019-06-26 00:08:47 +0900)
 > 
 > ----------------------------------------------------------------
-> UniPhier ARM SoC DT updates for v5.3
+> UniPhier ARM64 SoC DT updates for v5.3
 > 
 > - Migrate to the new binding for the Denali NAND controller
+> 
+> - Use reserved-memory node instead of /memreserve/ for the
+>   secure memory area
 
 Merged, thanks!
 
