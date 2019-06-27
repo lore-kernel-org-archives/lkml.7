@@ -2,100 +2,79 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB40C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849D6C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0134F20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:24:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXZlLx/G"
+	by mail.kernel.org (Postfix) with ESMTP id 5C26720644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfF0FYe (ORCPT
+        id S1726467AbfF0F0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 01:24:34 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33707 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfF0FYe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 01:24:34 -0400
-Received: by mail-io1-f65.google.com with SMTP id u13so2054250iop.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 22:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RIIwBX17xBmvmx1T+gcoOewCXOkdROxcqv1U8Dyz+oE=;
-        b=OXZlLx/GhXOXqwsTB/C1LqW8uw0P35vMVrRjeFdl6kaABAlVKJvCh2sz/FruA5C2Ex
-         CtdRjmzFIXxVXhTzYkM/TiPllk8gHaNR1ycXdrEV/HQQmkr97fic5QH1H4t3Q456NpnU
-         JbbXYMBtrduGC7PuVPp3LcoQr3DU/6GGdkDRsKBpU7S/KRv8UoNS6g1TKxZnLy/axGJL
-         BSL6szx5l6pkpSP5nwqNBrLHHlKBHAKbqR9Ja/f2lW4N4d/J2d1D4vlfWEAQiKHOJdiD
-         QgO/LrKA+u3P49TJ18ExP908RZkdxXyz3LK7w/unBJsIs088mPd+25gXOsuF7AP0zguE
-         1oDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RIIwBX17xBmvmx1T+gcoOewCXOkdROxcqv1U8Dyz+oE=;
-        b=Y/i11SMXnO//YeAKaSA8ElPQjzvp/fW1c62aTKW27apvUpgHDwrS1404NEbdscIaNJ
-         v1alLQLxf+oM/pXZy4+5uR/eKNdh/jdDFFYWIlWbTy6MCyNK1wcHSWKffN9ohHkJXP0i
-         EP8kPaN5BYnf4Ah6sE0u2qgHoSJOpVWPJpkWSXufJMSra+4reaZQSsbuXLlZviJUsC7n
-         KUv/AQL5+AfTPYA5nHkjK3elm9QTfKiRbbG6Nnrs14qMQsyGm1uWC/PgNjFiR0pmgulA
-         kJNLA63OLUSCrwy5S3dA2wVhmhqqBHv7jq5QuYZirvJOR/0TufeRprFeiaz8C7r2vV8a
-         4jhQ==
-X-Gm-Message-State: APjAAAWqY3vpOe0Ai6+KbJ/pFUe+MSYoQyat/go63NyTso1tzU5ljkUI
-        +VeqfHH9gvr3Ul8w1EhE/RTGqHUvjNYwJsHweXF4PQ==
-X-Google-Smtp-Source: APXvYqzbfviqVNtJkE4LqaJax/YS9ZYRuR9tvoYRDCBiYHH3Lad0CksUqVzpaEfSLY8jg9WXf01iJSJx5T6KnqYmSdw=
-X-Received: by 2002:a5d:97d8:: with SMTP id k24mr2531140ios.84.1561613072925;
- Wed, 26 Jun 2019 22:24:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190619090420.6667-1-kraxel@redhat.com> <20190619090420.6667-9-kraxel@redhat.com>
- <20190619110902.GO12905@phenom.ffwll.local> <20190620060107.tdz3nrnsczkkv2a6@sirius.home.kraxel.org>
-In-Reply-To: <20190620060107.tdz3nrnsczkkv2a6@sirius.home.kraxel.org>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Wed, 26 Jun 2019 22:24:20 -0700
-Message-ID: <CAPaKu7SZr+wvoM8JgB=d4kHOJioPiG-hQbfU5mmT4iB9Kn4DgA@mail.gmail.com>
-Subject: Re: [PATCH v3 08/12] drm/virtio: rework virtio_gpu_execbuffer_ioctl fencing
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Jun 2019 01:26:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:36381 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbfF0F0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 01:26:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 22:26:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,422,1557212400"; 
+   d="scan'208";a="183367026"
+Received: from hao-dev.bj.intel.com ([10.238.157.65])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Jun 2019 22:26:38 -0700
+From:   Wu Hao <hao.wu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-api@vger.kernel.org, gregkh@linuxfoundation.org,
+        atull@kernel.org, Wu Hao <hao.wu@intel.com>
+Subject: [PATCH v4 0/2] add performance reporting support to FPGA DFL drivers
+Date:   Thu, 27 Jun 2019 13:09:53 +0800
+Message-Id: <1561612195-6081-1-git-send-email-hao.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I tried my best to review this series.  I am not really a kernel dev
-so please take that with a grain of salt.
+This patchset adds performance reporting support for FPGA DFL drivers. It
+introduces one pmu to expose userspace interfaces via standard perf API.
+User could use standard perf tool to access perf events exposed via pmu.
 
-On Wed, Jun 19, 2019 at 11:01 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
->   Hi,
->
-> > Also, I strongly recommend you do a very basic igt to exercise this, i.e.
-> > allocate some buffers, submit them in a dummby op, then close the entire
-> > drmfd. The old version should at least have tripped over kasan, maybe even
-> > oopses somewhere.
->
-> Hmm, I suspect I have to extend igt for that (adding support for
-> virtio ioctls), right?
->
-> A quick and dirty test (run webgl demo in firefox, then kill -9 both
-> firefox and Xorg) didn't show any nasty surprises.
->
-> cheers,
->   Gerd
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+This patchset is splitted from patchset[1] for better review, and version 3
+patch could be found here[2]. Please note that this patchset needs to be
+applied on top of patchset[3][4].
+
+Main changes from v3:
+ - add more descriptions in doc, including how to use perf tool for these
+   hardware counters. (patch #1)
+ - use standard perf API instead of sysfs entries. (patch #2)
+
+[1]https://lkml.org/lkml/2019/5/27/11
+[2]https://lkml.org/lkml/2019/5/27/18
+[3]https://lkml.org/lkml/2019/6/27/29
+[4]https://lkml.org/lkml/2019/6/27/49
+
+Wu Hao (1):
+  fpga: dfl: fme: add performance reporting support
+
+Xu Yilun (1):
+  Documentation: fpga: dfl: add description for performance reporting
+    support
+
+ Documentation/fpga/dfl.txt  |  83 +++++
+ drivers/fpga/Makefile       |   1 +
+ drivers/fpga/dfl-fme-main.c |   4 +
+ drivers/fpga/dfl-fme-perf.c | 871 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/fpga/dfl-fme.h      |   2 +
+ 5 files changed, 961 insertions(+)
+ create mode 100644 drivers/fpga/dfl-fme-perf.c
+
+-- 
+1.8.3.1
+
