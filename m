@@ -2,114 +2,134 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC34EC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4A7C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78AAA2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:07:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DCf6AIsR"
+	by mail.kernel.org (Postfix) with ESMTP id 1B0EE2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfF0HHV (ORCPT
+        id S1726500AbfF0HIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 03:07:21 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:65381 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfF0HHU (ORCPT
+        Thu, 27 Jun 2019 03:08:30 -0400
+Received: from lgeamrelo12.lge.com ([156.147.23.52]:48569 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725787AbfF0HIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:07:20 -0400
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x5R778ra019578
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 16:07:08 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x5R778ra019578
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561619228;
-        bh=gj7s9w7UjXz0QHPHPCGEcB7DjBVPqUTYuZyU7sdAJGw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DCf6AIsRzYlp5t1zwsJPkD6eGEu5QWqqV/2eaydEHdB15Wg8YhM883tol3tJU+a2M
-         lYJpBrRLro0MO5aKXO9saaQHvF8WJ8YoJxlD7R4Yiq3xPX3bEtgMGzpawIClNyDgoO
-         QnZdjfD0eiSXx9hqTNffy/Q8bjJbDK2NSGfPY47AE0fFlk6qP+NchGA/2SmgTbky1t
-         xVftm4d5SfI8cCvOADNu6IyxC46BVTflQxaYo8817ZVoW9azbu1jtt+2Ij2vaggPwk
-         10Am7HZ7CiWvTvOpaEH96Rg7j/7aHqjNPSCVNqNYm5Szc0Ato0iwBTREBUQ14kgwAy
-         DnmNRgW9t8Kjg==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id o2so446781uae.10
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 00:07:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAUzW9OtB08VtBjZIdYPRPsjhIzsR4I9NqhD9VjFbkZvf39yJAm5
-        bW34D3owarFE4+ijaa0orMFk+z9z77rD8MWG3SY=
-X-Google-Smtp-Source: APXvYqx824GHdql4BE5NM/JzpgGc4JoQsrkCC8hqQAOm3UzXYSdRRi1zarQ28eOqavgTIxG4QWRhxiFU9drmOTEF+WY=
-X-Received: by 2002:ab0:70d9:: with SMTP id r25mr880005ual.109.1561619227668;
- Thu, 27 Jun 2019 00:07:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190618030926.30616-1-yamada.masahiro@socionext.com> <1318390798.95477.1560838785550.JavaMail.zimbra@nod.at>
-In-Reply-To: <1318390798.95477.1560838785550.JavaMail.zimbra@nod.at>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 27 Jun 2019 16:06:31 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARA62uqi8rkDeJ=zjA6vnruTAH2VGOBd4=sQMhF+FHMLA@mail.gmail.com>
-Message-ID: <CAK7LNARA62uqi8rkDeJ=zjA6vnruTAH2VGOBd4=sQMhF+FHMLA@mail.gmail.com>
-Subject: Re: [PATCH v2] jffs2: remove C++ style comments from uapi header
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 27 Jun 2019 03:08:30 -0400
+Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
+        by 156.147.23.52 with ESMTP; 27 Jun 2019 16:08:27 +0900
+X-Original-SENDERIP: 156.147.1.126
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO localhost.localdomain) (10.177.222.33)
+        by 156.147.1.126 with ESMTP; 27 Jun 2019 16:08:27 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     paulmck@linux.ibm.com, josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: [PATCH v2] rcu: Change return type of rcu_spawn_one_boost_kthread()
+Date:   Thu, 27 Jun 2019 16:07:46 +0900
+Message-Id: <1561619266-8850-1-git-send-email-byungchul.park@lge.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 3:20 PM Richard Weinberger <richard@nod.at> wrote:
->
-> ----- Urspr=C3=BCngliche Mail -----
-> > Von: "Masahiro Yamada" <yamada.masahiro@socionext.com>
-> > An: "linux-mtd" <linux-mtd@lists.infradead.org>
-> > CC: "Boris Brezillon" <bbrezillon@kernel.org>, "Miquel Raynal" <miquel.=
-raynal@bootlin.com>, "Brian Norris"
-> > <computersforpeace@gmail.com>, "Vignesh Raghavendra" <vigneshr@ti.com>,=
- "Marek Vasut" <marek.vasut@gmail.com>,
-> > "Masahiro Yamada" <yamada.masahiro@socionext.com>, "richard" <richard@n=
-od.at>, "David Woodhouse" <dwmw2@infradead.org>,
-> > "linux-kernel" <linux-kernel@vger.kernel.org>
-> > Gesendet: Dienstag, 18. Juni 2019 05:09:26
-> > Betreff: [PATCH v2] jffs2: remove C++ style comments from uapi header
->
-> > Linux kernel tolerates C++ style comments these days. Actually, the
-> > SPDX License tags for .c files start with //.
-> >
-> > On the other hand, uapi headers are written in more strict C, where
-> > the C++ comment style is forbidden.
-> >
-> > I simply dropped these lines instead of fixing the comment style.
-> >
-> > This code has been always commented out since it was added around
-> > Linux 2.4.9 (i.e. commented out for more than 17 years).
-> >
-> > 'Maybe later...' will never happen.
->
-> :-)
->
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
-> Acked-by: Richard Weinberger <richard@nod.at>
->
-> Thanks,
-> //richard
+Hello,
 
+I tested if the WARN_ON_ONCE() is fired with my box and it was ok.
 
-Will this be picked up for v5.3-rc1 ?
+Thanks,
+Byungchul
 
+Changes from v1
+-. WARN_ON_ONCE() on failing to create rcu_boost_kthread.
+-. Changed title and commit message a bit.
 
+---8<---
+From 7100fcf82202f063f70f45def208ea5198412f5a Mon Sep 17 00:00:00 2001
+From: Byungchul Park <byungchul.park@lge.com>
+Date: Thu, 27 Jun 2019 15:58:10 +0900
+Subject: [PATCH v2] rcu: Change return type of rcu_spawn_one_boost_kthread()
 
---=20
-Best Regards
-Masahiro Yamada
+The return value of rcu_spawn_one_boost_kthread() is not used any
+longer. Change return type of that function from int to void.
+
+Signed-off-by: Byungchul Park <byungchul.park@lge.com>
+---
+ kernel/rcu/tree_plugin.h | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 1102765..3c8444e 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -1131,7 +1131,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
+  * already exist.  We only create this kthread for preemptible RCU.
+  * Returns zero if all is well, a negated errno otherwise.
+  */
+-static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
++static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+ {
+ 	int rnp_index = rnp - rcu_get_root();
+ 	unsigned long flags;
+@@ -1139,25 +1139,24 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+ 	struct task_struct *t;
+ 
+ 	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
+-		return 0;
++		return;
+ 
+ 	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
+-		return 0;
++		return;
+ 
+ 	rcu_state.boost = 1;
+ 	if (rnp->boost_kthread_task != NULL)
+-		return 0;
++		return;
+ 	t = kthread_create(rcu_boost_kthread, (void *)rnp,
+ 			   "rcub/%d", rnp_index);
+-	if (IS_ERR(t))
+-		return PTR_ERR(t);
++	if (WARN_ON_ONCE(IS_ERR(t)))
++		return;
+ 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 	rnp->boost_kthread_task = t;
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 	sp.sched_priority = kthread_prio;
+ 	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
+ 	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
+-	return 0;
+ }
+ 
+ static void rcu_cpu_kthread_setup(unsigned int cpu)
+@@ -1265,7 +1264,7 @@ static void __init rcu_spawn_boost_kthreads(void)
+ 	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
+ 		return;
+ 	rcu_for_each_leaf_node(rnp)
+-		(void)rcu_spawn_one_boost_kthread(rnp);
++		rcu_spawn_one_boost_kthread(rnp);
+ }
+ 
+ static void rcu_prepare_kthreads(int cpu)
+@@ -1275,7 +1274,7 @@ static void rcu_prepare_kthreads(int cpu)
+ 
+ 	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
+ 	if (rcu_scheduler_fully_active)
+-		(void)rcu_spawn_one_boost_kthread(rnp);
++		rcu_spawn_one_boost_kthread(rnp);
+ }
+ 
+ #else /* #ifdef CONFIG_RCU_BOOST */
+-- 
+1.9.1
+
