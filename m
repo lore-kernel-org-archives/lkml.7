@@ -2,90 +2,63 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9BEC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DABDC48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1A42086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:26:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HiozRSV9"
+	by mail.kernel.org (Postfix) with ESMTP id 0D9C12083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfF0L0X (ORCPT
+        id S1726817AbfF0L0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 07:26:23 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35832 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfF0L0X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:26:23 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a25so1331267lfg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 04:26:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yf/4QsQz71xnsufXmplIhM5PQjWjtA8iRNvCLywUsCI=;
-        b=HiozRSV9jjoEd8lgVneXDXnUBP1+IEYIg+jfVj3yu3YE2rDCh0mQf6PCltXafOZuRQ
-         wgzquUBxyhWo7PDBS9m/LWFwnCANPBpvCZrQYE2oHj20GZq/2E9ThKk3E8NPw81Lz1IR
-         6wqLETMA8WyJzKNmXnDzqbNY6sUIuKzxUMVE+GnlYNfor+m9ZCB+VLKecag/t5wKJ6Jd
-         T9zmH0RwA2Aq86TTmuzE2Qjhpw0IXYMX8T1nY+VIb685SluVHK84SiGlfHixp33uk0NX
-         kmZSALvd+oLO52Ab1ZdDT5vg1sdlJ8tHsJXVo/3VFxdWskcobVYms8f/hqACvEI3a+uf
-         LmpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yf/4QsQz71xnsufXmplIhM5PQjWjtA8iRNvCLywUsCI=;
-        b=Y9U4aCxxXjLP0hm0oOKbFvYZVlMGgx3w7jpY+Mvb4Yi4MfzsU469ayaPbnrI+yVc3X
-         dEB+W01zpWXWHP5iWGELhmCVSlICpQcM4C2F2hqHcWPBOsU/XjDY55L5a67j3dIDovM1
-         ax1FtvRkq8DHC0Q7edoe6U0FHk3g9OgQmDVrgZQm6r+imkFyYpyb6UB2xzoZ+9615y0+
-         ZO9CN2PS8bAXQmlug648ll9okG9xVcC3fiZm5WZYv4ZcuSMHDRr7ubSG7H3zGw4bNxf1
-         Owdt3lD890hhN1ZPFE/ioRU7IN3YXh0UENTjLEtNa3epU2Lk8rip9i8TI0ARjc45uo+F
-         0csg==
-X-Gm-Message-State: APjAAAVJ/3pKJ3OsDstvLZ1uCUUq0qPEQ+WPuYlVrdhtSRc8kt5QcLDw
-        +qtAZHgCHIIdnGVA/I2XW4Vt15pJ1XORT+HLdoEzBw==
-X-Google-Smtp-Source: APXvYqzeLT9m0qZPhFXMQe7bGeM0G0YNhFKZNBdroL1getpvV13XvxWgav2h1PfavnIunwZFc7NAtBe9miLt5qxA34s=
-X-Received: by 2002:a19:dc0d:: with SMTP id t13mr1687908lfg.152.1561634781537;
- Thu, 27 Jun 2019 04:26:21 -0700 (PDT)
+        Thu, 27 Jun 2019 07:26:37 -0400
+Received: from mga03.intel.com ([134.134.136.65]:56015 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbfF0L0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 07:26:37 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 04:26:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
+   d="scan'208";a="183428487"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 27 Jun 2019 04:26:32 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 27 Jun 2019 14:26:31 +0300
+Date:   Thu, 27 Jun 2019 14:26:31 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     wsa@the-dreams.de, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH v8 2/6] i2c: acpi: Use available IRQ helper functions
+Message-ID: <20190627112631.GC2640@lahna.fi.intel.com>
+References: <20190627092411.26123-1-ckeepax@opensource.cirrus.com>
+ <20190627092411.26123-3-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-References: <20190626071430.28556-1-andrew@aj.id.au> <20190626071430.28556-2-andrew@aj.id.au>
- <CACPK8Xfdd1ReAHr9f6zRbZ-WJRquDJsTdUQeT_JuEBhOzS8tig@mail.gmail.com>
-In-Reply-To: <CACPK8Xfdd1ReAHr9f6zRbZ-WJRquDJsTdUQeT_JuEBhOzS8tig@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 27 Jun 2019 12:26:10 +0100
-Message-ID: <CACRpkdZtTy-HHu2O4aOaqV5ZdxcYYPFRuxK2jjnw+_O1xcF1rg@mail.gmail.com>
-Subject: Re: [PATCH 1/8] dt-bindings: pinctrl: aspeed: Split bindings document
- in two
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-aspeed@lists.ozlabs.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627092411.26123-3-ckeepax@opensource.cirrus.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 4:32 AM Joel Stanley <joel@jms.id.au> wrote:
+On Thu, Jun 27, 2019 at 10:24:07AM +0100, Charles Keepax wrote:
+> Use the available IRQ helper functions, most of the functions have
+> additional helpful side affects like configuring the trigger type of the
+> IRQ.
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-> I think we can use this as an opportunity to drop the unused g4-scu
-> compatible from the bindings. Similarly for the g5.
->
-> Acked-by: Joel Stanley <joel@jms.id.au>
-
-I assume I should wait for a new version of the patches that does
-this?
-
-Yours,
-Linus Walleij
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
