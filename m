@@ -8,69 +8,65 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28BAC48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6DFC48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85EE7205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5DD205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uPdAlVeE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LN7RT0XY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbfF0RmH (ORCPT
+        id S1726960AbfF0RmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:42:07 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36319 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfF0RmH (ORCPT
+        Thu, 27 Jun 2019 13:42:17 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41667 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfF0RmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:42:07 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so1594428pfl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 10:42:06 -0700 (PDT)
+        Thu, 27 Jun 2019 13:42:17 -0400
+Received: by mail-pl1-f195.google.com with SMTP id m7so1669306pls.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 10:42:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=gOS8Fn0ZCLcglF4xKeQZbhL/pfJXLmBVW/p/GaFW4vw=;
-        b=uPdAlVeEkWRPvyXaQHMcoUf1KiMZ8y3IchjzB4LpXvjA3PWopLM23mdCfvh8e6aT8f
-         moz685kVPURyD0QfGpQ15iLkhiJVnB6FTnopZaE9GQw1qfcX28961BFzoad6LmgcjMAK
-         iNPi65WQF2y1Dt8++ZIA3pavZhIs+52lbBKhOO6mnWezHhch/UrA36rmJJf3w2Sox7iG
-         FH5c/7rND1ZKv138gH03CluA5COl027kU9NwXSFzNau196IytFwuou1PeTSQWgB9vt90
-         jOupeT3ZMB/on6U8wr/LakCfP8gqj0haMByxgc/rBKy5VLN0WBXim3kJMGDgXFqRzcmL
-         f1Eg==
+        bh=a1PhA2Or6OPK8FK6GJ0xMKVx39nWfrgg8OZa9emN5gw=;
+        b=LN7RT0XYk5lzaKtqIY6WCCGM5L0jtMOkSd2BNwWK1MTF3BQs2wBZxmE1B6srKD+All
+         zW/VsiLSECzJSbsj/De6yZdOCw6igZtdrTR/K7uYS3Cjw3nj8t/yrWpxbWOVYRYS9H2A
+         ZP1CixY3j3YhUbXFn/lmpWWO6w5ZRa27hPcvFaJxXag7NU0Ld5N4VVa9VNLuzJQWE9hx
+         h21a41wMT10QWnHQbf2eLPNk+wRS3iTJ+xGYFyVR1BD/gAOZGswJz6rhc6KtWw1HoV9B
+         DOP7mY/xrmiORWriXeZK1+VAB4GMVOHCS+k6aRgz4A6M17+Ah2EFSBBeFkhpfOZnMdO0
+         l4UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gOS8Fn0ZCLcglF4xKeQZbhL/pfJXLmBVW/p/GaFW4vw=;
-        b=TIqxEfTBmBhQKf6ayC4ZiNXj4NzkSEvqyT1T/QtLk6GVVYDdA+5z0Moys9XgXOUFgq
-         SUUUpaXGfWgwdSJmPPJp3oOUsB5Bk06B4Qaz/ZGIx74ROV0JfE+7VnDmjEnrlXryNbU8
-         spX+8BBjC/uRniq6SiUErZJBi1v8bJRLw9b1Q9spJkW+Axhpbv/BBsSpQFLHK0Ve0ZZz
-         slKfnyEjdF5EMA7g5J7YYFiZA2nOLt4u5Bjmvkgyn7ibWRCha0lfv6knLnHO6MraK8AF
-         j66ACRYljpFg6YzjE2KgwW7476kyBti9dvtOffJ8MPDJoCJk6qiYMHmj4HajfEaYl2Gq
-         Uj/A==
-X-Gm-Message-State: APjAAAVBz9av0FBby6fKrL4qThTJIoxgubGAnwcyM4WDRD/clBc6Izwd
-        zO32TGRaxr46hXs94HZyWeM=
-X-Google-Smtp-Source: APXvYqxLjZc8YA2i5iuLsRCgktSmgA1fvawM8bInlAxJ54TjKSt49nAe7X0Ysj4Sjh/WVGT73i+7dg==
-X-Received: by 2002:a65:6241:: with SMTP id q1mr4853914pgv.24.1561657326093;
-        Thu, 27 Jun 2019 10:42:06 -0700 (PDT)
+        bh=a1PhA2Or6OPK8FK6GJ0xMKVx39nWfrgg8OZa9emN5gw=;
+        b=scyLTn7UXUiCQy675C2FCzp1JuOgzLkqrFMWzSGysaOnv+mpBkRTw21HMEHq4/9WQx
+         kYzn4v3UafNCbCXItSJ3CHToCB47SSnxI3c36psU5qxCs61wuFp8E54NmrwaDdafWf2R
+         iRuChX7VwdRJ/aMtDwYTDdQl0HOn9P8CnSh9+8Gmu5fILkaUzLCC0yRD2uClluCytjr4
+         nvMk9T2H23bhqvxVnNfNqh4/uLTaTYQ6N6LuEVm7n9tmSNxWbJEvAoZXvzHQa6PBtwLU
+         cf1HhCijVuLwuLYwEGFxxGZlux8E4rRO0AzUPtRKd+pj+u/Cy9PkkCTDlIxDq3FrmUxq
+         wZng==
+X-Gm-Message-State: APjAAAXCUFDN0dS09ahRFcPrnPt2pUxGkBRV45ubRa5VSDuydi4kyMMu
+        GbGZ4uz0A0aK6CpdQaRqvCE=
+X-Google-Smtp-Source: APXvYqyRTr6Xrl6LCdDDX1j2cfNbXCLG3l7lKFZl34Zkg/4yGCb7FtnMr0SFZ+DanxIianCIevQrJA==
+X-Received: by 2002:a17:902:694a:: with SMTP id k10mr5937681plt.255.1561657336721;
+        Thu, 27 Jun 2019 10:42:16 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id cx22sm6124798pjb.25.2019.06.27.10.42.02
+        by smtp.googlemail.com with ESMTPSA id b24sm3391850pfd.98.2019.06.27.10.42.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:42:05 -0700 (PDT)
+        Thu, 27 Jun 2019 10:42:16 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
-        Murray McAllister <murray.mcallister@insomniasec.com>,
-        Kimberly Brown <kimbrownkd@gmail.com>,
-        Anirudh Rayabharam <anirudh.rayabharam@gmail.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
+        Michael Straube <straube.linux@gmail.com>,
+        Dafna Hirschfeld <dafna3@gmail.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 49/87] rtl8723bs: core: remove memset after rtw_zmalloc
-Date:   Fri, 28 Jun 2019 01:41:56 +0800
-Message-Id: <20190627174158.4560-1-huangfq.daxian@gmail.com>
+Subject: [PATCH 50/87] rtl8712: replace kmalloc and memset with kzalloc
+Date:   Fri, 28 Jun 2019 01:42:08 +0800
+Message-Id: <20190627174209.4616-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,48 +74,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rtw_zmalloc already zeros the memory.
-memset is unneeded.
+kmalloc + memset(0) -> kzalloc
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/staging/rtl8723bs/core/rtw_ap.c   | 2 --
- drivers/staging/rtl8723bs/core/rtw_mlme.c | 2 --
- 2 files changed, 4 deletions(-)
+ drivers/staging/rtl8712/rtl871x_io.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index bc0230672457..dc1da5626ce1 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -1504,8 +1504,6 @@ static int rtw_ap_set_key(
- 		goto exit;
- 	}
- 
--	memset(psetkeyparm, 0, sizeof(struct setkey_parm));
--
- 	psetkeyparm->keyid = (u8)keyid;
- 	if (is_wep_enc(alg))
- 		padapter->securitypriv.key_mask |= BIT(psetkeyparm->keyid);
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-index 5f78f1eaa7aa..3586da79af5a 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-@@ -2229,7 +2229,6 @@ sint rtw_set_auth(struct adapter *adapter, struct security_priv *psecuritypriv)
- 		goto exit;
- 	}
- 
--	memset(psetauthparm, 0, sizeof(struct setauth_parm));
- 	psetauthparm->mode = (unsigned char)psecuritypriv->dot11AuthAlgrthm;
- 
- 	pcmd->cmdcode = _SetAuth_CMD_;
-@@ -2262,7 +2261,6 @@ sint rtw_set_key(struct adapter *adapter, struct security_priv *psecuritypriv, s
- 		res = _FAIL;
- 		goto exit;
- 	}
--	memset(psetkeyparm, 0, sizeof(struct setkey_parm));
- 
- 	if (psecuritypriv->dot11AuthAlgrthm == dot11AuthAlgrthm_8021X) {
- 		psetkeyparm->algorithm = (unsigned char)psecuritypriv->dot118021XGrpPrivacy;
+diff --git a/drivers/staging/rtl8712/rtl871x_io.c b/drivers/staging/rtl8712/rtl871x_io.c
+index 17dafeffd6f4..87024d6a465e 100644
+--- a/drivers/staging/rtl8712/rtl871x_io.c
++++ b/drivers/staging/rtl8712/rtl871x_io.c
+@@ -107,13 +107,11 @@ uint r8712_alloc_io_queue(struct _adapter *adapter)
+ 	INIT_LIST_HEAD(&pio_queue->processing);
+ 	INIT_LIST_HEAD(&pio_queue->pending);
+ 	spin_lock_init(&pio_queue->lock);
+-	pio_queue->pallocated_free_ioreqs_buf = kmalloc(NUM_IOREQ *
++	pio_queue->pallocated_free_ioreqs_buf = kzalloc(NUM_IOREQ *
+ 						(sizeof(struct io_req)) + 4,
+ 						GFP_ATOMIC);
+ 	if ((pio_queue->pallocated_free_ioreqs_buf) == NULL)
+ 		goto alloc_io_queue_fail;
+-	memset(pio_queue->pallocated_free_ioreqs_buf, 0,
+-			(NUM_IOREQ * (sizeof(struct io_req)) + 4));
+ 	pio_queue->free_ioreqs_buf = pio_queue->pallocated_free_ioreqs_buf + 4
+ 			- ((addr_t)(pio_queue->pallocated_free_ioreqs_buf)
+ 			& 3);
 -- 
 2.11.0
 
