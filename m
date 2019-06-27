@@ -2,108 +2,102 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56D9C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE889C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 807EE2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561628272;
-	bh=KmiOKWu+8QexJ8lPQPqypYPtnrqM0EvVEE0r/tGHZuk=;
-	h=Date:From:To:cc:Subject:List-ID:From;
-	b=PZ5xGncLzkB796kzzuLLbRA2/Xe1R08ncAZcx0xu/+c3C39AvttG4bWwxH6SpnruG
-	 nsL18SYkSzf7CNjh1EepUlARc+FST6IGi0aC26lQJfIzYV0da5LLlzv2fIDjLkuTj0
-	 LV9HtE/StQ4k17h7+7WWRymNgs8v/1LTg6qBw1qA=
+	by mail.kernel.org (Postfix) with ESMTP id AD5A82080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfF0Jhv (ORCPT
+        id S1726543AbfF0JjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 05:37:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52352 "EHLO mail.kernel.org"
+        Thu, 27 Jun 2019 05:39:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53881 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbfF0Jhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 05:37:51 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725385AbfF0JjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 05:39:08 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CF922080C;
-        Thu, 27 Jun 2019 09:37:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561628269;
-        bh=KmiOKWu+8QexJ8lPQPqypYPtnrqM0EvVEE0r/tGHZuk=;
-        h=Date:From:To:cc:Subject:From;
-        b=ifQLNdv7IH5Y/95hr6IZtn197cWgaG5bPsuTzxQhfdOUfUB01ktJz4v60ppxSMKTH
-         /BSB4yKT11hKgMvjC+wB2f+PsRijJthwbdeQjiSfh59ZQ2WKMl8xsoqszkwjhSijpy
-         HI5QvankQ9gLq/j2cZkoAq9qqhk7k4e1li6Z6cEg=
-Date:   Thu, 27 Jun 2019 11:37:47 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     linux-kernel@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [GIT PULL] HID fixes
-Message-ID: <nycvar.YFH.7.76.1906271134320.27227@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        by mx1.redhat.com (Postfix) with ESMTPS id 889F081E0A;
+        Thu, 27 Jun 2019 09:38:59 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-180.str.redhat.com [10.33.192.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 507835C1B4;
+        Thu, 27 Jun 2019 09:38:46 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>
+Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
+References: <20190501211217.5039-1-yu-cheng.yu@intel.com>
+        <20190502111003.GO3567@e103592.cambridge.arm.com>
+        <CALCETrVZCzh+KFCF6ijuf4QEPn=R2gJ8FHLpyFd=n+pNOMMMjA@mail.gmail.com>
+Date:   Thu, 27 Jun 2019 11:38:45 +0200
+In-Reply-To: <CALCETrVZCzh+KFCF6ijuf4QEPn=R2gJ8FHLpyFd=n+pNOMMMjA@mail.gmail.com>
+        (Andy Lutomirski's message of "Wed, 26 Jun 2019 10:14:07 -0700")
+Message-ID: <87ef3fweoq.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 27 Jun 2019 09:39:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+* Andy Lutomirski:
 
-please pull from
+> Also, I don't think there's any actual requirement that the upstream
+> kernel recognize existing CET-enabled RHEL 8 binaries as being
+> CET-enabled.  I tend to think that RHEL 8 jumped the gun here.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+The ABI was supposed to be finalized and everyone involved thought it
+had been reviewed by the GNU gABI community and other interested
+parties.  It had been included in binutils for several releases.
 
-to receive the following fixes for HID subsystem:
+From my point of view, the kernel is just a consumer of the ABI.  The
+kernel would not change an instruction encoding if it doesn't like it
+for some reason, either.
 
-=====
-- fix for one corner case in HID++ protocol with respect to handling very 
-  long reports, from Hans de Goede
-- power management fix in Intel-ISH driver, from Hyungwoo Yang
-- use-after-free fix in Intel-ISH driver, from Dan Carpenter
-- a couple of new device IDs/quirks from Kai-Heng Feng, Kyle Godbey and 
-  Oleksandr Natalenko
-=====
+> While the upstream kernel should make some reasonble effort to make
+> sure that RHEL 8 binaries will continue to run, I don't see why we
+> need to go out of our way to keep the full set of mitigations
+> available for binaries that were developed against a non-upstream
+> kernel.
 
-Thanks.
+They were developed against the ABI specification.
 
-----------------------------------------------------------------
-Dan Carpenter (1):
-      HID: intel-ish-hid: Fix a use after free in load_fw_from_host()
+I do not have a strong opinion what the kernel should do going forward.
+I just want to make clear what happened.
 
-Hans de Goede (1):
-      HID: logitech-dj: Fix forwarding of very long HID++ reports
-
-Hyungwoo Yang (1):
-      HID: intel-ish-hid: fix wrong driver_data usage
-
-Kai-Heng Feng (1):
-      HID: multitouch: Add pointstick support for ALPS Touchpad
-
-Kyle Godbey (1):
-      HID: uclogic: Add support for Huion HS64 tablet
-
-Oleksandr Natalenko (1):
-      HID: chicony: add another quirk for PixArt mouse
-
- drivers/hid/hid-ids.h                        |  3 +++
- drivers/hid/hid-logitech-dj.c                |  4 +++-
- drivers/hid/hid-multitouch.c                 |  4 ++++
- drivers/hid/hid-quirks.c                     |  1 +
- drivers/hid/hid-uclogic-core.c               |  2 ++
- drivers/hid/hid-uclogic-params.c             |  2 ++
- drivers/hid/intel-ish-hid/ishtp-fw-loader.c  |  2 +-
- drivers/hid/intel-ish-hid/ishtp-hid-client.c |  4 ++--
- drivers/hid/intel-ish-hid/ishtp/bus.c        | 15 ++++++++++++++-
- include/linux/intel-ish-client-if.h          |  1 +
- 10 files changed, 33 insertions(+), 5 deletions(-)
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Thanks,
+Florian
