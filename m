@@ -2,143 +2,124 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95368C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DD2C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6956E20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561658269;
-	bh=AuFJz8ka4bbd9U8/rrPBsrwzzsfKjM33G6LhSwHHcbw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uKyM126BLS0kyYkszdHwqy9YdUXoFq4Q4VFQAVDbLjo2wpajaRF56WU4PeNSXJX4O
-	 pgd3nEkOvKM5fX1hKyulZ7rWyYAZgGJefSk0KsA/DX06hkmS4s9ZGXhMOF6yoCusW4
-	 qzfWZFevdkQlEi47xaIm0O+haCfwg9DbWM0mC3dw=
+	by mail.kernel.org (Postfix) with ESMTP id AB6B4208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfF0R5s (ORCPT
+        id S1726640AbfF0SAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:57:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726405AbfF0R5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:57:47 -0400
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E74E2177B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 17:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561658267;
-        bh=AuFJz8ka4bbd9U8/rrPBsrwzzsfKjM33G6LhSwHHcbw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pwSTMjXHGt/r9fLzwmASxdxE/MmLeOQQgtEWbcj4Fz3PTiBFMaiK7bmkIU1SJoaOl
-         w9R8eI2/KXAX3pKdJp8fhRJfvTpdd3SGtoI+mq/ZuFWFQPWzJnHZeJBgsrIg+oVgL8
-         3BLPjvrqsqk/1SFDO5kG5qLtztrvaPW/n3nt+1XY=
-Received: by mail-qk1-f174.google.com with SMTP id x18so2472969qkn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 10:57:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAULx417sIUYHdFHqHwSqkMv/mK2k4B4e0KLajeMMKPDa3MXY6px
-        P6/dV8NGJFNDWFWUIlnUGT9nKJ89POUAB8Fqyg==
-X-Google-Smtp-Source: APXvYqxhQp2BTbtvCFGln6FbDKha/1kQyYa7alsmb9UvgsSNplaI6MWMixSvDaZWUZprwBsf2EDRykU9lv19KYFgGos=
-X-Received: by 2002:ae9:ebd1:: with SMTP id b200mr4759890qkg.152.1561658266279;
- Thu, 27 Jun 2019 10:57:46 -0700 (PDT)
+        Thu, 27 Jun 2019 14:00:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48768 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726405AbfF0SAN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:00:13 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RHvBj8102602
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:00:12 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2td2nd85es-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:00:11 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 27 Jun 2019 19:00:10 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 27 Jun 2019 19:00:06 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RI05xC54067698
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 18:00:05 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 377F8B2064;
+        Thu, 27 Jun 2019 18:00:05 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 242E4B206B;
+        Thu, 27 Jun 2019 18:00:05 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Jun 2019 18:00:05 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 252A116C0E68; Thu, 27 Jun 2019 11:00:07 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 11:00:07 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH RT 4/4] rcutorture: Avoid problematic critical
+ section nesting
+Reply-To: paulmck@linux.ibm.com
+References: <20190619011908.25026-1-swood@redhat.com>
+ <20190619011908.25026-5-swood@redhat.com>
+ <20190620211826.GX26519@linux.ibm.com>
+ <20190621163821.rm2rhsnvfo5tnjul@linutronix.de>
+ <20190621235955.GK26519@linux.ibm.com>
+ <20190626110847.2dfdf72c@gandalf.local.home>
+ <8462f30720637ec0da377aa737d26d2cad424d36.camel@redhat.com>
 MIME-Version: 1.0
-References: <20190627155318.38053-1-steven.price@arm.com> <20190627155318.38053-2-steven.price@arm.com>
-In-Reply-To: <20190627155318.38053-2-steven.price@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 27 Jun 2019 11:57:34 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ5ebyrvapvOSvg1ejgkbqEZyYh2AWAbO0UE=DssKtW1Q@mail.gmail.com>
-Message-ID: <CAL_JsqJ5ebyrvapvOSvg1ejgkbqEZyYh2AWAbO0UE=DssKtW1Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] drm/gem: Rename drm_gem_dumb_map_offset() to drm_gem_map_offset()
-To:     Steven Price <steven.price@arm.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        David Airlie <airlied@linux.ie>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8462f30720637ec0da377aa737d26d2cad424d36.camel@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19062718-2213-0000-0000-000003A5D520
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011342; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01224104; UDB=6.00644247; IPR=6.01005293;
+ MB=3.00027492; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-27 18:00:09
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062718-2214-0000-0000-00005F04DBB5
+Message-Id: <20190627180007.GA27126@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906270205
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 9:53 AM Steven Price <steven.price@arm.com> wrote:
->
-> drm_gem_dumb_map_offset() is a useful helper for non-dumb clients, so
-> rename it to remove the _dumb and add a comment that it can be used by
-> shmem clients.
->
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  drivers/gpu/drm/drm_dumb_buffers.c      | 4 ++--
->  drivers/gpu/drm/drm_gem.c               | 9 ++++++---
->  drivers/gpu/drm/exynos/exynos_drm_gem.c | 3 +--
->  include/drm/drm_gem.h                   | 4 ++--
->  4 files changed, 11 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dumb_buffers.c b/drivers/gpu/drm/drm_dumb_buffers.c
-> index d18a740fe0f1..b55cfc9e8772 100644
-> --- a/drivers/gpu/drm/drm_dumb_buffers.c
-> +++ b/drivers/gpu/drm/drm_dumb_buffers.c
-> @@ -48,7 +48,7 @@
->   * To support dumb objects drivers must implement the &drm_driver.dumb_create
->   * operation. &drm_driver.dumb_destroy defaults to drm_gem_dumb_destroy() if
->   * not set and &drm_driver.dumb_map_offset defaults to
-> - * drm_gem_dumb_map_offset(). See the callbacks for further details.
-> + * drm_gem_map_offset(). See the callbacks for further details.
->   *
->   * Note that dumb objects may not be used for gpu acceleration, as has been
->   * attempted on some ARM embedded platforms. Such drivers really must have
-> @@ -127,7 +127,7 @@ int drm_mode_mmap_dumb_ioctl(struct drm_device *dev,
->                                                     args->handle,
->                                                     &args->offset);
->         else
-> -               return drm_gem_dumb_map_offset(file_priv, dev, args->handle,
-> +               return drm_gem_map_offset(file_priv, dev, args->handle,
->                                                &args->offset);
->  }
->
-> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-> index a8c4468f03d9..62842b7701bb 100644
-> --- a/drivers/gpu/drm/drm_gem.c
-> +++ b/drivers/gpu/drm/drm_gem.c
-> @@ -298,7 +298,7 @@ drm_gem_handle_delete(struct drm_file *filp, u32 handle)
->  EXPORT_SYMBOL(drm_gem_handle_delete);
->
->  /**
-> - * drm_gem_dumb_map_offset - return the fake mmap offset for a gem object
-> + * drm_gem_map_offset - return the fake mmap offset for a gem object
->   * @file: drm file-private structure containing the gem object
->   * @dev: corresponding drm_device
->   * @handle: gem object handle
-> @@ -307,10 +307,13 @@ EXPORT_SYMBOL(drm_gem_handle_delete);
->   * This implements the &drm_driver.dumb_map_offset kms driver callback for
->   * drivers which use gem to manage their backing storage.
->   *
-> + * It can also be used by drivers using the shmem backend as they have the
-> + * same restriction that imported objects cannot be mapped.
+On Wed, Jun 26, 2019 at 11:49:16AM -0500, Scott Wood wrote:
+> On Wed, 2019-06-26 at 11:08 -0400, Steven Rostedt wrote:
+> > On Fri, 21 Jun 2019 16:59:55 -0700
+> > "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
+> > 
+> > > I have no objection to the outlawing of a number of these sequences in
+> > > mainline, but am rather pointing out that until they really are outlawed
+> > > and eliminated, rcutorture must continue to test them in mainline.
+> > > Of course, an rcutorture running in -rt should avoid testing things that
+> > > break -rt, including these sequences.
+> > 
+> > We should update lockdep to complain about these sequences. That would
+> > "outlaw" them in mainline. That is, after we clean up all the current
+> > sequences in the code. And we also need to get Linus's approval of this
+> > as I believe he was against enforcing this in the past.
+> 
+> Was the opposition to prohibiting some specific sequence?  It's only certain
+> misnesting scenarios that are problematic.  The rcu_read_lock/
+> local_irq_disable restriction can be dropped with the IPI-to-self added in
+> Paul's tree.  Are there any known instances of the other two (besides
+> rcutorture)?
 
-Maybe better not to say 'shmem' explicitly or just mention it as an
-example so when we have a 2nd case we don't have to update the
-comment.
+Given the failure scenario Sebastian Siewior reported today, there
+apparently are some, at least when running threaded interrupt handlers.
 
-...drivers with GEM BO implementations which have the same...
+							Thanx, Paul
 
-I can fix up and apply. Some other acks would be nice first.
-
-Rob
