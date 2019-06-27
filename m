@@ -7,73 +7,95 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D23C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D9EC48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E75EE2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254302133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:28:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UZ8UBz2r"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oDEgl6m/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfF0R22 (ORCPT
+        id S1726655AbfF0R2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:28:28 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38097 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfF0R22 (ORCPT
+        Thu, 27 Jun 2019 13:28:46 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33454 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726519AbfF0R2q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:28:28 -0400
-Received: by mail-pl1-f196.google.com with SMTP id 9so883575ple.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 10:28:28 -0700 (PDT)
+        Thu, 27 Jun 2019 13:28:46 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x15so1581242pfq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 10:28:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=OQen2ezFLvGlY5YY2wOeplKvt6lesrbg+a5IZq1voZU=;
-        b=UZ8UBz2rwp9uCPm/XWOWstqPk6guuL7vFbYt+hTU+3oAUdZ+KJW1UI6WNQjROfu/rT
-         YwiYbghhgbL2rP1xFoxyA/69RcI9H6khyVMUE75v93HYh5nrsUO+Uc+KQLL3SxvYnUQi
-         xlaQXXboV5bZfkvYs++Ed0XP5Tpln34eObYds=
+        bh=1BuKXBmmW9/P/7i29LRIiTw7qTDu/2or3umd5ZEV8Lo=;
+        b=oDEgl6m/gy5Of4Vf+KJ7EdiB5UApvl/p5nbHKbFmiGRum3SByz96/Z0eBCqFDhdP7H
+         tYEuNbeu8qY68ho01JwoUKsD9W6Ay7GZvAIAyenZJMiW5Ux6tDLjV369gNKWlrDRvXJC
+         4S5uxcWftfMBu/IA9fb+m76jrdTMv9QSz4qn0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=OQen2ezFLvGlY5YY2wOeplKvt6lesrbg+a5IZq1voZU=;
-        b=Kq38euOgP0zsCNIxicrhC6QzxXqPJxDmQMCuKYgDu4gFafJLxsX8GE73BY9MaDv6ba
-         suhKF1WeZbBGiwoMsOHqlB0YdB9cVSU16liTNtg6kEd2IN1OpAQn/zKd6A+Ke9CcrtqA
-         ZLRoLQGllgodhvBH7rFiyN5gqwKOOcGa7klnJCSB8QBJumbZ4Y90h8spnz1WkCUtU3YG
-         vAQN+Cls0ldJt5sNK50ZJ9kSEjgqZxgSIw6tIlJm8SyqQj6yzO3IyDTbFlTCTlJhtDso
-         4QG4lKKM845krFvlwOAVvLz8MrhQgBeIdV4apHuExFBCtHKKoXnDrgYjZ9FWkviVWjnv
-         9b3g==
-X-Gm-Message-State: APjAAAWemOdJE43JYqrgRTunkAb0aNkuyFNZA2TvIw/cMxVqgyD9tJF5
-        TDzugq1eXzXVS8RdsppLl3Nw0w==
-X-Google-Smtp-Source: APXvYqwpeS85FeXRmIPlVVSP7QWKH4tvGJ6nJ90QbxQII2vd1YPE9YG+2ED59z5CL0tAOcqEADxIGg==
-X-Received: by 2002:a17:902:f81:: with SMTP id 1mr5865146plz.191.1561656507785;
-        Thu, 27 Jun 2019 10:28:27 -0700 (PDT)
+        bh=1BuKXBmmW9/P/7i29LRIiTw7qTDu/2or3umd5ZEV8Lo=;
+        b=ckVLjxMRX1huC5OMV3ctGFgVs+g+nnhtiYLuUJDK2W0L1QJsB+LcaJNrac55ShsAgD
+         wyQwE8veywS8yIcVeEuAw1WElLdQlBz1/X4MGTao1yu8AxnRbgqihr4yu0hMYAfH725u
+         JnG7pZs1UHfUv5/VbPgFJ5Fl3pTNQ94EEcpxWlMRQnqNroIHgjdB7DEv2H5lIBLBbZbZ
+         prSVcK/0McQYVOxT8ljpjUNB+h1/fQqXtJgsaD2L0baml33iScddESIjdiF1dfYLrVzw
+         pEE4+ULi4217yW967GlheJu1nSJuratE/g+7+c3dcVzOfATPlmbrhM67UFejSCF2q3Zn
+         Y2mA==
+X-Gm-Message-State: APjAAAVncV+K7o2Q9HaRGYHdCqOsg5Ag9KXBvI7xBhVgqXY38CLJTqdr
+        686lMT0gqbsOhfqkaPfdQ0ehrw==
+X-Google-Smtp-Source: APXvYqy3tPJAc6F33ZKoDp1dJlxiuk6bL+tlx77piHErqbQ17H3BVnKEMbzBjTSyC6qfYrNj43KOyw==
+X-Received: by 2002:a17:90a:730b:: with SMTP id m11mr7289827pjk.89.1561656525785;
+        Thu, 27 Jun 2019 10:28:45 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q10sm2508402pgg.35.2019.06.27.10.28.26
+        by smtp.gmail.com with ESMTPSA id w3sm3177048pgl.31.2019.06.27.10.28.44
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Jun 2019 10:28:27 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 10:28:26 -0700
+        Thu, 27 Jun 2019 10:28:45 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 10:28:44 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Andy Lutomirski <luto@kernel.org>
 Cc:     x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
         Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v2 3/8] x86/vsyscall: Show something useful on a read
- fault
-Message-ID: <201906271028.E2A4538@keescook>
+        Jann Horn <jannh@google.com>, Borislav Petkov <bp@alien8.de>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 4/8] x86/vsyscall: Document odd SIGSEGV error code for
+ vsyscalls
+Message-ID: <201906271028.00EE29E9E@keescook>
 References: <cover.1561610354.git.luto@kernel.org>
- <8016afffe0eab497be32017ad7f6f7030dc3ba66.1561610354.git.luto@kernel.org>
+ <75c91855fd850649ace162eec5495a1354221aaa.1561610354.git.luto@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8016afffe0eab497be32017ad7f6f7030dc3ba66.1561610354.git.luto@kernel.org>
+In-Reply-To: <75c91855fd850649ace162eec5495a1354221aaa.1561610354.git.luto@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 09:45:04PM -0700, Andy Lutomirski wrote:
+On Wed, Jun 26, 2019 at 09:45:05PM -0700, Andy Lutomirski wrote:
+> Even if vsyscall=none, we report uer page faults on the vsyscall
+> page as though the PROT bit in the error code was set.  Add a
+> comment explaining why this is probably okay and display the value
+> in the test case.
+> 
+> While we're at it, explain why our behavior is correct with respect
+> to PKRU.
+> 
+> This also modifies the selftest to print the odd error code so that
+> you can run the selftest and see that the behavior is odd.
+> 
+> If anyone really cares about more accurate emulation, we could
+> change the behavior.
+> 
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
 > Signed-off-by: Andy Lutomirski <luto@kernel.org>
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
@@ -81,93 +103,66 @@ Reviewed-by: Kees Cook <keescook@chromium.org>
 -Kees
 
 > ---
->  arch/x86/entry/vsyscall/vsyscall_64.c | 19 ++++++++++++++++++-
->  arch/x86/include/asm/vsyscall.h       |  6 ++++--
->  arch/x86/mm/fault.c                   | 11 +++++------
->  3 files changed, 27 insertions(+), 9 deletions(-)
+>  arch/x86/mm/fault.c                         | 7 +++++++
+>  tools/testing/selftests/x86/test_vsyscall.c | 9 ++++++++-
+>  2 files changed, 15 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
-> index fedd7628f3a6..9c58ab807aeb 100644
-> --- a/arch/x86/entry/vsyscall/vsyscall_64.c
-> +++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-> @@ -117,7 +117,8 @@ static bool write_ok_or_segv(unsigned long ptr, size_t size)
->  	}
->  }
->  
-> -bool emulate_vsyscall(struct pt_regs *regs, unsigned long address)
-> +bool emulate_vsyscall(unsigned long error_code,
-> +		      struct pt_regs *regs, unsigned long address)
->  {
->  	struct task_struct *tsk;
->  	unsigned long caller;
-> @@ -126,6 +127,22 @@ bool emulate_vsyscall(struct pt_regs *regs, unsigned long address)
->  	long ret;
->  	unsigned long orig_dx;
->  
-> +	/* Write faults or kernel-privilege faults never get fixed up. */
-> +	if ((error_code & (X86_PF_WRITE | X86_PF_USER)) != X86_PF_USER)
-> +		return false;
-> +
-> +	if (!(error_code & X86_PF_INSTR)) {
-> +		/* Failed vsyscall read */
-> +		if (vsyscall_mode == EMULATE)
-> +			return false;
-> +
-> +		/*
-> +		 * User code tried and failed to read the vsyscall page.
-> +		 */
-> +		warn_bad_vsyscall(KERN_INFO, regs, "vsyscall read attempt denied -- look up the vsyscall kernel parameter if you need a workaround");
-> +		return false;
-> +	}
-> +
->  	/*
->  	 * No point in checking CS -- the only way to get here is a user mode
->  	 * trap to a high address, which means that we're in 64-bit user code.
-> diff --git a/arch/x86/include/asm/vsyscall.h b/arch/x86/include/asm/vsyscall.h
-> index b986b2ca688a..ab60a71a8dcb 100644
-> --- a/arch/x86/include/asm/vsyscall.h
-> +++ b/arch/x86/include/asm/vsyscall.h
-> @@ -13,10 +13,12 @@ extern void set_vsyscall_pgtable_user_bits(pgd_t *root);
->   * Called on instruction fetch fault in vsyscall page.
->   * Returns true if handled.
->   */
-> -extern bool emulate_vsyscall(struct pt_regs *regs, unsigned long address);
-> +extern bool emulate_vsyscall(unsigned long error_code,
-> +			     struct pt_regs *regs, unsigned long address);
->  #else
->  static inline void map_vsyscall(void) {}
-> -static inline bool emulate_vsyscall(struct pt_regs *regs, unsigned long address)
-> +static inline bool emulate_vsyscall(unsigned long error_code,
-> +				    struct pt_regs *regs, unsigned long address)
->  {
->  	return false;
->  }
 > diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> index 46df4c6aae46..288a5462076f 100644
+> index 288a5462076f..58e4f1f00bbc 100644
 > --- a/arch/x86/mm/fault.c
 > +++ b/arch/x86/mm/fault.c
-> @@ -1369,16 +1369,15 @@ void do_user_addr_fault(struct pt_regs *regs,
->  
->  #ifdef CONFIG_X86_64
->  	/*
-> -	 * Instruction fetch faults in the vsyscall page might need
-> -	 * emulation.  The vsyscall page is at a high address
-> -	 * (>PAGE_OFFSET), but is considered to be part of the user
-> -	 * address space.
-> +	 * Faults in the vsyscall page might need emulation.  The
-> +	 * vsyscall page is at a high address (>PAGE_OFFSET), but is
-> +	 * considered to be part of the user address space.
+> @@ -710,6 +710,10 @@ static void set_signal_archinfo(unsigned long address,
+>  	 * To avoid leaking information about the kernel page
+>  	 * table layout, pretend that user-mode accesses to
+>  	 * kernel addresses are always protection faults.
+> +	 *
+> +	 * NB: This means that failed vsyscalls with vsyscall=none
+> +	 * will have the PROT bit.  This doesn't leak any
+> +	 * information and does not appear to cause any problems.
+>  	 */
+>  	if (address >= TASK_SIZE_MAX)
+>  		error_code |= X86_PF_PROT;
+> @@ -1375,6 +1379,9 @@ void do_user_addr_fault(struct pt_regs *regs,
 >  	 *
 >  	 * The vsyscall page does not have a "real" VMA, so do this
 >  	 * emulation before we go searching for VMAs.
+> +	 *
+> +	 * PKRU never rejects instruction fetches, so we don't need
+> +	 * to consider the PF_PK bit.
 >  	 */
-> -	if ((hw_error_code & X86_PF_INSTR) && is_vsyscall_vaddr(address)) {
-> -		if (emulate_vsyscall(regs, address))
-> +	if (is_vsyscall_vaddr(address)) {
-> +		if (emulate_vsyscall(hw_error_code, regs, address))
->  			return;
+>  	if (is_vsyscall_vaddr(address)) {
+>  		if (emulate_vsyscall(hw_error_code, regs, address))
+> diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
+> index 0b4f1cc2291c..4c9a8d76dba0 100644
+> --- a/tools/testing/selftests/x86/test_vsyscall.c
+> +++ b/tools/testing/selftests/x86/test_vsyscall.c
+> @@ -183,9 +183,13 @@ static inline long sys_getcpu(unsigned * cpu, unsigned * node,
+>  }
+>  
+>  static jmp_buf jmpbuf;
+> +static volatile unsigned long segv_err;
+>  
+>  static void sigsegv(int sig, siginfo_t *info, void *ctx_void)
+>  {
+> +	ucontext_t *ctx = (ucontext_t *)ctx_void;
+> +
+> +	segv_err =  ctx->uc_mcontext.gregs[REG_ERR];
+>  	siglongjmp(jmpbuf, 1);
+>  }
+>  
+> @@ -416,8 +420,11 @@ static int test_vsys_r(void)
+>  	} else if (!can_read && should_read_vsyscall) {
+>  		printf("[FAIL]\tWe don't have read access, but we should\n");
+>  		return 1;
+> +	} else if (can_read) {
+> +		printf("[OK]\tWe have read access\n");
+>  	} else {
+> -		printf("[OK]\tgot expected result\n");
+> +		printf("[OK]\tWe do not have read access: #PF(0x%lx)\n",
+> +		       segv_err);
 >  	}
 >  #endif
+>  
 > -- 
 > 2.21.0
 > 
