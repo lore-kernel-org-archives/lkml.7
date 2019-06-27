@@ -2,227 +2,136 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE0BC4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ACFC4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B6B216FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="nHXMAZdV"
+	by mail.kernel.org (Postfix) with ESMTP id 9A3B22133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561679222;
+	bh=Q1dFVGatyrvH1EwQa8A03bponGisy9U9KxUcuy5FXpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UvrKb4IOuP7I8rYCMPAmzCDxYxzyEfaylIV7nuDe8JThDncq1Enw55XPSMxq6BB0H
+	 h8ZFycjcx5fAx2wW8ssVldV1TU3APJsP8zXvksjXPPlZcMOXwMD4buGAK+TxSkUW4u
+	 MT8L2hOQHnYQAHA73qWfaqZcObiM+lPxRAoGdsfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfF0Xpn (ORCPT
+        id S1726710AbfF0XrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:45:43 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40993 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbfF0Xpn (ORCPT
+        Thu, 27 Jun 2019 19:47:01 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43457 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfF0XrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:45:43 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RNjRvx502904
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 27 Jun 2019 16:45:28 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RNjRvx502904
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561679128;
-        bh=w77iUMJwFYizOzEiRHpKqAIZpTBQAMppfcbmZJO7WWY=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=nHXMAZdVSw8fgHNG2OFhPffc/es6c+TiHJ5BVfLrpLYeParPhOOW+vIykviJ3sG3O
-         cHWzDidS9wYVKXfG5yaXcwP8BqVyCycx5CVm2tPAES5ztFz5idSPaLNDnART7fotVz
-         F7L4aaxdyTpnWE7jdGNyAi41JMG7jwD13xCOAYxROal5+W8BIK0fmT69Ohd8cvFkSc
-         c84dpCobXNcvpOE/HTTByltAAv7/49pcLOuINGL1/UW5lnatP0t0z30Mu93LdS2Lk9
-         eQFNMmqO7UPCKbNdMDHB4FqQ0VL38qWk0+tnNbnQZmUG9v7FdXa41TbMnojw14k4P9
-         4bA7goMhVCCxA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RNjRuU502901;
-        Thu, 27 Jun 2019 16:45:27 -0700
-Date:   Thu, 27 Jun 2019 16:45:27 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Ingo Molnar <tipbot@zytor.com>
-Message-ID: <tip-0b5c597de6aa30000480d6add2f37ef7de3f9312@git.kernel.org>
-Cc:     ravi.v.shankar@intel.com, Suravee.Suthikulpanit@amd.com,
-        tglx@linutronix.de, ricardo.neri-calderon@linux.intel.com,
-        andi.kleen@intel.com, eranian@google.com,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        mingo@kernel.org, hpa@zytor.com, peterz@infradead.org
-Reply-To: peterz@infradead.org, mingo@kernel.org, ashok.raj@intel.com,
-          hpa@zytor.com, eranian@google.com, linux-kernel@vger.kernel.org,
-          tglx@linutronix.de, Suravee.Suthikulpanit@amd.com,
-          ravi.v.shankar@intel.com, ricardo.neri-calderon@linux.intel.com,
-          andi.kleen@intel.com
-In-Reply-To: <20190623132435.637420368@linutronix.de>
-References: <20190623132435.637420368@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/timers] x86/hpet: Coding style cleanup
-Git-Commit-ID: 0b5c597de6aa30000480d6add2f37ef7de3f9312
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 27 Jun 2019 19:47:00 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i189so1983107pfg.10;
+        Thu, 27 Jun 2019 16:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tqaLuK1L6bNY5cuzUVYngg+bgb4Q6R92tXoWTRxzMkI=;
+        b=iIbAJ0+HhXrBNS1hsYpHT5C8buG1Mj/g0OAh2U5znFpi+186BSN2teqxdBdTVnG77F
+         kdmHZoJFZTmnQcuWpqWSsFQ7aV3JXDpLk2CMUhfdtzimCljVRwmrNReQEth9UZ8hLlJp
+         muc1DByzKkRp7dKSApxi5Ni4p2ChvaDByCNBv13j548c+icCoMjfhS6Oh6rl/Va/KCvB
+         p7mes9TkQtNb26gesa/N8zHNnrTaGRRtgvjKTr8VcKGMHdr9h7HjZ8ueQi7wmBRV1PcN
+         ftvXHt1qCDylmsN++jRgEpNLeXmJCPojhhNR7rTKPKAbVkaC2ruAdiG9DIyM+OD2/SQe
+         cBEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tqaLuK1L6bNY5cuzUVYngg+bgb4Q6R92tXoWTRxzMkI=;
+        b=UFKKbcbLZZiF2L9XEEotHqvtRaBNfa6I/MyRUjb4KTpRVoo29pIC5o0cn08koxaB+3
+         KLpX3bAZbW74rWCpyOAfBfmyfHcaUpo/78s/3Ge77M+hWoL4xYCJ0qKto8vCz4tYvUbW
+         cSKBkd4gtGzHskKOegW93DXTR6fE51H3QDco3VmmaDZtKbG8+P0QFeVlN6gA/GCVC1aP
+         I+Tr0dPkJENc/sO2uR5ifT1c7rEJzhXW5nvxcFShnSLT0GaF8PFwsc1daEuK3iGzndl/
+         od2C99znnL77hAnV/tbDm3rFt7l5Zo6CHATWldfX44zb8F/eFFFhNXhJdFCwFon9yXPZ
+         QLDw==
+X-Gm-Message-State: APjAAAUKs8t2uojgx6EQVyRY7NRNfQKDxfTNvvPhqb35hlm3xJ07ZSae
+        eVczhZPVDJouUzA73R2VIu4=
+X-Google-Smtp-Source: APXvYqzpbRDUIvQ5FKcZ778NrsrMCXHQoQCWNiYvEEW/PsDymyV52tRB/FTO9qLcw1VQh1WcXNh5Cg==
+X-Received: by 2002:a17:90a:9bc5:: with SMTP id b5mr9330442pjw.109.1561679220004;
+        Thu, 27 Jun 2019 16:47:00 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id e6sm197854pfn.71.2019.06.27.16.46.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 16:46:58 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 08:46:52 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v3 1/5] mm: introduce MADV_COLD
+Message-ID: <20190627234652.GB33052@google.com>
+References: <20190627115405.255259-1-minchan@kernel.org>
+ <20190627115405.255259-2-minchan@kernel.org>
+ <343599f9-3d99-b74f-1732-368e584fa5ef@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <343599f9-3d99-b74f-1732-368e584fa5ef@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0b5c597de6aa30000480d6add2f37ef7de3f9312
-Gitweb:     https://git.kernel.org/tip/0b5c597de6aa30000480d6add2f37ef7de3f9312
-Author:     Ingo Molnar <mingo@kernel.org>
-AuthorDate: Sun, 23 Jun 2019 15:23:57 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 28 Jun 2019 00:57:21 +0200
+On Thu, Jun 27, 2019 at 06:13:36AM -0700, Dave Hansen wrote:
+> On 6/27/19 4:54 AM, Minchan Kim wrote:
+> > This patch introduces the new MADV_COLD hint to madvise(2) syscall.
+> > MADV_COLD can be used by a process to mark a memory range as not expected
+> > to be used in the near future. The hint can help kernel in deciding which
+> > pages to evict early during memory pressure.
+> > 
+> > It works for every LRU pages like MADV_[DONTNEED|FREE]. IOW, It moves
+> > 
+> > 	active file page -> inactive file LRU
+> > 	active anon page -> inacdtive anon LRU
+> 
+> Is the LRU behavior part of the interface or the implementation?
 
-x86/hpet: Coding style cleanup
+It's a just implementation. What user should expect with this API is they just
+informs to the kernel "this memory in the regions wouldn't access in the near
+future" so how kernel will handle memory in there is up to the kernel.
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Andi Kleen <andi.kleen@intel.com>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Ravi Shankar <ravi.v.shankar@intel.com>
-Link: https://lkml.kernel.org/r/20190623132435.637420368@linutronix.de
+> 
+> I ask because we've got something in between tossing something down the
+> LRU and swapping it: page migration.  Specifically, on a system with
+> slower memory media (like persistent memory) we just migrate a page
+> instead of discarding it at reclaim:
+> 
+> > https://lore.kernel.org/linux-mm/20190321200157.29678-4-keith.busch@intel.com/
+> 
+> So let's say I have a page I want to evict from DRAM to the next slower
+> tier of memory.  Do I use MADV_COLD or MADV_PAGEOUT?  If the LRU
+> behavior is part of the interface itself, then MADV_COLD doesn't work.
 
----
- arch/x86/kernel/hpet.c | 43 ++++++++++++++++++++++++++-----------------
- 1 file changed, 26 insertions(+), 17 deletions(-)
+IMHO, if it's one of storage in the memory hierarchy, that shouldn't be transparent
+for the user? What I meant is VM moves inactive pages to the persistent memory
+before the reclaiming. IOW, VM would have one more level LRU or extened inactive
+LRU to cover the persistent memory.
 
-diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-index 1a389a2ff42a..ed2d556f2c96 100644
---- a/arch/x86/kernel/hpet.c
-+++ b/arch/x86/kernel/hpet.c
-@@ -131,26 +131,33 @@ EXPORT_SYMBOL_GPL(is_hpet_enabled);
- 
- static void _hpet_print_config(const char *function, int line)
- {
--	u32 i, timers, l, h;
-+	u32 i, id, period, cfg, status, channels, l, h;
-+
- 	pr_info("%s(%d):\n", function, line);
--	l = hpet_readl(HPET_ID);
--	h = hpet_readl(HPET_PERIOD);
--	timers = ((l & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1;
--	pr_info("ID: 0x%x, PERIOD: 0x%x\n", l, h);
--	l = hpet_readl(HPET_CFG);
--	h = hpet_readl(HPET_STATUS);
--	pr_info("CFG: 0x%x, STATUS: 0x%x\n", l, h);
-+
-+	id = hpet_readl(HPET_ID);
-+	period = hpet_readl(HPET_PERIOD);
-+	pr_info("ID: 0x%x, PERIOD: 0x%x\n", id, period);
-+
-+	cfg = hpet_readl(HPET_CFG);
-+	status = hpet_readl(HPET_STATUS);
-+	pr_info("CFG: 0x%x, STATUS: 0x%x\n", cfg, status);
-+
- 	l = hpet_readl(HPET_COUNTER);
- 	h = hpet_readl(HPET_COUNTER+4);
- 	pr_info("COUNTER_l: 0x%x, COUNTER_h: 0x%x\n", l, h);
- 
--	for (i = 0; i < timers; i++) {
-+	channels = ((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1;
-+
-+	for (i = 0; i < channels; i++) {
- 		l = hpet_readl(HPET_Tn_CFG(i));
- 		h = hpet_readl(HPET_Tn_CFG(i)+4);
- 		pr_info("T%d: CFG_l: 0x%x, CFG_h: 0x%x\n", i, l, h);
-+
- 		l = hpet_readl(HPET_Tn_CMP(i));
- 		h = hpet_readl(HPET_Tn_CMP(i)+4);
- 		pr_info("T%d: CMP_l: 0x%x, CMP_h: 0x%x\n", i, l, h);
-+
- 		l = hpet_readl(HPET_Tn_ROUTE(i));
- 		h = hpet_readl(HPET_Tn_ROUTE(i)+4);
- 		pr_info("T%d ROUTE_l: 0x%x, ROUTE_h: 0x%x\n", i, l, h);
-@@ -216,6 +223,7 @@ static void hpet_reserve_platform_timers(unsigned int id) { }
- static void hpet_stop_counter(void)
- {
- 	u32 cfg = hpet_readl(HPET_CFG);
-+
- 	cfg &= ~HPET_CFG_ENABLE;
- 	hpet_writel(cfg, HPET_CFG);
- }
-@@ -229,6 +237,7 @@ static void hpet_reset_counter(void)
- static void hpet_start_counter(void)
- {
- 	unsigned int cfg = hpet_readl(HPET_CFG);
-+
- 	cfg |= HPET_CFG_ENABLE;
- 	hpet_writel(cfg, HPET_CFG);
- }
-@@ -393,7 +402,7 @@ static int hpet_legacy_resume(struct clock_event_device *evt)
- }
- 
- static int hpet_legacy_next_event(unsigned long delta,
--			struct clock_event_device *evt)
-+				  struct clock_event_device *evt)
- {
- 	return hpet_next_event(delta, 0);
- }
-@@ -1142,6 +1151,7 @@ EXPORT_SYMBOL_GPL(hpet_rtc_timer_init);
- static void hpet_disable_rtc_channel(void)
- {
- 	u32 cfg = hpet_readl(HPET_T1_CFG);
-+
- 	cfg &= ~HPET_TN_ENABLE;
- 	hpet_writel(cfg, HPET_T1_CFG);
- }
-@@ -1183,8 +1193,7 @@ int hpet_set_rtc_irq_bit(unsigned long bit_mask)
- }
- EXPORT_SYMBOL_GPL(hpet_set_rtc_irq_bit);
- 
--int hpet_set_alarm_time(unsigned char hrs, unsigned char min,
--			unsigned char sec)
-+int hpet_set_alarm_time(unsigned char hrs, unsigned char min, unsigned char sec)
- {
- 	if (!is_hpet_enabled())
- 		return 0;
-@@ -1204,15 +1213,16 @@ int hpet_set_periodic_freq(unsigned long freq)
- 	if (!is_hpet_enabled())
- 		return 0;
- 
--	if (freq <= DEFAULT_RTC_INT_FREQ)
-+	if (freq <= DEFAULT_RTC_INT_FREQ) {
- 		hpet_pie_limit = DEFAULT_RTC_INT_FREQ / freq;
--	else {
-+	} else {
- 		clc = (uint64_t) hpet_clockevent.mult * NSEC_PER_SEC;
- 		do_div(clc, freq);
- 		clc >>= hpet_clockevent.shift;
- 		hpet_pie_delta = clc;
- 		hpet_pie_limit = 0;
- 	}
-+
- 	return 1;
- }
- EXPORT_SYMBOL_GPL(hpet_set_periodic_freq);
-@@ -1272,8 +1282,7 @@ irqreturn_t hpet_rtc_interrupt(int irq, void *dev_id)
- 		hpet_prev_update_sec = curr_time.tm_sec;
- 	}
- 
--	if (hpet_rtc_flags & RTC_PIE &&
--	    ++hpet_pie_count >= hpet_pie_limit) {
-+	if (hpet_rtc_flags & RTC_PIE && ++hpet_pie_count >= hpet_pie_limit) {
- 		rtc_int_flag |= RTC_PF;
- 		hpet_pie_count = 0;
- 	}
-@@ -1282,7 +1291,7 @@ irqreturn_t hpet_rtc_interrupt(int irq, void *dev_id)
- 	    (curr_time.tm_sec == hpet_alarm_time.tm_sec) &&
- 	    (curr_time.tm_min == hpet_alarm_time.tm_min) &&
- 	    (curr_time.tm_hour == hpet_alarm_time.tm_hour))
--			rtc_int_flag |= RTC_AF;
-+		rtc_int_flag |= RTC_AF;
- 
- 	if (rtc_int_flag) {
- 		rtc_int_flag |= (RTC_IRQF | (RTC_NUM_INTS << 8));
+> 
+> Do you think we'll need a third MADV_ flag for our automatic migration
+> behavior?  MADV_REALLYCOLD?  MADV_MIGRATEOUT?
+
+I believe it depends on how we abstract the persistent memory of cache hierarchy.
+If we abstract it as diffrent storage with DRAM, manybe, that should be part of
+other syscall like like move_pages. 
+If we abstract it as part of DRAM, that should be part of additional LRU
+or extended inactive LRU.
