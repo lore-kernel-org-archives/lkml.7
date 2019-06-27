@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAAEC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7AEC48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDB5214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F92216E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596200;
-	bh=zv5ArkQNzKVhkr4KOuXcuxsIBaZHqAmilWoFbD4Feso=;
+	s=default; t=1561596202;
+	bh=x4mQG6GAX/CvAfXJVH7jhacAsKv8k1Vr43eH6Ug7CSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DnRNrHGFbjcKNKFsiuXgVoiZqFHANu5A3w2IcmsZxINAmOV1Sh5HyDIN9hU3GXWRf
-	 VedxxKSLo704S2WZSYxXoJNfjcLSHmDT14SAIePTxv0Urp5N96rQ21/p5gPZ9vsA7O
-	 Ahs/haytTek/IBbn46BufyyFr8FZLaQ9wsL2kuug=
+	b=gbTxt1ZexdDCH2HK/Hmz85m3RSAvJ8pAiQ5fb5Wxzr0LCzIpRU3fZNr4LJMyLn8TL
+	 fYIpWu9HWtoHASTyd/tBr7q95UEu7VNSxK8sWsCLMl961xrOREJMp3beS6MKy9qz0w
+	 9R6ctND5F2rfV1Yd9aOfvkjZ3qjSWgtkK8NWq52k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbfF0AnS (ORCPT
+        id S1729869AbfF0AnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:43:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47132 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:43:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729852AbfF0AnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:43:16 -0400
+        id S1728157AbfF0AnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:43:19 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36F27214DA;
-        Thu, 27 Jun 2019 00:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3708B2083B;
+        Thu, 27 Jun 2019 00:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596195;
-        bh=zv5ArkQNzKVhkr4KOuXcuxsIBaZHqAmilWoFbD4Feso=;
+        s=default; t=1561596198;
+        bh=x4mQG6GAX/CvAfXJVH7jhacAsKv8k1Vr43eH6Ug7CSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZrpmoRg16x77PSvdLbDpGf6UozKZ9xd9/AM+omEFEsCerwRdK6wgPJVkHICQv19A
-         mj7ljabbH+9P0lyKjnUtkT/098Vgnq/4i1mULipFlSZH4qTWIxlxfB1YINdQaTrXx1
-         1kkRw7a7IihrMYiQSoI9n3iK4pOm8C/FYJWFsFaU=
+        b=Tcgx7bntIXza6f1LCxqdz+ML6jae16Z8Js21BhMs3mgmPXZUkPNpxo1WkF++ORNct
+         ZclOiqkZR7TC9LaypOnKmy2qqknz+lphc0im49jQbMkq3NVhyCJfPLeRcq0X6WW/y6
+         YLIMWMHdae6pjSAzuL+LqmNBGhfZ32o6ORxn3tZ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/12] Input: imx_keypad - make sure keyboard can always wake up system
-Date:   Wed, 26 Jun 2019 20:42:30 -0400
-Message-Id: <20190627004236.21909-8-sashal@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 09/12] ARM: davinci: da850-evm: call regulator_has_full_constraints()
+Date:   Wed, 26 Jun 2019 20:42:31 -0400
+Message-Id: <20190627004236.21909-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627004236.21909-1-sashal@kernel.org>
 References: <20190627004236.21909-1-sashal@kernel.org>
@@ -60,86 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <anson.huang@nxp.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit ce9a53eb3dbca89e7ad86673d94ab886e9bea704 ]
+[ Upstream commit 0c0c9b5753cd04601b17de09da1ed2885a3b42fe ]
 
-There are several scenarios that keyboard can NOT wake up system
-from suspend, e.g., if a keyboard is depressed between system
-device suspend phase and device noirq suspend phase, the keyboard
-ISR will be called and both keyboard depress and release interrupts
-will be disabled, then keyboard will no longer be able to wake up
-system. Another scenario would be, if a keyboard is kept depressed,
-and then system goes into suspend, the expected behavior would be
-when keyboard is released, system will be waked up, but current
-implementation can NOT achieve that, because both depress and release
-interrupts are disabled in ISR, and the event check is still in
-progress.
+The BB expander at 0x21 i2c bus 1 fails to probe on da850-evm because
+the board doesn't set has_full_constraints to true in the regulator
+API.
 
-To fix these issues, need to make sure keyboard's depress or release
-interrupt is enabled after noirq device suspend phase, this patch
-moves the suspend/resume callback to noirq suspend/resume phase, and
-enable the corresponding interrupt according to current keyboard status.
+Call regulator_has_full_constraints() at the end of board registration
+just like we do in da850-lcdk and da830-evm.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/imx_keypad.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ arch/arm/mach-davinci/board-da850-evm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/imx_keypad.c
-index 2165f3dd328b..842c0235471d 100644
---- a/drivers/input/keyboard/imx_keypad.c
-+++ b/drivers/input/keyboard/imx_keypad.c
-@@ -530,11 +530,12 @@ static int imx_keypad_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int __maybe_unused imx_kbd_suspend(struct device *dev)
-+static int __maybe_unused imx_kbd_noirq_suspend(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
- 	struct input_dev *input_dev = kbd->input_dev;
-+	unsigned short reg_val = readw(kbd->mmio_base + KPSR);
- 
- 	/* imx kbd can wake up system even clock is disabled */
- 	mutex_lock(&input_dev->mutex);
-@@ -544,13 +545,20 @@ static int __maybe_unused imx_kbd_suspend(struct device *dev)
- 
- 	mutex_unlock(&input_dev->mutex);
- 
--	if (device_may_wakeup(&pdev->dev))
-+	if (device_may_wakeup(&pdev->dev)) {
-+		if (reg_val & KBD_STAT_KPKD)
-+			reg_val |= KBD_STAT_KRIE;
-+		if (reg_val & KBD_STAT_KPKR)
-+			reg_val |= KBD_STAT_KDIE;
-+		writew(reg_val, kbd->mmio_base + KPSR);
+diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+index 1ed545cc2b83..99356e23776d 100644
+--- a/arch/arm/mach-davinci/board-da850-evm.c
++++ b/arch/arm/mach-davinci/board-da850-evm.c
+@@ -1479,6 +1479,8 @@ static __init void da850_evm_init(void)
+ 	if (ret)
+ 		pr_warn("%s: dsp/rproc registration failed: %d\n",
+ 			__func__, ret);
 +
- 		enable_irq_wake(kbd->irq);
-+	}
- 
- 	return 0;
++	regulator_has_full_constraints();
  }
  
--static int __maybe_unused imx_kbd_resume(struct device *dev)
-+static int __maybe_unused imx_kbd_noirq_resume(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
-@@ -574,7 +582,9 @@ static int __maybe_unused imx_kbd_resume(struct device *dev)
- 	return ret;
- }
- 
--static SIMPLE_DEV_PM_OPS(imx_kbd_pm_ops, imx_kbd_suspend, imx_kbd_resume);
-+static const struct dev_pm_ops imx_kbd_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_kbd_noirq_suspend, imx_kbd_noirq_resume)
-+};
- 
- static struct platform_driver imx_keypad_driver = {
- 	.driver		= {
+ #ifdef CONFIG_SERIAL_8250_CONSOLE
 -- 
 2.20.1
 
