@@ -2,93 +2,155 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60131C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADD2C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F1E2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:58:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nW6rZQeC"
+	by mail.kernel.org (Postfix) with ESMTP id 6E93520B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:58:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfF0O6A (ORCPT
+        id S1726947AbfF0O6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 10:58:00 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36357 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfF0O6A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:58:00 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q26so1809415lfc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 07:57:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NY6E3pRbAeGkJX9wIK/Nm1oM3Y/QGiVQ3g92XbhUcPI=;
-        b=nW6rZQeCtWoyBm/C2/PgUsVj+WtjyS61O4kx+GtOpcXfcX7/axr5e62sd79lEVqg4Z
-         PcHMo7wCJPGl3d59Pe7MFmWIbDmHBHDkMmlgAL3rQtmDoc3pn85lxNKKQ5V4jrSQA8Ce
-         i6cVSFr9oyr/x65ELltX+Lk4HC4eBZMLzoyUA/LauWQXCWiE6U2UTklQDxNOCQMDpucg
-         xnudwd14X9Upm6uxl5fGJygFr2dfB0as2tCqLB5DkXNOM1/EvZtn0Q/HfxS8lSzs1osF
-         mEKNLoCw/DcBOzkPFLKxfieQjG7GBwoCgzwEZe5QbP52V9GXw/WUMb6rEJt5m1qGCquR
-         6MDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NY6E3pRbAeGkJX9wIK/Nm1oM3Y/QGiVQ3g92XbhUcPI=;
-        b=NgmZN+sFAC9DvVizN2S340G19bKEmzMrGL9hixqGcSdcgjWq/o8PpIrOY2pECnpt/y
-         bUlfbUrUCO5Jwm/2p6RQp1YAq3haeMBkI3nfyHrhPFxqYA2cqgw+ZIknCPxcdU6pJAAu
-         PmOH4D4KDaVpZX49fyJ1gqLaHn5hjETuwxmhdCbebqqz3AFtAVlr6PT8l791r/Mhq89Q
-         omqc95Uvsqr5t8zeWHZdeZKIPilhe1aPfx1vYTPciK8awzIRO6vkYqs9dkUVV00ORKSG
-         O58cOu1LAbm7RmHrNo0vC2ZQPs+AqtBogMOnWnx2q1y7+JgLvYWUuHhrsKxrOYAg4I0N
-         7jyQ==
-X-Gm-Message-State: APjAAAVtoadptR2Tt3Te6MK7ohvbyNs1R7LMt2E/ba5ONGoK87eglkvh
-        pJOfiD1OX9r3LPOytO2hXZWAFdW6BlLcKiGV0pqdLyjlMl8=
-X-Google-Smtp-Source: APXvYqwPnv0vTnR6pIWZAn8g7t0sJZ5O7W58stX5I1NFpECaW1P5djVIeS/ctdViHMxD+FrzPeodPIw75oRBFzHewfI=
-X-Received: by 2002:ac2:5382:: with SMTP id g2mr2219936lfh.92.1561647478479;
- Thu, 27 Jun 2019 07:57:58 -0700 (PDT)
+        Thu, 27 Jun 2019 10:58:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:56108 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726497AbfF0O6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 10:58:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B367360;
+        Thu, 27 Jun 2019 07:58:05 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6A5D3F246;
+        Thu, 27 Jun 2019 07:58:02 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 15:58:00 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V11 03/12] PCI: dwc: Perform dbi regs write lock towards
+ the end
+Message-ID: <20190627145800.GD3782@e121166-lin.cambridge.arm.com>
+References: <20190624091505.1711-1-vidyas@nvidia.com>
+ <20190624091505.1711-4-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <20190627181941.1222cb9c@canb.auug.org.au>
-In-Reply-To: <20190627181941.1222cb9c@canb.auug.org.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 27 Jun 2019 15:57:46 +0100
-Message-ID: <CACRpkda1EgeRqgRZgNn+F7RSHonPE=s8c15uiKYtzg8NOWqvYw@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the gpio tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Enrico Weigelt <info@metux.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624091505.1711-4-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 9:20 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Mon, Jun 24, 2019 at 02:44:56PM +0530, Vidya Sagar wrote:
+> Remove multiple write enable and disable sequences of dbi registers as
+> Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
+> DBI write-lock enable bit thereby not allowing any further writes to BAR-0
+> register in config space to take place. Hence enabling write permission at
+> the start of function and disabling the same only towards the end.
 
-> After merging the gpio tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
->
-> drivers/gpio/gpio-amd-fch.c: In function 'amd_fch_gpio_probe':
-> drivers/gpio/gpio-amd-fch.c:171:49: warning: passing argument 2 of 'devm_ioremap_resource' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
->   priv->base = devm_ioremap_resource(&pdev->dev, &amd_fch_gpio_iores);
->                                                  ^~~~~~~~~~~~~~~~~~~
-> In file included from include/linux/platform_device.h:13,
->                  from drivers/gpio/gpio-amd-fch.c:15:
-> include/linux/device.h:708:15: note: expected 'struct resource *' but argument is of type 'const struct resource *'
->  void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res);
->                ^~~~~~~~~~~~~~~~~~~~~
->
-> Introduced by commit
->
->   9bb2e0452508 ("gpio: amd: Make resource struct const")
+I do not understand what this patch does, I would like to rephrase
+the commit log in a way that is easier to parse.
 
-OK I dropped this commit until Enrico get some time to figure out
-what's going wrong here.
+In particular I do not get what you mean in relation to BAR-0, I am
+confused, please clarify.
 
-Yours,
-Linus Walleij
+Lorenzo
+
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
+> Acked-by: Jingoo Han <jingoohan1@gmail.com>
+> ---
+> Changes since [v10]:
+> * None
+> 
+> Changes since [v9]:
+> * None
+> 
+> Changes since [v8]:
+> * None
+> 
+> Changes since [v7]:
+> * None
+> 
+> Changes since [v6]:
+> * None
+> 
+> Changes since [v5]:
+> * Moved write enable to the beginning of the API and write disable to the end
+> 
+> Changes since [v4]:
+> * None
+> 
+> Changes since [v3]:
+> * None
+> 
+> Changes since [v2]:
+> * None
+> 
+> Changes since [v1]:
+> * None
+> 
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index f93252d0da5b..d3156446ff27 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  	u32 val, ctrl, num_ctrls;
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  
+> +	/*
+> +	 * Enable DBI read-only registers for writing/updating configuration.
+> +	 * Write permission gets disabled towards the end of this function.
+> +	 */
+> +	dw_pcie_dbi_ro_wr_en(pci);
+> +
+>  	dw_pcie_setup(pci);
+>  
+>  	if (!pp->ops->msi_host_init) {
+> @@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
+>  
+>  	/* Setup interrupt pins */
+> -	dw_pcie_dbi_ro_wr_en(pci);
+>  	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
+>  	val &= 0xffff00ff;
+>  	val |= 0x00000100;
+>  	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
+> -	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+>  	/* Setup bus numbers */
+>  	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
+> @@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  
+>  	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+>  
+> -	/* Enable write permission for the DBI read-only register */
+> -	dw_pcie_dbi_ro_wr_en(pci);
+>  	/* Program correct class for RC */
+>  	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+> -	/* Better disable write permission right after the update */
+> -	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+>  	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
+>  	val |= PORT_LOGIC_SPEED_CHANGE;
+>  	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+> +
+> +	dw_pcie_dbi_ro_wr_dis(pci);
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
+> -- 
+> 2.17.1
+> 
