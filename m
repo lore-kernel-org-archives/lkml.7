@@ -2,694 +2,394 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEXHASH_WORD,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE17C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CAEC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559862063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561607601;
-	bh=S3Q9/A6fffv4M1Cef+uuvie/jTKdjWAwfXMc8XrIfWc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=k7AvNagA4JKxKysHAc/5ECs8I1k+b5b3a+uhPFCuv7iUvy/ig9pPUu5pAyz6offBK
-	 ce1nPDjkXcpNBy6MMRaos/y95AON+xiuDeaDhNd5Xd2MdyuKezYNzI4P9gNnuFQVXS
-	 fv2soI/Sxb3JT/cusFAMfX4cyFgUZkJz08MHz7mI=
+	by mail.kernel.org (Postfix) with ESMTP id 6F7C721852
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:55:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="GTt/F9Qa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EK8E0SUG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfF0DxU (ORCPT
+        id S1726954AbfF0Dzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 23:53:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38156 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbfF0DxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 23:53:19 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F7532063F;
-        Thu, 27 Jun 2019 03:53:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561607595;
-        bh=S3Q9/A6fffv4M1Cef+uuvie/jTKdjWAwfXMc8XrIfWc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=pJkJmKtF5ASjjJw82YQioBzS16z+OBWngZykseu/WKJdXY1AB2Qwmz2sjW7ZCoutz
-         I49imGhSAuvPsL+7kE7+XFtDSYB3TXUfILuiWxR05zyItBjm5Kusj8Uke9AV4eQCz2
-         7PDM3X+9nR9uUkNNri7WUO3Yzcc8X+CLmbHPZUic=
-Date:   Wed, 26 Jun 2019 20:53:14 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dafna Hirschfeld <dafna3@gmail.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 28 open syzbot bugs in media subsystem
-Message-ID: <20190627035314.GD721@sol.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 26 Jun 2019 23:55:47 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:58005 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726663AbfF0Dzq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 23:55:46 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C23C4FE1;
+        Wed, 26 Jun 2019 23:55:44 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 26 Jun 2019 23:55:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type:content-transfer-encoding; s=fm3; bh=tMjKr
+        iNycNOWkPKVYEQBH1iIP1LssSXBssZD2VGtolQ=; b=GTt/F9Qa6bfIu3QOnOpxY
+        Uv5bHNcOzYTEPNdjXk7gXE5NTjWBYEfKhC8+ecFsY/Xstnur01IzqMHvTLXoJDSX
+        oxMJPT4RforoAXFoFbFnT6Lug/oOn4JvgC7neJvYOWuMosbT+dy1LiAHlF0HzTtn
+        sp7oXsPMLMTCZw/K2PQjqJByQ9vdNIQt9CNxEc2g+Eyv3L2tFmfQcSCDEICSyjKG
+        T2gifMxPKDmsnqGMwVVVieD0v8+8mx+cx89yO+HlEzVqvz67xThMiNxcZmu8pIQj
+        o1EuHXMSKL7hkduHR/YTXK3w9q8qSZx5DRtNlf4e1hVDVpSoEzQBIucyfb1ZJiDa
+        w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=tMjKriNycNOWkPKVYEQBH1iIP1LssSXBssZD2VGto
+        lQ=; b=EK8E0SUG+AhD5hGbawX4rZsr8eBONtMImKCWFrm0mCjZ64Z6CdybCcdaE
+        C/xNGHwDh2P+RdZGeafGS4/VB/PTCzsxbWjihNV9Vl/Bk6rKEVeganc6iqMmGSPE
+        e+76aFA9ucOBZ5g09R6VCClNwy1C/IqVbyMHRHnRl2PDlNTKyqh9G71XF0WPPFWM
+        0aEaIyIuoEZX4JpltGpwEk68JZGXAx+LfCOvFCj6Pyuv1fE/oWAFexMebdEc7y52
+        wAAdpxOPxgMCQfsPDB6JBBdlzqhkqdtpSDo4ZK/wFG4OcpN4JS2fEVS0BUvGNQDz
+        LDtu0/jg9l9T6gfAVrupQUG7vbRzQ==
+X-ME-Sender: <xms:Pz4UXW8o9fzgPtOAqJO6SJ3Xuku4yGCtRb-1zTmQiKVXuUWs3alKjA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejgdejkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtgfesthhqredtreerjeenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuffhomh
+    grihhnpeguvghvihgtvghtrhgvvgdrohhrghdpkhgvrhhnvghlrdhorhhgnecurfgrrhgr
+    mhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrh
+    fuihiivgeptd
+X-ME-Proxy: <xmx:Pz4UXdA0yFPWEhSAHAbLxDmG8n0GPLyIH3Y_AruW_aug9NgSZx9iIQ>
+    <xmx:Pz4UXYuzqbFBGFnN8KjhiG-1KMAWv8z4Jykv8xIuhfjQUn7eHpB52g>
+    <xmx:Pz4UXdHMayJBqUUBd93X0A19lr5aDWjm-6p95WEXdx5tgvWuGty14w>
+    <xmx:QD4UXSo3CXxzmQP7A3KBP2n9US2PkaDx_zy3mziznJ7Ll57gJIvvcA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id E3CD1E00A2; Wed, 26 Jun 2019 23:55:42 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-730-g63f2c3b-fmstable-20190622v1
+Mime-Version: 1.0
+Message-Id: <30d5585b-7591-4149-87c4-816e4c18fb9d@www.fastmail.com>
+In-Reply-To: <CAL_JsqKXPzFYTHos-uvCUtBj-bcsNfrzt5GjxQ=PmgeXpp5J-A@mail.gmail.com>
+References: <20190626071430.28556-1-andrew@aj.id.au>
+ <20190626071430.28556-3-andrew@aj.id.au>
+ <CAL_JsqKXPzFYTHos-uvCUtBj-bcsNfrzt5GjxQ=PmgeXpp5J-A@mail.gmail.com>
+Date:   Thu, 27 Jun 2019 13:25:42 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Rob Herring" <robh+dt@kernel.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Ryan Chen" <ryan_chen@aspeedtech.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Joel Stanley" <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Re:_[PATCH_2/8]_dt-bindings:_pinctrl:_aspeed:_Convert_AST2400_?=
+ =?UTF-8?Q?bindings_to_json-schema?=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better.]
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 28 of them as possibly being bugs in the media subsystem.  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
 
-Of these 28 bugs, 9 were seen in mainline in the last week.
-
-Of these 28 bugs, 4 were bisected to commits from the following people:
-
-	Dafna Hirschfeld <dafna3@gmail.com>
-	Helen Koike <helen.koike@collabora.com>
-	Hans Verkuil <hans.verkuil@cisco.com>
-
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed a bug to the media subsystem, please let me know,
-and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              WARNING in vb2_core_reqbufs
-Last occurred:      0 days ago
-Reported:           239 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=aaf17ca3f8ef677356e61bbe7e2c1af7f4398ec3
-Original thread:    https://lkml.kernel.org/lkml/00000000000069922505797781b0@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit 3b15f68e19c28a76d175f61943a8c23224afce93
-	Author: Dafna Hirschfeld <dafna3@gmail.com>
-	Date:   Mon Jan 21 11:46:18 2019 +0000
-
-	  media: vicodec: Add support for resolution change event.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f9966a25169b6d66d61f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000069922505797781b0@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: unable to handle kernel paging request in tpg_fill_plane_buffer
-Last occurred:      1 day ago
-Reported:           211 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=f620d34965777e9d309c58394ade94dbd3e3b0a8
-Original thread:    https://lkml.kernel.org/lkml/0000000000005b7c64057ba003fb@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-This bug was bisected to:
-
-	commit f2fe89061d79706eca5c47e4efdc09bbc171e74a
-	Author: Helen Koike <helen.koike@collabora.com>
-	Date:   Fri Apr 7 17:55:19 2017 +0000
-
-	  [media] vimc: Virtual Media Controller core, capture and sensor
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+aa8212f63ea8ffaf3bfa@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005b7c64057ba003fb@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in v4l2_release
-Last occurred:      1 day ago
-Reported:           72 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=775f90f43cfd6f8ac6c15251ce68e604453da226
-Original thread:    https://lkml.kernel.org/lkml/00000000000086f7f20586929239@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000086f7f20586929239@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in __vb2_queue_cancel
-Last occurred:      0 days ago
-Reported:           240 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=dd5aa153a2344f5f39e656692bc58dfe86e0423f
-Original thread:    https://lkml.kernel.org/lkml/0000000000002cf4a10579616456@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+736c3aae4af7b50d9683@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000002cf4a10579616456@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in flexcop_usb_probe
-Last occurred:      0 days ago
-Reported:           75 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=c0203bd72037d07493f4b7562411e4f5f4553a8f
-Original thread:    https://lkml.kernel.org/lkml/00000000000010fe260586536e86@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a media USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+d93dff37e6a89431c158@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000010fe260586536e86@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in spi_register_controller
-Last occurred:      0 days ago
-Reported:           75 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=c2f000b7826e712b064b66b32ed73e21ee09d7a5
-Original thread:    https://lkml.kernel.org/lkml/00000000000089dace058653b58e@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a media USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+c60ddb60b685777d9d59@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000089dace058653b58e@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: trying to register non-static key in mxl111sf_ctrl_msg
-Last occurred:      0 days ago
-Reported:           73 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=d7240bc21ef4b00a01e5ac7a7e616bdb7da26104
-Original thread:    https://lkml.kernel.org/lkml/000000000000f64e71058683105b@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a media USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+5ca0bf339f13c4243001@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000f64e71058683105b@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: global-out-of-bounds Read in hdpvr_probe
-Last occurred:      1 day ago
-Reported:           55 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=69bf3422c0eb7a37dec8c1a6c2d56ea40bf6bacf
-Original thread:    https://lkml.kernel.org/lkml/000000000000bc655f0587e6e01f@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a media USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000bc655f0587e6e01f@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in read_sensor_register
-Last occurred:      1 day ago
-Reported:           19 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=cd81ee9a4ef2297ef27f95a3637b3f8a3db71de2
-Original thread:    https://lkml.kernel.org/lkml/000000000000f8c953058ac2dae4@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a media USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+06ddf1788cfd048c5e82@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000f8c953058ac2dae4@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in sd_init
-Last occurred:      3 days ago
-Reported:           22 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=3fc6579f907ab3449adb030e8dc65fafdb8e09e4
-Original thread:    https://lkml.kernel.org/lkml/0000000000009bf1bd058a887277@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a media USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+1a35278dd0ebfb3a038a@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000009bf1bd058a887277@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in v4l2_fh_init
-Last occurred:      9 days ago
-Reported:           68 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=378c929b412e1ceac0d515df2156365827384ba4
-Original thread:    https://lkml.kernel.org/lkml/000000000000ec53de0586e309fc@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+c025d34b8eaa54c571b8@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ec53de0586e309fc@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in v4l2_ioctl
-Last occurred:      9 days ago
-Reported:           73 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ba05259158f35e969fff5418080482392e23ccf9
-Original thread:    https://lkml.kernel.org/lkml/00000000000003799c05868311b9@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+d587871cd33a9bc7c086@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000003799c05868311b9@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: unable to handle kernel paging request in au0828_usb_disconnect
-Last occurred:      2 days ago
-Reported:           58 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=4b76fcf12dea9e3aec69294b5d66b0831b60c627
-Original thread:    https://lkml.kernel.org/lkml/000000000000ffc8c80587aa1bb1@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a media USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+15e91d49c4c757c3d363@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ffc8c80587aa1bb1@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in technisat_usb2_rc_query
-Last occurred:      20 days ago
-Reported:           73 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=928bdd0e4f3f9b6b57b3772861c28da2382272e1
-
-This bug has a C reproducer.
-
-For some reason the syzbot dashboard doesn't contain a link to the original
-thread for this bug, so my script couldn't provide a link to it in this
-reminder.  Try searching for the bug title.
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in i2c_w
-Last occurred:      23 days ago
-Reported:           22 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=5b6be32aa55adc05444701e80c3b1eae5d9079d2
-Original thread:    https://lkml.kernel.org/lkml/000000000000a0a468058a88723d@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a media USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+397fd082ce5143e2f67d@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000a0a468058a88723d@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: null-ptr-deref Read in refcount_sub_and_test_checked (2)
-Last occurred:      23 days ago
-Reported:           224 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=17535f4bf5b322437f7c639b59161ce343fc55a9
-Original thread:    https://lkml.kernel.org/lkml/00000000000057e614057a9abcd3@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+0468b73bdbb243217224@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000057e614057a9abcd3@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Write in __vb2_cleanup_fileio
-Last occurred:      237 days ago
-Reported:           240 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=0264f823322ea8600fbe3fb7e9e016569ca542d8
-Original thread:    https://lkml.kernel.org/lkml/000000000000204051057963c4dc@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+4e12d2d56f8ccc65c180@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000204051057963c4dc@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in hdpvr_probe
-Last occurred:      1 day ago
-Reported:           1 day ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=b1fc93b6998238f231f3eb1ea1cf29524e3d6e69
-Original thread:    https://lkml.kernel.org/lkml/0000000000003fc6ef058c2db557@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a media USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000003fc6ef058c2db557@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in vivid_stop_generating_vid_cap
-Last occurred:      237 days ago
-Reported:           240 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=4c0ccb254972cc51bdf6838cb1eff4fcc00de597
-Original thread:    https://lkml.kernel.org/lkml/00000000000080601805795ada2e@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit f2fe89061d79706eca5c47e4efdc09bbc171e74a
-	Author: Helen Koike <helen.koike@collabora.com>
-	Date:   Fri Apr 7 17:55:19 2017 +0000
-
-	  [media] vimc: Virtual Media Controller core, capture and sensor
-
-The original thread for this bug received 2 replies; the last was 96 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+06283a66a648cd073885@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000080601805795ada2e@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in __video_do_ioctl
-Last occurred:      8 days ago
-Reported:           73 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=b723ac4eeadd7c7b8a881613a7f1a060fb6d3e22
-Original thread:    https://lkml.kernel.org/lkml/00000000000014c6b305868311d3@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+5b7575b3f6820232e17c@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000014c6b305868311d3@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in v4l2_release
-Last occurred:      183 days ago
-Reported:           222 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=72dff36edffc3e8a3a0895aaf03b46d545a5dd5d
-Original thread:    https://lkml.kernel.org/lkml/0000000000005943f3057acf6a1e@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit 757fdb51c14fda221ccb6999a865f7f895c79750
-	Author: Hans Verkuil <hans.verkuil@cisco.com>
-	Date:   Mon May 21 08:54:59 2018 +0000
-
-	  media: vivid: add request support
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+ea05c832a73d0615bf33@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005943f3057acf6a1e@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Write in v4l2_prio_close
-Last occurred:      25 days ago
-Reported:           23 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=716a2d0ec0d1a591dfabca8a0d8b7f5bcaae2e31
-Original thread:    https://lkml.kernel.org/lkml/000000000000f7047d058a69d653@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+a6566701042e6e3e4ed1@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000f7047d058a69d653@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in vb2_mmap
-Last occurred:      183 days ago
-Reported:           228 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=4cf5ee79b52a4797c5bd40a58bd6ab243d40de48
-Original thread:    https://lkml.kernel.org/lkml/00000000000014008b057a598671@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+52e5bf0ebfa66092937a@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000014008b057a598671@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Write in v4l2_device_release
-Last occurred:      48 days ago
-Reported:           58 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=8dbc8bd83de779b45f4a1d4cf3ba40c28207cae8
-Original thread:    https://lkml.kernel.org/lkml/000000000000fb811f0587aa1b7f@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+62d0ec9a8d05fffcf12e@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000fb811f0587aa1b7f@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in v4l2_fh_del
-Last occurred:      56 days ago
-Reported:           55 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=62eb6d89717b65b3f05b33bf7cf5b5dbf68f71a6
-Original thread:    https://lkml.kernel.org/lkml/000000000000c08c230587e6e01e@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+d53275bc1af5eb01bfff@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000c08c230587e6e01e@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in dma_buf_vunmap
-Last occurred:      187 days ago
-Reported:           226 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=163388d1fb80146cd3ba22a11a5a1995c3eaaafe
-Original thread:    https://lkml.kernel.org/lkml/000000000000aa8703057a7ea0bb@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+a9317fe7ad261fc76b88@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000aa8703057a7ea0bb@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: unable to handle kernel paging request in osq_lock
-Last occurred:      65 days ago
-Reported:           69 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=541944363389fada3583295a3454a1eac5089fd6
-Original thread:    https://lkml.kernel.org/lkml/000000000000e9e1990586cd3e40@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a media USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+e5c9afc3e1eed1dfc2b0@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000e9e1990586cd3e40@google.com
-
---------------------------------------------------------------------------------
-Title:              divide error in vivid_thread_vid_cap
-Last occurred:      143 days ago
-Reported:           142 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=794f27cf99870643a7e8429418b3a1093be4c363
-Original thread:    https://lkml.kernel.org/lkml/0000000000002ccf9905810b34a5@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+75293f834026a7e97684@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000002ccf9905810b34a5@google.com
-
+On Wed, 26 Jun 2019, at 23:17, Rob Herring wrote:
+> On Wed, Jun 26, 2019 at 1:21 AM Andrew Jeffery <andrew@aj.id.au> wrote=
+:
+> > +  The pin controller node should be the child of a syscon node with=
+ the
+> > +  required property:
+> > +
+> > +  - compatible:     Should be one of the following:
+> > +                    "aspeed,ast2400-scu", "syscon", "simple-mfd"
+> > +                    "aspeed,g4-scu", "syscon", "simple-mfd"
+> > +
+> > +  Refer to the the bindings described in
+> > +  Documentation/devicetree/bindings/mfd/syscon.txt
+> > +
+> > +  For the AST2400 pinmux, each mux function has only one associated=
+ pin group.
+> > +  Each group is named by its function. The following values for the=
+ function
+> > +  and groups properties are supported:
+> > +
+> > +  ACPI ADC0 ADC1 ADC10 ADC11 ADC12 ADC13 ADC14 ADC15 ADC2 ADC3 ADC4=
+ ADC5 ADC6
+> > +  ADC7 ADC8 ADC9 BMCINT DDCCLK DDCDAT EXTRST FLACK FLBUSY FLWP GPID=
+ GPID0 GPID2
+> > +  GPID4 GPID6 GPIE0 GPIE2 GPIE4 GPIE6 I2C10 I2C11 I2C12 I2C13 I2C14=
+ I2C3 I2C4
+> > +  I2C5 I2C6 I2C7 I2C8 I2C9 LPCPD LPCPME LPCRST LPCSMI MAC1LINK MAC2=
+LINK MDIO1
+> > +  MDIO2 NCTS1 NCTS2 NCTS3 NCTS4 NDCD1 NDCD2 NDCD3 NDCD4 NDSR1 NDSR2=
+ NDSR3 NDSR4
+> > +  NDTR1 NDTR2 NDTR3 NDTR4 NDTS4 NRI1 NRI2 NRI3 NRI4 NRTS1 NRTS2 NRT=
+S3 OSCCLK
+> > +  PWM0 PWM1 PWM2 PWM3 PWM4 PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2=
+ ROM16 ROM8
+> > +  ROMCS1 ROMCS2 ROMCS3 ROMCS4 RXD1 RXD2 RXD3 RXD4 SALT1 SALT2 SALT3=
+ SALT4 SD1
+> > +  SD2 SGPMCK SGPMI SGPMLD SGPMO SGPSCK SGPSI0 SGPSI1 SGPSLD SIOONCT=
+RL SIOPBI
+> > +  SIOPBO SIOPWREQ SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1DEBUG SPI1PA=
+SSTHRU
+> > +  SPICS1 TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2 TXD3 T=
+XD4 UART6
+> > +  USB11D1 USB11H2 USB2D1 USB2H1 USBCKI VGABIOS_ROM VGAHS VGAVS VPI1=
+8 VPI24
+> > +  VPI30 VPO12 VPO24 WDTRST1 WDTRST2
+>=20
+> This should be a schema. You need to define child nodes and list these=
+
+> as values for 'function' and 'group'. Ideally, the child nodes would
+> have some sort of pattern, but if not, you can just match on '^.*$'
+> under patternProperties.
+
+The children don't have any pattern in their node name, which drives
+me towards the '^.*$' pattern match, however, what I've found is that
+I get the following errors for some of the relevant dts files:
+
+```
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.=
+dt.yaml: compatible: ['aspeed,g4-pinctrl'] is not of type 'object'      =
+                                                                        =
+                                                       =20
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.=
+dt.yaml: pinctrl-names: ['default'] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.=
+dt.yaml: pinctrl-0: [[7, 8, 9, 10, 11, 12]] is not of type 'object'     =
+                                                                        =
+                                                       =20
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.=
+dt.yaml: phandle: [[13]] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.=
+dt.yaml: $nodename: ['pinctrl'] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: compatible: ['aspeed,g4-pinctrl'] is not of type 'object'       =
+                                                                        =
+                                                       =20
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: pinctrl-names: ['default'] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: pinctrl-0: [[9, 10, 11, 12]] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: phandle: [[13]] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: $nodename: ['pinctrl'] is not of type 'object'
+```
+
+We shouldn't be expecting these properties in the child nodes, so
+something is busted. Looking at processed-schema.yaml, we have:
+
+```
+- $filename: /home/andrew/src/linux/aspeed/Documentation/devicetree/bind=
+ings/pinctrl/aspeed,ast2400-pinctrl.yaml
+  $id: http://devicetree.org/schemas/pinctrl/aspeed,ast2400-pinctrl.yaml=
+#
+  $schema: http://devicetree.org/meta-schemas/core.yaml#
+  patternProperties:
+    ^.*$:
+      patternProperties:
+        ^function|groups$:
+          allOf:
+          - {$ref: /schemas/types.yaml#/definitions/string}
+          - additionalItems: false
+            items:
+              enum: [ACPI, ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14=
+, ADC15, ADC2,
+                ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT, DDCCLK=
+, DDCDAT,
+                EXTRST, FLACK, FLBUSY, FLWP, GPID, GPID0, GPID2, GPID4, =
+GPID6, GPIE0,
+                GPIE2, GPIE4, GPIE6, I2C10, I2C11, I2C12, I2C13, I2C14, =
+I2C3, I2C4,
+                I2C5, I2C6, I2C7, I2C8, I2C9, LPCPD, LPCPME, LPCRST, LPC=
+SMI, MAC1LINK,
+                MAC2LINK, MDIO1, MDIO2, NCTS1, NCTS2, NCTS3, NCTS4, NDCD=
+1, NDCD2,
+                NDCD3, NDCD4, NDSR1, NDSR2, NDSR3, NDSR4, NDTR1, NDTR2, =
+NDTR3, NDTR4,
+                NDTS4, NRI1, NRI2, NRI3, NRI4, NRTS1, NRTS2, NRTS3, OSCC=
+LK, PWM0,
+                PWM1, PWM2, PWM3, PWM4, PWM5, PWM6, PWM7, RGMII1, RGMII2=
+, RMII1, RMII2,
+                ROM16, ROM8, ROMCS1, ROMCS2, ROMCS3, ROMCS4, RXD1, RXD2,=
+ RXD3, RXD4,
+                SALT1, SALT2, SALT3, SALT4, SD1, SD2, SGPMCK, SGPMI, SGP=
+MLD, SGPMO,
+                SGPSCK, SGPSI0, SGPSI1, SGPSLD, SIOONCTRL, SIOPBI, SIOPB=
+O, SIOPWREQ,
+                SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1, SPI1DEBUG, SPI1PAS=
+STHRU, SPICS1,
+                TIMER3, TIMER4, TIMER5, TIMER6, TIMER7, TIMER8, TXD1, TX=
+D2, TXD3,
+                TXD4, UART6, USB11D1, USB11H2, USB2D1, USB2H1, USBCKI, V=
+GABIOS_ROM,
+                VGAHS, VGAVS, VPI18, VPI24, VPI30, VPO12, VPO24, WDTRST1=
+, WDTRST2]
+            maxItems: 1
+            minItems: 1
+            type: array
+        pinctrl-[0-9]+: true
+      properties: {phandle: true, pinctrl-names: true, status: true}
+      type: object
+    pinctrl-[0-9]+: true
+  properties:
+    $nodename: true
+    compatible:
+      additionalItems: false
+      items:
+      - enum: ['aspeed,ast2400-pinctrl', 'aspeed,g4-pinctrl']
+      maxItems: 1
+      minItems: 1
+      type: array
+    phandle: true
+    pinctrl-names: true
+    status: true
+  required: [compatible]
+  select:
+    properties:
+      compatible:
+        contains:
+          enum: ['aspeed,ast2400-pinctrl', 'aspeed,g4-pinctrl']
+    required: [compatible]
+  title: ASPEED AST2400 Pin Controller
+```
+
+`properties: {phandle: true, pinctrl-names: true, status: true}` has bee=
+n
+merged into my '^.*$' patternProperty, presumably partly from
+pinctrl-consumer.yaml, and this seems to be the source of the bad
+output. If as a hack I change my pattern to '^.*_default$' the problem
+goes away as we no longer try to enforce the constraints on properties
+provided by other bindings, but the problem is the node names are
+largely freeform[1] (unless I enforce a naming constraint as part of my
+bindings?).
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
+ree/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt?h=3Dv=
+5.2-rc6#n112
+
+>=20
+> BTW, You can put the names under a 'definitions' key and then use
+> '$ref' to reference them from function and group to avoid duplicating
+> the names. Or use patternProperties with '^(function|group)$'.
+
+I've used the patternProperties approach above as I couldn't get the
+definitions/$ref approach to work. I did the following:
+
+```
+definitions:
+  pinctrl-value:
+    allOf:
+      - $ref: "/schemas/types.yaml#/definitions/string"
+      - enum: [ "ACPI", "ADC0", "ADC1", "ADC10", "ADC11", "ADC12", "ADC1=
+3",
+        "ADC14", "ADC15", "ADC2", "ADC3", "ADC4", "ADC5", "ADC6", "ADC7"=
+,
+        "ADC8", "ADC9", "BMCINT", "DDCCLK", "DDCDAT", "EXTRST", "FLACK",=
+
+        "FLBUSY", "FLWP", "GPID", "GPID0", "GPID2", "GPID4", "GPID6", "G=
+PIE0",
+        "GPIE2", "GPIE4", "GPIE6", "I2C10", "I2C11", "I2C12", "I2C13", "=
+I2C14",
+        "I2C3", "I2C4", "I2C5", "I2C6", "I2C7", "I2C8", "I2C9", "LPCPD",=
+
+        "LPCPME", "LPCRST", "LPCSMI", "MAC1LINK", "MAC2LINK", "MDIO1", "=
+MDIO2",
+        "NCTS1", "NCTS2", "NCTS3", "NCTS4", "NDCD1", "NDCD2", "NDCD3", "=
+NDCD4",
+        "NDSR1", "NDSR2", "NDSR3", "NDSR4", "NDTR1", "NDTR2", "NDTR3", "=
+NDTR4",
+        "NDTS4", "NRI1", "NRI2", "NRI3", "NRI4", "NRTS1", "NRTS2", "NRTS=
+3",
+        "OSCCLK", "PWM0", "PWM1", "PWM2", "PWM3", "PWM4", "PWM5", "PWM6"=
+,
+        "PWM7", "RGMII1", "RGMII2", "RMII1", "RMII2", "ROM16", "ROM8",
+        "ROMCS1", "ROMCS2", "ROMCS3", "ROMCS4", "RXD1", "RXD2", "RXD3", =
+"RXD4",
+        "SALT1", "SALT2", "SALT3", "SALT4", "SD1", "SD2", "SGPMCK", "SGP=
+MI",
+        "SGPMLD", "SGPMO", "SGPSCK", "SGPSI0", "SGPSI1", "SGPSLD", "SIOO=
+NCTRL",
+        "SIOPBI", "SIOPBO", "SIOPWREQ", "SIOPWRGD", "SIOS3", "SIOS5", "S=
+IOSCI",
+        "SPI1", "SPI1DEBUG", "SPI1PASSTHRU", "SPICS1", "TIMER3", "TIMER4=
+",
+        "TIMER5", "TIMER6", "TIMER7", "TIMER8", "TXD1", "TXD2", "TXD3", =
+"TXD4",
+        "UART6", "USB11D1", "USB11H2", "USB2D1", "USB2H1", "USBCKI",
+        "VGABIOS_ROM", "VGAHS", "VGAVS", "VPI18", "VPI24", "VPI30", "VPO=
+12",
+        "VPO24", "WDTRST1", "WDTRST2" ]
+
+patternProperties:
+  '^.*_default$':
+    type: object
+    properties:
+      function:
+        $ref: "#/definitions/pinctrl-value"
+      groups:
+        $ref: "#/definitions/pinctrl-value"
+```
+
+But it gave me output like:
+
+```
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: wdtrst2_default:function: ['WDTRST2'] is not one of ['ACPI', 'AD=
+C0', 'ADC1', 'ADC10', 'ADC11', 'ADC12', 'ADC13', 'ADC14', 'ADC15', 'ADC2=
+', 'ADC3', 'ADC4', 'ADC5', 'ADC6', 'ADC7', 'ADC8', 'ADC9', 'BMCINT', 'DD=
+CCLK', 'DDCDAT', 'EXTRST', 'FLACK', 'FLBUSY', 'FLWP', 'GPID', 'GPID0', '=
+GPID2', 'GPID4', 'GPID6', 'GPIE0', 'GPIE2', 'GPIE4', 'GPIE6', 'I2C10', '=
+I2C11', 'I2C12', 'I2C13', 'I2C14', 'I2C3', 'I2C4', 'I2C5', 'I2C6', 'I2C7=
+', 'I2C8', 'I2C9', 'LPCPD', 'LPCPME', 'LPCRST', 'LPCSMI', 'MAC1LINK', 'M=
+AC2LINK', 'MDIO1', 'MDIO2', 'NCTS1', 'NCTS2', 'NCTS3', 'NCTS4', 'NDCD1',=
+ 'NDCD2', 'NDCD3', 'NDCD4', 'NDSR1', 'NDSR2', 'NDSR3', 'NDSR4', 'NDTR1',=
+ 'NDTR2', 'NDTR3', 'NDTR4', 'NDTS4', 'NRI1', 'NRI2', 'NRI3', 'NRI4', 'NR=
+TS1', 'NRTS2', 'NRTS3', 'OSCCLK', 'PWM0', 'PWM1', 'PWM2', 'PWM3', 'PWM4'=
+, 'PWM5', 'PWM6', 'PWM7', 'RGMII1', 'RGMII2', 'RMII1', 'RMII2', 'ROM16',=
+ 'ROM8', 'ROMCS1', 'ROMCS2', 'ROMCS3', 'ROMCS4', 'RXD1', 'RXD2', 'RXD3',=
+ 'RXD4', 'SALT1', 'SALT2', 'SALT3', 'SALT4', 'SD1', 'SD2', 'SGPMCK', 'SG=
+PMI', 'SGPMLD', 'SGPMO', 'SGPSCK', 'SGPSI0', 'SGPSI1', 'SGPSLD', 'SIOONC=
+TRL', 'SIOPBI', 'SIOPBO', 'SIOPWREQ', 'SIOPWRGD', 'SIOS3', 'SIOS5', 'SIO=
+SCI', 'SPI1', 'SPI1DEBUG', 'SPI1PASSTHRU', 'SPICS1', 'TIMER3', 'TIMER4',=
+ 'TIMER5', 'TIMER6', 'TIMER7', 'TIMER8', 'TXD1', 'TXD2', 'TXD3', 'TXD4',=
+ 'UART6', 'USB11D1', 'USB11H2', 'USB2D1', 'USB2H1', 'USBCKI', 'VGABIOS_R=
+OM', 'VGAHS', 'VGAVS', 'VPI18', 'VPI24', 'VPI30', 'VPO12', 'VPO24', 'WDT=
+RST1', 'WDTRST2']
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: wdtrst2_default:groups: ['WDTRST2'] is not one of ['ACPI', 'ADC0=
+', 'ADC1', 'ADC10', 'ADC11', 'ADC12', 'ADC13', 'ADC14', 'ADC15', 'ADC2',=
+ 'ADC3', 'ADC4', 'ADC5', 'ADC6', 'ADC7', 'ADC8', 'ADC9', 'BMCINT', 'DDCC=
+LK', 'DDCDAT', 'EXTRST', 'FLACK', 'FLBUSY', 'FLWP', 'GPID', 'GPID0', 'GP=
+ID2', 'GPID4', 'GPID6', 'GPIE0', 'GPIE2', 'GPIE4', 'GPIE6', 'I2C10', 'I2=
+C11', 'I2C12', 'I2C13', 'I2C14', 'I2C3', 'I2C4', 'I2C5', 'I2C6', 'I2C7',=
+ 'I2C8', 'I2C9', 'LPCPD', 'LPCPME', 'LPCRST', 'LPCSMI', 'MAC1LINK', 'MAC=
+2LINK', 'MDIO1', 'MDIO2', 'NCTS1', 'NCTS2', 'NCTS3', 'NCTS4', 'NDCD1', '=
+NDCD2', 'NDCD3', 'NDCD4', 'NDSR1', 'NDSR2', 'NDSR3', 'NDSR4', 'NDTR1', '=
+NDTR2', 'NDTR3', 'NDTR4', 'NDTS4', 'NRI1', 'NRI2', 'NRI3', 'NRI4', 'NRTS=
+1', 'NRTS2', 'NRTS3', 'OSCCLK', 'PWM0', 'PWM1', 'PWM2', 'PWM3', 'PWM4', =
+'PWM5', 'PWM6', 'PWM7', 'RGMII1', 'RGMII2', 'RMII1', 'RMII2', 'ROM16', '=
+ROM8', 'ROMCS1', 'ROMCS2', 'ROMCS3', 'ROMCS4', 'RXD1', 'RXD2', 'RXD3', '=
+RXD4', 'SALT1', 'SALT2', 'SALT3', 'SALT4', 'SD1', 'SD2', 'SGPMCK', 'SGPM=
+I', 'SGPMLD', 'SGPMO', 'SGPSCK', 'SGPSI0', 'SGPSI1', 'SGPSLD', 'SIOONCTR=
+L', 'SIOPBI', 'SIOPBO', 'SIOPWREQ', 'SIOPWRGD', 'SIOS3', 'SIOS5', 'SIOSC=
+I', 'SPI1', 'SPI1DEBUG', 'SPI1PASSTHRU', 'SPICS1', 'TIMER3', 'TIMER4', '=
+TIMER5', 'TIMER6', 'TIMER7', 'TIMER8', 'TXD1', 'TXD2', 'TXD3', 'TXD4', '=
+UART6', 'USB11D1', 'USB11H2', 'USB2D1', 'USB2H1', 'USBCKI', 'VGABIOS_ROM=
+', 'VGAHS', 'VGAVS', 'VPI18', 'VPI24', 'VPI30', 'VPO12', 'VPO24', 'WDTRS=
+T1', 'WDTRST2']
+```
+
+Clearly I haven't got it quite right, but I'm not sure what's wrong with=
+ my approach. Can you tell me? It looks like the property is interpreted=
+ as a string-array rather than a string, but I'm not sure why.
+
+Cheers,
+
+Andrew
