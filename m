@@ -2,90 +2,172 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B38C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B820FC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAFD42054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:58:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eDidBiQ2"
+	by mail.kernel.org (Postfix) with ESMTP id 7FC46208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfF0P6F (ORCPT
+        id S1726519AbfF0P7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:58:05 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41906 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfF0P6F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:58:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id c70so1089232pga.8
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 08:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=m5jdjA4Mh5T62bcbT0WAFOmvzJ4iQAhMoI15EEuz+WQ=;
-        b=eDidBiQ2y/Qtxis5JF5IB4c+580qLNPD2Ms/iqUBqA4w6bRpvaG7xGa9PHfXMhj7A5
-         sq7eHT8vxMHZKmCT/jZr2ztJ960Xa1KyD/abiniVSGEc24u8pegg8IszBfV7BuHMIgb2
-         efUk40mVLp8AnvlC2CnjQ4KF0/1SBRWY4MlKQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=m5jdjA4Mh5T62bcbT0WAFOmvzJ4iQAhMoI15EEuz+WQ=;
-        b=pnLydnsuJUrzyJHV+uiB3CJAaQyg/Ycpfg2TyrGFKeJD74kZYLvQeZzkCw0feSPQiv
-         leBzbIuGGqD/TplLjYUaAyvI5rfI1p9mrhRi+lBzkYX+kLTURNYsyVcO2lngvWgwhW1S
-         3HPT34Oo7xUPWnmOyiY74g+TA94DeOGe5k6H7z0OdJB9LXUD/tCHL0zXcQ+2Z9adzdSc
-         TiIro91TltOXkt4m9GEy1Y4ToxJ9YgPfDVEMlSXNeJmQ/P20aCWRTk03guL7z8jvRCCA
-         nnCILbVKSFh7KjD3319SA3KioAuPxqbehiMjRCmai3hr1j8xRXTxmKTw+aAV0gLIuIBk
-         XCWw==
-X-Gm-Message-State: APjAAAWGUKUSK2HZ5e1uquFzQdfvRfZUUf+xhjrTSh9EtOlNyNWZ01aA
-        fzDURFZFgGbmlckvB3b8siDajQ==
-X-Google-Smtp-Source: APXvYqyIy5H1rZHeSlyF/dzNgqGv0+nyO7uySXo5T9+Ws9Jg2z/muYju2K0H5Nt4iSCvXKnut2gMKw==
-X-Received: by 2002:a17:90a:9a8d:: with SMTP id e13mr6973840pjp.77.1561651084576;
-        Thu, 27 Jun 2019 08:58:04 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 125sm5650159pfg.23.2019.06.27.08.58.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Jun 2019 08:58:03 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 08:58:03 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Potapenko <glider@google.com>, Qian Cai <cai@lca.pw>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] arm64: Move jump_label_init() before parse_early_param()
-Message-ID: <201906270856.8CF50064@keescook>
-References: <201906261343.5F26328@keescook>
- <20190627080207.sdpwjoi4wnc664gp@mbp>
+        Thu, 27 Jun 2019 11:59:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52828 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726187AbfF0P7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 11:59:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 87A68AD12;
+        Thu, 27 Jun 2019 15:59:06 +0000 (UTC)
+Subject: Re: [PATCH v3 1/5] gem/vram: pin to vram in vmap
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        open list <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org
+References: <20190627122348.5833-1-kraxel@redhat.com>
+ <20190627122348.5833-2-kraxel@redhat.com>
+ <8a52b578-b255-3e11-3a0c-0b68f0cb649e@suse.de>
+ <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
+ <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
+ IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
+ AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
+ 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
+ hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
+ YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
+ 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
+ tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
+ R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
+ E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
+ kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
+ 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
+ 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
+ A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
+ NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
+ VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
+ iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
+ VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
+ iNx9uqqx
+Message-ID: <41363906-ba15-3940-7b63-c8ae42fe49ff@suse.de>
+Date:   Thu, 27 Jun 2019 17:59:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627080207.sdpwjoi4wnc664gp@mbp>
+In-Reply-To: <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="v5mvHfWoBSW6q2OhJ1KOU2WDnpIPSFgU3"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 09:02:08AM +0100, Catalin Marinas wrote:
-> On Wed, Jun 26, 2019 at 01:51:15PM -0700, Kees Cook wrote:
-> > This moves arm64 jump_label_init() from smp_prepare_boot_cpu() to
-> > setup_arch(), as done already on x86, in preparation from early param
-> > usage in the init_on_alloc/free() series:
-> > https://lkml.kernel.org/r/1561572949.5154.81.camel@lca.pw
-> 
-> This looks fine to me. Is there any other series to be merged soon that
-> depends on this patch (the init_on_alloc/fail one)? If not, I can queue
-> it for 5.3.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--v5mvHfWoBSW6q2OhJ1KOU2WDnpIPSFgU3
+Content-Type: multipart/mixed; boundary="CyfwPLyugCmmiD1QOF0mNPbhTPLbJPTRI";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie
+ <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+ open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org
+Message-ID: <41363906-ba15-3940-7b63-c8ae42fe49ff@suse.de>
+Subject: Re: [PATCH v3 1/5] gem/vram: pin to vram in vmap
+References: <20190627122348.5833-1-kraxel@redhat.com>
+ <20190627122348.5833-2-kraxel@redhat.com>
+ <8a52b578-b255-3e11-3a0c-0b68f0cb649e@suse.de>
+ <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
+ <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
+In-Reply-To: <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
 
-Yes, but that series will be in 5.3 also, so there's rush for 5.2. Do
-you want Alexander (via akpm) to include it in his series instead of it going
-through the arm64 tree?
+--CyfwPLyugCmmiD1QOF0mNPbhTPLbJPTRI
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Kees Cook
+
+
+Am 27.06.19 um 17:54 schrieb Thomas Zimmermann:
+> Hi
+>=20
+> Am 27.06.19 um 17:16 schrieb Gerd Hoffmann:
+>>   Hi,
+>>
+>>>  1) Introduce a default_placement field in struct drm_gem_vram_helper=
+
+>>> where this flag can be configured. I'd favor this option.
+>>
+>>>  2) Introduce a separate callback function for pinning to vram. The
+>>> driver would have to set the correct function pointers.
+>>
+>>>  3) Pin the fb console buffer manually from within the bochs driver.
+>>
+>> Hmm.  Before calling drm_fbdev_generic_setup() the bo doesn't exist ye=
+t
+>> and when the function returns it is already vmapped and pinned I think=
+=2E
+>>
+>> So (3) isn't easily doable.  (1) looks best to me.
+>=20
+> For my patches, it's OK to have to BO pinned to VRAM by default. As the=
+
+> BO will be unmapped most of the time, I can change this flag at any tim=
+e.
+
+So, yeah, option 1 ...
+
+> Best regards
+> Thomas
+>=20
+>> cheers,
+>>   Gerd
+>>
+>=20
+>=20
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG N=C3=BCrnberg)
+
+
+--CyfwPLyugCmmiD1QOF0mNPbhTPLbJPTRI--
+
+--v5mvHfWoBSW6q2OhJ1KOU2WDnpIPSFgU3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl0U58kACgkQaA3BHVML
+eiM5lQf/RsyluzB6xEkjK6Yzi9qC1XEdmXeUMT+OdUI1bSiMmt+ruoWk0u63rBca
+HdrX5C939GADLVoVPG7bzxXHWwQ0yidOaRjVQ1OraFg+QlH6hRc7WIX54Z+GxZb0
+TlVYQCtmfSKIqfA9ksJNvqbKvCpfqJQPjfWkG7hDAN5UWILPRzY9Vf7YJUBUDKHs
+n27LxKwD0AV9hgAct1mhdVgfVECgQYR8GcNdZH0uT3HdLCU6/W7GENtrBYgJKlvT
+1aIh4OplSJNgx6DyNEYXp5wXbYEpYq6y7/Xn569+xH5mclL3kMAaRTBPyJ15bdtQ
+J50K4JrCIGaZzUopBIJ3TfltKu0pIg==
+=HSpn
+-----END PGP SIGNATURE-----
+
+--v5mvHfWoBSW6q2OhJ1KOU2WDnpIPSFgU3--
