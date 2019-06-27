@@ -2,75 +2,125 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69B8C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A19C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E27620656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77262083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfF0ITM (ORCPT
+        id S1726623AbfF0ITU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 04:19:12 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:60114 "EHLO gloria.sntech.de"
+        Thu, 27 Jun 2019 04:19:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43624 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbfF0ITL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 04:19:11 -0400
-Received: from wf0413.dip.tu-dresden.de ([141.76.181.157] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hgPcN-0006oO-B4; Thu, 27 Jun 2019 10:18:55 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Tony Xie <tony.xie@rock-chips.com>, broonie@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, chenjh@rock-chips.com,
-        xsf@rock-chips.com, zhangqing@rock-chips.com,
-        huangtao@rock-chips.com
-Subject: Re: [PATCH v10 0/6] support a new type of PMIC,including two chips(rk817 and rk809)
-Date:   Thu, 27 Jun 2019 10:18:54 +0200
-Message-ID: <2084806.DiqCa91xLP@phil>
-In-Reply-To: <20190626115251.GR21119@dell>
-References: <20190621103258.8154-1-tony.xie@rock-chips.com> <20190626115251.GR21119@dell>
+        id S1726370AbfF0ITU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 04:19:20 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 17B5130C1AFC;
+        Thu, 27 Jun 2019 08:19:20 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BC41960856;
+        Thu, 27 Jun 2019 08:19:16 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 10:19:14 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kwankhede@nvidia.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mdev: Send uevents around parent device registration
+Message-ID: <20190627101914.32829440.cohuck@redhat.com>
+In-Reply-To: <156155924767.11505.11457229921502145577.stgit@gimli.home>
+References: <156155924767.11505.11457229921502145577.stgit@gimli.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 27 Jun 2019 08:19:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+On Wed, 26 Jun 2019 08:27:58 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Am Mittwoch, 26. Juni 2019, 13:52:51 CEST schrieb Lee Jones:
-> On Fri, 21 Jun 2019, Tony Xie wrote:
+> This allows udev to trigger rules when a parent device is registered
+> or unregistered from mdev.
 > 
-> > Most of functions and registers of the rk817 and rk808 are the same,
-> > so they can share allmost all codes.
-> > 
-> > Their specifications are as follows:
-> >   1) The RK809 and RK809 consist of 5 DCDCs, 9 LDOs and have the same
-> > registers
-> >      for these components except dcdc5.
-> >   2) The dcdc5 is a boost dcdc for RK817 and is a buck for RK809.
-> >   3) The RK817 has one switch but The Rk809 has two.
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c |   10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> Just tried to apply this set to a v5.2-rc1 base, but it doesn't seem
-> to do so cleanly.  Would you be able to rebase and resend please?
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index ae23151442cb..ecec2a3b13cb 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>  {
+>  	int ret;
+>  	struct mdev_parent *parent;
+> +	char *env_string = "MDEV_STATE=registered";
 
-I took the liberty of rebasing patch 3 accordingly and sent it as reply
-to the original patch3 as (v10.1). The other patches did apply cleanly
-after that.
+This string is probably reasonable enough.
 
+> +	char *envp[] = { env_string, NULL };
+>  
+>  	/* check for mandatory ops */
+>  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
+> @@ -196,7 +198,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>  	list_add(&parent->next, &parent_list);
+>  	mutex_unlock(&parent_list_lock);
+>  
+> -	dev_info(dev, "MDEV: Registered\n");
+> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
 
-Heiko
+I also agree with the positioning here.
 
+> +
+>  	return 0;
+>  
+>  add_dev_err:
+> @@ -220,6 +223,8 @@ EXPORT_SYMBOL(mdev_register_device);
+>  void mdev_unregister_device(struct device *dev)
+>  {
+>  	struct mdev_parent *parent;
+> +	char *env_string = "MDEV_STATE=unregistered";
+
+Ok.
+
+> +	char *envp[] = { env_string, NULL };
+>  
+>  	mutex_lock(&parent_list_lock);
+>  	parent = __find_parent_device(dev);
+> @@ -228,7 +233,6 @@ void mdev_unregister_device(struct device *dev)
+>  		mutex_unlock(&parent_list_lock);
+>  		return;
+>  	}
+> -	dev_info(dev, "MDEV: Unregistering\n");
+>  
+>  	list_del(&parent->next);
+>  	mutex_unlock(&parent_list_lock);
+> @@ -243,6 +247,8 @@ void mdev_unregister_device(struct device *dev)
+>  	up_write(&parent->unreg_sem);
+>  
+>  	mdev_put_parent(parent);
+> +
+> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+
+I'm wondering whether we should indicate this uevent earlier: Once we
+have detached from the parent list, we're basically done for all
+practical purposes. So maybe move this right before we grab the
+unreg_sem?
+
+>  }
+>  EXPORT_SYMBOL(mdev_unregister_device);
+>  
+> 
 
