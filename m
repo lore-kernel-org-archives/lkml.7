@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDBCC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0697AC48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66EE921851
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3B0218A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595800;
-	bh=PUOoeL0ycfB19n0toeqNbyznI5I6SOYyob2cp42sH5A=;
+	s=default; t=1561595805;
+	bh=w5IZDkSLxGEqn14qMvhic0c5tKN9ytUQ6ouAmyL657g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IQQOiD4nBdpnssrNx+m1eG4QYq23bBM84arLNZq1M+mOspPS+RUTwBOndrIdVUw+w
-	 2tovWs+xQvZrRnflObPr0NmHzC7ImG6PDGXCdg0hf71KBIvPb7AclF+6IEKObtSCDQ
-	 6xP5zUNhTIBqBE4grmmuvSoEyZ2oL2ktZCo09I6o=
+	b=VcPC3S38iXAMytQ99ZmSFHCsIypTxPJqidG85VrZPnBnkV/O9TyZniD0tk2Dioqzn
+	 8w9jIACzQeNXcwygYGcAxYMCFtlNJUoh/9lEMsB1nMzpUtPdpW8Me3P7uHJb6F9eab
+	 jOI0azMbp3cLxtU1oQCR10Q0PzQMqIk8UTS2srmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbfF0Agj (ORCPT
+        id S1728393AbfF0Ago (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41108 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:36:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727223AbfF0Agg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:36:36 -0400
+        id S1728380AbfF0Agn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:36:43 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C3CF21851;
-        Thu, 27 Jun 2019 00:36:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0238C21852;
+        Thu, 27 Jun 2019 00:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595795;
-        bh=PUOoeL0ycfB19n0toeqNbyznI5I6SOYyob2cp42sH5A=;
+        s=default; t=1561595802;
+        bh=w5IZDkSLxGEqn14qMvhic0c5tKN9ytUQ6ouAmyL657g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wyBR2hU1CoUwBqpp7BbJRIbAALuimOwBvWaE5Cd1bQInHUs3fMo4gvfS5nZzm3Z1K
-         qKztoc6bXdd7c4wYhx+EH3wq4lD/3k769SEapB19J3YvZDXvCoeh2fUOGng+wIZDEz
-         2+X8+O+3xegXXOysexEmFkWpGLu43BGammDI0fZo=
+        b=0CA9+mSaQhX6SH1I0eyZLahtLHtRqSQ+ubMFgjGebktob+oeh67Jx7+7ZkvkT6CiB
+         MCnCO96lSmqRjz+E9B8ufpOqrdsVfnAKJ7ma2oP174TLiBe02U3CdgCdE0DaqjW+D+
+         tyG3WPz3l6PkGAB3Hb6GtuGYtSGLHOCM/N7KMwTw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Crispin <john@phrozen.org>,
-        Shashidhar Lakkavalli <slakkavalli@datto.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/60] mac80211: fix rate reporting inside cfg80211_calculate_bitrate_he()
-Date:   Wed, 26 Jun 2019 20:35:21 -0400
-Message-Id: <20190627003616.20767-6-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/60] soundwire: stream: fix out of boundary access on port properties
+Date:   Wed, 26 Jun 2019 20:35:23 -0400
+Message-Id: <20190627003616.20767-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
 References: <20190627003616.20767-1-sashal@kernel.org>
@@ -61,34 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Crispin <john@phrozen.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 25d16d124a5e249e947c0487678b61dcff25cf8b ]
+[ Upstream commit 03ecad90d3798be11b033248bbd4bbff4425a1c7 ]
 
-The reported rate is not scaled down correctly. After applying this patch,
-the function will behave just like the v/ht equivalents.
+Assigning local iterator to array element and using it again for
+indexing would cross the array boundary.
+Fix this by directly referring array element without using the local
+variable.
 
-Signed-off-by: Shashidhar Lakkavalli <slakkavalli@datto.com>
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soundwire/stream.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/net/wireless/util.c b/net/wireless/util.c
-index aad1c8e858e5..d57e2f679a3e 100644
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -1219,7 +1219,7 @@ static u32 cfg80211_calculate_bitrate_he(struct rate_info *rate)
- 	if (rate->he_dcm)
- 		result /= 2;
+diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+index e5c7e1ef6318..907a548645b7 100644
+--- a/drivers/soundwire/stream.c
++++ b/drivers/soundwire/stream.c
+@@ -1236,9 +1236,7 @@ struct sdw_dpn_prop *sdw_get_slave_dpn_prop(struct sdw_slave *slave,
+ 	}
  
--	return result;
-+	return result / 10000;
- }
+ 	for (i = 0; i < num_ports; i++) {
+-		dpn_prop = &dpn_prop[i];
+-
+-		if (dpn_prop->num == port_num)
++		if (dpn_prop[i].num == port_num)
+ 			return &dpn_prop[i];
+ 	}
  
- u32 cfg80211_calculate_bitrate(struct rate_info *rate)
 -- 
 2.20.1
 
