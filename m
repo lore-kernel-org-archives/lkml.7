@@ -2,77 +2,110 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4352C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDEDC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B402083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC69C2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfF0JJS (ORCPT
+        id S1726467AbfF0JLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 05:09:18 -0400
-Received: from verein.lst.de ([213.95.11.211]:50859 "EHLO newverein.lst.de"
+        Thu, 27 Jun 2019 05:11:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:60140 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbfF0JJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 05:09:17 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 7C50668B20; Thu, 27 Jun 2019 11:08:43 +0200 (CEST)
-Date:   Thu, 27 Jun 2019 11:08:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@lst.de>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190627090843.GB11548@lst.de>
-References: <20190624072752.GA3954@lst.de> <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com> <20190625072008.GB30350@lst.de> <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com> <20190625170115.GA9746@lst.de> <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com> <20190626065708.GB24531@lst.de> <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com> <20190626202107.GA5850@ziepe.ca> <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+        id S1725385AbfF0JLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 05:11:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 02:11:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
+   d="scan'208";a="167366720"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga006.jf.intel.com with ESMTP; 27 Jun 2019 02:11:44 -0700
+Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 27 Jun 2019 02:11:44 -0700
+Received: from shsmsx154.ccr.corp.intel.com (10.239.6.54) by
+ FMSMSX113.amr.corp.intel.com (10.18.116.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 27 Jun 2019 02:11:44 -0700
+Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.87]) by
+ SHSMSX154.ccr.corp.intel.com ([169.254.7.156]) with mapi id 14.03.0439.000;
+ Thu, 27 Jun 2019 17:11:41 +0800
+From:   "Zhang, Tina" <tina.zhang@intel.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>
+Subject: RE: [RFC PATCH v3 2/4] vfio: Introduce vGPU display irq type
+Thread-Topic: [RFC PATCH v3 2/4] vfio: Introduce vGPU display irq type
+Thread-Index: AQHVLJqW0JiZUS7UW0uPEvNgUIeas6augZSAgACxdSA=
+Date:   Thu, 27 Jun 2019 09:11:40 +0000
+Message-ID: <237F54289DF84E4997F34151298ABEBC876836C6@SHSMSX101.ccr.corp.intel.com>
+References: <20190627033802.1663-1-tina.zhang@intel.com>
+ <20190627033802.1663-3-tina.zhang@intel.com>
+ <20190627062043.63wpwgefbsnackbg@sirius.home.kraxel.org>
+In-Reply-To: <20190627062043.63wpwgefbsnackbg@sirius.home.kraxel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTZmZWE0MzgtODUyMi00ZDY4LWFlMTAtZjgxMzVlNzFkMTY0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVWttS050MFdHZ3c1VXFJdVpxeDgzWnNMNWVOQm1nNmEwMFpRYVJsXC9ZT2s1cU1pWnNubUJTOG1cL0RcL1REaE1EZSJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 02:45:38PM -0600, Logan Gunthorpe wrote:
-> > The bar info would give the exporting struct device and any other info
-> > we need to make the iommu mapping.
-> 
-> Well, the IOMMU mapping is the normal thing the mapping driver will
-> always do. We'd really just need the submitting driver to, when
-> appropriate, inform the mapping driver that this is a pci bus address
-> and not to call dma_map_xxx(). Then, for special mappings for the CMB
-> like Christoph is talking about, it's simply a matter of doing a range
-> compare on the PCI Bus address and converting the bus address to a BAR
-> and offset.
-
-Well, range compare on the physical address.  We have a few different
-options here:
-
- (a) a range is normal RAM, DMA mapping works as usual
- (b) a range is another devices BAR, in which case we need to do a
-     map_resource equivalent (which really just means don't bother with
-     cache flush on non-coherent architectures) and apply any needed
-     offset, fixed or iommu based
- (c) a range points to a BAR on the acting device. In which case we
-     don't need to DMA map at all, because no dma is happening but just an
-     internal transfer.  And depending on the device that might also require
-     a different addressing mode
-
-I guess it might make sense to just have a block layer flag that (b) or
-(c) might be contained in a bio.  Then we always look up the data
-structure, but can still fall back to (a) if nothing was found.  That
-even allows free mixing and matching of memory types, at least as long
-as they are contained to separate bio_vec segments.
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogaW50ZWwtZ3Z0LWRldiBb
+bWFpbHRvOmludGVsLWd2dC1kZXYtYm91bmNlc0BsaXN0cy5mcmVlZGVza3RvcC5vcmddIE9uDQo+
+IEJlaGFsZiBPZiBHZXJkIEhvZmZtYW5uDQo+IFNlbnQ6IFRodXJzZGF5LCBKdW5lIDI3LCAyMDE5
+IDI6MjEgUE0NCj4gVG86IFpoYW5nLCBUaW5hIDx0aW5hLnpoYW5nQGludGVsLmNvbT4NCj4gQ2M6
+IFRpYW4sIEtldmluIDxrZXZpbi50aWFuQGludGVsLmNvbT47IGt2bUB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyB6aGVueXV3QGxpbnV4LmludGVsLmNv
+bTsgWXVhbiwgSGFuZw0KPiA8aGFuZy55dWFuQGludGVsLmNvbT47IGFsZXgud2lsbGlhbXNvbkBy
+ZWRoYXQuY29tOyBMdiwgWmhpeXVhbg0KPiA8emhpeXVhbi5sdkBpbnRlbC5jb20+OyBpbnRlbC1n
+dnQtZGV2QGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsgV2FuZywgWmhpIEENCj4gPHpoaS5hLndhbmdA
+aW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1JGQyBQQVRDSCB2MyAyLzRdIHZmaW86IEludHJv
+ZHVjZSB2R1BVIGRpc3BsYXkgaXJxIHR5cGUNCj4gDQo+IE9uIFRodSwgSnVuIDI3LCAyMDE5IGF0
+IDExOjM4OjAwQU0gKzA4MDAsIFRpbmEgWmhhbmcgd3JvdGU6DQo+ID4gSW50cm9kdWNlIHZHUFUg
+c3BlY2lmaWMgaXJxIHR5cGUgVkZJT19JUlFfVFlQRV9HRlgsIGFuZA0KPiA+IFZGSU9fSVJRX1NV
+QlRZUEVfR0ZYX0RJU1BMQVlfSVJRIGFzIHRoZSBzdWJ0eXBlIGZvciB2R1BVIGRpc3BsYXkNCj4g
+Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IFRpbmEgWmhhbmcgPHRpbmEuemhhbmdAaW50ZWwuY29tPg0K
+PiA+IC0tLQ0KPiA+ICBpbmNsdWRlL3VhcGkvbGludXgvdmZpby5oIHwgMyArKysNCj4gPiAgMSBm
+aWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1
+ZGUvdWFwaS9saW51eC92ZmlvLmggYi9pbmNsdWRlL3VhcGkvbGludXgvdmZpby5oDQo+ID4gaW5k
+ZXggNjAwNzg0YWNjNGFjLi5jM2U5YzgyMWE1Y2IgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS91
+YXBpL2xpbnV4L3ZmaW8uaA0KPiA+ICsrKyBiL2luY2x1ZGUvdWFwaS9saW51eC92ZmlvLmgNCj4g
+PiBAQCAtNDY1LDYgKzQ2NSw5IEBAIHN0cnVjdCB2ZmlvX2lycV9pbmZvX2NhcF90eXBlIHsNCj4g
+PiAgCV9fdTMyIHN1YnR5cGU7ICAvKiB0eXBlIHNwZWNpZmljICovDQo+ID4gIH07DQo+ID4NCj4g
+PiArI2RlZmluZSBWRklPX0lSUV9UWVBFX0dGWAkJCQkoMSkNCj4gPiArI2RlZmluZSBWRklPX0lS
+UV9TVUJUWVBFX0dGWF9ESVNQTEFZX0lSUQkJKDEpDQo+IA0KPiBWRklPX0lSUV9UWVBFX0dGWF9W
+QkxBTksgPw0KVkZJT19JUlFfU1VCVFlQRV9HRlhfRElTUExBWV9JUlEgaXMgcHJvcG9zZWQgdG8g
+Y292ZXIgYWxsIHRoZSBkaXNwbGF5IHJlbGF0ZWQgZXZlbnRzLiBJbiB0aGlzIHZlcnNpb24sIHdl
+IG9ubHkgdXNlIFZGSU9fSVJRX1NVQlRZUEVfR0ZYX0RJU1BMQVlfSVJRIHRvIGRlbGl2ZXIgdmJs
+YW5rIGV2ZW50LiBIb3dldmVyLCB3ZSBtaWdodCBzdGlsbCB3YW50IHRvIHJlc2VydmUgc2VhdCBm
+b3Igb3RoZXIgZGlzcGxheSBldmVudCwgbGlrZSBwYWdlIGZsaXAgZXZlbnQuDQpUaGFua3MuDQoN
+CkJSLA0KVGluYQ0KPiANCj4gY2hlZXJzLA0KPiAgIEdlcmQNCj4gDQo+IF9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IGludGVsLWd2dC1kZXYgbWFpbGlu
+ZyBsaXN0DQo+IGludGVsLWd2dC1kZXZAbGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+IGh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vaW50ZWwtZ3Z0LWRldg0K
