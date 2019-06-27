@@ -2,141 +2,92 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9094BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A03C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F86620663
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E66020663
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="AbMqleUM"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="S+FOaFSk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfF0BAg (ORCPT
+        id S1726872AbfF0BCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 21:00:36 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:64609 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfF0BAe (ORCPT
+        Wed, 26 Jun 2019 21:02:24 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32869 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbfF0BCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 21:00:34 -0400
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x5R107Tk025524;
-        Thu, 27 Jun 2019 10:00:08 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x5R107Tk025524
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561597209;
-        bh=6VB1wZsBwsm/iN1345MEJ8y/YbQrBvHe3gm/fQA66sE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AbMqleUMF8WbkQW/DZ3atN0QXRNxLPw1q18m3uoTLxht9p+MrEed4X9Jmc5MmzRat
-         Exup6cH8GnliIiLsAE3f7+FeXtGhyrA2hPWu+hybbjiYJHJ95Hb/6TGEfqZxQud11A
-         1V9yJdKLQUu/VeS276NrdtEfdk7RGnbK+wKej3kIhwRu8oXlVpp+I1o/JpDTaZXApu
-         xhKPOozi6OodXtOtgJY0ythGVq3ePMAVx+g8HeCA83jsyo68fuxvre14nq0kkO7kp9
-         +H3HOxj4IatIV8cO2zzX12Ko5sf0mk+r1dR6q7Okctrir/tYNiVNKosCn1ymbS0Zjy
-         4Vo9MZCbMFrAA==
-X-Nifty-SrcIP: [209.85.222.49]
-Received: by mail-ua1-f49.google.com with SMTP id j8so195737uan.6;
-        Wed, 26 Jun 2019 18:00:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAWK9L5KAnawsipEw2w76cfJka2gw6fEyMULVXXiWgAtUFVgWZ7W
-        ac/k3YTo7vPyzaLJjFMJ7rMetjqcIQ6KA3TLgMA=
-X-Google-Smtp-Source: APXvYqwk0+dMb6B8alF8LE6yyL8exB7smiJopBH6EsTaiAnUD0pn7i1JY5b+amt9LwdZKsr1URzpxGEsZHMuJkQfBGg=
-X-Received: by 2002:ab0:234e:: with SMTP id h14mr666049uao.25.1561597207108;
- Wed, 26 Jun 2019 18:00:07 -0700 (PDT)
+        Wed, 26 Jun 2019 21:02:24 -0400
+Received: by mail-io1-f65.google.com with SMTP id u13so1028510iop.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 18:02:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=LukHuzspVdtsbWmPrQxtJofMfIkJuuBn4KLHq+hXvnA=;
+        b=S+FOaFSkDCDJ8fulPJ2UtIixLPm6C3blKm64Y26FpWliH1L0Kug+UoWJSnPzdI0Hcj
+         WIpQSV5+lHeemPxtT7Xcm9l2PGDireS9Cy5y9WyCF6nc8MvNf86DT26n4Uj7szEVflXK
+         7TdcSck6au5p+xNo79U3stPs5H1RUiTS20Kh1vpGpP8BZLL1aurZbclNgue4GAr053eG
+         IbbEFmsd4K4jnK/HKIBOTzUgeV8PgouYszZgI9mVl29aXMFMCPbfE0b+q6K1Srmh1sdH
+         CjXuVDZOcP7s9hMhGovvS1kStrCycR0lygvxsnRqkr3dk1iFcCEqAziHpxKtYM1HyLRb
+         9oCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=LukHuzspVdtsbWmPrQxtJofMfIkJuuBn4KLHq+hXvnA=;
+        b=IN3SS/hg41KgY2gbAOzhEdV4MlBKFNByeKVHiOawslFUn8kgziPWxRBabLxZFdiG2h
+         WD0nGxQ8ijM65mhdkj8EvQ1toBrtlOkS7hnowolwPgfiAQVG3GwPUafOBsLSBiQE0p/1
+         IPN18h4V9lXCUb6QiMlUvObm1GWuQ/JeN7ahTzllXdmihNhHbRYbZ8Hlp7/tHpViaVhS
+         5y8g9P5/x2wRJ8LuYodeoz8O9ep3Sc+k6XaPt3C+pNoHEC/5hFuTjezUP+qtq+Jj7QjS
+         XeI81/S+GBS5/kMmix9ULHvAv/kyPThdhB7kZkrtIbwQZuzpfdRT7zOj5uLynhxNibDi
+         7kgw==
+X-Gm-Message-State: APjAAAVio1iCI8q5I7f6j8aWeyt3J93rOgrdKTBDwroIBEUi6uihJUme
+        hU8Nbx1982SBLbpInmcPGlk+KQ==
+X-Google-Smtp-Source: APXvYqxH6d/kyIhVX9FR3/pclmA0eMPc/eQpoi25e5p7JBHqOX5DR5DbYu4JLM1fBKxoY3ScgDchXQ==
+X-Received: by 2002:a6b:f711:: with SMTP id k17mr1267637iog.273.1561597343694;
+        Wed, 26 Jun 2019 18:02:23 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id p10sm1457892iob.54.2019.06.26.18.02.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 18:02:23 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 18:02:22 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Rob Herring <robh@kernel.org>
+cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] dt-bindings: arm: Limit cpus schema to only check Arm
+ 'cpu' nodes
+In-Reply-To: <20190627000044.12739-1-robh@kernel.org>
+Message-ID: <alpine.DEB.2.21.9999.1906261759390.29311@viisi.sifive.com>
+References: <20190627000044.12739-1-robh@kernel.org>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-References: <20190613015532.19685-1-yamada.masahiro@socionext.com> <CACRpkdb1MySnzCVGb6v1KovmgJtagKeSe+mrPvsVOJz_s198eA@mail.gmail.com>
-In-Reply-To: <CACRpkdb1MySnzCVGb6v1KovmgJtagKeSe+mrPvsVOJz_s198eA@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 27 Jun 2019 09:59:30 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATUh+c=iUBiNe0ooV3ZykUpS4B3Bj93K7yJ9osgUH+=vA@mail.gmail.com>
-Message-ID: <CAK7LNATUh+c=iUBiNe0ooV3ZykUpS4B3Bj93K7yJ9osgUH+=vA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: remove unneeded #ifdef around declarations
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 5:52 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> Hi Masahiro,
->
-> thanks for your patch. For some reason I managed to pick up
-> patch 2 before patch 1. I applied this now with some fuzzing.
-> (Please check the result.)
->
-> On Thu, Jun 13, 2019 at 3:55 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
->
-> > What is the point in surrounding the whole of declarations with
-> > ifdef like this?
->
-> I don't know if it is generally good to have phrases posed as
-> questions in a commit message, we prefer to have statements
-> about the change not a polemic dialog.
->
-> >   #ifdef CONFIG_FOO
-> >   int foo(void);
-> >   #endif
-> >
-> > If CONFIG_FOO is not defined, all callers of foo() will fail
-> > with implicit declaration errors since the top Makefile adds
-> > -Werror-implicit-function-declaration to KBUILD_CFLAGS.
->
-> Maybe this flag was not in the top Makefile when the #ifdefs
-> where introduced?
->
-> > This breaks the build earlier when you are doing something wrong.
-> > That's it.
->
-> Good idea.
->
-> > Anyway, it will fail to link since the definition of foo() is not
-> > compiled.
-> >
-> > In summary, these ifdef are unneeded.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
-> Pushing this to the zeroday builders and let's see what happens!
+On Wed, 26 Jun 2019, Rob Herring wrote:
+
+> Matching on the 'cpus' node was a bad choice because the schema is
+> incorrectly applied to non-Arm cpus nodes. As we now have a common cpus
+> schema which checks the general structure, it is also redundant to do so
+> in the Arm CPU schema.
+> 
+> The downside is one could conceivably mix different architecture's cpu
+> nodes or have typos in the compatible string. The latter problem pretty
+> much exists for every schema.
+
+The RISC-V patch applies cleanly, but this one doesn't apply here on 
+either master or next-20190626.  Is there a different base commit?
 
 
-Sorry for my terrible commit message and offending response.
-
-I appended a new commit message below.
-
-If you are OK with rebasing, please consider replacement.
-
---------------------------->8----------------------------------
-pinctrl: remove less important #ifdef around declarations
-
-The whole declarations in these headers are surrounded by #ifdef.
-
-As far as I understood, the motivation of this is probably to break
-the build earlier if a driver misses to select or depend on correct
-CONFIG options in Kconfig.
-
-Since commit 94bed2a9c4ae ("Add -Werror-implicit-function-declaration")
-no one cannot call functions that have not been declared.
-
-So, I see some benefit in doing this in the cost of uglier headers.
-
-In reality, it would not be so easy to catch missed 'select' or
-'depends on' because PINCTRL, PINMUX, etc. are already selected by
-someone else eventually. So, this kind of error, if any, will be
-caught by randconfig bots.
-
-In summary, I am not a big fan of deep #ifdef nesting, and this
-does not matter for normal developers. The code readability wins.
---------------------------->8----------------------------------
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+- Paul
