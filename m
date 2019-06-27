@@ -2,156 +2,129 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822AEC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6BAC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6185D20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B82420663
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:55:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="QuXSG0Zb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfF0Py5 (ORCPT
+        id S1726524AbfF0Pzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:54:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52050 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726405AbfF0Py5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:54:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8CAD7AD12;
-        Thu, 27 Jun 2019 15:54:55 +0000 (UTC)
-Subject: Re: [PATCH v3 1/5] gem/vram: pin to vram in vmap
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
-References: <20190627122348.5833-1-kraxel@redhat.com>
- <20190627122348.5833-2-kraxel@redhat.com>
- <8a52b578-b255-3e11-3a0c-0b68f0cb649e@suse.de>
- <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
-Date:   Thu, 27 Jun 2019 17:54:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 27 Jun 2019 11:55:48 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:19540 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbfF0Pzr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 11:55:47 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.63,424,1557212400"; 
+   d="scan'208";a="39277033"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jun 2019 08:55:46 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 27 Jun 2019 08:55:46 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 27 Jun 2019 08:55:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8iAj8HAjrZkWALwk/F/8dpsLp0UCnJHMEZYNW05wnJ8=;
+ b=QuXSG0ZbUCXtMUMLGSqfCtvK6iejnmJy+CXLBpvBUN0zIE/rebDAo2shI862AM5nVVKfNYrUym3rPk/LVR2mJKUrpzi9RedCdYhEF34KHgFYxm9Ou1fN4DS3nmgWuyR8A2Ce3tOjP6adOIsnHo71V2g3xrfiP78ZHmmopYEbS/w=
+Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
+ MWHPR11MB1309.namprd11.prod.outlook.com (10.169.232.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.17; Thu, 27 Jun 2019 15:55:45 +0000
+Received: from MWHPR11MB1549.namprd11.prod.outlook.com
+ ([fe80::7d59:2a2f:90f1:2720]) by MWHPR11MB1549.namprd11.prod.outlook.com
+ ([fe80::7d59:2a2f:90f1:2720%9]) with mapi id 15.20.2008.018; Thu, 27 Jun 2019
+ 15:55:45 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <sboyd@kernel.org>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <mturquette@baylibre.com>
+CC:     <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <claudiu.beznea@gmail.com>
+Subject: Re: [PATCH 0/7] clk: at91: sckc: improve error path
+Thread-Topic: [PATCH 0/7] clk: at91: sckc: improve error path
+Thread-Index: AQHVIf3bUSmswP0Le0qxy3Tkv6UCZKavrwEAgAAOigA=
+Date:   Thu, 27 Jun 2019 15:55:45 +0000
+Message-ID: <d002d9ae-e84b-12e7-6c59-c76fb073f859@microchip.com>
+References: <1560440205-4604-1-git-send-email-claudiu.beznea@microchip.com>
+ <20190627150337.A233320B1F@mail.kernel.org>
+In-Reply-To: <20190627150337.A233320B1F@mail.kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR0601CA0012.eurprd06.prod.outlook.com
+ (2603:10a6:800:1e::22) To MWHPR11MB1549.namprd11.prod.outlook.com
+ (2603:10b6:301:c::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20190627185538166
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fd6d911a-d609-4847-4d95-08d6fb17e9fa
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1309;
+x-ms-traffictypediagnostic: MWHPR11MB1309:
+x-microsoft-antispam-prvs: <MWHPR11MB1309A1B15FFAACB3D94B926B87FD0@MWHPR11MB1309.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(136003)(39860400002)(396003)(346002)(199004)(189003)(53546011)(6506007)(76176011)(386003)(6512007)(52116002)(99286004)(229853002)(6486002)(102836004)(26005)(186003)(6436002)(110136005)(4326008)(54906003)(86362001)(31696002)(316002)(6246003)(2201001)(53936002)(4744005)(25786009)(71190400001)(71200400001)(2501003)(2906002)(256004)(14444005)(6116002)(3846002)(478600001)(8676002)(81166006)(81156014)(72206003)(68736007)(8936002)(14454004)(305945005)(7736002)(11346002)(486006)(476003)(66476007)(64756008)(2616005)(446003)(66556008)(66446008)(73956011)(66946007)(5660300002)(36756003)(31686004)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1309;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: EeBsJVygxVTDkq5vSZzzM88mUqL1FfQnGqpFNKXmOqLmLm2SqzbwKULqI8CnyD7GGN/DjCi6r8rSZM/vdeBjtwecoTlJLVVlXEMbDiORk5kMpw96FOrBLbwp4S6BtWIUK6vV6GICauu5BSXoEiRbXuONCePoIPRwXhPrAO0+9NXgmnwTyW717ASDwwvwMl4UOtthWoaDnQIHJz3lRxibwqVEsw54sp5cS+Bei+5rIn80WuNuGQTnB0gLw/XCvp3kVyarRG/a6e1ODU4WQdTdVzOECfeYXNdl80E34RdgYS8gDcud53wDAf5N47ql1BN6cptLQ8D4sjgBJJScEXEv5g+Kf2qtKKYWNi+HILu0AouVerAQ14Ng9xgLai0g2gjwt+7yWwbj9/k36FVoQeSDpD3iulcyDNzrZ9lGZYRv6aw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <301B48221B79334A992F7C675039FE99@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="tBTTJRDtS7CMLIYpOYJXPvr7feH33XgYO"
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd6d911a-d609-4847-4d95-08d6fb17e9fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 15:55:45.1531
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1309
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---tBTTJRDtS7CMLIYpOYJXPvr7feH33XgYO
-Content-Type: multipart/mixed; boundary="5aKuOwci0HBAv9zVXFDlQwFppkudXPOMv";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, Maxime Ripard
- <maxime.ripard@bootlin.com>, open list <linux-kernel@vger.kernel.org>,
- David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
-Message-ID: <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
-Subject: Re: [PATCH v3 1/5] gem/vram: pin to vram in vmap
-References: <20190627122348.5833-1-kraxel@redhat.com>
- <20190627122348.5833-2-kraxel@redhat.com>
- <8a52b578-b255-3e11-3a0c-0b68f0cb649e@suse.de>
- <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
-In-Reply-To: <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
-
---5aKuOwci0HBAv9zVXFDlQwFppkudXPOMv
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-Am 27.06.19 um 17:16 schrieb Gerd Hoffmann:
->   Hi,
->=20
->>  1) Introduce a default_placement field in struct drm_gem_vram_helper
->> where this flag can be configured. I'd favor this option.
->=20
->>  2) Introduce a separate callback function for pinning to vram. The
->> driver would have to set the correct function pointers.
->=20
->>  3) Pin the fb console buffer manually from within the bochs driver.
->=20
-> Hmm.  Before calling drm_fbdev_generic_setup() the bo doesn't exist yet=
-
-> and when the function returns it is already vmapped and pinned I think.=
-
->=20
-> So (3) isn't easily doable.  (1) looks best to me.
-
-For my patches, it's OK to have to BO pinned to VRAM by default. As the
-BO will be unmapped most of the time, I can change this flag at any time.=
-
-
-Best regards
-Thomas
-
-> cheers,
->   Gerd
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
-
-
---5aKuOwci0HBAv9zVXFDlQwFppkudXPOMv--
-
---tBTTJRDtS7CMLIYpOYJXPvr7feH33XgYO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl0U5soACgkQaA3BHVML
-eiNQeAf+NnjuxqrjNx6kGfqn9NwnbfJLfP67MLbaMk5zgiP57zfMw/CAdHENVBtT
-fVlNbTQ2Y5894tk+TgvZUmtAbql242FJ8nPLTYoWoipUN5IgZ6m+dt/kCSZ80ci7
-jffxxMeosDdXc8RGLIntkKJn/axK0S+L3h3dt8Jd6LyOhd7pUu4JM76IknYY6pUr
-TEJpYUzwiUW7OD7+eXBNxfK5fshT/gGmWUIItkWwCVMNQegPIHAfvqkpv4BHK+A2
-3U38OZLODh64Z+Xnzz01mm+QM7jlXizRtVPAz6LzqUJtApf3OrnSSvMxhC+e1Ela
-A2NOCN5NpkxMCmsfPnmS3C1Sdux9yg==
-=USKJ
------END PGP SIGNATURE-----
-
---tBTTJRDtS7CMLIYpOYJXPvr7feH33XgYO--
+DQoNCk9uIDI3LjA2LjIwMTkgMTg6MDMsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gRXh0ZXJuYWwg
+RS1NYWlsDQo+IA0KPiANCj4gUXVvdGluZyBDbGF1ZGl1LkJlem5lYUBtaWNyb2NoaXAuY29tICgy
+MDE5LTA2LTEzIDA4OjM3OjA2KQ0KPj4gRnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6
+bmVhQG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4gSGksDQo+Pg0KPj4gVGhpcyBzZXJpZXMgdHJpZXMg
+dG8gaW1wcm92ZSBlcnJvciBwYXRoIGZvciBzbG93IGNsb2NrIHJlZ2lzdHJhdGlvbnMNCj4+IGJ5
+IGFkZGluZyBmdW5jdGlvbnMgdG8gZnJlZSByZXNvdXJjZXMgYW5kIHVzaW5nIHRoZW0gb24gZmFp
+bHVyZXMuDQo+IA0KPiBJZiBwb3NzaWJsZSwgcmVzZW5kIHRoaXMgcGF0Y2ggc2VyaWVzIGluIHBs
+YWluIHRleHQuIFRoYW5rcy4NCg0KRG9uZSEgVGhhbmsgeW91IQ0KDQo+IA0K
