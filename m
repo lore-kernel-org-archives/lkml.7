@@ -2,96 +2,84 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B46C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC48C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0431B2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2C642084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQOe/7um"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="y262Yvjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfF0OCt (ORCPT
+        id S1727047AbfF0ODW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 10:02:49 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42564 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbfF0OCt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:02:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id u19so4919332ior.9;
-        Thu, 27 Jun 2019 07:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HR741RRqebY4X1NTwNK+3TmEuWMGWvTRaUnu7N0KA9Y=;
-        b=kQOe/7umXBPeJa9ykeZEkNlHWsfxFfLkKYMkY64foQTtgWh5Pn5wGsaEV8R3G7xvVU
-         VXi6o6+TMpMPZeN657TfKrJBZkj+WOLSXs+PljDAivCvu1MvuvTjJp44an05YG1s3+wm
-         lMHQ7mG1vbB1/iw1m6y+xvJof+L3lWTcbAPMj8lZVbCVFh4s7KkXBxjhtJM3/2TweT6f
-         hOxilAJt7U7zgg5kka0w62aA9HESs4SouVmSIUrnTX51QqtBA7rUbDkIxcTk+2ZYqv9G
-         UJLA5aM93V/QXZnQIPSrtebobY8K4dhtV00po57j8+wbUtFqyd0INos5iKeUXC8lzZws
-         tlmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HR741RRqebY4X1NTwNK+3TmEuWMGWvTRaUnu7N0KA9Y=;
-        b=IKzgZILG3uRRjEHK0q3fTKTh22MV38yo+PBzLs4/H/bJru3CSRBFXe/eJisNgcyz0h
-         0QNzBVnx/t2MnaIpANPQhTjgg8Rx6462ZR83RFm20PHDkg98FWcfqsDozqpQBGZCfD5t
-         sX03uSxy4RUxx/HrJjdtHY/3XEV/qXtgcaLxfuvp8J3d8ZHSTzTq3poUBk/RTmzi+nqs
-         vm9nyEaSEvLMoLW/JMuaT71FiMFt0l5GT0uDzX4PC8oO/HewGVMTJjwyJGEGlhh4rhPz
-         Lhcs4ZrD+PxnYnZYDr8y5GzVU4zpSPu7IkXuqyPHAJkIn+bgFe+HchQww3VVdL0JJUUo
-         HdwQ==
-X-Gm-Message-State: APjAAAWQOv5qsGsutc81L2+4wYPP3oqm0f7v7U4vyBQ3nqZrTlWEcHcN
-        RL3h2Kfxd5BW44q/f5VSm3AJ0o3FrNddHXVBLBo=
-X-Google-Smtp-Source: APXvYqwxq6k8RM7mKSu7KdFaK3htzOTQ92YdpSzmLBI9AfAIpQYhG+2uj4SJJnP2pUHa9ePz7ETa8nCeNSjch6xgYEI=
-X-Received: by 2002:a6b:e615:: with SMTP id g21mr1197927ioh.178.1561644168258;
- Thu, 27 Jun 2019 07:02:48 -0700 (PDT)
+        Thu, 27 Jun 2019 10:03:22 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:37024 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbfF0ODV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 10:03:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=redkA+CovLKkIpwZ1wU0Xkvse8YZ5XsqEc9J4PcUp3E=; b=y262YvjpBRgPISvI0ncYokuWF0
+        MZPHbH3jdRfr2batVnS6iSJovhZEb0LlkR0nSoqXJOlPhUwpbnEJvigs7kTl6fLDfs5P41654+Vbe
+        V2i5kllV703tjX1boaoAGm3ahO81ovLZcysz3RbZ2qw64mbQ9L9ud3/i5VcodPICzKuY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hgUzc-0000AY-Tq; Thu, 27 Jun 2019 16:03:16 +0200
+Date:   Thu, 27 Jun 2019 16:03:16 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH net-next 10/10] net: stmmac: Try to get C45 PHY if
+ everything else fails
+Message-ID: <20190627140316.GF31189@lunn.ch>
+References: <cover.1561556555.git.joabreu@synopsys.com>
+ <c7d1dbac1940853c22db8215ed60181b2abe3050.1561556556.git.joabreu@synopsys.com>
+ <20190626200128.GH27733@lunn.ch>
+ <BN8PR12MB3266A8396ACA97484A5E0CE7D3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190627132340.GC31189@lunn.ch>
+ <BN8PR12MB32666DADBD1DD315026E9A2BD3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
- <20190621145042.38637-1-jeffrey.l.hugo@gmail.com> <20190623062000.GB204275@dtor-ws>
-In-Reply-To: <20190623062000.GB204275@dtor-ws>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 27 Jun 2019 08:02:35 -0600
-Message-ID: <CAOCk7Nr4+Sj9U=qAZTEhPGgZNrZ1VVvNtuUg-9vQzp15xFdCUw@mail.gmail.com>
-Subject: Re: [PATCH v8 1/5] Input: elan_i2c: Export the device id whitelist
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN8PR12MB32666DADBD1DD315026E9A2BD3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 12:20 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Fri, Jun 21, 2019 at 07:50:42AM -0700, Jeffrey Hugo wrote:
-> > Elan_i2c and hid-quirks work in conjunction to decide which devices each
-> > driver will handle.  Elan_i2c has a whitelist of devices that should be
-> > consumed by hid-quirks so that there is one master list of devices to
-> > handoff between the drivers.  Put the ids in a header file so that
-> > hid-quirks can consume it instead of duplicating the list.
-> >
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->
-> Benjamin, are you happy with this version?
+On Thu, Jun 27, 2019 at 01:33:59PM +0000, Jose Abreu wrote:
+> From: Andrew Lunn <andrew@lunn.ch>
+> 
+> > There have been some drivers gaining patches for ACPI. That is
+> > probably the better long term solution, ask ACPI where is the PHY and
+> > what MDIO protocol to use to talk to it.
+> 
+> Hmmm, I'm not sure this is going to work that way ...
+> 
+> My setup is a PCI EP which is hot-pluggable and as far as I know ACPI 
+> has only static content (????)
 
-Benjamin, ping?
-Sorry to be a bother, but I'm still anxious to get this queued for 5.3.
+I've wanted to improve the PHY probe code for a while. I was thinking
+we should add a flag to the MDIO bus driver structure indicating it
+can do C45. When that flag is present, we should also scan the bus for
+C45 devices, and register them as well.
+
+With that in place, i think your problem goes away. Architecturally, i
+think it is wrong that a MAC driver is registering PHY devices. The
+MDIO core should do this.
+
+      Andrew
