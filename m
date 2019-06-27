@@ -2,129 +2,214 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167F3C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E64C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E184A217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8979E217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="h6+/Ds+T"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="T+qvoCg3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfF0Bpl (ORCPT
+        id S1727059AbfF0BrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 21:45:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:57969 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbfF0Bpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 21:45:40 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Z2m11dlfz9sCJ;
-        Thu, 27 Jun 2019 11:45:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561599937;
-        bh=81FSZHDgH28AVa4MeUVlcelNCGqVcxfM0/bSKVPs9ec=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=h6+/Ds+TV3xmRNYImuUdT8vJq7WYBxOZVqat7KMasdshUkVhYP6Mapcw1iGwtttl9
-         IEYP6fTawKj6m46pzDEkYqfhRV5hawe8mTorcHW6TMUOQBQvVxgcB4j/wgCtSolYl4
-         //aSKfuFp3IvxovjgNtCskC55wxzqKQ6ssuVJO8Jff6uD6SBTiYg9NhW8N2ad8qdCd
-         rRPFB0C2IHv7EX8W9ftWPYTl8OZK0hKiVTY5Uhn8lzgvwz+S/WA+Dtd/o9IiocToTh
-         7U4rq0276UHtgNQ7ixHzbr3K4hyF6Iqbqn4O/uud0TQIn0hxu3WTBFxDbOK8l92vvb
-         cA2bGr4/wI/8A==
-Date:   Thu, 27 Jun 2019 11:45:36 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Roman Gushchin <guro@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the bpf tree
-Message-ID: <20190627114536.09c08f5d@canb.auug.org.au>
-In-Reply-To: <CAADnVQJiMH=jfuD0FGpr2JmzyQsMKHJ4pM1kfQ8jhSxrAe0XWg@mail.gmail.com>
-References: <20190627080521.5df8ccfc@canb.auug.org.au>
-        <20190626221347.GA17762@tower.DHCP.thefacebook.com>
-        <CAADnVQJiMH=jfuD0FGpr2JmzyQsMKHJ4pM1kfQ8jhSxrAe0XWg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/7u90A+dZmO=x5m+8WaV.bo8"; protocol="application/pgp-signature"
+        Wed, 26 Jun 2019 21:47:25 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:23029 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfF0BrY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 21:47:24 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x5R1kN0x032702;
+        Thu, 27 Jun 2019 10:46:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x5R1kN0x032702
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561599986;
+        bh=IbQmIGA4DYqtLSrd9igtMcpMuk9jBtAXWel/GSOA8+0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=T+qvoCg3RIgbgsavQ9zJThO28RX6JgBSu4vdMQ9gIBIDzi22uSj8ur9QVdAJiYLYn
+         /mowYOiU3XKQKsTu8CcBe7y+6axgrrQ4tromLgTO/Yvpad88jrX+lThAD53n94k3jn
+         Jzj57q06KTqDwDpXTvTJdIE6Ms53Y/nuoGh4QPJ6fORYejHft4hubFyXL5PY3ZtmOo
+         HfFHnOOgiVfWtRiJO+tQWqs1IJPGuAkOhaTnTWFeiqENqNqfpgxY2KDwAW4j05zUvt
+         WuVkKnj7cXl6NgkPN5O8BMe1YclL1M/+oLtp9LRE1wNsyNX6RQLg2kZ607gevXgYJH
+         f032fFS3xI8zA==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-kernel@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: [PATCH v2 2/4] kbuild: do not create wrappers for header-test-y
+Date:   Thu, 27 Jun 2019 10:46:15 +0900
+Message-Id: <20190627014617.600-3-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190627014617.600-1-yamada.masahiro@socionext.com>
+References: <20190627014617.600-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7u90A+dZmO=x5m+8WaV.bo8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+header-test-y does not work with headers in sub-directories.
 
-Hi all,
+For example, you can write a Makefile, like this:
 
-On Wed, 26 Jun 2019 16:36:50 -0700 Alexei Starovoitov <alexei.starovoitov@g=
-mail.com> wrote:
->
-> On Wed, Jun 26, 2019 at 3:14 PM Roman Gushchin <guro@fb.com> wrote:
-> >
-> > On Thu, Jun 27, 2019 at 08:05:21AM +1000, Stephen Rothwell wrote: =20
-> > >
-> > > In commit
-> > >
-> > >   12771345a467 ("bpf: fix cgroup bpf release synchronization")
-> > >
-> > > Fixes tag
-> > >
-> > >   Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf from
-> > >
-> > > has these problem(s):
-> > >
-> > >   - Subject has leading but no trailing parentheses
-> > >   - Subject has leading but no trailing quotes
-> > >
-> > > Please don't split Fixes tags across more than one line. =20
-> >
-> > Oops, sorry.
-> >
-> > Alexei, can you fix this in place?
-> > Or should I send an updated version? =20
->=20
-> I cannot easily do it since -p and --signoff are incompatible flags.
-> I need to use -p to preserve merge commits,
-> but I also need to use --signoff to add my sob to all
-> other commits that were committed by Daniel
-> after your commit.
->=20
-> Daniel, can you fix Roman's patch instead?
-> you can do:
-> git rebase -i -p  12771345a467^
-> fix Roman's, add you sob only to that one
-> and re-push the whole thing.
+include/linux/Kbuild:
 
-It's probably not worth fixing, just use this as a learning
-experience ...
+  header-test-y += mtd/nand.h
 
---=20
-Cheers,
-Stephen Rothwell
+This entry creates a wrapper include/linux/mtd/nand.hdrtest.c with
+the following content:
 
---Sig_/7u90A+dZmO=x5m+8WaV.bo8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+  #include "mtd/nand.h"
 
------BEGIN PGP SIGNATURE-----
+To make this work, we need to add $(srctree)/include/linux to the
+header search path. It would be tedious to add ccflags-y.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0UH8AACgkQAVBC80lX
-0GzJ0Qf/ajJwCOWDbYQEf7IpMsA/fgyGl9ocfvMMJxPvVBl7p1ApAgXv+BVbkewh
-hxEHSEMikoY3UYzkb5B8yz7EtRbh10h8a9trdmlmWW3mKqNSp5H3CjMkJUJDz6Ob
-HQ6h+iiijHozutoa65mVPa5GkKwR00cuY0dvu/trghiSgx2wGWkaq8rhYPezIbTw
-P/zWzYrg2T+Hdll7+KDVEizhb40JhQIM8gycHr+lR7srsKEJ1kj6mSm2rJQbJDVS
-HQDKmbV65WawDlw1jkdfM1OIVB3PcvvfpKjZFHfURQ5sy+zBFSD40sdpMQEkF71O
-wkx/IoqyGQlzuHi9KR8DbbrJPFtbbw==
-=3WPY
------END PGP SIGNATURE-----
+We could change the *.hdrtest.c rule to wrap:
 
---Sig_/7u90A+dZmO=x5m+8WaV.bo8--
+  #include "nand.h"
+
+This works for in-tree build since #include "..." searches in the
+relative path from the header with this directive. For O=... build,
+we need to add $(srctree)/include/linux/mtd to the header search path,
+which will be even more tedious.
+
+After all, I thought it would be handier to compile headers directly
+without creating wrappers.
+
+I added a new build rule to compile %.h into %.h.s
+
+I chose %.h.s instead of %.h.o because it was a little bit faster.
+Also, for GCC, an empty assembly is smaller than an empty object.
+
+I wrote the build rule:
+
+  $(CC) $(c_flags) -S -o $@ -x c /dev/null -include $<
+
+instead of:
+
+  $(CC) $(c_flags) -S -o $@ -x c $<
+
+Both work fine with GCC, but the latter is not good for Clang.
+
+This comes down to the difference in the -Wunused-function policy.
+GCC does not warn about unused 'static inline' functions at all.
+Clang does not warn about the ones in included headers, but does
+about the ones in the source. So, we should handle headers as
+headers, not as source files.
+
+In fact, this has been hidden since commit abb2ea7dfd82 ("compiler,
+clang: suppress warning for unused static inline functions"), but we
+should not rely on that.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Changes in v2:
+  - New patch
+
+ .gitignore                         |  1 -
+ Documentation/dontdiff             |  1 -
+ Documentation/kbuild/makefiles.txt |  3 +--
+ Makefile                           |  1 -
+ scripts/Makefile.build             | 10 +++++-----
+ scripts/Makefile.lib               |  2 +-
+ 6 files changed, 7 insertions(+), 11 deletions(-)
+
+diff --git a/.gitignore b/.gitignore
+index 4bb60f0fa23b..7587ef56b92d 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -22,7 +22,6 @@
+ *.elf
+ *.gcno
+ *.gz
+-*.hdrtest.c
+ *.i
+ *.ko
+ *.lex.c
+diff --git a/Documentation/dontdiff b/Documentation/dontdiff
+index 554dfe4883d2..5eba889ea84d 100644
+--- a/Documentation/dontdiff
++++ b/Documentation/dontdiff
+@@ -19,7 +19,6 @@
+ *.grep
+ *.grp
+ *.gz
+-*.hdrtest.c
+ *.html
+ *.i
+ *.jpeg
+diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+index ca4b24ec0399..5080fec34609 100644
+--- a/Documentation/kbuild/makefiles.txt
++++ b/Documentation/kbuild/makefiles.txt
+@@ -1023,8 +1023,7 @@ When kbuild executes, the following steps are followed (roughly):
+ 	header-test-y specifies headers (*.h) in the current directory that
+ 	should be compile tested to ensure they are self-contained,
+ 	i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
+-	this autogenerates dummy sources to include the headers, and builds them
+-	as part of extra-y.
++	this builds them as part of extra-y.
+ 
+ --- 6.7 Commands useful for building a boot image
+ 
+diff --git a/Makefile b/Makefile
+index f23516980796..7f293b0431fe 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1648,7 +1648,6 @@ clean: $(clean-dirs)
+ 		-o -name '*.dwo' -o -name '*.lst' \
+ 		-o -name '*.su'  \
+ 		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
+-		-o -name '*.hdrtest.c' \
+ 		-o -name '*.lex.c' -o -name '*.tab.[ch]' \
+ 		-o -name '*.asn1.[ch]' \
+ 		-o -name '*.symtypes' -o -name 'modules.order' \
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index ee0319560513..776842b7e6a3 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -294,14 +294,14 @@ quiet_cmd_cc_lst_c = MKLST   $@
+ $(obj)/%.lst: $(src)/%.c FORCE
+ 	$(call if_changed_dep,cc_lst_c)
+ 
+-# Dummy C sources for header test (header-test-y target)
++# header test (header-test-y target)
+ # ---------------------------------------------------------------------------
+ 
+-quiet_cmd_header_test = HDRTEST $@
+-      cmd_header_test = echo "\#include \"$*.h\"" > $@
++quiet_cmd_cc_s_h = CC      $@
++      cmd_cc_s_h = $(CC) $(c_flags) -S -o $@ -x c /dev/null -include $<
+ 
+-$(obj)/%.hdrtest.c:
+-	$(call cmd,header_test)
++$(obj)/%.h.s: $(src)/%.h FORCE
++	$(call if_changed_dep,cc_s_h)
+ 
+ # Compile assembler sources (.S)
+ # ---------------------------------------------------------------------------
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 3e630fcaffd1..55ae1ec65342 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -67,7 +67,7 @@ extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.yaml, $(dtb-))
+ endif
+ 
+ # Test self-contained headers
+-extra-$(CONFIG_HEADER_TEST) += $(patsubst %.h,%.hdrtest.o,$(header-test-y))
++extra-$(CONFIG_HEADER_TEST) += $(addsuffix .s, $(header-test-y))
+ 
+ # Add subdir path
+ 
+-- 
+2.17.1
+
