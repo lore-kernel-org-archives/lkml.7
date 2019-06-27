@@ -2,126 +2,144 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7B7C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E12C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93B52085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 297922084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:25:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="BJky9re7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rxjj862C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfF0JYu (ORCPT
+        id S1726674AbfF0JY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 05:24:50 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:21236 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726293AbfF0JY3 (ORCPT
+        Thu, 27 Jun 2019 05:24:59 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39549 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfF0JY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 05:24:29 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5R9JbXT012618;
-        Thu, 27 Jun 2019 04:24:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=xq2cCapP4dgrd+nT+2nqxyaf8X3aLPD+0j8liLfP3vw=;
- b=BJky9re7mCLjC1Kti6t/nAW21DP+3HOPKgIU/8GDXYSh/fd2F+9TUbpjSrxzcPb5pTHM
- 2ZQkiFdaxDOJVd4kaJYpZaAsvApxk4LFCTf0I3mt3YfSRIKh5hc/NXm0LccC6uUWMxTE
- uJDrKXqtof2sMKaegoV7IusDMZfnB41x9ZvRDVzV9ll47lqBU4IAzq6jOCa+cyIE5tpZ
- mcn5w/x1wTAUSp1KwrhTMp/nq8Cqf1oJO1IZTqU2CnqnIluWcDucHRqmgMuNUI4Cj06S
- 6Pq8k3eVpcJgNGvjlPhmjaAomXjC+PrjfW4/XWh0rp9w2VXNM6DK0Ssk57P56KRJPsWg vg== 
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail4.cirrus.com ([87.246.98.35])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2t9hr2gr55-1;
-        Thu, 27 Jun 2019 04:24:13 -0500
-Received: from EDIEX02.ad.cirrus.com (ediex02.ad.cirrus.com [198.61.84.81])
-        by mail4.cirrus.com (Postfix) with ESMTP id AFBB6611C8A7;
-        Thu, 27 Jun 2019 04:24:14 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 27 Jun
- 2019 10:24:12 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Thu, 27 Jun 2019 10:24:12 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 1F6D62A1;
-        Thu, 27 Jun 2019 10:24:12 +0100 (BST)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
-CC:     <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH v8 5/6] i2c: core: Move ACPI gpio IRQ handling into i2c_acpi_get_irq
-Date:   Thu, 27 Jun 2019 10:24:10 +0100
-Message-ID: <20190627092411.26123-6-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190627092411.26123-1-ckeepax@opensource.cirrus.com>
-References: <20190627092411.26123-1-ckeepax@opensource.cirrus.com>
+        Thu, 27 Jun 2019 05:24:58 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x4so1681260wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 02:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=LDEo8sY3vpdehIJiLNOJb41+3SEg4OJB1McKdbsbLIA=;
+        b=rxjj862CxQk8EcoCFKXxBXec7q2dUTnfV23dSWU3s6L44wRwVyzKQI9LaItmJJBCYr
+         CCunUbf0DyHes+96gfl0uMFK7u1ofaigi6tzk8foroRtjW67UkxmOjGR6pS8kxcMHMQf
+         gfDC+UhYjbyEUkiMyFnCXp19uDzY8x/EIFJkHM36kWk82KVh6kEh17ORV4Ap0dqDjQeP
+         eodW+lpOR5ylkyFRmF441elJYxUkOm61ILlY1XXEY0Qjg+u0/dV1FxmGel1jFTcSljsA
+         mWoLPSgxDbcZ1/DraVDtzbuYhHkXnZ+w/hbhz5oruBYDlQJrnauT9rMlNjkp6tmEGn5i
+         i8sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=LDEo8sY3vpdehIJiLNOJb41+3SEg4OJB1McKdbsbLIA=;
+        b=Kj4I4nxtu93LGjwbmy9r8JBLZlWlV4S5bQ5PtXIvHLsW488UeoimbrvcUCcY+P8ogY
+         1rB/B9Apcf2Sn3ubxk84jjVLlZi+xG44pgLO2d7P8y18oT7zOmiLWlhBbRiRtLO0062F
+         grcFKer/sSQ6UaPHR6XOhe5UAld7x11v59B4jowLdZ1k3HX7gcIr6ipJU3b3j/8APfQC
+         TnlXuH56U8d6pRIkXEHKYcRetTmzTfti89QmgGtZMICK5di/y+bTcsTWPDFk1SFkcCep
+         KpHeKvddat7cSbdsCw2yflO1E886XHl6t9h8qkEO/YAD/Qk11ovEww4h1GoBFzsTOpaR
+         Is8A==
+X-Gm-Message-State: APjAAAUc0tm79pa2QJblvyqcooA88XyfWA5wDg+hTgCM5kuCPdH3G+b7
+        ZgYNs/M89GEZ+wi1dqFIUAxJYg==
+X-Google-Smtp-Source: APXvYqwlvlqQ9PBpwP6Ua8UBVUJ+rHq8wSy378IO2LZ07NL/lYMF4gUKV993A67XO9U+QjopyAUeqg==
+X-Received: by 2002:adf:cc85:: with SMTP id p5mr2224711wrj.47.1561627496119;
+        Thu, 27 Jun 2019 02:24:56 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id h84sm5790048wmf.43.2019.06.27.02.24.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Jun 2019 02:24:55 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 10:24:53 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 3/4] backlight: pwm_bl: Set scale type for CIE 1931 curves
+Message-ID: <20190627092453.GB2000@dell>
+References: <20190613194326.180889-1-mka@chromium.org>
+ <20190613194326.180889-4-mka@chromium.org>
+ <61ed137c-31bb-c695-4174-0484fe667d6c@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=915 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270109
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <61ed137c-31bb-c695-4174-0484fe667d6c@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It makes sense to contain all the ACPI IRQ handling in a single helper
-function.
+On Fri, 21 Jun 2019, Daniel Thompson wrote:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+> On 13/06/2019 20:43, Matthias Kaehlcke wrote:
+> > For backlight curves calculated with the CIE 1931 algorithm set
+> > the brightness scale type property accordingly. This makes the
+> > scale type available to userspace via the 'scale' sysfs attribute.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> 
+> I'd like to keep discussion on patch 2 open a bit longer (it's not part of
+> the thread below patch 2 but Pavel had concerns about the sysfs interface)
+> so this ack won't really push things forward but FWIW:
+> 
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-No change since v7.
+Does this depend on patch 2, or is it orthogonal?
 
-Thanks,
-Charles
+> > ---
+> >   drivers/video/backlight/pwm_bl.c | 5 ++++-
+> >   1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> > index fb45f866b923..f067fe7aa35d 100644
+> > --- a/drivers/video/backlight/pwm_bl.c
+> > +++ b/drivers/video/backlight/pwm_bl.c
+> > @@ -553,6 +553,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+> >   		goto err_alloc;
+> >   	}
+> > +	memset(&props, 0, sizeof(struct backlight_properties));
+> > +
+> >   	if (data->levels) {
+> >   		/*
+> >   		 * For the DT case, only when brightness levels is defined
+> > @@ -591,6 +593,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+> >   			pb->levels = data->levels;
+> >   		}
+> > +
+> > +		props.scale = BACKLIGHT_SCALE_CIE1931;
+> >   	} else {
+> >   		/*
+> >   		 * That only happens for the non-DT case, where platform data
+> > @@ -601,7 +605,6 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+> >   	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
+> > -	memset(&props, 0, sizeof(struct backlight_properties));
+> >   	props.type = BACKLIGHT_RAW;
+> >   	props.max_brightness = data->max_brightness;
+> >   	bl = backlight_device_register(dev_name(&pdev->dev), &pdev->dev, pb,
+> > 
+> 
 
- drivers/i2c/i2c-core-acpi.c | 3 +++
- drivers/i2c/i2c-core-base.c | 3 ---
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index eaf45cf8e5b91..3707823efa850 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -168,6 +168,9 @@ int i2c_acpi_get_irq(struct i2c_client *client)
- 
- 	acpi_dev_free_resource_list(&resource_list);
- 
-+	if (irq == -ENOENT)
-+		irq = acpi_dev_gpio_irq_get(adev, 0);
-+
- 	return irq;
- }
- 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index c8fa2b825dcef..f0e1d338c7ddf 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -328,9 +328,6 @@ static int i2c_device_probe(struct device *dev)
- 				irq = of_irq_get(dev->of_node, 0);
- 		} else if (ACPI_COMPANION(dev)) {
- 			irq = i2c_acpi_get_irq(client);
--
--			if (irq == -ENOENT)
--				irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
- 		}
- 		if (irq == -EPROBE_DEFER)
- 			return irq;
 -- 
-2.11.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
