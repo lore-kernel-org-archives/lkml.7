@@ -2,407 +2,162 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0032C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197C6C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C63218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88ED218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:16:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLjGSXHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfF0FKq (ORCPT
+        id S1727158AbfF0FQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 01:10:46 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23286 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbfF0FKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 01:10:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 22:10:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,422,1557212400"; 
-   d="scan'208";a="313672766"
-Received: from hao-dev.bj.intel.com ([10.238.157.65])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2019 22:10:40 -0700
-From:   Wu Hao <hao.wu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-api@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        jdelvare@suse.com, linux@roeck-us.net, atull@kernel.org,
-        gregkh@linuxfoundation.org, Wu Hao <hao.wu@intel.com>,
-        Luwei Kang <luwei.kang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: [PATCH v4 3/3] fpga: dfl: fme: add power management support
-Date:   Thu, 27 Jun 2019 12:53:38 +0800
-Message-Id: <1561611218-5800-4-git-send-email-hao.wu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561611218-5800-1-git-send-email-hao.wu@intel.com>
-References: <1561611218-5800-1-git-send-email-hao.wu@intel.com>
+        Thu, 27 Jun 2019 01:16:21 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42065 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbfF0FQV (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 01:16:21 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay6so595128plb.9
+        for <Linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 22:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dLHMpSvXQSD083tckUaqr5lCc43yf6mebuGn+jSw2ow=;
+        b=hLjGSXHQ3ZySmpg9L0hRhXitIUKUzmq5ycHBXmG8iserze4xv8lurnOhm95Qx/T8+0
+         TrfKvR4p7nH6HbcWLxlQULke+4Muh+7TxjjsXB5cUtr61SaAsy4RczXGK/vLuRj8HHWQ
+         XGBJTBwp+7kLH4CxfebhqThEtaPZnnG4C7caDEkq+lCUAINs0hP4ZDyxiHqy/0Q1R1Xm
+         mLaOU6xmRlcFBlqyyWww7OKiCbbMQSPtX4sFrK+aUht9grjZMeNNp9WPjnr3Up8arurO
+         IA5V9kSJUJRHNtLPAA0FhRFxJ2qaenwf9uXIxmsktgVde0aBfje4RNAV+NRwLKomINdu
+         R9eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dLHMpSvXQSD083tckUaqr5lCc43yf6mebuGn+jSw2ow=;
+        b=ZMKLvxzkO1KXpv3a5RXrRQ8tgHc8/a5kr4V9YzOeHxQzrFVAxfTU5HpZ8RUC8/Ky6R
+         QR2CU54nZGLoCcECSFuO0zpKU+ipGkNhqQONtKCfn+u48QDHVHJN5X+UKaDgUfyc2Zov
+         LV6nkEHMK7DltCNvVSPF0bG1QuMfPDmOjLPu4mr78eZv8MK6p2pNb0cP/QricvoTAhnI
+         kT6mQEOCsW/7bwLJOEV7GZtsW+XxI7Tmr8Oj3mAVQFF9N6aEz7jCTNwwhMfh6jvQE40P
+         ud8Qd+hdvTONH7WZnnNPRtL1Ha+GZP47gkyvW9NpqR9GzCOOcokK04Op82V8K+MuXE1h
+         Hbmg==
+X-Gm-Message-State: APjAAAUBjW1YMMI6vrQM7aWQ4jiVPreDLjASCaP2RRyZIPTpEG2B1jcu
+        +tF+uwZwwWWYX3KSvJlwGQ==
+X-Google-Smtp-Source: APXvYqykoHphjYKkFLbMk8cRKv9nNo4OG3LontM4l5mWgAo0zB4rw4ZWsU/+nRm5s9kiLMS7f8GAwg==
+X-Received: by 2002:a17:902:2a27:: with SMTP id i36mr2307823plb.161.1561612580340;
+        Wed, 26 Jun 2019 22:16:20 -0700 (PDT)
+Received: from mylaptop.redhat.com ([2408:8207:7820:4fb0:dc47:8733:627e:cd6d])
+        by smtp.gmail.com with ESMTPSA id k3sm812688pgo.81.2019.06.26.22.16.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 22:16:19 -0700 (PDT)
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     Linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Linux-kernel@vger.kernel.org
+Subject: [PATCHv5] mm/gup: speed up check_and_migrate_cma_pages() on huge page
+Date:   Thu, 27 Jun 2019 13:15:45 +0800
+Message-Id: <1561612545-28997-1-git-send-email-kernelfans@gmail.com>
+X-Mailer: git-send-email 2.7.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for power management private feature under
-FPGA Management Engine (FME). This private feature driver registers
-a hwmon for power (power1_input), thresholds information, e.g.
-(power1_max / crit / max_alarm / crit_alarm) and also read-only sysfs
-interfaces for other power management information. For configuration,
-user could write threshold values via above power1_max / crit sysfs
-interface under hwmon too.
+Both hugetlb and thp locate on the same migration type of pageblock, since
+they are allocated from a free_list[]. Based on this fact, it is enough to
+check on a single subpage to decide the migration type of the whole huge
+page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
+similar on other archs.
 
-Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
----
-v2: create a dfl_fme_power hwmon to expose power sysfs interfaces.
-    move all sysfs interfaces under hwmon
-        consumed          --> hwmon power1_input
-        threshold1        --> hwmon power1_cap
-        threshold2        --> hwmon power1_crit
-        threshold1_status --> hwmon power1_cap_status
-        threshold2_status --> hwmon power1_crit_status
-        xeon_limit        --> hwmon power1_xeon_limit
-        fpga_limit        --> hwmon power1_fpga_limit
-        ltr               --> hwmon power1_ltr
-v3: rename some hwmon sysfs interfaces to follow hwmon ABI.
-	power1_cap         --> power1_max
-	power1_cap_status  --> power1_max_alarm
-	power1_crit_status --> power1_crit_alarm
-    update sysfs doc for above sysfs interface changes.
-    replace scnprintf with sprintf in sysfs interface.
-v4: use HWMON_CHANNEL_INFO.
-    update date in sysfs doc.
----
- Documentation/ABI/testing/sysfs-platform-dfl-fme |  67 +++++++
- drivers/fpga/dfl-fme-main.c                      | 221 +++++++++++++++++++++++
- 2 files changed, 288 insertions(+)
+Furthermore, when executing isolate_huge_page(), it avoid taking global
+hugetlb_lock many times, and meanless remove/add to the local link list
+cma_page_list.
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-index 2cd17dc..a669548 100644
---- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
-+++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-@@ -127,6 +127,7 @@ Contact:	Wu Hao <hao.wu@intel.com>
- Description:	Read-Only. Read this file to get the name of hwmon device, it
- 		supports values:
- 		    'dfl_fme_thermal' - thermal hwmon device name
-+		    'dfl_fme_power'   - power hwmon device name
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Linux-kernel@vger.kernel.org
+---
+v3 -> v4: fix C language precedence issue
+v4 -> v5: drop the check PageCompound() and improve notes
+ mm/gup.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index ddde097..1deaad2 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1336,25 +1336,30 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+ 					struct vm_area_struct **vmas,
+ 					unsigned int gup_flags)
+ {
+-	long i;
++	long i, step;
+ 	bool drain_allow = true;
+ 	bool migrate_allow = true;
+ 	LIST_HEAD(cma_page_list);
  
- What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_input
- Date:		June 2019
-@@ -183,3 +184,69 @@ Description:	Read-Only. Read this file to get the policy of hardware threshold1
- 		(see 'temp1_max'). It only supports two values (policies):
- 		    0 - AP2 state (90% throttling)
- 		    1 - AP1 state (50% throttling)
+ check_again:
+-	for (i = 0; i < nr_pages; i++) {
++	for (i = 0; i < nr_pages;) {
 +
-+What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_input
-+Date:		June 2019
-+KernelVersion:	5.3
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-Only. It returns current FPGA power consumption in uW.
++		struct page *head = compound_head(pages[i]);
 +
-+What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_max
-+Date:		June 2019
-+KernelVersion:	5.3
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-Write. Read this file to get current hardware power
-+		threshold1 in uW. If power consumption rises at or above
-+		this threshold, hardware starts 50% throttling.
-+		Write this file to set current hardware power threshold1 in uW.
-+		As hardware only accepts values in Watts, so input value will
-+		be round down per Watts (< 1 watts part will be discarded).
-+		Write fails with -EINVAL if input parsing fails or input isn't
-+		in the valid range (0 - 127000000 uW).
++		/*
++		 * gup may start from a tail page. Advance step by the left
++		 * part.
++		 */
++		step = (1 << compound_order(head)) - (pages[i] - head);
+ 		/*
+ 		 * If we get a page from the CMA zone, since we are going to
+ 		 * be pinning these entries, we might as well move them out
+ 		 * of the CMA zone if possible.
+ 		 */
+-		if (is_migrate_cma_page(pages[i])) {
+-
+-			struct page *head = compound_head(pages[i]);
+-
+-			if (PageHuge(head)) {
++		if (is_migrate_cma_page(head)) {
++			if (PageHuge(head))
+ 				isolate_huge_page(head, &cma_page_list);
+-			} else {
++			else {
+ 				if (!PageLRU(head) && drain_allow) {
+ 					lru_add_drain_all();
+ 					drain_allow = false;
+@@ -1369,6 +1374,8 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+ 				}
+ 			}
+ 		}
 +
-+What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_crit
-+Date:		June 2019
-+KernelVersion:	5.3
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-Write. Read this file to get current hardware power
-+		threshold2 in uW. If power consumption rises at or above
-+		this threshold, hardware starts 90% throttling.
-+		Write this file to set current hardware power threshold2 in uW.
-+		As hardware only accepts values in Watts, so input value will
-+		be round down per Watts (< 1 watts part will be discarded).
-+		Write fails with -EINVAL if input parsing fails or input isn't
-+		in the valid range (0 - 127000000 uW).
-+
-+What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_max_alarm
-+Date:		June 2019
-+KernelVersion:	5.3
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-only. It returns 1 if power consumption is currently at or
-+		above hardware threshold1 (see 'power1_max'), otherwise 0.
-+
-+What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_crit_alarm
-+Date:		June 2019
-+KernelVersion:	5.3
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-only. It returns 1 if power consumption is currently at or
-+		above hardware threshold2 (see 'power1_crit'), otherwise 0.
-+
-+What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_xeon_limit
-+Date:		June 2019
-+KernelVersion:	5.3
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-Only. It returns power limit for XEON in uW.
-+
-+What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_fpga_limit
-+Date:		June 2019
-+KernelVersion:	5.3
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-Only. It returns power limit for FPGA in uW.
-+
-+What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_ltr
-+Date:		June 2019
-+KernelVersion:	5.3
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-only. Read this file to get current Latency Tolerance
-+		Reporting (ltr) value. This ltr impacts the CPU low power
-+		state in integrated solution.
-diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-index 59ff9f1..9225b68 100644
---- a/drivers/fpga/dfl-fme-main.c
-+++ b/drivers/fpga/dfl-fme-main.c
-@@ -400,6 +400,223 @@ static void fme_thermal_mgmt_uinit(struct platform_device *pdev,
- 	.uinit = fme_thermal_mgmt_uinit,
- };
++		i += step;
+ 	}
  
-+#define FME_PWR_STATUS		0x8
-+#define FME_LATENCY_TOLERANCE	BIT_ULL(18)
-+#define PWR_CONSUMED		GENMASK_ULL(17, 0)
-+
-+#define FME_PWR_THRESHOLD	0x10
-+#define PWR_THRESHOLD1		GENMASK_ULL(6, 0)	/* in Watts */
-+#define PWR_THRESHOLD2		GENMASK_ULL(14, 8)	/* in Watts */
-+#define PWR_THRESHOLD_MAX	0x7f			/* in Watts */
-+#define PWR_THRESHOLD1_STATUS	BIT_ULL(16)
-+#define PWR_THRESHOLD2_STATUS	BIT_ULL(17)
-+
-+#define FME_PWR_XEON_LIMIT	0x18
-+#define XEON_PWR_LIMIT		GENMASK_ULL(14, 0)	/* in 0.1 Watts */
-+#define XEON_PWR_EN		BIT_ULL(15)
-+#define FME_PWR_FPGA_LIMIT	0x20
-+#define FPGA_PWR_LIMIT		GENMASK_ULL(14, 0)	/* in 0.1 Watts */
-+#define FPGA_PWR_EN		BIT_ULL(15)
-+
-+#define PWR_THRESHOLD_MAX_IN_UW (PWR_THRESHOLD_MAX * 1000000)
-+
-+static int power_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			    u32 attr, int channel, long *val)
-+{
-+	struct dfl_feature *feature = dev_get_drvdata(dev);
-+	u64 v;
-+
-+	switch (attr) {
-+	case hwmon_power_input:
-+		v = readq(feature->ioaddr + FME_PWR_STATUS);
-+		*val = (long)(FIELD_GET(PWR_CONSUMED, v) * 1000000);
-+		break;
-+	case hwmon_power_max:
-+		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-+		*val = (long)(FIELD_GET(PWR_THRESHOLD1, v) * 1000000);
-+		break;
-+	case hwmon_power_crit:
-+		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-+		*val = (long)(FIELD_GET(PWR_THRESHOLD2, v) * 1000000);
-+		break;
-+	case hwmon_power_max_alarm:
-+		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-+		*val = (long)FIELD_GET(PWR_THRESHOLD1_STATUS, v);
-+		break;
-+	case hwmon_power_crit_alarm:
-+		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-+		*val = (long)FIELD_GET(PWR_THRESHOLD2_STATUS, v);
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static int power_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
-+			     u32 attr, int channel, long val)
-+{
-+	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev->parent);
-+	struct dfl_feature *feature = dev_get_drvdata(dev);
-+	int ret = 0;
-+	u64 v;
-+
-+	if (val < 0 || val > PWR_THRESHOLD_MAX_IN_UW)
-+		return -EINVAL;
-+
-+	val = val / 1000000;
-+
-+	mutex_lock(&pdata->lock);
-+
-+	switch (attr) {
-+	case hwmon_power_max:
-+		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-+		v &= ~PWR_THRESHOLD1;
-+		v |= FIELD_PREP(PWR_THRESHOLD1, val);
-+		writeq(v, feature->ioaddr + FME_PWR_THRESHOLD);
-+		break;
-+	case hwmon_power_crit:
-+		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-+		v &= ~PWR_THRESHOLD2;
-+		v |= FIELD_PREP(PWR_THRESHOLD2, val);
-+		writeq(v, feature->ioaddr + FME_PWR_THRESHOLD);
-+		break;
-+	default:
-+		ret = -EOPNOTSUPP;
-+		break;
-+	}
-+
-+	mutex_unlock(&pdata->lock);
-+
-+	return ret;
-+}
-+
-+static umode_t power_hwmon_attrs_visible(const void *drvdata,
-+					 enum hwmon_sensor_types type,
-+					 u32 attr, int channel)
-+{
-+	switch (attr) {
-+	case hwmon_power_input:
-+	case hwmon_power_max_alarm:
-+	case hwmon_power_crit_alarm:
-+		return 0444;
-+	case hwmon_power_max:
-+	case hwmon_power_crit:
-+		return 0644;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct hwmon_ops power_hwmon_ops = {
-+	.is_visible = power_hwmon_attrs_visible,
-+	.read = power_hwmon_read,
-+	.write = power_hwmon_write,
-+};
-+
-+static const struct hwmon_channel_info *power_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(power, HWMON_P_INPUT |
-+				  HWMON_P_MAX   | HWMON_P_MAX_ALARM |
-+				  HWMON_P_CRIT  | HWMON_P_CRIT_ALARM),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info power_hwmon_chip_info = {
-+	.ops = &power_hwmon_ops,
-+	.info = power_hwmon_info,
-+};
-+
-+static ssize_t power1_xeon_limit_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct dfl_feature *feature = dev_get_drvdata(dev);
-+	u16 xeon_limit = 0;
-+	u64 v;
-+
-+	v = readq(feature->ioaddr + FME_PWR_XEON_LIMIT);
-+
-+	if (FIELD_GET(XEON_PWR_EN, v))
-+		xeon_limit = FIELD_GET(XEON_PWR_LIMIT, v);
-+
-+	return sprintf(buf, "%u\n", xeon_limit * 100000);
-+}
-+
-+static ssize_t power1_fpga_limit_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct dfl_feature *feature = dev_get_drvdata(dev);
-+	u16 fpga_limit = 0;
-+	u64 v;
-+
-+	v = readq(feature->ioaddr + FME_PWR_FPGA_LIMIT);
-+
-+	if (FIELD_GET(FPGA_PWR_EN, v))
-+		fpga_limit = FIELD_GET(FPGA_PWR_LIMIT, v);
-+
-+	return sprintf(buf, "%u\n", fpga_limit * 100000);
-+}
-+
-+static ssize_t power1_ltr_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct dfl_feature *feature = dev_get_drvdata(dev);
-+	u64 v;
-+
-+	v = readq(feature->ioaddr + FME_PWR_STATUS);
-+
-+	return sprintf(buf, "%u\n",
-+		       (unsigned int)FIELD_GET(FME_LATENCY_TOLERANCE, v));
-+}
-+
-+static DEVICE_ATTR_RO(power1_xeon_limit);
-+static DEVICE_ATTR_RO(power1_fpga_limit);
-+static DEVICE_ATTR_RO(power1_ltr);
-+
-+static struct attribute *power_extra_attrs[] = {
-+	&dev_attr_power1_xeon_limit.attr,
-+	&dev_attr_power1_fpga_limit.attr,
-+	&dev_attr_power1_ltr.attr,
-+	NULL
-+};
-+
-+ATTRIBUTE_GROUPS(power_extra);
-+
-+static int fme_power_mgmt_init(struct platform_device *pdev,
-+			       struct dfl_feature *feature)
-+{
-+	struct device *hwmon;
-+
-+	dev_dbg(&pdev->dev, "FME Power Management Init.\n");
-+
-+	hwmon = devm_hwmon_device_register_with_info(&pdev->dev,
-+						     "dfl_fme_power", feature,
-+						     &power_hwmon_chip_info,
-+						     power_extra_groups);
-+	if (IS_ERR(hwmon)) {
-+		dev_err(&pdev->dev, "Fail to register power hwmon\n");
-+		return PTR_ERR(hwmon);
-+	}
-+
-+	return 0;
-+}
-+
-+static void fme_power_mgmt_uinit(struct platform_device *pdev,
-+				 struct dfl_feature *feature)
-+{
-+	dev_dbg(&pdev->dev, "FME Power Management UInit.\n");
-+}
-+
-+static const struct dfl_feature_id fme_power_mgmt_id_table[] = {
-+	{.id = FME_FEATURE_ID_POWER_MGMT,},
-+	{0,}
-+};
-+
-+static const struct dfl_feature_ops fme_power_mgmt_ops = {
-+	.init = fme_power_mgmt_init,
-+	.uinit = fme_power_mgmt_uinit,
-+};
-+
- static struct dfl_feature_driver fme_feature_drvs[] = {
- 	{
- 		.id_table = fme_hdr_id_table,
-@@ -418,6 +635,10 @@ static void fme_thermal_mgmt_uinit(struct platform_device *pdev,
- 		.ops = &fme_thermal_mgmt_ops,
- 	},
- 	{
-+		.id_table = fme_power_mgmt_id_table,
-+		.ops = &fme_power_mgmt_ops,
-+	},
-+	{
- 		.ops = NULL,
- 	},
- };
+ 	if (!list_empty(&cma_page_list)) {
 -- 
-1.8.3.1
+2.7.5
 
