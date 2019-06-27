@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69505C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBFFC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357AF217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14229217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595478;
-	bh=rRmk4vQCs0ryL3VDEzKs8V5C/4jSw57lrGEjsl2sxgU=;
+	s=default; t=1561595480;
+	bh=C/S+sNG+v+PTJKx8SasDZ3EpwV/OjcDAbK3N53syDAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L8IR6In18gvkpXqqKpBGR8C+6Xo7Dy++L3i5lymtvtLkCwn4aFVWLKhM1iK5m1zXT
-	 7aorSLhpqlYjtq32kHJpcBkTnxwf4/RsS0MuT6L0dXF6w+ek9haWZ3OwcbU1+zVWqf
-	 5B4PwUeL9NgRNcYO9LFEDmjjFpQpsRH6TBNyFZyc=
+	b=aJPeLNwvcUAvkzTZRlzjoN+HhJ0SDGys4uxOxwz2+hEHShHIAGQjWbBWyxcZaK9HG
+	 9f73HRYlZGv8EnKiVX3y17ZMiQO7Bj128QO2709fbz7+TOXx9IZBhW4f/avmRm0M6d
+	 zbyjXLi5+8MljU0OFGDxSPoiBI4jPLTFBlE+f/qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfF0AbR (ORCPT
+        id S1727085AbfF0AbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:31:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34546 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:31:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726795AbfF0AbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:31:13 -0400
+        id S1727063AbfF0AbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:31:11 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46C7A2083B;
-        Thu, 27 Jun 2019 00:31:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D63AA217D9;
+        Thu, 27 Jun 2019 00:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595473;
-        bh=rRmk4vQCs0ryL3VDEzKs8V5C/4jSw57lrGEjsl2sxgU=;
+        s=default; t=1561595470;
+        bh=C/S+sNG+v+PTJKx8SasDZ3EpwV/OjcDAbK3N53syDAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bhrShYD+xeCIXo/CTNovEiO1MgdW066hH7tjpLMtQzWiEcHn9hijNJEA6crfhvbHc
-         0/9aXRhaP6lO5W1mK1QNzs22uI3cc6wxlGNDELZCoacArNFceL0M4PAvzKNUsCetTM
-         r6jn4A3oBzw9rx+G9+xYo6YLOwB0vMVz5upu7/qM=
+        b=P7Lg9MGekNe5cpG9tePCq82ol3WZKSDNGN76GclciVtmyR/+i6peSlRkFUpv+TjSQ
+         HDmWDe/1xYQZdRj6iwkNfz47/RTk6PHhWRMwHaPIEibNZKoX99rkhdBApRiWnVHvHz
+         GBshGfHOQeiN+rFa3bMkAa3aNp0uE9xuNwvjg/v8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Melissa Wen <melissa.srw@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.1 16/95] staging:iio:ad7150: fix threshold mode config bit
-Date:   Wed, 26 Jun 2019 20:29:01 -0400
-Message-Id: <20190627003021.19867-16-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 15/95] soundwire: stream: fix out of boundary access on port properties
+Date:   Wed, 26 Jun 2019 20:29:00 -0400
+Message-Id: <20190627003021.19867-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -60,78 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Melissa Wen <melissa.srw@gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit df4d737ee4d7205aaa6275158aeebff87fd14488 ]
+[ Upstream commit 03ecad90d3798be11b033248bbd4bbff4425a1c7 ]
 
-According to the AD7150 configuration register description, bit 7 assumes
-value 1 when the threshold mode is fixed and 0 when it is adaptive,
-however, the operation that identifies this mode was considering the
-opposite values.
+Assigning local iterator to array element and using it again for
+indexing would cross the array boundary.
+Fix this by directly referring array element without using the local
+variable.
 
-This patch renames the boolean variable to describe it correctly and
-properly replaces it in the places where it is used.
-
-Fixes: 531efd6aa0991 ("staging:iio:adc:ad7150: chan_spec conv + i2c_smbus commands + drop unused poweroff timeout control.")
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/iio/cdc/ad7150.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ drivers/soundwire/stream.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
-index 24f74ce60f80..14596aa7eaf1 100644
---- a/drivers/staging/iio/cdc/ad7150.c
-+++ b/drivers/staging/iio/cdc/ad7150.c
-@@ -6,6 +6,7 @@
-  * Licensed under the GPL-2 or later.
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/interrupt.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
-@@ -131,7 +132,7 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
- {
- 	int ret;
- 	u8 threshtype;
--	bool adaptive;
-+	bool thrfixed;
- 	struct ad7150_chip_info *chip = iio_priv(indio_dev);
- 
- 	ret = i2c_smbus_read_byte_data(chip->client, AD7150_CFG);
-@@ -139,21 +140,23 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
- 		return ret;
- 
- 	threshtype = (ret >> 5) & 0x03;
--	adaptive = !!(ret & 0x80);
-+
-+	/*check if threshold mode is fixed or adaptive*/
-+	thrfixed = FIELD_GET(AD7150_CFG_FIX, ret);
- 
- 	switch (type) {
- 	case IIO_EV_TYPE_MAG_ADAPTIVE:
- 		if (dir == IIO_EV_DIR_RISING)
--			return adaptive && (threshtype == 0x1);
--		return adaptive && (threshtype == 0x0);
-+			return !thrfixed && (threshtype == 0x1);
-+		return !thrfixed && (threshtype == 0x0);
- 	case IIO_EV_TYPE_THRESH_ADAPTIVE:
- 		if (dir == IIO_EV_DIR_RISING)
--			return adaptive && (threshtype == 0x3);
--		return adaptive && (threshtype == 0x2);
-+			return !thrfixed && (threshtype == 0x3);
-+		return !thrfixed && (threshtype == 0x2);
- 	case IIO_EV_TYPE_THRESH:
- 		if (dir == IIO_EV_DIR_RISING)
--			return !adaptive && (threshtype == 0x1);
--		return !adaptive && (threshtype == 0x0);
-+			return thrfixed && (threshtype == 0x1);
-+		return thrfixed && (threshtype == 0x0);
- 	default:
- 		break;
+diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+index bd879b1a76c8..00618de2ee12 100644
+--- a/drivers/soundwire/stream.c
++++ b/drivers/soundwire/stream.c
+@@ -1401,9 +1401,7 @@ struct sdw_dpn_prop *sdw_get_slave_dpn_prop(struct sdw_slave *slave,
  	}
+ 
+ 	for (i = 0; i < num_ports; i++) {
+-		dpn_prop = &dpn_prop[i];
+-
+-		if (dpn_prop->num == port_num)
++		if (dpn_prop[i].num == port_num)
+ 			return &dpn_prop[i];
+ 	}
+ 
 -- 
 2.20.1
 
