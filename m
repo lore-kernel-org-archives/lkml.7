@@ -7,126 +7,103 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF21BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53639C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78BD32184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248912182B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:33:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="CUYJXh+O"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="NAFslq//"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfF0Cds (ORCPT
+        id S1727161AbfF0Cdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 22:33:48 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44087 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbfF0Cdr (ORCPT
+        Wed, 26 Jun 2019 22:33:54 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40553 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfF0Cdx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 22:33:47 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r15so423389lfm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 19:33:46 -0700 (PDT)
+        Wed, 26 Jun 2019 22:33:53 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a21so638098ljh.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 19:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=kpqYC0bettaQFGE+cPMxYMow71Zk/Lt7y+RJt1aO3ZA=;
-        b=CUYJXh+O76PMEBZGgXYE4jBtsdtMsFSEbZO0ZPyGHzyh2zdxZqtKDI8UekfWutOZ/E
-         YOB+X7vQ4M6jz4r3vtoOXStSuKF65tzQF2Hy2iAis1o6RYF834KH8sRjmjRZMHCwO+62
-         MO4t7AD0yZgX9E1DKMcyzPLyDEPCd2COfseoooOnSJqaFvkUw9X7M0S0KF5v1b58crp0
-         FwPaHIAzP4nqMXq7qwBG6huU7gkp8E3fXfbotKN6d/a7vZrhC6xBO1zFP3Kc95nRNozg
-         3dUxkOYgiDhv7NyUXyrj5a+3L0Vv1LSR+WiWc3I9rNhxc1Mp1+3c7vN7Xszo0uMwbfZ+
-         hNTA==
+        bh=QsUYJ0OixGvyGAqGjBHbqvL3FB6Bz7WIPxlK8Bq4u5w=;
+        b=NAFslq//TWZ2W+oopBubsqoa2BPr60n5Uj9J50JGDr4Kkr6fRmHugqxnjlVcxVPieI
+         AauNsl1vc7rn6ds5sc8Rjp8jfNAuE53Aa9QZ7YVjueWHYAgNGWhZQYOTcW6FmjzmFHlj
+         hLojqogqtp71w9KWWQIAIq60LAKW1O1/UMvxNPpXWkppOUqpe5P0wJBVW6fmPj2ARYXR
+         ADBBcT42pEjlyebqv9Xk4Rn87VkzvJsHGrSfaqQH+AIDa7MamyA9CWR4OT2YdacSa3WN
+         my1XzRBDNQMx/VW7jTJW7DVouQIYBhALjGUix56/lH8pQEcT04DPF9qQuP+fuTyoi0Ph
+         DAkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kpqYC0bettaQFGE+cPMxYMow71Zk/Lt7y+RJt1aO3ZA=;
-        b=tDhDKMPSW/FArsNFJxKVvAoDFJjYYo+ksUuNSnV0owy8t4JEOXYgWNkglHgfOWSnFz
-         s4NLJ1IJFRAz+4e3tKctrpcc+TBzm865tIfJ5rguEq46wZnixqHgyj6Ct+b7+F1nltq1
-         qBCet1el77scqiT1O8x44wfueYgKLpDd8VHCEKNoLKlRLLl/XsQqXUOe4OX4tjyPJ75G
-         u3HpiEtycrDYQpB5/wPjAuJX+HcR4/3H9X59dx8VHTNT3L0icmYHPY1RFfytBlFFp/q8
-         jSvr1wbM9NuHj8vq7GB2IhZ+jf9CGL9MstbLho9YhgKJJ3Oh4lFHf939STn0RRRNUfnj
-         4Rng==
-X-Gm-Message-State: APjAAAV0+h4WHeicvpeP0/kZOqZsLuyUAi34DlMgslDDDTutIC6uq7Wi
-        yqsAgiJRbuvEzx9Cgx44iurwWQ==
-X-Google-Smtp-Source: APXvYqwVm7ApFldCcgUkF3KiAVNAlR3f2LErwu5ylCjWa4dtUcO2yDmcrQXQfnSFhvIyODaUbhq7dQ==
-X-Received: by 2002:ac2:52b7:: with SMTP id r23mr662754lfm.120.1561602825764;
-        Wed, 26 Jun 2019 19:33:45 -0700 (PDT)
+        bh=QsUYJ0OixGvyGAqGjBHbqvL3FB6Bz7WIPxlK8Bq4u5w=;
+        b=WyW7/FpEWMPxgq6U3Q5buzuWKKfYUOsjkmbbXFjnVDDaYl7QvdvPsDscP09wGqSy/+
+         WgeaSc/svw+bAYAxdgs3sjsbnmBT4IM08IoQMj8JJO7w0iHBYLFVsP+IxWTD65FAYu/e
+         DJaYoxr/S+SdnKwCrh8iSOagyr4/iuBpalaJXUbJXGprvIV2TEG3DhQcH0blw2lWivbZ
+         Bl9i/VM6oTk/4n1dnBf4mwm6mNyum72eJkjfsH5A2ZUp7kwHVVbLlKrie5nIhtMkDjCA
+         dIhhqj+FU1I4FlRogdQAzSYbAFMcM+2/AybmSsjCLrAPPECmQWktrZ+6J0fIG1E8nN7W
+         sAQw==
+X-Gm-Message-State: APjAAAU2+0bGF+pRqoX3TNYj7DZ9phbHnYskLyjZ4/WJWemgkl4Ljhcn
+        SE120Ra4OWdsjUjTcEwvSGUASQ==
+X-Google-Smtp-Source: APXvYqyh/a8j2yzQL0dk+k7+Q3KUqRAVUal00aYaGppig+X9K+BfCpTOWR8X2romBAWvRn/+S0Bzbg==
+X-Received: by 2002:a2e:7619:: with SMTP id r25mr841109ljc.199.1561602830482;
+        Wed, 26 Jun 2019 19:33:50 -0700 (PDT)
 Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id k12sm117397lfm.90.2019.06.26.19.33.42
+        by smtp.gmail.com with ESMTPSA id v15sm107799lfd.53.2019.06.26.19.33.49
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Jun 2019 19:33:43 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 19:19:37 -0700
+        Wed, 26 Jun 2019 19:33:49 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 19:22:02 -0700
 From:   Olof Johansson <olof@lixom.net>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Wei Xu <xuwei5@hisilicon.com>,
-        ARM-SoC Maintainers <arm@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     arm-soc <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        masahiroy@kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        jinying@hisilicon.com, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>
-Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
-Message-ID: <20190627021937.kk4lklv2uz3mogoq@localhost>
-References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
- <20190625112148.ckj7sgdgvyeel7vy@localhost>
- <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
- <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [GIT PULL] ARM: dts: uniphier: UniPhier DT updates for v5.3
+Message-ID: <20190627022202.hyukmqxmxjxw3bu6@localhost>
+References: <CAK7LNASNhp2o9kboRMJ66UJy5Z+T28K6CHO_=c02MaGoFyy-5Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
+In-Reply-To: <CAK7LNASNhp2o9kboRMJ66UJy5Z+T28K6CHO_=c02MaGoFyy-5Q@mail.gmail.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:31:26PM +0100, John Garry wrote:
-> On 25/06/2019 14:03, Olof Johansson wrote:
-> > > > are available in the Git repository at:
-> > > > > >
-> > > > > >   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
-> > > > > >
-> > > > > > for you to fetch changes up to 07c811af1c00d7b4212eac86900b023b6405a954:
-> > > > > >
-> > > > > >   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration (2019-06-25 09:40:42 +0100)
-> > > > > >
-> > > > > > ----------------------------------------------------------------
-> > > > > > Hisilicon fixes for v5.2-rc
-> > > > > >
-> > > > > > - fixed RCU usage in logical PIO
-> > > > > > - Added a function to unregister a logical PIO range in logical PIO
-> > > > > >   to support the fixes in the hisi-lpc driver
-> > > > > > - fixed and optimized hisi-lpc driver to avoid potential use-after-free
-> > > > > >   and driver unbind crash
-> > > >
-> > > > Merged to fixes, thanks.
-> > 
-> > This broke arm64 allmodconfig:
-> > 
-> >        arm64.allmodconfig:
-> > drivers/bus/hisi_lpc.c:656:3: error: implicit declaration of function
-> > 'hisi_lpc_acpi_remove'; did you mean 'hisi_lpc_acpi_probe'?
-> > [-Werror=implicit-function-declaration]
-> > 
-> > 
+On Wed, Jun 26, 2019 at 12:19:17AM +0900, Masahiro Yamada wrote:
+> Hi Arnd, Olof,
 > 
-> Uhhh, that's my fault - I didn't provide a stub for !ACPI. Sorry. I'll send
-> a fixed v3 series.
+> Please pull UniPhier DT updates (32bit) for the v5.3 MW.
+> 
+> Thanks.
+> 
+> 
+> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+> 
+>   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+> tags/uniphier-dt-v5.3
+> 
+> for you to fetch changes up to bc8841f0c1e6945fd7fde6faad3300d1b08abd86:
+> 
+>   ARM: dts: uniphier: update to new Denali NAND binding (2019-06-26
+> 00:06:50 +0900)
+> 
+> ----------------------------------------------------------------
+> UniPhier ARM SoC DT updates for v5.3
+> 
+> - Migrate to the new binding for the Denali NAND controller
 
-No worries, it happens -- but it's good if maintainers do at least a few test
-builds before sending in pull requests so we don't catch all of it at our end.
+Merged, thanks!
 
 
 -Olof
