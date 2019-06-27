@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48550C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AAAC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7EC208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9551D20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596244;
-	bh=gvVSKaqZrybsWTI5v1Ft2O1Gzqx5r/tj7z0gtcZMpDY=;
+	s=default; t=1561596252;
+	bh=eLmJ0MunBZrCkh4WprqPh2eUFcE7ufq0sKoh+UC+SDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XPMMSoJebtFd1zpmnnyGUNawyI+D7AuljNZ3xT8K5IyPphmb8p/p8RXlqPJHxKT62
-	 O9NF1KECrYAOPEZfRqoKUP+aEpVIYW/nOQfDPCMn8M42CHvpX2w0T4/6jnIfEmuyTa
-	 zkLISvLkELvC4PV1qd6GVDZya8qcn8ON+ptoFibE=
+	b=AH25Jkbm+xpgPGP8dUrRR8Qxm5DM56we6DwXkXbBtdOWEGgUjWTZTkeFU7obUEFSN
+	 Kt+rF+stNNimvgPnualSq8amaGZ/cf2pIZVgtppQgj/TnFSZjozdQ9Ns9kUrVd4Mzz
+	 /2uleu6sjc7o9LT7jEREvre985ixWuRIN90OwFrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbfF0Ams (ORCPT
+        id S1729738AbfF0Amc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:42:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46566 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:42:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727621AbfF0Amo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:42:44 -0400
+        id S1729722AbfF0Am3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:42:29 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1124F21871;
-        Thu, 27 Jun 2019 00:42:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CBEE205ED;
+        Thu, 27 Jun 2019 00:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596164;
-        bh=gvVSKaqZrybsWTI5v1Ft2O1Gzqx5r/tj7z0gtcZMpDY=;
+        s=default; t=1561596148;
+        bh=eLmJ0MunBZrCkh4WprqPh2eUFcE7ufq0sKoh+UC+SDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yiRQ21FHSIdViRnVJPAzmzQXEPNMbO/E2voEQK3fQiUmGPiaGA9Ic+P5JPrQ4MN4N
-         RgBiu+n4i9Wc/1hLyDuICDCw92L6bWgLfAXXvf73zvgUodZv8dp9miVa18XisaEYy7
-         chEenH9tziKJINuZkQy8E0O+bu5OAVaMvTf0JisM=
+        b=tzX2Q701IziX0jfnD05ADcwu4sExYdlFoja+EewY0jSeEDisP2MUINEfIakbMqQiV
+         HkqOgnlVHQseBtiiVvZEQ9VtyZxsbpXmjXqEpXl3lUuwsHXM+bl+0Fted5ssvQpvHK
+         hB+5SAqVHhy8AqIEF2VaLLsjAPO+12PdgHHM21ls=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chang-Hsien Tsai <luke.tw@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/12] samples, bpf: fix to change the buffer size for read()
-Date:   Wed, 26 Jun 2019 20:42:24 -0400
-Message-Id: <20190627004236.21909-2-sashal@kernel.org>
+Cc:     "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
+        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 19/21] bnx2x: Check if transceiver implements DDM before access
+Date:   Wed, 26 Jun 2019 20:41:19 -0400
+Message-Id: <20190627004122.21671-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627004236.21909-1-sashal@kernel.org>
-References: <20190627004236.21909-1-sashal@kernel.org>
+In-Reply-To: <20190627004122.21671-1-sashal@kernel.org>
+References: <20190627004122.21671-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,43 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chang-Hsien Tsai <luke.tw@gmail.com>
+From: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
 
-[ Upstream commit f7c2d64bac1be2ff32f8e4f500c6e5429c1003e0 ]
+[ Upstream commit cf18cecca911c0db96b868072665347efe6df46f ]
 
-If the trace for read is larger than 4096, the return
-value sz will be 4096. This results in off-by-one error
-on buf:
+Some transceivers may comply with SFF-8472 even though they do not
+implement the Digital Diagnostic Monitoring (DDM) interface described in
+the spec. The existence of such area is specified by the 6th bit of byte
+92, set to 1 if implemented.
 
-    static char buf[4096];
-    ssize_t sz;
+Currently, without checking this bit, bnx2x fails trying to read sfp
+module's EEPROM with the follow message:
 
-    sz = read(trace_fd, buf, sizeof(buf));
-    if (sz > 0) {
-        buf[sz] = 0;
-        puts(buf);
-    }
+ethtool -m enP5p1s0f1
+Cannot get Module EEPROM data: Input/output error
 
-Signed-off-by: Chang-Hsien Tsai <luke.tw@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Because it fails to read the additional 256 bytes in which it is assumed
+to exist the DDM data.
+
+This issue was noticed using a Mellanox Passive DAC PN 01FT738. The EEPROM
+data was confirmed by Mellanox as correct and similar to other Passive
+DACs from other manufacturers.
+
+Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
+Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/bpf_load.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c | 3 ++-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h    | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/samples/bpf/bpf_load.c b/samples/bpf/bpf_load.c
-index da86a8e0a95a..e836b5ff2060 100644
---- a/samples/bpf/bpf_load.c
-+++ b/samples/bpf/bpf_load.c
-@@ -336,7 +336,7 @@ void read_trace_pipe(void)
- 		static char buf[4096];
- 		ssize_t sz;
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+index 8aecd8ef6542..15a0850e6bde 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+@@ -1562,7 +1562,8 @@ static int bnx2x_get_module_info(struct net_device *dev,
+ 	}
  
--		sz = read(trace_fd, buf, sizeof(buf));
-+		sz = read(trace_fd, buf, sizeof(buf) - 1);
- 		if (sz > 0) {
- 			buf[sz] = 0;
- 			puts(buf);
+ 	if (!sff8472_comp ||
+-	    (diag_type & SFP_EEPROM_DIAG_ADDR_CHANGE_REQ)) {
++	    (diag_type & SFP_EEPROM_DIAG_ADDR_CHANGE_REQ) ||
++	    !(diag_type & SFP_EEPROM_DDM_IMPLEMENTED)) {
+ 		modinfo->type = ETH_MODULE_SFF_8079;
+ 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
+ 	} else {
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
+index b7d251108c19..7115f5025664 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
+@@ -62,6 +62,7 @@
+ #define SFP_EEPROM_DIAG_TYPE_ADDR		0x5c
+ #define SFP_EEPROM_DIAG_TYPE_SIZE		1
+ #define SFP_EEPROM_DIAG_ADDR_CHANGE_REQ		(1<<2)
++#define SFP_EEPROM_DDM_IMPLEMENTED		(1<<6)
+ #define SFP_EEPROM_SFF_8472_COMP_ADDR		0x5e
+ #define SFP_EEPROM_SFF_8472_COMP_SIZE		1
+ 
 -- 
 2.20.1
 
