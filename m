@@ -2,199 +2,158 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96999C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4459C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3D220659
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C555620659
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfF0RzS (ORCPT
+        id S1726668AbfF0Rzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:55:18 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:38694 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfF0RzS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:55:18 -0400
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id D834F67A649;
-        Thu, 27 Jun 2019 19:55:13 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 27 Jun
- 2019 19:55:13 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Thu, 27 Jun 2019 19:55:13 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Jeff Kletsky <lede@allycomm.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-CC:     Jeff Kletsky <git-commits@allycomm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH v2] mtd: spinand: Add initial support for Paragon PN26G0xA
-Thread-Topic: [PATCH v2] mtd: spinand: Add initial support for Paragon
- PN26G0xA
-Thread-Index: AQHVJfhz1ShSN5acYE2KqnOsUXxJMqavtXcA
-Date:   Thu, 27 Jun 2019 17:55:13 +0000
-Message-ID: <43edc5c1-8460-da12-15e7-f8db4bce9688@kontron.de>
-References: <20190618170805.7187-1-lede@allycomm.com>
-In-Reply-To: <20190618170805.7187-1-lede@allycomm.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4EF1664FA243F34BAE9B82190EB96EDB@snt-world.com>
-Content-Transfer-Encoding: base64
+        Thu, 27 Jun 2019 13:55:43 -0400
+Received: from mga14.intel.com ([192.55.52.115]:26901 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726405AbfF0Rzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 13:55:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 10:55:42 -0700
+X-IronPort-AV: E=Sophos;i="5.63,424,1557212400"; 
+   d="scan'208";a="337657300"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.24.14.95]) ([10.24.14.95])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 27 Jun 2019 10:55:40 -0700
+Subject: Re: [PATCH 00/10] x86/CPU and x86/resctrl: Support pseudo-lock
+ regions spanning L2 and L3 cache
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>
+Cc:     "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1561569068.git.reinette.chatre@intel.com>
+ <41cd71514a9042abaaef909d816e2522@AcuMS.aculab.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <a9be6561-548b-d384-d877-a3e031013710@intel.com>
+Date:   Thu, 27 Jun 2019 10:55:39 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: D834F67A649.A1317
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: computersforpeace@gmail.com, dwmw2@infradead.org,
-        git-commits@allycomm.com, lede@allycomm.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com
+In-Reply-To: <41cd71514a9042abaaef909d816e2522@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTguMDYuMTkgMTk6MDgsIEplZmYgS2xldHNreSB3cm90ZToNCj4gRnJvbTogSmVmZiBLbGV0
-c2t5IDxnaXQtY29tbWl0c0BhbGx5Y29tbS5jb20+DQo+IA0KPiBBZGQgaW5pdGlhbCBzdXBwb3J0
-IGZvciBQYXJhZ29uIFRlY2hub2xvZ3kNCj4gUE4yNkcwMUF4eHh4eCBhbmQgUE4yNkcwMkF4eHh4
-eCBTUEkgTkFORA0KPiANCj4gRGF0YXNoZWV0cyBhdmFpbGFibGUgYXQNCj4gaHR0cDovL3d3dy54
-dHh0ZWNoLmNvbS91cGZpbGUvMjAxNjA4MjUxNzI3NDU5MC5wZGYNCj4gaHR0cDovL3d3dy54dHh0
-ZWNoLmNvbS91cGZpbGUvMjAxNjA4MjUxNzI4MjMyOS5wZGYNCj4gDQo+IFNpZ25lZC1vZmYtYnk6
-IEplZmYgS2xldHNreSA8Z2l0LWNvbW1pdHNAYWxseWNvbW0uY29tPg0KDQpSZXZpZXdlZC1ieTog
-RnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0KDQo+IC0tLQ0K
-PiAgIGRyaXZlcnMvbXRkL25hbmQvc3BpL01ha2VmaWxlICB8ICAgMiArLQ0KPiAgIGRyaXZlcnMv
-bXRkL25hbmQvc3BpL2NvcmUuYyAgICB8ICAgMSArDQo+ICAgZHJpdmVycy9tdGQvbmFuZC9zcGkv
-cGFyYWdvbi5jIHwgMTQ3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgIGlu
-Y2x1ZGUvbGludXgvbXRkL3NwaW5hbmQuaCAgICB8ICAgMSArDQo+ICAgNCBmaWxlcyBjaGFuZ2Vk
-LCAxNTAgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL210ZC9uYW5kL3NwaS9wYXJhZ29uLmMNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL210ZC9uYW5kL3NwaS9NYWtlZmlsZSBiL2RyaXZlcnMvbXRkL25hbmQvc3BpL01ha2VmaWxl
-DQo+IGluZGV4IDc1MzEyNTA4MjY0MC4uOTY2MmI5YzFkNWE5IDEwMDY0NA0KPiAtLS0gYS9kcml2
-ZXJzL210ZC9uYW5kL3NwaS9NYWtlZmlsZQ0KPiArKysgYi9kcml2ZXJzL210ZC9uYW5kL3NwaS9N
-YWtlZmlsZQ0KPiBAQCAtMSwzICsxLDMgQEANCj4gICAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVy
-OiBHUEwtMi4wDQo+IC1zcGluYW5kLW9ianMgOj0gY29yZS5vIGdpZ2FkZXZpY2UubyBtYWNyb25p
-eC5vIG1pY3Jvbi5vIHRvc2hpYmEubyB3aW5ib25kLm8NCj4gK3NwaW5hbmQtb2JqcyA6PSBjb3Jl
-Lm8gZ2lnYWRldmljZS5vIG1hY3Jvbml4Lm8gbWljcm9uLm8gcGFyYWdvbi5vIHRvc2hpYmEubyB3
-aW5ib25kLm8NCj4gICBvYmotJChDT05GSUdfTVREX1NQSV9OQU5EKSArPSBzcGluYW5kLm8NCj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvc3BpL2NvcmUuYyBiL2RyaXZlcnMvbXRkL25h
-bmQvc3BpL2NvcmUuYw0KPiBpbmRleCA1NTZiZmRiMzQ0NTUuLmYwZjM1MjhhYWI4ZiAxMDA2NDQN
-Cj4gLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9zcGkvY29yZS5jDQo+ICsrKyBiL2RyaXZlcnMvbXRk
-L25hbmQvc3BpL2NvcmUuYw0KPiBAQCAtNzU3LDYgKzc1Nyw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1
-Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgKnNwaW5hbmRfbWFudWZhY3R1cmVyc1tdID0gew0KPiAg
-IAkmZ2lnYWRldmljZV9zcGluYW5kX21hbnVmYWN0dXJlciwNCj4gICAJJm1hY3Jvbml4X3NwaW5h
-bmRfbWFudWZhY3R1cmVyLA0KPiAgIAkmbWljcm9uX3NwaW5hbmRfbWFudWZhY3R1cmVyLA0KPiAr
-CSZwYXJhZ29uX3NwaW5hbmRfbWFudWZhY3R1cmVyLA0KPiAgIAkmdG9zaGliYV9zcGluYW5kX21h
-bnVmYWN0dXJlciwNCj4gICAJJndpbmJvbmRfc3BpbmFuZF9tYW51ZmFjdHVyZXIsDQo+ICAgfTsN
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvc3BpL3BhcmFnb24uYyBiL2RyaXZlcnMv
-bXRkL25hbmQvc3BpL3BhcmFnb24uYw0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAw
-MDAwMDAwMDAwMDAuLjUyMzA3NjgxY2JkMA0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL2RyaXZl
-cnMvbXRkL25hbmQvc3BpL3BhcmFnb24uYw0KPiBAQCAtMCwwICsxLDE0NyBAQA0KPiArLy8gU1BE
-WC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gKy8qDQo+ICsgKiBDb3B5cmlnaHQgKEMp
-IDIwMTkgSmVmZiBLbGV0c2t5DQo+ICsgKg0KPiArICogQXV0aG9yOiBKZWZmIEtsZXRza3kgPGdp
-dC1jb21taXRzQGFsbHljb21tLmNvbT4NCj4gKyAqLw0KPiArDQo+ICsjaW5jbHVkZSA8bGludXgv
-ZGV2aWNlLmg+DQo+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+ICsjaW5jbHVkZSA8bGlu
-dXgvbXRkL3NwaW5hbmQuaD4NCj4gKw0KPiArDQo+ICsjZGVmaW5lIFNQSU5BTkRfTUZSX1BBUkFH
-T04JMHhhMQ0KPiArDQo+ICsNCj4gKyNkZWZpbmUgUE4yNkcwWEFfU1RBVFVTX0VDQ19CSVRNQVNL
-CQkoMyA8PCA0KQ0KPiArDQo+ICsjZGVmaW5lIFBOMjZHMFhBX1NUQVRVU19FQ0NfTk9ORV9ERVRF
-Q1RFRAkoMCA8PCA0KQ0KPiArI2RlZmluZSBQTjI2RzBYQV9TVEFUVVNfRUNDXzFfN19DT1JSRUNU
-RUQJKDEgPDwgNCkNCj4gKyNkZWZpbmUgUE4yNkcwWEFfU1RBVFVTX0VDQ19FUlJPUkVECQkoMiA8
-PCA0KQ0KPiArI2RlZmluZSBQTjI2RzBYQV9TVEFUVVNfRUNDXzhfQ09SUkVDVEVECQkoMyA8PCA0
-KQ0KPiArDQo+ICsNCj4gK3N0YXRpYyBTUElOQU5EX09QX1ZBUklBTlRTKHJlYWRfY2FjaGVfdmFy
-aWFudHMsDQo+ICsJCVNQSU5BTkRfUEFHRV9SRUFEX0ZST01fQ0FDSEVfUVVBRElPX09QKDAsIDIs
-IE5VTEwsIDApLA0KPiArCQlTUElOQU5EX1BBR0VfUkVBRF9GUk9NX0NBQ0hFX1g0X09QKDAsIDEs
-IE5VTEwsIDApLA0KPiArCQlTUElOQU5EX1BBR0VfUkVBRF9GUk9NX0NBQ0hFX0RVQUxJT19PUCgw
-LCAxLCBOVUxMLCAwKSwNCj4gKwkJU1BJTkFORF9QQUdFX1JFQURfRlJPTV9DQUNIRV9YMl9PUCgw
-LCAxLCBOVUxMLCAwKSwNCj4gKwkJU1BJTkFORF9QQUdFX1JFQURfRlJPTV9DQUNIRV9PUCh0cnVl
-LCAwLCAxLCBOVUxMLCAwKSwNCj4gKwkJU1BJTkFORF9QQUdFX1JFQURfRlJPTV9DQUNIRV9PUChm
-YWxzZSwgMCwgMSwgTlVMTCwgMCkpOw0KPiArDQo+ICtzdGF0aWMgU1BJTkFORF9PUF9WQVJJQU5U
-Uyh3cml0ZV9jYWNoZV92YXJpYW50cywNCj4gKwkJU1BJTkFORF9QUk9HX0xPQURfWDQodHJ1ZSwg
-MCwgTlVMTCwgMCksDQo+ICsJCVNQSU5BTkRfUFJPR19MT0FEKHRydWUsIDAsIE5VTEwsIDApKTsN
-Cj4gKw0KPiArc3RhdGljIFNQSU5BTkRfT1BfVkFSSUFOVFModXBkYXRlX2NhY2hlX3ZhcmlhbnRz
-LA0KPiArCQlTUElOQU5EX1BST0dfTE9BRF9YNChmYWxzZSwgMCwgTlVMTCwgMCksDQo+ICsJCVNQ
-SU5BTkRfUFJPR19MT0FEKGZhbHNlLCAwLCBOVUxMLCAwKSk7DQo+ICsNCj4gKw0KPiArc3RhdGlj
-IGludCBwbjI2ZzB4YV9vb2JsYXlvdXRfZWNjKHN0cnVjdCBtdGRfaW5mbyAqbXRkLCBpbnQgc2Vj
-dGlvbiwNCj4gKwkJCQkgICBzdHJ1Y3QgbXRkX29vYl9yZWdpb24gKnJlZ2lvbikNCj4gK3sNCj4g
-KwlpZiAoc2VjdGlvbiA+IDMpDQo+ICsJCXJldHVybiAtRVJBTkdFOw0KPiArDQo+ICsJcmVnaW9u
-LT5vZmZzZXQgPSA2ICsgKDE1ICogc2VjdGlvbik7IC8qIDQgQkJNICsgMiB1c2VyIGJ5dGVzICov
-DQo+ICsJcmVnaW9uLT5sZW5ndGggPSAxMzsNCj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiAr
-DQo+ICtzdGF0aWMgaW50IHBuMjZnMHhhX29vYmxheW91dF9mcmVlKHN0cnVjdCBtdGRfaW5mbyAq
-bXRkLCBpbnQgc2VjdGlvbiwNCj4gKwkJCQkgICBzdHJ1Y3QgbXRkX29vYl9yZWdpb24gKnJlZ2lv
-bikNCj4gK3sNCj4gKwlpZiAoc2VjdGlvbiA+IDQpDQo+ICsJCXJldHVybiAtRVJBTkdFOw0KPiAr
-DQo+ICsJaWYgKHNlY3Rpb24gPT0gNCkgew0KPiArCQlyZWdpb24tPm9mZnNldCA9IDY0Ow0KPiAr
-CQlyZWdpb24tPmxlbmd0aCA9IDY0Ow0KPiArCX0gZWxzZSB7DQo+ICsJCXJlZ2lvbi0+b2Zmc2V0
-ID0gNCArICgxNSAqIHNlY3Rpb24pOw0KPiArCQlyZWdpb24tPmxlbmd0aCA9IDI7DQo+ICsJfQ0K
-PiArDQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbnQgcG4yNmcweGFfZWNj
-X2dldF9zdGF0dXMoc3RydWN0IHNwaW5hbmRfZGV2aWNlICpzcGluYW5kLA0KPiArCQkJCSAgIHU4
-IHN0YXR1cykNCj4gK3sNCj4gKwlzd2l0Y2ggKHN0YXR1cyAmIFBOMjZHMFhBX1NUQVRVU19FQ0Nf
-QklUTUFTSykgew0KPiArCWNhc2UgUE4yNkcwWEFfU1RBVFVTX0VDQ19OT05FX0RFVEVDVEVEOg0K
-PiArCQlyZXR1cm4gMDsNCj4gKw0KPiArCWNhc2UgUE4yNkcwWEFfU1RBVFVTX0VDQ18xXzdfQ09S
-UkVDVEVEOg0KPiArCQlyZXR1cm4gNzsJLyogUmV0dXJuIHVwcGVyIGxpbWl0IGJ5IGNvbnZlbnRp
-b24gKi8NCj4gKw0KPiArCWNhc2UgUE4yNkcwWEFfU1RBVFVTX0VDQ184X0NPUlJFQ1RFRDoNCj4g
-KwkJcmV0dXJuIDg7DQo+ICsNCj4gKwljYXNlIFBOMjZHMFhBX1NUQVRVU19FQ0NfRVJST1JFRDoN
-Cj4gKwkJcmV0dXJuIC1FQkFETVNHOw0KPiArDQo+ICsJZGVmYXVsdDoNCj4gKwkJYnJlYWs7DQo+
-ICsJfQ0KPiArDQo+ICsJcmV0dXJuIC1FSU5WQUw7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBjb25z
-dCBzdHJ1Y3QgbXRkX29vYmxheW91dF9vcHMgcG4yNmcweGFfb29ibGF5b3V0ID0gew0KPiArCS5l
-Y2MgPSBwbjI2ZzB4YV9vb2JsYXlvdXRfZWNjLA0KPiArCS5mcmVlID0gcG4yNmcweGFfb29ibGF5
-b3V0X2ZyZWUsDQo+ICt9Ow0KPiArDQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3BpbmFu
-ZF9pbmZvIHBhcmFnb25fc3BpbmFuZF90YWJsZVtdID0gew0KPiArCVNQSU5BTkRfSU5GTygiUE4y
-NkcwMUEiLCAweGUxLA0KPiArCQkgICAgIE5BTkRfTUVNT1JHKDEsIDIwNDgsIDEyOCwgNjQsIDEw
-MjQsIDIxLCAxLCAxLCAxKSwNCj4gKwkJICAgICBOQU5EX0VDQ1JFUSg4LCA1MTIpLA0KPiArCQkg
-ICAgIFNQSU5BTkRfSU5GT19PUF9WQVJJQU5UUygmcmVhZF9jYWNoZV92YXJpYW50cywNCj4gKwkJ
-CQkJICAgICAgJndyaXRlX2NhY2hlX3ZhcmlhbnRzLA0KPiArCQkJCQkgICAgICAmdXBkYXRlX2Nh
-Y2hlX3ZhcmlhbnRzKSwNCj4gKwkJICAgICAwLA0KPiArCQkgICAgIFNQSU5BTkRfRUNDSU5GTygm
-cG4yNmcweGFfb29ibGF5b3V0LA0KPiArCQkJCSAgICAgcG4yNmcweGFfZWNjX2dldF9zdGF0dXMp
-KSwNCj4gKwlTUElOQU5EX0lORk8oIlBOMjZHMDJBIiwgMHhlMiwNCj4gKwkJICAgICBOQU5EX01F
-TU9SRygxLCAyMDQ4LCAxMjgsIDY0LCAyMDQ4LCA0MSwgMSwgMSwgMSksDQo+ICsJCSAgICAgTkFO
-RF9FQ0NSRVEoOCwgNTEyKSwNCj4gKwkJICAgICBTUElOQU5EX0lORk9fT1BfVkFSSUFOVFMoJnJl
-YWRfY2FjaGVfdmFyaWFudHMsDQo+ICsJCQkJCSAgICAgICZ3cml0ZV9jYWNoZV92YXJpYW50cywN
-Cj4gKwkJCQkJICAgICAgJnVwZGF0ZV9jYWNoZV92YXJpYW50cyksDQo+ICsJCSAgICAgMCwNCj4g
-KwkJICAgICBTUElOQU5EX0VDQ0lORk8oJnBuMjZnMHhhX29vYmxheW91dCwNCj4gKwkJCQkgICAg
-IHBuMjZnMHhhX2VjY19nZXRfc3RhdHVzKSksDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgaW50IHBh
-cmFnb25fc3BpbmFuZF9kZXRlY3Qoc3RydWN0IHNwaW5hbmRfZGV2aWNlICpzcGluYW5kKQ0KPiAr
-ew0KPiArCXU4ICppZCA9IHNwaW5hbmQtPmlkLmRhdGE7DQo+ICsJaW50IHJldDsNCj4gKw0KPiAr
-CS8qIFJlYWQgSUQgcmV0dXJucyBbMF1bTUlEXVtESURdICovDQo+ICsNCj4gKwlpZiAoaWRbMV0g
-IT0gU1BJTkFORF9NRlJfUEFSQUdPTikNCj4gKwkJcmV0dXJuIDA7DQo+ICsNCj4gKwlyZXQgPSBz
-cGluYW5kX21hdGNoX2FuZF9pbml0KHNwaW5hbmQsIHBhcmFnb25fc3BpbmFuZF90YWJsZSwNCj4g
-KwkJCQkgICAgIEFSUkFZX1NJWkUocGFyYWdvbl9zcGluYW5kX3RhYmxlKSwNCj4gKwkJCQkgICAg
-IGlkWzJdKTsNCj4gKwlpZiAocmV0KQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiArDQo+ICsJcmV0dXJu
-IDE7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVy
-ZXJfb3BzIHBhcmFnb25fc3BpbmFuZF9tYW51Zl9vcHMgPSB7DQo+ICsJLmRldGVjdCA9IHBhcmFn
-b25fc3BpbmFuZF9kZXRlY3QsDQo+ICt9Ow0KPiArDQo+ICtjb25zdCBzdHJ1Y3Qgc3BpbmFuZF9t
-YW51ZmFjdHVyZXIgcGFyYWdvbl9zcGluYW5kX21hbnVmYWN0dXJlciA9IHsNCj4gKwkuaWQgPSBT
-UElOQU5EX01GUl9QQVJBR09OLA0KPiArCS5uYW1lID0gIlBhcmFnb24iLA0KPiArCS5vcHMgPSAm
-cGFyYWdvbl9zcGluYW5kX21hbnVmX29wcywNCj4gK307DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRl
-L2xpbnV4L210ZC9zcGluYW5kLmggYi9pbmNsdWRlL2xpbnV4L210ZC9zcGluYW5kLmgNCj4gaW5k
-ZXggZmJjMDQyM2JiNGFlLi40ZWE1NThiZDNjNDYgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGlu
-dXgvbXRkL3NwaW5hbmQuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L210ZC9zcGluYW5kLmgNCj4g
-QEAgLTIyNyw2ICsyMjcsNyBAQCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgew0KPiAgIGV4
-dGVybiBjb25zdCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgZ2lnYWRldmljZV9zcGluYW5k
-X21hbnVmYWN0dXJlcjsNCj4gICBleHRlcm4gY29uc3Qgc3RydWN0IHNwaW5hbmRfbWFudWZhY3R1
-cmVyIG1hY3Jvbml4X3NwaW5hbmRfbWFudWZhY3R1cmVyOw0KPiAgIGV4dGVybiBjb25zdCBzdHJ1
-Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgbWljcm9uX3NwaW5hbmRfbWFudWZhY3R1cmVyOw0KPiAr
-ZXh0ZXJuIGNvbnN0IHN0cnVjdCBzcGluYW5kX21hbnVmYWN0dXJlciBwYXJhZ29uX3NwaW5hbmRf
-bWFudWZhY3R1cmVyOw0KPiAgIGV4dGVybiBjb25zdCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVy
-ZXIgdG9zaGliYV9zcGluYW5kX21hbnVmYWN0dXJlcjsNCj4gICBleHRlcm4gY29uc3Qgc3RydWN0
-IHNwaW5hbmRfbWFudWZhY3R1cmVyIHdpbmJvbmRfc3BpbmFuZF9tYW51ZmFjdHVyZXI7DQo+ICAg
-DQo+IA==
+Hi David,
+
+On 6/27/2019 2:12 AM, David Laight wrote:
+> From: Reinette Chatre
+>> Sent: 26 June 2019 18:49
+>>
+>> Cache pseudo-locking involves preloading a region of physical memory into a
+>> reserved portion of cache that no task or CPU can subsequently fill into and
+>> from that point on will only serve cache hits. At this time it is only
+>> possible to create cache pseudo-locked regions in either L2 or L3 cache,
+>> supporting systems that support either L2 Cache Allocation Technology (CAT)
+>> or L3 CAT because CAT is the mechanism used to manage reservations of cache
+>> portions.
+> 
+> While this is a 'nice' hardware feature for some kinds of embedded systems
+> I don't see how it can be sensibly used inside a Linux kernel.
+
+Cache pseudo-locking is an existing (obviously not well known) feature
+in Linux kernel since v4.19.
+
+> There are an awful lot of places where things can go horribly wrong.
+
+The worse thing that can go wrong is that the memory is evicted from the
+pseudo-locked region and when it is accessed again it will have to share
+cache with all other memory sharing the same class of service it is
+accessed under. The consequence is lower latency when accessing this
+high priority memory and reduced cache availability due to the orphaned
+ways used for the pseudo-locked region.
+
+This worse case could happen when the task runs on a CPU that is not
+associated with the cache on which its memory is pseudo-locked, so the
+application is expected to be associated only to CPUs associated with
+the correct cache. This is familiar to high priority applications.
+
+Other ways in which memory could be evicted are addressed below as part
+of your detailed concerns.
+
+> I can imagine:
+> - Multiple requests to lock regions that end up trying to use the same
+>   set-associative cache lines leaving none for normal operation.
+
+I think that you are comparing this to cache coloring perhaps? Cache
+pseudo-locking builds on CAT that is a way-based cache allocation
+mechanism. It is impossible to use all cache ways for pseudo-locking
+since the default resource group cannot be used for pseudo-locking and
+resource groups will always have cache available to them (specifically:
+an all zero capacity bitmask (CBM) is illegal on Intel hardware to which
+this feature is specific).
+
+> - Excessive cache line bouncing because fewer lines are available.
+
+This is not specific to cache pseudo-locking. With cache allocation
+technology (CAT), on which cache pseudo-locking is built, the system
+administrator can partition the cache into portions and assign
+tasks/CPUs to these different portions to manage interference between
+the different tasks/CPUs.
+
+You are right that fewer cache lines would be available to different
+tasks/CPUs. By reducing the number of cache lines available to specific
+classes of service and managing overlap between these different classes
+of service the system administrator is able to manage interference
+between different classes of tasks or even CPUs.
+
+> - The effect of cache invalidate requests for the locked addresses.
+
+This is correct and documented in Documentation/x86/resctrl_ui.rst
+
+<snip>
+Cache pseudo-locking increases the probability that data will remain
+in the cache via carefully configuring the CAT feature and controlling
+application behavior. There is no guarantee that data is placed in
+cache. Instructions like INVD, WBINVD, CLFLUSH, etc. can still evict
+“locked” data from cache. Power management C-states may shrink or
+power off cache. Deeper C-states will automatically be restricted on
+pseudo-locked region creation.
+<snip>
+
+An application requesting pseudo-locked memory should not CLFLUSH that
+memory.
+
+> - I suspect the Linux kernel can do full cache invalidates at certain times.
+
+This is correct. Fortunately Linux kernel is averse to calling WBINVD
+during runtime and not many instances remain. A previous attempt at
+handling these found only two direct invocations of WBINVD, neither of
+which were likely to be used on a cache pseudo-lock system. During that
+discussion it was proposed that instead of needing to handle these, we
+should just be getting rid of WBINVD but such a system wide change was
+too daunting for me at that time. For reference, please see:
+http://lkml.kernel.org/r/alpine.DEB.2.21.1808031343020.1745@nanos.tec.linutronix.de
+
+> 
+> You've not given a use case.
+> 
+
+I think you may be asking for a use case of the original cache
+pseudo-locking feature, not a use case for the additional support
+contained in this series? Primary usages right now for cache
+pseudo-locking are industrial PLCs/automation and high-frequency
+trading/financial enterprise systems, but anything with relatively small
+repeating data structures should see benefit.
+
+Reinette
