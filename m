@@ -2,100 +2,163 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F07C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF18DC48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4D052082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47722082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561596648;
+	bh=7He2H5il0KlxV7ZS8vcK7Wju/7mKDKB3JcGAcJMylYc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DdgWzUmXUSBWUouze/NXtoJRT94MMEhWIK81sGuKZVbdZQQaxaCKjmVg9X6L/fAfz
+	 tYjgYk5if2yZpIx4KWBHfFWMSKu3v8SdJwAWTSlAA4nHdAW9kF6tfrxZRXBAPochnN
+	 H+PjZjrGVX9zufqzl7lfUFjmi+hKtUXDB6SbCPr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfF0Aul (ORCPT
+        id S1727545AbfF0Aet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:50:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41738 "EHLO mx1.redhat.com"
+        Wed, 26 Jun 2019 20:34:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbfF0Ae5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:34:57 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728123AbfF0Aeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:34:44 -0400
+Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C0B842F8BFE;
-        Thu, 27 Jun 2019 00:34:57 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C35C5D9DE;
-        Thu, 27 Jun 2019 00:34:51 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v3 1/4] perf/x86: Always store regs->ip in perf_callchain_kernel()
-Date:   Wed, 26 Jun 2019 19:33:52 -0500
-Message-Id: <3975a298fa52b506fea32666d8ff6a13467eee6d.1561595111.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1561595111.git.jpoimboe@redhat.com>
-References: <cover.1561595111.git.jpoimboe@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D57F2183F;
+        Thu, 27 Jun 2019 00:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561595684;
+        bh=7He2H5il0KlxV7ZS8vcK7Wju/7mKDKB3JcGAcJMylYc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U9WyjAie4qHBX3aqiuhNMHsJOxxqHQdnSnriI4VDxV03Ll4aGWXN+KJKr0zbcyFex
+         EkLgouuD++QYk0WJbfntuvI3njOx/kxoANKSznS/g6EugnLbHtMknKhk8eQg+GRUdt
+         28UyDN5sjPZIQByaVeY+dUdnpTuQTaanzmgskGb4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 78/95] IB/hfi1: Create inline to get extended headers
+Date:   Wed, 26 Jun 2019 20:30:03 -0400
+Message-Id: <20190627003021.19867-78-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
+References: <20190627003021.19867-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 27 Jun 2019 00:34:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-The stacktrace_map_raw_tp BPF selftest is failing because the RIP saved
-by perf_arch_fetch_caller_regs() isn't getting saved by
-perf_callchain_kernel().
+[ Upstream commit 9755f72496664eec70bc804104118b5797b6bf63 ]
 
-This was broken by the following commit:
+This paves the way for another patch that reacts to a
+flush sdma completion for RC.
 
-  d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-
-With that change, when starting with non-HW regs, the unwinder starts
-with the current stack frame and unwinds until it passes up the frame
-which called perf_arch_fetch_caller_regs().  So regs->ip needs to be
-saved deliberately.
-
-Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Fixes: 81cd3891f021 ("IB/hfi1: Add support for 16B Management Packets")
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/infiniband/hw/hfi1/hfi.h | 31 +++++++++++++++++++++++++++++++
+ drivers/infiniband/hw/hfi1/rc.c  | 21 +--------------------
+ 2 files changed, 32 insertions(+), 20 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index b9ccfe8f7d87..8bc3a7203552 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2328,13 +2328,13 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 		return;
- 	}
+diff --git a/drivers/infiniband/hw/hfi1/hfi.h b/drivers/infiniband/hw/hfi1/hfi.h
+index 048b5d73ba39..d85b16a3aaaf 100644
+--- a/drivers/infiniband/hw/hfi1/hfi.h
++++ b/drivers/infiniband/hw/hfi1/hfi.h
+@@ -539,6 +539,37 @@ static inline void hfi1_16B_set_qpn(struct opa_16b_mgmt *mgmt,
+ 	mgmt->src_qpn = cpu_to_be32(src_qp & OPA_16B_MGMT_QPN_MASK);
+ }
  
--	if (perf_hw_regs(regs)) {
--		if (perf_callchain_store(entry, regs->ip))
--			return;
-+	if (perf_callchain_store(entry, regs->ip))
-+		return;
++/**
++ * hfi1_get_rc_ohdr - get extended header
++ * @opah - the opaheader
++ */
++static inline struct ib_other_headers *
++hfi1_get_rc_ohdr(struct hfi1_opa_header *opah)
++{
++	struct ib_other_headers *ohdr;
++	struct ib_header *hdr = NULL;
++	struct hfi1_16b_header *hdr_16b = NULL;
 +
-+	if (perf_hw_regs(regs))
- 		unwind_start(&state, current, regs, NULL);
--	} else {
-+	else
- 		unwind_start(&state, current, NULL, (void *)regs->sp);
--	}
++	/* Find out where the BTH is */
++	if (opah->hdr_type == HFI1_PKT_TYPE_9B) {
++		hdr = &opah->ibh;
++		if (ib_get_lnh(hdr) == HFI1_LRH_BTH)
++			ohdr = &hdr->u.oth;
++		else
++			ohdr = &hdr->u.l.oth;
++	} else {
++		u8 l4;
++
++		hdr_16b = &opah->opah;
++		l4  = hfi1_16B_get_l4(hdr_16b);
++		if (l4 == OPA_16B_L4_IB_LOCAL)
++			ohdr = &hdr_16b->u.oth;
++		else
++			ohdr = &hdr_16b->u.l.oth;
++	}
++	return ohdr;
++}
++
+ struct rvt_sge_state;
  
- 	for (; !unwind_done(&state); unwind_next_frame(&state)) {
- 		addr = unwind_get_return_address(&state);
+ /*
+diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
+index 5991211d72bd..82f101878e33 100644
+--- a/drivers/infiniband/hw/hfi1/rc.c
++++ b/drivers/infiniband/hw/hfi1/rc.c
+@@ -1711,8 +1711,6 @@ void hfi1_rc_send_complete(struct rvt_qp *qp, struct hfi1_opa_header *opah)
+ 	struct ib_other_headers *ohdr;
+ 	struct hfi1_qp_priv *priv = qp->priv;
+ 	struct rvt_swqe *wqe;
+-	struct ib_header *hdr = NULL;
+-	struct hfi1_16b_header *hdr_16b = NULL;
+ 	u32 opcode, head, tail;
+ 	u32 psn;
+ 	struct tid_rdma_request *req;
+@@ -1721,24 +1719,7 @@ void hfi1_rc_send_complete(struct rvt_qp *qp, struct hfi1_opa_header *opah)
+ 	if (!(ib_rvt_state_ops[qp->state] & RVT_SEND_OR_FLUSH_OR_RECV_OK))
+ 		return;
+ 
+-	/* Find out where the BTH is */
+-	if (priv->hdr_type == HFI1_PKT_TYPE_9B) {
+-		hdr = &opah->ibh;
+-		if (ib_get_lnh(hdr) == HFI1_LRH_BTH)
+-			ohdr = &hdr->u.oth;
+-		else
+-			ohdr = &hdr->u.l.oth;
+-	} else {
+-		u8 l4;
+-
+-		hdr_16b = &opah->opah;
+-		l4  = hfi1_16B_get_l4(hdr_16b);
+-		if (l4 == OPA_16B_L4_IB_LOCAL)
+-			ohdr = &hdr_16b->u.oth;
+-		else
+-			ohdr = &hdr_16b->u.l.oth;
+-	}
+-
++	ohdr = hfi1_get_rc_ohdr(opah);
+ 	opcode = ib_bth_get_opcode(ohdr);
+ 	if ((opcode >= OP(RDMA_READ_RESPONSE_FIRST) &&
+ 	     opcode <= OP(ATOMIC_ACKNOWLEDGE)) ||
 -- 
 2.20.1
 
