@@ -6,80 +6,97 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772A2C5B54D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CDBC5B54D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47B642063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05332084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfF0WhI (ORCPT
+        id S1726713AbfF0Wjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:37:08 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46803 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726536AbfF0WhH (ORCPT
+        Thu, 27 Jun 2019 18:39:54 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60004 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfF0Wjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:37:07 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 5E47343C48F;
-        Fri, 28 Jun 2019 08:37:05 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hgczl-0001yF-U3; Fri, 28 Jun 2019 08:35:57 +1000
-Date:   Fri, 28 Jun 2019 08:35:57 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/12] iomap: add tracing for the address space operations
-Message-ID: <20190627223557.GI7777@dread.disaster.area>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-13-hch@lst.de>
- <20190624234921.GE7777@dread.disaster.area>
- <20190625101515.GL1462@lst.de>
+        Thu, 27 Jun 2019 18:39:54 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgd3D-0001yR-93; Fri, 28 Jun 2019 00:39:31 +0200
+Date:   Fri, 28 Jun 2019 00:39:30 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <dima@arista.com>
+cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv2] x86/hyperv: Hold cpus_read_lock() on assigning
+ reenlightenment vector
+In-Reply-To: <20190617163955.25659-1-dima@arista.com>
+Message-ID: <alpine.DEB.2.21.1906280033510.32342@nanos.tec.linutronix.de>
+References: <20190617163955.25659-1-dima@arista.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625101515.GL1462@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=rMA9bymeoucKrl8lURMA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:15:15PM +0200, Christoph Hellwig wrote:
-> On Tue, Jun 25, 2019 at 09:49:21AM +1000, Dave Chinner wrote:
-> > > +#undef TRACE_SYSTEM
-> > > +#define TRACE_SYSTEM iomap
-> > 
-> > Can you add a comment somewhere here that says these tracepoints are
-> > volatile and we reserve the right to change them at any time so they
-> > don't form any sort of persistent UAPI that we have to maintain?
-> 
-> Sure.  Note that we don't have any such comment in xfs either..
+On Mon, 17 Jun 2019, Dmitry Safonov wrote:
+> @@ -196,7 +196,16 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>  	/* Make sure callback is registered before we write to MSRs */
+>  	wmb();
+>  
+> +	/*
+> +	 * As reenlightenment vector is global, there is no difference which
+> +	 * CPU will register MSR, though it should be an online CPU.
+> +	 * hv_cpu_die() callback guarantees that on CPU teardown
+> +	 * another CPU will re-register MSR back.
+> +	 */
+> +	cpus_read_lock();
+> +	re_ctrl.target_vp = hv_vp_index[raw_smp_processor_id()];
+>  	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+> +	cpus_read_unlock();
 
-Yes, but that is buries inside the xfs code where we largely set our
-own rules. This, however, is generic code where people have a habit
-of arguing that tracepoints are stable API and they can never be
-changed because some random userspace application may have hard
-coded a dependency on it...
+Should work
 
-Hence we need to be explicit here that this is diagnostic/debug code
-and anyone who tries to rely on it as a stable API gets to keep all
-the broken bits to themselves.
+>  	wrmsrl(HV_X64_MSR_TSC_EMULATION_CONTROL, *((u64 *)&emu_ctrl));
+>  }
+>  EXPORT_SYMBOL_GPL(set_hv_tscchange_cb);
+> @@ -239,6 +248,7 @@ static int hv_cpu_die(unsigned int cpu)
+>  
+>  	rdmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+>  	if (re_ctrl.target_vp == hv_vp_index[cpu]) {
+> +		lockdep_assert_cpus_held();
 
-Cheers,
+So you're not trusting the hotplug core code to hold the lock when it
+brings a CPU down and invokes that callback? Come on
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>  		/* Reassign to some other online CPU */
+>  		new_cpu = cpumask_any_but(cpu_online_mask, cpu);
+
+Thanks,
+
+	tglx
