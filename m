@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC9DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5193FC48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76AE42184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C8B2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595822;
-	bh=+wsvP3Sq5vBZ057Yb9y8toEVymdBvVtmGhlYf27lnik=;
+	s=default; t=1561595836;
+	bh=Do+ZFldgUIPiXLB7n1y+uxP70mE2qkdNAeMpDck2sYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nehkfRbTws7QD7+WD8hBgLAA0IclMjgNZvQDQ5c+XMYX42W6NMOv1OANWPQBYqSlP
-	 26u/x1xykX8yluaL6CLDQIjD0aeW7k4AaF7nxlIeWNLFvDLQAaW3xD+gfDHc7SRnF6
-	 Aqadxw3qZUM5ohVFv55LEB9ZxuihJAc+EpSFc4Jc=
+	b=fEvPPtJRTSHhfFkqxa9Ll11IuQ/Kh2qeU1wFpaLdB/BtvdlTGREQBnyYHZihuWwqq
+	 jYWn71nm7Mi/I79srmNX4XEUuyBoAX/wH63GDJ05vP/Qj5rSSHldEdh/nOSuEoyzxa
+	 vWGPr37VYwKezEkX0+QqZkzoLVjVtyv/xbZe2rqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfF0AhB (ORCPT
+        id S1728222AbfF0AhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41496 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbfF0Ag5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:36:57 -0400
+        id S1727168AbfF0AhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:37:08 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2E10217F4;
-        Thu, 27 Jun 2019 00:36:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56EE62184E;
+        Thu, 27 Jun 2019 00:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595816;
-        bh=+wsvP3Sq5vBZ057Yb9y8toEVymdBvVtmGhlYf27lnik=;
+        s=default; t=1561595827;
+        bh=Do+ZFldgUIPiXLB7n1y+uxP70mE2qkdNAeMpDck2sYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v0yLVMZX+rNhN7MlM2gKRMSR2zVsFyGRn4ZGKCFxraOuOJTBy/WUkatUU6cvmteif
-         AGbiJNQp2QKqDV9P+0RV1c4BDdbebzIzJ7To3aTC0TVVTSrSu8FrbMUK9pkAH1lCVY
-         L9zixyXARUNP5LiOwwJOkeEaI/wCb7JPbxj0MD+Y=
+        b=ugy0OgtlbpSSgrmrRWoXqKwaCv/ZumbETB30nw2wIGh+M0aionWTZIP5u1doisoA0
+         gG8PaGQTFwMsouM/QvzESxSjxza2SBgk92CdYct0Kb1t/s+4uB88531PLWGiyNp2W3
+         QNBb5x8pvPxIXvj6tsJ22JqxBGgaqP9qiuOY/g1g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, huangwen <huangwen@venustech.com.cn>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 13/60] mwifiex: Fix possible buffer overflows at parsing bss descriptor
-Date:   Wed, 26 Jun 2019 20:35:28 -0400
-Message-Id: <20190627003616.20767-13-sashal@kernel.org>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Tom Herbert <tom@herbertland.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 17/60] bpf: udp: Avoid calling reuseport's bpf_prog from udp_gro
+Date:   Wed, 26 Jun 2019 20:35:32 -0400
+Message-Id: <20190627003616.20767-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
 References: <20190627003616.20767-1-sashal@kernel.org>
@@ -60,49 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Martin KaFai Lau <kafai@fb.com>
 
-[ Upstream commit 13ec7f10b87f5fc04c4ccbd491c94c7980236a74 ]
+[ Upstream commit 257a525fe2e49584842c504a92c27097407f778f ]
 
-mwifiex_update_bss_desc_with_ie() calls memcpy() unconditionally in
-a couple places without checking the destination size.  Since the
-source is given from user-space, this may trigger a heap buffer
-overflow.
+When the commit a6024562ffd7 ("udp: Add GRO functions to UDP socket")
+added udp[46]_lib_lookup_skb to the udp_gro code path, it broke
+the reuseport_select_sock() assumption that skb->data is pointing
+to the transport header.
 
-Fix it by putting the length check before performing memcpy().
+This patch follows an earlier __udp6_lib_err() fix by
+passing a NULL skb to avoid calling the reuseport's bpf_prog.
 
-This fix addresses CVE-2019-3846.
-
-Reported-by: huangwen <huangwen@venustech.com.cn>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: a6024562ffd7 ("udp: Add GRO functions to UDP socket")
+Cc: Tom Herbert <tom@herbertland.com>
+Signed-off-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/scan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/ipv4/udp.c | 6 +++++-
+ net/ipv6/udp.c | 2 +-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-index 8e483b0bc3b1..ddf985fb93ab 100644
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -1247,6 +1247,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
- 		}
- 		switch (element_id) {
- 		case WLAN_EID_SSID:
-+			if (element_len > IEEE80211_MAX_SSID_LEN)
-+				return -EINVAL;
- 			bss_entry->ssid.ssid_len = element_len;
- 			memcpy(bss_entry->ssid.ssid, (current_ptr + 2),
- 			       element_len);
-@@ -1256,6 +1258,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
- 			break;
+diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+index e45a5e19e509..e6dbe3912b93 100644
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -542,7 +542,11 @@ static inline struct sock *__udp4_lib_lookup_skb(struct sk_buff *skb,
+ struct sock *udp4_lib_lookup_skb(struct sk_buff *skb,
+ 				 __be16 sport, __be16 dport)
+ {
+-	return __udp4_lib_lookup_skb(skb, sport, dport, &udp_table);
++	const struct iphdr *iph = ip_hdr(skb);
++
++	return __udp4_lib_lookup(dev_net(skb->dev), iph->saddr, sport,
++				 iph->daddr, dport, inet_iif(skb),
++				 inet_sdif(skb), &udp_table, NULL);
+ }
+ EXPORT_SYMBOL_GPL(udp4_lib_lookup_skb);
  
- 		case WLAN_EID_SUPP_RATES:
-+			if (element_len > MWIFIEX_SUPPORTED_RATES)
-+				return -EINVAL;
- 			memcpy(bss_entry->data_rates, current_ptr + 2,
- 			       element_len);
- 			memcpy(bss_entry->supported_rates, current_ptr + 2,
+diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
+index cab8b2b647f9..7c3ea06f86a9 100644
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -282,7 +282,7 @@ struct sock *udp6_lib_lookup_skb(struct sk_buff *skb,
+ 
+ 	return __udp6_lib_lookup(dev_net(skb->dev), &iph->saddr, sport,
+ 				 &iph->daddr, dport, inet6_iif(skb),
+-				 inet6_sdif(skb), &udp_table, skb);
++				 inet6_sdif(skb), &udp_table, NULL);
+ }
+ EXPORT_SYMBOL_GPL(udp6_lib_lookup_skb);
+ 
 -- 
 2.20.1
 
