@@ -2,185 +2,309 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7C6C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EB6C48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B432086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561632752;
-	bh=q/D9q6XrPEUkLYgQMJmvvcOU6kMo0DZxmHeNrNmy40U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WFsmc/XRis99ukUo5orGnSWhXOB/aCgMXKqjA2uE37aNM2rUr+/Z2IqVOfzoi3C9c
-	 q+gPXD2woVpVyEVd2pgJqCJglRfaYCgUt/lTWTGXKTZorQkQXR4gUULkGPg7pVbbZv
-	 9CcviljjiewTBhimvRZsBD4FXmjAbx800ZzeATRg=
+	by mail.kernel.org (Postfix) with ESMTP id 99AB92085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:56:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfF0Kwa (ORCPT
+        id S1726540AbfF0K4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 06:52:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52364 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfF0Kwa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 06:52:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=d7UsfJNZRzKm4RLEJ8xCGaJL1/w5M/N9EXa+/Ti2rqw=; b=NmjLGbk5nMb640HCjyvgUfVbV
-        iCw2ISM+wEBIUOcaBh4xELH548wfUKuJgcn9VArHpht9uAdqUebDxRYVOS8rwf0ypjtOYh8KaFVLJ
-        HFte2q1YdoOj94TqAdZp+skJybh7DMZcCg44dvlGh1NBo7X2T2TbYDr918M520yKSoi+V8tOwtzYO
-        YJCe9iiV1/IPcUJmxG5+mS+1Hrj+AANavnIWkfB/gfXJ2I4MzDb6ZsCVpgdUZOGY9MG78mrrNRP/Q
-        OWIfg+hluhABXHmmQCEErDnZaQMbp0g2X8N4H8kADNRpzMTYQXVrA82BJ5DSBX0a3k7HpBuHQ5X/i
-        nGrU56wKg==;
-Received: from [186.213.242.156] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgS0y-0006mN-V2; Thu, 27 Jun 2019 10:52:29 +0000
-Date:   Thu, 27 Jun 2019 07:52:25 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 12/14] doc-rst: add ABI documentation to the admin-guide
- book
-Message-ID: <20190627075225.34f8457f@coco.lan>
-In-Reply-To: <87blyjqrz7.fsf@intel.com>
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
-        <9da2a7f6ff57d9d53dcbb964eb310f7956522870.1560477540.git.mchehab+samsung@kernel.org>
-        <87o930uvur.fsf@intel.com>
-        <20190614140603.GB7234@kroah.com>
-        <20190614122755.1c7b4898@coco.lan>
-        <874l4ov16m.fsf@intel.com>
-        <20190617105154.3874fd89@coco.lan>
-        <87h88nth3v.fsf@intel.com>
-        <20190619133739.44f92409@coco.lan>
-        <20190621112700.6922d80d@coco.lan>
-        <87blyjqrz7.fsf@intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 27 Jun 2019 06:56:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:51498 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726308AbfF0K4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 06:56:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5E252B;
+        Thu, 27 Jun 2019 03:56:49 -0700 (PDT)
+Received: from [10.37.13.7] (unknown [10.37.13.7])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 29F7A3F718;
+        Thu, 27 Jun 2019 03:56:46 -0700 (PDT)
+Subject: Re: [PATCH v7 04/25] arm64: Substitute gettimeofday with C
+ implementation
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arch@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Huw Davies <huw@codeweavers.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        linux-mips@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        linux-kselftest@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Russell King <linux@armlinux.org.uk>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-5-vincenzo.frascino@arm.com>
+ <20190625153336.GZ2790@e103592.cambridge.arm.com>
+ <f5ac379a-731d-0662-2f5b-bd046e3bd1c5@arm.com>
+ <20190626161413.GA2790@e103592.cambridge.arm.com>
+ <19ebd45a-b666-d7de-fd9e-2b72e18892d9@arm.com>
+ <20190627100150.GC2790@e103592.cambridge.arm.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <85808e79-27a0-d3ab-3fb0-445f79ff87a4@arm.com>
+Date:   Thu, 27 Jun 2019 11:57:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190627100150.GC2790@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 27 Jun 2019 12:48:12 +0300
-Jani Nikula <jani.nikula@linux.intel.com> escreveu:
+Hi Dave,
 
-> On Fri, 21 Jun 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> w=
-rote:
-> > Em Wed, 19 Jun 2019 13:37:39 -0300
-> > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
-> > =20
-> >> Em Tue, 18 Jun 2019 11:47:32 +0300
-> >> Jani Nikula <jani.nikula@linux.intel.com> escreveu:
-> >>  =20
-> >> > On Mon, 17 Jun 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.o=
-rg> wrote:   =20
-> >> > > Yeah, I guess it should be possible to do that. How a python script
-> >> > > can identify if it was called by Sphinx, or if it was called direc=
-tly?     =20
-> >> >=20
-> >> > if __name__ =3D=3D '__main__':
-> >> > 	# run on the command-line, not imported   =20
-> >>=20
-> >> Ok, when I have some spare time, I may try to convert one script
-> >> to python and see how it behaves.  =20
-> >
-> > Did a quick test here...=20
-> >
-> > Probably I'm doing something wrong (as I'm a rookie with Python), but,
-> > in order to be able to use the same script as command line and as an Sp=
-hinx
-> > extension, everything that it is currently there should be "escaped"
-> > by an:
-> >
-> > 	if __name__ !=3D '__main__':
-> >
-> > As event the class definition:
-> >
-> >     class KernelCmd(Directive):
-> >
-> > depends on:
-> >
-> > 	from docutils.parsers.rst import directives, Directive
-> >
-> > With is only required when one needs to parse ReST - e. g. only
-> > when the script runs as a Sphinx extension.
-> >
-> > If this is right, as we want a script that can run by command line
-> > to parse and search inside ABI files, at the end of the day, it will
-> > be a lot easier to maintain if the parser script is different from the
-> > Sphinx extension.  =20
->=20
-> Split it into two files, one has the nuts and bolts of parsing and has
-> the "if __name__ =3D=3D '__main__':" bit to run on the command line, and =
-the
-> other interfaces with Sphinx and imports the parser.
+Overall, I want to thank you for bringing out the topic. It helped me to
+question some decisions and make sure that we have no holes left in the approach.
 
-It seems we have an agreement here: the best is indeed to have two
-files, one with the Documentation/ABI parser, and another one with the=20
-Sphinx extension...
+[...]
 
->=20
-> > If so, as the Sphinx extension script will need to call a parsing script
-> > anyway, it doesn't matter the language of the script with will be
-> > doing the ABI file parsing. =20
->=20
-> Calling the parser using an API will be easier to use, maintain and
-> extend than using pipes, with all the interleaved sideband information
-> to adjust line numbers and whatnot.
+>>
+>> vDSO library is a shared object not compiled with LTO as far as I can
+>> see, hence if this involved LTO should not applicable in this case.
+> 
+> That turned to be a spurious hypothesis on my part -- LTO isn't the
+> smoking gun.  (See below.)
+>
 
-... and here is where we have two different views.
+Ok.
 
-=46rom debug PoV, the Documentation/ABI parser script should be able to
-print the results by a command line call. This is also a feature
-that it is useful for the users: to be able to seek for a symbol
-and output its ABI description. So, the "stdout" output will be
-there anyway.
+>>> The classic example of this (triggered directly and not due to inlining)
+>>> would be something like:
+>>>
+>>> int bar(int, int);
+>>>
+>>> void foo(int x, int y)
+>>> {
+>>> 	register int x_ asm("r0") = x;
+>>> 	register int y_ asm("r1") = bar(x, y);
+>>>
+>>> 	asm volatile (
+>>> 		"svc	#0"
+>>> 		:: "r" (x_), "r" (y_)
+>>> 		: "memory"
+>>> 	);
+>>> }
+>>>
+>>> ->
+>>>
+>>> 0000000000000000 <foo>:
+>>>    0:   a9bf7bfd        stp     x29, x30, [sp, #-16]!
+>>>    4:   910003fd        mov     x29, sp
+>>>    8:   94000000        bl      0 <bar>
+>>>    c:   2a0003e1        mov     w1, w0
+>>>   10:   d4000001        svc     #0x0
+>>>   14:   a8c17bfd        ldp     x29, x30, [sp], #16
+>>>   18:   d65f03c0        ret
+>>>
+>>
+>> Contextualized to what my vdso fallback functions do, this should not be a
+>> concern because in no case a function result is directly set to a variable
+>> declared as register.
+>>
+>> Since the vdso fallback functions serve a very specific and limited purpose, I
+>> do not expect that that code is going to change much in future.
+>>
+>> The only thing that can happen is something similar to what I wrote in my
+>> example, which as I empirically proved does not trigger the problematic behavior.
+>>
+>>>
+>>> The gcc documentation is vague and ambiguous about precisely whan this
+>>> can happen and about how to avoid it.
+>>>
+>>
+>> On this I agree, it is not very clear, but this seems more something to raise
+>> with the gcc folks in order to have a more "explicit" description that leaves no
+>> room to the interpretation.
+>>
+>> ...
+>>
+>>>
+>>> However, the workaround is cheap, and to avoid the chance of subtle
+>>> intermittent code gen bugs it may be worth it:
+>>>
+>>> void foo(int x, int y)
+>>> {
+>>> 	asm volatile (
+>>> 		"mov	x0, %0\n\t"
+>>> 		"mov	x1, %1\n\t"
+>>> 		"svc	#0"
+>>> 		:: "r" (x), "r" (bar(x, y))
+>>> 		: "r0", "r1", "memory"
+>>> 	);
+>>> }
+>>>
+>>> ->
+>>>
+>>> 0000000000000000 <foo>:
+>>>    0:   a9be7bfd        stp     x29, x30, [sp, #-32]!
+>>>    4:   910003fd        mov     x29, sp
+>>>    8:   f9000bf3        str     x19, [sp, #16]
+>>>    c:   2a0003f3        mov     w19, w0
+>>>   10:   94000000        bl      0 <bar>
+>>>   14:   2a0003e2        mov     w2, w0
+>>>   18:   aa1303e0        mov     x0, x19
+>>>   1c:   aa0203e1        mov     x1, x2
+>>>   20:   d4000001        svc     #0x0
+>>>   24:   f9400bf3        ldr     x19, [sp, #16]
+>>>   28:   a8c27bfd        ldp     x29, x30, [sp], #32
+>>>   2c:   d65f03c0        ret
+>>>
+>>>
+>>> What do you think?
+>>>
+>>
+>> The solution seems ok, thanks for providing it, but IMHO I think we
+>> should find a workaround for something that is broken, which, unless
+>> I am missing something major, this seems not the case.
+> 
+> So, after a bit of further experimentation, I found that I could trigger
+> it with implicit function calls on an older compiler.  I couldn't show
+> it with explicit function calls (as in your example).
+> 
+> With the following code, inlining if an expression that causes an
+> implicit call to a libgcc helper can trigger this issue, but I had to
+> try an older compiler:
+> 
+> int foo(int x, int y)
+> {
+> 	register int res asm("r0");
+> 	register const int x_ asm("r0") = x;
+> 	register const int y_ asm("r1") = y;
+> 
+> 	asm volatile (
+> 		"svc	#0"
+> 		: "=r" (res)
+> 		: "r" (x_), "r" (y_)
+> 		: "memory"
+> 	);
+> 
+> 	return res;
+> }
+> 
+> int bar(int x, int y)
+> {
+> 	return foo(x, x / y);
+> }
+> 
+> -> (arm-linux-gnueabihf-gcc 9.1 -O2)
+> 
+> 00000000 <foo>:
+>    0:   df00            svc     0
+>    2:   4770            bx      lr
+> 
+> 00000004 <bar>:
+>    4:   b510            push    {r4, lr}
+>    6:   4604            mov     r4, r0
+>    8:   f7ff fffe       bl      0 <__aeabi_idiv>
+>    c:   4601            mov     r1, r0
+>    e:   4620            mov     r0, r4
+>   10:   df00            svc     0
+>   12:   bd10            pop     {r4, pc}
+> 
+> -> (arm-linux-gnueabihf-gcc 5.1 -O2)
+> 
+> 00000000 <foo>:
+>    0:   df00            svc     0
+>    2:   4770            bx      lr
+> 
+> 00000004 <bar>:
+>    4:   b508            push    {r3, lr}
+>    6:   f7ff fffe       bl      0 <__aeabi_idiv>
+>    a:   4601            mov     r1, r0
+>    c:   df00            svc     0
+>    e:   bd08            pop     {r3, pc}
+> 
 
-The only extra data for the extension side is the file name where
-the information came and the line number.
+Thanks for reporting this. I had a go with gcc-5.1 on the vDSO library and seems
+Ok, but it was worth trying.
 
-=46rom maintainership PoV, adding the sideband API for file+line is
-one line at the parser script (a print) and two lines at the Sphinx
-extension (a regex expression and a match line). That's simple to
-maintain.
+For obvious reasons I am not reporting the objdump here :)
 
-It is also simple to verify both sides independently, as what
-you see when running the parser script is what you get at the
-extension.
+> I was struggling to find a way to emit an implicit function call for
+> AArch64, except for 128-bit divide, which would complicate things since
+> uint128_t doesn't fit in a single register anyway.
+> 
+> Maybe this was considered a bug and fixed sometime after GCC 5, but I
+> think the GCC documentation is still quite unclear on the semantics of
+> register asm vars that alias call-clobbered registers in the PCS.
+> 
+> If we can get a promise out of the GCC folks that this will not happen
+> with any future compiler, then maybe we could just require a new enough
+> compiler to be used.
+> 
 
-If we add a new ABI between the parser script and the extension
-script, this would require to also maintain the ABI, and would
-make harder to identify problems on ABI problems.
+On this I fully agree, the compiler should never change an "expected" behavior.
 
--
+If the issue comes from a gray area in the documentation, we have to address it
+and have it fixed there.
 
-Another advantage of having those independent is that the
-language of the parsing script can be different. Not being
-python is a big advantage for me, as perl is a lot more
-intuitive and easier to write parser scripts for my eyes.
+The minimum version of the compiler from linux-4.19 is 4.6, hence I had to try
+that the vDSO lib does not break with 5.1 [1].
 
-I can write a perl parsing script in a matter of minutes.
-It takes me a lot more time to do the same with python, and then
-ensure that it will work with two similar but different languages
-(python2 and python3) [1].
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cafa0010cd51fb711fdcb50fc55f394c5f167a0a
 
-[1] btw, with that regards, I still don't know how to teach a
-    python script that it should "prefer" to run with python3 but would
-    fall back to python2. Adding this shebang:
-	# /usr/bin/env python
-    just do the opposite - at least on Fedora
+> Then of course there is clang.
+> 
 
+I could not help myself and I tried clang.8 and clang.7 as well with my example,
+just to make sure that we are fine even in that case. Please find below the
+results (pretty identical).
 
-Thanks,
-Mauro
+main.clang.7.o:	file format ELF64-aarch64-little
+
+Disassembly of section .text:
+0000000000000000 show_it:
+       0:	e8 03 1f aa 	mov	x8, xzr
+       4:	09 68 68 38 	ldrb	w9, [x0, x8]
+       8:	08 05 00 91 	add	x8, x8, #1
+       c:	c9 ff ff 34 	cbz	w9, #-8 <show_it+0x4>
+      10:	02 05 00 51 	sub	w2, w8, #1
+      14:	e1 03 00 aa 	mov	x1, x0
+      18:	08 08 80 d2 	mov	x8, #64
+      1c:	01 00 00 d4 	svc	#0
+      20:	c0 03 5f d6 	ret
+
+main.clang.8.o:	file format ELF64-aarch64-little
+
+Disassembly of section .text:
+0000000000000000 show_it:
+       0:	e8 03 1f aa 	mov	x8, xzr
+       4:	09 68 68 38 	ldrb	w9, [x0, x8]
+       8:	08 05 00 91 	add	x8, x8, #1
+       c:	c9 ff ff 34 	cbz	w9, #-8 <show_it+0x4>
+      10:	02 05 00 51 	sub	w2, w8, #1
+      14:	e1 03 00 aa 	mov	x1, x0
+      18:	08 08 80 d2 	mov	x8, #64
+      1c:	01 00 00 d4 	svc	#0
+      20:	c0 03 5f d6 	ret
+
+Commands used:
+
+$ clang -target aarch64-linux-gnueabi main.c -O -c -o main.clang.<x>.o
+$ llvm-objdump -d main.clang.<x>.o
+
+> Cheers
+> ---Dave
+> 
+
+-- 
+Regards,
+Vincenzo
