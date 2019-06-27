@@ -2,140 +2,92 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8AEC48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83631C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA982054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5296320663
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561654034;
+	bh=4xUGv1/o6blMAKCCJJ4W4BVLGoWulRvdcHqF1JjKY2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kHihaECf/MQ+oKE3L3LyMH5GuVU1Pe+YYWvNyQQ46vMhiYybFq+1R8wbzaMwyU+Z6
+	 N/OqlsXJ+d4c1Dc6XJqJ99dyG+y2mf0v0NOWxp/IHV4Si/ZF3VnlpCEDPbrGXZgMVA
+	 du8NvQmE+ND3v9rltLGwmJlcyw52a40ZLK4739y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfF0QrG (ORCPT
+        id S1726650AbfF0QrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:47:06 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:52709 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfF0QrF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:47:05 -0400
-Received: by mail-io1-f71.google.com with SMTP id p12so3196700iog.19
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 09:47:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=kA5B5hPw8fOR1bAhlCj3+mj3jVuYHQxvzyz5nlx4Vvc=;
-        b=oGYlXGh4vCrizTbM2f2n6q1+U6TBIJLl7ZcH1SvxgITFBFXKf4B32mlprQsVbPWS2j
-         2CZYbeRewzqIsEOl8tPAvctgRTLhOS7WgSD7xGKWYC6Cmp2e5t9nZT1MEIaasloq9Jn2
-         s0oMMH6x5n4hJ3bRg8+hkFfmzDAlilTbzjvhZC6dc4Lz3HEGrrSc61sb5owPoDMr7WT8
-         dBK3a2KUG9EkreLMbR5i408I1CXfezrWgmsohDCNazkLfY/ze2rXBqIT8QZME/QieJ7f
-         +8CAyZKq4LYkAfdJnyBO4SwBc+2iohHWfJAxcJiEzGJXVnnNZEuatzuRStzlqdvuJKjm
-         VTlg==
-X-Gm-Message-State: APjAAAX2qppQxkqdkZU1Vil93tnPIkI9qfN3zmYIkTevae+v9GzPsclL
-        TICn8rSi/COJib8y1blIF4noN9fkUvHHNRiluFrwQ3feTiOH
-X-Google-Smtp-Source: APXvYqyBxlSeXbrDdFNqT47S1wItj4v9P7FopjfV2TZlPVbuPST6L9OVLUQfsqUCk9WZ0mdOdYFzfKqbJskg+GE4ThQRl16x9Z3h
+        Thu, 27 Jun 2019 12:47:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725770AbfF0QrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 12:47:13 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0BCD2054F;
+        Thu, 27 Jun 2019 16:47:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561654032;
+        bh=4xUGv1/o6blMAKCCJJ4W4BVLGoWulRvdcHqF1JjKY2g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oDIpUHGYhjrQKfQtioIrtGLI5WLEzWVGVW1ZuPbuDNGK4TeZdUEWZB1k8gKj5At/8
+         aXyF95c7d2u2o8zP78iql17oz8bmky8JtFX7D9HEkmM2+8cX7/SeNfyW71K7c05HZT
+         IKQoQLGhlMOjPS1M838B5E/acmo7oduSjvbk1ls8=
+Date:   Thu, 27 Jun 2019 17:47:06 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, will.deacon@arm.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        catalin.marinas@arm.com, lenb@kernel.org
+Subject: Re: [PATCH v5 0/4] arm64: SPE ACPI enablement
+Message-ID: <20190627164706.rdmoze4we2dcshts@willie-the-truck>
+References: <20190626213718.39423-1-jeremy.linton@arm.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:5:: with SMTP id z5mr6029096jao.58.1561654025090;
- Thu, 27 Jun 2019 09:47:05 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 09:47:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006d7e29058c50e94b@google.com>
-Subject: KASAN: null-ptr-deref Write in submit_audio_out_urb (2)
-From:   syzbot <syzbot+219f00fb49874dcaea17@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, alsa-devel@alsa-project.org,
-        andreyknvl@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        perex@perex.cz, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, tiwai@suse.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626213718.39423-1-jeremy.linton@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Jun 26, 2019 at 04:37:14PM -0500, Jeremy Linton wrote:
+> This patch series enables the Arm Statistical Profiling
+> Extension (SPE) on ACPI platforms.
+> 
+> This is possible because ACPI 6.3 uses a previously
+> reserved field in the MADT to store the SPE interrupt
+> number, similarly to how the normal PMU is described.
+> If a consistent valid interrupt exists across all the
+> cores in the system, a platform device is registered.
+> That then triggers the SPE module, which runs as normal.
+> 
+> We also add the ability to parse the PPTT for IDENTICAL
+> cores. We then use this to sanity check the single SPE
+> device we create. This creates a bit of a problem with
+> respect to the specification though. The specification
+> says that its legal for multiple tree's to exist in the
+> PPTT. We handle this fine, but what happens in the
+> case of multiple tree's is that the lack of a common
+> node with IDENTICAL set forces us to assume that there
+> are multiple non-IDENTICAL cores in the machine.
+> 
+> v4->v5: Remove error returns from arm_spe_acpi_register_device()
+> 	Add some review/test tags
 
-syzbot found the following crash on:
+Cheers, I've pushed this out with the acks and typo fixes.
 
-HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=12f335e9a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f6d4561982f71f63
-dashboard link: https://syzkaller.appspot.com/bug?extid=219f00fb49874dcaea17
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1122b6f3a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=127fc823a00000
+https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-next/perf
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+219f00fb49874dcaea17@syzkaller.appspotmail.com
+Please let me know if you spot any problems.
 
-snd_usb_toneport 1-1:0.49: write failed (error 0)
-usb 1-1: send failed (error -110)
-usb 1-1: send failed (error -110)
-snd_usb_toneport 1-1:0.49: Line 6 POD Studio UX1 now attached
-==================================================================
-BUG: KASAN: null-ptr-deref in memset include/linux/string.h:344 [inline]
-BUG: KASAN: null-ptr-deref in submit_audio_out_urb+0x919/0x1780  
-sound/usb/line6/playback.c:242
-Write of size 20 at addr 0000000000000010 by task kworker/1:0/17
-
-CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.2.0-rc6+ #13
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events line6_startup_work
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  __kasan_report.cold+0x5/0x32 mm/kasan/report.c:321
-  kasan_report+0xe/0x20 mm/kasan/common.c:614
-  memset+0x20/0x40 mm/kasan/common.c:107
-  memset include/linux/string.h:344 [inline]
-  submit_audio_out_urb+0x919/0x1780 sound/usb/line6/playback.c:242
-  line6_submit_audio_out_all_urbs+0xc9/0x120 sound/usb/line6/playback.c:291
-  line6_stream_start+0x156/0x1f0 sound/usb/line6/pcm.c:195
-  line6_pcm_acquire+0x134/0x210 sound/usb/line6/pcm.c:318
-  line6_startup_work+0x42/0x50 sound/usb/line6/driver.c:725
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-==================================================================
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 17 Comm: kworker/1:0 Tainted: G    B             5.2.0-rc6+ #13
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events line6_startup_work
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x292/0x6c9 kernel/panic.c:219
-  end_report+0x43/0x49 mm/kasan/report.c:95
-  __kasan_report.cold+0xd/0x32 mm/kasan/report.c:324
-  kasan_report+0xe/0x20 mm/kasan/common.c:614
-  memset+0x20/0x40 mm/kasan/common.c:107
-  memset include/linux/string.h:344 [inline]
-  submit_audio_out_urb+0x919/0x1780 sound/usb/line6/playback.c:242
-  line6_submit_audio_out_all_urbs+0xc9/0x120 sound/usb/line6/playback.c:291
-  line6_stream_start+0x156/0x1f0 sound/usb/line6/pcm.c:195
-  line6_pcm_acquire+0x134/0x210 sound/usb/line6/pcm.c:318
-  line6_startup_work+0x42/0x50 sound/usb/line6/driver.c:725
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Will
