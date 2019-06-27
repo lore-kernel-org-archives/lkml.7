@@ -2,103 +2,119 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F3EC5B576
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B10C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39FFE2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A6A2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561677141;
+	bh=h/Cgdd2LZO4mu4iNQYJwY63FiVrhwCjgCo6vQk7kHg0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2C8vRQur00CAVUpIerGL9P8sGIqzNt7WEo16okrBvSAOwWtcS5H4Ld1AE8POH25gg
+	 XZlYzQ8lS4Kl7UF8xl5ttsAO+B6NPD412v7MYp4Wr95OeDt5Sa6i9SqOhUqCm7P+AJ
+	 K2AJXfPMNpqclscYGeWgjh7d07tsobJCRkKR6tJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfF0XJu (ORCPT
+        id S1726640AbfF0XMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:09:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60043 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfF0XJu (ORCPT
+        Thu, 27 Jun 2019 19:12:20 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41077 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfF0XMT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:09:50 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgdVt-0002QR-4D; Fri, 28 Jun 2019 01:09:09 +0200
-Date:   Fri, 28 Jun 2019 01:09:08 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH] ftrace: Remove possible deadlock between register_kprobe()
- and ftrace_run_update_code()
-In-Reply-To: <20190627190457.703a486e@gandalf.local.home>
-Message-ID: <alpine.DEB.2.21.1906280106360.32342@nanos.tec.linutronix.de>
-References: <20190627081334.12793-1-pmladek@suse.com> <20190627224729.tshtq4bhzhneq24w@treble> <20190627190457.703a486e@gandalf.local.home>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 27 Jun 2019 19:12:19 -0400
+Received: by mail-pf1-f195.google.com with SMTP id m30so1954961pff.8;
+        Thu, 27 Jun 2019 16:12:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=3K8ZEEArtsKiEJ5I7k4SQLYx/luEOe5+arx+qBgdSFA=;
+        b=JSk4HdvqruT+eRFKcMzKF4cuqUMKAFW0JmLoEPitz4V9TYrtKEJX4lFAYbPrn+53Sr
+         iScOFwvbVbYQmM0y8f/WY1EJOSMQYHxuToZnJjChnKzKTZFqMoTt5HBG3WLdxnDjc38m
+         a64MaJrlM59WDcPpUi603vXqz1z5jxeJIA6WVnx3wdmiGFtIrrhJJl0wbw+/zI2tItVS
+         2WFm+5OmdgiY+zckFV8E0k+HtY/mr56quNTtxkI5cjogi4SpVGiwHjZQIAKP68nearBn
+         gle5TBra9FVnkjUV0vdkG42M04Pu3Ydc95ZQLipUDBCMbx1qIczM3Mj5HCiYQLeXM6f9
+         0MUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=3K8ZEEArtsKiEJ5I7k4SQLYx/luEOe5+arx+qBgdSFA=;
+        b=dqTmYBxcxHZ3QOzzGlwdn1TXgGiVcQo5y+F7c67rFTgA1fhgR5CfsNUgIIx/Hbxgpd
+         C78ql09hQjwv9qU9UoR7RxgWZFM3XEHHOwJGYEERZKa/5hPaomo6jC1nvsCcP7hGE3bM
+         nOEGx/0jFeOJhpOBuZ5NDKps0hpToy8+rFkF6Y0o7yKEIkQlS58czQyHlGM/rRRDmXhk
+         4fdUpwc3MvoTmkuvV11c5KAnJ6KkDa5qUnhA6tO5YsPqIoGhyMBaxj6DMZnTCqkSnOSa
+         I0qLLeHoQvS6/wo2lbW1x1X3YB2kax6RJUfZzBReP724hwm/J6mnVjiM+f3oAWuYisSB
+         FU1A==
+X-Gm-Message-State: APjAAAUeOpYRZ+vm799m3jtBCn6RqDnyG/mgf53+COc51n5ND2DystiT
+        1Hh3VwL+gPj8zuuCNL0nz2k=
+X-Google-Smtp-Source: APXvYqxtn9cf+kC5zwOASaw1d/Oo8w/GiSK/V2r2g0NRoYK4Nj3w5dEEjSiS3BxhR2Cs1b8xLtShlA==
+X-Received: by 2002:a17:90a:fa18:: with SMTP id cm24mr8869128pjb.120.1561677138694;
+        Thu, 27 Jun 2019 16:12:18 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id x23sm154864pfo.112.2019.06.27.16.12.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 16:12:17 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 08:12:11 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v3 0/5] Introduce MADV_COLD and MADV_PAGEOUT
+Message-ID: <20190627231211.GA33052@google.com>
+References: <20190627115405.255259-1-minchan@kernel.org>
+ <20190627180601.xcppuzia3gk57lq2@box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190627180601.xcppuzia3gk57lq2@box>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019, Steven Rostedt wrote:
-> On Thu, 27 Jun 2019 17:47:29 -0500
-> > Releasing the lock in a separate function seems a bit surprising and
-> > fragile, would it be possible to do something like this instead?
+On Thu, Jun 27, 2019 at 09:06:01PM +0300, Kirill A. Shutemov wrote:
+> On Thu, Jun 27, 2019 at 08:54:00PM +0900, Minchan Kim wrote:
+> > - Problem
 > > 
-> > diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> > index b38c388d1087..89ea1af6fd13 100644
-> > --- a/arch/x86/kernel/ftrace.c
-> > +++ b/arch/x86/kernel/ftrace.c
-> > @@ -37,15 +37,21 @@
-> >  int ftrace_arch_code_modify_prepare(void)
-> >  {
-> >  	mutex_lock(&text_mutex);
-> > +
-> >  	set_kernel_text_rw();
-> >  	set_all_modules_text_rw();
-> > +
-> > +	mutex_unlock(&text_mutex);
-> >  	return 0;
-> >  }
-> >  
-> >  int ftrace_arch_code_modify_post_process(void)
-> >  {
-> > +	mutex_lock(&text_mutex);
-> > +
-> >  	set_all_modules_text_ro();
-> >  	set_kernel_text_ro();
-> > +
-> >  	mutex_unlock(&text_mutex);
-> >  	return 0;
-> >  }
+> > Naturally, cached apps were dominant consumers of memory on the system.
+> > However, they were not significant consumers of swap even though they are
+> > good candidate for swap. Under investigation, swapping out only begins
+> > once the low zone watermark is hit and kswapd wakes up, but the overall
+> > allocation rate in the system might trip lmkd thresholds and cause a cached
+> > process to be killed(we measured performance swapping out vs. zapping the
+> > memory by killing a process. Unsurprisingly, zapping is 10x times faster
+> > even though we use zram which is much faster than real storage) so kill
+> > from lmkd will often satisfy the high zone watermark, resulting in very
+> > few pages actually being moved to swap.
 > 
-> I agree with Josh on this. As the original bug was the race between
-> ftrace and live patching / modules changing the text from ro to rw and
-> vice versa. Just protecting the update to the text permissions is more
-> robust, and should be more self documenting when we need to handle
-> other architectures for this.
+> Maybe we should look if we do The Right Thing™ at system-wide level before
+> introducing new API? How changing swappiness affects your workloads? What
+> is swappiness value in your setup?
 
-How is that supposed to work?
+It was 100. Even, I tried 150 and 200 with simple hack of swappiness.
+However, it caused too excessive swpout.
 
-    ftrace  	     	
-	prepare()
-	 setrw()
-			setro()
-	patch <- FAIL
-
-Thanks,
-
-	tglx
+Anyway, systen-level tune is generally good but if process has hint, that
+should work better and that's why advise API is.
