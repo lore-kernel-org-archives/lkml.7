@@ -2,219 +2,97 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C28D4C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E44FC48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B203205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561660103;
-	bh=taqyQ1APEgX+EVCAzATmMcA2vqF2xWfz1x10hWSRsgI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IKj0SJE76tULPoa6QVLO8zprxZnalJQzT1JE2V65rXMpGD7thWYKdasq9EzTh4uPG
-	 qoOEQzYyrbTV/3ylH6gAN9yiUpXgPFqUcbnETY96Z9Dd6x05yI6FQ2QqM4IOFpKPTQ
-	 WsSfJSR/27RkpIa2RGs4PRFiFfatzylIY1XX8Y3A=
+	by mail.kernel.org (Postfix) with ESMTP id 25BAB205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:30:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="foFvp30D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfF0S2W (ORCPT
+        id S1726531AbfF0SaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbfF0S2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:28:21 -0400
-Received: from earth.universe (unknown [185.62.205.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D92F205F4;
-        Thu, 27 Jun 2019 18:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561660100;
-        bh=taqyQ1APEgX+EVCAzATmMcA2vqF2xWfz1x10hWSRsgI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hR15WHn5VGnYjJBJF3P3KfFz2mIU6gWMdyBW1J9JfNrAe3Wkox4nvnMreFyFc8Oga
-         gHHKlRxzScRITQpZl1lYB4jheGTy3CTkrWujVUNozMy3/DQtRu1+16z5GQ7OQZL9gE
-         dfQ26EIv4VN+fxjVF3qFiQDlpLL05BiHlURmYc7g=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 66ADF3C08D5; Thu, 27 Jun 2019 20:28:17 +0200 (CEST)
-Date:   Thu, 27 Jun 2019 20:28:17 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 00/34] treewide: simplify getting the adapter of an I2C
- client
-Message-ID: <20190627182817.5vrfmuzn7kanvtwu@earth.universe>
-References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
+        Thu, 27 Jun 2019 14:30:06 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39769 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfF0SaF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:30:05 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r21so2627172otq.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 11:30:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7E3kE8wu6XArETAHziQvnZYV/Eha0av5p2dljNuncOs=;
+        b=foFvp30DG07jcUeEQRk8SMFfwd/Wva8/DnhLRWyqOIEHY3iQ0bH3xBBjNEWt1UAb9i
+         aSc3lqlBun4TcabEhTjxpZ+OkIyuycNXsXlxccJejQbd632UL5dTF0ReYx9tgjN1LZpK
+         mBX/S+GBhEMY+hKQwLcUyojf3H+OPilbFg/JD2SVMM8M3MT8ZlLkX9kEa99YULT2J3wq
+         SG/RSlHZrZLlAxovfeBCH2Ijpak7jmNP8mbWhWYFIOM4MtwTQ47fcYTztP21tUI+pIKW
+         0YYfQqSutj9IcqcAXAchA74/rzypF+j+tEfioCqOTkayP1R9aOB5o1e55rrlVcQGp0yZ
+         oBsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7E3kE8wu6XArETAHziQvnZYV/Eha0av5p2dljNuncOs=;
+        b=LbBKY9jvel2dYvRM9XrO726K3CTbyo1gMGj0Jt5nPqQB45dqKpiYn26dUpKqL/fzAU
+         RMPrDn0Fso2yLOyoDG2W10YKMCPK21K9LgIK0S2Ua5XWvz2dDjlbW70hnGA81gs1mVCf
+         PS7hr3ZARig96Ln8Sng12Ia0HnJkEaxmyHM3uzNoL6QAZIjxC33YxFdCwee1RhsxQkPQ
+         +XZHq6q6+8Z2ke8ousPRycfCRH/idHYW8Hwq+Yet+8hNDw6nahO6FTkgjD9Cmr6PHTM0
+         rwALXYDxti1JM0zRoH7bu7MZz1WgKwpVgxSvJHi2vr3rbssd/FQTYbyKAaetwbmyjQaU
+         x8eA==
+X-Gm-Message-State: APjAAAW//Vyk6S2OUTws3FEsMYL+TSSm5+4ioT5Smq98dItEu6I3nFrn
+        Q2M2LIkSBmPoim+FnTFmhhaGrmlxbZANypSqW0QQhg==
+X-Google-Smtp-Source: APXvYqzR6jmVs33hZDIYobItCy5fbsq9anYEdod2Ip+FjFmtBNmx0NXxWd92xbXTibPcVqTURkcFzBgWlQkkEVlfzdE=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr4463320oto.207.1561660204791;
+ Thu, 27 Jun 2019 11:30:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dtrjmbi6re7vojrt"
-Content-Disposition: inline
-In-Reply-To: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
-User-Agent: NeoMutt/20180716
+References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190627123415.GA4286@bombadil.infradead.org> <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
+In-Reply-To: <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 27 Jun 2019 11:29:53 -0700
+Message-ID: <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 27, 2019 at 9:06 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Thu, Jun 27, 2019 at 5:34 AM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > On Wed, Jun 26, 2019 at 05:15:45PM -0700, Dan Williams wrote:
+> > > Ever since the conversion of DAX to the Xarray a RocksDB benchmark has
+> > > been encountering intermittent lockups. The backtraces always include
+> > > the filesystem-DAX PMD path, multi-order entries have been a source of
+> > > bugs in the past, and disabling the PMD path allows a test that fails in
+> > > minutes to run for an hour.
+> >
+> > On May 4th, I asked you:
+> >
+> > Since this is provoked by a fatal signal, it must have something to do
+> > with a killable or interruptible sleep.  There's only one of those in the
+> > DAX code; fatal_signal_pending() in dax_iomap_actor().  Does rocksdb do
+> > I/O with write() or through a writable mmap()?  I'd like to know before
+> > I chase too far down this fault tree analysis.
+>
+> RocksDB in this case is using write() for writes and mmap() for reads.
 
---dtrjmbi6re7vojrt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Sat, Jun 08, 2019 at 12:55:39PM +0200, Wolfram Sang wrote:
-> While preparing a refactoring series, I noticed that some drivers use a
-> complicated way of determining the adapter of a client. The easy way is
-> to use the intended pointer: client->adapter
->=20
-> These drivers do:
-> 	to_i2c_adapter(client->dev.parent);
->=20
-> The I2C core populates the parent pointer as:
-> 	client->dev.parent =3D &client->adapter->dev;
->=20
-> Now take into consideration that
-> 	to_i2c_adapter(&adapter->dev);
->=20
-> is a complicated way of saying 'adapter', then we can even formally
-> prove that the complicated expression can be simplified by using
-> client->adapter.
->=20
-> The conversion was done using a coccinelle script with some manual
-> indentation fixes applied on top.
->=20
-> To avoid a brown paper bag mistake, I double checked this on a Renesas
-> Salvator-XS board (R-Car M3N) and verified both expression result in the
-> same pointer. Other than that, the series is only build tested.
->=20
-> A branch can be found here:
->=20
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/no_to_ada=
-pter
->=20
-> Please apply the patches to the individual subsystem trees. There are no
-> dependencies.
->=20
-> Thanks and kind regards,
->=20
->    Wolfram
-
-Thanks, I queued the patches prefixed with "power: supply: [...]".
-
--- Sebastian
-
-> Wolfram Sang (34):
->   clk: clk-cdce706: simplify getting the adapter of a client
->   gpu: drm: bridge: sii9234: simplify getting the adapter of a client
->   iio: light: bh1780: simplify getting the adapter of a client
->   leds: leds-pca955x: simplify getting the adapter of a client
->   leds: leds-tca6507: simplify getting the adapter of a client
->   media: i2c: ak881x: simplify getting the adapter of a client
->   media: i2c: mt9m001: simplify getting the adapter of a client
->   media: i2c: mt9m111: simplify getting the adapter of a client
->   media: i2c: mt9p031: simplify getting the adapter of a client
->   media: i2c: ov2640: simplify getting the adapter of a client
->   media: i2c: tw9910: simplify getting the adapter of a client
->   misc: fsa9480: simplify getting the adapter of a client
->   misc: isl29003: simplify getting the adapter of a client
->   misc: tsl2550: simplify getting the adapter of a client
->   mtd: maps: pismo: simplify getting the adapter of a client
->   power: supply: bq24190_charger: simplify getting the adapter of a client
->   power: supply: bq24257_charger: simplify getting the adapter of a client
->   power: supply: bq25890_charger: simplify getting the adapter of a client
->   power: supply: max14656_charger_detector: simplify getting the adapter
->     of a client
->   power: supply: max17040_battery: simplify getting the adapter of a clie=
-nt
->   power: supply: max17042_battery: simplify getting the adapter of a clie=
-nt
->   power: supply: rt5033_battery: simplify getting the adapter of a client
->   power: supply: rt9455_charger: simplify getting the adapter of a client
->   power: supply: sbs-manager: simplify getting the adapter of a client
->   regulator: max8952: simplify getting the adapter of a client
->   rtc: fm3130: simplify getting the adapter of a client
->   rtc: m41t80: simplify getting the adapter of a client
->   rtc: rv8803: simplify getting the adapter of a client
->   rtc: rx8010: simplify getting the adapter of a client
->   rtc: rx8025: simplify getting the adapter of a client
->   staging: media: soc_camera: imx074: simplify getting the adapter of a c=
-lient
->   staging: media: soc_camera: mt9t031: simplify getting the adapter of a =
-client
->   staging: media: soc_camera: soc_mt9v022: simplify getting the adapter
->     of a client
->   usb: typec: tcpm: fusb302: simplify getting the adapter of a client
->=20
->  drivers/clk/clk-cdce706.c                        | 2 +-
->  drivers/gpu/drm/bridge/sii9234.c                 | 4 ++--
->  drivers/iio/light/bh1780.c                       | 2 +-
->  drivers/leds/leds-pca955x.c                      | 2 +-
->  drivers/leds/leds-tca6507.c                      | 2 +-
->  drivers/media/i2c/ak881x.c                       | 2 +-
->  drivers/media/i2c/mt9m001.c                      | 2 +-
->  drivers/media/i2c/mt9m111.c                      | 2 +-
->  drivers/media/i2c/mt9p031.c                      | 2 +-
->  drivers/media/i2c/ov2640.c                       | 2 +-
->  drivers/media/i2c/tw9910.c                       | 3 +--
->  drivers/misc/fsa9480.c                           | 2 +-
->  drivers/misc/isl29003.c                          | 2 +-
->  drivers/misc/tsl2550.c                           | 2 +-
->  drivers/mtd/maps/pismo.c                         | 2 +-
->  drivers/power/supply/bq24190_charger.c           | 2 +-
->  drivers/power/supply/bq24257_charger.c           | 2 +-
->  drivers/power/supply/bq25890_charger.c           | 2 +-
->  drivers/power/supply/max14656_charger_detector.c | 2 +-
->  drivers/power/supply/max17040_battery.c          | 2 +-
->  drivers/power/supply/max17042_battery.c          | 2 +-
->  drivers/power/supply/rt5033_battery.c            | 2 +-
->  drivers/power/supply/rt9455_charger.c            | 2 +-
->  drivers/power/supply/sbs-manager.c               | 2 +-
->  drivers/regulator/max8952.c                      | 2 +-
->  drivers/rtc/rtc-fm3130.c                         | 8 +++-----
->  drivers/rtc/rtc-m41t80.c                         | 2 +-
->  drivers/rtc/rtc-rv8803.c                         | 2 +-
->  drivers/rtc/rtc-rx8010.c                         | 2 +-
->  drivers/rtc/rtc-rx8025.c                         | 2 +-
->  drivers/staging/media/soc_camera/imx074.c        | 2 +-
->  drivers/staging/media/soc_camera/mt9t031.c       | 2 +-
->  drivers/staging/media/soc_camera/soc_mt9v022.c   | 2 +-
->  drivers/usb/typec/tcpm/fusb302.c                 | 3 +--
->  34 files changed, 37 insertions(+), 41 deletions(-)
->=20
-> --=20
-> 2.19.1
->=20
-
---dtrjmbi6re7vojrt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0VCsEACgkQ2O7X88g7
-+poEpxAAm77/GZ4czva5lDqclyAk1YfbiV55qi+jow32xQwZ17FXo8Ch9G11Qrwl
-famQPiB/pD3r3m2TfihhFAcFjOGiwl9GxQJ+4at64Atab2w5BWh9zwDQWdtT80jF
-3ytFncogbL36MVBgIv5YQUZQiqIiZlUei6lTOnnyfv3PLtvNVbIodxSVYp5qJWMy
-M+qrdy6tAVsuK6yqAwPRhfjBzlmlLZVudUZqbAWKMbK1YBt0rkkSNw9xpF1pLrv6
-zLbGdmBngoivDyNJldn+5bhMiwsDyxf/8E7eblcAMkO/D1oPrb51zV92FFX7qyzT
-eI5KRHwY88XkUuIK25aDnO1bR3eDn3RDcxtW8MMMeRihWX3gNSL+hKZ24XGxOgz5
-L3tL9nm6X6sHg867+V5voAxNACnbgFT/Mrzhal4HGbN8adctDoaSEuiMPAQlAkEG
-PbW3c2B0n+Bav3XksRT4h19t7drSk4a3aR04I/GHc3l9jDQicnDr4DwiVaPpd1UF
-gpPhBXgO4NSZr5yUEzoVOSOsW6WS2k5SFV+sQjU1C5R+oXBH59J9oIMlOOaNKo0w
-rTXxOtxQ38vqyMiQZBLwoTh1remxiOBp+5lwmYWGWYpBDVcr9HB+kzNJPFxDVk5A
-YgiEzXje0LsgjUBgpmiq5YPAmsNIntDezydWTc20Otk1+Vgotgo=
-=CJhg
------END PGP SIGNATURE-----
-
---dtrjmbi6re7vojrt--
+It's not clear to me that a fatal signal is a component of the failure
+as much as it's the way to detect that the benchmark has indeed locked
+up.
