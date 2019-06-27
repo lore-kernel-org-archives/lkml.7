@@ -2,101 +2,79 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C085C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB02EC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65970208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA4D2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbfF0M13 (ORCPT
+        id S1726863AbfF0M3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 08:27:29 -0400
-Received: from mga11.intel.com ([192.55.52.93]:46490 "EHLO mga11.intel.com"
+        Thu, 27 Jun 2019 08:29:38 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:60120 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfF0M12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 08:27:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 05:27:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
-   d="scan'208";a="164321091"
-Received: from lxy-dell.sh.intel.com ([10.239.159.145])
-  by fmsmga007.fm.intel.com with ESMTP; 27 Jun 2019 05:27:24 -0700
-Message-ID: <3c53ec41a1cdf668f3d849c2177fff3098347fbb.camel@intel.com>
-Subject: Re: [PATCH v9 11/17] kvm/vmx: Emulate MSR TEST_CTL
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Date:   Thu, 27 Jun 2019 20:22:28 +0800
-In-Reply-To: <alpine.DEB.2.21.1906271408380.32342@nanos.tec.linutronix.de>
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
-         <1560897679-228028-12-git-send-email-fenghua.yu@intel.com>
-         <b52b0f72-e242-68b1-640c-85759bdce869@linux.intel.com>
-         <alpine.DEB.2.21.1906270901120.32342@nanos.tec.linutronix.de>
-         <fa53c72c-b1af-7d77-d39c-a9401dc65e27@linux.intel.com>
-         <alpine.DEB.2.21.1906271408380.32342@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726059AbfF0M3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 08:29:37 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 30FF42001CC;
+        Thu, 27 Jun 2019 14:29:36 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 229A220010D;
+        Thu, 27 Jun 2019 14:29:36 +0200 (CEST)
+Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 83C95205DB;
+        Thu, 27 Jun 2019 14:29:35 +0200 (CEST)
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     jaswinder.singh@linaro.org, jassisinghbrar@gmail.com
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        shengjiu.wang@nxp.com, o.rempel@pengutronix.de,
+        daniel.baluta@gmail.com, Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [RESEND PATCH v2] mailbox: imx: Clear GIEn bit at shutdown
+Date:   Thu, 27 Jun 2019 15:29:27 +0300
+Message-Id: <20190627122927.9041-1-daniel.baluta@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-27 at 14:11 +0200, Thomas Gleixner wrote:
-> On Thu, 27 Jun 2019, Xiaoyao Li wrote:
-> > On 6/27/2019 3:12 PM, Thomas Gleixner wrote:
-> > > The real interesting question is whether the #AC on split lock prevents
-> > > the
-> > > actual bus lock or not. If it does then the above is fine.
-> > > 
-> > > If not, then it would be trivial for a malicious guest to set the
-> > > SPLIT_LOCK_ENABLE bit and "handle" the exception pro forma, return to the
-> > > offending instruction and trigger another one. It lowers the rate, but
-> > > that
-> > > doesn't make it any better.
-> > > 
-> > > The SDM is as usual too vague to be useful. Please clarify.
-> > > 
-> > 
-> > This feature is to ensure no bus lock (due to split lock) in hardware, that
-> > to
-> > say, when bit 29 of TEST_CTL is set, there is no bus lock due to split lock
-> > can be acquired.
-> 
-> So enabling this prevents the bus lock, i.e. the exception is raised before
-> that happens.
-> 
-exactly.
+GIEn is enabled at startup for RX doorbell mailboxes so
+we need to clear the bit at shutdown in order to avoid
+leaving the interrupt line enabled.
 
-> Please add that information to the changelog as well because that's
-> important to know and makes me much more comfortable handing the #AC back
-> into the guest when it has it enabled.
-> 
-Will add it in next version.
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+Changes since v1:
+ - separate patch from inital series of creating DSP IPC driver
+ - add Oleksij reviewed-by
+ - include Jassi's linaro email
 
-Thanks.
+ drivers/mailbox/imx-mailbox.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
+diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+index 25be8bb5e371..9f74dee1a58c 100644
+--- a/drivers/mailbox/imx-mailbox.c
++++ b/drivers/mailbox/imx-mailbox.c
+@@ -217,8 +217,8 @@ static void imx_mu_shutdown(struct mbox_chan *chan)
+ 	if (cp->type == IMX_MU_TYPE_TXDB)
+ 		tasklet_kill(&cp->txdb_tasklet);
+ 
+-	imx_mu_xcr_rmw(priv, 0,
+-		   IMX_MU_xCR_TIEn(cp->idx) | IMX_MU_xCR_RIEn(cp->idx));
++	imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx) |
++		       IMX_MU_xCR_RIEn(cp->idx) | IMX_MU_xCR_GIEn(cp->idx));
+ 
+ 	free_irq(priv->irq, chan);
+ }
+-- 
+2.17.1
 
