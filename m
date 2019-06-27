@@ -2,128 +2,85 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED8DC48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53620C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0714B2085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:18:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="k8ywuutI"
+	by mail.kernel.org (Postfix) with ESMTP id 322D82085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfF0MSj (ORCPT
+        id S1726721AbfF0MVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 08:18:39 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51611 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfF0MSj (ORCPT
+        Thu, 27 Jun 2019 08:21:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53495 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfF0MVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 08:18:39 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 207so5514736wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 05:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=Zdd4Pp3dYlawoEQsjCTjL1Bm9eBCVbOZ/q37LUapnaQ=;
-        b=k8ywuutI5JJ1zOZBUSRsiA6wF2HW/8zzohHwXhnHqAE4EOXoGZ6iion4AWL7kpTwR6
-         qAY+CpaQo3wjcaUtdet5Ew+axkm4VjOnlrKl9HBABghASKurGPUynYSpaOP4PU+6mece
-         z7xORIC5BZJAMxRKJwKl4WQ6E0fiVnWmR9t39mGB2/DytymcTWatNM/SRNdT8DoCixeQ
-         eudI3hm86XZDcojtmkzCOfoFGiokZRxpQQutxIzHUgMQAA339QF1UW1S2h7QIsQlNetS
-         1vsloMKS2mL8TAN9kbK+Zjz8hEQZ7WBEOJKvJIoBDSTqwV5KXBqHBppJN9/PdbPQ+IiX
-         mvDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=Zdd4Pp3dYlawoEQsjCTjL1Bm9eBCVbOZ/q37LUapnaQ=;
-        b=tDRieP8bjmmuiJ037tD0G+NZG7fqsZBSH7ZrBo3wF1P+r/IT9iwhL3lQdWJs3aDHAi
-         PYHKdJY2ZlagIhRKyPtuGH/Kvm4ifGxRpLeNFtsa069GQ+V011eYSmO52FPdgSYDmNDa
-         2Lhl1NJruMV9+v/6OaJ6uaB7XRX5zpk8scbkF8y62pmTWeVnv73O1RgBzrAEKHA6p4J7
-         OEBSoewUWRpSIo+9p1tRRoj0g9ZZ9xtm7rXV8D1+2+Ij3+ljJcMTBJmWs0kNu1bnVqMg
-         pNpsGKvuzMcZqGSIa8EiW/JVV8GYnbWOZXsMW1pUN+PE7HLNmi6Eu+5ho9SBDpkM+EMo
-         qnBA==
-X-Gm-Message-State: APjAAAXqD8DWwdY+5xza60qR5dRMyC1Ap1ffLMcPNKT/RX/Kc+GCaRqh
-        GLfSSDEw2KbxDDlDeWWk8454Og==
-X-Google-Smtp-Source: APXvYqwP5/KqbmGqmRh+sNx5VCR+6gZxpNd+GAZ3G0BUulrp4g0b6pfWHwk+3cirqW7BcslJWBkoWg==
-X-Received: by 2002:a1c:7a01:: with SMTP id v1mr3202693wmc.10.1561637917201;
-        Thu, 27 Jun 2019 05:18:37 -0700 (PDT)
-Received: from LAPTOP-V3S7NLPL ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id l19sm3291337wmj.33.2019.06.27.05.18.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Jun 2019 05:18:36 -0700 (PDT)
-References: <20190626231257.14495-1-lukenels@cs.washington.edu>
-User-agent: mu4e 0.9.18; emacs 25.2.2
-From:   Jiong Wang <jiong.wang@netronome.com>
-To:     Luke Nelson <lukenels@cs.washington.edu>
-Cc:     linux-kernel@vger.kernel.org, Luke Nelson <luke.r.nels@gmail.com>,
-        Xi Wang <xi.wang@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        =?utf-8?B?QmrDtnJu?= =?utf-8?B?IFTDtnBlbA==?= 
-        <bjorn.topel@gmail.com>, linux-riscv@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2 bpf-next] RV32G eBPF JIT
-In-reply-to: <20190626231257.14495-1-lukenels@cs.washington.edu>
-Date:   Thu, 27 Jun 2019 13:18:35 +0100
-Message-ID: <87y31nuspw.fsf@netronome.com>
+        Thu, 27 Jun 2019 08:21:10 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgTOl-00021l-R5; Thu, 27 Jun 2019 14:21:07 +0200
+Date:   Thu, 27 Jun 2019 14:21:06 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+cc:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jason Vas Dias <jason.vas.dias@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Subject: Re: [PATCH v3 1/2] x86/vdso: Move mult and shift into struct
+ vgtod_ts
+In-Reply-To: <0643ba97-1b1b-8e14-c2cc-dcdf9cfd8479@nokia.com>
+Message-ID: <alpine.DEB.2.21.1906271417420.32342@nanos.tec.linutronix.de>
+References: <20190605144116.28553-1-alexander.sverdlin@nokia.com> <20190605144116.28553-2-alexander.sverdlin@nokia.com> <alpine.DEB.2.21.1906231008170.32342@nanos.tec.linutronix.de> <df6b6311-ac67-857f-5a81-aee4eabd9f47@nokia.com>
+ <alpine.DEB.2.21.1906241135450.32342@nanos.tec.linutronix.de> <01ab4388-f259-e801-8c8a-f39b5abcfb52@nokia.com> <alpine.DEB.2.21.1906271405400.32342@nanos.tec.linutronix.de> <0643ba97-1b1b-8e14-c2cc-dcdf9cfd8479@nokia.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Alexander,
 
-Luke Nelson writes:
+On Thu, 27 Jun 2019, Sverdlin, Alexander (Nokia - DE/Ulm) wrote:
+> On 27/06/2019 14:07, Thomas Gleixner wrote:
+> > 
+> > Did you use the git tree? If not, it would be interesting to have a test
+> > against that as well because that's the final version.
+> 
+> I've applied the following list:
+> 
+> 3acf4be23528 (tip/timers/vdso) arm64: vdso: Fix compilation with clang older than 8
 
-<snip>
-> +
-> +static int emit_insn(const struct bpf_insn *insn,
-> +		     struct rv_jit_context *ctx,
-> +		     bool extra_pass)
-> +{
-> +	int rvoff, i = insn - ctx->prog->insnsi;
-> +	u8 code = insn->code;
-> +	s16 off = insn->off;
-> +	s32 imm = insn->imm;
-> +
-> +	const s8 *dst = bpf2rv32[insn->dst_reg];
-> +	const s8 *src = bpf2rv32[insn->src_reg];
-> +	const s8 *tmp1 = bpf2rv32[TMP_REG_1];
-> +	const s8 *tmp2 = bpf2rv32[TMP_REG_2];
-> +
-> +	switch (code) {
-> +	case BPF_ALU64 | BPF_MOV | BPF_X:
-> +		if (imm == 1) {
-> +			/* Special mov32 for zext */
-> +			emit_rv32_zext64(dst, ctx);
-> +			break;
-> +		}
+> If you expect a difference, I can re-test using your tree as-is.
 
-Thanks for adding the 32-bit opt!
+That's the tip of tree. All good.
 
-Just want to mention ZEXT is a special mov32, see include/linux/filter.h:
+> > The increase for mono and realtime is impressive. Which CPU is that?
+> 
+> This time it was
+> 
+> processor	: 3
+> vendor_id	: AuthenticAMD
+> cpu family	: 21
+> model		: 96
+> model name	: AMD PRO A10-8700B R6, 10 Compute Cores 4C+6G
 
-#define BPF_ZEXT_REG(DST)
-        ((struct bpf_insn) {
-                 .code  = BPF_ALU | BPF_MOV | BPF_X
+Interesting. Need to find something similar in my fleet and figure out what
+changed that so much.
 
-So it can't be BPF_ALU64. It is safe to remove this chunk of code.
+Thanks!
 
-For backend like arm, riscv etc, they are grouping several CASE label
-together and are sharing code. imm == 1 check is done inside the shared
-code to avoid moving code around given imm == 1 can't be true for ALU64 as
-if there is such insn (register format using imm) it should have been
-rejected by verifier. While mov32 variant is inserted by verifier at very
-late stage after main verification finished.
-
-Regards,
-Jiong
+	tglx
