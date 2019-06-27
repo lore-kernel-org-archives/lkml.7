@@ -2,313 +2,211 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0E3C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E9BC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFCFD2183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2730120989
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfF0DoP (ORCPT
+        id S1727153AbfF0Dox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 23:44:15 -0400
-Received: from mga17.intel.com ([192.55.52.151]:21244 "EHLO mga17.intel.com"
+        Wed, 26 Jun 2019 23:44:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49510 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726989AbfF0DoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 23:44:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 20:44:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,422,1557212400"; 
-   d="scan'208";a="360561007"
-Received: from gvt.bj.intel.com ([10.238.158.187])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Jun 2019 20:44:08 -0700
-From:   Tina Zhang <tina.zhang@intel.com>
-To:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tina Zhang <tina.zhang@intel.com>, kraxel@redhat.com,
-        zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
-        zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com,
-        alex.williamson@redhat.com
-Subject: [RFC PATCH v3 4/4] drm/i915/gvt: Deliver vGPU vblank event to userspace
-Date:   Thu, 27 Jun 2019 11:38:02 +0800
-Message-Id: <20190627033802.1663-5-tina.zhang@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190627033802.1663-1-tina.zhang@intel.com>
-References: <20190627033802.1663-1-tina.zhang@intel.com>
+        id S1726640AbfF0Dox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 23:44:53 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 74609C04BD4A;
+        Thu, 27 Jun 2019 03:44:52 +0000 (UTC)
+Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EB56B19C5B;
+        Thu, 27 Jun 2019 03:44:49 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 22:44:47 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v3 2/4] objtool: Add support for C jump tables
+Message-ID: <20190627034447.gl5tusbhkbr6dadc@treble>
+References: <cover.1561595111.git.jpoimboe@redhat.com>
+ <426541f62dad525078ee732c09bc206289e994aa.1561595111.git.jpoimboe@redhat.com>
+ <CAADnVQ+veayfD70Xsu8UnNrLdRW6rh9jxPb=OGoiYT-O=_zW=A@mail.gmail.com>
+ <20190627024700.q4rkcbhmrna6ev4y@treble>
+ <CAADnVQJRs9NdHgGiAZfzCLb=eWAPD03-+uf3fisLZrKZUSSoyg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAADnVQJRs9NdHgGiAZfzCLb=eWAPD03-+uf3fisLZrKZUSSoyg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 27 Jun 2019 03:44:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deliver the display vblank event to the user land. Userspace can use
-the irq mask/unmask mechanism to disable or enable the event delivery.
+On Wed, Jun 26, 2019 at 07:54:08PM -0700, Alexei Starovoitov wrote:
+> On Wed, Jun 26, 2019 at 7:47 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Wed, Jun 26, 2019 at 06:42:40PM -0700, Alexei Starovoitov wrote:
+> > > > @@ -1035,9 +1038,18 @@ static struct rela *find_switch_table(struct objtool_file *file,
+> > > >
+> > > >                 /*
+> > > >                  * Make sure the .rodata address isn't associated with a
+> > > > -                * symbol.  gcc jump tables are anonymous data.
+> > > > +                * symbol.  GCC jump tables are anonymous data.
+> > > > +                *
+> > > > +                * Also support C jump tables which are in the same format as
+> > > > +                * switch jump tables.  Each jump table should be a static
+> > > > +                * local const array named "jump_table" for objtool to
+> > > > +                * recognize it.
+> > >
+> > > Nacked-by: Alexei Starovoitov <ast@kernel.org>
+> > >
+> > > It's not acceptable for objtool to dictate kernel naming convention.
+> >
+> > Abrasive nack notwithstanding, I agree it's not ideal.
+> >
+> > How about the following approach instead?  This is the only other way I
+> > can think of to annotate a jump table so that objtool can distinguish
+> > it:
+> >
+> > #define __annotate_jump_table __section(".jump_table.rodata")
+> >
+> > Then bpf would just need the following:
+> >
+> > -       static const void *jumptable[256] = {
+> > +       static const void __annotate_jump_table *jumptable[256] = {
+> >
+> > This would be less magical and fragile than my original approach.
+> >
+> > I think the jump table would still be placed with all the other rodata,
+> > like before, because the vmlinux linker script recognizes the section
+> > ".rodata" suffix and bundles them all together.
+> 
+> I like it if that works :)
+> Definitely cleaner.
+> May be a bit more linker script magic would be necessary,
+> but hopefully not.
+> And no need to rely on gcc style of mangling static vars.
 
-Signed-off-by: Tina Zhang <tina.zhang@intel.com>
----
- drivers/gpu/drm/i915/gvt/display.c |   4 +
- drivers/gpu/drm/i915/gvt/gvt.h     |   4 +
- drivers/gpu/drm/i915/gvt/kvmgt.c   | 150 +++++++++++++++++++++++++++--
- 3 files changed, 149 insertions(+), 9 deletions(-)
+Completely untested swag:
 
-diff --git a/drivers/gpu/drm/i915/gvt/display.c b/drivers/gpu/drm/i915/gvt/display.c
-index 1a0a4ae4826e..e62313b5f8a6 100644
---- a/drivers/gpu/drm/i915/gvt/display.c
-+++ b/drivers/gpu/drm/i915/gvt/display.c
-@@ -412,6 +412,10 @@ static void emulate_vblank_on_pipe(struct intel_vgpu *vgpu, int pipe)
- 
- 	if (pipe_is_enabled(vgpu, pipe)) {
- 		vgpu_vreg_t(vgpu, PIPE_FRMCOUNT_G4X(pipe))++;
-+		if (vgpu->vdev.vblank_trigger &&
-+		    !(vgpu->vdev.display_event_mask & DISPLAY_VBLANK_EVENT))
-+			eventfd_signal(vgpu->vdev.vblank_trigger, 1);
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 8aaf7cd026b0..84212bcb5015 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -116,9 +116,14 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 	".pushsection .discard.unreachable\n\t"				\
+ 	".long 999b - .\n\t"						\
+ 	".popsection\n\t"
 +
- 		intel_vgpu_trigger_virtual_event(vgpu, vblank_event[pipe]);
- 	}
- }
-diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gvt.h
-index cd29ea28d7ed..b3b476ee5acf 100644
---- a/drivers/gpu/drm/i915/gvt/gvt.h
-+++ b/drivers/gpu/drm/i915/gvt/gvt.h
-@@ -165,6 +165,8 @@ struct intel_vgpu_submission {
- 	bool active;
- };
- 
-+#define DISPLAY_VBLANK_EVENT	(1 << 0)
++/* Annotate a C jump table to enable objtool to follow the code flow */
++#define __annotate_jump_table __section(".jump_table.rodata")
 +
- struct intel_vgpu {
- 	struct intel_gvt *gvt;
- 	struct mutex vgpu_lock;
-@@ -205,6 +207,8 @@ struct intel_vgpu {
- 		int num_irqs;
- 		struct eventfd_ctx *intx_trigger;
- 		struct eventfd_ctx *msi_trigger;
-+		struct eventfd_ctx *vblank_trigger;
-+		u32 display_event_mask;
+ #else
+ #define annotate_reachable()
+ #define annotate_unreachable()
++#define __annotate_jump_table
+ #endif
  
- 		/*
- 		 * Two caches are used to avoid mapping duplicated pages (eg.
-diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-index f222c9cd7a56..7a84222d7d2d 100644
---- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-+++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-@@ -1222,6 +1222,8 @@ static int intel_vgpu_get_irq_count(struct intel_vgpu *vgpu, int type)
+ #ifndef ASM_UNREACHABLE
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 080e2bb644cc..e67977e22967 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
  {
- 	if (type == VFIO_PCI_INTX_IRQ_INDEX || type == VFIO_PCI_MSI_IRQ_INDEX)
- 		return 1;
-+	else if (type < VFIO_PCI_NUM_IRQS + vgpu->vdev.num_irqs)
-+		return vgpu->vdev.irq[type - VFIO_PCI_NUM_IRQS].count;
- 
- 	return 0;
+ #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+ #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
+-	static const void *jumptable[256] = {
++	static const void __annotate_jump_table *jumptable[256] = {
+ 		[0 ... 255] = &&default_label,
+ 		/* Now overwrite non-defaults ... */
+ 		BPF_INSN_MAP(BPF_INSN_2_LBL, BPF_INSN_3_LBL),
+@@ -1558,7 +1558,6 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+ 		BUG_ON(1);
+ 		return 0;
  }
-@@ -1269,7 +1271,60 @@ static int intel_vgpu_set_msi_trigger(struct intel_vgpu *vgpu,
- 	return 0;
- }
+-STACK_FRAME_NON_STANDARD(___bpf_prog_run); /* jump table */
  
--static int intel_vgpu_set_irqs(struct intel_vgpu *vgpu, u32 flags,
-+static int intel_vgu_set_display_irq_mask(struct intel_vgpu *vgpu,
-+		unsigned int index, unsigned int start, unsigned int count,
-+		u32 flags, void *data)
-+{
-+	if (start != 0 || count != 1)
-+		return -EINVAL;
-+
-+	if (flags & VFIO_IRQ_SET_DATA_NONE)
-+		vgpu->vdev.display_event_mask |= DISPLAY_VBLANK_EVENT;
-+
-+	return 0;
-+}
-+
-+static int intel_vgu_set_display_irq_unmask(struct intel_vgpu *vgpu,
-+		unsigned int index, unsigned int start, unsigned int count,
-+		u32 flags, void *data)
-+{
-+	if (start != 0 || count != 1)
-+		return -EINVAL;
-+
-+	if (flags & VFIO_IRQ_SET_DATA_NONE)
-+		vgpu->vdev.display_event_mask &= ~DISPLAY_VBLANK_EVENT;
-+
-+	return 0;
-+}
-+
-+static int intel_vgpu_set_display_event_trigger(struct intel_vgpu *vgpu,
-+		unsigned int index, unsigned int start, unsigned int count,
-+		u32 flags, void *data)
-+{
-+	struct eventfd_ctx *trigger;
-+
-+	if (flags & VFIO_IRQ_SET_DATA_EVENTFD) {
-+		int fd = *(int *)data;
-+
-+		trigger = eventfd_ctx_fdget(fd);
-+		if (IS_ERR(trigger)) {
-+			gvt_vgpu_err("eventfd_ctx_fdget failed\n");
-+			return PTR_ERR(trigger);
-+		}
-+		vgpu->vdev.vblank_trigger = trigger;
-+		vgpu->vdev.display_event_mask = 0;
-+	} else if ((flags & VFIO_IRQ_SET_DATA_NONE) && !count) {
-+		trigger = vgpu->vdev.vblank_trigger;
-+		if (trigger) {
-+			eventfd_ctx_put(trigger);
-+			vgpu->vdev.vblank_trigger = NULL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+int intel_vgpu_set_irqs(struct intel_vgpu *vgpu, u32 flags,
- 		unsigned int index, unsigned int start, unsigned int count,
- 		void *data)
- {
-@@ -1302,6 +1357,35 @@ static int intel_vgpu_set_irqs(struct intel_vgpu *vgpu, u32 flags,
- 			break;
+ #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
+ #define DEFINE_BPF_PROG_RUN(stack_size) \
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 8341c2fff14f..d6d7dd65a195 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -18,7 +18,7 @@
+ 
+ #define FAKE_JUMP_OFFSET -1
+ 
+-#define JUMP_TABLE_SYM_PREFIX "jump_table."
++#define C_JUMP_TABLE_SECTION ".jump_table.rodata"
+ 
+ struct alternative {
+ 	struct list_head list;
+@@ -999,7 +999,6 @@ static struct rela *find_switch_table(struct objtool_file *file,
+ 	struct instruction *orig_insn = insn;
+ 	struct section *rodata_sec;
+ 	unsigned long table_offset;
+-	struct symbol *sym;
+ 
+ 	/*
+ 	 * Backward search using the @first_jump_src links, these help avoid
+@@ -1041,15 +1040,12 @@ static struct rela *find_switch_table(struct objtool_file *file,
+ 		 * symbol.  GCC jump tables are anonymous data.
+ 		 *
+ 		 * Also support C jump tables which are in the same format as
+-		 * switch jump tables.  Each jump table should be a static
+-		 * local const array named "jump_table" for objtool to
+-		 * recognize it.  Note: GCC will add a numbered suffix to the
+-		 * ELF symbol name, like "jump_table.12345", which it does for
+-		 * all static local variables.
++		 * switch jump tables.  For objtool to recognize them, they
++		 * need to be placed in the C_JUMP_TABLE_SECTION section.  They
++		 * have symbols associated with them.
+ 		 */
+-		sym = find_symbol_containing(rodata_sec, table_offset);
+-		if (sym && strncmp(sym->name, JUMP_TABLE_SYM_PREFIX,
+-				   strlen(JUMP_TABLE_SYM_PREFIX)))
++		if (find_symbol_containing(rodata_sec, table_offset) &&
++		    strcmp(rodata_sec->name, C_JUMP_TABLE_SECTION))
+ 			continue;
+ 
+ 		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
+@@ -1289,13 +1285,19 @@ static void mark_rodata(struct objtool_file *file)
+ 	bool found = false;
+ 
+ 	/*
+-	 * This searches for the .rodata section or multiple .rodata.func_name
+-	 * sections if -fdata-sections is being used. The .str.1.1 and .str.1.8
+-	 * rodata sections are ignored as they don't contain jump tables.
++	 * This searches for the following rodata sections, each of which can
++	 * potentially contain jump tables:
++	 *
++	 * - .rodata - can contain GCC switch tables
++	 * - .rodata.func_name - if -fdata-sections * is being used
++	 * - .jump_table.rodata - contains C annotated jump tables
++	 *
++	 * The .rodata.str.* sections are ignored because they don't contain
++	 * jump tables.
+ 	 */
+ 	for_each_sec(file, sec) {
+-		if (!strncmp(sec->name, ".rodata", 7) &&
+-		    !strstr(sec->name, ".str1.")) {
++		if ((!strncmp(sec->name, ".rodata", 7) && !strstr(sec->name, ".str1.")) ||
++		    !strcmp(sec->name, C_JUMP_TABLE_SECTION)) {
+ 			sec->rodata = true;
+ 			found = true;
  		}
- 		break;
-+	default:
-+	{
-+		int i;
-+
-+		if (index >= VFIO_PCI_NUM_IRQS +
-+					vgpu->vdev.num_irqs)
-+			return -EINVAL;
-+		index =
-+			array_index_nospec(index,
-+						VFIO_PCI_NUM_IRQS +
-+						vgpu->vdev.num_irqs);
-+
-+		i = index - VFIO_PCI_NUM_IRQS;
-+		if (vgpu->vdev.irq[i].type == VFIO_IRQ_TYPE_GFX &&
-+		    vgpu->vdev.irq[i].subtype ==
-+		    VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ) {
-+			switch (flags & VFIO_IRQ_SET_ACTION_TYPE_MASK) {
-+			case VFIO_IRQ_SET_ACTION_MASK:
-+				func = intel_vgu_set_display_irq_mask;
-+				break;
-+			case VFIO_IRQ_SET_ACTION_UNMASK:
-+				func = intel_vgu_set_display_irq_unmask;
-+				break;
-+			case VFIO_IRQ_SET_ACTION_TRIGGER:
-+				func = intel_vgpu_set_display_event_trigger;
-+				break;
-+			}
-+		}
-+	}
- 	}
- 
- 	if (!func)
-@@ -1333,7 +1417,7 @@ static long intel_vgpu_ioctl(struct mdev_device *mdev, unsigned int cmd,
- 		info.flags |= VFIO_DEVICE_FLAGS_RESET;
- 		info.num_regions = VFIO_PCI_NUM_REGIONS +
- 				vgpu->vdev.num_regions;
--		info.num_irqs = VFIO_PCI_NUM_IRQS;
-+		info.num_irqs = VFIO_PCI_NUM_IRQS + vgpu->vdev.num_irqs;
- 
- 		return copy_to_user((void __user *)arg, &info, minsz) ?
- 			-EFAULT : 0;
-@@ -1493,32 +1577,79 @@ static long intel_vgpu_ioctl(struct mdev_device *mdev, unsigned int cmd,
- 			-EFAULT : 0;
- 	} else if (cmd == VFIO_DEVICE_GET_IRQ_INFO) {
- 		struct vfio_irq_info info;
-+		struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
-+		unsigned int i;
-+		int ret;
- 
- 		minsz = offsetofend(struct vfio_irq_info, count);
- 
- 		if (copy_from_user(&info, (void __user *)arg, minsz))
- 			return -EFAULT;
- 
--		if (info.argsz < minsz || info.index >= VFIO_PCI_NUM_IRQS)
-+		if (info.argsz < minsz)
- 			return -EINVAL;
- 
- 		switch (info.index) {
- 		case VFIO_PCI_INTX_IRQ_INDEX:
- 		case VFIO_PCI_MSI_IRQ_INDEX:
-+			info.flags = VFIO_IRQ_INFO_EVENTFD;
- 			break;
--		default:
-+		case VFIO_PCI_MSIX_IRQ_INDEX:
-+		case VFIO_PCI_ERR_IRQ_INDEX:
-+		case VFIO_PCI_REQ_IRQ_INDEX:
- 			return -EINVAL;
--		}
-+		default:
-+		{
-+			struct vfio_irq_info_cap_type cap_type = {
-+				.header.id = VFIO_IRQ_INFO_CAP_TYPE,
-+				.header.version = 1 };
- 
--		info.flags = VFIO_IRQ_INFO_EVENTFD;
-+			if (info.index >= VFIO_PCI_NUM_IRQS +
-+					vgpu->vdev.num_irqs)
-+				return -EINVAL;
-+			info.index =
-+				array_index_nospec(info.index,
-+						VFIO_PCI_NUM_IRQS +
-+						vgpu->vdev.num_irqs);
-+
-+			i = info.index - VFIO_PCI_NUM_IRQS;
-+
-+			info.flags = vgpu->vdev.irq[i].flags;
-+			cap_type.type = vgpu->vdev.irq[i].type;
-+			cap_type.subtype = vgpu->vdev.irq[i].subtype;
-+
-+			ret = vfio_info_add_capability(&caps,
-+						&cap_type.header,
-+						sizeof(cap_type));
-+			if (ret)
-+				return ret;
-+		}
-+		}
- 
- 		info.count = intel_vgpu_get_irq_count(vgpu, info.index);
- 
- 		if (info.index == VFIO_PCI_INTX_IRQ_INDEX)
- 			info.flags |= (VFIO_IRQ_INFO_MASKABLE |
- 				       VFIO_IRQ_INFO_AUTOMASKED);
--		else
--			info.flags |= VFIO_IRQ_INFO_NORESIZE;
-+
-+		if (caps.size) {
-+			info.flags |= VFIO_IRQ_INFO_FLAG_CAPS;
-+			if (info.argsz < sizeof(info) + caps.size) {
-+				info.argsz = sizeof(info) + caps.size;
-+				info.cap_offset = 0;
-+			} else {
-+				vfio_info_cap_shift(&caps, sizeof(info));
-+				if (copy_to_user((void __user *)arg +
-+						  sizeof(info), caps.buf,
-+						  caps.size)) {
-+					kfree(caps.buf);
-+					return -EFAULT;
-+				}
-+				info.cap_offset = sizeof(info);
-+			}
-+
-+			kfree(caps.buf);
-+		}
- 
- 		return copy_to_user((void __user *)arg, &info, minsz) ?
- 			-EFAULT : 0;
-@@ -1537,7 +1668,8 @@ static long intel_vgpu_ioctl(struct mdev_device *mdev, unsigned int cmd,
- 			int max = intel_vgpu_get_irq_count(vgpu, hdr.index);
- 
- 			ret = vfio_set_irqs_validate_and_prepare(&hdr, max,
--						VFIO_PCI_NUM_IRQS, &data_size);
-+					VFIO_PCI_NUM_IRQS + vgpu->vdev.num_irqs,
-+								 &data_size);
- 			if (ret) {
- 				gvt_vgpu_err("intel:vfio_set_irqs_validate_and_prepare failed\n");
- 				return -EINVAL;
--- 
-2.17.1
-
