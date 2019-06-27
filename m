@@ -2,68 +2,68 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B244AC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15ADC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831A820644
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F25120644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:43:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+UKG+O4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUZvhBi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfF0Rn2 (ORCPT
+        id S1727174AbfF0Rnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:43:28 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34104 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfF0Rn0 (ORCPT
+        Thu, 27 Jun 2019 13:43:32 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40864 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfF0Rna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:43:26 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p10so1355614pgn.1;
-        Thu, 27 Jun 2019 10:43:26 -0700 (PDT)
+        Thu, 27 Jun 2019 13:43:30 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a93so1684553pla.7;
+        Thu, 27 Jun 2019 10:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=5yXtCY8+SUxwVe8KOeKy/jAD6fDiQgSV/PqCOT/7qso=;
-        b=f+UKG+O4/Rxj5mwHBxO2vSuKFB5Jbwqy+gAXw/tRLQ24V4c+1nRp1pK3GVV8/kunBr
-         XBbE5+y+3ugm94S4HF3cyhnfzYHwKHn63wAThdv/cn/wTWK4fcWFCnjXLSWBFP76S7AQ
-         v5gpeCj2430jpnMH7ycFJOgnQJUFpmGhIF2T/TP2M7YecU28G7McurxHyyqflnaBzlSP
-         D4RBfB5FRfJ6+RLAbK49cbdE3kFhh+Xjrq0SUQbUMONGJBb6BlPpdoAsyfMyw3UUzbmh
-         tZRzbjrHm5IUwz31ebloD3Jkmge6him6jrNznLJSskqmCM5Dm3CwYDqkN2N8kqPK+5+J
-         uhMA==
+        bh=Omg2r+qJLtgq2Odatu+vxMoOAmxY3CNldRSlBn3BzJY=;
+        b=oUZvhBi+q6BwldFmrCI54T7dPoXEbxghwxxzpvavrUkRyVtj+XELXymH1Gt6dl1ViN
+         SNPT/gpluLW5q4VlChwqJJeVvRXu2dKAtlbWEUN5yOP/PqtBHkAS+Jarw/GLxFaztMbR
+         CYW3ICYEmqxkQNzq0N2GQlPlWVlLvoGuHbglVzyHBUX5oupicR1OwrkAu+ymen7ZsDPE
+         XrkiXys0509jPgEesExshUrWq2U4Jda/LObTVKmJr/v/7yE/4xLTO7OItsQnQwT81Pgk
+         cJxD6Fu78I/UcZcoxHkd9tShjFeFtGogT/fMVufKE6ueTLwZIv67k2bHXIh6ZSC7Ifz3
+         yXwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5yXtCY8+SUxwVe8KOeKy/jAD6fDiQgSV/PqCOT/7qso=;
-        b=lOVO4LhXKBcjefWlNapLdV/H6J0Uug/mvyw8UmyiKrIFtW8yuQUNabkpbpWJfki+HB
-         9N9V/7sLY374bVFFzsxEOGVCv/NHQy+RUoKAxiMolUsmYI3dBUQKE6+ww2g02uopG41s
-         7tKXishjSzCdSsq99EF10sTnMKg+9HCC4jRklE7Ah3ZHhbfaD6q2Q3FHiMT+Bu+oeqj6
-         1khMPuu1DuNAv50hvm4tuCL4nrxYtd4bMPzbrWV9m+xXnAT5VGSR5ly74B9hZV8+7C3j
-         rHkn2XIJE7RkMXWft7oSlycHVQPRVin3UVyz1WU12gTrAUpJ6alMYM+fJD2SRtqTpiq8
-         06Bw==
-X-Gm-Message-State: APjAAAXgEMm+XUrolSUXynNpIoHR6aRSGYqywtHyD8BAZEF60cBQOrff
-        Rv79TPJNzyxhLH30d8eRslY=
-X-Google-Smtp-Source: APXvYqwXKxyNpqDNq5O1I8zhK3VRQ+kC4YusxJsOH6nHnsvGEoCXhd8/wGlKIzp3uyjhYIZxoAqZ+w==
-X-Received: by 2002:a63:4518:: with SMTP id s24mr4953313pga.123.1561657405805;
-        Thu, 27 Jun 2019 10:43:25 -0700 (PDT)
+        bh=Omg2r+qJLtgq2Odatu+vxMoOAmxY3CNldRSlBn3BzJY=;
+        b=m3hzMf90kKeu8aquhoNos7YD63gSLETQglriNug4qYED/Ad+id2kWuVOQZRjDGQ736
+         gtZUNk0uWYSoYA7DROKWlLRGWtz1YcDSOEkdgdaHUv1A//DM+x2HGvnbVFC+5TOfa9XY
+         nq6Fu3I1rTgFo2cU84gCtCXRQdmG5oaUyzJjZ7wqy91wmaDL837AEgutewe/NGJDASIX
+         5okE2T3V4ZN0iPRzgYf455pxZjNht6DfAlbc4PpbbP++uKGtWUtxUA/FC02RsOoEwD7I
+         X3JuMiIWn6ui2nhxHQn9TStHV/qtzfKEIByc4tsW1WD+ZXsV3qHjiKx0RKivbSWvQkRW
+         0CQA==
+X-Gm-Message-State: APjAAAUyD95tuKFvjM0d9/AUyCW6FcubHLfzBXgr4cwi0PDV0zXeIuBA
+        qo+4VLzNLxJH9DHFqq5yL28=
+X-Google-Smtp-Source: APXvYqzhiTWTM3GiO4gixElLqF05+baJ+GEhtlIAbDBQFJmrYzg7Ok5W/2oU1piuA9dI9B6k/Rb7Rg==
+X-Received: by 2002:a17:902:7087:: with SMTP id z7mr5982555plk.184.1561657409580;
+        Thu, 27 Jun 2019 10:43:29 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id y17sm3056052pfe.148.2019.06.27.10.43.23
+        by smtp.googlemail.com with ESMTPSA id f10sm2636285pgo.14.2019.06.27.10.43.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:43:25 -0700 (PDT)
+        Thu, 27 Jun 2019 10:43:29 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        QLogic-Storage-Upstream@cavium.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 55/87] scsi: qedf: replace vmalloc and memset with vzalloc
-Date:   Fri, 28 Jun 2019 01:43:15 +0800
-Message-Id: <20190627174315.5042-1-huangfq.daxian@gmail.com>
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 84/87] ethernet: mellanox: mlxsw: remove memset after pci_alloc_persistent
+Date:   Fri, 28 Jun 2019 01:43:19 +0800
+Message-Id: <20190627174319.5095-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,30 +71,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vmalloc + memset(0) -> vzalloc
+pci_alloc_persistent calls dma_alloc_coherent directly.
+In commit af7ddd8a627c
+("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
+dma_alloc_coherent has already zeroed the memory.
+So memset is not needed.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/scsi/qedf/qedf_dbg.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/pci.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/scsi/qedf/qedf_dbg.c b/drivers/scsi/qedf/qedf_dbg.c
-index e0387e495261..0d2aed82882a 100644
---- a/drivers/scsi/qedf/qedf_dbg.c
-+++ b/drivers/scsi/qedf/qedf_dbg.c
-@@ -106,11 +106,10 @@ qedf_dbg_info(struct qedf_dbg_ctx *qedf, const char *func, u32 line,
- int
- qedf_alloc_grc_dump_buf(u8 **buf, uint32_t len)
- {
--		*buf = vmalloc(len);
-+		*buf = vzalloc(len);
- 		if (!(*buf))
- 			return -ENOMEM;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/pci.c b/drivers/net/ethernet/mellanox/mlxsw/pci.c
+index b40455f8293d..be310ac0883a 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/pci.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/pci.c
+@@ -835,7 +835,6 @@ static int mlxsw_pci_queue_init(struct mlxsw_pci *mlxsw_pci, char *mbox,
+ 					     &mem_item->mapaddr);
+ 	if (!mem_item->buf)
+ 		return -ENOMEM;
+-	memset(mem_item->buf, 0, mem_item->size);
  
--		memset(*buf, 0, len);
- 		return 0;
- }
- 
+ 	q->elem_info = kcalloc(q->count, sizeof(*q->elem_info), GFP_KERNEL);
+ 	if (!q->elem_info) {
 -- 
 2.11.0
 
