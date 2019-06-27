@@ -2,93 +2,160 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EAFC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170BDC48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF132084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:15:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oh8LTD8m"
+	by mail.kernel.org (Postfix) with ESMTP id E4A3A2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561634124;
+	bh=jPgqxDZcWWYNOPVQr1m6fpHFvXPLYS4pO3M7pgBI9vU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HMuLd57e4j8/VFha62Cny3r6fOgPIKkfkSRZDmb1+23/A1F4HY7LqZA7Dui1lIHJ6
+	 UwxogbHnmpGj5Wsfx9TPkxLVw0aNPuUMRwGplp3Ow3wae7UhsMRCP8ON5OFz1uAdZ6
+	 HvV8QfIGtCnmw/0DIswlgPAj1axRUiGGACT5aSUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfF0LPM (ORCPT
+        id S1726603AbfF0LPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 07:15:12 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45670 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfF0LPL (ORCPT
+        Thu, 27 Jun 2019 07:15:13 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42433 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfF0LPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:15:11 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m23so1885783lje.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 04:15:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5TqvPz8DpORGx1+vi8ExXWSK0FXpNg/HXwHTY32b52w=;
-        b=Oh8LTD8m7IDgDorBBc7V+VvCco9ShEfKtubYx65x1T5UADxUHneIwXm5D34fbeGt8A
-         ixjCx/VH3pF/bQ6ZHMg9PHCQmjkpCAiXVk/t5qsh/Qqm5tx9SPGzVhjOT8gQTzjQQrfi
-         lAGtQ9fEG9oF9K1v8oeREAXC0uuw/SL0BJN950l/xiDxO5+wGYpYmT+5VPl0QUp7nSue
-         aAMKG7ngQmAlBgnfr7IMamGqNGSDVnT6ZsHyoFmoAYfgNHCqJ4qfQ4AxjZkWYV30/+vx
-         p6K15ZkS7XsSbBvwsLCURk/PDZbWbvX4UVyTadC7wxBwmODusUKB4z9LZEZdJG1mVlPF
-         JTEg==
+        Thu, 27 Jun 2019 07:15:12 -0400
+Received: by mail-oi1-f196.google.com with SMTP id s184so1262750oie.9;
+        Thu, 27 Jun 2019 04:15:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5TqvPz8DpORGx1+vi8ExXWSK0FXpNg/HXwHTY32b52w=;
-        b=dLLOAwkxFdVcwV1w5lyxKVonLSj4Hd0KUn9QXXVQjrbPNZHkxfRTbX5+S4A9/5PQEm
-         dwfE+UVWbUMIQlwf4XnpwbvM2nvxW8CZdBz3zm63I3Oax7T1FNxKds6cE2Ra3P9hwUZo
-         2gtix27CmKHonPyVrVny302iz159CBA6e1TQe78fuYWyueSIrvhiha/euLpF8mpmwEQ7
-         0fyohSvZFi02pkHCKhKUm+o5HrB8DA05nbgwwVDI/Nq+sKm+WQ6Ez5p+zBqxacVM80Vu
-         4pHdRuYrc2UeQTd3d7jxivfknH7VbLffcGXxwGaHat2qlUY93YxWqXQZqFcAxAto0EVs
-         XO/A==
-X-Gm-Message-State: APjAAAWu5cTC6BJnBLvqf2zRJr/YTuTg4qeOUu13F0WP3SIGK2BNmHe1
-        xg0rj0+L1o+Bsk8GIDKuQMCkjARexgRNIjvM6z/sUQ==
-X-Google-Smtp-Source: APXvYqyVA9C7Y1iH92FooDzDgEr3HQuytpfeJym/aOuE5hBX0/swTw0Rz9L0rgrDIJ1qob4Es/otbtAluqfU9XSMIXs=
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr2303238ljm.180.1561634109728;
- Thu, 27 Jun 2019 04:15:09 -0700 (PDT)
+        bh=vkwo17Jxfe5H5nbAVTLEzuj/Ttfe2mfI+ZP3IgtJV0U=;
+        b=OUPqgu2JfWT6Uwh0CcoTTC7JJwjHEf/ietKvM5gPMbD9N1uvhnV5NEQasTxeoC7gXX
+         7M4gpBfoIQ6lw1nXF4d0EEZwTaMsbQc6fjCYOROiGix89XVADw2ElqEGuXppGsA3KveW
+         LTvDbzSlP0btXohk2XwOgNYxg+3QmGYhE3pHa8kybnJoSfNlc26ls6ySZFu99pOOwAj3
+         /PmeC2MUDvV2qW4awQzR2y8kWJZ2PatCzZuCZi6Y8/cS9NgZZWvH7U7VEJ/KVY6W1YQS
+         6QMqYLtP3xRIntNDMZAv7wB9rWNZL3K0v+sYVgISACsRgxsH/IJs2cudizjoPAzsxefr
+         RCCw==
+X-Gm-Message-State: APjAAAX4ZH48jPLeMfkTEEeh0vPgFp+0I8eLtKWo89DziLjVYO+ctS2G
+        Txp7k9kHRm/rPLeI/lIQTfPdSiLzAOK7PQKP97edxA==
+X-Google-Smtp-Source: APXvYqyNtP3I+OQkcwTXLakewZWO7PdxVHYhHgXqYPHJVPHIo+HivWejz3S0mN7DzNENmB04FtX/QkK8MfHFVJJiFRY=
+X-Received: by 2002:aca:edc8:: with SMTP id l191mr1874535oih.103.1561634111149;
+ Thu, 27 Jun 2019 04:15:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190625163434.13620-1-brgl@bgdev.pl> <20190625163434.13620-4-brgl@bgdev.pl>
-In-Reply-To: <20190625163434.13620-4-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 27 Jun 2019 12:14:58 +0100
-Message-ID: <CACRpkdZm35HOxBqDN0dfAyiMPFAPOguPrzuPUwS14kZM-VJV4A@mail.gmail.com>
-Subject: Re: [PATCH 03/12] backlight: gpio: pull the non-pdata device probing
- code into probe()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Lechner <david@lechnology.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190626213718.39423-1-jeremy.linton@arm.com> <20190626213718.39423-2-jeremy.linton@arm.com>
+In-Reply-To: <20190626213718.39423-2-jeremy.linton@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 27 Jun 2019 13:15:00 +0200
+Message-ID: <CAJZ5v0hqDwEAuJ6rk5yBd7_OCW71Y5ihHHNDUUiW6a3wvWOuGg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] ACPI/PPTT: Modify node flag detection to find last IDENTICAL
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Hanjun Gou <gouhanjun@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 5:34 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Wed, Jun 26, 2019 at 11:37 PM Jeremy Linton <jeremy.linton@arm.com> wrote:
 >
-> There's no good reason to have the generic probing code in a separate
-> routine. This function is short and is inlined by the compiler anyway.
-> Move it into probe under the pdata-specific part.
+> The ACPI specification implies that the IDENTICAL flag should be
+> set on all non leaf nodes where the children are identical.
+> This means that we need to be searching for the last node with
+> the identical flag set rather than the first one.
 >
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Since this flag is also dependent on the table revision, we
+> need to add a bit of extra code to verify the table revision,
+> and the next node's state in the traversal. Since we want to
+> avoid function pointers here, lets just special case
+> the IDENTICAL flag.
+>
+> Tested-by: Hanjun Gou <gouhanjun@huawei.com>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Assuming that the Tested-by tag will be fixed:
 
-Yours,
-Linus Walleij
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+> ---
+>  drivers/acpi/pptt.c | 35 +++++++++++++++++++++++++++++------
+>  1 file changed, 29 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
+> index b72e6afaa8fb..05344413f199 100644
+> --- a/drivers/acpi/pptt.c
+> +++ b/drivers/acpi/pptt.c
+> @@ -432,17 +432,40 @@ static void cache_setup_acpi_cpu(struct acpi_table_header *table,
+>         }
+>  }
+>
+> +static bool flag_identical(struct acpi_table_header *table_hdr,
+> +                          struct acpi_pptt_processor *cpu)
+> +{
+> +       struct acpi_pptt_processor *next;
+> +
+> +       /* heterogeneous machines must use PPTT revision > 1 */
+> +       if (table_hdr->revision < 2)
+> +               return false;
+> +
+> +       /* Locate the last node in the tree with IDENTICAL set */
+> +       if (cpu->flags & ACPI_PPTT_ACPI_IDENTICAL) {
+> +               next = fetch_pptt_node(table_hdr, cpu->parent);
+> +               if (!(next && next->flags & ACPI_PPTT_ACPI_IDENTICAL))
+> +                       return true;
+> +       }
+> +
+> +       return false;
+> +}
+> +
+>  /* Passing level values greater than this will result in search termination */
+>  #define PPTT_ABORT_PACKAGE 0xFF
+>
+> -static struct acpi_pptt_processor *acpi_find_processor_package_id(struct acpi_table_header *table_hdr,
+> -                                                                 struct acpi_pptt_processor *cpu,
+> -                                                                 int level, int flag)
+> +static struct acpi_pptt_processor *acpi_find_processor_tag(struct acpi_table_header *table_hdr,
+> +                                                          struct acpi_pptt_processor *cpu,
+> +                                                          int level, int flag)
+>  {
+>         struct acpi_pptt_processor *prev_node;
+>
+>         while (cpu && level) {
+> -               if (cpu->flags & flag)
+> +               /* special case the identical flag to find last identical */
+> +               if (flag == ACPI_PPTT_ACPI_IDENTICAL) {
+> +                       if (flag_identical(table_hdr, cpu))
+> +                               break;
+> +               } else if (cpu->flags & flag)
+>                         break;
+>                 pr_debug("level %d\n", level);
+>                 prev_node = fetch_pptt_node(table_hdr, cpu->parent);
+> @@ -480,8 +503,8 @@ static int topology_get_acpi_cpu_tag(struct acpi_table_header *table,
+>
+>         cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
+>         if (cpu_node) {
+> -               cpu_node = acpi_find_processor_package_id(table, cpu_node,
+> -                                                         level, flag);
+> +               cpu_node = acpi_find_processor_tag(table, cpu_node,
+> +                                                  level, flag);
+>                 /*
+>                  * As per specification if the processor structure represents
+>                  * an actual processor, then ACPI processor ID must be valid.
+> --
+> 2.21.0
+>
