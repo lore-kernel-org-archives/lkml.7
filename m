@@ -5,187 +5,198 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A093DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95347C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A7D20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D1620659
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZM5jrqkf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mMSGLXrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfF0QHL (ORCPT
+        id S1726576AbfF0QHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:07:11 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33625 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfF0QHK (ORCPT
+        Thu, 27 Jun 2019 12:07:46 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35260 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbfF0QHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:07:10 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c14so1560626plo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 09:07:10 -0700 (PDT)
+        Thu, 27 Jun 2019 12:07:45 -0400
+Received: by mail-lj1-f193.google.com with SMTP id x25so2964728ljh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 09:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YubArmml1h3da19oo14hDKUh4iUk2iId9IFXcb+lgfE=;
-        b=ZM5jrqkf1YPQbShg55KDMRK1AN3BPBhV1rfjC02j8tBiDqKSXL/oWs7V6cvjIBQTns
-         uLwb7Xo2dWd0Jxc2Y8eQwBFXKoFJM7ycdsQnAwlvl1hiwA5fYeI5fJKCqY80nLPYmovI
-         JpC6AI+aU7O+uTMLz8MZXgL42KaRt7ZabJkNM=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7gTNVn5WCRldcDUWtwi1/4b1MRMrZ6Z1SWmnd3KDtoo=;
+        b=mMSGLXrRvMZGZ14LwUf/WZBcQ21CdDDWbtHgzqqBkGpt9ngbgWupQBTb5vwwIw6yW4
+         GahqbUABhriM2yXqUnGjZkwg0LPGCGJNO+ZXqwLGyQrNVAY7s8T/ktfrpesN3OIR3iH7
+         TyoVBc7MOhQWS+sE+q9qT7LeV+q30GZrpaVHw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YubArmml1h3da19oo14hDKUh4iUk2iId9IFXcb+lgfE=;
-        b=ESPC2z9WapYLhObszjqduXm+AKPzLijizsG26DCeMIb88njRKY2oZzqTbxvN9sCh9r
-         Gsm3smjL4uCQvRG0LV5j6sTXl05jLqvwn4HUOVF/StOUtVfKrvfLZ6hm+7k87WtUZ2gU
-         1TAA/++54pDn9xsaw3Zcz3Sdr3iwjM7m+y6Sy/k12ybHOV0lojgkZe2mz5OpCzIUy0Ok
-         YZ7lOzQT+d9HCvHmTm/YfTj9zxUXKbyFctGChX/8rbT3RIpVfojSTJ2E+IWP+2dMAz2E
-         gzPHZY9FGbkjC0M7NypgQPUiLCP+xtgvs2Wd1sz+M+IN0F17RM1dGOu+ZEH9WgDjhKiW
-         wRfw==
-X-Gm-Message-State: APjAAAVANwNseR8WfhtGhO8QLCKTQDjLtlOpd+NJ/f790d5TIDleFLRJ
-        DMVtoStAc2r+09a4GmPiEDyRGw==
-X-Google-Smtp-Source: APXvYqxIq0TpaZ0zSQZtZhkI/74V37DVi1HouI3w6I5BzO0yXzYiL7aJZqJNRqs/ejob+/YzW1mf5g==
-X-Received: by 2002:a17:902:4222:: with SMTP id g31mr5760668pld.41.1561651629814;
-        Thu, 27 Jun 2019 09:07:09 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f10sm3514357pfd.151.2019.06.27.09.07.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Jun 2019 09:07:08 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 09:07:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Marco Elver <elver@google.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org
-Subject: Re: [PATCH v4 5/5] mm/kasan: Add object validation in ksize()
-Message-ID: <201906270906.9EE619600@keescook>
-References: <20190627094445.216365-1-elver@google.com>
- <20190627094445.216365-6-elver@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7gTNVn5WCRldcDUWtwi1/4b1MRMrZ6Z1SWmnd3KDtoo=;
+        b=c3kQQkTNOOP9zrtBtYhfJG3ZJ39nEYSzERmpEVvaZTE5P3ebCGbLAeVzqQFcBN0iJz
+         7ucHwwDB2HejgHvakDRzNT35e1KPiylyGoBsQ7RPLC3c1F4vkSsxdZnI2bfu4qORM1da
+         Ux4597OLvh09HNekIRyPiYcbqogx7DmHfKO0n/fRsleejilrnzJ66OWmnWjMnzi+/CTb
+         zwuXWoioa9BpzO2xoVqlMkOxFRBAWvK8XuLgZg1w1ptFaHs614I8sSQxkxczihcO55kq
+         QvMdF+Uc3Os+AxMzoc3Uy1iQtEJ0R91ssONNPyiwl9MAIzm0MpHza2su+lY+VgUscUG1
+         B3RA==
+X-Gm-Message-State: APjAAAXBI2cuh2jPFAJOmYgDbiLcZ+y52CKLYSx6tXFYU+IJPeQ5EddU
+        vcuOA+rfdNDM62AabrJqnCmW4caN1EI=
+X-Google-Smtp-Source: APXvYqwvdYI8N+dOE3fM39c7E9OBE+KOV4mycaBiJ2m6fxLLorWObJEuVb91ETDWFk4/6Y9KQOdyQw==
+X-Received: by 2002:a2e:7c15:: with SMTP id x21mr3145402ljc.55.1561651662755;
+        Thu, 27 Jun 2019 09:07:42 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id a17sm490759lfk.0.2019.06.27.09.07.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 09:07:41 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id r9so2951515ljg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 09:07:41 -0700 (PDT)
+X-Received: by 2002:a2e:898b:: with SMTP id c11mr3200920lji.241.1561651660581;
+ Thu, 27 Jun 2019 09:07:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627094445.216365-6-elver@google.com>
+References: <20190617215234.260982-1-evgreen@chromium.org> <20190625130515.GJ21119@dell>
+ <e9e6e090-7c9b-ff5c-7389-702f9deb6712@collabora.com>
+In-Reply-To: <e9e6e090-7c9b-ff5c-7389-702f9deb6712@collabora.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Thu, 27 Jun 2019 09:07:04 -0700
+X-Gmail-Original-Message-ID: <CAE=gft5TCcWGz_i3AaqexNWx6XvwcxNqTcXqrGn_4bFaMQFtjA@mail.gmail.com>
+Message-ID: <CAE=gft5TCcWGz_i3AaqexNWx6XvwcxNqTcXqrGn_4bFaMQFtjA@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/chrome: Expose resume result via debugfs
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 11:44:45AM +0200, Marco Elver wrote:
-> ksize() has been unconditionally unpoisoning the whole shadow memory region
-> associated with an allocation. This can lead to various undetected bugs,
-> for example, double-kzfree().
-> 
-> Specifically, kzfree() uses ksize() to determine the actual allocation
-> size, and subsequently zeroes the memory. Since ksize() used to just
-> unpoison the whole shadow memory region, no invalid free was detected.
-> 
-> This patch addresses this as follows:
-> 
-> 1. Add a check in ksize(), and only then unpoison the memory region.
-> 
-> 2. Preserve kasan_unpoison_slab() semantics by explicitly unpoisoning
->    the shadow memory region using the size obtained from __ksize().
-> 
-> Tested:
-> 1. With SLAB allocator: a) normal boot without warnings; b) verified the
->    added double-kzfree() is detected.
-> 2. With SLUB allocator: a) normal boot without warnings; b) verified the
->    added double-kzfree() is detected.
-> 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=199359
-> Signed-off-by: Marco Elver <elver@google.com>
+On Wed, Jun 26, 2019 at 1:55 PM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Evan,
+>
+> Two few comments and I think I'm fine with it.
+>
+> On 25/6/19 15:05, Lee Jones wrote:
+> > On Mon, 17 Jun 2019, Evan Green wrote:
+> >
+> >> For ECs that support it, the EC returns the number of slp_s0
+> >> transitions and whether or not there was a timeout in the resume
+> >> response. Expose the last resume result to usermode via debugfs so
+> >> that usermode can detect and report S0ix timeouts.
+> >>
+> >> Signed-off-by: Evan Green <evgreen@chromium.org>
+> >
+> > This still needs a platform/chrome Ack.
+> >
+> >> ---
+> >>
+> >> Changes in v2:
+> >>  - Moved from sysfs to debugfs (Enric)
+> >>  - Added documentation (Enric)
+> >>
+> >>
+> >> ---
+> >>  Documentation/ABI/testing/debugfs-cros-ec | 22 ++++++++++++++++++++++
+> >>  drivers/mfd/cros_ec.c                     |  6 +++++-
+> >>  drivers/platform/chrome/cros_ec_debugfs.c |  7 +++++++
+> >>  include/linux/mfd/cros_ec.h               |  1 +
+> >>  4 files changed, 35 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
+> >> index 573a82d23c89..008b31422079 100644
+> >> --- a/Documentation/ABI/testing/debugfs-cros-ec
+> >> +++ b/Documentation/ABI/testing/debugfs-cros-ec
+> >> @@ -32,3 +32,25 @@ Description:
+> >>              is used for synchronizing the AP host time with the EC
+> >>              log. An error is returned if the command is not supported
+> >>              by the EC or there is a communication problem.
+> >> +
+> >> +What:               /sys/kernel/debug/cros_ec/last_resume_result
+>
+> Thinking about it, as other the other interfaces, I'd do
+>
+> s/cros_ec/<cros-ec-device>/
+>
+> I know that for now only cros_ec supports that, but we don't know what will
+> happen in the future, specially now that the number of cros devices is incrementing.
 
-Acked-by: Kees Cook <keescook@chromium.org>
+See my comment below, I suppose the fate of these two comments are
+tied together.
 
--Kees
+>
+> >> +Date:               June 2019
+> >> +KernelVersion:      5.3
+> >> +Description:
+> >> +            Some ECs have a feature where they will track transitions to
+> >> +            the (Intel) processor's SLP_S0 line, in order to detect cases
+> >> +            where a system failed to go into S0ix. When the system resumes,
+> >> +            an EC with this feature will return a summary of SLP_S0
+> >> +            transitions that occurred. The last_resume_result file returns
+> >> +            the most recent response from the AP's resume message to the EC.
+> >> +
+> >> +            The bottom 31 bits contain a count of the number of SLP_S0
+> >> +            transitions that occurred since the suspend message was
+> >> +            received. Bit 31 is set if the EC attempted to wake the
+> >> +            system due to a timeout when watching for SLP_S0 transitions.
+> >> +            Callers can use this to detect a wake from the EC due to
+> >> +            S0ix timeouts. The result will be zero if no suspend
+> >> +            transitions have been attempted, or the EC does not support
+> >> +            this feature.
+> >> +
+> >> +            Output will be in the format: "0x%08x\n".
+> >> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
+> >> index 5d5c41ac3845..2a9ac5213893 100644
+> >> --- a/drivers/mfd/cros_ec.c
+> >> +++ b/drivers/mfd/cros_ec.c
+> >> @@ -102,12 +102,16 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+> >>
+> >>      /* For now, report failure to transition to S0ix with a warning. */
+> >>      if (ret >= 0 && ec_dev->host_sleep_v1 &&
+> >> -        (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
+> >> +        (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME)) {
+> >> +            ec_dev->last_resume_result =
+> >> +                    buf.u.resp1.resume_response.sleep_transitions;
+> >> +
+> >>              WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
+> >>                        EC_HOST_RESUME_SLEEP_TIMEOUT,
+> >>                        "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
+> >>                        buf.u.resp1.resume_response.sleep_transitions &
+> >>                        EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
+> >> +    }
+> >>
+> >>      return ret;
+> >>  }
+> >> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+> >> index cd3fb9c22a44..663bebf699bf 100644
+> >> --- a/drivers/platform/chrome/cros_ec_debugfs.c
+> >> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
+> >> @@ -447,6 +447,13 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
+> >>      debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
+> >>                          &cros_ec_uptime_fops);
+> >>
+> >> +    if (!strcmp(ec->class_dev.kobj.name, CROS_EC_DEV_NAME)) {
+>
+> For debugfs I don't care having the file exposed even is not supported, anyway
+> there are some CROS_EC_DEV_NAME that won't support it, so just make this simple
+> and create the file always.
 
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Andrey Konovalov <andreyknvl@google.com>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: kasan-dev@googlegroups.com
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> ---
-> v4:
-> * Prefer WARN_ON_ONCE() instead of BUG_ON().
-> ---
->  include/linux/kasan.h |  7 +++++--
->  mm/slab_common.c      | 22 +++++++++++++++++++++-
->  2 files changed, 26 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index b40ea104dd36..cc8a03cc9674 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -76,8 +76,11 @@ void kasan_free_shadow(const struct vm_struct *vm);
->  int kasan_add_zero_shadow(void *start, unsigned long size);
->  void kasan_remove_zero_shadow(void *start, unsigned long size);
->  
-> -size_t ksize(const void *);
-> -static inline void kasan_unpoison_slab(const void *ptr) { ksize(ptr); }
-> +size_t __ksize(const void *);
-> +static inline void kasan_unpoison_slab(const void *ptr)
-> +{
-> +	kasan_unpoison_shadow(ptr, __ksize(ptr));
-> +}
->  size_t kasan_metadata_size(struct kmem_cache *cache);
->  
->  bool kasan_save_enable_multi_shot(void);
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index b7c6a40e436a..a09bb10aa026 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -1613,7 +1613,27 @@ EXPORT_SYMBOL(kzfree);
->   */
->  size_t ksize(const void *objp)
->  {
-> -	size_t size = __ksize(objp);
-> +	size_t size;
-> +
-> +	if (WARN_ON_ONCE(!objp))
-> +		return 0;
-> +	/*
-> +	 * We need to check that the pointed to object is valid, and only then
-> +	 * unpoison the shadow memory below. We use __kasan_check_read(), to
-> +	 * generate a more useful report at the time ksize() is called (rather
-> +	 * than later where behaviour is undefined due to potential
-> +	 * use-after-free or double-free).
-> +	 *
-> +	 * If the pointed to memory is invalid we return 0, to avoid users of
-> +	 * ksize() writing to and potentially corrupting the memory region.
-> +	 *
-> +	 * We want to perform the check before __ksize(), to avoid potentially
-> +	 * crashing in __ksize() due to accessing invalid metadata.
-> +	 */
-> +	if (unlikely(objp == ZERO_SIZE_PTR) || !__kasan_check_read(objp, 1))
-> +		return 0;
-> +
-> +	size = __ksize(objp);
->  	/*
->  	 * We assume that ksize callers could use whole allocated area,
->  	 * so we need to unpoison this area.
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
+Aw, really? This file is very specific to system suspend/resume. My
+original patch had it everywhere, but I was finding it very ugly that
+this was showing up on things like the fingerprint device. I can
+change it if you think it's better to have it everywhere, but it also
+seems like an easy change to make in the future if this file is for
+some reason needed on other EC types.
 
--- 
-Kees Cook
+-Evan
