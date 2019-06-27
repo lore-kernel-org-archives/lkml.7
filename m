@@ -2,170 +2,180 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95ACC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DB0C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1A72063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561607760;
-	bh=HtG9XaxI8dxdP6z0WoeNQBcq5UjKcC+JZ0uUdedJPfU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ylC5mu/d9uOZNAjh5z+eAzwE5/4h1i5kEykkeFItTLt/p6foZ/qL5OqVhYyTE6AgJ
-	 0rpk5IuSMYJaPgZkX8OxMVfvlmN/4s9FEIsseACUMp4mb6MVnwuQLb1UIwvSWcawTe
-	 GJc9pG1jqrhPqxkyDAMNF+ilktm/+v3j2kbw9Ewo=
+	by mail.kernel.org (Postfix) with ESMTP id 1966B217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:56:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfF0Dz7 (ORCPT
+        id S1727087AbfF0D4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 23:55:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39198 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 23:56:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41768 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbfF0Dz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 23:55:59 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726640AbfF0D43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 23:56:29 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C4AC2063F;
-        Thu, 27 Jun 2019 03:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561607757;
-        bh=HtG9XaxI8dxdP6z0WoeNQBcq5UjKcC+JZ0uUdedJPfU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=aCiyYf91Fiy8r87E3PA4odSo5T08hQxff3C8OrTDA+ZjD4Z+6AL26BO9kBsuH4uCR
-         osjDwyjfoKK6baFwWy4UQVqdTbmdaFXoffbnjjaDs3e5jqleOc2aOUACe1iUMFmJNj
-         gLwkr/MCN5DDmodd2fd6Q6IQRz5lO0XMRFbNeguo=
-Date:   Wed, 26 Jun 2019 20:55:55 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        DaeRyong Jeong <threeearcat@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 4 open syzbot bugs in tty subsystem
-Message-ID: <20190627035555.GE721@sol.localdomain>
+        by mx1.redhat.com (Postfix) with ESMTPS id A9DFA81F35;
+        Thu, 27 Jun 2019 03:56:28 +0000 (UTC)
+Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 601D460856;
+        Thu, 27 Jun 2019 03:56:26 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 22:56:23 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v3 2/4] objtool: Add support for C jump tables
+Message-ID: <20190627035623.owkbrxa7dx7suv4a@treble>
+References: <cover.1561595111.git.jpoimboe@redhat.com>
+ <426541f62dad525078ee732c09bc206289e994aa.1561595111.git.jpoimboe@redhat.com>
+ <CAADnVQ+veayfD70Xsu8UnNrLdRW6rh9jxPb=OGoiYT-O=_zW=A@mail.gmail.com>
+ <20190627024700.q4rkcbhmrna6ev4y@treble>
+ <CAADnVQJRs9NdHgGiAZfzCLb=eWAPD03-+uf3fisLZrKZUSSoyg@mail.gmail.com>
+ <20190627034447.gl5tusbhkbr6dadc@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190627034447.gl5tusbhkbr6dadc@treble>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 27 Jun 2019 03:56:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better.]
+On Wed, Jun 26, 2019 at 10:44:47PM -0500, Josh Poimboeuf wrote:
+> > > How about the following approach instead?  This is the only other way I
+> > > can think of to annotate a jump table so that objtool can distinguish
+> > > it:
+> > >
+> > > #define __annotate_jump_table __section(".jump_table.rodata")
+> > >
+> > > Then bpf would just need the following:
+> > >
+> > > -       static const void *jumptable[256] = {
+> > > +       static const void __annotate_jump_table *jumptable[256] = {
+> > >
+> > > This would be less magical and fragile than my original approach.
+> > >
+> > > I think the jump table would still be placed with all the other rodata,
+> > > like before, because the vmlinux linker script recognizes the section
+> > > ".rodata" suffix and bundles them all together.
+> > 
+> > I like it if that works :)
+> > Definitely cleaner.
+> > May be a bit more linker script magic would be necessary,
+> > but hopefully not.
+> > And no need to rely on gcc style of mangling static vars.
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 4 of them as possibly being bugs in the tty subsystem.  I've listed these
-reports below, sorted by an algorithm that tries to list first the reports most
-likely to be still valid, important, and actionable.
+The last patch was based weird, this one's based on upstream.  Will test
+tomorrow.
 
-Of these 4 bugs, 2 were seen in mainline in the last week.
-
-Of these 4 bugs, 1 was bisected to a commit from the following person:
-
-	DaeRyong Jeong <threeearcat@gmail.com>
-
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed a bug to the tty subsystem, please let me know,
-and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in console_unlock
-Last occurred:      0 days ago
-Reported:           385 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=39ea6caa479af471183997376dc7e90bc7d64a6a
-Original thread:    https://lkml.kernel.org/lkml/00000000000087008b056df8fbb3@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 19 replies; the last was 126 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+43e93968b964e369db0b@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000087008b056df8fbb3@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in console_lock_spinning_enable
-Last occurred:      0 days ago
-Reported:           6 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=2820deb61d92a8d7ab17a56ced58e963e65d76d0
-Original thread:    https://lkml.kernel.org/lkml/0000000000006c95c1058bbf7c3d@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit b6da31b2c07c46f2dcad1d86caa835227a16d9ff
-	Author: DaeRyong Jeong <threeearcat@gmail.com>
-	Date:   Mon Apr 30 15:27:04 2018 +0000
-
-	  tty: Fix data race in tty_insert_flip_string_fixed_flag
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+3ed715090790806d8b18@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000006c95c1058bbf7c3d@google.com
-
---------------------------------------------------------------------------------
-Title:              memory leak in cfserl_create
-Last occurred:      21 days ago
-Reported:           21 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=62bc71b5fa73349e2e6b6280eca9c9615ddeb585
-Original thread:    https://lkml.kernel.org/lkml/00000000000053d7e9058a97f4ca@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+7ec324747ce876a29db6@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000053d7e9058a97f4ca@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: unable to handle kernel paging request in slhc_free
-Last occurred:      62 days ago
-Reported:           180 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ca98e815aabdd1494eacb048d649ffd4fc916e2e
-Original thread:    https://lkml.kernel.org/lkml/000000000000675cea057e201cbb@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 1 reply, 102 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000675cea057e201cbb@google.com
-
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 8aaf7cd026b0..84212bcb5015 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -116,9 +116,14 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 	".pushsection .discard.unreachable\n\t"				\
+ 	".long 999b - .\n\t"						\
+ 	".popsection\n\t"
++
++/* Annotate a C jump table to enable objtool to follow the code flow */
++#define __annotate_jump_table __section(".jump_table.rodata")
++
+ #else
+ #define annotate_reachable()
+ #define annotate_unreachable()
++#define __annotate_jump_table
+ #endif
+ 
+ #ifndef ASM_UNREACHABLE
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 080e2bb644cc..e67977e22967 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+ {
+ #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+ #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
+-	static const void *jumptable[256] = {
++	static const void __annotate_jump_table *jumptable[256] = {
+ 		[0 ... 255] = &&default_label,
+ 		/* Now overwrite non-defaults ... */
+ 		BPF_INSN_MAP(BPF_INSN_2_LBL, BPF_INSN_3_LBL),
+@@ -1558,7 +1558,6 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+ 		BUG_ON(1);
+ 		return 0;
+ }
+-STACK_FRAME_NON_STANDARD(___bpf_prog_run); /* jump table */
+ 
+ #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
+ #define DEFINE_BPF_PROG_RUN(stack_size) \
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 172f99195726..6ade2b32f484 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -18,6 +18,8 @@
+ 
+ #define FAKE_JUMP_OFFSET -1
+ 
++#define C_JUMP_TABLE_SECTION ".jump_table.rodata"
++
+ struct alternative {
+ 	struct list_head list;
+ 	struct instruction *insn;
+@@ -1035,9 +1037,15 @@ static struct rela *find_switch_table(struct objtool_file *file,
+ 
+ 		/*
+ 		 * Make sure the .rodata address isn't associated with a
+-		 * symbol.  gcc jump tables are anonymous data.
++		 * symbol.  GCC jump tables are anonymous data.
++		 *
++		 * Also support C jump tables which are in the same format as
++		 * switch jump tables.  For objtool to recognize them, they
++		 * need to be placed in the C_JUMP_TABLE_SECTION section.  They
++		 * have symbols associated with them.
+ 		 */
+-		if (find_symbol_containing(rodata_sec, table_offset))
++		if (find_symbol_containing(rodata_sec, table_offset) &&
++		    strcmp(rodata_sec->name, C_JUMP_TABLE_SECTION))
+ 			continue;
+ 
+ 		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
+@@ -1277,13 +1285,18 @@ static void mark_rodata(struct objtool_file *file)
+ 	bool found = false;
+ 
+ 	/*
+-	 * This searches for the .rodata section or multiple .rodata.func_name
+-	 * sections if -fdata-sections is being used. The .str.1.1 and .str.1.8
+-	 * rodata sections are ignored as they don't contain jump tables.
++	 * Search for the following rodata sections, each of which can
++	 * potentially contain jump tables:
++	 *
++	 * - .rodata: can contain GCC switch tables
++	 * - .rodata.<func>: same, if -fdata-sections is being used
++	 * - .jump_table.rodata: contains C annotated jump tables
++	 *
++	 * .rodata.str1.* sections are ignored; they don't contain jump tables.
+ 	 */
+ 	for_each_sec(file, sec) {
+-		if (!strncmp(sec->name, ".rodata", 7) &&
+-		    !strstr(sec->name, ".str1.")) {
++		if ((!strncmp(sec->name, ".rodata", 7) && !strstr(sec->name, ".str1.")) ||
++		    !strcmp(sec->name, C_JUMP_TABLE_SECTION)) {
+ 			sec->rodata = true;
+ 			found = true;
+ 		}
