@@ -2,136 +2,143 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ACFC4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55B2C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3B22133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:47:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561679222;
-	bh=Q1dFVGatyrvH1EwQa8A03bponGisy9U9KxUcuy5FXpk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UvrKb4IOuP7I8rYCMPAmzCDxYxzyEfaylIV7nuDe8JThDncq1Enw55XPSMxq6BB0H
-	 h8ZFycjcx5fAx2wW8ssVldV1TU3APJsP8zXvksjXPPlZcMOXwMD4buGAK+TxSkUW4u
-	 MT8L2hOQHnYQAHA73qWfaqZcObiM+lPxRAoGdsfg=
+	by mail.kernel.org (Postfix) with ESMTP id B6CF5208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:47:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="e3R8zpyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbfF0XrB (ORCPT
+        id S1726739AbfF0Xry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:47:01 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43457 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbfF0XrA (ORCPT
+        Thu, 27 Jun 2019 19:47:54 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:47863 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfF0Xry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:47:00 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i189so1983107pfg.10;
-        Thu, 27 Jun 2019 16:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tqaLuK1L6bNY5cuzUVYngg+bgb4Q6R92tXoWTRxzMkI=;
-        b=iIbAJ0+HhXrBNS1hsYpHT5C8buG1Mj/g0OAh2U5znFpi+186BSN2teqxdBdTVnG77F
-         kdmHZoJFZTmnQcuWpqWSsFQ7aV3JXDpLk2CMUhfdtzimCljVRwmrNReQEth9UZ8hLlJp
-         muc1DByzKkRp7dKSApxi5Ni4p2ChvaDByCNBv13j548c+icCoMjfhS6Oh6rl/Va/KCvB
-         p7mes9TkQtNb26gesa/N8zHNnrTaGRRtgvjKTr8VcKGMHdr9h7HjZ8ueQi7wmBRV1PcN
-         ftvXHt1qCDylmsN++jRgEpNLeXmJCPojhhNR7rTKPKAbVkaC2ruAdiG9DIyM+OD2/SQe
-         cBEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tqaLuK1L6bNY5cuzUVYngg+bgb4Q6R92tXoWTRxzMkI=;
-        b=UFKKbcbLZZiF2L9XEEotHqvtRaBNfa6I/MyRUjb4KTpRVoo29pIC5o0cn08koxaB+3
-         KLpX3bAZbW74rWCpyOAfBfmyfHcaUpo/78s/3Ge77M+hWoL4xYCJ0qKto8vCz4tYvUbW
-         cSKBkd4gtGzHskKOegW93DXTR6fE51H3QDco3VmmaDZtKbG8+P0QFeVlN6gA/GCVC1aP
-         I+Tr0dPkJENc/sO2uR5ifT1c7rEJzhXW5nvxcFShnSLT0GaF8PFwsc1daEuK3iGzndl/
-         od2C99znnL77hAnV/tbDm3rFt7l5Zo6CHATWldfX44zb8F/eFFFhNXhJdFCwFon9yXPZ
-         QLDw==
-X-Gm-Message-State: APjAAAUKs8t2uojgx6EQVyRY7NRNfQKDxfTNvvPhqb35hlm3xJ07ZSae
-        eVczhZPVDJouUzA73R2VIu4=
-X-Google-Smtp-Source: APXvYqzpbRDUIvQ5FKcZ778NrsrMCXHQoQCWNiYvEEW/PsDymyV52tRB/FTO9qLcw1VQh1WcXNh5Cg==
-X-Received: by 2002:a17:90a:9bc5:: with SMTP id b5mr9330442pjw.109.1561679220004;
-        Thu, 27 Jun 2019 16:47:00 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id e6sm197854pfn.71.2019.06.27.16.46.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 16:46:58 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 08:46:52 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v3 1/5] mm: introduce MADV_COLD
-Message-ID: <20190627234652.GB33052@google.com>
-References: <20190627115405.255259-1-minchan@kernel.org>
- <20190627115405.255259-2-minchan@kernel.org>
- <343599f9-3d99-b74f-1732-368e584fa5ef@intel.com>
+        Thu, 27 Jun 2019 19:47:54 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RNlZsV503085
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 27 Jun 2019 16:47:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RNlZsV503085
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561679256;
+        bh=dHC6ig0/remYSbb17ANAbzepvA3ymaeJEI2Ue7UCDc8=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=e3R8zpyyl8tZZnK3tY7mIdvSaGtolUGKVr0PNKqlUtG550YGfkluyx3btLCFpNred
+         axcgu/gd6oa3GjVsKfkSwZF3mNJ8AKcKwzjDiVU7V4UsKC0GaDRQ70j2JwNzPHRRlj
+         U5/HILVHjvHmw4o08dN0bvsZxz8MpiG/mvQl3To8GIGxlPxi3IDDmfWcpe2f8Aq/SU
+         HAjWV4eSxB/fuUFA8xxyaScKT9F1bbBknO2QZrm+UacwxXOF9O7MNxKwA4nzS558qu
+         15SLq1dj+2cM36cuVXExwd6s982jqfL4qeKFhVx3ZX8JuwnfRZyoXcrZNHGbT6mnOo
+         8/GCNzjKivHBA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RNlZ9Z503082;
+        Thu, 27 Jun 2019 16:47:35 -0700
+Date:   Thu, 27 Jun 2019 16:47:35 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-9e16e4933e48819a259b8967e72e5765349953b1@git.kernel.org>
+Cc:     ricardo.neri-calderon@linux.intel.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        ashok.raj@intel.com, hpa@zytor.com, mingo@kernel.org,
+        ravi.v.shankar@intel.com, eranian@google.com, andi.kleen@intel.com,
+        tglx@linutronix.de, Suravee.Suthikulpanit@amd.com
+Reply-To: peterz@infradead.org, ashok.raj@intel.com,
+          linux-kernel@vger.kernel.org,
+          ricardo.neri-calderon@linux.intel.com,
+          Suravee.Suthikulpanit@amd.com, andi.kleen@intel.com,
+          tglx@linutronix.de, eranian@google.com, ravi.v.shankar@intel.com,
+          mingo@kernel.org, hpa@zytor.com
+In-Reply-To: <20190623132435.911652981@linutronix.de>
+References: <20190623132435.911652981@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/timers] x86/hpet: Add mode information to struct
+ hpet_channel
+Git-Commit-ID: 9e16e4933e48819a259b8967e72e5765349953b1
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <343599f9-3d99-b74f-1732-368e584fa5ef@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 06:13:36AM -0700, Dave Hansen wrote:
-> On 6/27/19 4:54 AM, Minchan Kim wrote:
-> > This patch introduces the new MADV_COLD hint to madvise(2) syscall.
-> > MADV_COLD can be used by a process to mark a memory range as not expected
-> > to be used in the near future. The hint can help kernel in deciding which
-> > pages to evict early during memory pressure.
-> > 
-> > It works for every LRU pages like MADV_[DONTNEED|FREE]. IOW, It moves
-> > 
-> > 	active file page -> inactive file LRU
-> > 	active anon page -> inacdtive anon LRU
-> 
-> Is the LRU behavior part of the interface or the implementation?
+Commit-ID:  9e16e4933e48819a259b8967e72e5765349953b1
+Gitweb:     https://git.kernel.org/tip/9e16e4933e48819a259b8967e72e5765349953b1
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Sun, 23 Jun 2019 15:24:00 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 28 Jun 2019 00:57:23 +0200
 
-It's a just implementation. What user should expect with this API is they just
-informs to the kernel "this memory in the regions wouldn't access in the near
-future" so how kernel will handle memory in there is up to the kernel.
+x86/hpet: Add mode information to struct hpet_channel
 
-> 
-> I ask because we've got something in between tossing something down the
-> LRU and swapping it: page migration.  Specifically, on a system with
-> slower memory media (like persistent memory) we just migrate a page
-> instead of discarding it at reclaim:
-> 
-> > https://lore.kernel.org/linux-mm/20190321200157.29678-4-keith.busch@intel.com/
-> 
-> So let's say I have a page I want to evict from DRAM to the next slower
-> tier of memory.  Do I use MADV_COLD or MADV_PAGEOUT?  If the LRU
-> behavior is part of the interface itself, then MADV_COLD doesn't work.
+The usage of the individual HPET channels is not tracked in a central
+place. The information is scattered in different data structures. Also the
+HPET reservation in the HPET character device is split out into several
+places which makes the code hard to follow.
 
-IMHO, if it's one of storage in the memory hierarchy, that shouldn't be transparent
-for the user? What I meant is VM moves inactive pages to the persistent memory
-before the reclaiming. IOW, VM would have one more level LRU or extened inactive
-LRU to cover the persistent memory.
+Assigning a mode to the channel allows to consolidate the reservation code
+and paves the way for further simplifications.
 
-> 
-> Do you think we'll need a third MADV_ flag for our automatic migration
-> behavior?  MADV_REALLYCOLD?  MADV_MIGRATEOUT?
+As a first step set the mode of the legacy channels when the HPET is in
+legacy mode.
 
-I believe it depends on how we abstract the persistent memory of cache hierarchy.
-If we abstract it as diffrent storage with DRAM, manybe, that should be part of
-other syscall like like move_pages. 
-If we abstract it as part of DRAM, that should be part of additional LRU
-or extended inactive LRU.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Andi Kleen <andi.kleen@intel.com>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Ravi Shankar <ravi.v.shankar@intel.com>
+Link: https://lkml.kernel.org/r/20190623132435.911652981@linutronix.de
+
+---
+ arch/x86/kernel/hpet.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index 8711f1fdef8f..3a8ec363d569 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -22,9 +22,17 @@ struct hpet_dev {
+ 	char				name[10];
+ };
+ 
++enum hpet_mode {
++	HPET_MODE_UNUSED,
++	HPET_MODE_LEGACY,
++	HPET_MODE_CLOCKEVT,
++	HPET_MODE_DEVICE,
++};
++
+ struct hpet_channel {
+ 	unsigned int			num;
+ 	unsigned int			irq;
++	enum hpet_mode			mode;
+ 	unsigned int			boot_cfg;
+ };
+ 
+@@ -947,6 +955,9 @@ int __init hpet_enable(void)
+ 
+ 	if (id & HPET_ID_LEGSUP) {
+ 		hpet_legacy_clockevent_register();
++		hpet_base.channels[0].mode = HPET_MODE_LEGACY;
++		if (IS_ENABLED(CONFIG_HPET_EMULATE_RTC))
++			hpet_base.channels[1].mode = HPET_MODE_LEGACY;
+ 		return 1;
+ 	}
+ 	return 0;
