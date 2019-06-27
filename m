@@ -2,87 +2,59 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A35C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4806C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F39B2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC5E2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfF0NRf (ORCPT
+        id S1726748AbfF0NRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:17:35 -0400
-Received: from mga18.intel.com ([134.134.136.126]:49336 "EHLO mga18.intel.com"
+        Thu, 27 Jun 2019 09:17:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfF0NRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:17:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 06:17:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
-   d="scan'208";a="361147600"
-Received: from unknown (HELO jsakkine-mobl1) ([10.252.36.47])
-  by fmsmga006.fm.intel.com with ESMTP; 27 Jun 2019 06:17:29 -0700
-Message-ID: <b688e845ccbe011c54b10043fbc3c0de8f0befc2.camel@linux.intel.com>
-Subject: Re: [PATCH v7 1/2] fTPM: firmware TPM running in TEE
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
-        thiruan@microsoft.com, bryankel@microsoft.com,
-        tee-dev@lists.linaro.org, ilias.apalodimas@linaro.org,
-        sumit.garg@linaro.org, rdunlap@infradead.org
-Date:   Thu, 27 Jun 2019 16:17:29 +0300
-In-Reply-To: <20190626235653.GL7898@sasha-vm>
-References: <20190625201341.15865-1-sashal@kernel.org>
-         <20190625201341.15865-2-sashal@kernel.org>
-         <673dd30d03e8ed9825bb46ef21b2efef015f6f2a.camel@linux.intel.com>
-         <20190626235653.GL7898@sasha-vm>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        id S1726697AbfF0NRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 09:17:43 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC6F02084B;
+        Thu, 27 Jun 2019 13:17:41 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 09:17:39 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] recordmcount: Fix spurious mcount entries on powerpc
+Message-ID: <20190627091739.15a51a35@gandalf.local.home>
+In-Reply-To: <8736jvtvvg.fsf@concordia.ellerman.id.au>
+References: <20190626183801.31247-1-naveen.n.rao@linux.vnet.ibm.com>
+        <8736jvtvvg.fsf@concordia.ellerman.id.au>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-26 at 19:56 -0400, Sasha Levin wrote:
-> > You've used so much on this so shouldn't this have that somewhat new
-> > co-developed-by tag? I'm also wondering can this work at all
-> 
-> Honestly, I've just been massaging this patch more than "authoring" it.
-> If you feel strongly about it feel free to add a Co-authored patch with
-> my name, but in my mind this is just Thiru's work.
+On Thu, 27 Jun 2019 15:55:47 +1000
+Michael Ellerman <mpe@ellerman.id.au> wrote:
 
-This is just my subjective view but writing code is easier than making
-it work in the mainline in 99% of cases. If this patch was doing
-something revolutional, lets say a new outstanding scheduling algorithm,
-then I would think otherwise. It is not. You without question deserve
-both credit and also the blame (if this breaks everything) :-)
+> Steve are you OK if I merge this via the powerpc tree? I'll reword the
+> commit message so that it makes sense coming prior to the commit
+> mentioned above.
 
-> > process-wise if the original author of the patch is also the only tester
-> > of the patch?
-> 
-> There's not much we can do about this... Linaro folks have tested this
-> without the fTPM firmware, so at the very least it won't explode for
-> everyone. If for some reason non-microsoft folks see issues then we can
-> submit patches on top to fix this, we're not just throwing this at you
-> and running away.
+Yes, please add:
 
-So why any of those Linaro folks can't do it? I can add after tested-by
-tag parentheses something explaining that context of testing. It is
-reasonable given the circumstances.
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-I can also give an explanation in my next PR along the lines what you
-are saying. This would definitely work for me.
+Thanks,
 
-/Jarkko
-
+-- Steve
