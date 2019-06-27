@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBFFC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BFAC48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14229217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E59216E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595480;
-	bh=C/S+sNG+v+PTJKx8SasDZ3EpwV/OjcDAbK3N53syDAU=;
+	s=default; t=1561595484;
+	bh=izG3SCuNQy/aSYFelT4kpyUT0lPwO5iH4uBJMSPnCdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aJPeLNwvcUAvkzTZRlzjoN+HhJ0SDGys4uxOxwz2+hEHShHIAGQjWbBWyxcZaK9HG
-	 9f73HRYlZGv8EnKiVX3y17ZMiQO7Bj128QO2709fbz7+TOXx9IZBhW4f/avmRm0M6d
-	 zbyjXLi5+8MljU0OFGDxSPoiBI4jPLTFBlE+f/qg=
+	b=MrwF2kJEy4hORWJCpqd+DtA5raJPtvjwcmNVCFA6PHko/8jc+3sHWLUPg7cRBFJtq
+	 +9NsYAvUhR14gktMFiJrJwSoSiQ2YBpuxJvuHLoFIDUd+tHz6H7OBoENKlk/y4Wlme
+	 3Zz84bsE6ye8MikmeKwk/3DhK9kl5hxuNiuHqaRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfF0AbO (ORCPT
+        id S1727142AbfF0AbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34472 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:31:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbfF0AbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:31:11 -0400
+        id S1727094AbfF0AbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:31:16 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D63AA217D9;
-        Thu, 27 Jun 2019 00:31:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B21B1216E3;
+        Thu, 27 Jun 2019 00:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595470;
-        bh=C/S+sNG+v+PTJKx8SasDZ3EpwV/OjcDAbK3N53syDAU=;
+        s=default; t=1561595475;
+        bh=izG3SCuNQy/aSYFelT4kpyUT0lPwO5iH4uBJMSPnCdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P7Lg9MGekNe5cpG9tePCq82ol3WZKSDNGN76GclciVtmyR/+i6peSlRkFUpv+TjSQ
-         HDmWDe/1xYQZdRj6iwkNfz47/RTk6PHhWRMwHaPIEibNZKoX99rkhdBApRiWnVHvHz
-         GBshGfHOQeiN+rFa3bMkAa3aNp0uE9xuNwvjg/v8=
+        b=m7V7HEbC8hcb1yw94wUpZQBl9RLsW5GUT0uvmBBVt4jGhqhS5Yo5FfripmYgJq7xC
+         5iZElix+p+XAgK1NMCgUo0qb5eErDKy8iw2bJ1X14kpEH4ggqAj7NUSzOXpW+R4h0J
+         98OFsYZatjdg3xnYx/MlQLdOx6yov2/Nt29MrIY0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 15/95] soundwire: stream: fix out of boundary access on port properties
-Date:   Wed, 26 Jun 2019 20:29:00 -0400
-Message-Id: <20190627003021.19867-15-sashal@kernel.org>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 17/95] iio: imu: st_lsm6dsx: fix PM support for st_lsm6dsx i2c controller
+Date:   Wed, 26 Jun 2019 20:29:02 -0400
+Message-Id: <20190627003021.19867-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -59,38 +59,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 03ecad90d3798be11b033248bbd4bbff4425a1c7 ]
+[ Upstream commit bce0d57db388cdb1c1931d0aa7d31c77b590e0f0 ]
 
-Assigning local iterator to array element and using it again for
-indexing would cross the array boundary.
-Fix this by directly referring array element without using the local
-variable.
+Properly suspend/resume i2c slaves connected to st_lsm6dsx master
+controller if the CPU goes in suspended state
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: c91c1c844ebd ("imu: st_lsm6dsx: add i2c embedded controller support")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soundwire/stream.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  2 ++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 25 +++++++++++++-------
+ 2 files changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index bd879b1a76c8..00618de2ee12 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -1401,9 +1401,7 @@ struct sdw_dpn_prop *sdw_get_slave_dpn_prop(struct sdw_slave *slave,
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+index d1d8d07a0714..83425b7b580c 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+@@ -265,6 +265,7 @@ struct st_lsm6dsx_sensor {
+  * @conf_lock: Mutex to prevent concurrent FIFO configuration update.
+  * @page_lock: Mutex to prevent concurrent memory page configuration.
+  * @fifo_mode: FIFO operating mode supported by the device.
++ * @suspend_mask: Suspended sensor bitmask.
+  * @enable_mask: Enabled sensor bitmask.
+  * @ts_sip: Total number of timestamp samples in a given pattern.
+  * @sip: Total number of samples (acc/gyro/ts) in a given pattern.
+@@ -282,6 +283,7 @@ struct st_lsm6dsx_hw {
+ 	struct mutex page_lock;
+ 
+ 	enum st_lsm6dsx_fifo_mode fifo_mode;
++	u8 suspend_mask;
+ 	u8 enable_mask;
+ 	u8 ts_sip;
+ 	u8 sip;
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+index 12e29dda9b98..96986d84e418 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+@@ -1023,8 +1023,6 @@ static int __maybe_unused st_lsm6dsx_suspend(struct device *dev)
+ {
+ 	struct st_lsm6dsx_hw *hw = dev_get_drvdata(dev);
+ 	struct st_lsm6dsx_sensor *sensor;
+-	const struct st_lsm6dsx_reg *reg;
+-	unsigned int data;
+ 	int i, err = 0;
+ 
+ 	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+@@ -1035,12 +1033,16 @@ static int __maybe_unused st_lsm6dsx_suspend(struct device *dev)
+ 		if (!(hw->enable_mask & BIT(sensor->id)))
+ 			continue;
+ 
+-		reg = &st_lsm6dsx_odr_table[sensor->id].reg;
+-		data = ST_LSM6DSX_SHIFT_VAL(0, reg->mask);
+-		err = st_lsm6dsx_update_bits_locked(hw, reg->addr, reg->mask,
+-						    data);
++		if (sensor->id == ST_LSM6DSX_ID_EXT0 ||
++		    sensor->id == ST_LSM6DSX_ID_EXT1 ||
++		    sensor->id == ST_LSM6DSX_ID_EXT2)
++			err = st_lsm6dsx_shub_set_enable(sensor, false);
++		else
++			err = st_lsm6dsx_sensor_set_enable(sensor, false);
+ 		if (err < 0)
+ 			return err;
++
++		hw->suspend_mask |= BIT(sensor->id);
  	}
  
- 	for (i = 0; i < num_ports; i++) {
--		dpn_prop = &dpn_prop[i];
--
--		if (dpn_prop->num == port_num)
-+		if (dpn_prop[i].num == port_num)
- 			return &dpn_prop[i];
+ 	if (hw->fifo_mode != ST_LSM6DSX_FIFO_BYPASS)
+@@ -1060,12 +1062,19 @@ static int __maybe_unused st_lsm6dsx_resume(struct device *dev)
+ 			continue;
+ 
+ 		sensor = iio_priv(hw->iio_devs[i]);
+-		if (!(hw->enable_mask & BIT(sensor->id)))
++		if (!(hw->suspend_mask & BIT(sensor->id)))
+ 			continue;
+ 
+-		err = st_lsm6dsx_set_odr(sensor, sensor->odr);
++		if (sensor->id == ST_LSM6DSX_ID_EXT0 ||
++		    sensor->id == ST_LSM6DSX_ID_EXT1 ||
++		    sensor->id == ST_LSM6DSX_ID_EXT2)
++			err = st_lsm6dsx_shub_set_enable(sensor, true);
++		else
++			err = st_lsm6dsx_sensor_set_enable(sensor, true);
+ 		if (err < 0)
+ 			return err;
++
++		hw->suspend_mask &= ~BIT(sensor->id);
  	}
  
+ 	if (hw->enable_mask)
 -- 
 2.20.1
 
