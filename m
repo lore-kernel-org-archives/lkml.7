@@ -2,73 +2,91 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24AFC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4012C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53E12133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C130E2133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfF0Qct (ORCPT
+        id S1726487AbfF0QeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:32:49 -0400
-Received: from mga14.intel.com ([192.55.52.115]:21015 "EHLO mga14.intel.com"
+        Thu, 27 Jun 2019 12:34:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36034 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfF0Qct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:32:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 09:32:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,424,1557212400"; 
-   d="scan'208";a="170472750"
-Received: from unknown (HELO jsakkine-mobl1) ([10.252.36.47])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 Jun 2019 09:32:44 -0700
-Message-ID: <0893dc429d4c3f3b52d423f9e61c08a5012a7519.camel@linux.intel.com>
-Subject: Re: [PATCH v7 1/2] fTPM: firmware TPM running in TEE
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     Sasha Levin <sashal@kernel.org>, peterhuewe@gmx.de, jgg@ziepe.ca,
-        corbet@lwn.net, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@microsoft.com, thiruan@microsoft.com,
-        bryankel@microsoft.com, tee-dev@lists.linaro.org,
-        sumit.garg@linaro.org, rdunlap@infradead.org
-Date:   Thu, 27 Jun 2019 19:32:45 +0300
-In-Reply-To: <20190627133004.GA3757@apalos>
-References: <20190625201341.15865-1-sashal@kernel.org>
-         <20190625201341.15865-2-sashal@kernel.org>
-         <673dd30d03e8ed9825bb46ef21b2efef015f6f2a.camel@linux.intel.com>
-         <20190626235653.GL7898@sasha-vm>
-         <b688e845ccbe011c54b10043fbc3c0de8f0befc2.camel@linux.intel.com>
-         <20190627133004.GA3757@apalos>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        id S1726315AbfF0QeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 12:34:06 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6871C3082B4D;
+        Thu, 27 Jun 2019 16:33:59 +0000 (UTC)
+Received: from krava (unknown [10.43.17.81])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B8DB060BE0;
+        Thu, 27 Jun 2019 16:33:52 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 18:33:52 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        tmricht@linux.ibm.com, brueckner@linux.ibm.com,
+        kan.liang@linux.intel.com, ben@decadent.org.uk,
+        mathieu.poirier@linaro.org, mark.rutland@arm.com,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org,
+        zhangshaokun@hisilicon.com
+Subject: Re: [PATCH v2 2/5] perf pmu: Support more complex PMU event aliasing
+Message-ID: <20190627163352.GE24279@krava>
+References: <1560521283-73314-1-git-send-email-john.garry@huawei.com>
+ <1560521283-73314-3-git-send-email-john.garry@huawei.com>
+ <20190616095844.GC2500@krava>
+ <a27e65b4-b487-9206-6dd0-6f9dcec0f1f5@huawei.com>
+ <20190620182519.GA15239@krava>
+ <6257fc79-b737-e6ca-2fce-f71afa36e9aa@huawei.com>
+ <cafed7d6-13c7-3a92-a826-024698bc6cc8@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cafed7d6-13c7-3a92-a826-024698bc6cc8@huawei.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 27 Jun 2019 16:34:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-27 at 16:30 +0300, Ilias Apalodimas wrote:
-> is really useful. I don't have hardware to test this at the moment, but once i
-> get it, i'll give it a spin.
+On Thu, Jun 27, 2019 at 05:27:32PM +0100, John Garry wrote:
 
-Thank you for responding, really appreciate it.
+SNIP
 
-Please note, however, that I already did my v5.3 PR so there is a lot of
-time to give it a spin. In all cases, we will find a way to put this to
-my v5.4 PR. I don't see any reason why not.
+> > loop 2. tok=ddrc name=ddrc0
+> > loop 3. tok=NULL -> breakout and return true
+> > 
+> > A couple of notes:
+> > a. loop 1. could be omitted, but the code becomes a bit more complicated
+> > 2. I don't have to advance name. But then we would match something like
+> > hisi_ddrc0_sccl1. Maybe this is ok.
+> > 
+> > > 
+> > > and name is still pmu with no ',' ...
+> > > please make this or
+> > > proper version that in some comment
+> > > 
+> > 
+> > I didn't really get your meaning here. Please check my replies and see
+> > if you have further doubt or concern.
+> > 
+> 
+> Hi Jirka,
+> 
+> I was just wondering if you have any further comments or questions here?
+> 
+> Much appreciated,
 
-As soon as the cosmetic stuff is fixed that I remarked in v7 I'm ready
-to take this to my tree and after that soonish make it available on
-linux-next.
+sorry, forgot about this one.. will check soon
 
-/Jarkko
-
+jirka
