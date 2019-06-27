@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7AEC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AEBC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F92216E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3ED216E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596202;
-	bh=x4mQG6GAX/CvAfXJVH7jhacAsKv8k1Vr43eH6Ug7CSc=;
+	s=default; t=1561596206;
+	bh=2wN7/1FQiDeEJB5U0GsbdSu1agyTJhKVmOXHkz+gbqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gbTxt1ZexdDCH2HK/Hmz85m3RSAvJ8pAiQ5fb5Wxzr0LCzIpRU3fZNr4LJMyLn8TL
-	 fYIpWu9HWtoHASTyd/tBr7q95UEu7VNSxK8sWsCLMl961xrOREJMp3beS6MKy9qz0w
-	 9R6ctND5F2rfV1Yd9aOfvkjZ3qjSWgtkK8NWq52k=
+	b=IVUtYYP8RCuX+3QN1O1P6U5x8cjfLjncvNCkp8CQLrUuGG2vsZC6+x2o2gGNCefGN
+	 ExDnFr1c2ymYKLIpbs5LlJXIXeDuANJK9clC6YPKKu4jB2tf+RRHy69p1BtYDBWtRi
+	 MJVy1lVrAQSHJGFCkNlH2gX+PHGG5maI56F1mXcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbfF0AnV (ORCPT
+        id S1729879AbfF0AnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:43:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:43:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728157AbfF0AnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:43:19 -0400
+        id S1728157AbfF0AnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:43:22 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3708B2083B;
-        Thu, 27 Jun 2019 00:43:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90993208E3;
+        Thu, 27 Jun 2019 00:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596198;
-        bh=x4mQG6GAX/CvAfXJVH7jhacAsKv8k1Vr43eH6Ug7CSc=;
+        s=default; t=1561596201;
+        bh=2wN7/1FQiDeEJB5U0GsbdSu1agyTJhKVmOXHkz+gbqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tcgx7bntIXza6f1LCxqdz+ML6jae16Z8Js21BhMs3mgmPXZUkPNpxo1WkF++ORNct
-         ZclOiqkZR7TC9LaypOnKmy2qqknz+lphc0im49jQbMkq3NVhyCJfPLeRcq0X6WW/y6
-         YLIMWMHdae6pjSAzuL+LqmNBGhfZ32o6ORxn3tZ4=
+        b=eeDlJKPQnpNGC3UMUaEFaJJV92yw0hWa4jFul51+X8dIL2oX3rZqNwlqKWBtx0a0G
+         rCboPdW0q990ol+SSp8yWa7EMprqXzR4m0Qp8At0oZEA/nHKFcYgQeAuYLFlFUZJNy
+         8YjVnwJJ29qadwDCmSDXM0478J7q9bOIENyBBRsk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
         Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 09/12] ARM: davinci: da850-evm: call regulator_has_full_constraints()
-Date:   Wed, 26 Jun 2019 20:42:31 -0400
-Message-Id: <20190627004236.21909-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 10/12] ARM: davinci: da8xx: specify dma_coherent_mask for lcdc
+Date:   Wed, 26 Jun 2019 20:42:32 -0400
+Message-Id: <20190627004236.21909-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627004236.21909-1-sashal@kernel.org>
 References: <20190627004236.21909-1-sashal@kernel.org>
@@ -61,36 +60,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit 0c0c9b5753cd04601b17de09da1ed2885a3b42fe ]
+[ Upstream commit 68f2515bb31a664ba3e2bc1eb78dd9f529b10067 ]
 
-The BB expander at 0x21 i2c bus 1 fails to probe on da850-evm because
-the board doesn't set has_full_constraints to true in the regulator
-API.
+The lcdc device is missing the dma_coherent_mask definition causing the
+following warning on da850-evm:
 
-Call regulator_has_full_constraints() at the end of board registration
-just like we do in da850-lcdk and da830-evm.
+da8xx_lcdc da8xx_lcdc.0: found Sharp_LK043T1DG01 panel
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at kernel/dma/mapping.c:247 dma_alloc_attrs+0xc8/0x110
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.2.0-rc3-00077-g16d72dd4891f #18
+Hardware name: DaVinci DA850/OMAP-L138/AM18x EVM
+[<c000fce8>] (unwind_backtrace) from [<c000d900>] (show_stack+0x10/0x14)
+[<c000d900>] (show_stack) from [<c001a4f8>] (__warn+0xec/0x114)
+[<c001a4f8>] (__warn) from [<c001a634>] (warn_slowpath_null+0x3c/0x48)
+[<c001a634>] (warn_slowpath_null) from [<c0065860>] (dma_alloc_attrs+0xc8/0x110)
+[<c0065860>] (dma_alloc_attrs) from [<c02820f8>] (fb_probe+0x228/0x5a8)
+[<c02820f8>] (fb_probe) from [<c02d3e9c>] (platform_drv_probe+0x48/0x9c)
+[<c02d3e9c>] (platform_drv_probe) from [<c02d221c>] (really_probe+0x1d8/0x2d4)
+[<c02d221c>] (really_probe) from [<c02d2474>] (driver_probe_device+0x5c/0x168)
+[<c02d2474>] (driver_probe_device) from [<c02d2728>] (device_driver_attach+0x58/0x60)
+[<c02d2728>] (device_driver_attach) from [<c02d27b0>] (__driver_attach+0x80/0xbc)
+[<c02d27b0>] (__driver_attach) from [<c02d047c>] (bus_for_each_dev+0x64/0xb4)
+[<c02d047c>] (bus_for_each_dev) from [<c02d1590>] (bus_add_driver+0xe4/0x1d8)
+[<c02d1590>] (bus_add_driver) from [<c02d301c>] (driver_register+0x78/0x10c)
+[<c02d301c>] (driver_register) from [<c000a5c0>] (do_one_initcall+0x48/0x1bc)
+[<c000a5c0>] (do_one_initcall) from [<c05cae6c>] (kernel_init_freeable+0x10c/0x1d8)
+[<c05cae6c>] (kernel_init_freeable) from [<c048a000>] (kernel_init+0x8/0xf4)
+[<c048a000>] (kernel_init) from [<c00090e0>] (ret_from_fork+0x14/0x34)
+Exception stack(0xc6837fb0 to 0xc6837ff8)
+7fa0:                                     00000000 00000000 00000000 00000000
+7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+---[ end trace 8a8073511be81dd2 ]---
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Add a 32-bit mask to the platform device's definition.
+
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
 Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-davinci/board-da850-evm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/mach-davinci/devices-da8xx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index 1ed545cc2b83..99356e23776d 100644
---- a/arch/arm/mach-davinci/board-da850-evm.c
-+++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -1479,6 +1479,8 @@ static __init void da850_evm_init(void)
- 	if (ret)
- 		pr_warn("%s: dsp/rproc registration failed: %d\n",
- 			__func__, ret);
-+
-+	regulator_has_full_constraints();
- }
+diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+index 78d325f3245a..4728d0974849 100644
+--- a/arch/arm/mach-davinci/devices-da8xx.c
++++ b/arch/arm/mach-davinci/devices-da8xx.c
+@@ -660,6 +660,9 @@ static struct platform_device da8xx_lcdc_device = {
+ 	.id		= 0,
+ 	.num_resources	= ARRAY_SIZE(da8xx_lcdc_resources),
+ 	.resource	= da8xx_lcdc_resources,
++	.dev		= {
++		.coherent_dma_mask	= DMA_BIT_MASK(32),
++	}
+ };
  
- #ifdef CONFIG_SERIAL_8250_CONSOLE
+ int __init da8xx_register_lcdc(struct da8xx_lcdc_platform_data *pdata)
 -- 
 2.20.1
 
