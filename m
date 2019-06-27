@@ -2,117 +2,131 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9B1C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3792C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A8A208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF3A20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:54:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Or3LxChJ"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IMj5MLbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfF0SwC (ORCPT
+        id S1726545AbfF0SyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:52:02 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37217 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfF0SwB (ORCPT
+        Thu, 27 Jun 2019 14:54:09 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33590 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfF0SyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:52:01 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 19so1680904pfa.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 11:52:01 -0700 (PDT)
+        Thu, 27 Jun 2019 14:54:08 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h24so615781qto.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 11:54:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=7D0PzAfViZ1saMwvNXJVGOaPjQ/bd1/rxTaSKwyyN7c=;
-        b=Or3LxChJeEuS1HBnMbn0UutirVCYfBWmq+PyVXAXsmtTRTu2mgUE0I+d2IFhAA4eMt
-         hDPclPC9uDGZW/BcYzaRPWWQdaEzo2N60lU0qf2Ul/oMsmtURjSWwNsjQB581IMH5bg2
-         KxhX0Pepu0pJkMF1p2c7/ehz91TZJXogYpMLnp4br5BFJ+lyIkf51A7m/lN2u1Z/1xj7
-         cdtKTn/ITHXAcj7r3hNhpDrmm+/9a5Aqi71PYdmCI4sg5EMcrt77LF87Z/vx+EeeLDwf
-         3WG85rGLM4DLRuHVKEI3IlP4AWkfmZKRaBRdGxLhLbjaxYObDIh6wUg0knh9fDR/VJBh
-         W+/A==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pzbB0dauErUy58OAB+4MrG23QuVRtPqScjaalstzwrY=;
+        b=IMj5MLbFKg5nIySk6MNr7pGBSFgPun/hMMfqHAFbw+gs+sXmnZI/YJ6yx9DxrnPn/M
+         QRNQbKVXiLYW9d6o+pC1IOrku5yeFSDdf0frb5Zr5hH9Td9FzgcGkll/NB8A19kxZJn3
+         ktBiqfLyRIDZFPDaABir1oywPqLMKWNLpoAKHLc8PXNaqHbcj1oW8rR8KoBHLMI/wjF7
+         xre+HIl9mYIV9WK6nyul/BZtwQqKQdOxwLYHQW03RnofOUscSAKVEXZFybj1+GRfcQg1
+         yhJ58xE4bBrjw2uRapYqq2/Ll0SfPqtNy8LfrEwYXV7nNk9DRGU9DWYCX6O48Nf9lfIz
+         po2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=7D0PzAfViZ1saMwvNXJVGOaPjQ/bd1/rxTaSKwyyN7c=;
-        b=UeFpxg7q8zh+Yl9Nrv4ePk25LAQAAkE62hAO45rbQ1HGjtXv0hO8PYvcb1Fp+RcmVl
-         E885BMDO4+pX1dXMqv9EPN+LrXrtuT+9Ie67umUZQfh4sU0xsSxvWc+yWXvn4R72+8g7
-         EDeApu99iJvqExg+HaHOHLASKf1KJQ+7MjF1UDdz1P0jB1c3LpJ0K+xJe2OGzEkEQlbh
-         xqUIv0DZ7Uk/zJcCVQFp9IwS+g/bct6/nQluWN1tWNtw9s06xmsVD9XsYAvwpEqv4dE1
-         8ZEBeE5da8WA94H4izZ3fqA1JzkagYAdJGAHzOA7hcUVmHh9TGhQFJkooTp0oYhShTeh
-         d6AQ==
-X-Gm-Message-State: APjAAAU3Z0st6P2k5929lR1jRipa4S+SzYytpQBv/vB5NOIXRTAy2Tok
-        dlTheAMUXheDAThboKCAKHo=
-X-Google-Smtp-Source: APXvYqxlncH/motRpxarXISHjXNRG22cGr8PEndowAP9oFWA6icJDy71gKmV/rtomSNgmIBIN4/uZQ==
-X-Received: by 2002:a63:6b07:: with SMTP id g7mr5345593pgc.325.1561661521129;
-        Thu, 27 Jun 2019 11:52:01 -0700 (PDT)
-Received: from localhost.localdomain ([183.83.73.90])
-        by smtp.gmail.com with ESMTPSA id c83sm5194088pfb.111.2019.06.27.11.51.58
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pzbB0dauErUy58OAB+4MrG23QuVRtPqScjaalstzwrY=;
+        b=MsVC2gj5wLGwvSy4OAuWepyYnK8ZwyZSyxPpOjAMMr+luLysnq+Wb8sgK5xKnwe0Wf
+         EyDInLA8PRA2Hh1OQvx1RaCdarJJY2iBE+t84ZENImBHflknudiW4BECHry7l6P7GPh9
+         197Lk4kV7bdvjFnxGgWSa+DCs/C7rsvxA9QdMYz0jIsv/M+1XzfzOIhTwfSYT7UCu4AK
+         UVw1rZjni7zPtNED+k7vSf8W0+ETzJGfpriJv1lI02BjXmSKpRLfX7ZV1Wg2fSUL9V9O
+         j4gz6I8ae4M0LYxBl9AzQN4xXBDH7FM3ZSxVg3VDhVQyPDP59AUsUX9fdxzo6qRaE36J
+         OFPA==
+X-Gm-Message-State: APjAAAXSDb9m7vHifcgkK6GeiC9oB+clRcGEHkBjF5dPQ9kgv3xCbGc0
+        bpCRxkYgSSLpqo+Fl6wLDqtLfA==
+X-Google-Smtp-Source: APXvYqxNXDq0uMmaGEPN7R9AoWFo8lEgE/pofnzH9twSLd5sQ1GF9FdCN33tuaiRfgzCkgzDsXHjiA==
+X-Received: by 2002:ac8:2b01:: with SMTP id 1mr4621099qtu.177.1561661647731;
+        Thu, 27 Jun 2019 11:54:07 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id n184sm1276105qkc.114.2019.06.27.11.54.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 11:52:00 -0700 (PDT)
-From:   Harsh Jain <harshjain32@gmail.com>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, harshjain32@gmail.com,
-        harshjain.prof@gmail.com
-Subject: [PATCH] staging:kpc2000:Fix sparse warnings
-Date:   Fri, 28 Jun 2019 00:21:38 +0530
-Message-Id: <20190627185138.26214-1-harshjain32@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Jun 2019 11:54:07 -0700 (PDT)
+Message-ID: <1561661645.5154.89.camel@lca.pw>
+Subject: Re: LTP hugemmap05 test case failure on arm64 with linux-next
+ (next-20190613)
+From:   Qian Cai <cai@lca.pw>
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Thu, 27 Jun 2019 14:54:05 -0400
+In-Reply-To: <15651f16-8d30-412f-8064-41ff03f3f47d@oracle.com>
+References: <1560461641.5154.19.camel@lca.pw>
+         <20190614102017.GC10659@fuggles.cambridge.arm.com>
+         <1560514539.5154.20.camel@lca.pw>
+         <054b6532-a867-ec7c-0a72-6a58d4b2723e@arm.com>
+         <EC704BC3-62FF-4DCE-8127-40279ED50D65@lca.pw>
+         <20190624093507.6m2quduiacuot3ne@willie-the-truck>
+         <1561381129.5154.55.camel@lca.pw> <1561411839.5154.60.camel@lca.pw>
+         <ed517a19-7804-c679-da94-279565001ca1@oracle.com>
+         <15651f16-8d30-412f-8064-41ff03f3f47d@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: root <harshjain32@gmail.com>
+On Thu, 2019-06-27 at 11:09 -0700, Mike Kravetz wrote:
+> On 6/24/19 2:53 PM, Mike Kravetz wrote:
+> > On 6/24/19 2:30 PM, Qian Cai wrote:
+> > > So the problem is that ipcget_public() has held the semaphore "ids->rwsem" 
+> > > for
+> > > too long seems unnecessarily and then goes to sleep sometimes due to
+> > > direct
+> > > reclaim (other times LTP hugemmap05 [1] has hugetlb_file_setup() returns
+> > > -ENOMEM),
+> > 
+> > Thanks for looking into this!  I noticed that recent kernels could take a
+> > VERY long time trying to do high order allocations.  In my case it was
+> > trying
+> > to do dynamic hugetlb page allocations as well [1].  But, IMO this is more
+> > of a general direct reclaim/compation issue than something hugetlb specific.
+> > 
+> 
+> <snip>
+> 
+> > > Ideally, it seems only ipc_findkey() and newseg() in this path needs to
+> > > hold the
+> > > semaphore to protect concurrency access, so it could just be converted to
+> > > a
+> > > spinlock instead.
+> > 
+> > I do not have enough experience with this ipc code to comment on your
+> > proposed
+> > change.  But, I will look into it.
+> > 
+> > [1] https://lkml.org/lkml/2019/4/23/2
+> 
+> I only took a quick look at the ipc code, but there does not appear to be
+> a quick/easy change to make.  The issue is that shared memory creation could
+> take a long time.  With issue [1] above unresolved, creation of hugetlb backed
+> shared memory segments could take a VERY long time.
+> 
+> I do not believe the test failure is arm specific.  Most likely, it is just
+> because testing was done on a system with memory size to trigger this issue?
 
-Fix following sparse warning
-symbol was not declared. Should it be static?
-Using plain integer as NULL pointer
+I think it is because the arm64 machine has the default hugepage size in 512M
+instead of 2M on other arches, but the test case still blindly try to allocate
+around 200 of hugepages which the system can't handle gracefully, i.e., return
+-ENOMEM in reasonable time.
 
-Signed-off-by: Harsh Jain <harshjain32@gmail.com>
----
- drivers/staging/kpc2000/kpc_i2c/i2c_driver.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c b/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
-index 0fb068b2408d..155da641e3a2 100644
---- a/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
-+++ b/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
-@@ -614,7 +614,7 @@ static const struct i2c_algorithm smbus_algorithm = {
- /********************************
-  *** Part 2 - Driver Handlers ***
-  ********************************/
--int pi2c_probe(struct platform_device *pldev)
-+static int pi2c_probe(struct platform_device *pldev)
- {
-     int err;
-     struct i2c_device *priv;
-@@ -664,7 +664,7 @@ int pi2c_probe(struct platform_device *pldev)
-     return 0;
- }
- 
--int pi2c_remove(struct platform_device *pldev)
-+static int pi2c_remove(struct platform_device *pldev)
- {
-     struct i2c_device *lddev;
-     dev_dbg(&pldev->dev, "pi2c_remove(pldev = %p '%s')\n", pldev, pldev->name);
-@@ -679,9 +679,9 @@ int pi2c_remove(struct platform_device *pldev)
-     //pci_set_drvdata(dev, NULL);
-     
-     //cdev_del(&lddev->cdev);
--    if(lddev != 0) {
-+    if(lddev != NULL) {
-         kfree(lddev);
--        pldev->dev.platform_data = 0;
-+        pldev->dev.platform_data = NULL;
-     }
-     
-     return 0;
--- 
-2.17.1
-
+> 
+> My plan is to focus on [1].  When that is resolved, this issue should go away.
