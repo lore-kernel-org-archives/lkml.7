@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E041C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A01C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7588821871
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B3521882
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596160;
-	bh=oW5pAeo++OS2RF8UDf8aG6MvZdYNZ5YXKrBU8Px9OA8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y6PCLNRxcIkutpHttb/R42egkURRkZuovmhAMC4+qQ6kCqLEt+0bHcyd56wZMAcs9
-	 NGl0zWD5qHcOl75Q0NjJ8UNkuHahAxNC2csnsNXXn5fs2fySe98nyBMNUTnJrFSkiO
-	 bNeQw2h64dn+Ua4Hn9lFRe6oIOg+yTHvhDldoQwI=
+	s=default; t=1561596165;
+	bh=uYHHQna/b8aiJkSocqZI9OLyWqsdt6zDdV6LnlYjypc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iX2nJdCMBjOUJ0XIEVlSICHqGJKmGUDMIEAhzjpVGe1SyYGrsTB4w1ZEWXjfrxLTz
+	 +L4t9S1NJ6xsJdKtuwya6GkuqtBdbayJaPNqNeP1sNb5oJKdasKXabwKDHvkUt5+O7
+	 YO55w0jWpBs9pvF819Fnv0hR9zope4FL6/9HJBsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbfF0Amj (ORCPT
+        id S1729772AbfF0Amn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:42:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46428 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:42:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729745AbfF0Amf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:42:35 -0400
+        id S1728597AbfF0Aml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:42:41 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CF92205ED;
-        Thu, 27 Jun 2019 00:42:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68DFA205ED;
+        Thu, 27 Jun 2019 00:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596154;
-        bh=oW5pAeo++OS2RF8UDf8aG6MvZdYNZ5YXKrBU8Px9OA8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k/hpDhWult9cVPPHTzNkZJRnYmokeQBeP8slJGsUkRIOdIFm7iI++CgYRmKdFj31t
-         5+ToFciD/R+uemA5kcR2XhQcXAR44ggiky2PW0JhQb5+XoSo4WDgNnDR0C+efes4DI
-         N+eBDXTDKv9QXQZko8GSwXAR73Y3J5BDs/idc6O4=
+        s=default; t=1561596161;
+        bh=uYHHQna/b8aiJkSocqZI9OLyWqsdt6zDdV6LnlYjypc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0DqU/ZbtacccaSoQBFqzt/YdLaoAJvbP6Ym66EIsQQU8dwHuId5l4qFOLGpzMfcTb
+         qpNXiReaLEJlqD4VM5JINv+ymWezJHvTpDm52mVSt8tNAdBk5jjU6FbcEXQNS0iHh/
+         BxjqSZEJj3pIjx4bgl/NbC1dIA1nsYRmmrinFZB8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lin Yi <teroincn@163.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 21/21] net :sunrpc :clnt :Fix xps refcount imbalance on the error path
-Date:   Wed, 26 Jun 2019 20:41:21 -0400
-Message-Id: <20190627004122.21671-21-sashal@kernel.org>
+Cc:     Aaron Ma <aaron.ma@canonical.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 01/12] Input: elantech - enable middle button support on 2 ThinkPads
+Date:   Wed, 26 Jun 2019 20:42:23 -0400
+Message-Id: <20190627004236.21909-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627004122.21671-1-sashal@kernel.org>
-References: <20190627004122.21671-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,32 +57,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lin Yi <teroincn@163.com>
+From: Aaron Ma <aaron.ma@canonical.com>
 
-[ Upstream commit b96226148491505318228ac52624956bd98f9e0c ]
+[ Upstream commit aa440de3058a3ef530851f9ef373fbb5f694dbc3 ]
 
-rpc_clnt_add_xprt take a reference to struct rpc_xprt_switch, but forget
-to release it before return, may lead to a memory leak.
+Adding 2 new touchpad PNPIDs to enable middle button support.
 
-Signed-off-by: Lin Yi <teroincn@163.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/clnt.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/input/mouse/elantech.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 244eac1bd648..de18a463ac96 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2718,6 +2718,7 @@ int rpc_clnt_add_xprt(struct rpc_clnt *clnt,
- 	xprt = xprt_iter_xprt(&clnt->cl_xpi);
- 	if (xps == NULL || xprt == NULL) {
- 		rcu_read_unlock();
-+		xprt_switch_put(xps);
- 		return -EAGAIN;
- 	}
- 	resvport = xprt->resvport;
+diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+index 4c1e527f14a5..7b942ee364b6 100644
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -1191,6 +1191,8 @@ static const char * const middle_button_pnp_ids[] = {
+ 	"LEN2132", /* ThinkPad P52 */
+ 	"LEN2133", /* ThinkPad P72 w/ NFC */
+ 	"LEN2134", /* ThinkPad P72 */
++	"LEN0407",
++	"LEN0408",
+ 	NULL
+ };
+ 
 -- 
 2.20.1
 
