@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9229C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B1BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7790E21851
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15E521851
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595726;
-	bh=SQ9IR5Fk2JhjIsoB4sJRIflWq9VbQg4x2q3LL2zkuz0=;
+	s=default; t=1561595729;
+	bh=fpOF9X+K6MX51S2lgAmlVhrDgGS7QuhMNiVq3/Zuy0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qtEQdtqzxMUTg6g+wDHhvQqGUnLeD5rhrSe8ANHS1n49gAPgdThdAoRyCcibd6fLO
-	 dDYaIq0Oo6W10NVthr/LzWmh2SvXEsPlMIeInbWe8aaSKs2HY7/Sfj6oNccj2L0EEc
-	 i+oDQNX9LpHekCMWJjyI/RTxSFrSgUMjxAIc7cJw=
+	b=FRtwQFPvzR8jW8qUO7TC+lookfu7vC8U0+6/dVTFPspmnrF6UPFvjV6CsSChGfUlB
+	 1ZYu2SzfCWMrK2mTaXB0GZ8iGyWgTSP90Bi4rwVHxvfEyuAKzW9jZwSrpGNZ5g1Xr9
+	 8KCoYv3gtlnxm2xJoaNusHVAEYgYY/k9ClSp5UCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfF0AfZ (ORCPT
+        id S1728300AbfF0Af1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39760 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:35:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbfF0AfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:35:18 -0400
+        id S1728257AbfF0Af0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:35:26 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4699F217F4;
-        Thu, 27 Jun 2019 00:35:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63E40217F4;
+        Thu, 27 Jun 2019 00:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595717;
-        bh=SQ9IR5Fk2JhjIsoB4sJRIflWq9VbQg4x2q3LL2zkuz0=;
+        s=default; t=1561595725;
+        bh=fpOF9X+K6MX51S2lgAmlVhrDgGS7QuhMNiVq3/Zuy0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iESBHwIW0DxR6Zo80ZGJSeNlDWA64tZDF+7nga3Hv+NbMD4Vi++zy3jqmw8dkmObe
-         Ml9VcSoqAXPSoz/O1kPu/45xhUoEwwvX65urYNssDBFG0WBwu5lc/AJmpQLVpbEN5E
-         AEuDgW9TNV3sB4MJUZmRKPhsDGbuAlk/iqnRKdYI=
+        b=PnMtstHAOnK/+cYq3j/SygXW6dTPlCktQVE/4TRnwFzA1IQE/u00bggRs+ttYmiQ7
+         c55GIMHbAe+zBaJLhtkB6h2YcNOOTG19ydgWKxoiD+lHqtBJeD+GObNonx4CV5OOvY
+         jYQp+OZu7/K65vijQtfgmCtxAPNjQypIhk5Jg1Xc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yangerkun <yangerkun@huawei.com>, Jan Kara <jack@suse.cz>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 90/95] quota: fix a problem about transfer quota
-Date:   Wed, 26 Jun 2019 20:30:15 -0400
-Message-Id: <20190627003021.19867-90-sashal@kernel.org>
+Cc:     Andrew Jones <drjones@redhat.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 5.1 93/95] KVM: arm/arm64: Fix emulated ptimer irq injection
+Date:   Wed, 26 Jun 2019 20:30:18 -0400
+Message-Id: <20190627003021.19867-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -58,43 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Andrew Jones <drjones@redhat.com>
 
-[ Upstream commit c6d9c35d16f1bafd3fec64b865e569e48cbcb514 ]
+[ Upstream commit e4e5a865e9a9e8e47ac1959b629e9f3ae3b062f2 ]
 
-Run below script as root, dquot_add_space will return -EDQUOT since
-__dquot_transfer call dquot_add_space with flags=0, and dquot_add_space
-think it's a preallocation. Fix it by set flags as DQUOT_SPACE_WARN.
+The emulated ptimer needs to track the level changes, otherwise the
+the interrupt will never get deasserted, resulting in the guest getting
+stuck in an interrupt storm if it enables ptimer interrupts. This was
+found with kvm-unit-tests; the ptimer tests hung as soon as interrupts
+were enabled. Typical Linux guests don't have a problem as they prefer
+using the virtual timer.
 
-mkfs.ext4 -O quota,project /dev/vdb
-mount -o prjquota /dev/vdb /mnt
-setquota -P 23 1 1 0 0 /dev/vdb
-dd if=/dev/zero of=/mnt/test-file bs=4K count=1
-chattr -p 23 test-file
-
-Fixes: 7b9ca4c61bc2 ("quota: Reduce contention on dq_data_lock")
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: bee038a674875 ("KVM: arm/arm64: Rework the timer code to use a timer_map")
+Signed-off-by: Andrew Jones <drjones@redhat.com>
+[Simplified the patch to res we only care about emulated timers here]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/quota/dquot.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ virt/kvm/arm/arch_timer.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index fc20e06c56ba..dd1783ea7003 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -1993,8 +1993,8 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 				       &warn_to[cnt]);
- 		if (ret)
- 			goto over_quota;
--		ret = dquot_add_space(transfer_to[cnt], cur_space, rsv_space, 0,
--				      &warn_to[cnt]);
-+		ret = dquot_add_space(transfer_to[cnt], cur_space, rsv_space,
-+				      DQUOT_SPACE_WARN, &warn_to[cnt]);
- 		if (ret) {
- 			spin_lock(&transfer_to[cnt]->dq_dqb_lock);
- 			dquot_decr_inodes(transfer_to[cnt], inode_usage);
+diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
+index 7fc272ecae16..1b1c449ceaf4 100644
+--- a/virt/kvm/arm/arch_timer.c
++++ b/virt/kvm/arm/arch_timer.c
+@@ -321,14 +321,15 @@ static void kvm_timer_update_irq(struct kvm_vcpu *vcpu, bool new_level,
+ 	}
+ }
+ 
++/* Only called for a fully emulated timer */
+ static void timer_emulate(struct arch_timer_context *ctx)
+ {
+ 	bool should_fire = kvm_timer_should_fire(ctx);
+ 
+ 	trace_kvm_timer_emulate(ctx, should_fire);
+ 
+-	if (should_fire) {
+-		kvm_timer_update_irq(ctx->vcpu, true, ctx);
++	if (should_fire != ctx->irq.level) {
++		kvm_timer_update_irq(ctx->vcpu, should_fire, ctx);
+ 		return;
+ 	}
+ 
 -- 
 2.20.1
 
