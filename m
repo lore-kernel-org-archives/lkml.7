@@ -2,90 +2,161 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3666DC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9413C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148C320656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8705E20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:34:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LCuuA8yK";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="toe00VUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfF0GeF (ORCPT
+        id S1726520AbfF0Gem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 02:34:05 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39927 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfF0GeE (ORCPT
+        Thu, 27 Jun 2019 02:34:42 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:4520 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725770AbfF0Gel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 02:34:04 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hgNyg-00037l-N0; Thu, 27 Jun 2019 08:33:50 +0200
-Message-ID: <1561617229.4216.1.camel@pengutronix.de>
-Subject: Re: [PATCH] media: staging/imx: Fix NULL deref in
- find_pipeline_entity()
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Steve Longerbeam <slongerbeam@gmail.com>,
-        linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Thu, 27 Jun 2019 08:33:49 +0200
-In-Reply-To: <20190626185225.11992-1-slongerbeam@gmail.com>
-References: <20190626185225.11992-1-slongerbeam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Thu, 27 Jun 2019 02:34:41 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5R6UKfm025319;
+        Wed, 26 Jun 2019 23:31:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=h8pU6xF38JB3r9LlEsuLt4wH985rRUbhoyuS6lhAxts=;
+ b=LCuuA8yKcAhk7DukG7j+j0QQSZ8q3DLfcshEEep9vv5NPQj6/TfmwTQXEdRMMdc8+L8C
+ syHsc56iIFIJeos5/pd/T4RwNqIRvokxaV+qpjOoQpiEobrLZCcTFf7l8MDCdk7u6xAm
+ YIqBqf9+21IefoSpZRdpVBm6UA+jk7hhYtY= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2tcgav9h16-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 26 Jun 2019 23:31:29 -0700
+Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
+ ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 26 Jun 2019 23:31:28 -0700
+Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
+ ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 26 Jun 2019 23:31:28 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 26 Jun 2019 23:31:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h8pU6xF38JB3r9LlEsuLt4wH985rRUbhoyuS6lhAxts=;
+ b=toe00VUwFum1VsoZ3radHSBd36BaaFmuWFVSXLilMCk8VKR/ONCp9SX6mIM/jGMSHaDWEUTY4ufzs05lbfl9yrcdR5IMpz8/6MDdDTUHk8GJmiJ0LbaoB3oKNqiGHfe9fyv4r9Kem294GxflBANlbOetF17rgRKBtXDmlhFU6ug=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1951.namprd15.prod.outlook.com (10.175.9.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Thu, 27 Jun 2019 06:31:26 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::400e:e329:ea98:aa0d]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::400e:e329:ea98:aa0d%6]) with mapi id 15.20.2008.018; Thu, 27 Jun 2019
+ 06:31:26 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "william.kucharski@oracle.com" <william.kucharski@oracle.com>
+Subject: Re: [PATCH v7 4/4] uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT
+Thread-Topic: [PATCH v7 4/4] uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT
+Thread-Index: AQHVK7E785+oCFqbhUC2jl0BeioYsaatcZEAgAGa74A=
+Date:   Thu, 27 Jun 2019 06:31:26 +0000
+Message-ID: <AE9CD0A1-14EB-4919-B14F-23B077C57891@fb.com>
+References: <20190625235325.2096441-1-songliubraving@fb.com>
+ <20190625235325.2096441-5-songliubraving@fb.com>
+ <20190626060038.GB9158@linux.vnet.ibm.com>
+In-Reply-To: <20190626060038.GB9158@linux.vnet.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:180::1:6ea5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2880b3e6-e60d-4289-66fa-08d6fac914f6
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1951;
+x-ms-traffictypediagnostic: MWHPR15MB1951:
+x-microsoft-antispam-prvs: <MWHPR15MB1951FA57F2B389231202505BB3FD0@MWHPR15MB1951.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(396003)(366004)(346002)(136003)(199004)(189003)(68736007)(53546011)(6506007)(76176011)(36756003)(305945005)(8936002)(7736002)(6246003)(6486002)(186003)(6436002)(14454004)(229853002)(57306001)(4326008)(66446008)(64756008)(66556008)(66476007)(73956011)(102836004)(76116006)(316002)(99286004)(54906003)(110136005)(66946007)(25786009)(6116002)(4744005)(33656002)(5660300002)(50226002)(86362001)(8676002)(81156014)(81166006)(478600001)(6512007)(2906002)(71190400001)(71200400001)(53936002)(46003)(7416002)(11346002)(2616005)(486006)(476003)(446003)(14444005)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1951;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hG+2Udvs0PDKgyESMlOCFnBsWbcJUdh09mID884t3JnFcFu/jA/TjncZLvFQdHNNnKWYBwaHAxPehm1Z9VE8rcb3peOPA7WQwUrHI4kjMeAGGc4MqPpda0vG/sJjnGj8M7II1cbaWqo+1w6v7bayVexgqKj40ex4601kULRxPSyYvypBKK5FshLHpXNlQEh4O7lv8Kxw7jqCV1cgEtw+eOvlBWjA/VaskOwJGB+QyNelqgU1zHHKcM466m3D0Vq0qO9Nk00AVDuxc24hTPWs9WXFnzAx4grh/+gxo9tKWC3MFMojV+PrvN7UPOlmcPvl4WoMVyAtqODGtQgUvw06JOfqKarmVGkuIwUznAXrbw79N/KwX3wgSY8YDwK1nX/hwsn7cSxunE1Y4DEJXFvcA4CJ96XqSQ3PkswPnz2tYXs=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <902646C75C382B46BB3D455B995697F5@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2880b3e6-e60d-4289-66fa-08d6fac914f6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 06:31:26.5305
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1951
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=954 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906270074
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-26 at 11:52 -0700, Steve Longerbeam wrote:
-> Fix a cut&paste error in find_pipeline_entity(). The start entity must be
-> passed to media_entity_to_video_device() in find_pipeline_entity(), not
-> pad->entity. The pad is only put to use later, after determining the start
-> entity is not the entity being searched for.
-> 
-> Fixes: 3ef46bc97ca2 ("media: staging/imx: Improve pipeline searching")
-> 
-> Reported-by: Colin Ian King <colin.king@canonical.com>
-> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-> ---
->  drivers/staging/media/imx/imx-media-utils.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
-> index b5b8a3b7730a..6fb88c22ee27 100644
-> --- a/drivers/staging/media/imx/imx-media-utils.c
-> +++ b/drivers/staging/media/imx/imx-media-utils.c
-> @@ -842,7 +842,7 @@ find_pipeline_entity(struct media_entity *start, u32 grp_id,
->  		if (sd->grp_id & grp_id)
->  			return &sd->entity;
->  	} else if (buftype && is_media_entity_v4l2_video_device(start)) {
-> -		vfd = media_entity_to_video_device(pad->entity);
-> +		vfd = media_entity_to_video_device(start);
->  		if (buftype == vfd->queue->type)
->  			return &vfd->entity;
->  	}
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-regards
-Philipp
+> On Jun 25, 2019, at 11:00 PM, Srikar Dronamraju <srikar@linux.vnet.ibm.co=
+m> wrote:
+>=20
+> * Song Liu <songliubraving@fb.com> [2019-06-25 16:53:25]:
+>=20
+>> This patches uses newly added FOLL_SPLIT_PMD in uprobe. This enables eas=
+y
+>> regroup of huge pmd after the uprobe is disabled (in next patch).
+>>=20
+>> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Signed-off-by: Song Liu <songliubraving@fb.com>
+>> ---
+>> kernel/events/uprobes.c | 6 ++----
+>> 1 file changed, 2 insertions(+), 4 deletions(-)
+>=20
+> Looks good to me.
+>=20
+> Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+
+Thanks Srikar!
+
+I guess these 4 patches are ready to go?=20
+
+Hi Andrew,=20
+
+Could you please route them via the mm tree?=20
+
+Thanks,
+Song
+
+
