@@ -2,130 +2,114 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A70C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95966C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8982084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:59:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ooazNoLW"
+	by mail.kernel.org (Postfix) with ESMTP id 6D4752084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfF0N7y (ORCPT
+        id S1726942AbfF0OBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:59:54 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52195 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbfF0N7v (ORCPT
+        Thu, 27 Jun 2019 10:01:42 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53972 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfF0OBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:59:51 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so5845854wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 06:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=HZ7QyNPTvF6/RgnmII34ur/JGsTqdFkUnUKXTuvqG/w=;
-        b=ooazNoLWOxU7IwbCJhoA5ND74omxfkNA0U1UpIkyKlNt0uKAfdvPmkJmQH421o+src
-         vHLl/RyQplDDT1tW40Dp93vFXUKuqLfSJXg+XUzCJcoYTZZGO4+o0KU/ZfLagw0bgegz
-         wZBSx99uweaNbb2vAFhf51jahF3xYUMLdJMKzZid2NhISCpPSl25DVCmAaHc/iCEvqzt
-         V15JjUpQIM1tcn7pXWbEW6dhtbporZSui1zZxUUr7YTVTg347Lia76DJHNyeo5Dbwg1w
-         hv1riHzjcdEwAokiYUSBUrUU76pCTDr2HpASIT86s3UXxmXaVYUxyRFIB2OcBe61Dt1L
-         f56Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=HZ7QyNPTvF6/RgnmII34ur/JGsTqdFkUnUKXTuvqG/w=;
-        b=o8cQRNUzOIf1p0i6QBxq2MA36zcQzKqoASIxjZjp9wqlTV8E1+XPC9SvpvVzrElrnu
-         hsTV+1j9N80Ns0sQKhbG0/MeJHEGRMX6S10LtKH+0+++UWWIFoWfc2sylB8o7R3obHFR
-         bROlGmwWponV/OazBZ/yEEtpYpKEKV35k41vi1SQzgoV1h2q3f9YV5M8qgDSwllaRC46
-         b5RfnRBtCANxD/pxXRZjj3Y/wYfWZvE7vIcC5Am3A5ifACsOuGgPHqHkEsYwexHnKjgY
-         1cjsQVw+kHnN2wuzamRej+FeYpLfugI/w6i5b/s211TDEVU6xwJc/Hgvz/Zm6vEV8EPd
-         Tknw==
-X-Gm-Message-State: APjAAAWIWO8V8C5QXPsS2SOlO00b6bxU8OenRDFcia2yd3STJS1lBNww
-        MIrfj9ukvCiV1g1e1gx0GjD6pA==
-X-Google-Smtp-Source: APXvYqwaxWiKD/K7An3E8jt0LE3Y8mQ4GeKWfysCY8bRIdbz0ryFrlEPnonTiu8gbtoYhCpar5TrSg==
-X-Received: by 2002:a1c:b146:: with SMTP id a67mr3282875wmf.124.1561643989260;
-        Thu, 27 Jun 2019 06:59:49 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id y184sm5473350wmg.14.2019.06.27.06.59.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Jun 2019 06:59:48 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 14:59:46 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Tony Xie <tony.xie@rock-chips.com>
-Cc:     heiko@sntech.de, broonie@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, chenjh@rock-chips.com,
-        xsf@rock-chips.com, zhangqing@rock-chips.com,
-        huangtao@rock-chips.com
-Subject: [GIT PULL] Immutable branch between MFD, Clk, Regulator and RTC due
- for the v5.3 merge window
-Message-ID: <20190627135946.GI2000@dell>
-References: <20190621103258.8154-1-tony.xie@rock-chips.com>
+        Thu, 27 Jun 2019 10:01:42 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hgUy4-0008RR-Fz; Thu, 27 Jun 2019 14:01:40 +0000
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: static analysis bug report: ALSA: swapped client and port arguments
+ in calls to snd_seq_oss_fill_addr
+Message-ID: <28c3fc44-0d4c-25e2-c9f4-d240c6d239f0@canonical.com>
+Date:   Thu, 27 Jun 2019 15:01:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190621103258.8154-1-tony.xie@rock-chips.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enjoy!
+Hi there,
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+Static analysis with Coverity has picked up two potential issues with
+the call to function snd_seq_oss_fill_addr. The prototype of
+snd_seq_oss_fill_addr is as follows:
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+static inline void
+snd_seq_oss_fill_addr(struct seq_oss_devinfo *dp, struct snd_seq_event
+*ev,int dest_client, int dest_port)
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-clk-regulator-rtc-v5.3
+However, in sound/core/seq/oss/seq_oss_ioctl.c in function
+snd_seq_oss_oob_user it is being called as follows:
 
-for you to fetch changes up to 8ed14401974830f316a419b073e58ef75a473a63:
+	 snd_seq_oss_fill_addr(dp, &tmpev, dp->addr.port, dp->addr.client);
 
-  clk: RK808: Add RK809 and RK817 support. (2019-06-27 14:57:59 +0100)
+and also in sound/core/seq/oss/seq_oss_rw.c in function is it also being
+called as follows:
 
-----------------------------------------------------------------
-Immutable branch between MFD, Clk, Regulator and RTC due for the v5.3 merge window
+	snd_seq_oss_fill_addr(dp, &event, dp->addr.port, dp->addr.client);
 
-----------------------------------------------------------------
-Heiko Stuebner (1):
-      regulator: rk808: Add RK809 and RK817 support.
+..as one can see, in both cases the port and client arguments are
+swapped compared to the function prototype.  I doubt this is intentional
+but you never know. Are these bugs?
 
-Tony Xie (4):
-      mfd: rk808: Add RK817 and RK809 support
-      dt-bindings: mfd: rk808: Add binding information for RK809 and RK817.
-      rtc: rk808: Add RK809 and RK817 support.
-      clk: RK808: Add RK809 and RK817 support.
-
- Documentation/devicetree/bindings/mfd/rk808.txt |  44 ++
- drivers/clk/Kconfig                             |   9 +-
- drivers/clk/clk-rk808.c                         |  64 ++-
- drivers/mfd/Kconfig                             |   6 +-
- drivers/mfd/rk808.c                             | 192 ++++++-
- drivers/regulator/Kconfig                       |   4 +-
- drivers/regulator/rk808-regulator.c             | 646 +++++++++++++++++++++++-
- drivers/rtc/Kconfig                             |   4 +-
- drivers/rtc/rtc-rk808.c                         |  68 ++-
- include/linux/mfd/rk808.h                       | 175 +++++++
- 10 files changed, 1156 insertions(+), 56 deletions(-)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Colin
