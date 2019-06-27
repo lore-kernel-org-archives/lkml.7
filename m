@@ -2,97 +2,68 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EECC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D055C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6005A2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:48:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RsjFuiT9"
+	by mail.kernel.org (Postfix) with ESMTP id DDEC320828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:51:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfF0Nsd (ORCPT
+        id S1726785AbfF0Nv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:48:33 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33757 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfF0Nsc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:48:32 -0400
-Received: by mail-wm1-f65.google.com with SMTP id h19so7135982wme.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 06:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=wE1PAp4MHXALqCCVusUAqoCtyEzbEOvw3nFbp39o+9U=;
-        b=RsjFuiT9rMad5Q9PIoyVIM7BSFrPdPoqZnQzdHKlydHUP69gx1nq9MYzIiacZkcPmh
-         Zn7CdU/0HbeBV6hglksqYyijhTbIdorSrlmwOv1qEhc+XDMMGklFdzvPgtuNcwTYFj+W
-         hDTngUkvknNqed6xqDLnvymmPtU30R81sTFgoPzoxhxH9AYkx5DRBaTlzH586IhoEq7G
-         bpIBmLWFep8yNlqxGRmQdxojJT6PJIXgLF52KQJmcWB4j5LDMVHSwsc3iImEkP4QBCs0
-         jLjAR3GQInnyuEsKDZyvsaKysSPDgsjqFMSjsFUiQnwA73v5fkoEtoA/O94/x0PfOTrZ
-         b2tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=wE1PAp4MHXALqCCVusUAqoCtyEzbEOvw3nFbp39o+9U=;
-        b=NIupxM+0StL5h0iWr0b1Qpj0ax3JAMpQ9EgHeTRFHKfqGhfceZXZqPxvxj+QU5zy4r
-         hxs5OSF6UuvDAlgSTa9X1HGsQ41FAMXhxkj59+9xEN+fZ4Zbi03KgoBuOpijqPn9L1i/
-         XoHvQBYTjsQSEeufyS/C8bvJKVs01uWFGL/nFEN4Sxb/lNYSI9gNuU/aW4S1U5YIxsHM
-         2Nb/PunNRrERUvI+XFyFje2C/io4LqUV1TmWTgYJuP7S5AaifYl5+3ImPVr1aASQyUu6
-         +ARSif3guS1YfXH2Vzu6Or+1uDpbEG2juaJU/LAFRemjpdg6VY0PqJrgsgPaQzRnG7l6
-         6r/A==
-X-Gm-Message-State: APjAAAW7/bCgir1PLd+555IrcRKWhd8s+noIzg21c1Hk5hvMgzzXD+1j
-        rnxJb42WvcaHOsu2I1Gc2WlE2g==
-X-Google-Smtp-Source: APXvYqy6pxzkEm1GFr8Ojt5atRppKQODIgFO8CkGNkxitxJs+DxYnmKnRFL/jbGBUXzzRgTMpdVwpQ==
-X-Received: by 2002:a1c:63d7:: with SMTP id x206mr3364766wmb.19.1561643310573;
-        Thu, 27 Jun 2019 06:48:30 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id s188sm6942557wmf.40.2019.06.27.06.48.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Jun 2019 06:48:29 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 14:48:28 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Chen Feng <puck.chen@hisilicon.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] mfd: hi655x-pmic: Fix missing return value check
- for devm_regmap_init_mmio_clk
-Message-ID: <20190627134828.GH2000@dell>
-References: <20190626133007.591-1-axel.lin@ingics.com>
+        Thu, 27 Jun 2019 09:51:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52968 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726462AbfF0Nv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 09:51:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 23C5BAB9D;
+        Thu, 27 Jun 2019 13:51:27 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, "Yan, Zheng" <zyan@redhat.com>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [RFC PATCH] ceph: initialize superblock s_time_gran to 1
+Date:   Thu, 27 Jun 2019 14:51:22 +0100
+Message-Id: <20190627135122.12817-1-lhenriques@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190626133007.591-1-axel.lin@ingics.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019, Axel Lin wrote:
+Having granularity set to 1us results in having inode timestamps with a
+accurancy different from the fuse client (i.e. atime, ctime and mtime will
+always end with '000').  This patch normalizes this behaviour and sets the
+granularity to 1.
 
-> Since devm_regmap_init_mmio_clk can fail, add return value checking.
-> 
-> Signed-off-by: Axel Lin <axel.lin@ingics.com>
-> Acked-by: Chen Feng <puck.chen@hisilicon.com>
-> ---
-> This was sent on https://lkml.org/lkml/2019/3/6/904
-> 
->  drivers/mfd/hi655x-pmic.c | 2 ++
->  1 file changed, 2 insertions(+)
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+---
+ fs/ceph/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied, thanks.
+Hi!
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+As far as I could see there are no other side-effects of changing
+s_time_gran but I'm really not sure why it was initially set to 1000 in
+the first place so I may be missing something.
+
+diff --git a/fs/ceph/super.c b/fs/ceph/super.c
+index d57fa60dcd43..35dd75bc9cd0 100644
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -980,7 +980,7 @@ static int ceph_set_super(struct super_block *s, void *data)
+ 	s->s_d_op = &ceph_dentry_ops;
+ 	s->s_export_op = &ceph_export_ops;
+ 
+-	s->s_time_gran = 1000;  /* 1000 ns == 1 us */
++	s->s_time_gran = 1;
+ 
+ 	ret = set_anon_super(s, NULL);  /* what is that second arg for? */
+ 	if (ret != 0)
