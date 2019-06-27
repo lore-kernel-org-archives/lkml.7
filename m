@@ -2,206 +2,106 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3ADC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E92C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2339217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAB02182B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:27:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPQG3Tb3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="4R5vNhuy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfF0CYz (ORCPT
+        id S1727142AbfF0C1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 22:24:55 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41283 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfF0CYz (ORCPT
+        Wed, 26 Jun 2019 22:27:15 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53010 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfF0C1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 22:24:55 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c11so437676qkk.8;
-        Wed, 26 Jun 2019 19:24:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=CwXiTfKdRBSuqmsWvDSj+CcpjrFT7bp9Wdj7/SDDQQM=;
-        b=gPQG3Tb3BAqDKCYjknMDPN8Has7WknTuhjx9Onc73ZUttwxlJS7RWqDjI5WjJDKqkc
-         YY0RK5D22jP62x5APzLIRXcBvSFXLswLi4euPI89GtJchEdGEWOPBYk7T17cPaTGW46H
-         sAo8DxxOoYjPy6+1z+q1WEbPEdrVUfARGuO8gIpfkQm/jY6bdXCtERiVrjIUzzLhT5wu
-         JhbqCoKWvAqrcBijMt9eZDrw50UGcpoeAgHrrkL1BGyMLhqEmAhNHqRrMaZNvMT4lGBA
-         iermO0Uahq8pbAds3Hg6SLY1nGxws43CAmQui1woxsrDG9KY5fUaR5PhV4HhUFW5WLuv
-         uewg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=CwXiTfKdRBSuqmsWvDSj+CcpjrFT7bp9Wdj7/SDDQQM=;
-        b=FlqO9w4rRTVJYIznJmJ2wGw3uv8qeFV8rwXfGZYDjtAYhPBFGy+MqU6vcjy4eiVdmc
-         11pWTLmUijcFCEbOery9V9yx4hL5IosSs9lzJ0KtKhV/QlCjk7td3LIK4u1UtXDTyIsI
-         YVQqXBS+j9mW1fzGu0+MYMp48XjLGcOonh/nYvfcYG4kzZsXDZpuqaHAlmFXs1hgQIBt
-         aAKF5oioegr0AqdCnxc25J1+l4Acs1XYSWd3YODcCQiL17P4bA4TLrIGzU45x52fNtfQ
-         Bs9/vFoEpUivD7bve0DrADwbStC2iszvQFNpTDyBXovqGSqYoyDtkq4oDQvlHyP4kAGg
-         rsuw==
-X-Gm-Message-State: APjAAAVYh5e4fk+IlZ9E5tOVyzXrKfgviUQEhqBUluagvQT0Z89sOMfK
-        x79nUWAPPe04xrkAvM4Tt1YU7gJMGXM=
-X-Google-Smtp-Source: APXvYqwILC8Qzl3XDYRopJbpc3veonxZ8pt1ecsAMrdQ8LngY2Fyk6ZNJJGcWZTk1ps0EoHJAC0k6A==
-X-Received: by 2002:a37:a86:: with SMTP id 128mr1164611qkk.169.1561602293573;
-        Wed, 26 Jun 2019 19:24:53 -0700 (PDT)
-Received: from smtp.gmail.com ([187.121.151.146])
-        by smtp.gmail.com with ESMTPSA id y10sm290769qkf.82.2019.06.26.19.24.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 19:24:52 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 23:24:46 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Keith Packard <keithp@keithp.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, intel-gfx@lists.freedesktop.org
-Subject: [PATCH V5] drm/drm_vblank: Change EINVAL by the correct errno
-Message-ID: <20190627022446.fkuomcgiuu3bj3kb@smtp.gmail.com>
+        Wed, 26 Jun 2019 22:27:15 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R2OJCr158484;
+        Thu, 27 Jun 2019 02:27:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=wTJmtSmsKZEwIH7KReMQGmLwFMGAH0weuV2WcidpqCI=;
+ b=4R5vNhuy3qrtDpQ/trcm6kBkzz2g5W/b7NUGmRp8OzyZk8dBJCRT9EHIrX5/5RJ8tr1A
+ weSIeBS9TvK6iathXYhQxUZ4GZXyZRGY7Dh/HveNReVm6tFvy8up5jXGL7BANcNl4OXM
+ ZE98hYNKMztuWAl4D1y73yX7wPEgEQxP1FrrGtCqEOxamNbPE7twbO53c5UCJHnURx8U
+ s/XMYYn2D/V/oS71pq8Jo1ImbfgxRkVKiBUS3W1yF3ytM+7RAT7xgtmcrYdT1rWf2DHq
+ 34vJA1LfrzqjQtIKh21zNU1jvU4SBlWF4IOTnUV6dRr6rpYTkJxVrTTjv/nNWkvfm81G 4A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2t9c9pwh19-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 02:26:59 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R2PSuV097622;
+        Thu, 27 Jun 2019 02:26:59 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2tat7d4p47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 02:26:59 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5R2QumM032359;
+        Thu, 27 Jun 2019 02:26:56 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Jun 2019 19:26:56 -0700
+To:     "Bean Huo \(beanhuo\)" <beanhuo@micron.com>
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi\@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH v2 0/3] scsi: ufs: typo fixes and improvement
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <BN7PR08MB5684A44F56972BCE0972B28EDBE10@BN7PR08MB5684.namprd08.prod.outlook.com>
+Date:   Wed, 26 Jun 2019 22:26:53 -0400
+In-Reply-To: <BN7PR08MB5684A44F56972BCE0972B28EDBE10@BN7PR08MB5684.namprd08.prod.outlook.com>
+        (Bean Huo's message of "Sun, 23 Jun 2019 17:37:56 +0000")
+Message-ID: <yq1k1d7lq4y.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ygl3ejqndwnzekz3"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=945
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906270027
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=990 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906270027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ygl3ejqndwnzekz3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Bean,
 
-For historical reasons, the function drm_wait_vblank_ioctl always return
--EINVAL if something gets wrong. This scenario limits the flexibility
-for the userspace to make detailed verification of any problem and take
-some action. In particular, the validation of =E2=80=9Cif (!dev->irq_enable=
-d)=E2=80=9D
-in the drm_wait_vblank_ioctl is responsible for checking if the driver
-support vblank or not. If the driver does not support VBlank, the
-function drm_wait_vblank_ioctl returns EINVAL, which does not represent
-the real issue; this patch changes this behavior by return EOPNOTSUPP.
-Additionally, drm_crtc_get_sequence_ioctl and
-drm_crtc_queue_sequence_ioctl, also returns EINVAL if vblank is not
-supported; this patch also changes the return value to EOPNOTSUPP in
-these functions. Lastly, these functions are invoked by libdrm, which is
-used by many compositors; because of this, it is important to check if
-this change breaks any compositor. In this sense, the following projects
-were examined:
+> This series patch is to fix several typos and fix one issue of twice
+> completing ufs-bsg job in case of UPIU/DME command failed.
+>
+> Changed since v1:
+>     - split v1 patch
+>     - add fixes tag
+>     - delete needless blank line
 
-* Drm-hwcomposer
-* Kwin
-* Sway
-* Wlroots
-* Wayland-core
-* Weston
-* Xorg (67 different drivers)
+Applied to 5.3/scsi-queue. Mostly by hand. Please use git send-email to
+post patches. Thanks!
 
-For each repository the verification happened in three steps:
-
-* Update the main branch
-* Look for any occurrence of "drmCrtcQueueSequence",
-  "drmCrtcGetSequence", and "drmWaitVBlank" with the command git grep -n
-  "STRING".
-* Look in the git history of the project with the command
-git log -S<STRING>
-
-None of the above projects validate the use of EINVAL when using
-drmWaitVBlank(), which make safe, at least for these projects, to change
-the return values. On the other hand, mesa and xserver project uses
-drmCrtcQueueSequence() and drmCrtcGetSequence(); this change is harmless
-for both projects.
-
-Change since V4 (Daniel):
- - Also return EOPNOTSUPP in drm_crtc_[get|queue]_sequence_ioctl
-
-Change since V3:
- - Return EINVAL for _DRM_VBLANK_SIGNAL (Daniel)
-
-Change since V2:
- Daniel Vetter and Chris Wilson
- - Replace ENOTTY by EOPNOTSUPP
- - Return EINVAL if the parameters are wrong
-
-Cc: Keith Packard <keithp@keithp.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
----
- drivers/gpu/drm/drm_vblank.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index 603ab105125d..bd4ac834d3ef 100644
---- a/drivers/gpu/drm/drm_vblank.c
-+++ b/drivers/gpu/drm/drm_vblank.c
-@@ -1582,7 +1582,7 @@ int drm_wait_vblank_ioctl(struct drm_device *dev, voi=
-d *data,
- 	unsigned int flags, pipe, high_pipe;
-=20
- 	if (!dev->irq_enabled)
--		return -EINVAL;
-+		return -EOPNOTSUPP;
-=20
- 	if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
- 		return -EINVAL;
-@@ -1823,7 +1823,7 @@ int drm_crtc_get_sequence_ioctl(struct drm_device *de=
-v, void *data,
- 		return -EOPNOTSUPP;
-=20
- 	if (!dev->irq_enabled)
--		return -EINVAL;
-+		return -EOPNOTSUPP;
-=20
- 	crtc =3D drm_crtc_find(dev, file_priv, get_seq->crtc_id);
- 	if (!crtc)
-@@ -1881,7 +1881,7 @@ int drm_crtc_queue_sequence_ioctl(struct drm_device *=
-dev, void *data,
- 		return -EOPNOTSUPP;
-=20
- 	if (!dev->irq_enabled)
--		return -EINVAL;
-+		return -EOPNOTSUPP;
-=20
- 	crtc =3D drm_crtc_find(dev, file_priv, queue_seq->crtc_id);
- 	if (!crtc)
---=20
-2.21.0
-
---ygl3ejqndwnzekz3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl0UKO0ACgkQWJzP/com
-vP9DYBAAl3K8kqqVa/P2GDZvxDrE3XCKPipZhDER9QiBIHjjIeEFvMavxBEVvm+T
-4fmVKfta/9xYLDcoBvzk8ZxJhpsB8xSrbEZbRcBHKQ+VtF2JU6ArKbqU5TnNBHyZ
-HY4eL0Ju6v9E0A8HmutOfIPZPgJT4DFihHhT2hqqjNldkB2CvfOnny6msf7FytGI
-piD1wPcYwYNN03ZRcXEW5ocyWByA0mY1aTGCVS1ogYkdDtgz/t7+r9I+Yx6oCWOL
-uwhgYCMskG2/PAHm/4xx+qPjwnrN/2TCAW07udDI3Mz0BpxTXlKH+iXC6K5Frt7g
-IK/kN6PHk7JCzsz+1uQMOcH+hJJHfgrLSEyUZtpE02vCe1KYHiE7FpY2D5kHj4s1
-4l5fButamxNI6mHkg1uBigkfF3R06OSuBJE+q3np0EDf7TE4LsLu91KENCdEa1SF
-r3FzrFyW/IZRNWFgNs2ZxbYysUHwogDFkWjvRIxCKnUGGe5Gdg3g2pOsPfJ+yGal
-8Bk0OsTgvVn0J9wwS+R8ldOu/Z6Qdd4wwaQpAESYQnogjAA3U5Hy0dMHV46WlycY
-6+rWBgr6AdiHKuRgXa2Ga3XphXBZCGD/2AtQmm3M8Jl51GdgPErONbMalazsl5Pb
-cTJ7rX4j+lYzlvL+saFge2VhXsi8IV6JICcrQ3eDzrjJnBzPdVY=
-=t8eI
------END PGP SIGNATURE-----
-
---ygl3ejqndwnzekz3--
+-- 
+Martin K. Petersen	Oracle Linux Engineering
