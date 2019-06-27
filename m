@@ -2,200 +2,214 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C614C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3516BC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04D6820659
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:33:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NI59+G6d"
+	by mail.kernel.org (Postfix) with ESMTP id 107BA20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfF0PdU (ORCPT
+        id S1726603AbfF0PeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:33:20 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:4740 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfF0PdT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:33:19 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d14e1bc0002>; Thu, 27 Jun 2019 08:33:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 27 Jun 2019 08:33:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 27 Jun 2019 08:33:17 -0700
-Received: from [10.25.73.176] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Jun
- 2019 15:33:11 +0000
-Subject: Re: [PATCH V11 03/12] PCI: dwc: Perform dbi regs write lock towards
- the end
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190624091505.1711-1-vidyas@nvidia.com>
- <20190624091505.1711-4-vidyas@nvidia.com>
- <20190627145800.GD3782@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <ecae46b4-54cc-7f4d-5a86-908431fd472a@nvidia.com>
-Date:   Thu, 27 Jun 2019 21:03:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 27 Jun 2019 11:34:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:56860 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726384AbfF0PeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 11:34:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7709B360;
+        Thu, 27 Jun 2019 08:34:05 -0700 (PDT)
+Received: from [10.37.13.7] (unknown [10.37.13.7])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 161663F246;
+        Thu, 27 Jun 2019 08:34:00 -0700 (PDT)
+Subject: Re: [PATCH v7 04/25] arm64: Substitute gettimeofday with C
+ implementation
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arch@vger.kernel.org, Shijith Thotton <sthotton@marvell.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Huw Davies <huw@codeweavers.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Will Deacon <will.deacon@arm.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-5-vincenzo.frascino@arm.com>
+ <20190625153336.GZ2790@e103592.cambridge.arm.com>
+ <f5ac379a-731d-0662-2f5b-bd046e3bd1c5@arm.com>
+ <20190626161413.GA2790@e103592.cambridge.arm.com>
+ <19ebd45a-b666-d7de-fd9e-2b72e18892d9@arm.com>
+ <20190627100150.GC2790@e103592.cambridge.arm.com>
+ <85808e79-27a0-d3ab-3fb0-445f79ff87a4@arm.com>
+ <20190627112731.GF2790@e103592.cambridge.arm.com>
+ <a07b66cb-186f-a743-4f1d-41227f23db74@arm.com>
+ <20190627143826.GG2790@e103592.cambridge.arm.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <19e192a7-f8e1-2f04-48fb-8ea668ba32ca@arm.com>
+Date:   Thu, 27 Jun 2019 16:34:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <20190627145800.GD3782@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190627143826.GG2790@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561649596; bh=i+FMOxZ9zRQNIxD/tJQJP96BLZYES68rpDNzKXH1Hoo=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=NI59+G6dB0bbFZOAVMh76agA4AL6+J8djBbkbKJCvGiynhoRhcuiRRXcZCNx3MGK1
-         30Y9IIl8j16nKlv3yyuYUj5y0M1WwcI4yOjPK2rCeDFZkYJVUIgpRjL7df+4Sovqdq
-         hnXAawpejYqElyJdckiVWzKkFZaPTtP4qq2SOmzM97x/Uk4NZkZuCdsCJBw3Yc8lhF
-         7MGzi5MrJ5adaeaH443AMqbarB9ll7Xl/dywfrpDFmqWZuvqIymMz6Yittq6w2loqH
-         L47JjkDApJJUcyWLy0kdPGhJQX5DJ2ZYAr6PDf5TCoJ/2d2FQYHERNf8OKXqk1dEI0
-         nkQPmwugOQuHg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/27/2019 8:28 PM, Lorenzo Pieralisi wrote:
-> On Mon, Jun 24, 2019 at 02:44:56PM +0530, Vidya Sagar wrote:
->> Remove multiple write enable and disable sequences of dbi registers as
->> Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
->> DBI write-lock enable bit thereby not allowing any further writes to BAR-0
->> register in config space to take place. Hence enabling write permission at
->> the start of function and disabling the same only towards the end.
-> 
-> I do not understand what this patch does, I would like to rephrase
-> the commit log in a way that is easier to parse.
-> 
-> In particular I do not get what you mean in relation to BAR-0, I am
-> confused, please clarify.
-> 
-> Lorenzo
-Well, some of the Synopsys DesignWare core's DBI registers are protected with a lock
-without which, they are read-only by default. Existing code in dw_pcie_setup_rc() API
-tries to unlock and lock multiple times whenever it wants to update those write-protected
-registers. This patch attempts to unlock all such write-protected registers for writing
-once in the beginning of the function and lock them back towards the end.
-As far as BAR-0 register (which is at offset 0x10 in DBI space... nothing but the
-config space) in Tegra194 is concerned, it is one of those registers to which
-writes are protected. I could have added unlock/lock pair around accessing this register,
-but that would bloat this API with one more pair of unlock/lock, instead I chose to remove
-unlock/lock pairs for all protected registers and have unlock in the beginning and lock
-towards the end.
+Hi Dave,
 
--Vidya Sagar
-
+On 6/27/19 3:38 PM, Dave Martin wrote:
+> On Thu, Jun 27, 2019 at 12:59:07PM +0100, Vincenzo Frascino wrote:
+>> On 6/27/19 12:27 PM, Dave Martin wrote:
+>>> On Thu, Jun 27, 2019 at 11:57:36AM +0100, Vincenzo Frascino wrote:
 > 
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Reviewed-by: Thierry Reding <treding@nvidia.com>
->> Acked-by: Jingoo Han <jingoohan1@gmail.com>
->> ---
->> Changes since [v10]:
->> * None
+> [...]
+> 
+>>>> Disassembly of section .text:
+>>>> 0000000000000000 show_it:
+>>>>        0:	e8 03 1f aa 	mov	x8, xzr
+>>>>        4:	09 68 68 38 	ldrb	w9, [x0, x8]
+>>>>        8:	08 05 00 91 	add	x8, x8, #1
+>>>>        c:	c9 ff ff 34 	cbz	w9, #-8 <show_it+0x4>
+>>>>       10:	02 05 00 51 	sub	w2, w8, #1
+>>>>       14:	e1 03 00 aa 	mov	x1, x0
+>>>>       18:	08 08 80 d2 	mov	x8, #64
+>>>>       1c:	01 00 00 d4 	svc	#0
+>>>>       20:	c0 03 5f d6 	ret
+>>>>
+>>>> Commands used:
+>>>>
+>>>> $ clang -target aarch64-linux-gnueabi main.c -O -c -o main.clang.<x>.o
+>>>> $ llvm-objdump -d main.clang.<x>.o
+>>>
+>>> Actually, I'm not sure this is comparable with the reproducer I quoted
+>>> in my last reply.
+>>>
 >>
->> Changes since [v9]:
->> * None
->>
->> Changes since [v8]:
->> * None
->>
->> Changes since [v7]:
->> * None
->>
->> Changes since [v6]:
->> * None
->>
->> Changes since [v5]:
->> * Moved write enable to the beginning of the API and write disable to the end
->>
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * None
->>
->> Changes since [v1]:
->> * None
->>
->>   drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
->>   1 file changed, 8 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->> index f93252d0da5b..d3156446ff27 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->> @@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>   	u32 val, ctrl, num_ctrls;
->>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>   
->> +	/*
->> +	 * Enable DBI read-only registers for writing/updating configuration.
->> +	 * Write permission gets disabled towards the end of this function.
->> +	 */
->> +	dw_pcie_dbi_ro_wr_en(pci);
->> +
->>   	dw_pcie_setup(pci);
->>   
->>   	if (!pp->ops->msi_host_init) {
->> @@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>   	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
->>   
->>   	/* Setup interrupt pins */
->> -	dw_pcie_dbi_ro_wr_en(pci);
->>   	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
->>   	val &= 0xffff00ff;
->>   	val |= 0x00000100;
->>   	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
->> -	dw_pcie_dbi_ro_wr_dis(pci);
->>   
->>   	/* Setup bus numbers */
->>   	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
->> @@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>   
->>   	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
->>   
->> -	/* Enable write permission for the DBI read-only register */
->> -	dw_pcie_dbi_ro_wr_en(pci);
->>   	/* Program correct class for RC */
->>   	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
->> -	/* Better disable write permission right after the update */
->> -	dw_pcie_dbi_ro_wr_dis(pci);
->>   
->>   	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
->>   	val |= PORT_LOGIC_SPEED_CHANGE;
->>   	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
->> +
->> +	dw_pcie_dbi_ro_wr_dis(pci);
->>   }
->>   EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
->> -- 
->> 2.17.1
->>
+>> As explained in my previous email, this is the only case that can realistically
+>> happen. vDSO has no dependency on any other library (i.e. libgcc you were
+>> mentioning) and we are referring to the fallbacks which fall in this category.
+> 
+> Outlining could also introduce a local function call where none exists
+> explicitly in the program IIUC.
+> 
+> My point is that the interaction between asm reg vars and machine-level
+> procedure calls is at best ill-defined, and it is largely up to the
+> compiler when to introduce such a call, even without LTO etc.
+> 
+> So we should not be surprised to see variations in behaviour depending
+> on compiler, compiler version and compiler flags.
+>
 
+I tested 10 version of the compiler and a part gcc-5.1 that triggers the issue
+in a specific case and not in the vdso library, I could not find evidence of the
+problem.
+
+>>> The compiler can see the definition of strlen and fully inlines it.
+>>> I only ever saw the problem when the compiler emits an out-of-line
+>>> implicit function call.
+>>>> What does clang do with my example on 32-bit?
+>>
+>> When clang is selected compat vDSOs are currently disabled on arm64, will be
+>> introduced with a future patch series.
+>>
+>> Anyway since I am curious as well, this is what happens with your example with
+>> clang.8 target=arm-linux-gnueabihf:
+>>
+>> dave-code.clang.8.o:	file format ELF32-arm-little
+>>
+>> Disassembly of section .text:
+>> 0000000000000000 foo:
+>>        0:	00 00 00 ef 	svc	#0
+>>        4:	1e ff 2f e1 	bx	lr
+>>
+>> 0000000000000008 bar:
+>>        8:	10 4c 2d e9 	push	{r4, r10, r11, lr}
+>>        c:	08 b0 8d e2 	add	r11, sp, #8
+>>       10:	00 40 a0 e1 	mov	r4, r0
+>>       14:	fe ff ff eb 	bl	#-8 <bar+0xc>
+>>       18:	00 10 a0 e1 	mov	r1, r0
+>>       1c:	04 00 a0 e1 	mov	r0, r4
+>>       20:	00 00 00 ef 	svc	#0
+>>       24:	10 8c bd e8 	pop	{r4, r10, r11, pc}
+> 
+>> Compiled with -O2, -O3, -Os never inlines.
+> 
+> Looks sane, and is the behaviour we want.
+> 
+>> Same thing happens for aarch64-linux-gnueabi:
+>>
+>> dave-code.clang.8.o:	file format ELF64-aarch64-little
+>>
+>> Disassembly of section .text:
+>> 0000000000000000 foo:
+>>        0:	e0 03 00 2a 	mov	w0, w0
+>>        4:	e1 03 01 2a 	mov	w1, w1
+>>        8:	01 00 00 d4 	svc	#0
+>>        c:	c0 03 5f d6 	ret
+>>
+>> 0000000000000010 bar:
+>>       10:	01 0c c1 1a 	sdiv	w1, w0, w1
+>>       14:	e0 03 00 2a 	mov	w0, w0
+>>       18:	01 00 00 d4 	svc	#0
+>>       1c:	c0 03 5f d6 	ret
+> 
+> Curious, clang seems to be inserting some seemingly redundant moves
+> of its own here, though this shouldn't break anything.
+> 
+> I suspect that clang might require an X-reg holding an int to have its
+> top 32 bits zeroed for passing to an asm, whereas GCC does not.  I think
+> this comes under "we should not be surprised to see variations".
+> 
+> GCC 9 does this instead:
+> 
+> 0000000000000000 <foo>:
+>    0:   d4000001        svc     #0x0
+>    4:   d65f03c0        ret
+> 
+> 0000000000000008 <bar>:
+>    8:   1ac10c01        sdiv    w1, w0, w1
+>    c:   d4000001        svc     #0x0
+>   10:   d65f03c0        ret
+> 
+> 
+>> Based on this I think we can conclude our investigation.
+> 
+> So we use non-reg vars and use the asm clobber list and explicit moves
+> to get things into / out of the right registers?
+> 
+
+Since I managed to provide enough evidence, based on the behavior of various
+versions of the compilers, that the library as it stands is consistent and does
+not suffer any of the issues you reported I think I will keep my code as is at
+least for this release, I will revisit it in future if something happens.
+
+If you manage to prove that my library as it stands (no code additions or source
+modifications) has the issues you mentioned based on some version of the
+compiler, this changes everything.
+
+Happy to hear from you.
+
+> Cheers
+> ---Dave
+> 
+
+-- 
+Regards,
+Vincenzo
