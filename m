@@ -2,220 +2,104 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2017BC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92501C48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5702182B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6256321855
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:11:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="ILPY5vZv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9gmGEgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfF0DKn (ORCPT
+        id S1726913AbfF0DLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 23:10:43 -0400
-Received: from mail-eopbgr140081.outbound.protection.outlook.com ([40.107.14.81]:33896
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726658AbfF0DKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 23:10:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XX8ZulPh5Yh0kwkEluOtRiKPukGZC9tkvRaHJ8oVifM=;
- b=ILPY5vZv8hsXcWnjdf3LyztZuelWGD0ZY9t4eR/NLxnG2kML8Iht6NtZRcK/Xaq+l8gpPs+93ApESNQB/QQUNsX4dLvCRCTsddoe7m4KkMCallEhAs0LST5MG8aihrUgcv4RMGXfsJB74hKzicER9esVFdTxcv+iGQKmUrzy8GA=
-Received: from VI1PR08MB5488.eurprd08.prod.outlook.com (52.133.246.150) by
- VI1PR08MB3358.eurprd08.prod.outlook.com (52.134.31.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Thu, 27 Jun 2019 03:10:37 +0000
-Received: from VI1PR08MB5488.eurprd08.prod.outlook.com
- ([fe80::390b:b8a9:542b:9ef9]) by VI1PR08MB5488.eurprd08.prod.outlook.com
- ([fe80::390b:b8a9:542b:9ef9%3]) with mapi id 15.20.2008.014; Thu, 27 Jun 2019
- 03:10:37 +0000
-From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>
-CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: [PATCH] drm/komeda: Adds error event print functionality
-Thread-Topic: [PATCH] drm/komeda: Adds error event print functionality
-Thread-Index: AQHVLJXktogmbqKelUWXSXQXvsiyYA==
-Date:   Thu, 27 Jun 2019 03:10:36 +0000
-Message-ID: <1561604994-26925-1-git-send-email-lowry.li@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK0PR01CA0017.apcprd01.prod.exchangelabs.com
- (2603:1096:203:92::29) To VI1PR08MB5488.eurprd08.prod.outlook.com
- (2603:10a6:803:137::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.9.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0b86c7d4-6c4c-45c2-6465-08d6faad0696
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB3358;
-x-ms-traffictypediagnostic: VI1PR08MB3358:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <VI1PR08MB3358231DA7D96AB77390162D9FFD0@VI1PR08MB3358.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 008184426E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(376002)(346002)(136003)(199004)(189003)(66446008)(8676002)(256004)(386003)(2501003)(54906003)(6506007)(53936002)(186003)(6116002)(476003)(71190400001)(110136005)(52116002)(6636002)(478600001)(102836004)(486006)(55236004)(2616005)(26005)(86362001)(66066001)(50226002)(316002)(64756008)(2201001)(99286004)(66476007)(6486002)(73956011)(2906002)(14454004)(66946007)(66556008)(36756003)(72206003)(81156014)(14444005)(71200400001)(3846002)(8936002)(68736007)(25786009)(6512007)(4326008)(5660300002)(7736002)(305945005)(81166006)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3358;H:VI1PR08MB5488.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rdQBKLjYaliZhPaW/uDVd0OOlFyBjJDPHAJN3mQXKSumH6xQDp0Du02MzvAbF6iLUMbfWyTRTOUz1yOg90Alsq5xRHbYkEAeekowD319c6v60bQlilc4tgxHN5N5EiMHPDVuvCkAPqjjREPzkAN1q/n+rC9AqBKI37O9y06FSSzxB43ZvNTPPUKxgIJ9f04VapEL5PZcdMm+K3xFj8i+6gPZI5Hfgs8fvQaGso+BYz+dgg86j1cKfPzXQHHcpLhJRifKa5Jra7SwnjKesdYAAabStnZthv2fFI/0WeQBy1JPjOxD/aV3rKQJ8sN1rjDLmrh5bP/y5IQhxBkLM2ci1tkpDQUVoRPG7DcUDtove60bYkkmCkrc0yOMdAsors/L4SpMWhYWPWP11N1sgF0bBdaQiJ9bmgMh1j4RlQBIDwk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 26 Jun 2019 23:11:48 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33063 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfF0DLs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 23:11:48 -0400
+Received: by mail-io1-f65.google.com with SMTP id u13so1542606iop.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 20:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q96TkVsJnfnxVeWX/AdudLxYyvC01VLk3tE7qk29U9Q=;
+        b=H9gmGEglIn+LAw9pG4lAyeC7GhEDYFCJpfJVAp3JJqXANo/tVpzC+GJcFcrlYpvbj6
+         LZm186SGKl9CFSNXORhYuyjBdwTM7KPKNscLWSd/EYAmijYajHPGFqMTpy6Xc+zbvw4w
+         WT0h/+6gaQSq8OTkWhmAo0q/9hftwqjfoS6CsX9FhxyKJ3Q2XoH+taa414Ic5ZbhK78f
+         tWqXR+NYSVL0F6zfy5hSTKhH36gP6+7ucDnu/+JHvNsS7N/AOiKsC/zSHcLai4NHKWwo
+         FtO3VNKdyMpuxkCe5bQ22L7C4c+1kD34uaGMmJTJ/wb7S7XIjPi3FJOJ4YCXzjgh7f+k
+         GaVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q96TkVsJnfnxVeWX/AdudLxYyvC01VLk3tE7qk29U9Q=;
+        b=REpkPZkUpK14t+PkEBe0LolRNCD8gr7k0fcKyXJxO++drJAg4lt7OxBcCVJK9u2Wue
+         pyCPsK8NIq/e8Yx7ro+c+qlIKMs024Mlw5qzRATkTo3LXt7ZCRQZK6LwGTU3h+oPcx+g
+         RFC6E2FCIsrHweYm6N1Bx3EFBF+g7lZMLDXfLtlI1VQT0+LlIrTkAqnsao5xgKhj1PaA
+         ESy8fNPBYysd/EJjtzYhHRipXChf+y1HbOqGY0V0J62H719wefCkSfJaNkKLqbJ8JzO9
+         fBl8pFHXRkjJr/ikgh8Q04bTKIP7p2+Fnj9/8ZHgG1UfWUGZUzjSKIF1QM4mwNf0bH6F
+         zfQA==
+X-Gm-Message-State: APjAAAVXLIE3hSgR/VBkzpWqWh7zax/hOD+yjcH/JTI+HW/JFgHZz50D
+        hgV4OOSmwRAb4ldNjkNA9wnv3628+Os6OI50Dg==
+X-Google-Smtp-Source: APXvYqwtgBUKznYI9WKiA96o5xUtUGO2BS1tjRoGjRXP0Akltu+m1KJzetXfkm3GRRcNfMOyaUKPCNxgs3JB/FHiGWo=
+X-Received: by 2002:a02:a384:: with SMTP id y4mr1716711jak.77.1561605107707;
+ Wed, 26 Jun 2019 20:11:47 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b86c7d4-6c4c-45c2-6465-08d6faad0696
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 03:10:36.9461
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Lowry.Li@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3358
+References: <20190512054829.11899-1-cai@lca.pw> <20190513124112.GH24036@dhcp22.suse.cz>
+ <1561123078.5154.41.camel@lca.pw> <20190621135507.GE3429@dhcp22.suse.cz>
+ <CAFgQCTvSJjzFGGyt_VOvyB46yy6452wach7UmmuY5ZJZ3YZzcg@mail.gmail.com> <20190626135744.GX17798@dhcp22.suse.cz>
+In-Reply-To: <20190626135744.GX17798@dhcp22.suse.cz>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Thu, 27 Jun 2019 11:11:36 +0800
+Message-ID: <CAFgQCTvAaWvnZYYeg-TqCMtYdgGu-r29iGu4igoQ-RRkRkYmVw@mail.gmail.com>
+Subject: Re: [PATCH -next v2] mm/hotplug: fix a null-ptr-deref during NUMA boot
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Barret Rhoden <brho@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ingo Molnar <mingo@elte.hu>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkcyB0byBwcmludCB0aGUgZXZlbnQgbWVzc2FnZSB3aGVuIGVycm9yIGhhcHBlbnMgYW5kIHRo
-ZSBzYW1lIGV2ZW50DQp3aWxsIG5vdCBiZSBwcmludGVkIHVudGlsIG5leHQgdnN5bmMuDQoNClNp
-Z25lZC1vZmYtYnk6IExvd3J5IExpIChBcm0gVGVjaG5vbG9neSBDaGluYSkgPGxvd3J5LmxpQGFy
-bS5jb20+DQotLS0NCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL01ha2VmaWxl
-ICAgICAgIHwgICAxICsNCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVk
-YV9kZXYuaCAgIHwgIDEzICsrDQogZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9r
-b21lZGFfZXZlbnQuYyB8IDE0NCArKysrKysrKysrKysrKysrKysrKysrDQogZHJpdmVycy9ncHUv
-ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfa21zLmMgICB8ICAgMiArDQogNCBmaWxlcyBj
-aGFuZ2VkLCAxNjAgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9ldmVudC5jDQoNCmRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL01ha2VmaWxlIGIvZHJpdmVycy9ncHUv
-ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9NYWtlZmlsZQ0KaW5kZXggMzhhYTU4NC4uM2Y1M2QyZCAx
-MDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvTWFrZWZpbGUN
-CisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvTWFrZWZpbGUNCkBAIC03
-LDYgKzcsNyBAQCBjY2ZsYWdzLXkgOj0gXA0KIGtvbWVkYS15IDo9IFwNCiAJa29tZWRhX2Rydi5v
-IFwNCiAJa29tZWRhX2Rldi5vIFwNCisJa29tZWRhX2V2ZW50Lm8gXA0KIAlrb21lZGFfZm9ybWF0
-X2NhcHMubyBcDQogCWtvbWVkYV9jb2VmZnMubyBcDQogCWtvbWVkYV9jb2xvcl9tZ210Lm8gXA0K
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rl
-di5oIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2LmgNCmlu
-ZGV4IDA5NmY5ZjcuLmU4NjNlYzMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rp
-c3BsYXkva29tZWRhL2tvbWVkYV9kZXYuaA0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNw
-bGF5L2tvbWVkYS9rb21lZGFfZGV2LmgNCkBAIC00MCw2ICs0MCwxNyBAQA0KICNkZWZpbmUgS09N
-RURBX0VSUl9UVE5HCQkJQklUX1VMTCgzMCkNCiAjZGVmaW5lIEtPTUVEQV9FUlJfVFRGCQkJQklU
-X1VMTCgzMSkNCiANCisjZGVmaW5lIEtPTUVEQV9FUlJfRVZFTlRTCVwNCisJKEtPTUVEQV9FVkVO
-VF9VUlVOCXwgS09NRURBX0VWRU5UX0lCU1kJfCBLT01FREFfRVZFTlRfT1ZSIHxcDQorCUtPTUVE
-QV9FUlJfVEVUTwkJfCBLT01FREFfRVJSX1RFTVIJfCBLT01FREFfRVJSX1RJVFIgfFwNCisJS09N
-RURBX0VSUl9DUEUJCXwgS09NRURBX0VSUl9DRkdFCXwgS09NRURBX0VSUl9BWElFIHxcDQorCUtP
-TUVEQV9FUlJfQUNFMAkJfCBLT01FREFfRVJSX0FDRTEJfCBLT01FREFfRVJSX0FDRTIgfFwNCisJ
-S09NRURBX0VSUl9BQ0UzCQl8IEtPTUVEQV9FUlJfRFJJRlRUTwl8IEtPTUVEQV9FUlJfRlJBTUVU
-TyB8XA0KKwlLT01FREFfRVJSX1pNRQkJfCBLT01FREFfRVJSX01FUlIJfCBLT01FREFfRVJSX1RD
-RiB8XA0KKwlLT01FREFfRVJSX1RUTkcJCXwgS09NRURBX0VSUl9UVEYpDQorDQorI2RlZmluZSBL
-T01FREFfV0FSTl9FVkVOVFMJS09NRURBX0VSUl9DU0NFDQorDQogLyogbWFsaWRwIGRldmljZSBp
-ZCAqLw0KIGVudW0gew0KIAlNQUxJX0Q3MSA9IDAsDQpAQCAtMjA3LDYgKzIxOCw4IEBAIHN0cnVj
-dCBrb21lZGFfZGV2IHsNCiANCiBzdHJ1Y3Qga29tZWRhX2RldiAqZGV2X3RvX21kZXYoc3RydWN0
-IGRldmljZSAqZGV2KTsNCiANCit2b2lkIGtvbWVkYV9wcmludF9ldmVudHMoc3RydWN0IGtvbWVk
-YV9ldmVudHMgKmV2dHMpOw0KKw0KIGludCBrb21lZGFfZGV2X3Jlc3VtZShzdHJ1Y3Qga29tZWRh
-X2RldiAqbWRldik7DQogaW50IGtvbWVkYV9kZXZfc3VzcGVuZChzdHJ1Y3Qga29tZWRhX2RldiAq
-bWRldik7DQogI2VuZGlmIC8qX0tPTUVEQV9ERVZfSF8qLw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2V2ZW50LmMgYi9kcml2ZXJzL2dwdS9k
-cm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9ldmVudC5jDQpuZXcgZmlsZSBtb2RlIDEwMDY0
-NA0KaW5kZXggMDAwMDAwMC4uMzA5ZGJlMg0KLS0tIC9kZXYvbnVsbA0KKysrIGIvZHJpdmVycy9n
-cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZXZlbnQuYw0KQEAgLTAsMCArMSwxNDQg
-QEANCisvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KKy8qDQorICogKEMpIENP
-UFlSSUdIVCAyMDE5IEFSTSBMaW1pdGVkLiBBbGwgcmlnaHRzIHJlc2VydmVkLg0KKyAqIEF1dGhv
-cjogSmFtZXMuUWlhbi5XYW5nIDxqYW1lcy5xaWFuLndhbmdAYXJtLmNvbT4NCisgKg0KKyAqLw0K
-KyNpbmNsdWRlIDxkcm0vZHJtX3ByaW50Lmg+DQorDQorI2luY2x1ZGUgImtvbWVkYV9kZXYuaCIN
-CisNCitzdHJ1Y3Qga29tZWRhX3N0ciB7DQorCWNoYXIgKnN0cjsNCisJdTMyIHN6Ow0KKwl1MzIg
-bGVuOw0KK307DQorDQorLyogcmV0dXJuIDAgb24gc3VjY2VzcywgIDwgMCBvbiBubyBzcGFjZS4N
-CisgKi8NCitzdGF0aWMgaW50IGtvbWVkYV9zcHJpbnRmKHN0cnVjdCBrb21lZGFfc3RyICpzdHIs
-IGNvbnN0IGNoYXIgKmZtdCwgLi4uKQ0KK3sNCisJdmFfbGlzdCBhcmdzOw0KKwlpbnQgbnVtLCBm
-cmVlX3N6Ow0KKwlpbnQgZXJyOw0KKw0KKwlmcmVlX3N6ID0gc3RyLT5zeiAtIHN0ci0+bGVuOw0K
-KwlpZiAoZnJlZV9zeiA8PSAwKQ0KKwkJcmV0dXJuIC1FTk9TUEM7DQorDQorCXZhX3N0YXJ0KGFy
-Z3MsIGZtdCk7DQorDQorCW51bSA9IHZzbnByaW50ZihzdHItPnN0ciArIHN0ci0+bGVuLCBmcmVl
-X3N6LCBmbXQsIGFyZ3MpOw0KKw0KKwl2YV9lbmQoYXJncyk7DQorDQorCWlmIChudW0gPD0gZnJl
-ZV9zeikgew0KKwkJc3RyLT5sZW4gKz0gbnVtOw0KKwkJZXJyID0gMDsNCisJfSBlbHNlIHsNCisJ
-CXN0ci0+bGVuID0gc3RyLT5zejsNCisJCWVyciA9IC1FTk9TUEM7DQorCX0NCisNCisJcmV0dXJu
-IGVycjsNCit9DQorDQorc3RhdGljIHZvaWQgZXZ0X3NwcmludGYoc3RydWN0IGtvbWVkYV9zdHIg
-KnN0ciwgdTY0IGV2dCwgY29uc3QgY2hhciAqbXNnKQ0KK3sNCisJaWYgKGV2dCkNCisJCWtvbWVk
-YV9zcHJpbnRmKHN0ciwgbXNnKTsNCit9DQorDQorc3RhdGljIHZvaWQgZXZ0X3N0cihzdHJ1Y3Qg
-a29tZWRhX3N0ciAqc3RyLCB1NjQgZXZlbnRzKQ0KK3sNCisJaWYgKGV2ZW50cyA9PSAwVUxMKSB7
-DQorCQlldnRfc3ByaW50ZihzdHIsIDEsICJOb25lIik7DQorCQlyZXR1cm47DQorCX0NCisNCisJ
-ZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01FREFfRVZFTlRfVlNZTkMsICJWU1lOQ3wiKTsN
-CisJZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01FREFfRVZFTlRfRkxJUCwgIkZMSVB8Iik7
-DQorCWV2dF9zcHJpbnRmKHN0ciwgZXZlbnRzICYgS09NRURBX0VWRU5UX0VPVywgIkVPV3wiKTsN
-CisJZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01FREFfRVZFTlRfTU9ERSwgIk9QLU1PREV8
-Iik7DQorDQorCWV2dF9zcHJpbnRmKHN0ciwgZXZlbnRzICYgS09NRURBX0VWRU5UX1VSVU4sICJV
-TkRFUlJVTnwiKTsNCisJZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01FREFfRVZFTlRfT1ZS
-LCAiT1ZFUlJVTnwiKTsNCisNCisJLyogR0xCIGVycm9yICovDQorCWV2dF9zcHJpbnRmKHN0ciwg
-ZXZlbnRzICYgS09NRURBX0VSUl9NRVJSLCAiTUVSUnwiKTsNCisJZXZ0X3NwcmludGYoc3RyLCBl
-dmVudHMgJiBLT01FREFfRVJSX0ZSQU1FVE8sICJGUkFNRVRPfCIpOw0KKw0KKwkvKiBET1UgZXJy
-b3IgKi8NCisJZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01FREFfRVJSX0RSSUZUVE8sICJE
-UklGVFRPfCIpOw0KKwlldnRfc3ByaW50ZihzdHIsIGV2ZW50cyAmIEtPTUVEQV9FUlJfRlJBTUVU
-TywgIkZSQU1FVE98Iik7DQorCWV2dF9zcHJpbnRmKHN0ciwgZXZlbnRzICYgS09NRURBX0VSUl9U
-RVRPLCAiVEVUT3wiKTsNCisJZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01FREFfRVJSX0NT
-Q0UsICJDU0NFfCIpOw0KKw0KKwkvKiBMUFUgZXJyb3JzIG9yIGV2ZW50cyAqLw0KKwlldnRfc3By
-aW50ZihzdHIsIGV2ZW50cyAmIEtPTUVEQV9FVkVOVF9JQlNZLCAiSUJTWXwiKTsNCisJZXZ0X3Nw
-cmludGYoc3RyLCBldmVudHMgJiBLT01FREFfRVJSX0FYSUUsICJBWElFfCIpOw0KKwlldnRfc3By
-aW50ZihzdHIsIGV2ZW50cyAmIEtPTUVEQV9FUlJfQUNFMCwgIkFDRTB8Iik7DQorCWV2dF9zcHJp
-bnRmKHN0ciwgZXZlbnRzICYgS09NRURBX0VSUl9BQ0UxLCAiQUNFMXwiKTsNCisJZXZ0X3Nwcmlu
-dGYoc3RyLCBldmVudHMgJiBLT01FREFfRVJSX0FDRTIsICJBQ0UyfCIpOw0KKwlldnRfc3ByaW50
-ZihzdHIsIGV2ZW50cyAmIEtPTUVEQV9FUlJfQUNFMywgIkFDRTN8Iik7DQorDQorCS8qIExQVSBU
-QlUgZXJyb3JzKi8NCisJZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01FREFfRVJSX1RDRiwg
-IlRDRnwiKTsNCisJZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01FREFfRVJSX1RUTkcsICJU
-VE5HfCIpOw0KKwlldnRfc3ByaW50ZihzdHIsIGV2ZW50cyAmIEtPTUVEQV9FUlJfVElUUiwgIlRJ
-VFJ8Iik7DQorCWV2dF9zcHJpbnRmKHN0ciwgZXZlbnRzICYgS09NRURBX0VSUl9URU1SLCAiVEVN
-UnwiKTsNCisJZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01FREFfRVJSX1RURiwgIlRURnwi
-KTsNCisNCisJLyogQ1UgZXJyb3JzKi8NCisJZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01F
-REFfRVJSX0NQRSwgIkNPUFJPQ3wiKTsNCisJZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01F
-REFfRVJSX1pNRSwgIlpNRXwiKTsNCisJZXZ0X3NwcmludGYoc3RyLCBldmVudHMgJiBLT01FREFf
-RVJSX0NGR0UsICJDRkdFfCIpOw0KKwlldnRfc3ByaW50ZihzdHIsIGV2ZW50cyAmIEtPTUVEQV9F
-UlJfVEVNUiwgIlRFTVJ8Iik7DQorDQorCWlmIChzdHItPmxlbiA+IDAgJiYgKHN0ci0+c3RyW3N0
-ci0+bGVuIC0gMV0gPT0gJ3wnKSkgew0KKwkJc3RyLT5zdHJbc3RyLT5sZW4gLSAxXSA9IDA7DQor
-CQlzdHItPmxlbi0tOw0KKwl9DQorfQ0KKw0KK3N0YXRpYyBib29sIGlzX25ld19mcmFtZShzdHJ1
-Y3Qga29tZWRhX2V2ZW50cyAqYSkNCit7DQorCXJldHVybiAoYS0+cGlwZXNbMF0gfCBhLT5waXBl
-c1sxXSkgJiBLT01FREFfRVZFTlRfRkxJUDsNCit9DQorDQordm9pZCBrb21lZGFfcHJpbnRfZXZl
-bnRzKHN0cnVjdCBrb21lZGFfZXZlbnRzICpldnRzKQ0KK3sNCisJdTY0IHByaW50X2V2dHMgPSBL
-T01FREFfRVJSX0VWRU5UUzsNCisJc3RhdGljIGJvb2wgZW5fcHJpbnQgPSB0cnVlOw0KKw0KKwkv
-KiByZWR1Y2UgdGhlIHNhbWUgbXNnIHByaW50LCBvbmx5IHByaW50IHRoZSBmaXJzdCBldnQgZm9y
-IG9uZSBmcmFtZSAqLw0KKwlpZiAoZXZ0cy0+Z2xvYmFsIHx8IGlzX25ld19mcmFtZShldnRzKSkN
-CisJCWVuX3ByaW50ID0gdHJ1ZTsNCisJaWYgKCFlbl9wcmludCkNCisJCXJldHVybjsNCisNCisj
-aWZkZWYgREVCVUcNCisJcHJpbnRfZXZ0cyB8PSBLT01FREFfV0FSTl9FVkVOVFM7DQorI2VuZGlm
-DQorDQorCWlmICgoZXZ0cy0+Z2xvYmFsIHwgZXZ0cy0+cGlwZXNbMF0gfCBldnRzLT5waXBlc1sx
-XSkgJiBwcmludF9ldnRzKSB7DQorCQkjZGVmaW5lIFNUUl9TWgkJMTI4DQorCQljaGFyIG1zZ1tT
-VFJfU1pdOw0KKwkJc3RydWN0IGtvbWVkYV9zdHIgc3RyOw0KKw0KKwkJc3RyLnN0ciA9IG1zZzsN
-CisJCXN0ci5zeiAgPSBTVFJfU1o7DQorCQlzdHIubGVuID0gMDsNCisNCisJCWtvbWVkYV9zcHJp
-bnRmKCZzdHIsICJnY3U6ICIpOw0KKwkJZXZ0X3N0cigmc3RyLCBldnRzLT5nbG9iYWwpOw0KKwkJ
-a29tZWRhX3NwcmludGYoJnN0ciwgIiwgcGlwZXNbMF06ICIpOw0KKwkJZXZ0X3N0cigmc3RyLCBl
-dnRzLT5waXBlc1swXSk7DQorCQlrb21lZGFfc3ByaW50Zigmc3RyLCAiLCBwaXBlc1sxXTogIik7
-DQorCQlldnRfc3RyKCZzdHIsIGV2dHMtPnBpcGVzWzFdKTsNCisNCisJCURSTV9FUlJPUigiZXJy
-IGRldGVjdDogJXNcbiIsIG1zZyk7DQorDQorCQllbl9wcmludCA9IGZhbHNlOw0KKwl9DQorfQ0K
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2tt
-cy5jIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfa21zLmMNCmlu
-ZGV4IDY0N2JjZTUuLjE0NjJiYWMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rp
-c3BsYXkva29tZWRhL2tvbWVkYV9rbXMuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNw
-bGF5L2tvbWVkYS9rb21lZGFfa21zLmMNCkBAIC00Nyw2ICs0Nyw4IEBAIHN0YXRpYyBpcnFyZXR1
-cm5fdCBrb21lZGFfa21zX2lycV9oYW5kbGVyKGludCBpcnEsIHZvaWQgKmRhdGEpDQogCW1lbXNl
-dCgmZXZ0cywgMCwgc2l6ZW9mKGV2dHMpKTsNCiAJc3RhdHVzID0gbWRldi0+ZnVuY3MtPmlycV9o
-YW5kbGVyKG1kZXYsICZldnRzKTsNCiANCisJa29tZWRhX3ByaW50X2V2ZW50cygmZXZ0cyk7DQor
-DQogCS8qIE5vdGlmeSB0aGUgY3J0YyB0byBoYW5kbGUgdGhlIGV2ZW50cyAqLw0KIAlmb3IgKGkg
-PSAwOyBpIDwga21zLT5uX2NydGNzOyBpKyspDQogCQlrb21lZGFfY3J0Y19oYW5kbGVfZXZlbnQo
-Jmttcy0+Y3J0Y3NbaV0sICZldnRzKTsNCi0tIA0KMS45LjENCg0K
+On Wed, Jun 26, 2019 at 9:57 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Mon 24-06-19 16:42:20, Pingfan Liu wrote:
+> > Hi Michal,
+> >
+> > What about dropping the change of the online definition of your patch,
+> > just do the following?
+>
+> I am sorry but I am unlikely to find some more time to look into this. I
+> am willing to help reviewing but I will not find enough time to focus on
+> this to fix up the patch. Are you willing to work on this and finish the
+> patch? It is a very tricky area with side effects really hard to see in
+> advance but going with a robust fix is definitely worth the effort.
+Yeah, the bug is a little trivial but hard to fix bug, and take a lot
+of time. It is hard to meet your original design target, based on
+current situation. I will have a try limited to this bug.
+
+Thanks,
+  Pingfan
+>
+> Thanks!
+> --
+> Michal Hocko
+> SUSE Labs
