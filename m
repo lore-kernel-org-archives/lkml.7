@@ -2,232 +2,182 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32081C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79D3C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1552082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E77D20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beyZvOpI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbfF0AtB (ORCPT
+        id S1728469AbfF0AtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:49:01 -0400
-Received: from lgeamrelo13.lge.com ([156.147.23.53]:55510 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726862AbfF0As7 (ORCPT
+        Wed, 26 Jun 2019 20:49:20 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36727 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbfF0AtS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:48:59 -0400
-Received: from unknown (HELO lgeamrelo01.lge.com) (156.147.1.125)
-        by 156.147.23.53 with ESMTP; 27 Jun 2019 09:48:56 +0900
-X-Original-SENDERIP: 156.147.1.125
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.125 with ESMTP; 27 Jun 2019 09:48:56 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Thu, 27 Jun 2019 09:48:16 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com
-Subject: Re: [RFC] rcu: Warn that rcu ktheads cannot be spawned
-Message-ID: <20190627004816.GA7427@X58A-UD3R>
-References: <1561364852-5113-1-git-send-email-byungchul.park@lge.com>
- <20190624164624.GA41314@google.com>
- <20190624172551.GI26519@linux.ibm.com>
- <20190625024100.GA10912@X58A-UD3R>
- <20190625133115.GV26519@linux.ibm.com>
- <20190626025120.GA3452@X58A-UD3R>
- <20190626163045.GB26519@linux.ibm.com>
+        Wed, 26 Jun 2019 20:49:18 -0400
+Received: by mail-io1-f68.google.com with SMTP id h6so945415ioh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 17:49:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FnuQP7CTcbJye7wkfnNka2bWrrxEpDeN1sGJnHRjqmw=;
+        b=beyZvOpIoSnCiVUg3YQYCGXioF/dyxle9eDYc/zWVKmJCbs27jCH009EwTbRKHLTou
+         cVQhkKfw0ZS43zSlmtqoFOoQ2oxY/xV6BXq7e9uT98Fag+EEx17DrFjsNGQKlTY7zczB
+         3njyfFCt8K+Z4uBOJHEv02y2R21GVOsUeD+xk4Ny5/Dt2CZ8bs2s5SdBf00OQIJTsTrw
+         /7RqtCzM+S8vEz99lQul2d9fheRAQucnLsy4i5eWDhwWYo47zbuZBFpcQF2cFQrFBaus
+         1LFkn9tcjwldGgIW3KJtGM//tMgEt9bkTuGP6/6eQexPpO+V7QEp/PR28DJAjKr6sKq0
+         PwUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FnuQP7CTcbJye7wkfnNka2bWrrxEpDeN1sGJnHRjqmw=;
+        b=WcMjB4NiZOU2pKyZy9nrpAqLO04Sae5ZBQTZIQDihDIqEgFD4iGQElYOx5S7aTUndU
+         Yo/tEP7FE+z5mruzXUSVLy/vZhrDkVJpJLbv+q2DY/EVh6YvzX5WJOgBTKSK9OSHo5zu
+         0IBKhDiL3oY+yapOU6SSbHbEJrG79Zn8HPjbhM6dDFQLdcgFtVSrhFZuY/1u2JO3H/sh
+         NV0b/a5+mguduIvrL6kK/G9qH07hlJ2HfLVcdtRUOYQyI5x9hPJcrVO2JndFDimH/HAt
+         Do5gGdD2xMKOC7ca/WniOjoEoFDKI4IzE2fwbRFKmy0kxpao2JErvn7z3I8jXWJ0FthK
+         +f3A==
+X-Gm-Message-State: APjAAAUs7S14/mEOykuC9xTtm2vBMdsDy4bg87us+BP7C05qMMY16zAi
+        QM7ggJoL6+2lfXzKVMuUbGqOqEeJX3pkcMOJRzRNPDc3
+X-Google-Smtp-Source: APXvYqzVlHJw5tL36/rn9Qjl/0Q9Vf2GB+usOUX6IiDa54+5zwayzncbpLfYPkKaUkSvv1Vo6TLxRYG5GYVer4iwUEQ=
+X-Received: by 2002:a6b:9257:: with SMTP id u84mr1277575iod.278.1561596557688;
+ Wed, 26 Jun 2019 17:49:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626163045.GB26519@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190620060726.926-1-kraxel@redhat.com> <20190620060726.926-8-kraxel@redhat.com>
+In-Reply-To: <20190620060726.926-8-kraxel@redhat.com>
+From:   Chia-I Wu <olvaffe@gmail.com>
+Date:   Wed, 26 Jun 2019 17:49:06 -0700
+Message-ID: <CAPaKu7RwVC3p=K0gxy=NfJaCJd_RkRc1vCKH4e7oS8rn-6wyOQ@mail.gmail.com>
+Subject: Re: [PATCH v4 07/12] drm/virtio: add virtio_gpu_object_array & helpers
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 09:30:45AM -0700, Paul E. McKenney wrote:
-> On Wed, Jun 26, 2019 at 11:51:20AM +0900, Byungchul Park wrote:
-> > On Tue, Jun 25, 2019 at 06:31:15AM -0700, Paul E. McKenney wrote:
-> > > On Tue, Jun 25, 2019 at 11:41:00AM +0900, Byungchul Park wrote:
-> > > > On Mon, Jun 24, 2019 at 10:25:51AM -0700, Paul E. McKenney wrote:
-> > > > > On Mon, Jun 24, 2019 at 12:46:24PM -0400, Joel Fernandes wrote:
-> > > > > > On Mon, Jun 24, 2019 at 05:27:32PM +0900, Byungchul Park wrote:
-> > > > > > > Hello rcu folks,
-> > > > > > > 
-> > > > > > > I thought it'd better to announce it if those spawnings fail because of
-> > > > > > > !rcu_scheduler_fully_active.
-> > > > > > > 
-> > > > > > > Of course, with the current code, it never happens though.
-> > > > > > > 
-> > > > > > > Thoughts?
-> > > > > > 
-> > > > > > It seems in the right spirit, but with your patch a warning always fires.
-> > > > > > rcu_prepare_cpu() is called multiple times, once from rcu_init() and then
-> > > > > > from hotplug paths.
-> > > > > > 
-> > > > > > Warning splat stack looks like:
-> > > > > > 
-> > > > > > [    0.398767] Call Trace:
-> > > > > > [    0.398775]  rcu_init+0x6aa/0x724
-> > > > > > [    0.398779]  start_kernel+0x220/0x4a2
-> > > > > > [    0.398780]  ? copy_bootdata+0x12/0xac
-> > > > > > [    0.398782]  secondary_startup_64+0xa4/0xb0
-> > > > > 
-> > > > > Thank you both, and I will remove this from my testing queue.
-> > > > > 
-> > > > > As Joel says, this is called at various points in the boot sequence, not
-> > > > > all of which are far enough along to support spawning kthreads.
-> > > > > 
-> > > > > The real question here is "What types of bugs are we trying to defend
-> > > > > against?"  But keeping in mind existing diagnostics.  For example, are
-> > > > > there any kthreads for which a persistent failure to spawn would not
-> > > > > emit any error message.  My belief is that any such persistent failure
-> > > > > would result in either an in-kernel diagnostic or an rcutorture failure,
-> > > > > but I might well be missing something.
-> > > > > 
-> > > > > Thoughts?  Or, more to the point, tests demonstrating silence in face
-> > > > > of such a persistent failure?
-> > > > 
-> > > > You are right. There wouldn't be a persistent failure because the path
-> > > > turning cpus on always tries to spawn them, *even* in case that the
-> > > > booting sequence is wrong. The current code anyway goes right though.
-> > > > 
-> > > > I thought a hole can be there if the code changes so that those kthreads
-> > > > cannot be spawned until the cpu being up, which is the case I was
-> > > > interested in. Again, it's gonna never happen with the current code
-> > > > because it spawns them after setting rcu_scheduler_fully_active to 1 in
-> > > > rcu_spawn_gp_kthead().
-> > > > 
-> > > > And I wrongly thought you placed the rcu_scheduler_fully_active check on
-> > > > spawning just in case. But it seems to be not the case.
-> > > > 
-> > > > So I'd better stop working on the warning patch. :) Instead, please
-> > > > check the following trivial fix.
-> > > > 
-> > > > Thanks,
-> > > > Byungchul
-> > > > 
-> > > > ---8<---
-> > > > >From 1293d19bb7abf7553d656c81182118eff54e7dc9 Mon Sep 17 00:00:00 2001
-> > > > From: Byungchul Park <byungchul.park@lge.com>
-> > > > Date: Mon, 24 Jun 2019 16:22:11 +0900
-> > > > Subject: [PATCH] rcu: Make rcu_spawn_one_boost_kthread() return void
-> > > > 
-> > > > The return value of rcu_spawn_one_boost_kthread() is not used any
-> > > > longer. Change the return type from int to void.
-> > > > 
-> > > > Signed-off-by: Byungchul Park <byungchul.park@lge.com>
-> > > 
-> > > Looks pretty good, just one comment below.  Plus could you please tell
-> > > me what you are developing this against?
-> > 
-> > Only for removing out-dated code. Not for funcational change.
-> 
-> I was actually expecting an answer of the form "current mainline",
-> "v5.2-rc3", "-rcu branch dev", or some such.  If need be, I will ask
-> again for your next version.  ;-)
-
-OMG. It was linux-rcu.git rcu/next. :(
-
-Thank you!
-Byungchul
-
-> > And simple answer below...
-> > 
-> > > 
-> > > 							Thanx, Paul
-> > > 
-> > > > ---
-> > > >  kernel/rcu/tree_plugin.h | 15 +++++++--------
-> > > >  1 file changed, 7 insertions(+), 8 deletions(-)
-> > > > 
-> > > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > > > index 1102765..4e11aa4 100644
-> > > > --- a/kernel/rcu/tree_plugin.h
-> > > > +++ b/kernel/rcu/tree_plugin.h
-> > > > @@ -1131,7 +1131,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
-> > > >   * already exist.  We only create this kthread for preemptible RCU.
-> > > >   * Returns zero if all is well, a negated errno otherwise.
-> > > >   */
-> > > > -static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> > > > +static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> > > >  {
-> > > >  	int rnp_index = rnp - rcu_get_root();
-> > > >  	unsigned long flags;
-> > > > @@ -1139,25 +1139,24 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> > > >  	struct task_struct *t;
-> > > >  
-> > > >  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
-> > > > -		return 0;
-> > > > +		return;
-> > > >  
-> > > >  	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
-> > > > -		return 0;
-> > > > +		return;
-> > > >  
-> > > >  	rcu_state.boost = 1;
-> > > >  	if (rnp->boost_kthread_task != NULL)
-> > > > -		return 0;
-> > > > +		return;
-> > > >  	t = kthread_create(rcu_boost_kthread, (void *)rnp,
-> > > >  			   "rcub/%d", rnp_index);
-> > > >  	if (IS_ERR(t))
-> > > 
-> > > This would be a change in behavior, but it might be good to have a
-> > > WARN_ON_ONCE() above.  Assuming that it doesn't splat on every boot.  ;-)
-> > 
-> > Yes. Normally it shouldn't. Right? I will resend this after testing with
-> > my machine. :)
-> 
-> My guess is that it will not splat, but if it does, it would not be the
-> first time that RCU has surprised me.  ;-)
-> 
-> 							Thanx, Paul
-> 
-> > Thanks,
-> > Byungchul
-> > 
-> > > 
-> > > > -		return PTR_ERR(t);
-> > > > +		return;
-> > > >  	raw_spin_lock_irqsave_rcu_node(rnp, flags);
-> > > >  	rnp->boost_kthread_task = t;
-> > > >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> > > >  	sp.sched_priority = kthread_prio;
-> > > >  	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
-> > > >  	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
-> > > > -	return 0;
-> > > >  }
-> > > >  
-> > > >  static void rcu_cpu_kthread_setup(unsigned int cpu)
-> > > > @@ -1265,7 +1264,7 @@ static void __init rcu_spawn_boost_kthreads(void)
-> > > >  	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
-> > > >  		return;
-> > > >  	rcu_for_each_leaf_node(rnp)
-> > > > -		(void)rcu_spawn_one_boost_kthread(rnp);
-> > > > +		rcu_spawn_one_boost_kthread(rnp);
-> > > >  }
-> > > >  
-> > > >  static void rcu_prepare_kthreads(int cpu)
-> > > > @@ -1275,7 +1274,7 @@ static void rcu_prepare_kthreads(int cpu)
-> > > >  
-> > > >  	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
-> > > >  	if (rcu_scheduler_fully_active)
-> > > > -		(void)rcu_spawn_one_boost_kthread(rnp);
-> > > > +		rcu_spawn_one_boost_kthread(rnp);
-> > > >  }
-> > > >  
-> > > >  #else /* #ifdef CONFIG_RCU_BOOST */
-> > > > -- 
-> > > > 1.9.1
-> > > > 
-> > 
+On Wed, Jun 19, 2019 at 11:08 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> Some helper functions to manage an array of gem objects.
+>
+> v4: make them virtio-private instead of generic helpers.
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_drv.h | 10 ++++++
+>  drivers/gpu/drm/virtio/virtgpu_gem.c | 50 ++++++++++++++++++++++++++++
+>  2 files changed, 60 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> index 07f6001ea91e..98d646789d23 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> @@ -84,6 +84,11 @@ struct virtio_gpu_object {
+>  #define gem_to_virtio_gpu_obj(gobj) \
+>         container_of((gobj), struct virtio_gpu_object, gem_base)
+>
+> +struct virtio_gpu_object_array {
+> +       u32 nents;
+> +       struct drm_gem_object *objs[];
+> +};
+> +
+>  struct virtio_gpu_vbuffer;
+>  struct virtio_gpu_device;
+>
+> @@ -251,6 +256,11 @@ int virtio_gpu_mode_dumb_mmap(struct drm_file *file_priv,
+>                               struct drm_device *dev,
+>                               uint32_t handle, uint64_t *offset_p);
+>
+> +struct virtio_gpu_object_array *virtio_gpu_array_alloc(u32 nents);
+> +struct virtio_gpu_object_array*
+> +virtio_gpu_array_from_handles(struct drm_file *drm_file, u32 *handles, u32 nents);
+> +void virtio_gpu_array_put_free(struct virtio_gpu_object_array *objs);
+> +
+>  /* virtio vg */
+>  int virtio_gpu_alloc_vbufs(struct virtio_gpu_device *vgdev);
+>  void virtio_gpu_free_vbufs(struct virtio_gpu_device *vgdev);
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_gem.c b/drivers/gpu/drm/virtio/virtgpu_gem.c
+> index 9c9ad3b14080..456cc382ce68 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_gem.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_gem.c
+> @@ -169,3 +169,53 @@ void virtio_gpu_gem_object_close(struct drm_gem_object *obj,
+>                                                 qobj->hw_res_handle);
+>         virtio_gpu_object_unreserve(qobj);
+>  }
+> +
+> +struct virtio_gpu_object_array *virtio_gpu_array_alloc(u32 nents)
+> +{
+> +       struct virtio_gpu_object_array *objs;
+> +       size_t size = sizeof(*objs) + sizeof(objs->objs[0]) * nents;
+> +
+> +       objs = kzalloc(size, GFP_KERNEL);
+It seems unlikely to get wrong.  Use kmalloc instead?
+> +       if (!objs)
+> +               return NULL;
+> +
+> +       objs->nents = nents;
+> +       return objs;
+> +}
+> +
+> +static void virtio_gpu_array_free(struct virtio_gpu_object_array *objs)
+> +{
+> +       kfree(objs);
+> +}
+> +
+> +struct virtio_gpu_object_array*
+> +virtio_gpu_array_from_handles(struct drm_file *drm_file, u32 *handles, u32 nents)
+> +{
+> +       struct virtio_gpu_object_array *objs;
+> +       u32 i;
+> +
+> +       objs = virtio_gpu_array_alloc(nents);
+> +       if (!objs)
+> +               return NULL;
+> +
+> +       for (i = 0; i < nents; i++) {
+> +               objs->objs[i] = drm_gem_object_lookup(drm_file, handles[i]);
+> +               if (!objs->objs[i]) {
+> +                       virtio_gpu_array_put_free(objs);
+Set objs->nents to i before calling i915_gem_object_lookup;
+> +                       return NULL;
+Should we distinguish ENOMEM and ENOENT?
+> +               }
+> +       }
+> +       return objs;
+> +}
+> +
+> +void virtio_gpu_array_put_free(struct virtio_gpu_object_array *objs)
+> +{
+> +       u32 i;
+> +
+> +       for (i = 0; i < objs->nents; i++) {
+> +               if (!objs->objs[i])
+> +                       continue;
+The check can be removed if the change in virtio_gpu_array_from_handles.
+> +               drm_gem_object_put_unlocked(objs->objs[i]);
+> +       }
+> +       virtio_gpu_array_free(objs);
+> +}
+> --
+> 2.18.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
