@@ -2,108 +2,118 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E3BC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DABC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D223020659
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEF820B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfF0PeT (ORCPT
+        id S1726513AbfF0Pfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:34:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48262 "EHLO mx1.suse.de"
+        Thu, 27 Jun 2019 11:35:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48634 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726587AbfF0PeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:34:19 -0400
+        id S1726463AbfF0Pfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 11:35:41 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C1667ABC4;
-        Thu, 27 Jun 2019 15:34:16 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 7744ADA811; Thu, 27 Jun 2019 17:35:02 +0200 (CEST)
-Date:   Thu, 27 Jun 2019 17:35:02 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Naohiro Aota <Naohiro.Aota@wdc.com>
-Cc:     "dsterba@suse.cz" <dsterba@suse.cz>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Matias =?iso-8859-1?Q?Bj=F8rling?= <mb@lightnvm.io>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH 09/19] btrfs: limit super block locations in HMZONED mode
-Message-ID: <20190627153502.GD20977@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Naohiro Aota <Naohiro.Aota@wdc.com>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Matias =?iso-8859-1?Q?Bj=F8rling?= <mb@lightnvm.io>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-References: <20190607131025.31996-1-naohiro.aota@wdc.com>
- <20190607131025.31996-10-naohiro.aota@wdc.com>
- <20190617225356.GJ19057@twin.jikos.cz>
- <SN6PR04MB523133E2B4DA6705F79A48FF8CEA0@SN6PR04MB5231.namprd04.prod.outlook.com>
+        by mx1.suse.de (Postfix) with ESMTP id 50103ABC4;
+        Thu, 27 Jun 2019 15:35:40 +0000 (UTC)
+Subject: Re: [Xen-devel] [PATCH] mm: fix regression with deferred struct page
+ init
+To:     xen-devel@lists.xenproject.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, pasha.tatashin@soleen.com,
+        rppt@linux.ibm.com
+References: <20190620160821.4210-1-jgross@suse.com>
+ <79797c17-58d6-b09c-3aad-73e375a7f208@suse.com>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <a9b02905-8b4f-48ac-8638-8ff99bd3b0e6@suse.com>
+Date:   Thu, 27 Jun 2019 17:35:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR04MB523133E2B4DA6705F79A48FF8CEA0@SN6PR04MB5231.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+In-Reply-To: <79797c17-58d6-b09c-3aad-73e375a7f208@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 09:01:35AM +0000, Naohiro Aota wrote:
-> On 2019/06/18 7:53, David Sterba wrote:
-> > On Fri, Jun 07, 2019 at 10:10:15PM +0900, Naohiro Aota wrote:
-> >> When in HMZONED mode, make sure that device super blocks are located in
-> >> randomly writable zones of zoned block devices. That is, do not write super
-> >> blocks in sequential write required zones of host-managed zoned block
-> >> devices as update would not be possible.
-> > 
-> > This could be explained in more detail. My understanding is that the 1st
-> > and 2nd copy superblocks is skipped at write time but the zone
-> > containing the superblocks is not excluded from allocations. Ie. regular
-> > data can appear in place where the superblocks would exist on
-> > non-hmzoned filesystem. Is that correct?
+On 25.06.19 10:25, Juergen Gross wrote:
+> Gentle ping.
 > 
-> Correct. You can see regular data stored at usually SB location on HMZONED fs.
-> 
-> > The other option is to completely exclude the zone that contains the
-> > superblock copies.
-> > 
-> > primary sb			 64K
-> > 1st copy			 64M
-> > 2nd copy			256G
-> > 
-> > Depends on the drives, but I think the size of the random write zone
-> > will very often cover primary and 1st copy. So there's at least some
-> > backup copy.
-> > 
-> > The 2nd copy will be in the sequential-only zone, so the whole zone
-> > needs to be excluded in exclude_super_stripes. But it's not, so this
-> > means data can go there.  I think the zone should be left empty.
-> > 
-> 
-> I see. That's more safe for the older kernel/userland, right? By keeping that zone empty,
-> we can avoid old ones to mis-interpret data to be SB.
+> I'd really like to have that in 5.2 in order to avoid the regression
+> introduced with 5.2-rc1.
 
-That's not only for older kernels, the superblock locations are known
-and the contents should not depend on the type of device on which it was
-created. This can be considered part of the on-disk format.
+Adding some maintainers directly...
+
+
+Juergen
+
+> 
+> 
+> Juergen
+> 
+> On 20.06.19 18:08, Juergen Gross wrote:
+>> Commit 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time
+>> instead of doing larger sections") is causing a regression on some
+>> systems when the kernel is booted as Xen dom0.
+>>
+>> The system will just hang in early boot.
+>>
+>> Reason is an endless loop in get_page_from_freelist() in case the first
+>> zone looked at has no free memory. deferred_grow_zone() is always
+>> returning true due to the following code snipplet:
+>>
+>>    /* If the zone is empty somebody else may have cleared out the zone */
+>>    if (!deferred_init_mem_pfn_range_in_zone(&i, zone, &spfn, &epfn,
+>>                                             first_deferred_pfn)) {
+>>            pgdat->first_deferred_pfn = ULONG_MAX;
+>>            pgdat_resize_unlock(pgdat, &flags);
+>>            return true;
+>>    }
+>>
+>> This in turn results in the loop as get_page_from_freelist() is
+>> assuming forward progress can be made by doing some more struct page
+>> initialization.
+>>
+>> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>> Fixes: 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time 
+>> instead of doing larger sections")
+>> Suggested-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>> Signed-off-by: Juergen Gross <jgross@suse.com>
+>> ---
+>>   mm/page_alloc.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index d66bc8abe0af..8e3bc949ebcc 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -1826,7 +1826,8 @@ deferred_grow_zone(struct zone *zone, unsigned 
+>> int order)
+>>                            first_deferred_pfn)) {
+>>           pgdat->first_deferred_pfn = ULONG_MAX;
+>>           pgdat_resize_unlock(pgdat, &flags);
+>> -        return true;
+>> +        /* Retry only once. */
+>> +        return first_deferred_pfn != ULONG_MAX;
+>>       }
+>>       /*
+>>
+> 
+> 
+> _______________________________________________
+> Xen-devel mailing list
+> Xen-devel@lists.xenproject.org
+> https://lists.xenproject.org/mailman/listinfo/xen-devel
+
