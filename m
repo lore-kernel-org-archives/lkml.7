@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D485EC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8DCC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF4D2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC397208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:49:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aznYrOcX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VexMF7Uj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfF0KtJ (ORCPT
+        id S1726845AbfF0KtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 06:49:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52112 "EHLO
+        Thu, 27 Jun 2019 06:49:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52140 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbfF0KtE (ORCPT
+        with ESMTP id S1726829AbfF0KtK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 06:49:04 -0400
+        Thu, 27 Jun 2019 06:49:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cnuZT4OO0ob1C2zJXF5M8LbSGOx6gZLow7UomC2W2hw=; b=aznYrOcXfLv8n88K8HVQm0PHZf
-        KTzfML83o8uWNtPXGKgZEb76kHAZf3VCdi4Jtui/Hm29kWDACz9HM765EcOOu/m/IIxJctfX173cg
-        3GWXFLj8VsjDSVb3qf5jx+VCttLVa+gvt1mNdyjt3DBzjnTDaTIFYBNiW72p3LiBFe9MV/TBSIVFC
-        Hmb8ZVvYBgUiLhourQBNqRkw8b5WXEcrzM4ARhCFIZKHOzUFuTVnRpJcEU3st2NsPPP3Td36bgIFw
-        J5lRoXHIZc6z+PMiSYPKe9hymXNc50Tzy+21Z/weqAVNOVRQxv8oG+opfoIrqXpgc28WBZbPr6wC/
-        UTdz4cHA==;
+        bh=f/Lt4oK1XJa38pgZPzAwzgRtR3bnhXl8o7smCmfHD54=; b=VexMF7UjnXK9jDttDCxY/R/rOn
+        y+eS+v+D8OtVn1wDF7JDhCUQNYVw+8tTNbwyzwxru+L2iNV3jn1TNRq8RmWWpaUe/3FMkGrXziDpn
+        8NN8yLNFoJYin5bKEaamdP8moGZiGLsMJWq8wWbfWp46nr8Cl0zeRYgpd1BsKVBAIhhLtwTZ8xysR
+        I1xAb28j8YeoNMEWJIbATE2FFF4SGZtn8myxJcEH/X9Bv3V/QIdIr4WzB/JK4VFjWFyB8l6y3VJo5
+        zh2T8Icpdmc6TmgYyuecFTbp+g/ic9kH8ZnkapvcTH4QMlLLYe7kXSgk/56dLDVcTAO8yakNbvNcW
+        3zAHIetQ==;
 Received: from 089144214055.atnat0023.highway.a1.net ([89.144.214.55] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgRxe-00057X-6R; Thu, 27 Jun 2019 10:49:02 +0000
+        id 1hgRxj-00058O-E9; Thu, 27 Jun 2019 10:49:07 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "Darrick J . Wong" <darrick.wong@oracle.com>
 Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
         Andreas Gruenbacher <agruenba@redhat.com>,
         linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 08/13] xfs: simplify xfs_ioend_can_merge
-Date:   Thu, 27 Jun 2019 12:48:31 +0200
-Message-Id: <20190627104836.25446-9-hch@lst.de>
+Subject: [PATCH 10/13] xfs: turn io_append_trans into an io_private void pointer
+Date:   Thu, 27 Jun 2019 12:48:33 +0200
+Message-Id: <20190627104836.25446-11-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627104836.25446-1-hch@lst.de>
 References: <20190627104836.25446-1-hch@lst.de>
@@ -58,53 +58,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compare the block layer status directly instead of converting it to
-an errno first.
+In preparation for moving the ioend structure to common code we need
+to get rid of the xfs-specific xfs_trans type.  Just make it a file
+system private void pointer instead.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_aops.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ fs/xfs/xfs_aops.c | 26 +++++++++++++-------------
+ fs/xfs/xfs_aops.h |  2 +-
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 4ef8343c3759..cd839f24c7ef 100644
+index f3b99b0a9999..5f77ac93e5ab 100644
 --- a/fs/xfs/xfs_aops.c
 +++ b/fs/xfs/xfs_aops.c
-@@ -299,13 +299,9 @@ xfs_end_ioend(
- static bool
- xfs_ioend_can_merge(
+@@ -155,7 +155,7 @@ xfs_setfilesize_trans_alloc(
+ 	if (error)
+ 		return error;
+ 
+-	ioend->io_append_trans = tp;
++	ioend->io_private = tp;
+ 
+ 	/*
+ 	 * We may pass freeze protection with a transaction.  So tell lockdep
+@@ -222,7 +222,7 @@ xfs_setfilesize_ioend(
+ 	int			error)
+ {
+ 	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
+-	struct xfs_trans	*tp = ioend->io_append_trans;
++	struct xfs_trans	*tp = ioend->io_private;
+ 
+ 	/*
+ 	 * The transaction may have been allocated in the I/O submission thread,
+@@ -287,10 +287,10 @@ xfs_end_ioend(
+ 	else if (ioend->io_type == IOMAP_UNWRITTEN)
+ 		error = xfs_iomap_write_unwritten(ip, offset, size, false);
+ 	else
+-		ASSERT(!xfs_ioend_is_append(ioend) || ioend->io_append_trans);
++		ASSERT(!xfs_ioend_is_append(ioend) || ioend->io_private);
+ 
+ done:
+-	if (ioend->io_append_trans)
++	if (ioend->io_private)
+ 		error = xfs_setfilesize_ioend(ioend, error);
+ 	xfs_destroy_ioends(ioend, error);
+ 	memalloc_nofs_restore(nofs_flag);
+@@ -323,13 +323,13 @@ xfs_ioend_can_merge(
+  * as it is guaranteed to be clean.
+  */
+ static void
+-xfs_ioend_merge_append_transactions(
++xfs_ioend_merge_private(
  	struct xfs_ioend	*ioend,
--	int			ioend_error,
  	struct xfs_ioend	*next)
  {
--	int			next_error;
--
--	next_error = blk_status_to_errno(next->io_bio->bi_status);
--	if (ioend_error != next_error)
-+	if (ioend->io_bio->bi_status != next->io_bio->bi_status)
- 		return false;
- 	if ((ioend->io_fork == XFS_COW_FORK) ^ (next->io_fork == XFS_COW_FORK))
- 		return false;
-@@ -343,17 +339,11 @@ xfs_ioend_try_merge(
- 	struct list_head	*more_ioends)
- {
- 	struct xfs_ioend	*next_ioend;
--	int			ioend_error;
--
--	if (list_empty(more_ioends))
--		return;
--
--	ioend_error = blk_status_to_errno(ioend->io_bio->bi_status);
- 
- 	while (!list_empty(more_ioends)) {
- 		next_ioend = list_first_entry(more_ioends, struct xfs_ioend,
- 				io_list);
--		if (!xfs_ioend_can_merge(ioend, ioend_error, next_ioend))
-+		if (!xfs_ioend_can_merge(ioend, next_ioend))
+-	if (!ioend->io_append_trans) {
+-		ioend->io_append_trans = next->io_append_trans;
+-		next->io_append_trans = NULL;
++	if (!ioend->io_private) {
++		ioend->io_private = next->io_private;
++		next->io_private = NULL;
+ 	} else {
+ 		xfs_setfilesize_ioend(next, -ECANCELED);
+ 	}
+@@ -351,8 +351,8 @@ xfs_ioend_try_merge(
  			break;
- 		list_move_tail(&next_ioend->io_list, &ioend->io_list);
- 		ioend->io_size += next_ioend->io_size;
+ 		list_move_tail(&next->io_list, &ioend->io_list);
+ 		ioend->io_size += next->io_size;
+-		if (next->io_append_trans)
+-			xfs_ioend_merge_append_transactions(ioend, next);
++		if (next->io_private)
++			xfs_ioend_merge_private(ioend, next);
+ 	}
+ }
+ 
+@@ -415,7 +415,7 @@ xfs_end_bio(
+ 
+ 	if (ioend->io_fork == XFS_COW_FORK ||
+ 	    ioend->io_type == IOMAP_UNWRITTEN ||
+-	    ioend->io_append_trans != NULL) {
++	    ioend->io_private) {
+ 		spin_lock_irqsave(&ip->i_ioend_lock, flags);
+ 		if (list_empty(&ip->i_ioend_list))
+ 			WARN_ON_ONCE(!queue_work(mp->m_unwritten_workqueue,
+@@ -680,7 +680,7 @@ xfs_submit_ioend(
+ 	    (ioend->io_fork == XFS_COW_FORK ||
+ 	     ioend->io_type != IOMAP_UNWRITTEN) &&
+ 	    xfs_ioend_is_append(ioend) &&
+-	    !ioend->io_append_trans)
++	    !ioend->io_private)
+ 		status = xfs_setfilesize_trans_alloc(ioend);
+ 
+ 	memalloc_nofs_restore(nofs_flag);
+@@ -729,7 +729,7 @@ xfs_alloc_ioend(
+ 	ioend->io_inode = inode;
+ 	ioend->io_size = 0;
+ 	ioend->io_offset = offset;
+-	ioend->io_append_trans = NULL;
++	ioend->io_private = NULL;
+ 	ioend->io_bio = bio;
+ 	return ioend;
+ }
+diff --git a/fs/xfs/xfs_aops.h b/fs/xfs/xfs_aops.h
+index 4af8ec0115cd..6a45d675dcba 100644
+--- a/fs/xfs/xfs_aops.h
++++ b/fs/xfs/xfs_aops.h
+@@ -18,7 +18,7 @@ struct xfs_ioend {
+ 	struct inode		*io_inode;	/* file being written to */
+ 	size_t			io_size;	/* size of the extent */
+ 	xfs_off_t		io_offset;	/* offset in the file */
+-	struct xfs_trans	*io_append_trans;/* xact. for size update */
++	void			*io_private;	/* file system private data */
+ 	struct bio		*io_bio;	/* bio being built */
+ 	struct bio		io_inline_bio;	/* MUST BE LAST! */
+ };
 -- 
 2.20.1
 
