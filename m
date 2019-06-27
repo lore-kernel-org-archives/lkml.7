@@ -2,218 +2,93 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB1DC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAE6C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F92C208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:40:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JBtHMrOE"
+	by mail.kernel.org (Postfix) with ESMTP id 28F84214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfF0Qk0 (ORCPT
+        id S1726646AbfF0Qkx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:40:26 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:24574 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfF0QkY (ORCPT
+        Thu, 27 Jun 2019 12:40:53 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55849 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfF0Qkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:40:24 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x5RGdDPw001384;
-        Fri, 28 Jun 2019 01:39:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x5RGdDPw001384
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561653556;
-        bh=4f9Bdg3oO7GPeYMOcFqmb0qOWx4/5YC1fL5oEolllJs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JBtHMrOERZXsZ87gj3q5jdcJiisc87Ii1WX9foKDExtNI8ydOePwKsGuQ8eR7P6qg
-         +urMpwnuAougAk/P4bVjABn0KbmkyXlnRboswh9rS4rSOeP7mvJJCGvt9pFSR3wFpC
-         vCw3dtQfg+W+aRM1mELl5HiCOwvrrl14xU/2LMODDYS3JfQZpBCnVHpKL9ymiZv/lM
-         rLUCwlGQboMF0MKKuY9anoSSs8Zr6q9ukd8RLwmPrMWjQhlOaG2A2+VHihL8X9Czfd
-         q6xyOm13nHASPnMY/39ykpLPZY612wPCP4VxK12Ep2z7RXCrqKYS1oNW3SjMGPZoDq
-         lVZzTpb37u7kA==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Jani Nikula <jani.nikula@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-kernel@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH v3 2/4] kbuild: do not create wrappers for header-test-y
-Date:   Fri, 28 Jun 2019 01:39:00 +0900
-Message-Id: <20190627163903.28398-3-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190627163903.28398-1-yamada.masahiro@socionext.com>
-References: <20190627163903.28398-1-yamada.masahiro@socionext.com>
+        Thu, 27 Jun 2019 12:40:53 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 15D332000E;
+        Thu, 27 Jun 2019 16:40:48 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 18:40:47 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Paul Cercueil <paul@crapouillou.net>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mtd: rawnand: ingenic: fix ingenic_ecc dependency
+Message-ID: <20190627184047.6faa058a@xps13>
+In-Reply-To: <20190617141659.376c0271@xps13>
+References: <20190617111110.2103786-1-arnd@arndb.de>
+        <1560770644.1774.0@crapouillou.net>
+        <CAK8P3a28NrvLP1nE7TQUCqwYXVwrSnVUJoH0yTSqRpz93f4g2Q@mail.gmail.com>
+        <20190617141659.376c0271@xps13>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-header-test-y does not work with headers in sub-directories.
+Hi Paul,
 
-For example, you may want to write a Makefile, like this:
+Miquel Raynal <miquel.raynal@bootlin.com> wrote on Mon, 17 Jun 2019
+14:16:59 +0200:
 
-include/linux/Kbuild:
+> Hello,
+> 
+> Arnd Bergmann <arnd@arndb.de> wrote on Mon, 17 Jun 2019 14:12:48 +0200:
+> 
+> > On Mon, Jun 17, 2019 at 1:24 PM Paul Cercueil <paul@crapouillou.net> wrote:
+> >   
+> > > I think there's a better way to fix it, only in Kconfig.
+> > >
+> > > * Add a bool symbol MTD_NAND_INGENIC_USE_HW_ECC
+> > > * Have the three ECC/BCH drivers select this symbol instead of
+> > >   MTD_NAND_INGENIC_ECC
+> > > * Add the following to the MTD_NAND_JZ4780 config option:
+> > >   "select MTD_NAND_INGENIC_ECC if MTD_NAND_INGENIC_USE_HW_ECC"    
+> > 
+> > I don't see much difference to my approach here, but if you want
+> > to submit that version with 'Reported-by: Arnd Bergmann <arnd@arndb.de>',
+> > please do so.
+> > 
+> > Yet another option would be to use Makefile code to link both
+> > files into one module, and remove the EXPORT_SYMBOL statements:
+> > 
+> > obj-$(CONFIG_MTD_NAND_JZ4780) += jz4780_nand.o
+> > jz4780_nand-y += ingenic_nand.o
+> > jz4780_nand-$(CONFIG_MTD_NAND_INGENIC_ECC) += ingenic_ecc.o
+> >   
+> 
+> I personally have a preference for this one.
 
-  header-test-y += mtd/nand.h
+Would you mind sending the above change? I forgot about it but I would
+like to queue it for the next release. Preferably the last version Arnd
+proposed.
 
-This entry will create a wrapper include/linux/mtd/nand.hdrtest.c
-with the following content:
 
-  #include "mtd/nand.h"
-
-To make this work, we need to add $(srctree)/include/linux to the
-header search path. It would be tedious to add ccflags-y.
-
-Instead, we could change the *.hdrtest.c rule to wrap:
-
-  #include "nand.h"
-
-This works for in-tree build since #include "..." searches in the
-relative path from the header with this directive. For O=... build,
-we need to add $(srctree)/include/linux/mtd to the header search path,
-which will be even more tedious.
-
-After all, I thought it would be handier to compile headers directly
-without creating wrappers.
-
-I added a new build rule to compile %.h into %.h.s
-
-The target is %.h.s instead of %.h.o because it is slightly faster.
-Also, as for GCC, an empty assembly is smaller than an empty object.
-
-I wrote the build rule:
-
-  $(CC) $(c_flags) -S -o $@ -x c /dev/null -include $<
-
-instead of:
-
-  $(CC) $(c_flags) -S -o $@ -x c $<
-
-Both work fine with GCC, but the latter is bad for Clang.
-
-This comes down to the difference in the -Wunused-function policy.
-GCC does not warn about unused 'static inline' functions at all.
-Clang does not warn about the ones in included headers, but does
-about the ones in the source. So, we should handle headers as
-headers, not as source files.
-
-In fact, this has been hidden since commit abb2ea7dfd82 ("compiler,
-clang: suppress warning for unused static inline functions"), but we
-should not rely on that.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-Tested-by: Jani Nikula <jani.nikula@intel.com>
----
-
-Changes in v3: None
-Changes in v2:
-  - New patch
-
- .gitignore                         |  1 -
- Documentation/dontdiff             |  1 -
- Documentation/kbuild/makefiles.txt |  3 +--
- Makefile                           |  1 -
- scripts/Makefile.build             | 10 +++++-----
- scripts/Makefile.lib               |  2 +-
- 6 files changed, 7 insertions(+), 11 deletions(-)
-
-diff --git a/.gitignore b/.gitignore
-index 4bb60f0fa23b..7587ef56b92d 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -22,7 +22,6 @@
- *.elf
- *.gcno
- *.gz
--*.hdrtest.c
- *.i
- *.ko
- *.lex.c
-diff --git a/Documentation/dontdiff b/Documentation/dontdiff
-index 554dfe4883d2..5eba889ea84d 100644
---- a/Documentation/dontdiff
-+++ b/Documentation/dontdiff
-@@ -19,7 +19,6 @@
- *.grep
- *.grp
- *.gz
--*.hdrtest.c
- *.html
- *.i
- *.jpeg
-diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-index ca4b24ec0399..5080fec34609 100644
---- a/Documentation/kbuild/makefiles.txt
-+++ b/Documentation/kbuild/makefiles.txt
-@@ -1023,8 +1023,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	header-test-y specifies headers (*.h) in the current directory that
- 	should be compile tested to ensure they are self-contained,
- 	i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
--	this autogenerates dummy sources to include the headers, and builds them
--	as part of extra-y.
-+	this builds them as part of extra-y.
- 
- --- 6.7 Commands useful for building a boot image
- 
-diff --git a/Makefile b/Makefile
-index f23516980796..7f293b0431fe 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1648,7 +1648,6 @@ clean: $(clean-dirs)
- 		-o -name '*.dwo' -o -name '*.lst' \
- 		-o -name '*.su'  \
- 		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
--		-o -name '*.hdrtest.c' \
- 		-o -name '*.lex.c' -o -name '*.tab.[ch]' \
- 		-o -name '*.asn1.[ch]' \
- 		-o -name '*.symtypes' -o -name 'modules.order' \
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index ee0319560513..776842b7e6a3 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -294,14 +294,14 @@ quiet_cmd_cc_lst_c = MKLST   $@
- $(obj)/%.lst: $(src)/%.c FORCE
- 	$(call if_changed_dep,cc_lst_c)
- 
--# Dummy C sources for header test (header-test-y target)
-+# header test (header-test-y target)
- # ---------------------------------------------------------------------------
- 
--quiet_cmd_header_test = HDRTEST $@
--      cmd_header_test = echo "\#include \"$*.h\"" > $@
-+quiet_cmd_cc_s_h = CC      $@
-+      cmd_cc_s_h = $(CC) $(c_flags) -S -o $@ -x c /dev/null -include $<
- 
--$(obj)/%.hdrtest.c:
--	$(call cmd,header_test)
-+$(obj)/%.h.s: $(src)/%.h FORCE
-+	$(call if_changed_dep,cc_s_h)
- 
- # Compile assembler sources (.S)
- # ---------------------------------------------------------------------------
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 3e630fcaffd1..55ae1ec65342 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -67,7 +67,7 @@ extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.yaml, $(dtb-))
- endif
- 
- # Test self-contained headers
--extra-$(CONFIG_HEADER_TEST) += $(patsubst %.h,%.hdrtest.o,$(header-test-y))
-+extra-$(CONFIG_HEADER_TEST) += $(addsuffix .s, $(header-test-y))
- 
- # Add subdir path
- 
--- 
-2.17.1
-
+Thanks,
+Miquèl
