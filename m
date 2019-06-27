@@ -2,199 +2,100 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2E5C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2690BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0372C21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E528420659
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:15:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sGd9i/DI"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="FZyxg24L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfF0BJP (ORCPT
+        id S1726927AbfF0BPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 21:09:15 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:28768 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbfF0BJP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 21:09:15 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190627010912epoutp045a78317075fed1ef817d9354b2204d18~r6OHSuWfj0076500765epoutp04e
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 01:09:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190627010912epoutp045a78317075fed1ef817d9354b2204d18~r6OHSuWfj0076500765epoutp04e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561597752;
-        bh=uInEp3j3G0XFuViWSlYVOQQ4J2ycTL1mKxSrVR72yYo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=sGd9i/DIFTSxzLIPJYiwEu7+jnmK4Ak/yBcdhjpaLMgKmsh2aLEALtaGiS9jvViln
-         BDHK5FPBcWNPAw7rKSwTnpxqIGDFRHNw8l6k61ZvEWIuMpPIwPELR29+06d3QjYUmz
-         1kqUVMHbKmuDKDNVUReovkqJh2TyadAm8nPvLu5U=
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.156]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190627010906epcas1p399a0674f908891b6c329ccfa1fb128b3~r6OBe0GQz3172831728epcas1p3V;
-        Thu, 27 Jun 2019 01:09:06 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        95.63.04257.237141D5; Thu, 27 Jun 2019 10:09:06 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190627010905epcas1p347586b98c94ed5b6fe4f5672ad568ed1~r6OBEaW1t0997809978epcas1p3o;
-        Thu, 27 Jun 2019 01:09:05 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190627010905epsmtrp2743d21a17fa82667ae77e8a2f752423b~r6OBDaI7i0313603136epsmtrp27;
-        Thu, 27 Jun 2019 01:09:05 +0000 (GMT)
-X-AuditID: b6c32a38-5cbff700000010a1-b0-5d1417320857
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        83.A4.03662.137141D5; Thu, 27 Jun 2019 10:09:05 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190627010905epsmtip2915645a7fefe2d9608ead492f8c1e187~r6OAn7gp81982919829epsmtip2N;
-        Thu, 27 Jun 2019 01:09:05 +0000 (GMT)
-Subject: Re: [PATCH v4 4/5] Documentation: devicetree: add PPMU events
- description
-To:     Lukasz Luba <l.luba@partner.samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     cwchoi00@gmail.com, devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org,
-        willy.mh.wolff.ml@gmail.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <99a47066-3713-77fa-4afb-6f2f17a2721a@samsung.com>
-Date:   Thu, 27 Jun 2019 10:11:43 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <776f58c2-a05c-8fa8-c7f5-458dc17926f6@partner.samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAJsWRmVeSWpSXmKPExsWy7bCmvq6RuEiswYpNbBYbZ6xntXh2VNti
-        /pFzrBb9j18zW5w/v4Hd4mzTG3aLWw0yFpseX2O1uLxrDpvF594jjBYzzu9jslh75C67xdLr
-        F5ksbjeuYLNo3XuE3eLwm3ZWi28nHjE6CHqsmbeG0WPnrLvsHptWdbJ5bF5S73Hw3R4mj74t
-        qxg9Pm+SC2CPyrbJSE1MSS1SSM1Lzk/JzEu3VfIOjneONzUzMNQ1tLQwV1LIS8xNtVVy8QnQ
-        dcvMAbpfSaEsMacUKBSQWFyspG9nU5RfWpKqkJFfXGKrlFqQklNgWaBXnJhbXJqXrpecn2tl
-        aGBgZApUmJCdse3oFvaCK/wVrWdfsjUw7uLpYuTkkBAwkeiaMYe1i5GLQ0hgB6PEgZ/vGCGc
-        T4wSd3esZoNwvjFKXP93kxmmZe/Gl1BVexklHp0/zAThvGeU+P3zBitIlbBAiMS/TYeYQGwR
-        gVCJlXtOM4MUMQusZJGYf2U/C0iCTUBLYv+LG2wgNr+AosTVH48ZQWxeATuJxlvn2EFsFgFV
-        iYvdL8FsUYEIictbdkHVCEqcnPkEbA6ngLvEh2unwWqYBcQlbj2ZzwRhy0s0b50NtlhC4Bi7
-        xPXZzVA/uEi0zzvKDmELS7w6vgXKlpL4/G4vG4RdLbHy5BE2iOYORokt+y+wQiSMJfYvnQy0
-        gQNog6bE+l36EGFFiZ2/5zJCLOaTePe1hxWkREKAV6KjTQiiRFni8oO7TBC2pMTi9k62CYxK
-        s5C8MwvJC7OQvDALYdkCRpZVjGKpBcW56anFhgUmyPG9iRGcurUsdjDuOedziFGAg1GJh3fF
-        TuFYIdbEsuLK3EOMEhzMSiK8SxMFYoV4UxIrq1KL8uOLSnNSiw8xmgJDeyKzlGhyPjCv5JXE
-        G5oaGRsbW5gYmpkaGiqJ88Zz34wREkhPLEnNTk0tSC2C6WPi4JRqYOyZmyLM4ix8Zq/U55j5
-        EdavmC7n/PlXdTPu2fewjV1bD3qmXQjMX+YWXezU82aNnEV5Gm+Ey2eW6QuPcbp6nfj7vn/W
-        7vV5/54/Sl3cb3Hugp6Z25neprPJ3P8VZ3D03J2z7uWzVymBTXuPa64z7s75Ghr3RvzggzWH
-        WH9ydWqz3FuYph7+96sSS3FGoqEWc1FxIgB86ve38wMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsWy7bCSvK6huEiswYbDyhYbZ6xntXh2VNti
-        /pFzrBb9j18zW5w/v4Hd4mzTG3aLWw0yFpseX2O1uLxrDpvF594jjBYzzu9jslh75C67xdLr
-        F5ksbjeuYLNo3XuE3eLwm3ZWi28nHjE6CHqsmbeG0WPnrLvsHptWdbJ5bF5S73Hw3R4mj74t
-        qxg9Pm+SC2CP4rJJSc3JLEst0rdL4MrYdnQLe8EV/orWsy/ZGhh38XQxcnJICJhI7N34krGL
-        kYtDSGA3o8StxWeZIBKSEtMuHmXuYuQAsoUlDh8uhqh5yyhxau98dpAaYYEQiX+bDoHViwiE
-        SvzvvQo2iFlgJYvEvt6frBAdF5klPr3/xwJSxSagJbH/xQ02EJtfQFHi6o/HjCA2r4CdROOt
-        c2BTWQRUJS52vwSzRQUiJPraZrNB1AhKnJz5BGwOp4C7xIdrp8FqmAXUJf7Mu8QMYYtL3Hoy
-        nwnClpdo3jqbeQKj8Cwk7bOQtMxC0jILScsCRpZVjJKpBcW56bnFhgVGeanlesWJucWleel6
-        yfm5mxjBMayltYPxxIn4Q4wCHIxKPLwrdgrHCrEmlhVX5h5ilOBgVhLhXZooECvEm5JYWZVa
-        lB9fVJqTWnyIUZqDRUmcVz7/WKSQQHpiSWp2ampBahFMlomDU6qBkSllTopZcomqHR/roTCT
-        qbM2v3qvJ/rzblBd2cGmHU6nhP9ytnrG1r//fVvyeZcqP796w74tD4M+KcfEyKxZpyd1xED0
-        xKk3r+NfnBM6uvCi5QuRbFY71qb6aQ+WqcRyrCsqygn55+N07gYzm1TMyWdulcXnquXiLt67
-        UNhVu+MLt6JytripEktxRqKhFnNRcSIAlGiJPN0CAAA=
-X-CMS-MailID: 20190627010905epcas1p347586b98c94ed5b6fe4f5672ad568ed1
-X-Msg-Generator: CA
+        Wed, 26 Jun 2019 21:15:43 -0400
+Received: from mail-eopbgr1410099.outbound.protection.outlook.com ([40.107.141.99]:51280
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726373AbfF0BPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 21:15:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P2avVQiR3lQuclFmlL/N/rnJt6G4lneF2E4ydIRrq24=;
+ b=FZyxg24LHqxTFFpAFkdk+O6ve/ZxgYoGErDeqjnaqWnFtun4Vh7ybs7dr9qToYZ5zz5NscLNSluj6Q0H3EDbE+qgHO12thli68c8tBQ2peuabY8v6wa91mTbNo4AVRRyFCJRulJ9p4tcuoIutk0pC0BnI7/qvSyQu8TbbEIP4aE=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.174.85) by
+ TYAPR01MB3887.jpnprd01.prod.outlook.com (20.178.138.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Thu, 27 Jun 2019 01:15:40 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::602d:62cc:de62:eaba]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::602d:62cc:de62:eaba%6]) with mapi id 15.20.2008.014; Thu, 27 Jun 2019
+ 01:15:40 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Colin King <colin.king@canonical.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] usb: gadget: udc: renesas_usb3: remove redundant
+ assignment to ret
+Thread-Topic: [PATCH] usb: gadget: udc: renesas_usb3: remove redundant
+ assignment to ret
+Thread-Index: AQHVLD0mdKJKZlZQqUCpEjW4XqxaaqausuBA
+Date:   Thu, 27 Jun 2019 01:15:39 +0000
+Message-ID: <TYAPR01MB4544D0BC2802B2F914153190D8FD0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20190626163517.18530-1-colin.king@canonical.com>
+In-Reply-To: <20190626163517.18530-1-colin.king@canonical.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [118.238.235.108]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b87bb337-658e-4f29-1bfa-08d6fa9cf803
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TYAPR01MB3887;
+x-ms-traffictypediagnostic: TYAPR01MB3887:
+x-microsoft-antispam-prvs: <TYAPR01MB38871BF6619BEB0713B0DED0D8FD0@TYAPR01MB3887.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(366004)(396003)(376002)(136003)(346002)(189003)(199004)(68736007)(54906003)(8676002)(478600001)(71190400001)(256004)(11346002)(316002)(74316002)(2501003)(4744005)(99286004)(53936002)(7696005)(66476007)(7736002)(52536014)(9686003)(81166006)(81156014)(8936002)(86362001)(14454004)(73956011)(229853002)(66446008)(76116006)(110136005)(6436002)(305945005)(55016002)(64756008)(3846002)(486006)(4326008)(2906002)(71200400001)(66556008)(6116002)(33656002)(446003)(6246003)(66066001)(5660300002)(25786009)(66946007)(76176011)(26005)(186003)(102836004)(476003)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3887;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6nWM5R7XYEQz1XCEqJllsluIarH7jrF/kmYAaLAlvegB7y5HHpT+BVgwTZJjWrZa78i6WLlH1LPRCGw6+gMD/gYMoQyRhARqof7vWhaeEoTD0ZsHI/l6U69av7qbtGWgzlelSeIamDTDqWNgoxXgegKL8BEfgplq4Fk2gA5kbbzQtpY+npjU8No0ppOEo1BE38wKR7pI6vo6+0mQq/DOAfp/pJbhpt0byWhaWCQPb7owBP+VfCeaty+kGBpvcCj9u/M24lgGszDxHeWDbEgTKmPfFdqZU3cHMSUoaUItEm0PtVVWkfyjO+YCvisW+o0CQJWcDT8XbSXowpJS7rZC2RyDLhQ41Oi5IDAjIRt8bIKacgvfjt6Jpi45DsoHmKfOrM5w+g1tZNBjZ3Njl2iWMn8w26ELHa6ZdZA9A+u0GSo=
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190605091304eucas1p21e0717cafa17a14de569f1773cc7abe5
-References: <CGME20190605091304eucas1p21e0717cafa17a14de569f1773cc7abe5@eucas1p2.samsung.com>
-        <20190605091236.24263-1-l.luba@partner.samsung.com>
-        <20190605091236.24263-5-l.luba@partner.samsung.com>
-        <CAGTfZH2kTNWtx=Jp1UJaLN50Qxbq+Q9ThV4vhQ240QbOy1TRMQ@mail.gmail.com>
-        <7498059d-95f7-e154-cf49-bcbc8ee6fdb9@partner.samsung.com>
-        <CAJKOXPc6304D=HNQnrvhBH6qKxhkf=VQ2Gg6Q2FMP2hYOTYSDQ@mail.gmail.com>
-        <776f58c2-a05c-8fa8-c7f5-458dc17926f6@partner.samsung.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b87bb337-658e-4f29-1bfa-08d6fa9cf803
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 01:15:39.9830
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yoshihiro.shimoda.uh@renesas.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3887
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
-
-On 19. 6. 26. 오후 11:17, Lukasz Luba wrote:
-> Hi Krzysztof,
-> 
-> On 6/26/19 4:03 PM, Krzysztof Kozlowski wrote:
->> On Wed, 26 Jun 2019 at 15:58, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>>
->>> Hi Chanwoo,
->>>
->>> On 6/26/19 10:23 AM, Chanwoo Choi wrote:
->>>> Hi Lukasz,
->>>>
->>>> 2019년 6월 5일 (수) 18:14, Lukasz Luba <l.luba@partner.samsung.com
->>>> <mailto:l.luba@partner.samsung.com>>님이 작성:
->>>>
->>>>      Extend the documenation by events description with new 'event-data-type'
->>>>      field. Add example how the event might be defined in DT.
->>>>
->>>>      Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com
->>>>      <mailto:l.luba@partner.samsung.com>>
->>>>      Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com
->>>>      <mailto:cw00.choi@samsung.com>>
->>>>      ---
->>>>        .../bindings/devfreq/event/exynos-ppmu.txt    | 26 +++++++++++++++++--
->>>>        1 file changed, 24 insertions(+), 2 deletions(-)
->>>>
->>>>
->>>>
->>>> Acked-by: Chanwoo Choi <cw00.choi@samsung.com
->>>
->>> Thank you for the ACKs for this a 2/5 patch.
->>> Do you think the v4 could be merged now?
->>
->> I think you have all necessary acks. I can take the DTS patch (5/5)
->> although probably for next merge window as I just sent one.
-> There was one patch 3/5
-> https://protect2.fireeye.com/url?k=82dd0d0cbe2abd04.82dc8643-d13ecd7e5f989b8d&u=https://lkml.org/lkml/2019/6/5/215
-> which was waiting ACK or I missed the email somehow.
-
-When I was in vacation, your patches are removed on my email account
-because of the email expiration. So, I replied with my Ack through
-gmail account on mobile phone. But, there are some problem. My reply
-didn't arrive the mailing list.
-
-I have no any way to reply about this at company. After leaving one's
-office, I'll reply with Ack again at home.
-
-> 
-> Regards,
-> Lukasz
-> 
->>
->> Best regards,
->> Krzysztof
->>
->>
-> 
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+SGkgQ29saW4sDQoNCj4gRnJvbTogQ29saW4gS2luZywgU2VudDogVGh1cnNkYXksIEp1bmUgMjcs
+IDIwMTkgMTozNSBBTQ0KPiANCj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fu
+b25pY2FsLmNvbT4NCj4gDQo+IFZhcmlhYmxlIHJldCBpcyBiZWluZyBpbml0aWFsaXplZCB3aXRo
+IGEgdmFsdWUgdGhhdCBpcyBuZXZlciByZWFkIGFuZA0KPiByZXQgaXMgYmVpbmcgcmUtYXNzaWdu
+ZWQgaW1tZWRpYXRlbHkgYWZ0ZXIgdGhlIGluaXRpYWxpemF0aW9uIGluIGJvdGgNCj4gcGF0aHMg
+b2YgYW4gaWYgc3RhdGVtZW50LiBUaGlzIGlzIHJlZHVuZGFudCBhbmQgY2FuIGJlIHJlbW92ZWQu
+DQo+IA0KPiBBZGRyZXNzZXMtQ292ZXJpdHk6ICgiVW51c2VkIHZhbHVlIikNCj4gU2lnbmVkLW9m
+Zi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCg0KVGhhbmsg
+eW91IGZvciB0aGUgcGF0Y2ghDQoNClJldmlld2VkLWJ5OiBZb3NoaWhpcm8gU2hpbW9kYSA8eW9z
+aGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+DQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGly
+byBTaGltb2RhDQoNCg==
