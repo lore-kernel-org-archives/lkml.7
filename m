@@ -8,72 +8,63 @@ X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05F6C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8BDC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC172086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA302086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:46:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XjfUBn3m"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLc3SIuF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfF0Rp6 (ORCPT
+        id S1726657AbfF0RqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:45:58 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44897 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfF0Rpz (ORCPT
+        Thu, 27 Jun 2019 13:46:04 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40898 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfF0RqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:45:55 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t7so1673580plr.11;
-        Thu, 27 Jun 2019 10:45:55 -0700 (PDT)
+        Thu, 27 Jun 2019 13:46:02 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p184so1589109pfp.7;
+        Thu, 27 Jun 2019 10:46:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=drjgftEWAZg3/oKZde2zMkT36C0ZEqDQk/rQk2ecHqE=;
-        b=XjfUBn3mJbrbGfnwsW7qoISdtv6h21GLg/ORcHgYgxh0ZNbGJvRJm8p7NUx83k8CXF
-         UE9f/pywfKSF3lbE6Z9b9N2B1hbKKM0S8YiLgbKkZhiKTe8xjRneYdFvNHs8HVWBx67n
-         JhBdsjs0sFx7N+B/9O/lkx75hKe+oLyunRlmmkgbR7EotaRQSX4Odn6J012YHLNnzZB/
-         b2UIpsrlefZYyexOoe5sUfgGdsgrpB0xqB/I7Rmrqdov2RW4iXd6aynhTO9mSlrjrbjx
-         T3pvu5kE66+EDc+N2M7BJOSALqSKbcyWGEFKK53Q6vlKd1d0eJ1fPtdqCwZQOhXF7Nrc
-         C0RQ==
+        bh=o+36uH8gml1ZGrQYdSI5lxoYpgHdYwkkvcnlEpAcvxc=;
+        b=VLc3SIuFHR72K59KZtvjOHJR/Pb65re/R0PSiTa7GgEJCKa4LwkgAGkv6XffTvPnDf
+         1yTzNqpIX8etis+JYRNEEpn0giOtH+huaUymEw8KXFLfhhLQli1fNGNIVLxNQew4NGya
+         O1hpQd+hHdTsNy7wBMXxRnK+CXdZRODKyD+MP/oULWok3L2ZACH2gxxKUW4OLolSBmDj
+         X7jJ4/9ZbJDbA9Kj8BVHXQdKUPHKnQs1CUITfwxEmpWeWLPTazDx+Hf9v3G2I0ZZ0M5C
+         VDCtYrOmtFEn1WIKY+rtog90+Jas3FkIcB/2qNadRIW7WiD/dRYDtqpMehWVjAqDuezq
+         Stxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=drjgftEWAZg3/oKZde2zMkT36C0ZEqDQk/rQk2ecHqE=;
-        b=bE9rdc75do/KtENCg/yfyzO4dXw/Mp5sN1NUwEl593p4YwdP7eodl4MSj6ud47xIgV
-         ay7M5NHPIO6qiY9CVy34UD4C8i3HxhBD1FrNOo/uc9WyGKlTBsJ0r3N6UAgr5oby/X5c
-         MXwSpXS+1B0MmRlX7ip+GLTLdCB/QVns4dHmtUqqc8PgFehcVtYtfC6emdU1K5/v0lAL
-         53B85Vih1ZJcO9GmJat2rNry/woZ3CcAu38XLRo9T5X9HRIz+593Mo18nP1ScZna/k+e
-         V6IvCv37tB4RTpR5bRLclBtgqwJv5JdaR7rkG6FQ8oujsQ+Kf0uzKw1oOsw7WtTgkkGl
-         SDgg==
-X-Gm-Message-State: APjAAAXjirSFEXw6+Bg8JMhipPsInUPzmzDxiP7dVsF69FqI0u5hX1vl
-        f7ugmGTpeKxt+5DyyRiMgX7AfsWOt5h3vg==
-X-Google-Smtp-Source: APXvYqwrFX/Sk4b/bSSq48Wz4qHMklsVR8zrsDYcV8VDNsPA4F3Z9IARxomaPfDpugHllO0j07+RFw==
-X-Received: by 2002:a17:902:7887:: with SMTP id q7mr6105676pll.129.1561657554912;
-        Thu, 27 Jun 2019 10:45:54 -0700 (PDT)
+        bh=o+36uH8gml1ZGrQYdSI5lxoYpgHdYwkkvcnlEpAcvxc=;
+        b=qcbLcdhFrpMsN/+qhYLs6k89unRZGIyAPyRt+ZINbXy4+GqUAvvJp0IeQQ9XK9Hm/j
+         dm3A6UjHEEvzTUMsBDupny91k5zwL9tQiD4WqyCuv3MCEPxyOpqBIC30kIEpzw4hS/1p
+         RcNC9w1Tlaidv4xtynpM5/kPQx1TW+9qevFqDP6SVOMwzZ5+zlPpmEHQi43K1n6MMcE6
+         OXHO019AAyAEjcma4JkNU2x0bVcTPCkhk5RLtdkPv15IkA4KITPWBw43JPs9mK3IMcJ9
+         OIMLcH8ktEvjar0dro+sUD3VPiiT6kZgMexDsygTdHpLae40xMutM2yRybAKVGjRlDcf
+         tTTg==
+X-Gm-Message-State: APjAAAXQ8YOSrv9Js8TjTWuSs4HhHjQjuzXknFe6wk9RoAnqSiWazS64
+        YDZPKaTD+O5D3Q6HxIqDtkxUxbKTLU4mVg==
+X-Google-Smtp-Source: APXvYqy92XNMInm4ZAyBxfWWY7IUZN67sKW9UCkJ/NmXuwjrYc7ozMB0cXMD2ituSSV+LXP3GbuBfQ==
+X-Received: by 2002:a63:4d63:: with SMTP id n35mr4891540pgl.43.1561657561653;
+        Thu, 27 Jun 2019 10:46:01 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id h26sm4116937pfq.64.2019.06.27.10.45.50
+        by smtp.googlemail.com with ESMTPSA id h1sm3452403pfo.152.2019.06.27.10.45.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:45:54 -0700 (PDT)
+        Thu, 27 Jun 2019 10:46:01 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 77/87] wireless: broadcom: remove memset after dma_alloc_coherent
-Date:   Fri, 28 Jun 2019 01:45:43 +0800
-Message-Id: <20190627174544.6145-1-huangfq.daxian@gmail.com>
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Ching Huang <ching2048@areca.com.tw>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 69/87] scsi: arcmsr: remove memset after dma_coherent in arcmsr_hba.c
+Date:   Fri, 28 Jun 2019 01:45:53 +0800
+Message-Id: <20190627174554.6206-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -88,22 +79,21 @@ So memset is not needed.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/scsi/arcmsr/arcmsr_hba.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-index 83e4938527f4..3fc08fe7c3a2 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-@@ -1033,8 +1033,6 @@ brcmf_pcie_init_dmabuffer_for_device(struct brcmf_pciedev_info *devinfo,
- 			       address & 0xffffffff);
- 	brcmf_pcie_write_tcm32(devinfo, tcm_dma_phys_addr + 4, address >> 32);
- 
--	memset(ring, 0, size);
--
- 	return (ring);
- }
- 
+diff --git a/drivers/scsi/arcmsr/arcmsr_hba.c b/drivers/scsi/arcmsr/arcmsr_hba.c
+index 88053b15c363..a0d0dc83184f 100644
+--- a/drivers/scsi/arcmsr/arcmsr_hba.c
++++ b/drivers/scsi/arcmsr/arcmsr_hba.c
+@@ -727,7 +727,6 @@ static int arcmsr_alloc_ccb_pool(struct AdapterControlBlock *acb)
+ 	}
+ 	acb->dma_coherent = dma_coherent;
+ 	acb->dma_coherent_handle = dma_coherent_handle;
+-	memset(dma_coherent, 0, acb->uncache_size);
+ 	acb->ccbsize = roundup_ccbsize;
+ 	ccb_tmp = dma_coherent;
+ 	curr_phy_upper32 = upper_32_bits(dma_coherent_handle);
 -- 
 2.11.0
 
