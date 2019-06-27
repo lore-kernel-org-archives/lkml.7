@@ -2,66 +2,134 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4791C004E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4242C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9EE20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E2D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561667998;
+	bh=uhPVkL3y7IrRKq8KXFNf3+E60/kPbFRxIXQSEM558UQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=bxSO5EJ6803Qf1WAYYspDj6+Tq8ldRwKeH5xO7tZFzcCoEoksliTuJay4rpiu71qe
+	 /wnnaqekrdE3hEeU/m51bHWdjUTWqDWsQuDxqWPbYRZv2IZGRfor2uLotWcyAVCrDS
+	 d9XiNWPW7uSY4rp1DcA0s8NxLtbn6xLShcXwu3rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfF0Uj0 (ORCPT
+        id S1726716AbfF0Uj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 16:39:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59815 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfF0UjY (ORCPT
+        Thu, 27 Jun 2019 16:39:57 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44145 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfF0Uj4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 16:39:24 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgbAo-0007wl-E8; Thu, 27 Jun 2019 22:39:14 +0200
-Date:   Thu, 27 Jun 2019 22:39:13 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Alan Cox <alan.cox@intel.com>, Tony Luck <tony.luck@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Mohammad Etemadi <mohammad.etemadi@intel.com>,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 0/2] Speed MTRR programming up when we can
-In-Reply-To: <1561660997-21562-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1906272238460.32342@nanos.tec.linutronix.de>
-References: <1561660997-21562-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 27 Jun 2019 16:39:56 -0400
+Received: by mail-qk1-f195.google.com with SMTP id p144so2943227qke.11;
+        Thu, 27 Jun 2019 13:39:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=ybck1vLhDov0MKKyXsh2jg2LPJRwZCrCeuFa0yt4DYI=;
+        b=ag2Gs+LKLeevpy56TTxF85ajtVkLQYNbia84gmoW0Xuzlw4/APmVDwv4Hy1Gkyq1XU
+         LgNQ415ZKRlP3PBfVzD1RgBIF8JMG03sjAK1wB5Nr/9WWfYw07ArtOxAYbvySBUNmtaq
+         GR0TPqUYsphdbw3IrJv7hg7XRHno0rimqodWnDvrm8/BU8mHzv2g44oaznOdxCgqJ2Je
+         6rIr5FOdo8Mv9oJt+LRjoj014nnoGVp62H4Fg/qaRSXywxUoi+ux7HO2QUj5YDbGI/JZ
+         ldQFlaqI9ZwBoZsXebY6TGjAJNrXqJtzyonUJQKmdVnDq41M8eNRbpcvcUAS4BEPGc2P
+         2Guw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=ybck1vLhDov0MKKyXsh2jg2LPJRwZCrCeuFa0yt4DYI=;
+        b=WRXShxyPID1fRmDUJhgyJVJhm+zVzZ2T+dlrzTS27A/c5eoNeTI/Ayj/rTlM3KNgfm
+         37vyZDBaF/pizSXdWJb+Nc+8o9//xtLYCge5F+vUFpV4yhxZTgTdcDjCoxmB2rQa1jvL
+         C+zeXZ5R6zupZW/9ASsdWmPmjw9X1NqhHg7BswjK3lAzBtfyyEF28ALTFvtVQ3GsTr5A
+         4Vf2kEIS17gfTX+/KFURNQXc/Q90ZQoOpVqmVzseTbwUYKOcFe2xuG+VKdlN0ej1MxLZ
+         pUW7D/nIVJJYVynEtwL5pCCuZPN+idPs+JKm9RJDUWGo5xucWX3BSoKL+lSVM/5FZINf
+         pEUg==
+X-Gm-Message-State: APjAAAX36uDVNC8ruTajkplLl0nBl5h6RGTOZlodRbbVFsjPoB1j2Sgt
+        ktInr0vy+1CBX8PHmks0SVOQluIF
+X-Google-Smtp-Source: APXvYqxdspLa8CegnseSDgRCl+19jBVOk9zvGOA3kE9jB7Cc2EeAbkWGAOXU8jFOKdyHtNKYJRVPPw==
+X-Received: by 2002:a37:b87:: with SMTP id 129mr5171858qkl.132.1561667995759;
+        Thu, 27 Jun 2019 13:39:55 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::5a51])
+        by smtp.gmail.com with ESMTPSA id 123sm67372qkh.113.2019.06.27.13.39.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 13:39:55 -0700 (PDT)
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk
+Cc:     jack@suse.cz, josef@toxicpanda.com, clm@fb.com, dsterba@suse.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCHSET for-5.3/block] block: add blkcg bio punt mechanism
+Date:   Thu, 27 Jun 2019 13:39:47 -0700
+Message-Id: <20190627203952.386785-1-tj@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019, Ricardo Neri wrote:
-> By measuring the execution time of mtrr_aps_init() (from which MTRRs
-> in all CPUs are programmed in lock-step at boot), I find savings in the
-> time required to program MTRRs as follows:
-> 
-> Platform                      time-with-wbinvd(ms) time-no-wbinvd(ms)
-> 104-core (208 LP) Skylake            1437                 28
-> 2-core (4 LP) Haswell                 114                  2
+Hello,
 
-Impressive!
+This patchset contains only the block part of the following
+
+  [1] [PATCHSET v2 btrfs/for-next] blkcg, btrfs: fix cgroup writeback support
+
+with the following changes
+
+ * wbc_account_io() is renamed to wbc_account_cgroup_owner() and
+   wbc->no_account_io to wbc->no_cgroup_owner for clarity.
+
+When writeback is executed asynchronously (e.g. for compression), bios
+are bounced to and issued by worker pool shared by all cgroups.  This
+leads to significant priority inversions when cgroup IO control is in
+use - IOs for a low priority cgroup can tie down the workers forcing
+higher priority IOs to wait behind them.
+
+This patchset adds an bio punt mechanism to blkcg and updates btrfs to
+issue async IOs through it.  A bio tagged with REQ_CGROUP_PUNT flag is
+bounced to the asynchronous issue context of the associated blkcg on
+bio_submit().  As the bios are issued from per-blkcg work items,
+there's no concern for priority inversions and it doesn't require
+invasive changes to the filesystems.  The mechanism should be
+generally useful for IO control support across different filesystems.
+
+This patchset contains the following 5 patches.
+
+ 0001-cgroup-blkcg-Prepare-some-symbols-for-module-and-CON.patch
+ 0002-blkcg-writeback-Rename-wbc_account_io-to-wbc_account.patch
+ 0003-blkcg-writeback-Add-wbc-no_cgroup_owner.patch
+ 0004-blkcg-writeback-Implement-wbc_blkcg_css.patch
+ 0005-blkcg-implement-REQ_CGROUP_PUNT.patch
+
+The patches are also available in the following branch.
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-blkcg-punt
+
+Thanks, diffstat follows.
+
+ Documentation/admin-guide/cgroup-v2.rst |    2 -
+ block/blk-cgroup.c                      |   54 ++++++++++++++++++++++++++++++++
+ block/blk-core.c                        |    3 +
+ fs/btrfs/extent_io.c                    |    4 +-
+ fs/buffer.c                             |    2 -
+ fs/ext4/page-io.c                       |    2 -
+ fs/f2fs/data.c                          |    4 +-
+ fs/fs-writeback.c                       |   13 ++++---
+ fs/mpage.c                              |    2 -
+ include/linux/backing-dev.h             |    1 
+ include/linux/blk-cgroup.h              |   16 ++++++++-
+ include/linux/blk_types.h               |   10 +++++
+ include/linux/cgroup.h                  |    1 
+ include/linux/writeback.h               |   41 ++++++++++++++++++++----
+ 14 files changed, 134 insertions(+), 21 deletions(-)
+
+--
+tejun
+
+[1] http://lkml.kernel.org/r/20190615182453.843275-1-tj@kernel.org
+
