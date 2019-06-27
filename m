@@ -3,122 +3,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A43C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24AFC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 323052133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53E12133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfF0Qaz (ORCPT
+        id S1726571AbfF0Qct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:30:55 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:36190 "EHLO ale.deltatee.com"
+        Thu, 27 Jun 2019 12:32:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21015 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfF0Qaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:30:55 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hgXIL-0002lS-36; Thu, 27 Jun 2019 10:30:46 -0600
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190624072752.GA3954@lst.de>
- <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
- <20190625072008.GB30350@lst.de>
- <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
- <20190625170115.GA9746@lst.de>
- <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
- <20190626065708.GB24531@lst.de>
- <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
- <20190626202107.GA5850@ziepe.ca>
- <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
- <20190627090843.GB11548@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <89889319-e778-7772-ab36-dc55b59826be@deltatee.com>
-Date:   Thu, 27 Jun 2019 10:30:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726315AbfF0Qct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 12:32:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 09:32:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,424,1557212400"; 
+   d="scan'208";a="170472750"
+Received: from unknown (HELO jsakkine-mobl1) ([10.252.36.47])
+  by FMSMGA003.fm.intel.com with ESMTP; 27 Jun 2019 09:32:44 -0700
+Message-ID: <0893dc429d4c3f3b52d423f9e61c08a5012a7519.camel@linux.intel.com>
+Subject: Re: [PATCH v7 1/2] fTPM: firmware TPM running in TEE
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc:     Sasha Levin <sashal@kernel.org>, peterhuewe@gmx.de, jgg@ziepe.ca,
+        corbet@lwn.net, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@microsoft.com, thiruan@microsoft.com,
+        bryankel@microsoft.com, tee-dev@lists.linaro.org,
+        sumit.garg@linaro.org, rdunlap@infradead.org
+Date:   Thu, 27 Jun 2019 19:32:45 +0300
+In-Reply-To: <20190627133004.GA3757@apalos>
+References: <20190625201341.15865-1-sashal@kernel.org>
+         <20190625201341.15865-2-sashal@kernel.org>
+         <673dd30d03e8ed9825bb46ef21b2efef015f6f2a.camel@linux.intel.com>
+         <20190626235653.GL7898@sasha-vm>
+         <b688e845ccbe011c54b10043fbc3c0de8f0befc2.camel@linux.intel.com>
+         <20190627133004.GA3757@apalos>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20190627090843.GB11548@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2019-06-27 at 16:30 +0300, Ilias Apalodimas wrote:
+> is really useful. I don't have hardware to test this at the moment, but once i
+> get it, i'll give it a spin.
 
+Thank you for responding, really appreciate it.
 
-On 2019-06-27 3:08 a.m., Christoph Hellwig wrote:
-> On Wed, Jun 26, 2019 at 02:45:38PM -0600, Logan Gunthorpe wrote:
->>> The bar info would give the exporting struct device and any other info
->>> we need to make the iommu mapping.
->>
->> Well, the IOMMU mapping is the normal thing the mapping driver will
->> always do. We'd really just need the submitting driver to, when
->> appropriate, inform the mapping driver that this is a pci bus address
->> and not to call dma_map_xxx(). Then, for special mappings for the CMB
->> like Christoph is talking about, it's simply a matter of doing a range
->> compare on the PCI Bus address and converting the bus address to a BAR
->> and offset.
-> 
-> Well, range compare on the physical address.  We have a few different
-> options here:
-> 
->  (a) a range is normal RAM, DMA mapping works as usual
->  (b) a range is another devices BAR, in which case we need to do a
->      map_resource equivalent (which really just means don't bother with
->      cache flush on non-coherent architectures) and apply any needed
->      offset, fixed or iommu based
+Please note, however, that I already did my v5.3 PR so there is a lot of
+time to give it a spin. In all cases, we will find a way to put this to
+my v5.4 PR. I don't see any reason why not.
 
-Well I would split this into two cases: (b1) ranges in another device's
-BAR that will pass through the root complex and require a map_resource
-equivalent and (b2) ranges in another device's bar that don't pass
-through the root complex and require applying an offset to the bus
-address. Both require rather different handling and the submitting
-driver should already know ahead of time what type we have.
+As soon as the cosmetic stuff is fixed that I remarked in v7 I'm ready
+to take this to my tree and after that soonish make it available on
+linux-next.
 
->  (c) a range points to a BAR on the acting device. In which case we
->      don't need to DMA map at all, because no dma is happening but just an
->      internal transfer.  And depending on the device that might also require
->      a different addressing mode
+/Jarkko
 
-I think (c) is actually just a special case of (b2). Any device that has
-a special protocol for addressing the local BAR can just do a range
-compare on the address to determine if it's local or not. Devices that
-don't have a special protocol for this would handle both (c) and (b2)
-the same.
-
-> I guess it might make sense to just have a block layer flag that (b) or
-> (c) might be contained in a bio.  Then we always look up the data
-> structure, but can still fall back to (a) if nothing was found.  That
-> even allows free mixing and matching of memory types, at least as long
-> as they are contained to separate bio_vec segments.
-
-IMO these three cases should be reflected in flags in the bio_vec. We'd
-probably still need a queue flag to indicate support for mapping these,
-but a flag on the bio that indicates special cases *might* exist in the
-bio_vec and the driver has to do extra work to somehow distinguish the
-three types doesn't seem useful. bio_vec flags also make it easy to
-support mixing segments from different memory types.
-
-Logan
