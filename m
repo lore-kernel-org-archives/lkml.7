@@ -2,69 +2,215 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B046AC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13484C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5652146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64F92133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:25:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="W6wClXcU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfF0QZJ (ORCPT
+        id S1726572AbfF0QZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:25:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:58206 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfF0QZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:25:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE3EA360;
-        Thu, 27 Jun 2019 09:25:08 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E95083F246;
-        Thu, 27 Jun 2019 09:25:07 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 17:25:05 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Potapenko <glider@google.com>, Qian Cai <cai@lca.pw>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org
-Subject: Re: [PATCH] arm64: Move jump_label_init() before parse_early_param()
-Message-ID: <20190627162505.GD9894@arrakis.emea.arm.com>
-References: <201906261343.5F26328@keescook>
- <20190627080207.sdpwjoi4wnc664gp@mbp>
- <201906270856.8CF50064@keescook>
+        Thu, 27 Jun 2019 12:25:26 -0400
+Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:63556 "EHLO
+        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfF0QZ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 12:25:26 -0400
+X-Greylist: delayed 435 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Jun 2019 12:25:25 EDT
+Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
+        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id 12E14D00073;
+        Thu, 27 Jun 2019 18:18:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
+        s=20160407; t=1561652296;
+        bh=e/9/soaXxtPOLGylT6FEbrJeqf5CH04oQATLaTVtYYU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
+        b=W6wClXcUUlkKnnGLJvw4aTCMWkm09TDrSTk9aM9xnwww4FBi0ejQRAcafStv5/PaJ
+         TqrbxB0HJK5AlaMj+32Fv5C+eIXElxPDgSsWmy8WNE0FLMTpJKJCXCDNGJH1h32ujf
+         j3MYKbBu4YcvZG46mgjJZp8EBFnFZqhYxuyHP8lyHu4ZI8r+dYtyn+iL/vL6YOtxyy
+         QU6Mq5Q0bVZHHLEXz3klncr6GlMrRPDL9Tn4C2pQLuLAfn5TywxxeMwPSIi/Fs+lCq
+         gy/tTNJzdYhegMvZKVrDR2iD1hhhEK7jXeI+DDvom0fHd4UcejWmedP6Ns5bAcnTlx
+         feTNxO0qXLdaw==
+Subject: Re: [PATCH bpf-next v9 05/10] bpf,landlock: Add a new map type: inode
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+CC:     <linux-kernel@vger.kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Drysdale <drysdale@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        John Johansen <john.johansen@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thomas Graf <tgraf@suug.ch>, Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>,
+        <kernel-hardening@lists.openwall.com>, <linux-api@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>, <netdev@vger.kernel.org>
+References: <20190625215239.11136-1-mic@digikod.net>
+ <20190625215239.11136-6-mic@digikod.net>
+ <20190625225201.GJ17978@ZenIV.linux.org.uk>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
+Message-ID: <79bac827-4092-8a4d-9dc6-6019419b2486@ssi.gouv.fr>
+Date:   Thu, 27 Jun 2019 18:18:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201906270856.8CF50064@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190625225201.GJ17978@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 08:58:03AM -0700, Kees Cook wrote:
-> On Thu, Jun 27, 2019 at 09:02:08AM +0100, Catalin Marinas wrote:
-> > On Wed, Jun 26, 2019 at 01:51:15PM -0700, Kees Cook wrote:
-> > > This moves arm64 jump_label_init() from smp_prepare_boot_cpu() to
-> > > setup_arch(), as done already on x86, in preparation from early param
-> > > usage in the init_on_alloc/free() series:
-> > > https://lkml.kernel.org/r/1561572949.5154.81.camel@lca.pw
-> > 
-> > This looks fine to me. Is there any other series to be merged soon that
-> > depends on this patch (the init_on_alloc/fail one)? If not, I can queue
-> > it for 5.3.
-> 
-> Yes, but that series will be in 5.3 also, so there's rush for 5.2. Do
-> you want Alexander (via akpm) to include it in his series instead of it going
-> through the arm64 tree?
 
-It's pretty late for 5.2, especially since it hasn't had extensive
-testing (though I'm fairly sure it won't break). Anyway, it's better if
-it goes together with Alexander's series.
+On 26/06/2019 00:52, Al Viro wrote:
+> On Tue, Jun 25, 2019 at 11:52:34PM +0200, Micka=C3=ABl Sala=C3=BCn wrote:
+>> +/* must call iput(inode) after this call */
+>> +static struct inode *inode_from_fd(int ufd, bool check_access)
+>> +{
+>> +    struct inode *ret;
+>> +    struct fd f;
+>> +    int deny;
+>> +
+>> +    f =3D fdget(ufd);
+>> +    if (unlikely(!f.file || !file_inode(f.file))) {
+>> +            ret =3D ERR_PTR(-EBADF);
+>> +            goto put_fd;
+>> +    }
+>
+> Just when does one get a NULL file_inode()?  The reason I'm asking is
+> that arseloads of code would break if one managed to create such
+> a beast...
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+I didn't find any API documentation about this guarantee, so I followed
+a defensive programming approach. I'll remove the file_inode() check.
+
+>
+> Incidentally, that should be return ERR_PTR(-EBADF); fdput() is wrong the=
+re.
+
+Right, I'll fix that.
+
+>
+>> +    }
+>> +    /* check if the FD is tied to a mount point */
+>> +    /* TODO: add this check when called from an eBPF program too */
+>> +    if (unlikely(!f.file->f_path.mnt
+>
+> Again, the same question - when the hell can that happen?
+
+Defensive programming again, I'll remove it.
+
+> If you are
+> sitting on an exploitable roothole, do share it...
+>
+>  || f.file->f_path.mnt->mnt_flags &
+>> +                            MNT_INTERNAL)) {
+>> +            ret =3D ERR_PTR(-EINVAL);
+>> +            goto put_fd;
+>
+> What does it have to do with mountpoints, anyway?
+
+I want to only manage inodes tied to a userspace-visible file system
+(this check may not be enough though). It doesn't make sense to be able
+to add inodes which are not mounted, to this kind of map.
+
+>
+>> +/* called from syscall */
+>> +static int sys_inode_map_delete_elem(struct bpf_map *map, struct inode =
+*key)
+>> +{
+>> +    struct inode_array *array =3D container_of(map, struct inode_array,=
+ map);
+>> +    struct inode *inode;
+>> +    int i;
+>> +
+>> +    WARN_ON_ONCE(!rcu_read_lock_held());
+>> +    for (i =3D 0; i < array->map.max_entries; i++) {
+>> +            if (array->elems[i].inode =3D=3D key) {
+>> +                    inode =3D xchg(&array->elems[i].inode, NULL);
+>> +                    array->nb_entries--;
+>
+> Umm...  Is that intended to be atomic in any sense?
+
+nb_entries is not used as a bound check but to avoid walking uselessly
+through the (pre-allocated) array when adding a new element, but I'll
+use an atomic to avoid inconsistencies anyway.
+
+>
+>> +                    iput(inode);
+>> +                    return 0;
+>> +            }
+>> +    }
+>> +    return -ENOENT;
+>> +}
+>> +
+>> +/* called from syscall */
+>> +int bpf_inode_map_delete_elem(struct bpf_map *map, int *key)
+>> +{
+>> +    struct inode *inode;
+>> +    int err;
+>> +
+>> +    inode =3D inode_from_fd(*key, false);
+>> +    if (IS_ERR(inode))
+>> +            return PTR_ERR(inode);
+>> +    err =3D sys_inode_map_delete_elem(map, inode);
+>> +    iput(inode);
+>> +    return err;
+>> +}
+>
+> Wait a sec...  So we have those beasties that can have long-term
+> references to arbitrary inodes stuck in them?  What will happen
+> if you get umount(2) called while such a thing exists?
+
+I though an umount would be denied but no, we get a self-destructed busy
+inode and a bug!
+What about wrapping the inode's superblock->s_op->destroy_inode() to
+first remove the element from the map and then call the real
+destroy_inode(), if any?
+Or I could update fs/inode.c:destroy_inode() to call inode->free_inode()
+if it is set, and set it when such inode is referenced by a map?
+Or maybe I could hold the referencing file in the map and then wrap its
+f_op?
+
+
+--
+Micka=C3=ABl Sala=C3=BCn
+ANSSI/SDE/ST/LAM
+
+Les donn=C3=A9es =C3=A0 caract=C3=A8re personnel recueillies et trait=C3=A9=
+es dans le cadre de cet =C3=A9change, le sont =C3=A0 seule fin d=E2=80=99ex=
+=C3=A9cution d=E2=80=99une relation professionnelle et s=E2=80=99op=C3=A8re=
+nt dans cette seule finalit=C3=A9 et pour la dur=C3=A9e n=C3=A9cessaire =C3=
+=A0 cette relation. Si vous souhaitez faire usage de vos droits de consulta=
+tion, de rectification et de suppression de vos donn=C3=A9es, veuillez cont=
+acter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=C3=A7u ce message par err=
+eur, nous vous remercions d=E2=80=99en informer l=E2=80=99exp=C3=A9diteur e=
+t de d=C3=A9truire le message. The personal data collected and processed du=
+ring this exchange aims solely at completing a business relationship and is=
+ limited to the necessary duration of that relationship. If you wish to use=
+ your rights of consultation, rectification and deletion of your data, plea=
+se contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message i=
+n error, we thank you for informing the sender and destroying the message.
