@@ -2,136 +2,140 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EE2C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97277C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E35221841
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:57:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="XzMOM0/r";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cOiSDPN6"
+	by mail.kernel.org (Postfix) with ESMTP id 66A2D2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561607919;
+	bh=hTSxWsubMT7I39Ui6BX/OBcIaUiO8KFk30qTBy/c24g=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=BVig1jB93FPqKwYUQHTjgh9cF/XsRZ/siJPAEDfqMRHRyei+na6GJRTfNNILAYm0+
+	 khUJuE2YaY3Jz/diZfAA3IWH4hm1w6M868inKvkHRCl4edwqWo3IsL340eX981wIKF
+	 iPB1Rvnso+JCjdjqu96GThiIOAppm7BxOui4QWQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfF0D5v (ORCPT
+        id S1727124AbfF0D6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 23:57:51 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:50031 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726563AbfF0D5v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 23:57:51 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E81FA12EC;
-        Wed, 26 Jun 2019 23:57:49 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 26 Jun 2019 23:57:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=rg0MvOjGGvyE/jBUfl7d7PqyJK1OGHx
-        niXZ/0dvFPZw=; b=XzMOM0/rxccQ96fc86NdijBflRai0T1+PxCH9qaL3Sryjrw
-        nj/UpEtQP/UzQsGY8fgJDnhpiCZ4g5PKxAFVv8clb9SdA8LzyaWe3dUotdPgpr0z
-        G+JWDrgXHh6BFTck+mFh2x58zXQUksUUA9HoIo2NO1lksrZW1etKIfegcBCg9IVm
-        Ks7AfdUDbl35GslFSCM4M74kv9Y/0fBcdhYT0hcn626UDRSP3DS4z4YSlSyUXdBQ
-        GTUCC8no7rKNgfhjiC4SB+U9tYx5+z+ygw4+F0FIiOQ/1hARiReCbo3Q125db2B5
-        RxEGsH1fKh8Pjbdx0WhITmwhk+XcDT3sKukOQCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=rg0MvO
-        jGGvyE/jBUfl7d7PqyJK1OGHxniXZ/0dvFPZw=; b=cOiSDPN6EEDQPKa7O3gae8
-        lusEHXgnu4k/9H+I2TcJhlUhAEz2+crNkkAzW9vAulDzh5969LYLk5zroCpNMMLX
-        9N1frUxLs5V9LWpM47DkpAzihRu1aXp0s/0vb8MrlcvFWxyfVOyU0BCrpS3oW8Si
-        E0L77ATGh0A6J7Q7pOYZ6g/AoYz+zRk7n72RDR4nxdq2cs7EJVbu2sLPggFZq5YH
-        2A1fORbPRT1bNrmwUApDoKHYGJn4KmOwNsyLa9FWgtE4VfzJk+E9c6b2EL0+TSLd
-        vUm6tsiXd4Jy5GyKjxJS2UBU+FnPwX+L4GL+q6RQbKIoIUAQkjw+mqSoUeSgqdsw
-        ==
-X-ME-Sender: <xms:vT4UXRp2MSuLxXQ-ITuvd9B7INIxJ1ed3uVe2NGSAquykYboA1IenA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejgdejkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:vT4UXYtzJC0GJKHqspDMd3VbjFBNdrZWw32FOnTyS-Oem1uJSTqvog>
-    <xmx:vT4UXbNZnvGiTu5AJiZZYW8Ejpqsyqa7EmhdNAoSgkzu215cKLw8Bw>
-    <xmx:vT4UXamkNYXRw3iXICIJ2khXi9n8IP0ba-Pd7XLwIBhloCztRxSFJg>
-    <xmx:vT4UXXevahKZNWtBkhHAopfLZyZhUVcd73y5CdDGD6apGkgIe0e0cQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 9C47CE00A2; Wed, 26 Jun 2019 23:57:49 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-730-g63f2c3b-fmstable-20190622v1
-Mime-Version: 1.0
-Message-Id: <835ac4e3-6ee4-4c3f-913b-93629d7e8080@www.fastmail.com>
-In-Reply-To: <CACPK8XcPxJAOBAnKMKxtiG4Fkz8BPf8KtW1Kc3A9tU_emQviVg@mail.gmail.com>
-References: <20190626071430.28556-1-andrew@aj.id.au>
- <20190626071430.28556-6-andrew@aj.id.au>
- <CACPK8XcPxJAOBAnKMKxtiG4Fkz8BPf8KtW1Kc3A9tU_emQviVg@mail.gmail.com>
-Date:   Thu, 27 Jun 2019 13:27:49 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Joel Stanley" <joel@jms.id.au>
-Cc:     linux-gpio@vger.kernel.org, "Ryan Chen" <ryan_chen@aspeedtech.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        linux-aspeed@lists.ozlabs.org,
-        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?Re:_[PATCH_5/8]_pinctrl:_aspeed:_Correct_comment_that_is_no_lo?=
- =?UTF-8?Q?nger_true?=
-Content-Type: text/plain
+        Wed, 26 Jun 2019 23:58:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726563AbfF0D6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 23:58:37 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ACB220665;
+        Thu, 27 Jun 2019 03:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561607916;
+        bh=hTSxWsubMT7I39Ui6BX/OBcIaUiO8KFk30qTBy/c24g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CyIIi7kJ0TTJu02ygisu3AzlZVADuT4g/48sgLms8DcZiHo+MA/d3+ick/emsX0+6
+         p0R4vaB3OkDTT2h8MrGc/+n6xyhy0w7GGm6yI2Cp4yO7UQ7laRnw3Xur6Ug3dX/7LZ
+         I3nU3+4MmA78hrKAIbREL6bmj6cavRzFh2Jb/P1o=
+Date:   Wed, 26 Jun 2019 20:58:35 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-input@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 3 open syzbot bugs in input subsystem
+Message-ID: <20190627035835.GF721@sol.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better.]
 
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 3 of them as possibly being bugs in the input subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
 
-On Thu, 27 Jun 2019, at 13:00, Joel Stanley wrote:
-> On Wed, 26 Jun 2019 at 07:16, Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> > We have handled the GFX register case for quite some time now.
-> >
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > ---
-> >  drivers/pinctrl/aspeed/pinctrl-aspeed.h | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.h b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-> > index 4b06ddbc6aec..c5918c4a087c 100644
-> > --- a/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-> > +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-> > @@ -240,8 +240,7 @@
-> >   * opposed to naming them e.g. PINMUX_CTRL_[0-9]). Further, signal expressions
-> >   * reference registers beyond those dedicated to pinmux, such as the system
-> >   * reset control and MAC clock configuration registers. The AST2500 goes a step
-> 
-> AST2600 too?
+Of these 3 bugs, 2 were seen in mainline in the last week.
 
-No mention of the GFX block in the pinctrl table for the 2600, it appears the pinmux
-state is entirely determined by SCU registers.
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
 
-> 
-> Acked-by: Joel Stanley <joel@jms.id.au>
+If you believe I misattributed a bug to the input subsystem, please let me know,
+and if possible forward the report to the correct people or mailing list.
 
-Cheers,
+Here are the bugs:
 
-Andrew
+--------------------------------------------------------------------------------
+Title:              WARNING in aiptek_open/usb_submit_urb
+Last occurred:      2 days ago
+Reported:           19 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=0e35393fd821f0570b2a1663a01ac7bdcd15046a
+Original thread:    https://lkml.kernel.org/lkml/0000000000001abc1c058ab95b3e@google.com/T/#u
 
-> 
-> > - * further and references registers in the graphics IP block, but that isn't
-> > - * handled yet.
-> > + * further and references registers in the graphics IP block.
-> >   */
-> >  #define SCU2C           0x2C /* Misc. Control Register */
-> >  #define SCU3C           0x3C /* System Reset Control/Status Register */
-> > --
-> > 2.20.1
-> >
->
+This bug has a C reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+This looks like a bug in an input USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+75cccf2b7da87fb6f84b@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000001abc1c058ab95b3e@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: trying to register non-static key in usbtouch_reset_resume
+Last occurred:      6 days ago
+Reported:           30 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=64fd387d8358406dc0037511ee44db159f6f1605
+Original thread:    https://lkml.kernel.org/lkml/0000000000005463aa0589dcfb85@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+This looks like a bug in an input USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+933daad9be4e67ba91a9@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000005463aa0589dcfb85@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: task hung in evdev_release
+Last occurred:      246 days ago
+Reported:           253 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ebbbff1dcac574b81f9fd5e07100a4879e5bf53d
+Original thread:    https://lkml.kernel.org/lkml/000000000000f1be430578524a20@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 1 reply, 86 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+a979743610b4755d4d57@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000f1be430578524a20@google.com
+
