@@ -2,83 +2,133 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F706C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F803C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B45821726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12EF721852
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:39:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBzs0jVp"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ez22xSXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfF0Eip (ORCPT
+        id S1727074AbfF0Ej0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 00:38:45 -0400
-Received: from mail-lj1-f173.google.com ([209.85.208.173]:40788 "EHLO
-        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfF0Eio (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 00:38:44 -0400
-Received: by mail-lj1-f173.google.com with SMTP id a21so848332ljh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 21:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OI/CurwELFO5rqxaUjVeh3NIzHPBCNbNCcw11h4RDrs=;
-        b=QBzs0jVpaRngXNkhNeYrZEmCadowG8F0BLG3INhcQjU//0JIw8D17sJdGuWI101Lj1
-         t0LTaW+ZgMvQclbuoUIB9zYPu2sjdqOz53LMamHA/Ng2wTqv47tWJiC2rgHhsJIs2vpz
-         NaItkCQ7+KGft20AJ83enZqkL8aQuu2Nf6wAkMPIO/IuOqSuiAvNGclDbFrmhmxWa3lC
-         v/paqOtK5udz/IhmtIqsxpNHnqdG+VQr5RkeM5u/VP8WZ0ya5klOLpSeieyNHVmQ/kA5
-         ezEw5LmCEf1+wUKuMQmByTE3rkNTefx6Awc1csHytP86zf+zcxapzIYG7ZnAcOhYuqXA
-         sgFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OI/CurwELFO5rqxaUjVeh3NIzHPBCNbNCcw11h4RDrs=;
-        b=G0Dz4tRFm6OqbkeQw8vV5RY9vzF0Zh6myKoSIRWDKMM/IWcDp7URK7uIcNjgP5G017
-         qexr5mBTwuYX8HJ4Xeir6FgkPqT+nea4Wm1TjO0Y0o78UFvR1O0f2zyNIxV3xrm/RULI
-         /HxTsopjP9RjKKWbJa7GFZl3SQw4roCOq9Hld9gp+RaUn+vUFRJOegTzRskNrIfpn5JZ
-         FyEKZBWEj59XJje249A457o2BXJjVi6mGfXzm4XxVpE+cvoxToef903t/XKi+hA158iH
-         u0jCo9W3OaozkPD7GaJBmSk0YeOC+l1MlWJGlohmnllXazfJkdZJvf+41gCf4b+etlXn
-         2EPA==
-X-Gm-Message-State: APjAAAWWTemUte0hl0Dbja3+wS9dVZrbS3w7ld863QZx60Au1RJB0HuY
-        BEPAo+wXqY+0dBOySVe/W4k379Y3IWxcdi543nc=
-X-Google-Smtp-Source: APXvYqzF8qbK/dtxeTCqVNS//O58i3UG2hqgWw8oKeKraVLEq9rfu4ZFLAvE+OfexOuE6W+AbdKy1I7YHpBUdAeKvvk=
-X-Received: by 2002:a2e:968e:: with SMTP id q14mr1077059lji.195.1561610322670;
- Wed, 26 Jun 2019 21:38:42 -0700 (PDT)
+        Thu, 27 Jun 2019 00:39:26 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:63453 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbfF0Ej0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 00:39:26 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45Z6cW3zXvz9v0bT;
+        Thu, 27 Jun 2019 06:39:23 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=ez22xSXe; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Pv5yZBePPNWY; Thu, 27 Jun 2019 06:39:23 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45Z6cW2gw5z9v0bS;
+        Thu, 27 Jun 2019 06:39:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1561610363; bh=uSip90CjY6ipnPCboMIzCTf6R15j8iY2klqsFQRuFHo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ez22xSXenyJafd/cBfOrYvcLgLb3L9QoeannzXvtRfqULrpeEdFu+LempOs+0fZbS
+         SN2CHGt29XHhtCvT4IUW/MwhSHlxG7dhGGSOLadHGbbbX6IuWOiO0g8hxJRKQfdbIk
+         7xeaz24HM3SZHQ1Yv5C73jVUNwkMDZNCgg6T3oJY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 278B98B780;
+        Thu, 27 Jun 2019 06:39:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id paYZo5xhpiac; Thu, 27 Jun 2019 06:39:24 +0200 (CEST)
+Received: from pc17473vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A027F8B77F;
+        Thu, 27 Jun 2019 06:39:23 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/64s/radix: Define arch_ioremap_p4d_supported()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        linux-next@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org
+References: <1561555260-17335-1-git-send-email-anshuman.khandual@arm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <f32fbb6c-0600-991a-6d1a-72670c27c8de@c-s.fr>
+Date:   Thu, 27 Jun 2019 04:38:50 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <cover.1561595111.git.jpoimboe@redhat.com> <426541f62dad525078ee732c09bc206289e994aa.1561595111.git.jpoimboe@redhat.com>
- <CAADnVQ+veayfD70Xsu8UnNrLdRW6rh9jxPb=OGoiYT-O=_zW=A@mail.gmail.com>
- <20190627024700.q4rkcbhmrna6ev4y@treble> <CAADnVQJRs9NdHgGiAZfzCLb=eWAPD03-+uf3fisLZrKZUSSoyg@mail.gmail.com>
- <20190627034447.gl5tusbhkbr6dadc@treble> <20190627035623.owkbrxa7dx7suv4a@treble>
-In-Reply-To: <20190627035623.owkbrxa7dx7suv4a@treble>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 26 Jun 2019 21:38:31 -0700
-Message-ID: <CAADnVQK4B6oaaYnVsUsZ7coL0yw1fJtapazcf=_hDKyzkrmGZw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] objtool: Add support for C jump tables
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1561555260-17335-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 8:56 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> The last patch was based weird, this one's based on upstream.  Will test
-> tomorrow.
 
-Great. Once it passes your tests I'll be happy to test it on my side.
+
+On 06/26/2019 01:21 PM, Anshuman Khandual wrote:
+> Recent core ioremap changes require HAVE_ARCH_HUGE_VMAP subscribing archs
+> provide arch_ioremap_p4d_supported() failing which will result in a build
+> failure like the following.
+> 
+> ld: lib/ioremap.o: in function `.ioremap_huge_init':
+> ioremap.c:(.init.text+0x3c): undefined reference to
+> `.arch_ioremap_p4d_supported'
+> 
+> This defines a stub implementation for arch_ioremap_p4d_supported() keeping
+> it disabled for now to fix the build problem.
+> 
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-next@vger.kernel.org
+> 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
+Add a Fixes: tag ? For instance:
+
+Fixes: d909f9109c30 ("powerpc/64s/radix: Enable HAVE_ARCH_HUGE_VMAP")
+
+Christophe
+
+> ---
+> This has been just build tested and fixes the problem reported earlier.
+> 
+>   arch/powerpc/mm/book3s64/radix_pgtable.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
+> index 8904aa1..c81da88 100644
+> --- a/arch/powerpc/mm/book3s64/radix_pgtable.c
+> +++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
+> @@ -1124,6 +1124,11 @@ void radix__ptep_modify_prot_commit(struct vm_area_struct *vma,
+>   	set_pte_at(mm, addr, ptep, pte);
+>   }
+>   
+> +int __init arch_ioremap_p4d_supported(void)
+> +{
+> +	return 0;
+> +}
+> +
+>   int __init arch_ioremap_pud_supported(void)
+>   {
+>   	/* HPT does not cope with large pages in the vmalloc area */
+> 
