@@ -2,239 +2,120 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8ECC48BE7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCA5C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F87420665
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7C5208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2tZYxcO"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="is1HU+gg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfF0Ttp (ORCPT
+        id S1726520AbfF0Twt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 15:49:45 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37777 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfF0Ttn (ORCPT
+        Thu, 27 Jun 2019 15:52:49 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38254 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfF0Twt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 15:49:43 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y57so3832161qtk.4;
-        Thu, 27 Jun 2019 12:49:42 -0700 (PDT)
+        Thu, 27 Jun 2019 15:52:49 -0400
+Received: by mail-qk1-f193.google.com with SMTP id a27so2842672qkk.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 12:52:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MenPiCw1B2pHCHuETRVoHlHg8uoJRec68bX3QIhKK+0=;
-        b=b2tZYxcOSVDOSlx9s9Y0fD5ZZq5G7Sx+TNB/9r7SSwO0TQ0t/E7iQjuw3D8GIbciOx
-         Phckim+CZ+rZUEZj7olsxP6BHD1NMuLhLdfVjq/a8fWVQhVu2tyNN7QAKYy1pvLrDhLp
-         F8Dr8cD8CQvU5UqHz1WStBvvx4pPwPWiO7+LlNnrkFMl/4VSw17mvIoqdwUoNMk5xOJU
-         RQAc500HLM9D6jpX2EsiGV/iEOnyAaUw4S8WvlhHD73f0ivCFmjin2D3u72fKozikZbV
-         PHVnzAGoSoPIO31CQBLkhgYqIBUz/LGznxdHhpsplrnVjqE+4uaVfwRR3Wd6Ux4AqF2S
-         FzTA==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qQvtIolaIhbEj7zQCdzCY/FMnc1dfYBybIqVXd3KZ8Y=;
+        b=is1HU+ggY8nhSOnAQI/VX7rUG8dfJ3gGIIegNI9BVXfIesWy5VLF4zh7WUrsqCOnqB
+         ikg5x6cEt2YFLNh/o/vy+ITlF970QkFbOx5kYJ5Z7Oe3G8liFvatPNcmmKMbn4+QUov6
+         mbKPoj0t4y6YqqcAsVb3+2XEPtY2R/tcXkptmHCU83/GJucXehVUt+CwKgySB8sMGzc9
+         Q3HhHPkn99sdp+xZlnDk85aR87UlQvBs+PhhwF4J/o60rrixXxSEpjxs0CSGMdVD30bK
+         FV9EwDfNdcXpK1Dfv86SaUzx5gx7GW2c6ZCWEZgScTBygh+A5ccUyjt6kI8KAOsBypOQ
+         1GsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MenPiCw1B2pHCHuETRVoHlHg8uoJRec68bX3QIhKK+0=;
-        b=cEpDlpIuFtLAxTBANpyEjjL/h+atVhiUAaxzgpqL1JfZzmSaahCcdsIoKKV685FMgK
-         riESmPw2szPpT1nuJSNWMFUeqlh+uK6MOBp9Mq6tCxHrTzEgG51H8Rs26AZZzObR3vXA
-         WrNaRwrz9xrQiapt7pRSgSK9k5u2YOtId3vAOIPVDr6txU6E13O3IeU+4xKKP9cWQGBw
-         3luoVZAqa5b2fHNwr/RW5T67eNrKiHyysvLHPe72c2TfGCTlunZHiJToYV5nSJkyejF2
-         vCI74xkn2GarH1z5AK1w2PdmKXORSeM3uo2DlnSEN3FFukKcXsBP8BktRn4As3DpP04g
-         R1PQ==
-X-Gm-Message-State: APjAAAVZ+7Svaq4quzcojP6pguv0Va9TGoVbTJTnqlpEwYgCcm0Lj1CZ
-        hac+a/kqufDtq6E/xoaIRsM=
-X-Google-Smtp-Source: APXvYqzoaYDifvYkRLn3drVCGVXffLrEFo0MNdR3u9o8JcopLUZzCYdZSGJ3h+zSAqEg7E9jfkOKwg==
-X-Received: by 2002:a0c:b998:: with SMTP id v24mr4881682qvf.132.1561664982305;
-        Thu, 27 Jun 2019 12:49:42 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id k55sm37681qtf.68.2019.06.27.12.49.39
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qQvtIolaIhbEj7zQCdzCY/FMnc1dfYBybIqVXd3KZ8Y=;
+        b=OdAwNz6z0biTJFGGi5OI7h1vuIFtv2LX2pXVPo2LrYFExz6WkeQeo4hE5hUvtsi677
+         NW3uRMSO4hYzC2uGMnfcSASEJ4AAJk4hW8WocauwRYcEy5Gq3W+Q142BVLeyManIvza5
+         MqeXuEJl9dIH4gfD5sGn+2OFB81jYQQqgwz0+yawfx4h4l1t1nDWRJ5PGMozuwJismJX
+         PVOQ6/F+hhoeyLFMgHnu//phcfL0IfSF5YWNhAeUqpiBHwH5Fr2/pBebMYxy53nXqne/
+         PjZnrqpYiokRCrd34g1v+ZUppWCbVjvkS9mUrzXc+T978eUo/pLtTXiruCx0iBepGx4I
+         tuAQ==
+X-Gm-Message-State: APjAAAUygt2eQV6blKRBwnSsnsNK0HmKoWtJtyzGUMrODQ2WghEsbfO2
+        msJVmFhxWWxqNpJzBdjkhrV5Ew==
+X-Google-Smtp-Source: APXvYqwqsUW/Hfuw+7OIqqajGDQc9UBxmD94kwLGNZOhmicRCyFC0z+2aPwr1Mw8fSs39S+PHsN01g==
+X-Received: by 2002:a37:a2cc:: with SMTP id l195mr5019652qke.362.1561665168691;
+        Thu, 27 Jun 2019 12:52:48 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id a15sm63894qtb.43.2019.06.27.12.52.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 12:49:41 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Thu, 27 Jun 2019 12:52:48 -0700 (PDT)
+Message-ID: <1561665166.5154.90.camel@lca.pw>
+Subject: Re: [PATCH v2] powerpc/setup_64: fix -Wempty-body warnings
+From:   Qian Cai <cai@lca.pw>
+To:     mpe@ellerman.id.au
+Cc:     paulus@samba.org, benh@kernel.crashing.org,
+        tyreld@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue granularity
-Date:   Thu, 27 Jun 2019 22:47:28 +0300
-Message-Id: <20190627194728.8948-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
+Date:   Thu, 27 Jun 2019 15:52:46 -0400
+In-Reply-To: <1559768018-7665-1-git-send-email-cai@lca.pw>
+References: <1559768018-7665-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra's APB DMA engine updates words counter after each transferred burst
-of data, hence it can report transfer's residual with more fidelity which
-may be required in cases like audio playback. In particular this fixes
-audio stuttering during playback in a chromium web browser. The patch is
-based on the original work that was made by Ben Dooks and a patch from
-downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+Ping.
 
-Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
-Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
-Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
-
-Changelog:
-
-v3:  Added workaround for a hardware design shortcoming that results
-     in a words counter wraparound before end-of-transfer bit is set
-     in a cyclic mode.
-
-v2:  Addressed review comments made by Jon Hunter to v1. We won't try
-     to get words count if dma_desc is on free list as it will result
-     in a NULL dereference because this case wasn't handled properly.
-
-     The residual value is now updated properly, avoiding potential
-     integer overflow by adding the "bytes" to the "bytes_transferred"
-     instead of the subtraction.
-
- drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++----
- 1 file changed, 62 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 79e9593815f1..71473eda28ee 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
- 	bool				last_sg;
- 	struct list_head		node;
- 	struct tegra_dma_desc		*dma_desc;
-+	unsigned int			words_xferred;
- };
- 
- /*
-@@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
- 	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
- 				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
- 	nsg_req->configured = true;
-+	nsg_req->words_xferred = 0;
- 
- 	tegra_dma_resume(tdc);
- }
-@@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
- 					typeof(*sg_req), node);
- 	tegra_dma_start(tdc, sg_req);
- 	sg_req->configured = true;
-+	sg_req->words_xferred = 0;
- 	tdc->busy = true;
- }
- 
-@@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
- 	return 0;
- }
- 
-+static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
-+					       struct tegra_dma_sg_req *sg_req)
-+{
-+	unsigned long status, wcount = 0;
-+
-+	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
-+		return 0;
-+
-+	if (tdc->tdma->chip_data->support_separate_wcount_reg)
-+		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
-+
-+	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
-+
-+	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
-+		wcount = status;
-+
-+	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
-+		return sg_req->req_len;
-+
-+	wcount = get_current_xferred_count(tdc, sg_req, wcount);
-+
-+	if (!wcount) {
-+		/*
-+		 * If wcount wasn't ever polled for this SG before, then
-+		 * simply assume that transfer hasn't started yet.
-+		 *
-+		 * Otherwise it's the end of the transfer.
-+		 *
-+		 * The alternative would be to poll the status register
-+		 * until EOC bit is set or wcount goes UP. That's so
-+		 * because EOC bit is getting set only after the last
-+		 * burst's completion and counter is less than the actual
-+		 * transfer size by 4 bytes. The counter value wraps around
-+		 * in a cyclic mode before EOC is set(!), so we can't easily
-+		 * distinguish start of transfer from its end.
-+		 */
-+		if (sg_req->words_xferred)
-+			wcount = sg_req->req_len - 4;
-+
-+	} else if (wcount < sg_req->words_xferred) {
-+		/*
-+		 * This case shall not ever happen because EOC bit
-+		 * must be set once next cyclic transfer is started.
-+		 * Assume that hardware is malfunctioning or there is
-+		 * a software bug.
-+		 */
-+		wcount = sg_req->req_len - 4;
-+		WARN_ON_ONCE(1);
-+	} else {
-+		sg_req->words_xferred = wcount;
-+	}
-+
-+	return wcount;
-+}
-+
- static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 	dma_cookie_t cookie, struct dma_tx_state *txstate)
- {
-@@ -806,6 +864,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 	enum dma_status ret;
- 	unsigned long flags;
- 	unsigned int residual;
-+	unsigned int bytes = 0;
- 
- 	ret = dma_cookie_status(dc, cookie, txstate);
- 	if (ret == DMA_COMPLETE)
-@@ -825,6 +884,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 	list_for_each_entry(sg_req, &tdc->pending_sg_req, node) {
- 		dma_desc = sg_req->dma_desc;
- 		if (dma_desc->txd.cookie == cookie) {
-+			bytes = tegra_dma_sg_bytes_xferred(tdc, sg_req);
- 			ret = dma_desc->dma_status;
- 			goto found;
- 		}
-@@ -836,7 +896,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- found:
- 	if (dma_desc && txstate) {
- 		residual = dma_desc->bytes_requested -
--			   (dma_desc->bytes_transferred %
-+			   ((dma_desc->bytes_transferred + bytes) %
- 			    dma_desc->bytes_requested);
- 		dma_set_residue(txstate, residual);
- 	}
-@@ -1441,12 +1501,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
- 		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
- 	tdma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
--	/*
--	 * XXX The hardware appears to support
--	 * DMA_RESIDUE_GRANULARITY_BURST-level reporting, but it's
--	 * only used by this driver during tegra_dma_terminate_all()
--	 */
--	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
-+	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
- 	tdma->dma_dev.device_config = tegra_dma_slave_config;
- 	tdma->dma_dev.device_terminate_all = tegra_dma_terminate_all;
- 	tdma->dma_dev.device_tx_status = tegra_dma_tx_status;
--- 
-2.22.0
-
+On Wed, 2019-06-05 at 16:53 -0400, Qian Cai wrote:
+> At the beginning of setup_64.c, it has,
+> 
+>   #ifdef DEBUG
+>   #define DBG(fmt...) udbg_printf(fmt)
+>   #else
+>   #define DBG(fmt...)
+>   #endif
+> 
+> where DBG() could be compiled away, and generate warnings,
+> 
+> arch/powerpc/kernel/setup_64.c: In function 'initialize_cache_info':
+> arch/powerpc/kernel/setup_64.c:579:49: warning: suggest braces around
+> empty body in an 'if' statement [-Wempty-body]
+>     DBG("Argh, can't find dcache properties !\n");
+>                                                  ^
+> arch/powerpc/kernel/setup_64.c:582:49: warning: suggest braces around
+> empty body in an 'if' statement [-Wempty-body]
+>     DBG("Argh, can't find icache properties !\n");
+> 
+> Suggested-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v2: fix it by using a NOP while loop.
+> 
+>  arch/powerpc/kernel/setup_64.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
+> index 44b4c432a273..bed4ae8d338c 100644
+> --- a/arch/powerpc/kernel/setup_64.c
+> +++ b/arch/powerpc/kernel/setup_64.c
+> @@ -71,7 +71,7 @@
+>  #ifdef DEBUG
+>  #define DBG(fmt...) udbg_printf(fmt)
+>  #else
+> -#define DBG(fmt...)
+> +#define DBG(fmt...) do { } while (0)
+>  #endif
+>  
+>  int spinning_secondaries;
