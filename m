@@ -2,81 +2,148 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56299C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BA4C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 364332075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884F92075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:42:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i6uS7I64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfF0ViV (ORCPT
+        id S1726536AbfF0VmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 17:38:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59897 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfF0ViU (ORCPT
+        Thu, 27 Jun 2019 17:42:21 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43218 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfF0VmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 17:38:20 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgc5v-0000s3-Ge; Thu, 27 Jun 2019 23:38:15 +0200
-Date:   Thu, 27 Jun 2019 23:38:14 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Maya Nakamura <m.maya.nakamura@gmail.com>
-cc:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] x86: hv: hv_init.c: Add functions to allocate/deallocate
- page for Hyper-V
-In-Reply-To: <d19c28cda88bf1706baff883380dfd321da30a68.1560837096.git.m.maya.nakamura@gmail.com>
-Message-ID: <alpine.DEB.2.21.1906272334560.32342@nanos.tec.linutronix.de>
-References: <cover.1560837096.git.m.maya.nakamura@gmail.com> <d19c28cda88bf1706baff883380dfd321da30a68.1560837096.git.m.maya.nakamura@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 27 Jun 2019 17:42:20 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 16so3841878ljv.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YMYPQ8HMwHsCu6Nb47E3eYy5SYkz8O/qNoaUqvE9/MA=;
+        b=i6uS7I64eUcQYgWj3c9jAsLFmKoZ/q4U1ARoqLXaf/YYG6/XKX4AFmJsVHu8ajhu8F
+         u/851Ek5TISb9oKcMr4gdoc97WJOWUN9L2EaFUzcuHcVgkAFa/aIk00P2zCsY+DEKLbb
+         QVX4X2B53szP9bzFueP7gJQs6nlm5JL1pPJAXbZ7xyVGoTv4qCLOGtK9IlKbuNK7mpS1
+         V9V4nYBBIn9uw/jdDC6NzHcOCeJdusC/cbvB5yzj/ZOuu/3cHn3fzNuEjgt+KCGgFJax
+         RMZitSXX+ZB+xjhqB/Au1y7H81Xk+YEcQEZ163jAPyP6SEOQRWfTHLbio0Upf6BZZ8CG
+         ok0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YMYPQ8HMwHsCu6Nb47E3eYy5SYkz8O/qNoaUqvE9/MA=;
+        b=VNntjrJJ/0la/PkoOBdZvI0Y8gSh1y3qMiUe2HYQLRvAmgcyBJns/pApgFk4poOjGs
+         mX122N5lYpKhJpQwSxm64jlxwaeIwoB/My2ch4zNNaumyc3PBkEOhh9W3IGegxsTWT9U
+         aKxZF6cCRSHPPJYXrP/LIvJ11droWcFHfMo43GnlNlhR4l9JJmGZe8ajHDsck4E4mTTK
+         pTBJXkN3cXR7LhJzp+YA+TMt0UvM/NtoU+2//KefGyqu2gc1aFniiOq0wh++lEOIaVvp
+         gu8xAGKqT4oJMhyA3cAS6j7qNfTfmH5s2HxIL/w9FzblUuuFwG51IltNFRT3s0c5XWbk
+         a7VA==
+X-Gm-Message-State: APjAAAWy61A8m3VG0KfKpCNUXeaX8OmpeqbyuiwIC5aAXoKgj6hQ08tD
+        nGpE4eeqTrhU1zaqkyJULCaiXhLr9hAXzhfx3I37IhWIz5w=
+X-Google-Smtp-Source: APXvYqwjCRMWLMJwN8uYVOflAp6npBo8Enm8Kh9HtUnKPohkjA5si4zEphHh9vaaaJMztaekITPHbnUJZQJyzpu0bOI=
+X-Received: by 2002:a2e:8345:: with SMTP id l5mr3873254ljh.18.1561671737949;
+ Thu, 27 Jun 2019 14:42:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190625205101.33032-1-rajatja@google.com> <a755588b-1062-7c4f-7c03-f35ca23f39a4@collabora.com>
+In-Reply-To: <a755588b-1062-7c4f-7c03-f35ca23f39a4@collabora.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Thu, 27 Jun 2019 14:41:41 -0700
+Message-ID: <CACK8Z6HFzn+tAL7KRmTF4Eet2VRYwr9D2sndeQXcfrQg2qkGPw@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: lightbar: Assign drvdata during probe
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Evan Green <evgreen@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maya,
+Hi Enric,
 
-On Tue, 18 Jun 2019, Maya Nakamura wrote:
+On Wed, Jun 26, 2019 at 1:34 PM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Rajat,
+>
+> On 25/6/19 22:51, Rajat Jain wrote:
+> > The lightbar driver never assigned the drvdata in probe method, and thus
+> > causes a panic when it is accessed at the suspend time.
+>
+> Good catch, that's one of the problems I currently have with mainline on Samus.
+> The other one, that I didn't find time to look at is, that for some reason, when
+> I suspend the system reboots. Is suspend/resume working for you in current mainline?
 
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index 0e033ef11a9f..e8960a83add7 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -37,6 +37,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
->  u32 hv_max_vp_index;
->  EXPORT_SYMBOL_GPL(hv_max_vp_index);
->  
-> +void *hv_alloc_hyperv_page(void)
-> +{
-> +	BUILD_BUG_ON(PAGE_SIZE != HV_HYP_PAGE_SIZE);
-> +
-> +	return (void *)__get_free_page(GFP_KERNEL);
-> +}
-> +EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
-> +
-> +void hv_free_hyperv_page(unsigned long addr)
-> +{
-> +	free_page(addr);
-> +}
-> +EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
+I haven't tried current mainline yet. (I tried, but wasn't able to
+build it like I used to. If you have a recipe, can you share and I can
+give it a try).
+I was seeing the same symptoms on my Hatch (using 4.19) before this
+patch. I found this was the cause of the reboot, and is fixed now with
+this patch. May be you can try on Samus with its fix?
 
-These functions need to be declared in a header file.
+>
+> There is no drvdata because we don't really need extra private data for this
+> driver, the ec_dev is directly the drvdata provided by device parent. I am
+> wondering if you can just do
+>
+>    struct cros_ec_dev *ec_dev = to_cros_ec_dev(dev);
+>
+> in the suspend/resume calls like we do in the show/store calls or get the
+> drvdata from its parent. I guess I prefer the first one.
+
+The dev in suspend() callback points to "cros-ec-lightbar" device
+instead of "cros-ec-dev", so we'd need to reach the parent. I'll send
+a new patch in a moment.
 
 Thanks,
 
-	tglx
+Rajat
 
 
+>
+> >
+>
+> Would be nice have a fixes tag here.
+>
+> > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > ---
+> >  drivers/platform/chrome/cros_ec_lightbar.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
+> > index d30a6650b0b5..98e514fc5830 100644
+> > --- a/drivers/platform/chrome/cros_ec_lightbar.c
+> > +++ b/drivers/platform/chrome/cros_ec_lightbar.c
+> > @@ -578,11 +578,14 @@ static int cros_ec_lightbar_probe(struct platform_device *pd)
+> >
+> >       ret = sysfs_create_group(&ec_dev->class_dev.kobj,
+> >                                &cros_ec_lightbar_attr_group);
+> > -     if (ret < 0)
+> > +     if (ret < 0) {
+> >               dev_err(dev, "failed to create %s attributes. err=%d\n",
+> >                       cros_ec_lightbar_attr_group.name, ret);
+> > +             return ret;
+> > +     }
+> >
+> > -     return ret;
+> > +     platform_set_drvdata(pd, ec_dev);
+> > +     return 0;
+> >  }
+> >
+> >  static int cros_ec_lightbar_remove(struct platform_device *pd)
+> >
+>
+> Thanks,
+> ~ Enric
