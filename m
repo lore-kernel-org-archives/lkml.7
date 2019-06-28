@@ -2,193 +2,168 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6354C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2CDC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B302133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D67D92070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:25:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dDcHXyNc"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="s6xZq0ze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfF1FYK (ORCPT
+        id S1726813AbfF1FZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 01:24:10 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36334 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfF1FYK (ORCPT
+        Fri, 28 Jun 2019 01:25:35 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38481 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfF1FZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 01:24:10 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5S5O2IZ033667;
-        Fri, 28 Jun 2019 00:24:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561699442;
-        bh=mpYlm12k50Y2IG6Z0/YvEbMsQANay4iaP7Ic4q1ygZ4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dDcHXyNc1WQcEbS9lRFb0KSH/YJxf8Lb4OuAfR1+QS5V/TvYMhMnmmg+NoWiLQA+Y
-         JqSgRsZ1ebzOMwOJrcxg3kvsKM0O1pvc8thh+lAYLDUcrI0toeqKuj2c0cWWMvpMry
-         axprcIPUkMqnONDnm7p0bILfPk8cEwSde6PlaPc0=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5S5O2S1050156
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Jun 2019 00:24:02 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 28
- Jun 2019 00:24:02 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 28 Jun 2019 00:24:02 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5S5NwZA082212;
-        Fri, 28 Jun 2019 00:23:59 -0500
-Subject: Re: [RESEND PATCH 02/10] crypto: sa2ul: Add crypto driver
-To:     Eric Biggers <ebiggers@kernel.org>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <t-kristo@ti.com>,
-        <linux-crypto@vger.kernel.org>, <nm@ti.com>
-References: <20190628042745.28455-1-j-keerthy@ti.com>
- <20190628042745.28455-3-j-keerthy@ti.com>
- <20190628050756.GD673@sol.localdomain>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <e86c6c6b-116d-f065-52a4-9b4d2951d100@ti.com>
-Date:   Fri, 28 Jun 2019 10:54:36 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 28 Jun 2019 01:25:35 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5S5P5Ei616394
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 27 Jun 2019 22:25:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5S5P5Ei616394
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561699507;
+        bh=dN3aAWE0wvlajftEFy0qc+z/I60HJK0GsN08cShALp8=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=s6xZq0zeH05eyON0Bt7lAVBEau1hR2QL7EIHaXehqlq7LfL5XKtt0lAd9cf03lxML
+         eAMCYn/1j7wFRn0KcmqMOwW3ANYNcsTnNduxr1YJu0lzOu5vRD71q1FTM93dTyzO7+
+         CbrpoEznBDSsZQIj9P37k6WYKTUTSB6zLrF5OSllJ6v51Wwp8s/Szcus38Tpn1ObyO
+         WMIArSoPBvdrhZTLRufZC1wQyBKSdsb2PVaWWLhyFbasw4s8xq8qoICocOqk5W/Sqk
+         thq2Fdyu+Ep444hgNGeFTww3kyOHJyVwba5AccmJZRo9AWltSMT+6JDSuZ3XKUga/u
+         umUfdHHIbluqg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5S5P4qj616385;
+        Thu, 27 Jun 2019 22:25:04 -0700
+Date:   Thu, 27 Jun 2019 22:25:04 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Ricardo Neri <tipbot@zytor.com>
+Message-ID: <tip-1e03bff3600101bd9158d005e4313132e55bdec8@git.kernel.org>
+Cc:     hdegoede@redhat.com, tony.luck@intel.com,
+        andriy.shevchenko@intel.com, andi.kleen@intel.com,
+        alan.cox@intel.com, ricardo.neri-calderon@linux.intel.com,
+        gregkh@linuxfoundation.org, mohammad.etemadi@intel.com,
+        ak@linux.intel.com, mail@jordan-borgner.de, mingo@kernel.org,
+        hpa@zytor.com, andriy.shevchenko@linux.intel.com, bp@suse.de,
+        ravi.v.shankar@intel.com, tglx@linutronix.de,
+        rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org,
+        ricardo.neri@intel.com, pfeiner@google.com
+Reply-To: mail@jordan-borgner.de, ak@linux.intel.com,
+          mohammad.etemadi@intel.com, gregkh@linuxfoundation.org,
+          ricardo.neri-calderon@linux.intel.com, alan.cox@intel.com,
+          andi.kleen@intel.com, andriy.shevchenko@intel.com,
+          tony.luck@intel.com, hdegoede@redhat.com, ricardo.neri@intel.com,
+          pfeiner@google.com, linux-kernel@vger.kernel.org,
+          rafael.j.wysocki@intel.com, tglx@linutronix.de, bp@suse.de,
+          ravi.v.shankar@intel.com, hpa@zytor.com,
+          andriy.shevchenko@linux.intel.com, mingo@kernel.org
+In-Reply-To: <1561689337-19390-2-git-send-email-ricardo.neri-calderon@linux.intel.com>
+References: <1561689337-19390-2-git-send-email-ricardo.neri-calderon@linux.intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/cpu] x86/cpu/intel: Clear cache self-snoop capability in
+ CPUs with known errata
+Git-Commit-ID: 1e03bff3600101bd9158d005e4313132e55bdec8
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190628050756.GD673@sol.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  1e03bff3600101bd9158d005e4313132e55bdec8
+Gitweb:     https://git.kernel.org/tip/1e03bff3600101bd9158d005e4313132e55bdec8
+Author:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+AuthorDate: Thu, 27 Jun 2019 19:35:36 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 28 Jun 2019 07:20:48 +0200
 
+x86/cpu/intel: Clear cache self-snoop capability in CPUs with known errata
 
-On 28/06/19 10:37 AM, Eric Biggers wrote:
-> On Fri, Jun 28, 2019 at 09:57:37AM +0530, Keerthy wrote:
->> The Security Accelerator (SA2_UL) subsystem provides hardware
->> cryptographic acceleration for the following use cases:
->> • Encryption and authentication for secure boot
->> • Encryption and authentication of content in applications
->>    requiring DRM (digital rights management) and
->>    content/asset protection
->> The device includes one instantiation of SA2_UL named SA2_UL0
->>
->> SA2_UL supports the following cryptographic industry standards to enable data authentication, data
->> integrity and data confidentiality.
->>
->> Crypto function library for software acceleration
->> o AES operation
->> o 3DES operation
->> o SHA1 operation
->> o MD5 operation
->> o SHA2 – 224, 256, 384, 512 operation
->>
->> Authentication supported via following hardware cores
->> o SHA1
->> o MD5
->> o SHA2 -224
->> o SHA2-256
->> o SHA2-384
->> o SHA2-512
-> 
-> What about HMAC?
-> 
-> Your actual driver only exposes HMAC-SHA*, not SHA* anything.
-> 
-> What does the hardware actually support?
+Processors which have self-snooping capability can handle conflicting
+memory type across CPUs by snooping its own cache. However, there exists
+CPU models in which having conflicting memory types still leads to
+unpredictable behavior, machine check errors, or hangs.
 
-Hardware supports both SHA and HMAC-SHA
+Clear this feature on affected CPUs to prevent its use.
 
-> 
->> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
->> index 603413f28fa3..b9a3fa026c74 100644
->> --- a/drivers/crypto/Kconfig
->> +++ b/drivers/crypto/Kconfig
->> @@ -785,4 +785,21 @@ config CRYPTO_DEV_CCREE
->>   
->>   source "drivers/crypto/hisilicon/Kconfig"
->>   
->> +config CRYPTO_DEV_SA2UL
->> +	tristate "Support for TI security accelerator"
->> +	depends on ARCH_K3 || COMPILE_TEST
->> +	select ARM64_CRYPTO
->> +	select CRYPTO_AES
->> +	select CRYPTO_AES_ARM64
->> +	select CRYPTO_SHA1
->> +	select CRYPTO_MD5
->> +	select CRYPTO_ALGAPI
->> +	select CRYPTO_AUTHENC
->> +	select HW_RANDOM
->> +	default m if ARCH_K3
->> +	help
->> +	  Keystone devices include a security accelerator engine that may be
->> +	  used for crypto offload.  Select this if you want to use hardware
->> +	  acceleration for cryptographic algorithms on these devices.
-> 
-> This shouldn't be enabled by default.  Note that arm64 defconfig sets ARCH_K3 as
-> well as lots of other ARCH_* options, so clearly just because ARCH_K3 is set
-> doesn't mean the kernel is being built specifically for your platform.
+Suggested-by: Alan Cox <alan.cox@intel.com>
+Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Andi Kleen <andi.kleen@intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jordan Borgner <mail@jordan-borgner.de>
+Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+Cc: Mohammad Etemadi <mohammad.etemadi@intel.com>
+Cc: Ricardo Neri <ricardo.neri@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Feiner <pfeiner@google.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Link: https://lkml.kernel.org/r/1561689337-19390-2-git-send-email-ricardo.neri-calderon@linux.intel.com
 
-okay. I will remove that.
+---
+ arch/x86/kernel/cpu/intel.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-> 
->> +/*
->> + * Mode Control Instructions for various Key lengths 128, 192, 256
->> + * For CBC (Cipher Block Chaining) mode for encryption
->> + */
->> +static u8 mci_cbc_enc_array[3][MODE_CONTROL_BYTES] = {
->> +	{	0x21, 0x00, 0x00, 0x18, 0x88, 0x0a, 0xaa, 0x4b, 0x7e, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
->> +	{	0x21, 0x00, 0x00, 0x18, 0x88, 0x4a, 0xaa, 0x4b, 0x7e, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
->> +	{	0x21, 0x00, 0x00, 0x18, 0x88, 0x8a, 0xaa, 0x4b, 0x7e, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
->> +};
-> 
-> Use 'const' for static constants.
-
-Okay
-
-> 
->> +static int sa_aes_cbc_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
->> +			     unsigned int keylen)
->> +{
->> +	struct algo_data *ad = kzalloc(sizeof(*ad), GFP_KERNEL);
-> 
-> Need to check from error for all memory allocations.
-> 
->> +static struct sa_alg_tmpl sa_algs[] = {
->> +	{.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
-> 
-> ablkcipher API is deprecated.  Use skcipher instead.
-
-Okay
-
-> 
-> (To be clear, these are just a few things I happened to notice from very quickly
-> skimming through this patch.  I don't have time to do a proper review of random
-> drivers.)
-
-I will incorporate the comments in v2.
-
-Thanks for your quick review.
-
-> 
-> - Eric
-> 
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index f17c1a714779..8d6d92ebeb54 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -66,6 +66,32 @@ void check_mpx_erratum(struct cpuinfo_x86 *c)
+ 	}
+ }
+ 
++/*
++ * Processors which have self-snooping capability can handle conflicting
++ * memory type across CPUs by snooping its own cache. However, there exists
++ * CPU models in which having conflicting memory types still leads to
++ * unpredictable behavior, machine check errors, or hangs. Clear this
++ * feature to prevent its use on machines with known erratas.
++ */
++static void check_memory_type_self_snoop_errata(struct cpuinfo_x86 *c)
++{
++	switch (c->x86_model) {
++	case INTEL_FAM6_CORE_YONAH:
++	case INTEL_FAM6_CORE2_MEROM:
++	case INTEL_FAM6_CORE2_MEROM_L:
++	case INTEL_FAM6_CORE2_PENRYN:
++	case INTEL_FAM6_CORE2_DUNNINGTON:
++	case INTEL_FAM6_NEHALEM:
++	case INTEL_FAM6_NEHALEM_G:
++	case INTEL_FAM6_NEHALEM_EP:
++	case INTEL_FAM6_NEHALEM_EX:
++	case INTEL_FAM6_WESTMERE:
++	case INTEL_FAM6_WESTMERE_EP:
++	case INTEL_FAM6_SANDYBRIDGE:
++		setup_clear_cpu_cap(X86_FEATURE_SELFSNOOP);
++	}
++}
++
+ static bool ring3mwait_disabled __read_mostly;
+ 
+ static int __init ring3mwait_disable(char *__unused)
+@@ -304,6 +330,7 @@ static void early_init_intel(struct cpuinfo_x86 *c)
+ 	}
+ 
+ 	check_mpx_erratum(c);
++	check_memory_type_self_snoop_errata(c);
+ 
+ 	/*
+ 	 * Get the number of SMT siblings early from the extended topology
