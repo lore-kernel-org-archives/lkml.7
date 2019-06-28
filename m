@@ -2,766 +2,367 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD02C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD66C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864442133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E71214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561724611;
-	bh=JioYX/oG/ZZte857JXA/ojcKpJVj2A8XvQYRkkditvU=;
+	s=default; t=1561724616;
+	bh=NEoP2vHnlc2FjV5i7CiAlDXpdSAyBgLpWXJdgb87YfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kCbIW23yipk/ynGpfF/jevvy5CbBCkWxLVoUKmNtvW5X9AE1g5iD3L8x6n1H0p/2M
-	 0ccnNuxqXuhFa9GKyl5/Xu7S9JIhMMOhqmXULQEtq7Oa3ooWY3d7G/HGJ7VEMxg6eJ
-	 4vrH/R4EVVEScdkKMNmNGjABm7t3pOlpiWRlFKJo=
+	b=RvLZ1VW5rFMSOwxEwFQ04Su02GnyCkwXAHW/NoEHuFk+Bp9/2NW+xncklKEgW0gBC
+	 O/MzQQ3X8bpZ97Z/mjyc8GEobPXqmN7XU0SI/580kk7wO9BX6fOta34EBH84P8se//
+	 uw90PtPYExfjRZDKO1Zb6rCbhXG0MiorWItzkHg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfF1MXZ (ORCPT
+        id S1726901AbfF1MXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:23:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58774 "EHLO
+        Fri, 28 Jun 2019 08:23:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58762 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfF1MUq (ORCPT
+        with ESMTP id S1726786AbfF1MUp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:20:46 -0400
+        Fri, 28 Jun 2019 08:20:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Wqq/Z+X4ksZt2A+1tBR82tvkrdmJET6qkC5w+cL940E=; b=oTWdhqKa1en3vJZPQmNydBxwaC
-        snHg32jRL+dMpZZ7D1P/ALFhNBSzG6qYGCIMusSi9hi5Vi76IYEPkCkvdab/iWr9AJ42lREw5INA1
-        x6B9sxcR/VjOGuB6/zudNEM4o0xRge3qeaPtkzW+/5I+ubtFRHSmX8/LGg+2z7lJI1JIDCgp20HUE
-        n6U/2vo8RspkfodtTZzicvnYvBwZxY7t9CYwj0pA9/glCTIWMa/9AxfTeCMuCnwfiId1SWYInadEI
-        vqUauDLa53wNMnPUYakEJa8Kelh0CRTA3FnNqYLnk7EcQHmhVgYRYTkUCbpO15NWCIQd+P63uQP4C
-        Gvi/qE9g==;
+        bh=cezNa+/SrJlGLyHHIrMODuEUH4YfnTfH3rjk4VDYllU=; b=ByG0lzsJ141F8kpfRUpDMUqi9E
+        kinD+KC1TqyAtzE4G4hfRYW2c8Sq1KY6WbMoQ1RKtXBBroSrtwA5PWTc626G6z1lb2TFZ2TLW2s50
+        ZjaKhKnQ60uBCF/IUxGq+kUF3Au+NsN4ZiUDO5AA5weLCDmkXJziyOaqfadA375cjsFyVM2Ae9Lpl
+        VnlIiMqiT/SBZis0dtvx2jfYafRV2JHXSPXwzoNWacMhFDEB2yQ1G8Hd2b63w0t52aU0iIPeWFL4d
+        84aHoqSowYJTzV1N79+3KV7cMl2z++Qz1bsB44Ji/zeJe+BhztUbX+ZDgTii/4+9MOM6loTNVhi4J
+        sdVMk52Q==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgprv-00009o-2v; Fri, 28 Jun 2019 12:20:43 +0000
+        id 1hgprw-0000AK-1N; Fri, 28 Jun 2019 12:20:44 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgprt-00056r-0C; Fri, 28 Jun 2019 09:20:41 -0300
+        id 1hgprt-00059N-UA; Fri, 28 Jun 2019 09:20:41 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
-Subject: [PATCH 01/43] docs: infiniband: convert docs to ReST and rename to *.rst
-Date:   Fri, 28 Jun 2019 09:19:57 -0300
-Message-Id: <4d843d0361e245861f7051e2c736a18dfaae7601.1561723980.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 32/43] docs: mmc: convert to ReST
+Date:   Fri, 28 Jun 2019 09:20:28 -0300
+Message-Id: <a35ed2e9655b0f8cb09d96c771218b0e2e9ee2a4.1561723980.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561723979.git.mchehab+samsung@kernel.org>
 References: <cover.1561723979.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The InfiniBand docs are plain text with no markups.
-So, all we needed to do were to add the title markups and
-some markup sequences in order to properly parse tables,
-lists and literal blocks.
+Rename the mmc documentation files to ReST, add an
+index for them and adjust in order to produce a nice html
+output via the Sphinx build system.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../{core_locking.txt => core_locking.rst}    |  64 ++++++-----
- Documentation/infiniband/index.rst            |  23 ++++
- .../infiniband/{ipoib.txt => ipoib.rst}       |  24 ++--
- .../infiniband/{opa_vnic.txt => opa_vnic.rst} | 108 +++++++++---------
- .../infiniband/{sysfs.txt => sysfs.rst}       |   4 +-
- .../{tag_matching.txt => tag_matching.rst}    |   5 +
- .../infiniband/{user_mad.txt => user_mad.rst} |  33 ++++--
- .../{user_verbs.txt => user_verbs.rst}        |  12 +-
- drivers/infiniband/core/user_mad.c            |   2 +-
- drivers/infiniband/ulp/ipoib/Kconfig          |   2 +-
- 10 files changed, 174 insertions(+), 103 deletions(-)
- rename Documentation/infiniband/{core_locking.txt => core_locking.rst} (78%)
- create mode 100644 Documentation/infiniband/index.rst
- rename Documentation/infiniband/{ipoib.txt => ipoib.rst} (90%)
- rename Documentation/infiniband/{opa_vnic.txt => opa_vnic.rst} (63%)
- rename Documentation/infiniband/{sysfs.txt => sysfs.rst} (69%)
- rename Documentation/infiniband/{tag_matching.txt => tag_matching.rst} (98%)
- rename Documentation/infiniband/{user_mad.txt => user_mad.rst} (90%)
- rename Documentation/infiniband/{user_verbs.txt => user_verbs.rst} (93%)
+ Documentation/mmc/index.rst                   | 13 +++++
+ .../{mmc-async-req.txt => mmc-async-req.rst}  | 53 +++++++++++--------
+ .../{mmc-dev-attrs.txt => mmc-dev-attrs.rst}  | 32 +++++++----
+ .../{mmc-dev-parts.txt => mmc-dev-parts.rst}  | 13 ++---
+ .../mmc/{mmc-tools.txt => mmc-tools.rst}      |  5 +-
+ 5 files changed, 79 insertions(+), 37 deletions(-)
+ create mode 100644 Documentation/mmc/index.rst
+ rename Documentation/mmc/{mmc-async-req.txt => mmc-async-req.rst} (75%)
+ rename Documentation/mmc/{mmc-dev-attrs.txt => mmc-dev-attrs.rst} (73%)
+ rename Documentation/mmc/{mmc-dev-parts.txt => mmc-dev-parts.rst} (83%)
+ rename Documentation/mmc/{mmc-tools.txt => mmc-tools.rst} (92%)
 
-diff --git a/Documentation/infiniband/core_locking.txt b/Documentation/infiniband/core_locking.rst
-similarity index 78%
-rename from Documentation/infiniband/core_locking.txt
-rename to Documentation/infiniband/core_locking.rst
-index 4b1f36b6ada0..f34669beb4fe 100644
---- a/Documentation/infiniband/core_locking.txt
-+++ b/Documentation/infiniband/core_locking.rst
-@@ -1,4 +1,6 @@
--INFINIBAND MIDLAYER LOCKING
-+===========================
-+InfiniBand Midlayer Locking
-+===========================
- 
-   This guide is an attempt to make explicit the locking assumptions
-   made by the InfiniBand midlayer.  It describes the requirements on
-@@ -6,45 +8,47 @@ INFINIBAND MIDLAYER LOCKING
-   protocols that use the midlayer.
- 
- Sleeping and interrupt context
-+==============================
- 
-   With the following exceptions, a low-level driver implementation of
-   all of the methods in struct ib_device may sleep.  The exceptions
-   are any methods from the list:
- 
--    create_ah
--    modify_ah
--    query_ah
--    destroy_ah
--    post_send
--    post_recv
--    poll_cq
--    req_notify_cq
--    map_phys_fmr
-+    - create_ah
-+    - modify_ah
-+    - query_ah
-+    - destroy_ah
-+    - post_send
-+    - post_recv
-+    - poll_cq
-+    - req_notify_cq
-+    - map_phys_fmr
- 
-   which may not sleep and must be callable from any context.
- 
-   The corresponding functions exported to upper level protocol
-   consumers:
- 
--    ib_create_ah
--    ib_modify_ah
--    ib_query_ah
--    ib_destroy_ah
--    ib_post_send
--    ib_post_recv
--    ib_req_notify_cq
--    ib_map_phys_fmr
-+    - ib_create_ah
-+    - ib_modify_ah
-+    - ib_query_ah
-+    - ib_destroy_ah
-+    - ib_post_send
-+    - ib_post_recv
-+    - ib_req_notify_cq
-+    - ib_map_phys_fmr
- 
-   are therefore safe to call from any context.
- 
-   In addition, the function
- 
--    ib_dispatch_event
-+    - ib_dispatch_event
- 
-   used by low-level drivers to dispatch asynchronous events through
-   the midlayer is also safe to call from any context.
- 
- Reentrancy
-+----------
- 
-   All of the methods in struct ib_device exported by a low-level
-   driver must be fully reentrant.  The low-level driver is required to
-@@ -62,6 +66,7 @@ Reentrancy
-   information between different calls of ib_poll_cq() is not defined.
- 
- Callbacks
-+---------
- 
-   A low-level driver must not perform a callback directly from the
-   same callchain as an ib_device method call.  For example, it is not
-@@ -74,18 +79,18 @@ Callbacks
-   completion event handlers for the same CQ are not called
-   simultaneously.  The driver must guarantee that only one CQ event
-   handler for a given CQ is running at a time.  In other words, the
--  following situation is not allowed:
-+  following situation is not allowed::
- 
--        CPU1                                    CPU2
-+          CPU1                                    CPU2
- 
--  low-level driver ->
--    consumer CQ event callback:
--      /* ... */
--      ib_req_notify_cq(cq, ...);
--                                        low-level driver ->
--      /* ... */                           consumer CQ event callback:
--                                            /* ... */
--      return from CQ event handler
-+    low-level driver ->
-+      consumer CQ event callback:
-+        /* ... */
-+        ib_req_notify_cq(cq, ...);
-+                                          low-level driver ->
-+        /* ... */                           consumer CQ event callback:
-+                                              /* ... */
-+        return from CQ event handler
- 
-   The context in which completion event and asynchronous event
-   callbacks run is not defined.  Depending on the low-level driver, it
-@@ -93,6 +98,7 @@ Callbacks
-   Upper level protocol consumers may not sleep in a callback.
- 
- Hot-plug
-+--------
- 
-   A low-level driver announces that a device is ready for use by
-   consumers when it calls ib_register_device(), all initialization
-diff --git a/Documentation/infiniband/index.rst b/Documentation/infiniband/index.rst
+diff --git a/Documentation/mmc/index.rst b/Documentation/mmc/index.rst
 new file mode 100644
-index 000000000000..22eea64de722
+index 000000000000..3305478ddadb
 --- /dev/null
-+++ b/Documentation/infiniband/index.rst
-@@ -0,0 +1,23 @@
++++ b/Documentation/mmc/index.rst
+@@ -0,0 +1,13 @@
 +:orphan:
 +
-+==========
-+InfiniBand
-+==========
++========================
++MMC/SD/SDIO card support
++========================
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+   core_locking
-+   ipoib
-+   opa_vnic
-+   sysfs
-+   tag_matching
-+   user_mad
-+   user_verbs
++   mmc-dev-attrs
++   mmc-dev-parts
++   mmc-async-req
++   mmc-tools
+diff --git a/Documentation/mmc/mmc-async-req.txt b/Documentation/mmc/mmc-async-req.rst
+similarity index 75%
+rename from Documentation/mmc/mmc-async-req.txt
+rename to Documentation/mmc/mmc-async-req.rst
+index ae1907b10e4a..0f7197c9c3b5 100644
+--- a/Documentation/mmc/mmc-async-req.txt
++++ b/Documentation/mmc/mmc-async-req.rst
+@@ -1,13 +1,20 @@
++========================
++MMC Asynchronous Request
++========================
 +
-+.. only::  subproject and html
+ Rationale
+ =========
+ 
+ How significant is the cache maintenance overhead?
 +
-+   Indices
-+   =======
+ It depends. Fast eMMC and multiple cache levels with speculative cache
+ pre-fetch makes the cache overhead relatively significant. If the DMA
+ preparations for the next request are done in parallel with the current
+ transfer, the DMA preparation overhead would not affect the MMC performance.
 +
-+   * :ref:`genindex`
-diff --git a/Documentation/infiniband/ipoib.txt b/Documentation/infiniband/ipoib.rst
-similarity index 90%
-rename from Documentation/infiniband/ipoib.txt
-rename to Documentation/infiniband/ipoib.rst
-index 47c1dd9818f2..0dd36154c0c9 100644
---- a/Documentation/infiniband/ipoib.txt
-+++ b/Documentation/infiniband/ipoib.rst
-@@ -1,4 +1,6 @@
--IP OVER INFINIBAND
-+==================
-+IP over InfiniBand
-+==================
- 
-   The ib_ipoib driver is an implementation of the IP over InfiniBand
-   protocol as specified by RFC 4391 and 4392, issued by the IETF ipoib
-@@ -8,16 +10,17 @@ IP OVER INFINIBAND
-   masqueraded to the kernel as ethernet interfaces).
- 
- Partitions and P_Keys
-+=====================
- 
-   When the IPoIB driver is loaded, it creates one interface for each
-   port using the P_Key at index 0.  To create an interface with a
-   different P_Key, write the desired P_Key into the main interface's
--  /sys/class/net/<intf name>/create_child file.  For example:
-+  /sys/class/net/<intf name>/create_child file.  For example::
- 
-     echo 0x8001 > /sys/class/net/ib0/create_child
- 
-   This will create an interface named ib0.8001 with P_Key 0x8001.  To
--  remove a subinterface, use the "delete_child" file:
-+  remove a subinterface, use the "delete_child" file::
- 
-     echo 0x8001 > /sys/class/net/ib0/delete_child
- 
-@@ -28,6 +31,7 @@ Partitions and P_Keys
-   rtnl_link_ops, where children created using either way behave the same.
- 
- Datagram vs Connected modes
-+===========================
- 
-   The IPoIB driver supports two modes of operation: datagram and
-   connected.  The mode is set and read through an interface's
-@@ -51,6 +55,7 @@ Datagram vs Connected modes
-   networking stack to use the smaller UD MTU for these neighbours.
- 
- Stateless offloads
-+==================
- 
-   If the IB HW supports IPoIB stateless offloads, IPoIB advertises
-   TCP/IP checksum and/or Large Send (LSO) offloading capability to the
-@@ -60,9 +65,10 @@ Stateless offloads
-   on/off using ethtool calls.  Currently LRO is supported only for
-   checksum offload capable devices.
- 
--  Stateless offloads are supported only in datagram mode.  
-+  Stateless offloads are supported only in datagram mode.
- 
- Interrupt moderation
-+====================
- 
-   If the underlying IB device supports CQ event moderation, one can
-   use ethtool to set interrupt mitigation parameters and thus reduce
-@@ -71,6 +77,7 @@ Interrupt moderation
-   moderation is supported.
- 
- Debugging Information
-+=====================
- 
-   By compiling the IPoIB driver with CONFIG_INFINIBAND_IPOIB_DEBUG set
-   to 'y', tracing messages are compiled into the driver.  They are
-@@ -79,7 +86,7 @@ Debugging Information
-   runtime through files in /sys/module/ib_ipoib/.
- 
-   CONFIG_INFINIBAND_IPOIB_DEBUG also enables files in the debugfs
--  virtual filesystem.  By mounting this filesystem, for example with
-+  virtual filesystem.  By mounting this filesystem, for example with::
- 
-     mount -t debugfs none /sys/kernel/debug
- 
-@@ -96,10 +103,13 @@ Debugging Information
-   performance, because it adds tests to the fast path.
- 
- References
-+==========
- 
-   Transmission of IP over InfiniBand (IPoIB) (RFC 4391)
--    http://ietf.org/rfc/rfc4391.txt 
-+    http://ietf.org/rfc/rfc4391.txt
+ The intention of non-blocking (asynchronous) MMC requests is to minimize the
+ time between when an MMC request ends and another MMC request begins.
 +
-   IP over InfiniBand (IPoIB) Architecture (RFC 4392)
--    http://ietf.org/rfc/rfc4392.txt 
-+    http://ietf.org/rfc/rfc4392.txt
+ Using mmc_wait_for_req(), the MMC controller is idle while dma_map_sg and
+ dma_unmap_sg are processing. Using non-blocking MMC requests makes it
+ possible to prepare the caches for next job in parallel with an active
+@@ -17,6 +24,7 @@ MMC block driver
+ ================
+ 
+ The mmc_blk_issue_rw_rq() in the MMC block driver is made non-blocking.
 +
-   IP over InfiniBand: Connected Mode (RFC 4755)
-     http://ietf.org/rfc/rfc4755.txt
-diff --git a/Documentation/infiniband/opa_vnic.txt b/Documentation/infiniband/opa_vnic.rst
-similarity index 63%
-rename from Documentation/infiniband/opa_vnic.txt
-rename to Documentation/infiniband/opa_vnic.rst
-index 282e17be798a..2f888d9ffec0 100644
---- a/Documentation/infiniband/opa_vnic.txt
-+++ b/Documentation/infiniband/opa_vnic.rst
-@@ -1,3 +1,7 @@
-+=================================================================
-+Intel Omni-Path (OPA) Virtual Network Interface Controller (VNIC)
-+=================================================================
+ The increase in throughput is proportional to the time it takes to
+ prepare (major part of preparations are dma_map_sg() and dma_unmap_sg())
+ a request and how fast the memory is. The faster the MMC/SD is the
+@@ -35,6 +43,7 @@ MMC core API extension
+ ======================
+ 
+ There is one new public function mmc_start_req().
 +
- Intel Omni-Path (OPA) Virtual Network Interface Controller (VNIC) feature
- supports Ethernet functionality over Omni-Path fabric by encapsulating
- the Ethernet packets between HFI nodes.
-@@ -17,70 +21,72 @@ an independent Ethernet network. The configuration is performed by an
- Ethernet Manager (EM) which is part of the trusted Fabric Manager (FM)
- application. HFI nodes can have multiple VNICs each connected to a
- different virtual Ethernet switch. The below diagram presents a case
--of two virtual Ethernet switches with two HFI nodes.
-+of two virtual Ethernet switches with two HFI nodes::
- 
--                             +-------------------+
--                             |      Subnet/      |
--                             |     Ethernet      |
--                             |      Manager      |
--                             +-------------------+
--                                /          /
--                              /           /
--                            /            /
--                          /             /
--+-----------------------------+  +------------------------------+
--|  Virtual Ethernet Switch    |  |  Virtual Ethernet Switch     |
--|  +---------+    +---------+ |  | +---------+    +---------+   |
--|  | VPORT   |    |  VPORT  | |  | |  VPORT  |    |  VPORT  |   |
--+--+---------+----+---------+-+  +-+---------+----+---------+---+
--         |                 \        /                 |
--         |                   \    /                   |
--         |                     \/                     |
--         |                    /  \                    |
--         |                  /      \                  |
--     +-----------+------------+  +-----------+------------+
--     |   VNIC    |    VNIC    |  |    VNIC   |    VNIC    |
--     +-----------+------------+  +-----------+------------+
--     |          HFI           |  |          HFI           |
--     +------------------------+  +------------------------+
-+                               +-------------------+
-+                               |      Subnet/      |
-+                               |     Ethernet      |
-+                               |      Manager      |
-+                               +-------------------+
-+                                  /          /
-+                                /           /
-+                              /            /
-+                            /             /
-+  +-----------------------------+  +------------------------------+
-+  |  Virtual Ethernet Switch    |  |  Virtual Ethernet Switch     |
-+  |  +---------+    +---------+ |  | +---------+    +---------+   |
-+  |  | VPORT   |    |  VPORT  | |  | |  VPORT  |    |  VPORT  |   |
-+  +--+---------+----+---------+-+  +-+---------+----+---------+---+
-+           |                 \        /                 |
-+           |                   \    /                   |
-+           |                     \/                     |
-+           |                    /  \                    |
-+           |                  /      \                  |
-+       +-----------+------------+  +-----------+------------+
-+       |   VNIC    |    VNIC    |  |    VNIC   |    VNIC    |
-+       +-----------+------------+  +-----------+------------+
-+       |          HFI           |  |          HFI           |
-+       +------------------------+  +------------------------+
- 
- 
- The Omni-Path encapsulated Ethernet packet format is as described below.
- 
--Bits          Field
--------------------------------------
-+==================== ================================
-+Bits                 Field
-+==================== ================================
- Quad Word 0:
--0-19      SLID (lower 20 bits)
--20-30     Length (in Quad Words)
--31        BECN bit
--32-51     DLID (lower 20 bits)
--52-56     SC (Service Class)
--57-59     RC (Routing Control)
--60        FECN bit
--61-62     L2 (=10, 16B format)
--63        LT (=1, Link Transfer Head Flit)
-+0-19                 SLID (lower 20 bits)
-+20-30                Length (in Quad Words)
-+31                   BECN bit
-+32-51                DLID (lower 20 bits)
-+52-56                SC (Service Class)
-+57-59                RC (Routing Control)
-+60                   FECN bit
-+61-62                L2 (=10, 16B format)
-+63                   LT (=1, Link Transfer Head Flit)
- 
- Quad Word 1:
--0-7       L4 type (=0x78 ETHERNET)
--8-11      SLID[23:20]
--12-15     DLID[23:20]
--16-31     PKEY
--32-47     Entropy
--48-63     Reserved
-+0-7                  L4 type (=0x78 ETHERNET)
-+8-11                 SLID[23:20]
-+12-15                DLID[23:20]
-+16-31                PKEY
-+32-47                Entropy
-+48-63                Reserved
- 
- Quad Word 2:
--0-15      Reserved
--16-31     L4 header
--32-63     Ethernet Packet
-+0-15                 Reserved
-+16-31                L4 header
-+32-63                Ethernet Packet
- 
- Quad Words 3 to N-1:
--0-63      Ethernet packet (pad extended)
-+0-63                 Ethernet packet (pad extended)
- 
- Quad Word N (last):
--0-23      Ethernet packet (pad extended)
--24-55     ICRC
--56-61     Tail
--62-63     LT (=01, Link Transfer Tail Flit)
-+0-23                 Ethernet packet (pad extended)
-+24-55                ICRC
-+56-61                Tail
-+62-63                LT (=01, Link Transfer Tail Flit)
-+==================== ================================
- 
- Ethernet packet is padded on the transmit side to ensure that the VNIC OPA
- packet is quad word aligned. The 'Tail' field contains the number of bytes
-@@ -123,7 +129,7 @@ operation. It also handles the encapsulation of Ethernet packets with an
- Omni-Path header in the transmit path. For each VNIC interface, the
- information required for encapsulation is configured by the EM via VEMA MAD
- interface. It also passes any control information to the HW dependent driver
--by invoking the RDMA netdev control operations.
-+by invoking the RDMA netdev control operations::
- 
-         +-------------------+ +----------------------+
-         |                   | |       Linux          |
-diff --git a/Documentation/infiniband/sysfs.txt b/Documentation/infiniband/sysfs.rst
-similarity index 69%
-rename from Documentation/infiniband/sysfs.txt
-rename to Documentation/infiniband/sysfs.rst
-index 9fab5062f84b..f0abd6fa48f4 100644
---- a/Documentation/infiniband/sysfs.txt
-+++ b/Documentation/infiniband/sysfs.rst
-@@ -1,4 +1,6 @@
--SYSFS FILES
-+===========
-+Sysfs files
-+===========
- 
- The sysfs interface has moved to
- Documentation/ABI/stable/sysfs-class-infiniband.
-diff --git a/Documentation/infiniband/tag_matching.txt b/Documentation/infiniband/tag_matching.rst
-similarity index 98%
-rename from Documentation/infiniband/tag_matching.txt
-rename to Documentation/infiniband/tag_matching.rst
-index d2a3bf819226..ef56ea585f92 100644
---- a/Documentation/infiniband/tag_matching.txt
-+++ b/Documentation/infiniband/tag_matching.rst
-@@ -1,12 +1,16 @@
-+==================
- Tag matching logic
-+==================
- 
- The MPI standard defines a set of rules, known as tag-matching, for matching
- source send operations to destination receives.  The following parameters must
- match the following source and destination parameters:
+ It starts a new MMC command request for a host. The function isn't
+ truly non-blocking. If there is an ongoing async request it waits
+ for completion of that request and starts the new one and returns. It
+@@ -47,6 +56,7 @@ MMC host extensions
+ There are two optional members in the mmc_host_ops -- pre_req() and
+ post_req() -- that the host driver may implement in order to move work
+ to before and after the actual mmc_host_ops.request() function is called.
 +
- *	Communicator
- *	User tag - wild card may be specified by the receiver
- *	Source rank – wild car may be specified by the receiver
- *	Destination rank – wild
+ In the DMA case pre_req() may do dma_map_sg() and prepare the DMA
+ descriptor, and post_req() runs the dma_unmap_sg().
+ 
+@@ -55,33 +65,34 @@ Optimize for the first request
+ 
+ The first request in a series of requests can't be prepared in parallel
+ with the previous transfer, since there is no previous request.
 +
- The ordering rules require that when more than one pair of send and receive
- message envelopes may match, the pair that includes the earliest posted-send
- and the earliest posted-receive is the pair that must be used to satisfy the
-@@ -35,6 +39,7 @@ the header to initiate an RDMA READ operation directly to the matching buffer.
- A fin message needs to be received in order for the buffer to be reused.
+ The argument is_first_req in pre_req() indicates that there is no previous
+ request. The host driver may optimize for this scenario to minimize
+ the performance loss. A way to optimize for this is to split the current
+ request in two chunks, prepare the first chunk and start the request,
+ and finally prepare the second chunk and start the transfer.
  
- Tag matching implementation
-+===========================
+-Pseudocode to handle is_first_req scenario with minimal prepare overhead:
++Pseudocode to handle is_first_req scenario with minimal prepare overhead::
  
- There are two types of matching objects used, the posted receive list and the
- unexpected message list. The application posts receive buffers through calls
-diff --git a/Documentation/infiniband/user_mad.txt b/Documentation/infiniband/user_mad.rst
-similarity index 90%
-rename from Documentation/infiniband/user_mad.txt
-rename to Documentation/infiniband/user_mad.rst
-index 7aca13a54a3a..d88abfc0e370 100644
---- a/Documentation/infiniband/user_mad.txt
-+++ b/Documentation/infiniband/user_mad.rst
-@@ -1,6 +1,9 @@
--USERSPACE MAD ACCESS
-+====================
-+Userspace MAD access
-+====================
+-if (is_first_req && req->size > threshold)
+-   /* start MMC transfer for the complete transfer size */
+-   mmc_start_command(MMC_CMD_TRANSFER_FULL_SIZE);
++  if (is_first_req && req->size > threshold)
++     /* start MMC transfer for the complete transfer size */
++     mmc_start_command(MMC_CMD_TRANSFER_FULL_SIZE);
  
- Device files
-+============
+-   /*
+-    * Begin to prepare DMA while cmd is being processed by MMC.
+-    * The first chunk of the request should take the same time
+-    * to prepare as the "MMC process command time".
+-    * If prepare time exceeds MMC cmd time
+-    * the transfer is delayed, guesstimate max 4k as first chunk size.
+-    */
+-    prepare_1st_chunk_for_dma(req);
+-    /* flush pending desc to the DMAC (dmaengine.h) */
+-    dma_issue_pending(req->dma_desc);
++     /*
++      * Begin to prepare DMA while cmd is being processed by MMC.
++      * The first chunk of the request should take the same time
++      * to prepare as the "MMC process command time".
++      * If prepare time exceeds MMC cmd time
++      * the transfer is delayed, guesstimate max 4k as first chunk size.
++      */
++      prepare_1st_chunk_for_dma(req);
++      /* flush pending desc to the DMAC (dmaengine.h) */
++      dma_issue_pending(req->dma_desc);
  
-   Each port of each InfiniBand device has a "umad" device and an
-   "issm" device attached.  For example, a two-port HCA will have two
-@@ -8,12 +11,13 @@ Device files
-   device of each type (for switch port 0).
+-    prepare_2nd_chunk_for_dma(req);
+-    /*
+-     * The second issue_pending should be called before MMC runs out
+-     * of the first chunk. If the MMC runs out of the first data chunk
+-     * before this call, the transfer is delayed.
+-     */
+-    dma_issue_pending(req->dma_desc);
++      prepare_2nd_chunk_for_dma(req);
++      /*
++       * The second issue_pending should be called before MMC runs out
++       * of the first chunk. If the MMC runs out of the first data chunk
++       * before this call, the transfer is delayed.
++       */
++      dma_issue_pending(req->dma_desc);
+diff --git a/Documentation/mmc/mmc-dev-attrs.txt b/Documentation/mmc/mmc-dev-attrs.rst
+similarity index 73%
+rename from Documentation/mmc/mmc-dev-attrs.txt
+rename to Documentation/mmc/mmc-dev-attrs.rst
+index 4ad0bb17f343..4f44b1b730d6 100644
+--- a/Documentation/mmc/mmc-dev-attrs.txt
++++ b/Documentation/mmc/mmc-dev-attrs.rst
+@@ -1,3 +1,4 @@
++==================================
+ SD and MMC Block Device Attributes
+ ==================================
  
- Creating MAD agents
-+===================
+@@ -6,23 +7,29 @@ SD or MMC device.
  
-   A MAD agent can be created by filling in a struct ib_user_mad_reg_req
-   and then calling the IB_USER_MAD_REGISTER_AGENT ioctl on a file
-   descriptor for the appropriate device file.  If the registration
-   request succeeds, a 32-bit id will be returned in the structure.
--  For example:
-+  For example::
+ The following attributes are read/write.
  
- 	struct ib_user_mad_reg_req req = { /* ... */ };
- 	ret = ioctl(fd, IB_USER_MAD_REGISTER_AGENT, (char *) &req);
-@@ -26,12 +30,14 @@ Creating MAD agents
-   ioctl.  Also, all agents registered through a file descriptor will
-   be unregistered when the descriptor is closed.
+-	force_ro		Enforce read-only access even if write protect switch is off.
++	========		===============================================
++	force_ro		Enforce read-only access even if write protect 					switch is off.
++	========		===============================================
  
--  2014 -- a new registration ioctl is now provided which allows additional
-+  2014
-+       a new registration ioctl is now provided which allows additional
-        fields to be provided during registration.
-        Users of this registration call are implicitly setting the use of
-        pkey_index (see below).
+ SD and MMC Device Attributes
+ ============================
  
- Receiving MADs
-+==============
+ All attributes are read-only.
  
-   MADs are received using read().  The receive side now supports
-   RMPP. The buffer passed to read() must be at least one
-@@ -41,7 +47,8 @@ Receiving MADs
-   MAD (RMPP), the errno is set to ENOSPC and the length of the
-   buffer needed is set in mad.length.
- 
--  Example for normal MAD (non RMPP) reads:
-+  Example for normal MAD (non RMPP) reads::
++	======================	===============================================
+ 	cid			Card Identification Register
+ 	csd			Card Specific Data Register
+ 	scr			SD Card Configuration Register (SD only)
+ 	date			Manufacturing Date (from CID Register)
+-	fwrev			Firmware/Product Revision (from CID Register) (SD and MMCv1 only)
+-	hwrev			Hardware/Product Revision (from CID Register) (SD and MMCv1 only)
++	fwrev			Firmware/Product Revision (from CID Register)
++				(SD and MMCv1 only)
++	hwrev			Hardware/Product Revision (from CID Register)
++				(SD and MMCv1 only)
+ 	manfid			Manufacturer ID (from CID Register)
+ 	name			Product Name (from CID Register)
+ 	oemid			OEM/Application ID (from CID Register)
+-	prv			Product Revision (from CID Register) (SD and MMCv4 only)
++	prv			Product Revision (from CID Register)
++				(SD and MMCv4 only)
+ 	serial			Product Serial Number (from CID Register)
+ 	erase_size		Erase group size
+ 	preferred_erase_size	Preferred erase size
+@@ -30,7 +37,10 @@ All attributes are read-only.
+ 	rel_sectors		Reliable write sector count
+ 	ocr 			Operation Conditions Register
+ 	dsr			Driver Stage Register
+-	cmdq_en			Command Queue enabled: 1 => enabled, 0 => not enabled
++	cmdq_en			Command Queue enabled:
 +
- 	struct ib_user_mad *mad;
- 	mad = malloc(sizeof *mad + 256);
- 	ret = read(fd, mad, sizeof *mad + 256);
-@@ -50,7 +57,8 @@ Receiving MADs
- 		free(mad);
- 	}
++					1 => enabled, 0 => not enabled
++	======================	===============================================
  
--  Example for RMPP reads:
-+  Example for RMPP reads::
+ Note on Erase Size and Preferred Erase Size:
+ 
+@@ -44,14 +54,15 @@ Note on Erase Size and Preferred Erase Size:
+ 	SD/MMC cards can erase an arbitrarily large area up to and
+ 	including the whole card.  When erasing a large area it may
+ 	be desirable to do it in smaller chunks for three reasons:
+-		1. A single erase command will make all other I/O on
 +
- 	struct ib_user_mad *mad;
- 	mad = malloc(sizeof *mad + 256);
- 	ret = read(fd, mad, sizeof *mad + 256);
-@@ -76,11 +84,12 @@ Receiving MADs
-   poll()/select() may be used to wait until a MAD can be read.
++	     1. A single erase command will make all other I/O on
+ 		the card wait.  This is not a problem if the whole card
+ 		is being erased, but erasing one partition will make
+ 		I/O for another partition on the same card wait for the
+ 		duration of the erase - which could be a several
+ 		minutes.
+-		2. To be able to inform the user of erase progress.
+-		3. The erase timeout becomes too large to be very
++	     2. To be able to inform the user of erase progress.
++	     3. The erase timeout becomes too large to be very
+ 		useful.  Because the erase timeout contains a margin
+ 		which is multiplied by the size of the erase area,
+ 		the value can end up being several minutes for large
+@@ -72,6 +83,9 @@ Note on Erase Size and Preferred Erase Size:
+ 	"preferred_erase_size" is in bytes.
  
- Sending MADs
-+============
+ Note on raw_rpmb_size_mult:
++
+ 	"raw_rpmb_size_mult" is a multiple of 128kB block.
++
+ 	RPMB size in byte is calculated by using the following equation:
+-	RPMB partition size = 128kB x raw_rpmb_size_mult
++
++		RPMB partition size = 128kB x raw_rpmb_size_mult
+diff --git a/Documentation/mmc/mmc-dev-parts.txt b/Documentation/mmc/mmc-dev-parts.rst
+similarity index 83%
+rename from Documentation/mmc/mmc-dev-parts.txt
+rename to Documentation/mmc/mmc-dev-parts.rst
+index f08d078d43cf..995922f1f744 100644
+--- a/Documentation/mmc/mmc-dev-parts.txt
++++ b/Documentation/mmc/mmc-dev-parts.rst
+@@ -1,3 +1,4 @@
++============================
+ SD and MMC Device Partitions
+ ============================
  
-   MADs are sent using write().  The agent ID for sending should be
-   filled into the id field of the MAD, the destination LID should be
-   filled into the lid field, and so on.  The send side does support
--  RMPP so arbitrary length MAD can be sent. For example:
-+  RMPP so arbitrary length MAD can be sent. For example::
+@@ -18,18 +19,18 @@ platform, write access is disabled by default to reduce the chance of
+ accidental bricking.
  
- 	struct ib_user_mad *mad;
+ To enable write access to /dev/mmcblkXbootY, disable the forced read-only
+-access with:
++access with::
  
-@@ -97,6 +106,7 @@ Sending MADs
- 		perror("write");
+-echo 0 > /sys/block/mmcblkXbootY/force_ro
++	echo 0 > /sys/block/mmcblkXbootY/force_ro
  
- Transaction IDs
-+===============
+-To re-enable read-only access:
++To re-enable read-only access::
  
-   Users of the umad devices can use the lower 32 bits of the
-   transaction ID field (that is, the least significant half of the
-@@ -105,6 +115,7 @@ Transaction IDs
-   the kernel and will be overwritten before a MAD is sent.
+-echo 1 > /sys/block/mmcblkXbootY/force_ro
++	echo 1 > /sys/block/mmcblkXbootY/force_ro
  
- P_Key Index Handling
-+====================
+ The boot partitions can also be locked read only until the next power on,
+-with:
++with::
  
-   The old ib_umad interface did not allow setting the P_Key index for
-   MADs that are sent and did not provide a way for obtaining the P_Key
-@@ -119,6 +130,7 @@ P_Key Index Handling
-   default, and the IB_USER_MAD_ENABLE_PKEY ioctl will be removed.
+-echo 1 > /sys/block/mmcblkXbootY/ro_lock_until_next_power_on
++	echo 1 > /sys/block/mmcblkXbootY/ro_lock_until_next_power_on
  
- Setting IsSM Capability Bit
-+===========================
- 
-   To set the IsSM capability bit for a port, simply open the
-   corresponding issm device file.  If the IsSM bit is already set,
-@@ -129,25 +141,26 @@ Setting IsSM Capability Bit
-   the issm file.
- 
- /dev files
-+==========
- 
-   To create the appropriate character device files automatically with
--  udev, a rule like
-+  udev, a rule like::
- 
-     KERNEL=="umad*", NAME="infiniband/%k"
-     KERNEL=="issm*", NAME="infiniband/%k"
- 
--  can be used.  This will create device nodes named
-+  can be used.  This will create device nodes named::
- 
-     /dev/infiniband/umad0
-     /dev/infiniband/issm0
- 
-   for the first port, and so on.  The InfiniBand device and port
--  associated with these devices can be determined from the files
-+  associated with these devices can be determined from the files::
- 
-     /sys/class/infiniband_mad/umad0/ibdev
-     /sys/class/infiniband_mad/umad0/port
- 
--  and
-+  and::
- 
-     /sys/class/infiniband_mad/issm0/ibdev
-     /sys/class/infiniband_mad/issm0/port
-diff --git a/Documentation/infiniband/user_verbs.txt b/Documentation/infiniband/user_verbs.rst
-similarity index 93%
-rename from Documentation/infiniband/user_verbs.txt
-rename to Documentation/infiniband/user_verbs.rst
-index 47ebf2f80b2b..8ddc4b1cfef2 100644
---- a/Documentation/infiniband/user_verbs.txt
-+++ b/Documentation/infiniband/user_verbs.rst
-@@ -1,4 +1,6 @@
--USERSPACE VERBS ACCESS
+ This is a feature of the card and not of the kernel. If the card does
+ not support boot partition locking, the file will not exist. If the
+diff --git a/Documentation/mmc/mmc-tools.txt b/Documentation/mmc/mmc-tools.rst
+similarity index 92%
+rename from Documentation/mmc/mmc-tools.txt
+rename to Documentation/mmc/mmc-tools.rst
+index 735509c165d5..54406093768b 100644
+--- a/Documentation/mmc/mmc-tools.txt
++++ b/Documentation/mmc/mmc-tools.rst
+@@ -1,14 +1,17 @@
 +======================
-+Userspace verbs access
-+======================
+ MMC tools introduction
+ ======================
  
-   The ib_uverbs module, built by enabling CONFIG_INFINIBAND_USER_VERBS,
-   enables direct userspace access to IB hardware via "verbs," as
-@@ -13,6 +15,7 @@ USERSPACE VERBS ACCESS
-   libmthca userspace driver be installed.
+ There is one MMC test tools called mmc-utils, which is maintained by Chris Ball,
+ you can find it at the below public git repository:
+-http://git.kernel.org/cgit/linux/kernel/git/cjb/mmc-utils.git/
++
++	http://git.kernel.org/cgit/linux/kernel/git/cjb/mmc-utils.git/
  
- User-kernel communication
-+=========================
+ Functions
+ =========
  
-   Userspace communicates with the kernel for slow path, resource
-   management operations via the /dev/infiniband/uverbsN character
-@@ -28,6 +31,7 @@ User-kernel communication
-   system call.
- 
- Resource management
-+===================
- 
-   Since creation and destruction of all IB resources is done by
-   commands passed through a file descriptor, the kernel can keep track
-@@ -41,6 +45,7 @@ Resource management
-   prevent one process from touching another process's resources.
- 
- Memory pinning
-+==============
- 
-   Direct userspace I/O requires that memory regions that are potential
-   I/O targets be kept resident at the same physical address.  The
-@@ -54,13 +59,14 @@ Memory pinning
-   number of pages pinned by a process.
- 
- /dev files
-+==========
- 
-   To create the appropriate character device files automatically with
--  udev, a rule like
-+  udev, a rule like::
- 
-     KERNEL=="uverbs*", NAME="infiniband/%k"
- 
--  can be used.  This will create device nodes named
-+  can be used.  This will create device nodes named::
- 
-     /dev/infiniband/uverbs0
- 
-diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
-index 547090b41cfb..9f8a48016b41 100644
---- a/drivers/infiniband/core/user_mad.c
-+++ b/drivers/infiniband/core/user_mad.c
-@@ -745,7 +745,7 @@ static int ib_umad_reg_agent(struct ib_umad_file *file, void __user *arg,
- 				"process %s did not enable P_Key index support.\n",
- 				current->comm);
- 			dev_warn(&file->port->dev,
--				"   Documentation/infiniband/user_mad.txt has info on the new ABI.\n");
-+				"   Documentation/infiniband/user_mad.rst has info on the new ABI.\n");
- 		}
- 	}
- 
-diff --git a/drivers/infiniband/ulp/ipoib/Kconfig b/drivers/infiniband/ulp/ipoib/Kconfig
-index 4760ce465d89..7af68604af77 100644
---- a/drivers/infiniband/ulp/ipoib/Kconfig
-+++ b/drivers/infiniband/ulp/ipoib/Kconfig
-@@ -7,7 +7,7 @@ config INFINIBAND_IPOIB
- 	  transports IP packets over InfiniBand so you can use your IB
- 	  device as a fancy NIC.
- 
--	  See Documentation/infiniband/ipoib.txt for more information
-+	  See Documentation/infiniband/ipoib.rst for more information
- 
- config INFINIBAND_IPOIB_CM
- 	bool "IP-over-InfiniBand Connected Mode support"
+ The mmc-utils tools can do the following:
++
+  - Print and parse extcsd data.
+  - Determine the eMMC writeprotect status.
+  - Set the eMMC writeprotect status.
 -- 
 2.21.0
 
