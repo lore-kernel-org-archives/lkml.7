@@ -2,209 +2,157 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D882C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59491C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CB62053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381C8206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfF1Ici (ORCPT
+        id S1726761AbfF1Icm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:32:38 -0400
-Received: from twhmllg4.macronix.com ([211.75.127.132]:51313 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfF1Ici (ORCPT
+        Fri, 28 Jun 2019 04:32:42 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50696 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbfF1Icl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:32:38 -0400
-Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id x5S8VFLX077566;
-        Fri, 28 Jun 2019 16:31:15 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id AE28135DC1DE6750D845;
-        Fri, 28 Jun 2019 16:31:15 +0800 (CST)
-In-Reply-To: <20190628091836.3148d450@xps13>
-References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw> <1561443056-13766-2-git-send-email-masonccyang@mxic.com.tw>
-        <20190627193635.29abff43@xps13> <OFDDC43C05.7B4092B5-ON48258427.001EE57E-48258427.002122D1@mxic.com.tw> <20190628091836.3148d450@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     anders.roxell@linaro.org, bbrezillon@kernel.org,
-        broonie@kernel.org, christophe.kerello@st.com,
-        computersforpeace@gmail.com, devicetree@vger.kernel.org,
-        dwmw2@infradead.org, jianxin.pan@amlogic.com, juliensu@mxic.com.tw,
-        lee.jones@linaro.org, liang.yang@amlogic.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, paul@crapouillou.net, paul.burton@mips.com,
-        richard@nod.at, stefan@agner.ch, vigneshr@ti.com
-Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add Macronix Raw NAND controller
+        Fri, 28 Jun 2019 04:32:41 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hgmJC-0001IW-1I; Fri, 28 Jun 2019 08:32:38 +0000
+Subject: Re: [PATCH] net: stmmac: add sanity check to
+ device_property_read_u32_array call
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
+        kernel-janitors@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+        peppe.cavallaro@st.com
+References: <20190617165836.4673-1-colin.king@canonical.com>
+ <20190619051308.23582-1-martin.blumenstingl@googlemail.com>
+ <92f9e5a6-d2a2-6bf2-ff8a-2430fe977f93@canonical.com>
+ <CAFBinCDmYVPDMcwAAYhMfxxuTsG=xunduN58_8e20zE_Mhmb7Q@mail.gmail.com>
+ <CAFBinCC-LLpfXQRFcKBbUpCfKc0S9Xtt60QrhEThsOFV-T7vFw@mail.gmail.com>
+ <c46d2d17-c35b-46f0-0674-0c55bea3a272@canonical.com>
+ <CAFBinCBk5aPVE+vq5px3QKS1T_R=WGXXxEJMC9X676KGvi9jdg@mail.gmail.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <26646ff1-059f-fb2d-e05d-43009aeb2150@canonical.com>
+Date:   Fri, 28 Jun 2019 09:32:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-KeepSent: 2EDB7089:FAD92F61-48258427:002D122A;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF2EDB7089.FAD92F61-ON48258427.002D122A-48258427.002ECEF3@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Fri, 28 Jun 2019 16:31:16 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/06/28 PM 04:31:15,
-        Serialize complete at 2019/06/28 PM 04:31:15
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com x5S8VFLX077566
+In-Reply-To: <CAFBinCBk5aPVE+vq5px3QKS1T_R=WGXXxEJMC9X676KGvi9jdg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 28/06/2019 05:15, Martin Blumenstingl wrote:
+> On Tue, Jun 25, 2019 at 9:58 AM Colin Ian King <colin.king@canonical.com> wrote:
+>>
+>> On 25/06/2019 05:44, Martin Blumenstingl wrote:
+>>> Hi Colin,
+>>>
+>>> On Thu, Jun 20, 2019 at 3:34 AM Martin Blumenstingl
+>>> <martin.blumenstingl@googlemail.com> wrote:
+>>>>
+>>>> Hi Colin,
+>>>>
+>>>> On Wed, Jun 19, 2019 at 8:55 AM Colin Ian King <colin.king@canonical.com> wrote:
+>>>>>
+>>>>> On 19/06/2019 06:13, Martin Blumenstingl wrote:
+>>>>>> Hi Colin,
+>>>>>>
+>>>>>>> Currently the call to device_property_read_u32_array is not error checked
+>>>>>>> leading to potential garbage values in the delays array that are then used
+>>>>>>> in msleep delays.  Add a sanity check to the property fetching.
+>>>>>>>
+>>>>>>> Addresses-Coverity: ("Uninitialized scalar variable")
+>>>>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>>>>> I have also sent a patch [0] to fix initialize the array.
+>>>>>> can you please look at my patch so we can work out which one to use?
+>>>>>>
+>>>>>> my concern is that the "snps,reset-delays-us" property is optional,
+>>>>>> the current dt-bindings documentation states that it's a required
+>>>>>> property. in reality it isn't, there are boards (two examples are
+>>>>>> mentioned in my patch: [0]) without it.
+>>>>>>
+>>>>>> so I believe that the resulting behavior has to be:
+>>>>>> 1. don't delay if this property is missing (instead of delaying for
+>>>>>>    <garbage value> ms)
+>>>>>> 2. don't error out if this property is missing
+>>>>>>
+>>>>>> your patch covers #1, can you please check whether #2 is also covered?
+>>>>>> I tested case #2 when submitting my patch and it worked fine (even
+>>>>>> though I could not reproduce the garbage values which are being read
+>>>>>> on some boards)
+>>> in the meantime I have tested your patch.
+>>> when I don't set the "snps,reset-delays-us" property then I get the
+>>> following error:
+>>>   invalid property snps,reset-delays-us
+>>>
+>>> my patch has landed in the meantime: [0]
+>>> how should we proceed with your patch?
 
-Hi Miquel,
+Your fix is good, so I think we should just drop/forget about my fix.
 
-> > 
-> > > > Add a driver for Macronix raw NAND controller. 
-> > > 
-> > > Could you pass userspace major MTD tests and can you 
-attach/mount/edit
-> > > a UBI/UBIFS storage? 
-> > 
-> > mtd_debug passed and using dd utility to read and write 
-> > with md5sum checking passed.
+Colin
+
+>>
+>> I'm out of the office today. I'll get back to you on this tomorrow.
+> gentle ping
+> (I will be away for the weekend but I can reply on Monday)
 > 
-> Please don't use dd, use nanddump/nandwrite/flasherase/nandbiterrs and
-> run the other tests from the mtd-utils test suite (available in
-> Buildroot for instance).
-> 
-
-Got it.
-
-But may I know why 'dd' utility is not preferences ?
-I generate a random data file and write to Flash by
-using dd with bs=page size and read data back from Flash.
-Checking data by md5sum.
-The write and read testing data size is easily adjustable.
-
-
-> > 
-> > > > +static int mxic_nfc_clk_enable(struct mxic_nand_ctlr *nfc)
-> > > > +{
-> > > > +   int ret;
-> > > > +
-> > > > +   ret = clk_prepare_enable(nfc->send_clk);
-> > > > +   if (ret)
-> > > > +      return ret;
-> > > > +
-> > > > +   ret = clk_prepare_enable(nfc->send_dly_clk);
-> > > > +   if (ret)
-> > > > +      goto err_send_dly_clk; 
-> > > 
-> > > I'm not sure why you only enable 2 out of 3 clocks and also why ou
-> > > handle two of them here (which is great, I prefer having a separate
-> > > helper for that) and the other one elsewhere?
-> > > 
-> > 
-> > send_clk and send_dly_clk are device domain clocks.
-> > 
-> > send_clk is clock without phase delay to ps_clk, used for sending 
-device
-> > signals except for SIO[7:0].
-> > send_dly_clk is clock with phase delay to ps_clk, used for sending 
-> > SIO[7:0]
-> > 
-> > ps_clk is system domain clock and it's a source clock of send_clk and 
-> > send_dly_clk.
-> 
-> And why is that explaining the fact that you configure them in
-> different places? You can explain this with a nice comment at the top
-> of the function, but I would rather prefer that you handle all three
-> clocks in one go if possible.
-> 
-
-okay, will patch it.
-
-> > > > +static int mxic_nfc_data_xfer(struct mxic_nand_ctlr *nfc, const 
-void 
-> > *txbuf,
-> > > > +               void *rxbuf, unsigned int len)
-> > > > +{
-> > > > +   unsigned int pos = 0;
-> > > > +
-> > > > +   while (pos < len) {
-> > > > +      unsigned int nbytes = len - pos;
-> > > > +      u32 data = 0xffffffff;
-> > > > +      u32 sts;
-> > > > +      int ret;
-> > > > +
-> > > > +      if (nbytes > 4)
-> > > > +         nbytes = 4;
-> > > > +
-> > > > +      if (txbuf)
-> > > > +         memcpy(&data, txbuf + pos, nbytes);
-> > > > +
-> > > > +      ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
-> > > > +                sts & INT_TX_EMPTY, 0, USEC_PER_SEC);
-> > > > +      if (ret)
-> > > > +         return ret;
-> > > > +
-> > > > +      writel(data, nfc->regs + TXD(nbytes % 4));
-> > > > +
-> > > > +      if (rxbuf) {
-> > > > +         ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
-> > > > +                   sts & INT_TX_EMPTY, 0,
-> > > > +                   USEC_PER_SEC);
-> > > > +         if (ret)
-> > > > +            return ret;
-> > > > +
-> > > > +         ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
-> > > > +                   sts & INT_RX_NOT_EMPTY, 0,
-> > > > +                   USEC_PER_SEC);
-> > > > +         if (ret)
-> > > > +            return ret;
-> > > > +
-> > > > +         data = readl(nfc->regs + RXD);
-> > > > +         data >>= (8 * (4 - nbytes));
-> > > > +         memcpy(rxbuf + pos, &data, nbytes);
-> > > > +         WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY);
-> > > > +      } else {
-> > > > +         readl(nfc->regs + RXD);
-> > > > +      }
-> > > > +      WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY); 
-> > > 
-> > > WARN_ON() is maybe a bit overkill here? 
-> > 
-> > should I remove it ?
-> 
-> I would stick to regular dev_warn.
-
-Got it, will patch it.
-
-thanks & best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
 
