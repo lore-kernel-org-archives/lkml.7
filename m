@@ -7,68 +7,78 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0632C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0C9C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF97F2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A389208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:36:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WWSHrZeT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MSV3k1wR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfF1Sfx (ORCPT
+        id S1727075AbfF1SgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:35:53 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56252 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbfF1SfY (ORCPT
+        Fri, 28 Jun 2019 14:36:01 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54666 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfF1Sf7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:35:24 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5SIYK1M108856;
-        Fri, 28 Jun 2019 18:35:14 GMT
+        Fri, 28 Jun 2019 14:35:59 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5SIYFKk027580;
+        Fri, 28 Jun 2019 18:34:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : mime-version : content-type :
  content-transfer-encoding; s=corp-2018-07-02;
- bh=X31Rdwe/fJpCbRhxiN4E1CTNpfH8gWc+Lmuymkd/7tU=;
- b=WWSHrZeTQOM2DQMjPusLnbXcDxVxeA7M7u1P3I/zNSt4gy9JnK7FgAfgnlSMApe7aoCf
- UrjDRHAnOJSBfQz+kwR193dOjvcS/GSszyqd+ONkce1jQZPFLIc3vqR1Db9gKVE0gHAR
- w2CCi2s3uloN0ogQYmAz9DbxZmZDx8yOSbDiNfwtsfWFxWfVPk2Ny1aPtA7Bw/XcmhTF
- OwA72SmJsRoonPVrE56vGDCCt7L9Pjed/Y2RRHx9FrpohlEeoYdL5sWbWPOswBHNtWiM
- n5ce9/hTY/ZxX1MoMaAAZK2Bg3jIUbqSGNjuzE1Q7keq4fbTzhLB3bQgK/nAoJ0iOFqe tw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t9brtq3k0-1
+ bh=fawPQY/UISfSH6DvrztcWabWXm47TtXieQJWSELxOKQ=;
+ b=MSV3k1wREyOZiFpPpvgY3Rux39mU5lQ1KuniYc4Ie6w7JtZJmHKecvubM23dsIDGuJZj
+ 0kBZKXN2nVbEu420ZAKAI1xRCkRYIV2YwintD6ID8Ef9AbMSdXwgcgptihQ1MHeFh2xq
+ 4rthJOp1LoqFymHqc7XUoAgWgyHhQQXJ6mUsYDiNcGbORfy7T7jZgONqr9D3Obf778mO
+ OMaSDrTN639V6Y5LIwKcUxtwE9Aby8Sku8uUQgNDdtjD6t77xSNL7Dbg+p5SeDnXQdcl
+ a2PsAdVk14mFbai1lLrR0i9JMF4YWvUjiuNurCUsTfH4inSLWA8dSmsARfc/6gXafxRO PQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2t9c9q72q0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 18:35:14 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5SIYwDR152445;
-        Fri, 28 Jun 2019 18:35:13 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2t9p6w237k-1
+        Fri, 28 Jun 2019 18:34:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5SIXdhY078899;
+        Fri, 28 Jun 2019 18:34:39 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2t9acdyeaf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Jun 2019 18:34:39 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5SIYdKY080557;
+        Fri, 28 Jun 2019 18:34:39 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2t9acdyeac-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 18:35:13 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5SIZCEb027315;
-        Fri, 28 Jun 2019 18:35:13 GMT
+        Fri, 28 Jun 2019 18:34:39 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5SIYcPk001892;
+        Fri, 28 Jun 2019 18:34:38 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 28 Jun 2019 11:35:12 -0700
-Subject: [PATCH v2 0/2] vfs: make active swap files unwritable
+        with ESMTP ; Fri, 28 Jun 2019 11:34:38 -0700
+Subject: [PATCH v6 0/4] vfs: make immutable files actually immutable
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     hch@infradead.org, akpm@linux-foundation.org, tytso@mit.edu,
-        viro@zeniv.linux.org.uk, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Date:   Fri, 28 Jun 2019 11:35:11 -0700
-Message-ID: <156174691124.1557844.14293659081769020256.stgit@magnolia>
+To:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        darrick.wong@oracle.com, ard.biesheuvel@linaro.org,
+        josef@toxicpanda.com, hch@infradead.org, clm@fb.com,
+        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org
+Cc:     reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Date:   Fri, 28 Jun 2019 11:34:35 -0700
+Message-ID: <156174687561.1557469.7505651950825460767.stgit@magnolia>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906280209
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
@@ -82,11 +92,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi all,
 
-I discovered that it's possible for userspace to write to active swap
-files and swap devices.  While activated, the kernel effectively holds
-an irrevocable (except by swapoff) longterm lease on the storage
-associated with the swap device, so we need to shut down this vector for
-memory corruption of userspace programs.
+The chattr(1) manpage has this to say about the immutable bit that
+system administrators can set on files:
+
+"A file with the 'i' attribute cannot be modified: it cannot be deleted
+or renamed, no link can be created to this file, most of the file's
+metadata can not be modified, and the file can not be opened in write
+mode."
+
+Given the clause about how the file 'cannot be modified', it is
+surprising that programs holding writable file descriptors can continue
+to write to and truncate files after the immutable flag has been set,
+but they cannot call other things such as utimes, fallocate, unlink,
+link, setxattr, or reflink.
+
+Since the immutable flag is only settable by administrators, resolve
+this inconsistent behavior in favor of the documented behavior -- once
+the flag is set, the file cannot be modified, period.  We presume that
+administrators must be trusted to know what they're doing, and that
+cutting off programs with writable fds will probably break them.
+
+Therefore, add immutability checks to the relevant VFS functions, then
+refactor the SETFLAGS and FSSETXATTR implementations to use common
+argument checking functions so that we can then force pagefaults on all
+the file data when setting immutability.
+
+Note that various distro manpages points out the inconsistent behavior
+of the various Linux filesystems w.r.t. immutable.  This fixes all that.
+
+I also discovered that userspace programs can write and create writable
+memory mappings to active swap files.  This is extremely bad because
+this allows anyone with write privileges to corrupt system memory.  The
+final patch in this series closes off that hole, at least for swap
+files.
 
 If you're going to start using this mess, you probably ought to just
 pull from my git trees, which are linked below.
@@ -97,7 +135,7 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=immutable-swapfiles
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=immutable-files
 
 fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=immutable-swapfiles
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=immutable-files
