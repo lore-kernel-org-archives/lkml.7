@@ -4,63 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E947C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15260C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F227D208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B8F20828
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Crebc91l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2PHdGTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfF1RtT (ORCPT
+        id S1726851AbfF1Run (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:49:19 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35176 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfF1RtS (ORCPT
+        Fri, 28 Jun 2019 13:50:43 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46469 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfF1Run (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:49:18 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x25so6842990ljh.2;
-        Fri, 28 Jun 2019 10:49:17 -0700 (PDT)
+        Fri, 28 Jun 2019 13:50:43 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v24so6794495ljg.13;
+        Fri, 28 Jun 2019 10:50:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WJsIhY4wNQryIfT9KbxiILwrE7QAS+RQBKJnSZt1T4o=;
-        b=Crebc91lCSxk7TMCY8Q1U9io2/WLQpztGqZaL+13FtcWeRi8UJXcokTcvTshRXhiAy
-         ooXSPgCtrMzKcPJn8uvnBZ/S5mcan1t2Yp26dct8RVz4gDtlYd2umQbOrnnISeAY73Nu
-         Yxm0bUk7a1I3jh+MICpnPG5hUhr5bkrhGgENXucWLrn6NHZdrU2go6D7juVZ2Onm2AdT
-         Q/0m9W1o+8sEZSPPA6RjCWsVI4lB7xKMtzDt8mD0m+k0whGSPj5nCZF+JfL/h9qLVmvG
-         Voi6r8rKzQfVmq4IDwJOEzAJ0ILefENsWuhawHj8Y0xZMcPV8wOMLiYMEjHMqZwj69IW
-         bh/g==
+        bh=jI8gwBEu6dDG7Kr6XIrekH/tMjZltib+4iVniKLZRUI=;
+        b=J2PHdGTIyFxxfRx2UTWBPh97xzQVNbXYKy7oLSL2KGIRYKjFIUX7kv3i5n5wo8KXCk
+         TIFwkcZUdVsU+RnnksEdYpdc35zzyJJJZfjILAbEqb+tK3SuY8mW9X2MbQ1SVKsrv1Bi
+         tDiRlT8r7iHip02eRxas0p5L4SIVpCdNBYd7lqdgcSss7Atl9KAgptxrd4BNXIbQoco4
+         hVI6PD/lC/LJMXvgAWpv4V8HltYLfD3TuRtHQ89Y4/xnOmlZlJEtjg8JasV/+G9JLR2/
+         7A2E4bO62kzqXqAi7P9GghFzS5QDD9bY/P8twhXT9Jj+Mj9C0MdIRF5EoEDJD4TPNbna
+         ZYDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WJsIhY4wNQryIfT9KbxiILwrE7QAS+RQBKJnSZt1T4o=;
-        b=U9Z5ToDjhEpMxLczmXzyo61zWM0Q5PCidhCAzB4CZrsAOo85/dl587khjzME+bCuUj
-         7qa7llJkdDPBoX2c9rcJt8SssOxVe7gILRjW7Bk3IdEACeMtOvqsI0M/oViimfxVwBYd
-         PdxRygJN/+BrNSUwQmuK9V3FAizjxbU6BuJFI04Nv/CB6WRZ1TrUxhhxiFGpJ0ZqxWCr
-         OH0uYiQjJGsSNyVvaDonh9kSEdp5P3aGYIGZd3BHK18tAklPvT4IOqHyb+sIu/nIQfnr
-         6XwyAsoNrS25eLJNBQXswyh1apNhw6QP7bSog3aSKKwgxFmPpa2ekP60iSQdjzmQLxfJ
-         7AxA==
-X-Gm-Message-State: APjAAAXpgN3dGe0Ty3dosvAmJuQq8CAMC6b7Q+adb1yI0LLWaJpaH2A1
-        8gOBdl29NlkIZ1Ry1MeeZPyStRb3k1s2PTm9oGI=
-X-Google-Smtp-Source: APXvYqw6pdfVVcV7F1MTFAKS4tN+8AmYdV0o5Pj1yHuZwF6xpDcLMBPIT5lVWVOeoG97nEquRE9MQNhAx1M38ZD5Ca0=
-X-Received: by 2002:a2e:6c07:: with SMTP id h7mr6983719ljc.177.1561744156739;
- Fri, 28 Jun 2019 10:49:16 -0700 (PDT)
+        bh=jI8gwBEu6dDG7Kr6XIrekH/tMjZltib+4iVniKLZRUI=;
+        b=FGpbAOXNnsko+8UUTg8jM2sKQV6pyUUjGdJusC9AnOhEDxcT7k/n164LnBTfQIigRT
+         hgsaCsmH5AL9bxdKBmRKwZP60h385A3+dye3Uqii3aIOrg/V61+tGG4zD7B4IEcGcjCU
+         id6Iuzd55YbwzlOYmvICa93r/lPVdpzmcdaJiJVLPJBnifYRqa6qwOxOcQq3xQz6ODRd
+         mQyJ73pnF7XwTkWnjkZthmJdgYog/PO/nElfZUERJ3xxUSeU2ZhQEpGLru+tx/NCP3Ag
+         5KQpLhjgY6gXMoLPY/F+qx3SQURf4Inr617Bt5HHbfOQaLW/IfQHB2o0Da/iJ8jT2csz
+         ne0A==
+X-Gm-Message-State: APjAAAXl3Uf8QFqXlzgtHbpBGATZ0JYW9lPEf86Ca+T2rdHmQnGHUWX7
+        GdwiVanXVlwkaqgNszQZEZqmw+Crn/7oOsBeZqEQPw==
+X-Google-Smtp-Source: APXvYqzd0aPE3yJu70GTxGM1a6KqWx9XbmEILScqFxQH+bS3SBsE+gIp3LzTCV/msKDf1LxluCckoyw+v4vm2kmCKR0=
+X-Received: by 2002:a2e:9a82:: with SMTP id p2mr7065714lji.64.1561744240622;
+ Fri, 28 Jun 2019 10:50:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190627202417.33370-1-brianvv@google.com> <20190627202417.33370-3-brianvv@google.com>
- <20190627221253.fjsa2lzog2zs5nyz@ast-mbp.dhcp.thefacebook.com>
-In-Reply-To: <20190627221253.fjsa2lzog2zs5nyz@ast-mbp.dhcp.thefacebook.com>
+References: <20190627202417.33370-1-brianvv@google.com> <20190627221434.tz2fscw2cjvrqiop@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20190627221434.tz2fscw2cjvrqiop@ast-mbp.dhcp.thefacebook.com>
 From:   Brian Vazquez <brianvv.kernel@gmail.com>
-Date:   Fri, 28 Jun 2019 10:49:05 -0700
-Message-ID: <CABCgpaWZKac+yAoohUbR0otv4EjBdj9ogA-oZJ2=mHkmqb8AVQ@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next v2 2/6] bpf: add BPF_MAP_DUMP command to
- access more than one entry per call
+Date:   Fri, 28 Jun 2019 10:50:29 -0700
+Message-ID: <CABCgpaU3jtge4JJG=k0XqLXcPzjMUHaQ7eMAwm6svaLnO+n+yg@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next v2 0/6] bpf: add BPF_MAP_DUMP command to
 To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
 Cc:     Brian Vazquez <brianvv@google.com>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -77,72 +75,6 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Please explain the api behavior and corner cases in the commit log
-> or in code comments.
+> was it with kpti and retpoline mitigations?
 
-Ack, will prepare a new version adding those.
-
-> Would it make sense to return last key back into prev_key,
-> so that next map_dump command doesn't need to copy it from the
-> buffer?
-
-Actually that's a good idea.
-
-
-> checkpatch.pl please.
-
- I did use the script and it didn't complain, are you seeing something?
-
-> > +next:
-> > +             if (signal_pending(current)) {
-> > +                     err = -EINTR;
-> > +                     break;
-> > +             }
-> > +
-> > +             rcu_read_lock();
-> > +             err = map->ops->map_get_next_key(map, prev_key, key);
-> > +             rcu_read_unlock();
-> > +
-> > +             if (err)
-> > +                     break;
->
-> should probably be only for ENOENT case?
-
-Yes, this makes sense.
-
-> and other errors should be returned to user ?
-
-and what if the error happened when we had already copied some
-entries? Current behavior masks the error to 0 if we copied at least 1
-element
-
->
-> > +
-> > +             if (bpf_map_copy_value(map, key, value, attr->dump.flags))
-> > +                     goto next;
->
-> only for ENOENT as well?
-> and instead of goto use continue and move cp_len+= to the end after prev_key=key?
-
-Right
-
->
-> > +
-> > +             if (copy_to_user(ubuf + cp_len, buf, elem_size))
-> > +                     break;
->
-> return error to user?
->
-> > +
-> > +             prev_key = key;
-> > +     }
-> > +
-> > +     if (cp_len)
-> > +             err = 0;
->
-> this will mask any above errors if there was at least one element copied.
-
-So in general if we copied elements and suddenly we find and error we
-should return that error and maybe set cp_len to 0 to 'invalidate' the
-data that was already copied?
-Yes, I think that sounds like the correct thing to do, what do you think?
+No, it wasn't. Will get back with new numbers.
