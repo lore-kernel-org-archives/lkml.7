@@ -2,142 +2,85 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4549C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F191C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F26F2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB903208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:38:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hI/jZKkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfF1Oho (ORCPT
+        id S1726885AbfF1Oie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 10:37:44 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57350 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726836AbfF1Oh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 10:37:29 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 43BCE9BEFCADED0D27FC;
-        Fri, 28 Jun 2019 22:37:27 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 28 Jun 2019 22:37:21 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <tmricht@linux.ibm.com>,
-        <brueckner@linux.ibm.com>, <kan.liang@linux.intel.com>,
-        <ben@decadent.org.uk>, <mathieu.poirier@linaro.org>,
-        <mark.rutland@arm.com>, <will.deacon@arm.com>
-CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <zhangshaokun@hisilicon.com>, <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH v3 1/4] perf pmu: Support more complex PMU event aliasing
-Date:   Fri, 28 Jun 2019 22:35:49 +0800
-Message-ID: <1561732552-143038-2-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1561732552-143038-1-git-send-email-john.garry@huawei.com>
-References: <1561732552-143038-1-git-send-email-john.garry@huawei.com>
+        Fri, 28 Jun 2019 10:38:34 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33070 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbfF1Oie (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 10:38:34 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c14so3376025plo.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 07:38:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OENcuWh1eNo2odCCmWlkvrC8foslWGe6z/lQuF+yKiU=;
+        b=hI/jZKkTvfKJ1QCuPIA2jwcVCu++15YT4VW/X/uj3BhoidEJrrTRo3JfCW4BDOnFjw
+         AuEz2gWKAHuJ9n3W6s2+tDkxgciVxp08zGzb/euU5KAyIEwnuj9bvIZWDfI1uIK9pbRi
+         +bbM/SoY8qTBRJd/pz5uGpQbyCErsxx08aFZ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OENcuWh1eNo2odCCmWlkvrC8foslWGe6z/lQuF+yKiU=;
+        b=g3VV0CNXrkGlqPiwgslbumEeJbwcvBSni5Uq6m5SuaknOacrk+qdYFsPeJCDaPHhJc
+         USkrhAxEoUzexYYU/mHAxDg0xZIOcob+Z4mJ6aDpOT01Zo8EdA6ePaelo9bQgygXeKsY
+         t3bBO3jjIG/7cgy/y/m4yOmDiOgobOWpsijzLulrKpIZqVkqW6Efmfy84vqgufQNvkNh
+         iM2+5z9KyEADeVv7whsdBxXJiQbqpT6RxThRvEOGqr9uLo4aAlQGMyWDJZ4szbcbg4pl
+         1G4+raPPNq0JJ6Ta+Jo8D0ocbWQaZWGi+DzjZrAyQxjJGycRZMvW2vkZiVuxYsyliYOk
+         TIRA==
+X-Gm-Message-State: APjAAAX1QOTtPdgmchsb6LLEvn7KzdiMRW+qEpX4MzhmYWliqrujtkI+
+        QFOPRR3GiVaqQLevCrgyCwqIcVG33Xg=
+X-Google-Smtp-Source: APXvYqw1esTx+L79bzkow6doELumvuhA+3skfMMkuytCaww2yhuYlDC9ocI7SFjpxEFSke1Kn6fTlA==
+X-Received: by 2002:a17:902:f81:: with SMTP id 1mr11891718plz.191.1561732713810;
+        Fri, 28 Jun 2019 07:38:33 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s17sm2313504pgi.9.2019.06.28.07.38.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Jun 2019 07:38:32 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 07:38:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>, Qian Cai <cai@lca.pw>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org
+Subject: Re: [PATCH] arm64: Move jump_label_init() before parse_early_param()
+Message-ID: <201906280738.AE85B01D2@keescook>
+References: <201906261343.5F26328@keescook>
+ <20190627080207.sdpwjoi4wnc664gp@mbp>
+ <201906270856.8CF50064@keescook>
+ <20190627162505.GD9894@arrakis.emea.arm.com>
+ <CAG_fn=UhdoyWjFPxdFOJ7XFRHb62RErxFjOKnFeHtMJWTib7pg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG_fn=UhdoyWjFPxdFOJ7XFRHb62RErxFjOKnFeHtMJWTib7pg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The jevent "Unit" field is used for uncore PMU alias definition.
+On Fri, Jun 28, 2019 at 11:26:34AM +0200, Alexander Potapenko wrote:
+> Am I understanding right this is already covered by Kees having sent
+> his patch to -mm tree and I don't need to explicitly include it into
+> my series?
 
-The form uncore_pmu_example_X is supported, where "X" is a wildcard,
-to support multiple instances of the same PMU in a system.
+Correct; Andrew added it to -mm already.
 
-Unfortunately this format not suitable for all uncore PMUs; take the Hisi
-DDRC uncore PMU for example, where the name is in the form
-hisi_scclX_ddrcY.
-
-For for current jevent parsing, we would be required to hardcode an uncore
-alias translation for each possible value of X. This is not scalable.
-
-Instead, add support for "Unit" field in the form "hisi_sccl,ddrc", where
-we can match by hisi_scclX and ddrcY. Tokens  in Unit field
-are delimited by ','.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- tools/perf/util/pmu.c | 46 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 41 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 7e7299fee550..cfc916819c59 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -700,6 +700,46 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu)
- 	return map;
- }
- 
-+static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
-+{
-+	char *tmp, *tok, *str;
-+	bool res;
-+
-+	str = strdup(pmu_name);
-+	if (!str)
-+		return false;
-+
-+	/*
-+	 * uncore alias may be from different PMU with common prefix
-+	 */
-+	tok = strtok_r(str, ",", &tmp);
-+	if (strncmp(pmu_name, tok, strlen(tok))) {
-+		res = false;
-+		goto out;
-+	}
-+
-+	/*
-+	 * Match more complex aliases where the alias name is a comma-delimited
-+	 * list of tokens, orderly contained in the matching PMU name.
-+	 *
-+	 * Example: For alias "socket,pmuname" and PMU "socketX_pmunameY", we
-+	 *	    match "socket" in "socketX_pmunameY" and then "pmuname" in
-+	 *	    "pmunameY".
-+	 */
-+	for (; tok; name += strlen(tok), tok = strtok_r(NULL, ",", &tmp)) {
-+		name = strstr(name, tok);
-+		if (!name) {
-+			res = false;
-+			goto out;
-+		}
-+	}
-+
-+	res = true;
-+out:
-+	free(str);
-+	return res;
-+}
-+
- /*
-  * From the pmu_events_map, find the table of PMU events that corresponds
-  * to the current running CPU. Then, add all PMU events from that table
-@@ -730,12 +770,8 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
- 			break;
- 		}
- 
--		/*
--		 * uncore alias may be from different PMU
--		 * with common prefix
--		 */
- 		if (pmu_is_uncore(name) &&
--		    !strncmp(pname, name, strlen(pname)))
-+		    pmu_uncore_alias_match(pname, name))
- 			goto new_alias;
- 
- 		if (strcmp(pname, name))
 -- 
-2.17.1
-
+Kees Cook
