@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDE5C5B578
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53E3C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FC6208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA77C2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:27:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WfIbKHBa"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DfoAI+m5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfF1E1m (ORCPT
+        id S1726887AbfF1E1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 00:27:42 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58828 "EHLO
+        Fri, 28 Jun 2019 00:27:51 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58850 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbfF1E1k (ORCPT
+        with ESMTP id S1726759AbfF1E1q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 00:27:40 -0400
+        Fri, 28 Jun 2019 00:27:46 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5S4RXFV020836;
-        Thu, 27 Jun 2019 23:27:33 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5S4RdXp020857;
+        Thu, 27 Jun 2019 23:27:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561696053;
-        bh=LRrIRoI605SGe2Kd9jqNqCwySQtTN507at5OWZZ7EhQ=;
+        s=ti-com-17Q1; t=1561696059;
+        bh=+JcQY1LG9gNG3F7q1r1Itpd36WhWjpw9sV8+qyxk/l4=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=WfIbKHBaPYEcA6K9XLn1DmoHpG1ILHG/pIyTyRjTw5dqD5JLu7ARO+3qEz6rIwEp2
-         gsvNH5RSUMNtnjsqbdnKup8UEwZyddFcgaQGnxj997Z6ApK5bJISBej2U7vv4iQ716
-         HPW49EwC5czGc03/lIIq+qPo53T6RGVOFwJJYbhg=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5S4RXLJ021546
+        b=DfoAI+m5ulodTcEV/3sZfwocTG9PwdYpPjMlPPX5eI9yxNyyL0ghs3B1Bwrz9x0SO
+         XgSxYG4i937bwVGxuiKw/3j7JFGwkvgMeBkOD0nxGh0JUViC7SwccgVsbzAG35sqMR
+         b+rRYJJYCFElNx2aOaTE/G3qxUxAlEniGadinVlI=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5S4RdYl021629
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Jun 2019 23:27:33 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 27 Jun 2019 23:27:39 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 27
- Jun 2019 23:27:32 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2019 23:27:39 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 27 Jun 2019 23:27:32 -0500
+ Frontend Transport; Thu, 27 Jun 2019 23:27:39 -0500
 Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5S4RKPN062595;
-        Thu, 27 Jun 2019 23:27:30 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5S4RKPP062595;
+        Thu, 27 Jun 2019 23:27:36 -0500
 From:   Keerthy <j-keerthy@ti.com>
 To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
         <robh+dt@kernel.org>
@@ -55,9 +55,9 @@ CC:     <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <t-kristo@ti.com>,
         <j-keerthy@ti.com>, <linux-crypto@vger.kernel.org>, <nm@ti.com>
-Subject: [RESEND PATCH 03/10] crypto: sa2ul: Add AES ECB Mode support
-Date:   Fri, 28 Jun 2019 09:57:38 +0530
-Message-ID: <20190628042745.28455-4-j-keerthy@ti.com>
+Subject: [RESEND PATCH 05/10] crypto: sha256_generic: Export the Transform function
+Date:   Fri, 28 Jun 2019 09:57:40 +0530
+Message-ID: <20190628042745.28455-6-j-keerthy@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190628042745.28455-1-j-keerthy@ti.com>
 References: <20190628042745.28455-1-j-keerthy@ti.com>
@@ -69,119 +69,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for AES algorithm in ECB Mode. Data encryption modes
-are supported via MCE engine (programmable mode control engine).
-ECB (Electronic code book) is a mode of operation for a block cipher,
-with the characteristic that each possible block of plaintext has a
-defined corresponding ciphertext value and vice versa. In other words,
-the same plaintext value will always result in the same ciphertext value.
+The transform function can be used as is by other crypto
+drivers that need to transform the 256 bit key using cpu.
+Hence export it.
 
 Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- drivers/crypto/sa2ul.c | 76 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+ crypto/sha256_generic.c | 3 ++-
+ include/crypto/sha.h    | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/sa2ul.c b/drivers/crypto/sa2ul.c
-index 64bdf6b2b879..a17c1f66c5c1 100644
---- a/drivers/crypto/sa2ul.c
-+++ b/drivers/crypto/sa2ul.c
-@@ -178,6 +178,38 @@ static u8 mci_cbc_dec_array[3][MODE_CONTROL_BYTES] = {
- 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
- };
- 
-+/*
-+ * Mode Control Instructions for various Key lengths 128, 192, 256
-+ * For ECB (Electronic Code Book) mode for encryption
-+ */
-+static u8 mci_ecb_enc_array[3][27] = {
-+	{	0x21, 0x00, 0x00, 0x80, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
-+	{	0x21, 0x00, 0x00, 0x84, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
-+	{	0x21, 0x00, 0x00, 0x88, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
-+};
-+
-+/*
-+ * Mode Control Instructions for various Key lengths 128, 192, 256
-+ * For ECB (Electronic Code Book) mode for decryption
-+ */
-+static u8 mci_ecb_dec_array[3][27] = {
-+	{	0x31, 0x00, 0x00, 0x80, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
-+	{	0x31, 0x00, 0x00, 0x84, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
-+	{	0x31, 0x00, 0x00, 0x88, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
-+};
-+
- /*
-  * Perform 16 byte or 128 bit swizzling
-  * The SA2UL Expects the security context to
-@@ -746,6 +778,26 @@ static int sa_aes_cbc_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
- 	return sa_aes_setkey(tfm, key, keylen, ad);
+diff --git a/crypto/sha256_generic.c b/crypto/sha256_generic.c
+index b7502a96a0d4..583a3c3b93e0 100644
+--- a/crypto/sha256_generic.c
++++ b/crypto/sha256_generic.c
+@@ -63,7 +63,7 @@ static inline void BLEND_OP(int I, u32 *W)
+ 	W[I] = s1(W[I-2]) + W[I-7] + s0(W[I-15]) + W[I-16];
  }
  
-+static int sa_aes_ecb_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
-+			     unsigned int keylen)
-+{
-+	struct algo_data *ad = kzalloc(sizeof(*ad), GFP_KERNEL);
-+	/* Convert the key size (16/24/32) to the key size index (0/1/2) */
-+	int key_idx = (keylen >> 3) - 2;
-+
-+	ad->enc_eng.eng_id = SA_ENG_ID_EM1;
-+	ad->enc_eng.sc_size = SA_CTX_ENC_TYPE1_SZ;
-+	ad->auth_eng.eng_id = SA_ENG_ID_NONE;
-+	ad->auth_eng.sc_size = 0;
-+	ad->mci_enc = mci_ecb_enc_array[key_idx];
-+	ad->mci_dec = mci_ecb_dec_array[key_idx];
-+	ad->inv_key = true;
-+	ad->ealg_id = SA_EALG_ID_AES_ECB;
-+	ad->aalg_id = SA_AALG_ID_NONE;
-+
-+	return sa_aes_setkey(tfm, key, keylen, ad);
-+}
-+
- static void sa_aes_dma_in_callback(void *data)
+-static void sha256_transform(u32 *state, const u8 *input)
++void sha256_transform(u32 *state, const u8 *input)
  {
- 	struct sa_rx_data *rxd = (struct sa_rx_data *)data;
-@@ -940,6 +992,30 @@ static struct sa_alg_tmpl sa_algs[] = {
- 					}
- 			}
- 	},
-+	{	.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
-+		.alg.crypto = {
-+			.cra_name = "ecb(aes)",
-+			.cra_driver_name = "ecb-aes-sa2ul",
-+			.cra_priority = 30000,
-+			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
-+					CRYPTO_ALG_KERN_DRIVER_ONLY |
-+				CRYPTO_ALG_ASYNC | CRYPTO_ALG_NEED_FALLBACK,
-+			.cra_blocksize = AES_BLOCK_SIZE,
-+			.cra_ctxsize = sizeof(struct sa_tfm_ctx),
-+			.cra_alignmask = 0,
-+			.cra_type = &crypto_ablkcipher_type,
-+			.cra_module = THIS_MODULE,
-+			.cra_init = sa_aes_cra_init,
-+			.cra_exit = sa_aes_cra_exit,
-+			.cra_u.ablkcipher = {
-+				.min_keysize    = AES_MIN_KEY_SIZE,
-+				.max_keysize    = AES_MAX_KEY_SIZE,
-+				.setkey		= sa_aes_ecb_setkey,
-+				.encrypt	= sa_aes_cbc_encrypt,
-+				.decrypt	= sa_aes_cbc_decrypt,
-+			}
-+		}
-+	},
- };
+ 	u32 a, b, c, d, e, f, g, h, t1, t2;
+ 	u32 W[64];
+@@ -225,6 +225,7 @@ static void sha256_transform(u32 *state, const u8 *input)
+ 	a = b = c = d = e = f = g = h = t1 = t2 = 0;
+ 	memzero_explicit(W, 64 * sizeof(u32));
+ }
++EXPORT_SYMBOL(sha256_transform);
  
- /* Register the algorithms in crypto framework */
+ static void sha256_generic_block_fn(struct sha256_state *sst, u8 const *src,
+ 				    int blocks)
+diff --git a/include/crypto/sha.h b/include/crypto/sha.h
+index 8a46202b1857..6e04f412b0c2 100644
+--- a/include/crypto/sha.h
++++ b/include/crypto/sha.h
+@@ -95,6 +95,7 @@ struct sha512_state {
+ 
+ struct shash_desc;
+ 
++extern void sha256_transform(u32 *state, const u8 *input);
+ extern int crypto_sha1_update(struct shash_desc *desc, const u8 *data,
+ 			      unsigned int len);
+ 
 -- 
 2.17.1
 
