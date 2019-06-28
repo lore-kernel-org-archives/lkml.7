@@ -4,90 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AF7C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F1AC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F0220656
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E872220656
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfF1EP7 (ORCPT
+        id S1727298AbfF1EQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 00:15:59 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:38260 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725792AbfF1EP6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 00:15:58 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08664834|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.11304-0.0102429-0.876717;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.Er4GNk4_1561695320;
-Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.Er4GNk4_1561695320)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Fri, 28 Jun 2019 12:15:53 +0800
-From:   liaoweixiong <liaoweixiong@allwinnertech.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@exceet.de>,
-        Peter Pan <peterpandong@micron.com>,
-        Jeff Kletsky <git-commits@allycomm.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.De>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        liaoweixiong <liaoweixiong@allwinnertech.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v3] mtd: spinand: read return badly if the last page has bitflips
-Date:   Fri, 28 Jun 2019 12:14:46 +0800
-Message-Id: <1561695286-19265-1-git-send-email-liaoweixiong@allwinnertech.com>
-X-Mailer: git-send-email 1.9.1
+        Fri, 28 Jun 2019 00:16:38 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37082 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725792AbfF1EQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 00:16:38 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 37F383B7DBA811E7F22C;
+        Fri, 28 Jun 2019 12:16:36 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Jun 2019
+ 12:16:28 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <tony@atomide.com>, <rogerq@ti.com>, <faiz_abbas@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] bus: ti-sysc: remove set but not used variable 'quirks'
+Date:   Fri, 28 Jun 2019 12:10:54 +0800
+Message-ID: <20190628041054.46216-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of the last page containing bitflips (ret > 0),
-spinand_mtd_read() will return that number of bitflips for the last
-page. But to me it looks like it should instead return max_bitflips like
-it does when the last page read returns with 0.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Weixiong Liao <liaoweixiong@allwinnertech.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Cc: stable@vger.kernel.org
-Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+drivers/bus/ti-sysc.c: In function sysc_reset:
+drivers/bus/ti-sysc.c:1452:50: warning: variable quirks set but not used [-Wunused-but-set-variable]
+
+It is never used since commit e0db94fe87da ("bus: ti-sysc: Make
+OCP reset work for sysstatus and sysconfig reset bits")
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
-Changes since v2:
-- Resend this patch with Cc and Fixes tags.
+ drivers/bus/ti-sysc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Changes since v1:
-- More accurate description for this patch
----
-
- drivers/mtd/nand/spi/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 556bfdb..6b9388d 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -511,12 +511,12 @@ static int spinand_mtd_read(struct mtd_info *mtd, loff_t from,
- 		if (ret == -EBADMSG) {
- 			ecc_failed = true;
- 			mtd->ecc_stats.failed++;
--			ret = 0;
- 		} else {
- 			mtd->ecc_stats.corrected += ret;
- 			max_bitflips = max_t(unsigned int, max_bitflips, ret);
- 		}
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index e6deabd..8cb5351 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1558,12 +1558,11 @@ static int sysc_rstctrl_reset_deassert(struct sysc *ddata, bool reset)
+  */
+ static int sysc_reset(struct sysc *ddata)
+ {
+-	int sysc_offset, syss_offset, sysc_val, rstval, quirks, error = 0;
++	int sysc_offset, syss_offset, sysc_val, rstval, error = 0;
+ 	u32 sysc_mask, syss_done;
  
-+		ret = 0;
- 		ops->retlen += iter.req.datalen;
- 		ops->oobretlen += iter.req.ooblen;
- 	}
+ 	sysc_offset = ddata->offsets[SYSC_SYSCONFIG];
+ 	syss_offset = ddata->offsets[SYSC_SYSSTATUS];
+-	quirks = ddata->cfg.quirks;
+ 
+ 	if (ddata->legacy_mode || sysc_offset < 0 ||
+ 	    ddata->cap->regbits->srst_shift < 0 ||
 -- 
-1.9.1
+2.7.4
+
 
