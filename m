@@ -2,31 +2,58 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06A3C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F16C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA6C205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4A720828
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfF1SUz convert rfc822-to-8bit (ORCPT
+        id S1726673AbfF1SW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:20:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37501 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfF1SUy (ORCPT
+        Fri, 28 Jun 2019 14:22:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40092 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726514AbfF1SWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:20:54 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hgvUL-00044w-Ua; Fri, 28 Jun 2019 20:20:45 +0200
-Date:   Fri, 28 Jun 2019 20:20:45 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Fri, 28 Jun 2019 14:22:25 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SILkSI101611
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 14:22:23 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdqdt9hcg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 14:22:23 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Fri, 28 Jun 2019 19:22:21 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 28 Jun 2019 19:22:16 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SIMFeX13041942
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 18:22:15 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B330AB205F;
+        Fri, 28 Jun 2019 18:22:15 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8622AB2064;
+        Fri, 28 Jun 2019 18:22:15 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Jun 2019 18:22:15 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 3AAA616C5DE8; Fri, 28 Jun 2019 11:22:16 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 11:22:16 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -36,8 +63,9 @@ Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Lai Jiangshan <jiangshanlai@gmail.com>
 Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Message-ID: <20190628182045.ow4i5cncauk2jxjl@linutronix.de>
-References: <20190627155506.GU26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190627153031.GA249127@google.com>
+ <20190627155506.GU26519@linux.ibm.com>
  <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
  <20190627173831.GW26519@linux.ibm.com>
  <20190627181638.GA209455@google.com>
@@ -46,59 +74,106 @@ References: <20190627155506.GU26519@linux.ibm.com>
  <20190628164559.GC240964@google.com>
  <20190628173011.GX26519@linux.ibm.com>
  <20190628174545.pwgwi3wxl2eapkvm@linutronix.de>
- <20190628180727.GE240964@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190628180727.GE240964@google.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190628174545.pwgwi3wxl2eapkvm@linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19062818-0060-0000-0000-00000356C6B3
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011347; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01224588; UDB=6.00644540; IPR=6.01005780;
+ MB=3.00027510; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-28 18:22:19
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062818-0061-0000-0000-000049F12615
+Message-Id: <20190628182216.GY26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906280207
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-28 14:07:27 [-0400], Joel Fernandes wrote:
-> On Fri, Jun 28, 2019 at 07:45:45PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2019-06-28 10:30:11 [-0700], Paul E. McKenney wrote:
-> > > > I believe the .blocked field remains set even though we are not any more in a
-> > > > reader section because of deferred processing of the blocked lists that you
-> > > > mentioned yesterday.
-> > > 
-> > > That can indeed happen.  However, in current -rcu, that would mean
-> > > that .deferred_qs is also set, which (if in_irq()) would prevent
-> > > the raise_softirq_irqsoff() from being invoked.  Which was why I was
-> > > asking the questions about whether in_irq() returns true within threaded
-> > > interrupts yesterday.  If it does, I need to find if there is some way
-> > > of determining whether rcu_read_unlock_special() is being called from
-> > > a threaded interrupt in order to suppress the call to raise_softirq()
-> > > in that case.
+On Fri, Jun 28, 2019 at 07:45:45PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-06-28 10:30:11 [-0700], Paul E. McKenney wrote:
+> > > I believe the .blocked field remains set even though we are not any more in a
+> > > reader section because of deferred processing of the blocked lists that you
+> > > mentioned yesterday.
 > > 
-> > Please not that:
-> > | void irq_exit(void)
-> > | {
-> > |…
-> > in_irq() returns true
-> > |         preempt_count_sub(HARDIRQ_OFFSET);
-> > in_irq() returns false
-> > |         if (!in_interrupt() && local_softirq_pending())
-> > |                 invoke_softirq();
-> > 
-> > -> invoke_softirq() does
-> > |        if (!force_irqthreads) {
-> > |                 __do_softirq();
-> > |         } else {
-> > |                 wakeup_softirqd();
-> > |         }
-> > 
+> > That can indeed happen.  However, in current -rcu, that would mean
+> > that .deferred_qs is also set, which (if in_irq()) would prevent
+> > the raise_softirq_irqsoff() from being invoked.  Which was why I was
+> > asking the questions about whether in_irq() returns true within threaded
+> > interrupts yesterday.  If it does, I need to find if there is some way
+> > of determining whether rcu_read_unlock_special() is being called from
+> > a threaded interrupt in order to suppress the call to raise_softirq()
+> > in that case.
 > 
-> In my traces which I shared previous email, the wakeup_softirqd() gets
-> called.
+> Please not that:
+> | void irq_exit(void)
+> | {
+> |…
+> in_irq() returns true
+> |         preempt_count_sub(HARDIRQ_OFFSET);
+> in_irq() returns false
+> |         if (!in_interrupt() && local_softirq_pending())
+> |                 invoke_softirq();
 > 
-> I thought force_irqthreads value is decided at boot time, so I got lost a bit
-> with your comment.
+> -> invoke_softirq() does
+> |        if (!force_irqthreads) {
+> |                 __do_softirq();
+> |         } else {
+> |                 wakeup_softirqd();
+> |         }
+> 
+> so for `force_irqthreads' rcu_read_unlock_special() within
+> wakeup_softirqd() will see false.
 
-It does. I just wanted point out that in this case
-rcu_unlock() / rcu_read_unlock_special() won't see in_irq() true.
+OK, fair point.  How about the following instead, again on -rcu?
 
-Sebastian
+Here is the rationale for the new version of the "if" statement:
+
+1.	irqs_were_disabled:  If interrupts are enabled, we should
+	instead let the upcoming irq_enable()/local_bh_enable()
+	do the rescheduling for us.
+2.	use_softirq: If we aren't using softirq, then
+	raise_softirq_irqoff() will be unhelpful.
+3a.	in_interrupt(): If this returns true, the subsequent
+	call to raise_softirq_irqoff() is guaranteed not to
+	do a wakeup, so that call will be both very cheap and
+	quite safe.
+3b.	Otherwise, if !in_interrupt(), if exp (an expedited RCU grace
+	period is being blocked), then incurring wakeup overhead
+	is worthwhile, and if also !.deferred_qs then scheduler locks
+	cannot be held so the wakeup will be safe.
+
+Does that make more sense?
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 82c925df1d92..83333cfe8707 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -624,8 +624,9 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 		      (rdp->grpmask & rnp->expmask) ||
+ 		      tick_nohz_full_cpu(rdp->cpu);
+ 		// Need to defer quiescent state until everything is enabled.
+-		if ((exp || in_irq()) && irqs_were_disabled && use_softirq &&
+-		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
++		if (irqs_were_disabled && use_softirq &&
++		    (in_interrupt() ||
++		     (exp && !t->rcu_read_unlock_special.b.deferred_qs))) {
+ 			// Using softirq, safe to awaken, and we get
+ 			// no help from enabling irqs, unlike bh/preempt.
+ 			raise_softirq_irqoff(RCU_SOFTIRQ);
+
