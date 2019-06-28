@@ -2,144 +2,284 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70C0C5B576
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9972C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5CD20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561690831;
-	bh=pbLYvNe/6qkAnoA79ALM9ag4cBtnyMvqkIIhOCRf2Hg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hOP7bgnAj+LIOjFjk6xRw/uJiXwmEDBzfp98ahsdm6crk10pKjcUE23/M+E3D71aY
-	 BJXKlHGsPzC2At7Lnu+Rf8QVJkAjY924VAy5bxQibjnU1oaneo3+/vl+wWP6Tb6Paa
-	 /mZ8Otl5DgO342gYy26VsSZILhxMSRP+N+0IIsNw=
+	by mail.kernel.org (Postfix) with ESMTP id 9CA9B208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfF1DAa (ORCPT
+        id S1726869AbfF1DCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:00:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38126 "EHLO mail.kernel.org"
+        Thu, 27 Jun 2019 23:02:05 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:8216 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726542AbfF1DAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:00:30 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51D99208CB;
-        Fri, 28 Jun 2019 03:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561690828;
-        bh=pbLYvNe/6qkAnoA79ALM9ag4cBtnyMvqkIIhOCRf2Hg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zNbh31L95Ds/t4wKKYOnaNQuAvd/Jdq/lVR0fxPThWzMUYK4tIaBviOwSFLoOTvXZ
-         9P3QMp+gcKP05LNAxYVo92cnlRj+A73lH/5fcBWoa0G87sFEYE06RqZl+GjVj/dUBj
-         H5g1jTPlrTOUhiH8tKTc7aGzNRoP6N73LYkj3mDE=
-Date:   Thu, 27 Jun 2019 20:00:17 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
-        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com,
-        mpatocka@redhat.com, gmazyland@gmail.com
-Subject: Re: [RFC PATCH v5 1/1] Add dm verity root hash pkcs7 sig validation.
-Message-ID: <20190628030017.GA673@sol.localdomain>
-References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com>
- <20190619191048.20365-2-jaskarankhurana@linux.microsoft.com>
- <20190627234149.GA212823@gmail.com>
- <alpine.LRH.2.21.1906271844470.22562@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.1906271844470.22562@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1726542AbfF1DCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 23:02:04 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id DFF94594B33C4A312078;
+        Fri, 28 Jun 2019 11:02:01 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x5S30C0k068092;
+        Fri, 28 Jun 2019 11:00:12 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019062811004795-1800625 ;
+          Fri, 28 Jun 2019 11:00:47 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Markus Elfring <Markus.Elfring@web.de>, cocci@systeme.lip6.fr
+Subject: [PATCH v2] coccinelle: semantic code search for missing of_node_put
+Date:   Fri, 28 Jun 2019 10:58:52 +0800
+Message-Id: <1561690732-20694-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-06-28 11:00:48,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-06-28 11:00:18,
+        Serialize complete at 2019-06-28 11:00:18
+X-MAIL: mse-fl2.zte.com.cn x5S30C0k068092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaskaran,
+There are functions which increment a reference counter for a device node.
+These functions belong to a programming interface for the management
+of information from device trees.
+The counter must be decremented after the last usage of a device node.
+We find these functions by using the following SmPL:
 
-On Thu, Jun 27, 2019 at 06:49:58PM -0700, Jaskaran Singh Khurana wrote:
-> 
-> 
-> On Thu, 27 Jun 2019, Eric Biggers wrote:
-> 
-> > Hi Jaskaran, one comment (I haven't reviewed this in detail):
-> > 
-> > On Wed, Jun 19, 2019 at 12:10:48PM -0700, Jaskaran Khurana wrote:
-> > > diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
-> > > index db269a348b20..2d658a3512cb 100644
-> > > --- a/drivers/md/Kconfig
-> > > +++ b/drivers/md/Kconfig
-> > > @@ -475,6 +475,7 @@ config DM_VERITY
-> > >  	select CRYPTO
-> > >  	select CRYPTO_HASH
-> > >  	select DM_BUFIO
-> > > +	select SYSTEM_DATA_VERIFICATION
-> > >  	---help---
-> > >  	  This device-mapper target creates a read-only device that
-> > >  	  transparently validates the data on one underlying device against
-> > > diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-> > > index be7a6eb92abc..3b47b256b15e 100644
-> > > --- a/drivers/md/Makefile
-> > > +++ b/drivers/md/Makefile
-> > > @@ -18,7 +18,7 @@ dm-cache-y	+= dm-cache-target.o dm-cache-metadata.o dm-cache-policy.o \
-> > >  		    dm-cache-background-tracker.o
-> > >  dm-cache-smq-y   += dm-cache-policy-smq.o
-> > >  dm-era-y	+= dm-era-target.o
-> > > -dm-verity-y	+= dm-verity-target.o
-> > > +dm-verity-y	+= dm-verity-target.o dm-verity-verify-sig.o
-> > >  md-mod-y	+= md.o md-bitmap.o
-> > >  raid456-y	+= raid5.o raid5-cache.o raid5-ppl.o
-> > >  dm-zoned-y	+= dm-zoned-target.o dm-zoned-metadata.o dm-zoned-reclaim.o
-> > 
-> > Perhaps this should be made optional and controlled by a kconfig option
-> > CONFIG_DM_VERITY_SIGNATURE_VERIFICATION, similar to CONFIG_DM_VERITY_FEC?
-> > 
-> > CONFIG_SYSTEM_DATA_VERIFICATION brings in a lot of stuff, which might be
-> > unnecessary for some dm-verity users.  Also, you've already separated most of
-> > the code out into a separate .c file anyway.
-> > 
-> > - Eric
-> > 
-> Hello Eric,
-> 
-> This started with a config (see V4). We didnot want scripts that pass this
-> parameter to suddenly stop working if for some reason the verification is
-> turned off so the optional parameter was just parsed and no validation
-> happened if the CONFIG was turned off. This was changed to a commandline
-> parameter after feedback from the community, so I would prefer to keep it
-> *now* as commandline parameter. Let me know if you are OK with this.
-> 
-> Regards,
-> JK
+<SmPL>
+@initialize:ocaml@
+@@
 
-Sorry, I haven't been following the whole discussion.  (BTW, you sent out
-multiple versions both called "v4", and using a cover letter for a single patch
-makes it unnecessarily difficult to review.)  However, it appears Milan were
-complaining about the DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE option which set the
-policy for signature verification, *not* the DM_VERITY_VERIFY_ROOTHASH_SIG
-option which enabled support for signature verification.  Am I missing
-something?  You can have a module parameter which controls the "signatures
-required" setting, while also allowing people to compile out kernel support for
-the signature verification feature.
+let relevant_str = "use of_node_put() on it when done"
 
-Sure, it means that the signature verification support won't be guaranteed to be
-present when dm-verity is.  But the same is true of the hash algorithm (e.g.
-sha512), and of the forward error correction feature.  Since the signature
-verification is nontrivial and pulls in a lot of other kernel code which might
-not be otherwise needed (via SYSTEM_DATA_VERIFICATION), it seems a natural
-candidate for putting the support behind a Kconfig option.
+let contains s1 s2 =
+    let re = Str.regexp_string s2
+    in
+        try ignore (Str.search_forward re s1 0); true
+        with Not_found -> false
 
-BTW, I'm doing something similar for fs-verity; see
-https://patchwork.kernel.org/patch/11008077/.  The signature verification
-support is behind CONFIG_FS_VERITY_BUILTIN_SIGNATURES, but the policy of
-requiring signatures is a sysctl fs.verity.require_signatures.
+let relevant_functions = ref []
 
-- Eric
+let add_function f c =
+    if not (List.mem f !relevant_functions)
+    then
+      begin
+        let s = String.concat " "
+          (
+            (List.map String.lowercase_ascii
+              (List.filter
+                (function x ->
+                  Str.string_match
+                  (Str.regexp "[a-zA-Z_\\(\\)][-a-zA-Z0-9_\\(\\)]*$")
+                x 0) (Str.split (Str.regexp "[ .;\t\n]+") c)))) in
+             if contains s relevant_str
+             then
+               Printf.printf "Found relevant function: %s\n" f;
+               relevant_functions := f :: !relevant_functions;
+      end
+
+@r@
+identifier fn;
+comments c;
+type T = struct device_node *;
+@@
+
+T@c fn(...) {
+...
+}
+
+@script:ocaml@
+f << r.fn;
+c << r.c;
+@@
+
+let (cb,cm,ca) = List.hd c in
+let c = String.concat " " cb in
+add_function f c
+</SmPL>
+
+And this patch also looks for places where an of_node_put()
+call is on some paths but not on others.
+
+Suggested-by: Julia Lawall <Julia.Lawall@lip6.fr>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: Gilles Muller <Gilles.Muller@lip6.fr>
+Cc: Nicolas Palix <nicolas.palix@imag.fr>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Cc: cocci@systeme.lip6.fr
+---
+v2: improve the commit description and delete duplicate code.
+
+ scripts/coccinelle/free/of_node_put.cocci | 143 ++++++++++++++++++++++++++++++
+ 1 file changed, 143 insertions(+)
+ create mode 100644 scripts/coccinelle/free/of_node_put.cocci
+
+diff --git a/scripts/coccinelle/free/of_node_put.cocci b/scripts/coccinelle/free/of_node_put.cocci
+new file mode 100644
+index 0000000..81a9f54
+--- /dev/null
++++ b/scripts/coccinelle/free/of_node_put.cocci
+@@ -0,0 +1,143 @@
++// SPDX-License-Identifier: GPL-2.0
++/// Find missing of_node_put
++///
++// Confidence: Moderate
++// Copyright: (C) 2018-2019 Wen Yang, ZTE.
++// Comments:
++// Options: --no-includes --include-headers
++
++virtual report
++virtual org
++
++@initialize:python@
++@@
++
++seen = set()
++
++def add_if_not_present (p1, p2):
++    if (p1, p2) not in seen:
++        seen.add((p1, p2))
++        return True
++    return False
++
++def display_report(p1, p2):
++    if add_if_not_present(p1[0].line, p2[0].line):
++       coccilib.report.print_report(p2[0],
++                                    "ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line "
++                                    + p1[0].line
++                                    + ", but without a corresponding object release within this function.")
++
++def display_org(p1, p2):
++    cocci.print_main("acquired a node pointer with refcount incremented", p1)
++    cocci.print_secs("needed of_node_put", p2)
++
++@r1 exists@
++local idexpression struct device_node *x;
++expression e, e1;
++position p1, p2;
++statement S;
++type T;
++@@
++
++x = @p1\(of_find_all_nodes\|
++         of_get_cpu_node\|
++         of_get_parent\|
++         of_get_next_parent\|
++         of_get_next_child\|
++         of_get_next_cpu_node\|
++         of_get_compatible_child\|
++         of_get_child_by_name\|
++         of_find_node_opts_by_path\|
++         of_find_node_by_name\|
++         of_find_node_by_type\|
++         of_find_compatible_node\|
++         of_find_node_with_property\|
++         of_find_matching_node_and_match\|
++         of_find_node_by_phandle\|
++         of_parse_phandle\|
++         of_find_next_cache_node\|
++         of_get_next_available_child\)(...);
++...
++if (x == NULL || ...) S
++... when != e = (T)x
++    when != true x == NULL
++    when != of_node_put(x)
++    when != of_get_next_parent(x)
++    when != of_find_matching_node(x, ...)
++    when != if (x) { ... return x; }
++    when != v4l2_async_notifier_add_fwnode_subdev(<...x...>)
++    when != e1 = of_fwnode_handle(x)
++(
++if (x) { ... when forall
++         of_node_put(x) ... }
++|
++return x;
++|
++return of_fwnode_handle(x);
++|
++return@p2 ...;
++)
++
++@script:python depends on report && r1@
++p1 << r1.p1;
++p2 << r1.p2;
++@@
++
++display_report(p1, p2)
++
++@script:python depends on org && r1@
++p1 << r1.p1;
++p2 << r1.p2;
++@@
++
++display_org(p1, p2)
++
++@r2 exists@
++local idexpression struct device_node *x;
++expression e, e1;
++position p1, p2;
++identifier f;
++statement S;
++type T;
++@@
++
++(
++x = f@p1(...);
++... when != e = (T)x
++    when != true x == NULL
++    when != of_node_put(x)
++    when != of_get_next_parent(x)
++    when != of_find_matching_node(x, ...)
++    when != if (x) { ... return x; }
++    when != v4l2_async_notifier_add_fwnode_subdev(<...x...>)
++    when != e1 = of_fwnode_handle(x)
++(
++if (x) { ... when forall
++         of_node_put(x) ... }
++|
++return x;
++|
++return of_fwnode_handle(x);
++|
++return@p2 ...;
++)
++&
++x = f(...)
++...
++if (<+...x...+>) S
++...
++of_node_put(x);
++)
++@script:python depends on report && r2@
++p1 << r2.p1;
++p2 << r2.p2;
++@@
++
++display_report(p1, p2)
++
++@script:python depends on org && r2@
++p1 << r2.p1;
++p2 << r2.p2;
++@@
++
++display_org(p1, p2)
+-- 
+2.9.5
+
