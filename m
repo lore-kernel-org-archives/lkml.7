@@ -2,192 +2,147 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE16C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FD6C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1E02063F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:55:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ng/LpVIz"
+	by mail.kernel.org (Postfix) with ESMTP id DC129208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:57:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561726657;
+	bh=XEYDarb8NSLXAMTxaRlXcywzzmI5a0jxNDElYQMapA4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ipYPO5+IwYyC3nSuMH+Ukvp/+OX95oBIzSfQpMXXAQV3pnpiEGgad8cuB8wikDRnk
+	 4pY3oo/U1l+Q2+yK3h6xmQXquBSo4enSRdYsx3TX4iu7MXUEeCgywW4kXU5Wu1rHVA
+	 ybWJXgjQ6gBKctJeHCuMoFQAEuyQrJs3vL5df/C4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfF1MzT (ORCPT
+        id S1726819AbfF1M5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:55:19 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:35897 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726660AbfF1MzR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:55:17 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190628125514euoutp014edf00165e92c79c70efc940b797771c~sXf2Vz_jf3234532345euoutp013;
-        Fri, 28 Jun 2019 12:55:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190628125514euoutp014edf00165e92c79c70efc940b797771c~sXf2Vz_jf3234532345euoutp013
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561726514;
-        bh=GrXQNTXN4I9JHpQIL9zEkPq5zel3LSoEW3EB5ycEB2s=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Ng/LpVIzRsZ7uGyNkWHy/60hDS9y3MXaKxN/pLMXMT/Bss+fscGXO4sT151M0V6LW
-         QnUUmI4ALzkM6LrKmpH2V91CL0TahcMQc1lrHnHJeNV17Pp51zvLwJ2S4ssCIqcPRr
-         XOw/LyfRj5xsOxagZmKVtqZMHmRvG41kFNIfuAHc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190628125514eucas1p1fd4db9f4161cfcae44ce131fc32d78ff~sXf19jycg2330223302eucas1p1v;
-        Fri, 28 Jun 2019 12:55:14 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 60.05.04298.13E061D5; Fri, 28
-        Jun 2019 13:55:13 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190628125513eucas1p149cf5397774d31921b4eee030d2d8500~sXf1JHVEo3050330503eucas1p1G;
-        Fri, 28 Jun 2019 12:55:13 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190628125512eusmtrp1f2e2177567d58a7c6fc5cb876c1efe21~sXf06je0q1299212992eusmtrp1O;
-        Fri, 28 Jun 2019 12:55:12 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-72-5d160e310d01
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 2E.CA.04146.03E061D5; Fri, 28
-        Jun 2019 13:55:12 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190628125511eusmtip2334885dcd96bf89cc8f0faa1cb1e303f~sXfzmDhKC0126701267eusmtip2m;
-        Fri, 28 Jun 2019 12:55:11 +0000 (GMT)
-Subject: Re: [PATCH 37/39] docs: adds some directories to the main
- documentation index
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, live-patching@vger.kernel.org,
-        netdev@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-watchdog@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <a89ef0db-211c-1880-e60c-dc599b36feb7@samsung.com>
-Date:   Fri, 28 Jun 2019 14:55:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <b26fc645cb2c81fe88ab13616c65664d2c3cead5.1561724493.git.mchehab+samsung@kernel.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUxTZxTee796qRavlcE7YRqbOZVkCnMuZ36NJcu8WWJCjGaLjGDVOzDQ
-        anqpU7dkuPBZOnQyQ6hMwA8ooNAVggXEdWhbFKyTrwFaWCqLQlIRK9vcFKW9NePfc97nec55
-        zklellROMYvZfdpMQadVZ6gYOdXsfOp+Jz48MjnO54iDCXs+gjrPMQbG7HkIym5lU9A3PcnA
-        sCsHQUljLQP2p50ITD+2E1CZe46CzqJHNHhL/5aB0+Yl4FmrjYDe1jIG/N9fQ1D4u42BR0Yv
-        A4P1V2RQkT0rHqvsJqD71xEGql0zBHjMgwRMPi4gwHbjDAnlR7dAZXcSOCsi4c6JEgo8NxwM
-        vLg3TUN3Vw8NOed9BDRaT5Jwb3yGhPYRP0pYzjfVDBH8by3z+BaTR8Y3mmP5s5fHCb73pp63
-        1hYw/EO3W8bXXLhA86OFLoI/W1RM857cjfzUn8MUf7H9AeInr/QzfFN/HpUYuVO+ca+Qse+g
-        oFuzeZc8bWDkLnOgPvxQ07VSlIXG5QbEsph7DztdjAHJWSVnRvi8LQcZUNhs8QThbG+I8CNs
-        f36fChABg3f6JCER1Qg/6x8JFT6Es9oMREC1iPsct/tdwVYR3Pv4utsRbEVyZjnus1iZAMFw
-        6/EPebVBkYLbjP+q66UDmOKW46vmJ8H312cbjTottKRZiK+XjgVjhHFqbGm2BDUkF4WHx8oJ
-        CS/Fl3xlZGAY5txh2PrCwki5P8Y/TxpDeBGecDXJJByDu4qNlGSoR/h5/oOQ+xLC1cUzIccG
-        fNV1mw6cjORW4YbWNdL1PsLe776QYDge9C2UMoTjE80lpPSswPm5SqnH29hS9SpNDDa01JDH
-        kco0ZzPTnG1Mc7Yx/T+2AlG1KErQi5pUQYzXCl+tFtUaUa9NXb1nv8aKZj9C14zrsQ1N9+zu
-        QByLVPMV/8yPTFbS6oPiYU0HwiypilC84Y5IVir2qg8fEXT7U3T6DEHsQNEspYpSfP3aH0lK
-        LlWdKaQLwgFB94ol2LDFWShae5NOO5Ikq4J3V/z06b9Lb0/E9C375uK2hzvyKrVl8nl6cUG5
-        55fEUwkNsdF1H9hHp/xbfY5vNVXpQ5syNp26ZVnXdvqzO+v6MpfVpXBrV705evytgi93e7Ya
-        h6jeDwdSEnYuaXD0VGyLK7q/stCY0ro91TxwbAl39ND6zk/aEv+rTl+posQ0dXwsqRPVLwFc
-        V6c/BAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0yTVxiAPd+tpVvNZ0U4AzO2JmYGY7Ug9oUgarZlJ7qo0T9kjGjFz2Kk
-        revXEi/ZohnX4mVOCWnDBogECnijTIsRqFWpl1oNeIPRLqldYiWKjrGFBNlKGxP+PXnf5znJ
-        SV4prSjnUqR7DGbBZNCWKDkZc2/GG1y+cn5S4crQOw28dFch6Aic4CDsrkRQ/6CMgUeT4xyM
-        eMsR1DnbOXBP3UZgP91LQVPFWQZuH3/DQsj2rwQGXCEKpq+6KBi6Ws/BxLGbCGqeujh4czTE
-        wbPzfRJoLIvK4SYfBb7rQQ5avTMUBNqeUTD+VzUFrrtnaGg48hU0+QpgoDEJfv+5joHA3Vsc
-        /Pd8kgXfvUEWylteUeDsqqXheWSGht7gBFq3hHQ7hinysOcD0mMPSIizLZ00X4tQZOi+hXS1
-        V3Pktd8vIY7OTpb8UeOlSPPxUywJVOSSt3+OMORc7wtExvsec6T7cSWzJekbVa7JaDELnxQb
-        RfMaZYEaMlTqbFBlrMpWqTM1hTkZWcoVebm7hJI9pYJpRd4OVfGT4Ci37/z8/d03begwisis
-        KEGK+VU4NFlLWZFMquBbEO7zldFWJI0uFmPvhdK4sxBPP7FycWcM4arhLsnsYiGfj3snvGiW
-        E/nV+I7/Vkyi+U4Z7q9zS+LFi2jR8wsza3F8Dj5Z2R4r5Hwe/qdjiJ1lhl+Cb7T9HZsvir7q
-        G29j4s4CfMcWjnECr8UXL1+MOTT/GZ7+dZCOczIeCTdQcU7DV17V0z8hhX1Obp+T2Ock9jlJ
-        I2LaUaJgEfU6vahWiVq9aDHoVEVGfReKnuDlgSmnCw1e2uZBvBQpP5Q3ypIKFay2VDyg9yAs
-        pZWJ8o/8iYUK+S7tgYOCybjdZCkRRA/Kin7uJJ2yqMgYPWiDebs6S62BbLUmU5O5GpTJ8ir+
-        +rcKXqc1C3sFYZ9get9R0oSUwyh5mH3KTKUZ0z3XPs1yr2leN+/jo+sP5m5eLCdLjwymOmq+
-        eLTpzIndG1ULfjgkidTd77SNtTglX6Y/WMsWdFTrUn/bWSF/2O8Yae1/t9xtHW7J9+SMVjmV
-        59ytjilD+OuNNvx9td0478eI45LuuyvBDa+DwWJ/Q9qy0VTaXFu09XMlIxZr1em0SdT+Dxpi
-        Ik6YAwAA
-X-CMS-MailID: 20190628125513eucas1p149cf5397774d31921b4eee030d2d8500
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190628123051epcas3p35e0cb4a5a1159dac19bde504ae21b0f3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190628123051epcas3p35e0cb4a5a1159dac19bde504ae21b0f3
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
-        <CGME20190628123051epcas3p35e0cb4a5a1159dac19bde504ae21b0f3@epcas3p3.samsung.com>
-        <b26fc645cb2c81fe88ab13616c65664d2c3cead5.1561724493.git.mchehab+samsung@kernel.org>
+        Fri, 28 Jun 2019 08:57:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbfF1M5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 08:57:36 -0400
+Received: from localhost.localdomain (unknown [60.186.221.217])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD1F82063F;
+        Fri, 28 Jun 2019 12:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561726655;
+        bh=XEYDarb8NSLXAMTxaRlXcywzzmI5a0jxNDElYQMapA4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A+yLbvKdzNksnNInnFSB+NO+OkPfr+84GXHFoD7NIWw+B1ukMT10UITZCWrS3N2lp
+         lf+3RS+tLBE8PfiM6tO6bW9nb9Kiq9My83vHCYlUXdtYreeh9WDvdG76X99a1rKA/+
+         32ZGOv9Y5ljQtbtN33aPrQ2y11WGyjB+2NkgYqkY=
+From:   guoren@kernel.org
+To:     arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH] csky: Fixup abiv1 memset error
+Date:   Fri, 28 Jun 2019 20:57:28 +0800
+Message-Id: <1561726648-24871-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Guo Ren <ren_guo@c-sky.com>
 
-On 6/28/19 2:30 PM, Mauro Carvalho Chehab wrote:
-> The contents of those directories were orphaned at the documentation
-> body.
-> 
-> While those directories could likely be moved to be inside some guide,
-> I'm opting to just adding their indexes to the main one, removing the
-> :orphan: and adding the SPDX header.
-> 
-> For the drivers, the rationale is that the documentation contains
-> a mix of Kernelspace, uAPI and admin-guide. So, better to keep them on
-> separate directories, as we've be doing with similar subsystem-specific
-> docs that were not split yet.
-> 
-> For the others, well... I'm too lazy to do the move. Also, it
-> seems to make sense to keep at least some of those at the main
-> dir (like kbuild, for example). In any case, a latter patch
-> could do the move.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Current memset implementation in abiv1 is wrong and it'll cause unalign
+access. Just remove it and use the generic one. This patch will cause
+performance degradation and we will improve it with a new design in next
+patchset.
 
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/csky/abiv1/Makefile         |  1 -
+ arch/csky/abiv1/inc/abi/string.h |  3 ---
+ arch/csky/abiv1/memset.c         | 37 -------------------------------------
+ arch/csky/abiv1/strksyms.c       |  1 -
+ 4 files changed, 42 deletions(-)
+ delete mode 100644 arch/csky/abiv1/memset.c
 
-> ---
->  Documentation/cdrom/index.rst           |  2 +-
->  Documentation/fault-injection/index.rst |  2 +-
->  Documentation/fb/index.rst              |  2 +-
->  Documentation/fpga/index.rst            |  2 +-
->  Documentation/ide/index.rst             |  2 +-
->  Documentation/index.rst                 | 14 ++++++++++++++
->  Documentation/kbuild/index.rst          |  2 +-
->  Documentation/livepatch/index.rst       |  2 +-
->  Documentation/netlabel/index.rst        |  2 +-
->  Documentation/pcmcia/index.rst          |  2 +-
->  Documentation/power/index.rst           |  2 +-
->  Documentation/target/index.rst          |  2 +-
->  Documentation/timers/index.rst          |  2 +-
->  Documentation/watchdog/index.rst        |  2 +-
->  14 files changed, 27 insertions(+), 13 deletions(-)
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+diff --git a/arch/csky/abiv1/Makefile b/arch/csky/abiv1/Makefile
+index e52b42b..601ce3b 100644
+--- a/arch/csky/abiv1/Makefile
++++ b/arch/csky/abiv1/Makefile
+@@ -5,5 +5,4 @@ obj-y					+= bswapsi.o
+ obj-y					+= cacheflush.o
+ obj-y					+= mmap.o
+ obj-y					+= memcpy.o
+-obj-y					+= memset.o
+ obj-y					+= strksyms.o
+diff --git a/arch/csky/abiv1/inc/abi/string.h b/arch/csky/abiv1/inc/abi/string.h
+index 5abe80b..0cd4338 100644
+--- a/arch/csky/abiv1/inc/abi/string.h
++++ b/arch/csky/abiv1/inc/abi/string.h
+@@ -7,7 +7,4 @@
+ #define __HAVE_ARCH_MEMCPY
+ extern void *memcpy(void *, const void *, __kernel_size_t);
+ 
+-#define __HAVE_ARCH_MEMSET
+-extern void *memset(void *, int, __kernel_size_t);
+-
+ #endif /* __ABI_CSKY_STRING_H */
+diff --git a/arch/csky/abiv1/memset.c b/arch/csky/abiv1/memset.c
+deleted file mode 100644
+index b4aa75b..0000000
+--- a/arch/csky/abiv1/memset.c
++++ /dev/null
+@@ -1,37 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
+-
+-#include <linux/types.h>
+-
+-void *memset(void *dest, int c, size_t l)
+-{
+-	char *d = dest;
+-	int ch = c & 0xff;
+-	int tmp = (ch | ch << 8 | ch << 16 | ch << 24);
+-
+-	while (((uintptr_t)d & 0x3) && l--)
+-		*d++ = ch;
+-
+-	while (l >= 16) {
+-		*(((u32 *)d))   = tmp;
+-		*(((u32 *)d)+1) = tmp;
+-		*(((u32 *)d)+2) = tmp;
+-		*(((u32 *)d)+3) = tmp;
+-		l -= 16;
+-		d += 16;
+-	}
+-
+-	while (l > 3) {
+-		*(((u32 *)d)) = tmp;
+-		l -= 4;
+-		d += 4;
+-	}
+-
+-	while (l) {
+-		*d = ch;
+-		l--;
+-		d++;
+-	}
+-
+-	return dest;
+-}
+diff --git a/arch/csky/abiv1/strksyms.c b/arch/csky/abiv1/strksyms.c
+index 436995c..c7ccbb2 100644
+--- a/arch/csky/abiv1/strksyms.c
++++ b/arch/csky/abiv1/strksyms.c
+@@ -4,4 +4,3 @@
+ #include <linux/module.h>
+ 
+ EXPORT_SYMBOL(memcpy);
+-EXPORT_SYMBOL(memset);
+-- 
+2.7.4
+
