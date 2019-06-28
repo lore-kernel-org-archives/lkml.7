@@ -2,212 +2,305 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92258C5B577
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6A8C5B576
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAB9208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:17:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="awrtA7A/"
+	by mail.kernel.org (Postfix) with ESMTP id 8845820656
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfF1CRy (ORCPT
+        id S1726660AbfF1CUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:17:54 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:35104 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfF1CRy (ORCPT
+        Thu, 27 Jun 2019 22:20:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29116 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725770AbfF1CUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:17:54 -0400
-Received: by mail-yb1-f194.google.com with SMTP id i203so2760383ybg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ibD3B/EuuR/59/QG00Y+ZaZmcuQXpKuzxrjxPyCsSA4=;
-        b=awrtA7A/YuN+zmQJPqbtUleuKyvjg6A0tJpSNBjNRmZq4OuPxqGWedPeRnBQn4Utjv
-         nk98MtbTNb478DEXPChwnOaCU3YTLFfxWO/BuQLukMKu4GgUu90ngQQPYBU9AGCJrvuP
-         GdX4Ys2a8CFdKSDbXq2bOOTnop7hM0QRlNG0rr9gz2H7/LF1IwkKrT9u0nTEZ2/Y3x9W
-         wFT5azmUDUR4xceH98veZ+nvA+BuwZU+SKdhRwz4hLTy6GFjTjtWj27c9AnXaIqSb1cy
-         Pdze7nRpyNKRz9jPRdOak1n0Wb6BA/Ecxp9JSRnl0ODl+kZDzc+46LavxfjoevfNLJ4o
-         NJnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ibD3B/EuuR/59/QG00Y+ZaZmcuQXpKuzxrjxPyCsSA4=;
-        b=cgpJ8FCSNknrUfhA6Lgr+ron7pZK/05HVetxBMFIIogvexuVQsh5D8ZucuPTylhX+Y
-         ZOVfWKb5vI7Up0b0C2FPrLb6NLD4By5uzknIH+c3Cp57tXFDnK/qnDRxltPoN8lW3Y3B
-         rfl+KKk5h1zT/xUrJhpsOusxpPYXGEzUgnIoeog4Vlb9mAH1wTnlDQG35Fqxn1OyDpsu
-         OOY8dzJebl0pR1YoZh+3Ss44jUVf6lltZsFt2d6hp8N+eVm4rCBkxNJPxgae1e1c88YT
-         cOevErIHGNKJbAC0IuQ4WM2h0mOGCcgyWk1R1kX6VxlVK1zD9TUESxhA7yaJj6kQ1hgo
-         Eitg==
-X-Gm-Message-State: APjAAAW3QY50o2G1hxr0pIX5Pz8shEA3CyVNnKduj5oIIEgndmp2+0Zv
-        Npo0jpQTXYSd1bp0mMPEBADLvY1oe8aYZ2pMLYLxYQ==
-X-Google-Smtp-Source: APXvYqwF1lSv64rIEIapmHrZ6IHwmSEzU8bnvHcvSHkQLK5z0KHWArfvRZvZYwhEP9Zv+BKQmxlncbYgeftk+2J0lwI=
-X-Received: by 2002:a25:7c05:: with SMTP id x5mr4806862ybc.358.1561688272976;
- Thu, 27 Jun 2019 19:17:52 -0700 (PDT)
+        Thu, 27 Jun 2019 22:20:00 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5S2GYgL047196
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 22:19:57 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2td63tr1sw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 22:19:57 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Fri, 28 Jun 2019 03:19:57 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 28 Jun 2019 03:19:51 +0100
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5S2JoLo55443882
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 02:19:50 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B4BE112062;
+        Fri, 28 Jun 2019 02:19:50 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AEFE5112061;
+        Fri, 28 Jun 2019 02:19:45 +0000 (GMT)
+Received: from morokweng.localdomain.com (unknown [9.85.218.134])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Jun 2019 02:19:45 +0000 (GMT)
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: [PATCH v12 00/11] Appended signatures support for IMA appraisal
+Date:   Thu, 27 Jun 2019 23:19:23 -0300
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190624212631.87212-1-shakeelb@google.com> <20190624212631.87212-3-shakeelb@google.com>
- <20190626065118.GJ17798@dhcp22.suse.cz>
-In-Reply-To: <20190626065118.GJ17798@dhcp22.suse.cz>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 27 Jun 2019 19:17:41 -0700
-Message-ID: <CALvZod7-g1mcxZTdcXnU_ApCZt6pNKFFy7MpY0aXUcO7bJp=SA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] oom: decouple mems_allowed from oom_unkillable_task
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        David Rientjes <rientjes@google.com>,
-        KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Paul Jackson <pj@sgi.com>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19062802-2213-0000-0000-000003A60F42
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011344; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01224269; UDB=6.00644348; IPR=6.01005459;
+ MB=3.00027497; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-28 02:19:55
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062802-2214-0000-0000-00005F06101F
+Message-Id: <20190628021934.4260-1-bauerman@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906280019
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:55 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Mon 24-06-19 14:26:31, Shakeel Butt wrote:
-> > The commit ef08e3b4981a ("[PATCH] cpusets: confine oom_killer to
-> > mem_exclusive cpuset") introduces a heuristic where a potential
-> > oom-killer victim is skipped if the intersection of the potential victim
-> > and the current (the process triggered the oom) is empty based on the
-> > reason that killing such victim most probably will not help the current
-> > allocating process. However the commit 7887a3da753e ("[PATCH] oom:
-> > cpuset hint") changed the heuristic to just decrease the oom_badness
-> > scores of such potential victim based on the reason that the cpuset of
-> > such processes might have changed and previously they might have
-> > allocated memory on mems where the current allocating process can
-> > allocate from.
-> >
-> > Unintentionally commit 7887a3da753e ("[PATCH] oom: cpuset hint")
-> > introduced a side effect as the oom_badness is also exposed to the
-> > user space through /proc/[pid]/oom_score, so, readers with different
-> > cpusets can read different oom_score of th same process.
-> >
-> > Later the commit 6cf86ac6f36b ("oom: filter tasks not sharing the same
-> > cpuset") fixed the side effect introduced by 7887a3da753e by moving the
-> > cpuset intersection back to only oom-killer context and out of
-> > oom_badness. However the combination of the commit ab290adbaf8f ("oom:
-> > make oom_unkillable_task() helper function") and commit 26ebc984913b
-> > ("oom: /proc/<pid>/oom_score treat kernel thread honestly")
-> > unintentionally brought back the cpuset intersection check into the
-> > oom_badness calculation function.
->
-> Thanks for this excursion into the history. I think it is very useful.
->
-> > Other than doing cpuset/mempolicy intersection from oom_badness, the
-> > memcg oom context is also doing cpuset/mempolicy intersection which is
-> > quite wrong and is caught by syzcaller with the following report:
-> >
-> > kasan: CONFIG_KASAN_INLINE enabled
-> > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 0 PID: 28426 Comm: syz-executor.5 Not tainted 5.2.0-rc3-next-20190607
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
-> > RIP: 0010:has_intersects_mems_allowed mm/oom_kill.c:84 [inline]
-> > RIP: 0010:oom_unkillable_task mm/oom_kill.c:168 [inline]
-> > RIP: 0010:oom_unkillable_task+0x180/0x400 mm/oom_kill.c:155
-> > Code: c1 ea 03 80 3c 02 00 0f 85 80 02 00 00 4c 8b a3 10 07 00 00 48 b8 00
-> > 00 00 00 00 fc ff df 4d 8d 74 24 10 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f
-> > 85 67 02 00 00 49 8b 44 24 10 4c 8d a0 68 fa ff ff
-> > RSP: 0018:ffff888000127490 EFLAGS: 00010a03
-> > RAX: dffffc0000000000 RBX: ffff8880a4cd5438 RCX: ffffffff818dae9c
-> > RDX: 100000000c3cc602 RSI: ffffffff818dac8d RDI: 0000000000000001
-> > RBP: ffff8880001274d0 R08: ffff888000086180 R09: ffffed1015d26be0
-> > R10: ffffed1015d26bdf R11: ffff8880ae935efb R12: 8000000061e63007
-> > R13: 0000000000000000 R14: 8000000061e63017 R15: 1ffff11000024ea6
-> > FS:  00005555561f5940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000607304 CR3: 000000009237e000 CR4: 00000000001426f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
-> > Call Trace:
-> >   oom_evaluate_task+0x49/0x520 mm/oom_kill.c:321
-> >   mem_cgroup_scan_tasks+0xcc/0x180 mm/memcontrol.c:1169
-> >   select_bad_process mm/oom_kill.c:374 [inline]
-> >   out_of_memory mm/oom_kill.c:1088 [inline]
-> >   out_of_memory+0x6b2/0x1280 mm/oom_kill.c:1035
-> >   mem_cgroup_out_of_memory+0x1ca/0x230 mm/memcontrol.c:1573
-> >   mem_cgroup_oom mm/memcontrol.c:1905 [inline]
-> >   try_charge+0xfbe/0x1480 mm/memcontrol.c:2468
-> >   mem_cgroup_try_charge+0x24d/0x5e0 mm/memcontrol.c:6073
-> >   mem_cgroup_try_charge_delay+0x1f/0xa0 mm/memcontrol.c:6088
-> >   do_huge_pmd_wp_page_fallback+0x24f/0x1680 mm/huge_memory.c:1201
-> >   do_huge_pmd_wp_page+0x7fc/0x2160 mm/huge_memory.c:1359
-> >   wp_huge_pmd mm/memory.c:3793 [inline]
-> >   __handle_mm_fault+0x164c/0x3eb0 mm/memory.c:4006
-> >   handle_mm_fault+0x3b7/0xa90 mm/memory.c:4053
-> >   do_user_addr_fault arch/x86/mm/fault.c:1455 [inline]
-> >   __do_page_fault+0x5ef/0xda0 arch/x86/mm/fault.c:1521
-> >   do_page_fault+0x71/0x57d arch/x86/mm/fault.c:1552
-> >   page_fault+0x1e/0x30 arch/x86/entry/entry_64.S:1156
-> > RIP: 0033:0x400590
-> > Code: 06 e9 49 01 00 00 48 8b 44 24 10 48 0b 44 24 28 75 1f 48 8b 14 24 48
-> > 8b 7c 24 20 be 04 00 00 00 e8 f5 56 00 00 48 8b 74 24 08 <89> 06 e9 1e 01
-> > 00 00 48 8b 44 24 08 48 8b 14 24 be 04 00 00 00 8b
-> > RSP: 002b:00007fff7bc49780 EFLAGS: 00010206
-> > RAX: 0000000000000001 RBX: 0000000000760000 RCX: 0000000000000000
-> > RDX: 0000000000000000 RSI: 000000002000cffc RDI: 0000000000000001
-> > RBP: fffffffffffffffe R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000075 R11: 0000000000000246 R12: 0000000000760008
-> > R13: 00000000004c55f2 R14: 0000000000000000 R15: 00007fff7bc499b0
-> > Modules linked in:
-> > ---[ end trace a65689219582ffff ]---
-> > RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
-> > RIP: 0010:has_intersects_mems_allowed mm/oom_kill.c:84 [inline]
-> > RIP: 0010:oom_unkillable_task mm/oom_kill.c:168 [inline]
-> > RIP: 0010:oom_unkillable_task+0x180/0x400 mm/oom_kill.c:155
-> > Code: c1 ea 03 80 3c 02 00 0f 85 80 02 00 00 4c 8b a3 10 07 00 00 48 b8 00
-> > 00 00 00 00 fc ff df 4d 8d 74 24 10 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f
-> > 85 67 02 00 00 49 8b 44 24 10 4c 8d a0 68 fa ff ff
-> > RSP: 0018:ffff888000127490 EFLAGS: 00010a03
-> > RAX: dffffc0000000000 RBX: ffff8880a4cd5438 RCX: ffffffff818dae9c
-> > RDX: 100000000c3cc602 RSI: ffffffff818dac8d RDI: 0000000000000001
-> > RBP: ffff8880001274d0 R08: ffff888000086180 R09: ffffed1015d26be0
-> > R10: ffffed1015d26bdf R11: ffff8880ae935efb R12: 8000000061e63007
-> > R13: 0000000000000000 R14: 8000000061e63017 R15: 1ffff11000024ea6
-> > FS:  00005555561f5940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000001b2f823000 CR3: 000000009237e000 CR4: 00000000001426f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
-> >
-> > The fix is to decouple the cpuset/mempolicy intersection check from
-> > oom_unkillable_task() and make sure cpuset/mempolicy intersection check
-> > is only done in the global oom context.
->
-> Thanks for the changelog update. This looks really great to me.
->
-> > Reported-by: syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com
-> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
->
-> I think that VM_BUG_ON in has_intersects_mems_allowed is over protective
-> and it makes the rest of the code a bit more convoluted than necessary.
-> Is there any reason we just do the check and return true there? Btw.
-> has_intersects_mems_allowed sounds like a misnomer to me. It suggests
-> to be a more generic function while it has some memcg implications which
-> are not trivial to spot without digging deeper. I would go with
-> oom_cpuset_eligible or something along those lines.
->
+Hello,
 
-I will change the name to "oom_cpuset_eligible".
+This version is essentially identical to the last one.
 
-> Anyway
-> Acked-by: Michal Hocko <mhocko@suse.com>
+It is only a rebase on top of today's linux-integrity/next-queued-testing,
+prompted by conflicts with Prakhar Srivastava's patches to measure the
+kernel command line. It also drops two patches that are already present in
+that branch.
 
-Thanks.
+As I mentioned in an earlier email, I believe Mimi is happy with this
+version but before she can accept it I still need acks from maintainers of
+the module and asymmetric keys subsystems for the first three patches.
+
+Many thanks to Mimi Zohar for her help with the development of this patch
+series.
+
+This patch which I sent earlier today needs to be applied first:
+
+ima: Update MAX_TEMPLATE_NAME_LEN to fit largest reasonable definition
+
+Original cover letter:
+
+On the OpenPOWER platform, secure boot and trusted boot are being
+implemented using IMA for taking measurements and verifying signatures.
+Since the kernel image on Power servers is an ELF binary, kernels are
+signed using the scripts/sign-file tool and thus use the same signature
+format as signed kernel modules.
+
+This patch series adds support in IMA for verifying those signatures.
+It adds flexibility to OpenPOWER secure boot, because it allows it to boot
+kernels with the signature appended to them as well as kernels where the
+signature is stored in the IMA extended attribute.
+
+Changes since v11:
+
+- Patch "integrity: Introduce struct evm_xattr"
+  - Dropped since it's already in linux-integrity/next-queued-testing.
+
+- Patch "ima: Use designated initializers for struct ima_event_data"
+  - Dropped since it's already in linux-integrity/next-queued-testing.
+
+Changes since v10:
+
+- Patch "MODSIGN: Export module signature definitions"
+  - Moved config MODULE_SIG_FORMAT definition before its use. Suggested by
+    Mimi Zohar.
+  - Added missing kerneldoc for @name parameter. Suggested by Mimi Zohar.
+
+- Patch "ima: Implement support for module-style appended signatures"
+  - Bugfix: don't check status variable when deciding whether to verify
+    modsig in ima_appraise_measurement(). Suggested by Mimi Zohar.
+  - Bugfix: verify the modsig in ima_appraise_measurement() if the xattr
+    contains a digest. Suggested by Mimi Zohar.
+
+- Patch "ima: Define ima-modsig template"
+  - Renamed ima_modsig_serialize() to ima_get_raw_modsig().
+  - Renamed check_current_template_modsig() to check_template_modsig().
+  - Fixed outdated comment in ima_eventmodsig_init(). Suggested by Mimi
+    Zohar.
+  - Check either the global or the per-rule template when an appraisal rule
+    allows modsig. Suggested by Mimi Zohar.
+
+- Patch "ima: Store the measurement again when appraising a modsig"
+  - Bugfix: Only re-measure file containing modsig if it was measured
+    before.
+  - Check for modsig-related fields in the template_desc obtained in
+    process_measurement() which can be a per-rule template. Suggested by Mimi
+    Zohar.
+
+- Patch "ima: Allow template= option for appraise rules as well"
+  - New patch. Suggested by Mimi Zohar.
+
+Changes since v9:
+
+- Patch "MODSIGN: Export module signature definitions"
+  - Moved mod_check_sig() to a new file so that CONFIG_IMA_APPRAISE_MODSIG
+    doesn't have to depend on CONFIG_MODULES.
+  - Changed scripts/Makefile to build sign-file if CONFIG_MODULE_SIG_FORMAT
+    is set.
+  - Removed Mimi's Reviewed-by because of the changes in this version.
+
+- Patch "PKCS#7: Refactor verify_pkcs7_signature()"
+  - Don't add function pkcs7_get_message_sig() anymore, since it's not
+    needed in the current version.
+
+- Patch "PKCS#7: Introduce pkcs7_get_digest()"
+  - Changed 'len' argument from 'u8 *' to 'u32 *'.
+  - Added 'hash_algo' argument to obtain the algo used for the digest.
+  - Don't check whether 'buf', 'len' and 'hash_algo' output arguments are NULL,
+    since the function's only caller always sets them.
+  - Removed Mimi's Reviewed-by because of the changes in this version.
+
+- Patch "integrity: Introduce asymmetric_sig_has_known_key()"
+  - Dropped.
+
+- Patch "integrity: Introduce integrity_keyring_from_id"
+  - Squashed into "ima: Implement support for module-style appended signatures"
+  - Changed integrity_keyring_from_id() to a static function (suggested by Mimi
+    Zohar).
+
+- Patch "ima: Introduce is_signed()"
+  - Dropped.
+
+- Patch "ima: Export func_tokens"
+  - Squashed into "ima: Implement support for module-style appended signatures"
+
+- Patch "ima: Use designated initializers for struct ima_event_data"
+  - New patch.
+
+- Patch "ima: Factor xattr_verify() out of ima_appraise_measurement()"
+  - New patch.
+
+- Patch "ima: Implement support for module-style appended signatures"
+  - Renamed 'struct modsig_hdr' to 'struct modsig'.
+  - Added integrity_modsig_verify() to integrity/digsig.c so that it's not
+    necessary to export integrity_keyring_from_id() (Suggested by Mimi Zohar).
+  - Don't add functions ima_xattr_sig_known_key() and
+    modsig_has_known_key() since they're not necessary anymore.
+  - Added modsig argument to ima_appraise_measurement().
+  - Verify modsig in a separate function called by ima_appraise_measurement().
+  - Renamed ima_read_collect_modsig() to ima_read_modsig(), with a separate
+    collect function added in patch "ima: Collect modsig" (suggested by Mimi
+    Zohar).
+  - In ima_read_modsig(), moved code saving of raw PKCS7 data to 'struct
+    modsig' to patch "ima: Collect modsig".
+  - In ima_read_modsig(), moved all parts related to the modsig hash to
+    patch "ima: Collect modsig".
+  - In ima_read_modsig(), don't check if the buf pointer is NULL since it's
+    never supposed to happen.
+  - Renamed ima_free_xattr_data() to ima_free_modsig().
+  - No need to check for modsig in ima_read_xattr() and
+    ima_inode_set_xattr() anymore.
+  - In ima_modsig_verify(), don't check if the modsig pointer is NULL since
+    it's not supposed to happen.
+  - Don't define IMA_MODSIG element in enum evm_ima_xattr_type.
+
+- Patch "ima: Collect modsig"
+  - New patch.
+
+- Patch "ima: Define ima-modsig template"
+  - Patch renamed from "ima: Add new "d-sig" template field"
+  - Renamed 'd-sig' template field to 'd-modsig'.
+  - Added 'modsig' template field.
+  - Added 'ima-modsig' defined template descriptor.
+  - Renamed ima_modsig_serialize_data() to ima_modsig_serialize().
+  - Renamed ima_get_modsig_hash() to ima_get_modsig_digest(). Also the
+    function is a lot simpler now since what it used to do is now done in
+    ima_collect_modsig() and pkcs7_get_digest().
+  - Added check for failed modsig collection in ima_eventdigest_modsig_init().
+  - Added modsig argument to ima_store_measurement().
+  - Added 'modsig' field to struct ima_event_data.
+  - Removed check for modsig == NULL in ima_get_modsig_digest() and in
+    ima_modsig_serialize_data() since their callers already performs that
+    check.
+  - Moved check_current_template_modsig() to this patch, previously was in
+    "ima: Store the measurement again when appraising a modsig".
+
+- Patch "ima: Store the measurement again when appraising a modsig"
+  - Renamed ima_template_has_sig() to ima_template_has_modsig().
+  - Added a change to ima_collect_measurement(), making it to call
+    ima_collect_modsig() even if IMA_COLLECT is set in iint->flags.
+  - Removed IMA_READ_MEASURE flag.
+  - Renamed template_has_sig global variable to template_has_modsig.
+  - Renamed find_sig_in_template() to find_modsig_in_template().
+
+
+Thiago Jung Bauermann (11):
+  MODSIGN: Export module signature definitions
+  PKCS#7: Refactor verify_pkcs7_signature()
+  PKCS#7: Introduce pkcs7_get_digest()
+  integrity: Select CONFIG_KEYS instead of depending on it
+  ima: Add modsig appraise_type option for module-style appended
+    signatures
+  ima: Factor xattr_verify() out of ima_appraise_measurement()
+  ima: Implement support for module-style appended signatures
+  ima: Collect modsig
+  ima: Define ima-modsig template
+  ima: Store the measurement again when appraising a modsig
+  ima: Allow template= option for appraise rules as well
+
+ Documentation/ABI/testing/ima_policy      |   6 +-
+ Documentation/security/IMA-templates.rst  |   3 +
+ certs/system_keyring.c                    |  61 +++++--
+ crypto/asymmetric_keys/pkcs7_verify.c     |  33 ++++
+ include/crypto/pkcs7.h                    |   4 +
+ include/linux/module.h                    |   3 -
+ include/linux/module_signature.h          |  44 +++++
+ include/linux/verification.h              |  10 ++
+ init/Kconfig                              |   6 +-
+ kernel/Makefile                           |   1 +
+ kernel/module.c                           |   1 +
+ kernel/module_signature.c                 |  46 +++++
+ kernel/module_signing.c                   |  56 +------
+ scripts/Makefile                          |   2 +-
+ security/integrity/Kconfig                |   2 +-
+ security/integrity/digsig.c               |  43 ++++-
+ security/integrity/ima/Kconfig            |  13 ++
+ security/integrity/ima/Makefile           |   1 +
+ security/integrity/ima/ima.h              |  60 ++++++-
+ security/integrity/ima/ima_api.c          |  23 ++-
+ security/integrity/ima/ima_appraise.c     | 194 ++++++++++++++--------
+ security/integrity/ima/ima_main.c         |  24 ++-
+ security/integrity/ima/ima_modsig.c       | 169 +++++++++++++++++++
+ security/integrity/ima/ima_policy.c       |  68 +++++++-
+ security/integrity/ima/ima_template.c     |  26 ++-
+ security/integrity/ima/ima_template_lib.c |  64 ++++++-
+ security/integrity/ima/ima_template_lib.h |   4 +
+ security/integrity/integrity.h            |  20 +++
+ 28 files changed, 819 insertions(+), 168 deletions(-)
+ create mode 100644 include/linux/module_signature.h
+ create mode 100644 kernel/module_signature.c
+ create mode 100644 security/integrity/ima/ima_modsig.c
+
