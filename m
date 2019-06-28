@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5B2C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD7AC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B405C2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862082086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfF1Lw5 (ORCPT
+        id S1727138AbfF1LxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:52:57 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8231 "EHLO huawei.com"
+        Fri, 28 Jun 2019 07:53:05 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7677 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726931AbfF1LwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:52:15 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3BA4EAE7289F2E695B14;
-        Fri, 28 Jun 2019 19:52:11 +0800 (CST)
+        id S1726587AbfF1LwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 07:52:09 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id F1ECDB8DA3BAFCC954CE;
+        Fri, 28 Jun 2019 19:52:05 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 28 Jun 2019 19:52:02 +0800
+ 14.3.439.0; Fri, 28 Jun 2019 19:51:59 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
         Peng Li <lipeng321@huawei.com>,
-        "Huazhong Tan" <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 10/12] net: hns3: remove unused linkmode definition
-Date:   Fri, 28 Jun 2019 19:50:16 +0800
-Message-ID: <1561722618-12168-11-git-send-email-tanhuazhong@huawei.com>
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 03/12] net: hns3: change SSU's buffer allocation according to UM
+Date:   Fri, 28 Jun 2019 19:50:09 +0800
+Message-ID: <1561722618-12168-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
 References: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,47 +47,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-This patch removes unused linkmode definition.
+Currently when there is share buffer in the SSU(storage
+switching unit), the low waterline for RX private buffer is
+too low to keep the hardware running. Hardware may have
+processed all the packet stored in the private buffer of the
+low waterline before the new packet comes, because hardware
+only tell the peer send packet again when the private buffer
+is under the low waterline.
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
+So this patch only allocate RX private buffer if there is
+enough buffer according to hardware user manual.
+
+This patch also reserve some buffer for reusing when TC num
+is less than or equal to 2, and change PAUSE_TRANS_GAP &
+HCLGE_NON_DCB_ADDITIONAL_BUF according to hardware user
+manual.
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h | 19 -------------------
- 1 file changed, 19 deletions(-)
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  2 +-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 65 +++++++++++++++++++++-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.h  |  2 +-
+ 3 files changed, 64 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index 3ac1411..dd00640 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -446,25 +446,6 @@ enum hns3_flow_level_range {
- 	HNS3_FLOW_ULTRA = 3,
- };
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+index cf52cdf..d23ab2b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+@@ -884,7 +884,7 @@ struct hclge_serdes_lb_cmd {
+ #define HCLGE_TOTAL_PKT_BUF		0x108000 /* 1.03125M bytes */
+ #define HCLGE_DEFAULT_DV		0xA000	 /* 40k byte */
+ #define HCLGE_DEFAULT_NON_DCB_DV	0x7800	/* 30K byte */
+-#define HCLGE_NON_DCB_ADDITIONAL_BUF	0x200	/* 512 byte */
++#define HCLGE_NON_DCB_ADDITIONAL_BUF	0x1400	/* 5120 byte */
  
--enum hns3_link_mode_bits {
--	HNS3_LM_FIBRE_BIT = BIT(0),
--	HNS3_LM_AUTONEG_BIT = BIT(1),
--	HNS3_LM_TP_BIT = BIT(2),
--	HNS3_LM_PAUSE_BIT = BIT(3),
--	HNS3_LM_BACKPLANE_BIT = BIT(4),
--	HNS3_LM_10BASET_HALF_BIT = BIT(5),
--	HNS3_LM_10BASET_FULL_BIT = BIT(6),
--	HNS3_LM_100BASET_HALF_BIT = BIT(7),
--	HNS3_LM_100BASET_FULL_BIT = BIT(8),
--	HNS3_LM_1000BASET_FULL_BIT = BIT(9),
--	HNS3_LM_10000BASEKR_FULL_BIT = BIT(10),
--	HNS3_LM_25000BASEKR_FULL_BIT = BIT(11),
--	HNS3_LM_40000BASELR4_FULL_BIT = BIT(12),
--	HNS3_LM_50000BASEKR2_FULL_BIT = BIT(13),
--	HNS3_LM_100000BASEKR4_FULL_BIT = BIT(14),
--	HNS3_LM_COUNT = 15
--};
--
- #define HNS3_INT_GL_MAX			0x1FE0
- #define HNS3_INT_GL_50K			0x0014
- #define HNS3_INT_GL_20K			0x0032
+ #define HCLGE_TYPE_CRQ			0
+ #define HCLGE_TYPE_CSQ			1
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index b25365c..a2401c3 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -30,6 +30,9 @@
+ #define HCLGE_BUF_SIZE_UNIT	256U
+ #define HCLGE_BUF_MUL_BY	2
+ #define HCLGE_BUF_DIV_BY	2
++#define NEED_RESERVE_TC_NUM	2
++#define BUF_MAX_PERCENT		100
++#define BUF_RESERVE_PERCENT	90
+ 
+ #define HCLGE_RESET_MAX_FAIL_CNT	5
+ 
+@@ -1694,10 +1697,14 @@ static bool  hclge_is_rx_buf_ok(struct hclge_dev *hdev,
+ 	}
+ 
+ 	if (hnae3_dev_dcb_supported(hdev)) {
++		hi_thrd = shared_buf - hdev->dv_buf_size;
++
++		if (tc_num <= NEED_RESERVE_TC_NUM)
++			hi_thrd = hi_thrd * BUF_RESERVE_PERCENT
++					/ BUF_MAX_PERCENT;
++
+ 		if (tc_num)
+-			hi_thrd = (shared_buf - hdev->dv_buf_size) / tc_num;
+-		else
+-			hi_thrd = shared_buf - hdev->dv_buf_size;
++			hi_thrd = hi_thrd / tc_num;
+ 
+ 		hi_thrd = max_t(u32, hi_thrd, HCLGE_BUF_MUL_BY * aligned_mps);
+ 		hi_thrd = rounddown(hi_thrd, HCLGE_BUF_SIZE_UNIT);
+@@ -1837,6 +1844,55 @@ static bool hclge_drop_pfc_buf_till_fit(struct hclge_dev *hdev,
+ 	return hclge_is_rx_buf_ok(hdev, buf_alloc, rx_all);
+ }
+ 
++static int hclge_only_alloc_priv_buff(struct hclge_dev *hdev,
++				      struct hclge_pkt_buf_alloc *buf_alloc)
++{
++#define COMPENSATE_BUFFER	0x3C00
++#define COMPENSATE_HALF_MPS_NUM	5
++#define PRIV_WL_GAP		0x1800
++
++	u32 rx_priv = hdev->pkt_buf_size - hclge_get_tx_buff_alloced(buf_alloc);
++	u32 tc_num = hclge_get_tc_num(hdev);
++	u32 half_mps = hdev->mps >> 1;
++	u32 min_rx_priv;
++	unsigned int i;
++
++	if (tc_num)
++		rx_priv = rx_priv / tc_num;
++
++	if (tc_num <= NEED_RESERVE_TC_NUM)
++		rx_priv = rx_priv * BUF_RESERVE_PERCENT / BUF_MAX_PERCENT;
++
++	min_rx_priv = hdev->dv_buf_size + COMPENSATE_BUFFER +
++			COMPENSATE_HALF_MPS_NUM * half_mps;
++	min_rx_priv = round_up(min_rx_priv, HCLGE_BUF_SIZE_UNIT);
++	rx_priv = round_down(rx_priv, HCLGE_BUF_SIZE_UNIT);
++
++	if (rx_priv < min_rx_priv)
++		return false;
++
++	for (i = 0; i < HCLGE_MAX_TC_NUM; i++) {
++		struct hclge_priv_buf *priv = &buf_alloc->priv_buf[i];
++
++		priv->enable = 0;
++		priv->wl.low = 0;
++		priv->wl.high = 0;
++		priv->buf_size = 0;
++
++		if (!(hdev->hw_tc_map & BIT(i)))
++			continue;
++
++		priv->enable = 1;
++		priv->buf_size = rx_priv;
++		priv->wl.high = rx_priv - hdev->dv_buf_size;
++		priv->wl.low = priv->wl.high - PRIV_WL_GAP;
++	}
++
++	buf_alloc->s_buf.buf_size = 0;
++
++	return true;
++}
++
+ /* hclge_rx_buffer_calc: calculate the rx private buffer size for all TCs
+  * @hdev: pointer to struct hclge_dev
+  * @buf_alloc: pointer to buffer calculation data
+@@ -1856,6 +1912,9 @@ static int hclge_rx_buffer_calc(struct hclge_dev *hdev,
+ 		return 0;
+ 	}
+ 
++	if (hclge_only_alloc_priv_buff(hdev, buf_alloc))
++		return 0;
++
+ 	if (hclge_rx_buf_calc_all(hdev, true, buf_alloc))
+ 		return 0;
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.h
+index 5150daa..8186109 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.h
+@@ -12,7 +12,7 @@
+ 
+ #define HCLGE_TM_PORT_BASE_MODE_MSK	BIT(0)
+ 
+-#define HCLGE_DEFAULT_PAUSE_TRANS_GAP	0xFF
++#define HCLGE_DEFAULT_PAUSE_TRANS_GAP	0x7F
+ #define HCLGE_DEFAULT_PAUSE_TRANS_TIME	0xFFFF
+ 
+ /* SP or DWRR */
 -- 
 2.7.4
 
