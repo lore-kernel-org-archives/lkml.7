@@ -2,77 +2,83 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D63BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3B8C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DAF206A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4494208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:22:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="fgy+EAjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbfF1AAh (ORCPT
+        id S1726651AbfF1AUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 20:00:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36000 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfF1AAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 20:00:36 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9D94AC04BD4A;
-        Fri, 28 Jun 2019 00:00:36 +0000 (UTC)
-Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0BA9360BE0;
-        Fri, 28 Jun 2019 00:00:35 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 19:00:34 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] objtool: Be lenient about -Wundef
-Message-ID: <20190628000033.ipcypg4kny2whfz7@treble>
-References: <20190619120337.78624-1-olof@lixom.net>
+        Thu, 27 Jun 2019 20:20:35 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:53248 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfF1AUf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 20:20:35 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x5S0KWp8006247
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 09:20:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x5S0KWp8006247
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561681233;
+        bh=FfFvbLeTvHF4J2LwiruUFDOUX+CzWNP8nToG0NC0n/A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fgy+EAjpY0arvlJS2FI4jL9MR2RyQ6vOAS0MAwmcJ9/x2WM+eiEycLIFdQurV/PZL
+         ivE93M+9Qg3/7rwdHjDLM5ajljGKfK0Cf+U3/yhCS/uIsrM2maE3wHBsTJqjvYLFqs
+         Yvw+tFOIOHQ2WlrE/iiQLJJ2LsDDgBvpRMZkJWVMQ8zRVNeiCgHxkljSCxnWXJGIJD
+         AAau0ClHb3nAdiWbQCfzKwK4FdcxtfOsYveKEjdtEt8SdR7lbdT7BB7aGKw05KLTNL
+         0obYY8xvmm4uXuTNBBqAJqnAdK8BbXATTl7YXetiIgqmhphiIed7Ru/r2BYeHq7Z1J
+         3ZrBW417evXrw==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id j21so1564735uap.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 17:20:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAVDT/Bv5Uv/BA9ugHB855GGT0hATv0v0271kP0QByKldjEatu/Y
+        IeEFZ5/so+Gjoc5cgEzx+/3UFNUCRvbHmArRjEk=
+X-Google-Smtp-Source: APXvYqwR/HSlTCsKLQPImh1GC7qYXUhUeq6IgNn8w7Lz+hVttmjew/lR9DdypS3GQAWDJD/nZ1m95iPbw+2kZwMZ1hY=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr4493495uag.40.1561681231765;
+ Thu, 27 Jun 2019 17:20:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190619120337.78624-1-olof@lixom.net>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 28 Jun 2019 00:00:36 +0000 (UTC)
+References: <20190627212447.217059-1-ndesaulniers@google.com>
+In-Reply-To: <20190627212447.217059-1-ndesaulniers@google.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 28 Jun 2019 09:19:55 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASV6LxTsTnAdJbqxYecrj-TEZ5+j7bVvDPRkFDjjykXzQ@mail.gmail.com>
+Message-ID: <CAK7LNASV6LxTsTnAdJbqxYecrj-TEZ5+j7bVvDPRkFDjjykXzQ@mail.gmail.com>
+Subject: Re: [PATCH] .gitignore: ignore *.rej files
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Rob Herring <robh@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 05:03:37AM -0700, Olof Johansson wrote:
-> Some libelf versions use undefined macros, which combined with newer GCC
-> makes for errors from system headers. This isn't overly useful to fail
-> compiling objtool for.
-> 
-> Error as seen:
-> 
-> cc1: all warnings being treated as errors
-> In file included from arch/x86/../../elf.h:10,
->                  from arch/x86/decode.c:14:
-> /usr/include/libelf/gelf.h:25:5: error: "__LIBELF_INTERNAL__" is not defined, evaluates to 0 [-Werror=undef]
->  #if __LIBELF_INTERNAL__
->      ^~~~~~~~~~~~~~~~~~~
-> 
-> For this reason, skip -Wundef on objtool.
-> 
-> Signed-off-by: Olof Johansson <olof@lixom.net>
+On Fri, Jun 28, 2019 at 6:25 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> Such as those produced by the `patch` utility. We already ignore *.orig
+> files, and there are currently no *.rej files in the tree at this time.
+>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
 
-Sorry for the delay, I was out last week and I'm still getting caught
-up.
 
-Which libelf was this?  I'm guessing it's the old non-elfutils version
-which has been unmaintained for 10 years (and which doesn't work with
-objtool anyway).
+This reverts 1f5d3a6b6532e25a5cdf1f311956b2b03d343a48
+so needs enough reason to do so.
 
-It would be nice if we could figure out a way to detect that libelf and
-report a more useful error for it.
+
+
+
 
 -- 
-Josh
+Best Regards
+Masahiro Yamada
