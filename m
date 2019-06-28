@@ -8,53 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82928C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7FFC5B576
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526AC2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB6220B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="upp295eE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YHZTLQ59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfF1AnU (ORCPT
+        id S1726718AbfF1AnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 20:43:20 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34824 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfF1AnT (ORCPT
+        Thu, 27 Jun 2019 20:43:23 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40124 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfF1AnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 20:43:19 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w24so2203721plp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 17:43:19 -0700 (PDT)
+        Thu, 27 Jun 2019 20:43:22 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p184so2049157pfp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 17:43:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=XK5NFZh7pG1K+u3GPFcGObWPOefyWYFPM8I5XfkBG/8=;
-        b=upp295eE4zrZ2rfDBy6cAlytz9+pNGthZTHLKTr1OO9dTOiMZf6JwjuEq8ekcHwklm
-         cZv7vb8Oym6r76qlAR2DGFlE+Fbgscpula7GgOLKLeBbiFxjKOlKf23bv6QUIvRVWaHE
-         Ea+r/DyVrIdjoJq+E65Gw199EVyBXO2RUkgTDAb6ac+RO8yV6feWGc6NCWESOj4QnZ+6
-         wxVgJDAGElxaJAHNExlL90/amJQsDPcePEhhadmUwuhv9YNJvTpqQWp/tp7mCG/2hSjS
-         b/Zb6zy2r9GhjEZ8w8H3xBiCMMbqthMSoge28/XS+uZd9P1/BJZP4YQ0MGL2gbG8GElv
-         DoPA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=d162iqtuNRNjSY3NyB0aYNZBj8AFFyHaBGabROY5zB0=;
+        b=YHZTLQ59iv53WzHQFefXff3T56dcMxiJD5Yctll4VgHgaQgI4i3ZrviitjnvQGXV+r
+         BuCh2omzPIM+C2pkLzOmE9Jc5FH3pDKkJfdP1qkHjI2Ef31JGHo1RuCHFwcdN4HmE+AL
+         I14oFVB5nj3oYfn/jeqXY2x/qhpP94moQHLjMDmLNPO39wT04oJgXQu9xduuOzsJwt/7
+         BKG++PDEmepZGsiQLRJ6Il+wOePVG+23eyEABZMSVEijkbisWLuTGiE+JTrbixCpaXF7
+         RDJF2tiY190d21PRwcKzT7WicYf8U4ts1Jmer3/y2sYjjEmGjI+V43FlWJd7WlR1BjEP
+         SPrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XK5NFZh7pG1K+u3GPFcGObWPOefyWYFPM8I5XfkBG/8=;
-        b=pCYNhtpDZmyG2w8gicLTFCqtROKa95I27aTD4QS2QGf9KstgohyIET0V/EsruKZuqk
-         MEUItpRa9GSdpt4Oq5AKlhe5/OjRTk9kMAp7+Yc+qXRak4WoBNiWMuZ0L5ZYpdDuI2aJ
-         Rm9AIOQJexnjtCi8fMs7+/jMGFtmSO8pB4736S1sUDEr4riaPFtA6RYzs4RMZvEIKmeZ
-         j8IIRmCF3R6OS+noOM0tV2QJhYpaSCN2HUbCrDLkzIabEwXUuyfE+GrA2Uzr+m5Tx9tG
-         Bc60dGOVYHXM8x32W7fHC3iHQ/xHw6yASWnpGSDr+LeeuGZAMng+WiIQ8TJTVvK+sTNr
-         5dTQ==
-X-Gm-Message-State: APjAAAV5GUlN1XThNezL0Ll1uJLEJOnmX2YA7kvulCQYLeBYQ5OZE6nP
-        Ocz/z0AkOXzP++Z1rKPaR2fbpfclEj4=
-X-Google-Smtp-Source: APXvYqxegHsYVbbcs7Qa6pW5xQvySaMtUe0xaNM73KyiAwlrJT2OfQixsRUUai9jwK7wPOKdbdO+NA==
-X-Received: by 2002:a17:902:7b84:: with SMTP id w4mr7879007pll.22.1561682598960;
-        Thu, 27 Jun 2019 17:43:18 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=d162iqtuNRNjSY3NyB0aYNZBj8AFFyHaBGabROY5zB0=;
+        b=cvE0jQEQTZZ0QFKDJ7Ax7SM6f37/MEpmFQpPLD0+wU/eql27MhyelZsSYySQTCkSn/
+         /pqADDOY4QktrZhP9hCEPRSiDKqPEKTk9ZuFjLIWp2ZMyIKr/NH3uwyTfZcv+tkxeec8
+         2YQSLKwH6x3P09IhTdZ4GU6MxlpRMA7EgxfvKDwbmHBpFGlDM6ZJYJveh28S7MKoXu4x
+         J30c8jPcPiuasxeOunrTLp/INnFmwUadE6RhFapZDU8FeVCibpBGdGpojz4VmN/XFM2J
+         xLe+JwUP5UZFvRTs+iicHMXo0k8XQESYF1FurdLIzaci1fVpvEUjjLLOqpNpqGl9Vc47
+         ZtgA==
+X-Gm-Message-State: APjAAAVDkjCjBX6RrTxpPd4aDYicqRvWVmacppv6iZi6+Xw+Hey6uY7W
+        1v/2oiOGltLy7QMwESaoBdgbGWRdvtM=
+X-Google-Smtp-Source: APXvYqxF6Ecy7iu+6E0RPNfyb8EPwgopzuozwBqRw3ed6fOh33U3LXSxDdVWMS2cXAGLtfsaaCGhKA==
+X-Received: by 2002:a17:90a:d817:: with SMTP id a23mr9417481pjv.54.1561682601211;
+        Thu, 27 Jun 2019 17:43:21 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id n89sm11927802pjc.0.2019.06.27.17.43.16
+        by smtp.googlemail.com with ESMTPSA id n89sm11927802pjc.0.2019.06.27.17.43.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 27 Jun 2019 17:43:18 -0700 (PDT)
+        Thu, 27 Jun 2019 17:43:20 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org
@@ -63,10 +64,12 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
         Frederic Weisbecker <frederic@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2] sched/nohz: Optimize get_nohz_timer_target()
-Date:   Fri, 28 Jun 2019 08:43:12 +0800
-Message-Id: <1561682593-12071-1-git-send-email-wanpengli@tencent.com>
+Subject: [PATCH RESEND v3] sched/isolation: Prefer housekeeping cpu in local node
+Date:   Fri, 28 Jun 2019 08:43:13 +0800
+Message-Id: <1561682593-12071-2-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1561682593-12071-1-git-send-email-wanpengli@tencent.com>
+References: <1561682593-12071-1-git-send-email-wanpengli@tencent.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -74,26 +77,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-On a machine, cpu 0 is used for housekeeping, the other 39 cpus in the 
-same socket are in nohz_full mode. We can observe huge time burn in the 
-loop for seaching nearest busy housekeeper cpu by ftrace.
-
-  2)               |       get_nohz_timer_target() {
-  2)   0.240 us    |         housekeeping_test_cpu();
-  2)   0.458 us    |         housekeeping_test_cpu();
-
-  ...
-
-  2)   0.292 us    |         housekeeping_test_cpu();
-  2)   0.240 us    |         housekeeping_test_cpu();
-  2)   0.227 us    |         housekeeping_any_cpu();
-  2) + 43.460 us   |       }
-  
-This patch optimizes the searching logic by finding a nearest housekeeper
-cpu in the housekeeping cpumask, it can minimize the worst searching time 
-from ~44us to < 10us in my testing. In addition, the last iterated busy 
-housekeeper can become a random candidate while current CPU is a better 
-fallback if it is a housekeeper.
+In real product setup, there will be houseeking cpus in each nodes, it 
+is prefer to do housekeeping from local node, fallback to global online 
+cpumask if failed to find houseeking cpu from local node.
 
 Cc: Ingo Molnar <mingo@redhat.com> 
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -101,56 +87,96 @@ Cc: Frederic Weisbecker <frederic@kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
+v2 -> v3:
+ * add sched_numa_find_closest comments
 v1 -> v2:
- * current CPU is a better fallback if it is a housekeeper
+ * introduce sched_numa_find_closest
 
- kernel/sched/core.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ kernel/sched/isolation.c | 12 ++++++++++--
+ kernel/sched/sched.h     |  5 ++---
+ kernel/sched/topology.c  | 22 ++++++++++++++++++++++
+ 3 files changed, 34 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 102dfcf..04a0f6a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -539,27 +539,32 @@ void resched_cpu(int cpu)
-  */
- int get_nohz_timer_target(void)
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 123ea07..589afba 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -16,9 +16,17 @@ static unsigned int housekeeping_flags;
+ 
+ int housekeeping_any_cpu(enum hk_flags flags)
  {
--	int i, cpu = smp_processor_id();
-+	int i, cpu = smp_processor_id(), default_cpu = -1;
- 	struct sched_domain *sd;
- 
--	if (!idle_cpu(cpu) && housekeeping_cpu(cpu, HK_FLAG_TIMER))
--		return cpu;
-+	if (housekeeping_cpu(cpu, HK_FLAG_TIMER)) {
-+		if (!idle_cpu(cpu))
-+			return cpu;
-+		default_cpu = cpu;
+-	if (static_branch_unlikely(&housekeeping_overridden))
+-		if (housekeeping_flags & flags)
++	int cpu;
++
++	if (static_branch_unlikely(&housekeeping_overridden)) {
++		if (housekeeping_flags & flags) {
++			cpu = sched_numa_find_closest(housekeeping_mask, smp_processor_id());
++			if (cpu < nr_cpu_ids)
++				return cpu;
++
+ 			return cpumask_any_and(housekeeping_mask, cpu_online_mask);
++		}
 +	}
+ 	return smp_processor_id();
+ }
+ EXPORT_SYMBOL_GPL(housekeeping_any_cpu);
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index b08dee2..0db7431 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1212,9 +1212,6 @@ enum numa_topology_type {
+ extern enum numa_topology_type sched_numa_topology_type;
+ extern int sched_max_numa_distance;
+ extern bool find_numa_distance(int distance);
+-#endif
+-
+-#ifdef CONFIG_NUMA
+ extern void sched_init_numa(void);
+ extern void sched_domains_numa_masks_set(unsigned int cpu);
+ extern void sched_domains_numa_masks_clear(unsigned int cpu);
+@@ -1224,6 +1221,8 @@ static inline void sched_domains_numa_masks_set(unsigned int cpu) { }
+ static inline void sched_domains_numa_masks_clear(unsigned int cpu) { }
+ #endif
  
- 	rcu_read_lock();
- 	for_each_domain(cpu, sd) {
--		for_each_cpu(i, sched_domain_span(sd)) {
-+		for_each_cpu_and(i, sched_domain_span(sd),
-+			housekeeping_cpumask(HK_FLAG_TIMER)) {
- 			if (cpu == i)
- 				continue;
++extern int sched_numa_find_closest(const struct cpumask *cpus, int cpu);
++
+ #ifdef CONFIG_NUMA_BALANCING
+ /* The regions in numa_faults array from task_struct */
+ enum numa_faults_stats {
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 63184cf..083ef23 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1726,6 +1726,28 @@ void sched_domains_numa_masks_clear(unsigned int cpu)
  
--			if (!idle_cpu(i) && housekeeping_cpu(i, HK_FLAG_TIMER)) {
-+			if (!idle_cpu(i)) {
- 				cpu = i;
- 				goto unlock;
- 			}
- 		}
- 	}
+ #endif /* CONFIG_NUMA */
  
--	if (!housekeeping_cpu(cpu, HK_FLAG_TIMER))
--		cpu = housekeeping_any_cpu(HK_FLAG_TIMER);
-+	if (default_cpu == -1)
-+		default_cpu = housekeeping_any_cpu(HK_FLAG_TIMER);
-+	cpu = default_cpu;
- unlock:
- 	rcu_read_unlock();
- 	return cpu;
++/*
++ * sched_numa_find_closest() - given the NUMA topology, find the cpu
++ *                             closest to @cpu from @cpumask.
++ * cpumask: cpumask to find a cpu from
++ * cpu: cpu to be close to
++ *
++ * returns: cpu, or >= nr_cpu_ids when nothing found (or !NUMA).
++ */
++int sched_numa_find_closest(const struct cpumask *cpus, int cpu)
++{
++#ifdef CONFIG_NUMA
++	int i, j = cpu_to_node(cpu);
++
++	for (i = 0; i < sched_domains_numa_levels; i++) {
++		cpu = cpumask_any_and(cpus, sched_domains_numa_masks[i][j]);
++		if (cpu < nr_cpu_ids)
++			return cpu;
++	}
++#endif
++	return nr_cpu_ids;
++}
++
+ static int __sdt_alloc(const struct cpumask *cpu_map)
+ {
+ 	struct sched_domain_topology_level *tl;
 -- 
-1.8.3.1
+2.7.4
 
