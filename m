@@ -7,2033 +7,1692 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5C2C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A50C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97905215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD04F208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561724470;
-	bh=XlJo/s4cSHqfQgukUFsVQTeVfH8SRT6KZ6jAtimonqA=;
+	s=default; t=1561724473;
+	bh=9TsWHwBU7Sg4Fv9lQL7pgOu1DrT+RSQ35LOb/BAoR3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lfnaLEuIXMUI8WWqo4yR/PhVndfBUA9cU54o+Ye17HPOfGtVNZJbYxptIeJrfI6B2
-	 q5WqCQ8ejjvWOQcTr/s1QKf3RkjlV9lGyZnJDPL6PhAkGN4pY6/DE+rYSRPxLpkuzV
-	 dmrf4TicvCldCrh5Jb7gjVxGXABewYHkiXLMbXek=
+	b=rNxez8WUX+Zk6R3v82vLqntDDbGv+MsbVy2BEZlp9Es83zMRG6Qc+pie+p/Fy/rml
+	 cnbzKEmIYmIFSl9fUq3BY7HMkbqiOWHeEeSR/jcWpLkBA/PxN4n++hgzzRYIuaqJvp
+	 LlhkTmChKXNLEAwYxxlLSIUvp5wB6kFfKRdmx+uY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfF1MVE (ORCPT
+        id S1727143AbfF1MVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:21:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58948 "EHLO
+        Fri, 28 Jun 2019 08:21:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58968 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfF1MUu (ORCPT
+        with ESMTP id S1726875AbfF1MUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:20:50 -0400
+        Fri, 28 Jun 2019 08:20:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xz/ZvlCVRvGSIe+tsVe0A9eW2QRksWCnyWyekumqMPQ=; b=DqByFKawMWxFSmJ5dPd5AKvLYW
-        j1BNVWHvLn/DEL1m3m0oR5cnBxFvc6aVC++qKS8WteBFCWTR0QSyjZrbb+JJJC04UzNxqRwuPKjTo
-        iGAJ32pevuTn2w19LwygBQd88SoD/BxiaY9awXUk5MEOfnDZVtlj3s4JznnxpbKGlULYJ4H3wZbA3
-        tcln4mhe1A+6rRLqTyXIlntOBAVZW2xUnkbDFqCbYflnVIDUl5SLuweTd68Q13UARI21n+U3dHvz3
-        //ZHyL72zqMHZ3Ozh/2KivNR61IHkAbTOriIZI5uqRDs9COuVI7b+zAwOsZQLuTcPs8sw9VTV+Voc
-        gwgiU67g==;
+        bh=U/n/6ZEpmIDBKGHgrR9OrCg1XI8jaOd6KkEJu3TT/Vo=; b=KwxmZYFjGmbyENF4hFhJi+nI4Z
+        g2lqxvcwRCBVtt+3l05WMtTzV6KdgYH/dJvXsp/t8Khz7tDROiFbRY1CL3Jb5zMXWhyWWP3RQRyaC
+        J5Qps2v/MAmyw9FvO30bu2w/8FWRoMQwDiGRu8lxO4lVrW2ovV3pPeuYEeqmvg6T8BF+Cf7oqCTJx
+        9ROS7hlfc08o5pAEofV5aIoxsFNNc1VnjyzxDECRPFftVIFJWeP4DZP33SFrjz7AxkQrf4jw18Abv
+        ShXe69kHgu7U1qsuBXfWa8tSv/3OtfDB16G7iBfdHF/gwO0SWz6FPhrcTXuBl55FNk2D232NlGXxJ
+        7trkSP+Q==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgprv-0000AN-VP; Fri, 28 Jun 2019 12:20:45 +0000
+        id 1hgprw-0000AP-0F; Fri, 28 Jun 2019 12:20:45 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgpru-00059c-1C; Fri, 28 Jun 2019 09:20:42 -0300
+        id 1hgpru-00059n-36; Fri, 28 Jun 2019 09:20:42 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        Arjan van de Ven <arjan@linux.intel.com>
-Subject: [PATCH 35/43] docs: thermal: convert to ReST
-Date:   Fri, 28 Jun 2019 09:20:31 -0300
-Message-Id: <7bcb613259e724ef564d373d7299073d841df7ac.1561723980.git.mchehab+samsung@kernel.org>
+        Jens Axboe <axboe@kernel.dk>, Jiri Kosina <jikos@kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Shuah Khan <shuah@kernel.org>, linux-block@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH 37/43] docs: blockdev: convert to ReST
+Date:   Fri, 28 Jun 2019 09:20:33 -0300
+Message-Id: <82c018d038ac46277da25b4ead77b2833b940cde.1561723980.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561723979.git.mchehab+samsung@kernel.org>
 References: <cover.1561723979.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the thermal documentation files to ReST, add an
+Rename the blockdev documentation files to ReST, add an
 index for them and adjust in order to produce a nice html
 output via the Sphinx build system.
+
+The drbd sub-directory contains some graphs and data flows.
+Add those too to the documentation.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- ...pu-cooling-api.txt => cpu-cooling-api.rst} |  39 +-
- .../{exynos_thermal => exynos_thermal.rst}    |  47 +-
- .../thermal/exynos_thermal_emulation          |  53 --
- .../thermal/exynos_thermal_emulation.rst      |  61 +++
- Documentation/thermal/index.rst               |  18 +
- ...el_powerclamp.txt => intel_powerclamp.rst} | 177 +++----
- .../{nouveau_thermal => nouveau_thermal.rst}  |  54 +-
- ...ower_allocator.txt => power_allocator.rst} | 140 ++---
- .../thermal/{sysfs-api.txt => sysfs-api.rst}  | 490 ++++++++++++------
- ...hermal => x86_pkg_temperature_thermal.rst} |  28 +-
- MAINTAINERS                                   |   2 +-
- include/linux/thermal.h                       |   4 +-
- 12 files changed, 689 insertions(+), 424 deletions(-)
- rename Documentation/thermal/{cpu-cooling-api.txt => cpu-cooling-api.rst} (82%)
- rename Documentation/thermal/{exynos_thermal => exynos_thermal.rst} (67%)
- delete mode 100644 Documentation/thermal/exynos_thermal_emulation
- create mode 100644 Documentation/thermal/exynos_thermal_emulation.rst
- create mode 100644 Documentation/thermal/index.rst
- rename Documentation/thermal/{intel_powerclamp.txt => intel_powerclamp.rst} (76%)
- rename Documentation/thermal/{nouveau_thermal => nouveau_thermal.rst} (64%)
- rename Documentation/thermal/{power_allocator.txt => power_allocator.rst} (74%)
- rename Documentation/thermal/{sysfs-api.txt => sysfs-api.rst} (66%)
- rename Documentation/thermal/{x86_pkg_temperature_thermal => x86_pkg_temperature_thermal.rst} (80%)
+ .../admin-guide/kernel-parameters.txt         |  18 +-
+ ...structure-v9.txt => data-structure-v9.rst} |   6 +-
+ Documentation/blockdev/drbd/figures.rst       |  28 +++
+ .../blockdev/drbd/{README.txt => index.rst}   |  15 +-
+ .../blockdev/{floppy.txt => floppy.rst}       |  88 ++++----
+ Documentation/blockdev/index.rst              |  16 ++
+ Documentation/blockdev/{nbd.txt => nbd.rst}   |   2 +-
+ .../blockdev/{paride.txt => paride.rst}       | 194 +++++++++--------
+ .../blockdev/{ramdisk.txt => ramdisk.rst}     |  55 ++---
+ Documentation/blockdev/{zram.txt => zram.rst} | 195 ++++++++++++------
+ MAINTAINERS                                   |   8 +-
+ drivers/block/Kconfig                         |   8 +-
+ drivers/block/floppy.c                        |   2 +-
+ drivers/block/zram/Kconfig                    |   6 +-
+ tools/testing/selftests/zram/README           |   2 +-
+ 15 files changed, 398 insertions(+), 245 deletions(-)
+ rename Documentation/blockdev/drbd/{data-structure-v9.txt => data-structure-v9.rst} (94%)
+ create mode 100644 Documentation/blockdev/drbd/figures.rst
+ rename Documentation/blockdev/drbd/{README.txt => index.rst} (55%)
+ rename Documentation/blockdev/{floppy.txt => floppy.rst} (81%)
+ create mode 100644 Documentation/blockdev/index.rst
+ rename Documentation/blockdev/{nbd.txt => nbd.rst} (96%)
+ rename Documentation/blockdev/{paride.txt => paride.rst} (81%)
+ rename Documentation/blockdev/{ramdisk.txt => ramdisk.rst} (84%)
+ rename Documentation/blockdev/{zram.txt => zram.rst} (76%)
 
-diff --git a/Documentation/thermal/cpu-cooling-api.txt b/Documentation/thermal/cpu-cooling-api.rst
-similarity index 82%
-rename from Documentation/thermal/cpu-cooling-api.txt
-rename to Documentation/thermal/cpu-cooling-api.rst
-index 7df567eaea1a..645d914c45a6 100644
---- a/Documentation/thermal/cpu-cooling-api.txt
-+++ b/Documentation/thermal/cpu-cooling-api.rst
-@@ -1,5 +1,6 @@
-+=======================
- CPU cooling APIs How To
--===================================
-+=======================
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 92d335837c52..7ed94527a4a0 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1249,7 +1249,7 @@
+ 			See also Documentation/fault-injection/.
  
- Written by Amit Daniel Kachhap <amit.kachhap@linaro.org>
+ 	floppy=		[HW]
+-			See Documentation/blockdev/floppy.txt.
++			See Documentation/blockdev/floppy.rst.
  
-@@ -8,40 +9,54 @@ Updated: 6 Jan 2015
- Copyright (c)  2012 Samsung Electronics Co., Ltd(http://www.samsung.com)
+ 	force_pal_cache_flush
+ 			[IA-64] Avoid check_sal_cache_flush which may hang on
+@@ -2247,7 +2247,7 @@
+ 	memblock=debug	[KNL] Enable memblock debug messages.
  
- 0. Introduction
-+===============
+ 	load_ramdisk=	[RAM] List of ramdisks to load from floppy
+-			See Documentation/blockdev/ramdisk.txt.
++			See Documentation/blockdev/ramdisk.rst.
  
- The generic cpu cooling(freq clipping) provides registration/unregistration APIs
- to the caller. The binding of the cooling devices to the trip point is left for
- the user. The registration APIs returns the cooling device pointer.
+ 	lockd.nlm_grace_period=P  [NFS] Assign grace period.
+ 			Format: <integer>
+@@ -3294,7 +3294,7 @@
  
- 1. cpu cooling APIs
-+===================
+ 	pcd.		[PARIDE]
+ 			See header of drivers/block/paride/pcd.c.
+-			See also Documentation/blockdev/paride.txt.
++			See also Documentation/blockdev/paride.rst.
  
- 1.1 cpufreq registration/unregistration APIs
--1.1.1 struct thermal_cooling_device *cpufreq_cooling_register(
--	struct cpumask *clip_cpus)
-+--------------------------------------------
+ 	pci=option[,option...]	[PCI] various PCI subsystem options.
+ 
+@@ -3538,7 +3538,7 @@
+ 			needed on a platform with proper driver support.
+ 
+ 	pd.		[PARIDE]
+-			See Documentation/blockdev/paride.txt.
++			See Documentation/blockdev/paride.rst.
+ 
+ 	pdcchassis=	[PARISC,HW] Disable/Enable PDC Chassis Status codes at
+ 			boot time.
+@@ -3553,10 +3553,10 @@
+ 			and performance comparison.
+ 
+ 	pf.		[PARIDE]
+-			See Documentation/blockdev/paride.txt.
++			See Documentation/blockdev/paride.rst.
+ 
+ 	pg.		[PARIDE]
+-			See Documentation/blockdev/paride.txt.
++			See Documentation/blockdev/paride.rst.
+ 
+ 	pirq=		[SMP,APIC] Manual mp-table setup
+ 			See Documentation/x86/i386/IO-APIC.rst.
+@@ -3668,7 +3668,7 @@
+ 
+ 	prompt_ramdisk=	[RAM] List of RAM disks to prompt for floppy disk
+ 			before loading.
+-			See Documentation/blockdev/ramdisk.txt.
++			See Documentation/blockdev/ramdisk.rst.
+ 
+ 	psi=		[KNL] Enable or disable pressure stall information
+ 			tracking.
+@@ -3690,7 +3690,7 @@
+ 	pstore.backend=	Specify the name of the pstore backend to use
+ 
+ 	pt.		[PARIDE]
+-			See Documentation/blockdev/paride.txt.
++			See Documentation/blockdev/paride.rst.
+ 
+ 	pti=		[X86_64] Control Page Table Isolation of user and
+ 			kernel address spaces.  Disabling this feature
+@@ -3719,7 +3719,7 @@
+ 			See Documentation/admin-guide/md.rst.
+ 
+ 	ramdisk_size=	[RAM] Sizes of RAM disks in kilobytes
+-			See Documentation/blockdev/ramdisk.txt.
++			See Documentation/blockdev/ramdisk.rst.
+ 
+ 	random.trust_cpu={on,off}
+ 			[KNL] Enable or disable trusting the use of the
+diff --git a/Documentation/blockdev/drbd/data-structure-v9.txt b/Documentation/blockdev/drbd/data-structure-v9.rst
+similarity index 94%
+rename from Documentation/blockdev/drbd/data-structure-v9.txt
+rename to Documentation/blockdev/drbd/data-structure-v9.rst
+index 1e52a0e32624..66036b901644 100644
+--- a/Documentation/blockdev/drbd/data-structure-v9.txt
++++ b/Documentation/blockdev/drbd/data-structure-v9.rst
+@@ -1,3 +1,7 @@
++================================
++kernel data structure for DRBD-9
++================================
 +
-+    ::
-+
-+	struct thermal_cooling_device
-+	*cpufreq_cooling_register(struct cpumask *clip_cpus)
+ This describes the in kernel data structure for DRBD-9. Starting with
+ Linux v3.14 we are reorganizing DRBD to use this data structure.
  
-     This interface function registers the cpufreq cooling device with the name
-     "thermal-cpufreq-%x". This api can support multiple instances of cpufreq
-     cooling devices.
+@@ -10,7 +14,7 @@ device is represented by a block device locally.
  
--   clip_cpus: cpumask of cpus where the frequency constraints will happen.
-+   clip_cpus:
-+	cpumask of cpus where the frequency constraints will happen.
+ The DRBD objects are interconnected to form a matrix as depicted below; a
+ drbd_peer_device object sits at each intersection between a drbd_device and a
+-drbd_connection:
++drbd_connection::
  
--1.1.2 struct thermal_cooling_device *of_cpufreq_cooling_register(
--					struct cpufreq_policy *policy)
-+    ::
-+
-+	struct thermal_cooling_device
-+	*of_cpufreq_cooling_register(struct cpufreq_policy *policy)
- 
-     This interface function registers the cpufreq cooling device with
-     the name "thermal-cpufreq-%x" linking it with a device tree node, in
-     order to bind it via the thermal DT code. This api can support multiple
-     instances of cpufreq cooling devices.
- 
--    policy: CPUFreq policy.
-+    policy:
-+	CPUFreq policy.
- 
--1.1.3 void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev)
-+
-+    ::
-+
-+	void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev)
- 
-     This interface function unregisters the "thermal-cpufreq-%x" cooling device.
- 
-     cdev: Cooling device pointer which has to be unregistered.
- 
- 2. Power models
-+===============
- 
- The power API registration functions provide a simple power model for
- CPUs.  The current power is calculated as dynamic power (static power isn't
-@@ -65,9 +80,9 @@ For a given processor implementation the primary factors are:
-   variation.  In pathological cases this variation can be significant,
-   but typically it is of a much lesser impact than the factors above.
- 
--A high level dynamic power consumption model may then be represented as:
-+A high level dynamic power consumption model may then be represented as::
- 
--Pdyn = f(run) * Voltage^2 * Frequency * Utilisation
-+	Pdyn = f(run) * Voltage^2 * Frequency * Utilisation
- 
- f(run) here represents the described execution behaviour and its
- result has a units of Watts/Hz/Volt^2 (this often expressed in
-@@ -80,9 +95,9 @@ factors.  Therefore, in initial implementation that contribution is
- represented as a constant coefficient.  This is a simplification
- consistent with the relative contribution to overall power variation.
- 
--In this simplified representation our model becomes:
-+In this simplified representation our model becomes::
- 
--Pdyn = Capacitance * Voltage^2 * Frequency * Utilisation
-+	Pdyn = Capacitance * Voltage^2 * Frequency * Utilisation
- 
- Where `capacitance` is a constant that represents an indicative
- running time dynamic power coefficient in fundamental units of
-diff --git a/Documentation/thermal/exynos_thermal b/Documentation/thermal/exynos_thermal.rst
-similarity index 67%
-rename from Documentation/thermal/exynos_thermal
-rename to Documentation/thermal/exynos_thermal.rst
-index 9010c4416967..5bd556566c70 100644
---- a/Documentation/thermal/exynos_thermal
-+++ b/Documentation/thermal/exynos_thermal.rst
-@@ -1,8 +1,11 @@
-+========================
- Kernel driver exynos_tmu
--=================
-+========================
- 
- Supported chips:
-+
- * ARM SAMSUNG EXYNOS4, EXYNOS5 series of SoC
-+
-   Datasheet: Not publicly available
- 
- Authors: Donggeun Kim <dg77.kim@samsung.com>
-@@ -19,32 +22,39 @@ Temperature can be taken from the temperature code.
- There are three equations converting from temperature to temperature code.
- 
- The three equations are:
--  1. Two point trimming
-+  1. Two point trimming::
-+
- 	Tc = (T - 25) * (TI2 - TI1) / (85 - 25) + TI1
- 
--  2. One point trimming
-+  2. One point trimming::
-+
- 	Tc = T + TI1 - 25
- 
--  3. No trimming
-+  3. No trimming::
-+
- 	Tc = T + 50
- 
--  Tc: Temperature code, T: Temperature,
--  TI1: Trimming info for 25 degree Celsius (stored at TRIMINFO register)
-+  Tc:
-+       Temperature code, T: Temperature,
-+  TI1:
-+       Trimming info for 25 degree Celsius (stored at TRIMINFO register)
-        Temperature code measured at 25 degree Celsius which is unchanged
--  TI2: Trimming info for 85 degree Celsius (stored at TRIMINFO register)
-+  TI2:
-+       Trimming info for 85 degree Celsius (stored at TRIMINFO register)
-        Temperature code measured at 85 degree Celsius which is unchanged
- 
- TMU(Thermal Management Unit) in EXYNOS4/5 generates interrupt
- when temperature exceeds pre-defined levels.
- The maximum number of configurable threshold is five.
--The threshold levels are defined as follows:
-+The threshold levels are defined as follows::
-+
-   Level_0: current temperature > trigger_level_0 + threshold
-   Level_1: current temperature > trigger_level_1 + threshold
-   Level_2: current temperature > trigger_level_2 + threshold
-   Level_3: current temperature > trigger_level_3 + threshold
- 
--  The threshold and each trigger_level are set
--  through the corresponding registers.
-+The threshold and each trigger_level are set
-+through the corresponding registers.
- 
- When an interrupt occurs, this driver notify kernel thermal framework
- with the function exynos_report_trigger.
-@@ -54,24 +64,27 @@ it can be used to synchronize the cooling action.
- TMU driver description:
- -----------------------
- 
--The exynos thermal driver is structured as,
-+The exynos thermal driver is structured as::
- 
- 					Kernel Core thermal framework
- 				(thermal_core.c, step_wise.c, cpu_cooling.c)
- 								^
- 								|
- 								|
--TMU configuration data -------> TMU Driver  <------> Exynos Core thermal wrapper
--(exynos_tmu_data.c)	      (exynos_tmu.c)	   (exynos_thermal_common.c)
--(exynos_tmu_data.h)	      (exynos_tmu.h)	   (exynos_thermal_common.h)
-+  TMU configuration data -----> TMU Driver  <----> Exynos Core thermal wrapper
-+  (exynos_tmu_data.c)	      (exynos_tmu.c)	   (exynos_thermal_common.c)
-+  (exynos_tmu_data.h)	      (exynos_tmu.h)	   (exynos_thermal_common.h)
- 
--a) TMU configuration data: This consist of TMU register offsets/bitfields
-+a) TMU configuration data:
-+		This consist of TMU register offsets/bitfields
- 		described through structure exynos_tmu_registers. Also several
- 		other platform data (struct exynos_tmu_platform_data) members
- 		are used to configure the TMU.
--b) TMU driver: This component initialises the TMU controller and sets different
-+b) TMU driver:
-+		This component initialises the TMU controller and sets different
- 		thresholds. It invokes core thermal implementation with the call
- 		exynos_report_trigger.
--c) Exynos Core thermal wrapper: This provides 3 wrapper function to use the
-+c) Exynos Core thermal wrapper:
-+		This provides 3 wrapper function to use the
- 		Kernel core thermal framework. They are exynos_unregister_thermal,
- 		exynos_register_thermal and exynos_report_trigger.
-diff --git a/Documentation/thermal/exynos_thermal_emulation b/Documentation/thermal/exynos_thermal_emulation
-deleted file mode 100644
-index b15efec6ca28..000000000000
---- a/Documentation/thermal/exynos_thermal_emulation
-+++ /dev/null
-@@ -1,53 +0,0 @@
--EXYNOS EMULATION MODE
--========================
--
--Copyright (C) 2012 Samsung Electronics
--
--Written by Jonghwa Lee <jonghwa3.lee@samsung.com>
--
--Description
-------------
--
--Exynos 4x12 (4212, 4412) and 5 series provide emulation mode for thermal management unit.
--Thermal emulation mode supports software debug for TMU's operation. User can set temperature
--manually with software code and TMU will read current temperature from user value not from
--sensor's value.
--
--Enabling CONFIG_THERMAL_EMULATION option will make this support available.
--When it's enabled, sysfs node will be created as
--/sys/devices/virtual/thermal/thermal_zone'zone id'/emul_temp.
--
--The sysfs node, 'emul_node', will contain value 0 for the initial state. When you input any
--temperature you want to update to sysfs node, it automatically enable emulation mode and
--current temperature will be changed into it.
--(Exynos also supports user changeable delay time which would be used to delay of
-- changing temperature. However, this node only uses same delay of real sensing time, 938us.)
--
--Exynos emulation mode requires synchronous of value changing and enabling. It means when you
--want to update the any value of delay or next temperature, then you have to enable emulation
--mode at the same time. (Or you have to keep the mode enabling.) If you don't, it fails to
--change the value to updated one and just use last succeessful value repeatedly. That's why
--this node gives users the right to change termerpature only. Just one interface makes it more
--simply to use.
--
--Disabling emulation mode only requires writing value 0 to sysfs node.
--
--
--TEMP	120 |
--	    |
--	100 |
--	    |
--	 80 |
--	    |		     	 	 +-----------
--	 60 |      		     	 |	    |
--	    |	           +-------------|          |
--	 40 |              |         	 |          |
--	    |		   |	     	 |          |
--	 20 |		   |	     	 |          +----------
--	    |	 	   |	     	 |          |          |
--	  0 |______________|_____________|__________|__________|_________
--		   A	    	 A	    A	   	       A     TIME
--		   |<----->|	 |<----->|  |<----->|	       |
--		   | 938us |  	 |	 |  |       |          |
--emulation    :  0  50	   |  	 70      |  20      |          0
--current temp :   sensor   50		 70         20	      sensor
-diff --git a/Documentation/thermal/exynos_thermal_emulation.rst b/Documentation/thermal/exynos_thermal_emulation.rst
+   /--------------+---------------+.....+---------------\
+   |   resource   |    device     |     |    device     |
+diff --git a/Documentation/blockdev/drbd/figures.rst b/Documentation/blockdev/drbd/figures.rst
 new file mode 100644
-index 000000000000..c21d10838bc5
+index 000000000000..3e3fd4b8a478
 --- /dev/null
-+++ b/Documentation/thermal/exynos_thermal_emulation.rst
-@@ -0,0 +1,61 @@
-+=====================
-+Exynos Emulation Mode
-+=====================
++++ b/Documentation/blockdev/drbd/figures.rst
+@@ -0,0 +1,28 @@
++.. The here included files are intended to help understand the implementation
 +
-+Copyright (C) 2012 Samsung Electronics
++Data flows that Relate some functions, and write packets
++========================================================
 +
-+Written by Jonghwa Lee <jonghwa3.lee@samsung.com>
++.. kernel-figure:: DRBD-8.3-data-packets.svg
++    :alt:   DRBD-8.3-data-packets.svg
++    :align: center
 +
-+Description
-+-----------
-+
-+Exynos 4x12 (4212, 4412) and 5 series provide emulation mode for thermal
-+management unit. Thermal emulation mode supports software debug for
-+TMU's operation. User can set temperature manually with software code
-+and TMU will read current temperature from user value not from sensor's
-+value.
-+
-+Enabling CONFIG_THERMAL_EMULATION option will make this support
-+available. When it's enabled, sysfs node will be created as
-+/sys/devices/virtual/thermal/thermal_zone'zone id'/emul_temp.
-+
-+The sysfs node, 'emul_node', will contain value 0 for the initial state.
-+When you input any temperature you want to update to sysfs node, it
-+automatically enable emulation mode and current temperature will be
-+changed into it.
-+
-+(Exynos also supports user changeable delay time which would be used to
-+delay of changing temperature. However, this node only uses same delay
-+of real sensing time, 938us.)
-+
-+Exynos emulation mode requires synchronous of value changing and
-+enabling. It means when you want to update the any value of delay or
-+next temperature, then you have to enable emulation mode at the same
-+time. (Or you have to keep the mode enabling.) If you don't, it fails to
-+change the value to updated one and just use last succeessful value
-+repeatedly. That's why this node gives users the right to change
-+termerpature only. Just one interface makes it more simply to use.
-+
-+Disabling emulation mode only requires writing value 0 to sysfs node.
-+
-+::
++.. kernel-figure:: DRBD-data-packets.svg
++    :alt:   DRBD-data-packets.svg
++    :align: center
 +
 +
-+  TEMP	120 |
-+	    |
-+	100 |
-+	    |
-+	 80 |
-+	    |				 +-----------
-+	 60 |      			 |	    |
-+	    |		   +-------------|          |
-+	 40 |              |         	 |          |
-+	    |		   |		 |          |
-+	 20 |		   |		 |          +----------
-+	    |		   |		 |          |          |
-+	  0 |______________|_____________|__________|__________|_________
-+		   A		 A	    A		       A     TIME
-+		   |<----->|	 |<----->|  |<----->|	       |
-+		   | 938us |  	 |	 |  |       |          |
-+  emulation   : 0  50	   |  	 70      |  20      |          0
-+  current temp:   sensor   50		 70         20	      sensor
-diff --git a/Documentation/thermal/index.rst b/Documentation/thermal/index.rst
++Sub graphs of DRBD's state transitions
++======================================
++
++.. kernel-figure:: conn-states-8.dot
++    :alt:   conn-states-8.dot
++    :align: center
++
++.. kernel-figure:: disk-states-8.dot
++    :alt:   disk-states-8.dot
++    :align: center
++
++.. kernel-figure:: node-states-8.dot
++    :alt:   node-states-8.dot
++    :align: center
+diff --git a/Documentation/blockdev/drbd/README.txt b/Documentation/blockdev/drbd/index.rst
+similarity index 55%
+rename from Documentation/blockdev/drbd/README.txt
+rename to Documentation/blockdev/drbd/index.rst
+index 627b0a1bf35e..68ecd5c113e9 100644
+--- a/Documentation/blockdev/drbd/README.txt
++++ b/Documentation/blockdev/drbd/index.rst
+@@ -1,4 +1,9 @@
++==========================================
++Distributed Replicated Block Device - DRBD
++==========================================
++
+ Description
++===========
+ 
+   DRBD is a shared-nothing, synchronously replicated block device. It
+   is designed to serve as a building block for high availability
+@@ -7,10 +12,8 @@ Description
+ 
+   Please visit http://www.drbd.org to find out more.
+ 
+-The here included files are intended to help understand the implementation
++.. toctree::
++   :maxdepth: 1
+ 
+-DRBD-8.3-data-packets.svg, DRBD-data-packets.svg  
+-  relates some functions, and write packets.
+-
+-conn-states-8.dot, disk-states-8.dot, node-states-8.dot
+-  The sub graphs of DRBD's state transitions
++   data-structure-v9
++   figures
+diff --git a/Documentation/blockdev/floppy.txt b/Documentation/blockdev/floppy.rst
+similarity index 81%
+rename from Documentation/blockdev/floppy.txt
+rename to Documentation/blockdev/floppy.rst
+index e2240f5ab64d..4a8f31cf4139 100644
+--- a/Documentation/blockdev/floppy.txt
++++ b/Documentation/blockdev/floppy.rst
+@@ -1,35 +1,37 @@
+-This file describes the floppy driver.
++=============
++Floppy Driver
++=============
+ 
+ FAQ list:
+ =========
+ 
+- A FAQ list may be found in the fdutils package (see below), and also
++A FAQ list may be found in the fdutils package (see below), and also
+ at <http://fdutils.linux.lu/faq.html>.
+ 
+ 
+ LILO configuration options (Thinkpad users, read this)
+ ======================================================
+ 
+- The floppy driver is configured using the 'floppy=' option in
++The floppy driver is configured using the 'floppy=' option in
+ lilo. This option can be typed at the boot prompt, or entered in the
+ lilo configuration file.
+ 
+- Example: If your kernel is called linux-2.6.9, type the following line
+-at the lilo boot prompt (if you have a thinkpad):
++Example: If your kernel is called linux-2.6.9, type the following line
++at the lilo boot prompt (if you have a thinkpad)::
+ 
+  linux-2.6.9 floppy=thinkpad
+ 
+ You may also enter the following line in /etc/lilo.conf, in the description
+-of linux-2.6.9:
++of linux-2.6.9::
+ 
+  append = "floppy=thinkpad"
+ 
+- Several floppy related options may be given, example:
++Several floppy related options may be given, example::
+ 
+  linux-2.6.9 floppy=daring floppy=two_fdc
+  append = "floppy=daring floppy=two_fdc"
+ 
+- If you give options both in the lilo config file and on the boot
++If you give options both in the lilo config file and on the boot
+ prompt, the option strings of both places are concatenated, the boot
+ prompt options coming last. That's why there are also options to
+ restore the default behavior.
+@@ -38,21 +40,23 @@ restore the default behavior.
+ Module configuration options
+ ============================
+ 
+- If you use the floppy driver as a module, use the following syntax:
+-modprobe floppy floppy="<options>"
++If you use the floppy driver as a module, use the following syntax::
+ 
+-Example:
+- modprobe floppy floppy="omnibook messages"
++	modprobe floppy floppy="<options>"
+ 
+- If you need certain options enabled every time you load the floppy driver,
+-you can put:
++Example::
+ 
+- options floppy floppy="omnibook messages"
++	modprobe floppy floppy="omnibook messages"
++
++If you need certain options enabled every time you load the floppy driver,
++you can put::
++
++	options floppy floppy="omnibook messages"
+ 
+ in a configuration file in /etc/modprobe.d/.
+ 
+ 
+- The floppy driver related options are:
++The floppy driver related options are:
+ 
+  floppy=asus_pci
+ 	Sets the bit mask to allow only units 0 and 1. (default)
+@@ -70,8 +74,7 @@ in a configuration file in /etc/modprobe.d/.
+ 	Tells the floppy driver that you have only one floppy controller.
+ 	(default)
+ 
+- floppy=two_fdc
+- floppy=<address>,two_fdc
++ floppy=two_fdc / floppy=<address>,two_fdc
+ 	Tells the floppy driver that you have two floppy controllers.
+ 	The second floppy controller is assumed to be at <address>.
+ 	This option is not needed if the second controller is at address
+@@ -84,8 +87,7 @@ in a configuration file in /etc/modprobe.d/.
+  floppy=0,thinkpad
+ 	Tells the floppy driver that you don't have a Thinkpad.
+ 
+- floppy=omnibook
+- floppy=nodma
++ floppy=omnibook / floppy=nodma
+ 	Tells the floppy driver not to use Dma for data transfers.
+ 	This is needed on HP Omnibooks, which don't have a workable
+ 	DMA channel for the floppy driver. This option is also useful
+@@ -144,14 +146,16 @@ in a configuration file in /etc/modprobe.d/.
+ 	described in the physical CMOS), or if your BIOS uses
+ 	non-standard CMOS types. The CMOS types are:
+ 
+-		0 - Use the value of the physical CMOS
+-		1 - 5 1/4 DD
+-		2 - 5 1/4 HD
+-		3 - 3 1/2 DD
+-		4 - 3 1/2 HD
+-		5 - 3 1/2 ED
+-		6 - 3 1/2 ED
+-	       16 - unknown or not installed
++	       ==  ==================================
++		0  Use the value of the physical CMOS
++		1  5 1/4 DD
++		2  5 1/4 HD
++		3  3 1/2 DD
++		4  3 1/2 HD
++		5  3 1/2 ED
++		6  3 1/2 ED
++	       16  unknown or not installed
++	       ==  ==================================
+ 
+ 	(Note: there are two valid types for ED drives. This is because 5 was
+ 	initially chosen to represent floppy *tapes*, and 6 for ED drives.
+@@ -162,8 +166,7 @@ in a configuration file in /etc/modprobe.d/.
+ 	Print a warning message when an unexpected interrupt is received.
+ 	(default)
+ 
+- floppy=no_unexpected_interrupts
+- floppy=L40SX
++ floppy=no_unexpected_interrupts / floppy=L40SX
+ 	Don't print a message when an unexpected interrupt is received. This
+ 	is needed on IBM L40SX laptops in certain video modes. (There seems
+ 	to be an interaction between video and floppy. The unexpected
+@@ -199,47 +202,54 @@ in a configuration file in /etc/modprobe.d/.
+ 	Sets the floppy DMA channel to <nr> instead of 2.
+ 
+  floppy=slow
+-	Use PS/2 stepping rate:
+-	 " PS/2 floppies have much slower step rates than regular floppies.
++	Use PS/2 stepping rate::
++
++	   PS/2 floppies have much slower step rates than regular floppies.
+ 	   It's been recommended that take about 1/4 of the default speed
+-	   in some more extreme cases."
++	   in some more extreme cases.
+ 
+ 
+ Supporting utilities and additional documentation:
+ ==================================================
+ 
+- Additional parameters of the floppy driver can be configured at
++Additional parameters of the floppy driver can be configured at
+ runtime. Utilities which do this can be found in the fdutils package.
+ This package also contains a new version of mtools which allows to
+ access high capacity disks (up to 1992K on a high density 3 1/2 disk!).
+ It also contains additional documentation about the floppy driver.
+ 
+ The latest version can be found at fdutils homepage:
++
+  http://fdutils.linux.lu
+ 
+ The fdutils releases can be found at:
++
+  http://fdutils.linux.lu/download.html
++
+  http://www.tux.org/pub/knaff/fdutils/
++
+  ftp://metalab.unc.edu/pub/Linux/utils/disk-management/
+ 
+ Reporting problems about the floppy driver
+ ==========================================
+ 
+- If you have a question or a bug report about the floppy driver, mail
++If you have a question or a bug report about the floppy driver, mail
+ me at Alain.Knaff@poboxes.com . If you post to Usenet, preferably use
+ comp.os.linux.hardware. As the volume in these groups is rather high,
+ be sure to include the word "floppy" (or "FLOPPY") in the subject
+ line.  If the reported problem happens when mounting floppy disks, be
+ sure to mention also the type of the filesystem in the subject line.
+ 
+- Be sure to read the FAQ before mailing/posting any bug reports!
++Be sure to read the FAQ before mailing/posting any bug reports!
+ 
+- Alain
++Alain
+ 
+ Changelog
+ =========
+ 
+-10-30-2004 :	Cleanup, updating, add reference to module configuration.
++10-30-2004 :
++		Cleanup, updating, add reference to module configuration.
+ 		James Nelson <james4765@gmail.com>
+ 
+-6-3-2000 :	Original Document
++6-3-2000 :
++		Original Document
+diff --git a/Documentation/blockdev/index.rst b/Documentation/blockdev/index.rst
 new file mode 100644
-index 000000000000..8c1c00146cad
+index 000000000000..a9af6ed8b4aa
 --- /dev/null
-+++ b/Documentation/thermal/index.rst
-@@ -0,0 +1,18 @@
++++ b/Documentation/blockdev/index.rst
+@@ -0,0 +1,16 @@
 +:orphan:
 +
-+=======
-+Thermal
-+=======
++===========================
++The Linux RapidIO Subsystem
++===========================
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+   cpu-cooling-api
-+   sysfs-api
-+   power_allocator
++   floppy
++   nbd
++   paride
++   ramdisk
++   zram
 +
-+   exynos_thermal
-+   exynos_thermal_emulation
-+   intel_powerclamp
-+   nouveau_thermal
-+   x86_pkg_temperature_thermal
-diff --git a/Documentation/thermal/intel_powerclamp.txt b/Documentation/thermal/intel_powerclamp.rst
-similarity index 76%
-rename from Documentation/thermal/intel_powerclamp.txt
-rename to Documentation/thermal/intel_powerclamp.rst
-index b5df21168fbc..3f6dfb0b3ea6 100644
---- a/Documentation/thermal/intel_powerclamp.txt
-+++ b/Documentation/thermal/intel_powerclamp.rst
-@@ -1,10 +1,13 @@
--			 =======================
--			 INTEL POWERCLAMP DRIVER
--			 =======================
--By: Arjan van de Ven <arjan@linux.intel.com>
--    Jacob Pan <jacob.jun.pan@linux.intel.com>
-+=======================
-+Intel Powerclamp Driver
-+=======================
-+
-+By:
-+  - Arjan van de Ven <arjan@linux.intel.com>
-+  - Jacob Pan <jacob.jun.pan@linux.intel.com>
-+
-+.. Contents:
- 
--Contents:
- 	(*) Introduction
- 	    - Goals and Objectives
- 
-@@ -23,7 +26,6 @@ Contents:
- 	    - Generic Thermal Layer (sysfs)
- 	    - Kernel APIs (TBD)
- 
--============
- INTRODUCTION
- ============
- 
-@@ -47,7 +49,6 @@ scalability, and user experience. In many cases, clear advantage is
- shown over taking the CPU offline or modulating the CPU clock.
- 
- 
--===================
- THEORY OF OPERATION
- ===================
- 
-@@ -57,11 +58,12 @@ Idle Injection
- On modern Intel processors (Nehalem or later), package level C-state
- residency is available in MSRs, thus also available to the kernel.
- 
--These MSRs are:
--      #define MSR_PKG_C2_RESIDENCY	0x60D
--      #define MSR_PKG_C3_RESIDENCY	0x3F8
--      #define MSR_PKG_C6_RESIDENCY	0x3F9
--      #define MSR_PKG_C7_RESIDENCY	0x3FA
-+These MSRs are::
-+
-+      #define MSR_PKG_C2_RESIDENCY      0x60D
-+      #define MSR_PKG_C3_RESIDENCY      0x3F8
-+      #define MSR_PKG_C6_RESIDENCY      0x3F9
-+      #define MSR_PKG_C7_RESIDENCY      0x3FA
- 
- If the kernel can also inject idle time to the system, then a
- closed-loop control system can be established that manages package
-@@ -96,19 +98,21 @@ are not masked. Tests show that the extra wakeups from scheduler tick
- have a dramatic impact on the effectiveness of the powerclamp driver
- on large scale systems (Westmere system with 80 processors).
- 
--CPU0
--		  ____________          ____________
--kidle_inject/0   |   sleep    |  mwait |  sleep     |
--	_________|            |________|            |_______
--			       duration
--CPU1
--		  ____________          ____________
--kidle_inject/1   |   sleep    |  mwait |  sleep     |
--	_________|            |________|            |_______
--			      ^
--			      |
--			      |
--			      roundup(jiffies, interval)
-+::
-+
-+  CPU0
-+		    ____________          ____________
-+  kidle_inject/0   |   sleep    |  mwait |  sleep     |
-+	  _________|            |________|            |_______
-+				 duration
-+  CPU1
-+		    ____________          ____________
-+  kidle_inject/1   |   sleep    |  mwait |  sleep     |
-+	  _________|            |________|            |_______
-+				^
-+				|
-+				|
-+				roundup(jiffies, interval)
- 
- Only one CPU is allowed to collect statistics and update global
- control parameters. This CPU is referred to as the controlling CPU in
-@@ -148,7 +152,7 @@ b) determine the amount of compensation needed at each target ratio
- 
- Compensation to each target ratio consists of two parts:
- 
--        a) steady state error compensation
-+	a) steady state error compensation
- 	This is to offset the error occurring when the system can
- 	enter idle without extra wakeups (such as external interrupts).
- 
-@@ -158,41 +162,42 @@ Compensation to each target ratio consists of two parts:
- 	slowing down CPU activities.
- 
- A debugfs file is provided for the user to examine compensation
--progress and results, such as on a Westmere system.
--[jacob@nex01 ~]$ cat
--/sys/kernel/debug/intel_powerclamp/powerclamp_calib
--controlling cpu: 0
--pct confidence steady dynamic (compensation)
--0	0	0	0
--1	1	0	0
--2	1	1	0
--3	3	1	0
--4	3	1	0
--5	3	1	0
--6	3	1	0
--7	3	1	0
--8	3	1	0
--...
--30	3	2	0
--31	3	2	0
--32	3	1	0
--33	3	2	0
--34	3	1	0
--35	3	2	0
--36	3	1	0
--37	3	2	0
--38	3	1	0
--39	3	2	0
--40	3	3	0
--41	3	1	0
--42	3	2	0
--43	3	1	0
--44	3	1	0
--45	3	2	0
--46	3	3	0
--47	3	0	0
--48	3	2	0
--49	3	3	0
-+progress and results, such as on a Westmere system::
-+
-+  [jacob@nex01 ~]$ cat
-+  /sys/kernel/debug/intel_powerclamp/powerclamp_calib
-+  controlling cpu: 0
-+  pct confidence steady dynamic (compensation)
-+  0       0       0       0
-+  1       1       0       0
-+  2       1       1       0
-+  3       3       1       0
-+  4       3       1       0
-+  5       3       1       0
-+  6       3       1       0
-+  7       3       1       0
-+  8       3       1       0
-+  ...
-+  30      3       2       0
-+  31      3       2       0
-+  32      3       1       0
-+  33      3       2       0
-+  34      3       1       0
-+  35      3       2       0
-+  36      3       1       0
-+  37      3       2       0
-+  38      3       1       0
-+  39      3       2       0
-+  40      3       3       0
-+  41      3       1       0
-+  42      3       2       0
-+  43      3       1       0
-+  44      3       1       0
-+  45      3       2       0
-+  46      3       3       0
-+  47      3       0       0
-+  48      3       2       0
-+  49      3       3       0
- 
- Calibration occurs during runtime. No offline method is available.
- Steady state compensation is used only when confidence levels of all
-@@ -217,9 +222,8 @@ keeps track of clamping kernel threads, even after they are migrated
- to other CPUs, after a CPU offline event.
- 
- 
--=====================
- Performance Analysis
--=====================
-+====================
- This section describes the general performance data collected on
- multiple systems, including Westmere (80P) and Ivy Bridge (4P, 8P).
- 
-@@ -257,16 +261,15 @@ achieve up to 40% better performance per watt. (measured by a spin
- counter summed over per CPU counting threads spawned for all running
- CPUs).
- 
--====================
- Usage and Interfaces
- ====================
- The powerclamp driver is registered to the generic thermal layer as a
--cooling device. Currently, it’s not bound to any thermal zones.
-+cooling device. Currently, it’s not bound to any thermal zones::
- 
--jacob@chromoly:/sys/class/thermal/cooling_device14$ grep . *
--cur_state:0
--max_state:50
--type:intel_powerclamp
-+  jacob@chromoly:/sys/class/thermal/cooling_device14$ grep . *
-+  cur_state:0
-+  max_state:50
-+  type:intel_powerclamp
- 
- cur_state allows user to set the desired idle percentage. Writing 0 to
- cur_state will stop idle injection. Writing a value between 1 and
-@@ -278,9 +281,9 @@ cur_state returns value -1 instead of 0 which is to avoid confusing
- 100% busy state with the disabled state.
- 
- Example usage:
--- To inject 25% idle time
--$ sudo sh -c "echo 25 > /sys/class/thermal/cooling_device80/cur_state
--"
-+- To inject 25% idle time::
-+
-+	$ sudo sh -c "echo 25 > /sys/class/thermal/cooling_device80/cur_state
- 
- If the system is not busy and has more than 25% idle time already,
- then the powerclamp driver will not start idle injection. Using Top
-@@ -292,23 +295,23 @@ idle time is accounted as normal idle in that common code path is
- taken as the idle task.
- 
- In this example, 24.1% idle is shown. This helps the system admin or
--user determine the cause of slowdown, when a powerclamp driver is in action.
-+user determine the cause of slowdown, when a powerclamp driver is in action::
- 
- 
--Tasks: 197 total,   1 running, 196 sleeping,   0 stopped,   0 zombie
--Cpu(s): 71.2%us,  4.7%sy,  0.0%ni, 24.1%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
--Mem:   3943228k total,  1689632k used,  2253596k free,    74960k buffers
--Swap:  4087804k total,        0k used,  4087804k free,   945336k cached
-+  Tasks: 197 total,   1 running, 196 sleeping,   0 stopped,   0 zombie
-+  Cpu(s): 71.2%us,  4.7%sy,  0.0%ni, 24.1%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
-+  Mem:   3943228k total,  1689632k used,  2253596k free,    74960k buffers
-+  Swap:  4087804k total,        0k used,  4087804k free,   945336k cached
- 
--  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
-- 3352 jacob     20   0  262m  644  428 S  286  0.0   0:17.16 spin
-- 3341 root     -51   0     0    0    0 D   25  0.0   0:01.62 kidle_inject/0
-- 3344 root     -51   0     0    0    0 D   25  0.0   0:01.60 kidle_inject/3
-- 3342 root     -51   0     0    0    0 D   25  0.0   0:01.61 kidle_inject/1
-- 3343 root     -51   0     0    0    0 D   25  0.0   0:01.60 kidle_inject/2
-- 2935 jacob     20   0  696m 125m  35m S    5  3.3   0:31.11 firefox
-- 1546 root      20   0  158m  20m 6640 S    3  0.5   0:26.97 Xorg
-- 2100 jacob     20   0 1223m  88m  30m S    3  2.3   0:23.68 compiz
-+    PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
-+   3352 jacob     20   0  262m  644  428 S  286  0.0   0:17.16 spin
-+   3341 root     -51   0     0    0    0 D   25  0.0   0:01.62 kidle_inject/0
-+   3344 root     -51   0     0    0    0 D   25  0.0   0:01.60 kidle_inject/3
-+   3342 root     -51   0     0    0    0 D   25  0.0   0:01.61 kidle_inject/1
-+   3343 root     -51   0     0    0    0 D   25  0.0   0:01.60 kidle_inject/2
-+   2935 jacob     20   0  696m 125m  35m S    5  3.3   0:31.11 firefox
-+   1546 root      20   0  158m  20m 6640 S    3  0.5   0:26.97 Xorg
-+   2100 jacob     20   0 1223m  88m  30m S    3  2.3   0:23.68 compiz
- 
- Tests have shown that by using the powerclamp driver as a cooling
- device, a PID based userspace thermal controller can manage to
-diff --git a/Documentation/thermal/nouveau_thermal b/Documentation/thermal/nouveau_thermal.rst
-similarity index 64%
-rename from Documentation/thermal/nouveau_thermal
-rename to Documentation/thermal/nouveau_thermal.rst
-index 6e17a11efcb0..37255fd6735d 100644
---- a/Documentation/thermal/nouveau_thermal
-+++ b/Documentation/thermal/nouveau_thermal.rst
-@@ -1,13 +1,15 @@
-+=====================
- Kernel driver nouveau
--===================
-+=====================
- 
- Supported chips:
-+
- * NV43+
- 
- Authors: Martin Peres (mupuf) <martin.peres@free.fr>
- 
- Description
-----------
-+-----------
- 
- This driver allows to read the GPU core temperature, drive the GPU fan and
- set temperature alarms.
-@@ -19,20 +21,25 @@ interface is likely not to work. This document may then not cover your situation
- entirely.
- 
- Temperature management
----------------------
-+----------------------
- 
- Temperature is exposed under as a read-only HWMON attribute temp1_input.
- 
- In order to protect the GPU from overheating, Nouveau supports 4 configurable
- temperature thresholds:
- 
-- * Fan_boost: Fan speed is set to 100% when reaching this temperature;
-- * Downclock: The GPU will be downclocked to reduce its power dissipation;
-- * Critical: The GPU is put on hold to further lower power dissipation;
-- * Shutdown: Shut the computer down to protect your GPU.
-+ * Fan_boost:
-+	Fan speed is set to 100% when reaching this temperature;
-+ * Downclock:
-+	The GPU will be downclocked to reduce its power dissipation;
-+ * Critical:
-+	The GPU is put on hold to further lower power dissipation;
-+ * Shutdown:
-+	Shut the computer down to protect your GPU.
- 
--WARNING: Some of these thresholds may not be used by Nouveau depending
--on your chipset.
-+WARNING:
-+	Some of these thresholds may not be used by Nouveau depending
-+	on your chipset.
- 
- The default value for these thresholds comes from the GPU's vbios. These
- thresholds can be configured thanks to the following HWMON attributes:
-@@ -46,19 +53,24 @@ NOTE: Remember that the values are stored as milli degrees Celsius. Don't forget
- to multiply!
- 
- Fan management
--------------
-+--------------
- 
- Not all cards have a drivable fan. If you do, then the following HWMON
- attributes should be available:
- 
-- * pwm1_enable: Current fan management mode (NONE, MANUAL or AUTO);
-- * pwm1: Current PWM value (power percentage);
-- * pwm1_min: The minimum PWM speed allowed;
-- * pwm1_max: The maximum PWM speed allowed (bypassed when hitting Fan_boost);
-+ * pwm1_enable:
-+	Current fan management mode (NONE, MANUAL or AUTO);
-+ * pwm1:
-+	Current PWM value (power percentage);
-+ * pwm1_min:
-+	The minimum PWM speed allowed;
-+ * pwm1_max:
-+	The maximum PWM speed allowed (bypassed when hitting Fan_boost);
- 
- You may also have the following attribute:
- 
-- * fan1_input: Speed in RPM of your fan.
-+ * fan1_input:
-+	Speed in RPM of your fan.
- 
- Your fan can be driven in different modes:
- 
-@@ -66,14 +78,16 @@ Your fan can be driven in different modes:
-  * 1: The fan can be driven in manual (use pwm1 to change the speed);
-  * 2; The fan is driven automatically depending on the temperature.
- 
--NOTE: Be sure to use the manual mode if you want to drive the fan speed manually
-+NOTE:
-+  Be sure to use the manual mode if you want to drive the fan speed manually
- 
--NOTE2: When operating in manual mode outside the vbios-defined
--[PWM_min, PWM_max] range, the reported fan speed (RPM) may not be accurate
--depending on your hardware.
-+NOTE2:
-+  When operating in manual mode outside the vbios-defined
-+  [PWM_min, PWM_max] range, the reported fan speed (RPM) may not be accurate
-+  depending on your hardware.
- 
- Bug reports
-----------
-+-----------
- 
- Thermal management on Nouveau is new and may not work on all cards. If you have
- inquiries, please ping mupuf on IRC (#nouveau, freenode).
-diff --git a/Documentation/thermal/power_allocator.txt b/Documentation/thermal/power_allocator.rst
-similarity index 74%
-rename from Documentation/thermal/power_allocator.txt
-rename to Documentation/thermal/power_allocator.rst
-index 9fb0ff06dca9..67b6a3297238 100644
---- a/Documentation/thermal/power_allocator.txt
-+++ b/Documentation/thermal/power_allocator.rst
++   drbd/index
+diff --git a/Documentation/blockdev/nbd.txt b/Documentation/blockdev/nbd.rst
+similarity index 96%
+rename from Documentation/blockdev/nbd.txt
+rename to Documentation/blockdev/nbd.rst
+index db242ea2bce8..d78dfe559dcf 100644
+--- a/Documentation/blockdev/nbd.txt
++++ b/Documentation/blockdev/nbd.rst
 @@ -1,3 +1,4 @@
-+=================================
- Power allocator governor tunables
- =================================
++==================================
+ Network Block Device (TCP version)
+ ==================================
  
-@@ -25,36 +26,36 @@ temperature as the control input and power as the controlled output:
-     P_max = k_p * e + k_i * err_integral + k_d * diff_err + sustainable_power
+@@ -28,4 +29,3 @@ max_part
  
- where
--    e = desired_temperature - current_temperature
--    err_integral is the sum of previous errors
--    diff_err = e - previous_error
-+   -  e = desired_temperature - current_temperature
-+   -  err_integral is the sum of previous errors
-+   -  diff_err = e - previous_error
- 
--It is similar to the one depicted below:
-+It is similar to the one depicted below::
- 
--                                      k_d
--                                       |
--current_temp                           |
--     |                                 v
--     |                +----------+   +---+
--     |         +----->| diff_err |-->| X |------+
--     |         |      +----------+   +---+      |
--     |         |                                |      tdp        actor
--     |         |                      k_i       |       |  get_requested_power()
--     |         |                       |        |       |        |     |
--     |         |                       |        |       |        |     | ...
--     v         |                       v        v       v        v     v
--   +---+       |      +-------+      +---+    +---+   +---+   +----------+
--   | S |-------+----->| sum e |----->| X |--->| S |-->| S |-->|power     |
--   +---+       |      +-------+      +---+    +---+   +---+   |allocation|
--     ^         |                                ^             +----------+
--     |         |                                |                |     |
--     |         |        +---+                   |                |     |
--     |         +------->| X |-------------------+                v     v
--     |                  +---+                               granted performance
--desired_temperature       ^
--                          |
--                          |
--                      k_po/k_pu
-+				      k_d
-+				       |
-+  current_temp                         |
-+       |                               v
-+       |              +----------+   +---+
-+       |       +----->| diff_err |-->| X |------+
-+       |       |      +----------+   +---+      |
-+       |       |                                |      tdp        actor
-+       |       |                      k_i       |       |  get_requested_power()
-+       |       |                       |        |       |        |     |
-+       |       |                       |        |       |        |     | ...
-+       v       |                       v        v       v        v     v
-+     +---+     |      +-------+      +---+    +---+   +---+   +----------+
-+     | S |-----+----->| sum e |----->| X |--->| S |-->| S |-->|power     |
-+     +---+     |      +-------+      +---+    +---+   +---+   |allocation|
-+       ^       |                                ^             +----------+
-+       |       |                                |                |     |
-+       |       |        +---+                   |                |     |
-+       |       +------->| X |-------------------+                v     v
-+       |                +---+                               granted performance
-+  desired_temperature     ^
-+			  |
-+			  |
-+		      k_po/k_pu
- 
- Sustainable power
- -----------------
-@@ -73,7 +74,7 @@ is typically 2000mW, while on a 10" tablet is around 4500mW (may vary
- depending on screen size).
- 
- If you are using device tree, do add it as a property of the
--thermal-zone.  For example:
-+thermal-zone.  For example::
- 
- 	thermal-zones {
- 		soc_thermal {
-@@ -85,7 +86,7 @@ thermal-zone.  For example:
- Instead, if the thermal zone is registered from the platform code, pass a
- `thermal_zone_params` that has a `sustainable_power`.  If no
- `thermal_zone_params` were being passed, then something like below
--will suffice:
-+will suffice::
- 
- 	static const struct thermal_zone_params tz_params = {
- 		.sustainable_power = 3500,
-@@ -112,18 +113,18 @@ available capacity at a low temperature.  On the other hand, a high
- value of `k_pu` will result in the governor granting very high power
- while temperature is low, and may lead to temperature overshooting.
- 
--The default value for `k_pu` is:
-+The default value for `k_pu` is::
- 
-     2 * sustainable_power / (desired_temperature - switch_on_temp)
- 
- This means that at `switch_on_temp` the output of the controller's
- proportional term will be 2 * `sustainable_power`.  The default value
--for `k_po` is:
-+for `k_po` is::
- 
-     sustainable_power / (desired_temperature - switch_on_temp)
- 
- Focusing on the proportional and feed forward values of the PID
--controller equation we have:
-+controller equation we have::
- 
-     P_max = k_p * e + sustainable_power
- 
-@@ -134,21 +135,23 @@ is the desired one, then the proportional component is zero and
- thermal equilibrium under constant load.  `sustainable_power` is only
- an estimate, which is the reason for closed-loop control such as this.
- 
--Expanding `k_pu` we get:
-+Expanding `k_pu` we get::
-+
-     P_max = 2 * sustainable_power * (T_set - T) / (T_set - T_on) +
--        sustainable_power
-+	sustainable_power
- 
--where
--    T_set is the desired temperature
--    T is the current temperature
--    T_on is the switch on temperature
-+where:
-+
-+    - T_set is the desired temperature
-+    - T is the current temperature
-+    - T_on is the switch on temperature
- 
- When the current temperature is the switch_on temperature, the above
--formula becomes:
-+formula becomes::
- 
-     P_max = 2 * sustainable_power * (T_set - T_on) / (T_set - T_on) +
--        sustainable_power = 2 * sustainable_power + sustainable_power =
--        3 * sustainable_power
-+	sustainable_power = 2 * sustainable_power + sustainable_power =
-+	3 * sustainable_power
- 
- Therefore, the proportional term alone linearly decreases power from
- 3 * `sustainable_power` to `sustainable_power` as the temperature
-@@ -178,11 +181,18 @@ Cooling device power API
- Cooling devices controlled by this governor must supply the additional
- "power" API in their `cooling_device_ops`.  It consists on three ops:
- 
--1. int get_requested_power(struct thermal_cooling_device *cdev,
--	struct thermal_zone_device *tz, u32 *power);
--@cdev: The `struct thermal_cooling_device` pointer
--@tz: thermal zone in which we are currently operating
--@power: pointer in which to store the calculated power
-+1. ::
-+
-+    int get_requested_power(struct thermal_cooling_device *cdev,
-+			    struct thermal_zone_device *tz, u32 *power);
-+
-+
-+@cdev:
-+	The `struct thermal_cooling_device` pointer
-+@tz:
-+	thermal zone in which we are currently operating
-+@power:
-+	pointer in which to store the calculated power
- 
- `get_requested_power()` calculates the power requested by the device
- in milliwatts and stores it in @power .  It should return 0 on
-@@ -190,23 +200,37 @@ success, -E* on failure.  This is currently used by the power
- allocator governor to calculate how much power to give to each cooling
- device.
- 
--2. int state2power(struct thermal_cooling_device *cdev, struct
--        thermal_zone_device *tz, unsigned long state, u32 *power);
--@cdev: The `struct thermal_cooling_device` pointer
--@tz: thermal zone in which we are currently operating
--@state: A cooling device state
--@power: pointer in which to store the equivalent power
-+2. ::
-+
-+	int state2power(struct thermal_cooling_device *cdev, struct
-+			thermal_zone_device *tz, unsigned long state,
-+			u32 *power);
-+
-+@cdev:
-+	The `struct thermal_cooling_device` pointer
-+@tz:
-+	thermal zone in which we are currently operating
-+@state:
-+	A cooling device state
-+@power:
-+	pointer in which to store the equivalent power
- 
- Convert cooling device state @state into power consumption in
- milliwatts and store it in @power.  It should return 0 on success, -E*
- on failure.  This is currently used by thermal core to calculate the
- maximum power that an actor can consume.
- 
--3. int power2state(struct thermal_cooling_device *cdev, u32 power,
--	unsigned long *state);
--@cdev: The `struct thermal_cooling_device` pointer
--@power: power in milliwatts
--@state: pointer in which to store the resulting state
-+3. ::
-+
-+	int power2state(struct thermal_cooling_device *cdev, u32 power,
-+			unsigned long *state);
-+
-+@cdev:
-+	The `struct thermal_cooling_device` pointer
-+@power:
-+	power in milliwatts
-+@state:
-+	pointer in which to store the resulting state
- 
- Calculate a cooling device state that would make the device consume at
- most @power mW and store it in @state.  It should return 0 on success,
-diff --git a/Documentation/thermal/sysfs-api.txt b/Documentation/thermal/sysfs-api.rst
-similarity index 66%
-rename from Documentation/thermal/sysfs-api.txt
-rename to Documentation/thermal/sysfs-api.rst
-index c3fa500df92c..e4930761d3e5 100644
---- a/Documentation/thermal/sysfs-api.txt
-+++ b/Documentation/thermal/sysfs-api.rst
-@@ -1,3 +1,4 @@
+ nbds_max
+ 	Number of block devices that should be initialized (default: 16).
+-
+diff --git a/Documentation/blockdev/paride.txt b/Documentation/blockdev/paride.rst
+similarity index 81%
+rename from Documentation/blockdev/paride.txt
+rename to Documentation/blockdev/paride.rst
+index ee6717e3771d..87b4278bf314 100644
+--- a/Documentation/blockdev/paride.txt
++++ b/Documentation/blockdev/paride.rst
+@@ -1,15 +1,17 @@
+-
+-		Linux and parallel port IDE devices
 +===================================
- Generic Thermal Sysfs driver How To
- ===================================
++Linux and parallel port IDE devices
++===================================
  
-@@ -9,6 +10,7 @@ Copyright (c)  2008 Intel Corporation
+ PARIDE v1.03   (c) 1997-8  Grant Guenther <grant@torque.net>
  
- 
- 0. Introduction
+ 1. Introduction
 +===============
  
- The generic thermal sysfs provides a set of interfaces for thermal zone
- devices (sensors) and thermal cooling devices (fan, processor...) to register
-@@ -25,59 +27,90 @@ An intelligent thermal management application can make decisions based on
- inputs from thermal zone attributes (the current temperature and trip point
- temperature) and throttle appropriate devices.
+ Owing to the simplicity and near universality of the parallel port interface
+ to personal computers, many external devices such as portable hard-disk,
+ CD-ROM, LS-120 and tape drives use the parallel port to connect to their
+ host computer.  While some devices (notably scanners) use ad-hoc methods
+-to pass commands and data through the parallel port interface, most 
++to pass commands and data through the parallel port interface, most
+ external devices are actually identical to an internal model, but with
+ a parallel-port adapter chip added in.  Some of the original parallel port
+ adapters were little more than mechanisms for multiplexing a SCSI bus.
+@@ -28,47 +30,50 @@ were to open up a parallel port CD-ROM drive, for instance, one would
+ find a standard ATAPI CD-ROM drive, a power supply, and a single adapter
+ that interconnected a standard PC parallel port cable and a standard
+ IDE cable.  It is usually possible to exchange the CD-ROM device with
+-any other device using the IDE interface. 
++any other device using the IDE interface.
  
--[0-*]	denotes any positive number starting from 0
--[1-*]	denotes any positive number starting from 1
-+- `[0-*]`	denotes any positive number starting from 0
-+- `[1-*]`	denotes any positive number starting from 1
+ The document describes the support in Linux for parallel port IDE
+ devices.  It does not cover parallel port SCSI devices, "ditto" tape
+-drives or scanners.  Many different devices are supported by the 
++drives or scanners.  Many different devices are supported by the
+ parallel port IDE subsystem, including:
  
- 1. thermal sysfs driver interface functions
-+===========================================
+-	MicroSolutions backpack CD-ROM
+-	MicroSolutions backpack PD/CD
+-	MicroSolutions backpack hard-drives
+-	MicroSolutions backpack 8000t tape drive
+-	SyQuest EZ-135, EZ-230 & SparQ drives
+-	Avatar Shark
+-	Imation Superdisk LS-120
+-	Maxell Superdisk LS-120
+-	FreeCom Power CD 
+-	Hewlett-Packard 5GB and 8GB tape drives
+-	Hewlett-Packard 7100 and 7200 CD-RW drives
++	- MicroSolutions backpack CD-ROM
++	- MicroSolutions backpack PD/CD
++	- MicroSolutions backpack hard-drives
++	- MicroSolutions backpack 8000t tape drive
++	- SyQuest EZ-135, EZ-230 & SparQ drives
++	- Avatar Shark
++	- Imation Superdisk LS-120
++	- Maxell Superdisk LS-120
++	- FreeCom Power CD
++	- Hewlett-Packard 5GB and 8GB tape drives
++	- Hewlett-Packard 7100 and 7200 CD-RW drives
  
- 1.1 thermal zone device interface
--1.1.1 struct thermal_zone_device *thermal_zone_device_register(char *type,
--		int trips, int mask, void *devdata,
--		struct thermal_zone_device_ops *ops,
--		const struct thermal_zone_params *tzp,
--		int passive_delay, int polling_delay))
-+---------------------------------
-+
-+    ::
-+
-+	struct thermal_zone_device
-+	*thermal_zone_device_register(char *type,
-+				      int trips, int mask, void *devdata,
-+				      struct thermal_zone_device_ops *ops,
-+				      const struct thermal_zone_params *tzp,
-+				      int passive_delay, int polling_delay))
+ as well as most of the clone and no-name products on the market.
  
-     This interface function adds a new thermal zone device (sensor) to
--    /sys/class/thermal folder as thermal_zone[0-*]. It tries to bind all the
-+    /sys/class/thermal folder as `thermal_zone[0-*]`. It tries to bind all the
-     thermal cooling devices registered at the same time.
+ To support such a wide range of devices, PARIDE, the parallel port IDE
+ subsystem, is actually structured in three parts.   There is a base
+ paride module which provides a registry and some common methods for
+-accessing the parallel ports.  The second component is a set of 
+-high-level drivers for each of the different types of supported devices: 
++accessing the parallel ports.  The second component is a set of
++high-level drivers for each of the different types of supported devices:
  
--    type: the thermal zone type.
--    trips: the total number of trip points this thermal zone supports.
--    mask: Bit string: If 'n'th bit is set, then trip point 'n' is writeable.
--    devdata: device private data
--    ops: thermal zone device call-backs.
--	.bind: bind the thermal zone device with a thermal cooling device.
--	.unbind: unbind the thermal zone device with a thermal cooling device.
--	.get_temp: get the current temperature of the thermal zone.
--	.set_trips: set the trip points window. Whenever the current temperature
-+    type:
-+	the thermal zone type.
-+    trips:
-+	the total number of trip points this thermal zone supports.
-+    mask:
-+	Bit string: If 'n'th bit is set, then trip point 'n' is writeable.
-+    devdata:
-+	device private data
-+    ops:
-+	thermal zone device call-backs.
-+
-+	.bind:
-+		bind the thermal zone device with a thermal cooling device.
-+	.unbind:
-+		unbind the thermal zone device with a thermal cooling device.
-+	.get_temp:
-+		get the current temperature of the thermal zone.
-+	.set_trips:
-+		    set the trip points window. Whenever the current temperature
- 		    is updated, the trip points immediately below and above the
- 		    current temperature are found.
--	.get_mode: get the current mode (enabled/disabled) of the thermal zone.
--	    - "enabled" means the kernel thermal management is enabled.
--	    - "disabled" will prevent kernel thermal driver action upon trip points
--	      so that user applications can take charge of thermal management.
--	.set_mode: set the mode (enabled/disabled) of the thermal zone.
--	.get_trip_type: get the type of certain trip point.
--	.get_trip_temp: get the temperature above which the certain trip point
-+	.get_mode:
-+		   get the current mode (enabled/disabled) of the thermal zone.
-+
-+			- "enabled" means the kernel thermal management is
-+			  enabled.
-+			- "disabled" will prevent kernel thermal driver action
-+			  upon trip points so that user applications can take
-+			  charge of thermal management.
-+	.set_mode:
-+		set the mode (enabled/disabled) of the thermal zone.
-+	.get_trip_type:
-+		get the type of certain trip point.
-+	.get_trip_temp:
-+			get the temperature above which the certain trip point
- 			will be fired.
--	.set_emul_temp: set the emulation temperature which helps in debugging
-+	.set_emul_temp:
-+			set the emulation temperature which helps in debugging
- 			different threshold temperature points.
--    tzp: thermal zone platform parameters.
--    passive_delay: number of milliseconds to wait between polls when
-+    tzp:
-+	thermal zone platform parameters.
-+    passive_delay:
-+	number of milliseconds to wait between polls when
- 	performing passive cooling.
--    polling_delay: number of milliseconds to wait between polls when checking
-+    polling_delay:
-+	number of milliseconds to wait between polls when checking
- 	whether trip points have been crossed (0 for interrupt driven systems).
++	===	=============
+ 	pd	IDE disk
+ 	pcd	ATAPI CD-ROM
+ 	pf	ATAPI disk
+ 	pt	ATAPI tape
+ 	pg	ATAPI generic
++	===	=============
  
-+    ::
+ (Currently, the pg driver is only used with CD-R drives).
  
--1.1.2 void thermal_zone_device_unregister(struct thermal_zone_device *tz)
-+	void thermal_zone_device_unregister(struct thermal_zone_device *tz)
+ The high-level drivers function according to the relevant standards.
+ The third component of PARIDE is a set of low-level protocol drivers
+ for each of the parallel port IDE adapter chips.  Thanks to the interest
+-and encouragement of Linux users from many parts of the world, 
++and encouragement of Linux users from many parts of the world,
+ support is available for almost all known adapter protocols:
  
-     This interface function removes the thermal zone device.
-     It deletes the corresponding entry from /sys/class/thermal folder and
-     unbinds all the thermal cooling devices it uses.
++	====    ====================================== ====
+         aten    ATEN EH-100                            (HK)
+         bpck    Microsolutions backpack                (US)
+         comm    DataStor (old-type) "commuter" adapter (TW)
+@@ -83,9 +88,11 @@ support is available for almost all known adapter protocols:
+ 	ktti    KT Technology PHd adapter              (SG)
+         on20    OnSpec 90c20                           (US)
+         on26    OnSpec 90c26                           (US)
++	====    ====================================== ====
  
--1.1.3 struct thermal_zone_device *thermal_zone_of_sensor_register(
--		struct device *dev, int sensor_id, void *data,
--		const struct thermal_zone_of_device_ops *ops)
-+	::
-+
-+	   struct thermal_zone_device
-+	   *thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
-+				void *data,
-+				const struct thermal_zone_of_device_ops *ops)
  
- 	This interface adds a new sensor to a DT thermal zone.
- 	This function will search the list of thermal zones described in
-@@ -87,25 +120,33 @@ temperature) and throttle appropriate devices.
- 	thermal zone device.
- 
- 	The parameters for this interface are:
--	dev:		Device node of sensor containing valid node pointer in
-+
-+	dev:
-+			Device node of sensor containing valid node pointer in
- 			dev->of_node.
--	sensor_id:	a sensor identifier, in case the sensor IP has more
-+	sensor_id:
-+			a sensor identifier, in case the sensor IP has more
- 			than one sensors
--	data:		a private pointer (owned by the caller) that will be
-+	data:
-+			a private pointer (owned by the caller) that will be
- 			passed back, when a temperature reading is needed.
--	ops:		struct thermal_zone_of_device_ops *.
-+	ops:
-+			`struct thermal_zone_of_device_ops *`.
- 
--			get_temp:	a pointer to a function that reads the
-+			==============  =======================================
-+			get_temp	a pointer to a function that reads the
- 					sensor temperature. This is mandatory
- 					callback provided by sensor driver.
--			set_trips:      a pointer to a function that sets a
-+			set_trips	a pointer to a function that sets a
- 					temperature window. When this window is
- 					left the driver must inform the thermal
- 					core via thermal_zone_device_update.
--			get_trend: 	a pointer to a function that reads the
-+			get_trend 	a pointer to a function that reads the
- 					sensor temperature trend.
--			set_emul_temp:	a pointer to a function that sets
-+			set_emul_temp	a pointer to a function that sets
- 					sensor emulated temperature.
-+			==============  =======================================
-+
- 	The thermal zone temperature is provided by the get_temp() function
- 	pointer of thermal_zone_of_device_ops. When called, it will
- 	have the private pointer @data back.
-@@ -114,8 +155,10 @@ temperature) and throttle appropriate devices.
- 	handle. Caller should check the return handle with IS_ERR() for finding
- 	whether success or not.
- 
--1.1.4 void thermal_zone_of_sensor_unregister(struct device *dev,
--		struct thermal_zone_device *tzd)
-+	::
-+
-+	    void thermal_zone_of_sensor_unregister(struct device *dev,
-+						   struct thermal_zone_device *tzd)
- 
- 	This interface unregisters a sensor from a DT thermal zone which was
- 	successfully added by interface thermal_zone_of_sensor_register().
-@@ -124,21 +167,29 @@ temperature) and throttle appropriate devices.
- 	interface. It will also silent the zone by remove the .get_temp() and
- 	get_trend() thermal zone device callbacks.
- 
--1.1.5 struct thermal_zone_device *devm_thermal_zone_of_sensor_register(
--		struct device *dev, int sensor_id,
--		void *data, const struct thermal_zone_of_device_ops *ops)
-+	::
-+
-+	  struct thermal_zone_device
-+	  *devm_thermal_zone_of_sensor_register(struct device *dev,
-+				int sensor_id,
-+				void *data,
-+				const struct thermal_zone_of_device_ops *ops)
- 
- 	This interface is resource managed version of
- 	thermal_zone_of_sensor_register().
-+
- 	All details of thermal_zone_of_sensor_register() described in
- 	section 1.1.3 is applicable here.
-+
- 	The benefit of using this interface to register sensor is that it
- 	is not require to explicitly call thermal_zone_of_sensor_unregister()
- 	in error path or during driver unbinding as this is done by driver
- 	resource manager.
- 
--1.1.6 void devm_thermal_zone_of_sensor_unregister(struct device *dev,
--		struct thermal_zone_device *tzd)
-+	::
-+
-+		void devm_thermal_zone_of_sensor_unregister(struct device *dev,
-+						struct thermal_zone_device *tzd)
- 
- 	This interface is resource managed version of
- 	thermal_zone_of_sensor_unregister().
-@@ -147,123 +198,186 @@ temperature) and throttle appropriate devices.
- 	Normally this function will not need to be called and the resource
- 	management code will ensure that the resource is freed.
- 
--1.1.7 int thermal_zone_get_slope(struct thermal_zone_device *tz)
-+	::
-+
-+		int thermal_zone_get_slope(struct thermal_zone_device *tz)
- 
- 	This interface is used to read the slope attribute value
- 	for the thermal zone device, which might be useful for platform
- 	drivers for temperature calculations.
- 
--1.1.8 int thermal_zone_get_offset(struct thermal_zone_device *tz)
-+	::
-+
-+		int thermal_zone_get_offset(struct thermal_zone_device *tz)
- 
- 	This interface is used to read the offset attribute value
- 	for the thermal zone device, which might be useful for platform
- 	drivers for temperature calculations.
- 
- 1.2 thermal cooling device interface
--1.2.1 struct thermal_cooling_device *thermal_cooling_device_register(char *name,
--		void *devdata, struct thermal_cooling_device_ops *)
-+------------------------------------
-+
-+
-+    ::
-+
-+	struct thermal_cooling_device
-+	*thermal_cooling_device_register(char *name,
-+			void *devdata, struct thermal_cooling_device_ops *)
- 
-     This interface function adds a new thermal cooling device (fan/processor/...)
--    to /sys/class/thermal/ folder as cooling_device[0-*]. It tries to bind itself
-+    to /sys/class/thermal/ folder as `cooling_device[0-*]`. It tries to bind itself
-     to all the thermal zone devices registered at the same time.
--    name: the cooling device name.
--    devdata: device private data.
--    ops: thermal cooling devices call-backs.
--	.get_max_state: get the Maximum throttle state of the cooling device.
--	.get_cur_state: get the Currently requested throttle state of the cooling device.
--	.set_cur_state: set the Current throttle state of the cooling device.
--
--1.2.2 void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
-+
-+    name:
-+	the cooling device name.
-+    devdata:
-+	device private data.
-+    ops:
-+	thermal cooling devices call-backs.
-+
-+	.get_max_state:
-+		get the Maximum throttle state of the cooling device.
-+	.get_cur_state:
-+		get the Currently requested throttle state of the
-+		cooling device.
-+	.set_cur_state:
-+		set the Current throttle state of the cooling device.
-+
-+    ::
-+
-+	void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
- 
-     This interface function removes the thermal cooling device.
-     It deletes the corresponding entry from /sys/class/thermal folder and
-     unbinds itself from all the thermal zone devices using it.
- 
- 1.3 interface for binding a thermal zone device with a thermal cooling device
--1.3.1 int thermal_zone_bind_cooling_device(struct thermal_zone_device *tz,
--	int trip, struct thermal_cooling_device *cdev,
--	unsigned long upper, unsigned long lower, unsigned int weight);
-+-----------------------------------------------------------------------------
-+
-+    ::
-+
-+	int thermal_zone_bind_cooling_device(struct thermal_zone_device *tz,
-+		int trip, struct thermal_cooling_device *cdev,
-+		unsigned long upper, unsigned long lower, unsigned int weight);
- 
-     This interface function binds a thermal cooling device to a particular trip
-     point of a thermal zone device.
-+
-     This function is usually called in the thermal zone device .bind callback.
--    tz: the thermal zone device
--    cdev: thermal cooling device
--    trip: indicates which trip point in this thermal zone the cooling device
--          is associated with.
--    upper:the Maximum cooling state for this trip point.
--          THERMAL_NO_LIMIT means no upper limit,
-+
-+    tz:
-+	  the thermal zone device
-+    cdev:
-+	  thermal cooling device
-+    trip:
-+	  indicates which trip point in this thermal zone the cooling device
-+	  is associated with.
-+    upper:
-+	  the Maximum cooling state for this trip point.
-+	  THERMAL_NO_LIMIT means no upper limit,
- 	  and the cooling device can be in max_state.
--    lower:the Minimum cooling state can be used for this trip point.
--          THERMAL_NO_LIMIT means no lower limit,
-+    lower:
-+	  the Minimum cooling state can be used for this trip point.
-+	  THERMAL_NO_LIMIT means no lower limit,
- 	  and the cooling device can be in cooling state 0.
--    weight: the influence of this cooling device in this thermal
--            zone.  See 1.4.1 below for more information.
-+    weight:
-+	  the influence of this cooling device in this thermal
-+	  zone.  See 1.4.1 below for more information.
- 
--1.3.2 int thermal_zone_unbind_cooling_device(struct thermal_zone_device *tz,
--		int trip, struct thermal_cooling_device *cdev);
-+    ::
-+
-+	int thermal_zone_unbind_cooling_device(struct thermal_zone_device *tz,
-+				int trip, struct thermal_cooling_device *cdev);
- 
-     This interface function unbinds a thermal cooling device from a particular
-     trip point of a thermal zone device. This function is usually called in
-     the thermal zone device .unbind callback.
--    tz: the thermal zone device
--    cdev: thermal cooling device
--    trip: indicates which trip point in this thermal zone the cooling device
--          is associated with.
-+
-+    tz:
-+	the thermal zone device
-+    cdev:
-+	thermal cooling device
-+    trip:
-+	indicates which trip point in this thermal zone the cooling device
-+	is associated with.
- 
- 1.4 Thermal Zone Parameters
--1.4.1 struct thermal_bind_params
-+---------------------------
-+
-+    ::
-+
-+	struct thermal_bind_params
-+
-     This structure defines the following parameters that are used to bind
-     a zone with a cooling device for a particular trip point.
--    .cdev: The cooling device pointer
--    .weight: The 'influence' of a particular cooling device on this
--             zone. This is relative to the rest of the cooling
--             devices. For example, if all cooling devices have a
--             weight of 1, then they all contribute the same. You can
--             use percentages if you want, but it's not mandatory. A
--             weight of 0 means that this cooling device doesn't
--             contribute to the cooling of this zone unless all cooling
--             devices have a weight of 0. If all weights are 0, then
--             they all contribute the same.
--    .trip_mask:This is a bit mask that gives the binding relation between
--               this thermal zone and cdev, for a particular trip point.
--               If nth bit is set, then the cdev and thermal zone are bound
--               for trip point n.
--    .binding_limits: This is an array of cooling state limits. Must have
--                     exactly 2 * thermal_zone.number_of_trip_points. It is an
--                     array consisting of tuples <lower-state upper-state> of
--                     state limits. Each trip will be associated with one state
--                     limit tuple when binding. A NULL pointer means
--                     <THERMAL_NO_LIMITS THERMAL_NO_LIMITS> on all trips.
--                     These limits are used when binding a cdev to a trip point.
--    .match: This call back returns success(0) if the 'tz and cdev' need to
-+
-+    .cdev:
-+	     The cooling device pointer
-+    .weight:
-+	     The 'influence' of a particular cooling device on this
-+	     zone. This is relative to the rest of the cooling
-+	     devices. For example, if all cooling devices have a
-+	     weight of 1, then they all contribute the same. You can
-+	     use percentages if you want, but it's not mandatory. A
-+	     weight of 0 means that this cooling device doesn't
-+	     contribute to the cooling of this zone unless all cooling
-+	     devices have a weight of 0. If all weights are 0, then
-+	     they all contribute the same.
-+    .trip_mask:
-+	       This is a bit mask that gives the binding relation between
-+	       this thermal zone and cdev, for a particular trip point.
-+	       If nth bit is set, then the cdev and thermal zone are bound
-+	       for trip point n.
-+    .binding_limits:
-+		     This is an array of cooling state limits. Must have
-+		     exactly 2 * thermal_zone.number_of_trip_points. It is an
-+		     array consisting of tuples <lower-state upper-state> of
-+		     state limits. Each trip will be associated with one state
-+		     limit tuple when binding. A NULL pointer means
-+		     <THERMAL_NO_LIMITS THERMAL_NO_LIMITS> on all trips.
-+		     These limits are used when binding a cdev to a trip point.
-+    .match:
-+	    This call back returns success(0) if the 'tz and cdev' need to
- 	    be bound, as per platform data.
--1.4.2 struct thermal_zone_params
-+
-+    ::
-+
-+	struct thermal_zone_params
-+
-     This structure defines the platform level parameters for a thermal zone.
-     This data, for each thermal zone should come from the platform layer.
-     This is an optional feature where some platforms can choose not to
-     provide this data.
--    .governor_name: Name of the thermal governor used for this zone
--    .no_hwmon: a boolean to indicate if the thermal to hwmon sysfs interface
--               is required. when no_hwmon == false, a hwmon sysfs interface
--               will be created. when no_hwmon == true, nothing will be done.
--               In case the thermal_zone_params is NULL, the hwmon interface
--               will be created (for backward compatibility).
--    .num_tbps: Number of thermal_bind_params entries for this zone
--    .tbp: thermal_bind_params entries
-+
-+    .governor_name:
-+	       Name of the thermal governor used for this zone
-+    .no_hwmon:
-+	       a boolean to indicate if the thermal to hwmon sysfs interface
-+	       is required. when no_hwmon == false, a hwmon sysfs interface
-+	       will be created. when no_hwmon == true, nothing will be done.
-+	       In case the thermal_zone_params is NULL, the hwmon interface
-+	       will be created (for backward compatibility).
-+    .num_tbps:
-+	       Number of thermal_bind_params entries for this zone
-+    .tbp:
-+	       thermal_bind_params entries
- 
- 2. sysfs attributes structure
+ 2. Using the PARIDE subsystem
 +=============================
  
-+==	================
- RO	read only value
- WO	write only value
- RW	read/write value
-+==	================
+ While configuring the Linux kernel, you may choose either to build
+ the PARIDE drivers into your kernel, or to build them as modules.
+@@ -94,10 +101,10 @@ In either case, you will need to select "Parallel port IDE device support"
+ as well as at least one of the high-level drivers and at least one
+ of the parallel port communication protocols.  If you do not know
+ what kind of parallel port adapter is used in your drive, you could
+-begin by checking the file names and any text files on your DOS 
++begin by checking the file names and any text files on your DOS
+ installation floppy.  Alternatively, you can look at the markings on
+ the adapter chip itself.  That's usually sufficient to identify the
+-correct device.  
++correct device.
  
- Thermal sysfs attributes will be represented under /sys/class/thermal.
- Hwmon sysfs I/F extension is also available under /sys/class/hwmon
- if hwmon is compiled in or built as a module.
+ You can actually select all the protocol modules, and allow the PARIDE
+ subsystem to try them all for you.
+@@ -105,8 +112,9 @@ subsystem to try them all for you.
+ For the "brand-name" products listed above, here are the protocol
+ and high-level drivers that you would use:
  
--Thermal zone device sys I/F, created once it's registered:
--/sys/class/thermal/thermal_zone[0-*]:
-+Thermal zone device sys I/F, created once it's registered::
-+
-+  /sys/class/thermal/thermal_zone[0-*]:
-     |---type:			Type of the thermal zone
-     |---temp:			Current temperature
-     |---mode:			Working mode of the thermal zone
-@@ -282,8 +396,9 @@ Thermal zone device sys I/F, created once it's registered:
-     |---slope:                  Slope constant applied as linear extrapolation
-     |---offset:                 Offset constant applied as linear extrapolation
++	================	============	======	========
+ 	Manufacturer		Model		Driver	Protocol
+-	
++	================	============	======	========
+ 	MicroSolutions		CD-ROM		pcd	bpck
+ 	MicroSolutions		PD drive	pf	bpck
+ 	MicroSolutions		hard-drive	pd	bpck
+@@ -119,8 +127,10 @@ and high-level drivers that you would use:
+ 	Hewlett-Packard		5GB Tape	pt	epat
+ 	Hewlett-Packard		7200e (CD)	pcd	epat
+ 	Hewlett-Packard		7200e (CD-R)	pg	epat
++	================	============	======	========
  
--Thermal cooling device sys I/F, created once it's registered:
--/sys/class/thermal/cooling_device[0-*]:
-+Thermal cooling device sys I/F, created once it's registered::
-+
-+  /sys/class/thermal/cooling_device[0-*]:
-     |---type:			Type of the cooling device(processor/fan/...)
-     |---max_state:		Maximum cooling state of the cooling device
-     |---cur_state:		Current cooling state of the cooling device
-@@ -299,11 +414,13 @@ the relationship between a thermal zone and its associated cooling device.
- They are created/removed for each successful execution of
- thermal_zone_bind_cooling_device/thermal_zone_unbind_cooling_device.
+ 2.1  Configuring built-in drivers
++---------------------------------
  
--/sys/class/thermal/thermal_zone[0-*]:
-+::
-+
-+  /sys/class/thermal/thermal_zone[0-*]:
-     |---cdev[0-*]:		[0-*]th cooling device in current thermal zone
-     |---cdev[0-*]_trip_point:	Trip point that cdev[0-*] is associated with
-     |---cdev[0-*]_weight:       Influence of the cooling device in
--                                this thermal zone
-+				this thermal zone
+ We recommend that you get to know how the drivers work and how to
+ configure them as loadable modules, before attempting to compile a
+@@ -143,7 +153,7 @@ protocol identification number and, for some devices, the drive's
+ chain ID.  While your system is booting, a number of messages are
+ displayed on the console.  Like all such messages, they can be
+ reviewed with the 'dmesg' command.  Among those messages will be
+-some lines like:
++some lines like::
  
- Besides the thermal zone device sysfs I/F and cooling device sysfs I/F,
- the generic thermal driver also creates a hwmon sysfs I/F for each _type_
-@@ -311,16 +428,17 @@ of thermal zone device. E.g. the generic thermal driver registers one hwmon
- class device and build the associated hwmon sysfs I/F for all the registered
- ACPI thermal zones.
+ 	paride: bpck registered as protocol 0
+ 	paride: epat registered as protocol 1
+@@ -158,10 +168,10 @@ the last two digits of the drive's serial number (but read MicroSolutions'
+ documentation about this).
  
--/sys/class/hwmon/hwmon[0-*]:
-+::
-+
-+  /sys/class/hwmon/hwmon[0-*]:
-     |---name:			The type of the thermal zone devices
-     |---temp[1-*]_input:	The current temperature of thermal zone [1-*]
-     |---temp[1-*]_critical:	The critical trip point of thermal zone [1-*]
+ As an example, let's assume that you have a MicroSolutions PD/CD drive
+-with unit ID number 36 connected to the parallel port at 0x378, a SyQuest 
+-EZ-135 connected to the chained port on the PD/CD drive and also an 
+-Imation Superdisk connected to port 0x278.  You could give the following 
+-options on your boot command:
++with unit ID number 36 connected to the parallel port at 0x378, a SyQuest
++EZ-135 connected to the chained port on the PD/CD drive and also an
++Imation Superdisk connected to port 0x278.  You could give the following
++options on your boot command::
  
- Please read Documentation/hwmon/sysfs-interface.rst for additional information.
+ 	pd.drive0=0x378,1 pf.drive0=0x278,1 pf.drive1=0x378,0,36
  
--***************************
--* Thermal zone attributes *
--***************************
-+Thermal zone attributes
-+-----------------------
+@@ -169,24 +179,27 @@ In the last option, pf.drive1 configures device /dev/pf1, the 0x378
+ is the parallel port base address, the 0 is the protocol registration
+ number and 36 is the chain ID.
  
- type
- 	Strings which represent the thermal zone type.
-@@ -340,54 +458,67 @@ mode
- 	This file gives information about the algorithm that is currently
- 	managing the thermal zone. It can be either default kernel based
- 	algorithm or user space application.
--	enabled		= enable Kernel Thermal management.
--	disabled	= Preventing kernel thermal zone driver actions upon
-+
-+	enabled
-+			  enable Kernel Thermal management.
-+	disabled
-+			  Preventing kernel thermal zone driver actions upon
- 			  trip points so that user application can take full
- 			  charge of the thermal management.
-+
- 	RW, Optional
+-Please note:  while PARIDE will work both with and without the 
++Please note:  while PARIDE will work both with and without the
+ PARPORT parallel port sharing system that is included by the
+ "Parallel port support" option, PARPORT must be included and enabled
+ if you want to use chains of devices on the same parallel port.
  
- policy
- 	One of the various thermal governors used for a particular zone.
-+
- 	RW, Required
+ 2.2  Loading and configuring PARIDE as modules
++----------------------------------------------
  
- available_policies
- 	Available thermal governors which can be used for a particular zone.
-+
- 	RO, Required
+ It is much faster and simpler to get to understand the PARIDE drivers
+-if you use them as loadable kernel modules.   
++if you use them as loadable kernel modules.
  
--trip_point_[0-*]_temp
-+`trip_point_[0-*]_temp`
- 	The temperature above which trip point will be fired.
-+
- 	Unit: millidegree Celsius
-+
- 	RO, Optional
+-Note 1:  using these drivers with the "kerneld" automatic module loading
+-system is not recommended for beginners, and is not documented here.  
++Note 1:
++	using these drivers with the "kerneld" automatic module loading
++	system is not recommended for beginners, and is not documented here.
  
--trip_point_[0-*]_type
-+`trip_point_[0-*]_type`
- 	Strings which indicate the type of the trip point.
--	E.g. it can be one of critical, hot, passive, active[0-*] for ACPI
-+
-+	E.g. it can be one of critical, hot, passive, `active[0-*]` for ACPI
- 	thermal zone.
-+
- 	RO, Optional
+-Note 2:  if you build PARPORT support as a loadable module, PARIDE must
+-also be built as loadable modules, and PARPORT must be loaded before the
+-PARIDE modules.
++Note 2:
++	if you build PARPORT support as a loadable module, PARIDE must
++	also be built as loadable modules, and PARPORT must be loaded before
++	the PARIDE modules.
  
--trip_point_[0-*]_hyst
-+`trip_point_[0-*]_hyst`
- 	The hysteresis value for a trip point, represented as an integer
- 	Unit: Celsius
- 	RW, Optional
+-To use PARIDE, you must begin by 
++To use PARIDE, you must begin by::
  
--cdev[0-*]
-+`cdev[0-*]`
- 	Sysfs link to the thermal cooling device node where the sys I/F
- 	for cooling device throttling control represents.
-+
- 	RO, Optional
+ 	insmod paride
  
--cdev[0-*]_trip_point
--	The trip point in this thermal zone which cdev[0-*] is associated
-+`cdev[0-*]_trip_point`
-+	The trip point in this thermal zone which `cdev[0-*]` is associated
- 	with; -1 means the cooling device is not associated with any trip
- 	point.
-+
- 	RO, Optional
+@@ -195,8 +208,8 @@ among other tasks.
  
--cdev[0-*]_weight
--        The influence of cdev[0-*] in this thermal zone. This value
--        is relative to the rest of cooling devices in the thermal
--        zone. For example, if a cooling device has a weight double
--        than that of other, it's twice as effective in cooling the
--        thermal zone.
--        RW, Optional
-+`cdev[0-*]_weight`
-+	The influence of `cdev[0-*]` in this thermal zone. This value
-+	is relative to the rest of cooling devices in the thermal
-+	zone. For example, if a cooling device has a weight double
-+	than that of other, it's twice as effective in cooling the
-+	thermal zone.
-+
-+	RW, Optional
+ Then, load as many of the protocol modules as you think you might need.
+ As you load each module, it will register the protocols that it supports,
+-and print a log message to your kernel log file and your console. For 
+-example:
++and print a log message to your kernel log file and your console. For
++example::
  
- passive
- 	Attribute is only present for zones in which the passive cooling
-@@ -395,8 +526,11 @@ passive
- 	and can be set to a temperature (in millidegrees) to enable a
- 	passive trip point for the zone. Activation is done by polling with
- 	an interval of 1 second.
-+
- 	Unit: millidegrees Celsius
-+
- 	Valid values: 0 (disabled) or greater than 1000
-+
- 	RW, Optional
+ 	# insmod epat
+ 	paride: epat registered as protocol 0
+@@ -205,22 +218,22 @@ example:
+         paride: k971 registered as protocol 2
  
- emul_temp
-@@ -407,17 +541,21 @@ emul_temp
- 	threshold and its associated cooling action. This is write only node
- 	and writing 0 on this node should disable emulation.
- 	Unit: millidegree Celsius
-+
- 	WO, Optional
+ Finally, you can load high-level drivers for each kind of device that
+-you have connected.  By default, each driver will autoprobe for a single 
++you have connected.  By default, each driver will autoprobe for a single
+ device, but you can support up to four similar devices by giving their
+ individual co-ordinates when you load the driver.
  
--	  WARNING: Be careful while enabling this option on production systems,
--	  because userland can easily disable the thermal policy by simply
--	  flooding this sysfs node with low temperature values.
-+	  WARNING:
-+	    Be careful while enabling this option on production systems,
-+	    because userland can easily disable the thermal policy by simply
-+	    flooding this sysfs node with low temperature values.
+ For example, if you had two no-name CD-ROM drives both using the
+ KingByte KBIC-951A adapter, one on port 0x378 and the other on 0x3bc
+-you could give the following command:
++you could give the following command::
  
- sustainable_power
- 	An estimate of the sustained power that can be dissipated by
- 	the thermal zone. Used by the power allocator governor. For
--	more information see Documentation/thermal/power_allocator.txt
-+	more information see Documentation/thermal/power_allocator.rst
-+
- 	Unit: milliwatts
-+
- 	RW, Optional
+ 	# insmod pcd drive0=0x378,1 drive1=0x3bc,1
  
- k_po
-@@ -425,7 +563,8 @@ k_po
- 	controller during temperature overshoot. Temperature overshoot
- 	is when the current temperature is above the "desired
- 	temperature" trip point. For more information see
--	Documentation/thermal/power_allocator.txt
-+	Documentation/thermal/power_allocator.rst
-+
- 	RW, Optional
+ For most adapters, giving a port address and protocol number is sufficient,
+-but check the source files in linux/drivers/block/paride for more 
++but check the source files in linux/drivers/block/paride for more
+ information.  (Hopefully someone will write some man pages one day !).
  
- k_pu
-@@ -433,20 +572,23 @@ k_pu
- 	controller during temperature undershoot. Temperature undershoot
- 	is when the current temperature is below the "desired
- 	temperature" trip point. For more information see
--	Documentation/thermal/power_allocator.txt
-+	Documentation/thermal/power_allocator.rst
-+
- 	RW, Optional
+ As another example, here's what happens when PARPORT is installed, and
+-a SyQuest EZ-135 is attached to port 0x378:
++a SyQuest EZ-135 is attached to port 0x378::
  
- k_i
- 	The integral term of the power allocator governor's PID
- 	controller. This term allows the PID controller to compensate
- 	for long term drift. For more information see
--	Documentation/thermal/power_allocator.txt
-+	Documentation/thermal/power_allocator.rst
-+
- 	RW, Optional
+ 	# insmod paride
+ 	paride: version 1.0 installed
+@@ -237,46 +250,47 @@ Note that the last line is the output from the generic partition table
+ scanner - in this case it reports that it has found a disk with one partition.
  
- k_d
- 	The derivative term of the power allocator governor's PID
- 	controller. For more information see
--	Documentation/thermal/power_allocator.txt
-+	Documentation/thermal/power_allocator.rst
-+
- 	RW, Optional
+ 2.3  Using a PARIDE device
++--------------------------
  
- integral_cutoff
-@@ -456,8 +598,10 @@ integral_cutoff
- 	example, if integral_cutoff is 0, then the integral term only
- 	accumulates error when temperature is above the desired
- 	temperature trip point. For more information see
--	Documentation/thermal/power_allocator.txt
-+	Documentation/thermal/power_allocator.rst
-+
- 	Unit: millidegree Celsius
-+
- 	RW, Optional
+ Once the drivers have been loaded, you can access PARIDE devices in the
+ same way as their traditional counterparts.  You will probably need to
+ create the device "special files".  Here is a simple script that you can
+-cut to a file and execute:
++cut to a file and execute::
  
- slope
-@@ -465,6 +609,7 @@ slope
- 	to determine a hotspot temperature based off the sensor's
- 	raw readings. It is up to the device driver to determine
- 	the usage of these values.
-+
- 	RW, Optional
+-#!/bin/bash
+-#
+-# mkd -- a script to create the device special files for the PARIDE subsystem
+-#
+-function mkdev {
+-  mknod $1 $2 $3 $4 ; chmod 0660 $1 ; chown root:disk $1
+-}
+-#
+-function pd {
+-  D=$( printf \\$( printf "x%03x" $[ $1 + 97 ] ) )
+-  mkdev pd$D b 45 $[ $1 * 16 ]
+-  for P in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+-  do mkdev pd$D$P b 45 $[ $1 * 16 + $P ]
+-  done
+-}
+-#
+-cd /dev
+-#
+-for u in 0 1 2 3 ; do pd $u ; done
+-for u in 0 1 2 3 ; do mkdev pcd$u b 46 $u ; done 
+-for u in 0 1 2 3 ; do mkdev pf$u  b 47 $u ; done 
+-for u in 0 1 2 3 ; do mkdev pt$u  c 96 $u ; done 
+-for u in 0 1 2 3 ; do mkdev npt$u c 96 $[ $u + 128 ] ; done 
+-for u in 0 1 2 3 ; do mkdev pg$u  c 97 $u ; done 
+-#
+-# end of mkd
++  #!/bin/bash
++  #
++  # mkd -- a script to create the device special files for the PARIDE subsystem
++  #
++  function mkdev {
++    mknod $1 $2 $3 $4 ; chmod 0660 $1 ; chown root:disk $1
++  }
++  #
++  function pd {
++    D=$( printf \\$( printf "x%03x" $[ $1 + 97 ] ) )
++    mkdev pd$D b 45 $[ $1 * 16 ]
++    for P in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
++    do mkdev pd$D$P b 45 $[ $1 * 16 + $P ]
++    done
++  }
++  #
++  cd /dev
++  #
++  for u in 0 1 2 3 ; do pd $u ; done
++  for u in 0 1 2 3 ; do mkdev pcd$u b 46 $u ; done
++  for u in 0 1 2 3 ; do mkdev pf$u  b 47 $u ; done
++  for u in 0 1 2 3 ; do mkdev pt$u  c 96 $u ; done
++  for u in 0 1 2 3 ; do mkdev npt$u c 96 $[ $u + 128 ] ; done
++  for u in 0 1 2 3 ; do mkdev pg$u  c 97 $u ; done
++  #
++  # end of mkd
  
- offset
-@@ -472,28 +617,33 @@ offset
- 	to determine a hotspot temperature based off the sensor's
- 	raw readings. It is up to the device driver to determine
- 	the usage of these values.
-+
- 	RW, Optional
+ With the device files and drivers in place, you can access PARIDE devices
+-like any other Linux device.   For example, to mount a CD-ROM in pcd0, use:
++like any other Linux device.   For example, to mount a CD-ROM in pcd0, use::
  
--*****************************
--* Cooling device attributes *
--*****************************
-+Cooling device attributes
+ 	mount /dev/pcd0 /cdrom
+ 
+ If you have a fresh Avatar Shark cartridge, and the drive is pda, you
+-might do something like:
++might do something like::
+ 
+ 	fdisk /dev/pda		-- make a new partition table with
+ 				   partition 1 of type 83
+@@ -289,41 +303,46 @@ might do something like:
+ 
+ Devices like the Imation superdisk work in the same way, except that
+ they do not have a partition table.  For example to make a 120MB
+-floppy that you could share with a DOS system:
++floppy that you could share with a DOS system::
+ 
+ 	mkdosfs /dev/pf0
+ 	mount /dev/pf0 /mnt
+ 
+ 
+ 2.4  The pf driver
++------------------
+ 
+ The pf driver is intended for use with parallel port ATAPI disk
+ devices.  The most common devices in this category are PD drives
+ and LS-120 drives.  Traditionally, media for these devices are not
+ partitioned.  Consequently, the pf driver does not support partitioned
+-media.  This may be changed in a future version of the driver. 
++media.  This may be changed in a future version of the driver.
+ 
+ 2.5  Using the pt driver
++------------------------
+ 
+ The pt driver for parallel port ATAPI tape drives is a minimal driver.
+-It does not yet support many of the standard tape ioctl operations. 
++It does not yet support many of the standard tape ioctl operations.
+ For best performance, a block size of 32KB should be used.  You will
+ probably want to set the parallel port delay to 0, if you can.
+ 
+ 2.6  Using the pg driver
++------------------------
+ 
+ The pg driver can be used in conjunction with the cdrecord program
+ to create CD-ROMs.  Please get cdrecord version 1.6.1 or later
+-from ftp://ftp.fokus.gmd.de/pub/unix/cdrecord/ .  To record CD-R media 
+-your parallel port should ideally be set to EPP mode, and the "port delay" 
+-should be set to 0.  With those settings it is possible to record at 2x 
++from ftp://ftp.fokus.gmd.de/pub/unix/cdrecord/ .  To record CD-R media
++your parallel port should ideally be set to EPP mode, and the "port delay"
++should be set to 0.  With those settings it is possible to record at 2x
+ speed without any buffer underruns.  If you cannot get the driver to work
+ in EPP mode, try to use "bidirectional" or "PS/2" mode and 1x speeds only.
+ 
+ 
+ 3. Troubleshooting
++==================
+ 
+ 3.1  Use EPP mode if you can
++----------------------------
+ 
+ The most common problems that people report with the PARIDE drivers
+ concern the parallel port CMOS settings.  At this time, none of the
+@@ -332,6 +351,7 @@ If you are able to do so, please set your parallel port into EPP mode
+ using your CMOS setup procedure.
+ 
+ 3.2  Check the port delay
 +-------------------------
  
- type
- 	String which represents the type of device, e.g:
-+
- 	- for generic ACPI: should be "Fan", "Processor" or "LCD"
- 	- for memory controller device on intel_menlow platform:
- 	  should be "Memory controller".
-+
- 	RO, Required
+ Some parallel ports cannot reliably transfer data at full speed.  To
+ offset the errors, the PARIDE protocol modules introduce a "port
+@@ -347,23 +367,25 @@ read the comments at the beginning of the driver source files in
+ linux/drivers/block/paride.
  
- max_state
- 	The maximum permissible cooling state of this cooling device.
-+
- 	RO, Required
+ 3.3  Some drives need a printer reset
++-------------------------------------
  
- cur_state
- 	The current cooling state of this cooling device.
- 	The value can any integer numbers between 0 and max_state:
-+
- 	- cur_state == 0 means no cooling
- 	- cur_state == max_state means the maximum cooling.
-+
- 	RW, Required
+ There appear to be a number of "noname" external drives on the market
+ that do not always power up correctly.  We have noticed this with some
+ drives based on OnSpec and older Freecom adapters.  In these rare cases,
+ the adapter can often be reinitialised by issuing a "printer reset" on
+-the parallel port.  As the reset operation is potentially disruptive in 
+-multiple device environments, the PARIDE drivers will not do it 
+-automatically.  You can however, force a printer reset by doing:
++the parallel port.  As the reset operation is potentially disruptive in
++multiple device environments, the PARIDE drivers will not do it
++automatically.  You can however, force a printer reset by doing::
  
- stats/reset
-@@ -508,9 +658,11 @@ stats/time_in_state_ms:
- 	units here is 10mS (similar to other time exported in /proc).
- 	RO, Required
+ 	insmod lp reset=1
+ 	rmmod lp
  
+ If you have one of these marginal cases, you should probably build
+ your paride drivers as modules, and arrange to do the printer reset
+-before loading the PARIDE drivers. 
++before loading the PARIDE drivers.
+ 
+ 3.4  Use the verbose option and dmesg if you need help
++------------------------------------------------------
+ 
+ While a lot of testing has gone into these drivers to make them work
+ as smoothly as possible, problems will arise.  If you do have problems,
+@@ -373,7 +395,7 @@ clues, then please make sure that only one drive is hooked to your system,
+ and that either (a) PARPORT is enabled or (b) no other device driver
+ is using your parallel port (check in /proc/ioports).  Then, load the
+ appropriate drivers (you can load several protocol modules if you want)
+-as in:
++as in::
+ 
+ 	# insmod paride
+ 	# insmod epat
+@@ -394,12 +416,14 @@ by e-mail to grant@torque.net, or join the linux-parport mailing list
+ and post your report there.
+ 
+ 3.5  For more information or help
++---------------------------------
+ 
+ You can join the linux-parport mailing list by sending a mail message
+-to 
++to:
 +
- stats/total_trans:
- 	A single positive value showing the total number of times the state of a
- 	cooling device is changed.
+ 		linux-parport-request@torque.net
+ 
+-with the single word 
++with the single word::
+ 
+ 		subscribe
+ 
+@@ -412,6 +436,4 @@ have in your mail headers, when sending mail to the list server.
+ You might also find some useful information on the linux-parport
+ web pages (although they are not always up to date) at
+ 
+-	http://web.archive.org/web/*/http://www.torque.net/parport/
+-
+-
++	http://web.archive.org/web/%2E/http://www.torque.net/parport/
+diff --git a/Documentation/blockdev/ramdisk.txt b/Documentation/blockdev/ramdisk.rst
+similarity index 84%
+rename from Documentation/blockdev/ramdisk.txt
+rename to Documentation/blockdev/ramdisk.rst
+index 501e12e0323e..b7c2268f8dec 100644
+--- a/Documentation/blockdev/ramdisk.txt
++++ b/Documentation/blockdev/ramdisk.rst
+@@ -1,7 +1,8 @@
++==========================================
+ Using the RAM disk block device with Linux
+-------------------------------------------
++==========================================
+ 
+-Contents:
++.. Contents:
+ 
+ 	1) Overview
+ 	2) Kernel Command Line Parameters
+@@ -42,7 +43,7 @@ rescue floppy disk.
+ 2a) Kernel Command Line Parameters
+ 
+ 	ramdisk_size=N
+-	==============
++		Size of the ramdisk.
+ 
+ This parameter tells the RAM disk driver to set up RAM disks of N k size.  The
+ default is 4096 (4 MB).
+@@ -50,16 +51,13 @@ default is 4096 (4 MB).
+ 2b) Module parameters
+ 
+ 	rd_nr
+-	=====
+-	/dev/ramX devices created.
++		/dev/ramX devices created.
+ 
+ 	max_part
+-	========
+-	Maximum partition number.
++		Maximum partition number.
+ 
+ 	rd_size
+-	=======
+-	See ramdisk_size.
++		See ramdisk_size.
+ 
+ 3) Using "rdev -r"
+ ------------------
+@@ -71,11 +69,11 @@ to 2 MB (2^11) of where to find the RAM disk (this used to be the size). Bit
+ prompt/wait sequence is to be given before trying to read the RAM disk. Since
+ the RAM disk dynamically grows as data is being written into it, a size field
+ is not required. Bits 11 to 13 are not currently used and may as well be zero.
+-These numbers are no magical secrets, as seen below:
++These numbers are no magical secrets, as seen below::
+ 
+-./arch/x86/kernel/setup.c:#define RAMDISK_IMAGE_START_MASK     0x07FF
+-./arch/x86/kernel/setup.c:#define RAMDISK_PROMPT_FLAG          0x8000
+-./arch/x86/kernel/setup.c:#define RAMDISK_LOAD_FLAG            0x4000
++  ./arch/x86/kernel/setup.c:#define RAMDISK_IMAGE_START_MASK     0x07FF
++  ./arch/x86/kernel/setup.c:#define RAMDISK_PROMPT_FLAG          0x8000
++  ./arch/x86/kernel/setup.c:#define RAMDISK_LOAD_FLAG            0x4000
+ 
+ Consider a typical two floppy disk setup, where you will have the
+ kernel on disk one, and have already put a RAM disk image onto disk #2.
+@@ -92,20 +90,23 @@ sequence so that you have a chance to switch floppy disks.
+ The command line equivalent is: "prompt_ramdisk=1"
+ 
+ Putting that together gives 2^15 + 2^14 + 0 = 49152 for an rdev word.
+-So to create disk one of the set, you would do:
++So to create disk one of the set, you would do::
+ 
+ 	/usr/src/linux# cat arch/x86/boot/zImage > /dev/fd0
+ 	/usr/src/linux# rdev /dev/fd0 /dev/fd0
+ 	/usr/src/linux# rdev -r /dev/fd0 49152
+ 
+-If you make a boot disk that has LILO, then for the above, you would use:
++If you make a boot disk that has LILO, then for the above, you would use::
 +
- 	RO, Required
+ 	append = "ramdisk_start=0 load_ramdisk=1 prompt_ramdisk=1"
+-Since the default start = 0 and the default prompt = 1, you could use:
++
++Since the default start = 0 and the default prompt = 1, you could use::
++
+ 	append = "load_ramdisk=1"
  
- stats/trans_table:
-@@ -522,6 +674,7 @@ stats/trans_table:
- 	RO, Required
  
- 3. A simple implementation
+ 4) An Example of Creating a Compressed RAM Disk
+-----------------------------------------------
++-----------------------------------------------
+ 
+ To create a RAM disk image, you will need a spare block device to
+ construct it on. This can be the RAM disk device itself, or an
+@@ -120,11 +121,11 @@ a) Decide on the RAM disk size that you want. Say 2 MB for this example.
+    Create it by writing to the RAM disk device. (This step is not currently
+    required, but may be in the future.) It is wise to zero out the
+    area (esp. for disks) so that maximal compression is achieved for
+-   the unused blocks of the image that you are about to create.
++   the unused blocks of the image that you are about to create::
+ 
+ 	dd if=/dev/zero of=/dev/ram0 bs=1k count=2048
+ 
+-b) Make a filesystem on it. Say ext2fs for this example.
++b) Make a filesystem on it. Say ext2fs for this example::
+ 
+ 	mke2fs -vm0 /dev/ram0 2048
+ 
+@@ -133,11 +134,11 @@ c) Mount it, copy the files you want to it (eg: /etc/* /dev/* ...)
+ 
+ d) Compress the contents of the RAM disk. The level of compression
+    will be approximately 50% of the space used by the files. Unused
+-   space on the RAM disk will compress to almost nothing.
++   space on the RAM disk will compress to almost nothing::
+ 
+ 	dd if=/dev/ram0 bs=1k count=2048 | gzip -v9 > /tmp/ram_image.gz
+ 
+-e) Put the kernel onto the floppy
++e) Put the kernel onto the floppy::
+ 
+ 	dd if=zImage of=/dev/fd0 bs=1k
+ 
+@@ -146,13 +147,13 @@ f) Put the RAM disk image onto the floppy, after the kernel. Use an offset
+    (possibly larger) kernel onto the same floppy later without overlapping
+    the RAM disk image. An offset of 400 kB for kernels about 350 kB in
+    size would be reasonable. Make sure offset+size of ram_image.gz is
+-   not larger than the total space on your floppy (usually 1440 kB).
++   not larger than the total space on your floppy (usually 1440 kB)::
+ 
+ 	dd if=/tmp/ram_image.gz of=/dev/fd0 bs=1k seek=400
+ 
+ g) Use "rdev" to set the boot device, RAM disk offset, prompt flag, etc.
+    For prompt_ramdisk=1, load_ramdisk=1, ramdisk_start=400, one would
+-   have 2^15 + 2^14 + 400 = 49552.
++   have 2^15 + 2^14 + 400 = 49552::
+ 
+ 	rdev /dev/fd0 /dev/fd0
+ 	rdev -r /dev/fd0 49552
+@@ -160,15 +161,17 @@ g) Use "rdev" to set the boot device, RAM disk offset, prompt flag, etc.
+ That is it. You now have your boot/root compressed RAM disk floppy. Some
+ users may wish to combine steps (d) and (f) by using a pipe.
+ 
+---------------------------------------------------------------------------
++
+ 						Paul Gortmaker 12/95
+ 
+ Changelog:
+ ----------
+ 
+-10-22-04 :	Updated to reflect changes in command line options, remove
++10-22-04 :
++		Updated to reflect changes in command line options, remove
+ 		obsolete references, general cleanup.
+ 		James Nelson (james4765@gmail.com)
+ 
+ 
+-12-95 :		Original Document
++12-95 :
++		Original Document
+diff --git a/Documentation/blockdev/zram.txt b/Documentation/blockdev/zram.rst
+similarity index 76%
+rename from Documentation/blockdev/zram.txt
+rename to Documentation/blockdev/zram.rst
+index 4df0ce271085..2111231c9c0f 100644
+--- a/Documentation/blockdev/zram.txt
++++ b/Documentation/blockdev/zram.rst
+@@ -1,7 +1,9 @@
++========================================
+ zram: Compressed RAM based block devices
+-----------------------------------------
++========================================
+ 
+-* Introduction
++Introduction
++============
+ 
+ The zram module creates RAM based block devices named /dev/zram<id>
+ (<id> = 0, 1, ...). Pages written to these disks are compressed and stored
+@@ -12,9 +14,11 @@ use as swap disks, various caches under /var and maybe many more :)
+ Statistics for individual zram devices are exported through sysfs nodes at
+ /sys/block/zram<id>/
+ 
+-* Usage
++Usage
++=====
+ 
+ There are several ways to configure and manage zram device(-s):
++
+ a) using zram and zram_control sysfs attributes
+ b) using zramctl utility, provided by util-linux (util-linux@vger.kernel.org).
+ 
+@@ -22,7 +26,7 @@ In this document we will describe only 'manual' zram configuration steps,
+ IOW, zram and zram_control sysfs attributes.
+ 
+ In order to get a better idea about zramctl please consult util-linux
+-documentation, zramctl man-page or `zramctl --help'. Please be informed
++documentation, zramctl man-page or `zramctl --help`. Please be informed
+ that zram maintainers do not develop/maintain util-linux or zramctl, should
+ you have any questions please contact util-linux@vger.kernel.org
+ 
+@@ -30,19 +34,23 @@ Following shows a typical sequence of steps for using zram.
+ 
+ WARNING
+ =======
++
+ For the sake of simplicity we skip error checking parts in most of the
+ examples below. However, it is your sole responsibility to handle errors.
+ 
+ zram sysfs attributes always return negative values in case of errors.
+ The list of possible return codes:
+--EBUSY	-- an attempt to modify an attribute that cannot be changed once
+-the device has been initialised. Please reset device first;
+--ENOMEM	-- zram was not able to allocate enough memory to fulfil your
+-needs;
+--EINVAL	-- invalid input has been provided.
++
++========  =============================================================
++-EBUSY	  an attempt to modify an attribute that cannot be changed once
++	  the device has been initialised. Please reset device first;
++-ENOMEM	  zram was not able to allocate enough memory to fulfil your
++	  needs;
++-EINVAL	  invalid input has been provided.
++========  =============================================================
+ 
+ If you use 'echo', the returned value that is changed by 'echo' utility,
+-and, in general case, something like:
++and, in general case, something like::
+ 
+ 	echo 3 > /sys/block/zram0/max_comp_streams
+ 	if [ $? -ne 0 ];
+@@ -51,7 +59,11 @@ and, in general case, something like:
+ 
+ should suffice.
+ 
+-1) Load Module:
++1) Load Module
++==============
++
++::
++
+ 	modprobe zram num_devices=4
+ 	This creates 4 devices: /dev/zram{0,1,2,3}
+ 
+@@ -59,6 +71,8 @@ num_devices parameter is optional and tells zram how many devices should be
+ pre-created. Default: 1.
+ 
+ 2) Set max number of compression streams
++========================================
++
+ Regardless the value passed to this attribute, ZRAM will always
+ allocate multiple compression streams - one per online CPUs - thus
+ allowing several concurrent compression operations. The number of
+@@ -66,16 +80,20 @@ allocated compression streams goes down when some of the CPUs
+ become offline. There is no single-compression-stream mode anymore,
+ unless you are running a UP system or has only 1 CPU online.
+ 
+-To find out how many streams are currently available:
++To find out how many streams are currently available::
++
+ 	cat /sys/block/zram0/max_comp_streams
+ 
+ 3) Select compression algorithm
++===============================
++
+ Using comp_algorithm device attribute one can see available and
+ currently selected (shown in square brackets) compression algorithms,
+ change selected compression algorithm (once the device is initialised
+ there is no way to change compression algorithm).
+ 
+-Examples:
++Examples::
++
+ 	#show supported compression algorithms
+ 	cat /sys/block/zram0/comp_algorithm
+ 	lzo [lz4]
+@@ -83,20 +101,23 @@ Examples:
+ 	#select lzo compression algorithm
+ 	echo lzo > /sys/block/zram0/comp_algorithm
+ 
+-For the time being, the `comp_algorithm' content does not necessarily
++For the time being, the `comp_algorithm` content does not necessarily
+ show every compression algorithm supported by the kernel. We keep this
+ list primarily to simplify device configuration and one can configure
+ a new device with a compression algorithm that is not listed in
+-`comp_algorithm'. The thing is that, internally, ZRAM uses Crypto API
++`comp_algorithm`. The thing is that, internally, ZRAM uses Crypto API
+ and, if some of the algorithms were built as modules, it's impossible
+ to list all of them using, for instance, /proc/crypto or any other
+ method. This, however, has an advantage of permitting the usage of
+ custom crypto compression modules (implementing S/W or H/W compression).
+ 
+ 4) Set Disksize
++===============
++
+ Set disk size by writing the value to sysfs node 'disksize'.
+ The value can be either in bytes or you can use mem suffixes.
+-Examples:
++Examples::
++
+ 	# Initialize /dev/zram0 with 50MB disksize
+ 	echo $((50*1024*1024)) > /sys/block/zram0/disksize
+ 
+@@ -111,10 +132,13 @@ since we expect a 2:1 compression ratio. Note that zram uses about 0.1% of the
+ size of the disk when not in use so a huge zram is wasteful.
+ 
+ 5) Set memory limit: Optional
++=============================
++
+ Set memory limit by writing the value to sysfs node 'mem_limit'.
+ The value can be either in bytes or you can use mem suffixes.
+ In addition, you could change the value in runtime.
+-Examples:
++Examples::
++
+ 	# limit /dev/zram0 with 50MB memory
+ 	echo $((50*1024*1024)) > /sys/block/zram0/mem_limit
+ 
+@@ -126,7 +150,11 @@ Examples:
+ 	# To disable memory limit
+ 	echo 0 > /sys/block/zram0/mem_limit
+ 
+-6) Activate:
++6) Activate
++===========
++
++::
++
+ 	mkswap /dev/zram0
+ 	swapon /dev/zram0
+ 
+@@ -134,6 +162,7 @@ Examples:
+ 	mount /dev/zram1 /tmp
+ 
+ 7) Add/remove zram devices
 +==========================
  
- ACPI thermal zone may support multiple trip points like critical, hot,
- passive, active. If an ACPI thermal zone supports critical, passive,
-@@ -532,11 +685,10 @@ thermal_cooling_device. Both are considered to have the same
- effectiveness in cooling the thermal zone.
+ zram provides a control interface, which enables dynamic (on-demand) device
+ addition and removal.
+@@ -142,37 +171,44 @@ In order to add a new /dev/zramX device, perform read operation on hot_add
+ attribute. This will return either new device's device id (meaning that you
+ can use /dev/zram<id>) or error code.
  
- If the processor is listed in _PSL method, and the fan is listed in _AL0
--method, the sys I/F structure will be built like this:
-+method, the sys I/F structure will be built like this::
- 
--/sys/class/thermal:
--
--|thermal_zone1:
-+ /sys/class/thermal:
-+  |thermal_zone1:
-     |---type:			acpitz
-     |---temp:			37000
-     |---mode:			enabled
-@@ -557,24 +709,24 @@ method, the sys I/F structure will be built like this:
-     |---cdev1_trip_point:	2	/* cdev1 can be used for active[0]*/
-     |---cdev1_weight:           1024
- 
--|cooling_device0:
-+  |cooling_device0:
-     |---type:			Processor
-     |---max_state:		8
-     |---cur_state:		0
- 
--|cooling_device3:
-+  |cooling_device3:
-     |---type:			Fan
-     |---max_state:		2
-     |---cur_state:		0
- 
--/sys/class/hwmon:
--
--|hwmon0:
-+ /sys/class/hwmon:
-+  |hwmon0:
-     |---name:			acpitz
-     |---temp1_input:		37000
-     |---temp1_crit:		100000
- 
- 4. Event Notification
-+=====================
- 
- The framework includes a simple notification mechanism, in the form of a
- netlink event. Netlink socket initialization is done during the _init_
-@@ -587,21 +739,28 @@ event will be one of:{THERMAL_AUX0, THERMAL_AUX1, THERMAL_CRITICAL,
- THERMAL_DEV_FAULT}. Notification can be sent when the current temperature
- crosses any of the configured thresholds.
- 
--5. Export Symbol APIs:
-+5. Export Symbol APIs
-+=====================
-+
-+5.1. get_tz_trend
-+-----------------
- 
--5.1: get_tz_trend:
- This function returns the trend of a thermal zone, i.e the rate of change
- of temperature of the thermal zone. Ideally, the thermal sensor drivers
- are supposed to implement the callback. If they don't, the thermal
- framework calculated the trend by comparing the previous and the current
- temperature values.
- 
--5.2:get_thermal_instance:
-+5.2. get_thermal_instance
-+-------------------------
-+
- This function returns the thermal_instance corresponding to a given
- {thermal_zone, cooling_device, trip_point} combination. Returns NULL
- if such an instance does not exist.
- 
--5.3:thermal_notify_framework:
-+5.3. thermal_notify_framework
-+-----------------------------
-+
- This function handles the trip events from sensor drivers. It starts
- throttling the cooling devices according to the policy configured.
- For CRITICAL and HOT trip points, this notifies the respective drivers,
-@@ -609,12 +768,15 @@ and does actual throttling for other trip points i.e ACTIVE and PASSIVE.
- The throttling policy is based on the configured platform data; if no
- platform data is provided, this uses the step_wise throttling policy.
- 
--5.4:thermal_cdev_update:
-+5.4. thermal_cdev_update
-+------------------------
-+
- This function serves as an arbitrator to set the state of a cooling
- device. It sets the cooling device to the deepest cooling state if
- possible.
- 
--6. thermal_emergency_poweroff:
-+6. thermal_emergency_poweroff
-+=============================
- 
- On an event of critical trip temperature crossing. Thermal framework
- allows the system to shutdown gracefully by calling orderly_poweroff().
-diff --git a/Documentation/thermal/x86_pkg_temperature_thermal b/Documentation/thermal/x86_pkg_temperature_thermal.rst
-similarity index 80%
-rename from Documentation/thermal/x86_pkg_temperature_thermal
-rename to Documentation/thermal/x86_pkg_temperature_thermal.rst
-index 17a3a4c0a0ca..f134dbd3f5a9 100644
---- a/Documentation/thermal/x86_pkg_temperature_thermal
-+++ b/Documentation/thermal/x86_pkg_temperature_thermal.rst
-@@ -1,19 +1,23 @@
-+===================================
- Kernel driver: x86_pkg_temp_thermal
--===================
-+===================================
- 
- Supported chips:
-+
- * x86: with package level thermal management
-+
- (Verify using: CPUID.06H:EAX[bit 6] =1)
- 
- Authors: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
- 
- Reference
-----
-+---------
-+
- Intel® 64 and IA-32 Architectures Software Developer’s Manual (Jan, 2013):
- Chapter 14.6: PACKAGE LEVEL THERMAL MANAGEMENT
- 
- Description
-----------
-+-----------
- 
- This driver register CPU digital temperature package level sensor as a thermal
- zone with maximum two user mode configurable trip points. Number of trip points
-@@ -25,23 +29,27 @@ take any action to control temperature.
- Threshold management
- --------------------
- Each package will register as a thermal zone under /sys/class/thermal.
 -Example:
--/sys/class/thermal/thermal_zone1
-+
 +Example::
 +
-+	/sys/class/thermal/thermal_zone1
+ 	cat /sys/class/zram-control/hot_add
+ 	1
  
- This contains two trip points:
+ To remove the existing /dev/zramX device (where X is a device id)
+-execute
++execute::
 +
- - trip_point_0_temp
- - trip_point_1_temp
+ 	echo X > /sys/class/zram-control/hot_remove
  
- User can set any temperature between 0 to TJ-Max temperature. Temperature units
--are in milli-degree Celsius. Refer to "Documentation/thermal/sysfs-api.txt" for
-+are in milli-degree Celsius. Refer to "Documentation/thermal/sysfs-api.rst" for
- thermal sys-fs details.
+-8) Stats:
++8) Stats
++========
++
+ Per-device statistics are exported as various nodes under /sys/block/zram<id>/
  
- Any value other than 0 in these trip points, can trigger thermal notifications.
- Setting 0, stops sending thermal notifications.
+ A brief description of exported device attributes. For more details please
+ read Documentation/ABI/testing/sysfs-block-zram.
  
--Thermal notifications: To get kobject-uevent notifications, set the thermal zone
--policy to "user_space". For example: echo -n "user_space" > policy
--
--
-+Thermal notifications:
-+To get kobject-uevent notifications, set the thermal zone
-+policy to "user_space".
++======================  ======  ===============================================
+ Name            	access            description
+-----            	------            -----------
++======================  ======  ===============================================
+ disksize          	RW	show and set the device's disk size
+ initstate         	RO	shows the initialization state of the device
+ reset             	WO	trigger device reset
+-mem_used_max      	WO	reset the `mem_used_max' counter (see later)
+-mem_limit         	WO	specifies the maximum amount of memory ZRAM can use
+-				to store the compressed data
+-writeback_limit   	WO	specifies the maximum amount of write IO zram can
+-				write out to backing device as 4KB unit
++mem_used_max      	WO	reset the `mem_used_max` counter (see later)
++mem_limit         	WO	specifies the maximum amount of memory ZRAM can
++				use to store the compressed data
++writeback_limit   	WO	specifies the maximum amount of write IO zram
++				can write out to backing device as 4KB unit
+ writeback_limit_enable  RW	show and set writeback_limit feature
+-max_comp_streams  	RW	the number of possible concurrent compress operations
++max_comp_streams  	RW	the number of possible concurrent compress
++				operations
+ comp_algorithm    	RW	show and change the compression algorithm
+ compact           	WO	trigger memory compaction
+ debug_stat        	RO	this file is used for zram debugging purposes
+ backing_dev	  	RW	set up backend storage for zram to write out
+ idle		  	WO	mark allocated slot as idle
++======================  ======  ===============================================
  
-+For example::
  
-+	echo -n "user_space" > policy
+ User space is advised to use the following files to read the device statistics.
+@@ -188,23 +224,31 @@ The stat file represents device's I/O statistics not accounted by block
+ layer and, thus, not available in zram<id>/stat file. It consists of a
+ single line of text and contains the following stats separated by
+ whitespace:
+- failed_reads     the number of failed reads
+- failed_writes    the number of failed writes
+- invalid_io       the number of non-page-size-aligned I/O requests
++
++ =============    =============================================================
++ failed_reads     The number of failed reads
++ failed_writes    The number of failed writes
++ invalid_io       The number of non-page-size-aligned I/O requests
+  notify_free      Depending on device usage scenario it may account
++
+                   a) the number of pages freed because of swap slot free
+-                  notifications or b) the number of pages freed because of
+-                  REQ_OP_DISCARD requests sent by bio. The former ones are
+-                  sent to a swap block device when a swap slot is freed,
+-                  which implies that this disk is being used as a swap disk.
++                     notifications
++                  b) the number of pages freed because of
++                     REQ_OP_DISCARD requests sent by bio. The former ones are
++                     sent to a swap block device when a swap slot is freed,
++                     which implies that this disk is being used as a swap disk.
++
+                   The latter ones are sent by filesystem mounted with
+                   discard option, whenever some data blocks are getting
+                   discarded.
++ =============    =============================================================
+ 
+ File /sys/block/zram<id>/mm_stat
+ 
+ The stat file represents device's mm statistics. It consists of a single
+ line of text and contains the following stats separated by whitespace:
++
++ ================ =============================================================
+  orig_data_size   uncompressed size of data stored in this disk.
+ 		  This excludes same-element-filled pages (same_pages) since
+ 		  no memory is allocated for them.
+@@ -223,58 +267,71 @@ line of text and contains the following stats separated by whitespace:
+                   No memory is allocated for such pages.
+  pages_compacted  the number of pages freed during compaction
+  huge_pages	  the number of incompressible pages
++ ================ =============================================================
+ 
+ File /sys/block/zram<id>/bd_stat
+ 
+ The stat file represents device's backing device statistics. It consists of
+ a single line of text and contains the following stats separated by whitespace:
++
++ ============== =============================================================
+  bd_count	size of data written in backing device.
+ 		Unit: 4K bytes
+  bd_reads	the number of reads from backing device
+ 		Unit: 4K bytes
+  bd_writes	the number of writes to backing device
+ 		Unit: 4K bytes
++ ============== =============================================================
++
++9) Deactivate
++=============
++
++::
+ 
+-9) Deactivate:
+ 	swapoff /dev/zram0
+ 	umount /dev/zram1
+ 
+-10) Reset:
+-	Write any positive value to 'reset' sysfs node
+-	echo 1 > /sys/block/zram0/reset
+-	echo 1 > /sys/block/zram1/reset
++10) Reset
++=========
++
++	Write any positive value to 'reset' sysfs node::
++
++		echo 1 > /sys/block/zram0/reset
++		echo 1 > /sys/block/zram1/reset
+ 
+ 	This frees all the memory allocated for the given device and
+ 	resets the disksize to zero. You must set the disksize again
+ 	before reusing the device.
+ 
+-* Optional Feature
++Optional Feature
++================
+ 
+-= writeback
++writeback
++---------
+ 
+ With CONFIG_ZRAM_WRITEBACK, zram can write idle/incompressible page
+ to backing storage rather than keeping it in memory.
+-To use the feature, admin should set up backing device via
++To use the feature, admin should set up backing device via::
+ 
+-	"echo /dev/sda5 > /sys/block/zramX/backing_dev"
++	echo /dev/sda5 > /sys/block/zramX/backing_dev
+ 
+ before disksize setting. It supports only partition at this moment.
+-If admin want to use incompressible page writeback, they could do via
++If admin want to use incompressible page writeback, they could do via::
+ 
+-	"echo huge > /sys/block/zramX/write"
++	echo huge > /sys/block/zramX/write
+ 
+ To use idle page writeback, first, user need to declare zram pages
+-as idle.
++as idle::
+ 
+-	"echo all > /sys/block/zramX/idle"
++	echo all > /sys/block/zramX/idle
+ 
+ From now on, any pages on zram are idle pages. The idle mark
+ will be removed until someone request access of the block.
+ IOW, unless there is access request, those pages are still idle pages.
+ 
+-Admin can request writeback of those idle pages at right timing via
++Admin can request writeback of those idle pages at right timing via::
+ 
+-	"echo idle > /sys/block/zramX/writeback"
++	echo idle > /sys/block/zramX/writeback
+ 
+ With the command, zram writeback idle pages from memory to the storage.
+ 
+@@ -285,7 +342,7 @@ to guarantee storage health for entire product life.
+ To overcome the concern, zram supports "writeback_limit" feature.
+ The "writeback_limit_enable"'s default value is 0 so that it doesn't limit
+ any writeback. IOW, if admin want to apply writeback budget, he should
+-enable writeback_limit_enable via
++enable writeback_limit_enable via::
+ 
+ 	$ echo 1 > /sys/block/zramX/writeback_limit_enable
+ 
+@@ -296,7 +353,7 @@ until admin set the budget via /sys/block/zramX/writeback_limit.
+ assigned via /sys/block/zramX/writeback_limit is meaninless.)
+ 
+ If admin want to limit writeback as per-day 400M, he could do it
+-like below.
++like below::
+ 
+ 	$ MB_SHIFT=20
+ 	$ 4K_SHIFT=12
+@@ -305,16 +362,16 @@ like below.
+ 	$ echo 1 > /sys/block/zram0/writeback_limit_enable
+ 
+ If admin want to allow further write again once the bugdet is exausted,
+-he could do it like below
++he could do it like below::
+ 
+ 	$ echo $((400<<MB_SHIFT>>4K_SHIFT)) > \
+ 		/sys/block/zram0/writeback_limit
+ 
+-If admin want to see remaining writeback budget since he set,
++If admin want to see remaining writeback budget since he set::
+ 
+ 	$ cat /sys/block/zramX/writeback_limit
+ 
+-If admin want to disable writeback limit, he could do
++If admin want to disable writeback limit, he could do::
+ 
+ 	$ echo 0 > /sys/block/zramX/writeback_limit_enable
+ 
+@@ -326,25 +383,35 @@ budget in next setting is user's job.
+ If admin want to measure writeback count in a certain period, he could
+ know it via /sys/block/zram0/bd_stat's 3rd column.
+ 
+-= memory tracking
++memory tracking
++===============
+ 
+ With CONFIG_ZRAM_MEMORY_TRACKING, user can know information of the
+ zram block. It could be useful to catch cold or incompressible
+ pages of the process with*pagemap.
++
+ If you enable the feature, you could see block state via
+-/sys/kernel/debug/zram/zram0/block_state". The output is as follows,
++/sys/kernel/debug/zram/zram0/block_state". The output is as follows::
+ 
+ 	  300    75.033841 .wh.
+ 	  301    63.806904 s...
+ 	  302    63.806919 ..hi
+ 
+-First column is zram's block index.
+-Second column is access time since the system was booted
+-Third column is state of the block.
+-(s: same page
+-w: written page to backing store
+-h: huge page
+-i: idle page)
++First column
++	zram's block index.
++Second column
++	access time since the system was booted
++Third column
++	state of the block:
++
++	s:
++		same page
++	w:
++		written page to backing store
++	h:
++		huge page
++	i:
++		idle page
+ 
+ First line of above example says 300th block is accessed at 75.033841sec
+ and the block's state is huge so it is written back to the backing
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 8aa3d0bd5b80..85648a944446 100644
+index 85648a944446..808f65e06ad8 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -15762,7 +15762,7 @@ M:	Viresh Kumar <viresh.kumar@linaro.org>
- M:	Javi Merino <javi.merino@kernel.org>
- L:	linux-pm@vger.kernel.org
- S:	Supported
--F:	Documentation/thermal/cpu-cooling-api.txt
-+F:	Documentation/thermal/cpu-cooling-api.rst
- F:	drivers/thermal/cpu_cooling.c
- F:	include/linux/cpu_cooling.h
+@@ -11024,7 +11024,7 @@ M:	Josef Bacik <josef@toxicpanda.com>
+ S:	Maintained
+ L:	linux-block@vger.kernel.org
+ L:	nbd@other.debian.org
+-F:	Documentation/blockdev/nbd.txt
++F:	Documentation/blockdev/nbd.rst
+ F:	drivers/block/nbd.c
+ F:	include/trace/events/nbd.h
+ F:	include/uapi/linux/nbd.h
+@@ -12028,7 +12028,7 @@ PARIDE DRIVERS FOR PARALLEL PORT IDE DEVICES
+ M:	Tim Waugh <tim@cyberelk.net>
+ L:	linux-parport@lists.infradead.org (subscribers-only)
+ S:	Maintained
+-F:	Documentation/blockdev/paride.txt
++F:	Documentation/blockdev/paride.rst
+ F:	drivers/block/paride/
  
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index 15a4ca5d7099..681047f8cc05 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -251,7 +251,7 @@ struct thermal_bind_params {
- 	 * platform characterization. This value is relative to the
- 	 * rest of the weights so a cooling device whose weight is
- 	 * double that of another cooling device is twice as
--	 * effective. See Documentation/thermal/sysfs-api.txt for more
-+	 * effective. See Documentation/thermal/sysfs-api.rst for more
- 	 * information.
- 	 */
- 	int weight;
-@@ -259,7 +259,7 @@ struct thermal_bind_params {
- 	/*
- 	 * This is a bit mask that gives the binding relation between this
- 	 * thermal zone and cdev, for a particular trip point.
--	 * See Documentation/thermal/sysfs-api.txt for more information.
-+	 * See Documentation/thermal/sysfs-api.rst for more information.
- 	 */
- 	int trip_mask;
+ PARISC ARCHITECTURE
+@@ -13310,7 +13310,7 @@ F:	drivers/net/wireless/ralink/rt2x00/
+ RAMDISK RAM BLOCK DEVICE DRIVER
+ M:	Jens Axboe <axboe@kernel.dk>
+ S:	Maintained
+-F:	Documentation/blockdev/ramdisk.txt
++F:	Documentation/blockdev/ramdisk.rst
+ F:	drivers/block/brd.c
  
+ RANCHU VIRTUAL BOARD FOR MIPS
+@@ -17672,7 +17672,7 @@ R:	Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+ F:	drivers/block/zram/
+-F:	Documentation/blockdev/zram.txt
++F:	Documentation/blockdev/zram.rst
+ 
+ ZS DECSTATION Z85C30 SERIAL DRIVER
+ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
+diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+index 96ec7e0fc1ea..c43690b973d8 100644
+--- a/drivers/block/Kconfig
++++ b/drivers/block/Kconfig
+@@ -31,7 +31,7 @@ config BLK_DEV_FD
+ 	  If you want to use the floppy disk drive(s) of your PC under Linux,
+ 	  say Y. Information about this driver, especially important for IBM
+ 	  Thinkpad users, is contained in
+-	  <file:Documentation/blockdev/floppy.txt>.
++	  <file:Documentation/blockdev/floppy.rst>.
+ 	  That file also contains the location of the Floppy driver FAQ as
+ 	  well as location of the fdutils package used to configure additional
+ 	  parameters of the driver at run time.
+@@ -96,7 +96,7 @@ config PARIDE
+ 	  your computer's parallel port. Most of them are actually IDE devices
+ 	  using a parallel port IDE adapter. This option enables the PARIDE
+ 	  subsystem which contains drivers for many of these external drives.
+-	  Read <file:Documentation/blockdev/paride.txt> for more information.
++	  Read <file:Documentation/blockdev/paride.rst> for more information.
+ 
+ 	  If you have said Y to the "Parallel-port support" configuration
+ 	  option, you may share a single port between your printer and other
+@@ -261,7 +261,7 @@ config BLK_DEV_NBD
+ 	  userland (making server and client physically the same computer,
+ 	  communicating using the loopback network device).
+ 
+-	  Read <file:Documentation/blockdev/nbd.txt> for more information,
++	  Read <file:Documentation/blockdev/nbd.rst> for more information,
+ 	  especially about where to find the server code, which runs in user
+ 	  space and does not need special kernel support.
+ 
+@@ -303,7 +303,7 @@ config BLK_DEV_RAM
+ 	  during the initial install of Linux.
+ 
+ 	  Note that the kernel command line option "ramdisk=XX" is now obsolete.
+-	  For details, read <file:Documentation/blockdev/ramdisk.txt>.
++	  For details, read <file:Documentation/blockdev/ramdisk.rst>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called brd. An alias "rd" has been defined
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index b933a7eea52b..5c99e52f9dc1 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -4424,7 +4424,7 @@ static int __init floppy_setup(char *str)
+ 		pr_cont("\n");
+ 	} else
+ 		DPRINT("botched floppy option\n");
+-	DPRINT("Read Documentation/blockdev/floppy.txt\n");
++	DPRINT("Read Documentation/blockdev/floppy.rst\n");
+ 	return 0;
+ }
+ 
+diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
+index 1ffc64770643..e06b99d54816 100644
+--- a/drivers/block/zram/Kconfig
++++ b/drivers/block/zram/Kconfig
+@@ -12,7 +12,7 @@ config ZRAM
+ 	  It has several use cases, for example: /tmp storage, use as swap
+ 	  disks and maybe many more.
+ 
+-	  See Documentation/blockdev/zram.txt for more information.
++	  See Documentation/blockdev/zram.rst for more information.
+ 
+ config ZRAM_WRITEBACK
+        bool "Write back incompressible or idle page to backing device"
+@@ -26,7 +26,7 @@ config ZRAM_WRITEBACK
+ 	 With /sys/block/zramX/{idle,writeback}, application could ask
+ 	 idle page's writeback to the backing device to save in memory.
+ 
+-	 See Documentation/blockdev/zram.txt for more information.
++	 See Documentation/blockdev/zram.rst for more information.
+ 
+ config ZRAM_MEMORY_TRACKING
+ 	bool "Track zRam block status"
+@@ -36,4 +36,4 @@ config ZRAM_MEMORY_TRACKING
+ 	  of zRAM. Admin could see the information via
+ 	  /sys/kernel/debug/zram/zramX/block_state.
+ 
+-	  See Documentation/blockdev/zram.txt for more information.
++	  See Documentation/blockdev/zram.rst for more information.
+diff --git a/tools/testing/selftests/zram/README b/tools/testing/selftests/zram/README
+index 7972cc512408..5fa378391d3b 100644
+--- a/tools/testing/selftests/zram/README
++++ b/tools/testing/selftests/zram/README
+@@ -37,4 +37,4 @@ Commands required for testing:
+  - mkfs/ mkfs.ext4
+ 
+ For more information please refer:
+-kernel-source-tree/Documentation/blockdev/zram.txt
++kernel-source-tree/Documentation/blockdev/zram.rst
 -- 
 2.21.0
 
