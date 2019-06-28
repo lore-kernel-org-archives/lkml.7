@@ -2,149 +2,65 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09744C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9419C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE2520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:58:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JxblWpm3"
+	by mail.kernel.org (Postfix) with ESMTP id 9BA7420656
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:58:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfF1E6E (ORCPT
+        id S1726955AbfF1E6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 00:58:04 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:17874 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfF1E6E (ORCPT
+        Fri, 28 Jun 2019 00:58:53 -0400
+Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:56084 "EHLO
+        hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfF1E6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 00:58:04 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x5S4vmF1019231;
-        Fri, 28 Jun 2019 13:57:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5S4vmF1019231
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561697869;
-        bh=SIK/nAM+sI54EJmk0mR1Usgw9j5vfYmGFrOtLjOZzLg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JxblWpm3C3r7r01gYCOajBSW84T6W3cnHh34fYXfzFs98o7YC0XLfQPjyIZJOe7wM
-         PY/Z814YyNy19enS/Ou211c5U7rm691JuQCgggAcE2sGPHLAj9wwCQolzRkbPaDRiu
-         FrTXIynHp8sn8Ga5l38WmMbWouAfZu8DxdTPzh8CSEslepOK3tMS5SQS+4VtUehZ9t
-         NSNHzUy1OY+BQNhszkLRTwslt4vvB1fQRAdLZXk9kVNL+2+OwXetOycQuOQ2VOQRtf
-         XghTnCtXDc6J9Kd7iUMUzD/WmoM3yPHVBRQHQLacTI0FvtiDEE2S7qU0bYPKqALUUD
-         5RDATmr7n88Ew==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id m8so3223822vsj.0;
-        Thu, 27 Jun 2019 21:57:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAVu7n6CngMno4scf2pMdH3Hmq9hLhKhaaiLPuIUzywdwnzZSMaq
-        //TzyUqqq0KFjBboz92i6ufgqEomdtaXqA+s3JY=
-X-Google-Smtp-Source: APXvYqyyvmsd8AAk5R7aaNFgntOJs2TjX0FeQ1b2WdSaf2T0LzzKUcfk9Z8oacISJcBzf5zvmHjL7/Pj9m8miFmaa6o=
-X-Received: by 2002:a67:d46:: with SMTP id 67mr4682467vsn.181.1561697868020;
- Thu, 27 Jun 2019 21:57:48 -0700 (PDT)
+        Fri, 28 Jun 2019 00:58:53 -0400
+X-Greylist: delayed 576 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Jun 2019 00:58:51 EDT
+X-IronPort-AV: E=Sophos;i="5.63,426,1557176400"; 
+   d="scan'208";a="223942606"
+Subject: Re: [PATCH v4 0/2] Use NVMEM as reboot-mode write interface
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20190515104658.25535-1-nandor.han@vaisala.com>
+ <20190627183330.aole6zumw3l2vyet@earth.universe>
+From:   Nandor Han <nandor.han@vaisala.com>
+Message-ID: <75db3e6e-cf95-cdd0-7446-380a686992d2@vaisala.com>
+Date:   Fri, 28 Jun 2019 07:49:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190627163903.28398-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190627163903.28398-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 28 Jun 2019 13:57:12 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARj+A1JDnUmA_ZFC5Shsy7Tg37LtXS27H7ZTgDbp5BO2w@mail.gmail.com>
-Message-ID: <CAK7LNARj+A1JDnUmA_ZFC5Shsy7Tg37LtXS27H7ZTgDbp5BO2w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Compile-test UAPI and kernel headers
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Song Liu <songliubraving@fb.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-riscv@lists.infradead.org, Sam Ravnborg <sam@ravnborg.org>,
-        Kees Cook <keescook@chromium.org>, xdp-newbies@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Anton Vorontsov <anton@enomsg.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Colin Cross <ccross@android.com>, bpf@vger.kernel.org,
-        Martin KaFai Lau <kafai@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190627183330.aole6zumw3l2vyet@earth.universe>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-OriginalArrivalTime: 28 Jun 2019 04:49:11.0053 (UTC) FILETIME=[D3CE53D0:01D52D6C]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 1:41 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> 1/4: Compile-test exported headers (reworked in v2)
->
-> 2/4: fix a flaw I noticed when I was working on this series.
->      Avoid generating intermediate wrappers.
->
-> 3/4: maybe useful for 4/4 and in some other places.
->      Add header-test-pattern-y syntax.
->
-> 4/4: Compile-test kernel-space headers in include/.
->      v2: compile as many headers as possible.
->      v3: exclude more headers causing build errors
+Hi,
 
+>> Changes since v3:
+>> ----------------
+>>   - documentation updated according to the comments
+> 
+> Thanks, queued. Please fix your git/mail setup, I had to fix the
+> line endings (\r\n -> \n) to apply this.
+> 
+> -- Sebastian
+> 
 
-I push this series to
- git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
- header-test-v3
-for somebody who wants to test it.
-
-
-
->
-> Masahiro Yamada (4):
->   kbuild: compile-test UAPI headers to ensure they are self-contained
->   kbuild: do not create wrappers for header-test-y
->   kbuild: support header-test-pattern-y
->   kbuild: compile-test kernel headers to ensure they are self-contained
->
->  .gitignore                         |    1 -
->  Documentation/dontdiff             |    1 -
->  Documentation/kbuild/makefiles.txt |   13 +-
->  Makefile                           |    4 +-
->  include/Kbuild                     | 1250 ++++++++++++++++++++++++++++
->  init/Kconfig                       |   22 +
->  scripts/Makefile.build             |   10 +-
->  scripts/Makefile.lib               |   13 +-
->  scripts/cc-system-headers.sh       |    8 +
->  usr/.gitignore                     |    1 -
->  usr/Makefile                       |    2 +
->  usr/include/.gitignore             |    3 +
->  usr/include/Makefile               |  134 +++
->  13 files changed, 1449 insertions(+), 13 deletions(-)
->  create mode 100644 include/Kbuild
->  create mode 100755 scripts/cc-system-headers.sh
->  create mode 100644 usr/include/.gitignore
->  create mode 100644 usr/include/Makefile
->
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
+Ok. Thanks Sebastian.
 
 --
-Best Regards
-Masahiro Yamada
+Nandor
