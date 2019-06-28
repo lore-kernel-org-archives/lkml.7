@@ -2,148 +2,82 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AE7C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BF2C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACCF208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88643208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:22:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfF1LWG (ORCPT
+        id S1726674AbfF1LVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:22:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35296 "EHLO
+        Fri, 28 Jun 2019 07:21:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35285 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfF1LVt (ORCPT
+        with ESMTP id S1726524AbfF1LVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:21:49 -0400
+        Fri, 28 Jun 2019 07:21:47 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hgowt-000228-9e; Fri, 28 Jun 2019 13:21:47 +0200
-Message-Id: <20190628111440.370295517@linutronix.de>
+        id 1hgowr-00021l-Ax; Fri, 28 Jun 2019 13:21:45 +0200
+Message-Id: <20190628111148.828731433@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 28 Jun 2019 13:11:52 +0200
+Date:   Fri, 28 Jun 2019 13:11:48 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Robert Hodaszi <Robert.Hodaszi@digi.com>
-Subject: [patch V2 4/6] x86/ioapic: Implement irq_get_irqchip_state() callback
-References: <20190628111148.828731433@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Cc:     x86@kernel.org, Marc Zyngier <marc.zyngier@arm.com>
+Subject: [patch V2 0/6] x86/irq: Cure various interrupt issues
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an interrupt is shut down in free_irq() there might be an inflight
-interrupt pending in the IO-APIC remote IRR which is not yet serviced. That
-means the interrupt has been sent to the target CPUs local APIC, but the
-target CPU is in a state which delays the servicing.
+This series addresses a few long standing issues:
 
-So free_irq() would proceed to free resources and to clear the vector
-because synchronize_hardirq() does not see an interrupt handler in
-progress.
+  1) The spurious interrupt warning which is emitted occasionally for
+     no obvious reason. Partially harmless but annoying
 
-That can trigger a spurious interrupt warning, which is harmless and just
-confuses users, but it also can leave the remote IRR in a stale state
-because once the handler is invoked the interrupt resources might be freed
-already and therefore acknowledgement is not possible anymore.
+  2) The spurious system vector detection which got wreckaged quite some
+     time ago and can completely wedge a machine. Posted yesterday already
+     in a preliminary version. Now actually verified that it does what it
+     claims to do.
 
-Implement the irq_get_irqchip_state() callback for the IO-APIC irq chip. The
-callback is invoked from free_irq() via __synchronize_hardirq(). Check the
-remote IRR bit of the interrupt and return 'in flight' if it is set and the
-interrupt is configured in level mode. For edge mode the remote IRR has no
-meaning.
+Details in the various patches.
 
-As this is only meaningful for level triggered interrupts this won't cure
-the potential spurious interrupt warning for edge triggered interrupts, but
-the edge trigger case does not result in stale hardware state. This has to
-be addressed at the vector/interrupt entry level seperately.
+For your conveniance the series is available from git:
 
-Fixes: 464d12309e1b ("x86/vector: Switch IOAPIC to global reservation mode")
-Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
+    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.irq
 
-V2: Use irq_get_irqchip_state()
+Changes vs. V1: Use the existing irq_get_irqchip_state() callback
+	    	Fixup misleading comments
+		Use the sync scheme in synchronize_irq() as well.
 
----
- arch/x86/kernel/apic/io_apic.c |   46 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+Thanks,
 
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -1893,6 +1893,50 @@ static int ioapic_set_affinity(struct ir
- 	return ret;
- }
- 
-+/*
-+ * Interrupt shutdown masks the ioapic pin, but the interrupt might already
-+ * be on flight, but not yet serviced by the target CPU. That means
-+ * __synchronize_hardirq() would return and claim that everything is calmed
-+ * down. So free_irq() would proceed and deactivate the interrupt and free
-+ * resources.
-+ *
-+ * Once the target CPU comes around to service it it will find a cleared
-+ * vector and complain. While the spurious interrupt is harmless, the full
-+ * release of resources might prevent the interrupt from being acknowledged
-+ * which keeps the hardware in a weird state.
-+ *
-+ * Verify that the corresponding Remote-IRR bits are clear.
-+ */
-+static int ioapic_irq_get_chip_state(struct irq_data *irqd,
-+				   enum irqchip_irq_state which,
-+				   bool *state)
-+{
-+	struct mp_chip_data *mcd = irqd->chip_data;
-+	struct IO_APIC_route_entry rentry;
-+	struct irq_pin_list *p;
-+
-+	if (which != IRQCHIP_STATE_ACTIVE)
-+		return -EINVAL;
-+
-+	*state = false;
-+	raw_spin_lock(&ioapic_lock);
-+	for_each_irq_pin(p, mcd->irq_2_pin) {
-+		rentry = __ioapic_read_entry(p->apic, p->pin);
-+		/*
-+		 * The remote IRR is only valid in level trigger mode. It's
-+		 * meaning is undefined for edge triggered interrupts and
-+		 * irrelevant because the IO-APIC treats them as fire and
-+		 * forget.
-+		 */
-+		if (rentry.irr && rentry.trigger) {
-+			*state = true;
-+			break;
-+		}
-+	}
-+	raw_spin_unlock(&ioapic_lock);
-+	return 0;
-+}
-+
- static struct irq_chip ioapic_chip __read_mostly = {
- 	.name			= "IO-APIC",
- 	.irq_startup		= startup_ioapic_irq,
-@@ -1902,6 +1946,7 @@ static struct irq_chip ioapic_chip __rea
- 	.irq_eoi		= ioapic_ack_level,
- 	.irq_set_affinity	= ioapic_set_affinity,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE,
- };
- 
-@@ -1914,6 +1959,7 @@ static struct irq_chip ioapic_ir_chip __
- 	.irq_eoi		= ioapic_ir_ack_level,
- 	.irq_set_affinity	= ioapic_set_affinity,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE,
- };
- 
+        tglx
 
+8<--------------
+ arch/x86/entry/entry_32.S      |   24 ++++++++++
+ arch/x86/entry/entry_64.S      |   30 +++++++++++--
+ arch/x86/include/asm/hw_irq.h  |    5 +-
+ arch/x86/kernel/apic/apic.c    |   33 ++++++++++-----
+ arch/x86/kernel/apic/io_apic.c |   46 ++++++++++++++++++++
+ arch/x86/kernel/apic/vector.c  |    4 -
+ arch/x86/kernel/idt.c          |    3 -
+ arch/x86/kernel/irq.c          |    2 
+ kernel/irq/autoprobe.c         |    6 +-
+ kernel/irq/chip.c              |    6 ++
+ kernel/irq/cpuhotplug.c        |    2 
+ kernel/irq/internals.h         |    5 ++
+ kernel/irq/manage.c            |   90 +++++++++++++++++++++++++++++++----------
+ 13 files changed, 211 insertions(+), 45 deletions(-)
+
+
+
+
+    
 
