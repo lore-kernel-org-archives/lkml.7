@@ -2,211 +2,124 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC7EC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32726C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 561E5208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561712934;
-	bh=Qibb5cHDh93A09zMK1z8VLBtdEagC8Bss71IgS2q6T8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XjAtTeemvCFmBeAUqJrGICDJzWApjBDRopvd1uO+ETk9AedUYS+Safeti8djcbd/S
-	 f4oz8HB/ZS0oXE/csrbA/ktXfpOiOH1kqxCH/IRdrTXoiKu4/RwcCGqyl6l7GDkkWD
-	 nUeG6jD00I6e9UeNnOf8pkg8N5U/hdVeAvYk4f3k=
+	by mail.kernel.org (Postfix) with ESMTP id 0F7C3208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfF1JIw (ORCPT
+        id S1726606AbfF1JJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:08:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56668 "EHLO mail.kernel.org"
+        Fri, 28 Jun 2019 05:09:50 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:40556 "EHLO a.mx.secunet.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726431AbfF1JIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:08:52 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726431AbfF1JJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 05:09:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id C381620275;
+        Fri, 28 Jun 2019 11:09:48 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ZDtm5AXgp7JG; Fri, 28 Jun 2019 11:09:48 +0200 (CEST)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C08208CB;
-        Fri, 28 Jun 2019 09:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561712931;
-        bh=Qibb5cHDh93A09zMK1z8VLBtdEagC8Bss71IgS2q6T8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Anw5BxsSdhuy+YQas/z6oihpG1mRsxLO8wlKwR9qAcC9tfe+Z1QVCkcDn5PRSmWtQ
-         GMhoNAEAKyrBjfWX8XysBJhxVHoM77JmPY3o3hNeCNIA3XsukgNhYqfi1/iA3Wq4J9
-         pXWa/1DX3J0PyIjW6hAIWIfgYKlARmoeTjsnBkx4=
-Date:   Fri, 28 Jun 2019 10:08:46 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Ganapatrao Kulkarni <gklkml16@gmail.com>
-Cc:     Ganapatrao Kulkarni <gkulkarni@marvell.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Will.Deacon@arm.com" <Will.Deacon@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>, jnair@marvell.com,
-        rrichter@marvell.com, jglauber@marvell.com
-Subject: Re: [PATCH 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
- UNCORE driver.
-Message-ID: <20190628090845.rv6urqwfcwz4xxce@willie-the-truck>
-References: <1560534144-13896-1-git-send-email-gkulkarni@marvell.com>
- <1560534144-13896-3-git-send-email-gkulkarni@marvell.com>
- <20190627095730.nf5kkataptfobzue@willie-the-truck>
- <CAKTKpr7PXFzQBHrJt+Ko=JaB+-5FdpNu+ByfkWmAm8OeiPem3w@mail.gmail.com>
+        by a.mx.secunet.com (Postfix) with ESMTPS id 5AF03201BF;
+        Fri, 28 Jun 2019 11:09:48 +0200 (CEST)
+Received: from [10.182.6.138] (10.182.6.138) by mail-essen-01.secunet.de
+ (10.53.40.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 28 Jun
+ 2019 11:09:48 +0200
+From:   Dennis Wassenberg <dennis.wassenberg@secunet.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dennis.wassenberg@secunet.com; keydata=
+ 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
+ YPsSSSBN/R6Xmw==
+Organization: secunet Security Networks AG
+Subject: [PATCH] ALSA: hda/realtek - Change front mic location for Lenovo
+ M710q
+To:     <tiwai@suse.com>
+CC:     <jurica.vukadin@rt-rk.com>, <perex@perex.cz>, <broonie@kernel.org>,
+        <pierre-louis.bossart@linux.intel.com>, <qkrwngud825@gmail.com>,
+        <po-hsu.lin@canonical.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>
+Message-ID: <d529f0d8-31f5-aa03-c9bc-9bed58ed6137@secunet.com>
+Date:   Fri, 28 Jun 2019 10:54:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKTKpr7PXFzQBHrJt+Ko=JaB+-5FdpNu+ByfkWmAm8OeiPem3w@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi again, Ganapat,
+On M710q Lenovo ThinkCentre machine, there are two front mics,
+we change the location for one of them to avoid conflicts.
 
-Thanks for the quick reply.
+Signed-off-by: Dennis Wassenberg <dennis.wassenberg@secunet.com>
+---
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Fri, Jun 28, 2019 at 11:09:33AM +0530, Ganapatrao Kulkarni wrote:
-> On Thu, Jun 27, 2019 at 3:27 PM Will Deacon <will@kernel.org> wrote:
-> > On Fri, Jun 14, 2019 at 05:42:46PM +0000, Ganapatrao Kulkarni wrote:
-> > > CCPI2 is a low-latency high-bandwidth serial interface for connecting
-> > > ThunderX2 processors. This patch adds support to capture CCPI2 perf events.
-> > >
-> > > Signed-off-by: Ganapatrao Kulkarni <gkulkarni@marvell.com>
-> > > ---
-> > >  drivers/perf/thunderx2_pmu.c | 179 ++++++++++++++++++++++++++++++-----
-> > >  1 file changed, 157 insertions(+), 22 deletions(-)
-> > >
-> > > diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-> > > index 43d76c85da56..3791ac9b897d 100644
-> > > --- a/drivers/perf/thunderx2_pmu.c
-> > > +++ b/drivers/perf/thunderx2_pmu.c
-> > > @@ -16,7 +16,9 @@
-> > >   * they need to be sampled before overflow(i.e, at every 2 seconds).
-> > >   */
-> > >
-> > > -#define TX2_PMU_MAX_COUNTERS         4
-> > > +#define TX2_PMU_DMC_L3C_MAX_COUNTERS 4
-> >
-> > I find it odd that you rename this...
-> 
-> i am not sure, how to avoid this since dmc/l3c have 4 counters and ccpi2 has 8.
-> i will try to make this better in v2.
-> >
-> > > +#define TX2_PMU_CCPI2_MAX_COUNTERS   8
-> > > +
-> > >  #define TX2_PMU_DMC_CHANNELS         8
-> > >  #define TX2_PMU_L3_TILES             16
-> > >
-> > > @@ -28,11 +30,22 @@
-> > >    */
-> > >  #define DMC_EVENT_CFG(idx, val)              ((val) << (((idx) * 8) + 1))
-> > >
-> > > +#define GET_EVENTID_CCPI2(ev)                ((ev->hw.config) & 0x1ff)
-> > > +/* bits[3:0] to select counters, starts from 8, bit[3] set always. */
-> > > +#define GET_COUNTERID_CCPI2(ev)              ((ev->hw.idx) & 0x7)
-> > > +#define CCPI2_COUNTER_OFFSET         8
-> >
-> >
-> > ... but leave GET_EVENTID alone, even though it only applies to DMC/L3C
-> > events. Saying that, if you have the event you can figure out its type,
-> > so could you avoid the need for additional macros entirely and just use
-> > the correct masks based on the corresponding PMU type? That might also
-> > avoid some of the conditional control flow you're introducing elsewhere.
-> 
-> sure, i will add mask as argument to macro.
-> >
-> > >  #define L3C_COUNTER_CTL                      0xA8
-> > >  #define L3C_COUNTER_DATA             0xAC
-> > >  #define DMC_COUNTER_CTL                      0x234
-> > >  #define DMC_COUNTER_DATA             0x240
-> > >
-> > > +#define CCPI2_PERF_CTL                       0x108
-> > > +#define CCPI2_COUNTER_CTL            0x10C
-> > > +#define CCPI2_COUNTER_SEL            0x12c
-> > > +#define CCPI2_COUNTER_DATA_L         0x130
-> > > +#define CCPI2_COUNTER_DATA_H         0x134
-> > > +
-> > >  /* L3C event IDs */
-> > >  #define L3_EVENT_READ_REQ            0xD
-> > >  #define L3_EVENT_WRITEBACK_REQ               0xE
-> > > @@ -51,9 +64,16 @@
-> > >  #define DMC_EVENT_READ_TXNS          0xF
-> > >  #define DMC_EVENT_MAX                        0x10
-> > >
-> > > +#define CCPI2_EVENT_REQ_PKT_SENT     0x3D
-> > > +#define CCPI2_EVENT_SNOOP_PKT_SENT   0x65
-> > > +#define CCPI2_EVENT_DATA_PKT_SENT    0x105
-> > > +#define CCPI2_EVENT_GIC_PKT_SENT     0x12D
-> > > +#define CCPI2_EVENT_MAX                      0x200
-> > > +
-> > >  enum tx2_uncore_type {
-> > >       PMU_TYPE_L3C,
-> > >       PMU_TYPE_DMC,
-> > > +     PMU_TYPE_CCPI2,
-> > >       PMU_TYPE_INVALID,
-> > >  };
-> > >
-> > > @@ -73,8 +93,8 @@ struct tx2_uncore_pmu {
-> > >       u32 max_events;
-> > >       u64 hrtimer_interval;
-> > >       void __iomem *base;
-> > > -     DECLARE_BITMAP(active_counters, TX2_PMU_MAX_COUNTERS);
-> > > -     struct perf_event *events[TX2_PMU_MAX_COUNTERS];
-> > > +     DECLARE_BITMAP(active_counters, TX2_PMU_CCPI2_MAX_COUNTERS);
-> > > +     struct perf_event *events[TX2_PMU_DMC_L3C_MAX_COUNTERS];
-> >
-> > Hmm, that looks very odd. Why are they now different sizes?
-> 
-> events[ ] is used to hold reference to active events to use in timer
-> callback, which is not applicable to ccpi2, hence 4.
-> active_counters is set to max of both. i.e, 8. i will try to make it
-> better readable in v2.
-
-Thanks. I suspect renaming the field would help a lot, or perhaps reworking
-your data structures so that you have a union of ccpi2 and dmc/l2c
-structures where necessary.
-
-> > >       struct device *dev;
-> > >       struct hrtimer hrtimer;
-> > >       const struct attribute_group **attr_groups;
-> > > @@ -92,7 +112,21 @@ static inline struct tx2_uncore_pmu *pmu_to_tx2_pmu(struct pmu *pmu)
-> > >       return container_of(pmu, struct tx2_uncore_pmu, pmu);
-> > >  }
-> > >
-> > > -PMU_FORMAT_ATTR(event,       "config:0-4");
-> > > +#define TX2_PMU_FORMAT_ATTR(_var, _name, _format)                    \
-> > > +static ssize_t                                                               \
-> > > +__tx2_pmu_##_var##_show(struct device *dev,                          \
-> > > +                            struct device_attribute *attr,           \
-> > > +                            char *page)                              \
-> > > +{                                                                    \
-> > > +     BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE);                     \
-> > > +     return sprintf(page, _format "\n");                             \
-> > > +}                                                                    \
-> > > +                                                                     \
-> > > +static struct device_attribute format_attr_##_var =                  \
-> > > +     __ATTR(_name, 0444, __tx2_pmu_##_var##_show, NULL)
-> > > +
-> > > +TX2_PMU_FORMAT_ATTR(event, event, "config:0-4");
-> > > +TX2_PMU_FORMAT_ATTR(event_ccpi2, event, "config:0-9");
-> >
-> > This doesn't look right. Can perf deal with overlapping fields? It seems
-> > wrong that we'd allow the user to specify both, for example.
-> 
-> I am not sure what is the issue here? both are different PMUs
-> root@SBR-26> cat /sys/bus/event_source/devices/uncore_dmc_0/format/event
-> config:0-4
-> root@SBR-26> cat /sys/bus/event_source/devices/uncore_ccpi2_0/format/event
-> config:0-9
-
-Ah, sorry about that. I got _var and _name the wrong way around and thought
-you were introducing a file called event_ccpi2! What you have looks fine.
-
-Will
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 5b3c26991f26..78cef7392122 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7074,6 +7074,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
++	SND_PCI_QUIRK(0x17aa, 0x3111, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x312a, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+-- 
+2.17.1
