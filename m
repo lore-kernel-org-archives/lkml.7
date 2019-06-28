@@ -2,177 +2,182 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE663C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65B4C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC4462086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B404F2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:31:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RG3h+qO2";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="fnCP2Z3e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfF1RbZ (ORCPT
+        id S1726895AbfF1Rbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:31:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63464 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726408AbfF1RbY (ORCPT
+        Fri, 28 Jun 2019 13:31:36 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:61140 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726408AbfF1Rbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:31:24 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SHQjDB116033;
-        Fri, 28 Jun 2019 13:30:15 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tdn2x5qpy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Jun 2019 13:30:15 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5SHQpQZ116372;
-        Fri, 28 Jun 2019 13:30:14 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tdn2x5qn2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Jun 2019 13:30:14 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5SHRWQs007534;
-        Fri, 28 Jun 2019 17:30:12 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma04dal.us.ibm.com with ESMTP id 2t9by7exub-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Jun 2019 17:30:12 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SHUAbs51118498
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 17:30:11 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D5922B206A;
-        Fri, 28 Jun 2019 17:30:10 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8BA4B2067;
-        Fri, 28 Jun 2019 17:30:10 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Jun 2019 17:30:10 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 51AED16C39B7; Fri, 28 Jun 2019 10:30:11 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 10:30:11 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Message-ID: <20190628173011.GX26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190627142436.GD215968@google.com>
- <20190627103455.01014276@gandalf.local.home>
- <20190627153031.GA249127@google.com>
- <20190627155506.GU26519@linux.ibm.com>
- <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <20190628164008.GB240964@google.com>
- <20190628164559.GC240964@google.com>
+        Fri, 28 Jun 2019 13:31:35 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SHQ7N2028126;
+        Fri, 28 Jun 2019 10:30:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=VgE/836/q1ZgHFTz46BuTxhY1pWpQQygQXnKQTtXWWg=;
+ b=RG3h+qO2eUkVxxSHAw1yZ6M0fUOP0KjgMeAjUlRXexZDZWhyluqnvVzPEhWsIwWNPXqG
+ dg4mNOO7A3fUPL/Y6peIx8gp8Sx5drQdBAFlA1Ycs9Ex46yB47K1vGFDURUCjVpJHKF4
+ ITfAstaTyrYZWotQcUkEEokEsMSZvDvRY2A= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2tdk48s1kt-11
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 28 Jun 2019 10:30:51 -0700
+Received: from ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) by
+ ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 28 Jun 2019 10:30:48 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 28 Jun 2019 10:30:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VgE/836/q1ZgHFTz46BuTxhY1pWpQQygQXnKQTtXWWg=;
+ b=fnCP2Z3ei5ogfSNC2Z7AO3ZfRV6TRW3tg09Sr8nVG+XpuZuPDzbRa/h1puTh8gKAKyO+FAw3z5+B7sGcVAeCdH7i/cJxcpfwbyoQd0pGxbXhwSbiK5Mltb70urDIMfiwETSB4YCBdvpA2FAIKMdTy1w2lGm4UIe3V6kdhxSmr0k=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB2868.namprd15.prod.outlook.com (20.178.218.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.17; Fri, 28 Jun 2019 17:30:47 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::e594:155f:a43:92ad]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::e594:155f:a43:92ad%6]) with mapi id 15.20.2008.018; Fri, 28 Jun 2019
+ 17:30:46 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Yang Shi <shy828301@gmail.com>
+CC:     Christopher Lameter <cl@linux.com>,
+        Waiman Long <longman@redhat.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "Kees Cook" <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Michal Hocko" <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        "Andrea Arcangeli" <aarcange@redhat.com>
+Subject: Re: [PATCH 2/2] mm, slab: Extend vm/drop_caches to shrink kmem slabs
+Thread-Topic: [PATCH 2/2] mm, slab: Extend vm/drop_caches to shrink kmem slabs
+Thread-Index: AQHVKrRnjGLXeWaE8kq5EhXDbrxOt6auY3OAgAGdGgCAAAdmgIABMAYAgAAc/YCAAAQKAA==
+Date:   Fri, 28 Jun 2019 17:30:46 +0000
+Message-ID: <20190628173040.GA11971@tower.DHCP.thefacebook.com>
+References: <20190624174219.25513-1-longman@redhat.com>
+ <20190624174219.25513-3-longman@redhat.com>
+ <20190626201900.GC24698@tower.DHCP.thefacebook.com>
+ <063752b2-4f1a-d198-36e7-3e642d4fcf19@redhat.com>
+ <20190627212419.GA25233@tower.DHCP.thefacebook.com>
+ <0100016b9eb7685e-0a5ab625-abb4-4e79-ab86-07744b1e4c3a-000000@email.amazonses.com>
+ <CAHbLzkr+EJWgAQ9VhAdeTtMx+11=AX=mVVEvC-0UihROf2J+PA@mail.gmail.com>
+In-Reply-To: <CAHbLzkr+EJWgAQ9VhAdeTtMx+11=AX=mVVEvC-0UihROf2J+PA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR13CA0034.namprd13.prod.outlook.com
+ (2603:10b6:300:95::20) To BN8PR15MB2626.namprd15.prod.outlook.com
+ (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::1:e2ec]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f68ec203-4456-4e4e-2347-08d6fbee5abe
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB2868;
+x-ms-traffictypediagnostic: BN8PR15MB2868:
+x-microsoft-antispam-prvs: <BN8PR15MB286844A9C0D2B3F61340502ABEFC0@BN8PR15MB2868.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00826B6158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(376002)(136003)(39860400002)(189003)(199004)(6512007)(81166006)(9686003)(102836004)(305945005)(66476007)(446003)(6116002)(64756008)(6246003)(6436002)(73956011)(66946007)(316002)(6486002)(66446008)(25786009)(386003)(66556008)(86362001)(14454004)(1411001)(1076003)(71200400001)(71190400001)(54906003)(486006)(11346002)(186003)(8676002)(14444005)(256004)(229853002)(33656002)(476003)(6506007)(46003)(53546011)(8936002)(53936002)(52116002)(76176011)(2906002)(81156014)(68736007)(478600001)(5660300002)(7736002)(99286004)(4326008)(6916009)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2868;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PsMfrYT+MMnl1+MiSXu8aFedaregyy8EiFnekbYMHIX4/79EIJvUT7IbGe4/7xL6HP+V5FS0VWSiAyOffsSqZzW4b/DuyM1syOMFQ0mxh5lPlJZkiunP71n6pNC/FSyk+5dtkv9Xgza09NGoIxdXDhWnzY3EeM64fkXF4pqo1yJ8eg71+LwglTVICpeppbxnRunQ8nemOJfTgCaOTUfcWNm3Isr1LF1cLyoF9pisUxZ5IB8Eub/G/CClLKzBH5rTgZBrMeALuQVNovUz79ma4NAARzzEgmk+ulnfT2560rYcVbuKjx3809D+PU3VFa10HxMa10Y1eRiWWK+kyjypLga/8MKz76RU0yIJZ8ZFUpFdZxfScuAEcZVnJx3ElewqZeCbPUmdQzr6zTGUmc55rZdMrHHoMGVGvbPAYLBgirc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <96E427C466A25B4EB9262E3679EF031A@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628164559.GC240964@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
+X-MS-Exchange-CrossTenant-Network-Message-Id: f68ec203-4456-4e4e-2347-08d6fbee5abe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 17:30:46.7759
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2868
+X-OriginatorOrg: fb.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_08:,,
  signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=739 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1906280200
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 12:45:59PM -0400, Joel Fernandes wrote:
-> On Fri, Jun 28, 2019 at 12:40:08PM -0400, Joel Fernandes wrote:
-> > On Thu, Jun 27, 2019 at 11:41:07AM -0700, Paul E. McKenney wrote:
-> > [snip]
-> > > > > > And we should document this somewhere for future sanity preservation
-> > > > > > :-D
-> > > > > 
-> > > > > Or adjust the code and requirements to make it more sane, if feasible.
-> > > > > 
-> > > > > My current (probably wildly unreliable) guess that the conditions in
-> > > > > rcu_read_unlock_special() need adjusting.  I was assuming that in_irq()
-> > > > > implies a hardirq context, in other words that in_irq() would return
-> > > > > false from a threaded interrupt handler.  If in_irq() instead returns
-> > > > > true from within a threaded interrupt handler, then this code in
-> > > > > rcu_read_unlock_special() needs fixing:
-> > > > > 
-> > > > > 		if ((exp || in_irq()) && irqs_were_disabled && use_softirq &&
-> > > > > 		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
-> > > > > 			// Using softirq, safe to awaken, and we get
-> > > > > 			// no help from enabling irqs, unlike bh/preempt.
-> > > > > 			raise_softirq_irqoff(RCU_SOFTIRQ);
-> > > > > 
-> > > > > The fix would be replacing the calls to in_irq() with something that
-> > > > > returns true only if called from within a hardirq context.
-> > > > > Thoughts?
-> > > > 
-> > > > I am not sure if this will fix all cases though?
-> > > > 
-> > > > I think the crux of the problem is doing a recursive wake up. The threaded
-> > > > IRQ probably just happens to be causing it here, it seems to me this problem
-> > > > can also occur on a non-threaded irq system (say current_reader() in your
-> > > > example executed in a scheduler path in process-context and not from an
-> > > > interrupt). Is that not possible?
-> > > 
-> > > In the non-threaded case, invoking raise_softirq*() from hardirq context
-> > > just sets a bit in a per-CPU variable.  Now, to Sebastian's point, we
-> > > are only sort of in hardirq context in this case due to being called
-> > > from irq_exit(), but the failure we are seeing might well be a ways
-> > > downstream of the actual root-cause bug.
-> > 
-> > Hi Paul,
-> > I was talking about calling of rcu_read_unlock_special from a normal process
-> > context from the scheduler.
-> > 
-> > In the below traces, it shows that only the PREEMPT_MASK offset is set at the
-> > time of the issue. Both HARD AND SOFT IRQ masks are not enabled, which means
-> > the lock up is from a normal process context.
-> > 
-> > I think I finally understood why the issue shows up only with threadirqs in
-> > my setup. If I build x86_64_defconfig, the CONFIG_IRQ_FORCED_THREADING=y
-> > option is set. And booting this with threadirqs, it always tries to
-> > wakeup_ksoftirqd in invoke_softirq.
-> > 
-> > I believe what happens is, at an in-opportune time when the .blocked field is
-> > set for the preempted task, an interrupt is received. This timing is quite in
-> > auspicious because t->rcu_read_unlock_special just happens to have its
-> > .blocked field set even though it is not in a reader-section.
+On Fri, Jun 28, 2019 at 10:16:13AM -0700, Yang Shi wrote:
+> On Fri, Jun 28, 2019 at 8:32 AM Christopher Lameter <cl@linux.com> wrote:
+> >
+> > On Thu, 27 Jun 2019, Roman Gushchin wrote:
+> >
+> > > so that objects belonging to different memory cgroups can share the s=
+ame page
+> > > and kmem_caches.
+> > >
+> > > It's a fairly big change though.
+> >
+> > Could this be done at another level? Put a cgoup pointer into the
+> > corresponding structures and then go back to just a single kmen_cache f=
+or
+> > the system as a whole? You can still account them per cgroup and there
+> > will be no cleanup problem anymore. You could scan through a slab cache
+> > to remove the objects of a certain cgroup and then the fragmentation
+> > problem that cgroups create here will be handled by the slab allocators=
+ in
+> > the traditional way. The duplication of the kmem_cache was not designed
+> > into the allocators but bolted on later.
+>=20
+> I'm afraid this may bring in another problem for memcg page reclaim.
+> When shrinking the slabs, the shrinker may end up scanning a very long
+> list to find out the slabs for a specific memcg. Particularly for the
+> count operation, it may have to scan the list from the beginning all
+> the way down to the end. It may take unbounded time.
+>=20
+> When I worked on THP deferred split shrinker problem, I used to do
+> like this, but it turns out it may take milliseconds to count the
+> objects on the list, but it may just need reclaim a few of them.
 
-Thank you for tracing through this!
+I don't think the shrinker mechanism should be altered. Shrinker lists
+already contain individual objects, and I don't see any reasons, why
+these objects can't reside on a shared set of pages.
 
-> I believe the .blocked field remains set even though we are not any more in a
-> reader section because of deferred processing of the blocked lists that you
-> mentioned yesterday.
+What we're discussing is that it's way too costly (under some conditions)
+to have many sets of kmem_caches, if each of them is containing only
+few objects.
 
-That can indeed happen.  However, in current -rcu, that would mean
-that .deferred_qs is also set, which (if in_irq()) would prevent
-the raise_softirq_irqsoff() from being invoked.  Which was why I was
-asking the questions about whether in_irq() returns true within threaded
-interrupts yesterday.  If it does, I need to find if there is some way
-of determining whether rcu_read_unlock_special() is being called from
-a threaded interrupt in order to suppress the call to raise_softirq()
-in that case.
-
-But which version of the kernel are you using here?  Current -rcu?
-v5.2-rc1?  Something else?
-
-							Thanx, Paul
+Thanks!
