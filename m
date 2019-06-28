@@ -2,189 +2,367 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C43C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB50C46478
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F2B20828
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9812121773
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:49:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GyMkM3xX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JkqT59IE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfF1TsK (ORCPT
+        id S1727066AbfF1TtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 15:48:10 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43536 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfF1TsK (ORCPT
+        Fri, 28 Jun 2019 15:49:25 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45553 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbfF1TtY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 15:48:10 -0400
-Received: by mail-pl1-f195.google.com with SMTP id cl9so3797148plb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:48:09 -0700 (PDT)
+        Fri, 28 Jun 2019 15:49:24 -0400
+Received: by mail-io1-f66.google.com with SMTP id e3so14925245ioc.12;
+        Fri, 28 Jun 2019 12:49:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ChUBsFBboxFApcwFzipwESnSheECBArimENf95+mlCA=;
-        b=GyMkM3xXsRMmPGKX8Vnxcr/EmxSkiug4l0EL/232vcgqVdymn1s+EbaJ9pzrNErpIg
-         KmLfx6IePQaOTTV1ssVPFg6VgCUh0YDh2X34cbJaqARjQOOkzfmDUEFNiW06oVIJjLno
-         ThTVxw4hvNEkBlqG9vbvyVU5qCbRz7EskzHU0=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yyGQbOICu865VAL3WfBuIMEgZs6PIT7zz9ZwKAw1Ius=;
+        b=JkqT59IEWrKV78KBkgZo9Ndx7Bpm2aoAvA7F1k1pawzLor4/NffJdiQvDL6LLNzZ90
+         k2UzqvD0AJRCD+kYbKZ4HJDLZUlBAyb1m0tK3hAX1p44IyAFiffeNv4X6yJPU6jOsKkK
+         sMcRuvzuwAYEKPVz4AAP3j/blKztojOift+o8TsiqkQc8SNfNrnXmRwsoe/Q670W9guS
+         q2a5QLhq8G1iBenVuQ9LQWqKxmQOBl1aJcjpbvFdGv77FSeALyYmhP6CoMiWEYW/O5w2
+         TbeB7WUT8koFeZJQ66v3cRQHftPqAKP7CNLa9urFX86r81Q53pqSpa9P2Dhw4NtYC88S
+         +YzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ChUBsFBboxFApcwFzipwESnSheECBArimENf95+mlCA=;
-        b=cnfqOstu6I7BNxCaQGMCkI2w39n6EFTAFmcfbwi1ac7TCoSgjh8ADxt2zM8i8hlRBm
-         gAbiYivCBqXK4UJsAL0lnI1XLK1JDGpibF8U8+Xt7zCwz0UmjdJjda7kmA5QC6DikmSd
-         e7lG/oHp4O8ISFFNX0JLTwux/fyzOeVCg9QJUObPEph7HLewPjXvIwWKGoEperX+r51k
-         V/dcNkVpfkivWSNxC8RQ/ZTufQYEUESW7cFHoKcUipohU3eiAh5oHRuhhWIGH3SmUvZ9
-         pR1KsnOdZeqzs6JNoEWTK+vhmCzzuGrfXh+yw/iSAkB9nBXxWIhxbMiWq6LO3VjRWId/
-         Mzkg==
-X-Gm-Message-State: APjAAAX0u7vF6u2Kg6uNisWQEywm3HmoxuzoCywoEmf3tkrfMUsGrrvI
-        j+fykGdC/+argVVbViI+wZxudQ==
-X-Google-Smtp-Source: APXvYqxtv8TvNyn4zJpKrD6/mQH7c5fJYCsEEAuMAFHUWiXMb2hDoGhrYZltpHjmwQWPslPiSMyGpQ==
-X-Received: by 2002:a17:902:9896:: with SMTP id s22mr2769927plp.4.1561751289344;
-        Fri, 28 Jun 2019 12:48:09 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m11sm2593670pjv.21.2019.06.28.12.48.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Jun 2019 12:48:06 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 12:48:05 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
-        willy@infradead.org, peterz@infradead.org, will.deacon@arm.com,
-        paulmck@linux.vnet.ibm.com, elena.reshetova@intel.com,
-        kernel-team@android.com, kernel-hardening@lists.openwall.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v2] Convert struct pid count to refcount_t
-Message-ID: <201906281248.7D03C318A1@keescook>
-References: <20190628193442.94745-1-joel@joelfernandes.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yyGQbOICu865VAL3WfBuIMEgZs6PIT7zz9ZwKAw1Ius=;
+        b=kYo6WN+O+bQl0VUC7PzDpbn84y05UvUtTxNPoIaaiZsUSTB6NN5oW2TB4vENyBe1yy
+         amlTXx3wd91SigKBsCVk++eiyR0jUtgFuEAcgseaVNEd3BUGge6fDvVh6CkpfoaXFXNm
+         t9r4vgyMcYwEG7i8JucWC5TwUKkf4fOZkqjBdonACMpXKuoUxr2PuLGhYU3Ne/BnORQY
+         eNxjlYiQ0L04mVRFPtp2umgnoLCDzd4aU1cyT6TjoAfes2J4JkLlO7YlBRTGZ408bFFs
+         pzbtQbf0lIcdLuBz51ulYycTE6sYcFsDyw5f8p55vW4GTA92sDh+08hC5tEBshMFzafS
+         8T0A==
+X-Gm-Message-State: APjAAAWGBFF5/lIbvY575brxoRrIiO187Xr2NQVca69a+Vh+gtuNarI9
+        yVJb/SHFJ8dVW/siveZuvxVPs2dVgv5RG9KbCMc=
+X-Google-Smtp-Source: APXvYqwhrHo/W1nrbh50tbjbaM6e2639iaeQkYqCSOUx1E8YTlwQqRoMG/DwgwvY1AI1IgbPSbuDKpbNRcWF/HxwUO4=
+X-Received: by 2002:a6b:b790:: with SMTP id h138mr12378906iof.64.1561751363440;
+ Fri, 28 Jun 2019 12:49:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628193442.94745-1-joel@joelfernandes.org>
+References: <20190619222922.1231.27432.stgit@localhost.localdomain>
+ <20190619223302.1231.51136.stgit@localhost.localdomain> <7d959202-b2cd-fe24-5b3c-84e159eafe0a@redhat.com>
+In-Reply-To: <7d959202-b2cd-fe24-5b3c-84e159eafe0a@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 28 Jun 2019 12:49:11 -0700
+Message-ID: <CAKgT0UfNFbAs=1o_DMHRQScDKP8qLnmOGtgfUhjk3_Jupbwf6w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/6] mm: Adjust shuffle code to allow for future coalescing
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, wei.w.wang@intel.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 03:34:42PM -0400, Joel Fernandes (Google) wrote:
-> struct pid's count is an atomic_t field used as a refcount. Use
-> refcount_t for it which is basically atomic_t but does additional
-> checking to prevent use-after-free bugs.
-> 
-> For memory ordering, the only change is with the following:
->  -	if ((atomic_read(&pid->count) == 1) ||
->  -	     atomic_dec_and_test(&pid->count)) {
->  +	if (refcount_dec_and_test(&pid->count)) {
->  		kmem_cache_free(ns->pid_cachep, pid);
-> 
-> Here the change is from:
-> Fully ordered --> RELEASE + ACQUIRE (as per refcount-vs-atomic.rst)
-> This ACQUIRE should take care of making sure the free happens after the
-> refcount_dec_and_test().
-> 
-> The above hunk also removes atomic_read() since it is not needed for the
-> code to work and it is unclear how beneficial it is. The removal lets
-> refcount_dec_and_test() check for cases where get_pid() happened before
-> the object was freed.
-> 
-> Cc: mathieu.desnoyers@efficios.com
-> Cc: willy@infradead.org
-> Cc: peterz@infradead.org
-> Cc: will.deacon@arm.com
-> Cc: paulmck@linux.vnet.ibm.com
-> Cc: elena.reshetova@intel.com
-> Cc: keescook@chromium.org
-> Cc: kernel-team@android.com
-> Cc: kernel-hardening@lists.openwall.com
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On Tue, Jun 25, 2019 at 12:56 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 20.06.19 00:33, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >
+> > This patch is meant to move the head/tail adding logic out of the shuffle
+> > code and into the __free_one_page function since ultimately that is where
+> > it is really needed anyway. By doing this we should be able to reduce the
+> > overhead and can consolidate all of the list addition bits in one spot.
+> >
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > ---
+> >  include/linux/mmzone.h |   12 --------
+> >  mm/page_alloc.c        |   70 +++++++++++++++++++++++++++---------------------
+> >  mm/shuffle.c           |   24 ----------------
+> >  mm/shuffle.h           |   35 ++++++++++++++++++++++++
+> >  4 files changed, 74 insertions(+), 67 deletions(-)
+> >
+> > diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> > index 427b79c39b3c..4c07af2cfc2f 100644
+> > --- a/include/linux/mmzone.h
+> > +++ b/include/linux/mmzone.h
+> > @@ -116,18 +116,6 @@ static inline void add_to_free_area_tail(struct page *page, struct free_area *ar
+> >       area->nr_free++;
+> >  }
+> >
+> > -#ifdef CONFIG_SHUFFLE_PAGE_ALLOCATOR
+> > -/* Used to preserve page allocation order entropy */
+> > -void add_to_free_area_random(struct page *page, struct free_area *area,
+> > -             int migratetype);
+> > -#else
+> > -static inline void add_to_free_area_random(struct page *page,
+> > -             struct free_area *area, int migratetype)
+> > -{
+> > -     add_to_free_area(page, area, migratetype);
+> > -}
+> > -#endif
+> > -
+> >  /* Used for pages which are on another list */
+> >  static inline void move_to_free_area(struct page *page, struct free_area *area,
+> >                            int migratetype)
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > index f4651a09948c..ec344ce46587 100644
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -830,6 +830,36 @@ static inline struct capture_control *task_capc(struct zone *zone)
+> >  #endif /* CONFIG_COMPACTION */
+> >
+> >  /*
+> > + * If this is not the largest possible page, check if the buddy
+> > + * of the next-highest order is free. If it is, it's possible
+> > + * that pages are being freed that will coalesce soon. In case,
+> > + * that is happening, add the free page to the tail of the list
+> > + * so it's less likely to be used soon and more likely to be merged
+> > + * as a higher order page
+> > + */
+> > +static inline bool
+> > +buddy_merge_likely(unsigned long pfn, unsigned long buddy_pfn,
+> > +                struct page *page, unsigned int order)
+> > +{
+> > +     struct page *higher_page, *higher_buddy;
+> > +     unsigned long combined_pfn;
+> > +
+> > +     if (is_shuffle_order(order) || order >= (MAX_ORDER - 2))
+>
+> My intuition tells me you can drop the () around "MAX_ORDER - 2"
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+I dunno, I always kind of prefer to use the parenthesis in these cases
+for readability. I suppose I can drop it though.
 
--Kees
+> > +             return false;
+>
+> Guess the "is_shuffle_order(order)" check should rather be performed by
+> the caller, before calling this function.
 
-> 
-> ---
-> Only change from v1->v2 is to get rid of the atomic_read().
-> 
->  include/linux/pid.h | 5 +++--
->  kernel/pid.c        | 7 +++----
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index 14a9a39da9c7..8cb86d377ff5 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -3,6 +3,7 @@
->  #define _LINUX_PID_H
->  
->  #include <linux/rculist.h>
-> +#include <linux/refcount.h>
->  
->  enum pid_type
->  {
-> @@ -56,7 +57,7 @@ struct upid {
->  
->  struct pid
->  {
-> -	atomic_t count;
-> +	refcount_t count;
->  	unsigned int level;
->  	/* lists of tasks that use this pid */
->  	struct hlist_head tasks[PIDTYPE_MAX];
-> @@ -69,7 +70,7 @@ extern struct pid init_struct_pid;
->  static inline struct pid *get_pid(struct pid *pid)
->  {
->  	if (pid)
-> -		atomic_inc(&pid->count);
-> +		refcount_inc(&pid->count);
->  	return pid;
->  }
->  
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 20881598bdfa..89c4849fab5d 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -37,7 +37,7 @@
->  #include <linux/init_task.h>
->  #include <linux/syscalls.h>
->  #include <linux/proc_ns.h>
-> -#include <linux/proc_fs.h>
-> +#include <linux/refcount.h>
->  #include <linux/sched/task.h>
->  #include <linux/idr.h>
->  
-> @@ -106,8 +106,7 @@ void put_pid(struct pid *pid)
->  		return;
->  
->  	ns = pid->numbers[pid->level].ns;
-> -	if ((atomic_read(&pid->count) == 1) ||
-> -	     atomic_dec_and_test(&pid->count)) {
-> +	if (refcount_dec_and_test(&pid->count)) {
->  		kmem_cache_free(ns->pid_cachep, pid);
->  		put_pid_ns(ns);
->  	}
-> @@ -210,7 +209,7 @@ struct pid *alloc_pid(struct pid_namespace *ns)
->  	}
->  
->  	get_pid_ns(ns);
-> -	atomic_set(&pid->count, 1);
-> +	refcount_set(&pid->count, 1);
->  	for (type = 0; type < PIDTYPE_MAX; ++type)
->  		INIT_HLIST_HEAD(&pid->tasks[type]);
->  
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
+I could do that, however I am not sure it adds much. I am pretty sure
+the resultant code would be the same. Where things would be a bit more
+complicated is that I would then have to probably look at adding a
+variable to trap the output of is_shuffle_tail_page or
+buddy_merge_likely.
 
--- 
-Kees Cook
+> > +
+> > +     if (!pfn_valid_within(buddy_pfn))
+> > +             return false;
+> > +
+> > +     combined_pfn = buddy_pfn & pfn;
+> > +     higher_page = page + (combined_pfn - pfn);
+> > +     buddy_pfn = __find_buddy_pfn(combined_pfn, order + 1);
+> > +     higher_buddy = higher_page + (buddy_pfn - combined_pfn);
+> > +
+> > +     return pfn_valid_within(buddy_pfn) &&
+> > +            page_is_buddy(higher_page, higher_buddy, order + 1);
+> > +}
+> > +
+> > +/*
+> >   * Freeing function for a buddy system allocator.
+> >   *
+> >   * The concept of a buddy system is to maintain direct-mapped table
+> > @@ -858,11 +888,12 @@ static inline void __free_one_page(struct page *page,
+> >               struct zone *zone, unsigned int order,
+> >               int migratetype)
+> >  {
+> > -     unsigned long combined_pfn;
+> > +     struct capture_control *capc = task_capc(zone);
+> >       unsigned long uninitialized_var(buddy_pfn);
+> > -     struct page *buddy;
+> > +     unsigned long combined_pfn;
+> > +     struct free_area *area;
+> >       unsigned int max_order;
+> > -     struct capture_control *capc = task_capc(zone);
+> > +     struct page *buddy;
+> >
+> >       max_order = min_t(unsigned int, MAX_ORDER, pageblock_order + 1);
+> >
+> > @@ -931,35 +962,12 @@ static inline void __free_one_page(struct page *page,
+> >  done_merging:
+> >       set_page_order(page, order);
+> >
+> > -     /*
+> > -      * If this is not the largest possible page, check if the buddy
+> > -      * of the next-highest order is free. If it is, it's possible
+> > -      * that pages are being freed that will coalesce soon. In case,
+> > -      * that is happening, add the free page to the tail of the list
+> > -      * so it's less likely to be used soon and more likely to be merged
+> > -      * as a higher order page
+> > -      */
+> > -     if ((order < MAX_ORDER-2) && pfn_valid_within(buddy_pfn)
+> > -                     && !is_shuffle_order(order)) {
+> > -             struct page *higher_page, *higher_buddy;
+> > -             combined_pfn = buddy_pfn & pfn;
+> > -             higher_page = page + (combined_pfn - pfn);
+> > -             buddy_pfn = __find_buddy_pfn(combined_pfn, order + 1);
+> > -             higher_buddy = higher_page + (buddy_pfn - combined_pfn);
+> > -             if (pfn_valid_within(buddy_pfn) &&
+> > -                 page_is_buddy(higher_page, higher_buddy, order + 1)) {
+> > -                     add_to_free_area_tail(page, &zone->free_area[order],
+> > -                                           migratetype);
+> > -                     return;
+> > -             }
+> > -     }
+> > -
+> > -     if (is_shuffle_order(order))
+> > -             add_to_free_area_random(page, &zone->free_area[order],
+> > -                             migratetype);
+> > +     area = &zone->free_area[order];
+> > +     if (buddy_merge_likely(pfn, buddy_pfn, page, order) ||
+> > +         is_shuffle_tail_page(order))
+> > +             add_to_free_area_tail(page, area, migratetype);
+>
+> I would prefer here something like
+>
+> if (is_shuffle_order(order)) {
+>         if (add_shuffle_order_to_tail(order))
+>                 add_to_free_area_tail(page, area, migratetype);
+>         else
+>                 add_to_free_area(page, area, migratetype);
+> } else if (buddy_merge_likely(pfn, buddy_pfn, page, order)) {
+>         add_to_free_area_tail(page, area, migratetype);
+> } else {
+>         add_to_free_area(page, area, migratetype);
+> }
+>
+> dropping "is_shuffle_order()" from buddy_merge_likely()
+>
+> Especially, the name "is_shuffle_tail_page(order)" suggests that you are
+> passing a page.
+
+Okay, I can look at renaming that. I will probably look at just using
+a variable instead of nesting the if statements like that. Otherwise
+that is going to get pretty messy fairly quickly.
+
+> >       else
+> > -             add_to_free_area(page, &zone->free_area[order], migratetype);
+> > -
+> > +             add_to_free_area(page, area, migratetype);
+> >  }
+> >
+> >  /*
+> > diff --git a/mm/shuffle.c b/mm/shuffle.c
+> > index 3ce12481b1dc..55d592e62526 100644
+> > --- a/mm/shuffle.c
+> > +++ b/mm/shuffle.c
+> > @@ -4,7 +4,6 @@
+> >  #include <linux/mm.h>
+> >  #include <linux/init.h>
+> >  #include <linux/mmzone.h>
+> > -#include <linux/random.h>
+> >  #include <linux/moduleparam.h>
+> >  #include "internal.h"
+> >  #include "shuffle.h"
+> > @@ -182,26 +181,3 @@ void __meminit __shuffle_free_memory(pg_data_t *pgdat)
+> >       for (z = pgdat->node_zones; z < pgdat->node_zones + MAX_NR_ZONES; z++)
+> >               shuffle_zone(z);
+> >  }
+> > -
+> > -void add_to_free_area_random(struct page *page, struct free_area *area,
+> > -             int migratetype)
+> > -{
+> > -     static u64 rand;
+> > -     static u8 rand_bits;
+> > -
+> > -     /*
+> > -      * The lack of locking is deliberate. If 2 threads race to
+> > -      * update the rand state it just adds to the entropy.
+> > -      */
+> > -     if (rand_bits == 0) {
+> > -             rand_bits = 64;
+> > -             rand = get_random_u64();
+> > -     }
+> > -
+> > -     if (rand & 1)
+> > -             add_to_free_area(page, area, migratetype);
+> > -     else
+> > -             add_to_free_area_tail(page, area, migratetype);
+> > -     rand_bits--;
+> > -     rand >>= 1;
+> > -}
+> > diff --git a/mm/shuffle.h b/mm/shuffle.h
+> > index 777a257a0d2f..3f4edb60a453 100644
+> > --- a/mm/shuffle.h
+> > +++ b/mm/shuffle.h
+> > @@ -3,6 +3,7 @@
+> >  #ifndef _MM_SHUFFLE_H
+> >  #define _MM_SHUFFLE_H
+> >  #include <linux/jump_label.h>
+> > +#include <linux/random.h>
+> >
+> >  /*
+> >   * SHUFFLE_ENABLE is called from the command line enabling path, or by
+> > @@ -43,6 +44,35 @@ static inline bool is_shuffle_order(int order)
+> >               return false;
+> >       return order >= SHUFFLE_ORDER;
+> >  }
+> > +
+> > +static inline bool is_shuffle_tail_page(int order)
+> > +{
+> > +     static u64 rand;
+> > +     static u8 rand_bits;
+> > +     u64 rand_old;
+> > +
+> > +     if (!is_shuffle_order(order))
+> > +             return false;
+> > +
+> > +     /*
+> > +      * The lack of locking is deliberate. If 2 threads race to
+> > +      * update the rand state it just adds to the entropy.
+> > +      */
+> > +     if (rand_bits-- == 0) {
+> > +             rand_bits = 64;
+> > +             rand = get_random_u64();
+> > +     }
+> > +
+> > +     /*
+> > +      * Test highest order bit while shifting our random value. This
+> > +      * should result in us testing for the carry flag following the
+> > +      * shift.
+> > +      */
+> > +     rand_old = rand;
+> > +     rand <<= 1;
+> > +
+> > +     return rand < rand_old;
+> > +}
+> >  #else
+> >  static inline void shuffle_free_memory(pg_data_t *pgdat)
+> >  {
+> > @@ -60,5 +90,10 @@ static inline bool is_shuffle_order(int order)
+> >  {
+> >       return false;
+> >  }
+> > +
+> > +static inline bool is_shuffle_tail_page(int order)
+> > +{
+> > +     return false;
+> > +}
+> >  #endif
+> >  #endif /* _MM_SHUFFLE_H */
+> >
+>
+>
+> --
+>
+> Thanks,
+>
+> David / dhildenb
