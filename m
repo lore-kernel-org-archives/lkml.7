@@ -6,99 +6,84 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F545C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6ABC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3980820656
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A4E020656
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:40:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfF1KkK (ORCPT
+        id S1726871AbfF1Kke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:40:10 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:56605 "EHLO
+        Fri, 28 Jun 2019 06:40:34 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:43775 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfF1KkJ (ORCPT
+        with ESMTP id S1726484AbfF1Kke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:40:09 -0400
+        Fri, 28 Jun 2019 06:40:34 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MEmMt-1hneqR1qUl-00GHwL; Fri, 28 Jun 2019 12:39:28 +0200
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Mqrjz-1iJykT2h0L-00mrot; Fri, 28 Jun 2019 12:40:08 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Ramalingam C <ramalingam.c@intel.com>,
-        Radhakrishna Sripada <radhakrishna.sripada@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: connector: remove bogus NULL check
-Date:   Fri, 28 Jun 2019 12:39:05 +0200
-Message-Id: <20190628103925.2686249-1-arnd@arndb.de>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Qiuyang Sun <sunqiuyang@huawei.com>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Wang Shilong <wangshilong1991@gmail.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] f2fs: fix 32-bit linking
+Date:   Fri, 28 Jun 2019 12:39:52 +0200
+Message-Id: <20190628104007.2721479-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:G+y7LV1vsF/Vm55AUncbp7hvJIftzjKCKc7IizEy2E4LX7bp3+s
- Zw7dhRDtUzvEZDId+yfWbpw7nAAKWql8TNlnL1aGyNF4xHXL7NKNptNoY9TGI+Imy9RymzU
- AdTEA6pt6PQT+Me+UmPcFCEuOmU1kr4EdP7bU4i4bQ+Da1W4IrqtrFTFJeF2EfQV+QQRbba
- vqpPkiNLkJs2Q2Mk+srmw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:afF7kKP7CwA=:2IzTp9enG36FNhGD7pD+vz
- CJiQeyTns2tWzHZdGzNZz1vmnjcVF0b1fPoyB5mJl6KhNYkW4LDlOrn/beaVC5aaAa0rmATxD
- x2M3BrQXcYdB08bAUsttlahDS5JlcF/jgJ82LiM+CDmP5Xr7UQRx/hBooV+ujCaDFoNWz0NEE
- lOdoEdAUIBTz0nudc1sk6mZgph3PHth+BBxb6Jv/2CTS6+00MJCJiVw9f6QemhP4ljCxc93+2
- R+P8pQlnD2R3pGXn8c6Ya5KobpGDvnMISmpYVSjiYetnp0bRvpsmyt8T/RS4NZ44NHN9ntCql
- ZbfFxIx0oqY1TUTjAO7BeDhU8+F8/oBQw1ey2ohjRE9LcFvJJYXw5O8KSOBrMs06+diJPkmQM
- 1JXExkme8h7pXdYx6rEoNFO+rxSMSNYxNOXGG/yJ/Q99IDsfnHZf5bdiav+U3/QxeDeICGnaF
- xGYetucBIBr+v4iIJ1Kn3D+lHJFfkhIVW+KYzfR7YIfvr7ckBivb3DASpqqKcjkm9zw8NlL44
- 18flev/L1SVObA+e+bo1ml5DOV0t+Hv5tuPIk+JOob1vycIiB+LxodkAWk2pFst6ud7ts4Ydm
- LX1l+XP2mMuLPzE+O3/nNy5OPMD5am0ofKA7+q1/eRoA81QTufhDEYYRtw73GL7rM8qm+XRVS
- F+FlqOS8jbESNjPFwY4v4f8vzvx1MQn+Vgs74UoLU4ANk16HRJ05LxgVuzXPCXFX4X+HBzyiU
- BMrDZVYuJlrcBZXG72L43FgzJA3Rxo0E0mzBbA==
+X-Provags-ID: V03:K1:i9pne7gOZCrulnXnNLDG96catfF75e570yRKxFiuSSGz1wserXj
+ V+2v6vNon66+ukSkKeYP5KgkYiApttcBaBPeaidxkb24oPlO/LH7M7D126r1GBTEdd3AUPT
+ XVYSmsJyz5A2TCi4arN4hYixkHJpsVxqxfNhgPx8TlBTZfg/yCy23rrqI9LR6mBaIymqMc5
+ Jm+Rl+eFnIXH0yVU148rA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FR3HnG46Egc=:FDEAcdE/ll0BOROb5cxi1M
+ 2FF8mxEX6+baPUmlZWdyJJpJKqbmA+3tQ1w0h0leqhhoQ1ShzEK8Xg7EIzW59cXLTdEeMRjyO
+ F3BXMV6Uw4i1jlubPWxCMnKIXmXPDWFkEDOTRr6KkNaRJLz7GcJcFPm0cP/VBGRgVbmIPbM9o
+ VVzx6vgrWdknzPhbQbcUs8MgDgmORUd3uXP9/HRwbNoZFXMlgpsURQSBnV9DE06w3Og2jtLPx
+ tyv4GD2nwmjH9PHWDqKp5zaLjbIgxjYX9FQcIDHLxmuQBcz584TpU2m6GfyhyhoTFvyiIrLNq
+ vas2qDxdSSatWX9kb9NTDPOw2ACY5XBmeA6kLu6HIw+ke4k1FEAbMyN5QnJkx3UMr49WQ2nnF
+ PDDd2RGdVu/DWE7WcxMnNO03Xc5PUH6Ng62S1PwM459/E3/uaJRGPBVXA+Bbcs8HhVWtt3sQX
+ CS7kSAy3BbQAgCWY1H8yRqkuAeGegCERgf5T8Wa+Y4bZVCNpRS/qyLcNBV2D/YLX8yVU20D2k
+ XJZ9BWn3LpPLkR5+liH14GSKQioBe9bzcbyN2vOBygcGMyCyZeaewEMsMAtAGIKSmsROqlfC4
+ 3NG9W+OLmLG7unFxXcGzAGqBwXQ+ahaE0fOddfCO4gbiLsZ5rWXzYnWXf3li2/JDHvjCu985l
+ II8BRHvm+HVJRqHL6oHR36eQM1d/WVhzRKqoYlu5WnP1pfWyttVi8DHJTnTYnLYaTpCsBAAmX
+ Fn9UVF3LVasLObondlhoddMRvzhJMYQoUN63NA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mode->name is a character array in a structure, checking it's
-address is pointless and causes a warning with some compilers:
+Not all architectures support get_user() with a 64-bit argument:
 
-drivers/gpu/drm/drm_connector.c:144:15: error: address of array 'mode->name' will always evaluate to 'true'
-      [-Werror,-Wpointer-bool-conversion]
-                      mode->name ? mode->name : "",
-                      ~~~~~~^~~~ ~
-include/drm/drm_print.h:366:29: note: expanded from macro 'DRM_DEBUG_KMS'
-        drm_dbg(DRM_UT_KMS, fmt, ##__VA_ARGS__)
-                                   ^~~~~~~~~~~
+ERROR: "__get_user_bad" [fs/f2fs/f2fs.ko] undefined!
 
-Remove the check here.
+Use copy_from_user() here, this will always work.
 
-Fixes: 3aeeb13d8996 ("drm/modes: Support modes names on the command line")
+Fixes: d2ae7494d043 ("f2fs: ioctl for removing a range from F2FS")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/drm_connector.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/file.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-index 3afed5677946..b3f2cf7eae9c 100644
---- a/drivers/gpu/drm/drm_connector.c
-+++ b/drivers/gpu/drm/drm_connector.c
-@@ -141,7 +141,7 @@ static void drm_connector_get_cmdline_mode(struct drm_connector *connector)
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 998affe31419..465853029b8e 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3066,7 +3066,8 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+ 	if (f2fs_readonly(sbi->sb))
+ 		return -EROFS;
  
- 	DRM_DEBUG_KMS("cmdline mode for connector %s %s %dx%d@%dHz%s%s%s\n",
- 		      connector->name,
--		      mode->name ? mode->name : "",
-+		      mode->name,
- 		      mode->xres, mode->yres,
- 		      mode->refresh_specified ? mode->refresh : 60,
- 		      mode->rb ? " reduced blanking" : "",
+-	if (get_user(block_count, (__u64 __user *)arg))
++	if (copy_from_user(&block_count, (void __user *)arg,
++			   sizeof(block_count)))
+ 		return -EFAULT;
+ 
+ 	ret = f2fs_resize_fs(sbi, block_count);
 -- 
 2.20.0
 
