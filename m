@@ -2,106 +2,141 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DF1C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30B8C5B578
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891D4205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA6C2205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbfF1SxL (ORCPT
+        id S1727038AbfF1SxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:53:11 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:57264 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726909AbfF1SxJ (ORCPT
+        Fri, 28 Jun 2019 14:53:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48952 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726812AbfF1SxY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:53:09 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TVRxcr9_1561747966;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TVRxcr9_1561747966)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 29 Jun 2019 02:52:57 +0800
-Subject: Re: [PATCH] mm, vmscan: prevent useless kswapd loops
-To:     Shakeel Butt <shakeelb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Hillf Danton <hdanton@sina.com>, Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20190628015520.13357-1-shakeelb@google.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <6e28c8ce-96e1-5a1e-bd06-d1df5856094e@linux.alibaba.com>
-Date:   Fri, 28 Jun 2019 11:52:46 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Fri, 28 Jun 2019 14:53:24 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SIq2Bc131640;
+        Fri, 28 Jun 2019 14:52:21 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdqe82dkm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jun 2019 14:52:21 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5SIqLAO134916;
+        Fri, 28 Jun 2019 14:52:21 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdqe82dje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jun 2019 14:52:21 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5SIoXLg000306;
+        Fri, 28 Jun 2019 18:52:20 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 2t9by7q7f6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jun 2019 18:52:20 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SIqJIM42795434
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 18:52:19 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 37F6DB205F;
+        Fri, 28 Jun 2019 18:52:19 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 19AD7B2064;
+        Fri, 28 Jun 2019 18:52:19 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Jun 2019 18:52:19 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id C7D0716C39C0; Fri, 28 Jun 2019 11:52:19 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 11:52:19 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Message-ID: <20190628185219.GA26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190627103455.01014276@gandalf.local.home>
+ <20190627153031.GA249127@google.com>
+ <20190627155506.GU26519@linux.ibm.com>
+ <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
+ <20190627173831.GW26519@linux.ibm.com>
+ <20190627181638.GA209455@google.com>
+ <20190627184107.GA26519@linux.ibm.com>
+ <20190628135433.GE3402@hirez.programming.kicks-ass.net>
+ <20190628153050.GU26519@linux.ibm.com>
+ <20190628184026.fds6scgi2pnjnc5p@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190628015520.13357-1-shakeelb@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628184026.fds6scgi2pnjnc5p@linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906280213
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 28, 2019 at 08:40:26PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-06-28 08:30:50 [-0700], Paul E. McKenney wrote:
+> > On Fri, Jun 28, 2019 at 03:54:33PM +0200, Peter Zijlstra wrote:
+> > > On Thu, Jun 27, 2019 at 11:41:07AM -0700, Paul E. McKenney wrote:
+> > > > Or just don't do the wakeup at all, if it comes to that.  I don't know
+> > > > of any way to determine whether rcu_read_unlock() is being called from
+> > > > the scheduler, but it has been some time since I asked Peter Zijlstra
+> > > > about that.
+> > > 
+> > > There (still) is no 'in-scheduler' state.
+> > 
+> > Well, my TREE03 + threadirqs rcutorture test ran for ten hours last
+> > night with no problems, so we just might be OK.
+> > 
+> > The apparent fix is below, though my approach would be to do backports
+> > for the full set of related changes.
+> > 
+> > Joel, Sebastian, how goes any testing from your end?  Any reason
+> > to believe that this does not represent a fix?  (Me, I am still
+> > concerned about doing raise_softirq() from within a threaded
+> > interrupt, but am not seeing failures.)
+> 
+> For some reason it does not trigger as good as it did yesterday.
 
+I swear that I wasn't watching!!!  ;-)
 
-On 6/27/19 6:55 PM, Shakeel Butt wrote:
-> On production we have noticed hard lockups on large machines running
-> large jobs due to kswaps hoarding lru lock within isolate_lru_pages when
-> sc->reclaim_idx is 0 which is a small zone. The lru was couple hundred
-> GiBs and the condition (page_zonenum(page) > sc->reclaim_idx) in
-> isolate_lru_pages was basically skipping GiBs of pages while holding the
-> LRU spinlock with interrupt disabled.
->
-> On further inspection, it seems like there are two issues:
->
-> 1) If the kswapd on the return from balance_pgdat() could not sleep
-> (maybe all zones are still unbalanced), the classzone_idx is set to 0,
-> unintentionally, and the whole reclaim cycle of kswapd will try to reclaim
-> only the lowest and smallest zone while traversing the whole memory.
->
-> 2) Fundamentally isolate_lru_pages() is really bad when the allocation
-> has woken kswapd for a smaller zone on a very large machine running very
-> large jobs. It can hoard the LRU spinlock while skipping over 100s of
-> GiBs of pages.
->
-> This patch only fixes the (1). The (2) needs a more fundamental solution.
->
-> Fixes: e716f2eb24de ("mm, vmscan: prevent kswapd sleeping prematurely
-> due to mismatched classzone_idx")
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> ---
->   mm/vmscan.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 9e3292ee5c7c..786dacfdfe29 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -3908,7 +3908,7 @@ static int kswapd(void *p)
->   
->   		/* Read the new order and classzone_idx */
->   		alloc_order = reclaim_order = pgdat->kswapd_order;
-> -		classzone_idx = kswapd_classzone_idx(pgdat, 0);
-> +		classzone_idx = kswapd_classzone_idx(pgdat, classzone_idx);
+But I do know that feeling.
 
-I'm a little bit confused by the fix. What happen if kswapd is waken for 
-a lower zone? It looks kswapd may just reclaim the higher zone instead 
-of the lower zone?
+> Commit
+> - 23634ebc1d946 ("rcu: Check for wakeup-safe conditions in
+>    rcu_read_unlock_special()") does not trigger the bug within 94
+>    attempts.
+> 
+> - 48d07c04b4cc1 ("rcu: Enable elimination of Tree-RCU softirq
+>   processing") needed 12 attempts to trigger the bug.
 
-For example, after bootup, classzone_idx should be (MAX_NR_ZONES - 1), 
-if GFP_DMA is used for allocation and kswapd is waken up for ZONE_DMA, 
-kswapd_classzone_idx would still return (MAX_NR_ZONES - 1) since 
-kswapd_classzone_idx(pgdat, classzone_idx) returns the max classzone_idx.
+That matches my belief that 23634ebc1d946 ("rcu: Check for wakeup-safe
+conditions in rcu_read_unlock_special()") will at least greatly decrease
+the probability of this bug occurring.
 
->   		pgdat->kswapd_order = 0;
->   		pgdat->kswapd_classzone_idx = MAX_NR_ZONES;
->   
-
+							Thanx, Paul
