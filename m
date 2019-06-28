@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4B0C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFFDC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6765A208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 147EA208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561740999;
-	bh=jwjx0UEtpI4xG/9p+HiTQ33NeIvSAdTS9uO/bXUP0zM=;
+	s=default; t=1561741001;
+	bh=QkBNEdmX/H3/l1teEu0uZoDZD8t9RC3V6jjGJ09soY4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=SGlC6qKjfCHujtAJQU2SSwvQ6McQvN2ixeh3H1wDEcpg5Ej6O6YLBIJr52SkUKDuP
-	 v8Yz4r7X5DqsVEIPDv/t5KlQBDNT5EcLF17c1IZzcRLFfKIerJdOx00H4amgHCTOds
-	 tjuOdzNA5y8UfZgb6cCyaKXTA0yeGJ0KPzpmT8t8=
+	b=UHC8LO5hN2UoPLrcI+Tc/7hjtR1r6KjFFZyDQmhoppQ2I9b8s1XAQAwPeZISOrnTf
+	 h4sVvhKHyv8JTNwxHpeAizE+7IwAbtaG53RizI+dUOQMr2YF9Zk93Q8y9rkhOxwGSR
+	 OdqHiiCixn9ZPo7DKDXUJC9N+CIxvy4Dm6RI7lcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfF1Q4i (ORCPT
+        id S1726970AbfF1Q4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:56:38 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42504 "EHLO
+        Fri, 28 Jun 2019 12:56:39 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42514 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfF1Q4h (ORCPT
+        with ESMTP id S1726883AbfF1Q4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:56:37 -0400
+        Fri, 28 Jun 2019 12:56:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=9kUAjdy2iW6Uc+2HQD3Freg59GbE2w/VGxT6YCQv6To=; b=ick8YSwuhryY
-        5UBEv9SG1hZuPf6yMSWnq94/a1Wi1LmaElRJNXqPrvTro+V9oaaky59JgmSTAk6XjFjsYK4DEKvDM
-        mI+cAGLv8FVuhHmh/KdEa2lk8upP6cxQ4G0wsP2wgqB/P5Yikb7RUJ7/fQ5SavHin8uS+Dl29aVzb
-        cyoK8=;
+        List-Archive; bh=GjcHksA4qGiaUnr9QTbALLeGH/gj9DkhMrZ1SbHiikw=; b=oCkunyEKReYW
+        4gnQc44v2vTEo2iacdCajWGkArNGwSog1x2I5M2pXvT5EYfFVoX1gmqFPsw+NauMsl67SlUgOtHWB
+        vp/U+MmYkgpuTKiFFwqORf8UsFlaW0iOuc2aszy1orc/dpEUqAiAPBzEKXhapa4kLhEb4R33z7xA4
+        lJZvw=;
 Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hguAm-0007BX-NQ; Fri, 28 Jun 2019 16:56:28 +0000
+        id 1hguAm-0007BF-D7; Fri, 28 Jun 2019 16:56:28 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 26843440046; Fri, 28 Jun 2019 17:56:28 +0100 (BST)
+        id CAB93440049; Fri, 28 Jun 2019 17:56:27 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: soc-core: support dai_link with platforms_num != 1" to the asoc tree
-In-Reply-To: <20190627121350.21027-3-jbrunet@baylibre.com>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Subject: Applied "ASoC: topology: fix memory leaks on sm, se and sbe" to the asoc tree
+In-Reply-To: <20190627133208.9550-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190628165628.26843440046@finisterre.sirena.org.uk>
-Date:   Fri, 28 Jun 2019 17:56:28 +0100 (BST)
+Message-Id: <20190628165627.CAB93440049@finisterre.sirena.org.uk>
+Date:   Fri, 28 Jun 2019 17:56:27 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: soc-core: support dai_link with platforms_num != 1
+   ASoC: topology: fix memory leaks on sm, se and sbe
 
 has been applied to the asoc tree at
 
@@ -90,162 +91,63 @@ to this mail.
 Thanks,
 Mark
 
-From 34614739988ad60c3493da66dd856002ee93edf9 Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 27 Jun 2019 14:13:50 +0200
-Subject: [PATCH] ASoC: soc-core: support dai_link with platforms_num != 1
+From 1ad741d0e8e8ecccc16aa9ccb8362575197d91bf Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Thu, 27 Jun 2019 14:32:08 +0100
+Subject: [PATCH] ASoC: topology: fix memory leaks on sm, se and sbe
 
-Add support platforms_num != 1 in dai_link. Initially, the main purpose of
-this change was to make the platform optional in the dai_link, instead of
-inserting the dummy platform driver.
+Currently when a kstrdup fails the error exit paths don't free
+the allocations for sm, se and sbe.  This can be fixed by assigning
+kc[i].private_value to these before doing the ksrtdup so that the error
+exit path will be able to free these objects.
 
-This particular case had just been solved by Kuninori Morimoto with
-commit 1d7689892878 ("ASoC: soc-core: allow no Platform on dai_link").
-
-However, this change may still be useful for those who need multiple
-platform components on a single dai_link (it solves one of the FIXME
-note in soc-core)
-
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Addresses-Coverity: ("Resource leak")
+Fixes: 9f90af3a9952 ("ASoC: topology: Consolidate and fix asoc_tplg_dapm_widget_*_create flow")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- include/sound/soc.h  |  6 +++++
- sound/soc/soc-core.c | 59 ++++++++++++++++++--------------------------
- 2 files changed, 30 insertions(+), 35 deletions(-)
+ sound/soc/soc-topology.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 64405cdab8bb..4e8071269639 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -997,6 +997,12 @@ struct snd_soc_dai_link {
- 	     ((i) < link->num_codecs) && ((codec) = &link->codecs[i]);	\
- 	     (i)++)
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index fc1f1d6f9e92..dc463f1a9e24 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -1326,10 +1326,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dmixer_create(
+ 		dev_dbg(tplg->dev, " adding DAPM widget mixer control %s at %d\n",
+ 			mc->hdr.name, i);
  
-+#define for_each_link_platforms(link, i, platform)			\
-+	for ((i) = 0;							\
-+	     ((i) < link->num_platforms) &&				\
-+	     ((platform) = &link->platforms[i]);			\
-+	     (i)++)
-+
- /*
-  * Sample 1 : Single CPU/Codec/Platform
-  *
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index b5f3c09311c3..b9061cd8d787 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -896,7 +896,7 @@ static int soc_bind_dai_link(struct snd_soc_card *card,
- 	struct snd_soc_dai_link *dai_link)
- {
- 	struct snd_soc_pcm_runtime *rtd;
--	struct snd_soc_dai_link_component *codecs;
-+	struct snd_soc_dai_link_component *codec, *platform;
- 	struct snd_soc_component *component;
- 	int i;
++		kc[i].private_value = (long)sm;
+ 		kc[i].name = kstrdup(mc->hdr.name, GFP_KERNEL);
+ 		if (kc[i].name == NULL)
+ 			goto err_sm;
+-		kc[i].private_value = (long)sm;
+ 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+ 		kc[i].access = mc->hdr.access;
  
-@@ -926,13 +926,14 @@ static int soc_bind_dai_link(struct snd_soc_card *card,
+@@ -1412,10 +1412,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
+ 		dev_dbg(tplg->dev, " adding DAPM widget enum control %s\n",
+ 			ec->hdr.name);
  
- 	/* Find CODEC from registered CODECs */
- 	rtd->num_codecs = dai_link->num_codecs;
--	for_each_link_codecs(dai_link, i, codecs) {
--		rtd->codec_dais[i] = snd_soc_find_dai(codecs);
-+	for_each_link_codecs(dai_link, i, codec) {
-+		rtd->codec_dais[i] = snd_soc_find_dai(codec);
- 		if (!rtd->codec_dais[i]) {
- 			dev_info(card->dev, "ASoC: CODEC DAI %s not registered\n",
--				 codecs->dai_name);
-+				 codec->dai_name);
- 			goto _err_defer;
- 		}
-+
- 		snd_soc_rtdcom_add(rtd, rtd->codec_dais[i]->component);
- 	}
++		kc[i].private_value = (long)se;
+ 		kc[i].name = kstrdup(ec->hdr.name, GFP_KERNEL);
+ 		if (kc[i].name == NULL)
+ 			goto err_se;
+-		kc[i].private_value = (long)se;
+ 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+ 		kc[i].access = ec->hdr.access;
  
-@@ -940,12 +941,13 @@ static int soc_bind_dai_link(struct snd_soc_card *card,
- 	rtd->codec_dai = rtd->codec_dais[0];
+@@ -1524,10 +1524,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dbytes_create(
+ 			"ASoC: adding bytes kcontrol %s with access 0x%x\n",
+ 			be->hdr.name, be->hdr.access);
  
- 	/* Find PLATFORM from registered PLATFORMs */
--	for_each_component(component) {
--		if (!snd_soc_is_matching_component(dai_link->platforms,
--						   component))
--			continue;
-+	for_each_link_platforms(dai_link, i, platform) {
-+		for_each_component(component) {
-+			if (!snd_soc_is_matching_component(platform, component))
-+				continue;
- 
--		snd_soc_rtdcom_add(rtd, component);
-+			snd_soc_rtdcom_add(rtd, component);
-+		}
- 	}
- 
- 	soc_add_pcm_runtime(card, rtd);
-@@ -1058,15 +1060,14 @@ static int soc_init_dai_link(struct snd_soc_card *card,
- 			     struct snd_soc_dai_link *link)
- {
- 	int i;
--	struct snd_soc_dai_link_component *codec;
-+	struct snd_soc_dai_link_component *codec, *platform;
- 
- 	for_each_link_codecs(link, i, codec) {
- 		/*
- 		 * Codec must be specified by 1 of name or OF node,
- 		 * not both or neither.
- 		 */
--		if (!!codec->name ==
--		    !!codec->of_node) {
-+		if (!!codec->name == !!codec->of_node) {
- 			dev_err(card->dev, "ASoC: Neither/both codec name/of_node are set for %s\n",
- 				link->name);
- 			return -EINVAL;
-@@ -1087,36 +1088,24 @@ static int soc_init_dai_link(struct snd_soc_card *card,
- 			return -EPROBE_DEFER;
- 	}
- 
--	/*
--	 * Platform may be specified by either name or OF node,
--	 * or no Platform.
--	 *
--	 * FIXME
--	 *
--	 * We need multi-platform support
--	 */
--	if (link->num_platforms > 0) {
--
--		if (link->num_platforms > 1) {
--			dev_err(card->dev,
--				"ASoC: multi platform is not yet supported %s\n",
--				link->name);
--			return -EINVAL;
--		}
--
--		if (link->platforms->name && link->platforms->of_node) {
-+	for_each_link_platforms(link, i, platform) {
-+		/*
-+		 * Platform may be specified by either name or OF node, but it
-+		 * can be left unspecified, then no components will be inserted
-+		 * in the rtdcom list
-+		 */
-+		if (!!platform->name == !!platform->of_node) {
- 			dev_err(card->dev,
--				"ASoC: Both platform name/of_node are set for %s\n",
-+				"ASoC: Neither/both platform name/of_node are set for %s\n",
- 				link->name);
- 			return -EINVAL;
- 		}
- 
- 		/*
--		 * Defer card registartion if platform dai component is not
--		 * added to component list.
-+		 * Defer card registration if platform component is not added to
-+		 * component list.
- 		 */
--		if ((link->platforms->of_node || link->platforms->name) &&
--		    !soc_find_component(link->platforms))
-+		if (!soc_find_component(platform))
- 			return -EPROBE_DEFER;
- 	}
++		kc[i].private_value = (long)sbe;
+ 		kc[i].name = kstrdup(be->hdr.name, GFP_KERNEL);
+ 		if (kc[i].name == NULL)
+ 			goto err_sbe;
+-		kc[i].private_value = (long)sbe;
+ 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+ 		kc[i].access = be->hdr.access;
  
 -- 
 2.20.1
