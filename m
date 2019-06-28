@@ -2,117 +2,111 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F26C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D1DC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE8420659
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C9620659
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:39:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="uhN/KAyq"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pVKePB43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfF1QjN (ORCPT
+        id S1726892AbfF1Qjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:39:13 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36410 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfF1QjN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:39:13 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r6so6604817oti.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 09:39:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5XLI89+7Lb6wfVp1bMUmxbBSBywMikjF0UqTHc4ZmMY=;
-        b=uhN/KAyqmQJIfXv831E6f5gCDD4M7DPJutn9seJLci/a+sjZWkNPOQkf4lWIlPxwGD
-         wMJOdt7G3K51qZNGI32EaXEHFWXMsveXMVkqEPxlkaTlEw1EBzhFfuapGlvfNcBcrdL8
-         f/oqvyCxWz01YIuY/ynYX7NCy59SZ0R5gEnlrM241o+azp5zCI0tGPyPwJCui9wr6IgY
-         jtsQL9yrZizohktvGl0vlFQn2LyUDsaLvo9BzEfVLM292cR04kl53Lpy8I5hyHVV6Ru8
-         hH0ENXRysaq4iaAGqfrO2x1mMegw9G1ixN1TNPBbhj80FdYkvhaMt1tohfYCgxXPvFfq
-         l7WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5XLI89+7Lb6wfVp1bMUmxbBSBywMikjF0UqTHc4ZmMY=;
-        b=CBaGq7ao0iZntnbfE4ZDGUz6f5/3SpEL0uMsVz0CHuO8PYZdV3B6YOP8sycsPne4I0
-         ibmHPwsUnYPprQx8D6zLqAcopYxeXBNp2Grcy1HlpgCELaxR+3WH8BGYz1i4NCp96XSi
-         fRfZGLJ06zCoOrT66yO7s6XANb4xPsQpEnozhD8y0NJGK8RyUcMv/fmN+JxiHKZrRf2s
-         P7sUGPTTgNBi/rSIguK50j95MceW0/sjZ5WDwghZFRg6jGAkaQ4m1wKoWGrlr3D40n6b
-         e3Gylk3m24Gm57Hs4bUt7+flMEoMQ2TCmtkcTJc5+B0dJJ22SeGx8GbSvj4NPZvBbSv9
-         s0xA==
-X-Gm-Message-State: APjAAAXE016XOlYAvEh0yJlPnJNrhLJooV6J+9+FdDXNdA+OC8wHay3Y
-        ULbYhZMtR8/aiPdJqLpukf+dWBIpZakHeSrqwQQPQw==
-X-Google-Smtp-Source: APXvYqy7YGYkJSjiaanIgBTFDjBOm0MW6GQ0Eu+LrM/c/o1FCTwV4rvL/QeDyZWVusE9P5L/uXi6G63VRJfQmLXqzk4=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr8613500oto.207.1561739952508;
- Fri, 28 Jun 2019 09:39:12 -0700 (PDT)
+        Fri, 28 Jun 2019 12:39:55 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:8807 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726605AbfF1Qjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 12:39:55 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45b2YN3C52zB09Zb;
+        Fri, 28 Jun 2019 18:39:52 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=pVKePB43; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id YV9INxoLhf96; Fri, 28 Jun 2019 18:39:52 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45b2YN1sxvzB09ZZ;
+        Fri, 28 Jun 2019 18:39:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1561739992; bh=uppHxiv76x3DLKs7pLhlu/yXbeshcJ3XT1kuNUTvaPI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pVKePB433jkcqO4D8bb2+BUMLdTABMAkxqnveFnbO1rdXjkO3/uFx5gQgU0imVgrU
+         dvssKi2YNnNQ3gtKgdjNuKSxGeQ6f/FNCC+HAwKyiyzSAQB1hKEZbaCljM48zle36I
+         jaJoCycDiu/lUGojW6IdvtaWngvG9AthpyWo2nl4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E5B5E8B975;
+        Fri, 28 Jun 2019 18:39:53 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id f00KyCZdoUwa; Fri, 28 Jun 2019 18:39:53 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C2B188B955;
+        Fri, 28 Jun 2019 18:39:53 +0200 (CEST)
+Subject: Re: [RFC PATCH v2 02/12] powerpc/ptrace: drop unnecessary #ifdefs
+ CONFIG_PPC64
+To:     Andreas Schwab <schwab@linux-m68k.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <cover.1561735587.git.christophe.leroy@c-s.fr>
+ <34af3942cd27f6b5365caae772fb8e0af44763d5.1561735587.git.christophe.leroy@c-s.fr>
+ <874l49mzuv.fsf@igel.home>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <7dd19eae-793e-b334-e621-7681998ddf2e@c-s.fr>
+Date:   Fri, 28 Jun 2019 18:39:53 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190627123415.GA4286@bombadil.infradead.org> <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
- <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
- <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
- <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
- <20190627195948.GB4286@bombadil.infradead.org> <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
- <20190628163721.GC4286@bombadil.infradead.org>
-In-Reply-To: <20190628163721.GC4286@bombadil.infradead.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 28 Jun 2019 09:39:01 -0700
-Message-ID: <CAPcyv4jeRwhYWnGw9RrfDA54RRa9LK4JPuF3zQ-av=HdRqCTJw@mail.gmail.com>
-Subject: Re: [PATCH] filesystem-dax: Disable PMD support
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <874l49mzuv.fsf@igel.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 9:37 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Thu, Jun 27, 2019 at 07:39:37PM -0700, Dan Williams wrote:
-> > On Thu, Jun 27, 2019 at 12:59 PM Matthew Wilcox <willy@infradead.org> wrote:
-> > > On Thu, Jun 27, 2019 at 12:09:29PM -0700, Dan Williams wrote:
-> > > > > This bug feels like we failed to unlock, or unlocked the wrong entry
-> > > > > and this hunk in the bisected commit looks suspect to me. Why do we
-> > > > > still need to drop the lock now that the radix_tree_preload() calls
-> > > > > are gone?
-> > > >
-> > > > Nevermind, unmapp_mapping_pages() takes a sleeping lock, but then I
-> > > > wonder why we don't restart the lookup like the old implementation.
-> > >
-> > > If something can remove a locked entry, then that would seem like the
-> > > real bug.  Might be worth inserting a lookup there to make sure that it
-> > > hasn't happened, I suppose?
-> >
-> > Nope, added a check, we do in fact get the same locked entry back
-> > after dropping the lock.
->
-> Okay, good, glad to have ruled that out.
->
-> > The deadlock revolves around the mmap_sem. One thread holds it for
-> > read and then gets stuck indefinitely in get_unlocked_entry(). Once
-> > that happens another rocksdb thread tries to mmap and gets stuck
-> > trying to take the mmap_sem for write. Then all new readers, including
-> > ps and top that try to access a remote vma, then get queued behind
-> > that write.
-> >
-> > It could also be the case that we're missing a wake up.
->
-> That was the conclusion I came to; that one thread holding the mmap sem
-> for read isn't being woken up when it should be.  Just need to find it ...
-> obviously it's something to do with the PMD entries.
 
-Can you explain to me one more time, yes I'm slow on the uptake on
-this, the difference between xas_load() and xas_find_conflict() and
-why it's ok for dax_lock_page() to use xas_load() while
-grab_mapping_entry() uses xas_find_conflict()?
+
+Le 28/06/2019 à 18:36, Andreas Schwab a écrit :
+> On Jun 28 2019, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> 
+>> diff --git a/arch/powerpc/include/uapi/asm/ptrace.h b/arch/powerpc/include/uapi/asm/ptrace.h
+>> index f5f1ccc740fc..37d7befbb8dc 100644
+>> --- a/arch/powerpc/include/uapi/asm/ptrace.h
+>> +++ b/arch/powerpc/include/uapi/asm/ptrace.h
+>> @@ -43,12 +43,11 @@ struct pt_regs
+>>   	unsigned long link;
+>>   	unsigned long xer;
+>>   	unsigned long ccr;
+>> -#ifdef __powerpc64__
+>> -	unsigned long softe;		/* Soft enabled/disabled */
+>> -#else
+>> -	unsigned long mq;		/* 601 only (not used at present) */
+>> +	union {
+>> +		unsigned long softe;	/* Soft enabled/disabled */
+>> +		unsigned long mq;	/* 601 only (not used at present) */
+>>   					/* Used on APUS to hold IPL value. */
+>> -#endif
+>> +	};
+> 
+> Anonymous unions are a C11 feature.
+> 
+
+Is that a problem ?
+
+Kernel has a minimum GCC requirement of version 4.6, doesn't 4.6 support 
+C11 ?
+
+Christophe
