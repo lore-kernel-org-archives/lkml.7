@@ -2,123 +2,111 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC25C5B577
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196C1C5B577
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124F92084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E366C208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FkqymYqS"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="MyBHZuXx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aOvbE5MW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfF1A5j (ORCPT
+        id S1726664AbfF1BBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 20:57:39 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42584 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbfF1A5i (ORCPT
+        Thu, 27 Jun 2019 21:01:17 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:46729 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726595AbfF1BBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 20:57:38 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t28so4195148lje.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 17:57:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+ColG6tAMdXMX0sMcY5uS4eoT6aSf9bBNC0BhjT/Dps=;
-        b=FkqymYqSYyzMnl6BeJ+0JA3KpJHYhMUGxyg0//P/F1xTjwGV+Hc9nP0j5AsWIVw5TS
-         2hn64vii2DskH08AM9sDw3qiDUv/WCWoxusc5AeMIj95ts7Vv60TMDrhCj/SQjBZtfr+
-         p0IShO+mgPJZbNVIMebQ1ETCdkb8Kyosa6OFKhjis+06cUKGrTDtYvoqzQe+hjLHV1W9
-         jSa3kCvJq0/ejTtP3/F9KrzdmtDtN3g9dan53g7+QxeK01SpIUQze4Aq5c20BRE7jJlF
-         c2L5g9neQT9bl0JIoRrsWpH5jBJ8rXGU6gMlShDZWdhPxmfjynrl7l4nY+37ZO+ZRfVd
-         pbqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+ColG6tAMdXMX0sMcY5uS4eoT6aSf9bBNC0BhjT/Dps=;
-        b=FNv3Riywhf40WaxG1byAXMJVPo5qfaHgUaWTKzyTX2nGhFWr8vs0w7npUTAFEX8u8Z
-         XvVIn+EXrnHQIgNnzsV8tRPMhjupDIlH94PAK1E8drbkfN1Xt0bC0Q1S1XATOsTffre3
-         F7j6HXDSSrYeCxF80Y0hohEUZwNoHxTuioSMQqDcKdzAuncS27FND0sdUgl/zb7yZtlL
-         V+FDa+FLPVX19awRjGNaeqeSjSmrv2O06o/nXBh+Y4IZCFUyE135Gy3EOZKjpX78iURw
-         ZsvV3B2C5NOdfAGMS49xzDlPDN+EiCW/D/UNYPapZu0v/rsTLC8uWB6+iFwm+Wwx+hHY
-         K09A==
-X-Gm-Message-State: APjAAAXTMsJMr5P8LF2VWoF5dfMruppsdqkiYcKl7qc7OEKD95x24IKM
-        cBN3Gqn7xtFw8CawX6PiduR3L8ve7u4YieJjXC471g==
-X-Google-Smtp-Source: APXvYqxeqxKlbqEG0X8f8nA8BtDLRCgvi1n29E+p3mzGfmcxCq6PUxPeSNrEkhYQS+uyWX37yf29kbDBHfqvXOKSlIE=
-X-Received: by 2002:a2e:a311:: with SMTP id l17mr4294915lje.214.1561683455952;
- Thu, 27 Jun 2019 17:57:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190621072911.GA21600@kroah.com> <20190621141550.GG82584@google.com>
-In-Reply-To: <20190621141550.GG82584@google.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 27 Jun 2019 17:56:59 -0700
-Message-ID: <CACK8Z6FXS3VoaqxmwXCR2vnp-TSE5zGMi6Zt1w_LxskTguMw=Q@mail.gmail.com>
-Subject: Re: PCI/AER sysfs files violate the rules of how sysfs works
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Jun 2019 21:01:17 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 2A3631448;
+        Thu, 27 Jun 2019 21:01:16 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Thu, 27 Jun 2019 21:01:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=6QkdIpPNZcez0nWZJny4hrwMOIoRT7+
+        z3YW1PJJsa+0=; b=MyBHZuXxdmX/5SpLOi1pAk1sCtJy3enfybuFzaWKTrrihqf
+        fjNZULa6ESDWG9Nb1IhjNaUOpYZKHFIDcgFyiFPg4JC97AXqbNcayZ0rTx2sGaZ2
+        zQCnMf7nezIurCkUGAugjDNs4PXdf9Mha1OwOLdIRy2JuJnmOrIKCu5dWMRve7ny
+        IHU5fjAUSZCjOCDUTaJO0hOwf1aHHz8yh64OjkbITBempZkcG9vMe0kchf7gViUc
+        q6wJasjAVeHjWXYKG2uB5UjyTlH+3+p4iL28aEN82uexhYbGjCX9iIlFx5Bb8E0x
+        Dt5XRi/Mqf0398zbAzSg9WVWxEeo5ebcPkwZeCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=6QkdIp
+        PNZcez0nWZJny4hrwMOIoRT7+z3YW1PJJsa+0=; b=aOvbE5MWRlWu77Pg+XZaA/
+        u4PlEqmN0NQRyeeEAHI37JRT5naI2Yzcgh5r+3Ovx+A6tOZ0YUE69dSLNvvnlgtC
+        0rr+BGnl0AmCuryqoZyldci7C9uWKjCRB7RYblWj70Akm9wL8e7Yfpa4nAE+9RVZ
+        47G8Q4DC8RfQSoughbd67uc4HGwhmNZVA6ZxBve8RQERZ29ep0tQFWEfmZS1kYyB
+        mckAxPBzpheOfqxG/Q54sP+aGp0V3afVQY8wAZrr6TFdxwVo1PbUmUoJc8dS6Vs+
+        Tafs4h/6x+M7+MM80WUPi/WmfEUXhGkYriNoBojwrgVVuDYKaVoDDkVAjsDhmzIA
+        ==
+X-ME-Sender: <xms:2mYVXZRh07v3m3dtSpcqvSBZhb3GnfbHz-u-bsw1kRb6Mvs22kxfdw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudelgdegvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
+    ufhiiigvpedt
+X-ME-Proxy: <xmx:2mYVXQRnCamIqGoCcwQ4HGTSFXWpd7-rjjS744xveIwEbLYzbV5eiw>
+    <xmx:2mYVXRdoBHmREkPzHUUNTFrBhroqsf2TSy20snTyK8odUSz6fSUTAQ>
+    <xmx:2mYVXWdJECu90yIqi6uBcSVlaESB7fOX6doZKI4a18B3urbJj8mAUg>
+    <xmx:3GYVXdkcWIdXmwbmCLrdk1-KHTzuUFRg8uGxViV45__3yffNc6InwA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 17816E00A3; Thu, 27 Jun 2019 21:01:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-731-g19d3b16-fmstable-20190627v1
+Mime-Version: 1.0
+Message-Id: <67703d84-a827-4a5c-bf75-37a619f1de94@www.fastmail.com>
+In-Reply-To: <CACRpkdZtTy-HHu2O4aOaqV5ZdxcYYPFRuxK2jjnw+_O1xcF1rg@mail.gmail.com>
+References: <20190626071430.28556-1-andrew@aj.id.au>
+ <20190626071430.28556-2-andrew@aj.id.au>
+ <CACPK8Xfdd1ReAHr9f6zRbZ-WJRquDJsTdUQeT_JuEBhOzS8tig@mail.gmail.com>
+ <CACRpkdZtTy-HHu2O4aOaqV5ZdxcYYPFRuxK2jjnw+_O1xcF1rg@mail.gmail.com>
+Date:   Fri, 28 Jun 2019 10:31:13 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Linus Walleij" <linus.walleij@linaro.org>,
+        "Joel Stanley" <joel@jms.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Ryan Chen" <ryan_chen@aspeedtech.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        linux-aspeed@lists.ozlabs.org,
+        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Re:_[PATCH_1/8]_dt-bindings:_pinctrl:_aspeed:_Split_bindings_d?=
+ =?UTF-8?Q?ocument_in_two?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 7:15 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Jun 21, 2019 at 09:29:11AM +0200, Greg KH wrote:
-> > Hi,
+
+
+On Thu, 27 Jun 2019, at 20:56, Linus Walleij wrote:
+> On Thu, Jun 27, 2019 at 4:32 AM Joel Stanley <joel@jms.id.au> wrote:
+> 
+> > I think we can use this as an opportunity to drop the unused g4-scu
+> > compatible from the bindings. Similarly for the g5.
 > >
-> > When working on some documentation scripts to show the
-> > Documentation/ABI/ files in an automated way, I ran across this "gem" of
-> > a sysfs file: Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> >
-> > In it you describe how the files
-> > /sys/bus/pci/devices/<dev>/aer_dev_correctable and
-> > /sys/bus/pci/devices/<dev>/aer_dev_fatal and
-> > /sys/bus/pci/devices/<dev>/aer_dev_nonfatal
-> > all display a bunch of text on multiple lines.
-> >
-> > This violates the "one value per sysfs file" rule, and should never have
-> > been merged as-is :(
-> >
-> > Please fix it up to be a lot of individual files if your really need all
-> > of those different values.
->
-> Sorry about that.  Do you think we're safe in changing the sysfs ABI
-> by removing the original files and replacing them with new, better
-> ones?  This is pretty new and hopefully not widely used yet.
+> > Acked-by: Joel Stanley <joel@jms.id.au>
+> 
+> I assume I should wait for a new version of the patches that does
+> this?
 
-Hi Bjorn / Greg,
+I'll take a look at the gX compatibles more broadly in a separate series.
+I'm cleaning up the current series wrt Rob's comments and I hope to
+send it out shortly.
 
-I'm thinking of having a named group  for AER stats so that all the
-individual counter attributes are put under a subdirectory (called
-"aer_stats") in the sysfs, instead of cluttering the PCI device
-directory. I expect to have the following counters in there:
-
-dev_err_corr_<correctible_error_name>  (Total 8 such files)
-dev_err_fatal_<fatal_error_name> (Total 17 Such files)
-dev_err_nonfatal_<fatal_error_name> (Total 17 Such files)
-
-dev_total_err_corr (1file)
-dev_total_err_fatal (1file)
-dev_total_err_nonfatal (1file)
-
-rootport_total_err_corr (1file - only for rootports)
-rootport_total_err_fatal (1file - only for rootports)
-rootport_total_err_nonfatal (1file - only for rootports)
-
-Please let me know if this sounds ok.
-
-Thanks & Best Regards,
-
-Rajat
-
->
-> Bjorn
+Andrew
