@@ -2,91 +2,142 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6C2C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DB8C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E931205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86ECD217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfF1KeN (ORCPT
+        id S1726842AbfF1KeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:34:13 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:33457 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfF1KeN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:34:13 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M4JVv-1hgX5U2JRx-000Hmo; Fri, 28 Jun 2019 12:34:01 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Russell King <linux@armlinux.org.uk>,
+        Fri, 28 Jun 2019 06:34:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38986 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbfF1KeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 06:34:16 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3CFBD3082E55;
+        Fri, 28 Jun 2019 10:34:14 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D77B05C70C;
+        Fri, 28 Jun 2019 10:34:13 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id D90AF16E05; Fri, 28 Jun 2019 12:34:12 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 12:34:12 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Chia-I Wu <olvaffe@gmail.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/armada: fix debugfs link error
-Date:   Fri, 28 Jun 2019 12:33:40 +0200
-Message-Id: <20190628103359.2516007-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v4 08/12] drm/virtio: rework virtio_gpu_execbuffer_ioctl
+ fencing
+Message-ID: <20190628103412.f2n7ybp3qtxbhdk4@sirius.home.kraxel.org>
+References: <20190620060726.926-1-kraxel@redhat.com>
+ <20190620060726.926-9-kraxel@redhat.com>
+ <CAPaKu7QjuKMJfhTVOzBsUb8cT9cGgesG_-skQeBO8hL8UqcAzw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:yDMdCFNWi3eU4ukD4Asr7J3rQl5xwCdYhWLt3CtMOZ0hUYFIVP0
- TN6nF1GWbhjRGe5AH0LiQ9iSfgDYTsV5YQjtAF49GKiyIbUdB56yLZ4vgitW4ndREs6VNRr
- XkiMQi+73hO8i64aUnRo/CspzmUQgF20+bQmrefYvEus5jIt2eFZjWVmUDp6cEgTjB1F9zd
- +4QDLSFXVhUEWpYEMDfrA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WII6mkT31vU=:BJ3SdIyV3vMTpydYamkxj3
- DQJ7SUbnIXLT8VuLoKVLblLnbDI/iGV1QFIjaBputIyypzuRsuVz9SoAlCRLZ0/V/49TaYKc8
- g9mMlRbYjtcoiraCXQawDU1tgPJdFXcJacv4m/RjC4LLVYx7SlSid2m2isZdt6n+L73VZGUfu
- 8ioGU3ZxwLRLzKHaXWU6tdGGoopQJNsjIcQ9hw99N05MOXgYYwoWRkn7LUCNC7c9MZgh18DJ4
- mKQR1DRFJvFfDvhkD4LpmqUasp17SZTasN1iJ6FuR5L2VxnhDjWuw3/vnKjf4Ug8vlCsHtiDy
- OjPFGIzKi5jJlrsy3DctMBgmhARIee2QXsmXgfuILwzFDiHE2A5WpKV7VIYjik8xTRCwvsBiP
- fz1+vTdI6Xyd5IpWY+DC9y1xzqjE0SPPruvX5zexTObFOr+88SMPl1qA64vPZf16/vlRglbsR
- sXYGwz4ZmOybPKI8ZdQAsjFamsQVgpOTmmk0bq+c0VyvfmK7LrkRqhQ8oNSLsIlUC3JozMH0x
- igINaxkEZXuOUsTL2GRbwDlF96yGL4yW/tqSjTb5GXP8aqdcdi4VCPd+Bg5l6iHhLEKMnp5Fp
- NMBPKaRjnrpayLeo+YSvO6KE0WEtDA14YWtMZoHKKyA6MIwbrcTYg4RSSMpJ0R9JBNBG/nV+R
- aVS21HUCWOrZEQzN53AdaIAUS+44q1TKitFQCJj9sdyIsRoaXJZKwdSGJtGiP+V5C1WahM5N1
- TFkifZmoEny1NieOKP1F0CNeCChPt83nYiyOkg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPaKu7QjuKMJfhTVOzBsUb8cT9cGgesG_-skQeBO8hL8UqcAzw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 28 Jun 2019 10:34:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Debugfs can be disabled at compile time, causing a link error
-with the newly restructured code:
+  Hi,
 
-drivers/gpu/drm/armada/armada_crtc.o: In function `armada_drm_crtc_late_register':
-armada_crtc.c:(.text+0x974): undefined reference to `armada_drm_crtc_debugfs_init'
+> > --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> > @@ -120,9 +120,9 @@ struct virtio_gpu_vbuffer {
+> >
+> >         char *resp_buf;
+> >         int resp_size;
+> > -
+> >         virtio_gpu_resp_cb resp_cb;
+> >
+> > +       struct virtio_gpu_object_array *objs;
+> This can use a comment (e.g., objects referenced by the vbuffer)
 
-Make the code into the debugfs init function conditional.
+IMHO this is obvious ...
 
-Fixes: 05ec8bd524ba ("drm/armada: redo CRTC debugfs files")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/armada/armada_crtc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> >  void virtio_gpu_cmd_submit(struct virtio_gpu_device *vgdev,
+> >                            void *data, uint32_t data_size,
+> > -                          uint32_t ctx_id, struct virtio_gpu_fence *fence);
+> > +                          uint32_t ctx_id, struct virtio_gpu_fence *fence,
+> > +                          struct virtio_gpu_object_array *objs);
+> Can we keep fence, which is updated, as the last parameter?
 
-diff --git a/drivers/gpu/drm/armada/armada_crtc.c b/drivers/gpu/drm/armada/armada_crtc.c
-index e3a5964d8a65..03d3fd00fe00 100644
---- a/drivers/gpu/drm/armada/armada_crtc.c
-+++ b/drivers/gpu/drm/armada/armada_crtc.c
-@@ -773,7 +773,9 @@ static void armada_drm_crtc_destroy(struct drm_crtc *crtc)
- 
- static int armada_drm_crtc_late_register(struct drm_crtc *crtc)
- {
--	armada_drm_crtc_debugfs_init(drm_to_armada_crtc(crtc));
-+	if (IS_ENABLED(CONFIG_DEBUG_FS))
-+		armada_drm_crtc_debugfs_init(drm_to_armada_crtc(crtc));
-+
- 	return 0;
- }
- 
--- 
-2.20.0
+Fixed.
+
+> > +       if (buflist) {
+> > +               for (i = 0; i < exbuf->num_bo_handles; i++)
+> > +                       reservation_object_add_excl_fence(buflist->objs[i]->resv,
+> > +                                                         &out_fence->f);
+> > +               drm_gem_unlock_reservations(buflist->objs, buflist->nents,
+> > +                                           &ticket);
+> > +       }
+> We used to unlock after virtio_gpu_cmd_submit.
+> 
+> I guess, the fence is considered signaled (because its seqno is still
+> 0) until after virtio_gpu_cmd_submit.  We probably don't want other
+> processes to see the semi-initialized fence.
+
+Good point.  Fixed.
+
+> >  out_memdup:
+> >         kfree(buf);
+> >  out_unresv:
+> > -       ttm_eu_backoff_reservation(&ticket, &validate_list);
+> > -out_free:
+> > -       virtio_gpu_unref_list(&validate_list);
+> Keeping out_free to free buflist seems just fine.
+
+We don't need the separate label though ...
+
+> > +       drm_gem_unlock_reservations(buflist->objs, buflist->nents, &ticket);
+> >  out_unused_fd:
+> >         kvfree(bo_handles);
+> > -       kvfree(buflist);
+> > +       if (buflist)
+> > +               virtio_gpu_array_put_free(buflist);
+
+... and the buflist is released here if needed.
+
+But we need if (buflist) for drm_gem_unlock_reservations too.  Fixed.
+
+> > -
+> > -               list_del(&entry->list);
+> > -               free_vbuf(vgdev, entry);
+> >         }
+> >         wake_up(&vgdev->ctrlq.ack_queue);
+> >
+> >         if (fence_id)
+> >                 virtio_gpu_fence_event_process(vgdev, fence_id);
+> > +
+> > +       list_for_each_entry_safe(entry, tmp, &reclaim_list, list) {
+> > +               if (entry->objs)
+> > +                       virtio_gpu_array_put_free(entry->objs);
+> > +               list_del(&entry->list);
+> We are clearing the list.  I guess list_del is not needed.
+> > +               free_vbuf(vgdev, entry);
+
+This just shuffles around the code.  Dropping list_del() is unrelated
+and should be a separate patch.
+
+Beside that I'm not sure it actually can be dropped.  free_vbuf() will
+not kfree() the vbuf but keep it cached in a freelist instead.
+
+cheers,
+  Gerd
 
