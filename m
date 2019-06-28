@@ -2,185 +2,319 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF874C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D728C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE14B2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E07BB2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:02:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="F50dR304"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rd9lRP9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfF1IBV (ORCPT
+        id S1726681AbfF1ICH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:01:21 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:45014 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfF1IBT (ORCPT
+        Fri, 28 Jun 2019 04:02:07 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34278 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfF1ICG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:01:19 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190628080117euoutp02995ad71bdee338f3f720480d28b40db6~sTfMKnXom1117011170euoutp02Y
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 08:01:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190628080117euoutp02995ad71bdee338f3f720480d28b40db6~sTfMKnXom1117011170euoutp02Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561708877;
-        bh=wcgcV0tJwUzmXVmNXDGn4ZkkEJhhcwPdUNLlNuG05po=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=F50dR3047CR+jwhOCx/qfu+sSDjC+EjPweVha1V78tIIbF2yZy1xvX1pXMrNBnN15
-         rgoqPu/ocKBbMUGZNeW3AImNXbW1nBMATeK1wXNrAeVs3B3ulp2J3Qb0ODvOJDKPWw
-         8o7ArQMMKZEJXrgmTV9TVnWQDzAmFNLd+2OVg5W0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190628080116eucas1p29b9b99feeba3a229e081a2cfcf916838~sTfLbq3vP1442914429eucas1p2M;
-        Fri, 28 Jun 2019 08:01:16 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 07.9B.04325.B49C51D5; Fri, 28
-        Jun 2019 09:01:15 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190628080115eucas1p1edc82651728719c2413ffc16b576a0ed~sTfKrzTTu2969929699eucas1p1I;
-        Fri, 28 Jun 2019 08:01:15 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190628080115eusmtrp12959d6a6fcc277d7fbac5bd93f35e34c~sTfKdtbt32149521495eusmtrp1r;
-        Fri, 28 Jun 2019 08:01:15 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-d8-5d15c94b888e
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id FC.D6.04146.B49C51D5; Fri, 28
-        Jun 2019 09:01:15 +0100 (BST)
-Received: from [106.109.129.180] (unknown [106.109.129.180]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190628080114eusmtip1b8fee092190bf5f677ed1f155cc87b4f~sTfJ1ltX31983619836eusmtip11;
-        Fri, 28 Jun 2019 08:01:14 +0000 (GMT)
-Subject: Re: [PATCH bpf v5 2/2] xdp: fix hang while unregistering device
- bound to xdp socket
-To:     Jonathan Lemon <jonathan.lemon@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-From:   Ilya Maximets <i.maximets@samsung.com>
-Message-ID: <2190070e-db72-6fbe-8dc9-7567847e48ff@samsung.com>
-Date:   Fri, 28 Jun 2019 11:01:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Fri, 28 Jun 2019 04:02:06 -0400
+Received: by mail-pl1-f195.google.com with SMTP id i2so2802237plt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 01:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WZq6BCzx2oAYKBXZwpH6LRexuDJ0/444+0e0Mc/hDbY=;
+        b=Rd9lRP9zAd/kbl3ZE7qYqE71uAPpqI08y9O8Z8POPjewUXfV5BkcxB5GlkY7Lz2EvR
+         L0vi5OB036U4FKFCgIDZv8F3y6lztLOxmk0kwy/NUBPaZkq+ECaVF1Jt2lfubLgAj49H
+         Uk6C/xmHOoJyYfOl2AD99Cc4Ji0bJcI5iEK/IOzTvY7wn8alGsOUKlv4FIhRP3sRGF55
+         fIMKwrwTaQtuY+hOsydah24wbl/mQVSW6sltZZBybHwghcYUR14MnHCnTHXmgdqPSQtw
+         agAI8RdzSUB0Onytip3sOEuouLaTLd1x4D+UiNdsy+ktLsNeIwWlm9Q+91kPa3V5g02W
+         Z4fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WZq6BCzx2oAYKBXZwpH6LRexuDJ0/444+0e0Mc/hDbY=;
+        b=FqoIf4seZOMeTFuqhjN2s5khvYb4868OAawF8i7mGZnImKx55I1f9wpviQcjx4NPUh
+         8VcPvzB7ONbAh4zubSEx4KMiJN6mBN09NFtTcHtgUGkRbkxjCKWue4mFwW3zfZEAZmqZ
+         0zM5e+461pSjNCUzba1r7gZ8fIzZLDLvilqG9kKfUQniXkQWhgfyXdK1AHF5K4RjYEys
+         jyYZLKrQYG6vAmjOqft+PerEsXN5fBfgTBLjlfXJKewsj14xx9fFw+Gudmqjx8cq5sif
+         R+PqT3WQ7o1ibOHg/yOzZJDuw/H2OkDHjicZaLBsSY52lQdp7aqQrraYC0nZbWre1k0E
+         5V1w==
+X-Gm-Message-State: APjAAAXkZkv9RyxoNmq1gazhmUvlL7nI8fzMEjgYynMqA9xh1mKT/V8W
+        b+5zf1p00AnRnXXJbHHmtivc4UHdpOPZCetuWWuULQ==
+X-Google-Smtp-Source: APXvYqwmEZtlGKAjiLJWvizo9Zwmik6FWTQ62cPvtwGWDViEZL1wVsPAEfk8YLKeNB7mUaMkZVTde4hFd59dR/Vcw90=
+X-Received: by 2002:a17:902:2006:: with SMTP id n6mr10173684pla.232.1561708925220;
+ Fri, 28 Jun 2019 01:02:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <74C6C13C-651D-4CD1-BCA1-1B8998A4FA31@gmail.com>
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKKsWRmVeSWpSXmKPExsWy7djPc7reJ0VjDTrXWFj8advAaPH5yHE2
-        i8ULvzFbzDnfwmJxpf0nu8WxFy1sFrvWzWS2uLxrDpvFikMngGILxCy29+9jdOD22LLyJpPH
-        zll32T0W73nJ5NF14xKzx/Tuh8wefVtWMXp83iQXwB7FZZOSmpNZllqkb5fAlbFneQt7wWOB
-        ir4dU5gaGG/wdjFyckgImEj8fnyOuYuRi0NIYAWjxOHL6xghnC+MEjdO32GDcD4zShzf/YwN
-        pmXqkSksILaQwHJGieYl5RBFHxklDsydBVYkLBAnsaz7HyOILSKgK7FvQyc7SBGzwG0mie3b
-        TrCCJNgEdCROrT4CVsQrYCfxYsVfoCIODhYBVYkf7aIgYVGBCInLW3ZBlQhKnJz5hAWkhFPA
-        VuLUpnKQMLOAuETTl5WsELa8RPPW2WDvSAhcY5e4cPQ4E8TRLhJb93yGsoUlXh3fwg5hy0ic
-        ntzDAmHXS9xveckI0dzBKDH90D+oBnuJLa/Pgd3GLKApsX6XPogpIeAocXimFoTJJ3HjrSDE
-        CXwSk7ZNZ4YI80p0tAlBzFCR+H1wOTOELSVx891n9gmMSrOQ/DULyTOzkDwzC2HtAkaWVYzi
-        qaXFuempxcZ5qeV6xYm5xaV56XrJ+bmbGIGJ6/S/4193MO77k3SIUYCDUYmHV2GnSKwQa2JZ
-        cWXuIUYJDmYlEV7Jc0Ah3pTEyqrUovz4otKc1OJDjNIcLErivNUMD6KFBNITS1KzU1MLUotg
-        skwcnFINjPu75nvNy5440ab22oWDJs/OW1xNl4tw+Xvh1YKN5tJTLHd3HJQtUahU+BQXGLFs
-        QdkBo/d6Lr9ElJ77xsf6PVQPbKuoWPzqXZ3xAfmlP55/8O1a8OqSYL+4lPpN5vPyLXmh3x5u
-        eCY1fzPX6qzYR2USHgn3BUUvG8kHKjGftJEx7bB/ovbIW4mlOCPRUIu5qDgRAH9MtJhYAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBIsWRmVeSWpSXmKPExsVy+t/xu7reJ0VjDX5c47b407aB0eLzkeNs
-        FosXfmO2mHO+hcXiSvtPdotjL1rYLHatm8lscXnXHDaLFYdOAMUWiFls79/H6MDtsWXlTSaP
-        nbPusnss3vOSyaPrxiVmj+ndD5k9+rasYvT4vEkugD1Kz6Yov7QkVSEjv7jEVina0MJIz9DS
-        Qs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL2PP8hb2gscCFX07pjA1MN7g7WLk5JAQMJGY
-        emQKSxcjF4eQwFJGie/PprBBJKQkfvy6wAphC0v8udYFFhcSeM8o8eFtGogtLBAnMfXANGYQ
-        W0RAV2Lfhk52EJtZ4DaTxJStURBDvzBKLDr7FyzBJqAjcWr1EUYQm1fATuLFCpA4BweLgKrE
-        j3ZRkLCoQIREX9tsNogSQYmTM5+wgJRwCthKnNpUDjFeXeLPvEvMELa4RNOXlawQtrxE89bZ
-        zBMYhWYh6Z6FpGUWkpZZSFoWMLKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93ECIzVbcd+bt7B
-        eGlj8CFGAQ5GJR5ehZ0isUKsiWXFlbmHGCU4mJVEeCXPAYV4UxIrq1KL8uOLSnNSiw8xmgK9
-        NpFZSjQ5H5hG8kriDU0NzS0sDc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MNYV
-        nn46o9+5wixU4XPYjiUZK+WUC/rZ3WvC9x398kuTq2DZAatDaSKiu478SWP4aMxzPCGpkLVr
-        979lgtoJwS+OZy8NPXMjdfOiN5Urttt+37Lo9euns75vUWK1ql0clnzpnw/vKn3Zaffb0/gn
-        m33jiaxzFFxqc2TpIzc9U/PI8K6gNSFOq5VYijMSDbWYi4oTAaZyV5HrAgAA
-X-CMS-MailID: 20190628080115eucas1p1edc82651728719c2413ffc16b576a0ed
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190627101540eucas1p149805b39e12bf7ecf5864b7ff1b0c934
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190627101540eucas1p149805b39e12bf7ecf5864b7ff1b0c934
-References: <20190627101529.11234-1-i.maximets@samsung.com>
-        <CGME20190627101540eucas1p149805b39e12bf7ecf5864b7ff1b0c934@eucas1p1.samsung.com>
-        <20190627101529.11234-3-i.maximets@samsung.com>
-        <74C6C13C-651D-4CD1-BCA1-1B8998A4FA31@gmail.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-18-brendanhiggins@google.com> <20190626021744.GU19023@42.do-not-panic.com>
+ <CAAXuY3p+kVhjQ4LYtzormqVcH2vKu1abc_K9Z0XY=JX=bp8NcQ@mail.gmail.com> <20190627061021.GE19023@42.do-not-panic.com>
+In-Reply-To: <20190627061021.GE19023@42.do-not-panic.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 28 Jun 2019 01:01:54 -0700
+Message-ID: <CAFd5g45VJ9yfuESUc=E0ydJyN+mk1b1kyHSCYvO2x9KPC7+3GQ@mail.gmail.com>
+Subject: Re: [PATCH v5 17/18] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Iurii Zaikin <yzaikin@google.com>, linux-api@vger.kernel.org,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.06.2019 1:04, Jonathan Lemon wrote:
-> On 27 Jun 2019, at 3:15, Ilya Maximets wrote:
-> 
->> Device that bound to XDP socket will not have zero refcount until the
->> userspace application will not close it. This leads to hang inside
->> 'netdev_wait_allrefs()' if device unregistering requested:
->>
->>   # ip link del p1
->>   < hang on recvmsg on netlink socket >
->>
->>   # ps -x | grep ip
->>   5126  pts/0    D+   0:00 ip link del p1
->>
->>   # journalctl -b
->>
->>   Jun 05 07:19:16 kernel:
->>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
->>
->>   Jun 05 07:19:27 kernel:
->>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
->>   ...
->>
->> Fix that by implementing NETDEV_UNREGISTER event notification handler
->> to properly clean up all the resources and unref device.
->>
->> This should also allow socket killing via ss(8) utility.
->>
->> Fixes: 965a99098443 ("xsk: add support for bind for Rx")
->> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
->> ---
->>  include/net/xdp_sock.h |  5 +++
->>  net/xdp/xdp_umem.c     | 10 ++---
->>  net/xdp/xdp_umem.h     |  1 +
->>  net/xdp/xsk.c          | 87 ++++++++++++++++++++++++++++++++++++------
->>  4 files changed, 87 insertions(+), 16 deletions(-)
->>
->> diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
->> index d074b6d60f8a..82d153a637c7 100644
->> --- a/include/net/xdp_sock.h
->> +++ b/include/net/xdp_sock.h
->> @@ -61,6 +61,11 @@ struct xdp_sock {
->>      struct xsk_queue *tx ____cacheline_aligned_in_smp;
->>      struct list_head list;
->>      bool zc;
->> +    enum {
->> +        XSK_UNINITIALIZED = 0,
->> +        XSK_BINDED,
->> +        XSK_UNBINDED,
->> +    } state;
-> 
-> I'd prefer that these were named better, perhaps:
->    XSK_READY,
->    XSK_BOUND,
->    XSK_UNBOUND,
+On Wed, Jun 26, 2019 at 11:10 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Wed, Jun 26, 2019 at 09:07:43PM -0700, Iurii Zaikin wrote:
+> > On Tue, Jun 25, 2019 at 7:17 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > > > +static void sysctl_test_dointvec_table_maxlen_unset(struct kunit *test)
+> > > > +{
+> > > > +     struct ctl_table table = {
+> > > > +             .procname = "foo",
+> > > > +             .data           = &test_data.int_0001,
+> > > > +             .maxlen         = 0,
+> > > > +             .mode           = 0644,
+> > > > +             .proc_handler   = proc_dointvec,
+> > > > +             .extra1         = &i_zero,
+> > > > +             .extra2         = &i_one_hundred,
+> > > > +     };
+> > > > +     void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > > > +     size_t len;
+> > > > +     loff_t pos;
+> > > > +
+> > > > +     len = 1234;
+> > > > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
+> > > > +     KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> > > > +     len = 1234;
+> > > > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, buffer, &len, &pos));
+> > > > +     KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> > > > +}
+> > >
+> > > In a way this is also testing for general kernel API changes. This is and the
+> > > last one were good examples. So this is not just testing functionality
+> > > here. There is no wrong or write answer if 0 or -EINVAL was returned
+> > > other than the fact that we have been doing this for years.
+> > >
+> > > Its a perhaps small but important difference for some of these tests.  I
+> > > *do* think its worth clarifying through documentation which ones are
+> > > testing for API consistency Vs proper correctness.
+> >
+> > You make a good point that the test codifies the existing behavior of
+> > the function in lieu of formal documentation.  However, the test cases
+> > were derived from examining the source code of the function under test
+> > and attempting to cover all branches. The assertions were added only
+> > for the values that appeared to be set deliberately in the
+> > implementation. And it makes sense to me to test that the code does
+> > exactly what the implementation author intended.
+>
+> I'm not arguing against adding them. I'm suggesting that it is different
+> to test for API than for correctness of intended functionality, and
+> it would be wise to make it clear which test cases are for API and which
+> for correctness.
 
-Sure. Thanks for suggestion!
+I see later on that some of the API stuff you are talking about is
+public APIs from the standpoint of user (outside of LInux) visible. To
+be clear, is that what you mean by public APIs throughout, or would
+you distinguish between correctness tests, internal API tests, and
+external API tests?
 
-> 
-> Other than that:
-> Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-> 
+> This will come up later for other kunit tests and it would be great
+> to set precendent so that other kunit tests can follow similar
+> practices to ensure its clear what is API realted Vs correctness of
+> intended functionality.
+>
+> In fact, I'm not yet sure if its possible to test public kernel API to
+> userspace with kunit, but if it is possible... well, that could make
+> linux-api folks happy as they could enable us to codify interpreation of
+> what is expected into kunit test cases, and we'd ensure that the
+> codified interpretation is not only documented in man pages but also
+> through formal kunit test cases.
+>
+> A regression in linux-api then could be formalized through a proper
+> kunit tests case. And if an API evolves, it would force developers to
+> update the respective kunit which codifies that contract.
 
-I'll send a new version with the new state names keeping your ACK.
+Yep, I think that is long term hope. Some of the file system interface
+stuff that requires a filesystem to be mounted somewhere might get a
+little weird/difficult, but I suspect we should be able to do it
+eventually. I mean it's all just C code right? Should mostly boil down
+to someone figuring out how to do it the first time.
 
-Best regards, Ilya Maximets.
+> > > > +static void sysctl_test_dointvec_single_less_int_min(struct kunit *test)
+> > > > +{
+> > > > +     struct ctl_table table = {
+> > > > +             .procname = "foo",
+> > > > +             .data           = &test_data.int_0001,
+> > > > +             .maxlen         = sizeof(int),
+> > > > +             .mode           = 0644,
+> > > > +             .proc_handler   = proc_dointvec,
+> > > > +             .extra1         = &i_zero,
+> > > > +             .extra2         = &i_one_hundred,
+> > > > +     };
+> > > > +     char input[32];
+> > > > +     size_t len = sizeof(input) - 1;
+> > > > +     loff_t pos = 0;
+> > > > +     unsigned long abs_of_less_than_min = (unsigned long)INT_MAX
+> > > > +                                          - (INT_MAX + INT_MIN) + 1;
+> > > > +
+> > > > +     KUNIT_EXPECT_LT(test,
+> > > > +                     (size_t)snprintf(input, sizeof(input), "-%lu",
+> > > > +                                      abs_of_less_than_min),
+> > > > +                     sizeof(input));
+> > > > +
+> > > > +     table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > > > +     KUNIT_EXPECT_EQ(test, -EINVAL,
+> > > > +                     proc_dointvec(&table, 1, input, &len, &pos));
+> > > > +     KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > > > +     KUNIT_EXPECT_EQ(test, 0, ((int *)table.data)[0]);
+> > > > +}
+> > >
+> > > API test.
+> > >
+> > Not sure why.
+>
+> Because you are codifying that we *definitely* return -EINVAL on
+> overlow. Some parts of the kernel return -ERANGE for overflows for
+> instance.
+>
+> It would be a generic test for overflow if it would just test
+> for any error.
+>
+> It is a fine and good test to keep. All these tests are good to keep.
+>
+> > I believe there has been a real bug with int overflow in
+> > proc_dointvec.
+> > Covering it with test seems like a good idea.
+>
+> Oh definitely.
+>
+> > > > +static void sysctl_test_dointvec_single_greater_int_max(struct kunit *test)
+> > > > +{
+> > > > +     struct ctl_table table = {
+> > > > +             .procname = "foo",
+> > > > +             .data           = &test_data.int_0001,
+> > > > +             .maxlen         = sizeof(int),
+> > > > +             .mode           = 0644,
+> > > > +             .proc_handler   = proc_dointvec,
+> > > > +             .extra1         = &i_zero,
+> > > > +             .extra2         = &i_one_hundred,
+> > > > +     };
+> > > > +     char input[32];
+> > > > +     size_t len = sizeof(input) - 1;
+> > > > +     loff_t pos = 0;
+> > > > +     unsigned long greater_than_max = (unsigned long)INT_MAX + 1;
+> > > > +
+> > > > +     KUNIT_EXPECT_GT(test, greater_than_max, (unsigned long)INT_MAX);
+> > > > +     KUNIT_EXPECT_LT(test, (size_t)snprintf(input, sizeof(input), "%lu",
+> > > > +                                            greater_than_max),
+> > > > +                     sizeof(input));
+> > > > +     table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > > > +     KUNIT_EXPECT_EQ(test, -EINVAL,
+> > > > +                     proc_dointvec(&table, 1, input, &len, &pos));
+> > > > +     KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > > > +     KUNIT_EXPECT_EQ(test, 0, ((int *)table.data)[0]);
+> > > > +}
+> > > > +
+> > >
+> > > API test.
+> > >
+> > > > +static struct kunit_case sysctl_test_cases[] = {
+> > > > +     KUNIT_CASE(sysctl_test_dointvec_null_tbl_data),
+> > > > +     KUNIT_CASE(sysctl_test_dointvec_table_maxlen_unset),
+> > > > +     KUNIT_CASE(sysctl_test_dointvec_table_len_is_zero),
+> > > > +     KUNIT_CASE(sysctl_test_dointvec_table_read_but_position_set),
+> > > > +     KUNIT_CASE(sysctl_test_dointvec_happy_single_positive),
+> > > > +     KUNIT_CASE(sysctl_test_dointvec_happy_single_negative),
+> > > > +     KUNIT_CASE(sysctl_test_dointvec_single_less_int_min),
+> > > > +     KUNIT_CASE(sysctl_test_dointvec_single_greater_int_max),
+> > > > +     {}
+> > > > +};
+> > >
+> > > Oh all are API tests.. perhaps then just rename then
+> > > sysctl_test_cases to sysctl_api_test_cases.
+> > >
+> > > Would be good to add at least *two* other tests cases for this
+> > > example, one which does a valid read and one which does a valid write.
+> > Added valid reads. There already are 2 valid writes.
+>
+> Thanks.
+>
+> > > If that is done either we add another kunit test module for correctness
+> > > or just extend the above and use prefix / postfixes on the functions
+> > > to distinguish between API / correctness somehow.
+> > >
+> > > > +
+> > > > +static struct kunit_module sysctl_test_module = {
+> > > > +     .name = "sysctl_test",
+> > > > +     .test_cases = sysctl_test_cases,
+> > > > +};
+> > > > +
+> > > > +module_test(sysctl_test_module);
+> > > > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > > > index cbdfae3798965..389b8986f5b77 100644
+> > > > --- a/lib/Kconfig.debug
+> > > > +++ b/lib/Kconfig.debug
+> > > > @@ -1939,6 +1939,16 @@ config TEST_SYSCTL
+> > > >
+> > > >         If unsure, say N.
+> > > >
+> > > > +config SYSCTL_KUNIT_TEST
+> > > > +     bool "KUnit test for sysctl"
+> > > > +     depends on KUNIT
+> > > > +     help
+> > > > +       This builds the proc sysctl unit test, which runs on boot. For more
+> > > > +       information on KUnit and unit tests in general please refer to the
+> > > > +       KUnit documentation in Documentation/dev-tools/kunit/.
+> > >
+> > > A little more description here would help. It is testing for API and
+> > > hopefully also correctness (if extended with those two examples I
+> > > mentioned).
+> > >
+> > Added "Tests the API contract and implementation correctness of sysctl."
+>
+> Yes, much clearer, thanks!
+
+Cheers!
