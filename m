@@ -2,90 +2,146 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB91C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEF2C5B578
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A863D214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="T6kWLJqr"
+	by mail.kernel.org (Postfix) with ESMTP id 3AB7D205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfF1SxB (ORCPT
+        id S1726954AbfF1SxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:53:01 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42516 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfF1SxA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:53:00 -0400
-Received: by mail-io1-f68.google.com with SMTP id u19so6141735ior.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:53:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=0vnkzi3BuJTyXx7KRAPPLKqoLRHPgMrkqNHgPj4DsWE=;
-        b=T6kWLJqrYH5JG0ZpMsTWJYlyGp9L3SPHrYqLjVPcryv7lQnYlvRo3gyaCu9yw18RST
-         Z87ehkfmmJPrNWqwbVGwO9zaTzKN6gap4ePTLSce7dgy/LWbvt+j+oH15CCz/kDxDRXT
-         kU+5cB/xXZA8kY42vlqCnC82yo2PhgaWetCTG/BFjvvO3NEjkfHPPtVNtIdzkmKPSV9n
-         sn1Tqp6C8V/RzMRtEteqgpcaDUHN/M557MGODv7f7gUChAz0zOz3c5iizFfLdZikIwK0
-         pGDBZemdSCGyArGmU3wNXGeWyE+g30zZSvPbbAKcxM1YICX3RCRnUn/dMCGi84YW3huv
-         IBLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=0vnkzi3BuJTyXx7KRAPPLKqoLRHPgMrkqNHgPj4DsWE=;
-        b=C+MtD/JVPcpfpqcjV9f35PnAhdgphYXUrthCBrkCRfmWjyxaYBzXiooUlCC4Mnd2VT
-         jefmzQYVc3elVArtpIrTy4j2DhDQe6UnjyWDTkRElayEJ87pIjVqmT7sARC8+Pqgr685
-         9E6oBe+kIeqGEPAJgdZK3NCfa+AaZGCM9ulrE44/pp5IW+fy5DMt7fg7goxN6t503Qdx
-         lCSRo/BVozBx3Zj9uznr7NEBaZQ+vJpgeBy6Nz2hjgJ5+I/tbS0lpdiZ1g4mUUsFxmV0
-         h23ot3tv9C2oowqUSv2j55rq5ZJBCsZY8zVZt0wWVIvi+mcmrUwtIwuB/rrEx0XOKV7A
-         PNsw==
-X-Gm-Message-State: APjAAAV2xLOd32J7G8obfCmj9NCZE8Z/rKZWeA9A2YE4208Pqt/cvSnG
-        WQ1kc3VGTVTuVIOJk0T1TOQBqP8wKo8=
-X-Google-Smtp-Source: APXvYqxpEW1Y8xJHyOkBaajlUN4Y39E+v9ExrC3+JygOPXs47MYzUBN0cdnJSzJFUIgReI45GA6Nrg==
-X-Received: by 2002:a02:bb08:: with SMTP id y8mr13143899jan.51.1561747980021;
-        Fri, 28 Jun 2019 11:53:00 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id w23sm2481400iod.12.2019.06.28.11.52.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 11:52:59 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 11:52:58 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     damon <liush.damon@gmail.com>
-cc:     palmer@sifive.com, sorear2@gmail.com, aou@eecs.berkeley.edu,
-        anup.patel@wdc.com, linux-kernel@vger.kernel.org,
-        rppt@linux.ibm.com, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] RISC-V: redefine
- PTRS_PER_PGD/PTRS_PER_PMD/PTRS_PER_PTE
-In-Reply-To: <1556093512-5006-1-git-send-email-liush.damon@gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1906281147260.3867@viisi.sifive.com>
-References: <1556093512-5006-1-git-send-email-liush.damon@gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 28 Jun 2019 14:53:08 -0400
+Received: from mga07.intel.com ([134.134.136.100]:56007 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726563AbfF1SxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 14:53:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 11:53:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,428,1557212400"; 
+   d="asc'?scan'208";a="314213610"
+Received: from rarober1-mobl.amr.corp.intel.com ([10.251.157.137])
+  by orsmga004.jf.intel.com with ESMTP; 28 Jun 2019 11:53:03 -0700
+Message-ID: <fee5dd422d88806ee0b5a6b84f14cd6d50351343.camel@intel.com>
+Subject: Re: [PATCH 24/39] docs: driver-model: move it to the driver-api book
+From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Kershner <david.kershner@unisys.com>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        sparmaintainer@unisys.com, devel@driverdev.osuosl.org,
+        cocci@systeme.lip6.fr
+Date:   Fri, 28 Jun 2019 11:53:03 -0700
+In-Reply-To: <920ff36c66233113b1825ab504fe675ed5a5bd7b.1561724493.git.mchehab+samsung@kernel.org>
+References: <cover.1561724493.git.mchehab+samsung@kernel.org>
+         <920ff36c66233113b1825ab504fe675ed5a5bd7b.1561724493.git.mchehab+samsung@kernel.org>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-K11StWmkFkExVL88vQz+"
+User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Apr 2019, damon wrote:
 
-> Use the number of addresses to define the relevant macros.
-> 
-> Signed-off-by: damon <liush.damon@gmail.com>
+--=-K11StWmkFkExVL88vQz+
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch looks reasonable to me.  But what's missing from the 
-description is the motivation.  Is this a prerequisite for another patch 
-that you're planning to post?  Or because you think this is clearer than 
-the original?  Or something else?  etc.
+On Fri, 2019-06-28 at 09:30 -0300, Mauro Carvalho Chehab wrote:
+> The audience for the Kernel driver-model is clearly Kernel hackers.
+>=20
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+
+For the 'ice' driver changes.
+
+> ---
+>  Documentation/{ =3D> driver-api}/driver-model/binding.rst       | 0
+>  Documentation/{ =3D> driver-api}/driver-model/bus.rst           | 0
+>  Documentation/{ =3D> driver-api}/driver-model/class.rst         | 0
+>  .../{ =3D> driver-api}/driver-model/design-patterns.rst         | 0
+>  Documentation/{ =3D> driver-api}/driver-model/device.rst        | 0
+>  Documentation/{ =3D> driver-api}/driver-model/devres.rst        | 0
+>  Documentation/{ =3D> driver-api}/driver-model/driver.rst        | 0
+>  Documentation/{ =3D> driver-api}/driver-model/index.rst         | 2 --
+>  Documentation/{ =3D> driver-api}/driver-model/overview.rst      | 0
+>  Documentation/{ =3D> driver-api}/driver-model/platform.rst      | 0
+>  Documentation/{ =3D> driver-api}/driver-model/porting.rst       | 2 +-
+>  Documentation/driver-api/gpio/driver.rst                      | 2 +-
+>  Documentation/driver-api/index.rst                            | 1 +
+>  Documentation/eisa.txt                                        | 4 ++--
+>  Documentation/filesystems/sysfs.txt                           | 2 +-
+>  Documentation/hwmon/submitting-patches.rst                    | 2 +-
+>  Documentation/translations/zh_CN/filesystems/sysfs.txt        | 2 +-
+>  drivers/base/platform.c                                       | 2 +-
+>  drivers/gpio/gpio-cs5535.c                                    | 2 +-
+>  drivers/net/ethernet/intel/ice/ice_main.c                     | 2 +-
+>  drivers/staging/unisys/Documentation/overview.txt             | 4 ++--
+>  include/linux/device.h                                        | 2 +-
+>  include/linux/platform_device.h                               | 2 +-
+>  scripts/coccinelle/free/devm_free.cocci                       | 2 +-
+>  24 files changed, 16 insertions(+), 17 deletions(-)
+>  rename Documentation/{ =3D> driver-api}/driver-model/binding.rst (100%)
+>  rename Documentation/{ =3D> driver-api}/driver-model/bus.rst (100%)
+>  rename Documentation/{ =3D> driver-api}/driver-model/class.rst (100%)
+>  rename Documentation/{ =3D> driver-api}/driver-model/design-patterns.rst
+> (100%)
+>  rename Documentation/{ =3D> driver-api}/driver-model/device.rst (100%)
+>  rename Documentation/{ =3D> driver-api}/driver-model/devres.rst (100%)
+>  rename Documentation/{ =3D> driver-api}/driver-model/driver.rst (100%)
+>  rename Documentation/{ =3D> driver-api}/driver-model/index.rst (96%)
+>  rename Documentation/{ =3D> driver-api}/driver-model/overview.rst (100%)
+>  rename Documentation/{ =3D> driver-api}/driver-model/platform.rst (100%)
+>  rename Documentation/{ =3D> driver-api}/driver-model/porting.rst (99%)
 
 
-- Paul
+--=-K11StWmkFkExVL88vQz+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl0WYg8ACgkQ5W/vlVpL
+7c71FA//aLp3imbzpY3ovZhJWfkCedgU23P55ANWPX+9LogGHwK/qtSXQlpOFKet
+AKb3TrRqbgzziAdpNGCgC9phQ5qo56UwhI6PAf+WweUQV0Q1y5VX9Uvis12Zut4i
+CiScVqBx3+Fgaj1KRXxoZKTmpdqsGCgQAr4BsqQUxYBWYk9al+iBz4YlqS2kQtyr
+HClWQ4taQ6T6xaVHnCkIZA5NaSvOnaQClg33sPyvWTXrXbnlcBnJ3pXttlOKpXRA
+ImO2jo16IYZFDpqCzlQpC1WjXz6vvFrHb2ukosXmYvNPBj33a//vD5PTvn6WUPkX
+euZ5dRMaHjCY6XA9lZ5/KgHgckHO7TuzNzOP1VNCfit1lszA5M4p74nAFeL4XfYy
+EKvosns0N5hrxl0M3VqtLfi4vqyC0S52SHeGzQ9Jugfi3Ey4f+RfGU1bqRlWu1SI
+4g/JtpDavi2dT/jer5JSX55XMnSPpHEGl5I7M8osiMSqUx1wsnubuT4StxBu5U5y
+MY11YSpOWwq1ufPph3M6Bd05gJxQxfY9mbQojyHl+gQm88PlF6tSvgKRyvFChfK1
+eBb+uyphD9mFl06ZVtimDSW8C/X7uCylET5CPahyh6Cb/Z2QfRuh07V1t7Jr0nox
+KZLcjeAWq2BLZnk+TBikfnYQZ+/29kyml3N+Dm/cP7JByhm53bo=
+=wwuU
+-----END PGP SIGNATURE-----
+
+--=-K11StWmkFkExVL88vQz+--
+
