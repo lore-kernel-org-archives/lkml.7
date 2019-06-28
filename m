@@ -2,149 +2,86 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09818C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD55C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45FF206A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29C9214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfF1DM4 convert rfc822-to-8bit (ORCPT
+        id S1727069AbfF1DTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:12:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:49101 "EHLO ozlabs.org"
+        Thu, 27 Jun 2019 23:19:15 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:37136 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726749AbfF1DMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:12:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45ZhfD3QYHz9s3l;
-        Fri, 28 Jun 2019 13:12:52 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Qian Cai <cai@lca.pw>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: power9 NUMA crash while reading debugfs imc_cmd
-In-Reply-To: <1561670472.5154.98.camel@lca.pw>
-References: <1561670472.5154.98.camel@lca.pw>
-Date:   Fri, 28 Jun 2019 13:12:48 +1000
-Message-ID: <87lfxms8r3.fsf@concordia.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+        id S1726542AbfF1DTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 23:19:14 -0400
+X-Greylist: delayed 936 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Jun 2019 23:19:13 EDT
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 095FE8AAAF48D3D3EE33;
+        Fri, 28 Jun 2019 11:03:36 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x5S32eAx063726;
+        Fri, 28 Jun 2019 11:02:40 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019062811031002-1800716 ;
+          Fri, 28 Jun 2019 11:03:10 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org
+Subject: [PATCH 0/3] fix leaked of_node references in drivers/media
+Date:   Fri, 28 Jun 2019 11:01:13 +0800
+Message-Id: <1561690876-20977-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-06-28 11:03:10,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-06-28 11:02:45,
+        Serialize complete at 2019-06-28 11:02:45
+X-MAIL: mse-fl1.zte.com.cn x5S32eAx063726
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian Cai <cai@lca.pw> writes:
-> Read of debugfs imc_cmd file for a memory-less node will trigger a crash below
-> on this power9 machine which has the following NUMA layout.
+The call to of_get_cpu_node/of_find_compatible_node/of_parse_phandle...
+returns a node pointer with refcount incremented thus it must be
+explicitly decremented after the last usage.
 
-What type of machine is it?
+We developed a coccinelle SmPL to detect  drivers/media/ code and
+found some issues.
+This patch series fixes those issues.
 
-cheers
+Wen Yang (3):
+  media: xilinx: fix leaked of_node references
+  media: exynos4-is: fix leaked of_node references
+  media: ti-vpe: fix leaked of_node references
 
-> I don't understand why I only saw it recently on linux-next where it
-> was tested everyday. I can reproduce it back to 4.20 where 4.18 seems
-> work fine.
->
-> # cat /sys/kernel/debug/powerpc/imc/imc_cmd_252 (On a 4.18-based kernel)
-> 0x0000000000000000
->
-> # numactl -H
-> available: 6 nodes (0,8,252-255)
-> node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
-> 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52
-> 53 54 55 56 57 58 59 60 61 62 63
-> node 0 size: 130210 MB
-> node 0 free: 128406 MB
-> node 8 cpus: 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85
-> 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108
-> 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
-> node 8 size: 130784 MB
-> node 8 free: 130051 MB
-> node 252 cpus:
-> node 252 size: 0 MB
-> node 252 free: 0 MB
-> node 253 cpus:
-> node 253 size: 0 MB
-> node 253 free: 0 MB
-> node 254 cpus:
-> node 254 size: 0 MB
-> node 254 free: 0 MB
-> node 255 cpus:
-> node 255 size: 0 MB
-> node 255 free: 0 MB
-> node distances:
-> node   0   8  252  253  254  255 
->   0:  10  40  80  80  80  80 
->   8:  40  10  80  80  80  80 
->  252:  80  80  10  80  80  80 
->  253:  80  80  80  10  80  80 
->  254:  80  80  80  80  10  80 
->  255:  80  80  80  80  80  10
->
-> # cat /sys/kernel/debug/powerpc/imc/imc_cmd_252
->
-> [ 1139.415461][ T5301] Faulting instruction address: 0xc0000000000d0d58
-> [ 1139.415492][ T5301] Oops: Kernel access of bad area, sig: 11 [#1]
-> [ 1139.415509][ T5301] LE PAGE_SIZE=64K MMU=Radix MMU=Hash SMP NR_CPUS=256
-> DEBUG_PAGEALLOC NUMA PowerNV
-> [ 1139.415542][ T5301] Modules linked in: i2c_opal i2c_core ip_tables x_tables
-> xfs sd_mod bnx2x mdio ahci libahci tg3 libphy libata firmware_class dm_mirror
-> dm_region_hash dm_log dm_mod
-> [ 1139.415595][ T5301] CPU: 67 PID: 5301 Comm: cat Not tainted 5.2.0-rc6-next-
-> 20190627+ #19
-> [ 1139.415634][ T5301] NIP:  c0000000000d0d58 LR: c00000000049aa18 CTR:
-> c0000000000d0d50
-> [ 1139.415675][ T5301] REGS: c00020194548f9e0 TRAP: 0300   Not tainted  (5.2.0-
-> rc6-next-20190627+)
-> [ 1139.415705][ T5301] MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR:
-> 28022822  XER: 00000000
-> [ 1139.415777][ T5301] CFAR: c00000000049aa14 DAR: 000000000003fc08 DSISR:
-> 40000000 IRQMASK: 0 
-> [ 1139.415777][ T5301] GPR00: c00000000049aa18 c00020194548fc70 c0000000016f8b00
-> 000000000003fc08 
-> [ 1139.415777][ T5301] GPR04: c00020194548fcd0 0000000000000000 0000000014884e73
-> ffffffff00011eaa 
-> [ 1139.415777][ T5301] GPR08: 000000007eea5a52 c0000000000d0d50 0000000000000000
-> 0000000000000000 
-> [ 1139.415777][ T5301] GPR12: c0000000000d0d50 c000201fff7f8c00 0000000000000000
-> 0000000000000000 
-> [ 1139.415777][ T5301] GPR16: 000000000000000d 00007fffeb0c3368 ffffffffffffffff
-> 0000000000000000 
-> [ 1139.415777][ T5301] GPR20: 0000000000000000 0000000000000000 0000000000000000
-> 0000000000020000 
-> [ 1139.415777][ T5301] GPR24: 0000000000000000 0000000000000000 0000000000020000
-> 000000010ec90000 
-> [ 1139.415777][ T5301] GPR28: c00020194548fdf0 c00020049a584ef8 0000000000000000
-> c00020049a584ea8 
-> [ 1139.416116][ T5301] NIP [c0000000000d0d58] imc_mem_get+0x8/0x20
-> [ 1139.416143][ T5301] LR [c00000000049aa18] simple_attr_read+0x118/0x170
-> [ 1139.416158][ T5301] Call Trace:
-> [ 1139.416182][ T5301] [c00020194548fc70] [c00000000049a970]
-> simple_attr_read+0x70/0x170 (unreliable)
-> [ 1139.416255][ T5301] [c00020194548fd10] [c00000000054385c]
-> debugfs_attr_read+0x6c/0xb0
-> [ 1139.416305][ T5301] [c00020194548fd60] [c000000000454c1c]
-> __vfs_read+0x3c/0x70
-> [ 1139.416363][ T5301] [c00020194548fd80] [c000000000454d0c] vfs_read+0xbc/0x1a0
-> [ 1139.416392][ T5301] [c00020194548fdd0] [c00000000045519c]
-> ksys_read+0x7c/0x140
-> [ 1139.416434][ T5301] [c00020194548fe20] [c00000000000b108]
-> system_call+0x5c/0x70
-> [ 1139.416473][ T5301] Instruction dump:
-> [ 1139.416511][ T5301] 4e800020 60000000 7c0802a6 60000000 7c801d28 38600000
-> 4e800020 60000000 
-> [ 1139.416572][ T5301] 60000000 60000000 7c0802a6 60000000 <7d201c28> 38600000
-> f9240000 4e800020 
-> [ 1139.416636][ T5301] ---[ end trace c44d1fb4ace04784 ]---
-> [ 1139.520686][ T5301] 
-> [ 1140.520820][ T5301] Kernel panic - not syncing: Fatal exception
+ drivers/media/platform/exynos4-is/fimc-is.c   |  1 +
+ drivers/media/platform/exynos4-is/media-dev.c |  2 ++
+ drivers/media/platform/ti-vpe/cal.c           |  1 +
+ drivers/media/platform/xilinx/xilinx-tpg.c    | 18 +++++++++++++-----
+ drivers/media/platform/xilinx/xilinx-vipp.c   |  8 +++++---
+ 5 files changed, 22 insertions(+), 8 deletions(-)
+
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: linux-media@vger.kernel.org
+
+-- 
+2.9.5
+
