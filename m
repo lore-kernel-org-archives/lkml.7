@@ -2,99 +2,75 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE007C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9F7C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A282064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C342064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfF1OyS (ORCPT
+        id S1726837AbfF1Oys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 10:54:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54580 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbfF1OyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 10:54:18 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5AEB6C057F88;
-        Fri, 28 Jun 2019 14:54:15 +0000 (UTC)
-Received: from krava (unknown [10.43.17.81])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 396295D704;
-        Fri, 28 Jun 2019 14:54:06 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 16:54:06 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        tmricht@linux.ibm.com, brueckner@linux.ibm.com,
-        kan.liang@linux.intel.com, ben@decadent.org.uk,
-        mathieu.poirier@linaro.org, mark.rutland@arm.com,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org,
-        zhangshaokun@hisilicon.com, ak@linux.intel.com
-Subject: Re: [PATCH v3 0/4] Perf uncore PMU event alias support for Hisi
- hip08 ARM64 platform
-Message-ID: <20190628145406.GA22863@krava>
-References: <1561732552-143038-1-git-send-email-john.garry@huawei.com>
+        Fri, 28 Jun 2019 10:54:48 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60221 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbfF1Oys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 10:54:48 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hgsGx-0001bA-Dj; Fri, 28 Jun 2019 14:54:43 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Philip Cox <Philip.Cox@amd.com>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amdkfd: fix a missing break in a switch statement
+Date:   Fri, 28 Jun 2019 15:54:43 +0100
+Message-Id: <20190628145443.9754-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561732552-143038-1-git-send-email-john.garry@huawei.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 28 Jun 2019 14:54:17 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 10:35:48PM +0800, John Garry wrote:
-> This patchset adds support for uncore PMU event aliasing for HiSilicon
-> hip08 ARM64 platform.
-> 
-> We can now get proper event description for uncore events for the
-> perf tool.
-> 
-> For HHA, DDRC, and L3C JSONs, we don't have all the event info yet, so
-> I will seek it out to update the JSONs later.
-> 
-> Changes to v3:
-> - Omit "perf pmu: Fix uncore PMU alias list for ARM64", as it has already
->   been picked up
-> - Add comment for pmu_uncore_alias_match()
+From: Colin Ian King <colin.king@canonical.com>
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Currently for the CHIP_RAVEN case there is a missing break
+causing the code to fall through to the new CHIP_NAVI10 case.
+Fix this by adding in the missing break statement.
 
-thanks,
-jirka
+Fixes: 14328aa58ce5 ("drm/amdkfd: Add navi10 support to amdkfd. (v3)")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_crat.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> Changes to v2:
-> - Use strtok_r() in pmu_uncore_alias_match()
-> - from "sccl" from uncore aliases
-> 
-> John Garry (4):
->   perf pmu: Support more complex PMU event aliasing
->   perf jevents: Add support for Hisi hip08 DDRC PMU aliasing
->   perf jevents: Add support for Hisi hip08 HHA PMU aliasing
->   perf jevents: Add support for Hisi hip08 L3C PMU aliasing
-> 
->  .../arm64/hisilicon/hip08/uncore-ddrc.json    | 44 ++++++++++++++++
->  .../arm64/hisilicon/hip08/uncore-hha.json     | 51 +++++++++++++++++++
->  .../arm64/hisilicon/hip08/uncore-l3c.json     | 37 ++++++++++++++
->  tools/perf/pmu-events/jevents.c               |  3 ++
->  tools/perf/util/pmu.c                         | 46 +++++++++++++++--
->  5 files changed, 176 insertions(+), 5 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
-> 
-> -- 
-> 2.17.1
-> 
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+index 792371442195..4e3fc284f6ac 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+@@ -668,6 +668,7 @@ static int kfd_fill_gpu_cache_info(struct kfd_dev *kdev,
+ 	case CHIP_RAVEN:
+ 		pcache_info = raven_cache_info;
+ 		num_of_cache_types = ARRAY_SIZE(raven_cache_info);
++		break;
+ 	case CHIP_NAVI10:
+ 		pcache_info = navi10_cache_info;
+ 		num_of_cache_types = ARRAY_SIZE(navi10_cache_info);
+-- 
+2.20.1
+
