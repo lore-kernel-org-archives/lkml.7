@@ -2,252 +2,128 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136EBC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AF8C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB42F2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0420C206A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VqQwvT2l"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aeU3RBjf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfF1CWX (ORCPT
+        id S1726673AbfF1C0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:22:23 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:39702 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbfF1CWT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:22:19 -0400
-Received: by mail-pf1-f201.google.com with SMTP id 6so2843729pfi.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:22:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=89YgFJIrqXM8qRSG+E6N6dSW7Vv7nFUkhehxmQ5rx7A=;
-        b=VqQwvT2lRkCQZFzdzcch9SsmHUIQdkdMiPm5ueyyq+Ajja/aq0V6lt1z8vPNJYwkkn
-         d+WsVWWSvr+ekZlXGYTOg2kagGwKNEDrEskeh3W3v0P0qI9wpR7LLSeyHGDqFBFlUkIF
-         IT3TfBx+OsW/9ARlplhWmX+QHieakhLEBJNgKLBkWRgiVub9RLBslw9dC7Q1G8rZfQ/i
-         JO8A+2V4uM50uV+QkNKrp+ntsRKOA1cGaA8u7nUmAWVIfyP17gJtn7CYi91QBHjANONX
-         nwcfbydsLoD/cpfkjgDVftHdl60bvph2981csOScTWrgqNscgpr1ca+1DEoNiSDMMlUH
-         MD2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=89YgFJIrqXM8qRSG+E6N6dSW7Vv7nFUkhehxmQ5rx7A=;
-        b=j4c8u99cQGlpkDzcPco+yCLX9CNFQJO54P4mkpcfFe+tF4rk/n5gwsbim7rdy4EN2j
-         xqk6AhDg1RtUNSQkfvpVoCtP1257V0A0ElCgb6Og8nVOA2tubsCQHpKZ3LWt5YUTAwAw
-         tl20nCpfB8/IxQnU6Kc2u9VG+eAobByDYOKCXto8lX8EHNhrKdh0oXEysEFqNBtFpp7h
-         X8kzZ7K8VBUOpi+uzC6ow4fQTGF/E1z+AOQ3dVILyRsJZs4zLGXk4ju9NUYYlSX+HLWE
-         y4MKvDmhpceMwUfkDRnszziqjnFPV4pTUYBs6L3DA1TxK49YxzS0A5wR68G3R5G45mfN
-         NOCA==
-X-Gm-Message-State: APjAAAVZkrMLLjgUumi+5yLDgqzGCRyHWR+cabIrcv0cPFtKsn57Qnmp
-        b1A8Xe/vrqnBnwzHMPu5po037nJ00PenYq0=
-X-Google-Smtp-Source: APXvYqw1ot1372jbeNDKajTYOcXMwh+DJBJdaGwbvvTb3kHabkFfK75iBoCDk9swduxWOmhTuInaVwVZqT9UH2E=
-X-Received: by 2002:a63:ea0a:: with SMTP id c10mr7098204pgi.426.1561688538188;
- Thu, 27 Jun 2019 19:22:18 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 19:22:02 -0700
-In-Reply-To: <20190628022202.118166-1-saravanak@google.com>
-Message-Id: <20190628022202.118166-4-saravanak@google.com>
-Mime-Version: 1.0
-References: <20190628022202.118166-1-saravanak@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v2 3/3] driver core: Add sync_state driver/bus callback
-From:   Saravana Kannan <saravanak@google.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Jun 2019 22:26:53 -0400
+Received: from mail-eopbgr70087.outbound.protection.outlook.com ([40.107.7.87]:3087
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726476AbfF1C0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 22:26:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=XDJAR6K4cRJQQxnK3+tVBD3yXiPT+luj5+UIq+WtM6Ua2ZZCwB/nCB2dcCZ5Fnh0Ewy1dovP/O/mouD3lMFVyZTguRDdoTp5CBviCFF3lWprq1NrS7DPcUy2E6HI3Qzt2OeJv8PmanoLXmnpi0g7XZ6rXoHRa7GYwJNnys9zxkE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gNe8FQY0oO0mUyMyJHV0bS74mcC1fkFw8/32dVb065k=;
+ b=DHfbxZ2gFKMSAjX6r8Wnh7QxaUWsOqHvbfFx5Flr136zqJTw03IijxKQrBQVAFKn7yQkRokWblCEkUUP7opRnIVx617gu1tnCv2GtCGnf49KLSpBZ5nrdkxNzXsqzUJ/3OPMMgKDtquBPw5jnorfM8V8mr/wKLzVTB3FAujC9+U=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gNe8FQY0oO0mUyMyJHV0bS74mcC1fkFw8/32dVb065k=;
+ b=aeU3RBjfPQqkTp9njQsbtv9ye1OpsVKR+Y6FuI4egCEVySu6c75j95FU340fo4dotqA5aBhDQKXvEqc5pe9qyUqIPGLMicaJBt7ffexxUEMuNZF4Q0XybLsnB2WIZ9vsFiWV3paQq1nS7FeFUJVP6V7THLJchQycjfVkRJFSsJk=
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.5.23) by
+ VI1PR0402MB2863.eurprd04.prod.outlook.com (10.175.20.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Fri, 28 Jun 2019 02:26:49 +0000
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::c8a7:d048:2a1a:8b67]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::c8a7:d048:2a1a:8b67%7]) with mapi id 15.20.2008.014; Fri, 28 Jun 2019
+ 02:26:49 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH 73/87] ethernet: freescale: Remove memset after
+ dma_alloc_coherent
+Thread-Topic: [EXT] [PATCH 73/87] ethernet: freescale: Remove memset after
+ dma_alloc_coherent
+Thread-Index: AQHVLRBMPnd9CZnblUeiibuiURDi+qawV5JQ
+Date:   Fri, 28 Jun 2019 02:26:48 +0000
+Message-ID: <VI1PR0402MB360017A5AA5A0E8470F44DE9FFFC0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+References: <20190627174641.6474-1-huangfq.daxian@gmail.com>
+In-Reply-To: <20190627174641.6474-1-huangfq.daxian@gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fugang.duan@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: edc8f6ec-bf25-41f9-7102-08d6fb7012ea
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2863;
+x-ms-traffictypediagnostic: VI1PR0402MB2863:
+x-microsoft-antispam-prvs: <VI1PR0402MB2863100506235ABB81FF8FF3FFFC0@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:37;
+x-forefront-prvs: 00826B6158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(366004)(376002)(136003)(199004)(189003)(86362001)(2906002)(256004)(478600001)(446003)(76116006)(73956011)(33656002)(52536014)(99286004)(5660300002)(3846002)(6116002)(54906003)(4744005)(66446008)(74316002)(7736002)(66946007)(316002)(4326008)(66556008)(66476007)(66066001)(71190400001)(71200400001)(6916009)(64756008)(55016002)(6436002)(8936002)(6246003)(76176011)(229853002)(186003)(68736007)(102836004)(8676002)(25786009)(11346002)(486006)(7696005)(81156014)(53936002)(26005)(81166006)(9686003)(6506007)(14454004)(476003)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2863;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: u2tDQtCAIUxvZvrQ0uJq95qaXU9UY13Dp3aMtrjsTWtppmhzHijwOCN/KXJdL4Gowjcmut9aVucI/aCV+CMWoPEPL5szm1DgYL10YEc4+b1qSNKUWYIH9w9wk5N5XG+GZh8T6IzmbZkkO1z2t7BvwCV36B3tUitikqrNZdQVc3Pq8TIhfHV0soKXUhyUpFcB7SQKqz7+2RUIOHNmF4zkWBfFPsybLa3GCn9QxPfSWRWuLA+TmR+7mMQIIe5qzS+xB3rqmli8Z6jUhcf+oZuq4GuHQCZFZhs1xcqnQ9UNPjWkFvhEhtoJUZtNUEfKQfhTT0aLXZ51pYS3221VIjNe3K9B2ckReQl2Lj1ZreDpjD7++6yyrjfUWH6X67Te3vF8busiBsxSleyJSfNgoFVF+9DwDlbiVQ3CYekYGDNYzZU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: edc8f6ec-bf25-41f9-7102-08d6fb7012ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 02:26:48.9068
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fugang.duan@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2863
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This sync_state driver/bus callback is called once all the consumers
-of a supplier have probed successfully.
+From: Fuqian Huang <huangfq.daxian@gmail.com> Sent: Friday, June 28, 2019 1=
+:47 AM
+> In commit af7ddd8a627c
+> ("Merge tag 'dma-mapping-4.21' of
+> git://git.infradead.org/users/hch/dma-mapping"),
+> dma_alloc_coherent has already zeroed the memory.
+> So memset is not needed.
+>=20
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 
-This allows the supplier device's driver/bus to sync the supplier
-device's state to the software state with the guarantee that all the
-consumers are actively managing the resources provided by the supplier
-device.
-
-To maintain backwards compatibility and ease transition from existing
-frameworks and resource cleanup schemes, late_initcall_sync is the
-earliest when the sync_state callback might be called.
-
-There is no upper bound on the time by which the sync_state callback
-has to be called. This is because if a consumer device never probes,
-the supplier has to maintain its resources in the state left by the
-bootloader. For example, if the bootloader leaves the display
-backlight at a fixed voltage and the backlight driver is never probed,
-you don't want the backlight to ever be turned off after boot up.
-
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/base/core.c    | 39 +++++++++++++++++++++++++++++++++++++++
- drivers/of/platform.c  |  9 +++++++++
- include/linux/device.h | 19 +++++++++++++++++++
- 3 files changed, 67 insertions(+)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 9ab6782dda1c..7a8777a33e8c 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -46,6 +46,7 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
- /* Device links support. */
- static LIST_HEAD(wait_for_suppliers);
- static DEFINE_MUTEX(wfs_lock);
-+static bool supplier_sync_state_enabled;
- 
- #ifdef CONFIG_SRCU
- static DEFINE_MUTEX(device_links_lock);
-@@ -616,6 +617,41 @@ int device_links_check_suppliers(struct device *dev)
- 	return ret;
- }
- 
-+static void __device_links_supplier_sync_state(struct device *dev)
-+{
-+	struct device_link *link;
-+
-+	if (dev->state_synced)
-+		return;
-+
-+	list_for_each_entry(link, &dev->links.consumers, s_node) {
-+		if (link->flags & DL_FLAG_STATELESS)
-+			continue;
-+		if (link->status != DL_STATE_ACTIVE)
-+			return;
-+	}
-+
-+	if (dev->bus->sync_state)
-+		dev->bus->sync_state(dev);
-+	else if (dev->driver && dev->driver->sync_state)
-+		dev->driver->sync_state(dev);
-+
-+	dev->state_synced = true;
-+}
-+
-+int device_links_supplier_sync_state(struct device *dev, void *data)
-+{
-+	device_links_write_lock();
-+	__device_links_supplier_sync_state(dev);
-+	device_links_write_unlock();
-+	return 0;
-+}
-+
-+void device_links_supplier_sync_state_enable(void)
-+{
-+	supplier_sync_state_enabled = true;
-+}
-+
- /**
-  * device_links_driver_bound - Update device links after probing its driver.
-  * @dev: Device to update the links for.
-@@ -660,6 +696,9 @@ void device_links_driver_bound(struct device *dev)
- 
- 		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
- 		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+
-+		if (supplier_sync_state_enabled)
-+			__device_links_supplier_sync_state(link->supplier);
- 	}
- 
- 	dev->links.status = DL_DEV_DRIVER_BOUND;
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 8d690fa0f47c..24851dcdab55 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -617,6 +617,15 @@ static int __init of_platform_default_populate_init(void)
- 	return 0;
- }
- arch_initcall_sync(of_platform_default_populate_init);
-+
-+static int __init of_platform_sync_state_init(void)
-+{
-+	device_links_supplier_sync_state_enable();
-+	bus_for_each_dev(&platform_bus_type, NULL, NULL,
-+			 device_links_supplier_sync_state);
-+	return 0;
-+}
-+late_initcall_sync(of_platform_sync_state_init);
- #endif
- 
- int of_platform_device_destroy(struct device *dev, void *data)
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 026dd842e511..60255f10dffa 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -79,6 +79,13 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
-  *		that generate uevents to add the environment variables.
-  * @probe:	Called when a new device or driver add to this bus, and callback
-  *		the specific driver's probe to initial the matched device.
-+ * @sync_state:	Called to sync device state to software state after all the
-+ *		state tracking consumers linked to this device (present at
-+ *		the time of late_initcall) have successfully bound to a
-+ *		driver. If the device has no consumers, this function will
-+ *		be called at late_initcall_sync level. If the device has
-+ *		consumers that are never bound to a driver, this function
-+ *		will never get called until they do.
-  * @remove:	Called when a device removed from this bus.
-  * @shutdown:	Called at shut-down time to quiesce the device.
-  *
-@@ -122,6 +129,7 @@ struct bus_type {
- 	int (*match)(struct device *dev, struct device_driver *drv);
- 	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
- 	int (*probe)(struct device *dev);
-+	void (*sync_state)(struct device *dev);
- 	int (*remove)(struct device *dev);
- 	void (*shutdown)(struct device *dev);
- 
-@@ -251,6 +259,13 @@ enum probe_type {
-  * @probe:	Called to query the existence of a specific device,
-  *		whether this driver can work with it, and bind the driver
-  *		to a specific device.
-+ * @sync_state:	Called to sync device state to software state after all the
-+ *		state tracking consumers linked to this device (present at
-+ *		the time of late_initcall) have successfully bound to a
-+ *		driver. If the device has no consumers, this function will
-+ *		be called at late_initcall_sync level. If the device has
-+ *		consumers that are never bound to a driver, this function
-+ *		will never get called until they do.
-  * @remove:	Called when the device is removed from the system to
-  *		unbind a device from this driver.
-  * @shutdown:	Called at shut-down time to quiesce the device.
-@@ -288,6 +303,7 @@ struct device_driver {
- 	const struct acpi_device_id	*acpi_match_table;
- 
- 	int (*probe) (struct device *dev);
-+	void (*sync_state)(struct device *dev);
- 	int (*remove) (struct device *dev);
- 	void (*shutdown) (struct device *dev);
- 	int (*suspend) (struct device *dev, pm_message_t state);
-@@ -1059,6 +1075,7 @@ struct device {
- 	bool			offline_disabled:1;
- 	bool			offline:1;
- 	bool			of_node_reused:1;
-+	bool			state_synced:1;
- #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
-@@ -1401,6 +1418,8 @@ void device_link_remove(void *consumer, struct device *supplier);
- void device_link_wait_for_supplier(struct device *consumer);
- void device_link_check_waiting_consumers(
- 		int (*add_suppliers)(struct device *consumer));
-+int device_links_supplier_sync_state(struct device *dev, void *data);
-+void device_links_supplier_sync_state_enable(void);
- 
- #ifndef dev_fmt
- #define dev_fmt(fmt) fmt
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Acked-by: Fugang Duan <fugang.duan@nxp.com>
+> ---
+>  drivers/net/ethernet/freescale/fec_main.c | 2 --
+>  1 file changed, 2 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/freescale/fec_main.c
+> b/drivers/net/ethernet/freescale/fec_main.c
+> index 38f10f7dcbc3..ec87b8b78d21 100644
+> --- a/drivers/net/ethernet/freescale/fec_main.c
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> @@ -3143,8 +3143,6 @@ static int fec_enet_init(struct net_device *ndev)
+>                 return -ENOMEM;
+>         }
+>=20
+> -       memset(cbd_base, 0, bd_size);
+> -
+>         /* Get the Ethernet address */
+>         fec_get_mac(ndev);
+>         /* make sure MAC we just acquired is programmed into the hw */
+> --
+> 2.11.0
 
