@@ -2,129 +2,135 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B59BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5537C5B577
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F40205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DC8214DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:45:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FTihH1TC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfF1Bnx (ORCPT
+        id S1726558AbfF1BpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:43:53 -0400
-Received: from mga12.intel.com ([192.55.52.136]:23711 "EHLO mga12.intel.com"
+        Thu, 27 Jun 2019 21:45:10 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58969 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfF1Bnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:43:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 18:43:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,425,1557212400"; 
-   d="scan'208";a="189286122"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmsmga002.fm.intel.com with ESMTP; 27 Jun 2019 18:43:52 -0700
-Date:   Thu, 27 Jun 2019 18:43:26 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Alan Cox <alan.cox@intel.com>, Tony Luck <tony.luck@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Mohammad Etemadi <mohammad.etemadi@intel.com>,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Peter Feiner <pfeiner@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH 1/2] x86/cpu/intel: Clear cache self-snoop capability in
- CPUs with known errata
-Message-ID: <20190628014326.GA3887@ranerica-svr.sc.intel.com>
-References: <1561660997-21562-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
- <1561660997-21562-2-git-send-email-ricardo.neri-calderon@linux.intel.com>
- <alpine.DEB.2.21.1906272231060.32342@nanos.tec.linutronix.de>
+        id S1726500AbfF1BpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 21:45:10 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Zfhx4QTcz9s3Z;
+        Fri, 28 Jun 2019 11:45:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561686305;
+        bh=4aAH+l1+X6slCnnOWZAlgZ4hfMF/p/4CgqBa64BdBdg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=FTihH1TCGpy9WKHLi3K5cMZdGcxDG2AOj8ASRNNxt11FtW0R/IFYTShPOFIs02TwS
+         YKyqK23OVmYVz1nsPemfcETk9qjU9swhLnIgXOPRsVR5p5CyV8RvV4jp4v8d8ka0R6
+         ZWGZOQNq9spzSRpjTiO8duWYJbYzUqyL7EwTtUN1TQUJ+VTJLrt/1zq1ufy4LAY4Tq
+         2PvzjhxhmTde/pGmOWNYgFRi7CsE5ph7VRzW328WAhbGXIaLIOptt9zhPIU+oPlfRn
+         m0N+VoLR9feb8JrH3NX4UCAdE7DDeTHxqivRP6jOAjD0eVesqe3NSt0aZx9twAUFcT
+         rrIhHXomSmJjQ==
+Date:   Fri, 28 Jun 2019 11:45:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20190628114504.52d3fe65@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906272231060.32342@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/KTqn5qH3d8uD5y73ynfmeX="; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 10:38:13PM +0200, Thomas Gleixner wrote:
-> Ricardo,
-> 
-> On Thu, 27 Jun 2019, Ricardo Neri wrote:
-> >  
-> > +/*
-> > + * Processors which have self-snooping capability can handle conflicting
-> > + * memory type across CPUs by snooping its own cache. However, there exists
-> > + * CPU models in which having conflicting memory types still leads to
-> > + * unpredictable behavior, machine check errors, or hangs. Clear this feature
-> > + * to prevent its use. For instance, the algorithm to program the Memory Type
-> > + * Region Registers and the Page Attribute Table MSR can skip expensive cache
-> > + * flushes if self-snooping is supported.
-> 
-> I appreciate informative comments, but this is the part which disables a
-> feature on errata inflicted CPUs. So the whole information about what
-> self-snooping helps with is not that interesting here. It's broken, we
-> disable it and be done with it.
+--Sig_/KTqn5qH3d8uD5y73ynfmeX=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sure, Thomas. I will move the the usefulness of self-snooping to the
-MTRR programming function as you mention below.
-> 
-> > + */
-> > +static void check_memory_type_self_snoop_errata(struct cpuinfo_x86 *c)
-> > +{
-> > +	switch (c->x86_model) {
-> > +	case INTEL_FAM6_CORE_YONAH:
-> > +	case INTEL_FAM6_CORE2_MEROM:
-> > +	case INTEL_FAM6_CORE2_MEROM_L:
-> > +	case INTEL_FAM6_CORE2_PENRYN:
-> > +	case INTEL_FAM6_CORE2_DUNNINGTON:
-> > +	case INTEL_FAM6_NEHALEM:
-> > +	case INTEL_FAM6_NEHALEM_G:
-> > +	case INTEL_FAM6_NEHALEM_EP:
-> > +	case INTEL_FAM6_NEHALEM_EX:
-> > +	case INTEL_FAM6_WESTMERE:
-> > +	case INTEL_FAM6_WESTMERE_EP:
-> > +	case INTEL_FAM6_SANDYBRIDGE:
-> > +		setup_clear_cpu_cap(X86_FEATURE_SELFSNOOP);
-> > +	}
-> > +}
-> > +
-> 
-> But looking at the actual interesting part of the 2nd patch:
-> 
-> > @@ -743,7 +743,9 @@ static void prepare_set(void) __acquires(set_atomicity_lock)
-> >        /* Enter the no-fill (CD=1, NW=0) cache mode and flush caches. */
-> >        cr0 = read_cr0() | X86_CR0_CD;
-> >        write_cr0(cr0);
-> > -       wbinvd();
-> > +
-> > +       if (!static_cpu_has(X86_FEATURE_SELFSNOOP))
-> > +               wbinvd();
-> 
-> This part lacks any form of explanation. So I'd rather have the comment
-> about why we can avoid the wbindv() here. I''d surely never would look at
-> that errata handling function to get that information.
-> 
-> Other than that detail, the patches are well done!
+Hi all,
 
-Thank you, Thomas!
+Today's linux-next merge of the net-next tree got conflicts in:
 
-BR,
-Ricardo
+  drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+  drivers/net/ethernet/aquantia/atlantic/aq_nic.h
+
+between commit:
+
+  48dd73d08d4d ("net: aquantia: fix vlans not working over bridged network")
+
+from the net tree and commit:
+
+  d3ed7c5cf79b ("net: aquantia: adding fields and device features for vlan =
+offload")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+index 41172fbebddd,746f85e6de13..000000000000
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+@@@ -126,7 -126,8 +126,9 @@@ void aq_nic_cfg_start(struct aq_nic_s *
+ =20
+  	cfg->link_speed_msk &=3D cfg->aq_hw_caps->link_speed_msk;
+  	cfg->features =3D cfg->aq_hw_caps->hw_features;
+ +	cfg->is_vlan_force_promisc =3D true;
++ 	cfg->is_vlan_rx_strip =3D !!(cfg->features & NETIF_F_HW_VLAN_CTAG_RX);
++ 	cfg->is_vlan_tx_insert =3D !!(cfg->features & NETIF_F_HW_VLAN_CTAG_TX);
+  }
+ =20
+  static int aq_nic_update_link_status(struct aq_nic_s *self)
+diff --cc drivers/net/ethernet/aquantia/atlantic/aq_nic.h
+index 0f22f5d5691b,26c72f298684..000000000000
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.h
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.h
+@@@ -35,7 -35,8 +35,9 @@@ struct aq_nic_cfg_s=20
+  	u32 flow_control;
+  	u32 link_speed_msk;
+  	u32 wol;
+ +	bool is_vlan_force_promisc;
++ 	u8 is_vlan_rx_strip;
++ 	u8 is_vlan_tx_insert;
+  	u16 is_mc_list_enabled;
+  	u16 mc_list_count;
+  	bool is_autoneg;
+
+--Sig_/KTqn5qH3d8uD5y73ynfmeX=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0VcSAACgkQAVBC80lX
+0GwEwgf9F59Mr2vpug7MbUet63z2io8N+oOHPXiygDfcGpDg/UW/OqxucjJi+8PG
+GRgtbMi3iD6WKIwkFYFQ+58OZW9XX5GX6c6FrtXL3l/+HdC78R5exwBDR/DDGHWo
+ewi86VkLvY8AJBc8rQuOAOMfly4lpmMMt7pOoDaubG2eOLuurDKzQ/d+jNXF3a2Z
+4bDLOjQopG3bN4HC+5YwXYwRt9STssRole9nxjm26sFIjqzBqV9P8dfz5r9a0NDr
+FNVAL9HvQZFKEIks7bGzIevleXyVdyfkFfRI+b5uCCKbvfiBDILVVjatPuL6xvUv
+5NWKquzlTbFjObk1mMViRfsUB/PRBg==
+=RNk3
+-----END PGP SIGNATURE-----
+
+--Sig_/KTqn5qH3d8uD5y73ynfmeX=--
