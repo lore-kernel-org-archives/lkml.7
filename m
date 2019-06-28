@@ -2,98 +2,295 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5D9C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3214C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5091F206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A910205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:53:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="iZJV4WTx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vgJOh/iP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfF1IxR (ORCPT
+        id S1726720AbfF1Ixd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:53:17 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:2312 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfF1IxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:53:16 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45ZrBx4KdTz9v1dc;
-        Fri, 28 Jun 2019 10:53:13 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=iZJV4WTx; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id hpEMNWuvYw_w; Fri, 28 Jun 2019 10:53:13 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45ZrBx3HBlz9v1dW;
-        Fri, 28 Jun 2019 10:53:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1561711993; bh=QNUEzs2e6ZJPJ8ysIU+hR3hVhhJUmwBw6ciMTdldx7A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=iZJV4WTxJKKUSiKol7dhPzbHdXh3ec9EIn5pAU5cZ0JJKx73Odp0IwloU69qraA7r
-         6Zo4TMx5/pg6etpO2hsuq1/xSK17qLVslIfBbTtCtJCzaD2XNn9p0YS/2cehaW+aTE
-         uyhro8CTUATQmvLZSsNKhWp6axzRPO3dqo66674w=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7148C8B965;
-        Fri, 28 Jun 2019 10:53:14 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id h0xoail7aHWy; Fri, 28 Jun 2019 10:53:14 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 436C08B961;
-        Fri, 28 Jun 2019 10:53:14 +0200 (CEST)
-Subject: Re: [PATCH 41/87] sound: ppc: remove memset after dma_alloc_coherent
-To:     Takashi Iwai <tiwai@suse.de>,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190627174018.4015-1-huangfq.daxian@gmail.com>
- <s5htvca6qp1.wl-tiwai@suse.de>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <b5f24a12-7fcf-63d3-4ca0-578aabbcbb8f@c-s.fr>
-Date:   Fri, 28 Jun 2019 10:53:14 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 28 Jun 2019 04:53:33 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38969 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfF1Ixc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:53:32 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v18so5188087ljh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 01:53:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9E0E93XxeCSyu3wDmx8dtieb34P1C5zJl3CaudNwVa8=;
+        b=vgJOh/iP+OUr9C1XTwB8TfEvrLboKNWgrNbicYnftcsnYxTa8ODof53WDXBbWfTTaU
+         AQrnJk/9x3YyCsKaPeljUMOAwx5XMgHm9dVDlTkztq0cpbQK39oZTmRmFSL3c1dhWo3v
+         wjICJUbAsHsIoXxHoq1B9ZkLvTTgGzeueniKMOHHP3lWmnXS3w71q6Qmp6ZlSEXcshyq
+         oiIyfETXspLOTf4V1N6DjhzyUefCUoGbRVOoD3xjcc8lqp6lZL7jz9GvP2nl/AqMXhye
+         Hiu/diU807QvsCIxmib9iAviqIgVqYQKXO1W6bcBePnVSHkzQRThCFC0X71oiXWJY2GH
+         qQPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=9E0E93XxeCSyu3wDmx8dtieb34P1C5zJl3CaudNwVa8=;
+        b=rBE0DNWsRaHgBhiSqZsB78uxfkuBJBJxXpFB8E8q1iV0bW9l7rqjEOoHf6nynNogGC
+         eF25lX2nQUHIrRA65x4EPaxBFlb+zABixGmWvCYgtG1QTdpzj55WT8KzfbOUsHJMuvnZ
+         364aOFyE8jsBpbvr1zWqFzWABFGOYjjmG0tPmQa5cm052J6O7uUG6A0mvYGF6lbFgqId
+         CxDl43Rj9Jnax3ZkJ56GzDsXbfRSbnCD9gwUTvkU9W6kMJkudKCg9M9J2Xi+mAmDnKWX
+         73GQJNzoUk8pu/SJoX9HLr5XBAxUJ+YrN4CG+kRYpafCa4KP1RQ2dwdi2wws1IkDXf9G
+         CE9w==
+X-Gm-Message-State: APjAAAXpLOfmIhnJoJiBsDGM7cA41qAwQDeBifgr9sGLTBU0rF6vHc2E
+        675VOLuv0gq/5T8atw1Q9C1RJA==
+X-Google-Smtp-Source: APXvYqx+UfOhCshbm6Vgy/3EvXVlzzq5rRsn0Z706cJ2Qa0EUEqVNnfktpteKZenWR2qPmZUbJYI0w==
+X-Received: by 2002:a2e:98d7:: with SMTP id s23mr5393648ljj.179.1561712009652;
+        Fri, 28 Jun 2019 01:53:29 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id s24sm507093lje.58.2019.06.28.01.53.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Jun 2019 01:53:29 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 11:53:26 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     davem@davemloft.net, grygorii.strashko@ti.com, saeedm@mellanox.com,
+        leon@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, ilias.apalodimas@linaro.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+Subject: Re: [PATCH v4 net-next 1/4] net: core: page_pool: add user cnt
+ preventing pool deletion
+Message-ID: <20190628085325.GA2795@khorivan>
+Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
+        davem@davemloft.net, grygorii.strashko@ti.com, saeedm@mellanox.com,
+        leon@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, ilias.apalodimas@linaro.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+References: <20190625175948.24771-1-ivan.khoronzhuk@linaro.org>
+ <20190625175948.24771-2-ivan.khoronzhuk@linaro.org>
+ <20190627214317.237e5926@carbon>
+ <20190627220245.GA3269@khorivan>
+ <20190628083520.4203cb41@carbon>
 MIME-Version: 1.0
-In-Reply-To: <s5htvca6qp1.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190628083520.4203cb41@carbon>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 28/06/2019 à 10:48, Takashi Iwai a écrit :
-> On Thu, 27 Jun 2019 19:40:17 +0200,
-> Fuqian Huang wrote:
+On Fri, Jun 28, 2019 at 08:35:20AM +0200, Jesper Dangaard Brouer wrote:
+>On Fri, 28 Jun 2019 01:02:47 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> Hi Jesper, thanks you remember about it.
 >>
->> In commit af7ddd8a627c
->> ("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
->> dma_alloc_coherent has already zeroed the memory.
->> So memset is not needed.
+>> >
+>> >I don't think that "create" and "free" routines paring looks "more
+>> >correct" together.
+>> >
+>> >Maybe we can scale back your solution(?), via creating a page_pool_get()
+>> >and page_pool_put() API that can be used by your driver, to keep the
+>> >page_pool object after a xdp_rxq_info_unreg() call.  Then you can use
+>> >it for two xdp_rxq_info structs, and call page_pool_put() after you
+>> >have unregistered both.
+>> >
+>> >The API would basically be:
+>> >
+>> >diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+>> >index b366f59885c1..691ddacfb5a6 100644
+>> >--- a/net/core/page_pool.c
+>> >+++ b/net/core/page_pool.c
+>> >@@ -357,6 +357,10 @@ static void __warn_in_flight(struct page_pool *pool)
+>> > void __page_pool_free(struct page_pool *pool)
+>> > {
+>> >        WARN(pool->alloc.count, "API usage violation");
+>> >+
+>> >+       if (atomic_read(&pool->user_cnt) != 0)
+>> >+               return;
+>> >+
+>> >        WARN(!ptr_ring_empty(&pool->ring), "ptr_ring is not empty");
+>> >
+>> >        /* Can happen due to forced shutdown */
+>> >@@ -372,6 +376,19 @@ void __page_pool_free(struct page_pool *pool)
+>> > }
+>> > EXPORT_SYMBOL(__page_pool_free);
+>> >
+>> >+void page_pool_put(struct page_pool *pool)
+>> >+{
+>> >+       if (!atomic_dec_and_test(&pool->user_cnt))
+>> >+               __page_pool_free(pool);
+>> >+}
+>> >+EXPORT_SYMBOL(page_pool_put);
+>> >+
+>> >+void page_pool_get(struct page_pool *pool)
+>> >+{
+>> >+       atomic_inc(&pool->user_cnt);
+>> >+}
+>> >+EXPORT_SYMBOL(page_pool_get);
+>> >+
 >>
->> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> 
-> Applied, thanks.
-> 
+>> I have another solution that doesn't touch page pool and adds modifications
+>> to xdp allocator. As for me it looks better and work wider, I don't need to
+>> think about this in the driver also.
+>>
+>> It's supposed allocator works as before, no any changes to mlx5 and
+>> page_pool API and its usage and seems like fits your requirements.
+>> It still supposes that allocator runs under same napi softirq but allows
+>> to reuse allocator.
+>>
+>> I have not verified yet, but looks like:
+>>
+>> diff --git a/include/net/xdp_priv.h b/include/net/xdp_priv.h
+>> index 6a8cba6ea79a..995b21da2f27 100644
+>> --- a/include/net/xdp_priv.h
+>> +++ b/include/net/xdp_priv.h
+>> @@ -18,6 +18,7 @@ struct xdp_mem_allocator {
+>>  	struct rcu_head rcu;
+>>  	struct delayed_work defer_wq;
+>>  	unsigned long defer_warn;
+>> +	unsigned long refcnt;
+>>  };
+>>
+>>  #endif /* __LINUX_NET_XDP_PRIV_H__ */
+>> diff --git a/net/core/xdp.c b/net/core/xdp.c
+>> index f98ab6b98674..6239483e3793 100644
+>> --- a/net/core/xdp.c
+>> +++ b/net/core/xdp.c
+>> @@ -98,6 +98,12 @@ static bool __mem_id_disconnect(int id, bool force)
+>>  		WARN(1, "Request remove non-existing id(%d), driver bug?", id);
+>>  		return true;
+>>  	}
+>> +
+>> +	if (--xa->refcnt) {
+>> +		mutex_unlock(&mem_id_lock);
+>> +		return true;
+>
+>This doesn't work.  This function __mem_id_disconnect() can be called
+>multiple times. E.g. if there are in-flight packets.
+Yes, it was draft. I still have not completely verify it due
+to several changes in cpsw and holiday in my side, second draft
+looks like:
 
-Euh ... looks like a v2 of this series was sent out.
+Subject: [PATCH] net: core: xdp: allow same allocator for rxq
 
-Christophe
+XDP rxq can be same for ndevs running under same rx napi softirq.
+But there is no ability to register same allocator for both rxqs,
+by fact it's same rxq but has different ndev as a reference.
+
+Due to last changes allocator destroy can be defered till the moment
+all packets are recycled by destination interface, afterwards it's
+freed. In order to schedule allocator destroy only after all users are
+unregistered, add refcnt to allocator object and start to destroy
+only it reaches 0.
+
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+---
+ include/net/xdp_priv.h |  1 +
+ net/core/xdp.c         | 46 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+
+diff --git a/include/net/xdp_priv.h b/include/net/xdp_priv.h
+index 6a8cba6ea79a..995b21da2f27 100644
+--- a/include/net/xdp_priv.h
++++ b/include/net/xdp_priv.h
+@@ -18,6 +18,7 @@ struct xdp_mem_allocator {
+ 	struct rcu_head rcu;
+ 	struct delayed_work defer_wq;
+ 	unsigned long defer_warn;
++	unsigned long refcnt;
+ };
+ 
+ #endif /* __LINUX_NET_XDP_PRIV_H__ */
+diff --git a/net/core/xdp.c b/net/core/xdp.c
+index f98ab6b98674..7b0185eec124 100644
+--- a/net/core/xdp.c
++++ b/net/core/xdp.c
+@@ -98,6 +98,18 @@ static bool __mem_id_disconnect(int id, bool force)
+ 		WARN(1, "Request remove non-existing id(%d), driver bug?", id);
+ 		return true;
+ 	}
++
++	/* to avoid hash lookup twice do refcnt dec here, but not when
++	 * it's 0 as it can be called from workqueue aftewards
++	 */
++	if (xa->refcnt)
++		xa->refcnt--;
++
++	if (xa->refcnt) {
++		mutex_unlock(&mem_id_lock);
++		return true;
++	}
++
+ 	xa->disconnect_cnt++;
+ 
+ 	/* Detects in-flight packet-pages for page_pool */
+@@ -312,6 +324,33 @@ static bool __is_supported_mem_type(enum xdp_mem_type type)
+ 	return true;
+ }
+ 
++static struct xdp_mem_allocator *xdp_allocator_get(void *allocator)
++{
++	struct xdp_mem_allocator *xae, *xa = NULL;
++	struct rhashtable_iter iter;
++
++	mutex_lock(&mem_id_lock);
++	rhashtable_walk_enter(mem_id_ht, &iter);
++	do {
++		rhashtable_walk_start(&iter);
++
++		while ((xae = rhashtable_walk_next(&iter)) && !IS_ERR(xae)) {
++			if (xae->allocator == allocator) {
++				xae->refcnt++;
++				xa = xae;
++				break;
++			}
++		}
++
++		rhashtable_walk_stop(&iter);
++
++	} while (xae == ERR_PTR(-EAGAIN));
++	rhashtable_walk_exit(&iter);
++	mutex_unlock(&mem_id_lock);
++
++	return xa;
++}
++
+ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+ 			       enum xdp_mem_type type, void *allocator)
+ {
+@@ -347,6 +386,12 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+ 		}
+ 	}
+ 
++	xdp_alloc = xdp_allocator_get(allocator);
++	if (xdp_alloc) {
++		xdp_rxq->mem.id = xdp_alloc->mem.id;
++		return 0;
++	}
++
+ 	xdp_alloc = kzalloc(sizeof(*xdp_alloc), gfp);
+ 	if (!xdp_alloc)
+ 		return -ENOMEM;
+@@ -360,6 +405,7 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+ 	xdp_rxq->mem.id = id;
+ 	xdp_alloc->mem  = xdp_rxq->mem;
+ 	xdp_alloc->allocator = allocator;
++	xdp_alloc->refcnt = 1;
+ 
+ 	/* Insert allocator into ID lookup table */
+ 	ptr = rhashtable_insert_slow(mem_id_ht, &id, &xdp_alloc->node);
+
+-- 
+Regards,
+Ivan Khoronzhuk
