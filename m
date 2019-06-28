@@ -2,129 +2,107 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8963C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10287C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB2D92133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09CB2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:28:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cJYYRBPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfF1DYR (ORCPT
+        id S1727091AbfF1D2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:24:17 -0400
-Received: from mga11.intel.com ([192.55.52.93]:39351 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbfF1DYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:24:17 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 20:24:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,426,1557212400"; 
-   d="asc'?scan'208";a="185498337"
-Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Jun 2019 20:24:14 -0700
-Date:   Fri, 28 Jun 2019 11:21:49 +0800
-From:   Zhenyu Wang <zhenyuw@linux.intel.com>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     "Zhang, Tina" <tina.zhang@intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Yuan, Hang" <hang.yuan@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
-Subject: Re: [RFC PATCH v3 0/4] Deliver vGPU display vblank event to userspace
-Message-ID: <20190628032149.GD9684@zhen-hp.sh.intel.com>
-Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
-References: <20190627033802.1663-1-tina.zhang@intel.com>
- <20190627062231.57tywityo6uyhmyd@sirius.home.kraxel.org>
- <237F54289DF84E4997F34151298ABEBC876835E5@SHSMSX101.ccr.corp.intel.com>
- <20190627103133.6ekdwazggi5j5lcl@sirius.home.kraxel.org>
+        Thu, 27 Jun 2019 23:28:11 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51606 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfF1D2L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 23:28:11 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5S3S6lZ006317;
+        Thu, 27 Jun 2019 22:28:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561692486;
+        bh=lHtPKETdLi4mz0hSNNJnuE1V/UMtFP6OzWRnYrjP7po=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cJYYRBPy3RiT5CHxIoh9lbCAyGUZ0Jyhh3HTYiu4pNLfmNYAgv2nPP7/sub8ekxnm
+         unBkNLYeyn0mBZoAM9EsEzy4aMImJe5bhcvJgIyTMMfRpo8qqUf5U3tLLAb1qKanrm
+         7BudChPInpqWkneMujwpafOdwJS6oIOQrxzMfrWY=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5S3S6uH083741
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Jun 2019 22:28:06 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 27
+ Jun 2019 22:28:06 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 27 Jun 2019 22:28:05 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5S3S3Ej112735;
+        Thu, 27 Jun 2019 22:28:04 -0500
+Subject: Re: [PATCH][next] regulator: lp87565: fix missing break in switch
+ statement
+To:     Colin King <colin.king@canonical.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190627131639.6394-1-colin.king@canonical.com>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <1a17ea61-a164-d61f-6416-637d47668f1b@ti.com>
+Date:   Fri, 28 Jun 2019 08:58:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="g++0NlQhRgFs6nMu"
-Content-Disposition: inline
-In-Reply-To: <20190627103133.6ekdwazggi5j5lcl@sirius.home.kraxel.org>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+In-Reply-To: <20190627131639.6394-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---g++0NlQhRgFs6nMu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On 2019.06.27 12:31:33 +0200, Gerd Hoffmann wrote:
-> > >   Hi,
-> > >=20
-> > > > Instead of delivering page flip events, we choose to post display
-> > > > vblank event. Handling page flip events for both primary plane and
-> > > > cursor plane may make user space quite busy, although we have the
-> > > > mask/unmask mechansim for mitigation. Besides, there are some cases
-> > > > that guest app only uses one framebuffer for both drawing and displ=
-ay.
-> > > > In such case, guest OS won't do the plane page flip when the
-> > > > framebuffer is updated, thus the user land won't be notified about =
-the
-> > > updated framebuffer.
-> > >=20
-> > > What happens when the guest is idle and doesn't draw anything to the
-> > > framebuffer?
-> > The vblank event will be delivered to userspace as well, unless guest O=
-S disable the pipe.
-> > Does it make sense to vfio/display?
->=20
-> Getting notified only in case there are actual display updates would be
-> a nice optimization, assuming the hardware is able to do that.  If the
-> guest pageflips this is obviously trivial.  Not sure this is possible in
-> case the guest renders directly to the frontbuffer.
->=20
-> What exactly happens when the guest OS disables the pipe?  Is a vblank
-> event delivered at least once?  That would be very useful because it
-> will be possible for userspace to stop polling altogether without
-> missing the "guest disabled pipe" event.
->=20
+On 27/06/19 6:46 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the LP87565_DEVICE_TYPE_LP87561_Q1 case does not have a
+> break statement, causing it to fall through to a dev_err message.
+> Fix this by adding in the missing break statement.
+> 
+> Addresses-Coverity: ("Missing break in switch")
+> Fixes: 7ee63bd74750 ("regulator: lp87565: Add 4-phase lp87561 regulator support")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   drivers/regulator/lp87565-regulator.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/regulator/lp87565-regulator.c b/drivers/regulator/lp87565-regulator.c
+> index 993c11702083..5d067f7c2116 100644
+> --- a/drivers/regulator/lp87565-regulator.c
+> +++ b/drivers/regulator/lp87565-regulator.c
+> @@ -180,6 +180,7 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
+>   	case LP87565_DEVICE_TYPE_LP87561_Q1:
+>   		min_idx = LP87565_BUCK_3210;
+>   		max_idx = LP87565_BUCK_3210;
+> +		break;
 
-It looks like purpose to use vblank here is to replace user space
-polling totally by kernel event? Which just act as display update
-event to replace user space timer to make it query and update
-planes? Although in theory vblank is not appropriate for this which
-doesn't align with plane update or possible front buffer rendering at
-all, but looks it's just a compromise e.g not sending event for every
-cursor position change, etc.
+Thanks Colin.
 
-I think we need to define semantics for this event properly, e.g user
-space purely depends on this event for display update, the opportunity
-for issuing this event is controlled by driver when it's necessary for
-update, etc. Definitely not named as vblank event or only issue at vblank,
-that need to happen for other plane change too.
+Reviewed-by: Keerthy <j-keerthy@ti.com>
 
---=20
-Open Source Technology Center, Intel ltd.
-
-$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
-
---g++0NlQhRgFs6nMu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXRWHzQAKCRCxBBozTXgY
-J//gAKCL699dZmXJ8voP2zTIzkbKlkEaoACfREQYSfPIUcqIAJ8iRylTd7kOOY0=
-=hNje
------END PGP SIGNATURE-----
-
---g++0NlQhRgFs6nMu--
+>   	default:
+>   		dev_err(lp87565->dev, "Invalid lp config %d\n",
+>   			lp87565->dev_type);
+> 
