@@ -2,95 +2,104 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56C5C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D67C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E32208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B94208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:31:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DCJbIut9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfF1Nai (ORCPT
+        id S1726798AbfF1Nb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 09:30:38 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:39297 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726558AbfF1Nah (ORCPT
+        Fri, 28 Jun 2019 09:31:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52946 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbfF1Nb2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:30:37 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-19-F5JmhSpNN6W7HG1xDN_l_A-1; Fri, 28 Jun 2019 14:30:31 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 28 Jun 2019 14:30:30 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 28 Jun 2019 14:30:30 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Walleij' <linus.walleij@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-CC:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-        Dmitry Torokhov <dtor@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dan Murphy <dmurphy@ti.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Oleh Kravchenko <oleg@kaa.org.ua>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Simon Shields <simon@lineageos.org>
-Subject: RE: [PATCH v5 05/26] leds: core: Add support for composing LED class
- device names
-Thread-Topic: [PATCH v5 05/26] leds: core: Add support for composing LED class
- device names
-Thread-Index: AQHVLY38Qac3tLDSDEaPU1xemGxruKaw8U2g
-Date:   Fri, 28 Jun 2019 13:30:30 +0000
-Message-ID: <643e3b10fe9d45b59ed063ffc6d578ff@AcuMS.aculab.com>
-References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
- <20190609190803.14815-6-jacek.anaszewski@gmail.com>
- <CACRpkdYdqKZVKSaQB0THi=iZcRT04EKX2-85__Hw1f53o8vsuw@mail.gmail.com>
-In-Reply-To: <CACRpkdYdqKZVKSaQB0THi=iZcRT04EKX2-85__Hw1f53o8vsuw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 28 Jun 2019 09:31:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WWW87peQLpsz5hF+D7roPrdiHtXEaavrtIXlcnYMy1Q=; b=DCJbIut9E6YcoLpwlDbqM6bjg
+        jSwlILW4EWr68yzvQf+B4qtTC60F/kkGKy2SDO0NEEISF/yza/RdM2RMq+WlWNvtH81TFWgqnJlQg
+        rgXHKEXu/iTMzCqtpSYjDeMvBoYmGxyZ9JnVsljXbv0NA3dxPFFVq/1YNoOrHX0ZB2zYNGGkJmPUj
+        Ccf4ofQoCJ5XaOh6pD41cQJEQipyZi1N1cg8KTCEtLl3sDyfCm7wpl/i36Mu+lQnge70hj/MFL3+k
+        j363U9hbm0bmnZz2z/1JjYqOBtnCOrqcPwcibcrdj2zQiRYA5WcAYUSmC5B45nQcb4ZCbIn75PI/2
+        qahVgr6lw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgqy3-0005JE-Co; Fri, 28 Jun 2019 13:31:07 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 48F2E20AB898E; Fri, 28 Jun 2019 15:31:05 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 15:31:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Shawn Landden <shawn@git.icu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Chandler Carruth <chandlerc@google.com>
+Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
+Message-ID: <20190628133105.GD3463@hirez.programming.kicks-ass.net>
+References: <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
+ <20190624203737.GL3436@hirez.programming.kicks-ass.net>
+ <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
+ <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
+ <20190625071846.GN3436@hirez.programming.kicks-ass.net>
+ <CANiq72=zzZ+Cx8uM+5UW7HeB9XtbXRhXmC2y2tz5EzPX77gHMw@mail.gmail.com>
+ <CAKwvOdn5j8Hkc_jrLMbhg-4jbNya+agtMJi=c9o01RPCno1Q+w@mail.gmail.com>
+ <20190626084927.GI3419@hirez.programming.kicks-ass.net>
+ <CAKwvOdkp7qnwLGY2=TOx=FQa1k2hEkdi1PO+9GfZkTQEUh49Rg@mail.gmail.com>
+ <20190627071250.GZ3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-MC-Unique: F5JmhSpNN6W7HG1xDN_l_A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627071250.GZ3402@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGludXMgV2FsbGVpag0KPiBTZW50OiAyOCBKdW5lIDIwMTkgMDk6NDYNCi4uLg0KPiBB
-IHByb2JsZW0gd2l0aCBMRURzIGlzIHRoYXQgaXQgaW52aXRlcyBiaWtlc2hlZGRpbmcgYmVjYXVz
-ZSBpdCBpcyB0b28NCj4gcmVsYXRlYWJsZS4NCg0KQmlrZXNoZWRkaW5nIGxlZHMgOi0pDQoNCkl0
-IGFsc28gaXNuJ3QgYXQgYWxsIGNsZWFyIGhvdyB0byBoYW5kbGUgYmktY29sb3VyIGFuZCB0cmkt
-Y29sb3VyIGxlZHMuDQpJU1RSIHRoZSB1c3VhbCBpbnRlcmZhY2UgbGV0cyB5b3Ugc2V0IHRoZSBi
-cmlnaHRuZXNzLCBidXQgbW9yZSBvZnRlbg0KbGVkcyBhcmUgc2luZ2xlIGJyaWdodG5lc3MgYnV0
-IG11bHRpLWNvbG91ci4NCkVnIHRoZSBldGhlcm5ldCAnc3BlZWQnIGxlZCB3aGljaCBpcyAodXN1
-YWxseSkgb2ZmL29yYW5nZS9ncmVlbi4NCg0KQ2hhbmdpbmcgdGhlIGJyaWdodG5lc3MgZWl0aGVy
-IG1lYW5zIGNoYW5naW5nIHRoZSBjdXJyZW50IG9yIHVzaW5nIFBXTS4NCkJvdGggcmVhbGx5IHJl
-cXVpcmUgbW9yZSBoYXJkd2FyZSBzdXBwb3J0IHRoYW4gY2hhbmdpbmcgY29sb3Vycy4NCg0KSSd2
-ZSBkb25lIHNvbWUgbGVkIGRyaXZpbmcgKGZvciBhIGZyb250IHBhbmVsKSBmcm9tIGEgUExEIChz
-bWFsbCBGUEdBKS4NCkFzIHdlbGwgYXMgdGhlIG9idmlvdXMgdGhpbmdzIEkgZGlkOg0KLSBkaW06
-IDEvOHRoIG9uIGF0IDgwSHouDQotIGZsYXNoOiAxLzh0aCBvbiBhdCA0SHouDQotIG9yYW5nZTog
-NTAtNTAgcmVkLWdyZWVuIGF0IDgwSHogb24gYW4gUkdCIGxlZC4NCg0KVGhlcmUgd2FzIGFsc28g
-dGhlICdldGhlcm5ldCBhY3Rpdml0eScgbGVkIHdoaWNoIGNvdWxkIGVpdGhlciBiZSBkcml2ZW4N
-CmJ5IHRoZSBoYXJkd2FyZSwgb3IgZm9yY2VkIG9uL29mZi9mbGFzaCBieSB0aGUgZHJpdmVyLg0K
-SWYgZHJpdmVuIGJ5IHRoZSBoYXJkd2FyZSwgdGhlIHNvZnR3YXJlIGNvdWxkIHJlYWQgdGhlIGN1
-cnJlbnQgc3RhdGUuDQoNCk5vbmUgb2YgdGhpcyByZWFsbHkgZml0dGVkIHRoZSBMaW51eCBsZWRz
-IGludGVyZmFjZS4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwg
-QnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVn
-aXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Thu, Jun 27, 2019 at 09:12:50AM +0200, Peter Zijlstra wrote:
 
+> Josh came up with the following:
+> 
+> +		/* If the jump target is close, do a 2-byte nop: */
+> +		".skip -(%l[l_yes] - 1b <= 126), 0x66\n"
+> +		".skip -(%l[l_yes] - 1b <= 126), 0x90\n"
+> +		/* Otherwise do a 5-byte nop: */
+> +		".skip -(%l[l_yes] - 1b > 126), 0x0f\n"
+> +		".skip -(%l[l_yes] - 1b > 126), 0x1f\n"
+> +		".skip -(%l[l_yes] - 1b > 126), 0x44\n"
+> +		".skip -(%l[l_yes] - 1b > 126), 0x00\n"
+> +		".skip -(%l[l_yes] - 1b > 126), 0x00\n"
+> 
+> Which is a wonderfully gruesome hack :-) So I'll be playing with that
+> for a bit.
+
+For those with interest; full patches at:
+
+  https://lkml.kernel.org/r/20190628102113.360432762@infradead.org
