@@ -2,106 +2,81 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEE6C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B338C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA22208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C742133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfF1PRU (ORCPT
+        id S1726953AbfF1PRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:17:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35568 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfF1PRU (ORCPT
+        Fri, 28 Jun 2019 11:17:35 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:53360 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726795AbfF1PRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:17:20 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w24so3419511plp.2;
-        Fri, 28 Jun 2019 08:17:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=08U5q1pt2W+YM1rIatW1uXCddvaCPZQ1ACknIlDj2y4=;
-        b=kLEsghuThznChptBzFvzk6m1ix8/alSy5C9QQbAzVmrg2t68sVhUMRUaDPW+Kvpu2h
-         YRkcwimqeFaSXKvWK7Zl8R2nOCIPxSEKe7/1llcm1Z83NoTUmP0mdYlf65rYbjCBP2UJ
-         qrlR7H9o9rg2bOIXMZD2kvvWrUQSP445pmGgSyYAwz4EpAxvLYDsQFUO1MVZFiDFHrJA
-         obaUnIMoiI0IDdFVNbuB8ZKOTZwfIcF2Hr6/RimrcuhDDvugHCOhm8aRZnNBfqo4ii3y
-         ro3mDAaXOx/Lwu9NWI80Jp+A9aGAuRrgLQY45W+12utqHVh7aI8azgm0SKWjjySRFrjX
-         wbPw==
-X-Gm-Message-State: APjAAAXa+EUlIeOAexujdLiNM/KtybIWT6c4jwaKU4jTp2vUrQ6YS9Hx
-        nhzUIW1WsHgVEZXP4dOl7o0=
-X-Google-Smtp-Source: APXvYqy6BruVFpT+atnt6vuKZwUyXTZc4F4Iz59vx0pXbfCiYbMdSN3HzP8L529KkVDl7Km+IkcRCg==
-X-Received: by 2002:a17:902:8205:: with SMTP id x5mr12403394pln.279.1561735039122;
-        Fri, 28 Jun 2019 08:17:19 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id e20sm4758253pfh.50.2019.06.28.08.17.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 08:17:17 -0700 (PDT)
-Subject: Re: WARNING in is_bpf_text_address
-To:     syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
-        jakub.kicinski@netronome.com, johannes.berg@intel.com,
-        johannes@sipsolutions.net, john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
-        netdev@vger.kernel.org, paulmck@linux.vnet.ibm.com,
-        peterz@infradead.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
-        torvalds@linux-foundation.org, will.deacon@arm.com,
-        xdp-newbies@vger.kernel.org, yhs@fb.com,
-        Dmitry Vyukov <dvyukov@google.com>
-References: <000000000000104b00058c61eda4@google.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <c0e440a1-30aa-a636-fe5c-44f71705857b@acm.org>
-Date:   Fri, 28 Jun 2019 08:17:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <000000000000104b00058c61eda4@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 28 Jun 2019 11:17:34 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hgsd2-0004T1-MI; Fri, 28 Jun 2019 17:17:32 +0200
+Message-ID: <b5a247aa3bb21094c0a6ef1d8e3281d701bb6200.camel@sipsolutions.net>
+Subject: Re: [Linux-kernel-mentees][PATCH v2] nl80211: Fix undefined
+ behavior in bit shift
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        Jiunn Chang <c0d1n61at3@gmail.com>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 28 Jun 2019 17:17:30 +0200
+In-Reply-To: <9e17c585-bd42-8c65-a37a-add6aa4d5ca4@linuxfoundation.org> (sfid-20190628_170419_565002_8FFEF936)
+References: <20190627010137.5612-4-c0d1n61at3@gmail.com>
+         <20190627032532.18374-4-c0d1n61at3@gmail.com>
+         <c20a0a94-ab50-bb85-7c78-e02a465c5a40@linuxfoundation.org>
+         <8b8c44c3ecb8626d9bb5a8f786b1d2b7488df86b.camel@sipsolutions.net>
+         <9e17c585-bd42-8c65-a37a-add6aa4d5ca4@linuxfoundation.org>
+         (sfid-20190628_170419_565002_8FFEF936)
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/19 6:05 AM, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
-> Author: Bart Van Assche <bvanassche@acm.org>
-> Date:   Thu Feb 14 23:00:46 2019 +0000
-> 
->      locking/lockdep: Free lock classes that are no longer in use
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
-> start commit:   abf02e29 Merge tag 'pm-5.2-rc6' of 
-> git://git.kernel.org/pu..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
-> dashboard link: 
-> https://syzkaller.appspot.com/bug?extid=bd3bba6ff3fcea7a6ec6
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ae828aa00000
-> 
-> Reported-by: syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com
-> Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no 
-> longer in use")
-> 
-> For information about bisection process see: 
-> https://goo.gl/tpsmEJ#bisection
+Hi Shuah,
 
-Dmitry, this bisection result does not make any sense to me. Can I mark 
-this bisection result myself as invalid?
+> I went looking in the git log. Looks like there are several commits with
+> "Changes since" included in the commit log. It still appears to be
+> maintainer preference. Probably from networking and networking related
+> areas - wireless being one of them. This trend is recent it appears in
+> any case.
 
-Thanks,
+Yeah. I was really just observing that I'd seen this, and some people (I
+guess 'many' was an exaggeration) actively request it to be in the
+commit log. I "grew up" with "changelog after ---" too ;-)
 
-Bart.
+> There is a value to seeing changes as the work evolves. However, there
+> is the concern that how log should it be.
+
+That doesn't parse, what did you mean?
+
+> This example commit has history from RFC stage and no doubt very useful
+> since this is a new driver.
+> 
+> 8ef988b914bd449458eb2174febb67b0f137b33c
+> 
+> If we make this more of a norm, we do want to make sure, we evolve
+> from informal nature of these "Changes since", to "Commit log" text.
+
+Not sure it's really worth it, but I guess some recommendations could be
+useful. If it is indeed to become the norm, and there aren't some people
+who strongly feel it should *not* be included.
+
+johannes
+
