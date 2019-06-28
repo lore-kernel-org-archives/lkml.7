@@ -2,37 +2,38 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA24C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8777C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24E420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2412133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfF1BCe (ORCPT
+        id S1726667AbfF1BHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:02:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44368 "EHLO mail.kernel.org"
+        Thu, 27 Jun 2019 21:07:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbfF1BCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:02:34 -0400
+        id S1726595AbfF1BHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 21:07:10 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06309208E3;
-        Fri, 28 Jun 2019 01:02:32 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 21:02:31 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id 69C52208E3;
+        Fri, 28 Jun 2019 01:07:09 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 21:07:07 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     Takeshi Misawa <jeliantsurux@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+To:     Takeshi Misawa <jeliantsurux@gmail.com>
+Cc:     Tom Zanussi <zanussi@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] tracing: Fix memory leak in tracing_err_log_open()
-Message-ID: <20190627210231.07cb24aa@gandalf.local.home>
-In-Reply-To: <20190627114116.GA2533@DESKTOP>
+Message-ID: <20190627210707.49ebbcf1@gandalf.local.home>
+In-Reply-To: <20190627210231.07cb24aa@gandalf.local.home>
 References: <20190627114116.GA2533@DESKTOP>
+        <20190627210231.07cb24aa@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -42,82 +43,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019 20:41:16 +0900
-Takeshi Misawa <jeliantsurux@gmail.com> wrote:
+On Thu, 27 Jun 2019 21:02:31 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> If tracing_err_log_open() call seq_open(), allocated memory is not freed.
-> 
-> kmemleak report:
-> 
-> unreferenced object 0xffff92c0781d1100 (size 128):
->   comm "tail", pid 15116, jiffies 4295163855 (age 22.704s)
->   hex dump (first 32 bytes):
->     00 f0 08 e5 c0 92 ff ff 00 10 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<000000000d0687d5>] kmem_cache_alloc+0x11f/0x1e0
->     [<000000003e3039a8>] seq_open+0x2f/0x90
->     [<000000008dd36b7d>] tracing_err_log_open+0x67/0x140
->     [<000000005a431ae2>] do_dentry_open+0x1df/0x3a0
->     [<00000000a2910603>] vfs_open+0x2f/0x40
->     [<0000000038b0a383>] path_openat+0x2e8/0x1690
->     [<00000000fe025bda>] do_filp_open+0x9b/0x110
->     [<00000000483a5091>] do_sys_open+0x1ba/0x260
->     [<00000000c558b5fd>] __x64_sys_openat+0x20/0x30
->     [<000000006881ec07>] do_syscall_64+0x5a/0x130
->     [<00000000571c2e94>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Fix this by calling seq_release() in tracing_err_log_fops.release().
+> > +++ b/kernel/trace/trace.c
+> > @@ -7126,12 +7126,24 @@ static ssize_t tracing_err_log_write(struct file *file,
+> >  	return count;
+> >  }
+> >  
+> > +static int tracing_err_log_release(struct inode *inode, struct file *file)
+> > +{
+> > +	struct trace_array *tr = inode->i_private;
+> > +
+> > +	trace_array_put(tr);
+> > +
+> > +	if (file->private_data)
 
-Tom,
+Actually, I think it is safer to have the condition be:
 
-Can you review this.
+	if (file->f_mode & FMODE_READ)
+
+As that would match the open.
+
+Takeshi,
+
+Can you send a v2?
 
 Thanks!
 
 -- Steve
 
-> 
-> Signed-off-by: Takeshi Misawa <jeliantsurux@gmail.com>
-> ---
-> Dear Steven Rostedt
-> 
-> I found kmemleak in tracing subsystem, and try to create a patch.
-> Please consider this memory leak and patch.
-> 
-> Regards.
-> ---
->  kernel/trace/trace.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 83e08b78dbee..574648798978 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -7126,12 +7126,24 @@ static ssize_t tracing_err_log_write(struct file *file,
->  	return count;
->  }
->  
-> +static int tracing_err_log_release(struct inode *inode, struct file *file)
-> +{
-> +	struct trace_array *tr = inode->i_private;
-> +
-> +	trace_array_put(tr);
-> +
-> +	if (file->private_data)
-> +		seq_release(inode, file);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct file_operations tracing_err_log_fops = {
->  	.open           = tracing_err_log_open,
->  	.write		= tracing_err_log_write,
->  	.read           = seq_read,
->  	.llseek         = seq_lseek,
-> -	.release	= tracing_release_generic_tr,
-> +	.release        = tracing_err_log_release,
->  };
->  
->  static int tracing_buffers_open(struct inode *inode, struct file *filp)
-
+> > +		seq_release(inode, file);
+> > +
+> > +	return 0;
+> > +}
+> > +
