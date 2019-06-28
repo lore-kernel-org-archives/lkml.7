@@ -2,132 +2,97 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7589DC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32B7C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54588208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF5A208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:00:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561737600;
+	bh=SlP82znV2OC7MdqO29KK1B36hJIqNFdblP/sjEhF12w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hpKv5fAYMoneGzUvIf90xC7JXCXD6AM8XxbVj5BDqTIy1bnLke3mDWje0GhDLJeZF
+	 kD1K9a2eOGiVGgKvPUb+k3uxWl/dFDTZYbV9OxS+Ks++qOHhL6Qpl2d2kDIw7IFlmL
+	 zHlgoRlEQvHlXHfyOZSn0rlYWXjxxt8qNjIMOWMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfF1P4K (ORCPT
+        id S1726869AbfF1P77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:56:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38296 "EHLO mx1.redhat.com"
+        Fri, 28 Jun 2019 11:59:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726707AbfF1P4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:56:09 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726657AbfF1P76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:59:58 -0400
+Received: from localhost (unknown [104.132.1.68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7E08359473;
-        Fri, 28 Jun 2019 15:56:09 +0000 (UTC)
-Received: from x1.home (ovpn-117-35.phx2.redhat.com [10.3.117.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 16E9326E64;
-        Fri, 28 Jun 2019 15:56:09 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 09:56:08 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kwankhede@nvidia.com, kvm@vger.kernel.org,
+        by mail.kernel.org (Postfix) with ESMTPSA id D871D20828;
+        Fri, 28 Jun 2019 15:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561737596;
+        bh=SlP82znV2OC7MdqO29KK1B36hJIqNFdblP/sjEhF12w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dvEtN3iN2/OmgCD7y14qVBt9dGQwwnPg4NW0dqXv/w/HwM9UwkHzlpJUnDlRorJ7l
+         Ny/1sWFpfpUwFKU6A/bLJVqlMassrzrcyBXXhE8q8zpn1fi0OY4yPKCEqqg8W3A4TL
+         sqCnIrxI0arf5dsrM27rrSVoiAUiUYqgzol3e0sg=
+Date:   Fri, 28 Jun 2019 08:59:56 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Chao Yu <yuchao0@huawei.com>, Qiuyang Sun <sunqiuyang@huawei.com>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Wang Shilong <wangshilong1991@gmail.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mdev: Send uevents around parent device registration
-Message-ID: <20190628095608.7762d6d0@x1.home>
-In-Reply-To: <20190627101914.32829440.cohuck@redhat.com>
-References: <156155924767.11505.11457229921502145577.stgit@gimli.home>
-        <20190627101914.32829440.cohuck@redhat.com>
-Organization: Red Hat
+Subject: Re: [PATCH] f2fs: fix 32-bit linking
+Message-ID: <20190628155956.GB27114@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190628104007.2721479-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 28 Jun 2019 15:56:09 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628104007.2721479-1-arnd@arndb.de>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019 10:19:14 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
+Hi Arnd,
 
-> On Wed, 26 Jun 2019 08:27:58 -0600
-> Alex Williamson <alex.williamson@redhat.com> wrote:
-> 
-> > This allows udev to trigger rules when a parent device is registered
-> > or unregistered from mdev.
-> > 
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > ---
-> >  drivers/vfio/mdev/mdev_core.c |   10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> > index ae23151442cb..ecec2a3b13cb 100644
-> > --- a/drivers/vfio/mdev/mdev_core.c
-> > +++ b/drivers/vfio/mdev/mdev_core.c
-> > @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
-> >  {
-> >  	int ret;
-> >  	struct mdev_parent *parent;
-> > +	char *env_string = "MDEV_STATE=registered";  
-> 
-> This string is probably reasonable enough.
-> 
-> > +	char *envp[] = { env_string, NULL };
-> >  
-> >  	/* check for mandatory ops */
-> >  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
-> > @@ -196,7 +198,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
-> >  	list_add(&parent->next, &parent_list);
-> >  	mutex_unlock(&parent_list_lock);
-> >  
-> > -	dev_info(dev, "MDEV: Registered\n");
-> > +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);  
-> 
-> I also agree with the positioning here.
-> 
-> > +
-> >  	return 0;
-> >  
-> >  add_dev_err:
-> > @@ -220,6 +223,8 @@ EXPORT_SYMBOL(mdev_register_device);
-> >  void mdev_unregister_device(struct device *dev)
-> >  {
-> >  	struct mdev_parent *parent;
-> > +	char *env_string = "MDEV_STATE=unregistered";  
-> 
-> Ok.
-> 
-> > +	char *envp[] = { env_string, NULL };
-> >  
-> >  	mutex_lock(&parent_list_lock);
-> >  	parent = __find_parent_device(dev);
-> > @@ -228,7 +233,6 @@ void mdev_unregister_device(struct device *dev)
-> >  		mutex_unlock(&parent_list_lock);
-> >  		return;
-> >  	}
-> > -	dev_info(dev, "MDEV: Unregistering\n");
-> >  
-> >  	list_del(&parent->next);
-> >  	mutex_unlock(&parent_list_lock);
-> > @@ -243,6 +247,8 @@ void mdev_unregister_device(struct device *dev)
-> >  	up_write(&parent->unreg_sem);
-> >  
-> >  	mdev_put_parent(parent);
-> > +
-> > +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);  
-> 
-> I'm wondering whether we should indicate this uevent earlier: Once we
-> have detached from the parent list, we're basically done for all
-> practical purposes. So maybe move this right before we grab the
-> unreg_sem?
+If you don't mind, can I integrate this into the original patch in the queue?
 
-That would make it a "this thing is about to go away" (ie.
-"unregistering") rather than "this thing is gone" ("unregistered").  I
-was aiming for the latter as the former just seems like it might make
-userspace race to remove devices.  Note that I don't actually make use
-of this event in mdevctl currently, so we could maybe save it for
-later, but the symmetry seemed preferable.  Thanks,
+Thanks,
 
-Alex
+On 06/28, Arnd Bergmann wrote:
+> Not all architectures support get_user() with a 64-bit argument:
+> 
+> ERROR: "__get_user_bad" [fs/f2fs/f2fs.ko] undefined!
+> 
+> Use copy_from_user() here, this will always work.
+> 
+> Fixes: d2ae7494d043 ("f2fs: ioctl for removing a range from F2FS")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  fs/f2fs/file.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 998affe31419..465853029b8e 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -3066,7 +3066,8 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+>  	if (f2fs_readonly(sbi->sb))
+>  		return -EROFS;
+>  
+> -	if (get_user(block_count, (__u64 __user *)arg))
+> +	if (copy_from_user(&block_count, (void __user *)arg,
+> +			   sizeof(block_count)))
+>  		return -EFAULT;
+>  
+>  	ret = f2fs_resize_fs(sbi, block_count);
+> -- 
+> 2.20.0
