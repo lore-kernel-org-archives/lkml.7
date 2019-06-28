@@ -6,68 +6,117 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBC2C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97E7C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD53E2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C416E2147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfF1Fm4 (ORCPT
+        id S1727047AbfF1Fn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 01:42:56 -0400
-Received: from verein.lst.de ([213.95.11.210]:45086 "EHLO newverein.lst.de"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726867AbfF1Fmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 01:42:54 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 0A0EF68CEC; Fri, 28 Jun 2019 07:42:52 +0200 (CEST)
-Date:   Fri, 28 Jun 2019 07:42:51 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: lift the xfs writepage code into iomap v2
-Message-ID: <20190628054251.GC26902@lst.de>
-References: <20190627104836.25446-1-hch@lst.de> <20190628013256.GE5179@magnolia>
+        Fri, 28 Jun 2019 01:43:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51766 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726622AbfF1Fn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 01:43:59 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 605775AFE9;
+        Fri, 28 Jun 2019 05:43:58 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 93C796012E;
+        Fri, 28 Jun 2019 05:43:52 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id C0C3D16E05; Fri, 28 Jun 2019 07:43:46 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 07:43:46 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc:     "Zhang, Tina" <tina.zhang@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+Subject: Re: [RFC PATCH v3 0/4] Deliver vGPU display vblank event to userspace
+Message-ID: <20190628054346.3uc3k4c4cffrqcy3@sirius.home.kraxel.org>
+References: <20190627033802.1663-1-tina.zhang@intel.com>
+ <20190627062231.57tywityo6uyhmyd@sirius.home.kraxel.org>
+ <237F54289DF84E4997F34151298ABEBC876835E5@SHSMSX101.ccr.corp.intel.com>
+ <20190627103133.6ekdwazggi5j5lcl@sirius.home.kraxel.org>
+ <20190628032149.GD9684@zhen-hp.sh.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190628013256.GE5179@magnolia>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190628032149.GD9684@zhen-hp.sh.intel.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 28 Jun 2019 05:43:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 06:32:56PM -0700, Darrick J. Wong wrote:
-> I think Dave has voiced some valid concerns about our ability to support
-> this code over the long term once we start sharing it with other fses.
-> XFS has a longish history of sailing away from generic code so that we
-> can remove awkward abstractions which aren't working well for us.  If
-> we're going to continue to go our own way with things like file locking
-> and mapping I wonder how long we'd keep using the iomap ioends before
-> moving away again.  How well will that iomap code avoid bitrot once XFS
-> does that?
+On Fri, Jun 28, 2019 at 11:21:49AM +0800, Zhenyu Wang wrote:
+> On 2019.06.27 12:31:33 +0200, Gerd Hoffmann wrote:
+> > > >   Hi,
+> > > > 
+> > > > > Instead of delivering page flip events, we choose to post display
+> > > > > vblank event. Handling page flip events for both primary plane and
+> > > > > cursor plane may make user space quite busy, although we have the
+> > > > > mask/unmask mechansim for mitigation. Besides, there are some cases
+> > > > > that guest app only uses one framebuffer for both drawing and display.
+> > > > > In such case, guest OS won't do the plane page flip when the
+> > > > > framebuffer is updated, thus the user land won't be notified about the
+> > > > updated framebuffer.
+> > > > 
+> > > > What happens when the guest is idle and doesn't draw anything to the
+> > > > framebuffer?
+> > > The vblank event will be delivered to userspace as well, unless guest OS disable the pipe.
+> > > Does it make sense to vfio/display?
+> > 
+> > Getting notified only in case there are actual display updates would be
+> > a nice optimization, assuming the hardware is able to do that.  If the
+> > guest pageflips this is obviously trivial.  Not sure this is possible in
+> > case the guest renders directly to the frontbuffer.
+> > 
+> > What exactly happens when the guest OS disables the pipe?  Is a vblank
+> > event delivered at least once?  That would be very useful because it
+> > will be possible for userspace to stop polling altogether without
+> > missing the "guest disabled pipe" event.
+> > 
+> 
+> It looks like purpose to use vblank here is to replace user space
+> polling totally by kernel event? Which just act as display update
+> event to replace user space timer to make it query and update
+> planes?
 
-As outlied in my mail to Dave I agree with the high level issue.
-But I very much thing that the writeback code is and should be generic.
-For one it is much more tightly integrated with other iomap code
-than with XFS.  And second the kernel doesn't have a sane generic
-writeback implementation.  We have like three different crappy buffer
-head ones, and anyone wanting to sanely implement writeback currently
-has to write their own, which is a major PITA.
+I think it makes sense to design it that way, so userspace will either
+use the events (when supported by the driver) or a timer (fallback if
+not) but not both.
 
-> How does that sound?  Who are the other potential users?
+> Although in theory vblank is not appropriate for this which
+> doesn't align with plane update or possible front buffer rendering at
+> all, but looks it's just a compromise e.g not sending event for every
+> cursor position change, etc.
+> 
+> I think we need to define semantics for this event properly, e.g user
+> space purely depends on this event for display update, the opportunity
+> for issuing this event is controlled by driver when it's necessary for
+> update, etc. Definitely not named as vblank event or only issue at vblank,
+> that need to happen for other plane change too.
 
-The immediate current user is Damiens zonefs, which is just a thin
-abstraction on top of zones in zoned block devices.  Then my plan has
-always been to convert gfs2 over to it, away from buffer heads.  With
-btrfs now joining iomap land I'd be really excited to move it over,
-but we'll see how feasily that is.  But with gfs2 done I think we
-also are ready to convert anything currently using plain old buffer
-heads over, so things like sysvfs, minix, jfs, etc.  While that isn't
-a priority and will take a while it will help with my grand overall
-scheme of killing buffer_heads, at least for the data path.
+I think it should be "display update notification", i.e. userspace
+should check for plane changes and update the display.
+
+Most events will probably come from vblank (typically plane update are
+actually committed at vblank time to avoid tearing, right?).  That is an
+implementation detail though.
+
+cheers,
+  Gerd
+
