@@ -2,229 +2,124 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E74C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFF5C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC4B2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F762053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:43:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9RTCSQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfF1Qm2 (ORCPT
+        id S1726947AbfF1QnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:42:28 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11220 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726605AbfF1Qm1 (ORCPT
+        Fri, 28 Jun 2019 12:43:04 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46617 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfF1QnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:42:27 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SGfrlQ074352
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:42:26 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdkgyrce8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:42:26 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Fri, 28 Jun 2019 17:42:24 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Jun 2019 17:42:20 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SGgJLF32899302
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 16:42:19 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3804A405B;
-        Fri, 28 Jun 2019 16:42:19 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 016B6A4051;
-        Fri, 28 Jun 2019 16:42:18 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.62.39])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Jun 2019 16:42:17 +0000 (GMT)
-From:   Parth Shah <parth@linux.ibm.com>
-Subject: Re: [RFCv3 0/8] TurboSched: A scheduler for sustaining Turbo
- Frequencies for longer durations
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com
-References: <20190625043726.21490-1-parth@linux.ibm.com>
- <20190628131430.qmbfocgujeyi3dbt@e110439-lin>
-Date:   Fri, 28 Jun 2019 22:12:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Fri, 28 Jun 2019 12:43:04 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 65so4694210oid.13
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 09:43:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=QFpm0UumsX4I37gj4rXPxQSbpBWGeOyG5IyhPSbjXkU=;
+        b=q9RTCSQnZxpTkNaRIo3OFvfTXF0T70elNpWwXG6dQojmPGV3ToN5VmSJp1wsOrc+16
+         41ha3a13CdvAhsI+OmoYnjkOHIyDRf/5yJBpD9LN0zcc8GNL0DadTGOCeo2t+smzWm/L
+         DvLfIYiSyc4GZ/0zur4lHkHXbRdSAvnJ+BF31t2AXTKqlrovWOxRgPnna+6dZbs/CLUc
+         vJvPJyLvid3Z/ATKqRbyhwl6/DFYYmp8zY3OnuhSV06DztcwHiJ5FvM+fR5FZqIzED4N
+         QpFKBe21HlFd/zae9hTsV+aMbgOCYN6Gji1xu7bnana2WAFvaxE9xUVnpdh8BhfS1XYw
+         5dVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QFpm0UumsX4I37gj4rXPxQSbpBWGeOyG5IyhPSbjXkU=;
+        b=VKJVHlbvAIwloj56EMym18gGJf93+bFeYM7xdmMI1q9WGklo4ZSVkRF3IZNgBn1bLs
+         80jEJzMYzaheG+lCkWq7WLXBKkyxyKAdop+k0zIQz6iH9JI57tV1y72CW80/3mNGBRYV
+         WWGJhjFcAsMlLGIVy76poPRvIZ9uJM1jB6OJ2tw0RnFDBDgf6V31cquQ8tF4i2cmf8qA
+         N7AvTWx7VSaESMLafTEvk6s8z9bFi3J5afCq8MdEUIySNPVFYmS0fSIYZGP2gnKIiXMV
+         ALExKZ6w2uK30/aWoGzvLKkiaedtfFz9c62Ng9kiRAdmNpCCPE57WgekvUd95T+f30fH
+         /sDQ==
+X-Gm-Message-State: APjAAAXdbyWzFCHOedw3X4wWuSMfBPKpqM7PYLFsOfycYV5tAyKWl334
+        jBWY02HmqNs+2LPhJ+hBlI/mY/3KbJTPKOByMI8=
+X-Google-Smtp-Source: APXvYqyPz5KQWvD+eakc5Lbbg9Fv9cJ+JpDlnFXrqCXzg3AuNaADqkkNAfxo1NOd5rgX2ljaHm/mIqQDuVCP+JsY+FA=
+X-Received: by 2002:aca:c7c6:: with SMTP id x189mr2102706oif.4.1561740183467;
+ Fri, 28 Jun 2019 09:43:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190628131430.qmbfocgujeyi3dbt@e110439-lin>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062816-0012-0000-0000-0000032D73CB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062816-0013-0000-0000-00002166B72D
-Message-Id: <95d58f4e-4429-d3d6-0962-bb33a9aa4b75@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906280191
+References: <156097935391.32250.14918304155094222078.malonedeb@chaenomeles.canonical.com>
+ <156113479576.29306.8491703251507627705.malone@gac.canonical.com>
+ <B0FDD5B2-EA6F-4ABC-8BF5-6231AA31EB70@canonical.com> <s5hh88a6pig.wl-tiwai@suse.de>
+ <4E6239D9-3A70-4D66-9F88-453EB268DA2A@canonical.com>
+In-Reply-To: <4E6239D9-3A70-4D66-9F88-453EB268DA2A@canonical.com>
+From:   Connor McAdams <conmanx360@gmail.com>
+Date:   Fri, 28 Jun 2019 12:42:52 -0400
+Message-ID: <CAM8Agx0Mx+B3VeANVkO+3EZAuRPZ8z-GB0npeJwWPvQ54YaMxg@mail.gmail.com>
+Subject: Re: [alsa-devel] ca0132 audio in Ubuntu 19.04 only after Windows 10
+ started, missing ctefx-r3di.bin
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Patrick,
+Hm... not sure the firmware will fix this issue, as it falls back to
+the default ctefx.bin firmware which should work fine. But it's worth
+a shot.
 
-Thank you for taking interest at the patch set.
+His card looks like it's being identified properly, and I've had
+reports from others with the same motherboard codecs not having
+issues.
 
+There's not too much that I can really troubleshoot with these cards,
+as I lack the documentation. All that I know is from capturing the HDA
+verbs from a Windows virtual machine with PCI passthrough.
 
-On 6/28/19 6:44 PM, Patrick Bellasi wrote:
-> On 25-Jun 10:07, Parth Shah wrote:
-> 
-> [...]
-> 
->> Implementation
->> ==============
->>
->> These patches uses UCLAMP mechanism[2] used to clamp utilization from the
->> userspace, which can be used to classify the jitter tasks. The task wakeup
->> logic uses this information to pack such tasks onto cores which are already
->> running busy with CPU intensive tasks. The task packing is done at
->> `select_task_rq_fair` only so that in case of wrong decision load balancer
->> may pull the classified jitter tasks for maximizing performance.
->>
->> Any tasks clamped with cpu.util.max=1 (with sched_setattr syscall) are
->> classified as jitter tasks.
-> 
-> I don't like this approach, it's overloading the meaning of clamps and
-> it also brings in un-wanted side effects, like running jitter tasks at
-> the minimum OPP.
-> 
-> Do you have any expected minimum frequency for those jitter tasks ?
-> I expect those to be relatively small tasks but still perhaps it makes
-> sense to run them on higher then minimal OPP.
+The only thing I can really think of is GPIO potentially, but that
+would be re-set when the Linux driver is booted up. I know some users
+have to do a full on shutdown to clear the cards internal memory for
+it to work in Linux, but it sounds like he may have already done that.
+
+I'll look into this a little bit when I get some time, but the issue
+is that I don't have too many options/ideas on what could be
+potentially wrong.
+
+On Fri, Jun 28, 2019 at 5:29 AM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
 >
-
-I absolutely agree with you as it may overload the meaning of clamps.
-AFAIK, the only way to detect jitters is by looking at its utilization,
-where low util tasks are possibly jitters unless they are important tasks. If
-userspace tells if the task is clamped to least OPP, then it is an indication of
-low utilization or unimportant tasks, which we say a jitter.
-
-Also, as we discussed in OSPM as well, if all the jitters are given a dedicated
-core by the scheduler, then UCLAMP ensures least OPP for such tasks which can help
-saving power a further bit, which can be channeled to busier core thus allowing
-them to sustain or boost turbo frequencies.
-
-I agree that it may have side-effects but I'm just putting idea out here.
-Also, I understand that task packing and frequency are not co-related but for
-this specific purpose of Turbo sustaining problem, jitters should be given least
-power so that others can have extra one, hence jitters should be given less
-frequency.
-
-> Why not just adding a new dedicated per-task scheduling attribute,
-> e.g. SCHED_FLAG_LATENCY_TOLERANT, and manage it via
-> sched_{set,get}attr() ?
-> 
-> I guess such a concept could work well on defining a generic
-> spread-vs-pack wakeup policy which is something Android also could
-> benefit from.
-> 
-
-I have made attempts to use per-task attributes for task classification in first
-series of TurboSched and it works fine.
-https://lwn.net/ml/linux-pm/20190322060621.27021-3-parth015@linux.vnet.ibm.com/
-
-Then from inputs from Dietmar, I thought of giving a try to UCLAMP for this purpose.
-But, now I guess having one more task attribute is useful as it can serve multiple
-purpose including android and task packing. I will add it v4 then.
-
-> However, what we will still be missing is a proper cgroups support.
-> Not always is possible and/or convenient to explicitly set per-task
-> attributes. But at the same time, AFAIK using cgroups to define
-> task properties which do not represent a "resource repartition" is
-> something very difficult to get accepted mainline.
-> 
-
-Yeah, I faced that problem in v2.
-https://lkml.org/lkml/2019/5/15/1395
-
-> In the past, back in 2011, there was an attempt to introduce a timer
-> slack controller, but apparently it was not very well received:
-> 
->    Message-ID: <1300111524-5666-1-git-send-email-kirill@shutemov.name>
->    https://lore.kernel.org/lkml/20110314164652.5b44fb9e.akpm@linux-foundation.org/
-> 
-> But perhaps now the times are more mature and we can try to come up
-> with compelling cases from both the server and the mobile world.
-> 
-
-The pointed patch series seems appealing and I will have a look at it. 
-
->> We define a core to be non-idle if it is over 12.5% utilized of its
->> capacity;
-> 
-> This looks like a random number, can you elaborate on that?
-
-It is an experimental value to define whether a "core" should be considered to be
-idle or not. This is because, even-though core is running few bunch of tasks summing
-upto around 10% of utilization in a core, it maybe going to shallower idle-states
-periodically which is kind of power-saving; placing new tasks on such core should
-be avoided as far as possible.
-
-I have just tested this on SMT-4/8 systems and it works as expected but at the end it
-is still an experimental value.
-
-> 
->> the jitters are packed over these cores using First-fit
->> approach.
->>
->> To demonstrate/benchmark, one can use a synthetic workload generator
->> `turbo_bench.c`[1] available at
->> https://github.com/parthsl/tools/blob/master/benchmarks/turbo_bench.c
->>
->> Following snippet demonstrates the use of TurboSched feature:
->> ```
->> i=8; ./turbo_bench -t 30 -h $i -n $((i*2)) -j
->> ```
->>
->> Current implementation uses only jitter classified tasks to be packed on
->> the first busy cores, but can be further optimized by getting userspace
->> input of important tasks and keeping track of such tasks.
->> This leads to optimized searching of non idle cores and also more
->> accurate as userspace hints are safer than auto classified busy
->> cores/tasks.
-> 
-> Hints from user-space looks like an interesting concept, could you
-> better elaborate what you are thinking about in this sense?
-> 
-
-Currently, we are just tagging tasks as jitters and packing it on already busier
-cores (>12.5% core utilization). Packing strategy is a simple first-fit algorithm
-looking for first core in a DIE where the waking-up jitter task can be accommodated.
-This is a lot of work in fast-path but can be optimized out. If user can also tag
-CPU intensive and/or important tasks then we can keep track of the cores occupying
-such tasks which can be used for task packing reducing the effort of finding non-idle.
-Again, this can be set with UCLAMP by cpu.util-min=SCHED_CAPACITY_SCALE.
-
-Infact, v1 does this but then I thought of breaking down problem into steps and this
-optimization can be introduced later.
-https://lwn.net/ml/linux-pm/20190322060621.27021-6-parth015@linux.vnet.ibm.com/
-
-So we can have some task attributes like task_type or similar which hints scheduler on
-several features like packing, spreading, or giving dedicated core where siblings will
-not be scheduled or even core scheduling, which in certain ways affect scheduling
-decisions.
-
-
-Thanks
-Parth
-
+> at 17:13, Takashi Iwai <tiwai@suse.de> wrote:
+>
+> > On Fri, 28 Jun 2019 08:35:51 +0200,
+> > Kai-Heng Feng wrote:
+> >> Hi Connor,
+> >>
+> >> The bug was filed at Launchpad [1], I think the most notable error is
+> >> [    3.768667] snd_hda_intel 0000:00:1f.3: Direct firmware load for
+> >> ctefx-r3di.bin failed with error -2
+> >>
+> >> The firmware is indeed listed in patch_ca0132.c, but looks like
+> >> there=E2=80=99s no  corresponding file in linux-firmware.
+> >
+> > FYI, the firmware is found in alsa-firmware git repo for now.
+>
+> Got it, thanks for the info. Didn=E2=80=99t know there=E2=80=99s alsa-fir=
+mware repo.
+>
+> Kai-Heng
+>
+> >
+> >
+> > Takashi
+>
+>
