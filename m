@@ -2,115 +2,105 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF22C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57A4C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE26D2147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:59:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kkh8QnWI"
+	by mail.kernel.org (Postfix) with ESMTP id 9CB0C2147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561694445;
+	bh=+VpOXo75LTdDhLhuuoxTBJKiQQ5nD94oHuo6kW9PLx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wwookDHCqFey1tjcRF3q8+RErawid/QklAo+v2u12wxwCtvGYiDO8nu3nlP9ihryX
+	 ICHU6NinXNb+1PM6ZrcvnguY1IeLv8J+8I23+nAUpSEyb+sUs3o0AjjB2AFG0PM1IH
+	 x3iRFQNE5/8l5jQEXt0n0PskNt8L/Zxsbw1ODE3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfF1D7m (ORCPT
+        id S1727204AbfF1EAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:59:42 -0400
-Received: from mail-io1-f43.google.com ([209.85.166.43]:47033 "EHLO
-        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfF1D7l (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:59:41 -0400
-Received: by mail-io1-f43.google.com with SMTP id i10so9521114iol.13
-        for <Linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 20:59:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Cs/BCNc/RCyeiUvf3Dd7XA6XNw70/7ZfOeMlzKTDfTw=;
-        b=Kkh8QnWIzrZazVljg6hBsx7W/ZP0eBr1ejVjQyHZVuyvnJ6opqO1Z13W5iz5qwZfcj
-         H0lYWcBOzr76HbMzjj9mSOh7bOMz8gIv2Mc8LAsLOX1h/MbSQcUX+u0P7/MCrytmMmf1
-         LP6QAlNDiOPI4CvLDKDvIhwWm+6F4zDZ/QIV2jsOeWikKn5H8nTXUpxnPFDi+tADdELb
-         wftLrz7FO1ZOq0s5Vc8glGunRKW99QX4s7hsFHySk3XEKUzqbNXquuqnZrDKU6fKvAgc
-         +PVk85g3fniAVaasVO0H0eME/b4zu2fMzz+50cj1nNgjd2/g2/SKXK8IT1YVcTH0vSHL
-         pMXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cs/BCNc/RCyeiUvf3Dd7XA6XNw70/7ZfOeMlzKTDfTw=;
-        b=IBcnEnQPLY9hoDEzBKl+nlxW3eXPOIK3UB7KPFBltqkUI3lLCCF76aKVOdu6wYXF6Z
-         1RxUYUXPWARRF4uKP83YsplweVxgY02q/Zx9ysncG5QEWpXJLdUbz7QEXh1qAVmV6ILM
-         v2RephfPvDttzfsAhPGQgDZ5HPcr+O5Q8BFPBks5u9OfBBBazWMNpUH/3prwo41j35mp
-         H8aAw8aXuTLALFqE5LUq4RqzrUbuVpEe9i4viwXBP39N6kGQG5XGVh5kfAFM/AztZo+t
-         2cjUnpYbeRPKff8X3GQti+/jDbxPd9GwhRpQJCyU5JtMlyNzOFr0859cLH1GRMxLkosX
-         em7w==
-X-Gm-Message-State: APjAAAWvYk5NN7c+V9BfV5RIIVozceioxq5eaCLvbT4ZbdaVGIUEocEu
-        Y+UN4rQ7VOn8UAl2vud+Tp3YMcHMhs3OAgYcqQ==
-X-Google-Smtp-Source: APXvYqyY3ydiSQhtYGah1iASt/iBOIbXr1KVVwN5LrQiYQZl9AUwyMpJlNcyVhrRfjf43MZT+WCGvVS8crgLy/UEH1M=
-X-Received: by 2002:a02:c6b8:: with SMTP id o24mr9180808jan.80.1561694381133;
- Thu, 27 Jun 2019 20:59:41 -0700 (PDT)
+        Fri, 28 Jun 2019 00:00:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbfF1EAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 00:00:44 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59CEC2070D;
+        Fri, 28 Jun 2019 04:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561694443;
+        bh=+VpOXo75LTdDhLhuuoxTBJKiQQ5nD94oHuo6kW9PLx8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wk+ccnTKmjcm9oInzJMB+0dNNB75ucxIeut8XOCR/Y7xP6hTrcDtH7lCEaIgtzY4v
+         cAcXSjofCHamgYUPbORfT/k9l+Y8il+53yCqIHfw+u84tfLmFEdAugDjO/mZXUw17Z
+         rsF9Jcub8341gulC7JgVNTnhPPrCi9vEWIdrK070=
+Date:   Thu, 27 Jun 2019 21:00:41 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com,
+        mpatocka@redhat.com, gmazyland@gmail.com
+Subject: Re: [RFC PATCH v5 0/1] Add dm verity root hash pkcs7 sig validation.
+Message-ID: <20190628040041.GB673@sol.localdomain>
+References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com>
 MIME-Version: 1.0
-References: <1561612545-28997-1-git-send-email-kernelfans@gmail.com> <20190627162511.1cf10f5b04538c955c329408@linux-foundation.org>
-In-Reply-To: <20190627162511.1cf10f5b04538c955c329408@linux-foundation.org>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Fri, 28 Jun 2019 11:59:29 +0800
-Message-ID: <CAFgQCTsO6WOef1v69J3+Vx-AuU8pPVeJSTjrf04VQum=YXEk2w@mail.gmail.com>
-Subject: Re: [PATCHv5] mm/gup: speed up check_and_migrate_cma_pages() on huge page
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux-mm@kvack.org, Ira Weiny <ira.weiny@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        LKML <Linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 7:25 AM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Thu, 27 Jun 2019 13:15:45 +0800 Pingfan Liu <kernelfans@gmail.com> wrote:
->
-> > Both hugetlb and thp locate on the same migration type of pageblock, since
-> > they are allocated from a free_list[]. Based on this fact, it is enough to
-> > check on a single subpage to decide the migration type of the whole huge
-> > page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
-> > similar on other archs.
-> >
-> > Furthermore, when executing isolate_huge_page(), it avoid taking global
-> > hugetlb_lock many times, and meanless remove/add to the local link list
-> > cma_page_list.
-> >
->
-> Thanks, looks good to me.  Have any timing measurements been taken?
-Not yet. It is a little hard to force huge page to be allocated CMA
-area. Should I provide the measurements?
->
-> > ...
-> >
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -1336,25 +1336,30 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
-> >                                       struct vm_area_struct **vmas,
-> >                                       unsigned int gup_flags)
-> >  {
-> > -     long i;
-> > +     long i, step;
->
-> I'll make these variables unsigned long - to match nr_pages and because
-> we have no need for them to be negative.
-OK, will fix it.
+On Wed, Jun 19, 2019 at 12:10:47PM -0700, Jaskaran Khurana wrote:
+> This patch set adds in-kernel pkcs7 signature checking for the roothash of
+> the dm-verity hash tree.
+> The verification is to support cases where the roothash is not secured by
+> Trusted Boot, UEFI Secureboot or similar technologies.
+> One of the use cases for this is for dm-verity volumes mounted after boot,
+> the root hash provided during the creation of the dm-verity volume has to
+> be secure and thus in-kernel validation implemented here will be used
+> before we trust the root hash and allow the block device to be created.
+> 
+> Why we are doing validation in the Kernel?
+> 
+> The reason is to still be secure in cases where the attacker is able to
+> compromise the user mode application in which case the user mode validation
+> could not have been trusted.
+> The root hash signature validation in the kernel along with existing
+> dm-verity implementation gives a higher level of confidence in the
+> executable code or the protected data. Before allowing the creation of
+> the device mapper block device the kernel code will check that the detached
+> pkcs7 signature passed to it validates the roothash and the signature is
+> trusted by builtin keys set at kernel creation. The kernel should be
+> secured using Verified boot, UEFI Secure Boot or similar technologies so we
+> can trust it.
+> 
+> What about attacker mounting non dm-verity volumes to run executable
+> code?
+> 
+> This verification can be used to have a security architecture where a LSM
+> can enforce this verification for all the volumes and by doing this it can
+> ensure that all executable code runs from signed and trusted dm-verity
+> volumes.
+> 
+> Further patches will be posted that build on this and enforce this
+> verification based on policy for all the volumes on the system.
+> 
 
-Thanks,
-  Pingfan
->
-> > ...
+I don't understand your justification for this feature.
+
+If userspace has already been pwned severely enough for the attacker to be
+executing arbitrary code with CAP_SYS_ADMIN (which is what the device mapper
+ioctls need), what good are restrictions on loading more binaries from disk?
+
+Please explain your security model.
+
+- Eric
