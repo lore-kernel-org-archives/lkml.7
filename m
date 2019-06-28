@@ -8,70 +8,71 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BBDC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BDFC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A2F208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B072F208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:27:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsggN7ys"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DqFWfig9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfF1R1x (ORCPT
+        id S1726787AbfF1R15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:27:53 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:32942 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfF1R1x (ORCPT
+        Fri, 28 Jun 2019 13:27:57 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37313 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfF1R1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:27:53 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c14so3618129plo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 10:27:52 -0700 (PDT)
+        Fri, 28 Jun 2019 13:27:55 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bh12so3597683plb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 10:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=b2wN17zlaOXo1nFQxwOfGzjJA08eKhEWDSV+dVCibq0=;
-        b=WsggN7ys/SUW8ke0djQCUW82tfxEw/UCjel87xrBD5nq5byykXD9pblR0QjtGhSG9k
-         eC1SMy0BJetgEADjjtsdRskVqDg0jLst8re0oTTcDnzZUo8Y9zq83Zk5SUSxqLVx442o
-         jKx2nsdFKtC/8WmsaRWdWYZ9puP62JacPrf1fhbvs5QsHtHtdqh8p6RdY/xEjit0pXXd
-         wocdDCvSSPpCUaLd2u7hp479pyXfqlj0+9a99vD3nXgh7UELNL6XzCt3z50pJERqHIrr
-         ZiQWUp3CsrE/NQ04tbURiOq8j/Z16WTl7kD8inuHxcXXt4WpSeg5K1YkxqpVC2oHS4r8
-         Oiuw==
+        bh=mLsHJ0i3ujM34GaeB9I76qtU6QknhGyjQmwjCGGHvKA=;
+        b=DqFWfig9P23wc62pGuCwg0dPMtOsYiK0zWh3xIxvl5JzYBwvaQKkg9HU4XJE8efjSv
+         RAPjqCv9RtEiWWBU54T7ZQjutf2/Vba2BKCaBGU6OVQG/Qox4QIh/+LNJmCWPmn7XU/Y
+         P+DGF4KaRrLTioPue9TpH+SGQj5jyu2NrPKfLbFpMyeOYC4krOtjwaWsXe/vwp3mB6F6
+         XsBoPEaaMUEadLLKpKTmMWwCPDAIQe5iCzmOR2HBfGxPrYpfvQq+LbkHqPNr6DwQR496
+         2OKW/5fOvrR07JLR/HRzROi0gHV9XIZuMQtKN3euZvDHC6YTukkFq1F/HzqescBKHxXT
+         hp5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=b2wN17zlaOXo1nFQxwOfGzjJA08eKhEWDSV+dVCibq0=;
-        b=HKi6LhAeCCDAysUgCoL1jofasjN9alDC+7yG9AnFIUbRH04WqFaRyvyzfamdYL4AF1
-         /lWc0AQeget0xm4Rkbfp7po0k9qOsCnBx9xH46XiI0IVeTwQ9Psz2jX4IIl7t+s1DS0G
-         Dw8yLxEZC1JJ5qZegHUZgRQBX67w7Yazql64GvnUlA2AjtFy1XpRyyUW6p4tGM+MLPH/
-         mkp3/jUh7MeUjBek22u35YGfL/PzxbTqdELmOmHnuh71XayQ9ZM9A1dutP9tRf8hNT27
-         t1bR2JZoZFcAQOvcjIUKatbVeCGKNinI2mung/vnKaKy5dcJHQ55uvVcs0T5GDPvhd7F
-         qC2g==
-X-Gm-Message-State: APjAAAWECm/EyDN1JdLYZBg3aPxUMTAalsLTIeCC8C76tITrBTcT6/Uw
-        jwRwnQUZSSjcm/qVtupgb30=
-X-Google-Smtp-Source: APXvYqwfYH+uqnVMzIEe7KSorliBUJGyOPlBJBtICxnUDGx5/BeL2WoO9U4iOWQc82skwTJkHl5Q8w==
-X-Received: by 2002:a17:902:20c8:: with SMTP id v8mr12964478plg.284.1561742872456;
-        Fri, 28 Jun 2019 10:27:52 -0700 (PDT)
+        bh=mLsHJ0i3ujM34GaeB9I76qtU6QknhGyjQmwjCGGHvKA=;
+        b=qVnRu06WNiUO0pP/HTvxEtW1jQ4ccE0K90yCvugGZ7JEXdFf36g536UQO/t92VESw+
+         vnsyiLtCU0+j1Sb1NRlfRrDQq1X4bTHeSYsRxnj1gffxd3MueVKAciayt7AhoZofMYUh
+         J6a2TnjrdZBPPNsAyJJn3TmmU6wFm/Mhsrk5Euc1Uwn1KP31HzLP81qFjnm7YlLk+xwF
+         Tmc2JZ5F3++M+bs5NH2fyoSnts6NgEtyrMBh+OZSbNptdLZDA7NxIpdfIVauePDyLPLQ
+         s0wEaU+3WFvd2+a49au6Q3HTmfHKGVg9W/ikcviv15OB4RyB2wpnlY5TM19rLa8IikIT
+         ww4g==
+X-Gm-Message-State: APjAAAVg4iD2F30hY9vUzys8dPNkZ61s5xnDCK1o3Ii5MfSb1dMzsCv1
+        AGzA0ixNoOoe9udNRMZJrhXe3hQ6yGkxzg==
+X-Google-Smtp-Source: APXvYqxSGAg6EZj/7hBC8Rbh4U6d65ZcCkSc/ZB+HyhFuwaojEV5WfwsTnHiDyNXVEJfiPzSsXlb/w==
+X-Received: by 2002:a17:902:bf08:: with SMTP id bi8mr13291525plb.189.1561742875096;
+        Fri, 28 Jun 2019 10:27:55 -0700 (PDT)
 Received: from localhost.localdomain ([183.83.73.90])
-        by smtp.gmail.com with ESMTPSA id k19sm2070490pgl.42.2019.06.28.10.27.48
+        by smtp.gmail.com with ESMTPSA id k19sm2070490pgl.42.2019.06.28.10.27.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 10:27:52 -0700 (PDT)
+        Fri, 28 Jun 2019 10:27:54 -0700 (PDT)
 From:   Harsh Jain <harshjain32@gmail.com>
 To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org, harshjain32@gmail.com,
         harshjain.prof@gmail.com
-Subject: [PATCH 1/2] staging:kpc2000:Fix symbol not declared warning
-Date:   Fri, 28 Jun 2019 22:57:23 +0530
-Message-Id: <20190628172724.2689-2-harshjain32@gmail.com>
+Subject: [PATCH 2/2] staging:kpc2000:Fix integer as null pointer warning
+Date:   Fri, 28 Jun 2019 22:57:24 +0530
+Message-Id: <20190628172724.2689-3-harshjain32@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190628172724.2689-1-harshjain32@gmail.com>
+In-Reply-To: <20190628172724.2689-2-harshjain32@gmail.com>
 References: <20190628172724.2689-1-harshjain32@gmail.com>
+ <20190628172724.2689-2-harshjain32@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It fixes "symbol was not declared. Should it be static?"
+It fixes "Using plain integer as NULL pointer"
 sparse warning.
 
 Signed-off-by: Harsh Jain <harshjain32@gmail.com>
@@ -80,27 +81,21 @@ Signed-off-by: Harsh Jain <harshjain32@gmail.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c b/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
-index 0fb068b2408d..204f33d0dc69 100644
+index 204f33d0dc69..155da641e3a2 100644
 --- a/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
 +++ b/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
-@@ -614,7 +614,7 @@ static const struct i2c_algorithm smbus_algorithm = {
- /********************************
-  *** Part 2 - Driver Handlers ***
-  ********************************/
--int pi2c_probe(struct platform_device *pldev)
-+static int pi2c_probe(struct platform_device *pldev)
- {
-     int err;
-     struct i2c_device *priv;
-@@ -664,7 +664,7 @@ int pi2c_probe(struct platform_device *pldev)
+@@ -679,9 +679,9 @@ static int pi2c_remove(struct platform_device *pldev)
+     //pci_set_drvdata(dev, NULL);
+     
+     //cdev_del(&lddev->cdev);
+-    if(lddev != 0) {
++    if(lddev != NULL) {
+         kfree(lddev);
+-        pldev->dev.platform_data = 0;
++        pldev->dev.platform_data = NULL;
+     }
+     
      return 0;
- }
- 
--int pi2c_remove(struct platform_device *pldev)
-+static int pi2c_remove(struct platform_device *pldev)
- {
-     struct i2c_device *lddev;
-     dev_dbg(&pldev->dev, "pi2c_remove(pldev = %p '%s')\n", pldev, pldev->name);
 -- 
 2.17.1
 
