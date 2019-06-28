@@ -2,175 +2,75 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BF3C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F7EC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E98208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:59:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="t9aF1X87"
+	by mail.kernel.org (Postfix) with ESMTP id 95D4A20828
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfF1V7m (ORCPT
+        id S1726772AbfF1WBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 17:59:42 -0400
-Received: from mail-eopbgr800084.outbound.protection.outlook.com ([40.107.80.84]:63126
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726754AbfF1V7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 17:59:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n5CICPJw0eTXocZnziVNnjhO/UoKQcF/BqBpuzzdoeo=;
- b=t9aF1X87iBmBq6lczlpKWMLyU6M/rS0oDhhxMETjgQpbujbOFd06yS0gqxC8XLrmrc3eGayolqgs+4RYwx4QlL+BeeE8sHD2RYP/xHBAuNfE7rch+FynVjujkPXbt/fB4wiBTcvorOv4D3qSg3ubmrwEV7VOmmln9Br/hjChXPM=
-Received: from CY4PR12MB1798.namprd12.prod.outlook.com (10.175.59.9) by
- CY4PR12MB1285.namprd12.prod.outlook.com (10.168.167.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.17; Fri, 28 Jun 2019 21:59:33 +0000
-Received: from CY4PR12MB1798.namprd12.prod.outlook.com
- ([fe80::38d5:5f22:2510:9e44]) by CY4PR12MB1798.namprd12.prod.outlook.com
- ([fe80::38d5:5f22:2510:9e44%9]) with mapi id 15.20.2008.019; Fri, 28 Jun 2019
- 21:59:33 +0000
-From:   "Phillips, Kim" <kim.phillips@amd.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Phillips, Kim" <kim.phillips@amd.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Martin Liska <mliska@suse.cz>,
-        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>,
-        "Hook, Gary" <Gary.Hook@amd.com>, Pu Wen <puwen@hygon.cn>,
-        Stephane Eranian <eranian@google.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: [PATCH 2/2 RESEND3] perf/x86/amd/uncore: set the thread mask for F17h
- L3 PMCs
-Thread-Topic: [PATCH 2/2 RESEND3] perf/x86/amd/uncore: set the thread mask for
- F17h L3 PMCs
-Thread-Index: AQHVLfzE4xmWuP/6j0S77TtF+wX25g==
-Date:   Fri, 28 Jun 2019 21:59:33 +0000
-Message-ID: <20190628215906.4276-2-kim.phillips@amd.com>
-References: <20190628215906.4276-1-kim.phillips@amd.com>
-In-Reply-To: <20190628215906.4276-1-kim.phillips@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR06CA0016.namprd06.prod.outlook.com
- (2603:10b6:805:8e::29) To CY4PR12MB1798.namprd12.prod.outlook.com
- (2603:10b6:903:11a::9)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=kim.phillips@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.22.0
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: beb4333a-0c18-4c64-a321-08d6fc13e6e5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR12MB1285;
-x-ms-traffictypediagnostic: CY4PR12MB1285:
-x-microsoft-antispam-prvs: <CY4PR12MB1285E7974A0779D6C91AFA1A87FC0@CY4PR12MB1285.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 00826B6158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(376002)(39860400002)(346002)(199004)(189003)(2906002)(110136005)(486006)(71190400001)(8936002)(186003)(71200400001)(25786009)(68736007)(7736002)(3846002)(45080400002)(81166006)(81156014)(6116002)(305945005)(5660300002)(7416002)(66476007)(64756008)(66556008)(99286004)(86362001)(8676002)(50226002)(1076003)(26005)(14454004)(316002)(36756003)(478600001)(66446008)(66946007)(6512007)(256004)(73956011)(102836004)(4326008)(476003)(66066001)(386003)(6436002)(6506007)(76176011)(52116002)(6486002)(11346002)(2616005)(446003)(53936002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1285;H:CY4PR12MB1798.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 380dK433YTfC6xh/u/acsLbCq84tIsjnHqOCG+DV2kzk27hTLAT8SPXnGprhftjOig3ilEVc6eI6RKIX28syxlizXDTM2O2zZewJ572kQDTL/ZrmlLxYkByWSTaJQJLGohs6uv5wvDA7DoWoOJ/S4iym0wlgT+Uz2TiMdb1uAdkJPC5pqtybCI9afPz/CkgBmUcYGJ7djX3hhVgoUkWjXQX3zayttSIl0pzvDOjHxj0EkwzHacFgSw2yY0EF05sCwtx5QFaWW4RvgOJ5232i21SGPu4w6W7VIV6MzpBs2055os6ln1a5JRWIJFHUx2B2zi65KROfQyavhUvE7U/qruMk6iRWHoKKAhWEHvuLczJzKRTKq2sHWcjoaDkinGMzMIeXtrfAZrSoMqhXa1MgFlEiEJwvcR0oC5kOTa4M9vg=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <848AB005D24AB4488FFC6F7659890929@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: beb4333a-0c18-4c64-a321-08d6fc13e6e5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 21:59:33.1994
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kphillips@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1285
+        Fri, 28 Jun 2019 18:01:40 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:42010 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfF1WBj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 18:01:39 -0400
+X-Greylist: delayed 1912 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Jun 2019 18:01:39 EDT
+Received: from [2601:449:8400:7293:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1hgyP6-0001gO-VY; Fri, 28 Jun 2019 16:27:34 -0500
+Message-ID: <af6156cafe7d7df31c042e60d2287b9a75b49738.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Nathan Huckleberry <nhuck@google.com>, mturquette@baylibre.com,
+        sboyd@kernel.org, yogeshnarayan.gaur@nxp.com
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Date:   Fri, 28 Jun 2019 16:27:31 -0500
+In-Reply-To: <20190627220642.78575-1-nhuck@google.com>
+References: <20190627220642.78575-1-nhuck@google.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8400:7293:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: nhuck@google.com, mturquette@baylibre.com, sboyd@kernel.org, yogeshnarayan.gaur@nxp.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH] clk: qoriq: Fix -Wunused-const-variable
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+On Thu, 2019-06-27 at 15:06 -0700, Nathan Huckleberry wrote:
+> drivers/clk/clk-qoriq.c:138:38: warning: unused variable
+> 'p5020_cmux_grp1' [-Wunused-const-variable] static const struct
+> clockgen_muxinfo p5020_cmux_grp1
+> 
+> drivers/clk/clk-qoriq.c:146:38: warning: unused variable
+> 'p5020_cmux_grp2' [-Wunused-const-variable] static const struct
+> clockgen_muxinfo p5020_cmux_grp2
+> 
+> In the definition of the p5020 chip, the p2041 chip's info was used
+> instead.  The p5020 and p2041 chips have different info. This is most
+> likely a typo.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/525
+> Cc: clang-built-linux@googlegroups.com
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
 
-Fill in the L3 performance event select register ThreadMask
-bitfield, to enable per hardware thread accounting.
+Acked-by: Scott Wood <oss@buserror.net>
 
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Martin Liska <mliska@suse.cz>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Cc: Gary Hook <Gary.Hook@amd.com>
-Cc: Pu Wen <puwen@hygon.cn>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: x86@kernel.org
----
-RESEND3: file sent with header:
+-Scott
 
-	Content-Type: text/plain; charset=3D"us-ascii"
-
-to work around a bug in the Microsoft Outlook SMTP servers.
-
- arch/x86/events/amd/uncore.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index c2c4ae5fbbfc..a6ea07f2aa84 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -202,15 +202,22 @@ static int amd_uncore_event_init(struct perf_event *e=
-vent)
- 	hwc->config =3D event->attr.config & AMD64_RAW_EVENT_MASK_NB;
- 	hwc->idx =3D -1;
-=20
-+	if (event->cpu < 0)
-+		return -EINVAL;
-+
- 	/*
- 	 * SliceMask and ThreadMask need to be set for certain L3 events in
- 	 * Family 17h. For other events, the two fields do not affect the count.
- 	 */
--	if (l3_mask && is_llc_event(event))
--		hwc->config |=3D (AMD64_L3_SLICE_MASK | AMD64_L3_THREAD_MASK);
-+	if (l3_mask && is_llc_event(event)) {
-+		int thread =3D 2 * (cpu_data(event->cpu).cpu_core_id % 4);
-=20
--	if (event->cpu < 0)
--		return -EINVAL;
-+		if (smp_num_siblings > 1)
-+			thread +=3D cpu_data(event->cpu).apicid & 1;
-+
-+		hwc->config |=3D (1ULL << (AMD64_L3_THREAD_SHIFT + thread) &
-+				AMD64_L3_THREAD_MASK) | AMD64_L3_SLICE_MASK;
-+	}
-=20
- 	uncore =3D event_to_amd_uncore(event);
- 	if (!uncore)
---=20
-2.22.0
 
