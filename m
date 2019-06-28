@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7D9C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6989C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BD2215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1DCF215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561743657;
-	bh=Aww1CuY+nNWchBpG1TRF+5hPu82SNYFOgNZPNettiVk=;
+	s=default; t=1561743660;
+	bh=IlM91rekBXzF2Dulk2z+OG35/Nb1/C6HO3bulRbEMa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=LK00/H2kphiKKxqKYvXjerbBOzV+SplIa1YwH/FR1bTVLsGlJzxdCDI3uk7IF8Srr
-	 0wuZgA0ZlMa1BiTen2w/GwUoxZgcE1LVYg1oRhoOyc2S5Cj355HX9ogFg9QsBJsu7n
-	 Mbu67rD7I9s09RRtMC7alUDYRZVeNOG9bHJXZ1xs=
+	b=LZ4uasZ53nlGldOo3FovBvvlN8Jz29r7LWw/eC06uGAddgCbx/6rMVyvmCI+K8Sgg
+	 BL0C9FkiO+QOtxfQSRUI+9CXIEsqLKEVtX+Vl5QJnecMOxn1NuaSbWP7j2f/z8BZd6
+	 rUGR8gVl4VN9FpDXcFxI+QDocwDE3+b5i5Bizios=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfF1Rkz (ORCPT
+        id S1726863AbfF1Rk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:40:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50270 "EHLO mail.kernel.org"
+        Fri, 28 Jun 2019 13:40:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbfF1Rky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:40:54 -0400
+        id S1726702AbfF1Rk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 13:40:56 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4EDF208CB;
-        Fri, 28 Jun 2019 17:40:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F399214DA;
+        Fri, 28 Jun 2019 17:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561743653;
-        bh=Aww1CuY+nNWchBpG1TRF+5hPu82SNYFOgNZPNettiVk=;
+        s=default; t=1561743656;
+        bh=IlM91rekBXzF2Dulk2z+OG35/Nb1/C6HO3bulRbEMa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=TKxw+iYJl2aeb5zLcfZYtW/0bJQkeVtfsi/g9KaUUvj+QaoJlYGS67ZA67Ldy0l3u
-         AtuqnAvZaAJSzupqlPfAlxj5mOJVCdvpeXUgyR2BFPo2FdhcWLHfkoas4R+TqAisPv
-         bR3fEKpUUwDzgNm9t3YnuGB0QHdi2EBkNQA5yPsw=
+        b=Mosgy565Lij4YKeWdTSt8BoGOKG/cqvoNnkQPXLFi2O/ayL+qN4i/YISjP3TMYTBz
+         /EiqGAVMEK6y1Y48wopWNYIipP3cPVnFh8Xlcf0eDta7f3cxiXxaKpV9xgpYtowZw/
+         j3mYFNgq8tt7ZeoUiksXXMclMMazHU5sWnkMrsm0=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/4] tracing: Add hist trigger error messages for sort specification
-Date:   Fri, 28 Jun 2019 12:40:21 -0500
-Message-Id: <237830dc05e583fbb53664d817a784297bf961be.1561743018.git.zanussi@kernel.org>
+Subject: [PATCH v2 4/4] tracing: Add new testcases for hist trigger parsing errors
+Date:   Fri, 28 Jun 2019 12:40:23 -0500
+Message-Id: <62ec58d9aca661cde46ba678e32a938427945e9e.1561743018.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1561743018.git.zanussi@kernel.org>
 References: <cover.1561743018.git.zanussi@kernel.org>
@@ -57,109 +57,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add error codes and messages for all the error paths leading to sort
-specification parsing errors.
+Add a testcase ensuring that the tracing error_log correctly displays
+hist trigger parsing errors.
 
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace_events_hist.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ .../test.d/trigger/trigger-hist-syntax-errors.tc   | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-syntax-errors.tc
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 964d032f51c6..d33c94a1cfa9 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -61,7 +61,12 @@
- 	C(INVALID_SUBSYS_EVENT,	"Invalid subsystem or event name"),	\
- 	C(INVALID_REF_KEY,	"Using variable references in keys not supported"), \
- 	C(VAR_NOT_FOUND,	"Couldn't find variable"),		\
--	C(FIELD_NOT_FOUND,	"Couldn't find field"),
-+	C(FIELD_NOT_FOUND,	"Couldn't find field"),			\
-+	C(EMPTY_ASSIGNMENT,	"Empty assignment"),			\
-+	C(INVALID_SORT_MODIFIER,"Invalid sort modifier"),		\
-+	C(EMPTY_SORT_FIELD,	"Empty sort field"),			\
-+	C(TOO_MANY_SORT_FIELDS,	"Too many sort fields (Max = 2)"),	\
-+	C(INVALID_SORT_FIELD,	"Sort field must be a key or a val"),
- 
- #undef C
- #define C(a, b)		HIST_ERR_##a
-@@ -2129,6 +2134,7 @@ parse_hist_trigger_attrs(struct trace_array *tr, char *trigger_str)
- 		if (rhs) {
- 			if (!strlen(++rhs)) {
- 				ret = -EINVAL;
-+				hist_err(tr, HIST_ERR_EMPTY_ASSIGNMENT, errpos(str));
- 				goto free;
- 			}
- 			ret = parse_assignment(tr, str, attrs);
-@@ -4680,7 +4686,7 @@ static int create_hist_fields(struct hist_trigger_data *hist_data,
- 	return ret;
- }
- 
--static int is_descending(const char *str)
-+static int is_descending(struct trace_array *tr, const char *str)
- {
- 	if (!str)
- 		return 0;
-@@ -4691,11 +4697,14 @@ static int is_descending(const char *str)
- 	if (strcmp(str, "ascending") == 0)
- 		return 0;
- 
-+	hist_err(tr, HIST_ERR_INVALID_SORT_MODIFIER, errpos((char *)str));
+diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-syntax-errors.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-syntax-errors.tc
+new file mode 100644
+index 000000000000..d44087a2f3d1
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-syntax-errors.tc
+@@ -0,0 +1,32 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: event trigger - test histogram parser errors
 +
- 	return -EINVAL;
- }
- 
- static int create_sort_keys(struct hist_trigger_data *hist_data)
- {
-+	struct trace_array *tr = hist_data->event_file->tr;
- 	char *fields_str = hist_data->attrs->sort_key_str;
- 	struct tracing_map_sort_key *sort_key;
- 	int descending, ret = 0;
-@@ -4719,10 +4728,12 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
- 
- 		if (!*field_str) {
- 			ret = -EINVAL;
-+			hist_err(tr, HIST_ERR_EMPTY_SORT_FIELD, errpos("sort="));
- 			break;
- 		}
- 
- 		if ((i == TRACING_MAP_SORT_KEYS_MAX - 1) && fields_str) {
-+			hist_err(tr, HIST_ERR_TOO_MANY_SORT_FIELDS, errpos("sort="));
- 			ret = -EINVAL;
- 			break;
- 		}
-@@ -4730,11 +4741,12 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
- 		field_name = strsep(&field_str, ".");
- 		if (!field_name || !*field_name) {
- 			ret = -EINVAL;
-+			hist_err(tr, HIST_ERR_EMPTY_SORT_FIELD, errpos("sort="));
- 			break;
- 		}
- 
- 		if (strcmp(field_name, "hitcount") == 0) {
--			descending = is_descending(field_str);
-+			descending = is_descending(tr, field_str);
- 			if (descending < 0) {
- 				ret = descending;
- 				break;
-@@ -4756,7 +4768,7 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
- 
- 			if (strcmp(field_name, test_name) == 0) {
- 				sort_key->field_idx = idx;
--				descending = is_descending(field_str);
-+				descending = is_descending(tr, field_str);
- 				if (descending < 0) {
- 					ret = descending;
- 					goto out;
-@@ -4767,6 +4779,7 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
- 		}
- 		if (j == hist_data->n_fields) {
- 			ret = -EINVAL;
-+			hist_err(tr, HIST_ERR_INVALID_SORT_FIELD, errpos(field_name));
- 			break;
- 		}
- 	}
++if [ ! -f set_event -o ! -d events/kmem ]; then
++    echo "event tracing is not supported"
++    exit_unsupported
++fi
++
++if [ ! -f events/kmem/kmalloc/trigger ]; then
++    echo "event trigger is not supported"
++    exit_unsupported
++fi
++
++if [ ! -f events/kmem/kmalloc/hist ]; then
++    echo "hist trigger is not supported"
++    exit_unsupported
++fi
++
++[ -f error_log ] || exit_unsupported
++
++check_error() { # command-with-error-pos-by-^
++    ftrace_errlog_check 'hist:kmem:kmalloc' "$1" 'events/kmem/kmalloc/trigger'
++}
++
++check_error 'hist:keys=common_pid:vals=bytes_req:sort=common_pid,^junk'	# INVALID_SORT_FIELD
++check_error 'hist:keys=common_pid:vals=bytes_req:^sort='		# EMPTY_ASSIGNMENT
++check_error 'hist:keys=common_pid:vals=bytes_req:^sort=common_pid,'	# EMPTY_SORT_FIELD
++check_error 'hist:keys=common_pid:vals=bytes_req:sort=common_pid.^junk'	# INVALID_SORT_MODIFIER
++check_error 'hist:keys=common_pid:vals=bytes_req,bytes_alloc:^sort=common_pid,bytes_req,bytes_alloc'	# TOO_MANY_SORT_FIELDS
++
++exit 0
 -- 
 2.14.1
 
