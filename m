@@ -7,59 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90ED8C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451B7C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608072133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9192083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561725138;
-	bh=OFnhJea0gyEPp+cJHwhXSXRaWGDRaJqhUSnzM29pFHA=;
+	s=default; t=1561725145;
+	bh=WFGeLwOlFZbdVXS5h0WeG4V8ZwSVcJhDq3sd/2CPeo0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dbirj6IJGiKJpMMSIAR0WUauWH52aWNcdzBZ621CkNcTHdT3VdtH/5Kb8jVx/oo18
-	 l9JXRZJ3miTRmnlmxKNhI1vCVI4MKTQdHuhYnPlvNe50VYAfFTvpMpnxPfXDAWciCj
-	 tB7kOX2qcE90ZFVLiHts/11L4akFWJr5mGY63nyU=
+	b=xLpBXJ1FICBS9NRaTc+segIbAI5d3gqsJJPjd/vsWZA7Hd+H+nhp0teiP3VkjpjIP
+	 t+20RA2iQ+qkKfpBmQ3tWgajbZsnytjr+FiTqb5XRvJ3Af26W29OVwgkpog+/eg6q8
+	 6f0WcssXuOysomtqTJIkVOAA0YSv7uj41wKzB19c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfF1McM (ORCPT
+        id S1727507AbfF1McY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:32:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39380 "EHLO
+        Fri, 28 Jun 2019 08:32:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39334 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfF1Man (ORCPT
+        with ESMTP id S1727037AbfF1Mam (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:30:43 -0400
+        Fri, 28 Jun 2019 08:30:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9x6MnELpm41+8+il8SzONc8VzOlbzKYgL1wPINAhEuU=; b=JTRIUwajdrDihDEkBt/zx/3w+b
-        U67j76+Puudo7N4rJUEJ6sU9zLuGZKUBOdsRnW/R5JsgtnxgT9M+8wIzVvoEgLsh3v1DskXsW+EyK
-        zidvAYPNYnWaBDtfUuOIfXodjjOxrrrrNiuX2l5sIat4zAZDzqv7hUZ4kMh0q87WNPHohB6hqU1DI
-        VeUPT4BzyvKLUwPnd2OMY0e28x+bPcN3uuQGYK8sgcNMdue3MsnhKya/GcoQGN7VhoPLPJnL+3EWZ
-        LiKjtuxM7kRBNSWjTlMYoFm3E0RzHPJOTIeiJskH5ZAjZXPBGXpB9tHZZ3M5W+6K0fcnlGJmvTI2r
-        qO36jZtg==;
+        bh=7J8GFXOXC+IsahgFkckgvyti7445SF8VB9Sumqq9uUc=; b=GbQemoOEwXARLFQleu5EcWNIIE
+        fdEAhyNTqyo3grcWlAVt3arziGjsdHks7HiHdSlngDlaEbP1Eqeq9MVo8OUBceYTeL/6zLVg1/dcU
+        UfJ5+nMnEOoT6YWgNEgj6MjE9fZfXdITbjy3OEH1MPHQgMuUQQPs3/ZVOQqzColEEJ1thEzTnjvbH
+        YY9joIENwEWfY8gFfL0PM9peiI6oRztYlLhWKHHhPIFWiwNICk2+5Pkw8eJn4VGAGbf8bFZvxPkCY
+        w97+3RLdZXK8NdGiZp1oQO4cEWjDzyItlyqGG9NLnFMG/i2HUAc1MdvDLtSH3Xi/Ma/B0+pXfLUgl
+        +GPfPteQ==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1U-00055r-Od; Fri, 28 Jun 2019 12:30:36 +0000
+        id 1hgq1W-000552-3x; Fri, 28 Jun 2019 12:30:38 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005TY-QB; Fri, 28 Jun 2019 09:30:34 -0300
+        id 1hgq1S-0005Ty-UM; Fri, 28 Jun 2019 09:30:34 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 33/39] docs: phy: place documentation under driver-api
-Date:   Fri, 28 Jun 2019 09:30:26 -0300
-Message-Id: <df0337d37a924dcfa1f528734ffd3bae430d93c4.1561724493.git.mchehab+samsung@kernel.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Subject: [PATCH 38/39] docs: locking: add it to the main index
+Date:   Fri, 28 Jun 2019 09:30:31 -0300
+Message-Id: <9cb659cc11d881b812a494475616e0f46ade51cb.1561724493.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
 References: <cover.1561724493.git.mchehab+samsung@kernel.org>
@@ -70,112 +66,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This subsystem-specific documentation belongs to the
-driver-api.
+The locking directory is part of the Kernel API bookset. Add
+it to the index file.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../devicetree/bindings/phy/phy-bindings.txt     |  2 +-
- .../devicetree/bindings/phy/phy-pxa-usb.txt      |  2 +-
- Documentation/driver-api/index.rst               |  1 +
- Documentation/driver-api/phy/index.rst           | 16 ++++++++++++++++
- .../{phy.txt => driver-api/phy/phy.rst}          |  0
- .../{ => driver-api}/phy/samsung-usb2.rst        |  0
- Documentation/index.rst                          |  1 -
- MAINTAINERS                                      |  2 +-
- 8 files changed, 20 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/driver-api/phy/index.rst
- rename Documentation/{phy.txt => driver-api/phy/phy.rst} (100%)
- rename Documentation/{ => driver-api}/phy/samsung-usb2.rst (100%)
+ Documentation/index.rst         | 1 +
+ Documentation/locking/index.rst | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-bindings.txt b/Documentation/devicetree/bindings/phy/phy-bindings.txt
-index a403b81d0679..c4eb38902533 100644
---- a/Documentation/devicetree/bindings/phy/phy-bindings.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-bindings.txt
-@@ -1,5 +1,5 @@
- This document explains only the device tree data binding. For general
--information about PHY subsystem refer to Documentation/phy.txt
-+information about PHY subsystem refer to Documentation/driver-api/phy/phy.rst
- 
- PHY device node
- ===============
-diff --git a/Documentation/devicetree/bindings/phy/phy-pxa-usb.txt b/Documentation/devicetree/bindings/phy/phy-pxa-usb.txt
-index 93fc09c12954..d80e36a77ec5 100644
---- a/Documentation/devicetree/bindings/phy/phy-pxa-usb.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-pxa-usb.txt
-@@ -15,4 +15,4 @@ Example:
- 	};
- 
- This document explains the device tree binding. For general
--information about PHY subsystem refer to Documentation/phy.txt
-+information about PHY subsystem refer to Documentation/driver-api/phy/phy.rst
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index d6f532c8d824..12d68c3ab792 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -85,6 +85,7 @@ available subsections can be seen below.
-    parport-lowlevel
-    pps
-    ptp
-+   phy/index
-    pti_intel_mid
-    pwm
-    rfkill
-diff --git a/Documentation/driver-api/phy/index.rst b/Documentation/driver-api/phy/index.rst
-new file mode 100644
-index 000000000000..fce9ffae2812
---- /dev/null
-+++ b/Documentation/driver-api/phy/index.rst
-@@ -0,0 +1,16 @@
-+=====================
-+Generic PHY Framework
-+=====================
-+
-+.. toctree::
-+
-+   phy
-+   samsung-usb2
-+
-+.. only::  subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-+
-diff --git a/Documentation/phy.txt b/Documentation/driver-api/phy/phy.rst
-similarity index 100%
-rename from Documentation/phy.txt
-rename to Documentation/driver-api/phy/phy.rst
-diff --git a/Documentation/phy/samsung-usb2.rst b/Documentation/driver-api/phy/samsung-usb2.rst
-similarity index 100%
-rename from Documentation/phy/samsung-usb2.rst
-rename to Documentation/driver-api/phy/samsung-usb2.rst
 diff --git a/Documentation/index.rst b/Documentation/index.rst
-index 28e6b5ef17b4..ea33cbbccd9d 100644
+index 075c732501a2..13c3188f6a68 100644
 --- a/Documentation/index.rst
 +++ b/Documentation/index.rst
-@@ -112,7 +112,6 @@ needed).
-    usb/index
-    misc-devices/index
-    mic/index
--   phy/samsung-usb2
-    scheduler/index
+@@ -96,6 +96,7 @@ needed).
  
- Architecture-specific documentation
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 856db8015edd..cda68bbd9d1c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14031,7 +14031,7 @@ M:	Sylwester Nawrocki <s.nawrocki@samsung.com>
- L:	linux-kernel@vger.kernel.org
- S:	Supported
- F:	Documentation/devicetree/bindings/phy/samsung-phy.txt
--F:	Documentation/phy/samsung-usb2.rst
-+F:	Documentation/driver-api/phy/samsung-usb2.rst
- F:	drivers/phy/samsung/phy-exynos4210-usb2.c
- F:	drivers/phy/samsung/phy-exynos4x12-usb2.c
- F:	drivers/phy/samsung/phy-exynos5250-usb2.c
+    driver-api/index
+    core-api/index
++   locking/index
+    accounting/index
+    block/index
+    cdrom/index
+diff --git a/Documentation/locking/index.rst b/Documentation/locking/index.rst
+index ef5da7fe9aac..626a463f7e42 100644
+--- a/Documentation/locking/index.rst
++++ b/Documentation/locking/index.rst
+@@ -1,4 +1,4 @@
+-:orphan:
++.. SPDX-License-Identifier: GPL-2.0
+ 
+ =======
+ locking
 -- 
 2.21.0
 
