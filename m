@@ -2,172 +2,143 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AB8C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09452C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96727205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3371205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:49:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="eLbff2yA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfF1PtJ (ORCPT
+        id S1727416AbfF1PtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:49:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36712 "EHLO mx1.redhat.com"
+        Fri, 28 Jun 2019 11:49:13 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:40434 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726907AbfF1PtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:49:06 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 66A0988305;
-        Fri, 28 Jun 2019 15:49:05 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BC6B75D71B;
-        Fri, 28 Jun 2019 15:49:02 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 3/9] security: Add a hook for the point of notification
- insertion [ver #5]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>, dhowells@redhat.com,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 28 Jun 2019 16:49:02 +0100
-Message-ID: <156173694190.15137.8939274212328721351.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156173690158.15137.3985163001079120218.stgit@warthog.procyon.org.uk>
-References: <156173690158.15137.3985163001079120218.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 28 Jun 2019 15:49:05 +0000 (UTC)
+        id S1726865AbfF1Prx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:47:53 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45b1PL2y79zB09ZQ;
+        Fri, 28 Jun 2019 17:47:50 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=eLbff2yA; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id iiL7FYjKr6zA; Fri, 28 Jun 2019 17:47:50 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45b1PL1qN4zB09ZN;
+        Fri, 28 Jun 2019 17:47:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1561736870; bh=WmP4bKhnfBYlSSGQ//frf/dAVmCAzNuL14conWVzh18=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=eLbff2yAwf4Sx2EDT4g7EvkoEDZQWJWVYdRgj+nDDJuZg0Zd8MCOiBSOuJjjo2GZG
+         lrHs2lCejz93KhHbBg4OBzjrvL93ErU3tVimaMWEMZFpnREahoPvegUT/mBgphJfBB
+         scdGGZMJpky1lJ75/DgcJrI8TZG1q2sShnz8LdS0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 715CE8B955;
+        Fri, 28 Jun 2019 17:47:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id HkwAnLYF9rVD; Fri, 28 Jun 2019 17:47:51 +0200 (CEST)
+Received: from localhost.localdomain (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E3FE98B976;
+        Fri, 28 Jun 2019 17:47:50 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id A6EE668DBC; Fri, 28 Jun 2019 15:47:50 +0000 (UTC)
+Message-Id: <4b371c54e2c15cab57585ad538d9fcb33bcf2725.1561735587.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1561735587.git.christophe.leroy@c-s.fr>
+References: <cover.1561735587.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH v2 01/12] powerpc: move ptrace into a subdirectory.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 28 Jun 2019 15:47:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a security hook that allows an LSM to rule on whether a notification
-message is allowed to be inserted into a particular watch queue.
+In order to allow splitting of ptrace depending on the
+different CONFIG_ options, create a subdirectory dedicated to
+ptrace and move ptrace.c and ptrace32.c into it.
 
-The hook is given the following information:
-
- (1) The credentials of the triggerer (which may be init_cred for a system
-     notification, eg. a hardware error).
-
- (2) The credentials of the whoever set the watch.
-
- (3) The notification message.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Casey Schaufler <casey@schaufler-ca.com>
-cc: Stephen Smalley <sds@tycho.nsa.gov>
-cc: linux-security-module@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
+ arch/powerpc/kernel/Makefile                | 7 +++----
+ arch/powerpc/kernel/ptrace/Makefile         | 9 +++++++++
+ arch/powerpc/kernel/{ => ptrace}/ptrace.c   | 0
+ arch/powerpc/kernel/{ => ptrace}/ptrace32.c | 0
+ 4 files changed, 12 insertions(+), 4 deletions(-)
+ create mode 100644 arch/powerpc/kernel/ptrace/Makefile
+ rename arch/powerpc/kernel/{ => ptrace}/ptrace.c (100%)
+ rename arch/powerpc/kernel/{ => ptrace}/ptrace32.c (100%)
 
- include/linux/lsm_hooks.h |   10 ++++++++++
- include/linux/security.h  |   10 ++++++++++
- security/security.c       |    6 ++++++
- 3 files changed, 26 insertions(+)
-
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index f9d31f6445e4..fd4b2b14e7d0 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -1426,6 +1426,12 @@
-  *	from devices (as a global set).
-  *	@watch: The watch object
-  *
-+ * @post_notification:
-+ *	Check to see if a watch notification can be posted to a particular
-+ *	queue.
-+ *	@w_cred: The credentials of the whoever set the watch.
-+ *	@cred: The event-triggerer's credentials
-+ *	@n: The notification being posted
-  *
-  * Security hooks for using the eBPF maps and programs functionalities through
-  * eBPF syscalls.
-@@ -1705,6 +1711,9 @@ union security_list_options {
- #ifdef CONFIG_WATCH_QUEUE
- 	int (*watch_key)(struct watch *watch, struct key *key);
- 	int (*watch_devices)(struct watch *watch);
-+	int (*post_notification)(const struct cred *w_cred,
-+				 const struct cred *cred,
-+				 struct watch_notification *n);
- #endif /* CONFIG_WATCH_QUEUE */
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index 0ea6c4aa3a20..c522464fa56a 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -3,8 +3,6 @@
+ # Makefile for the linux kernel.
+ #
  
- #ifdef CONFIG_SECURITY_NETWORK
-@@ -1985,6 +1994,7 @@ struct security_hook_heads {
- #ifdef CONFIG_WATCH_QUEUE
- 	struct hlist_head watch_key;
- 	struct hlist_head watch_devices;
-+	struct hlist_head post_notification;
- #endif /* CONFIG_WATCH_QUEUE */
- #ifdef CONFIG_SECURITY_NETWORK
- 	struct hlist_head unix_stream_connect;
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 540863678355..5c074bf18bea 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -58,6 +58,7 @@ struct fs_context;
- struct fs_parameter;
- enum fs_value_type;
- struct watch;
-+struct watch_notification;
+-CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
+-
+ # Disable clang warning for using setjmp without setjmp.h header
+ CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header)
  
- /* Default (no) options for the capable function */
- #define CAP_OPT_NONE 0x0
-@@ -396,6 +397,9 @@ int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
- #ifdef CONFIG_WATCH_QUEUE
- int security_watch_key(struct watch *watch, struct key *key);
- int security_watch_devices(struct watch *watch);
-+int security_post_notification(const struct cred *w_cred,
-+			       const struct cred *cred,
-+			       struct watch_notification *n);
- #endif /* CONFIG_WATCH_QUEUE */
- #else /* CONFIG_SECURITY */
+@@ -43,15 +41,16 @@ CFLAGS_prom_init.o += -DDISABLE_BRANCH_PROFILING
+ CFLAGS_btext.o += -DDISABLE_BRANCH_PROFILING
+ endif
  
-@@ -1218,6 +1222,12 @@ static inline int security_watch_devices(struct watch *watch)
- {
- 	return 0;
- }
-+static inline int security_post_notification(const struct cred *w_cred,
-+					     const struct cred *cred,
-+					     struct watch_notification *n)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_WATCH_QUEUE */
- #endif	/* CONFIG_SECURITY */
- 
-diff --git a/security/security.c b/security/security.c
-index 2c9919226ad1..459e87d55ac9 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1928,6 +1928,12 @@ int security_watch_devices(struct watch *watch)
- 	return call_int_hook(watch_devices, 0, watch);
- }
- 
-+int security_post_notification(const struct cred *w_cred,
-+			       const struct cred *cred,
-+			       struct watch_notification *n)
-+{
-+	return call_int_hook(post_notification, 0, w_cred, cred, n);
-+}
- #endif /* CONFIG_WATCH_QUEUE */
- 
- #ifdef CONFIG_SECURITY_NETWORK
+-obj-y				:= cputable.o ptrace.o syscalls.o \
++obj-y				:= cputable.o syscalls.o \
+ 				   irq.o align.o signal_32.o pmc.o vdso.o \
+ 				   process.o systbl.o idle.o \
+ 				   signal.o sysfs.o cacheinfo.o time.o \
+ 				   prom.o traps.o setup-common.o \
+ 				   udbg.o misc.o io.o misc_$(BITS).o \
+ 				   of_platform.o prom_parse.o
++obj-y				+= ptrace/
+ obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o \
+-				   signal_64.o ptrace32.o \
++				   signal_64.o \
+ 				   paca.o nvram_64.o firmware.o
+ obj-$(CONFIG_VDSO32)		+= vdso32/
+ obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
+diff --git a/arch/powerpc/kernel/ptrace/Makefile b/arch/powerpc/kernel/ptrace/Makefile
+new file mode 100644
+index 000000000000..02fb28eb3b55
+--- /dev/null
++++ b/arch/powerpc/kernel/ptrace/Makefile
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for the linux kernel.
++#
++
++CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
++
++obj-y				+= ptrace.o
++obj-$(CONFIG_PPC64)		+= ptrace32.o
+diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
+similarity index 100%
+rename from arch/powerpc/kernel/ptrace.c
+rename to arch/powerpc/kernel/ptrace/ptrace.c
+diff --git a/arch/powerpc/kernel/ptrace32.c b/arch/powerpc/kernel/ptrace/ptrace32.c
+similarity index 100%
+rename from arch/powerpc/kernel/ptrace32.c
+rename to arch/powerpc/kernel/ptrace/ptrace32.c
+-- 
+2.13.3
 
