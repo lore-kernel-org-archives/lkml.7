@@ -2,50 +2,42 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958CDC5B578
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0145CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F06208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1C072147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfF1Do1 (ORCPT
+        id S1727239AbfF1Dor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:44:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:39698 "EHLO foss.arm.com"
+        Thu, 27 Jun 2019 23:44:47 -0400
+Received: from cnc.isely.net ([75.149.91.89]:58911 "EHLO cnc.isely.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfF1DoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:44:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC1A92B;
-        Thu, 27 Jun 2019 20:44:24 -0700 (PDT)
-Received: from [10.162.40.144] (p8cg001049571a15.blr.arm.com [10.162.40.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BE923F706;
-        Thu, 27 Jun 2019 20:44:20 -0700 (PDT)
-Subject: Re: [PATCH] powerpc/64s/radix: Define arch_ioremap_p4d_supported()
-To:     Michael Ellerman <mpe@ellerman.id.au>, linux-mm@kvack.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org
-References: <1561555260-17335-1-git-send-email-anshuman.khandual@arm.com>
- <87d0iztz0f.fsf@concordia.ellerman.id.au>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <6d201cb8-4c39-b7ea-84e6-f84607cc8b4f@arm.com>
-Date:   Fri, 28 Jun 2019 09:14:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <87d0iztz0f.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        id S1726686AbfF1Dor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 23:44:47 -0400
+Received: from lochley (lochley-lan.isely.net [::ffff:192.168.23.74])
+  (AUTH: PLAIN isely, TLS: TLSv1/SSLv3,256bits,DHE-RSA-AES256-GCM-SHA384)
+  by cnc.isely.net with ESMTPSA; Thu, 27 Jun 2019 22:44:45 -0500
+  id 000000000014259A.000000005D158D2D.00007183
+Date:   Thu, 27 Jun 2019 22:44:45 -0500 (CDT)
+From:   isely@isely.net
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Isely at pobox <isely@pobox.com>
+Subject: Re: [PATCH 32/87] usb: pvrusb2: replace kmalloc and memset with
+ kzalloc in pvrusb2-eeprom.c
+In-Reply-To: <20190627173840.3519-1-huangfq.daxian@gmail.com>
+Message-ID: <alpine.DEB.2.20.1906272244210.22929@lochley.isely.net>
+References: <20190627173840.3519-1-huangfq.daxian@gmail.com>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -53,36 +45,44 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Acked-by: Mike Isely <isely@pobox.com>
 
-On 06/27/2019 10:18 AM, Michael Ellerman wrote:
-> Anshuman Khandual <anshuman.khandual@arm.com> writes:
->> Recent core ioremap changes require HAVE_ARCH_HUGE_VMAP subscribing archs
->> provide arch_ioremap_p4d_supported() failing which will result in a build
->> failure like the following.
->>
->> ld: lib/ioremap.o: in function `.ioremap_huge_init':
->> ioremap.c:(.init.text+0x3c): undefined reference to
->> `.arch_ioremap_p4d_supported'
->>
->> This defines a stub implementation for arch_ioremap_p4d_supported() keeping
->> it disabled for now to fix the build problem.
-> 
-> The easiest option is for this to be folded into your patch that creates
-> the requirement for arch_ioremap_p4d_supported().
-> 
-> Andrew might do that for you, or you could send a v2.
-> 
-> This looks fine from a powerpc POV:
-> 
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-> 
-> cheers
+  -Mike
 
-Hello Stephen/Michael/Andrew,
+On Fri, 28 Jun 2019, Fuqian Huang wrote:
 
-On linux-next (next-20190627) this change has already been applied though a
-merge commit 153083a99fe431 ("Merge branch 'akpm-current/current'"). So we
-are good on this ? Or shall I send out a V2 for the original patch. Please
-suggest. Thank you.
+> kmalloc + memset(0) -> kzalloc
+> 
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> ---
+>  drivers/media/usb/pvrusb2/pvrusb2-eeprom.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/usb/pvrusb2/pvrusb2-eeprom.c b/drivers/media/usb/pvrusb2/pvrusb2-eeprom.c
+> index 79f0e0c6df37..fac90af8b537 100644
+> --- a/drivers/media/usb/pvrusb2/pvrusb2-eeprom.c
+> +++ b/drivers/media/usb/pvrusb2/pvrusb2-eeprom.c
+> @@ -39,7 +39,7 @@ static u8 *pvr2_eeprom_fetch(struct pvr2_hdw *hdw)
+>  	int ret;
+>  	int mode16 = 0;
+>  	unsigned pcnt,tcnt;
+> -	eeprom = kmalloc(EEPROM_SIZE,GFP_KERNEL);
+> +	eeprom = kzalloc(EEPROM_SIZE,GFP_KERNEL);
+>  	if (!eeprom) {
+>  		pvr2_trace(PVR2_TRACE_ERROR_LEGS,
+>  			   "Failed to allocate memory required to read eeprom");
+> @@ -74,7 +74,6 @@ static u8 *pvr2_eeprom_fetch(struct pvr2_hdw *hdw)
+>  	   (1) we're only fetching part of the eeprom, and (2) if we were
+>  	   getting the whole thing our I2C driver can't grab it in one
+>  	   pass - which is what tveeprom is otherwise going to attempt */
+> -	memset(eeprom,0,EEPROM_SIZE);
+>  	for (tcnt = 0; tcnt < EEPROM_SIZE; tcnt += pcnt) {
+>  		pcnt = 16;
+>  		if (pcnt + tcnt > EEPROM_SIZE) pcnt = EEPROM_SIZE-tcnt;
+> 
 
-- Anshuman
+-- 
+
+Mike Isely
+isely @ isely (dot) net
+PGP: 03 54 43 4D 75 E5 CC 92 71 16 01 E2 B5 F5 C1 E8
