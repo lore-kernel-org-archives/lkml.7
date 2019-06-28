@@ -2,78 +2,47 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675ABC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EB7C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4F0205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:59:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hCseVWrz"
+	by mail.kernel.org (Postfix) with ESMTP id C017A2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfF1I7x (ORCPT
+        id S1726614AbfF1I75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:59:53 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:30451 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbfF1I7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:59:53 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45ZrLb32q7z9v1dq;
-        Fri, 28 Jun 2019 10:59:51 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=hCseVWrz; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id wg0kRk6LpBEP; Fri, 28 Jun 2019 10:59:51 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45ZrLb0JB7z9v1dW;
-        Fri, 28 Jun 2019 10:59:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1561712391; bh=3PExFE1N6IiyQSDeWR2v89tJ9QeiWcAN1N4Hjay3PlI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hCseVWrzRRQQXlskmPHp+o3zZeA9GBRK4q98IdoDLwuXYMJZ0gqNOJzJu4lD6Mxqb
-         cA/OiFk6yj7OXXXZDbS9ktAYJzXSFIfIfzeuxOXNEijxaOSJN+wsUKbnOH/ZnZ0Lmi
-         Pgc6B8sCSvQ3DAwq+DJQJ9XYrlUTJvBjOpWEWRUQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 256308B966;
-        Fri, 28 Jun 2019 10:59:52 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id mul6Zychpueb; Fri, 28 Jun 2019 10:59:52 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E11848B961;
-        Fri, 28 Jun 2019 10:59:51 +0200 (CEST)
-Subject: Re: [PATCH v2 27/27] sound: ppc: remove unneeded memset after
- dma_alloc_coherent
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, Allison Randal <allison@lohutok.net>
-References: <20190628025055.16242-1-huangfq.daxian@gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Followup-To: Takashi Iwai <tiwai@suse.com>
-Message-ID: <83108dee-72f7-e56f-95f6-26162c9a0ccc@c-s.fr>
-Date:   Fri, 28 Jun 2019 10:59:51 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 28 Jun 2019 04:59:57 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:47302 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725873AbfF1I7y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:59:54 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R841e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=zhiyuan2048@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TVQ6QnS_1561712375;
+Received: from houzhiyuandeMacBook-Pro.local(mailfrom:zhiyuan2048@linux.alibaba.com fp:SMTPD_---0TVQ6QnS_1561712375)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 28 Jun 2019 16:59:36 +0800
+Subject: Re: [PATCH net-next] net: ipvlan: forward ingress packet to slave's
+ l2 in l3s mode
+To:     Paolo Abeni <pabeni@redhat.com>, davem@davemloft.net,
+        idosch@mellanox.com, daniel@iogearbox.net, petrm@mellanox.com,
+        jiri@mellanox.com, tglx@linutronix.de, linmiaohe@huawei.com
+Cc:     zhabin@linux.alibaba.com, caspar@linux.alibaba.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wei.yang1@linux.alibaba.com
+References: <20190625064208.2256-1-zhiyuan2048@linux.alibaba.com>
+ <24fab1f43190f4994e47da4c2fa3fd622cd4e8ca.camel@redhat.com>
+From:   Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
+Message-ID: <07b3b417-c951-b9ce-743d-0fbe50e39c39@linux.alibaba.com>
+Date:   Fri, 28 Jun 2019 16:59:35 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190628025055.16242-1-huangfq.daxian@gmail.com>
+In-Reply-To: <24fab1f43190f4994e47da4c2fa3fd622cd4e8ca.camel@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -81,38 +50,121 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+在 2019/6/26 下午4:16, Paolo Abeni 写道:
+> Hi,
+>
+> On Tue, 2019-06-25 at 14:42 +0800, Zhiyuan Hou wrote:
+>> In ipvlan l3s mode,  ingress packet is switched to slave interface and
+>> delivers to l4 stack. This may cause two problems:
+>>
+>>    1. When slave is in an ns different from master, the behavior of stack
+>>    in slave ns may cause confusion for users. For example, iptables, tc,
+>>    and other l2/l3 functions are not available for ingress packet.
+>>
+>>    2. l3s mode is not used for tap device, and cannot support ipvtap. But
+>>    in VM or container based VM cases, tap device is a very common device.
+>>
+>> In l3s mode's input nf_hook, this patch calles the skb_forward_dev() to
+>> forward ingress packet to slave and uses nf_conntrack_confirm() to make
+>> conntrack work with new mode.
+>>
+>> Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
+>> Signed-off-by: Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
+>> ---
+>>   drivers/net/ipvlan/ipvlan.h     |  9 ++++++++-
+>>   drivers/net/ipvlan/ipvlan_l3s.c | 16 ++++++++++++++--
+>>   2 files changed, 22 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/net/ipvlan/ipvlan.h b/drivers/net/ipvlan/ipvlan.h
+>> index 3837c897832e..48c814e24c3f 100644
+>> --- a/drivers/net/ipvlan/ipvlan.h
+>> +++ b/drivers/net/ipvlan/ipvlan.h
+>> @@ -172,6 +172,14 @@ void ipvlan_link_delete(struct net_device *dev, struct list_head *head);
+>>   void ipvlan_link_setup(struct net_device *dev);
+>>   int ipvlan_link_register(struct rtnl_link_ops *ops);
+>>   #ifdef CONFIG_IPVLAN_L3S
+>> +
+>> +#include <net/netfilter/nf_conntrack_core.h>
+>> +
+>> +static inline int ipvlan_confirm_conntrack(struct sk_buff *skb)
+>> +{
+>> +	return nf_conntrack_confirm(skb);
+>> +}
+>> +
+>>   int ipvlan_l3s_register(struct ipvl_port *port);
+>>   void ipvlan_l3s_unregister(struct ipvl_port *port);
+>>   void ipvlan_migrate_l3s_hook(struct net *oldnet, struct net *newnet);
+>> @@ -206,5 +214,4 @@ static inline bool netif_is_ipvlan_port(const struct net_device *dev)
+>>   {
+>>   	return rcu_access_pointer(dev->rx_handler) == ipvlan_handle_frame;
+>>   }
+>> -
+>>   #endif /* __IPVLAN_H */
+>> diff --git a/drivers/net/ipvlan/ipvlan_l3s.c b/drivers/net/ipvlan/ipvlan_l3s.c
+>> index 943d26cbf39f..ed210002f593 100644
+>> --- a/drivers/net/ipvlan/ipvlan_l3s.c
+>> +++ b/drivers/net/ipvlan/ipvlan_l3s.c
+>> @@ -95,14 +95,26 @@ static unsigned int ipvlan_nf_input(void *priv, struct sk_buff *skb,
+>>   {
+>>   	struct ipvl_addr *addr;
+>>   	unsigned int len;
+>> +	int ret = NF_ACCEPT;
+>> +	bool success;
+>>   
+>>   	addr = ipvlan_skb_to_addr(skb, skb->dev);
+>>   	if (!addr)
+>>   		goto out;
+>>   
+>> -	skb->dev = addr->master->dev;
+>>   	len = skb->len + ETH_HLEN;
+>> -	ipvlan_count_rx(addr->master, len, true, false);
+>> +
+>> +	ret = ipvlan_confirm_conntrack(skb);
+>> +	if (ret != NF_ACCEPT) {
+>> +		ipvlan_count_rx(addr->master, len, false, false);
+>> +		goto out;
+>> +	}
+>> +
+>> +	skb_push_rcsum(skb, ETH_HLEN);
+>> +	success = dev_forward_skb(addr->master->dev, skb) == NET_RX_SUCCESS;
+> This looks weird to me: if I read the code correctly, the skb will
+> traverse twice NF_INET_LOCAL_IN, once due to the l3s hooking and
+> another one due to dev_forward_skb().
+>
+> Also, tc ingreess, etc will run after the first traversing of
+> NF_INET_LOCAL_IN.
 
-Le 28/06/2019 à 04:50, Fuqian Huang a écrit :
-> In commit af7ddd8a627c
-> ("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
-> dma_alloc_coherent has already zeroed the memory.
-> So memset is not needed.
+Yes,  but the skb's device has been modified from the master to slave. 
+In most use cases of
 
-You are refering to a merge commit, is that correct ?
+ipvlan, the master device and slave device are in different namespace 
+(ns), so the second
 
-I can't see anything related in that commit, can you please pinpoint it ?
+triggered LOCAL_IN is completely isolated from the first triggered 
+LOCAL_IN.
 
-As far as I can see, on powerpc the memory has always been zeroized 
-(since 2005 at least).
 
-Christophe
+When the master device and slave device are in the same ns, the behavior 
+of this patch is
 
-> 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> ---
->   sound/ppc/pmac.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/sound/ppc/pmac.c b/sound/ppc/pmac.c
-> index 1b11e53f6a62..1ab12f4f8631 100644
-> --- a/sound/ppc/pmac.c
-> +++ b/sound/ppc/pmac.c
-> @@ -56,7 +56,6 @@ static int snd_pmac_dbdma_alloc(struct snd_pmac *chip, struct pmac_dbdma *rec, i
->   	if (rec->space == NULL)
->   		return -ENOMEM;
->   	rec->size = size;
-> -	memset(rec->space, 0, rsize);
->   	rec->cmds = (void __iomem *)DBDMA_ALIGN(rec->space);
->   	rec->addr = rec->dma_base + (unsigned long)((char *)rec->cmds - (char *)rec->space);
->   
-> 
+similar to that of L2 over L3 tunnel (forwarding from L3 to L2 device).
+
+
+Since the device has been modified, the second triggered tc-ingress is 
+thus different.
+
+>
+> All in all I think that if full l2 processing is required, a different
+> mode or a different virtual device should be used.
+
+We can implement it in a new mode, but such a way is similar to the 
+current ipvlan l3s mode.
+
+Also, ipvlan l3s mode has two problems described in patch's commit log. 
+I think that a more
+
+appropriate solution is to modify ipvlan l3s.
+
+> Cheers,
+>
+> Paolo
