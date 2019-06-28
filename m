@@ -2,121 +2,109 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62538C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97392C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488CA2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C22208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:05:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Ogopxp/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfF1SBG (ORCPT
+        id S1726866AbfF1SFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:01:06 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:45884 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbfF1SBF (ORCPT
+        Fri, 28 Jun 2019 14:05:16 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:4619 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbfF1SFP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:01:05 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 8DED880348;
-        Fri, 28 Jun 2019 20:00:58 +0200 (CEST)
-Date:   Fri, 28 Jun 2019 20:00:57 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Colin Cross <ccross@android.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] kbuild: compile-test kernel headers to ensure
- they are self-contained
-Message-ID: <20190628180057.GA22758@ravnborg.org>
-References: <20190627163903.28398-1-yamada.masahiro@socionext.com>
- <20190627163903.28398-5-yamada.masahiro@socionext.com>
+        Fri, 28 Jun 2019 14:05:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1561745114; x=1593281114;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=J+7jeQfzr9Moq8Agn+ISSYlrytYaSGG1qD4Mlh6TYn8=;
+  b=Ogopxp/quGZatCOVgERjpBsbBW24yLLc6a0IGf2x9AVeh6fJ+RgTRzOq
+   AzLeuyuQs7u9tVvpA07iisB35nWj48OXa23ah0EkUKCd3wt/Sqpguz3To
+   ZFtlmiiwA8E44EAYDemsb2qcn0IVBMbkxDKMu8SuFhTjuUGto7++X+q1o
+   4=;
+X-IronPort-AV: E=Sophos;i="5.62,428,1554768000"; 
+   d="scan'208";a="813347880"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 28 Jun 2019 18:05:13 +0000
+Received: from EX13MTAUEB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (Postfix) with ESMTPS id 72AC2A18E5;
+        Fri, 28 Jun 2019 18:05:12 +0000 (UTC)
+Received: from EX13D08UEB004.ant.amazon.com (10.43.60.142) by
+ EX13MTAUEB001.ant.amazon.com (10.43.60.96) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 28 Jun 2019 18:05:12 +0000
+Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
+ EX13D08UEB004.ant.amazon.com (10.43.60.142) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 28 Jun 2019 18:05:11 +0000
+Received: from EX13D02UWC004.ant.amazon.com ([10.43.162.236]) by
+ EX13D02UWC004.ant.amazon.com ([10.43.162.236]) with mapi id 15.00.1367.000;
+ Fri, 28 Jun 2019 18:05:10 +0000
+From:   "Saidi, Ali" <alisaidi@amazon.com>
+To:     Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rindjunsky, Ron" <ronrindj@amazon.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/3] Add support for Graviton TRNG
+Thread-Topic: [PATCH 0/3] Add support for Graviton TRNG
+Thread-Index: AQHVGxR9rewpsnhufE+Qj7iDYwflKaaM+/mAgALbeQCAIVaegA==
+Date:   Fri, 28 Jun 2019 18:05:10 +0000
+Message-ID: <3104F396-094F-454C-8308-BF651FAB99AB@amazon.com>
+References: <20190604203100.15050-1-alisaidi@amazon.com>
+ <20190605122031.GK15030@fuggles.cambridge.arm.com>
+ <7EC45708-38A1-4826-BC82-298EFAAE30B1@amazon.com>
+In-Reply-To: <7EC45708-38A1-4826-BC82-298EFAAE30B1@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.161.147]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9B45E3D979865C468A2C17E957CEA6B4@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627163903.28398-5-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=yXOKcWPwKYVsdpAgASMA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro.
-
-On Fri, Jun 28, 2019 at 01:39:02AM +0900, Masahiro Yamada wrote:
-> The headers in include/ are globally used in the kernel source tree
-> to provide common APIs. They are included from external modules, too.
-> 
-> It will be useful to make as many headers self-contained as possible
-> so that we do not have to rely on a specific include order.
-> 
-> There are more than 4000 headers in include/. In my rough analysis,
-> 70% of them are already self-contained. With efforts, most of them
-> can be self-contained.
-> 
-> For now, we must exclude more than 1000 headers just because they
-> cannot be compiled as standalone units. I added them to header-test-.
-> The black list was mostly generated by a script, so should be checked
-> later.
-The list is smaller than I had expected.
-And I see why you insisted on avoiding a maze ok Kbuild files.
-It looks good, except there is a few issues..
-
-
-The file kernel/kheaders_data.tar.xz includes all the .s files.
-Something needs to be done to exclude the .s files...
-
-When building a full kernel the build fails like this:
-  LD      vmlinux.o
-aarch64-linux-gnu-ld: cannot find include/lib.a: No such file or directory
-make[1]: *** [/home/sam/kernel/linux-kbuild.git/Makefile:1054: vmlinux] Error 1
-make[1]: Leaving directory '/home/sam/kernel/linux-kbuild.git/.build/arm64-allyesconfig'
-make: *** [Makefile:179: sub-make] Error 2
-
-
-include/uapi/linux/mman.h fails when building sparc64 allmodconfig.
-There is likely more header files that will fail when we start to
-throw this after diverse randconfigs.
-I have no good idea how to catch this.
-Unless your scripts could automate this across several architectures.
-
-I did not continue my testing futher.
-
-> +header-test-			+= uapi/drm/vmwgfx_drm.h
-> +header-test-			+= uapi/linux/a.out.h
-> +header-test-			+= uapi/linux/coda.h
-...
-> +header-test-			+= uapi/xen/evtchn.h
-> +header-test-			+= uapi/xen/gntdev.h
-> +header-test-			+= uapi/xen/privcmd.h
-
-I though uapi files were covered by another Makefile?
-If they are added because we pull them in using a pattern, maybe they
-should be removed using a specific filer-out?
-
-	Sam
+T24gNi83LzE5LCA3OjU5IEFNLCAiIEFsaSBTYWlkaSIgPGFsaXNhaWRpQGFtYXpvbi5jb20+IHdy
+b3RlOg0KDQogICAgDQogICAgDQogICAgT24gNi81LzE5LCA3OjIwIEFNLCAiV2lsbCBEZWFjb24i
+IDx3aWxsLmRlYWNvbkBhcm0uY29tPiB3cm90ZToNCiAgICANCiAgICAgICAgT24gVHVlLCBKdW4g
+MDQsIDIwMTkgYXQgMDg6MzA6NTdQTSArMDAwMCwgQWxpIFNhaWRpIHdyb3RlOg0KICAgICAgICA+
+IEFXUyBHcmF2aXRvbiBiYXNlZCBzeXN0ZW1zIHByb3ZpZGUgYW4gQXJtIFNNQyBjYWxsIGluIHRo
+ZSB2ZW5kb3IgZGVmaW5lZA0KICAgICAgICA+IGh5cGVydmlzb3IgcmVnaW9uIHRvIHJlYWQgcmFu
+ZG9tIG51bWJlcnMgZnJvbSBhIEhXIFRSTkcgYW5kIHJldHVybiB0aGVtIHRvIHRoZQ0KICAgICAg
+ICA+IGd1ZXN0LiANCiAgICAgICAgPiANCiAgICAgICAgPiBXZSd2ZSBvYnNlcnZlZCBzbG93ZXIg
+Z3Vlc3QgYm9vdCBhbmQgZXNwZWNpYWxseSByZWJvb3QgdGltZXMgZHVlIHRvIGxhY2sgb2YNCiAg
+ICAgICAgPiBlbnRyb3B5IGFuZCBwcm92aWRpbmcgYWNjZXNzIHRvIGEgVFJORyBpcyBtZWFudCB0
+byBhZGRyZXNzIHRoaXMuIA0KICAgICAgICANCiAgICAgICAgQ3VyaW91cywgYnV0IHdoeSB0aGlz
+IG92ZXIgc29tZXRoaW5nIGxpa2UgdmlydGlvLXJuZz8NCiAgICAgICAgDQogICAgVGhpcyBpbnRl
+cmZhY2UgYWxsb3dzIHVzIHRvIHByb3ZpZGUgdGhlIGZ1bmN0aW9uYWxpdHkgZnJvbSBib3RoIEVM
+MiBhbmQgRUwzIGFuZCBzdXBwb3J0IG11bHRpcGxlIGRpZmZlcmVudCB0eXBlcyBvZiBvdXIgaW5z
+dGFuY2VzIHdoaWNoIHdlIHVuZm9ydHVuYXRlbHkgY2FuJ3QgZG8gd2l0aCB2aXJ0LWlvLg0KICAg
+IA0KV2lsbCwNCg0KQW55IGFkZGl0aW9uYWwgY29tbWVudHM/DQoNCk1hcmssDQoNCkRvIHlvdSBr
+bm93IHdoZW4geW91J2xsIGhhdmUgYSBjaGFuY2UgdG8gcmViYXNlIGFybTY0L3NtY2NjLWNsZWFu
+dXA/DQoNClRoYW5rcywNCkFsaQ0KDQoNCg==
