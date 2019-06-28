@@ -2,118 +2,169 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D86DC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBF9C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD282086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D9772086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="l0lt12s8";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="H7MKM6/R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vG3d8acL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfF1Xs0 (ORCPT
+        id S1727070AbfF1Xtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 19:48:26 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:60726 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726643AbfF1Xs0 (ORCPT
+        Fri, 28 Jun 2019 19:49:51 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42660 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfF1Xtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 19:48:26 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 0D6838EE0F5;
-        Fri, 28 Jun 2019 16:48:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1561765706;
-        bh=8TfBUOwrfWPIW8hwVX/RWo8daA0gmzbJ8Erv3ZCUqCc=;
-        h=Subject:From:To:Cc:Date:From;
-        b=l0lt12s84JjE6WmBrY3R3qhZi5EUect7aahlyIOwAxw7Xv79sLoyBnPiuM0C3scgY
-         KdTFWGT1CEtUZicjiM1cR95SbhksJUlIRru1CjV908qs8BkkHcXVB1LmswmDUTrucR
-         1Pz6/krxXW9OQNO0k18jiOXYOegAFj/M+mY7jZoU=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IvOhdlC4EP8L; Fri, 28 Jun 2019 16:48:25 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 69B728EE0C7;
-        Fri, 28 Jun 2019 16:48:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1561765705;
-        bh=8TfBUOwrfWPIW8hwVX/RWo8daA0gmzbJ8Erv3ZCUqCc=;
-        h=Subject:From:To:Cc:Date:From;
-        b=H7MKM6/RiP9cM8NbXMApxe7/yrMrJNZhw966+2vWU/FM8/S2SGD3ohTC+NSzjpZw9
-         hH2STS3eWZJMM3DJIgwvcMapgo7RaYqrxZPPvzMhGzavrP1FuZHeSXB92JmzfrOKTP
-         WzOQNTBamUcgw3J+jQE9b4qFaD6hlpJbXppD8EHU=
-Message-ID: <1561765703.5883.12.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 5.2-rc6
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 28 Jun 2019 16:48:23 -0700
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 28 Jun 2019 19:49:51 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x17so7838293wrl.9;
+        Fri, 28 Jun 2019 16:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Q7IEImnfjv+A3lRFXyTXResy2KVoDPFK5pOWIOXw67k=;
+        b=vG3d8acLaTa36M8Qk+1Ig6NnkHOM4RXcyJFhhNYvfAeittbGLBIk42dMPmgjNUsdn5
+         FuYVQa5cR7tHr2HSfddbCSHiQE09EEBRNwSaFvQfSxIOOjgnN2uv5TAD5a7xmftR1T5T
+         pwq8FCkeB+h/d/mMeVatdy/dOi9jzYpHc8DizVguo7L2LBu1Frni/N7D6Ji4+QESaydA
+         6CkAd7WRlSIFr1DbePAevzpDomH5OxStI3Qj/Gndq12vMLl42ZMaSDAnZbNnui7niT0N
+         L8iltdGDiezmYdLexEiKRS5zIuJc3XejBOaAIAXAiVoL2uKNPXt8Eu2bcyM+3tG1iuQq
+         qUqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q7IEImnfjv+A3lRFXyTXResy2KVoDPFK5pOWIOXw67k=;
+        b=efl1VCKG1NYIg7r+3lfhRYNejOx43sBJ1Kc0eXNNu6mVfCP1b0u039z0+Gu5t4YtbY
+         rH+BL4TgleBliOVN31BPRCOzkDbe1OViXRs5DldV77zTQClyvnXEgV3lbtu7UaGBUNih
+         W+F4nIAEtEmc3qDk51CGuTm97WqMsg6fwc0T/DaDqtDBuvIFuZ/ceEccnT854sJsLgmx
+         xQQTyB+GxosAkuVrNL6nd1BITc7oyKvafTWroIV8LG61yi+j3JzAzyBBqJNqQ6brsZJe
+         K8dLlJropWuXwSirFrKY+Hu6fl45XrpiOryzY2/+XqBMEpWjQ5H2CKPy5PkvaDERzOFB
+         NNnA==
+X-Gm-Message-State: APjAAAX2eakf8urgZovgroMVsn46EWD7AxdNBWQ5jVyDumcByputo/Pk
+        lqctfBICko/r4hQMy/9VYlw=
+X-Google-Smtp-Source: APXvYqxqv88pnNrGXl9e9tW3mOegaQe/CRnhjJlMga0gyKaLHiB23YZKxAYNn9ymY4Gf8UHD1YMp7A==
+X-Received: by 2002:adf:fecd:: with SMTP id q13mr9877353wrs.97.1561765788237;
+        Fri, 28 Jun 2019 16:49:48 -0700 (PDT)
+Received: from localhost (p200300E41F2AB200021F3CFFFE37B91B.dip0.t-ipconnect.de. [2003:e4:1f2a:b200:21f:3cff:fe37:b91b])
+        by smtp.gmail.com with ESMTPSA id s188sm3658105wmf.40.2019.06.28.16.49.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 28 Jun 2019 16:49:47 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 01:49:46 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Enric =?utf-8?B?QmFsbGV0YsOy?= <enric.balletbo@collabora.com>,
+        Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
+        Eric Anholt <eric@anholt.net>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v5 2/7] drm/panel: simple: Add ability to override
+ typical timing
+Message-ID: <20190628234946.GB1189@mithrandir>
+References: <20190401171724.215780-1-dianders@chromium.org>
+ <20190401171724.215780-3-dianders@chromium.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="NDin8bjvE/0mNLFQ"
+Content-Disposition: inline
+In-Reply-To: <20190401171724.215780-3-dianders@chromium.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One simple fix for a driver use after free.
 
-The patch is available here:
+--NDin8bjvE/0mNLFQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+On Mon, Apr 01, 2019 at 10:17:19AM -0700, Douglas Anderson wrote:
+> From: Sean Paul <seanpaul@chromium.org>
+>=20
+> This patch adds the ability to override the typical display timing for a
+> given panel. This is useful for devices which have timing constraints
+> that do not apply across the entire display driver (eg: to avoid
+> crosstalk between panel and digitizer on certain laptops). The rules are
+> as follows:
+>=20
+> - panel must not specify fixed mode (since the override mode will
+>   either be the same as the fixed mode, or we'll be unable to
+>   check the bounds of the overried)
+> - panel must specify at least one display_timing range which will be
+>   used to ensure the override mode fits within its bounds
+>=20
+> Changes in v2:
+>  - Parse the full display-timings node (using the native-mode) (Rob)
+> Changes in v3:
+>  - No longer parse display-timings subnode, use panel-timing (Rob)
+> Changes in v4:
+>  - Don't add mode from timing if override was specified (Thierry)
+>  - Add warning if timing and fixed mode was specified (Thierry)
+>  - Don't add fixed mode if timing was specified (Thierry)
+>  - Refactor/rename a bit to avoid extra indentation from "if" tests
+>  - i should be unsigned (Thierry)
+>  - Add annoying WARN_ONs for some cases (Thierry)
+>  - Simplify 'No display_timing found' handling (Thierry)
+>  - Rename to panel_simple_parse_override_mode() (Thierry)
+> Changes in v5:
+>  - Added Heiko's Tested-by
+>=20
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: St=C3=A9phane Marchesin <marcheu@chromium.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Tested-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>=20
+>  drivers/gpu/drm/panel/panel-simple.c | 109 +++++++++++++++++++++++++--
+>  1 file changed, 104 insertions(+), 5 deletions(-)
 
-The short changelog is:
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
-Jan Kara (1):
-      scsi: vmw_pscsi: Fix use-after-free in pvscsi_queue_lck()
+--NDin8bjvE/0mNLFQ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And the diffstat:
+-----BEGIN PGP SIGNATURE-----
 
- drivers/scsi/vmw_pvscsi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Wp5oACgkQ3SOs138+
+s6HkOA//aJRj++gDyHqyv+35Dnz1qJOb04MLQT25wHlW53LhiXm6APFDfKgu6GY1
+jEhdqsfBT7y0c+yM8SQRwJx44H4QN8YbkqpH0jFsvLli7S8oalKWtu6ti1nRv1XB
+oW2oTzn340rTKD1zeqQL1A26GF7G3COyKIOBhW+yHNAGA4gqi3XMi3RwKP0tLYWa
+1zpI7ZMQw8kwprzPZZbsEnfRYj1R5YUfBO1252HaixMStJbJGj5vfhKFE2H7wTJv
+zCz0JlxX6kepkO7aHmrwOWHYgnvrcCaphJy8YBWMhsBRN7UdOlLjjcBtvqGidKbc
+5bBZucu8NOKSBVKP9V7HlWgQjoCI4uPXSJ+Z9G+NemzcqFtLOYAgGezKiTVjnw1T
+AvEbEQ2ed9MPm2Yt93ozVgR0fvTqeJu0t5ybGaVhUXqevtek7HTCDbCiY+oFLBGs
+ubaXXPCJaYls415YuHWxeIOBuyuyAkSihPy9JB2SZ5jZbXgRiXFrppGI+/zcTklX
+InfVw9QwQMMHay+FhcnET0HkWiD47kvEnVBmaeHoMEnYKrE3p1IVZMXlzQsLqefL
+ADaFGSl0UIS5kyS6yB/b82C2XkyuyFqG40ohDu3qpa2ShzY7iovd1rJBRFmI22/3
+05j4j/3dS0eGTqoVVM1zpmdAaIvHaw7GbVjIEsd0BtG+51TIhW4=
+=P4R1
+-----END PGP SIGNATURE-----
 
-With full diff below.
-
-James
-
----
-
-diff --git a/drivers/scsi/vmw_pvscsi.c b/drivers/scsi/vmw_pvscsi.c
-index ecee4b3ff073..377b07b2feeb 100644
---- a/drivers/scsi/vmw_pvscsi.c
-+++ b/drivers/scsi/vmw_pvscsi.c
-@@ -763,6 +763,7 @@ static int pvscsi_queue_lck(struct scsi_cmnd *cmd, void (*done)(struct scsi_cmnd
- 	struct pvscsi_adapter *adapter = shost_priv(host);
- 	struct pvscsi_ctx *ctx;
- 	unsigned long flags;
-+	unsigned char op;
- 
- 	spin_lock_irqsave(&adapter->hw_lock, flags);
- 
-@@ -775,13 +776,14 @@ static int pvscsi_queue_lck(struct scsi_cmnd *cmd, void (*done)(struct scsi_cmnd
- 	}
- 
- 	cmd->scsi_done = done;
-+	op = cmd->cmnd[0];
- 
- 	dev_dbg(&cmd->device->sdev_gendev,
--		"queued cmd %p, ctx %p, op=%x\n", cmd, ctx, cmd->cmnd[0]);
-+		"queued cmd %p, ctx %p, op=%x\n", cmd, ctx, op);
- 
- 	spin_unlock_irqrestore(&adapter->hw_lock, flags);
- 
--	pvscsi_kick_io(adapter, cmd->cmnd[0]);
-+	pvscsi_kick_io(adapter, op);
- 
- 	return 0;
- }
+--NDin8bjvE/0mNLFQ--
