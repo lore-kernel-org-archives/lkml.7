@@ -6,218 +6,89 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CA0C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06342C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0929F206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF6D214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfF1JDh (ORCPT
+        id S1726844AbfF1JDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:03:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41866 "EHLO mx1.redhat.com"
+        Fri, 28 Jun 2019 05:03:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49590 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726709AbfF1JDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:03:16 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1726690AbfF1JDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 05:03:15 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CFB8859449;
-        Fri, 28 Jun 2019 09:03:13 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4C1BE87632;
+        Fri, 28 Jun 2019 09:03:15 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EB1860BEC;
-        Fri, 28 Jun 2019 09:03:06 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 05BC85D704;
+        Fri, 28 Jun 2019 09:03:15 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id E747F17473; Fri, 28 Jun 2019 11:03:03 +0200 (CEST)
+        id ACDE49D7D; Fri, 28 Jun 2019 11:03:09 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     ckoenig.leichtzumerken@gmail.com, thomas@shipmail.org,
         tzimmermann@suse.de, daniel@ffwll.ch, bskeggs@redhat.com,
         Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 02/18] drm/vram: use embedded gem object
-Date:   Fri, 28 Jun 2019 11:02:47 +0200
-Message-Id: <20190628090303.29467-3-kraxel@redhat.com>
+Subject: [PATCH v3 18/18] drm/ttm: drop ttm_buffer_object->resv
+Date:   Fri, 28 Jun 2019 11:03:03 +0200
+Message-Id: <20190628090303.29467-19-kraxel@redhat.com>
 In-Reply-To: <20190628090303.29467-1-kraxel@redhat.com>
 References: <20190628090303.29467-1-kraxel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 28 Jun 2019 09:03:16 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 28 Jun 2019 09:03:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop drm_gem_object from drm_gem_vram_object, use the
-ttm_buffer_object.base instead.
+All users moved to ttm_buffer_object->base.resv
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Reviewed-by: Christian König <christian.koenig@amd.com>
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
 ---
- include/drm/drm_gem_vram_helper.h           |  3 +--
- drivers/gpu/drm/ast/ast_main.c              |  2 +-
- drivers/gpu/drm/drm_gem_vram_helper.c       | 16 ++++++++--------
- drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c |  2 +-
- drivers/gpu/drm/mgag200/mgag200_main.c      |  2 +-
- drivers/gpu/drm/vboxvideo/vbox_main.c       |  2 +-
- 6 files changed, 13 insertions(+), 14 deletions(-)
+ include/drm/ttm/ttm_bo_api.h | 1 -
+ drivers/gpu/drm/ttm/ttm_bo.c | 2 --
+ 2 files changed, 3 deletions(-)
 
-diff --git a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vram_helper.h
-index 1a0ea18e7a74..2627bb618979 100644
---- a/include/drm/drm_gem_vram_helper.h
-+++ b/include/drm/drm_gem_vram_helper.h
-@@ -36,7 +36,6 @@ struct vm_area_struct;
-  * video memory becomes scarce.
-  */
- struct drm_gem_vram_object {
--	struct drm_gem_object gem;
- 	struct ttm_buffer_object bo;
- 	struct ttm_bo_kmap_obj kmap;
+diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
+index 7ffc50a3303d..65ef5376de59 100644
+--- a/include/drm/ttm/ttm_bo_api.h
++++ b/include/drm/ttm/ttm_bo_api.h
+@@ -230,7 +230,6 @@ struct ttm_buffer_object {
  
-@@ -68,7 +67,7 @@ static inline struct drm_gem_vram_object *drm_gem_vram_of_bo(
- static inline struct drm_gem_vram_object *drm_gem_vram_of_gem(
- 	struct drm_gem_object *gem)
- {
--	return container_of(gem, struct drm_gem_vram_object, gem);
-+	return container_of(gem, struct drm_gem_vram_object, bo.base);
- }
+ 	struct sg_table *sg;
  
- struct drm_gem_vram_object *drm_gem_vram_create(struct drm_device *dev,
-diff --git a/drivers/gpu/drm/ast/ast_main.c b/drivers/gpu/drm/ast/ast_main.c
-index 4c7e31cb45ff..74e6e471d283 100644
---- a/drivers/gpu/drm/ast/ast_main.c
-+++ b/drivers/gpu/drm/ast/ast_main.c
-@@ -609,6 +609,6 @@ int ast_gem_create(struct drm_device *dev,
- 			DRM_ERROR("failed to allocate GEM object\n");
- 		return ret;
+-	struct reservation_object *resv;
+ 	struct mutex wu_mutex;
+ };
+ 
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index e0792fd38b54..7465bf62e54c 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -1330,11 +1330,9 @@ int ttm_bo_init_reserved(struct ttm_bo_device *bdev,
+ 	bo->acc_size = acc_size;
+ 	bo->sg = sg;
+ 	if (resv) {
+-		bo->resv = resv;
+ 		bo->base.resv = resv;
+ 		reservation_object_assert_held(bo->base.resv);
+ 	} else {
+-		bo->resv = &bo->base._resv;
+ 		bo->base.resv = &bo->base._resv;
  	}
--	*obj = &gbo->gem;
-+	*obj = &gbo->bo.base;
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
-index 4de782ca26b2..61d9520cc15f 100644
---- a/drivers/gpu/drm/drm_gem_vram_helper.c
-+++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-@@ -24,7 +24,7 @@ static void drm_gem_vram_cleanup(struct drm_gem_vram_object *gbo)
- 	 * TTM buffer object in 'bo' has already been cleaned
- 	 * up; only release the GEM object.
- 	 */
--	drm_gem_object_release(&gbo->gem);
-+	drm_gem_object_release(&gbo->bo.base);
- }
- 
- static void drm_gem_vram_destroy(struct drm_gem_vram_object *gbo)
-@@ -80,7 +80,7 @@ static int drm_gem_vram_init(struct drm_device *dev,
- 	int ret;
- 	size_t acc_size;
- 
--	ret = drm_gem_object_init(dev, &gbo->gem, size);
-+	ret = drm_gem_object_init(dev, &gbo->bo.base, size);
- 	if (ret)
- 		return ret;
- 
-@@ -98,7 +98,7 @@ static int drm_gem_vram_init(struct drm_device *dev,
- 	return 0;
- 
- err_drm_gem_object_release:
--	drm_gem_object_release(&gbo->gem);
-+	drm_gem_object_release(&gbo->bo.base);
- 	return ret;
- }
- 
-@@ -378,11 +378,11 @@ int drm_gem_vram_fill_create_dumb(struct drm_file *file,
- 	if (IS_ERR(gbo))
- 		return PTR_ERR(gbo);
- 
--	ret = drm_gem_handle_create(file, &gbo->gem, &handle);
-+	ret = drm_gem_handle_create(file, &gbo->bo.base, &handle);
- 	if (ret)
- 		goto err_drm_gem_object_put_unlocked;
- 
--	drm_gem_object_put_unlocked(&gbo->gem);
-+	drm_gem_object_put_unlocked(&gbo->bo.base);
- 
- 	args->pitch = pitch;
- 	args->size = size;
-@@ -391,7 +391,7 @@ int drm_gem_vram_fill_create_dumb(struct drm_file *file,
- 	return 0;
- 
- err_drm_gem_object_put_unlocked:
--	drm_gem_object_put_unlocked(&gbo->gem);
-+	drm_gem_object_put_unlocked(&gbo->bo.base);
- 	return ret;
- }
- EXPORT_SYMBOL(drm_gem_vram_fill_create_dumb);
-@@ -441,7 +441,7 @@ int drm_gem_vram_bo_driver_verify_access(struct ttm_buffer_object *bo,
- {
- 	struct drm_gem_vram_object *gbo = drm_gem_vram_of_bo(bo);
- 
--	return drm_vma_node_verify_access(&gbo->gem.vma_node,
-+	return drm_vma_node_verify_access(&gbo->bo.base.vma_node,
- 					  filp->private_data);
- }
- EXPORT_SYMBOL(drm_gem_vram_bo_driver_verify_access);
-@@ -635,7 +635,7 @@ int drm_gem_vram_driver_gem_prime_mmap(struct drm_gem_object *gem,
- {
- 	struct drm_gem_vram_object *gbo = drm_gem_vram_of_gem(gem);
- 
--	gbo->gem.vma_node.vm_node.start = gbo->bo.vma_node.vm_node.start;
-+	gbo->bo.base.vma_node.vm_node.start = gbo->bo.vma_node.vm_node.start;
- 	return drm_gem_prime_mmap(gem, vma);
- }
- EXPORT_SYMBOL(drm_gem_vram_driver_gem_prime_mmap);
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-index 5d4a03cd7d50..998eb6014395 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-@@ -60,7 +60,7 @@ int hibmc_gem_create(struct drm_device *dev, u32 size, bool iskernel,
- 			DRM_ERROR("failed to allocate GEM object: %d\n", ret);
- 		return ret;
- 	}
--	*obj = &gbo->gem;
-+	*obj = &gbo->bo.base;
- 	return 0;
- }
- 
-diff --git a/drivers/gpu/drm/mgag200/mgag200_main.c b/drivers/gpu/drm/mgag200/mgag200_main.c
-index dd61ccc5af5c..071b55ce4795 100644
---- a/drivers/gpu/drm/mgag200/mgag200_main.c
-+++ b/drivers/gpu/drm/mgag200/mgag200_main.c
-@@ -285,6 +285,6 @@ int mgag200_gem_create(struct drm_device *dev,
- 			DRM_ERROR("failed to allocate GEM object\n");
- 		return ret;
- 	}
--	*obj = &gbo->gem;
-+	*obj = &gbo->bo.base;
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/vboxvideo/vbox_main.c b/drivers/gpu/drm/vboxvideo/vbox_main.c
-index 18693e2bf72a..02fa8277ff1e 100644
---- a/drivers/gpu/drm/vboxvideo/vbox_main.c
-+++ b/drivers/gpu/drm/vboxvideo/vbox_main.c
-@@ -292,7 +292,7 @@ int vbox_gem_create(struct vbox_private *vbox,
- 		return ret;
- 	}
- 
--	*obj = &gbo->gem;
-+	*obj = &gbo->bo.base;
- 
- 	return 0;
- }
+ 	if (!ttm_bo_uses_embedded_gem_object(bo)) {
 -- 
 2.18.1
 
