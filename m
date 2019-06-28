@@ -6,53 +6,47 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE30C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38EAC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD345206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65573206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfF1JDV (ORCPT
+        id S1726794AbfF1JD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:03:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52618 "EHLO mx1.redhat.com"
+        Fri, 28 Jun 2019 05:03:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49266 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726681AbfF1JDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:03:15 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        id S1726726AbfF1JDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 05:03:19 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 07C973082A28;
-        Fri, 28 Jun 2019 09:03:15 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 797223DD47;
+        Fri, 28 Jun 2019 09:03:17 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5BDF85C706;
-        Fri, 28 Jun 2019 09:03:13 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AAB801001B14;
+        Fri, 28 Jun 2019 09:03:11 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 1E5CA9D76; Fri, 28 Jun 2019 11:03:09 +0200 (CEST)
+        id DB9B49D73; Fri, 28 Jun 2019 11:03:07 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     ckoenig.leichtzumerken@gmail.com, thomas@shipmail.org,
         tzimmermann@suse.de, daniel@ffwll.ch, bskeggs@redhat.com,
         Gerd Hoffmann <kraxel@redhat.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 14/18] drm/amdgpu: switch driver from bo->resv to bo->base.resv
-Date:   Fri, 28 Jun 2019 11:02:59 +0200
-Message-Id: <20190628090303.29467-15-kraxel@redhat.com>
+Subject: [PATCH v3 11/18] drm/ttm: switch ttm core from bo->resv to bo->base.resv
+Date:   Fri, 28 Jun 2019 11:02:56 +0200
+Message-Id: <20190628090303.29467-12-kraxel@redhat.com>
 In-Reply-To: <20190628090303.29467-1-kraxel@redhat.com>
 References: <20190628090303.29467-1-kraxel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 28 Jun 2019 09:03:15 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 28 Jun 2019 09:03:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,484 +55,602 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Reviewed-by: Christian König <christian.koenig@amd.com>
 ---
- .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c  |  6 ++--
- drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c        |  6 ++--
- drivers/gpu/drm/amd/amdgpu/amdgpu_display.c   |  2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c   |  2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c       |  6 ++--
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c       |  2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c        |  2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_object.c    | 22 +++++++-------
- drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c       |  6 ++--
- drivers/gpu/drm/amd/amdgpu/amdgpu_uvd.c       |  4 +--
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c        | 30 +++++++++----------
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm_sdma.c   |  2 +-
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  2 +-
- 13 files changed, 45 insertions(+), 47 deletions(-)
+ include/drm/ttm/ttm_bo_driver.h        | 12 ++--
+ drivers/gpu/drm/ttm/ttm_bo.c           | 96 +++++++++++++-------------
+ drivers/gpu/drm/ttm/ttm_bo_util.c      | 16 ++---
+ drivers/gpu/drm/ttm/ttm_bo_vm.c        |  6 +-
+ drivers/gpu/drm/ttm/ttm_execbuf_util.c | 20 +++---
+ drivers/gpu/drm/ttm/ttm_tt.c           |  2 +-
+ 6 files changed, 76 insertions(+), 76 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index df26bf34b675..6dce43bd60f1 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -218,7 +218,7 @@ void amdgpu_amdkfd_unreserve_memory_limit(struct amdgpu_bo *bo)
- static int amdgpu_amdkfd_remove_eviction_fence(struct amdgpu_bo *bo,
- 					struct amdgpu_amdkfd_fence *ef)
+diff --git a/include/drm/ttm/ttm_bo_driver.h b/include/drm/ttm/ttm_bo_driver.h
+index c9b8ba492f24..5b54e3254d13 100644
+--- a/include/drm/ttm/ttm_bo_driver.h
++++ b/include/drm/ttm/ttm_bo_driver.h
+@@ -654,14 +654,14 @@ static inline int __ttm_bo_reserve(struct ttm_buffer_object *bo,
+ 		if (WARN_ON(ticket))
+ 			return -EBUSY;
+ 
+-		success = reservation_object_trylock(bo->resv);
++		success = reservation_object_trylock(bo->base.resv);
+ 		return success ? 0 : -EBUSY;
+ 	}
+ 
+ 	if (interruptible)
+-		ret = reservation_object_lock_interruptible(bo->resv, ticket);
++		ret = reservation_object_lock_interruptible(bo->base.resv, ticket);
+ 	else
+-		ret = reservation_object_lock(bo->resv, ticket);
++		ret = reservation_object_lock(bo->base.resv, ticket);
+ 	if (ret == -EINTR)
+ 		return -ERESTARTSYS;
+ 	return ret;
+@@ -745,10 +745,10 @@ static inline int ttm_bo_reserve_slowpath(struct ttm_buffer_object *bo,
+ 	WARN_ON(!kref_read(&bo->kref));
+ 
+ 	if (interruptible)
+-		ret = ww_mutex_lock_slow_interruptible(&bo->resv->lock,
++		ret = ww_mutex_lock_slow_interruptible(&bo->base.resv->lock,
+ 						       ticket);
+ 	else
+-		ww_mutex_lock_slow(&bo->resv->lock, ticket);
++		ww_mutex_lock_slow(&bo->base.resv->lock, ticket);
+ 
+ 	if (likely(ret == 0))
+ 		ttm_bo_del_sub_from_lru(bo);
+@@ -773,7 +773,7 @@ static inline void ttm_bo_unreserve(struct ttm_buffer_object *bo)
+ 	else
+ 		ttm_bo_move_to_lru_tail(bo, NULL);
+ 	spin_unlock(&bo->bdev->glob->lru_lock);
+-	reservation_object_unlock(bo->resv);
++	reservation_object_unlock(bo->base.resv);
+ }
+ 
+ /*
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index 3e605b9ee2f3..e0792fd38b54 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -173,7 +173,7 @@ static void ttm_bo_add_mem_to_lru(struct ttm_buffer_object *bo,
+ 	struct ttm_bo_device *bdev = bo->bdev;
+ 	struct ttm_mem_type_manager *man;
+ 
+-	reservation_object_assert_held(bo->resv);
++	reservation_object_assert_held(bo->base.resv);
+ 
+ 	if (!list_empty(&bo->lru))
+ 		return;
+@@ -244,7 +244,7 @@ static void ttm_bo_bulk_move_set_pos(struct ttm_lru_bulk_move_pos *pos,
+ void ttm_bo_move_to_lru_tail(struct ttm_buffer_object *bo,
+ 			     struct ttm_lru_bulk_move *bulk)
  {
--	struct reservation_object *resv = bo->tbo.resv;
-+	struct reservation_object *resv = bo->tbo.base.resv;
- 	struct reservation_object_list *old, *new;
- 	unsigned int i, j, k;
+-	reservation_object_assert_held(bo->resv);
++	reservation_object_assert_held(bo->base.resv);
  
-@@ -812,7 +812,7 @@ static int process_sync_pds_resv(struct amdkfd_process_info *process_info,
- 		struct amdgpu_bo *pd = peer_vm->root.base.bo;
+ 	ttm_bo_del_from_lru(bo);
+ 	ttm_bo_add_to_lru(bo);
+@@ -277,8 +277,8 @@ void ttm_bo_bulk_move_lru_tail(struct ttm_lru_bulk_move *bulk)
+ 		if (!pos->first)
+ 			continue;
  
- 		ret = amdgpu_sync_resv(NULL,
--					sync, pd->tbo.resv,
-+					sync, pd->tbo.base.resv,
- 					AMDGPU_FENCE_OWNER_UNDEFINED, false);
+-		reservation_object_assert_held(pos->first->resv);
+-		reservation_object_assert_held(pos->last->resv);
++		reservation_object_assert_held(pos->first->base.resv);
++		reservation_object_assert_held(pos->last->base.resv);
+ 
+ 		man = &pos->first->bdev->man[TTM_PL_TT];
+ 		list_bulk_move_tail(&man->lru[i], &pos->first->lru,
+@@ -292,8 +292,8 @@ void ttm_bo_bulk_move_lru_tail(struct ttm_lru_bulk_move *bulk)
+ 		if (!pos->first)
+ 			continue;
+ 
+-		reservation_object_assert_held(pos->first->resv);
+-		reservation_object_assert_held(pos->last->resv);
++		reservation_object_assert_held(pos->first->base.resv);
++		reservation_object_assert_held(pos->last->base.resv);
+ 
+ 		man = &pos->first->bdev->man[TTM_PL_VRAM];
+ 		list_bulk_move_tail(&man->lru[i], &pos->first->lru,
+@@ -307,8 +307,8 @@ void ttm_bo_bulk_move_lru_tail(struct ttm_lru_bulk_move *bulk)
+ 		if (!pos->first)
+ 			continue;
+ 
+-		reservation_object_assert_held(pos->first->resv);
+-		reservation_object_assert_held(pos->last->resv);
++		reservation_object_assert_held(pos->first->base.resv);
++		reservation_object_assert_held(pos->last->base.resv);
+ 
+ 		lru = &pos->first->bdev->glob->swap_lru[i];
+ 		list_bulk_move_tail(lru, &pos->first->swap, &pos->last->swap);
+@@ -439,12 +439,12 @@ static int ttm_bo_individualize_resv(struct ttm_buffer_object *bo)
+ {
+ 	int r;
+ 
+-	if (bo->resv == &bo->base._resv)
++	if (bo->base.resv == &bo->base._resv)
+ 		return 0;
+ 
+ 	BUG_ON(!reservation_object_trylock(&bo->base._resv));
+ 
+-	r = reservation_object_copy_fences(&bo->base._resv, bo->resv);
++	r = reservation_object_copy_fences(&bo->base._resv, bo->base.resv);
+ 	if (r)
+ 		reservation_object_unlock(&bo->base._resv);
+ 
+@@ -482,23 +482,23 @@ static void ttm_bo_cleanup_refs_or_queue(struct ttm_buffer_object *bo)
+ 		/* Last resort, if we fail to allocate memory for the
+ 		 * fences block for the BO to become idle
+ 		 */
+-		reservation_object_wait_timeout_rcu(bo->resv, true, false,
++		reservation_object_wait_timeout_rcu(bo->base.resv, true, false,
+ 						    30 * HZ);
+ 		spin_lock(&glob->lru_lock);
+ 		goto error;
+ 	}
+ 
+ 	spin_lock(&glob->lru_lock);
+-	ret = reservation_object_trylock(bo->resv) ? 0 : -EBUSY;
++	ret = reservation_object_trylock(bo->base.resv) ? 0 : -EBUSY;
+ 	if (!ret) {
+ 		if (reservation_object_test_signaled_rcu(&bo->base._resv, true)) {
+ 			ttm_bo_del_from_lru(bo);
+ 			spin_unlock(&glob->lru_lock);
+-			if (bo->resv != &bo->base._resv)
++			if (bo->base.resv != &bo->base._resv)
+ 				reservation_object_unlock(&bo->base._resv);
+ 
+ 			ttm_bo_cleanup_memtype_use(bo);
+-			reservation_object_unlock(bo->resv);
++			reservation_object_unlock(bo->base.resv);
+ 			return;
+ 		}
+ 
+@@ -514,9 +514,9 @@ static void ttm_bo_cleanup_refs_or_queue(struct ttm_buffer_object *bo)
+ 			ttm_bo_add_to_lru(bo);
+ 		}
+ 
+-		reservation_object_unlock(bo->resv);
++		reservation_object_unlock(bo->base.resv);
+ 	}
+-	if (bo->resv != &bo->base._resv)
++	if (bo->base.resv != &bo->base._resv)
+ 		reservation_object_unlock(&bo->base._resv);
+ 
+ error:
+@@ -550,7 +550,7 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo,
+ 	int ret;
+ 
+ 	if (unlikely(list_empty(&bo->ddestroy)))
+-		resv = bo->resv;
++		resv = bo->base.resv;
+ 	else
+ 		resv = &bo->base._resv;
+ 
+@@ -563,7 +563,7 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo,
+ 		long lret;
+ 
+ 		if (unlock_resv)
+-			reservation_object_unlock(bo->resv);
++			reservation_object_unlock(bo->base.resv);
+ 		spin_unlock(&glob->lru_lock);
+ 
+ 		lret = reservation_object_wait_timeout_rcu(resv, true,
+@@ -576,7 +576,7 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo,
+ 			return -EBUSY;
+ 
+ 		spin_lock(&glob->lru_lock);
+-		if (unlock_resv && !reservation_object_trylock(bo->resv)) {
++		if (unlock_resv && !reservation_object_trylock(bo->base.resv)) {
+ 			/*
+ 			 * We raced, and lost, someone else holds the reservation now,
+ 			 * and is probably busy in ttm_bo_cleanup_memtype_use.
+@@ -593,7 +593,7 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo,
+ 
+ 	if (ret || unlikely(list_empty(&bo->ddestroy))) {
+ 		if (unlock_resv)
+-			reservation_object_unlock(bo->resv);
++			reservation_object_unlock(bo->base.resv);
+ 		spin_unlock(&glob->lru_lock);
+ 		return ret;
+ 	}
+@@ -606,7 +606,7 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo,
+ 	ttm_bo_cleanup_memtype_use(bo);
+ 
+ 	if (unlock_resv)
+-		reservation_object_unlock(bo->resv);
++		reservation_object_unlock(bo->base.resv);
+ 
+ 	return 0;
+ }
+@@ -632,14 +632,14 @@ static bool ttm_bo_delayed_delete(struct ttm_bo_device *bdev, bool remove_all)
+ 		kref_get(&bo->list_kref);
+ 		list_move_tail(&bo->ddestroy, &removed);
+ 
+-		if (remove_all || bo->resv != &bo->base._resv) {
++		if (remove_all || bo->base.resv != &bo->base._resv) {
+ 			spin_unlock(&glob->lru_lock);
+-			reservation_object_lock(bo->resv, NULL);
++			reservation_object_lock(bo->base.resv, NULL);
+ 
+ 			spin_lock(&glob->lru_lock);
+ 			ttm_bo_cleanup_refs(bo, false, !remove_all, true);
+ 
+-		} else if (reservation_object_trylock(bo->resv)) {
++		} else if (reservation_object_trylock(bo->base.resv)) {
+ 			ttm_bo_cleanup_refs(bo, false, !remove_all, true);
+ 		} else {
+ 			spin_unlock(&glob->lru_lock);
+@@ -708,7 +708,7 @@ static int ttm_bo_evict(struct ttm_buffer_object *bo,
+ 	struct ttm_placement placement;
+ 	int ret = 0;
+ 
+-	reservation_object_assert_held(bo->resv);
++	reservation_object_assert_held(bo->base.resv);
+ 
+ 	placement.num_placement = 0;
+ 	placement.num_busy_placement = 0;
+@@ -778,8 +778,8 @@ static bool ttm_bo_evict_swapout_allowable(struct ttm_buffer_object *bo,
+ {
+ 	bool ret = false;
+ 
+-	if (bo->resv == ctx->resv) {
+-		reservation_object_assert_held(bo->resv);
++	if (bo->base.resv == ctx->resv) {
++		reservation_object_assert_held(bo->base.resv);
+ 		if (ctx->flags & TTM_OPT_FLAG_ALLOW_RES_EVICT
+ 		    || !list_empty(&bo->ddestroy))
+ 			ret = true;
+@@ -787,7 +787,7 @@ static bool ttm_bo_evict_swapout_allowable(struct ttm_buffer_object *bo,
+ 		if (busy)
+ 			*busy = false;
+ 	} else {
+-		ret = reservation_object_trylock(bo->resv);
++		ret = reservation_object_trylock(bo->base.resv);
+ 		*locked = ret;
+ 		if (busy)
+ 			*busy = !ret;
+@@ -815,10 +815,10 @@ static int ttm_mem_evict_wait_busy(struct ttm_buffer_object *busy_bo,
+ 		return -EBUSY;
+ 
+ 	if (ctx->interruptible)
+-		r = reservation_object_lock_interruptible(busy_bo->resv,
++		r = reservation_object_lock_interruptible(busy_bo->base.resv,
+ 							  ticket);
+ 	else
+-		r = reservation_object_lock(busy_bo->resv, ticket);
++		r = reservation_object_lock(busy_bo->base.resv, ticket);
+ 
+ 	/*
+ 	 * TODO: It would be better to keep the BO locked until allocation is at
+@@ -826,7 +826,7 @@ static int ttm_mem_evict_wait_busy(struct ttm_buffer_object *busy_bo,
+ 	 * of TTM.
+ 	 */
+ 	if (!r)
+-		reservation_object_unlock(busy_bo->resv);
++		reservation_object_unlock(busy_bo->base.resv);
+ 
+ 	return r == -EDEADLK ? -EAGAIN : r;
+ }
+@@ -852,7 +852,7 @@ static int ttm_mem_evict_first(struct ttm_bo_device *bdev,
+ 			if (!ttm_bo_evict_swapout_allowable(bo, ctx, &locked,
+ 							    &busy)) {
+ 				if (busy && !busy_bo &&
+-				    bo->resv->lock.ctx != ticket)
++				    bo->base.resv->lock.ctx != ticket)
+ 					busy_bo = bo;
+ 				continue;
+ 			}
+@@ -860,7 +860,7 @@ static int ttm_mem_evict_first(struct ttm_bo_device *bdev,
+ 			if (place && !bdev->driver->eviction_valuable(bo,
+ 								      place)) {
+ 				if (locked)
+-					reservation_object_unlock(bo->resv);
++					reservation_object_unlock(bo->base.resv);
+ 				continue;
+ 			}
+ 			break;
+@@ -932,9 +932,9 @@ static int ttm_bo_add_move_fence(struct ttm_buffer_object *bo,
+ 	spin_unlock(&man->move_lock);
+ 
+ 	if (fence) {
+-		reservation_object_add_shared_fence(bo->resv, fence);
++		reservation_object_add_shared_fence(bo->base.resv, fence);
+ 
+-		ret = reservation_object_reserve_shared(bo->resv, 1);
++		ret = reservation_object_reserve_shared(bo->base.resv, 1);
+ 		if (unlikely(ret)) {
+ 			dma_fence_put(fence);
+ 			return ret;
+@@ -967,7 +967,7 @@ static int ttm_bo_mem_force_space(struct ttm_buffer_object *bo,
+ 		if (mem->mm_node)
+ 			break;
+ 		ret = ttm_mem_evict_first(bdev, mem->mem_type, place, ctx,
+-					  bo->resv->lock.ctx);
++					  bo->base.resv->lock.ctx);
+ 		if (unlikely(ret != 0))
+ 			return ret;
+ 	} while (1);
+@@ -1089,7 +1089,7 @@ int ttm_bo_mem_space(struct ttm_buffer_object *bo,
+ 	bool type_found = false;
+ 	int i, ret;
+ 
+-	ret = reservation_object_reserve_shared(bo->resv, 1);
++	ret = reservation_object_reserve_shared(bo->base.resv, 1);
+ 	if (unlikely(ret))
+ 		return ret;
+ 
+@@ -1170,7 +1170,7 @@ static int ttm_bo_move_buffer(struct ttm_buffer_object *bo,
+ 	int ret = 0;
+ 	struct ttm_mem_reg mem;
+ 
+-	reservation_object_assert_held(bo->resv);
++	reservation_object_assert_held(bo->base.resv);
+ 
+ 	mem.num_pages = bo->num_pages;
+ 	mem.size = mem.num_pages << PAGE_SHIFT;
+@@ -1240,7 +1240,7 @@ int ttm_bo_validate(struct ttm_buffer_object *bo,
+ 	int ret;
+ 	uint32_t new_flags;
+ 
+-	reservation_object_assert_held(bo->resv);
++	reservation_object_assert_held(bo->base.resv);
+ 	/*
+ 	 * Check whether we need to move buffer.
+ 	 */
+@@ -1332,7 +1332,7 @@ int ttm_bo_init_reserved(struct ttm_bo_device *bdev,
+ 	if (resv) {
+ 		bo->resv = resv;
+ 		bo->base.resv = resv;
+-		reservation_object_assert_held(bo->resv);
++		reservation_object_assert_held(bo->base.resv);
+ 	} else {
+ 		bo->resv = &bo->base._resv;
+ 		bo->base.resv = &bo->base._resv;
+@@ -1361,7 +1361,7 @@ int ttm_bo_init_reserved(struct ttm_bo_device *bdev,
+ 	 * since otherwise lockdep will be angered in radeon.
+ 	 */
+ 	if (!resv) {
+-		locked = reservation_object_trylock(bo->resv);
++		locked = reservation_object_trylock(bo->base.resv);
+ 		WARN_ON(!locked);
+ 	}
+ 
+@@ -1805,13 +1805,13 @@ int ttm_bo_wait(struct ttm_buffer_object *bo,
+ 	long timeout = 15 * HZ;
+ 
+ 	if (no_wait) {
+-		if (reservation_object_test_signaled_rcu(bo->resv, true))
++		if (reservation_object_test_signaled_rcu(bo->base.resv, true))
+ 			return 0;
+ 		else
+ 			return -EBUSY;
+ 	}
+ 
+-	timeout = reservation_object_wait_timeout_rcu(bo->resv, true,
++	timeout = reservation_object_wait_timeout_rcu(bo->base.resv, true,
+ 						      interruptible, timeout);
+ 	if (timeout < 0)
+ 		return timeout;
+@@ -1819,7 +1819,7 @@ int ttm_bo_wait(struct ttm_buffer_object *bo,
+ 	if (timeout == 0)
+ 		return -EBUSY;
+ 
+-	reservation_object_add_excl_fence(bo->resv, NULL);
++	reservation_object_add_excl_fence(bo->base.resv, NULL);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(ttm_bo_wait);
+@@ -1935,7 +1935,7 @@ int ttm_bo_swapout(struct ttm_bo_global *glob, struct ttm_operation_ctx *ctx)
+ 	 * already swapped buffer.
+ 	 */
+ 	if (locked)
+-		reservation_object_unlock(bo->resv);
++		reservation_object_unlock(bo->base.resv);
+ 	kref_put(&bo->list_kref, ttm_bo_release_list);
+ 	return ret;
+ }
+@@ -1973,14 +1973,14 @@ int ttm_bo_wait_unreserved(struct ttm_buffer_object *bo)
+ 	ret = mutex_lock_interruptible(&bo->wu_mutex);
+ 	if (unlikely(ret != 0))
+ 		return -ERESTARTSYS;
+-	if (!ww_mutex_is_locked(&bo->resv->lock))
++	if (!ww_mutex_is_locked(&bo->base.resv->lock))
+ 		goto out_unlock;
+-	ret = reservation_object_lock_interruptible(bo->resv, NULL);
++	ret = reservation_object_lock_interruptible(bo->base.resv, NULL);
+ 	if (ret == -EINTR)
+ 		ret = -ERESTARTSYS;
+ 	if (unlikely(ret != 0))
+ 		goto out_unlock;
+-	reservation_object_unlock(bo->resv);
++	reservation_object_unlock(bo->base.resv);
+ 
+ out_unlock:
+ 	mutex_unlock(&bo->wu_mutex);
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
+index f5009c1b6a9c..425a6d627b30 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_util.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
+@@ -517,9 +517,9 @@ static int ttm_buffer_object_transfer(struct ttm_buffer_object *bo,
+ 	kref_init(&fbo->base.kref);
+ 	fbo->base.destroy = &ttm_transfered_destroy;
+ 	fbo->base.acc_size = 0;
+-	fbo->base.resv = &fbo->base.base._resv;
+-	reservation_object_init(fbo->base.resv);
+-	ret = reservation_object_trylock(fbo->base.resv);
++	fbo->base.base.resv = &fbo->base.base._resv;
++	reservation_object_init(fbo->base.base.resv);
++	ret = reservation_object_trylock(fbo->base.base.resv);
+ 	WARN_ON(!ret);
+ 
+ 	*new_obj = &fbo->base;
+@@ -689,7 +689,7 @@ int ttm_bo_move_accel_cleanup(struct ttm_buffer_object *bo,
+ 	int ret;
+ 	struct ttm_buffer_object *ghost_obj;
+ 
+-	reservation_object_add_excl_fence(bo->resv, fence);
++	reservation_object_add_excl_fence(bo->base.resv, fence);
+ 	if (evict) {
+ 		ret = ttm_bo_wait(bo, false, false);
+ 		if (ret)
+@@ -716,7 +716,7 @@ int ttm_bo_move_accel_cleanup(struct ttm_buffer_object *bo,
  		if (ret)
  			return ret;
-@@ -887,7 +887,7 @@ static int init_kfd_vm(struct amdgpu_vm *vm, void **process_info,
- 				  AMDGPU_FENCE_OWNER_KFD, false);
+ 
+-		reservation_object_add_excl_fence(ghost_obj->resv, fence);
++		reservation_object_add_excl_fence(ghost_obj->base.resv, fence);
+ 
+ 		/**
+ 		 * If we're not moving to fixed memory, the TTM object
+@@ -752,7 +752,7 @@ int ttm_bo_pipeline_move(struct ttm_buffer_object *bo,
+ 
+ 	int ret;
+ 
+-	reservation_object_add_excl_fence(bo->resv, fence);
++	reservation_object_add_excl_fence(bo->base.resv, fence);
+ 
+ 	if (!evict) {
+ 		struct ttm_buffer_object *ghost_obj;
+@@ -772,7 +772,7 @@ int ttm_bo_pipeline_move(struct ttm_buffer_object *bo,
+ 		if (ret)
+ 			return ret;
+ 
+-		reservation_object_add_excl_fence(ghost_obj->resv, fence);
++		reservation_object_add_excl_fence(ghost_obj->base.resv, fence);
+ 
+ 		/**
+ 		 * If we're not moving to fixed memory, the TTM object
+@@ -841,7 +841,7 @@ int ttm_bo_pipeline_gutting(struct ttm_buffer_object *bo)
  	if (ret)
- 		goto wait_pd_fail;
--	ret = reservation_object_reserve_shared(vm->root.base.bo->tbo.resv, 1);
-+	ret = reservation_object_reserve_shared(vm->root.base.bo->tbo.base.resv, 1);
+ 		return ret;
+ 
+-	ret = reservation_object_copy_fences(ghost->resv, bo->resv);
++	ret = reservation_object_copy_fences(ghost->base.resv, bo->base.resv);
+ 	/* Last resort, wait for the BO to be idle when we are OOM */
  	if (ret)
- 		goto reserve_shared_fail;
- 	amdgpu_bo_fence(vm->root.base.bo,
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-index dc63707e426f..118ec7514277 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-@@ -402,7 +402,7 @@ static int amdgpu_cs_bo_validate(struct amdgpu_cs_parser *p,
- 	struct ttm_operation_ctx ctx = {
- 		.interruptible = true,
- 		.no_wait_gpu = false,
--		.resv = bo->tbo.resv,
-+		.resv = bo->tbo.base.resv,
- 		.flags = 0
- 	};
- 	uint32_t domain;
-@@ -734,7 +734,7 @@ static int amdgpu_cs_sync_rings(struct amdgpu_cs_parser *p)
- 
- 	list_for_each_entry(e, &p->validated, tv.head) {
- 		struct amdgpu_bo *bo = ttm_to_amdgpu_bo(e->tv.bo);
--		struct reservation_object *resv = bo->tbo.resv;
-+		struct reservation_object *resv = bo->tbo.base.resv;
- 
- 		r = amdgpu_sync_resv(p->adev, &p->job->sync, resv, p->filp,
- 				     amdgpu_bo_explicit_sync(bo));
-@@ -1732,7 +1732,7 @@ int amdgpu_cs_find_mapping(struct amdgpu_cs_parser *parser,
- 	*map = mapping;
- 
- 	/* Double check that the BO is reserved by this CS */
--	if (READ_ONCE((*bo)->tbo.resv->lock.ctx) != &parser->ticket)
-+	if (READ_ONCE((*bo)->tbo.base.resv->lock.ctx) != &parser->ticket)
- 		return -EINVAL;
- 
- 	if (!((*bo)->flags & AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS)) {
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-index 535650967b1a..b5d020e15c35 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-@@ -204,7 +204,7 @@ int amdgpu_display_crtc_page_flip_target(struct drm_crtc *crtc,
- 		goto unpin;
+ 		ttm_bo_wait(bo, false, false);
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+index fb6875a789b7..85f5bcbe0c76 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+@@ -71,7 +71,7 @@ static vm_fault_t ttm_bo_vm_fault_idle(struct ttm_buffer_object *bo,
+ 		ttm_bo_get(bo);
+ 		up_read(&vmf->vma->vm_mm->mmap_sem);
+ 		(void) dma_fence_wait(bo->moving, true);
+-		reservation_object_unlock(bo->resv);
++		reservation_object_unlock(bo->base.resv);
+ 		ttm_bo_put(bo);
+ 		goto out_unlock;
  	}
- 
--	r = reservation_object_get_fences_rcu(new_abo->tbo.resv, &work->excl,
-+	r = reservation_object_get_fences_rcu(new_abo->tbo.base.resv, &work->excl,
- 					      &work->shared_count,
- 					      &work->shared);
- 	if (unlikely(r != 0)) {
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-index 4ee452fe0526..5e3a08325017 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-@@ -216,7 +216,7 @@ static int amdgpu_dma_buf_map_attach(struct dma_buf *dma_buf,
- 		 * fences on the reservation object into a single exclusive
- 		 * fence.
- 		 */
--		r = __reservation_object_make_exclusive(bo->tbo.resv);
-+		r = __reservation_object_make_exclusive(bo->tbo.base.resv);
- 		if (r)
- 			goto error_unreserve;
- 	}
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-index 6d991e8df357..d26bca1efb9d 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-@@ -134,7 +134,7 @@ int amdgpu_gem_object_open(struct drm_gem_object *obj,
- 		return -EPERM;
- 
- 	if (abo->flags & AMDGPU_GEM_CREATE_VM_ALWAYS_VALID &&
--	    abo->tbo.resv != vm->root.base.bo->tbo.resv)
-+	    abo->tbo.base.resv != vm->root.base.bo->tbo.base.resv)
- 		return -EPERM;
- 
- 	r = amdgpu_bo_reserve(abo, false);
-@@ -252,7 +252,7 @@ int amdgpu_gem_create_ioctl(struct drm_device *dev, void *data,
- 		if (r)
- 			return r;
- 
--		resv = vm->root.base.bo->tbo.resv;
-+		resv = vm->root.base.bo->tbo.base.resv;
- 	}
- 
- 	r = amdgpu_gem_object_create(adev, size, args->in.alignment,
-@@ -434,7 +434,7 @@ int amdgpu_gem_wait_idle_ioctl(struct drm_device *dev, void *data,
- 		return -ENOENT;
- 	}
- 	robj = gem_to_amdgpu_bo(gobj);
--	ret = reservation_object_wait_timeout_rcu(robj->tbo.resv, true, true,
-+	ret = reservation_object_wait_timeout_rcu(robj->tbo.base.resv, true, true,
- 						  timeout);
- 
- 	/* ret == 0 means not signaled,
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-index a70e5a32749a..5142aa6377a3 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -1084,7 +1084,7 @@ void amdgpu_driver_postclose_kms(struct drm_device *dev,
- 	amdgpu_vm_fini(adev, &fpriv->vm);
- 
- 	if (pasid)
--		amdgpu_pasid_free_delayed(pd->tbo.resv, pasid);
-+		amdgpu_pasid_free_delayed(pd->tbo.base.resv, pasid);
- 	amdgpu_bo_unref(&pd);
- 
- 	idr_for_each_entry(&fpriv->bo_list_handles, list, handle)
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c
-index 4ff4cf5988ea..9c72531c842c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c
-@@ -216,7 +216,7 @@ static void amdgpu_mn_invalidate_node(struct amdgpu_mn_node *node,
- 		if (!amdgpu_ttm_tt_affect_userptr(bo->tbo.ttm, start, end))
- 			continue;
- 
--		r = reservation_object_wait_timeout_rcu(bo->tbo.resv,
-+		r = reservation_object_wait_timeout_rcu(bo->tbo.base.resv,
- 			true, false, MAX_SCHEDULE_TIMEOUT);
- 		if (r <= 0)
- 			DRM_ERROR("(%ld) failed to wait for user bo\n", r);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-index ed2e88208a73..ec0f6420718f 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-@@ -505,8 +505,6 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
- 	if (unlikely(r != 0))
- 		return r;
- 
--	bo->tbo.base.resv = bo->tbo.resv;
--
- 	if (!amdgpu_gmc_vram_full_visible(&adev->gmc) &&
- 	    bo->tbo.mem.mem_type == TTM_PL_VRAM &&
- 	    bo->tbo.mem.start < adev->gmc.visible_vram_size >> PAGE_SHIFT)
-@@ -519,7 +517,7 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
- 	    bo->tbo.mem.placement & TTM_PL_FLAG_VRAM) {
- 		struct dma_fence *fence;
- 
--		r = amdgpu_fill_buffer(bo, 0, bo->tbo.resv, &fence);
-+		r = amdgpu_fill_buffer(bo, 0, bo->tbo.base.resv, &fence);
- 		if (unlikely(r))
- 			goto fail_unreserve;
- 
-@@ -542,7 +540,7 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
- 
- fail_unreserve:
- 	if (!bp->resv)
--		ww_mutex_unlock(&bo->tbo.resv->lock);
-+		ww_mutex_unlock(&bo->tbo.base.resv->lock);
- 	amdgpu_bo_unref(&bo);
- 	return r;
- }
-@@ -563,7 +561,7 @@ static int amdgpu_bo_create_shadow(struct amdgpu_device *adev,
- 	bp.flags = AMDGPU_GEM_CREATE_CPU_GTT_USWC |
- 		AMDGPU_GEM_CREATE_SHADOW;
- 	bp.type = ttm_bo_type_kernel;
--	bp.resv = bo->tbo.resv;
-+	bp.resv = bo->tbo.base.resv;
- 
- 	r = amdgpu_bo_do_create(adev, &bp, &bo->shadow);
- 	if (!r) {
-@@ -604,13 +602,13 @@ int amdgpu_bo_create(struct amdgpu_device *adev,
- 
- 	if ((flags & AMDGPU_GEM_CREATE_SHADOW) && !(adev->flags & AMD_IS_APU)) {
- 		if (!bp->resv)
--			WARN_ON(reservation_object_lock((*bo_ptr)->tbo.resv,
-+			WARN_ON(reservation_object_lock((*bo_ptr)->tbo.base.resv,
- 							NULL));
- 
- 		r = amdgpu_bo_create_shadow(adev, bp->size, *bo_ptr);
- 
- 		if (!bp->resv)
--			reservation_object_unlock((*bo_ptr)->tbo.resv);
-+			reservation_object_unlock((*bo_ptr)->tbo.base.resv);
- 
- 		if (r)
- 			amdgpu_bo_unref(bo_ptr);
-@@ -707,7 +705,7 @@ int amdgpu_bo_kmap(struct amdgpu_bo *bo, void **ptr)
- 		return 0;
- 	}
- 
--	r = reservation_object_wait_timeout_rcu(bo->tbo.resv, false, false,
-+	r = reservation_object_wait_timeout_rcu(bo->tbo.base.resv, false, false,
- 						MAX_SCHEDULE_TIMEOUT);
- 	if (r < 0)
- 		return r;
-@@ -1084,7 +1082,7 @@ int amdgpu_bo_set_tiling_flags(struct amdgpu_bo *bo, u64 tiling_flags)
-  */
- void amdgpu_bo_get_tiling_flags(struct amdgpu_bo *bo, u64 *tiling_flags)
- {
--	lockdep_assert_held(&bo->tbo.resv->lock.base);
-+	lockdep_assert_held(&bo->tbo.base.resv->lock.base);
- 
- 	if (tiling_flags)
- 		*tiling_flags = bo->tiling_flags;
-@@ -1280,7 +1278,7 @@ int amdgpu_bo_fault_reserve_notify(struct ttm_buffer_object *bo)
- void amdgpu_bo_fence(struct amdgpu_bo *bo, struct dma_fence *fence,
- 		     bool shared)
- {
--	struct reservation_object *resv = bo->tbo.resv;
-+	struct reservation_object *resv = bo->tbo.base.resv;
- 
- 	if (shared)
- 		reservation_object_add_shared_fence(resv, fence);
-@@ -1305,7 +1303,7 @@ int amdgpu_bo_sync_wait(struct amdgpu_bo *bo, void *owner, bool intr)
- 	int r;
- 
- 	amdgpu_sync_create(&sync);
--	amdgpu_sync_resv(adev, &sync, bo->tbo.resv, owner, false);
-+	amdgpu_sync_resv(adev, &sync, bo->tbo.base.resv, owner, false);
- 	r = amdgpu_sync_wait(&sync, intr);
- 	amdgpu_sync_free(&sync);
- 
-@@ -1325,7 +1323,7 @@ int amdgpu_bo_sync_wait(struct amdgpu_bo *bo, void *owner, bool intr)
- u64 amdgpu_bo_gpu_offset(struct amdgpu_bo *bo)
- {
- 	WARN_ON_ONCE(bo->tbo.mem.mem_type == TTM_PL_SYSTEM);
--	WARN_ON_ONCE(!ww_mutex_is_locked(&bo->tbo.resv->lock) &&
-+	WARN_ON_ONCE(!ww_mutex_is_locked(&bo->tbo.base.resv->lock) &&
- 		     !bo->pin_count && bo->tbo.type != ttm_bo_type_kernel);
- 	WARN_ON_ONCE(bo->tbo.mem.start == AMDGPU_BO_INVALID_OFFSET);
- 	WARN_ON_ONCE(bo->tbo.mem.mem_type == TTM_PL_VRAM &&
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-index b8ae9a838b6c..b903a382b6b6 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-@@ -438,7 +438,7 @@ static int amdgpu_move_blit(struct ttm_buffer_object *bo,
- 
- 	r = amdgpu_ttm_copy_mem_to_mem(adev, &src, &dst,
- 				       new_mem->num_pages << PAGE_SHIFT,
--				       bo->resv, &fence);
-+				       bo->base.resv, &fence);
- 	if (r)
- 		goto error;
- 
-@@ -1450,14 +1450,14 @@ static bool amdgpu_ttm_bo_eviction_valuable(struct ttm_buffer_object *bo,
- 	 * cleanly handle page faults.
+@@ -131,7 +131,7 @@ static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
+ 	 * for reserve, and if it fails, retry the fault after waiting
+ 	 * for the buffer to become unreserved.
  	 */
- 	if (bo->type == ttm_bo_type_kernel &&
--	    !reservation_object_test_signaled_rcu(bo->resv, true))
-+	    !reservation_object_test_signaled_rcu(bo->base.resv, true))
- 		return false;
- 
- 	/* If bo is a KFD BO, check if the bo belongs to the current process.
- 	 * If true, then return false as any KFD process needs all its BOs to
- 	 * be resident to run successfully
- 	 */
--	flist = reservation_object_get_list(bo->resv);
-+	flist = reservation_object_get_list(bo->base.resv);
- 	if (flist) {
- 		for (i = 0; i < flist->shared_count; ++i) {
- 			f = rcu_dereference_protected(flist->shared[i],
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_uvd.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_uvd.c
-index 5b2fea3b4a2c..f858607b17a5 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_uvd.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_uvd.c
-@@ -1073,7 +1073,7 @@ static int amdgpu_uvd_send_msg(struct amdgpu_ring *ring, struct amdgpu_bo *bo,
- 	ib->length_dw = 16;
- 
- 	if (direct) {
--		r = reservation_object_wait_timeout_rcu(bo->tbo.resv,
-+		r = reservation_object_wait_timeout_rcu(bo->tbo.base.resv,
- 							true, false,
- 							msecs_to_jiffies(10));
- 		if (r == 0)
-@@ -1085,7 +1085,7 @@ static int amdgpu_uvd_send_msg(struct amdgpu_ring *ring, struct amdgpu_bo *bo,
- 		if (r)
- 			goto err_free;
- 	} else {
--		r = amdgpu_sync_resv(adev, &job->sync, bo->tbo.resv,
-+		r = amdgpu_sync_resv(adev, &job->sync, bo->tbo.base.resv,
- 				     AMDGPU_FENCE_OWNER_UNDEFINED, false);
- 		if (r)
- 			goto err_free;
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-index e44f9dd202e8..4c86b9cd1530 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-@@ -302,7 +302,7 @@ static void amdgpu_vm_bo_base_init(struct amdgpu_vm_bo_base *base,
- 	base->next = bo->vm_bo;
- 	bo->vm_bo = base;
- 
--	if (bo->tbo.resv != vm->root.base.bo->tbo.resv)
-+	if (bo->tbo.base.resv != vm->root.base.bo->tbo.base.resv)
- 		return;
- 
- 	vm->bulk_moveable = false;
-@@ -583,7 +583,7 @@ void amdgpu_vm_del_from_lru_notify(struct ttm_buffer_object *bo)
- 	for (bo_base = abo->vm_bo; bo_base; bo_base = bo_base->next) {
- 		struct amdgpu_vm *vm = bo_base->vm;
- 
--		if (abo->tbo.resv == vm->root.base.bo->tbo.resv)
-+		if (abo->tbo.base.resv == vm->root.base.bo->tbo.base.resv)
- 			vm->bulk_moveable = false;
- 	}
- 
-@@ -834,7 +834,7 @@ static void amdgpu_vm_bo_param(struct amdgpu_device *adev, struct amdgpu_vm *vm,
- 		bp->flags |= AMDGPU_GEM_CREATE_SHADOW;
- 	bp->type = ttm_bo_type_kernel;
- 	if (vm->root.base.bo)
--		bp->resv = vm->root.base.bo->tbo.resv;
-+		bp->resv = vm->root.base.bo->tbo.base.resv;
+-	if (unlikely(!reservation_object_trylock(bo->resv))) {
++	if (unlikely(!reservation_object_trylock(bo->base.resv))) {
+ 		if (vmf->flags & FAULT_FLAG_ALLOW_RETRY) {
+ 			if (!(vmf->flags & FAULT_FLAG_RETRY_NOWAIT)) {
+ 				ttm_bo_get(bo);
+@@ -296,7 +296,7 @@ static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
+ out_io_unlock:
+ 	ttm_mem_io_unlock(man);
+ out_unlock:
+-	reservation_object_unlock(bo->resv);
++	reservation_object_unlock(bo->base.resv);
+ 	return ret;
  }
  
- /**
-@@ -1692,7 +1692,7 @@ int amdgpu_vm_bo_update(struct amdgpu_device *adev,
- 			ttm = container_of(bo->tbo.ttm, struct ttm_dma_tt, ttm);
- 			pages_addr = ttm->dma_address;
- 		}
--		exclusive = reservation_object_get_excl(bo->tbo.resv);
-+		exclusive = reservation_object_get_excl(bo->tbo.base.resv);
+diff --git a/drivers/gpu/drm/ttm/ttm_execbuf_util.c b/drivers/gpu/drm/ttm/ttm_execbuf_util.c
+index 957ec375a4ba..861c4145b462 100644
+--- a/drivers/gpu/drm/ttm/ttm_execbuf_util.c
++++ b/drivers/gpu/drm/ttm/ttm_execbuf_util.c
+@@ -39,7 +39,7 @@ static void ttm_eu_backoff_reservation_reverse(struct list_head *list,
+ 	list_for_each_entry_continue_reverse(entry, list, head) {
+ 		struct ttm_buffer_object *bo = entry->bo;
+ 
+-		reservation_object_unlock(bo->resv);
++		reservation_object_unlock(bo->base.resv);
  	}
+ }
  
- 	if (bo) {
-@@ -1702,7 +1702,7 @@ int amdgpu_vm_bo_update(struct amdgpu_device *adev,
- 		flags = 0x0;
+@@ -71,7 +71,7 @@ void ttm_eu_backoff_reservation(struct ww_acquire_ctx *ticket,
+ 
+ 		if (list_empty(&bo->lru))
+ 			ttm_bo_add_to_lru(bo);
+-		reservation_object_unlock(bo->resv);
++		reservation_object_unlock(bo->base.resv);
  	}
+ 	spin_unlock(&glob->lru_lock);
  
--	if (clear || (bo && bo->tbo.resv == vm->root.base.bo->tbo.resv))
-+	if (clear || (bo && bo->tbo.base.resv == vm->root.base.bo->tbo.base.resv))
- 		last_update = &vm->last_update;
- 	else
- 		last_update = &bo_va->last_pt_update;
-@@ -1733,7 +1733,7 @@ int amdgpu_vm_bo_update(struct amdgpu_device *adev,
- 	 * the evicted list so that it gets validated again on the
- 	 * next command submission.
- 	 */
--	if (bo && bo->tbo.resv == vm->root.base.bo->tbo.resv) {
-+	if (bo && bo->tbo.base.resv == vm->root.base.bo->tbo.base.resv) {
- 		uint32_t mem_type = bo->tbo.mem.mem_type;
+@@ -114,7 +114,7 @@ int ttm_eu_reserve_buffers(struct ww_acquire_ctx *ticket,
  
- 		if (!(bo->preferred_domains & amdgpu_mem_type_to_domain(mem_type)))
-@@ -1869,7 +1869,7 @@ static void amdgpu_vm_free_mapping(struct amdgpu_device *adev,
-  */
- static void amdgpu_vm_prt_fini(struct amdgpu_device *adev, struct amdgpu_vm *vm)
- {
--	struct reservation_object *resv = vm->root.base.bo->tbo.resv;
-+	struct reservation_object *resv = vm->root.base.bo->tbo.base.resv;
- 	struct dma_fence *excl, **shared;
- 	unsigned i, shared_count;
- 	int r;
-@@ -1983,7 +1983,7 @@ int amdgpu_vm_handle_moved(struct amdgpu_device *adev,
- 	while (!list_empty(&vm->invalidated)) {
- 		bo_va = list_first_entry(&vm->invalidated, struct amdgpu_bo_va,
- 					 base.vm_status);
--		resv = bo_va->base.bo->tbo.resv;
-+		resv = bo_va->base.bo->tbo.base.resv;
- 		spin_unlock(&vm->invalidated_lock);
+ 		ret = __ttm_bo_reserve(bo, intr, (ticket == NULL), ticket);
+ 		if (!ret && unlikely(atomic_read(&bo->cpu_writers) > 0)) {
+-			reservation_object_unlock(bo->resv);
++			reservation_object_unlock(bo->base.resv);
  
- 		/* Try to reserve the BO to avoid clearing its ptes */
-@@ -2074,7 +2074,7 @@ static void amdgpu_vm_bo_insert_map(struct amdgpu_device *adev,
- 	if (mapping->flags & AMDGPU_PTE_PRT)
- 		amdgpu_vm_prt_get(adev);
+ 			ret = -EBUSY;
  
--	if (bo && bo->tbo.resv == vm->root.base.bo->tbo.resv &&
-+	if (bo && bo->tbo.base.resv == vm->root.base.bo->tbo.base.resv &&
- 	    !bo_va->base.moved) {
- 		list_move(&bo_va->base.vm_status, &vm->moved);
- 	}
-@@ -2406,7 +2406,7 @@ void amdgpu_vm_bo_trace_cs(struct amdgpu_vm *vm, struct ww_acquire_ctx *ticket)
- 			struct amdgpu_bo *bo;
- 
- 			bo = mapping->bo_va->base.bo;
--			if (READ_ONCE(bo->tbo.resv->lock.ctx) != ticket)
-+			if (READ_ONCE(bo->tbo.base.resv->lock.ctx) != ticket)
+@@ -130,7 +130,7 @@ int ttm_eu_reserve_buffers(struct ww_acquire_ctx *ticket,
+ 			if (!entry->num_shared)
  				continue;
+ 
+-			ret = reservation_object_reserve_shared(bo->resv,
++			ret = reservation_object_reserve_shared(bo->base.resv,
+ 								entry->num_shared);
+ 			if (!ret)
+ 				continue;
+@@ -144,16 +144,16 @@ int ttm_eu_reserve_buffers(struct ww_acquire_ctx *ticket,
+ 
+ 		if (ret == -EDEADLK) {
+ 			if (intr) {
+-				ret = ww_mutex_lock_slow_interruptible(&bo->resv->lock,
++				ret = ww_mutex_lock_slow_interruptible(&bo->base.resv->lock,
+ 								       ticket);
+ 			} else {
+-				ww_mutex_lock_slow(&bo->resv->lock, ticket);
++				ww_mutex_lock_slow(&bo->base.resv->lock, ticket);
+ 				ret = 0;
+ 			}
  		}
  
-@@ -2433,7 +2433,7 @@ void amdgpu_vm_bo_rmv(struct amdgpu_device *adev,
- 	struct amdgpu_vm_bo_base **base;
+ 		if (!ret && entry->num_shared)
+-			ret = reservation_object_reserve_shared(bo->resv,
++			ret = reservation_object_reserve_shared(bo->base.resv,
+ 								entry->num_shared);
  
- 	if (bo) {
--		if (bo->tbo.resv == vm->root.base.bo->tbo.resv)
-+		if (bo->tbo.base.resv == vm->root.base.bo->tbo.base.resv)
- 			vm->bulk_moveable = false;
- 
- 		for (base = &bo_va->base.bo->vm_bo; *base;
-@@ -2497,7 +2497,7 @@ void amdgpu_vm_bo_invalidate(struct amdgpu_device *adev,
- 	for (bo_base = bo->vm_bo; bo_base; bo_base = bo_base->next) {
- 		struct amdgpu_vm *vm = bo_base->vm;
- 
--		if (evicted && bo->tbo.resv == vm->root.base.bo->tbo.resv) {
-+		if (evicted && bo->tbo.base.resv == vm->root.base.bo->tbo.base.resv) {
- 			amdgpu_vm_bo_evicted(bo_base);
- 			continue;
- 		}
-@@ -2508,7 +2508,7 @@ void amdgpu_vm_bo_invalidate(struct amdgpu_device *adev,
- 
- 		if (bo->tbo.type == ttm_bo_type_kernel)
- 			amdgpu_vm_bo_relocated(bo_base);
--		else if (bo->tbo.resv == vm->root.base.bo->tbo.resv)
-+		else if (bo->tbo.base.resv == vm->root.base.bo->tbo.base.resv)
- 			amdgpu_vm_bo_moved(bo_base);
+ 		if (unlikely(ret != 0)) {
+@@ -201,14 +201,14 @@ void ttm_eu_fence_buffer_objects(struct ww_acquire_ctx *ticket,
+ 	list_for_each_entry(entry, list, head) {
+ 		bo = entry->bo;
+ 		if (entry->num_shared)
+-			reservation_object_add_shared_fence(bo->resv, fence);
++			reservation_object_add_shared_fence(bo->base.resv, fence);
  		else
- 			amdgpu_vm_bo_invalidated(bo_base);
-@@ -2638,7 +2638,7 @@ void amdgpu_vm_adjust_size(struct amdgpu_device *adev, uint32_t min_vm_size,
-  */
- long amdgpu_vm_wait_idle(struct amdgpu_vm *vm, long timeout)
- {
--	return reservation_object_wait_timeout_rcu(vm->root.base.bo->tbo.resv,
-+	return reservation_object_wait_timeout_rcu(vm->root.base.bo->tbo.base.resv,
- 						   true, true, timeout);
- }
+-			reservation_object_add_excl_fence(bo->resv, fence);
++			reservation_object_add_excl_fence(bo->base.resv, fence);
+ 		if (list_empty(&bo->lru))
+ 			ttm_bo_add_to_lru(bo);
+ 		else
+ 			ttm_bo_move_to_lru_tail(bo, NULL);
+-		reservation_object_unlock(bo->resv);
++		reservation_object_unlock(bo->base.resv);
+ 	}
+ 	spin_unlock(&glob->lru_lock);
+ 	if (ticket)
+diff --git a/drivers/gpu/drm/ttm/ttm_tt.c b/drivers/gpu/drm/ttm/ttm_tt.c
+index e3a0691582ff..00b4a3337840 100644
+--- a/drivers/gpu/drm/ttm/ttm_tt.c
++++ b/drivers/gpu/drm/ttm/ttm_tt.c
+@@ -48,7 +48,7 @@ int ttm_tt_create(struct ttm_buffer_object *bo, bool zero_alloc)
+ 	struct ttm_bo_device *bdev = bo->bdev;
+ 	uint32_t page_flags = 0;
  
-@@ -2713,7 +2713,7 @@ int amdgpu_vm_init(struct amdgpu_device *adev, struct amdgpu_vm *vm,
- 	if (r)
- 		goto error_free_root;
+-	reservation_object_assert_held(bo->resv);
++	reservation_object_assert_held(bo->base.resv);
  
--	r = reservation_object_reserve_shared(root->tbo.resv, 1);
-+	r = reservation_object_reserve_shared(root->tbo.base.resv, 1);
- 	if (r)
- 		goto error_unreserve;
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm_sdma.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm_sdma.c
-index ddd181f5ed37..61fc584cbb1a 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm_sdma.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm_sdma.c
-@@ -72,7 +72,7 @@ static int amdgpu_vm_sdma_prepare(struct amdgpu_vm_update_params *p,
- 	if (r)
- 		return r;
- 
--	r = amdgpu_sync_resv(p->adev, &p->job->sync, root->tbo.resv,
-+	r = amdgpu_sync_resv(p->adev, &p->job->sync, root->tbo.base.resv,
- 			     owner, false);
- 	if (r)
- 		return r;
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index b16c658074d2..a1f86a2dfdf3 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -5509,7 +5509,7 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
- 		 * deadlock during GPU reset when this fence will not signal
- 		 * but we hold reservation lock for the BO.
- 		 */
--		r = reservation_object_wait_timeout_rcu(abo->tbo.resv, true,
-+		r = reservation_object_wait_timeout_rcu(abo->tbo.base.resv, true,
- 							false,
- 							msecs_to_jiffies(5000));
- 		if (unlikely(r <= 0))
+ 	if (bdev->need_dma32)
+ 		page_flags |= TTM_PAGE_FLAG_DMA32;
 -- 
 2.18.1
 
