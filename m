@@ -2,134 +2,112 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20221C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88B0C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF847214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889CE205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:28:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Wp2ECxRy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IKVorRDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfF1K15 (ORCPT
+        id S1726720AbfF1K2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:27:57 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:38883 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfF1K15 (ORCPT
+        Fri, 28 Jun 2019 06:28:25 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33305 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfF1K2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:27:57 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190628102756euoutp027763ef2453b2f03c26ac5a0806b95f96~sVfO7zn8c2641226412euoutp02P
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 10:27:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190628102756euoutp027763ef2453b2f03c26ac5a0806b95f96~sVfO7zn8c2641226412euoutp02P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561717676;
-        bh=Bsjy2CgLzbj8VVIl5VheX4ReDw3a8PH2su9cRZoqQPo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Wp2ECxRyTP3pu/9TV7kk1qwGI0sY++zmbxBeVCSB18ukI7e4AriT9xtR2BP+00ogE
-         gxPkwWwuCWzQRPuaqZKrBvkqhx4Y7MSH7ttzpnqpFM1G3XEiVP8ws42P7l39kUlGPr
-         RCsJZXkJb6hca3c2PAEqAwgzK92FoPfo2WKRQVa0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190628102755eucas1p13eea98a7e53b27980b995e5dbdcdbb4f~sVfODwN5O1398813988eucas1p1J;
-        Fri, 28 Jun 2019 10:27:55 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 95.FF.04325.AABE51D5; Fri, 28
-        Jun 2019 11:27:54 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190628102754eucas1p283e1ad580a242323137a4b6c7024028c~sVfNShlCk0105401054eucas1p2m;
-        Fri, 28 Jun 2019 10:27:54 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190628102754eusmtrp1a2a1cdb60391acefd19dbd378702a250~sVfNEbRd01758517585eusmtrp1J;
-        Fri, 28 Jun 2019 10:27:54 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-cf-5d15ebaacabb
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id A8.8A.04146.9ABE51D5; Fri, 28
-        Jun 2019 11:27:54 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190628102753eusmtip2e8a5388597214e975461aa5455e6fff7~sVfMrJtwU1098610986eusmtip2f;
-        Fri, 28 Jun 2019 10:27:53 +0000 (GMT)
-Subject: Re: [PATCH 3/3] video: fbdev: don't print error message on
- framebuffer_alloc() failure
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Cc:     =?UTF-8?Q?Bruno_Pr=c3=a9mont?= <bonbons@linux-vserver.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Message-ID: <4a534d3e-0ce6-9dfd-b3f2-e69aa0a1fcd8@samsung.com>
-Date:   Fri, 28 Jun 2019 12:27:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Fri, 28 Jun 2019 06:28:24 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y17so3656190lfe.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 03:28:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uNia+wXcww8hJhPTXh8yCLt0TR3O7aaW7PyNXd3ivCM=;
+        b=IKVorRDRsqKEUM0hcVl2t5iU7B8+N4xQ56gnE/B0TdoxPE0f06DGV1Th3bnGVPq+1i
+         qlOJbbrdlJWGYB2HGyV/JbdKNdMgZH9cyHeWFO9XiY5LT4+XFkdj4mO9fAtZF/PIRgRL
+         QsOfuUs4WXfJQ9yaUWnoReSSMZtIgKJlc1k7j6J/e3aNmQoK5MC7YHX0WpUu/l6naqlC
+         UFNH2eoSon5kdtoLPbZLbBRvk0s7tiEQVtwKkuuyAUuftFUTUMqeSmFrOXbLfmHfotyX
+         k3wxCIRXYcHy6YjAhtcIkgNwuzbYoSWXsk/UZx3BWa6ZCuJupTnj5F5XXV3J4GKI/RjQ
+         emoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uNia+wXcww8hJhPTXh8yCLt0TR3O7aaW7PyNXd3ivCM=;
+        b=JMOsjYhGKkN8QEbCxsVYLm3Fs2YjsWyRj0OsnKy03YrFXvN3iM49HUVVUwnFuCz4gj
+         Q8C22NMIbsuwrF7xnOclGWHJny3WA99x07ESySqoKJaO5H/os4Gv1yKxtGhhUOD0c6Cm
+         sjjd7uW3uf7l1GzGC4oCqbOT94py2SL5KdzCI2yCYOSPrcF81ZwF9H0Bl3ImFRC3vPXa
+         vbDuYLr0qRT8aHjeUVRdTm2BaIfjKgrfSPD407Oh5rDzgpZQxy6t8jw46QUmFl0alRXK
+         yuMXMfQi6Tnn7Rfff1oiakWfk0YZnCxNqaUZZUkSw4mhUotMxUoMl3ygXC3CRGC8VAco
+         EnMQ==
+X-Gm-Message-State: APjAAAUinh0b9pJlCK0TbLMUMkxtwjxmuQc+6y/M1p8jJi5dMHTqDFBw
+        luF/Yx/Zvfj/j3qopBbGNRm5XMLnH5dhA+Pw4JwBhA==
+X-Google-Smtp-Source: APXvYqyTSELuCwdqtXQ6xfh9OQghPYDZrodDsVKXcdIIzGQolnUkGedUB3xgSLIxsiO7L8/FxlqG97FHQGkNNX4PzBg=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr4549883lfu.141.1561717702644;
+ Fri, 28 Jun 2019 03:28:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3da197ed-a701-2aa7-d775-2bdbe9deab4a@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsWy7djP87qrXovGGjw8bWZxfcpmVotzk14z
-        W1z5+p7N4tbxVkaLE30fWC1ufvrGanF51xw2B3aPTas62TzezBXwuN99nMnj/b6rbB6fN8kF
-        sEZx2aSk5mSWpRbp2yVwZTy8tIG5YDVrxd0tG9kaGPeydDFyckgImEgc2/SduYuRi0NIYAWj
-        RPOk00wQzhdGiQtfj7FCOJ8ZJVYv/sIE03L43CFGiMRyRomtS09D9b9llHjwdT87SJWwQKLE
-        hx8LwDrYBKwkJravYgSxRQRqJeY39IHtYBaYwiix8/BhVpAEr4CdxMrLq8CuYhFQlbjceBys
-        QVQgQuL+sQ1QNYISJ2c+AavhFLCXuPbxPhuIzSwgLnHryXwmCFteonnrbLCLJAS2sUvs2PgP
-        6lUXibkN55khbGGJV8e3sEPYMhKnJ/ewQDSsY5T42/ECqns7o8Tyyf/YIKqsJQ4fvwh0BgfQ
-        Ck2J9bv0IcKOEl83rmECCUsI8EnceCsIcQSfxKRt05khwrwSHW1CENVqEhuWbWCDWdu1cyXz
-        BEalWUhem4XknVlI3pmFsHcBI8sqRvHU0uLc9NRi47zUcr3ixNzi0rx0veT83E2MwDR0+t/x
-        rzsY9/1JOsQowMGoxMOrsFMkVog1say4MvcQowQHs5IIr+Q5oBBvSmJlVWpRfnxRaU5q8SFG
-        aQ4WJXHeaoYH0UIC6YklqdmpqQWpRTBZJg5OqQbG5Pyz59LOSy1S5p2b5/HDenNlmYpGhJ1P
-        3NUJee7FRSFsH1PaG788WJSfWr6V+3rJl6/KLA6aHZ63LGujOkL8duV7T3IKl0t64VC7U9Xs
-        /vTpSZJ/HYRN+2Uy5s8Q7lnV9/pBdYG44MOmn3fMjG42aTXovt+5rJJDlXMey+OTNx5Gq96K
-        PqnEUpyRaKjFXFScCAAdKagpPwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNIsWRmVeSWpSXmKPExsVy+t/xe7qrXovGGjxXtLg+ZTOrxblJr5kt
-        rnx9z2Zx63gro8WJvg+sFjc/fWO1uLxrDpsDu8emVZ1sHm/mCnjc7z7O5PF+31U2j8+b5AJY
-        o/RsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyHl7a
-        wFywmrXi7paNbA2Me1m6GDk5JARMJA6fO8TYxcjFISSwlFHi99Sd7F2MHEAJGYnj68sgaoQl
-        /lzrYoOoec0o8fXELVaQhLBAosSHHwuYQGw2ASuJie2rGEFsEYFaiYnL/7OANDALTGOUONzX
-        zAySEBKwkziw5AobiM0LZK+8vArsChYBVYnLjcfBmkUFIiTOvF/BAlEjKHFy5hMwm1PAXuLa
-        x/tgvcwC6hJ/5l1ihrDFJW49mc8EYctLNG+dzTyBUWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi
-        3PTcYkO94sTc4tK8dL3k/NxNjMCI23bs5+YdjJc2Bh9iFOBgVOLhVdgpEivEmlhWXJl7iFGC
-        g1lJhFfyHFCINyWxsiq1KD++qDQntfgQoynQcxOZpUST84HJIK8k3tDU0NzC0tDc2NzYzEJJ
-        nLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA2O53HPeIxqiF/z4qpZtjHI8O+/RJKlXv388X+X0
-        /Y52+JyZ1b8zpZ/kZ/6btu1j9ynpKVH/p+3Km7JqQ+DU2aqHnnG2K/aw39N+Vu7kwv7yUPd+
-        6WcH0uV2e3pnTlGy2jdVfk2sin3Fh/Q+1RuuToseb52j9V0upmqnRstro1kVChde1oRpxK1S
-        YinOSDTUYi4qTgQAnCepTc4CAAA=
-X-CMS-MailID: 20190628102754eucas1p283e1ad580a242323137a4b6c7024028c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190628102754eucas1p283e1ad580a242323137a4b6c7024028c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190628102754eucas1p283e1ad580a242323137a4b6c7024028c
-References: <3da197ed-a701-2aa7-d775-2bdbe9deab4a@samsung.com>
-        <CGME20190628102754eucas1p283e1ad580a242323137a4b6c7024028c@eucas1p2.samsung.com>
+References: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Jun 2019 11:28:11 +0100
+Message-ID: <CACRpkdYD7Z7XX9wXFtBehJG_4NCt=m_MNsR5cESPRnO3tomKmQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] extcon: Add fsa9480 extcon driver
+To:     =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Donggeun Kim <dg77.kim@samsung.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 21, 2019 at 12:14 PM Pawe=C5=82 Chmiel
+<pawel.mikolaj.chmiel@gmail.com> wrote:
 
-On 6/14/19 4:51 PM, Bartlomiej Zolnierkiewicz wrote:
-> framebuffer_alloc() can fail only on kzalloc() memory allocation
-> failure and since kzalloc() will print error message in such case
-> we can omit printing extra error message in drivers (which BTW is
-> what the majority of framebuffer_alloc() users is doing already).
-> 
-> Cc: "Bruno Prémont" <bonbons@linux-vserver.org>
-> Cc: Jiri Kosina <jikos@kernel.org>
-> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> This small patchset adds support for Fairchild Semiconductor FSA9480
+> microUSB switch.
+>
+> It has been tested on Samsung Galaxy S and Samsung Fascinate 4G,
+> but it can be found also on other Samsung Aries (s5pv210) based devices.
+>
+> Tomasz Figa (2):
+>   dt-bindings: extcon: Add support for fsa9480 switch
+>   extcon: Add fsa9480 extcon driver
 
-I queued the patch for v5.3.
+This is surely an important driver since almost all elder Samsung
+mobiles use this kind of switch. So
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+This driver I see is already sent to Greg for inclusion in the next kernel.
+I just wonder if you guys are even aware of this driver for the same
+hardware added by Donggeun Kim in 2011:
+drivers/misc/fsa9480.c
+
+That said I am all for pulling in this new driver because it is surely
+better and supports device tree.
+
+But can we please also send Greg a patch to delete the old driver
+so we don't have two of them now?
+
+The old driver have no in-tree users so it can be deleted without
+side effects. Out-of-tree users can certainly adapt to the new
+extcon driver.
+
+If you want I can send a deletion patch for the misc driver?
+
+Yours,
+Linus Walleij
