@@ -2,135 +2,80 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5537C5B577
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC55C5B577
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DC8214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FTihH1TC"
+	by mail.kernel.org (Postfix) with ESMTP id B33422133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfF1BpK (ORCPT
+        id S1726472AbfF1Brs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:45:10 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58969 "EHLO ozlabs.org"
+        Thu, 27 Jun 2019 21:47:48 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:59806 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726500AbfF1BpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:45:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Zfhx4QTcz9s3Z;
-        Fri, 28 Jun 2019 11:45:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561686305;
-        bh=4aAH+l1+X6slCnnOWZAlgZ4hfMF/p/4CgqBa64BdBdg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FTihH1TCGpy9WKHLi3K5cMZdGcxDG2AOj8ASRNNxt11FtW0R/IFYTShPOFIs02TwS
-         YKyqK23OVmYVz1nsPemfcETk9qjU9swhLnIgXOPRsVR5p5CyV8RvV4jp4v8d8ka0R6
-         ZWGZOQNq9spzSRpjTiO8duWYJbYzUqyL7EwTtUN1TQUJ+VTJLrt/1zq1ufy4LAY4Tq
-         2PvzjhxhmTde/pGmOWNYgFRi7CsE5ph7VRzW328WAhbGXIaLIOptt9zhPIU+oPlfRn
-         m0N+VoLR9feb8JrH3NX4UCAdE7DDeTHxqivRP6jOAjD0eVesqe3NSt0aZx9twAUFcT
-         rrIhHXomSmJjQ==
-Date:   Fri, 28 Jun 2019 11:45:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
-        Igor Russkikh <igor.russkikh@aquantia.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20190628114504.52d3fe65@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/KTqn5qH3d8uD5y73ynfmeX="; protocol="application/pgp-signature"
+        id S1726292AbfF1Brr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 21:47:47 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 003511A103B;
+        Fri, 28 Jun 2019 03:47:45 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 323131A1045;
+        Fri, 28 Jun 2019 03:47:29 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A5E6F402FB;
+        Fri, 28 Jun 2019 09:47:16 +0800 (SGT)
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
+        lorenzo.pieralisi@arm.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
+        pombredanne@nexb.com, shawn.lin@rock-chips.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit property in EP driver.
+Date:   Fri, 28 Jun 2019 09:38:25 +0800
+Message-Id: <20190628013826.4705-1-xiaowei.bao@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/KTqn5qH3d8uD5y73ynfmeX=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
+is 32bit, BAR3 and BAR4 is 64bit, this is determined by hardware,
+so set the bar_fixed_64bit with 0x14.
 
-Hi all,
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+---
+v2:
+ - Replace value 0x14 with a macro.
+v3:
+ - No change.
 
-Today's linux-next merge of the net-next tree got conflicts in:
+ drivers/pci/controller/dwc/pci-layerscape-ep.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-  drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-  drivers/net/ethernet/aquantia/atlantic/aq_nic.h
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index be61d96..227c33b 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -44,6 +44,7 @@ static int ls_pcie_establish_link(struct dw_pcie *pci)
+ 	.linkup_notifier = false,
+ 	.msi_capable = true,
+ 	.msix_capable = false,
++	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+ };
+ 
+ static const struct pci_epc_features*
+-- 
+1.7.1
 
-between commit:
-
-  48dd73d08d4d ("net: aquantia: fix vlans not working over bridged network")
-
-from the net tree and commit:
-
-  d3ed7c5cf79b ("net: aquantia: adding fields and device features for vlan =
-offload")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index 41172fbebddd,746f85e6de13..000000000000
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@@ -126,7 -126,8 +126,9 @@@ void aq_nic_cfg_start(struct aq_nic_s *
- =20
-  	cfg->link_speed_msk &=3D cfg->aq_hw_caps->link_speed_msk;
-  	cfg->features =3D cfg->aq_hw_caps->hw_features;
- +	cfg->is_vlan_force_promisc =3D true;
-+ 	cfg->is_vlan_rx_strip =3D !!(cfg->features & NETIF_F_HW_VLAN_CTAG_RX);
-+ 	cfg->is_vlan_tx_insert =3D !!(cfg->features & NETIF_F_HW_VLAN_CTAG_TX);
-  }
- =20
-  static int aq_nic_update_link_status(struct aq_nic_s *self)
-diff --cc drivers/net/ethernet/aquantia/atlantic/aq_nic.h
-index 0f22f5d5691b,26c72f298684..000000000000
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.h
-@@@ -35,7 -35,8 +35,9 @@@ struct aq_nic_cfg_s=20
-  	u32 flow_control;
-  	u32 link_speed_msk;
-  	u32 wol;
- +	bool is_vlan_force_promisc;
-+ 	u8 is_vlan_rx_strip;
-+ 	u8 is_vlan_tx_insert;
-  	u16 is_mc_list_enabled;
-  	u16 mc_list_count;
-  	bool is_autoneg;
-
---Sig_/KTqn5qH3d8uD5y73ynfmeX=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0VcSAACgkQAVBC80lX
-0GwEwgf9F59Mr2vpug7MbUet63z2io8N+oOHPXiygDfcGpDg/UW/OqxucjJi+8PG
-GRgtbMi3iD6WKIwkFYFQ+58OZW9XX5GX6c6FrtXL3l/+HdC78R5exwBDR/DDGHWo
-ewi86VkLvY8AJBc8rQuOAOMfly4lpmMMt7pOoDaubG2eOLuurDKzQ/d+jNXF3a2Z
-4bDLOjQopG3bN4HC+5YwXYwRt9STssRole9nxjm26sFIjqzBqV9P8dfz5r9a0NDr
-FNVAL9HvQZFKEIks7bGzIevleXyVdyfkFfRI+b5uCCKbvfiBDILVVjatPuL6xvUv
-5NWKquzlTbFjObk1mMViRfsUB/PRBg==
-=RNk3
------END PGP SIGNATURE-----
-
---Sig_/KTqn5qH3d8uD5y73ynfmeX=--
