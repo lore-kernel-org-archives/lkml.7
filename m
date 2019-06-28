@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 665DFC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BDCC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48EC32086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F70208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfF1MGF (ORCPT
+        id S1727054AbfF1MGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:06:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54012 "EHLO
+        Fri, 28 Jun 2019 08:06:10 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53996 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfF1MGD (ORCPT
+        with ESMTP id S1726650AbfF1MGD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:06:03 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: bbeckett)
-        with ESMTPSA id 1F45D289C5D
+        with ESMTPSA id DAE3428A3A1
 From:   Robert Beckett <bob.beckett@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -32,9 +32,9 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Robert Beckett <bob.beckett@collabora.com>
-Subject: [PATCH v4 2/2] Revert "drm/vblank: Do not update vblank count if interrupts are already disabled."
-Date:   Fri, 28 Jun 2019 13:05:32 +0100
-Message-Id: <fc4a6e587e4570227f67a82f2d0e9520934e717e.1561722822.git.bob.beckett@collabora.com>
+Subject: [PATCH v4 1/2] drm/vblank: warn on sending stale event
+Date:   Fri, 28 Jun 2019 13:05:31 +0100
+Message-Id: <66e100219a2740e493a7b96ebb95d0a2e697f121.1561722822.git.bob.beckett@collabora.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <cover.1561722822.git.bob.beckett@collabora.com>
 References: <cover.1561722822.git.bob.beckett@collabora.com>
@@ -43,55 +43,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If interrupts are already disabled, then the timestamp for the vblank
-does not get updated, causing a stale timestamp to be reported to
-userland while disabling crtcs.
-
-This reverts commit 68036b08b91bc491ccc308f902616a570a49227c.
+Warn when about to send stale vblank info and add advice to
+documentation on how to avoid.
 
 Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
 ---
- drivers/gpu/drm/drm_vblank.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/drm_vblank.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index 7dabb2bdb733..aeb9734d7799 100644
+index 603ab105125d..7dabb2bdb733 100644
 --- a/drivers/gpu/drm/drm_vblank.c
 +++ b/drivers/gpu/drm/drm_vblank.c
-@@ -371,25 +371,23 @@ void drm_vblank_disable_and_save(struct drm_device *dev, unsigned int pipe)
- 	spin_lock_irqsave(&dev->vblank_time_lock, irqflags);
+@@ -918,6 +918,19 @@ EXPORT_SYMBOL(drm_crtc_arm_vblank_event);
+  *
+  * See drm_crtc_arm_vblank_event() for a helper which can be used in certain
+  * situation, especially to send out events for atomic commit operations.
++ *
++ * Care should be taken to avoid stale timestamps. If:
++ *   - your driver has vblank support (i.e. dev->num_crtcs > 0)
++ *   - the vblank irq is off (i.e. no one called drm_crtc_vblank_get)
++ *   - from the vblank code's pov the pipe is still running (i.e. not
++ *     in-between a drm_crtc_vblank_off()/on() pair)
++ * If all of these conditions hold then drm_crtc_send_vblank_event is
++ * going to give you a garbage timestamp and and sequence number (the last
++ * recorded before the irq was disabled). If you call drm_crtc_vblank_get/put
++ * around it, or after vblank_off, then either of those will have rolled things
++ * forward for you.
++ * So, drivers should call drm_crtc_vblank_off() before this function in their
++ * crtc atomic_disable handlers.
+  */
+ void drm_crtc_send_vblank_event(struct drm_crtc *crtc,
+ 				struct drm_pending_vblank_event *e)
+@@ -925,8 +938,12 @@ void drm_crtc_send_vblank_event(struct drm_crtc *crtc,
+ 	struct drm_device *dev = crtc->dev;
+ 	u64 seq;
+ 	unsigned int pipe = drm_crtc_index(crtc);
++	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
+ 	ktime_t now;
  
- 	/*
--	 * Update vblank count and disable vblank interrupts only if the
--	 * interrupts were enabled. This avoids calling the ->disable_vblank()
--	 * operation in atomic context with the hardware potentially runtime
--	 * suspended.
-+	 * Only disable vblank interrupts if they're enabled. This avoids
-+	 * calling the ->disable_vblank() operation in atomic context with the
-+	 * hardware potentially runtime suspended.
- 	 */
--	if (!vblank->enabled)
--		goto out;
-+	if (vblank->enabled) {
-+		__disable_vblank(dev, pipe);
-+		vblank->enabled = false;
-+	}
- 
- 	/*
--	 * Update the count and timestamp to maintain the
-+	 * Always update the count and timestamp to maintain the
- 	 * appearance that the counter has been ticking all along until
- 	 * this time. This makes the count account for the entire time
- 	 * between drm_crtc_vblank_on() and drm_crtc_vblank_off().
- 	 */
- 	drm_update_vblank_count(dev, pipe, false);
--	__disable_vblank(dev, pipe);
--	vblank->enabled = false;
- 
--out:
- 	spin_unlock_irqrestore(&dev->vblank_time_lock, irqflags);
- }
- 
++	WARN_ONCE(dev->num_crtcs > 0 && !vblank->enabled && !vblank->inmodeset,
++		  "sending stale vblank info\n");
++
+ 	if (dev->num_crtcs > 0) {
+ 		seq = drm_vblank_count_and_time(dev, pipe, &now);
+ 	} else {
 -- 
 2.18.0
 
