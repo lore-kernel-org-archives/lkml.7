@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83839C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FB1C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C814208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36088208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561723989;
-	bh=ONtInnwL8qsfVF9xRqfptzALN6o1MdLeVmFGHc43Xh0=;
+	s=default; t=1561723992;
+	bh=qgCdNXFPvDKQN+CS6kIvNO0/ThSTHOb9We4e6K8BLPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ql8hRAakQfNDvK28OhJ1cpcTm2HrtkbCM81YjjqoiZt53tlaI0pyeUE9qG+nHDeRn
-	 zk6k5zGed8pE9u3ulXlglNhzr9hJpY3vVfnPceJ40eXWK//AGd830GmVp8fuuuUNCH
-	 QsGFKyRFRZ/mZI3HZdBExOYN2ZTHxZBgHHyDxkgE=
+	b=g/9H83Lx/h6IfBLqimqy9wHddg0eGKSzY+Tyr122PYX5Ob8fjouwrOD79Vu7SiSXi
+	 UcNdW0jQs9Q5MhOeeZYTQ7KTlCiyqr1idsgZUkNtpKjuq21boqpGEgF3+Ol6+6maSU
+	 Avaco50a8SQ8A2UwKcuWRm97rUb0rtNbsktiGSXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfF1MNI (ORCPT
+        id S1727147AbfF1MND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:13:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58262 "EHLO
+        Fri, 28 Jun 2019 08:13:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58270 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbfF1MMh (ORCPT
+        with ESMTP id S1726882AbfF1MMh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:12:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,31 +34,31 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=T+aHFn5tFUgnSfpFBnMICNi3wReCrHAynzcdOyekQxQ=; b=li3EMoqURBx6eQDmRTLWIB3EsT
-        Zu6i0ZMoyMkhiaS/Xc9FEiFQdBWZ5xIb+okHKXiLjWDP29jcx01CZ1VFEd8xe24cfQg7EKFuuj/ZW
-        8G4qFBnweblN0OUkI+v917d3p7X5mTEvBpwJVzzo6LJxUmZ2POQ3i/auKaU3KB+HCB+xUt5gRUGd5
-        fdoArj9P5mey/eRvzL56ap3KvXszQg3Itx7S4dOVDXcEqoTHlbXBpw0OONwM9le9nNek5L9zlnmhi
-        outVa4sIbOJlIWglRQhxrm7sbeVu6SVOC3j2ZtW8aqwFO0Wpdjt6JSBf1rVzg7lf6KC2P3YZOm92P
-        PM2Z/KMw==;
+        bh=TeaGt8pI6Vwu62riXQZpDCGAriDc3nIBGdy7UclDHhY=; b=P48mKojoqFFE1MDRkjdbVDRgQU
+        EsQ5VFxzLhz9BgMT+T38WG/FqVN1k2+GAgYAPnVtMixUoi7MqfmsCV1lht7wGGJrgtBIB8uvqEcoA
+        O1bNc2pWd6gSxp+dHsmyV0LzHSDRPsQySyK1tzFOFxwQEY1CyNEUg8zQFgleg9WHHjvzTzWWFpzop
+        DrXbaa8k7wr60EZ4V6AFQ0jB0BqcsYjkYIJ2JsSreT4OH2UMdzo1aN9ajU33eQHNlmNXFNvmwzvG9
+        hrpC90S32aWAFQfBs9MjFyWEsnQ4DQABBMK5l1anOEEkre6dKkXySmHlw1+WlyE3XkZj4ucmuBF7v
+        +fl4mwRA==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgpk3-0005Ba-9t; Fri, 28 Jun 2019 12:12:35 +0000
+        id 1hgpk3-0005BY-9l; Fri, 28 Jun 2019 12:12:35 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgpk0-0004zX-9H; Fri, 28 Jun 2019 09:12:32 -0300
+        id 1hgpk0-0004zj-Bx; Fri, 28 Jun 2019 09:12:32 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 4/9] dt: leds-lm36274.txt: fix a broken reference to ti-lmu.txt
-Date:   Fri, 28 Jun 2019 09:12:26 -0300
-Message-Id: <6ac637e0394adfdc95bfc45dad6bfc7bf631fca3.1561723736.git.mchehab+samsung@kernel.org>
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org
+Subject: [PATCH 7/9] docs: gpu: add msm-crash-dump.rst to the index.rst file
+Date:   Fri, 28 Jun 2019 09:12:29 -0300
+Message-Id: <e5550abd8da391b539e9deb64b1305fc62fd00f2.1561723736.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561723736.git.mchehab+samsung@kernel.org>
 References: <cover.1561723736.git.mchehab+samsung@kernel.org>
@@ -69,29 +69,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's a typo there:
-	ti_lmu.txt -> ti-lmu.txt
+This file is currently orphaned.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Dan Murphy <dmurphy@ti.com>
 ---
- Documentation/devicetree/bindings/leds/leds-lm36274.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/gpu/drivers.rst        | 1 +
+ Documentation/gpu/msm-crash-dump.rst | 2 --
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm36274.txt b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
-index 456a589c65f0..39c230d59a4d 100644
---- a/Documentation/devicetree/bindings/leds/leds-lm36274.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
-@@ -6,7 +6,7 @@ up to 29V total output voltage. The 11-bit LED current is programmable via
- the I2C bus and/or controlled via a logic level PWM input from 60 uA to 30 mA.
+diff --git a/Documentation/gpu/drivers.rst b/Documentation/gpu/drivers.rst
+index 4bfb7068e9f7..6c88c57b90cf 100644
+--- a/Documentation/gpu/drivers.rst
++++ b/Documentation/gpu/drivers.rst
+@@ -20,6 +20,7 @@ GPU Driver Documentation
+    xen-front
+    afbc
+    komeda-kms
++   msm-crash-dump
  
- Parent device properties are documented in
--Documentation/devicetree/bindings/mfd/ti_lmu.txt
-+Documentation/devicetree/bindings/mfd/ti-lmu.txt
+ .. only::  subproject and html
  
- Regulator properties are documented in
- Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
+diff --git a/Documentation/gpu/msm-crash-dump.rst b/Documentation/gpu/msm-crash-dump.rst
+index 240ef200f76c..757cd257e0d8 100644
+--- a/Documentation/gpu/msm-crash-dump.rst
++++ b/Documentation/gpu/msm-crash-dump.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ =====================
+ MSM Crash Dump Format
+ =====================
 -- 
 2.21.0
 
