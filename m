@@ -2,112 +2,155 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50679C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B0BC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22DEA206A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5346A208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:09:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="HWMrmaJn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwJkYmlV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfF1TJG (ORCPT
+        id S1726940AbfF1TJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 15:09:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44100 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfF1TJG (ORCPT
+        Fri, 28 Jun 2019 15:09:30 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:35281 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfF1TJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 15:09:06 -0400
-Received: by mail-io1-f67.google.com with SMTP id s7so14674251iob.11
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:09:05 -0700 (PDT)
+        Fri, 28 Jun 2019 15:09:29 -0400
+Received: by mail-yw1-f67.google.com with SMTP id d204so1273410ywb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:09:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=denpEz7Y25tPYld+8szHUZUn70KyumHMuU5ZgYCdiKI=;
-        b=HWMrmaJnz5V8Ac64W9ltGnhij2/onexK3xCea2eFyAXK6JVJnwj62PwageLoaznljr
-         lVtZWieElekXXI6Q4uto5rBOs5y5+Y+oEhsPTyrfK/jawOxPcID1zg2pkEYUErrhcwJB
-         aszK3rXIb3zpoK6myJKG5S0dwok2xahK5qCTGgIkyiJIZXoRbIwMC/T+A04ynBDaa7BH
-         hrEXqsOvUf285Gj4q/Vnqx2FcdDFpiK+Iaa3nU5B1d3yP/hh7wB2rHg3xnWWrSZTkWn+
-         Q8Ff3Ayu/GN5pDCx+2ZM3PNc7q0wBMyQInqc2hToFVqvI2Nn3mimmdf2GreNGgeTmOwr
-         KdwQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=449XblN0l6jdSpOjx7Le/3IqqVPDOSTgCHH+i4/r88o=;
+        b=RwJkYmlVlijyN+MdHEcsc/YkWXFHbxv6OIZkk8PW1SaKrqUkU4fHbzvSS+akaO4nKJ
+         i6LbJHgvh5NNQ/1TcsiCaZ7tlgrDlRwyuv3+yQI86w2JvxYBUKVsWJgz2Cpe6qwwgXU7
+         0LZvYeauQQw+Bvb29wDhyZ3m31MkK4MDDKAi4HZ3XV4Bu70IrVR48eR2bwCB2hxR6mD2
+         +wHSl+xMwGtEhLZZP+QMQfPOX2YUYOGt/1Mak9xZQntcC8vEZ33oKXGWlfQNSDt/mNOH
+         tq7JM9XiZF40GmB1Co4DzcIsNaIMZTJLSeQU5aR7iY1aHdy2XVIDHO9wus01nNmzwCUx
+         xskQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=denpEz7Y25tPYld+8szHUZUn70KyumHMuU5ZgYCdiKI=;
-        b=ETM89ubDjWVqTmFOrOPVfVeVtENJMKTjsiXUvAGianC3yZpr9qr3eJ9L7pVOjp8nPf
-         Qbbnmmf+YZzaTRcuk9Zv3UIcyQcsqryHx+uBHLY6gGjndDDrRJvSEfZn/Yh5RXvAmK/2
-         m7N2rhZBnTsLPet2XIguPqMLhOyOHziLeaizYw9RWNVJ54T5aKu06gYV7yUNIv+Ppw/3
-         VVEjBf1c+aXYUtDr6f7+Cf2dxhW/aeyEhquFKqtbqYHIboasSaeF4pQkWUi2eR74udsc
-         ndyWwxpAYoB2MnMdxSSxFRzvgYsEQtDNDLcI2cELEwtWgwijAHXGzAXYLo2IxWYkN+30
-         WiVA==
-X-Gm-Message-State: APjAAAW9L6Dq4U13m54h1dW2zJ22Gy7bBlk6rUT4+f2S3LyJPbShkfln
-        nc2f9srur0fBnPTI7V/Pg03//w==
-X-Google-Smtp-Source: APXvYqyCiWd28x6ejKIVj1HQUvQbmY2IcCFzFG/uYivQu5hxZZBjfMnIAX99mg22opfTcrJJ/QIWog==
-X-Received: by 2002:a05:6638:281:: with SMTP id c1mr13074518jaq.43.1561748945460;
-        Fri, 28 Jun 2019 12:09:05 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id x13sm2623367ioj.18.2019.06.28.12.09.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 12:09:05 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 12:09:04 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Atish Patra <atish.patra@wdc.com>
-cc:     linux-kernel@vger.kernel.org, Karsten Merker <merker@debian.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Nick Kossifidis <mick@ics.forth.gr>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "trini@konsulko.com" <trini@konsulko.com>
-Subject: Re: [PATCH v4] RISC-V: Add an Image header that boot loader can
- parse.
-In-Reply-To: <20190606230800.19932-1-atish.patra@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1906281207290.3867@viisi.sifive.com>
-References: <20190606230800.19932-1-atish.patra@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=449XblN0l6jdSpOjx7Le/3IqqVPDOSTgCHH+i4/r88o=;
+        b=ojxt5V55BAidRWesGkQtYGUNljqqaU6PxdTQPBDBEA+yMqI7CA3Q5oTPsrNdcHt+tf
+         yZ3KQB8Zqd3uDcLVZGuhWiCnbzkSogr1tK5KGqw2WX0bi/50v5wohaWoRR29/Mi/uidG
+         ICYiuaAbXahTJLuszgbzs2fmKvtnftWF3mFumiV2y7BCYyU58xAOPZP2Vp3CWuLSERFm
+         4Dl98B9b4AYQrHukWO/g7Jfysn7QYxUCLarg7mXvix4PEOruzHDhisluOtX3w8xfW+M7
+         +xfYKck8X36WOMqPhBvHjoptn+OjXMTeRIKr+L/o3tOfnokRGsoCT7fTz+SNhlHZZlyU
+         CGkQ==
+X-Gm-Message-State: APjAAAWYr7d19bUiAhjkyxCIa+YlB0Jsz8m1M/rBHqxaqqqLfC4ATwZQ
+        p2aNoRnbM51kOqufR+UZ3R9zmenY
+X-Google-Smtp-Source: APXvYqwhqzl1ZPN0l2DqnhSLolIuZ4nldoNy1vRRFyOrCNRXxAySNYFiI7xva7ltOXpVCsdxiTH8ig==
+X-Received: by 2002:a81:2995:: with SMTP id p143mr7124568ywp.3.1561748968026;
+        Fri, 28 Jun 2019 12:09:28 -0700 (PDT)
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
+        by smtp.gmail.com with ESMTPSA id w17sm710676yww.82.2019.06.28.12.09.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Jun 2019 12:09:26 -0700 (PDT)
+Received: by mail-yb1-f174.google.com with SMTP id n3so4704240ybn.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:09:26 -0700 (PDT)
+X-Received: by 2002:a25:99c4:: with SMTP id q4mr7787823ybo.390.1561748966368;
+ Fri, 28 Jun 2019 12:09:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <cover.1561706800.git.joabreu@synopsys.com> <e4e9ee4cb9c3e7957fe0a09f88b20bc011e2bd4c.1561706801.git.joabreu@synopsys.com>
+In-Reply-To: <e4e9ee4cb9c3e7957fe0a09f88b20bc011e2bd4c.1561706801.git.joabreu@synopsys.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Fri, 28 Jun 2019 15:08:50 -0400
+X-Gmail-Original-Message-ID: <CA+FuTSc4MFfjBNpvN2hRh9_MRmxSYw2xY6wp32Hsbw0E=pqUdw@mail.gmail.com>
+Message-ID: <CA+FuTSc4MFfjBNpvN2hRh9_MRmxSYw2xY6wp32Hsbw0E=pqUdw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 06/10] net: stmmac: Do not disable interrupts
+ when cleaning TX
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Jun 2019, Atish Patra wrote:
+On Fri, Jun 28, 2019 at 3:30 AM Jose Abreu <Jose.Abreu@synopsys.com> wrote:
+>
+> This is a performance killer and anyways the interrupts are being
+> disabled by RX NAPI so no need to disable them again.
 
-> Currently, the last stage boot loaders such as U-Boot can accept only
-> uImage which is an unnecessary additional step in automating boot
-> process.
-> 
-> Add an image header that boot loader understands and boot Linux from
-> flat Image directly.
+By the
 
-...
+        if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
+                stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
+                napi_schedule_irqoff(&ch->rx_napi);
+        }
+
+branch directly above? If so, is it possible to have fewer rx than tx
+queues and miss this?
+
+this logic seems more complex than needed?
+
+        if (status)
+                status |= handle_rx | handle_tx;
+
+        if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
+
+        }
+
+        if ((status & handle_tx) && (chan < priv->plat->tx_queues_to_use)) {
+
+        }
+
+status & handle_rx implies status & handle_tx and vice versa.
 
 
-> +#if __riscv_xlen == 64
-> +	/* Image load offset(2MB) from start of RAM */
-> +	.dword 0x200000
-> +#else
-> +	/* Image load offset(4MB) from start of RAM */
-> +	.dword 0x400000
-> +#endif
+>
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> Cc: Joao Pinto <jpinto@synopsys.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 4a5941caaadc..e8f3e76889c8 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -2061,10 +2061,8 @@ static int stmmac_napi_check(struct stmmac_priv *priv, u32 chan)
+>                 napi_schedule_irqoff(&ch->rx_napi);
+>         }
+>
+> -       if ((status & handle_tx) && (chan < priv->plat->tx_queues_to_use)) {
+> -               stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
+> +       if ((status & handle_tx) && (chan < priv->plat->tx_queues_to_use))
+>                 napi_schedule_irqoff(&ch->tx_napi);
+> -       }
+>
+>         return status;
+>  }
+> @@ -3570,8 +3568,8 @@ static int stmmac_napi_poll_tx(struct napi_struct *napi, int budget)
+>         work_done = stmmac_tx_clean(priv, DMA_TX_SIZE, chan);
+>         work_done = min(work_done, budget);
+>
+> -       if (work_done < budget && napi_complete_done(napi, work_done))
+> -               stmmac_enable_dma_irq(priv, priv->ioaddr, chan);
+> +       if (work_done < budget)
+> +               napi_complete_done(napi, work_done);
 
-Is there a rationale behind these load offset values?
-
-
-- Paul
+It does seem odd that stmmac_napi_poll_rx and stmmac_napi_poll_tx both
+call stmmac_enable_dma_irq(..) independent of the other. Shouldn't the
+IRQ remain masked while either is active or scheduled? That is almost
+what this patch does, though not exactly.
