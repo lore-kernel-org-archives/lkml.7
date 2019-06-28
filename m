@@ -2,126 +2,235 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE48C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3122C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5D921773
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FFC205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="X8kT5lpm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfF1Pr4 (ORCPT
+        id S1727236AbfF1Pr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:47:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53262 "EHLO mx1.redhat.com"
+        Fri, 28 Jun 2019 11:47:57 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:44128 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727204AbfF1Pry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727086AbfF1Pry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 11:47:54 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3A8E8308624A;
-        Fri, 28 Jun 2019 15:47:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CC2C35B683;
-        Fri, 28 Jun 2019 15:47:52 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 6/6] fsinfo: Add documentation for mount and sb watches [ver
- #15]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
-        christian@brauner.io, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 28 Jun 2019 16:47:51 +0100
-Message-ID: <156173687101.14728.6401356872306559415.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156173681842.14728.9331700785061885270.stgit@warthog.procyon.org.uk>
-References: <156173681842.14728.9331700785061885270.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 28 Jun 2019 15:47:54 +0000 (UTC)
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45b1PM65MDzB09ZR;
+        Fri, 28 Jun 2019 17:47:51 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=X8kT5lpm; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 5n7YNf7C5Udk; Fri, 28 Jun 2019 17:47:51 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45b1PM4qqBzB09ZN;
+        Fri, 28 Jun 2019 17:47:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1561736871; bh=auZsk5+eXrNvOomMroEmyexOA4o1/bt7OLpPEQ8iQig=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=X8kT5lpmFcJWgC5JpZGa0nZKQbN+Ndk21FzryPecHf9Xhc3MQgfYkCzZxFFrIPLMv
+         4CHSWapC/vU7X9WPzhehbAOsOI5yqakGQdk266e99Gy8f4fZkxrQVBtB6lkP9sLnMJ
+         60PLknOtD2ZdTxssD7oc3Wpv6Qg9l3YWU4zCFPso=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F35028B976;
+        Fri, 28 Jun 2019 17:47:52 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id PGpsEOsz7mwc; Fri, 28 Jun 2019 17:47:52 +0200 (CEST)
+Received: from localhost.localdomain (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DFDD58B977;
+        Fri, 28 Jun 2019 17:47:51 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id AC8BB68DBC; Fri, 28 Jun 2019 15:47:51 +0000 (UTC)
+Message-Id: <34af3942cd27f6b5365caae772fb8e0af44763d5.1561735587.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1561735587.git.christophe.leroy@c-s.fr>
+References: <cover.1561735587.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH v2 02/12] powerpc/ptrace: drop unnecessary #ifdefs
+ CONFIG_PPC64
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 28 Jun 2019 15:47:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the fsinfo documentation to mention mount and sb watches.
+Drop a bunch of #ifdefs CONFIG_PPC64 that are not vital.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
+ arch/powerpc/include/asm/ptrace.h      |  9 ++++-----
+ arch/powerpc/include/uapi/asm/ptrace.h | 12 ++++--------
+ arch/powerpc/kernel/ptrace/ptrace.c    | 24 +++---------------------
+ 3 files changed, 11 insertions(+), 34 deletions(-)
 
- Documentation/filesystems/fsinfo.rst |   38 +++++++++++++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/filesystems/fsinfo.rst b/Documentation/filesystems/fsinfo.rst
-index 86c187a46396..ef79582b991d 100644
---- a/Documentation/filesystems/fsinfo.rst
-+++ b/Documentation/filesystems/fsinfo.rst
-@@ -7,7 +7,8 @@ security information beyond what stat(), statx() and statfs() can query.  It
- does not require a file to be opened as does ioctl().
+diff --git a/arch/powerpc/include/asm/ptrace.h b/arch/powerpc/include/asm/ptrace.h
+index faa5a338ac5a..1506a9c61d50 100644
+--- a/arch/powerpc/include/asm/ptrace.h
++++ b/arch/powerpc/include/asm/ptrace.h
+@@ -36,11 +36,10 @@ struct pt_regs
+ 			unsigned long link;
+ 			unsigned long xer;
+ 			unsigned long ccr;
+-#ifdef CONFIG_PPC64
+-			unsigned long softe;
+-#else
+-			unsigned long mq;
+-#endif
++			union {
++				unsigned long softe;
++				unsigned long mq;
++			};
+ 			unsigned long trap;
+ 			unsigned long dar;
+ 			unsigned long dsisr;
+diff --git a/arch/powerpc/include/uapi/asm/ptrace.h b/arch/powerpc/include/uapi/asm/ptrace.h
+index f5f1ccc740fc..37d7befbb8dc 100644
+--- a/arch/powerpc/include/uapi/asm/ptrace.h
++++ b/arch/powerpc/include/uapi/asm/ptrace.h
+@@ -43,12 +43,11 @@ struct pt_regs
+ 	unsigned long link;
+ 	unsigned long xer;
+ 	unsigned long ccr;
+-#ifdef __powerpc64__
+-	unsigned long softe;		/* Soft enabled/disabled */
+-#else
+-	unsigned long mq;		/* 601 only (not used at present) */
++	union {
++		unsigned long softe;	/* Soft enabled/disabled */
++		unsigned long mq;	/* 601 only (not used at present) */
+ 					/* Used on APUS to hold IPL value. */
+-#endif
++	};
+ 	unsigned long trap;		/* Reason for being here */
+ 	/* N.B. for critical exceptions on 4xx, the dar and dsisr
+ 	   fields are overloaded to hold srr0 and srr1. */
+@@ -105,11 +104,8 @@ struct pt_regs
+ #define PT_LNK	36
+ #define PT_XER	37
+ #define PT_CCR	38
+-#ifndef __powerpc64__
+ #define PT_MQ	39
+-#else
+ #define PT_SOFTE 39
+-#endif
+ #define PT_TRAP	40
+ #define PT_DAR	41
+ #define PT_DSISR 42
+diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
+index 684b0b315c32..0afb223c4d57 100644
+--- a/arch/powerpc/kernel/ptrace/ptrace.c
++++ b/arch/powerpc/kernel/ptrace/ptrace.c
+@@ -113,11 +113,8 @@ static const struct pt_regs_offset regoffset_table[] = {
+ 	REG_OFFSET_NAME(link),
+ 	REG_OFFSET_NAME(xer),
+ 	REG_OFFSET_NAME(ccr),
+-#ifdef CONFIG_PPC64
+ 	REG_OFFSET_NAME(softe),
+-#else
+ 	REG_OFFSET_NAME(mq),
+-#endif
+ 	REG_OFFSET_NAME(trap),
+ 	REG_OFFSET_NAME(dar),
+ 	REG_OFFSET_NAME(dsisr),
+@@ -289,17 +286,15 @@ int ptrace_get_reg(struct task_struct *task, int regno, unsigned long *data)
+ 	if (regno == PT_DSCR)
+ 		return get_user_dscr(task, data);
  
- fsinfo() may be called on a path, an open file descriptor, a filesystem-context
--file descriptor as allocated by fsopen() or fspick().
-+file descriptor as allocated by fsopen() or fspick() or a mount ID (allowing
-+for mounts concealed by overmounts to be accessed).
+-#ifdef CONFIG_PPC64
+ 	/*
+ 	 * softe copies paca->irq_soft_mask variable state. Since irq_soft_mask is
+ 	 * no more used as a flag, lets force usr to alway see the softe value as 1
+ 	 * which means interrupts are not soft disabled.
+ 	 */
+-	if (regno == PT_SOFTE) {
++	if (IS_ENABLED(CONFIG_PPC64) && regno == PT_SOFTE) {
+ 		*data = 1;
+ 		return  0;
+ 	}
+-#endif
  
- The fsinfo() system call needs to be configured on by enabling:
+ 	regs_max = sizeof(struct user_pt_regs) / sizeof(unsigned long);
+ 	if (regno < regs_max) {
+@@ -2013,7 +2008,6 @@ static const struct user_regset_view user_ppc_native_view = {
+ 	.regsets = native_regsets, .n = ARRAY_SIZE(native_regsets)
+ };
  
-@@ -235,6 +236,10 @@ To summarise the attributes that are defined::
-   FSINFO_ATTR_SERVER_NAME		N × string
-   FSINFO_ATTR_SERVER_ADDRESS		N × M × struct
-   FSINFO_ATTR_AFS_CELL_NAME		string
-+  FSINFO_ATTR_MOUNT_INFO		struct
-+  FSINFO_ATTR_MOUNT_DEVNAME		string
-+  FSINFO_ATTR_MOUNT_CHILDREN		array
-+  FSINFO_ATTR_MOUNT_SUBMOUNT		N × string
+-#ifdef CONFIG_PPC64
+ #include <linux/compat.h>
  
+ static int gpr32_get_common(struct task_struct *target,
+@@ -2287,14 +2281,11 @@ static const struct user_regset_view user_ppc_compat_view = {
+ 	.name = "ppc", .e_machine = EM_PPC, .ei_osabi = ELF_OSABI,
+ 	.regsets = compat_regsets, .n = ARRAY_SIZE(compat_regsets)
+ };
+-#endif	/* CONFIG_PPC64 */
  
- Attribute Catalogue
-@@ -386,6 +391,37 @@ before any superblock is attached:
-     before noting any other parameters.
+ const struct user_regset_view *task_user_regset_view(struct task_struct *task)
+ {
+-#ifdef CONFIG_PPC64
+-	if (test_tsk_thread_flag(task, TIF_32BIT))
++	if (IS_ENABLED(CONFIG_PPC64) && test_tsk_thread_flag(task, TIF_32BIT))
+ 		return &user_ppc_compat_view;
+-#endif
+ 	return &user_ppc_native_view;
+ }
  
+@@ -3081,11 +3072,7 @@ long arch_ptrace(struct task_struct *child, long request,
+ 		else
+ 			dbginfo.num_data_bps = 0;
+ 		dbginfo.num_condition_regs = 0;
+-#ifdef CONFIG_PPC64
+-		dbginfo.data_bp_alignment = 8;
+-#else
+-		dbginfo.data_bp_alignment = 4;
+-#endif
++		dbginfo.data_bp_alignment = sizeof(long);
+ 		dbginfo.sizeof_condition = 0;
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+ 		dbginfo.features = PPC_DEBUG_FEATURE_DATA_BP_RANGE;
+@@ -3322,12 +3309,10 @@ long do_syscall_trace_enter(struct pt_regs *regs)
+ 	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
+ 		trace_sys_enter(regs, regs->gpr[0]);
  
-+Then there are attributes that convey information about the mount topology:
-+
-+ *  ``FSINFO_ATTR_MOUNT_INFO``
-+
-+    This struct-type attribute conveys information about a mount topology node
-+    rather than a superblock.  This includes the ID of the superblock mounted
-+    there and the ID of the mount node, its parent, group, master and
-+    propagation source.  It also contains the attribute flags for the mount and
-+    a change counter so that it can be quickly determined if that node changed.
-+
-+ *  ``FSINFO_ATTR_MOUNT_DEVNAME``
-+
-+    This string-type attribute returns the "device name" that was supplied when
-+    the mount object was created.
-+
-+ *  ``FSINFO_ATTR_MOUNT_CHILDREN``
-+
-+    This is an array-type attribute that conveys a set of structs, each of
-+    which indicates the mount ID of a child and the change counter for that
-+    child.  The kernel also tags an extra element on the end that indicates the
-+    ID and change counter of the queried object.  This allows a conflicting
-+    change to be quickly detected by comparing the before and after counters.
-+
-+ *  ``FSINFO_ATTR_MOUNT_SUBMOUNT``
-+
-+    This is a string-type attribute that conveys the pathname of the Nth
-+    mountpoint under the target mount, relative to the mount root or the
-+    chroot, whichever is closer.  These correspond on a 1:1 basis with the
-+    elements in the FSINFO_ATTR_MOUNT_CHILDREN list.
-+
-+
- Then there are filesystem-specific attributes.
- 
-  *  ``FSINFO_ATTR_SERVER_NAME``
+-#ifdef CONFIG_PPC64
+ 	if (!is_32bit_task())
+ 		audit_syscall_entry(regs->gpr[0], regs->gpr[3], regs->gpr[4],
+ 				    regs->gpr[5], regs->gpr[6]);
+ 	else
+-#endif
+ 		audit_syscall_entry(regs->gpr[0],
+ 				    regs->gpr[3] & 0xffffffff,
+ 				    regs->gpr[4] & 0xffffffff,
+@@ -3382,13 +3367,10 @@ void __init pt_regs_check(void)
+ 		     offsetof(struct user_pt_regs, xer));
+ 	BUILD_BUG_ON(offsetof(struct pt_regs, ccr) !=
+ 		     offsetof(struct user_pt_regs, ccr));
+-#ifdef __powerpc64__
+ 	BUILD_BUG_ON(offsetof(struct pt_regs, softe) !=
+ 		     offsetof(struct user_pt_regs, softe));
+-#else
+ 	BUILD_BUG_ON(offsetof(struct pt_regs, mq) !=
+ 		     offsetof(struct user_pt_regs, mq));
+-#endif
+ 	BUILD_BUG_ON(offsetof(struct pt_regs, trap) !=
+ 		     offsetof(struct user_pt_regs, trap));
+ 	BUILD_BUG_ON(offsetof(struct pt_regs, dar) !=
+-- 
+2.13.3
 
