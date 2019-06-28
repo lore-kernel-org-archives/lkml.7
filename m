@@ -2,191 +2,171 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45766C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D13BC5B577
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16EA520B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2364420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:54:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P20VVlmj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfF1Axi (ORCPT
+        id S1726834AbfF1AyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 20:53:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48426 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726605AbfF1Axi (ORCPT
+        Thu, 27 Jun 2019 20:54:16 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38604 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfF1AyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 20:53:38 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5S0CiUM135961;
-        Thu, 27 Jun 2019 20:52:59 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2td4fehsfv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Jun 2019 20:52:59 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5S0F85a017280;
-        Fri, 28 Jun 2019 00:52:58 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma04dal.us.ibm.com with ESMTP id 2t9by7a975-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Jun 2019 00:52:58 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5S0qvBg47972810
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 00:52:58 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA782B2067;
-        Fri, 28 Jun 2019 00:52:57 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AFD56B2064;
-        Fri, 28 Jun 2019 00:52:57 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.201.148])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Jun 2019 00:52:57 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 6A68316C6BA7; Thu, 27 Jun 2019 17:52:57 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 17:52:57 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH RT 4/4] rcutorture: Avoid problematic critical
- section nesting
-Message-ID: <20190628005257.GM26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190619011908.25026-5-swood@redhat.com>
- <20190620211826.GX26519@linux.ibm.com>
- <20190621163821.rm2rhsnvfo5tnjul@linutronix.de>
- <20190621235955.GK26519@linux.ibm.com>
- <20190626110847.2dfdf72c@gandalf.local.home>
- <8462f30720637ec0da377aa737d26d2cad424d36.camel@redhat.com>
- <20190627180007.GA27126@linux.ibm.com>
- <5f4b1e594352ee776c4ccbe2760fee3a72345434.camel@redhat.com>
- <20190627205051.GE26519@linux.ibm.com>
- <4dc801b715baae4a87043fed20f682409446bb09.camel@redhat.com>
+        Thu, 27 Jun 2019 20:54:16 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S0DYMF078901;
+        Fri, 28 Jun 2019 00:53:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=w85fdhBnDnSJZdF4gNrdI0qjj60PNfiLCX8rThOx2Mc=;
+ b=P20VVlmj6tAjCBXzHGd1RrYIQG6BmeSTSOuaxXOGRdPYYkxXTebWzWb18ng4X2r49PCT
+ 5PA8vd4ebmFvRxj9a4tn3F7M8k50nBhxUCC4U+lq4RGT9H4vUFwH/ug+Dp9SYPT3gk+Q
+ 3w2ksCK6bxrtATMMo7Qx6qICm3dLGaD8vei07r/NQO5I4TB2sA9MePPxY6rWAdAgIBte
+ M8Q+9BNoaXipbEwwXmhBye6lBXoiJEcaPJvOey2deZ37EQoKhjwPHIjjDQTD7a4xol4H
+ uz7vTc7DS4cjg8zPtTbBAxnq1jj3y/TZK5FnXXGTD76uOAEQbiFFq16Cr3cZVATbtnSf ow== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2t9cyqtwqm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 00:53:09 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S0q2Zb124249;
+        Fri, 28 Jun 2019 00:53:09 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2t99f5aace-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 00:53:08 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5S0r4D6010716;
+        Fri, 28 Jun 2019 00:53:04 GMT
+Received: from [10.191.27.62] (/10.191.27.62)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Jun 2019 17:53:04 -0700
+Subject: Re: [PATCH v2 6/7] locking/spinlocks, paravirt, hyperv: Correct the
+ hv_nopvspin case
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
+        bp@alien8.de, hpa@zytor.com, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, peterz@infradead.org,
+        srinivas.eeda@oracle.com, Waiman Long <longman@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-hyperv@vger.kernel.org
+References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1561377779-28036-7-git-send-email-zhenzhong.duan@oracle.com>
+ <20190627222851.GC11506@sasha-vm>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <eaeb5e52-5fa8-20c9-bc5c-090572718511@oracle.com>
+Date:   Fri, 28 Jun 2019 08:53:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4dc801b715baae4a87043fed20f682409446bb09.camel@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906280001
+In-Reply-To: <20190627222851.GC11506@sasha-vm>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906280001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906280001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 05:46:27PM -0500, Scott Wood wrote:
-> On Thu, 2019-06-27 at 13:50 -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 27, 2019 at 03:16:09PM -0500, Scott Wood wrote:
-> > > On Thu, 2019-06-27 at 11:00 -0700, Paul E. McKenney wrote:
-> > > > On Wed, Jun 26, 2019 at 11:49:16AM -0500, Scott Wood wrote:
-> > > > > > 
-> > > > > > On Fri, 21 Jun 2019 16:59:55 -0700
-> > > > > > "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
-> > > > > > 
-> > > > > > > I have no objection to the outlawing of a number of these
-> > > > > > > sequences
-> > > > > > > in
-> > > > > > > mainline, but am rather pointing out that until they really are
-> > > > > > > outlawed
-> > > > > > > and eliminated, rcutorture must continue to test them in
-> > > > > > > mainline.
-> > > > > > > Of course, an rcutorture running in -rt should avoid testing
-> > > > > > > things
-> > > > > > > that
-> > > > > > > break -rt, including these sequences.
-> > > > > > 
-> > > > > > sequences in the code. And we also need to get Linus's approval of
-> > > > > > this
-> > > > > > as I believe he was against enforcing this in the past.
-> > > > > 
-> > > > > Was the opposition to prohibiting some specific sequence?  It's only
-> > > > > certain
-> > > > > misnesting scenarios that are problematic.  The rcu_read_lock/
-> > > > > local_irq_disable restriction can be dropped with the IPI-to-self
-> > > > > added
-> > > > > in
-> > > > > Paul's tree.  Are there any known instances of the other two
-> > > > > (besides
-> > > > > rcutorture)?
-> > 
-> > If by IPI-to-self you mean the IRQ work trick, that isn't implemented
-> > across all architectures yet, is it?
-> 
-> Right... smp_send_reschedule() has wider coverage, but even then there's
-> some hardware that just can't do it reasonably (e.g. pre-APIC x86).
 
-Except that smp_send_reschedule() won't do anything unless the scheduler
-things something needs to be done, as it its wake list is non-empty.
-Which might explain why Peter Zijlstra didn't suggest it.
+On 2019/6/28 6:28, Sasha Levin wrote:
+> On Mon, Jun 24, 2019 at 08:02:58PM +0800, Zhenzhong Duan wrote:
+>> With the boot parameter "hv_nopvspin" specified a Hyperv guest should
+>> not make use of paravirt spinlocks, but behave as if running on bare
+>> metal. This is not true, however, as the qspinlock code will fall back
+>> to a test-and-set scheme when it is detecting a hypervisor.
+>>
+>> In order to avoid this disable the virt_spin_lock_key.
+>>
+>> Same change for XEN is already in Commit e6fd28eb3522
+>> ("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case")
+>>
+>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+>> Cc: Waiman Long <longman@redhat.com>
+>> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+>> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+>> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+>> Cc: Sasha Levin <sashal@kernel.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: linux-hyperv@vger.kernel.org
+>> ---
+>> arch/x86/hyperv/hv_spinlock.c | 3 +++
+>> 1 file changed, 3 insertions(+)
+>>
+>> diff --git a/arch/x86/hyperv/hv_spinlock.c 
+>> b/arch/x86/hyperv/hv_spinlock.c
+>> index 07f21a0..d90b4b0 100644
+>> --- a/arch/x86/hyperv/hv_spinlock.c
+>> +++ b/arch/x86/hyperv/hv_spinlock.c
+>> @@ -64,6 +64,9 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
+>>
+>> void __init hv_init_spinlocks(void)
+>> {
+>> +    if (unlikely(!hv_pvspin))
+>> +        static_branch_disable(&virt_spin_lock_key);
+>
+> This should be combined in the conditional under it, which already
+> attempts to disable PV spinlocks, note how hv_pvspin is checked there.
+> hc_pvspin isn't the only reason we would disable PV spinlocks on hyperv.
 
->                                                                      So I
-> guess the options are:
-> 
-> 1. Accept that such hardware might experience delayed grace period
-> completion in certain configurations,
-> 2. Have such hardware check for need_resched in local_irq_enable() (not nice
-> if sharing a kernel build with hardware that doesn't need it), or
-> 3. Forbid the sequence (enforced by debug checks).  Again, this would only
-> prohibit rcu_read_lock()/local_irq_disable()/rcu_read_unlock()/
-> local_irq_enable() *without* preempt disabling around the IRQ-disabled
-> region.
+In virt_spin_lock() there is a comment as below. The test-and-set spinlock
 
-4. If further testing continues to show it to be reliable, continue
-using the scheme in -rcu.
-5. Use a short-duration hrtimer to get a clean environment in short
-order.  Yes, the timer might fire while preemption and/or softirqs
-are disabled, but then the code can rely on the following
-preempt_enable(), local_bh_enable(), or whatever.  This condition
-should be sufficiently rare to avoid issues with hrtimer overhead.
-6. Use smp_call_function_single() to IPI some other poor slob of a
-CPU, which then does the same back.  Non-waiting version in both
-cases, of course.
+is an optimization to hypervisor platform when PV spinlock is unsupported.
 
-Probably others as well.
+         /*
+          * On hypervisors without PARAVIRT_SPINLOCKS support we fall
+          * back to a Test-and-Set spinlock, because fair locks have
+          * horrible lock 'holder' preemption issues.
+          */
 
-> > Why not simply make rcutorture cyheck whether it is running in a
-> > PREEMPT_RT_FULL environment and avoid the PREEMPT_RT_FULL-unfriendly
-> > testing only in that case?
-> >
-> > And should we later get to a place where the PREEMPT_RT_FULL-unfriendly
-> > scenarios are prohibited across all kernel configurations, then the module
-> > parameter can be removed.  Again, until we know (as opposed to suspect)
-> > that these scenarios really don't happen, mainline rcutorture must
-> > continue testing them.
-> 
-> Yes, I already acknowledged that debug checks detecting the sequences should
-> come before the test removal
 
-OK, good to hear.  As you may have noticed, I was getting the impression
-that you might have changed your mind on this point.  ;-)
+So my understanding is:
 
->                              (including this patch as an RFC at this point
-> was mainly meant as a demonstration of what's needed to get rcutorture to
-> pass), but it'd be nice to have some idea of whether there would be
-> opposition to the concept before coding up the checks.  I'd rather not
-> continue the state of "these sequences can blow up on RT and we don't know
-> if they exist or not" any longer than necessary.  Plus, only one of the
-> sequences is exclusively an RT issue (though it's the one with the worst
-> consequences).
+If hv_pvspin=0 by command line, we want to behave as if running on bare 
+metal(the fair locks path).
 
-Steve Rostedt's point about enlisting the aid of lockdep seems worth
-looking into.
+Though there is performance regression, but it's not that important when 
+we use hv_pvspin=0.
 
-							Thanx, Paul
+If PV spinlock is disabled by other reasons, we prefer the optimization 
+path.
+
+>
+> Also, there's no need for the unlikely() here, it's only getting called
+> once...
+
+Ok, I'll removed it.
+
+
+Thanks
+
+Zhenzhong
+
