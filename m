@@ -2,102 +2,177 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55D7C5B576
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C0AC5B578
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1BD82086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1E0D2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:13:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bNoMT+Yu"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BWazzRGI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfF1CNA (ORCPT
+        id S1726655AbfF1CNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:13:00 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:45485 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfF1CNA (ORCPT
+        Thu, 27 Jun 2019 22:13:37 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:5470 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfF1CNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:13:00 -0400
-Received: by mail-yw1-f68.google.com with SMTP id m16so2577655ywh.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:12:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ESdzyALH+b44/HL+ukDoP4QdSzem8V/icNADS0o9wFw=;
-        b=bNoMT+YuH7ItGziVtsdIPXsPVFdbcyoeQtMerqHWvQsnSinptdEeivENVNdUr7TGgH
-         xs9S8RJdpFaJ/u8yifB/4AFCuclR6vey0K+VFkrCKxc7CD6VrygNTDddQFT8XoS2xY5k
-         B0Azomfo3EFsSKBuzaSHT3/t1S7yKCBAYqaGhu+vKwVWDDYJcPXiRDEvfz3vBgwHqKPu
-         UsV5N6XCFxj3SDFFkwHdx0PVbh5PMzCj1A6FXBI+G9ad/eqnis4qroBq2Ejk94ZhomLv
-         /FcfOTAjaVHiMdNxlTpO4YuYAz9aatDHVh/RxmZCxsrQJrFPI3InGgc6lXuv/sSzNAfk
-         SCtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ESdzyALH+b44/HL+ukDoP4QdSzem8V/icNADS0o9wFw=;
-        b=RF3ma975mvc9MNW2uIErOUPsek7TQffwLNkxfQvwd/6O0C93q0STKVETvEGxEIrmtz
-         ljm+qvPWYsgmSlvx3u1XLORn6Jfe8gjp9x6bHuHTxAXfNR31GPup7+9HIp5RV6BKOHBi
-         T/KqfnIQQ9JtlOXP9x6Wt4PX7AwC33Mq8vzHTQ34X2CyCDJ9uCXIZ7uWIXjMjdKOM/J3
-         dDsimWIXIJj2nPrArBhhqws5GImStd2zZg2Lfjs91EVkbBWswYFYx8Mp81/abeY+A6yi
-         f2nSmKiKUhYZLHZkGOc4148bn01121ua2rpgMBaOnBkg/mPdSlZpwkez/b91i+oDa6YZ
-         MtNw==
-X-Gm-Message-State: APjAAAU6IyjjzCzOTb/9eO65NJmWtu3EBGCfxreQ/f6tN2RHTTROyNxa
-        2Sd7aTbiBLGVja9udjLZiH9611yP7LeSd3wYoDwYEw==
-X-Google-Smtp-Source: APXvYqz0Cii6IBq9YH7EmbunOU8BzavnHLsl7DRlxEB5WcJVW9lCfnYlLvilIE/eHTA8PvLerwqJhx3puAdd8M0dbfo=
-X-Received: by 2002:a81:a55:: with SMTP id 82mr4680020ywk.205.1561687978995;
- Thu, 27 Jun 2019 19:12:58 -0700 (PDT)
+        Thu, 27 Jun 2019 22:13:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1577d00000>; Thu, 27 Jun 2019 19:13:36 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 27 Jun 2019 19:13:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 27 Jun 2019 19:13:33 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
+ 2019 02:13:32 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 28 Jun 2019 02:13:33 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.155]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d1577cd0000>; Thu, 27 Jun 2019 19:13:33 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <digetx@gmail.com>, <devicetree@vger.kernel.org>
+Subject: [PATCH V5 00/18] SC7 entry and exit support for Tegra210
+Date:   Thu, 27 Jun 2019 19:12:34 -0700
+Message-ID: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20190624212631.87212-1-shakeelb@google.com> <20190624212631.87212-2-shakeelb@google.com>
- <20190626063755.GI17798@dhcp22.suse.cz>
-In-Reply-To: <20190626063755.GI17798@dhcp22.suse.cz>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 27 Jun 2019 19:12:48 -0700
-Message-ID: <CALvZod6_EDG=WMvrcrSFK4yJ69Mc-sqWJ3_HycCUdW=FpxzGVQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] mm, oom: remove redundant task_in_mem_cgroup() check
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        David Rientjes <rientjes@google.com>,
-        KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Paul Jackson <pj@sgi.com>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561688016; bh=ZOCE9zjoMHUFAnpZCSr2RE82QUgVkauUv+okuy0Asas=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=BWazzRGIkGQ1ebBLvfe4M/Tei5UPV8iq2oYuyAKDuF98G9dfvbrslhzBqfxH3cYq6
+         njz+RCv/o6QJnOyQ/PRVhLz5dnR2SFzMp/16nEDNGYFSQ4JAsiXafBvUfwpsrlh5XK
+         9Skrfk9zUm9qAi1jmKFnFq56/YVcG/rxD6JqQfF14+wPhhtJ3vA844p9CmtMfHxxch
+         ryH8finaYUrOOTtTV86T8C0sapaXtgF5bi5KyQ52YHSxil4VcRVB3vb0BWA+jSJ003
+         9b6TJBMtgTSXkL52FaxSBwvNskDHG0jG9RsLHeVkKdt8QsnXJIbOCcZL9IWCYHXorv
+         dQWWHgbEJZD/g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:38 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Mon 24-06-19 14:26:30, Shakeel Butt wrote:
-> > oom_unkillable_task() can be called from three different contexts i.e.
-> > global OOM, memcg OOM and oom_score procfs interface. At the moment
-> > oom_unkillable_task() does a task_in_mem_cgroup() check on the given
-> > process. Since there is no reason to perform task_in_mem_cgroup()
-> > check for global OOM and oom_score procfs interface, those contexts
-> > provide NULL memcg and skips the task_in_mem_cgroup() check. However for
-> > memcg OOM context, the oom_unkillable_task() is always called from
-> > mem_cgroup_scan_tasks() and thus task_in_mem_cgroup() check becomes
-> > redundant. So, just remove the task_in_mem_cgroup() check altogether.
->
-> Just a nit. Not only it is redundant but it is effectively a dead code
-> after your previous patch.
->
+This patch series includes Tegra210 deepsleep support with RTC alarm
+wake event.
 
-I will update the commit message.
+This series also includes save and restore of PLLs, clocks, OSC contexts
+for deepsleep exit to normal operation.
 
-> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
->
-> Acked-by: Michal Hocko <mhocko@suse.com>
+This patch series doesn't support 100% suspend/resume to allow fully
+functional state upon resume and we are working on some more drivers suspend
+and resume implementations.
 
-Thanks
+[V5]: Changes between V4 & V5 are
+	- V4 feedback fixes
+
+[V4]: Changes between V3 & V4 are
+	- V3 feedback fixes
+	- Removed park bits clear for EMMC pads in pinctrl-tegra driver
+	  function tegra_pinctrl_clear_parked_bits as based on V3 feedback
+	  parked_bit is updated to parked_bitmask to use with DRV_PINGROUP
+	  as well and thierry posted patch series for this.
+	- Implemented all peripheral clocks save and restore through their
+	  corresponding clk_ops save_context and restore_context and removed
+	  all direct registers store and restore in clk-tegra210 driver.
+	- Created separate patch for fence_delay update during PLLU init based
+	  on V3 feedback.
+	- Added more comments in tegra210_clk_resume regarding dfll restore
+	  sequence and its dependency on peripheral clocks restore.
+
+[V3]: Changes between V2 & V3 are
+	- V2 feedback fixes
+	- GPIO restore should happen prior to Pinctrl restore to prevent
+	  glitch on GPIO lines. So using resume_noirq for gpio tegra to allow
+	  gpio resume prior to pinctrl resume.
+	- Implemented save_context and restore_context callbacks for clock
+	  plls, pll outs and dividers in corresponding drivers.
+	  Note: Peripheral clocks and clock enable and reset need to be in
+	  Tegra210 clock suspend/resume as they need to be in proper sequence
+	  w.r.t DFLL resume for restoring CPU clock.
+	- Removed gpio-tegra changes for hierarchical support to have PMC as
+	  parent to GPIOs for GPIO wake event support. Thierry is working on
+	  gpiolib for some cleanup before adding hierarchical support. So
+	  holding on to GPIO wake support for now.
+
+[V2] : V1 feedback fixes
+	Patch 0002: This version still using syscore. Thierry suggest not to
+	use syscore and waiting on suggestion from Linux Walleij for any better
+	way of storing current state of pins before suspend entry and restoring
+	them on resume at very early stage. So left this the same way as V1 and
+	will address once I get more feedback on this.
+	Also need to findout and implement proper way of forcing resume order
+	between pinctrl and gpio driver.
+
+[V1]:	Tegra210 SC7 entry and exit thru RTC wake and Power button GPIO wake
+	using hierarchical IRQ with PMC as parent to GPIO.
+
+
+
+
+Sowjanya Komatineni (18):
+  irqchip: tegra: do not disable COP IRQ during suspend
+  pinctrl: tegra: add suspend and resume support
+  clk: tegra: save and restore divider rate
+  clk: tegra: pllout: save and restore pllout context
+  clk: tegra: pll: save and restore pll context
+  clk: tegra: save and restore CPU and System clocks context
+  clk: tegra: support for saving and restoring OSC context
+  clk: tegra: add suspend resume support for DFLL
+  clk: tegra: add save and restore context support for peripheral clocks
+  clk: tegra210: use fence_udelay during PLLU init
+  clk: tegra210: support for Tegra210 clocks suspend and resume
+  soc/tegra: pmc: allow support for more tegra wake
+  soc/tegra: pmc: add pmc wake support for tegra210
+  arm64: tegra: enable wake from deep sleep on RTC alarm.
+  soc/tegra: pmc: configure core power request polarity
+  soc/tegra: pmc: configure deep sleep control settings
+  arm64: dts: tegra210-p2180: Jetson TX1 SC7 timings
+  arm64: dts: tegra210-p2180: Jetson nano SC7 timings
+
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi     |   7 +
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |   7 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   5 +-
+ drivers/clk/tegra/clk-dfll.c                       |  78 ++++++++++++
+ drivers/clk/tegra/clk-dfll.h                       |   2 +
+ drivers/clk/tegra/clk-divider.c                    |  23 ++++
+ drivers/clk/tegra/clk-periph-fixed.c               |  31 +++++
+ drivers/clk/tegra/clk-periph-gate.c                |  34 +++++
+ drivers/clk/tegra/clk-periph.c                     |  43 +++++++
+ drivers/clk/tegra/clk-pll-out.c                    |  28 ++++
+ drivers/clk/tegra/clk-pll.c                        | 121 +++++++++++++-----
+ drivers/clk/tegra/clk-sdmmc-mux.c                  |  30 +++++
+ drivers/clk/tegra/clk-tegra-fixed.c                |  14 ++
+ drivers/clk/tegra/clk-tegra-super-gen4.c           |   4 -
+ drivers/clk/tegra/clk-tegra210.c                   | 128 +++++++++++++++++--
+ drivers/clk/tegra/clk.c                            |  94 ++++++++++++++
+ drivers/clk/tegra/clk.h                            |  45 ++++++-
+ drivers/irqchip/irq-tegra.c                        |  20 ++-
+ drivers/pinctrl/tegra/pinctrl-tegra.c              |  52 ++++++++
+ drivers/pinctrl/tegra/pinctrl-tegra.h              |   3 +
+ drivers/pinctrl/tegra/pinctrl-tegra210.c           |   1 +
+ drivers/soc/tegra/pmc.c                            | 141 ++++++++++++++++++++-
+ 22 files changed, 858 insertions(+), 53 deletions(-)
+
+-- 
+2.7.4
+
