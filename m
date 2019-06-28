@@ -2,86 +2,163 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5649EC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FC3C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29484214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561734751;
-	bh=+ZbXIcvRp5Qmho+u63VDjM/Qf/GfS2IXDAt3/rMml+E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DC+BTccWGqb1bNNJOohkLKqMQ0KC4jOY6zrpfCyZGOpbLHHOwL52e0qqFT0YvH4Bb
-	 oDa6mmU3eHZBu5qGlNNoINvpNN3nsIhCADPp+76n+DW6Q+IbADxKfhUFCCvkvpTDY0
-	 Gwt0IUe8UwkO504rqo2Q73zeareZ3WAJtLimOCMQ=
+	by mail.kernel.org (Postfix) with ESMTP id C7B66208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfF1PM3 (ORCPT
+        id S1726830AbfF1PNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfF1PM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:12:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26901208E3;
-        Fri, 28 Jun 2019 15:12:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561734748;
-        bh=+ZbXIcvRp5Qmho+u63VDjM/Qf/GfS2IXDAt3/rMml+E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Uf3fQtJGO0vrZZnYpQ0n7anY7cN+9C39YrTwd9tYSPpgd8Kf2Mm9p2ap3elUABous
-         DeTCsB03QbHbgnfV0GIoYupeJXZdNKxjSD4O53FlFKt6FO25kyVbfTsLIIqyFFg9SB
-         96615WCgmGVzA3BwqpSo4yCwtN/iUJzIjX8czr0Q=
-Date:   Fri, 28 Jun 2019 17:12:26 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Enrico Weigelt <info@metux.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] devres: allow const resource arguments
-Message-ID: <20190628151226.GA14736@kroah.com>
-References: <20190628150049.1108048-1-arnd@arndb.de>
+        Fri, 28 Jun 2019 11:13:41 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55136 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfF1PNl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:13:41 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 1B1C026091A
+Subject: Re: [PATCH v2 1/1] iio: common: cros_ec_sensors: determine protocol
+ version
+To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     gwendal@chromium.org, egranata@chromium.org, kernel@collabora.com,
+        Nick Vaccaro <nvaccaro@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1561731659.git.fabien.lahoudere@collabora.com>
+ <f5e824de2c423b310c4981b723bba4945a6512d4.1561731659.git.fabien.lahoudere@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <4f79e029-b708-11f5-d4c6-2760e0b694d5@collabora.com>
+Date:   Fri, 28 Jun 2019 17:13:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628150049.1108048-1-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <f5e824de2c423b310c4981b723bba4945a6512d4.1561731659.git.fabien.lahoudere@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 04:59:45PM +0200, Arnd Bergmann wrote:
-> devm_ioremap_resource() does not currently take 'const' arguments,
-> which results in a warning from the first driver trying to do it
-> anyway:
+Hi,
+
+Thanks for the quick respin, two few comments below
+
+On 28/6/19 16:41, Fabien Lahoudere wrote:
+> This patch adds a function to determine which version of the
+> protocol is used to communicate with EC.
 > 
-> drivers/gpio/gpio-amd-fch.c: In function 'amd_fch_gpio_probe':
-> drivers/gpio/gpio-amd-fch.c:171:49: error: passing argument 2 of 'devm_ioremap_resource' discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
->   priv->base = devm_ioremap_resource(&pdev->dev, &amd_fch_gpio_iores);
->                                                  ^~~~~~~~~~~~~~~~~~~
-> 
-> Change the prototype to allow it, as there is no real reason not to.
-> 
-> Fixes: 9bb2e0452508 ("gpio: amd: Make resource struct const")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
+
+The order must be the opposite, first Nick and then you.
+
 > ---
-> The warning is currently in Linus Walleij's gpio tree, so I would
-> suggest he can queue up this fix as well, if Greg (or whoever
-> feels responsible for devres) agrees.
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 40 ++++++++++++++++++-
+>  1 file changed, 39 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index 130362ca421b..75d9b617f6c8 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -25,6 +25,35 @@ static char *cros_ec_loc[] = {
+>  	[MOTIONSENSE_LOC_MAX] = "unknown",
+>  };
+>  
+> +static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+> +					     u16 cmd_offset, u16 cmd, u32 *mask)
+> +{
+> +	int ret;
+> +	struct {
+> +		struct cros_ec_command msg;
+> +		union {
+> +			struct ec_params_get_cmd_versions params;
+> +			struct ec_response_get_cmd_versions resp;
+> +		};
+> +	} __packed buf = {
+> +		.msg = {
+> +			.version = 0,
+> +			.command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+> +			.insize = sizeof(struct ec_response_get_cmd_versions),
+> +			.outsize = sizeof(struct ec_params_get_cmd_versions)
+> +			},
+> +		.params = {.cmd = cmd}
+> +	};
+> +
+> +	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*mask = buf.resp.version_mask;
+> +
+> +	return 0;
+> +}
+> +
+>  int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  			      struct iio_dev *indio_dev,
+>  			      bool physical_device)
+> @@ -33,6 +62,8 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
+>  	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
+>  	struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
+> +	u32 ver_mask;
 
-That's fine with me if Linus takes it:
+If you follow the error path in the cros_ec_get_host_cmd_version_mask there is a
+possible use of an uninitialized variable.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	u32 ver_mask = 0;
+
+> +	int ret;
+>  
+>  	platform_set_drvdata(pdev, indio_dev);
+>  
+> @@ -47,8 +78,15 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  
+>  	mutex_init(&state->cmd_lock);
+>  
+
+What about adding a comment to explain the ver_mask thing for the record?
+
+	/*
+	 * If the EC is very old or misbehaving is it possible that the
+	 * communication succeed and have the version mask set to an invalid
+	 * value. So check that version mask is valid (!= 0), otherwise return
+	 * an error.
+	 */
+
+At least this is what I understood from the previous discussion.
+
+> +	ret = cros_ec_get_host_cmd_version_mask(state->ec,
+> +						ec->cmd_offset,
+> +						EC_CMD_MOTION_SENSE_CMD,
+> +						&ver_mask);
+> +	if (ret < 0 || ver_mask == 0)
+> +		return -ENODEV;
+> +
+>  	/* Set up the host command structure. */
+> -	state->msg->version = 2;
+> +	state->msg->version = fls(ver_mask) - 1;;
+>  	state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+>  	state->msg->outsize = sizeof(struct ec_params_motion_sense);
+>  
+> 
+
+Thanks,
+~ Enric
