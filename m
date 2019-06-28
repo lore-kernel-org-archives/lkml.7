@@ -2,139 +2,195 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A15C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E8AC5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F3F2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41DA20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfF1LgF (ORCPT
+        id S1726689AbfF1LhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:36:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:45856 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfF1LgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:36:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 036A728;
-        Fri, 28 Jun 2019 04:36:04 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F40DC3F718;
-        Fri, 28 Jun 2019 04:36:01 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 12:35:55 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
- MSI_FLAG_MULTI_PCI_MSI
-Message-ID: <20190628113555.GA21829@e121166-lin.cambridge.arm.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
- <20190611165935.GA22836@redmoon>
- <AM0PR04MB67383023B81AEB33DAF9C35584EC0@AM0PR04MB6738.eurprd04.prod.outlook.com>
- <20190612130813.GA15747@redmoon>
- <AM0PR04MB6738B93C7F1B5BE433753CF584E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
- <20190617093337.GD18020@e121166-lin.cambridge.arm.com>
- <AM6PR04MB67425792524FBA1C773F137984EB0@AM6PR04MB6742.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR04MB67425792524FBA1C773F137984EB0@AM6PR04MB6742.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 28 Jun 2019 07:37:14 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53744 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfF1LhO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 07:37:14 -0400
+Received: from laptop (unknown [IPv6:2a01:e34:ee7d:73d0:5796:7015:7f6:aeeb])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: aragua)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 02577285642;
+        Fri, 28 Jun 2019 12:37:10 +0100 (BST)
+Message-ID: <0af8a4bc994b4e90cb0d079d1c7f105dd2a60e32.camel@collabora.com>
+Subject: Re: [PATCH 1/2] iio: common: cros_ec_sensors: determine protocol
+ version
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+To:     Gwendal Grignou <gwendal@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>
+Date:   Fri, 28 Jun 2019 13:37:07 +0200
+In-Reply-To: <CAPUE2ut=imx=mhV_iyMwaYmfkFJ0zw3Jvsbxf+TbfqV1Sa_WJw@mail.gmail.com>
+References: <cover.1561642224.git.fabien.lahoudere@collabora.com>
+         <4724b46665d919cae0ea3b60e334053b0b17d686.1561642224.git.fabien.lahoudere@collabora.com>
+         <f8df78b4-8ae9-f292-cf70-ef682a4a47f4@collabora.com>
+         <CAPUE2ut=imx=mhV_iyMwaYmfkFJ0zw3Jvsbxf+TbfqV1Sa_WJw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.2 (3.30.2-2.fc29) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 10:34:35AM +0000, Z.q. Hou wrote:
-
-[...]
-
-> > There is nothing obvious. Write what you are fixing in the commit log and I will
-> > apply the patch, I won't write the commit log for you. Anyone should be able
-> > to understand why a patch was needed by reading the commit log, it is as
-> > important as writing the code itself.
-> 
-> With the flag MSI_FLAG_MULTI_PCI_MSI, when the Endpoint allocates
-> multiple MSI, it will trigger the "WARN_ON(nr_irqs != 1);" in
-> mobiveil_irq_msi_domain_alloc(), this is the issue this patch want to
-> fix. 
-
-And that's wrong. Marc explained why this controller does not support
-Multi MSI and that's what should go in the commit log, triggering
-a WARN_ON is the least of the problems (and the WARN_ON can even
-be removed after this patch is applied), if it was used as a bandaid
-to prevent allocating Multi MSI it is even more broken.
-
-Lorenzo
-
-> Thanks,
-> Zhiqiang
-> 
+Le jeudi 27 juin 2019 à 14:59 -0700, Gwendal Grignou a écrit :
+> On Thu, Jun 27, 2019 at 8:59 AM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+> > Hi,
+> > 
+> > cc'ing Doug, Gwendal and Enrico that might be interested to give a
+> > review.
+> > 
+> > This patch can be picked alone without 2/2, an is needed to have
+> > cros-ec-sensors
+> > legacy support on ARM (see [1] and [2])
+> > 
+> > Jonathan, as [1] and [2] will go through the chrome-platform tree
+> > if you don't
+> > mind I'd also like to carry with this patch once you're fine with
+> > it.
 > > 
 > > Thanks,
-> > Lorenzo
+> > ~ Enric
 > > 
-> > > Thanks,
-> > > Zhiqiang
-> > >
-> > > >
-> > > > Lorenzo
-> > > >
-> > > > > Subbu, did you test with Endpoint supporting multi MSI?
-> > > > >
-> > > > > Thanks,
-> > > > > Zhiqiang
-> > > > >
-> > > > > >
-> > > > > > Thanks,
-> > > > > > Lorenzo
-> > > > > >
-> > > > > > > Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
-> > > > > > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > > > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> > > > > > > ---
-> > > > > > > V5:
-> > > > > > >  - Corrected the subject.
-> > > > > > >
-> > > > > > >  drivers/pci/controller/pcie-mobiveil.c | 2 +-
-> > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
-> > > > > > > b/drivers/pci/controller/pcie-mobiveil.c
-> > > > > > > index 563210e731d3..a0dd337c6214 100644
-> > > > > > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > > > > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > > > > > @@ -703,7 +703,7 @@ static struct irq_chip
-> > > > > > > mobiveil_msi_irq_chip = {
-> > > > > > >
-> > > > > > >  static struct msi_domain_info mobiveil_msi_domain_info = {
-> > > > > > >  	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS |
-> > > > > > MSI_FLAG_USE_DEF_CHIP_OPS |
-> > > > > > > -		   MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-> > > > > > > +		   MSI_FLAG_PCI_MSIX),
-> > > > > > >  	.chip	= &mobiveil_msi_irq_chip,
-> > > > > > >  };
-> > > > > > >
-> > > > > > > --
-> > > > > > > 2.17.1
-> > > > > > >
+> > [1] https://patchwork.kernel.org/patch/11014329/
+> > [2] https://patchwork.kernel.org/patch/11014327/
+> > 
+> > On 27/6/19 16:04, Fabien Lahoudere wrote:
+> > > This patch adds a function to determine which version of the
+> > > protocol is used to communicate with EC.
+> > > 
+> > > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+> > > Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
+> > 
+> > Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > 
+> > > ---
+> > >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 36
+> > > ++++++++++++++++++-
+> > >  1 file changed, 35 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git
+> > > a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > > index 130362ca421b..2e0f97448e64 100644
+> > > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > > @@ -25,6 +25,31 @@ static char *cros_ec_loc[] = {
+> > >       [MOTIONSENSE_LOC_MAX] = "unknown",
+> > >  };
+> > > 
+> > > +static int cros_ec_get_host_cmd_version_mask(struct
+> > > cros_ec_device *ec_dev,
+> > > +                                          u16 cmd_offset, u16
+> > > cmd, u32 *mask)
+> > > +{
+> > > +     int ret;
+> > > +     struct {
+> > > +             struct cros_ec_command msg;
+> > > +             union {
+> > > +                     struct ec_params_get_cmd_versions params;
+> > > +                     struct ec_response_get_cmd_versions resp;
+> > > +             };
+> > > +     } __packed buf = {
+> > > +             .msg = {
+> add
+> .version = 0,
+> As the variable is coming from the stack, the version should be set.
+> > > +                     .command = EC_CMD_GET_CMD_VERSIONS +
+> > > cmd_offset,
+> > > +                     .insize = sizeof(struct
+> > > ec_response_get_cmd_versions),
+> > > +                     .outsize = sizeof(struct
+> > > ec_params_get_cmd_versions)
+> > > +                     },
+> > > +             .params = {.cmd = cmd}
+> > > +     };
+> > > +
+> > > +     ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+> > > +     if (ret >= 0)
+> It should be > 0: when the command is a success, it returns the
+> number
+> of byte in the response buffer. When don't expect == 0  here, because
+> when successful, EC_CMD_GET_CMD_VERSIONS will return a mask.
+> > > +             *mask = buf.resp.version_mask;
+> > > +     return ret;
+> > > +}
+> > > +
+> > >  int cros_ec_sensors_core_init(struct platform_device *pdev,
+> > >                             struct iio_dev *indio_dev,
+> > >                             bool physical_device)
+> > > @@ -33,6 +58,8 @@ int cros_ec_sensors_core_init(struct
+> > > platform_device *pdev,
+> > >       struct cros_ec_sensors_core_state *state =
+> > > iio_priv(indio_dev);
+> > >       struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
+> > >       struct cros_ec_sensor_platform *sensor_platform =
+> > > dev_get_platdata(dev);
+> > > +     u32 ver_mask;
+> > > +     int ret;
+> > > 
+> > >       platform_set_drvdata(pdev, indio_dev);
+> > > 
+> > > @@ -47,8 +74,15 @@ int cros_ec_sensors_core_init(struct
+> > > platform_device *pdev,
+> > > 
+> > >       mutex_init(&state->cmd_lock);
+> > > 
+> > > +     ret = cros_ec_get_host_cmd_version_mask(state->ec,
+> > > +                                             ec->cmd_offset,
+> > > +                                             EC_CMD_MOTION_SENSE
+> > > _CMD,
+> > > +                                             &ver_mask);
+> > > +     if (ret < 0)
+> Use:
+> if (ret <= 0 || ver_mask == 0) {
+> In case the EC is really old or misbehaving, we don't want to set an
+> invalid version later.
+
+To not return a positive value on error if ret >= 0 and ver_mask = 0  
+I would prefer this:
+
+	if (ret <= 0)
+		return ret;
+
+	if (ver_mask == 0)
+		return -EIO;
+
+Let me know if I am wrong
+
+> > > +             return ret;
+> > > +
+> > >       /* Set up the host command structure. */
+> > > -     state->msg->version = 2;
+> > > +     state->msg->version = fls(ver_mask) - 1;;
+> > >       state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec-
+> > > >cmd_offset;
+> > >       state->msg->outsize = sizeof(struct
+> > > ec_params_motion_sense);
+> > > 
+> > > 
+
