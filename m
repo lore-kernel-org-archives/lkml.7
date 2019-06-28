@@ -2,195 +2,96 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F59C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2416AC5B578
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319FE2147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFD972070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jfYXyDgO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R4Vr7ccV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfF1D4P (ORCPT
+        id S1727182AbfF1D6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:56:15 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56060 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfF1D4P (ORCPT
+        Thu, 27 Jun 2019 23:58:25 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37764 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbfF1D6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:56:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S3ssRB017302;
-        Fri, 28 Jun 2019 03:56:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=qoSzCPCCpXWHwOhkoHrIjqbxyk10xabogj8Yt3/QUS0=;
- b=jfYXyDgO6mbJw+tTplAh4kIQep1m/UfLsztlmoIkTJs8ouObELdPPyMPt/7ML+Bp2Rql
- gFEf/eYP/0MoWa14+74N7sIMkvMtrfwxrbgG1wbD9iPNzOns6qd/93ekVybl6rhRAgh1
- 46jYE7tazyt9SAdsXSsq1Z1w18WpMOVNGm+XC9y2irWSQsaYF/1untylkGP8gqLHI4yk
- lvb9lpNQ2TzFW7RNV2PqmDdG57PVEpmOYoFuVi6wIUGFejqlnJRqmkLp5EGhj+hYDVPF
- ct5SjwYFAERb2/6zl2MHn7tFBuCQ3AVmzcNIb87dh6WLW8LMzqEUQ8WOz3fXJC33BiJN oQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t9brtke49-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 03:56:02 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S3txhF054313;
-        Fri, 28 Jun 2019 03:56:01 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2t99f5bwqv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 03:56:01 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5S3tw8h021176;
-        Fri, 28 Jun 2019 03:55:59 GMT
-Received: from [10.190.130.61] (/192.188.170.109)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 20:55:58 -0700
-Subject: Re: [PATCH 09/19] btrfs: limit super block locations in HMZONED mode
-To:     Naohiro Aota <naohiro.aota@wdc.com>, linux-btrfs@vger.kernel.org,
-        David Sterba <dsterba@suse.com>
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
-        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        linux-fsdevel@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-References: <20190607131025.31996-1-naohiro.aota@wdc.com>
- <20190607131025.31996-10-naohiro.aota@wdc.com>
-From:   Anand Jain <anand.jain@oracle.com>
-Message-ID: <0ca3c475-fe10-4135-ddc9-7a82cc966d9a@oracle.com>
-Date:   Fri, 28 Jun 2019 11:55:51 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Thu, 27 Jun 2019 23:58:25 -0400
+Received: by mail-pg1-f194.google.com with SMTP id g15so67230pgi.4
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 20:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mXwJm7C4Bxy/Sv7wGhhaSYnzKT+9Q8/gprDQ0GpyEoM=;
+        b=R4Vr7ccV/e1171byUgh5Kfv/1rdelvNkuDHGd3eT+Mww172KgRTQlH4qYQaxGS+tRv
+         y5TQXtuuqJ1r+Xj2cM3l348GkZ42eGn8ajIHUlNVURzW6IXKqz24pKlYuOMxr3KZQEVY
+         hLmxgaESVaFp+wxI/2iZnnuDiUNDzXfV5qHCA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mXwJm7C4Bxy/Sv7wGhhaSYnzKT+9Q8/gprDQ0GpyEoM=;
+        b=QX5emm1iAdDusdsWfacunj/CXxFb5Tlo0o+rja7T7iZMr1rvPzkpTEjLUhcttMP0Qb
+         AsE4v+olF+ChpgQJ3N59ZdjT7g2Qgu0zCv4LIu5sMNDKiP73NL+jbjVZr8iWGbq91TJi
+         o8SKqlP+f83kNGx88vMz02/KUJOcWV1DmNVwEebr2pqyJmq1/uwnwMIQovVb50Vm1aTx
+         zsa68L+gkWcSwoGgsSDtJU8NVdNSdWb84q1o6uM94uiab/G2ft25WS9fTuEuV/hmiumw
+         E8SGI9618OWR1uQabMYmlBg35595YQ1OMAElhm9DnkwGc7yShc7TjihNb5yDk+OJQZGp
+         orkw==
+X-Gm-Message-State: APjAAAW9F/AGIPXHphHeRE6cof0gqFaf6mGcax33xzVO2mynTx8UYtdm
+        +9jXIBhdSdUNLdtPZm5sSknnpQ==
+X-Google-Smtp-Source: APXvYqy5mHFgwFzk60SOp52Qo8hDrI239nlNz5YOdEYGFrJ3eYVzOxhLdYMv6cBeHyvq/KH0pIUXVg==
+X-Received: by 2002:a63:130f:: with SMTP id i15mr3486154pgl.158.1561694304743;
+        Thu, 27 Jun 2019 20:58:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b126sm647423pfa.126.2019.06.27.20.58.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Jun 2019 20:58:23 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 20:58:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
+Message-ID: <201906272054.6954C08FA@keescook>
+References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
+ <1561042275-12723-9-git-send-email-bfields@redhat.com>
+ <20190621174544.GC25590@fieldses.org>
+ <201906211431.E6552108@keescook>
+ <20190622190058.GD5343@fieldses.org>
+ <201906221320.5BFC134713@keescook>
+ <20190624210512.GA20331@fieldses.org>
+ <20190626162149.GB4144@fieldses.org>
+ <20190627202124.GC16388@fieldses.org>
 MIME-Version: 1.0
-In-Reply-To: <20190607131025.31996-10-naohiro.aota@wdc.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906280039
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906280039
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627202124.GC16388@fieldses.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/6/19 9:10 PM, Naohiro Aota wrote:
-> When in HMZONED mode, make sure that device super blocks are located in
-> randomly writable zones of zoned block devices. That is, do not write super
-> blocks in sequential write required zones of host-managed zoned block
-> devices as update would not be possible.
+On Thu, Jun 27, 2019 at 04:21:24PM -0400, J. Bruce Fields wrote:
+> No, I was confused: "\n" is non-printable according to isprint(), so
+> ESCAPE_ANY_NP *will* escape it.  So this isn't quite so bad.  SSIDs are
+> usually printed as '%*pE', so arguably we should be escaping the single
+> quote character too, but at least we're not allowing line breaks
+> through.  I don't know about non-ascii.
 
-  By design all copies of SB must be updated at each transaction,
-  as they are redundant copies they must match at the end of
-  each transaction.
+Okay, cool. Given that most things are just trying to log, it seems like
+it should be safe to have %pE escape non-ascii, non-printable, \, ', and "?
 
-  Instead of skipping the sb updates, why not alter number of
-  copies at the time of mkfs.btrfs?
+And if we changing that, we're likely changing
+string_escape_mem(). Looking at callers of string_escape_mem() makes my
+head spin...
 
-Thanks, Anand
+Anyway, I don't want to block you needlessly. What would like to have
+be next steps here?
 
-
-> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-> ---
->   fs/btrfs/disk-io.c     | 11 +++++++++++
->   fs/btrfs/disk-io.h     |  1 +
->   fs/btrfs/extent-tree.c |  4 ++++
->   fs/btrfs/scrub.c       |  2 ++
->   4 files changed, 18 insertions(+)
-> 
-> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-> index 7c1404c76768..ddbb02906042 100644
-> --- a/fs/btrfs/disk-io.c
-> +++ b/fs/btrfs/disk-io.c
-> @@ -3466,6 +3466,13 @@ struct buffer_head *btrfs_read_dev_super(struct block_device *bdev)
->   	return latest;
->   }
->   
-> +int btrfs_check_super_location(struct btrfs_device *device, u64 pos)
-> +{
-> +	/* any address is good on a regular (zone_size == 0) device */
-> +	/* non-SEQUENTIAL WRITE REQUIRED zones are capable on a zoned device */
-> +	return device->zone_size == 0 || !btrfs_dev_is_sequential(device, pos);
-> +}
-> +
->   /*
->    * Write superblock @sb to the @device. Do not wait for completion, all the
->    * buffer heads we write are pinned.
-> @@ -3495,6 +3502,8 @@ static int write_dev_supers(struct btrfs_device *device,
->   		if (bytenr + BTRFS_SUPER_INFO_SIZE >=
->   		    device->commit_total_bytes)
->   			break;
-> +		if (!btrfs_check_super_location(device, bytenr))
-> +			continue;
->   
->   		btrfs_set_super_bytenr(sb, bytenr);
->   
-> @@ -3561,6 +3570,8 @@ static int wait_dev_supers(struct btrfs_device *device, int max_mirrors)
->   		if (bytenr + BTRFS_SUPER_INFO_SIZE >=
->   		    device->commit_total_bytes)
->   			break;
-> +		if (!btrfs_check_super_location(device, bytenr))
-> +			continue;
->   
->   		bh = __find_get_block(device->bdev,
->   				      bytenr / BTRFS_BDEV_BLOCKSIZE,
-> diff --git a/fs/btrfs/disk-io.h b/fs/btrfs/disk-io.h
-> index a0161aa1ea0b..70e97cd6fa76 100644
-> --- a/fs/btrfs/disk-io.h
-> +++ b/fs/btrfs/disk-io.h
-> @@ -141,6 +141,7 @@ struct extent_map *btree_get_extent(struct btrfs_inode *inode,
->   		struct page *page, size_t pg_offset, u64 start, u64 len,
->   		int create);
->   int btrfs_get_num_tolerated_disk_barrier_failures(u64 flags);
-> +int btrfs_check_super_location(struct btrfs_device *device, u64 pos);
->   int __init btrfs_end_io_wq_init(void);
->   void __cold btrfs_end_io_wq_exit(void);
->   
-> diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-> index 3d41d840fe5c..ae2c895d08c4 100644
-> --- a/fs/btrfs/extent-tree.c
-> +++ b/fs/btrfs/extent-tree.c
-> @@ -267,6 +267,10 @@ static int exclude_super_stripes(struct btrfs_block_group_cache *cache)
->   			return ret;
->   	}
->   
-> +	/* we won't have super stripes in sequential zones */
-> +	if (cache->alloc_type == BTRFS_ALLOC_SEQ)
-> +		return 0;
-> +
->   	for (i = 0; i < BTRFS_SUPER_MIRROR_MAX; i++) {
->   		bytenr = btrfs_sb_offset(i);
->   		ret = btrfs_rmap_block(fs_info, cache->key.objectid,
-> diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
-> index f7b29f9db5e2..36ad4fad7eaf 100644
-> --- a/fs/btrfs/scrub.c
-> +++ b/fs/btrfs/scrub.c
-> @@ -3720,6 +3720,8 @@ static noinline_for_stack int scrub_supers(struct scrub_ctx *sctx,
->   		if (bytenr + BTRFS_SUPER_INFO_SIZE >
->   		    scrub_dev->commit_total_bytes)
->   			break;
-> +		if (!btrfs_check_super_location(scrub_dev, bytenr))
-> +			continue;
->   
->   		ret = scrub_pages(sctx, bytenr, BTRFS_SUPER_INFO_SIZE, bytenr,
->   				  scrub_dev, BTRFS_EXTENT_FLAG_SUPER, gen, i,
-> 
-
+-- 
+Kees Cook
