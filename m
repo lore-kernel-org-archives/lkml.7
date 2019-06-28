@@ -2,635 +2,313 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF98C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AA0C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68302147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DDDA208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561725073;
-	bh=Sa/qTDZj/xRoiaZCg+mRibNrKJhgXoExCZJ0DKFmcqg=;
+	s=default; t=1561725077;
+	bh=gN24mhpZPdqhQreBaX4FNtk/aXC0wDFFgtXDeD6+OAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZHzrOIuRSF/BJpCUQs7jqQue/GtYHG7FSdrkV3BMuaskxocFYuL2YNYkk6RcxZV4d
-	 GdGpfzwG0buuaj3TA2Ou4YfJ5heff7j0GZ+dOGaK6F5I5yp3LTl0uMjAsJklsO4Vgx
-	 kZ/bk3GO31te+VT8sZ+AUbEXzoUKD8mEfxO9PQ5E=
+	b=luUMRnhcmLm6rihSsENiXWO8Vc0C74O6BPLAwKGHqsl1LeiiNNMLrmbk5pSEqqGrD
+	 GjXNHI46LphS2Ls3gbtvJXfYw4e53cBA0bV5UEDQW9Y4XZVfBQhnDMkA5oIZtaECji
+	 6NifeZfSTZwRlxCUUpUGzpMg60tfO7AcHtGwjZIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfF1MbI (ORCPT
+        id S1727346AbfF1MbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:31:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39816 "EHLO
+        Fri, 28 Jun 2019 08:31:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39868 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfF1Mas (ORCPT
+        with ESMTP id S1727188AbfF1Mas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:30:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=t2SlvlYO6vN68ooBWcFQh21aLIzOtka8Klr/M76soBU=; b=GPcFupf5dzfyT165XdM5l7atm7
-        NpunVR4RVyW430xRFKelq2/bs7dtPeXB4qL/NAe4wUu90z3hkDS/UIfIGdcLRgNR2UNHiStAIHDWk
-        b5ipZ/rh5zP1MANqlxnbENYD/fVy7fINuTz8hI/7Xxd5uRjSAc/v12+G6v77fOA6pvH51AXLu2qLr
-        m1H6iZl3askKHReK+jify63bqpxZ2aZmSjKnEi33cR7epWYwKUNyxM6iw0XhbwlMf1Q1R8eIlnGAY
-        g2vrko1I5YdrDNVcbwUdqvarlbeC++auL6Ldh/LGX2VSxCdN+UgvNr4MOiHvRW17Y0Xbs+VJlMxkY
-        FFszEwYQ==;
+        bh=HNTqLR7YTpiCGsfcYzZ23NBv7IuWobNYT8gokGCe3wo=; b=jOK9yEioolCXopD1Wq607Z9fR/
+        HdMohOTqYZUqXwti9GCkq6A/d0XRGI45pI0UuIi32KZf8+8qIJi/BsB/AXDe18qx+EYe0Kb3wSpax
+        BC4JBaEQFMDtp2rNHNAnVRNUlknvpaqomnsjSBYvbRksF4hQ8rk5FWq7VHR0xaVHdGiXcLi1mhWOL
+        7W1t49Fu8buHnGzEJsAmMVi6F8H7jPn2lzXVU6ILBj0+0XL7flg8ydZvEIxgxJvmRKTD407ivUgCs
+        DzquqTFZLZPqC91AwCHE5X0N6bEReQ7mAXvdb4/R1QTVyQNWjSXZTkOmieePIKqiGiHsO2c6fu0nx
+        yzEbLWYg==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1U-00055h-OB; Fri, 28 Jun 2019 12:30:37 +0000
+        id 1hgq1U-00055N-Fq; Fri, 28 Jun 2019 12:30:36 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005TB-Lz; Fri, 28 Jun 2019 09:30:34 -0300
+        id 1hgq1S-0005SM-DP; Fri, 28 Jun 2019 09:30:34 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Willy Tarreau <willy@haproxy.com>,
-        Ksenija Stanojevic <ksenija.stanojevic@gmail.com>,
-        "Richard Russon (FlatCap)" <ldm@flatcap.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Martin Mares <mj@ucw.cz>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-efi@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-ntfs-dev@lists.sourceforge.net, linux-rtc@vger.kernel.org,
-        linux-video@atrey.karlin.mff.cuni.cz,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH 28/39] docs: admin-guide: add a series of orphaned documents
-Date:   Fri, 28 Jun 2019 09:30:21 -0300
-Message-Id: <7ee0e33575633f689203f582259c2cbdce477176.1561724493.git.mchehab+samsung@kernel.org>
+        kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
+Subject: [PATCH 18/39] docs: admin-guide: add kdump documentation into it
+Date:   Fri, 28 Jun 2019 09:30:11 -0300
+Message-Id: <654e7591c044632c06257e0f069a52c0bb993554.1561724493.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
 References: <cover.1561724493.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are lots of documents that belong to the admin-guide but
-are on random places (most under Documentation root dir).
-
-Move them to the admin guide.
+The Kdump documentation describes procedures with admins use
+in order to solve issues on their systems.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/ABI/stable/sysfs-devices-node     |  2 +-
- Documentation/ABI/testing/procfs-diskstats      |  2 +-
- Documentation/ABI/testing/sysfs-block           |  2 +-
- .../ABI/testing/sysfs-devices-system-cpu        |  4 ++--
- .../{btmrvl.txt => admin-guide/btmrvl.rst}      |  0
- .../clearing-warn-once.rst}                     |  0
- .../{cpu-load.txt => admin-guide/cpu-load.rst}  |  0
- .../cputopology.rst}                            |  0
- .../admin-guide/device-mapper/statistics.rst    |  4 ++--
- .../{efi-stub.txt => admin-guide/efi-stub.rst}  |  0
- .../{highuid.txt => admin-guide/highuid.rst}    |  0
- Documentation/admin-guide/hw-vuln/l1tf.rst      |  2 +-
- .../hw_random.rst}                              |  0
- Documentation/admin-guide/index.rst             | 17 +++++++++++++++++
- .../{iostats.txt => admin-guide/iostats.rst}    |  0
- Documentation/admin-guide/kernel-parameters.txt |  2 +-
- .../kernel-per-CPU-kthreads.rst}                |  0
- .../lcd-panel-cgram.rst                         |  2 --
- Documentation/{ldm.txt => admin-guide/ldm.rst}  |  0
- .../lockup-watchdogs.rst}                       |  0
- .../mm/cma_debugfs.rst}                         |  2 --
- Documentation/admin-guide/mm/index.rst          |  1 +
- .../{numastat.txt => admin-guide/numastat.rst}  |  0
- Documentation/{pnp.txt => admin-guide/pnp.rst}  |  0
- Documentation/{rtc.txt => admin-guide/rtc.rst}  |  0
- .../{svga.txt => admin-guide/svga.rst}          |  0
- Documentation/admin-guide/sysctl/kernel.rst     |  2 +-
- .../video-output.rst}                           |  0
- Documentation/fb/vesafb.rst                     |  2 +-
- Documentation/x86/topology.rst                  |  2 +-
- MAINTAINERS                                     | 12 ++++++------
- arch/arm/Kconfig                                |  2 +-
- arch/parisc/Kconfig                             |  2 +-
- arch/sh/Kconfig                                 |  2 +-
- arch/sparc/Kconfig                              |  2 +-
- arch/x86/Kconfig                                |  4 ++--
- block/partitions/Kconfig                        |  2 +-
- drivers/char/Kconfig                            |  4 ++--
- drivers/char/hw_random/core.c                   |  2 +-
- include/linux/hw_random.h                       |  2 +-
- 40 files changed, 47 insertions(+), 33 deletions(-)
- rename Documentation/{btmrvl.txt => admin-guide/btmrvl.rst} (100%)
- rename Documentation/{clearing-warn-once.txt => admin-guide/clearing-warn-once.rst} (100%)
- rename Documentation/{cpu-load.txt => admin-guide/cpu-load.rst} (100%)
- rename Documentation/{cputopology.txt => admin-guide/cputopology.rst} (100%)
- rename Documentation/{efi-stub.txt => admin-guide/efi-stub.rst} (100%)
- rename Documentation/{highuid.txt => admin-guide/highuid.rst} (100%)
- rename Documentation/{hw_random.txt => admin-guide/hw_random.rst} (100%)
- rename Documentation/{iostats.txt => admin-guide/iostats.rst} (100%)
- rename Documentation/{kernel-per-CPU-kthreads.txt => admin-guide/kernel-per-CPU-kthreads.rst} (100%)
- rename Documentation/{auxdisplay => admin-guide}/lcd-panel-cgram.rst (99%)
- rename Documentation/{ldm.txt => admin-guide/ldm.rst} (100%)
- rename Documentation/{lockup-watchdogs.txt => admin-guide/lockup-watchdogs.rst} (100%)
- rename Documentation/{cma/debugfs.rst => admin-guide/mm/cma_debugfs.rst} (98%)
- rename Documentation/{numastat.txt => admin-guide/numastat.rst} (100%)
- rename Documentation/{pnp.txt => admin-guide/pnp.rst} (100%)
- rename Documentation/{rtc.txt => admin-guide/rtc.rst} (100%)
- rename Documentation/{svga.txt => admin-guide/svga.rst} (100%)
- rename Documentation/{video-output.txt => admin-guide/video-output.rst} (100%)
+ Documentation/admin-guide/bug-hunting.rst            | 4 ++--
+ Documentation/admin-guide/index.rst                  | 1 +
+ Documentation/{ => admin-guide}/kdump/gdbmacros.txt  | 0
+ Documentation/{ => admin-guide}/kdump/index.rst      | 1 -
+ Documentation/{ => admin-guide}/kdump/kdump.rst      | 0
+ Documentation/{ => admin-guide}/kdump/vmcoreinfo.rst | 0
+ Documentation/admin-guide/kernel-parameters.txt      | 6 +++---
+ Documentation/powerpc/firmware-assisted-dump.rst     | 2 +-
+ Documentation/translations/zh_CN/oops-tracing.txt    | 4 ++--
+ Documentation/watchdog/hpwdt.rst                     | 2 +-
+ MAINTAINERS                                          | 2 +-
+ arch/arm/Kconfig                                     | 2 +-
+ arch/arm64/Kconfig                                   | 2 +-
+ arch/sh/Kconfig                                      | 2 +-
+ arch/x86/Kconfig                                     | 4 ++--
+ 15 files changed, 16 insertions(+), 16 deletions(-)
+ rename Documentation/{ => admin-guide}/kdump/gdbmacros.txt (100%)
+ rename Documentation/{ => admin-guide}/kdump/index.rst (97%)
+ rename Documentation/{ => admin-guide}/kdump/kdump.rst (100%)
+ rename Documentation/{ => admin-guide}/kdump/vmcoreinfo.rst (100%)
 
-diff --git a/Documentation/ABI/stable/sysfs-devices-node b/Documentation/ABI/stable/sysfs-devices-node
-index f7ce68fbd4b9..df8413cf1468 100644
---- a/Documentation/ABI/stable/sysfs-devices-node
-+++ b/Documentation/ABI/stable/sysfs-devices-node
-@@ -61,7 +61,7 @@ Date:		October 2002
- Contact:	Linux Memory Management list <linux-mm@kvack.org>
- Description:
- 		The node's hit/miss statistics, in units of pages.
--		See Documentation/numastat.txt
-+		See Documentation/admin-guide/numastat.rst
+diff --git a/Documentation/admin-guide/bug-hunting.rst b/Documentation/admin-guide/bug-hunting.rst
+index b761aa2a51d2..44b8a4edd348 100644
+--- a/Documentation/admin-guide/bug-hunting.rst
++++ b/Documentation/admin-guide/bug-hunting.rst
+@@ -90,9 +90,9 @@ the disk is not available then you have three options:
+     run a null modem to a second machine and capture the output there
+     using your favourite communication program.  Minicom works well.
  
- What:		/sys/devices/system/node/nodeX/distance
- Date:		October 2002
-diff --git a/Documentation/ABI/testing/procfs-diskstats b/Documentation/ABI/testing/procfs-diskstats
-index abac31d216de..2c44b4f1b060 100644
---- a/Documentation/ABI/testing/procfs-diskstats
-+++ b/Documentation/ABI/testing/procfs-diskstats
-@@ -29,4 +29,4 @@ Description:
- 		17 - sectors discarded
- 		18 - time spent discarding
+-(3) Use Kdump (see Documentation/kdump/kdump.rst),
++(3) Use Kdump (see Documentation/admin-guide/kdump/kdump.rst),
+     extract the kernel ring buffer from old memory with using dmesg
+-    gdbmacro in Documentation/kdump/gdbmacros.txt.
++    gdbmacro in Documentation/admin-guide/kdump/gdbmacros.txt.
  
--		For more details refer to Documentation/iostats.txt
-+		For more details refer to Documentation/admin-guide/iostats.rst
-diff --git a/Documentation/ABI/testing/sysfs-block b/Documentation/ABI/testing/sysfs-block
-index dfad7427817c..f8c7c7126bb1 100644
---- a/Documentation/ABI/testing/sysfs-block
-+++ b/Documentation/ABI/testing/sysfs-block
-@@ -15,7 +15,7 @@ Description:
- 		 9 - I/Os currently in progress
- 		10 - time spent doing I/Os (ms)
- 		11 - weighted time spent doing I/Os (ms)
--		For more details refer Documentation/iostats.txt
-+		For more details refer Documentation/admin-guide/iostats.rst
- 
- 
- What:		/sys/block/<disk>/<part>/stat
-diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-index d404603c6b52..5f7d7b14fa44 100644
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -34,7 +34,7 @@ Description:	CPU topology files that describe kernel limits related to
- 		present: cpus that have been identified as being present in
- 		the system.
- 
--		See Documentation/cputopology.txt for more information.
-+		See Documentation/admin-guide/cputopology.rst for more information.
- 
- 
- What:		/sys/devices/system/cpu/probe
-@@ -103,7 +103,7 @@ Description:	CPU topology files that describe a logical CPU's relationship
- 		thread_siblings_list: human-readable list of cpu#'s hardware
- 		threads within the same core as cpu#
- 
--		See Documentation/cputopology.txt for more information.
-+		See Documentation/admin-guide/cputopology.rst for more information.
- 
- 
- What:		/sys/devices/system/cpu/cpuidle/current_driver
-diff --git a/Documentation/btmrvl.txt b/Documentation/admin-guide/btmrvl.rst
-similarity index 100%
-rename from Documentation/btmrvl.txt
-rename to Documentation/admin-guide/btmrvl.rst
-diff --git a/Documentation/clearing-warn-once.txt b/Documentation/admin-guide/clearing-warn-once.rst
-similarity index 100%
-rename from Documentation/clearing-warn-once.txt
-rename to Documentation/admin-guide/clearing-warn-once.rst
-diff --git a/Documentation/cpu-load.txt b/Documentation/admin-guide/cpu-load.rst
-similarity index 100%
-rename from Documentation/cpu-load.txt
-rename to Documentation/admin-guide/cpu-load.rst
-diff --git a/Documentation/cputopology.txt b/Documentation/admin-guide/cputopology.rst
-similarity index 100%
-rename from Documentation/cputopology.txt
-rename to Documentation/admin-guide/cputopology.rst
-diff --git a/Documentation/admin-guide/device-mapper/statistics.rst b/Documentation/admin-guide/device-mapper/statistics.rst
-index 3d80a9f850cc..41ded0bc5933 100644
---- a/Documentation/admin-guide/device-mapper/statistics.rst
-+++ b/Documentation/admin-guide/device-mapper/statistics.rst
-@@ -13,7 +13,7 @@ the range specified.
- 
- The I/O statistics counters for each step-sized area of a region are
- in the same format as `/sys/block/*/stat` or `/proc/diskstats` (see:
--Documentation/iostats.txt).  But two extra counters (12 and 13) are
-+Documentation/admin-guide/iostats.rst).  But two extra counters (12 and 13) are
- provided: total time spent reading and writing.  When the histogram
- argument is used, the 14th parameter is reported that represents the
- histogram of latencies.  All these counters may be accessed by sending
-@@ -151,7 +151,7 @@ Messages
- 	  The first 11 counters have the same meaning as
- 	  `/sys/block/*/stat or /proc/diskstats`.
- 
--	  Please refer to Documentation/iostats.txt for details.
-+	  Please refer to Documentation/admin-guide/iostats.rst for details.
- 
- 	  1. the number of reads completed
- 	  2. the number of reads merged
-diff --git a/Documentation/efi-stub.txt b/Documentation/admin-guide/efi-stub.rst
-similarity index 100%
-rename from Documentation/efi-stub.txt
-rename to Documentation/admin-guide/efi-stub.rst
-diff --git a/Documentation/highuid.txt b/Documentation/admin-guide/highuid.rst
-similarity index 100%
-rename from Documentation/highuid.txt
-rename to Documentation/admin-guide/highuid.rst
-diff --git a/Documentation/admin-guide/hw-vuln/l1tf.rst b/Documentation/admin-guide/hw-vuln/l1tf.rst
-index 656aee262e23..f83212fae4d5 100644
---- a/Documentation/admin-guide/hw-vuln/l1tf.rst
-+++ b/Documentation/admin-guide/hw-vuln/l1tf.rst
-@@ -241,7 +241,7 @@ Guest mitigation mechanisms
-    For further information about confining guests to a single or to a group
-    of cores consult the cpusets documentation:
- 
--   https://www.kernel.org/doc/Documentation/cgroup-v1/cpusets.rst
-+   https://www.kernel.org/doc/Documentation/admin-guide/cgroup-v1/cpusets.rst
- 
- .. _interrupt_isolation:
- 
-diff --git a/Documentation/hw_random.txt b/Documentation/admin-guide/hw_random.rst
-similarity index 100%
-rename from Documentation/hw_random.txt
-rename to Documentation/admin-guide/hw_random.rst
+ Finding the bug's location
+ --------------------------
 diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index d5064f1802c1..2c20607e90cd 100644
+index 9899b78dbe50..65e821a03aca 100644
 --- a/Documentation/admin-guide/index.rst
 +++ b/Documentation/admin-guide/index.rst
-@@ -84,8 +84,25 @@ configure specific aspects of kernel behavior to your liking.
-    perf-security
-    acpi/index
-    aoe/index
-+   btmrvl
-+   clearing-warn-once
-+   cpu-load
-+   cputopology
-    device-mapper/index
-+   efi-stub
-+   highuid
-+   hw_random
-+   iostats
-+   kernel-per-CPU-kthreads
-    laptops/index
-+   lcd-panel-cgram
-+   ldm
-+   lockup-watchdogs
-+   numastat
-+   pnp
-+   rtc
-+   svga
-+   video-output
+@@ -39,6 +39,7 @@ problems and bugs in particular.
+    ramoops
+    dynamic-debug-howto
+    init
++   kdump/index
+    perf/index
  
- .. only::  subproject and html
- 
-diff --git a/Documentation/iostats.txt b/Documentation/admin-guide/iostats.rst
+ This is the beginning of a section with information of interest to
+diff --git a/Documentation/kdump/gdbmacros.txt b/Documentation/admin-guide/kdump/gdbmacros.txt
 similarity index 100%
-rename from Documentation/iostats.txt
-rename to Documentation/admin-guide/iostats.rst
+rename from Documentation/kdump/gdbmacros.txt
+rename to Documentation/admin-guide/kdump/gdbmacros.txt
+diff --git a/Documentation/kdump/index.rst b/Documentation/admin-guide/kdump/index.rst
+similarity index 97%
+rename from Documentation/kdump/index.rst
+rename to Documentation/admin-guide/kdump/index.rst
+index 2b17fcf6867a..8e2ebd0383cd 100644
+--- a/Documentation/kdump/index.rst
++++ b/Documentation/admin-guide/kdump/index.rst
+@@ -1,4 +1,3 @@
+-:orphan:
+ 
+ ================================================================
+ Documentation for Kdump - The kexec-based Crash Dumping Solution
+diff --git a/Documentation/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+similarity index 100%
+rename from Documentation/kdump/kdump.rst
+rename to Documentation/admin-guide/kdump/kdump.rst
+diff --git a/Documentation/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+similarity index 100%
+rename from Documentation/kdump/vmcoreinfo.rst
+rename to Documentation/admin-guide/kdump/vmcoreinfo.rst
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index e833133c8897..713d6f378fbe 100644
+index e38b96d061f4..9b535c0e22f3 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5092,7 +5092,7 @@
+@@ -708,14 +708,14 @@
+ 			[KNL, x86_64] select a region under 4G first, and
+ 			fall back to reserve region above 4G when '@offset'
+ 			hasn't been specified.
+-			See Documentation/kdump/kdump.rst for further details.
++			See Documentation/admin-guide/kdump/kdump.rst for further details.
  
- 	vga=		[BOOT,X86-32] Select a particular video mode
- 			See Documentation/x86/boot.rst and
--			Documentation/svga.txt.
-+			Documentation/admin-guide/svga.rst.
- 			Use vga=ask for menu.
- 			This is actually a boot loader parameter; the value is
- 			passed to the kernel using a special protocol.
-diff --git a/Documentation/kernel-per-CPU-kthreads.txt b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
-similarity index 100%
-rename from Documentation/kernel-per-CPU-kthreads.txt
-rename to Documentation/admin-guide/kernel-per-CPU-kthreads.rst
-diff --git a/Documentation/auxdisplay/lcd-panel-cgram.rst b/Documentation/admin-guide/lcd-panel-cgram.rst
-similarity index 99%
-rename from Documentation/auxdisplay/lcd-panel-cgram.rst
-rename to Documentation/admin-guide/lcd-panel-cgram.rst
-index dfef50286018..a3eb00c62f53 100644
---- a/Documentation/auxdisplay/lcd-panel-cgram.rst
-+++ b/Documentation/admin-guide/lcd-panel-cgram.rst
-@@ -1,5 +1,3 @@
--:orphan:
--
- ======================================
- Parallel port LCD/Keypad Panel support
- ======================================
-diff --git a/Documentation/ldm.txt b/Documentation/admin-guide/ldm.rst
-similarity index 100%
-rename from Documentation/ldm.txt
-rename to Documentation/admin-guide/ldm.rst
-diff --git a/Documentation/lockup-watchdogs.txt b/Documentation/admin-guide/lockup-watchdogs.rst
-similarity index 100%
-rename from Documentation/lockup-watchdogs.txt
-rename to Documentation/admin-guide/lockup-watchdogs.rst
-diff --git a/Documentation/cma/debugfs.rst b/Documentation/admin-guide/mm/cma_debugfs.rst
-similarity index 98%
-rename from Documentation/cma/debugfs.rst
-rename to Documentation/admin-guide/mm/cma_debugfs.rst
-index 518fe401b5ee..4e06ffabd78a 100644
---- a/Documentation/cma/debugfs.rst
-+++ b/Documentation/admin-guide/mm/cma_debugfs.rst
-@@ -1,5 +1,3 @@
--:orphan:
--
- =====================
- CMA Debugfs Interface
- =====================
-diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
-index 5f61a6c429e0..11db46448354 100644
---- a/Documentation/admin-guide/mm/index.rst
-+++ b/Documentation/admin-guide/mm/index.rst
-@@ -26,6 +26,7 @@ the Linux memory management.
-    :maxdepth: 1
+ 	crashkernel=range1:size1[,range2:size2,...][@offset]
+ 			[KNL] Same as above, but depends on the memory
+ 			in the running system. The syntax of range is
+ 			start-[end] where start and end are both
+ 			a memory unit (amount[KMG]). See also
+-			Documentation/kdump/kdump.rst for an example.
++			Documentation/admin-guide/kdump/kdump.rst for an example.
  
-    concepts
-+   cma_debugfs
-    hugetlbpage
-    idle_page_tracking
-    ksm
-diff --git a/Documentation/numastat.txt b/Documentation/admin-guide/numastat.rst
-similarity index 100%
-rename from Documentation/numastat.txt
-rename to Documentation/admin-guide/numastat.rst
-diff --git a/Documentation/pnp.txt b/Documentation/admin-guide/pnp.rst
-similarity index 100%
-rename from Documentation/pnp.txt
-rename to Documentation/admin-guide/pnp.rst
-diff --git a/Documentation/rtc.txt b/Documentation/admin-guide/rtc.rst
-similarity index 100%
-rename from Documentation/rtc.txt
-rename to Documentation/admin-guide/rtc.rst
-diff --git a/Documentation/svga.txt b/Documentation/admin-guide/svga.rst
-similarity index 100%
-rename from Documentation/svga.txt
-rename to Documentation/admin-guide/svga.rst
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index a0c1d4ce403a..032c7cd3cede 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -327,7 +327,7 @@ when a hard lockup is detected.
-    0 - don't panic on hard lockup
-    1 - panic on hard lockup
+ 	crashkernel=size[KMG],high
+ 			[KNL, x86_64] range could be above 4G. Allow kernel
+@@ -1207,7 +1207,7 @@
+ 			Specifies physical address of start of kernel core
+ 			image elf header and optionally the size. Generally
+ 			kexec loader will pass this option to capture kernel.
+-			See Documentation/kdump/kdump.rst for details.
++			See Documentation/admin-guide/kdump/kdump.rst for details.
  
--See Documentation/lockup-watchdogs.txt for more information.  This can
-+See Documentation/admin-guide/lockup-watchdogs.rst for more information.  This can
- also be set using the nmi_watchdog kernel parameter.
+ 	enable_mtrr_cleanup [X86]
+ 			The kernel tries to adjust MTRR layout from continuous
+diff --git a/Documentation/powerpc/firmware-assisted-dump.rst b/Documentation/powerpc/firmware-assisted-dump.rst
+index d7fa7c35dd12..9ca12830a48e 100644
+--- a/Documentation/powerpc/firmware-assisted-dump.rst
++++ b/Documentation/powerpc/firmware-assisted-dump.rst
+@@ -61,7 +61,7 @@ as follows:
+          the default calculated size. Use this option if default
+          boot memory size is not sufficient for second kernel to
+          boot successfully. For syntax of crashkernel= parameter,
+-         refer to Documentation/kdump/kdump.rst. If any offset is
++         refer to Documentation/admin-guide/kdump/kdump.rst. If any offset is
+          provided in crashkernel= parameter, it will be ignored
+          as fadump uses a predefined offset to reserve memory
+          for boot memory dump preservation in case of a crash.
+diff --git a/Documentation/translations/zh_CN/oops-tracing.txt b/Documentation/translations/zh_CN/oops-tracing.txt
+index 368ddd05b304..c5f3bda7abcb 100644
+--- a/Documentation/translations/zh_CN/oops-tracing.txt
++++ b/Documentation/translations/zh_CN/oops-tracing.txt
+@@ -53,8 +53,8 @@ cat /proc/kmsg > file， 然而你必须介入中止传输， kmsg是一个“
+ （2）用串口终端启动（请参看Documentation/admin-guide/serial-console.rst），运行一个null
+ modem到另一台机器并用你喜欢的通讯工具获取输出。Minicom工作地很好。
  
+-（3）使用Kdump（请参看Documentation/kdump/kdump.rst），
+-使用在Documentation/kdump/gdbmacros.txt中定义的dmesg gdb宏，从旧的内存中提取内核
++（3）使用Kdump（请参看Documentation/admin-guide/kdump/kdump.rst），
++使用在Documentation/admin-guide/kdump/gdbmacros.txt中定义的dmesg gdb宏，从旧的内存中提取内核
+ 环形缓冲区。
  
-diff --git a/Documentation/video-output.txt b/Documentation/admin-guide/video-output.rst
-similarity index 100%
-rename from Documentation/video-output.txt
-rename to Documentation/admin-guide/video-output.rst
-diff --git a/Documentation/fb/vesafb.rst b/Documentation/fb/vesafb.rst
-index 2ed0dfb661cf..6821c87b7893 100644
---- a/Documentation/fb/vesafb.rst
-+++ b/Documentation/fb/vesafb.rst
-@@ -30,7 +30,7 @@ How to use it?
- ==============
+ 完整信息
+diff --git a/Documentation/watchdog/hpwdt.rst b/Documentation/watchdog/hpwdt.rst
+index 94a96371113e..49c647dba8aa 100644
+--- a/Documentation/watchdog/hpwdt.rst
++++ b/Documentation/watchdog/hpwdt.rst
+@@ -59,7 +59,7 @@ Last reviewed: 08/20/2018
+  and loop forever.  This is generally not what a watchdog user wants.
  
- Switching modes is done using the vga=... boot parameter.  Read
--Documentation/svga.txt for details.
-+Documentation/admin-guide/svga.rst for details.
+  For those wishing to learn more please see:
+-	Documentation/kdump/kdump.rst
++	Documentation/admin-guide/kdump/kdump.rst
+ 	Documentation/admin-guide/kernel-parameters.txt (panic=)
+ 	Your Linux Distribution specific documentation.
  
- You should compile in both vgacon (for text mode) and vesafb (for
- graphics mode). Which of them takes over the console depends on
-diff --git a/Documentation/x86/topology.rst b/Documentation/x86/topology.rst
-index 8e9704f61017..e29739904e37 100644
---- a/Documentation/x86/topology.rst
-+++ b/Documentation/x86/topology.rst
-@@ -9,7 +9,7 @@ representation in the kernel. Update/change when doing changes to the
- respective code.
- 
- The architecture-agnostic topology definitions are in
--Documentation/cputopology.txt. This file holds x86-specific
-+Documentation/admin-guide/cputopology.rst. This file holds x86-specific
- differences/specialities which must not necessarily apply to the generic
- definitions. Thus, the way to read up on Linux topology on x86 is to start
- with the generic one and look at this one in parallel for the x86 specifics.
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 82222aa618c5..76b52a20663e 100644
+index d35ff73f718a..4c622a19ab7d 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -6054,7 +6054,7 @@ M:	Ard Biesheuvel <ard.biesheuvel@linaro.org>
- L:	linux-efi@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
+@@ -8622,7 +8622,7 @@ R:	Vivek Goyal <vgoyal@redhat.com>
+ L:	kexec@lists.infradead.org
+ W:	http://lse.sourceforge.net/kdump/
  S:	Maintained
--F:	Documentation/efi-stub.txt
-+F:	Documentation/admin-guide/efi-stub.rst
- F:	arch/*/kernel/efi.c
- F:	arch/x86/boot/compressed/eboot.[ch]
- F:	arch/*/include/asm/efi.h
-@@ -7033,7 +7033,7 @@ M:	Herbert Xu <herbert@gondor.apana.org.au>
- L:	linux-crypto@vger.kernel.org
- S:	Odd fixes
- F:	Documentation/devicetree/bindings/rng/
--F:	Documentation/hw_random.txt
-+F:	Documentation/admin-guide/hw_random.rst
- F:	drivers/char/hw_random/
- F:	include/linux/hw_random.h
+-F:	Documentation/kdump/
++F:	Documentation/admin-guide/kdump/
  
-@@ -9347,7 +9347,7 @@ M:	"Richard Russon (FlatCap)" <ldm@flatcap.org>
- L:	linux-ntfs-dev@lists.sourceforge.net
- W:	http://www.linux-ntfs.org/content/view/19/37/
- S:	Maintained
--F:	Documentation/ldm.txt
-+F:	Documentation/admin-guide/ldm.rst
- F:	block/partitions/ldm.*
- 
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
-@@ -12000,7 +12000,7 @@ PARALLEL LCD/KEYPAD PANEL DRIVER
- M:	Willy Tarreau <willy@haproxy.com>
- M:	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
- S:	Odd Fixes
--F:	Documentation/auxdisplay/lcd-panel-cgram.rst
-+F:	Documentation/admin-guide/lcd-panel-cgram.rst
- F:	drivers/auxdisplay/panel.c
- 
- PARALLEL PORT SUBSYSTEM
-@@ -13419,7 +13419,7 @@ Q:	http://patchwork.ozlabs.org/project/rtc-linux/list/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git
- S:	Maintained
- F:	Documentation/devicetree/bindings/rtc/
--F:	Documentation/rtc.txt
-+F:	Documentation/admin-guide/rtc.rst
- F:	drivers/rtc/
- F:	include/linux/rtc.h
- F:	include/uapi/linux/rtc.h
-@@ -15248,7 +15248,7 @@ SVGA HANDLING
- M:	Martin Mares <mj@ucw.cz>
- L:	linux-video@atrey.karlin.mff.cuni.cz
- S:	Maintained
--F:	Documentation/svga.txt
-+F:	Documentation/admin-guide/svga.rst
- F:	arch/x86/boot/video*
- 
- SWIOTLB SUBSYSTEM
+ KEENE FM RADIO TRANSMITTER DRIVER
+ M:	Hans Verkuil <hverkuil@xs4all.nl>
 diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index d5bd4350fcbd..b1ab350b9d60 100644
+index 8bf8985ec667..d5bd4350fcbd 100644
 --- a/arch/arm/Kconfig
 +++ b/arch/arm/Kconfig
-@@ -1286,7 +1286,7 @@ config SMP
- 	  will run faster if you say N here.
+@@ -2025,7 +2025,7 @@ config CRASH_DUMP
+ 	  kdump/kexec. The crash dump kernel must be compiled to a
+ 	  memory address not used by the main kernel
  
- 	  See also <file:Documentation/x86/i386/IO-APIC.rst>,
--	  <file:Documentation/lockup-watchdogs.txt> and the SMP-HOWTO available at
-+	  <file:Documentation/admin-guide/lockup-watchdogs.rst> and the SMP-HOWTO available at
- 	  <http://tldp.org/HOWTO/SMP-HOWTO.html>.
+-	  For more details see Documentation/kdump/kdump.rst
++	  For more details see Documentation/admin-guide/kdump/kdump.rst
  
- 	  If you don't know what to do here, say N.
-diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-index 42875ff15671..6d732e451071 100644
---- a/arch/parisc/Kconfig
-+++ b/arch/parisc/Kconfig
-@@ -277,7 +277,7 @@ config SMP
- 	  machines, but will use only one CPU of a multiprocessor machine.
- 	  On a uniprocessor machine, the kernel will run faster if you say N.
+ config AUTO_ZRELADDR
+ 	bool "Auto calculation of the decompressed kernel image address"
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index accb045997c6..e1ea69994e0f 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -997,7 +997,7 @@ config CRASH_DUMP
+ 	  reserved region and then later executed after a crash by
+ 	  kdump/kexec.
  
--	  See also <file:Documentation/lockup-watchdogs.txt> and the SMP-HOWTO
-+	  See also <file:Documentation/admin-guide/lockup-watchdogs.rst> and the SMP-HOWTO
- 	  available at <http://www.tldp.org/docs.html#howto>.
+-	  For more details see Documentation/kdump/kdump.rst
++	  For more details see Documentation/admin-guide/kdump/kdump.rst
  
- 	  If you don't know what to do here, say N.
+ config XEN_DOM0
+ 	def_bool y
 diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index c2858ac6a46a..6b1b5941b618 100644
+index 31a7d12db705..c2858ac6a46a 100644
 --- a/arch/sh/Kconfig
 +++ b/arch/sh/Kconfig
-@@ -679,7 +679,7 @@ config SMP
- 	  People using multiprocessor machines who say Y here should also say
- 	  Y to "Enhanced Real Time Clock Support", below.
+@@ -626,7 +626,7 @@ config CRASH_DUMP
+ 	  to a memory address not used by the main kernel using
+ 	  PHYSICAL_START.
  
--	  See also <file:Documentation/lockup-watchdogs.txt> and the SMP-HOWTO
-+	  See also <file:Documentation/admin-guide/lockup-watchdogs.rst> and the SMP-HOWTO
- 	  available at <http://www.tldp.org/docs.html#howto>.
+-	  For more details see Documentation/kdump/kdump.rst
++	  For more details see Documentation/admin-guide/kdump/kdump.rst
  
- 	  If you don't know what to do here, say N.
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index e9f5d62e9817..7926a2e11bdc 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -180,7 +180,7 @@ config SMP
- 	  Y to "Enhanced Real Time Clock Support", below. The "Advanced Power
- 	  Management" code will be disabled if you say Y here.
- 
--	  See also <file:Documentation/lockup-watchdogs.txt> and the SMP-HOWTO
-+	  See also <file:Documentation/admin-guide/lockup-watchdogs.rst> and the SMP-HOWTO
- 	  available at <http://www.tldp.org/docs.html#howto>.
- 
- 	  If you don't know what to do here, say N.
+ config KEXEC_JUMP
+ 	bool "kexec jump (EXPERIMENTAL)"
 diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 489fd833b980..2ca471ae6756 100644
+index c9d59ca5e3ac..489fd833b980 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
-@@ -402,7 +402,7 @@ config SMP
- 	  Management" code will be disabled if you say Y here.
+@@ -2057,7 +2057,7 @@ config CRASH_DUMP
+ 	  to a memory address not used by the main kernel or BIOS using
+ 	  PHYSICAL_START, or it must be built as a relocatable image
+ 	  (CONFIG_RELOCATABLE=y).
+-	  For more details see Documentation/kdump/kdump.rst
++	  For more details see Documentation/admin-guide/kdump/kdump.rst
  
- 	  See also <file:Documentation/x86/i386/IO-APIC.rst>,
--	  <file:Documentation/lockup-watchdogs.txt> and the SMP-HOWTO available at
-+	  <file:Documentation/admin-guide/lockup-watchdogs.rst> and the SMP-HOWTO available at
- 	  <http://www.tldp.org/docs.html#howto>.
+ config KEXEC_JUMP
+ 	bool "kexec jump"
+@@ -2094,7 +2094,7 @@ config PHYSICAL_START
+ 	  the reserved region.  In other words, it can be set based on
+ 	  the "X" value as specified in the "crashkernel=YM@XM"
+ 	  command line boot parameter passed to the panic-ed
+-	  kernel. Please take a look at Documentation/kdump/kdump.rst
++	  kernel. Please take a look at Documentation/admin-guide/kdump/kdump.rst
+ 	  for more details about crash dumps.
  
- 	  If you don't know what to do here, say N.
-@@ -1959,7 +1959,7 @@ config EFI_STUB
-           This kernel feature allows a bzImage to be loaded directly
- 	  by EFI firmware without the use of a bootloader.
- 
--	  See Documentation/efi-stub.txt for more information.
-+	  See Documentation/admin-guide/efi-stub.rst for more information.
- 
- config EFI_MIXED
- 	bool "EFI mixed-mode support"
-diff --git a/block/partitions/Kconfig b/block/partitions/Kconfig
-index 37b9710cc80a..702689a628f0 100644
---- a/block/partitions/Kconfig
-+++ b/block/partitions/Kconfig
-@@ -194,7 +194,7 @@ config LDM_PARTITION
- 	  Normal partitions are now called Basic Disks under Windows 2000, XP,
- 	  and Vista.
- 
--	  For a fuller description read <file:Documentation/ldm.txt>.
-+	  For a fuller description read <file:Documentation/admin-guide/ldm.rst>.
- 
- 	  If unsure, say N.
- 
-diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-index 442403abd73a..3e866885a405 100644
---- a/drivers/char/Kconfig
-+++ b/drivers/char/Kconfig
-@@ -291,7 +291,7 @@ config RTC
- 	  and set the RTC in an SMP compatible fashion.
- 
- 	  If you think you have a use for such a device (such as periodic data
--	  sampling), then say Y here, and read <file:Documentation/rtc.txt>
-+	  sampling), then say Y here, and read <file:Documentation/admin-guide/rtc.rst>
- 	  for details.
- 
- 	  To compile this driver as a module, choose M here: the
-@@ -313,7 +313,7 @@ config JS_RTC
- 	  /dev/rtc.
- 
- 	  If you think you have a use for such a device (such as periodic data
--	  sampling), then say Y here, and read <file:Documentation/rtc.txt>
-+	  sampling), then say Y here, and read <file:Documentation/admin-guide/rtc.rst>
- 	  for details.
- 
- 	  To compile this driver as a module, choose M here: the
-diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
-index 95be7228f327..9044d31ab1a1 100644
---- a/drivers/char/hw_random/core.c
-+++ b/drivers/char/hw_random/core.c
-@@ -4,7 +4,7 @@
-  * Copyright 2006 Michael Buesch <m@bues.ch>
-  * Copyright 2005 (c) MontaVista Software, Inc.
-  *
-- * Please read Documentation/hw_random.txt for details on use.
-+ * Please read Documentation/admin-guide/hw_random.rst for details on use.
-  *
-  * This software may be used and distributed according to the terms
-  * of the GNU General Public License, incorporated herein by reference.
-diff --git a/include/linux/hw_random.h b/include/linux/hw_random.h
-index c0b93e0ff0c0..8e6dd908da21 100644
---- a/include/linux/hw_random.h
-+++ b/include/linux/hw_random.h
-@@ -1,7 +1,7 @@
- /*
- 	Hardware Random Number Generator
- 
--	Please read Documentation/hw_random.txt for details on use.
-+	Please read Documentation/admin-guide/hw_random.rst for details on use.
- 
- 	----------------------------------------------------------
- 	This software may be used and distributed according to the terms
+ 	  Usage of bzImage for capturing the crash dump is recommended as
 -- 
 2.21.0
 
