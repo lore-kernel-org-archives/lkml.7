@@ -2,152 +2,92 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CA1C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AF7C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A4A2147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:15:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebi/tmZi"
+	by mail.kernel.org (Postfix) with ESMTP id 28F0220656
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:16:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfF1EPO (ORCPT
+        id S1727294AbfF1EP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 00:15:14 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39174 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbfF1EPN (ORCPT
+        Fri, 28 Jun 2019 00:15:59 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:38260 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725792AbfF1EP6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 00:15:13 -0400
-Received: by mail-io1-f68.google.com with SMTP id r185so9665992iod.6;
-        Thu, 27 Jun 2019 21:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wskEaZMaFBoycfWtxq3fq9AtJfP+IBGorvO/F2Y89ls=;
-        b=ebi/tmZiTmZR58CGWM1DBvxgMSRk6yjKt8Dg4UdLy9wQ/qWCQv0CzwYY6orxTaLtLO
-         Lt3Gy7QpQecCK4e7DR1bSwaOnGKjWfCUw+sqEWQWQwcgaixbPlOVqc4L2ITktT67J0tZ
-         u5Cr3Vu0ZK3WMVVU2WcR96TkZH9aQOE8nUjO2fw26THNBzLo348oZKGBYpldECsT15Ba
-         umWhUOkVv2xfFCOJjzSNsGSscFZaDu3rd4q8O3ExRDsb/tn8Rv4pjFaxlyizTwGhiBbP
-         sWLOlThn478PtvZscYumkdcoRzCVVZLa4j+WNK6N0zhVmaYWDxP6zhrdMoW2r/q7ZExY
-         e9xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wskEaZMaFBoycfWtxq3fq9AtJfP+IBGorvO/F2Y89ls=;
-        b=llnoLprFzbai4nU7V0Ruk/jVuTKu+cnNCLVp9ERkal1qissi0Q/A4TqbXPHUvLdBNp
-         wAvUZf4HgaeWtb5FEUJum2PZoia6RkCfDN+ay3/ceI8ivqaJ43Dtr8TZ/7fBHpqCenip
-         dsEyvZhq+mcX1o263VptDXBqxBGSS82a1dhMUAR+ue34PdhmMJtpS6gnz2i9HwolJ+Sk
-         se4oLqROUg6Y8kJ4YYhIc2biR34CpvRvRQkwCiQUqzZGCMYpCJIBblTgTCAORkXD7dQv
-         3FkzfsjFzdHhnQi9KuwKmPw34kTriSYgEb3wXEpyo3kk9xP1howIgS0F6oqGG4mMVuxo
-         oeQg==
-X-Gm-Message-State: APjAAAU6++QhvGr6mMICAbmdfpCbGX1Iv1drePE7T8DUX+wrjeJhnHgp
-        wuw11DyPaqEhRhe0LDaDrY4GeMxaqNL4Vk2w6Mk=
-X-Google-Smtp-Source: APXvYqx805jmPo8VHAsRlCrZNa/kcCKR4OCGjQGESJe53coWOq1Pl+O2jcTSmmU10SWnzcKLL42iZZHVZ6OE3UD6Fhk=
-X-Received: by 2002:a02:c6a9:: with SMTP id o9mr9167467jan.90.1561695312103;
- Thu, 27 Jun 2019 21:15:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <1560534144-13896-1-git-send-email-gkulkarni@marvell.com>
- <1560534144-13896-2-git-send-email-gkulkarni@marvell.com> <20190627100118.nfveq4oktomqybtx@willie-the-truck>
- <20190627162236.y3wb5sle6yjbwtzm@willie-the-truck>
-In-Reply-To: <20190627162236.y3wb5sle6yjbwtzm@willie-the-truck>
-From:   Ganapatrao Kulkarni <gklkml16@gmail.com>
-Date:   Fri, 28 Jun 2019 09:45:00 +0530
-Message-ID: <CAKTKpr59+D4NV-eN61UsHGHwgaT2ikKcpVqEMt8VaFg-DSZ4kQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Documentation: perf: Update documentation for
- ThunderX2 PMU uncore driver
-To:     Will Deacon <will@kernel.org>
-Cc:     Ganapatrao Kulkarni <gkulkarni@marvell.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Will.Deacon@arm.com" <Will.Deacon@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>, jnair@marvell.com,
-        jglauber@marvell.com, rrichter@marvell.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 28 Jun 2019 00:15:58 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08664834|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.11304-0.0102429-0.876717;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.Er4GNk4_1561695320;
+Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.Er4GNk4_1561695320)
+          by smtp.aliyun-inc.com(10.147.41.143);
+          Fri, 28 Jun 2019 12:15:53 +0800
+From:   liaoweixiong <liaoweixiong@allwinnertech.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Frieder Schrempf <frieder.schrempf@exceet.de>,
+        Peter Pan <peterpandong@micron.com>,
+        Jeff Kletsky <git-commits@allycomm.com>,
+        Schrempf Frieder <frieder.schrempf@kontron.De>
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        liaoweixiong <liaoweixiong@allwinnertech.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v3] mtd: spinand: read return badly if the last page has bitflips
+Date:   Fri, 28 Jun 2019 12:14:46 +0800
+Message-Id: <1561695286-19265-1-git-send-email-liaoweixiong@allwinnertech.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+In case of the last page containing bitflips (ret > 0),
+spinand_mtd_read() will return that number of bitflips for the last
+page. But to me it looks like it should instead return max_bitflips like
+it does when the last page read returns with 0.
 
-On Thu, Jun 27, 2019 at 9:52 PM Will Deacon <will@kernel.org> wrote:
->
-> On Thu, Jun 27, 2019 at 11:01:18AM +0100, Will Deacon wrote:
-> > On Fri, Jun 14, 2019 at 05:42:45PM +0000, Ganapatrao Kulkarni wrote:
-> > > From: Ganapatrao Kulkarni <ganapatrao.kulkarni@marvell.com>
-> > >
-> > > Add documentation for Cavium Coherent Processor Interconnect (CCPI2) PMU.
-> > >
-> > > Signed-off-by: Ganapatrao Kulkarni <gkulkarni@marvell.com>
-> > > ---
-> > >  Documentation/perf/thunderx2-pmu.txt | 20 +++++++++++---------
-> > >  1 file changed, 11 insertions(+), 9 deletions(-)
-> > >
-> > > diff --git a/Documentation/perf/thunderx2-pmu.txt b/Documentation/perf/thunderx2-pmu.txt
-> > > index dffc57143736..62243230abc3 100644
-> > > --- a/Documentation/perf/thunderx2-pmu.txt
-> > > +++ b/Documentation/perf/thunderx2-pmu.txt
-> > > @@ -2,24 +2,26 @@ Cavium ThunderX2 SoC Performance Monitoring Unit (PMU UNCORE)
-> > >  =============================================================
-> > >
-> > >  The ThunderX2 SoC PMU consists of independent, system-wide, per-socket
-> > > -PMUs such as the Level 3 Cache (L3C) and DDR4 Memory Controller (DMC).
-> > > +PMUs such as the Level 3 Cache (L3C), DDR4 Memory Controller (DMC) and
-> > > +Cavium Coherent Processor Interconnect (CCPI2).
-> > >
-> > >  The DMC has 8 interleaved channels and the L3C has 16 interleaved tiles.
-> > >  Events are counted for the default channel (i.e. channel 0) and prorated
-> > >  to the total number of channels/tiles.
-> > >
-> > > -The DMC and L3C support up to 4 counters. Counters are independently
-> > > -programmable and can be started and stopped individually. Each counter
-> > > -can be set to a different event. Counters are 32-bit and do not support
-> > > -an overflow interrupt; they are read every 2 seconds.
-> > > +The DMC, L3C support up to 4 counters and CCPI2 support up to 8 counters.
-> >
-> > The DMC and L3C support up to 4 counters, while the CCPI2 supports up to 8
-> > counters.
-> >
-> > > +Counters are independently programmable and can be started and stopped
-> > > +individually. Each counter can be set to a different event. DMC and L3C
-> > > +Counters are 32-bit and do not support an overflow interrupt; they are read
-> >
-> > Counters -> counters
-> >
-> > > +every 2 seconds. CCPI2 counters are 64-bit.
-> >
-> > Assuming CCPI2 also doesn't support an overflow interrupt, I'd reword these
-> > two sentences as:
-> >
-> >   None of the counters support an overflow interrupt and therefore sampling
-> >   events are unsupported. The DMC and L3C counters are 32-bit and read every
-> >   2 seconds. The CCPI2 counters are 64-bit and assumed not to overflow in
-> >   normal operation.
->
+Signed-off-by: Weixiong Liao <liaoweixiong@allwinnertech.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Cc: stable@vger.kernel.org
+Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+---
+Changes since v2:
+- Resend this patch with Cc and Fixes tags.
 
-Thanks for the comments, will update in v2.
-Yes, CCPI2 is 64bit counter and there is no overflow issue.
+Changes since v1:
+- More accurate description for this patch
+---
 
-> Mark reminded me that these are system PMUs and therefore sampling is
-> unsupported irrespective of the presence of an overflow interrupt, so you
-> can drop that part from the text.
+ drivers/mtd/nand/spi/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-sure.
->
-> Sorry for the confusion,
->
-> Will
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index 556bfdb..6b9388d 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -511,12 +511,12 @@ static int spinand_mtd_read(struct mtd_info *mtd, loff_t from,
+ 		if (ret == -EBADMSG) {
+ 			ecc_failed = true;
+ 			mtd->ecc_stats.failed++;
+-			ret = 0;
+ 		} else {
+ 			mtd->ecc_stats.corrected += ret;
+ 			max_bitflips = max_t(unsigned int, max_bitflips, ret);
+ 		}
+ 
++		ret = 0;
+ 		ops->retlen += iter.req.datalen;
+ 		ops->oobretlen += iter.req.ooblen;
+ 	}
+-- 
+1.9.1
 
-Thanks,
-Ganapat
