@@ -2,113 +2,149 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88750C4646D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CDBC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B64D2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BFEB2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lmpx8dS8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sfyw3tVO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfF1Frk (ORCPT
+        id S1726867AbfF1FuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 01:47:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43484 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfF1Frj (ORCPT
+        Fri, 28 Jun 2019 01:50:19 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46174 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfF1FuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 01:47:39 -0400
-Received: by mail-io1-f65.google.com with SMTP id k20so9964914ios.10
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 22:47:39 -0700 (PDT)
+        Fri, 28 Jun 2019 01:50:19 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 81so2380015pfy.13;
+        Thu, 27 Jun 2019 22:50:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=JonNVAGavnRlJhh68LVsFtVqprQdtcLj2PTjdYw2e9k=;
-        b=lmpx8dS8SmmI+bod4CIGHygIhMfXqrGVR8dl/YJdRJFestIpTr/2lSxlvkarvtECIz
-         jx6ZaHJ4aIqG/48rZvDj+pl6lnRoAg9OZ9mxYeLRu+N9SYpUGe3wfh4MU68CNNoASNHc
-         CGNxA2syIdCf+HG0oxmfLEi5SFjUdX3hg9TniJxA+g7sQYNxfgMtpYyJie9GQC9bxwvC
-         cReJnEEoKLA8nTHOoZ5SvxX9pXWN/Xc6nNnzVxLP0Q0BGFsjFwe1RkKw61gfOyGVyCmv
-         qoJTVQu/+2v//+Sk7Cwc3qJ9hw8ZgudhaYDERLiqQNqOdyIAwuu6iSAeKjQ6bW/nLZQu
-         bTRw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=xbpQAYAfjyjoMDDuLtpqjMT1F1sFH7826ZzTz/6Eg7M=;
+        b=Sfyw3tVO4AFVG/7BVg2T241CKDlF/1Zid8ewZ3ulAjc2WpWrCgHwG4uBsS1HbKUy1g
+         jkGCkwVmb3i1Q9ZPnTLxoLNQYG/zGomGe4ffKDzoTgDPO0pCxcRZG34k3mO5BqgQuqTy
+         ejNmP+i1GtpLDU7k5QMoigeAWRFcRz/BoVX+5l/gk+PrAJDlu0U0OLgfds+wEZvUWAl2
+         uNE4iByyv9YlZa8I1t8AkmJ8Rf95Nn8TeybSrLYzrwuoNo+qXAHkzqLSnm8860jef/Mf
+         WpSKcTGnHHdaHj3DYI1KL/ylKYiYXNbYyirWZ7uzKsxD0CNyczo4YKRpCS2KS/U3fv7x
+         07wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=JonNVAGavnRlJhh68LVsFtVqprQdtcLj2PTjdYw2e9k=;
-        b=YBY9kA8rJSU72AXWq7YRR47CMl1H51LDfIU8c4o5kT7YwSkWEtZkEsQJ19HHwlD6Cy
-         G7D9fCAZ8VG77/YhE5+Ah/5RptCEhmSS8uV67rjIxWUl+mLncAINyIUHtXBQP5huNasO
-         7JBdQulTgV+rFvUjm+hpOothBOJTn5+LRSGRAH8tDl8XxHb6LI8r7GtssvYWZ1W/akeb
-         /gHSTat4+x4kQvQGsYSM8GOyHA5IQ2LN42EGiPMCk+xltoY4kzQgx6OgZHJXO9uN2tRm
-         tlRjtgMsWjSF8xfl1gQ/i2gaD3cfL7HRuIKyP1TmnUnnOX/OYkcu7wywnDSVUUV+ERu+
-         V81A==
-X-Gm-Message-State: APjAAAUgSAkdJrA4zVi72nKvjl8sKS3YNnMsMBQW80lG3lE3aJspf9qV
-        XC5RxOA8Jw8EmGZbMfaBFWHHIA==
-X-Google-Smtp-Source: APXvYqxSBxEznv5crFBLQNZa0Y7NNPYl7akgvsmNh/b7ftqbAIdgqF6gL+AZSuyVieJq0WKR7ZDQsQ==
-X-Received: by 2002:a5d:8195:: with SMTP id u21mr9407119ion.260.1561700858671;
-        Thu, 27 Jun 2019 22:47:38 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id t4sm1064999ioj.26.2019.06.27.22.47.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 22:47:38 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 22:47:37 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Atish Patra <atish.patra@wdc.com>, Ingo Molnar <mingo@redhat.com>
-cc:     linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Anup Patel <anup@brainfault.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "maintainer:X86 ARCHITECTURE 32-BIT AND 64-BIT" <x86@kernel.org>,
-        linux-mm@kvack.org, Borislav Petkov <bp@alien8.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Gary Guo <gary@garyguo.net>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-riscv@lists.infradead.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v3 1/3] x86: Move DEBUG_TLBFLUSH option.
-In-Reply-To: <20190429212750.26165-2-atish.patra@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1906272236550.3867@viisi.sifive.com>
-References: <20190429212750.26165-1-atish.patra@wdc.com> <20190429212750.26165-2-atish.patra@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=xbpQAYAfjyjoMDDuLtpqjMT1F1sFH7826ZzTz/6Eg7M=;
+        b=a52/6Ky0qvgut2HuWuy7NSIMqRlHzC643cR3Ewdli+uNWh859nMSA9xWC1ujKIAnWS
+         ZMuLepDsOG4hVfilD/G+F28RKoK501pUzpfhXtBcPP+BLpvXfhPz2wgMRze9HosSELg2
+         bQJKn6iWwDIjRV+zMhWP43ufJE9/oeHxt5Xism5y6fqgVPfH2j42o4OuXI75YuM1m3tS
+         cyNOv3VmYW5bY+1zz2tOaxJXFkGZg3BSIASIHQKSzmjDIMi9O8OwnwEWEZZMNawmRQCu
+         O0KCcS/tsUvC2YG7HncS+9dUHeMQTGlgLlQNdirGANZY5tmCAx/az5vWsWfKu1TiTGcO
+         XJoA==
+X-Gm-Message-State: APjAAAVTM/iFY1KzW6af5cB2z/eVua5hjXBTUo1alPS3QOIFNY+QrcjT
+        iKHGU6Ocxf2dIwN7LFyi9Wg=
+X-Google-Smtp-Source: APXvYqzgw/8wuWG+WuTQBp4hYNRYShg5QTTEVCWWBpWSbXf28XwMbhz39DkDwz/PRD6nsFKyvtwKbw==
+X-Received: by 2002:a17:90a:2706:: with SMTP id o6mr11134402pje.62.1561701018502;
+        Thu, 27 Jun 2019 22:50:18 -0700 (PDT)
+Received: from PSXP216MB0662.KORP216.PROD.OUTLOOK.COM ([40.100.44.181])
+        by smtp.gmail.com with ESMTPSA id o95sm902089pjb.4.2019.06.27.22.50.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 22:50:17 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH] video: fbdev: s3c-fb: fix sparse warnings about using
+ incorrect types
+Thread-Topic: [PATCH] video: fbdev: s3c-fb: fix sparse warnings about using
+ incorrect types
+Thread-Index: ATVhYXAyfWPTBNepn2TaTOmvIy9arGI0M2NlvIaGNxM=
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Fri, 28 Jun 2019 05:50:12 +0000
+Message-ID: <PSXP216MB0662D369EFFABF260394F179AAFC0@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
+References: <CGME20190627125803eucas1p1eb6a37f5fa96fd732e41ab1501367de5@eucas1p1.samsung.com>
+ <908fc26e-3bfa-c204-6c32-7d814fdcb37b@samsung.com>
+In-Reply-To: <908fc26e-3bfa-c204-6c32-7d814fdcb37b@samsung.com>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019, Atish Patra wrote:
+On 6/27/19, 9:58 PM, Bartlomiej Zolnierkiewicz wrote:
+>=20
+> Use ->screen_buffer instead of ->screen_base to fix sparse warnings.
+>
+> [ Please see commit 17a7b0b4d974 ("fb.h: Provide alternate screen_base
+>   pointer") for details. ]
+>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
 
-> CONFIG_DEBUG_TLBFLUSH was added in
-> 
-> 'commit 3df3212f9722 ("x86/tlb: add tlb_flushall_shift knob into debugfs")'
-> to support tlb_flushall_shift knob. The knob was removed in
-> 
-> 'commit e9f4e0a9fe27 ("x86/mm: Rip out complicated, out-of-date, buggy
-> TLB flushing")'.
-> However, the debug option was never removed from Kconfig. It was reused
-> in commit
-> 
-> '9824cf9753ec ("mm: vmstats: tlb flush counters")'
-> but the commit text was never updated accordingly.
-> 
-> Update the Kconfig option description as per its current usage.
-> 
-> Take this opportunity to make this kconfig option a common option as it
-> touches the common vmstat code. Introduce another arch specific config
-> HAVE_ARCH_DEBUG_TLBFLUSH that can be selected to enable this config.
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 
-Looks like this one still needs to be merged or acked by one of the x86 
-maintainers?
+Best regards,
+Jingoo Han
 
-
-- Paul
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> ---
+>  drivers/video/fbdev/s3c-fb.c |   12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> Index: b/drivers/video/fbdev/s3c-fb.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- a/drivers/video/fbdev/s3c-fb.c
+> +++ b/drivers/video/fbdev/s3c-fb.c
+> @@ -1105,14 +1105,14 @@ static int s3c_fb_alloc_memory(struct s3
+> =20
+>  	dev_dbg(sfb->dev, "want %u bytes for window\n", size);
+> =20
+> -	fbi->screen_base =3D dma_alloc_wc(sfb->dev, size, &map_dma, GFP_KERNEL)=
+;
+> -	if (!fbi->screen_base)
+> +	fbi->screen_buffer =3D dma_alloc_wc(sfb->dev, size, &map_dma, GFP_KERNE=
+L);
+> +	if (!fbi->screen_buffer)
+>  		return -ENOMEM;
+> =20
+>  	dev_dbg(sfb->dev, "mapped %x to %p\n",
+> -		(unsigned int)map_dma, fbi->screen_base);
+> +		(unsigned int)map_dma, fbi->screen_buffer);
+> =20
+> -	memset(fbi->screen_base, 0x0, size);
+> +	memset(fbi->screen_buffer, 0x0, size);
+>  	fbi->fix.smem_start =3D map_dma;
+> =20
+>  	return 0;
+> @@ -1129,9 +1129,9 @@ static void s3c_fb_free_memory(struct s3
+>  {
+>  	struct fb_info *fbi =3D win->fbinfo;
+> =20
+> -	if (fbi->screen_base)
+> +	if (fbi->screen_buffer)
+>  		dma_free_wc(sfb->dev, PAGE_ALIGN(fbi->fix.smem_len),
+> -		            fbi->screen_base, fbi->fix.smem_start);
+> +			    fbi->screen_buffer, fbi->fix.smem_start);
+>  }
+> =20
+>  /**
