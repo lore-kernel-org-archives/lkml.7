@@ -2,105 +2,111 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B577C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDB0C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156BD2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59AF1206A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:17:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="jX7l/aSc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JYJhZDX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfF1TO4 (ORCPT
+        id S1726892AbfF1TRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 15:14:56 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36190 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbfF1TOz (ORCPT
+        Fri, 28 Jun 2019 15:17:24 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38888 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfF1TRX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 15:14:55 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r6so7068402oti.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:14:55 -0700 (PDT)
+        Fri, 28 Jun 2019 15:17:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z75so3009079pgz.5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:17:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3EPvpztsPK7520nxsbDhjXQoNlIusJTLU8rYF+ocke4=;
-        b=jX7l/aScOnNag6NN8PLCh3f8Z8jWQa8rXqdmRFTm19zC5cGsMg4bGsXFEunae/2WjS
-         ovvvaTeYJH2utyMhChKwGiGq8ZBoeIIKayiImspczzJ8SDCf8XDDL3viRbXyjtD1lYaK
-         kzh/gY0uzN3viGFbDD3U65We27uV73cZy9DpexfMTRSqDZy8x6zljmPhhW1gZcx2hqFe
-         GQ/mPFT2QGn+yrEJgjwPpeYXNTM2MxsKsrWYit2Wtxn/cph7hWSIQxFHWHLu8ToPNVuS
-         0Ys9z5mBN7oGuoBHQrTDBIA0uIvuwg0tIL5G5RHXTDvUcDFV767ifaCgmnx0wSkTm7cV
-         iWpw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8q9yQqX5qZYX/nKn+QuYc3/3y+Tw6e7npxoxu3lD4U4=;
+        b=JYJhZDX4L8FidcKCWfChOysOK0tDYUdXHFqNULJe1cx1mJ2jHtWlSYC9LvCJDM61Hp
+         SkChCDVyLCWHly45CjTZ+6U5uffPfANA0U6Ibge2y2P8ELmeyql/pHqcc5aD+UgQHxpx
+         LC8JubRzPLXSfHuphNKElDSjiH4ucmtHV04xw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3EPvpztsPK7520nxsbDhjXQoNlIusJTLU8rYF+ocke4=;
-        b=BrzosKGzJs9I7nGRoy49SGM0HZeS/3RUlqT+6NuwzVMnCtj+T6rCo93MVGcLyIaur+
-         kxsiTFNYd7DvWnhtLIkSOpIs5sxtXckpCOnMg0fCQxEgDsxdHyRNup7W9ZwRfe4mGyOv
-         AsqeB4npnLeFF3vfet3NEJxaG49YhsEoLpvPFKmloTeKbIOm/SNRj/WJwzwyW3Uobsjc
-         sruxgGVYcAU6bYY7kq7QzF8UksECJHG3TGKJ938/EcLwaU7Y7NrbbwexDlyVhPIeQ3I+
-         mjhkjvmjWK4AQshS8W6eXK9cygCyngI9EEW9ifVEIaRdLFZQnGRJ9OFyzcfjm5oF2zjo
-         cs9w==
-X-Gm-Message-State: APjAAAXrw8/MXWc+aXv1bm1u47vRbMzUJPiBJG1fOzwIc31JXx5zuETD
-        oufxbjdWSokf34BNKdzm27KanMXCDDzoVjrXO+QUtA==
-X-Google-Smtp-Source: APXvYqwk0yjTvQhVqTpz4jl7ioGiwvBTeiygz26S4gTf6ee6guEN0yjq3zRwNg6EKq8iXaiv+Kpq8rgpgiSlzbcUkgY=
-X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr8541745otn.71.1561749295055;
- Fri, 28 Jun 2019 12:14:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8q9yQqX5qZYX/nKn+QuYc3/3y+Tw6e7npxoxu3lD4U4=;
+        b=OuZA/RNGxTK95CmuIaAz6eFsPigt2Pz9bJXsrxiEcR2tiTWxktTrQCzE+KsUzvg9y8
+         CmQ5+a4mwv6RpYmYdhrcNy1C9QFAJDmhqfav0Wvja+zqYKXKivYyj+9pbnJP+CsOX3ak
+         OetrxolcQewu9cH8McSUEOx3VG3ZkvTYEy5bsLt+cmN869N0BYkJhjCI+pqimtrVEnkN
+         gVkzJvbpUTbVccVu/GyGok4SecTNUlYHO9PXmLnL3lpSMhWZOPURpTXapwS5QKHua+Sn
+         wX15rAoJyrTw4R5POs1S3a9KbzlKNnoeOHSKVbzmorqa1JN6TYEgfg5FGl8rehOeIpkV
+         19gQ==
+X-Gm-Message-State: APjAAAV3zMAa752OWzQW57oPW0tfMXhk6PtBvZqC/14+cTtyo6i6HHQH
+        boC9dkZjnLX3xLbgBpZAt1fq9g==
+X-Google-Smtp-Source: APXvYqyQbuEulNlP6eXe4cVeX5cwXgAycVHoW9wLousAYKKfFBngw+uC5XTkOIBMOYUBg78WGwf+9g==
+X-Received: by 2002:a17:90a:a008:: with SMTP id q8mr15238102pjp.114.1561749442988;
+        Fri, 28 Jun 2019 12:17:22 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
+        by smtp.gmail.com with ESMTPSA id m31sm3230830pjb.6.2019.06.28.12.17.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Jun 2019 12:17:22 -0700 (PDT)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     jic23@kernel.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        fabien.lahoudere@collabora.com, dianders@chromium.org
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v4 0/4] Support accelerometers for veyron_minnie
+Date:   Fri, 28 Jun 2019 12:17:07 -0700
+Message-Id: <20190628191711.23584-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-References: <20190626122724.13313-17-hch@lst.de> <20190628153827.GA5373@mellanox.com>
- <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
- <20190628170219.GA3608@mellanox.com> <CAPcyv4ja9DVL2zuxuSup8x3VOT_dKAOS8uBQweE9R81vnYRNWg@mail.gmail.com>
- <CAPcyv4iWTe=vOXUqkr_CguFrFRqgA7hJSt4J0B3RpuP-Okz0Vw@mail.gmail.com>
- <20190628182922.GA15242@mellanox.com> <CAPcyv4g+zk9pnLcj6Xvwh-svKM+w4hxfYGikcmuoBAFGCr-HAw@mail.gmail.com>
- <20190628185152.GA9117@lst.de> <CAPcyv4i+b6bKhSF2+z7Wcw4OUAvb1=m289u9QF8zPwLk402JVg@mail.gmail.com>
- <20190628190207.GA9317@lst.de>
-In-Reply-To: <20190628190207.GA9317@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 28 Jun 2019 12:14:44 -0700
-Message-ID: <CAPcyv4h90DAVHbZ4bgvJwpfB8wr2K28oEes6HcdQOpf02+NL=g@mail.gmail.com>
-Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 12:02 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Fri, Jun 28, 2019 at 11:59:19AM -0700, Dan Williams wrote:
-> > It's a bug that the call to put_devmap_managed_page() was gated by
-> > MEMORY_DEVICE_PUBLIC in release_pages(). That path is also applicable
-> > to MEMORY_DEVICE_FSDAX because it needs to trigger the ->page_free()
-> > callback to wake up wait_on_var() via fsdax_pagefree().
-> >
-> > So I guess you could argue that the MEMORY_DEVICE_PUBLIC removal patch
-> > left the original bug in place. In that sense we're no worse off, but
-> > since we know about the bug, the fix and the patches have not been
-> > applied yet, why not fix it now?
->
-> The fix it now would simply be to apply Ira original patch now, but
-> given that we are at -rc6 is this really a good time?  And if we don't
-> apply it now based on the quilt based -mm worflow it just seems a lot
-> easier to apply it after my series.  Unless we want to include it in
-> the series, in which case I can do a quick rebase, we'd just need to
-> make sure Andrew pulls it from -mm.
+veyron_minnie - ASUS Chromebook Flip C100PA - embedded controller
+controls two accelerometers, one in the lid, one in the base.
+However, the EC firmware does not follow the new interface that
+cros_ec_accel driver use.
+Extend the legacy driver used on glimmer - Lenovo ThinkPad 11e
+Chromebook - to veyron_minnie.
+veyron_minnie being ARM based, issue command over the I2C bus to the EC
+instead of relying on the shared registers over LPC.
 
-I believe -mm auto drops patches when they appear in the -next
-baseline. So it should "just work" to pull it into the series and send
-it along for -next inclusion.
+Gwendal Grignou (4):
+  iio: cros_ec: Add sign vector in core for backward compatibility
+  iio: cros_ec_accel_legacy: Fix incorrect channel setting
+  iio: cros_ec_accel_legacy: Use cros_ec_sensors_core
+  iio: cros_ec_accel_legacy: Add support for veyron-minnie
+
+Changes in v4:
+- No change in iio/common/cros_ec_sensors
+- Split cros_ec_accel_legacy code in 3:
+  - fix an error in channel setting.
+  - remove duplicate code in cros_ec_accel, use cros_ec_sensors_core.
+  - extend cros_ec_accel to ARM device.
+- Define cros_ec_accel_legacy_read_cmd() as static.
+
+Changes in v3:
+- Fix commit message, add reviewed-by for first patch.
+
+Changes in v2:
+- Readd empty line to reduce amount of change in patch.
+- Remove Keywords used by ChromeOS commit queue.
+
+
+ drivers/iio/accel/Kconfig                     |   4 +-
+ drivers/iio/accel/cros_ec_accel_legacy.c      | 350 ++++--------------
+ .../cros_ec_sensors/cros_ec_sensors_core.c    |   4 +
+ .../linux/iio/common/cros_ec_sensors_core.h   |   1 +
+ 4 files changed, 84 insertions(+), 275 deletions(-)
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
