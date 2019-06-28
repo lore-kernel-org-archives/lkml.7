@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A4FC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3751EC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 946C2208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96BE208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561724453;
-	bh=qMxU+X0PKXb1qhjw4AYalznelvE+jxzQ8OPWZHVHcUM=;
+	s=default; t=1561724458;
+	bh=PDZr6JP7bdrH9gIxr23mL+Bc5u+bWnXAYdWzls5blbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IqWHO7IvwmqCaDrMTKCCwuuMWgkaWhWy7hUtIc3SSBbZOR5shljkZFJZOoiL9dH3t
-	 aF6PxQ6E87b8OXKydfBoDZ0JfDxpQZggooZo2Vj5szeTWPulBXnWpZiwkbdRy4ULhg
-	 KrPevwhpBkTJgAJIn1XrGgLXXjAgg6I6FnZAcyB8=
+	b=gtYOGRl7T8BlX/1hKjHGHhuQzQyT/cy0dc1JY8svCgUZ3+4kOU33rPInjt+W9L8a+
+	 cjMiTLBHbj6DKftQJwASzb9VMvhWByRhaaLlFG86Znps65DPbO+GEnqdYB2KPqUd3V
+	 AjHcx+qybsLgAB8D9ioZFNY9JxBlDJ734LezczLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfF1MUw (ORCPT
+        id S1726996AbfF1MUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:20:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58748 "EHLO
+        Fri, 28 Jun 2019 08:20:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58776 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726759AbfF1MUp (ORCPT
+        with ESMTP id S1726793AbfF1MUp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:20:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kz7NpCoqFlQivUcHWgI6dJqevP9W6MEo67gi223n7jc=; b=Ih8r+LTZmA+cAU8X/EC+KpPvZs
-        MD+AN7Hujj7nIqr3cGqiwnAlSN3/GRD8AJrEbrZbDcz4dM9a6gMKw0vbSL/4nPDFOXVSPZuJVPYUg
-        l9rJ/t0ceuu4mTavQlqtdSIW2J0B1NSNTRRT8rdXeXc1lhA2ooT0ZTrfMfDc066qncZxUYPnJ22Ia
-        JEuLCveOrkJOHUQAb94Dv7lAuzJjl7eQ4OlReJr7tyiQno7q0DxrG4+aHjlJHBpt/+xl8lcXu2Grt
-        6ROcBVmWFmVIjghN1WZCc7XGACsGDVKLaOMChQ/q7r5bhn3VaGxy0+emhFXbLeunFaNe8PGAfox2M
-        6B3X3XdQ==;
+        bh=XU8uJnYmG4/O4PpJifibMong93YJp89jiSUBX/t4FPM=; b=TILE3vmeqnXo5QhkBRZIeE6czk
+        NSG/VB4MWOeDY5h9a3n3RbaFrbVEV3V88w4R8Rjo4L69XBvgqV5wXAA6+k+MsW3jAOlbz+Gc5/U0Z
+        3/LPSMToqVKToZMw7jH6ASdTMV17smaCI9hnNfjLVjYs3QwnR9nPM807PcriPYTPhKzH2Z3hMtAAM
+        5zRoYjTVWP9VMfNZ8xEGTl49WeFprGtQBiS5QGGEdjX1UXW64gCG761iXf5LPE3N15PjerlykNjxp
+        Xz9pTzoLHIJNHrl1t3sD4u1NznqNMISIgJaKYoIqNpKE6x2cDJLR0ESirzTN/nHQ8nR7bSxSoYRFL
+        fRiMqe4g==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgprv-0000A5-EL; Fri, 28 Jun 2019 12:20:43 +0000
+        id 1hgprv-0000AF-N0; Fri, 28 Jun 2019 12:20:44 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgprt-00058F-H6; Fri, 28 Jun 2019 09:20:41 -0300
+        id 1hgprt-00058y-PN; Fri, 28 Jun 2019 09:20:41 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 18/43] docs: nvmem: convert docs to ReST and rename to *.rst
-Date:   Fri, 28 Jun 2019 09:20:14 -0300
-Message-Id: <601be92c030ca1a73fb84dc2c9e004fcb33dd6b8.1561723980.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 27/43] docs: nfc: convert to ReST
+Date:   Fri, 28 Jun 2019 09:20:23 -0300
+Message-Id: <81d093a05d72b08a459ce86b1faed1bc6c9cc712.1561723980.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561723979.git.mchehab+samsung@kernel.org>
 References: <cover.1561723979.git.mchehab+samsung@kernel.org>
@@ -64,228 +64,338 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to be able to add it into a doc book, we need first
-convert it to ReST.
+Rename the nfc documentation files to ReST, add an
+index for them and adjust in order to produce a nice html
+output via the Sphinx build system.
 
-The conversion is actually:
-  - add blank lines and identation in order to identify paragraphs;
-  - mark literal blocks;
-  - adjust title markups.
-
-While this is not part of any book, mark it as :orphan:, in order
-to avoid build warnings.
+At its new index.rst, let's add a :orphan: while this is not linked to
+the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/nvmem/{nvmem.txt => nvmem.rst} | 112 ++++++++++---------
- 1 file changed, 59 insertions(+), 53 deletions(-)
- rename Documentation/nvmem/{nvmem.txt => nvmem.rst} (62%)
+ Documentation/nfc/index.rst                   |  11 ++
+ .../nfc/{nfc-hci.txt => nfc-hci.rst}          | 163 ++++++++++--------
+ .../nfc/{nfc-pn544.txt => nfc-pn544.rst}      |   6 +-
+ 3 files changed, 107 insertions(+), 73 deletions(-)
+ create mode 100644 Documentation/nfc/index.rst
+ rename Documentation/nfc/{nfc-hci.txt => nfc-hci.rst} (71%)
+ rename Documentation/nfc/{nfc-pn544.txt => nfc-pn544.rst} (82%)
 
-diff --git a/Documentation/nvmem/nvmem.txt b/Documentation/nvmem/nvmem.rst
-similarity index 62%
-rename from Documentation/nvmem/nvmem.txt
-rename to Documentation/nvmem/nvmem.rst
-index fc2fe4b18655..3866b6e066d5 100644
---- a/Documentation/nvmem/nvmem.txt
-+++ b/Documentation/nvmem/nvmem.rst
-@@ -1,5 +1,10 @@
--			    NVMEM SUBSYSTEM
--	  Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+diff --git a/Documentation/nfc/index.rst b/Documentation/nfc/index.rst
+new file mode 100644
+index 000000000000..4f4947fce80d
+--- /dev/null
++++ b/Documentation/nfc/index.rst
+@@ -0,0 +1,11 @@
 +:orphan:
 +
-+===============
-+NVMEM Subsystem
-+===============
++========================
++Near Field Communication
++========================
 +
-+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
- 
- This document explains the NVMEM Framework along with the APIs provided,
- and how to use it.
-@@ -40,54 +45,54 @@ nvmem_device pointer.
- 
- nvmem_unregister(nvmem) is used to unregister a previously registered provider.
- 
--For example, a simple qfprom case:
-+For example, a simple qfprom case::
- 
--static struct nvmem_config econfig = {
-+  static struct nvmem_config econfig = {
- 	.name = "qfprom",
- 	.owner = THIS_MODULE,
--};
-+  };
- 
--static int qfprom_probe(struct platform_device *pdev)
--{
-+  static int qfprom_probe(struct platform_device *pdev)
-+  {
- 	...
- 	econfig.dev = &pdev->dev;
- 	nvmem = nvmem_register(&econfig);
- 	...
--}
-+  }
- 
- It is mandatory that the NVMEM provider has a regmap associated with its
- struct device. Failure to do would return error code from nvmem_register().
- 
- Users of board files can define and register nvmem cells using the
--nvmem_cell_table struct:
-+nvmem_cell_table struct::
- 
--static struct nvmem_cell_info foo_nvmem_cells[] = {
-+  static struct nvmem_cell_info foo_nvmem_cells[] = {
- 	{
- 		.name		= "macaddr",
- 		.offset		= 0x7f00,
- 		.bytes		= ETH_ALEN,
- 	}
--};
-+  };
- 
--static struct nvmem_cell_table foo_nvmem_cell_table = {
-+  static struct nvmem_cell_table foo_nvmem_cell_table = {
- 	.nvmem_name		= "i2c-eeprom",
- 	.cells			= foo_nvmem_cells,
- 	.ncells			= ARRAY_SIZE(foo_nvmem_cells),
--};
-+  };
- 
--nvmem_add_cell_table(&foo_nvmem_cell_table);
-+  nvmem_add_cell_table(&foo_nvmem_cell_table);
- 
- Additionally it is possible to create nvmem cell lookup entries and register
--them with the nvmem framework from machine code as shown in the example below:
-+them with the nvmem framework from machine code as shown in the example below::
- 
--static struct nvmem_cell_lookup foo_nvmem_lookup = {
-+  static struct nvmem_cell_lookup foo_nvmem_lookup = {
- 	.nvmem_name		= "i2c-eeprom",
- 	.cell_name		= "macaddr",
- 	.dev_id			= "foo_mac.0",
- 	.con_id			= "mac-address",
--};
-+  };
- 
--nvmem_add_cell_lookups(&foo_nvmem_lookup, 1);
-+  nvmem_add_cell_lookups(&foo_nvmem_lookup, 1);
- 
- NVMEM Consumers
- +++++++++++++++
-@@ -99,43 +104,43 @@ read from and to NVMEM.
- =================================
- 
- NVMEM cells are the data entries/fields in the NVMEM.
--The NVMEM framework provides 3 APIs to read/write NVMEM cells.
-+The NVMEM framework provides 3 APIs to read/write NVMEM cells::
- 
--struct nvmem_cell *nvmem_cell_get(struct device *dev, const char *name);
--struct nvmem_cell *devm_nvmem_cell_get(struct device *dev, const char *name);
-+  struct nvmem_cell *nvmem_cell_get(struct device *dev, const char *name);
-+  struct nvmem_cell *devm_nvmem_cell_get(struct device *dev, const char *name);
- 
--void nvmem_cell_put(struct nvmem_cell *cell);
--void devm_nvmem_cell_put(struct device *dev, struct nvmem_cell *cell);
-+  void nvmem_cell_put(struct nvmem_cell *cell);
-+  void devm_nvmem_cell_put(struct device *dev, struct nvmem_cell *cell);
- 
--void *nvmem_cell_read(struct nvmem_cell *cell, ssize_t *len);
--int nvmem_cell_write(struct nvmem_cell *cell, void *buf, ssize_t len);
-+  void *nvmem_cell_read(struct nvmem_cell *cell, ssize_t *len);
-+  int nvmem_cell_write(struct nvmem_cell *cell, void *buf, ssize_t len);
- 
--*nvmem_cell_get() apis will get a reference to nvmem cell for a given id,
-+`*nvmem_cell_get()` apis will get a reference to nvmem cell for a given id,
- and nvmem_cell_read/write() can then read or write to the cell.
--Once the usage of the cell is finished the consumer should call *nvmem_cell_put()
--to free all the allocation memory for the cell.
-+Once the usage of the cell is finished the consumer should call
-+`*nvmem_cell_put()` to free all the allocation memory for the cell.
- 
- 4. Direct NVMEM device based consumer APIs
- ==========================================
- 
- In some instances it is necessary to directly read/write the NVMEM.
--To facilitate such consumers NVMEM framework provides below apis.
-+To facilitate such consumers NVMEM framework provides below apis::
- 
--struct nvmem_device *nvmem_device_get(struct device *dev, const char *name);
--struct nvmem_device *devm_nvmem_device_get(struct device *dev,
-+  struct nvmem_device *nvmem_device_get(struct device *dev, const char *name);
-+  struct nvmem_device *devm_nvmem_device_get(struct device *dev,
- 					   const char *name);
--void nvmem_device_put(struct nvmem_device *nvmem);
--int nvmem_device_read(struct nvmem_device *nvmem, unsigned int offset,
-+  void nvmem_device_put(struct nvmem_device *nvmem);
-+  int nvmem_device_read(struct nvmem_device *nvmem, unsigned int offset,
- 		      size_t bytes, void *buf);
--int nvmem_device_write(struct nvmem_device *nvmem, unsigned int offset,
-+  int nvmem_device_write(struct nvmem_device *nvmem, unsigned int offset,
- 		       size_t bytes, void *buf);
--int nvmem_device_cell_read(struct nvmem_device *nvmem,
-+  int nvmem_device_cell_read(struct nvmem_device *nvmem,
- 			   struct nvmem_cell_info *info, void *buf);
--int nvmem_device_cell_write(struct nvmem_device *nvmem,
-+  int nvmem_device_cell_write(struct nvmem_device *nvmem,
- 			    struct nvmem_cell_info *info, void *buf);
- 
- Before the consumers can read/write NVMEM directly, it should get hold
--of nvmem_controller from one of the *nvmem_device_get() api.
-+of nvmem_controller from one of the `*nvmem_device_get()` api.
- 
- The difference between these apis and cell based apis is that these apis always
- take nvmem_device as parameter.
-@@ -145,12 +150,12 @@ take nvmem_device as parameter.
- 
- When a consumer no longer needs the NVMEM, it has to release the reference
- to the NVMEM it has obtained using the APIs mentioned in the above section.
--The NVMEM framework provides 2 APIs to release a reference to the NVMEM.
-+The NVMEM framework provides 2 APIs to release a reference to the NVMEM::
- 
--void nvmem_cell_put(struct nvmem_cell *cell);
--void devm_nvmem_cell_put(struct device *dev, struct nvmem_cell *cell);
--void nvmem_device_put(struct nvmem_device *nvmem);
--void devm_nvmem_device_put(struct device *dev, struct nvmem_device *nvmem);
-+  void nvmem_cell_put(struct nvmem_cell *cell);
-+  void devm_nvmem_cell_put(struct device *dev, struct nvmem_cell *cell);
-+  void nvmem_device_put(struct nvmem_device *nvmem);
-+  void devm_nvmem_device_put(struct device *dev, struct nvmem_device *nvmem);
- 
- Both these APIs are used to release a reference to the NVMEM and
- devm_nvmem_cell_put and devm_nvmem_device_put destroys the devres associated
-@@ -162,20 +167,21 @@ Userspace
- 6. Userspace binary interface
- ==============================
- 
--Userspace can read/write the raw NVMEM file located at
--/sys/bus/nvmem/devices/*/nvmem
-+Userspace can read/write the raw NVMEM file located at::
- 
--ex:
-+	/sys/bus/nvmem/devices/*/nvmem
- 
--hexdump /sys/bus/nvmem/devices/qfprom0/nvmem
-+ex::
- 
--0000000 0000 0000 0000 0000 0000 0000 0000 0000
--*
--00000a0 db10 2240 0000 e000 0c00 0c00 0000 0c00
--0000000 0000 0000 0000 0000 0000 0000 0000 0000
--...
--*
--0001000
-+  hexdump /sys/bus/nvmem/devices/qfprom0/nvmem
++.. toctree::
++   :maxdepth: 1
 +
-+  0000000 0000 0000 0000 0000 0000 0000 0000 0000
-+  *
-+  00000a0 db10 2240 0000 e000 0c00 0c00 0000 0c00
-+  0000000 0000 0000 0000 0000 0000 0000 0000 0000
-+  ...
-+  *
-+  0001000
++   nfc-hci
++   nfc-pn544
+diff --git a/Documentation/nfc/nfc-hci.txt b/Documentation/nfc/nfc-hci.rst
+similarity index 71%
+rename from Documentation/nfc/nfc-hci.txt
+rename to Documentation/nfc/nfc-hci.rst
+index 0dc078cab972..eb8a1a14e919 100644
+--- a/Documentation/nfc/nfc-hci.txt
++++ b/Documentation/nfc/nfc-hci.rst
+@@ -1,7 +1,9 @@
++========================
+ HCI backend for NFC Core
++========================
  
- 7. DeviceTree Binding
- =====================
+-Author: Eric Lapuyade, Samuel Ortiz
+-Contact: eric.lapuyade@intel.com, samuel.ortiz@intel.com
++- Author: Eric Lapuyade, Samuel Ortiz
++- Contact: eric.lapuyade@intel.com, samuel.ortiz@intel.com
+ 
+ General
+ -------
+@@ -24,12 +26,13 @@ HCI events can also be received from the host controller. They will be handled
+ and a translation will be forwarded to NFC Core as needed. There are hooks to
+ let the HCI driver handle proprietary events or override standard behavior.
+ HCI uses 2 execution contexts:
++
+ - one for executing commands : nfc_hci_msg_tx_work(). Only one command
+-can be executing at any given moment.
++  can be executing at any given moment.
+ - one for dispatching received events and commands : nfc_hci_msg_rx_work().
+ 
+-HCI Session initialization:
+----------------------------
++HCI Session initialization
++--------------------------
+ 
+ The Session initialization is an HCI standard which must unfortunately
+ support proprietary gates. This is the reason why the driver will pass a list
+@@ -58,9 +61,9 @@ HCI Management
+ --------------
+ 
+ A driver would normally register itself with HCI and provide the following
+-entry points:
++entry points::
+ 
+-struct nfc_hci_ops {
++  struct nfc_hci_ops {
+ 	int (*open)(struct nfc_hci_dev *hdev);
+ 	void (*close)(struct nfc_hci_dev *hdev);
+ 	int (*hci_ready) (struct nfc_hci_dev *hdev);
+@@ -82,38 +85,38 @@ struct nfc_hci_ops {
+ 			      struct nfc_target *target);
+ 	int (*event_received)(struct nfc_hci_dev *hdev, u8 gate, u8 event,
+ 			      struct sk_buff *skb);
+-};
++  };
+ 
+ - open() and close() shall turn the hardware on and off.
+ - hci_ready() is an optional entry point that is called right after the hci
+-session has been set up. The driver can use it to do additional initialization
+-that must be performed using HCI commands.
++  session has been set up. The driver can use it to do additional initialization
++  that must be performed using HCI commands.
+ - xmit() shall simply write a frame to the physical link.
+ - start_poll() is an optional entrypoint that shall set the hardware in polling
+-mode. This must be implemented only if the hardware uses proprietary gates or a
+-mechanism slightly different from the HCI standard.
++  mode. This must be implemented only if the hardware uses proprietary gates or a
++  mechanism slightly different from the HCI standard.
+ - dep_link_up() is called after a p2p target has been detected, to finish
+-the p2p connection setup with hardware parameters that need to be passed back
+-to nfc core.
++  the p2p connection setup with hardware parameters that need to be passed back
++  to nfc core.
+ - dep_link_down() is called to bring the p2p link down.
+ - target_from_gate() is an optional entrypoint to return the nfc protocols
+-corresponding to a proprietary gate.
++  corresponding to a proprietary gate.
+ - complete_target_discovered() is an optional entry point to let the driver
+-perform additional proprietary processing necessary to auto activate the
+-discovered target.
++  perform additional proprietary processing necessary to auto activate the
++  discovered target.
+ - im_transceive() must be implemented by the driver if proprietary HCI commands
+-are required to send data to the tag. Some tag types will require custom
+-commands, others can be written to using the standard HCI commands. The driver
+-can check the tag type and either do proprietary processing, or return 1 to ask
+-for standard processing. The data exchange command itself must be sent
+-asynchronously.
++  are required to send data to the tag. Some tag types will require custom
++  commands, others can be written to using the standard HCI commands. The driver
++  can check the tag type and either do proprietary processing, or return 1 to ask
++  for standard processing. The data exchange command itself must be sent
++  asynchronously.
+ - tm_send() is called to send data in the case of a p2p connection
+ - check_presence() is an optional entry point that will be called regularly
+-by the core to check that an activated tag is still in the field. If this is
+-not implemented, the core will not be able to push tag_lost events to the user
+-space
++  by the core to check that an activated tag is still in the field. If this is
++  not implemented, the core will not be able to push tag_lost events to the user
++  space
+ - event_received() is called to handle an event coming from the chip. Driver
+-can handle the event or return 1 to let HCI attempt standard processing.
++  can handle the event or return 1 to let HCI attempt standard processing.
+ 
+ On the rx path, the driver is responsible to push incoming HCP frames to HCI
+ using nfc_hci_recv_frame(). HCI will take care of re-aggregation and handling
+@@ -122,20 +125,23 @@ This must be done from a context that can sleep.
+ PHY Management
+ --------------
+ 
+-The physical link (i2c, ...) management is defined by the following structure:
++The physical link (i2c, ...) management is defined by the following structure::
+ 
+-struct nfc_phy_ops {
++  struct nfc_phy_ops {
+ 	int (*write)(void *dev_id, struct sk_buff *skb);
+ 	int (*enable)(void *dev_id);
+ 	void (*disable)(void *dev_id);
+-};
++  };
+ 
+-enable(): turn the phy on (power on), make it ready to transfer data
+-disable(): turn the phy off
+-write(): Send a data frame to the chip. Note that to enable higher
+-layers such as an llc to store the frame for re-emission, this function must
+-not alter the skb. It must also not return a positive result (return 0 for
+-success, negative for failure).
++enable():
++	turn the phy on (power on), make it ready to transfer data
++disable():
++	turn the phy off
++write():
++	Send a data frame to the chip. Note that to enable higher
++	layers such as an llc to store the frame for re-emission, this
++	function must not alter the skb. It must also not return a positive
++	result (return 0 for success, negative for failure).
+ 
+ Data coming from the chip shall be sent directly to nfc_hci_recv_frame().
+ 
+@@ -145,9 +151,9 @@ LLC
+ Communication between the CPU and the chip often requires some link layer
+ protocol. Those are isolated as modules managed by the HCI layer. There are
+ currently two modules : nop (raw transfert) and shdlc.
+-A new llc must implement the following functions:
++A new llc must implement the following functions::
+ 
+-struct nfc_llc_ops {
++  struct nfc_llc_ops {
+ 	void *(*init) (struct nfc_hci_dev *hdev, xmit_to_drv_t xmit_to_drv,
+ 		       rcv_to_hci_t rcv_to_hci, int tx_headroom,
+ 		       int tx_tailroom, int *rx_headroom, int *rx_tailroom,
+@@ -157,17 +163,25 @@ struct nfc_llc_ops {
+ 	int (*stop) (struct nfc_llc *llc);
+ 	void (*rcv_from_drv) (struct nfc_llc *llc, struct sk_buff *skb);
+ 	int (*xmit_from_hci) (struct nfc_llc *llc, struct sk_buff *skb);
+-};
++  };
+ 
+-- init() : allocate and init your private storage
+-- deinit() : cleanup
+-- start() : establish the logical connection
+-- stop () : terminate the logical connection
+-- rcv_from_drv() : handle data coming from the chip, going to HCI
+-- xmit_from_hci() : handle data sent by HCI, going to the chip
++init():
++	allocate and init your private storage
++deinit():
++	cleanup
++start():
++	establish the logical connection
++stop ():
++	terminate the logical connection
++rcv_from_drv():
++	handle data coming from the chip, going to HCI
++xmit_from_hci():
++	handle data sent by HCI, going to the chip
+ 
+ The llc must be registered with nfc before it can be used. Do that by
+-calling nfc_llc_register(const char *name, struct nfc_llc_ops *ops);
++calling::
++
++	nfc_llc_register(const char *name, struct nfc_llc_ops *ops);
+ 
+ Again, note that the llc does not handle the physical link. It is thus very
+ easy to mix any physical link with any llc for a given chip driver.
+@@ -187,26 +201,32 @@ fast, cannot sleep. sends incoming frames to HCI where they are passed to
+ the current llc. In case of shdlc, the frame is queued in shdlc rx queue.
+ 
+ - SHDLC State Machine worker (SMW)
+-Only when llc_shdlc is used: handles shdlc rx & tx queues.
+-Dispatches HCI cmd responses.
++
++  Only when llc_shdlc is used: handles shdlc rx & tx queues.
++
++  Dispatches HCI cmd responses.
+ 
+ - HCI Tx Cmd worker (MSGTXWQ)
+-Serializes execution of HCI commands. Completes execution in case of response
+-timeout.
++
++  Serializes execution of HCI commands.
++
++  Completes execution in case of response timeout.
+ 
+ - HCI Rx worker (MSGRXWQ)
+-Dispatches incoming HCI commands or events.
++
++  Dispatches incoming HCI commands or events.
+ 
+ - Syscall context from a userspace call (SYSCALL)
+-Any entrypoint in HCI called from NFC Core
++
++  Any entrypoint in HCI called from NFC Core
+ 
+ Workflow executing an HCI command (using shdlc)
+ -----------------------------------------------
+ 
+ Executing an HCI command can easily be performed synchronously using the
+-following API:
++following API::
+ 
+-int nfc_hci_send_cmd (struct nfc_hci_dev *hdev, u8 gate, u8 cmd,
++  int nfc_hci_send_cmd (struct nfc_hci_dev *hdev, u8 gate, u8 cmd,
+ 			const u8 *param, size_t param_len, struct sk_buff **skb)
+ 
+ The API must be invoked from a context that can sleep. Most of the time, this
+@@ -234,11 +254,11 @@ waiting command execution. Response processing involves invoking the completion
+ callback that was provided by nfc_hci_msg_tx_work() when it sent the command.
+ The completion callback will then wake the syscall context.
+ 
+-It is also possible to execute the command asynchronously using this API:
++It is also possible to execute the command asynchronously using this API::
+ 
+-static int nfc_hci_execute_cmd_async(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
+-			       const u8 *param, size_t param_len,
+-			       data_exchange_cb_t cb, void *cb_context)
++  static int nfc_hci_execute_cmd_async(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
++				       const u8 *param, size_t param_len,
++				       data_exchange_cb_t cb, void *cb_context)
+ 
+ The workflow is the same, except that the API call returns immediately, and
+ the callback will be called with the result from the SMW context.
+@@ -268,23 +288,24 @@ went wrong below and know that expected events will probably never happen.
+ Handling of these errors is done as follows:
+ 
+ - driver (pn544) fails to deliver an incoming frame: it stores the error such
+-that any subsequent call to the driver will result in this error. Then it calls
+-the standard nfc_shdlc_recv_frame() with a NULL argument to report the problem
+-above. shdlc stores a EREMOTEIO sticky status, which will trigger SMW to
+-report above in turn.
++  that any subsequent call to the driver will result in this error. Then it
++  calls the standard nfc_shdlc_recv_frame() with a NULL argument to report the
++  problem above. shdlc stores a EREMOTEIO sticky status, which will trigger
++  SMW to report above in turn.
+ 
+ - SMW is basically a background thread to handle incoming and outgoing shdlc
+-frames. This thread will also check the shdlc sticky status and report to HCI
+-when it discovers it is not able to run anymore because of an unrecoverable
+-error that happened within shdlc or below. If the problem occurs during shdlc
+-connection, the error is reported through the connect completion.
++  frames. This thread will also check the shdlc sticky status and report to HCI
++  when it discovers it is not able to run anymore because of an unrecoverable
++  error that happened within shdlc or below. If the problem occurs during shdlc
++  connection, the error is reported through the connect completion.
+ 
+ - HCI: if an internal HCI error happens (frame is lost), or HCI is reported an
+-error from a lower layer, HCI will either complete the currently executing
+-command with that error, or notify NFC Core directly if no command is executing.
++  error from a lower layer, HCI will either complete the currently executing
++  command with that error, or notify NFC Core directly if no command is
++  executing.
+ 
+ - NFC Core: when NFC Core is notified of an error from below and polling is
+-active, it will send a tag discovered event with an empty tag list to the user
+-space to let it know that the poll operation will never be able to detect a tag.
+-If polling is not active and the error was sticky, lower levels will return it
+-at next invocation.
++  active, it will send a tag discovered event with an empty tag list to the user
++  space to let it know that the poll operation will never be able to detect a
++  tag. If polling is not active and the error was sticky, lower levels will
++  return it at next invocation.
+diff --git a/Documentation/nfc/nfc-pn544.txt b/Documentation/nfc/nfc-pn544.rst
+similarity index 82%
+rename from Documentation/nfc/nfc-pn544.txt
+rename to Documentation/nfc/nfc-pn544.rst
+index b36ca14ca2d6..6b2d8aae0c4e 100644
+--- a/Documentation/nfc/nfc-pn544.txt
++++ b/Documentation/nfc/nfc-pn544.rst
+@@ -1,5 +1,7 @@
+-Kernel driver for the NXP Semiconductors PN544 Near Field
+-Communication chip
++============================================================================
++Kernel driver for the NXP Semiconductors PN544 Near Field Communication chip
++============================================================================
++
+ 
+ General
+ -------
 -- 
 2.21.0
 
