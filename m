@@ -2,88 +2,127 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B190CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC661C5B576
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869CB2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BEB42086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:46:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DfYRJv3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfF1Cqp (ORCPT
+        id S1727085AbfF1Cqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:46:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40188 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbfF1Cqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:46:42 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 14D8CC057E65;
-        Fri, 28 Jun 2019 02:46:42 +0000 (UTC)
-Received: from localhost (dhcp-12-102.nay.redhat.com [10.66.12.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6ECAB1001B16;
-        Fri, 28 Jun 2019 02:46:41 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 10:52:04 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/13] xfs: allow merging ioends over append boundaries
-Message-ID: <20190628025204.GI30864@dhcp-12-102.nay.redhat.com>
-References: <20190627104836.25446-1-hch@lst.de>
- <20190627104836.25446-8-hch@lst.de>
- <20190627182309.GP5171@magnolia>
- <20190627214304.GB30113@42.do-not-panic.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627214304.GB30113@42.do-not-panic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 28 Jun 2019 02:46:42 +0000 (UTC)
+        Thu, 27 Jun 2019 22:46:53 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40935 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfF1Cqx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 22:46:53 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a93so2360256pla.7;
+        Thu, 27 Jun 2019 19:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=04GljEtl2h3DmnTzFw9yoiLkqcADLLyfQ+DeoECtL/g=;
+        b=DfYRJv3o9Bcrqrgqw90Ljs1hZlo0ut9UVtzdSkOf+R1UrqOE5qgOpWli4VXM0vexVS
+         kcLQdIIY41qtuPt77bpfXCCz78DVSEt8nHQLWrbGGHdvoUJiz0AHcKv0zey3ymekMWQW
+         3ZYA8ry/J/fEnLyaQxY/BCrVNKg3WvLn+S+OzgWsXccwFp47WifaGx+EJq/hvLPyjB5T
+         MReyTie+sBqblJjpj/MiGCu3GI5I5tLhd2JdRgoeCaOJaKr2J4U4bH/SxUo06oabCEJW
+         tSJtSMgB5G+PcmJykIpGyPCl2lY/vlSPJFcP9+0kFoqBvtyZKe04tgqrO4PjH2qf54hN
+         q8Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=04GljEtl2h3DmnTzFw9yoiLkqcADLLyfQ+DeoECtL/g=;
+        b=V/wIPX6CW+2PXvu9P1h6h893H9ZSX+9n07VADXMMIUCql8qeJbAD8Qk1U5MnIxt8o3
+         IjhGSona3m5xDfVpymk5fvWX2b+8pIxBGJMA+5C4aCfByd9w4nrVpS/Yn8ea1nVXykI2
+         3LYHWPl+PzsQs9HfvsmM8pmmZbLkzdb4byfwTMXgWXsLhKghSyPgUtc10jQFOCJuihNT
+         WNbhnhLZ+qnXdRIwhr1PjFSe9Xu79+4xm1IPZbz5fFfBl2jsc6LoDkmAFyUGdhLb9p45
+         bi7lVFKtMme4DSDCjZEH+vam3UKl6rmNpXcUf4qKreoo7LY4K6oR48lqD+67J5wRpV9Q
+         WLFw==
+X-Gm-Message-State: APjAAAUkRJpPaoZOk1WieYSC9dDz91lxnttPkBj+HB/rxH0c7HPuBXXG
+        qFh33YfBe2S+foEQdu6lth0=
+X-Google-Smtp-Source: APXvYqwZWLNOSYNebra3h7VxqKFQWWgskOaNU9GLrmfb1nSa3+umdvA8TKyiTag+IOKEC5NcyTD2Fg==
+X-Received: by 2002:a17:902:9a42:: with SMTP id x2mr8693861plv.106.1561690012576;
+        Thu, 27 Jun 2019 19:46:52 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id j15sm450696pfr.146.2019.06.27.19.46.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 19:46:52 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sinan Kaya <okaya@kernel.org>, Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2 06/27] dma: remove memset after dma_alloc_coherent/dmam_alloc_coherent
+Date:   Fri, 28 Jun 2019 10:46:42 +0800
+Message-Id: <20190628024642.15089-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 09:43:04PM +0000, Luis Chamberlain wrote:
-> On Thu, Jun 27, 2019 at 11:23:09AM -0700, Darrick J. Wong wrote:
-> > On Thu, Jun 27, 2019 at 12:48:30PM +0200, Christoph Hellwig wrote:
-> > > There is no real problem merging ioends that go beyond i_size into an
-> > > ioend that doesn't.  We just need to move the append transaction to the
-> > > base ioend.  Also use the opportunity to use a real error code instead
-> > > of the magic 1 to cancel the transactions, and write a comment
-> > > explaining the scheme.
-> > > 
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > 
-> > Reading through this patch, I have a feeling it fixes the crash that
-> > Zorro has been seeing occasionally with generic/475...
-> > 
-> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Zorro, can you confirm? If so it would be great to also refer to
-> the respective bugzilla entry #203947 [0].
+In commit af7ddd8a627c
+("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
+dma_alloc_coherent/dmam_alloc_coherent has already zeroed the memory.
+So memset is not needed.
 
-Sure, I'll give it a test. But it's so hard to reproduce, I need long enough
-time to prove "the panic's gone".
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ drivers/dma/imx-sdma.c      | 4 ----
+ drivers/dma/qcom/hidma_ll.c | 2 --
+ 2 files changed, 6 deletions(-)
 
-BTW, should I only merge this single patch to test, or merge your whole patchset
-with 13 patches?
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 99d9f431ae2c..54d86359bdf8 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1886,10 +1886,6 @@ static int sdma_init(struct sdma_engine *sdma)
+ 	sdma->context_phys = ccb_phys +
+ 		MAX_DMA_CHANNELS * sizeof (struct sdma_channel_control);
+ 
+-	/* Zero-out the CCB structures array just allocated */
+-	memset(sdma->channel_control, 0,
+-			MAX_DMA_CHANNELS * sizeof (struct sdma_channel_control));
+-
+ 	/* disable all channels */
+ 	for (i = 0; i < sdma->drvdata->num_events; i++)
+ 		writel_relaxed(0, sdma->regs + chnenbl_ofs(sdma, i));
+diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
+index 5bf8b145c427..bb4471e84e48 100644
+--- a/drivers/dma/qcom/hidma_ll.c
++++ b/drivers/dma/qcom/hidma_ll.c
+@@ -749,7 +749,6 @@ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
+ 	if (!lldev->tre_ring)
+ 		return NULL;
+ 
+-	memset(lldev->tre_ring, 0, (HIDMA_TRE_SIZE + 1) * nr_tres);
+ 	lldev->tre_ring_size = HIDMA_TRE_SIZE * nr_tres;
+ 	lldev->nr_tres = nr_tres;
+ 
+@@ -769,7 +768,6 @@ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
+ 	if (!lldev->evre_ring)
+ 		return NULL;
+ 
+-	memset(lldev->evre_ring, 0, (HIDMA_EVRE_SIZE + 1) * nr_tres);
+ 	lldev->evre_ring_size = HIDMA_EVRE_SIZE * nr_tres;
+ 
+ 	/* the EVRE ring has to be EVRE_SIZE aligned */
+-- 
+2.11.0
 
-Thanks,
-Zorro
-
-> 
-> [0] https://bugzilla.kernel.org/show_bug.cgi?id=203947
-> 
->   Luis
