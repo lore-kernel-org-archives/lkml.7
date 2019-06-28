@@ -2,121 +2,88 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A74C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CF2C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABD520645
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:01:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rt96ENqd"
+	by mail.kernel.org (Postfix) with ESMTP id E6B32208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561719842;
+	bh=617G/COSgHc1PxFQNtQ74y+onsCaA4vkrdPfIUClF1Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OEPen1SRye0M6YKi4u/Jt+WhMU9gmbxtrKGImbi9wkV1REZ0OSRP2jvAzJHt/u+b6
+	 nQi1O6U4wr5BC2/PHyeHnmM0yFNeM+M1W796SsLOMfASjJ3piEPnaKw4NLxRmllNeT
+	 GaekmnZg5NZmdBl9hbqh3l1ma/xBhjiiSOla3J4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfF1LBD (ORCPT
+        id S1726688AbfF1LEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:01:03 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35145 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfF1LBD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:01:03 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d23so5777756qto.2;
-        Fri, 28 Jun 2019 04:01:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PHi/l29WbV9XGvG08yaJu2JZdqFHxJ2LPSLS5LkPUgE=;
-        b=rt96ENqdL6G1Tr+cMkk1T3g2/2K/RUQTjrLRXsbKsNNIdHOI9ySelUsBGog5QVqSNW
-         ECre0OW3JSUxqdLSDlGV3coL8SQo2pvFnFstPm2YjZRAS0q+JHi2POrvwQoa0jyMB1eK
-         FgwziXKA6DsEJy7nrBpj+kqwkSZeY4dc1z1w1GPnhct1T/An4vCarpp69gD7YicGdajs
-         cUGltF3PhOff4yz+PdGjMdGEv89XE3IHuDMQu2IXZYX4uYf/2MjNpPkZMnBJLV+RKwhf
-         bu6wDQ/1gunlF/geSeQnojUUP9qeo2guScCLS05E0L9JACvlJ2kqbhbfvrsaqcdFaYY0
-         u8dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PHi/l29WbV9XGvG08yaJu2JZdqFHxJ2LPSLS5LkPUgE=;
-        b=tDs1egUXrqIQGzEganA1kMQkiSDnoM5ma4S+SNcQkbkMQU4Mqzs9Sbu/6DRuQiOVHm
-         /pXQDW5B05ftFdqFzMDMXraMEMqZKFFAHmtkht5D0Zvlq/EIiVv0nHrwRHEPqwcqocFS
-         jldQVyrFzy9fBApbD/OH6qZGHLRyPfxG3roSe7/I/dFx2QRaRUGzinP3F78YFRsOknpV
-         Mg7AwdAi9OpllPTBzBkLL+pQUkuo+L6DB/ea7k17oKJ+9tbMDNQNGgfd2DR1hZiJElSC
-         FRx2DJ5QYgLllIphETEubLXZTPhLJNX5eD579jNWv0TaqUx4RDj/oJx0/65ILRXiS7PW
-         7N2Q==
-X-Gm-Message-State: APjAAAUGI8YRLL4fdGFIeTw9ZcL/GkMd1cGMtZWFR3Rgw5+OS8Oy6CMk
-        zAoDL/iyQPRbGNqZHBUcmuAcCVxC
-X-Google-Smtp-Source: APXvYqzwCr+FGhUpSDu7u5VfwZ94QnIWoiCWRUcr230qT8m85gg0sysgzx3uQkUbImDHJrydKogJZg==
-X-Received: by 2002:a0c:d7c7:: with SMTP id g7mr7476473qvj.171.1561719661775;
-        Fri, 28 Jun 2019 04:01:01 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id u71sm883674qka.21.2019.06.28.04.00.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 04:01:01 -0700 (PDT)
-Subject: Re: [PATCH] devfreq: tegra20: add COMMON_CLK dependency
-To:     Arnd Bergmann <arnd@arndb.de>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
+        Fri, 28 Jun 2019 07:04:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726524AbfF1LEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 07:04:00 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75BDC20645;
+        Fri, 28 Jun 2019 11:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561719839;
+        bh=617G/COSgHc1PxFQNtQ74y+onsCaA4vkrdPfIUClF1Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oO+e/+SF6aE/wnCBgn1fDu34odP5B+RANepyWNkxGB52xVZ7bGJ1ngBcg15zCG/8t
+         9QlRt0pjssRmzV+p1NBwA5yewiLXiC7Qd2B2RFRPB9nNJd/L8UcynncrcNxh2v+Z+Y
+         VLBQukF2ihVI61tOymZp2ILpyERFrnguU9yPna5o=
+Date:   Fri, 28 Jun 2019 12:03:54 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Yuyang Du <duyuyang@gmail.com>, Ingo Molnar <mingo@kernel.org>,
         linux-kernel@vger.kernel.org
-References: <20190628103232.2467959-1-arnd@arndb.de>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c2701295-0fd6-c5ec-59d4-6e6b3b3bdb8e@gmail.com>
-Date:   Fri, 28 Jun 2019 14:00:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+Subject: Re: [PATCH] locking/lockdep: clean up #ifdef checks
+Message-ID: <20190628110353.ijd42pbhqfsdsi2n@willie-the-truck>
+References: <20190628102919.2345242-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20190628103232.2467959-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628102919.2345242-1-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.06.2019 13:32, Arnd Bergmann пишет:
-> Compile-testing the new driver on platforms without CONFIG_COMMON_CLK
-> leads to a link error:
+Hi Arnd,
+
+On Fri, Jun 28, 2019 at 12:29:03PM +0200, Arnd Bergmann wrote:
+> As Will Deacon points out, CONFIG_PROVE_LOCKING implies TRACE_IRQFLAGS,
+> so the conditions I added in the previous patch, and some others in the
+> same file can be simplified by only checking for the former.
 > 
-> drivers/devfreq/tegra20-devfreq.o: In function `tegra_devfreq_target':
-> tegra20-devfreq.c:(.text+0x288): undefined reference to `clk_set_min_rate'
+> No functional change.
 > 
-> Add a dependency on COMMON_CLK to avoid this.
-> 
-> Fixes: 1d39ee8dad6d ("PM / devfreq: Introduce driver for NVIDIA Tegra20")
+> Fixes: 886532aee3cd ("locking/lockdep: Move mark_lock() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/devfreq/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index f3b242987fd9..defe1d438710 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -107,6 +107,7 @@ config ARM_TEGRA_DEVFREQ
->  config ARM_TEGRA20_DEVFREQ
->  	tristate "NVIDIA Tegra20 DEVFREQ Driver"
->  	depends on (TEGRA_MC && TEGRA20_EMC) || COMPILE_TEST
-> +	depends on COMMON_CLK
->  	select DEVFREQ_GOV_SIMPLE_ONDEMAND
->  	select PM_OPP
->  	help
-> 
+>  kernel/locking/lockdep.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
 
-How is it possible to happen? There is a stub for clk_set_min_rate() when COMMON_CLK
-is disabled .. Could you please show the kernel's config that causes the problem?
+Thanks for following up on this. I think it makes the code easier to read,
+so:
 
-Moreover that was me who added the missing stub for clk_set_min_rate() in [1] to fix [2].
+Acked-by: Will Deacon <will@kernel.org>
 
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/include/linux/clk.h?id=b88c9f4129dcec941e5a26508e991c08051ed1ac
-
-[2] https://lists.01.org/pipermail/kbuild-all/2019-April/060292.html
-
-So this patch looks wrong to me because apparently it fixes a non-existent problem.
+Will
