@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1696DC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C89C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6C6208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8592177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561723970;
-	bh=NVHzlpmUQ72ZWLHFmtEs75k0rxX4M0GYyDHiRZk8N6M=;
+	s=default; t=1561723976;
+	bh=I14JMvGn+h8CLeXoQ8x+xrC4Aq82f5IUq+A2GNFj6eM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U9jyWWGp67HYJnODmFZvM6Knh/A7oCyCqCPFcoKTkxDEy9bpuTZgPzM6aA0PzH4bD
-	 VuOaIfojmFm4p/bmWUkuVoMtOM0Q0zHIr8JstLI4f5nHu5GaR5K/zvart1k5tppZEa
-	 bOUKXrg7L98dqF5kiDYhHG0yCjYXk8+AYV1X/K2I=
+	b=jeqnnjZ3z9qQR0WkE/75s+r2/grAdRMAqa9OjesTDhwS6AtxLujrIYELiXHSpryb7
+	 1bGlXwvwUZFw1Qp5wmA94DYq7FjNfL7HHjc2lRFeLW9quyC2ZLTgSEQKUtfp8VxbtF
+	 Y8UWDbGAdoFF/ddxS/5TC8jRB/NsqSpDh1uZisQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfF1MMi (ORCPT
+        id S1726963AbfF1MMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:12:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58232 "EHLO
+        Fri, 28 Jun 2019 08:12:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58230 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfF1MMg (ORCPT
+        with ESMTP id S1726601AbfF1MMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:12:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,27 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=c2MTeld4vzkJB1O7NzF5HLwc9FIFwZiTcGNkD8j/Q/E=; b=Roa70AufGatpCUuFbqPrEsV9bL
-        50WmazvYf/i05ux+Sv3ILOHBmqIYwz46yoxM2gtAJZM2Pe/XRm37QQouZKcK3yG5COs89XtDKUY/P
-        vmRB4mG80uBRdR2HJ/pvMY8JJ4Ex2+ul7jhXxAZWZdnK5e9HMtJbO0H3oj6KPQ+KQQUzvaDuRa10c
-        BiLNKx+XKKScMtCekk/AyDsY0WItKsyaMNvGd+rHKhvVJEKGx/ou68V8NSFBMM7OvXlSo2TtKSEo3
-        D3uCrBCG4pTambaQVk3fQBDDThPKNwgaPPsAiNzBaodmvIreYfV3+lGN6amg7UCf5XtPo4MbijTqa
-        /CvMHh0g==;
+        bh=NMu/v002NyjPb7lxcrvrsfcxSTZZB6mI258wHNga6OY=; b=aDbjkwa0y8zVV2j/XVzprfc9o+
+        iVaRuq3Wu42H818goT947Hqsoyt+3tlUvrTviRz6h2WaAUSb3IYtWU4AH596xlzKl9R+GpLcDQCYZ
+        Jy8/lg68CctkTrJtMbjLNMut/vpAU10o2UKWtWH+vR7ipPawEyW53YwUsGLuYjz4iE0QslsWh4Rou
+        UHMcxlhYG6OIs6vLhRJl4zw50VrWk/Ea1gyfij4kHJ+d7Kf49vf5Leyjl2OOhiyL6Q5h7lPJ3QKcX
+        Y6XdDaqb0YgGcxoz6W1X9vgOhOCgw0X3lNlKZbU4MQkDdir6eJ9oP054xftANLBDMqGjlRRPR0XKS
+        CQAYGz9g==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgpk3-0005BV-8Z; Fri, 28 Jun 2019 12:12:35 +0000
+        id 1hgpk3-0005BT-8Z; Fri, 28 Jun 2019 12:12:35 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgpk0-0004zP-7d; Fri, 28 Jun 2019 09:12:32 -0300
+        id 1hgpk0-0004zT-8W; Fri, 28 Jun 2019 09:12:32 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 2/9] docs: trace: fix a broken label
-Date:   Fri, 28 Jun 2019 09:12:24 -0300
-Message-Id: <ebdaa804ada383289de537a66c5b345fe0f37f9d.1561723736.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 3/9] docs: signal: fix a kernel-doc markup
+Date:   Fri, 28 Jun 2019 09:12:25 -0300
+Message-Id: <f326b29547ca1b2d64411421911d918f85b15f1d.1561723736.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561723736.git.mchehab+samsung@kernel.org>
 References: <cover.1561723736.git.mchehab+samsung@kernel.org>
@@ -65,31 +64,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sphinx warnings about his:
-
-	Documentation/trace/kprobetrace.rst:68: WARNING: undefined label: user_mem_access (if the link has no caption the label must precede a section header)
-
-The problem is quite simple: Sphinx wants a blank line after
-references.
+The kernel-doc parser doesn't handle expressions with %foo*.
+Instead, when an asterisk should be part of a constant, it
+uses an alternative notation: `foo*`.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- Documentation/trace/kprobetrace.rst | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/signal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index fbb314bfa112..89ba487d4399 100644
---- a/Documentation/trace/kprobetrace.rst
-+++ b/Documentation/trace/kprobetrace.rst
-@@ -96,6 +96,7 @@ which shows given pointer in "symbol+offset" style.
- For $comm, the default type is "string"; any other type is invalid.
- 
- .. _user_mem_access:
-+
- User Memory Access
- ------------------
- Kprobe events supports user-space memory access. For that purpose, you can use
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 91b789dd6e72..10a826855b59 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -349,7 +349,7 @@ void task_clear_jobctl_pending(struct task_struct *task, unsigned long mask)
+  * @task has %JOBCTL_STOP_PENDING set and is participating in a group stop.
+  * Group stop states are cleared and the group stop count is consumed if
+  * %JOBCTL_STOP_CONSUME was set.  If the consumption completes the group
+- * stop, the appropriate %SIGNAL_* flags are set.
++ * stop, the appropriate `SIGNAL_*` flags are set.
+  *
+  * CONTEXT:
+  * Must be called with @task->sighand->siglock held.
 -- 
 2.21.0
 
