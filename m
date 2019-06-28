@@ -2,96 +2,118 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD4AC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AA8C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 117A9208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:59:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ghENWpAA"
+	by mail.kernel.org (Postfix) with ESMTP id 95B4920828
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfF1U7R (ORCPT
+        id S1726664AbfF1VMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 16:59:17 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45487 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfF1U7R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 16:59:17 -0400
-Received: by mail-io1-f65.google.com with SMTP id e3so15299362ioc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 13:59:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=STUNHcZ4hxOZiod6u/3V1J8ZChBosSMoQGGe/lSDBs0=;
-        b=ghENWpAAVzjbt6oM5hyVzf70X1DiGlFi89Bdqe+7m0aOwd0gs6r55kdMdjWrE3ONfx
-         JaH14I+2HCdc/eCei6DpI4p6c0FNK9z0ygDH0qvEjwGggxSvd8ikRv3/OHjVFZMPjpMz
-         jqbJHQV1/IJf+VdXISXfgT2VByp1YtvqGI3BWUsLtyZxTExbYxReW9zWUlz7b1Br5k60
-         bGUbiq0ZY9id6VJqboNCXDb5vZv8e9UVboLJ4Vz8b0Xr25u6RJ6CsYcgT2zxlmcIi6ZK
-         M7VUqWqwSNocDJfSHYoKa9/pdWcrAP1AAxoGny8AZgQ+TH4vxaQ0g9OSfGP8mMZzEvhf
-         bM8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=STUNHcZ4hxOZiod6u/3V1J8ZChBosSMoQGGe/lSDBs0=;
-        b=X/Z6sDAydIPVF9400Js//wyJRs946Kp9VXHUiqdv1ZwJA8co28nrPfo2MMek82Es21
-         p0AcsQJhdvioF2xQEESQZ+/i4ubHDHNCUJ4pykqMJCyGQWEJ83ceXZKimknc1Xm8eVwC
-         YWMf75wK/S3gABqrfhzUGmGY/W9CgG25IUT9QsoXi4otwJxTLH3OrILCmI+KakmGKMso
-         TUV7JHHeQRzytHHXRGEW8oqZMrT/+ckl/Y4OOMJ5lyTtWuf4ZkWS+rpT4NvSbQR/CfNp
-         AoKH09eUyq1/IcM2Me+1XTssvHH0SPfl3zvghK5k0rGODi04EX1Ntxl96a0tzb+8SdRa
-         OFEw==
-X-Gm-Message-State: APjAAAXhzxVM2n6kL7T6o4QS5FfyhHgcQRIKzonH9MHOtXM1aiikExcA
-        axFRBKQ9K3nBXpjA4x9orwm2VQ==
-X-Google-Smtp-Source: APXvYqxXFZwkCq/2JrQtMexw56mdAgVIzXPkjYw4TSdLaDVipd/LicRSt3CQ4GKhXW+y9Vsk0zxqrA==
-X-Received: by 2002:a5d:96d8:: with SMTP id r24mr2537366iol.269.1561755556522;
-        Fri, 28 Jun 2019 13:59:16 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id n21sm2918468ioh.30.2019.06.28.13.59.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 13:59:15 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 13:59:15 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Anup Patel <Anup.Patel@wdc.com>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 1/2] RISC-V: Fix memory reservation in
- setup_bootmem()
-In-Reply-To: <20190607060049.29257-2-anup.patel@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1906281348441.3867@viisi.sifive.com>
-References: <20190607060049.29257-1-anup.patel@wdc.com> <20190607060049.29257-2-anup.patel@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 28 Jun 2019 17:12:42 -0400
+Received: from mga11.intel.com ([192.55.52.93]:51823 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbfF1VMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 17:12:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 14:12:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,429,1557212400"; 
+   d="scan'208";a="361638711"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga006.fm.intel.com with ESMTP; 28 Jun 2019 14:12:39 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id B3C59130; Sat, 29 Jun 2019 00:12:38 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: perf: Build with make -C <Linux O=...>
+Date:   Sat, 29 Jun 2019 00:12:38 +0300
+Message-Id: <20190628211238.84990-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019, Anup Patel wrote:
+My setup includes Linux kernel repository and Buildroot.
+I build Linux kernel with make O=<Linux O=...> and then
+when I try to build perf by running
 
-> Currently, the setup_bootmem() reserves memory from RAM start to the
-> kernel end. This prevents us from exploring ways to use the RAM below
-> (or before) the kernel start hence this patch updates setup_bootmem()
-> to only reserve memory from the kernel start to the kernel end.
-> 
-> Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+	make -j1 V=1 JOBS=1 \
+		-C <Linux O=...> \
+		CROSS_COMPILE=".../i586-buildroot-linux-uclibc-" \
+		DESTDIR="..." tools/perf_install
 
-Thanks, queued for v5.3.
+where <Linux O=...> is a patch to output folder of built Linux kernel,
+I got wrong path in perf during build, so, instead of tools/perf it becomes
+tools/perf/tools/perf.
 
+Note, it fulfills my purposes with minimal features supported,
+that's why not every library got "fixed".
 
-- Paul
+Below is the patch which helped me to achieve above.
+
+I'm pretty sure it's not the best solution. Anyway, would like to hear any
+ideas how to do this better.
+
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 4d46ca6d7e20..c56d4c0fd29b 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -698,23 +698,24 @@ $(LIBPERF_A): $(LIBPERF_IN)
+ LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(LDFLAGS)'
+ 
+ $(LIBTRACEEVENT): FORCE
+-	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)libtraceevent.a
++	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) subdir= $(OUTPUT)libtraceevent.a
+ 
+ libtraceevent_plugins: FORCE
+-	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) plugins
++	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) subdir= plugins
+ 
+ $(LIBTRACEEVENT_DYNAMIC_LIST): libtraceevent_plugins
+-	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)libtraceevent-dynamic-list
++	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) subdir= $(OUTPUT)libtraceevent-dynamic-list
+ 
+ $(LIBTRACEEVENT)-clean:
+ 	$(call QUIET_CLEAN, libtraceevent)
+ 	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) O=$(OUTPUT) clean >/dev/null
+ 
+ install-traceevent-plugins: libtraceevent_plugins
+-	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) install_plugins
++	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) subdir= install_plugins
+ 
+ $(LIBAPI): FORCE
+-	$(Q)$(MAKE) -C $(LIB_DIR) O=$(OUTPUT) $(OUTPUT)libapi.a
++	$(Q)$(MAKE) -C $(LIB_DIR) O=$(OUTPUT) subdir= $(OUTPUT)libapi.a
++	mkdir -p $(API_PATH) && cp $(OUTPUT)libapi.a $(LIBAPI)
+ 
+ $(LIBAPI)-clean:
+ 	$(call QUIET_CLEAN, libapi)
+@@ -728,7 +729,7 @@ $(LIBBPF)-clean:
+ 	$(Q)$(MAKE) -C $(BPF_DIR) O=$(OUTPUT) clean >/dev/null
+ 
+ $(LIBSUBCMD): FORCE
+-	$(Q)$(MAKE) -C $(SUBCMD_DIR) O=$(OUTPUT) $(OUTPUT)libsubcmd.a
++	$(Q)$(MAKE) -C $(SUBCMD_DIR) O=$(OUTPUT) subdir= $(OUTPUT)libsubcmd.a
+ 
+ $(LIBSUBCMD)-clean:
+ 	$(call QUIET_CLEAN, libsubcmd)
+-- 
+2.20.1
+
