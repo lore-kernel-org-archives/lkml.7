@@ -2,2289 +2,3036 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC63C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6013CC5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15BA12133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0039C214DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561724514;
-	bh=nkWW52CsnK/cWlDMdISykUfY5rppd0kNe/RQcXahXLw=;
+	s=default; t=1561724519;
+	bh=oIUz4LY+1OUgNoNqoVFryATiZ8pYEqrmCbpvCdrAhFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MMOiMAUUb6/HHkQsgWJlPSCEhhpGeEAjd+E3imTKx90pN9ggsrO0YmD2U1cTVb0Hl
-	 Y2Ip7XjuFMELPpVGfS7r7sQStq8F9HGiWVUpVJKaAPgtqIbrDuqlXQLJOvAYBq00az
-	 8n+G1GRa4yCroutd81HBo30euwT79RVSGgb7JT1s=
+	b=Kdvz8HQY4UMj0OvxCYmZbM0dtCiHpbuegRIyzxRk0bF7N+jKtwYHy4+UH7IaCRSJy
+	 Pc4Lozh6miVE/CgqwBU3Ou7sV90byfF5IvnvgFggRlDnjSRgnwspOndJi5g94u6Hyd
+	 LJRGBzr3ny8UibD7eIP2joh35rQ7Jafu7eeNCkko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfF1MVw (ORCPT
+        id S1727204AbfF1MV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:21:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58924 "EHLO
+        Fri, 28 Jun 2019 08:21:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58952 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbfF1MUu (ORCPT
+        with ESMTP id S1726871AbfF1MUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:20:50 -0400
+        Fri, 28 Jun 2019 08:20:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=P4yiJPBcdFAzbYJH6ULYgbz6CqXNNMAs+tA9Wg2tz6c=; b=b+KxByeciXZmW8lr7xpsWwhBXY
-        1+WkrgpFxeVszdUJdvSNrQklQxAmGeI2EkAvlzP6zuN+uCalcL7BhHTgyhaj8LzQPMiP4/V99SKEn
-        IRD9x9zoSKNoefOSk4zgValq/nFHVbJ7tQyinwnoZ212MQPOFjRpXjkzv2i6VmiwSxsa2/rtsBfoE
-        PXBm1t74RJ+PWOn+UIsXm3yKE3PlHpTZrhNbWZmAmJiadMpTwgdY4rMaI3MQ+DhDXnfLwLoUHXVXW
-        J2U+GfauHVhVOlkPOO8SAjP0bZ3X45tw398YEaiocAY31LL0E67CvI7+1Fq3fm4b1fi5tqkAbuStA
-        /9m7UppQ==;
+        bh=6o6fXEYlR1jiA8HbNJ2w7XjNfev4ko3TxhPzWGy+zLg=; b=A7bNNPpgneE5Oxg18j4PJsnwqV
+        NTH44hHUNtLwlngKw1Em3+b1C6A8UbLQLgB/bEq3RwAIkqkqd7vRmcRkMJSDK/kE+aaJLVuhxhTUY
+        VWEDAnIM0r+NnDO+mOWS7QQEfjJPwc1Zpt5OnscU5vML+nIyAeJGMAHGk2sGdpGTT2XIvtavSsdDV
+        2uWjRFZYRiq7b+QJNoo2OcFcb+arrAR47m3aA8f6ZPwhxQGWTqnEJelYCI6wg1HZITtH46ILV1sbN
+        cZoSBLuvU8EweJpJWqoW865OXSJPPUxb4Kyfimis9mD1ni4f40Hiv9CtWMcSaEZANINCMln5bCzHl
+        rpl7O3CA==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgprx-00009x-2Y; Fri, 28 Jun 2019 12:20:46 +0000
+        id 1hgprx-0000A4-75; Fri, 28 Jun 2019 12:20:46 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgpru-0005A2-67; Fri, 28 Jun 2019 09:20:42 -0300
+        id 1hgpru-00059x-53; Fri, 28 Jun 2019 09:20:42 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: [PATCH 40/43] docs: block: convert to ReST
-Date:   Fri, 28 Jun 2019 09:20:36 -0300
-Message-Id: <a89dd04d77b5496169146eb0c7a86135af30d5c3.1561723980.git.mchehab+samsung@kernel.org>
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [PATCH 39/43] docs: sysctl: convert to ReST
+Date:   Fri, 28 Jun 2019 09:20:35 -0300
+Message-Id: <24b969641a02e9318d7695122d2c0b8a822f1d6f.1561723980.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561723979.git.mchehab+samsung@kernel.org>
 References: <cover.1561723979.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the block documentation files to ReST, add an
-index for them and adjust in order to produce a nice html
-output via the Sphinx build system.
+Rename the /proc/sys/ documentation files to ReST, using the
+README file as a template for an index.rst, adding the other
+files there via TOC markup.
+
+Despite being written on different times with different
+styles, try to make them somewhat coherent with a similar
+look and feel, ensuring that they'll look nice as both
+raw text file and as via the html output produced by the
+Sphinx build system.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../admin-guide/kernel-parameters.txt         |   8 +-
- .../{bfq-iosched.txt => bfq-iosched.rst}      |  66 ++--
- .../block/{biodoc.txt => biodoc.rst}          | 328 +++++++++++-------
- .../block/{biovecs.txt => biovecs.rst}        |  20 +-
- Documentation/block/capability.rst            |  18 +
- Documentation/block/capability.txt            |  15 -
- ...ne-partition.txt => cmdline-partition.rst} |  13 +-
- ...{data-integrity.txt => data-integrity.rst} |  60 ++--
- ...dline-iosched.txt => deadline-iosched.rst} |  21 +-
- Documentation/block/index.rst                 |  25 ++
- .../block/{ioprio.txt => ioprio.rst}          |  95 +++--
- .../{kyber-iosched.txt => kyber-iosched.rst}  |   3 +-
- .../block/{null_blk.txt => null_blk.rst}      |  65 +++-
- Documentation/block/{pr.txt => pr.rst}        |  18 +-
- .../{queue-sysfs.txt => queue-sysfs.rst}      |   7 +-
- .../block/{request.txt => request.rst}        |  47 ++-
- Documentation/block/{stat.txt => stat.rst}    |  13 +-
- ...witching-sched.txt => switching-sched.rst} |  28 +-
- ...ontrol.txt => writeback_cache_control.rst} |  12 +-
- Documentation/blockdev/zram.rst               |   2 +-
- MAINTAINERS                                   |   2 +-
- block/Kconfig                                 |   2 +-
- block/Kconfig.iosched                         |   2 +-
- block/bfq-iosched.c                           |   2 +-
- block/blk-integrity.c                         |   2 +-
- block/ioprio.c                                |   2 +-
- block/mq-deadline.c                           |   2 +-
- block/partitions/cmdline.c                    |   2 +-
- 28 files changed, 540 insertions(+), 340 deletions(-)
- rename Documentation/block/{bfq-iosched.txt => bfq-iosched.rst} (95%)
- rename Documentation/block/{biodoc.txt => biodoc.rst} (85%)
- rename Documentation/block/{biovecs.txt => biovecs.rst} (92%)
- create mode 100644 Documentation/block/capability.rst
- delete mode 100644 Documentation/block/capability.txt
- rename Documentation/block/{cmdline-partition.txt => cmdline-partition.rst} (92%)
- rename Documentation/block/{data-integrity.txt => data-integrity.rst} (91%)
- rename Documentation/block/{deadline-iosched.txt => deadline-iosched.rst} (89%)
- create mode 100644 Documentation/block/index.rst
- rename Documentation/block/{ioprio.txt => ioprio.rst} (75%)
- rename Documentation/block/{kyber-iosched.txt => kyber-iosched.rst} (86%)
- rename Documentation/block/{null_blk.txt => null_blk.rst} (60%)
- rename Documentation/block/{pr.txt => pr.rst} (93%)
- rename Documentation/block/{queue-sysfs.txt => queue-sysfs.rst} (99%)
- rename Documentation/block/{request.txt => request.rst} (59%)
- rename Documentation/block/{stat.txt => stat.rst} (89%)
- rename Documentation/block/{switching-sched.txt => switching-sched.rst} (67%)
- rename Documentation/block/{writeback_cache_control.txt => writeback_cache_control.rst} (94%)
+ .../admin-guide/kernel-parameters.txt         |   2 +-
+ Documentation/admin-guide/mm/index.rst        |   2 +-
+ Documentation/admin-guide/mm/ksm.rst          |   2 +-
+ Documentation/core-api/printk-formats.rst     |   2 +-
+ Documentation/networking/ip-sysctl.txt        |   2 +-
+ Documentation/sysctl/abi.rst                  |  67 ++++
+ Documentation/sysctl/abi.txt                  |  54 ---
+ Documentation/sysctl/{fs.txt => fs.rst}       | 142 +++----
+ Documentation/sysctl/{README => index.rst}    |  36 +-
+ .../sysctl/{kernel.txt => kernel.rst}         | 372 ++++++++++--------
+ Documentation/sysctl/{net.txt => net.rst}     | 141 ++++---
+ .../sysctl/{sunrpc.txt => sunrpc.rst}         |  13 +-
+ Documentation/sysctl/{user.txt => user.rst}   |  32 +-
+ Documentation/sysctl/{vm.txt => vm.rst}       | 258 ++++++------
+ Documentation/vm/unevictable-lru.rst          |   2 +-
+ kernel/panic.c                                |   2 +-
+ mm/swap.c                                     |   2 +-
+ 17 files changed, 650 insertions(+), 481 deletions(-)
+ create mode 100644 Documentation/sysctl/abi.rst
+ delete mode 100644 Documentation/sysctl/abi.txt
+ rename Documentation/sysctl/{fs.txt => fs.rst} (77%)
+ rename Documentation/sysctl/{README => index.rst} (78%)
+ rename Documentation/sysctl/{kernel.txt => kernel.rst} (79%)
+ rename Documentation/sysctl/{net.txt => net.rst} (85%)
+ rename Documentation/sysctl/{sunrpc.txt => sunrpc.rst} (62%)
+ rename Documentation/sysctl/{user.txt => user.rst} (77%)
+ rename Documentation/sysctl/{vm.txt => vm.rst} (85%)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 61abadd70a86..b2007fb4daf0 100644
+index 7ed94527a4a0..61abadd70a86 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -430,7 +430,7 @@
+@@ -3170,7 +3170,7 @@
+ 	numa_zonelist_order= [KNL, BOOT] Select zonelist order for NUMA.
+ 			'node', 'default' can be specified
+ 			This can be set from sysctl after boot.
+-			See Documentation/sysctl/vm.txt for details.
++			See Documentation/sysctl/vm.rst for details.
  
- 	blkdevparts=	Manual partition parsing of block device(s) for
- 			embedded devices based on command line input.
--			See Documentation/block/cmdline-partition.txt
-+			See Documentation/block/cmdline-partition.rst
+ 	ohci1394_dma=early	[HW] enable debugging via the ohci1394 driver.
+ 			See Documentation/debugging-via-ohci1394.txt for more
+diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
+index ddf8d8d33377..f5e92f33f96e 100644
+--- a/Documentation/admin-guide/mm/index.rst
++++ b/Documentation/admin-guide/mm/index.rst
+@@ -11,7 +11,7 @@ processes address space and many other cool things.
+ Linux memory management is a complex system with many configurable
+ settings. Most of these settings are available via ``/proc``
+ filesystem and can be quired and adjusted using ``sysctl``. These APIs
+-are described in Documentation/sysctl/vm.txt and in `man 5 proc`_.
++are described in Documentation/sysctl/vm.rst and in `man 5 proc`_.
  
- 	boot_delay=	Milliseconds to delay each printk during boot.
- 			Values larger than 10 seconds (10000) are changed to
-@@ -1199,9 +1199,9 @@
+ .. _man 5 proc: http://man7.org/linux/man-pages/man5/proc.5.html
  
- 	elevator=	[IOSCHED]
- 			Format: { "mq-deadline" | "kyber" | "bfq" }
--			See Documentation/block/deadline-iosched.txt,
--			Documentation/block/kyber-iosched.txt and
--			Documentation/block/bfq-iosched.txt for details.
-+			See Documentation/block/deadline-iosched.rst,
-+			Documentation/block/kyber-iosched.rst and
-+			Documentation/block/bfq-iosched.rst for details.
+diff --git a/Documentation/admin-guide/mm/ksm.rst b/Documentation/admin-guide/mm/ksm.rst
+index 9303786632d1..7b2b8767c0b4 100644
+--- a/Documentation/admin-guide/mm/ksm.rst
++++ b/Documentation/admin-guide/mm/ksm.rst
+@@ -59,7 +59,7 @@ MADV_UNMERGEABLE is applied to a range which was never MADV_MERGEABLE.
  
- 	elfcorehdr=[size[KMG]@]offset[KMG] [IA64,PPC,SH,X86,S390]
- 			Specifies physical address of start of kernel core
-diff --git a/Documentation/block/bfq-iosched.txt b/Documentation/block/bfq-iosched.rst
-similarity index 95%
-rename from Documentation/block/bfq-iosched.txt
-rename to Documentation/block/bfq-iosched.rst
-index bbd6eb5bbb07..2c13b2fc1888 100644
---- a/Documentation/block/bfq-iosched.txt
-+++ b/Documentation/block/bfq-iosched.rst
-@@ -1,9 +1,11 @@
-+==========================
- BFQ (Budget Fair Queueing)
- ==========================
+ If a region of memory must be split into at least one new MADV_MERGEABLE
+ or MADV_UNMERGEABLE region, the madvise may return ENOMEM if the process
+-will exceed ``vm.max_map_count`` (see Documentation/sysctl/vm.txt).
++will exceed ``vm.max_map_count`` (see Documentation/sysctl/vm.rst).
  
- BFQ is a proportional-share I/O scheduler, with some extra
- low-latency capabilities. In addition to cgroups support (blkio or io
- controllers), BFQ's main features are:
-+
- - BFQ guarantees a high system and application responsiveness, and a
-   low latency for time-sensitive applications, such as audio or video
-   players;
-@@ -55,18 +57,18 @@ sustainable throughputs, on the same systems as above:
+ Like other madvise calls, they are intended for use on mapped areas of
+ the user address space: they will report ENOMEM if the specified range
+diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+index 75d2bbe9813f..1d8e748f909f 100644
+--- a/Documentation/core-api/printk-formats.rst
++++ b/Documentation/core-api/printk-formats.rst
+@@ -119,7 +119,7 @@ Kernel Pointers
  
- BFQ works for multi-queue devices too.
+ For printing kernel pointers which should be hidden from unprivileged
+ users. The behaviour of %pK depends on the kptr_restrict sysctl - see
+-Documentation/sysctl/kernel.txt for more details.
++Documentation/sysctl/kernel.rst for more details.
  
--The table of contents follow. Impatients can just jump to Section 3.
-+.. The table of contents follow. Impatients can just jump to Section 3.
- 
--CONTENTS
-+.. CONTENTS
- 
--1. When may BFQ be useful?
-- 1-1 Personal systems
-- 1-2 Server systems
--2. How does BFQ work?
--3. What are BFQ's tunables and how to properly configure BFQ?
--4. BFQ group scheduling
-- 4-1 Service guarantees provided
-- 4-2 Interface
-+   1. When may BFQ be useful?
-+    1-1 Personal systems
-+    1-2 Server systems
-+   2. How does BFQ work?
-+   3. What are BFQ's tunables and how to properly configure BFQ?
-+   4. BFQ group scheduling
-+    4-1 Service guarantees provided
-+    4-2 Interface
- 
- 1. When may BFQ be useful?
- ==========================
-@@ -77,17 +79,20 @@ BFQ provides the following benefits on personal and server systems.
+ Unmodified Addresses
  --------------------
+diff --git a/Documentation/networking/ip-sysctl.txt b/Documentation/networking/ip-sysctl.txt
+index e0d8a96e2c67..0f8e1c544e1e 100644
+--- a/Documentation/networking/ip-sysctl.txt
++++ b/Documentation/networking/ip-sysctl.txt
+@@ -2284,7 +2284,7 @@ addr_scope_policy - INTEGER
  
- Low latency for interactive applications
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  
- Regardless of the actual background workload, BFQ guarantees that, for
- interactive tasks, the storage device is virtually as responsive as if
- it was idle. For example, even if one or more of the following
- background workloads are being executed:
+ /proc/sys/net/core/*
+-	Please see: Documentation/sysctl/net.txt for descriptions of these entries.
++	Please see: Documentation/sysctl/net.rst for descriptions of these entries.
+ 
+ 
+ /proc/sys/net/unix/*
+diff --git a/Documentation/sysctl/abi.rst b/Documentation/sysctl/abi.rst
+new file mode 100644
+index 000000000000..599bcde7f0b7
+--- /dev/null
++++ b/Documentation/sysctl/abi.rst
+@@ -0,0 +1,67 @@
++================================
++Documentation for /proc/sys/abi/
++================================
 +
- - one or more large files are being read, written or copied,
- - a tree of source files is being compiled,
- - one or more virtual machines are performing I/O,
- - a software update is in progress,
- - indexing daemons are scanning filesystems and updating their
-   databases,
++kernel version 2.6.0.test2
 +
- starting an application or loading a file from within an application
- takes about the same time as if the storage device was idle. As a
- comparison, with CFQ, NOOP or DEADLINE, and in the same conditions,
-@@ -95,13 +100,14 @@ applications experience high latencies, or even become unresponsive
- until the background workload terminates (also on SSDs).
- 
- Low latency for soft real-time applications
++Copyright (c) 2003,  Fabian Frederick <ffrederick@users.sourceforge.net>
++
++For general info: index.rst.
++
++------------------------------------------------------------------------------
++
++This path is binary emulation relevant aka personality types aka abi.
++When a process is executed, it's linked to an exec_domain whose
++personality is defined using values available from /proc/sys/abi.
++You can find further details about abi in include/linux/personality.h.
++
++Here are the files featuring in 2.6 kernel:
++
++- defhandler_coff
++- defhandler_elf
++- defhandler_lcall7
++- defhandler_libcso
++- fake_utsname
++- trace
++
++defhandler_coff
++---------------
++
++defined value:
++	PER_SCOSVR3::
++
++		0x0003 | STICKY_TIMEOUTS | WHOLE_SECONDS | SHORT_INODE
++
++defhandler_elf
++--------------
++
++defined value:
++	PER_LINUX::
++
++		0
++
++defhandler_lcall7
++-----------------
++
++defined value :
++	PER_SVR4::
++
++		0x0001 | STICKY_TIMEOUTS | MMAP_PAGE_ZERO,
++
++defhandler_libsco
++-----------------
++
++defined value:
++	PER_SVR4::
++
++		0x0001 | STICKY_TIMEOUTS | MMAP_PAGE_ZERO,
++
++fake_utsname
++------------
++
++Unused
++
++trace
++-----
++
++Unused
+diff --git a/Documentation/sysctl/abi.txt b/Documentation/sysctl/abi.txt
+deleted file mode 100644
+index 63f4ebcf652c..000000000000
+--- a/Documentation/sysctl/abi.txt
++++ /dev/null
+@@ -1,54 +0,0 @@
+-Documentation for /proc/sys/abi/* kernel version 2.6.0.test2
+-	(c) 2003,  Fabian Frederick <ffrederick@users.sourceforge.net>
 -
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- Also soft real-time applications, such as audio and video
- players/streamers, enjoy a low latency and a low drop rate, regardless
- of the background I/O workload. As a consequence, these applications
- do not suffer from almost any glitch due to the background workload.
+-For general info : README.
+-
+-==============================================================
+-
+-This path is binary emulation relevant aka personality types aka abi.
+-When a process is executed, it's linked to an exec_domain whose
+-personality is defined using values available from /proc/sys/abi.
+-You can find further details about abi in include/linux/personality.h.
+-
+-Here are the files featuring in 2.6 kernel :
+-
+-- defhandler_coff
+-- defhandler_elf
+-- defhandler_lcall7
+-- defhandler_libcso
+-- fake_utsname
+-- trace
+-
+-===========================================================
+-defhandler_coff:
+-defined value :
+-PER_SCOSVR3
+-0x0003 | STICKY_TIMEOUTS | WHOLE_SECONDS | SHORT_INODE
+-
+-===========================================================
+-defhandler_elf:
+-defined value :
+-PER_LINUX
+-0
+-
+-===========================================================
+-defhandler_lcall7:
+-defined value :
+-PER_SVR4
+-0x0001 | STICKY_TIMEOUTS | MMAP_PAGE_ZERO,
+-
+-===========================================================
+-defhandler_libsco:
+-defined value:
+-PER_SVR4
+-0x0001 | STICKY_TIMEOUTS | MMAP_PAGE_ZERO,
+-
+-===========================================================
+-fake_utsname:
+-Unused
+-
+-===========================================================
+-trace:
+-Unused
+-
+-===========================================================
+diff --git a/Documentation/sysctl/fs.txt b/Documentation/sysctl/fs.rst
+similarity index 77%
+rename from Documentation/sysctl/fs.txt
+rename to Documentation/sysctl/fs.rst
+index ebc679bcb2dc..2a45119e3331 100644
+--- a/Documentation/sysctl/fs.txt
++++ b/Documentation/sysctl/fs.rst
+@@ -1,10 +1,16 @@
+-Documentation for /proc/sys/fs/*	kernel version 2.2.10
+-	(c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
+-	(c) 2009,        Shen Feng<shen@cn.fujitsu.com>
++===============================
++Documentation for /proc/sys/fs/
++===============================
  
- Higher speed for code-development tasks
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-For general info and legal blurb, please look in README.
++kernel version 2.2.10
  
- If some additional workload happens to be executed in parallel, then
- BFQ executes the I/O-related components of typical code-development
-@@ -109,6 +115,7 @@ tasks (compilation, checkout, merge, ...) much more quickly than CFQ,
- NOOP or DEADLINE.
- 
- High throughput
-+^^^^^^^^^^^^^^^
- 
- On hard disks, BFQ achieves up to 30% higher throughput than CFQ, and
- up to 150% higher throughput than DEADLINE and NOOP, with all the
-@@ -117,6 +124,7 @@ and with all the workloads on flash-based devices, BFQ achieves,
- instead, about the same throughput as the other schedulers.
- 
- Strong fairness, bandwidth and delay guarantees
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- BFQ distributes the device throughput, and not just the device time,
- among I/O-bound applications in proportion their weights, with any
-@@ -133,15 +141,15 @@ Most benefits for server systems follow from the same service
- properties as above. In particular, regardless of whether additional,
- possibly heavy workloads are being served, BFQ guarantees:
- 
--. audio and video-streaming with zero or very low jitter and drop
-+* audio and video-streaming with zero or very low jitter and drop
-   rate;
- 
--. fast retrieval of WEB pages and embedded objects;
-+* fast retrieval of WEB pages and embedded objects;
- 
--. real-time recording of data in live-dumping applications (e.g.,
-+* real-time recording of data in live-dumping applications (e.g.,
-   packet logging);
- 
--. responsiveness in local and remote access to a server.
-+* responsiveness in local and remote access to a server.
- 
- 
- 2. How does BFQ work?
-@@ -151,7 +159,7 @@ BFQ is a proportional-share I/O scheduler, whose general structure,
- plus a lot of code, are borrowed from CFQ.
- 
- - Each process doing I/O on a device is associated with a weight and a
--  (bfq_)queue.
-+  `(bfq_)queue`.
- 
- - BFQ grants exclusive access to the device, for a while, to one queue
-   (process) at a time, and implements this service model by
-@@ -540,11 +548,12 @@ created, and kept up-to-date by bfq, depends on whether
- CONFIG_BFQ_CGROUP_DEBUG is set. If it is set, then bfq creates all
- the stat files documented in
- Documentation/cgroup-v1/blkio-controller.rst. If, instead,
--CONFIG_BFQ_CGROUP_DEBUG is not set, then bfq creates only the files
--blkio.bfq.io_service_bytes
--blkio.bfq.io_service_bytes_recursive
--blkio.bfq.io_serviced
--blkio.bfq.io_serviced_recursive
-+CONFIG_BFQ_CGROUP_DEBUG is not set, then bfq creates only the files::
+-==============================================================
++Copyright (c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
 +
-+  blkio.bfq.io_service_bytes
-+  blkio.bfq.io_service_bytes_recursive
-+  blkio.bfq.io_serviced
-+  blkio.bfq.io_serviced_recursive
- 
- The value of CONFIG_BFQ_CGROUP_DEBUG greatly influences the maximum
- throughput sustainable with bfq, because updating the blkio.bfq.*
-@@ -567,17 +576,22 @@ weight of the queues associated with interactive and soft real-time
- applications. Unset this tunable if you need/want to control weights.
- 
- 
--[1] P. Valente, A. Avanzini, "Evolution of the BFQ Storage I/O
-+[1]
-+    P. Valente, A. Avanzini, "Evolution of the BFQ Storage I/O
-     Scheduler", Proceedings of the First Workshop on Mobile System
-     Technologies (MST-2015), May 2015.
++Copyright (c) 2009,        Shen Feng<shen@cn.fujitsu.com>
 +
-     http://algogroup.unimore.it/people/paolo/disk_sched/mst-2015.pdf
++For general info and legal blurb, please look in intro.rst.
++
++------------------------------------------------------------------------------
  
--[2] P. Valente and M. Andreolini, "Improving Application
-+[2]
-+    P. Valente and M. Andreolini, "Improving Application
-     Responsiveness with the BFQ Disk I/O Scheduler", Proceedings of
-     the 5th Annual International Systems and Storage Conference
-     (SYSTOR '12), June 2012.
-+
-     Slightly extended version:
--    http://algogroup.unimore.it/people/paolo/disk_sched/bfq-v1-suite-
--							results.pdf
+ This file contains documentation for the sysctl files in
+ /proc/sys/fs/ and is valid for Linux kernel version 2.2.
+@@ -16,9 +22,10 @@ system, it is advisable to read both documentation and source
+ before actually making adjustments.
  
--[3] https://github.com/Algodev-github/S
-+    http://algogroup.unimore.it/people/paolo/disk_sched/bfq-v1-suite-results.pdf
-+
-+[3]
-+   https://github.com/Algodev-github/S
-diff --git a/Documentation/block/biodoc.txt b/Documentation/block/biodoc.rst
-similarity index 85%
-rename from Documentation/block/biodoc.txt
-rename to Documentation/block/biodoc.rst
-index 31c177663ed5..d6e30b680405 100644
---- a/Documentation/block/biodoc.txt
-+++ b/Documentation/block/biodoc.rst
-@@ -1,15 +1,24 @@
--	Notes on the Generic Block Layer Rewrite in Linux 2.5
--	=====================================================
-+=====================================================
-+Notes on the Generic Block Layer Rewrite in Linux 2.5
-+=====================================================
-+
-+.. note::
-+
-+	It seems that there are lot of outdated stuff here. This seems
-+	to be written somewhat as a task list. Yet, eventually, something
-+	here might still be useful.
+ 1. /proc/sys/fs
+-----------------------------------------------------------
++===============
  
- Notes Written on Jan 15, 2002:
--	Jens Axboe <jens.axboe@oracle.com>
--	Suparna Bhattacharya <suparna@in.ibm.com>
-+	- Jens Axboe <jens.axboe@oracle.com>
-+	- Suparna Bhattacharya <suparna@in.ibm.com>
- 
- Last Updated May 2, 2002
+ Currently, these files are in /proc/sys/fs:
 +
- September 2003: Updated I/O Scheduler portions
--	Nick Piggin <npiggin@kernel.dk>
-+	- Nick Piggin <npiggin@kernel.dk>
+ - aio-max-nr
+ - aio-nr
+ - dentry-state
+@@ -42,9 +49,9 @@ Currently, these files are in /proc/sys/fs:
+ - super-max
+ - super-nr
+ 
+-==============================================================
+ 
+-aio-nr & aio-max-nr:
++aio-nr & aio-max-nr
++-------------------
+ 
+ aio-nr is the running total of the number of events specified on the
+ io_setup system call for all currently active aio contexts.  If aio-nr
+@@ -52,21 +59,20 @@ reaches aio-max-nr then io_setup will fail with EAGAIN.  Note that
+ raising aio-max-nr does not result in the pre-allocation or re-sizing
+ of any kernel data structures.
+ 
+-==============================================================
+ 
+-dentry-state:
++dentry-state
++------------
+ 
+-From linux/include/linux/dcache.h:
+---------------------------------------------------------------
+-struct dentry_stat_t dentry_stat {
++From linux/include/linux/dcache.h::
++
++  struct dentry_stat_t dentry_stat {
+         int nr_dentry;
+         int nr_unused;
+         int age_limit;         /* age in seconds */
+         int want_pages;        /* pages requested by system */
+         int nr_negative;       /* # of unused negative dentries */
+         int dummy;             /* Reserved for future use */
+-};
+---------------------------------------------------------------
++  };
+ 
+ Dentries are dynamically allocated and deallocated.
+ 
+@@ -84,9 +90,9 @@ negative dentries which do not map to any files. Instead,
+ they help speeding up rejection of non-existing files provided
+ by the users.
+ 
+-==============================================================
+ 
+-dquot-max & dquot-nr:
++dquot-max & dquot-nr
++--------------------
+ 
+ The file dquot-max shows the maximum number of cached disk
+ quota entries.
+@@ -98,9 +104,9 @@ If the number of free cached disk quotas is very low and
+ you have some awesome number of simultaneous system users,
+ you might want to raise the limit.
+ 
+-==============================================================
+ 
+-file-max & file-nr:
++file-max & file-nr
++------------------
+ 
+ The value in file-max denotes the maximum number of file-
+ handles that the Linux kernel will allocate. When you get lots
+@@ -119,18 +125,19 @@ used file handles.
+ Attempts to allocate more file descriptors than file-max are
+ reported with printk, look for "VFS: file-max limit <number>
+ reached".
+-==============================================================
+ 
+-nr_open:
++
++nr_open
++-------
+ 
+ This denotes the maximum number of file-handles a process can
+ allocate. Default value is 1024*1024 (1048576) which should be
+ enough for most machines. Actual limit depends on RLIMIT_NOFILE
+ resource limit.
+ 
+-==============================================================
+ 
+-inode-max, inode-nr & inode-state:
++inode-max, inode-nr & inode-state
++---------------------------------
+ 
+ As with file handles, the kernel allocates the inode structures
+ dynamically, but can't free them yet.
+@@ -157,9 +164,9 @@ preshrink is nonzero when the nr_inodes > inode-max and the
+ system needs to prune the inode list instead of allocating
+ more.
+ 
+-==============================================================
+ 
+-overflowgid & overflowuid:
++overflowgid & overflowuid
++-------------------------
+ 
+ Some filesystems only support 16-bit UIDs and GIDs, although in Linux
+ UIDs and GIDs are 32 bits. When one of these filesystems is mounted
+@@ -169,18 +176,18 @@ to a fixed value before being written to disk.
+ These sysctls allow you to change the value of the fixed UID and GID.
+ The default is 65534.
+ 
+-==============================================================
+ 
+-pipe-user-pages-hard:
++pipe-user-pages-hard
++--------------------
+ 
+ Maximum total number of pages a non-privileged user may allocate for pipes.
+ Once this limit is reached, no new pipes may be allocated until usage goes
+ below the limit again. When set to 0, no limit is applied, which is the default
+ setting.
+ 
+-==============================================================
+ 
+-pipe-user-pages-soft:
++pipe-user-pages-soft
++--------------------
+ 
+ Maximum total number of pages a non-privileged user may allocate for pipes
+ before the pipe size gets limited to a single page. Once this limit is reached,
+@@ -190,9 +197,9 @@ denied until usage goes below the limit again. The default value allows to
+ allocate up to 1024 pipes at their default size. When set to 0, no limit is
+ applied.
+ 
+-==============================================================
+ 
+-protected_fifos:
++protected_fifos
++---------------
+ 
+ The intent of this protection is to avoid unintentional writes to
+ an attacker-controlled FIFO, where a program expected to create a regular
+@@ -208,9 +215,9 @@ When set to "2" it also applies to group writable sticky directories.
+ 
+ This protection is based on the restrictions in Openwall.
+ 
+-==============================================================
+ 
+-protected_hardlinks:
++protected_hardlinks
++--------------------
+ 
+ A long-standing class of security issues is the hardlink-based
+ time-of-check-time-of-use race, most commonly seen in world-writable
+@@ -228,9 +235,9 @@ already own the source file, or do not have read/write access to it.
+ 
+ This protection is based on the restrictions in Openwall and grsecurity.
+ 
+-==============================================================
+ 
+-protected_regular:
++protected_regular
++-----------------
+ 
+ This protection is similar to protected_fifos, but it
+ avoids writes to an attacker-controlled regular file, where a program
+@@ -244,9 +251,9 @@ owned by the owner of the directory.
+ 
+ When set to "2" it also applies to group writable sticky directories.
+ 
+-==============================================================
+ 
+-protected_symlinks:
++protected_symlinks
++------------------
+ 
+ A long-standing class of security issues is the symlink-based
+ time-of-check-time-of-use race, most commonly seen in world-writable
+@@ -264,34 +271,38 @@ follower match, or when the directory owner matches the symlink's owner.
+ 
+ This protection is based on the restrictions in Openwall and grsecurity.
+ 
+-==============================================================
+ 
+ suid_dumpable:
++--------------
+ 
+ This value can be used to query and set the core dump mode for setuid
+ or otherwise protected/tainted binaries. The modes are
+ 
+-0 - (default) - traditional behaviour. Any process which has changed
+-	privilege levels or is execute only will not be dumped.
+-1 - (debug) - all processes dump core when possible. The core dump is
+-	owned by the current user and no security is applied. This is
+-	intended for system debugging situations only. Ptrace is unchecked.
+-	This is insecure as it allows regular users to examine the memory
+-	contents of privileged processes.
+-2 - (suidsafe) - any binary which normally would not be dumped is dumped
+-	anyway, but only if the "core_pattern" kernel sysctl is set to
+-	either a pipe handler or a fully qualified path. (For more details
+-	on this limitation, see CVE-2006-2451.) This mode is appropriate
+-	when administrators are attempting to debug problems in a normal
+-	environment, and either have a core dump pipe handler that knows
+-	to treat privileged core dumps with care, or specific directory
+-	defined for catching core dumps. If a core dump happens without
+-	a pipe handler or fully qualifid path, a message will be emitted
+-	to syslog warning about the lack of a correct setting.
++=   ==========  ===============================================================
++0   (default)	traditional behaviour. Any process which has changed
++		privilege levels or is execute only will not be dumped.
++1   (debug)	all processes dump core when possible. The core dump is
++		owned by the current user and no security is applied. This is
++		intended for system debugging situations only.
++		Ptrace is unchecked.
++		This is insecure as it allows regular users to examine the
++		memory contents of privileged processes.
++2   (suidsafe)	any binary which normally would not be dumped is dumped
++		anyway, but only if the "core_pattern" kernel sysctl is set to
++		either a pipe handler or a fully qualified path. (For more
++		details on this limitation, see CVE-2006-2451.) This mode is
++		appropriate when administrators are attempting to debug
++		problems in a normal environment, and either have a core dump
++		pipe handler that knows to treat privileged core dumps with
++		care, or specific directory defined for catching core dumps.
++		If a core dump happens without a pipe handler or fully
++		qualified path, a message will be emitted to syslog warning
++		about the lack of a correct setting.
++=   ==========  ===============================================================
+ 
+-==============================================================
+ 
+-super-max & super-nr:
++super-max & super-nr
++--------------------
+ 
+ These numbers control the maximum number of superblocks, and
+ thus the maximum number of mounted filesystems the kernel
+@@ -299,33 +310,33 @@ can have. You only need to increase super-max if you need to
+ mount more filesystems than the current value in super-max
+ allows you to.
+ 
+-==============================================================
+ 
+-aio-nr & aio-max-nr:
++aio-nr & aio-max-nr
++-------------------
+ 
+ aio-nr shows the current system-wide number of asynchronous io
+ requests.  aio-max-nr allows you to change the maximum value
+ aio-nr can grow to.
+ 
+-==============================================================
+ 
+-mount-max:
++mount-max
++---------
+ 
+ This denotes the maximum number of mounts that may exist
+ in a mount namespace.
+ 
+-==============================================================
+ 
+ 
+ 2. /proc/sys/fs/binfmt_misc
+-----------------------------------------------------------
++===========================
+ 
+ Documentation for the files in /proc/sys/fs/binfmt_misc is
+ in Documentation/admin-guide/binfmt-misc.rst.
+ 
+ 
+ 3. /proc/sys/fs/mqueue - POSIX message queues filesystem
+-----------------------------------------------------------
++========================================================
++
+ 
+ The "mqueue"  filesystem provides  the necessary kernel features to enable the
+ creation of a  user space  library that  implements  the  POSIX message queues
+@@ -356,7 +367,7 @@ the default message size value if attr parameter of mq_open(2) is NULL. If it
+ exceed msgsize_max, the default value is initialized msgsize_max.
+ 
+ 4. /proc/sys/fs/epoll - Configuration options for the epoll interface
+---------------------------------------------------------
++=====================================================================
+ 
+ This directory contains configuration options for the epoll(7) interface.
+ 
+@@ -371,4 +382,3 @@ Each "watch" costs roughly 90 bytes on a 32bit kernel, and roughly 160 bytes
+ on a 64bit one.
+ The current default value for  max_user_watches  is the 1/32 of the available
+ low memory, divided for the "watch" cost in bytes.
+-
+diff --git a/Documentation/sysctl/README b/Documentation/sysctl/index.rst
+similarity index 78%
+rename from Documentation/sysctl/README
+rename to Documentation/sysctl/index.rst
+index d5f24ab0ecc3..efbcde8c1c9c 100644
+--- a/Documentation/sysctl/README
++++ b/Documentation/sysctl/index.rst
+@@ -1,5 +1,12 @@
+-Documentation for /proc/sys/		kernel version 2.2.10
+-	(c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
++:orphan:
++
++===========================
++Documentation for /proc/sys
++===========================
++
++Copyright (c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
++
++------------------------------------------------------------------------------
+ 
+ 'Why', I hear you ask, 'would anyone even _want_ documentation
+ for them sysctl files? If anybody really needs it, it's all in
+@@ -12,11 +19,12 @@ have the time or knowledge to read the source code.
+ Furthermore, the programmers who built sysctl have built it to
+ be actually used, not just for the fun of programming it :-)
+ 
+-==============================================================
++------------------------------------------------------------------------------
+ 
+ Legal blurb:
+ 
+ As usual, there are two main things to consider:
++
+ 1. you get what you pay for
+ 2. it's free
+ 
+@@ -35,15 +43,17 @@ stories to: <riel@nl.linux.org>
+ 
+ Rik van Riel.
+ 
+-==============================================================
++--------------------------------------------------------------
  
 -Introduction:
 +Introduction
 +============
  
- These are some notes describing some aspects of the 2.5 block layer in the
- context of the bio rewrite. The idea is to bring out some of the key
-@@ -17,11 +26,11 @@ changes and a glimpse of the rationale behind those changes.
- 
- Please mail corrections & suggestions to suparna@in.ibm.com.
- 
--Credits:
-----------
-+Credits
-+=======
- 
- 2.5 bio rewrite:
--	Jens Axboe <jens.axboe@oracle.com>
-+	- Jens Axboe <jens.axboe@oracle.com>
- 
- Many aspects of the generic block layer redesign were driven by and evolved
- over discussions, prior patches and the collective experience of several
-@@ -29,62 +38,63 @@ people. See sections 8 and 9 for a list of some related references.
- 
- The following people helped with review comments and inputs for this
- document:
--	Christoph Hellwig <hch@infradead.org>
--	Arjan van de Ven <arjanv@redhat.com>
--	Randy Dunlap <rdunlap@xenotime.net>
--	Andre Hedrick <andre@linux-ide.org>
+ Sysctl is a means of configuring certain aspects of the kernel
+ at run-time, and the /proc/sys/ directory is there so that you
+ don't even need special tools to do it!
+ In fact, there are only four things needed to use these config
+ facilities:
 +
-+	- Christoph Hellwig <hch@infradead.org>
-+	- Arjan van de Ven <arjanv@redhat.com>
-+	- Randy Dunlap <rdunlap@xenotime.net>
-+	- Andre Hedrick <andre@linux-ide.org>
+ - a running Linux system
+ - root access
+ - common sense (this is especially hard to come by these days)
+@@ -54,7 +64,9 @@ several (arch-dependent?) subdirs. Each subdir is mainly about
+ one part of the kernel, so you can do configuration on a piece
+ by piece basis, or just some 'thematic frobbing'.
  
- The following people helped with fixes/contributions to the bio patches
- while it was still work-in-progress:
--	David S. Miller <davem@redhat.com>
- 
-+	- David S. Miller <davem@redhat.com>
- 
--Description of Contents:
--------------------------
- 
--1. Scope for tuning of logic to various needs
--  1.1 Tuning based on device or low level driver capabilities
-+.. Description of Contents:
+-The subdirs are about:
++This documentation is about:
 +
-+   1. Scope for tuning of logic to various needs
-+     1.1 Tuning based on device or low level driver capabilities
- 	- Per-queue parameters
- 	- Highmem I/O support
- 	- I/O scheduler modularization
--  1.2 Tuning based on high level requirements/capabilities
-+     1.2 Tuning based on high level requirements/capabilities
- 	1.2.1 Request Priority/Latency
--  1.3 Direct access/bypass to lower layers for diagnostics and special
--      device operations
-+     1.3 Direct access/bypass to lower layers for diagnostics and special
-+	 device operations
- 	1.3.1 Pre-built commands
--2. New flexible and generic but minimalist i/o structure or descriptor
--   (instead of using buffer heads at the i/o layer)
--  2.1 Requirements/Goals addressed
--  2.2 The bio struct in detail (multi-page io unit)
--  2.3 Changes in the request structure
--3. Using bios
--  3.1 Setup/teardown (allocation, splitting)
--  3.2 Generic bio helper routines
--    3.2.1 Traversing segments and completion units in a request
--    3.2.2 Setting up DMA scatterlists
--    3.2.3 I/O completion
--    3.2.4 Implications for drivers that do not interpret bios (don't handle
-- 	  multiple segments)
--  3.3 I/O submission
--4. The I/O scheduler
--5. Scalability related changes
--  5.1 Granular locking: Removal of io_request_lock
--  5.2 Prepare for transition to 64 bit sector_t
--6. Other Changes/Implications
--  6.1 Partition re-mapping handled by the generic block layer
--7. A few tips on migration of older drivers
--8. A list of prior/related/impacted patches/ideas
--9. Other References/Discussion Threads
-+   2. New flexible and generic but minimalist i/o structure or descriptor
-+      (instead of using buffer heads at the i/o layer)
-+     2.1 Requirements/Goals addressed
-+     2.2 The bio struct in detail (multi-page io unit)
-+     2.3 Changes in the request structure
-+   3. Using bios
-+     3.1 Setup/teardown (allocation, splitting)
-+     3.2 Generic bio helper routines
-+       3.2.1 Traversing segments and completion units in a request
-+       3.2.2 Setting up DMA scatterlists
-+       3.2.3 I/O completion
-+       3.2.4 Implications for drivers that do not interpret bios (don't handle
-+	  multiple segments)
-+     3.3 I/O submission
-+   4. The I/O scheduler
-+   5. Scalability related changes
-+     5.1 Granular locking: Removal of io_request_lock
-+     5.2 Prepare for transition to 64 bit sector_t
-+   6. Other Changes/Implications
-+     6.1 Partition re-mapping handled by the generic block layer
-+   7. A few tips on migration of older drivers
-+   8. A list of prior/related/impacted patches/ideas
-+   9. Other References/Discussion Threads
- 
-----------------------------------------------------------------------------
- 
- Bio Notes
----------
-+=========
- 
- Let us discuss the changes in the context of how some overall goals for the
- block layer are addressed.
- 
- 1. Scope for tuning the generic logic to satisfy various requirements
-+=====================================================================
- 
- The block layer design supports adaptable abstractions to handle common
- processing with the ability to tune the logic to an appropriate extent
-@@ -97,6 +107,7 @@ and application/middleware software designed to take advantage of these
- capabilities.
- 
- 1.1 Tuning based on low level device / driver capabilities
-+----------------------------------------------------------
- 
- Sophisticated devices with large built-in caches, intelligent i/o scheduling
- optimizations, high memory DMA support, etc may find some of the
-@@ -133,12 +144,12 @@ Some new queue property settings:
- 		Sets two variables that limit the size of the request.
- 
- 		- The request queue's max_sectors, which is a soft size in
--		units of 512 byte sectors, and could be dynamically varied
--		by the core kernel.
-+		  units of 512 byte sectors, and could be dynamically varied
-+		  by the core kernel.
- 
- 		- The request queue's max_hw_sectors, which is a hard limit
--		and reflects the maximum size request a driver can handle
--		in units of 512 byte sectors.
-+		  and reflects the maximum size request a driver can handle
-+		  in units of 512 byte sectors.
- 
- 		The default for both max_sectors and max_hw_sectors is
- 		255. The upper limit of max_sectors is 1024.
-@@ -234,6 +245,7 @@ I/O scheduler wrappers are to be used instead of accessing the queue directly.
- See section 4. The I/O scheduler for details.
- 
- 1.2 Tuning Based on High level code capabilities
-+------------------------------------------------
- 
- i. Application capabilities for raw i/o
- 
-@@ -258,9 +270,11 @@ would need an additional mechanism either via open flags or ioctls, or some
- other upper level mechanism to communicate such settings to block.
- 
- 1.2.1 Request Priority/Latency
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--Todo/Under discussion:
--Arjan's proposed request priority scheme allows higher levels some broad
-+Todo/Under discussion::
-+
-+  Arjan's proposed request priority scheme allows higher levels some broad
-   control (high/med/low) over the priority  of an i/o request vs other pending
-   requests in the queue. For example it allows reads for bringing in an
-   executable page on demand to be given a higher priority over pending write
-@@ -272,7 +286,9 @@ Arjan's proposed request priority scheme allows higher levels some broad
- 
- 
- 1.3 Direct Access to Low level Device/Driver Capabilities (Bypass mode)
--    (e.g Diagnostics, Systems Management)
-+-----------------------------------------------------------------------
-+
-+(e.g Diagnostics, Systems Management)
- 
- There are situations where high-level code needs to have direct access to
- the low level device capabilities or requires the ability to issue commands
-@@ -308,28 +324,32 @@ involved. In the latter case, the driver would modify and manage the
- request->buffer, request->sector and request->nr_sectors or
- request->current_nr_sectors fields itself rather than using the block layer
- end_request or end_that_request_first completion interfaces.
--(See 2.3 or Documentation/block/request.txt for a brief explanation of
-+(See 2.3 or Documentation/block/request.rst for a brief explanation of
- the request structure fields)
- 
--[TBD: end_that_request_last should be usable even in this case;
--Perhaps an end_that_direct_request_first routine could be implemented to make
--handling direct requests easier for such drivers; Also for drivers that
--expect bios, a helper function could be provided for setting up a bio
--corresponding to a data buffer]
-+::
- 
--<JENS: I dont understand the above, why is end_that_request_first() not
--usable? Or _last for that matter. I must be missing something>
--<SUP: What I meant here was that if the request doesn't have a bio, then
-- end_that_request_first doesn't modify nr_sectors or current_nr_sectors,
-- and hence can't be used for advancing request state settings on the
-- completion of partial transfers. The driver has to modify these fields 
-- directly by hand.
-- This is because end_that_request_first only iterates over the bio list,
-- and always returns 0 if there are none associated with the request.
-- _last works OK in this case, and is not a problem, as I mentioned earlier
-->
-+  [TBD: end_that_request_last should be usable even in this case;
-+  Perhaps an end_that_direct_request_first routine could be implemented to make
-+  handling direct requests easier for such drivers; Also for drivers that
-+  expect bios, a helper function could be provided for setting up a bio
-+  corresponding to a data buffer]
-+
-+  <JENS: I dont understand the above, why is end_that_request_first() not
-+  usable? Or _last for that matter. I must be missing something>
-+
-+  <SUP: What I meant here was that if the request doesn't have a bio, then
-+   end_that_request_first doesn't modify nr_sectors or current_nr_sectors,
-+   and hence can't be used for advancing request state settings on the
-+   completion of partial transfers. The driver has to modify these fields
-+   directly by hand.
-+   This is because end_that_request_first only iterates over the bio list,
-+   and always returns 0 if there are none associated with the request.
-+   _last works OK in this case, and is not a problem, as I mentioned earlier
-+  >
- 
- 1.3.1 Pre-built Commands
-+^^^^^^^^^^^^^^^^^^^^^^^^
- 
- A request can be created with a pre-built custom command  to be sent directly
- to the device. The cmd block in the request structure has room for filling
-@@ -360,9 +380,11 @@ Aside:
-   the pre-builder hook can be invoked there.
- 
- 
--2. Flexible and generic but minimalist i/o structure/descriptor.
-+2. Flexible and generic but minimalist i/o structure/descriptor
-+===============================================================
- 
- 2.1 Reason for a new structure and requirements addressed
-+---------------------------------------------------------
- 
- Prior to 2.5, buffer heads were used as the unit of i/o at the generic block
- layer, and the low level request structure was associated with a chain of
-@@ -378,26 +400,26 @@ which were generated for each such chunk.
- The following were some of the goals and expectations considered in the
- redesign of the block i/o data structure in 2.5.
- 
--i.  Should be appropriate as a descriptor for both raw and buffered i/o  -
-+1.  Should be appropriate as a descriptor for both raw and buffered i/o  -
-     avoid cache related fields which are irrelevant in the direct/page i/o path,
-     or filesystem block size alignment restrictions which may not be relevant
-     for raw i/o.
--ii. Ability to represent high-memory buffers (which do not have a virtual
-+2.  Ability to represent high-memory buffers (which do not have a virtual
-     address mapping in kernel address space).
--iii.Ability to represent large i/os w/o unnecessarily breaking them up (i.e
-+3.  Ability to represent large i/os w/o unnecessarily breaking them up (i.e
-     greater than PAGE_SIZE chunks in one shot)
--iv. At the same time, ability to retain independent identity of i/os from
-+4.  At the same time, ability to retain independent identity of i/os from
-     different sources or i/o units requiring individual completion (e.g. for
-     latency reasons)
--v.  Ability to represent an i/o involving multiple physical memory segments
-+5.  Ability to represent an i/o involving multiple physical memory segments
-     (including non-page aligned page fragments, as specified via readv/writev)
-     without unnecessarily breaking it up, if the underlying device is capable of
-     handling it.
--vi. Preferably should be based on a memory descriptor structure that can be
-+6.  Preferably should be based on a memory descriptor structure that can be
-     passed around different types of subsystems or layers, maybe even
-     networking, without duplication or extra copies of data/descriptor fields
-     themselves in the process
--vii.Ability to handle the possibility of splits/merges as the structure passes
-+7.  Ability to handle the possibility of splits/merges as the structure passes
-     through layered drivers (lvm, md, evms), with minimal overhead.
- 
- The solution was to define a new structure (bio)  for the block layer,
-@@ -408,6 +430,7 @@ bh structure for buffered i/o, and in the case of raw/direct i/o kiobufs are
- mapped to bio structures.
- 
- 2.2 The bio struct
-+------------------
- 
- The bio structure uses a vector representation pointing to an array of tuples
- of <page, offset, len> to describe the i/o buffer, and has various other
-@@ -417,16 +440,18 @@ performing the i/o.
- Notice that this representation means that a bio has no virtual address
- mapping at all (unlike buffer heads).
- 
--struct bio_vec {
-+::
-+
-+  struct bio_vec {
-        struct page     *bv_page;
-        unsigned short  bv_len;
-        unsigned short  bv_offset;
--};
-+  };
- 
--/*
-- * main unit of I/O for the block layer and lower layers (ie drivers)
-- */
--struct bio {
-+  /*
-+   * main unit of I/O for the block layer and lower layers (ie drivers)
-+   */
-+  struct bio {
-        struct bio          *bi_next;    /* request queue link */
-        struct block_device *bi_bdev;	/* target device */
-        unsigned long       bi_flags;    /* status, command, etc */
-@@ -443,7 +468,7 @@ struct bio {
-        bio_end_io_t	*bi_end_io;  /* bi_end_io (bio) */
-        atomic_t		bi_cnt;	     /* pin count: free when it hits zero */
-        void             *bi_private;
--};
-+  };
- 
- With this multipage bio design:
- 
-@@ -453,7 +478,7 @@ With this multipage bio design:
- - Splitting of an i/o request across multiple devices (as in the case of
-   lvm or raid) is achieved by cloning the bio (where the clone points to
-   the same bi_io_vec array, but with the index and size accordingly modified)
--- A linked list of bios is used as before for unrelated merges (*) - this
-+- A linked list of bios is used as before for unrelated merges [*]_ - this
-   avoids reallocs and makes independent completions easier to handle.
- - Code that traverses the req list can find all the segments of a bio
-   by using rq_for_each_segment.  This handles the fact that a request
-@@ -462,10 +487,12 @@ With this multipage bio design:
-   field to keep track of the next bio_vec entry to process.
-   (e.g a 1MB bio_vec needs to be handled in max 128kB chunks for IDE)
-   [TBD: Should preferably also have a bi_voffset and bi_vlen to avoid modifying
--   bi_offset an len fields]
-+  bi_offset an len fields]
- 
--(*) unrelated merges -- a request ends up containing two or more bios that
--    didn't originate from the same place.
-+.. [*]
-+
-+	unrelated merges -- a request ends up containing two or more bios that
-+	didn't originate from the same place.
- 
- bi_end_io() i/o callback gets called on i/o completion of the entire bio.
- 
-@@ -483,10 +510,11 @@ which in turn means that only raw I/O uses it (direct i/o may not work
- right now). The intent however is to enable clustering of pages etc to
- become possible. The pagebuf abstraction layer from SGI also uses multi-page
- bios, but that is currently not included in the stock development kernels.
--The same is true of Andrew Morton's work-in-progress multipage bio writeout 
-+The same is true of Andrew Morton's work-in-progress multipage bio writeout
- and readahead patches.
- 
- 2.3 Changes in the Request Structure
-+------------------------------------
- 
- The request structure is the structure that gets passed down to low level
- drivers. The block layer make_request function builds up a request structure,
-@@ -499,11 +527,11 @@ request structure.
- Only some relevant fields (mainly those which changed or may be referred
- to in some of the discussion here) are listed below, not necessarily in
- the order in which they occur in the structure (see include/linux/blkdev.h)
--Refer to Documentation/block/request.txt for details about all the request
-+Refer to Documentation/block/request.rst for details about all the request
- structure fields and a quick reference about the layers which are
--supposed to use or modify those fields.
-+supposed to use or modify those fields::
- 
--struct request {
-+  struct request {
- 	struct list_head queuelist;  /* Not meant to be directly accessed by
- 					the driver.
- 					Used by q->elv_next_request_fn
-@@ -548,11 +576,11 @@ struct request {
- 	.
- 	struct bio *bio, *biotail;  /* bio list instead of bh */
- 	struct request_list *rl;
--}
--	
-+  }
-+
- See the req_ops and req_flag_bits definitions for an explanation of the various
- flags available. Some bits are used by the block layer or i/o scheduler.
--	
-+
- The behaviour of the various sector counts are almost the same as before,
- except that since we have multi-segment bios, current_nr_sectors refers
- to the numbers of sectors in the current segment being processed which could
-@@ -578,8 +606,10 @@ a driver needs to be careful about interoperation with the block layer helper
- functions which the driver uses. (Section 1.3)
- 
- 3. Using bios
-+=============
- 
- 3.1 Setup/Teardown
-+------------------
- 
- There are routines for managing the allocation, and reference counting, and
- freeing of bios (bio_alloc, bio_get, bio_put).
-@@ -606,10 +636,13 @@ case of bio, these routines make use of the standard slab allocator.
- The caller of bio_alloc is expected to taken certain steps to avoid
- deadlocks, e.g. avoid trying to allocate more memory from the pool while
- already holding memory obtained from the pool.
--[TBD: This is a potential issue, though a rare possibility
-- in the bounce bio allocation that happens in the current code, since
-- it ends up allocating a second bio from the same pool while
-- holding the original bio ]
-+
-+::
-+
-+  [TBD: This is a potential issue, though a rare possibility
-+   in the bounce bio allocation that happens in the current code, since
-+   it ends up allocating a second bio from the same pool while
-+   holding the original bio ]
- 
- Memory allocated from the pool should be released back within a limited
- amount of time (in the case of bio, that would be after the i/o is completed).
-@@ -635,14 +668,18 @@ same bio_vec_list). This would typically be used for splitting i/o requests
- in lvm or md.
- 
- 3.2 Generic bio helper Routines
-+-------------------------------
- 
- 3.2.1 Traversing segments and completion units in a request
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The macro rq_for_each_segment() should be used for traversing the bios
- in the request list (drivers should avoid directly trying to do it
- themselves). Using these helpers should also make it easier to cope
- with block changes in the future.
- 
-+::
-+
- 	struct req_iterator iter;
- 	rq_for_each_segment(bio_vec, rq, iter)
- 		/* bio_vec is now current segment */
-@@ -653,6 +690,7 @@ which don't make a distinction between segments and completion units would
- need to be reorganized to support multi-segment bios.
- 
- 3.2.2 Setting up DMA scatterlists
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The blk_rq_map_sg() helper routine would be used for setting up scatter
- gather lists from a request, so a driver need not do it on its own.
-@@ -683,6 +721,7 @@ of physical data segments in a request (i.e. the largest sized scatter list
- a driver could handle)
- 
- 3.2.3 I/O completion
-+^^^^^^^^^^^^^^^^^^^^
- 
- The existing generic block layer helper routines end_request,
- end_that_request_first and end_that_request_last can be used for i/o
-@@ -691,8 +730,10 @@ request can be kicked of) as before. With the introduction of multi-page
- bio support, end_that_request_first requires an additional argument indicating
- the number of sectors completed.
- 
--3.2.4 Implications for drivers that do not interpret bios (don't handle
-- multiple segments)
-+3.2.4 Implications for drivers that do not interpret bios
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+(don't handle multiple segments)
- 
- Drivers that do not interpret bios e.g those which do not handle multiple
- segments and do not support i/o into high memory addresses (require bounce
-@@ -707,15 +748,18 @@ be used if only if the request has come down from block/bio path, not for
- direct access requests which only specify rq->buffer without a valid rq->bio)
- 
- 3.3 I/O Submission
-+------------------
- 
- The routine submit_bio() is used to submit a single io. Higher level i/o
- routines make use of this:
- 
- (a) Buffered i/o:
-+
- The routine submit_bh() invokes submit_bio() on a bio corresponding to the
- bh, allocating the bio if required. ll_rw_block() uses submit_bh() as before.
- 
- (b) Kiobuf i/o (for raw/direct i/o):
-+
- The ll_rw_kio() routine breaks up the kiobuf into page sized chunks and
- maps the array to one or more multi-page bios, issuing submit_bio() to
- perform the i/o on each of these.
-@@ -738,6 +782,7 @@ Todo/Observation:
- 
- 
- (c) Page i/o:
-+
- Todo/Under discussion:
- 
-  Andrew Morton's multi-page bio patches attempt to issue multi-page
-@@ -753,6 +798,7 @@ Todo/Under discussion:
-  abstraction, but intended to be as lightweight as possible).
- 
- (d) Direct access i/o:
-+
- Direct access requests that do not contain bios would be submitted differently
- as discussed earlier in section 1.3.
- 
-@@ -780,11 +826,13 @@ Aside:
- 
- 
- 4. The I/O scheduler
-+====================
-+
- I/O scheduler, a.k.a. elevator, is implemented in two layers.  Generic dispatch
- queue and specific I/O schedulers.  Unless stated otherwise, elevator is used
- to refer to both parts and I/O scheduler to specific I/O schedulers.
- 
--Block layer implements generic dispatch queue in block/*.c.
-+Block layer implements generic dispatch queue in `block/*.c`.
- The generic dispatch queue is responsible for requeueing, handling non-fs
- requests and all other subtleties.
- 
-@@ -802,8 +850,11 @@ doesn't implement a function, the switch does nothing or some minimal house
- keeping work.
- 
- 4.1. I/O scheduler API
-+----------------------
- 
- The functions an elevator may implement are: (* are mandatory)
-+
-+=============================== ================================================
- elevator_merge_fn		called to query requests for merge with a bio
- 
- elevator_merge_req_fn		called when two requests get merged. the one
-@@ -862,8 +913,11 @@ elevator_deactivate_req_fn	Called when device driver decides to delay
- elevator_init_fn*
- elevator_exit_fn		Allocate and free any elevator specific storage
- 				for a queue.
-+=============================== ================================================
- 
- 4.2 Request flows seen by I/O schedulers
-+----------------------------------------
-+
- All requests seen by I/O schedulers strictly follow one of the following three
- flows.
- 
-@@ -877,9 +931,12 @@ flows.
-  -> put_req_fn
- 
- 4.3 I/O scheduler implementation
-+--------------------------------
-+
- The generic i/o scheduler algorithm attempts to sort/merge/batch requests for
- optimal disk scan and request servicing performance (based on generic
- principles and device capabilities), optimized for:
-+
- i.   improved throughput
- ii.  improved latency
- iii. better utilization of h/w & CPU time
-@@ -933,15 +990,19 @@ Aside:
-   a big request from the broken up pieces coming by.
- 
- 4.4 I/O contexts
-+----------------
-+
- I/O contexts provide a dynamically allocated per process data area. They may
- be used in I/O schedulers, and in the block layer (could be used for IO statis,
--priorities for example). See *io_context in block/ll_rw_blk.c, and as-iosched.c
-+priorities for example). See `*io_context` in block/ll_rw_blk.c, and as-iosched.c
- for an example of usage in an i/o scheduler.
- 
- 
- 5. Scalability related changes
-+==============================
- 
- 5.1 Granular Locking: io_request_lock replaced by a per-queue lock
-+------------------------------------------------------------------
- 
- The global io_request_lock has been removed as of 2.5, to avoid
- the scalability bottleneck it was causing, and has been replaced by more
-@@ -956,20 +1017,23 @@ request_fn execution which it means that lots of older drivers
- should still be SMP safe. Drivers are free to drop the queue
- lock themselves, if required. Drivers that explicitly used the
- io_request_lock for serialization need to be modified accordingly.
--Usually it's as easy as adding a global lock:
-+Usually it's as easy as adding a global lock::
- 
- 	static DEFINE_SPINLOCK(my_driver_lock);
- 
- and passing the address to that lock to blk_init_queue().
- 
- 5.2 64 bit sector numbers (sector_t prepares for 64 bit support)
-+----------------------------------------------------------------
- 
- The sector number used in the bio structure has been changed to sector_t,
- which could be defined as 64 bit in preparation for 64 bit sector support.
- 
- 6. Other Changes/Implications
-+=============================
- 
- 6.1 Partition re-mapping handled by the generic block layer
-+-----------------------------------------------------------
- 
- In 2.5 some of the gendisk/partition related code has been reorganized.
- Now the generic block layer performs partition-remapping early and thus
-@@ -984,6 +1048,7 @@ sent are offset from the beginning of the device.
- 
- 
- 7. A Few Tips on Migration of older drivers
-+===========================================
- 
- Old-style drivers that just use CURRENT and ignores clustered requests,
- may not need much change.  The generic layer will automatically handle
-@@ -1017,12 +1082,12 @@ blk_init_queue time.
- 
- Drivers no longer have to map a {partition, sector offset} into the
- correct absolute location anymore, this is done by the block layer, so
--where a driver received a request ala this before:
-+where a driver received a request ala this before::
- 
- 	rq->rq_dev = mk_kdev(3, 5);	/* /dev/hda5 */
- 	rq->sector = 0;			/* first sector on hda5 */
- 
--  it will now see
-+it will now see::
- 
- 	rq->rq_dev = mk_kdev(3, 0);	/* /dev/hda */
- 	rq->sector = 123128;		/* offset from start of disk */
-@@ -1039,38 +1104,65 @@ a bio into the virtual address space.
- 
- 
- 8. Prior/Related/Impacted patches
-+=================================
- 
- 8.1. Earlier kiobuf patches (sct/axboe/chait/hch/mkp)
-+-----------------------------------------------------
-+
- - orig kiobuf & raw i/o patches (now in 2.4 tree)
- - direct kiobuf based i/o to devices (no intermediate bh's)
- - page i/o using kiobuf
- - kiobuf splitting for lvm (mkp)
- - elevator support for kiobuf request merging (axboe)
-+
- 8.2. Zero-copy networking (Dave Miller)
-+---------------------------------------
-+
- 8.3. SGI XFS - pagebuf patches - use of kiobufs
-+-----------------------------------------------
- 8.4. Multi-page pioent patch for bio (Christoph Hellwig)
-+--------------------------------------------------------
- 8.5. Direct i/o implementation (Andrea Arcangeli) since 2.4.10-pre11
-+--------------------------------------------------------------------
- 8.6. Async i/o implementation patch (Ben LaHaise)
-+-------------------------------------------------
- 8.7. EVMS layering design (IBM EVMS team)
--8.8. Larger page cache size patch (Ben LaHaise) and
--     Large page size (Daniel Phillips)
-+-----------------------------------------
-+8.8. Larger page cache size patch (Ben LaHaise) and Large page size (Daniel Phillips)
-+-------------------------------------------------------------------------------------
-+
-     => larger contiguous physical memory buffers
-+
- 8.9. VM reservations patch (Ben LaHaise)
-+----------------------------------------
- 8.10. Write clustering patches ? (Marcelo/Quintela/Riel ?)
-+----------------------------------------------------------
- 8.11. Block device in page cache patch (Andrea Archangeli) - now in 2.4.10+
--8.12. Multiple block-size transfers for faster raw i/o (Shailabh Nagar,
--      Badari)
-+---------------------------------------------------------------------------
-+8.12. Multiple block-size transfers for faster raw i/o (Shailabh Nagar, Badari)
-+-------------------------------------------------------------------------------
- 8.13  Priority based i/o scheduler - prepatches (Arjan van de Ven)
-+------------------------------------------------------------------
- 8.14  IDE Taskfile i/o patch (Andre Hedrick)
-+--------------------------------------------
- 8.15  Multi-page writeout and readahead patches (Andrew Morton)
-+---------------------------------------------------------------
- 8.16  Direct i/o patches for 2.5 using kvec and bio (Badari Pulavarthy)
-+-----------------------------------------------------------------------
- 
--9. Other References:
-+9. Other References
-+===================
-+
-+9.1 The Splice I/O Model
-+------------------------
-+
-+Larry McVoy (and subsequent discussions on lkml, and Linus' comments - Jan 2001
-+
-+9.2 Discussions about kiobuf and bh design
-+------------------------------------------
-+
-+On lkml between sct, linus, alan et al - Feb-March 2001 (many of the
-+initial thoughts that led to bio were brought up in this discussion thread)
- 
--9.1 The Splice I/O Model - Larry McVoy (and subsequent discussions on lkml,
--and Linus' comments - Jan 2001)
--9.2 Discussions about kiobuf and bh design on lkml between sct, linus, alan
--et al - Feb-March 2001 (many of the initial thoughts that led to bio were
--brought up in this discussion thread)
- 9.3 Discussions on mempool on lkml - Dec 2001.
--
-+----------------------------------------------
-diff --git a/Documentation/block/biovecs.txt b/Documentation/block/biovecs.rst
-similarity index 92%
-rename from Documentation/block/biovecs.txt
-rename to Documentation/block/biovecs.rst
-index ce6eccaf5df7..86fa66c87172 100644
---- a/Documentation/block/biovecs.txt
-+++ b/Documentation/block/biovecs.rst
-@@ -1,6 +1,6 @@
--
--Immutable biovecs and biovec iterators:
--=======================================
-+======================================
-+Immutable biovecs and biovec iterators
-+======================================
- 
- Kent Overstreet <kmo@daterainc.com>
- 
-@@ -121,10 +121,12 @@ Other implications:
- Usage of helpers:
- =================
- 
--* The following helpers whose names have the suffix of "_all" can only be used
--on non-BIO_CLONED bio. They are usually used by filesystem code. Drivers
--shouldn't use them because the bio may have been split before it reached the
--driver.
-+* The following helpers whose names have the suffix of `_all` can only be used
-+  on non-BIO_CLONED bio. They are usually used by filesystem code. Drivers
-+  shouldn't use them because the bio may have been split before it reached the
-+  driver.
-+
-+::
- 
- 	bio_for_each_segment_all()
- 	bio_first_bvec_all()
-@@ -132,13 +134,13 @@ driver.
- 	bio_last_bvec_all()
- 
- * The following helpers iterate over single-page segment. The passed 'struct
--bio_vec' will contain a single-page IO vector during the iteration
-+  bio_vec' will contain a single-page IO vector during the iteration::
- 
- 	bio_for_each_segment()
- 	bio_for_each_segment_all()
- 
- * The following helpers iterate over multi-page bvec. The passed 'struct
--bio_vec' will contain a multi-page IO vector during the iteration
-+  bio_vec' will contain a multi-page IO vector during the iteration::
- 
- 	bio_for_each_bvec()
- 	rq_for_each_bvec()
-diff --git a/Documentation/block/capability.rst b/Documentation/block/capability.rst
-new file mode 100644
-index 000000000000..2cf258d64bbe
---- /dev/null
-+++ b/Documentation/block/capability.rst
-@@ -0,0 +1,18 @@
-+===============================
-+Generic Block Device Capability
-+===============================
-+
-+This file documents the sysfs file block/<disk>/capability
-+
-+capability is a hex word indicating which capabilities a specific disk
-+supports.  For more information on bits not listed here, see
-+include/linux/genhd.h
-+
-+GENHD_FL_MEDIA_CHANGE_NOTIFY
-+----------------------------
-+
-+Value: 4
-+
-+When this bit is set, the disk supports Asynchronous Notification
-+of media change events.  These events will be broadcast to user
-+space via kernel uevent.
-diff --git a/Documentation/block/capability.txt b/Documentation/block/capability.txt
-deleted file mode 100644
-index 2f1729424ef4..000000000000
---- a/Documentation/block/capability.txt
-+++ /dev/null
-@@ -1,15 +0,0 @@
--Generic Block Device Capability
--===============================================================================
--This file documents the sysfs file block/<disk>/capability
--
--capability is a hex word indicating which capabilities a specific disk
--supports.  For more information on bits not listed here, see
--include/linux/genhd.h
--
--Capability				Value
---------------------------------------------------------------------------------
--GENHD_FL_MEDIA_CHANGE_NOTIFY		4
--	When this bit is set, the disk supports Asynchronous Notification
--	of media change events.  These events will be broadcast to user
--	space via kernel uevent.
--
-diff --git a/Documentation/block/cmdline-partition.txt b/Documentation/block/cmdline-partition.rst
-similarity index 92%
-rename from Documentation/block/cmdline-partition.txt
-rename to Documentation/block/cmdline-partition.rst
-index 760a3f7c3ed4..530bedff548a 100644
---- a/Documentation/block/cmdline-partition.txt
-+++ b/Documentation/block/cmdline-partition.rst
-@@ -1,5 +1,6 @@
-+==============================================
- Embedded device command line partition parsing
--=====================================================================
-+==============================================
- 
- The "blkdevparts" command line option adds support for reading the
- block device partition table from the kernel command line.
-@@ -22,12 +23,15 @@ blkdevparts=<blkdev-def>[;<blkdev-def>]
- <size>
-     partition size, in bytes, such as: 512, 1m, 1G.
-     size may contain an optional suffix of (upper or lower case):
-+
-       K, M, G, T, P, E.
-+
-     "-" is used to denote all remaining space.
- 
- <offset>
-     partition start address, in bytes.
-     offset may contain an optional suffix of (upper or lower case):
-+
-       K, M, G, T, P, E.
- 
- (part-name)
-@@ -36,11 +40,14 @@ blkdevparts=<blkdev-def>[;<blkdev-def>]
-     User space application can access partition by partition name.
- 
- Example:
-+
-     eMMC disk names are "mmcblk0" and "mmcblk0boot0".
- 
--  bootargs:
-+  bootargs::
-+
-     'blkdevparts=mmcblk0:1G(data0),1G(data1),-;mmcblk0boot0:1m(boot),-(kernel)'
- 
--  dmesg:
-+  dmesg::
-+
-     mmcblk0: p1(data0) p2(data1) p3()
-     mmcblk0boot0: p1(boot) p2(kernel)
-diff --git a/Documentation/block/data-integrity.txt b/Documentation/block/data-integrity.rst
-similarity index 91%
-rename from Documentation/block/data-integrity.txt
-rename to Documentation/block/data-integrity.rst
-index 934c44ea0c57..4f2452a95c43 100644
---- a/Documentation/block/data-integrity.txt
-+++ b/Documentation/block/data-integrity.rst
-@@ -1,5 +1,9 @@
------------------------------------------------------------------------
--1. INTRODUCTION
-+﻿==============
-+Data Integrity
-+==============
-+
-+1. Introduction
-+===============
- 
- Modern filesystems feature checksumming of data and metadata to
- protect against data corruption.  However, the detection of the
-@@ -28,8 +32,8 @@ integrity of the I/O and reject it if corruption is detected.  This
- allows not only corruption prevention but also isolation of the point
- of failure.
- 
------------------------------------------------------------------------
--2. THE DATA INTEGRITY EXTENSIONS
-+2. The Data Integrity Extensions
-+================================
- 
- As written, the protocol extensions only protect the path between
- controller and storage device.  However, many controllers actually
-@@ -75,8 +79,8 @@ Extensions.  As these extensions are outside the scope of the protocol
- bodies (T10, T13), Oracle and its partners are trying to standardize
- them within the Storage Networking Industry Association.
- 
------------------------------------------------------------------------
--3. KERNEL CHANGES
-+3. Kernel Changes
-+=================
- 
- The data integrity framework in Linux enables protection information
- to be pinned to I/Os and sent to/received from controllers that
-@@ -123,10 +127,11 @@ access to manipulate the tags from user space.  A passthrough
- interface for this is being worked on.
- 
- 
------------------------------------------------------------------------
--4. BLOCK LAYER IMPLEMENTATION DETAILS
-+4. Block Layer Implementation Details
-+=====================================
- 
--4.1 BIO
-+4.1 Bio
-+-------
- 
- The data integrity patches add a new field to struct bio when
- CONFIG_BLK_DEV_INTEGRITY is enabled.  bio_integrity(bio) returns a
-@@ -145,7 +150,8 @@ attached using bio_integrity_add_page().
- bio_free() will automatically free the bip.
- 
- 
--4.2 BLOCK DEVICE
-+4.2 Block Device
-+----------------
- 
- Because the format of the protection data is tied to the physical
- disk, each block device has been extended with a block integrity
-@@ -163,10 +169,11 @@ and MD linear, RAID0 and RAID1 are currently supported.  RAID4/5/6
- will require extra work due to the application tag.
- 
- 
------------------------------------------------------------------------
--5.0 BLOCK LAYER INTEGRITY API
-+5.0 Block Layer Integrity API
-+=============================
- 
--5.1 NORMAL FILESYSTEM
-+5.1 Normal Filesystem
-+---------------------
- 
-     The normal filesystem is unaware that the underlying block device
-     is capable of sending/receiving integrity metadata.  The IMD will
-@@ -174,25 +181,26 @@ will require extra work due to the application tag.
-     in case of a WRITE.  A READ request will cause the I/O integrity
-     to be verified upon completion.
- 
--    IMD generation and verification can be toggled using the
-+    IMD generation and verification can be toggled using the::
- 
-       /sys/block/<bdev>/integrity/write_generate
- 
--    and
-+    and::
- 
-       /sys/block/<bdev>/integrity/read_verify
- 
-     flags.
- 
- 
--5.2 INTEGRITY-AWARE FILESYSTEM
-+5.2 Integrity-Aware Filesystem
-+------------------------------
- 
-     A filesystem that is integrity-aware can prepare I/Os with IMD
-     attached.  It can also use the application tag space if this is
-     supported by the block device.
- 
- 
--    bool bio_integrity_prep(bio);
-+    `bool bio_integrity_prep(bio);`
- 
-       To generate IMD for WRITE and to set up buffers for READ, the
-       filesystem must call bio_integrity_prep(bio).
-@@ -204,14 +212,15 @@ will require extra work due to the application tag.
-       Complete bio with error if prepare failed for some reson.
- 
- 
--5.3 PASSING EXISTING INTEGRITY METADATA
-+5.3 Passing Existing Integrity Metadata
-+---------------------------------------
- 
-     Filesystems that either generate their own integrity metadata or
-     are capable of transferring IMD from user space can use the
-     following calls:
- 
- 
--    struct bip * bio_integrity_alloc(bio, gfp_mask, nr_pages);
-+    `struct bip * bio_integrity_alloc(bio, gfp_mask, nr_pages);`
- 
-       Allocates the bio integrity payload and hangs it off of the bio.
-       nr_pages indicate how many pages of protection data need to be
-@@ -220,7 +229,7 @@ will require extra work due to the application tag.
-       The integrity payload will be freed at bio_free() time.
- 
- 
--    int bio_integrity_add_page(bio, page, len, offset);
-+    `int bio_integrity_add_page(bio, page, len, offset);`
- 
-       Attaches a page containing integrity metadata to an existing
-       bio.  The bio must have an existing bip,
-@@ -241,21 +250,21 @@ will require extra work due to the application tag.
-       integrity upon completion.
- 
- 
--5.4 REGISTERING A BLOCK DEVICE AS CAPABLE OF EXCHANGING INTEGRITY
--    METADATA
-+5.4 Registering A Block Device As Capable Of Exchanging Integrity Metadata
-+--------------------------------------------------------------------------
- 
-     To enable integrity exchange on a block device the gendisk must be
-     registered as capable:
- 
--    int blk_integrity_register(gendisk, blk_integrity);
-+    `int blk_integrity_register(gendisk, blk_integrity);`
- 
-       The blk_integrity struct is a template and should contain the
--      following:
-+      following::
- 
-         static struct blk_integrity my_profile = {
-             .name                   = "STANDARDSBODY-TYPE-VARIANT-CSUM",
-             .generate_fn            = my_generate_fn,
--       	    .verify_fn              = my_verify_fn,
-+	    .verify_fn              = my_verify_fn,
- 	    .tuple_size             = sizeof(struct my_tuple_size),
- 	    .tag_size               = <tag bytes per hw sector>,
-         };
-@@ -278,4 +287,5 @@ will require extra work due to the application tag.
-       0 depending on the value of the Control Mode Page ATO bit.
- 
- ----------------------------------------------------------------------
-+
- 2007-12-24 Martin K. Petersen <martin.petersen@oracle.com>
-diff --git a/Documentation/block/deadline-iosched.txt b/Documentation/block/deadline-iosched.rst
-similarity index 89%
-rename from Documentation/block/deadline-iosched.txt
-rename to Documentation/block/deadline-iosched.rst
-index 2d82c80322cb..9f5c5a4c370e 100644
---- a/Documentation/block/deadline-iosched.txt
-+++ b/Documentation/block/deadline-iosched.rst
-@@ -1,3 +1,4 @@
-+==============================
- Deadline IO scheduler tunables
- ==============================
- 
-@@ -7,15 +8,13 @@ of interest to power users.
- 
- Selecting IO schedulers
- -----------------------
--Refer to Documentation/block/switching-sched.txt for information on
-+Refer to Documentation/block/switching-sched.rst for information on
- selecting an io scheduler on a per-device basis.
- 
--
--********************************************************************************
--
-+------------------------------------------------------------------------------
- 
- read_expire	(in ms)
-------------
-+-----------------------
- 
- The goal of the deadline io scheduler is to attempt to guarantee a start
- service time for a request. As we focus mainly on read latencies, this is
-@@ -25,15 +24,15 @@ milliseconds.
- 
- 
- write_expire	(in ms)
-------------
-+-----------------------
- 
- Similar to read_expire mentioned above, but for writes.
- 
- 
- fifo_batch	(number of requests)
------------
-+------------------------------------
- 
--Requests are grouped into ``batches'' of a particular data direction (read or
-+Requests are grouped into ``batches`` of a particular data direction (read or
- write) which are serviced in increasing sector order.  To limit extra seeking,
- deadline expiries are only checked between batches.  fifo_batch controls the
- maximum number of requests per batch.
-@@ -45,7 +44,7 @@ generally improves throughput, at the cost of latency variation.
- 
- 
- writes_starved	(number of dispatches)
----------------
-+--------------------------------------
- 
- When we have to move requests from the io scheduler queue to the block
- device dispatch queue, we always give a preference to reads. However, we
-@@ -56,7 +55,7 @@ same criteria as reads.
- 
- 
- front_merges	(bool)
--------------
-+----------------------
- 
- Sometimes it happens that a request enters the io scheduler that is contiguous
- with a request that is already on the queue. Either it fits in the back of that
-@@ -71,5 +70,3 @@ rbtree front sector lookup when the io scheduler merge function is called.
- 
- 
- Nov 11 2002, Jens Axboe <jens.axboe@oracle.com>
--
--
-diff --git a/Documentation/block/index.rst b/Documentation/block/index.rst
-new file mode 100644
-index 000000000000..8cd226a0e86e
---- /dev/null
-+++ b/Documentation/block/index.rst
-@@ -0,0 +1,25 @@
-+:orphan:
-+
-+=====
-+Block
-+=====
++=============== ===============================================================
+ abi/		execution domains & personalities
+ debug/		<empty>
+ dev/		device specific information (eg dev/cdrom/info)
+@@ -70,7 +82,19 @@ sunrpc/		SUN Remote Procedure Call (NFS)
+ vm/		memory management tuning
+ 		buffer and cache management
+ user/		Per user per user namespace limits
++=============== ===============================================================
+ 
+ These are the subdirs I have on my system. There might be more
+ or other subdirs in another setup. If you see another dir, I'd
+ really like to hear about it :-)
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+   bfq-iosched
-+   biodoc
-+   biovecs
-+   capability
-+   cmdline-partition
-+   data-integrity
-+   deadline-iosched
-+   ioprio
-+   kyber-iosched
-+   null_blk
-+   pr
-+   queue-sysfs
-+   request
-+   stat
-+   switching-sched
-+   writeback_cache_control
-diff --git a/Documentation/block/ioprio.txt b/Documentation/block/ioprio.rst
-similarity index 75%
-rename from Documentation/block/ioprio.txt
-rename to Documentation/block/ioprio.rst
-index 8ed8c59380b4..f72b0de65af7 100644
---- a/Documentation/block/ioprio.txt
-+++ b/Documentation/block/ioprio.rst
-@@ -1,3 +1,4 @@
-+===================
- Block io priorities
- ===================
++   abi
++   fs
++   kernel
++   net
++   sunrpc
++   user
++   vm
+diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.rst
+similarity index 79%
+rename from Documentation/sysctl/kernel.txt
+rename to Documentation/sysctl/kernel.rst
+index 1b2fe17cd2fa..a0c1d4ce403a 100644
+--- a/Documentation/sysctl/kernel.txt
++++ b/Documentation/sysctl/kernel.rst
+@@ -1,10 +1,16 @@
+-Documentation for /proc/sys/kernel/*	kernel version 2.2.10
+-	(c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
+-	(c) 2009,        Shen Feng<shen@cn.fujitsu.com>
++===================================
++Documentation for /proc/sys/kernel/
++===================================
  
-@@ -40,81 +41,81 @@ class data, since it doesn't really apply here.
- Tools
- -----
+-For general info and legal blurb, please look in README.
++kernel version 2.2.10
  
--See below for a sample ionice tool. Usage:
-+See below for a sample ionice tool. Usage::
- 
--# ionice -c<class> -n<level> -p<pid>
-+	# ionice -c<class> -n<level> -p<pid>
- 
- If pid isn't given, the current process is assumed. IO priority settings
- are inherited on fork, so you can use ionice to start the process at a given
--level:
-+level::
- 
--# ionice -c2 -n0 /bin/ls
-+	# ionice -c2 -n0 /bin/ls
- 
- will run ls at the best-effort scheduling class at the highest priority.
--For a running process, you can give the pid instead:
-+For a running process, you can give the pid instead::
- 
--# ionice -c1 -n2 -p100
-+	# ionice -c1 -n2 -p100
- 
- will change pid 100 to run at the realtime scheduling class, at priority 2.
- 
-----> snip ionice.c tool <---
-+ionice.c tool::
- 
--#include <stdio.h>
--#include <stdlib.h>
--#include <errno.h>
--#include <getopt.h>
--#include <unistd.h>
--#include <sys/ptrace.h>
--#include <asm/unistd.h>
-+  #include <stdio.h>
-+  #include <stdlib.h>
-+  #include <errno.h>
-+  #include <getopt.h>
-+  #include <unistd.h>
-+  #include <sys/ptrace.h>
-+  #include <asm/unistd.h>
- 
--extern int sys_ioprio_set(int, int, int);
--extern int sys_ioprio_get(int, int);
-+  extern int sys_ioprio_set(int, int, int);
-+  extern int sys_ioprio_get(int, int);
- 
--#if defined(__i386__)
--#define __NR_ioprio_set		289
--#define __NR_ioprio_get		290
--#elif defined(__ppc__)
--#define __NR_ioprio_set		273
--#define __NR_ioprio_get		274
--#elif defined(__x86_64__)
--#define __NR_ioprio_set		251
--#define __NR_ioprio_get		252
--#elif defined(__ia64__)
--#define __NR_ioprio_set		1274
--#define __NR_ioprio_get		1275
--#else
--#error "Unsupported arch"
--#endif
-+  #if defined(__i386__)
-+  #define __NR_ioprio_set		289
-+  #define __NR_ioprio_get		290
-+  #elif defined(__ppc__)
-+  #define __NR_ioprio_set		273
-+  #define __NR_ioprio_get		274
-+  #elif defined(__x86_64__)
-+  #define __NR_ioprio_set		251
-+  #define __NR_ioprio_get		252
-+  #elif defined(__ia64__)
-+  #define __NR_ioprio_set		1274
-+  #define __NR_ioprio_get		1275
-+  #else
-+  #error "Unsupported arch"
-+  #endif
- 
--static inline int ioprio_set(int which, int who, int ioprio)
--{
-+  static inline int ioprio_set(int which, int who, int ioprio)
-+  {
- 	return syscall(__NR_ioprio_set, which, who, ioprio);
--}
-+  }
- 
--static inline int ioprio_get(int which, int who)
--{
-+  static inline int ioprio_get(int which, int who)
-+  {
- 	return syscall(__NR_ioprio_get, which, who);
--}
-+  }
- 
--enum {
-+  enum {
- 	IOPRIO_CLASS_NONE,
- 	IOPRIO_CLASS_RT,
- 	IOPRIO_CLASS_BE,
- 	IOPRIO_CLASS_IDLE,
--};
-+  };
- 
--enum {
-+  enum {
- 	IOPRIO_WHO_PROCESS = 1,
- 	IOPRIO_WHO_PGRP,
- 	IOPRIO_WHO_USER,
--};
-+  };
- 
--#define IOPRIO_CLASS_SHIFT	13
-+  #define IOPRIO_CLASS_SHIFT	13
- 
--const char *to_prio[] = { "none", "realtime", "best-effort", "idle", };
-+  const char *to_prio[] = { "none", "realtime", "best-effort", "idle", };
- 
--int main(int argc, char *argv[])
--{
-+  int main(int argc, char *argv[])
-+  {
- 	int ioprio = 4, set = 0, ioprio_class = IOPRIO_CLASS_BE;
- 	int c, pid = 0;
- 
-@@ -175,9 +176,7 @@ int main(int argc, char *argv[])
- 	}
- 
- 	return 0;
--}
--
-----> snip ionice.c tool <---
-+  }
- 
- 
- March 11 2005, Jens Axboe <jens.axboe@oracle.com>
-diff --git a/Documentation/block/kyber-iosched.txt b/Documentation/block/kyber-iosched.rst
-similarity index 86%
-rename from Documentation/block/kyber-iosched.txt
-rename to Documentation/block/kyber-iosched.rst
-index e94feacd7edc..3e164dd0617c 100644
---- a/Documentation/block/kyber-iosched.txt
-+++ b/Documentation/block/kyber-iosched.rst
-@@ -1,5 +1,6 @@
-+============================
- Kyber I/O scheduler tunables
--===========================
-+============================
- 
- The only two tunables for the Kyber scheduler are the target latencies for
- reads and synchronous writes. Kyber will throttle requests in order to meet
-diff --git a/Documentation/block/null_blk.txt b/Documentation/block/null_blk.rst
-similarity index 60%
-rename from Documentation/block/null_blk.txt
-rename to Documentation/block/null_blk.rst
-index 41f0a3d33bbd..31451d80783c 100644
---- a/Documentation/block/null_blk.txt
-+++ b/Documentation/block/null_blk.rst
-@@ -1,33 +1,43 @@
-+========================
- Null block device driver
--================================================================================
-+========================
- 
--I. Overview
-+1. Overview
-+===========
- 
- The null block device (/dev/nullb*) is used for benchmarking the various
- block-layer implementations. It emulates a block device of X gigabytes in size.
- The following instances are possible:
- 
-   Single-queue block-layer
+-==============================================================
++Copyright (c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
 +
-     - Request-based.
-     - Single submission queue per device.
-     - Implements IO scheduling algorithms (CFQ, Deadline, noop).
++Copyright (c) 2009,        Shen Feng<shen@cn.fujitsu.com>
 +
-   Multi-queue block-layer
++For general info and legal blurb, please look in index.rst.
 +
-     - Request-based.
-     - Configurable submission queues per device.
-+
-   No block-layer (Known as bio-based)
-+
-     - Bio-based. IO requests are submitted directly to the device driver.
-     - Directly accepts bio data structure and returns them.
++------------------------------------------------------------------------------
  
- All of them have a completion queue for each core in the system.
+ This file contains documentation for the sysctl files in
+ /proc/sys/kernel/ and is valid for Linux kernel version 2.2.
+@@ -101,9 +107,9 @@ show up in /proc/sys/kernel:
+ - watchdog_thresh
+ - version
  
--II. Module parameters applicable for all instances:
-+2. Module parameters applicable for all instances
-+=================================================
+-==============================================================
  
- queue_mode=[0-2]: Default: 2-Multi-queue
-   Selects which block-layer the module should instantiate with.
+ acct:
++=====
  
--  0: Bio-based.
--  1: Single-queue.
--  2: Multi-queue.
-+  =  ============
-+  0  Bio-based
-+  1  Single-queue
-+  2  Multi-queue
-+  =  ============
+ highwater lowwater frequency
  
- home_node=[0--nr_nodes]: Default: NUMA_NO_NODE
-   Selects what CPU node the data structures are allocated from.
-@@ -45,12 +55,14 @@ nr_devices=[Number of devices]: Default: 1
- irqmode=[0-2]: Default: 1-Soft-irq
-   The completion mode used for completing IOs to the block-layer.
+@@ -118,18 +124,18 @@ That is, suspend accounting if there left <= 2% free; resume it
+ if we got >=4%; consider information about amount of free space
+ valid for 30 seconds.
  
--  0: None.
--  1: Soft-irq. Uses IPI to complete IOs across CPU nodes. Simulates the overhead
-+  =  ===========================================================================
-+  0  None.
-+  1  Soft-irq. Uses IPI to complete IOs across CPU nodes. Simulates the overhead
-      when IOs are issued from another CPU node than the home the device is
-      connected to.
--  2: Timer: Waits a specific period (completion_nsec) for each IO before
-+  2  Timer: Waits a specific period (completion_nsec) for each IO before
-      completion.
-+  =  ===========================================================================
+-==============================================================
  
- completion_nsec=[ns]: Default: 10,000ns
-   Combined with irqmode=2 (timer). The time each completion event must wait.
-@@ -66,30 +78,45 @@ hw_queue_depth=[0..qdepth]: Default: 64
- III: Multi-queue specific parameters
- 
- use_per_node_hctx=[0/1]: Default: 0
--  0: The number of submit queues are set to the value of the submit_queues
-+
-+  =  =====================================================================
-+  0  The number of submit queues are set to the value of the submit_queues
-      parameter.
--  1: The multi-queue block layer is instantiated with a hardware dispatch
-+  1  The multi-queue block layer is instantiated with a hardware dispatch
-      queue for each CPU node in the system.
-+  =  =====================================================================
- 
- no_sched=[0/1]: Default: 0
--  0: nullb* use default blk-mq io scheduler.
--  1: nullb* doesn't use io scheduler.
-+
-+  =  ======================================
-+  0  nullb* use default blk-mq io scheduler
-+  1  nullb* doesn't use io scheduler
-+  =  ======================================
- 
- blocking=[0/1]: Default: 0
--  0: Register as a non-blocking blk-mq driver device.
--  1: Register as a blocking blk-mq driver device, null_blk will set
-+
-+  =  ===============================================================
-+  0  Register as a non-blocking blk-mq driver device.
-+  1  Register as a blocking blk-mq driver device, null_blk will set
-      the BLK_MQ_F_BLOCKING flag, indicating that it sometimes/always
-      needs to block in its ->queue_rq() function.
-+  =  ===============================================================
- 
- shared_tags=[0/1]: Default: 0
--  0: Tag set is not shared.
--  1: Tag set shared between devices for blk-mq. Only makes sense with
-+
-+  =  ================================================================
-+  0  Tag set is not shared.
-+  1  Tag set shared between devices for blk-mq. Only makes sense with
-      nr_devices > 1, otherwise there's no tag set to share.
-+  =  ================================================================
- 
- zoned=[0/1]: Default: 0
--  0: Block device is exposed as a random-access block device.
--  1: Block device is exposed as a host-managed zoned block device. Requires
-+
-+  =  ======================================================================
-+  0  Block device is exposed as a random-access block device.
-+  1  Block device is exposed as a host-managed zoned block device. Requires
-      CONFIG_BLK_DEV_ZONED.
-+  =  ======================================================================
- 
- zone_size=[MB]: Default: 256
-   Per zone size when exposed as a zoned block device. Must be a power of two.
-diff --git a/Documentation/block/pr.txt b/Documentation/block/pr.rst
-similarity index 93%
-rename from Documentation/block/pr.txt
-rename to Documentation/block/pr.rst
-index ac9b8e70e64b..30ea1c2e39eb 100644
---- a/Documentation/block/pr.txt
-+++ b/Documentation/block/pr.rst
-@@ -1,4 +1,4 @@
--
-+===============================================
- Block layer support for Persistent Reservations
- ===============================================
- 
-@@ -23,22 +23,18 @@ The following types of reservations are supported:
- --------------------------------------------------
- 
-  - PR_WRITE_EXCLUSIVE
--
- 	Only the initiator that owns the reservation can write to the
- 	device.  Any initiator can read from the device.
- 
-  - PR_EXCLUSIVE_ACCESS
--
- 	Only the initiator that owns the reservation can access the
- 	device.
- 
-  - PR_WRITE_EXCLUSIVE_REG_ONLY
--
- 	Only initiators with a registered key can write to the device,
- 	Any initiator can read from the device.
- 
-  - PR_EXCLUSIVE_ACCESS_REG_ONLY
--
- 	Only initiators with a registered key can access the device.
- 
-  - PR_WRITE_EXCLUSIVE_ALL_REGS
-@@ -48,21 +44,21 @@ The following types of reservations are supported:
- 	All initiators with a registered key are considered reservation
- 	holders.
- 	Please reference the SPC spec on the meaning of a reservation
--	holder if you want to use this type. 
-+	holder if you want to use this type.
- 
-  - PR_EXCLUSIVE_ACCESS_ALL_REGS
--
- 	Only initiators with a registered key can access the device.
- 	All initiators with a registered key are considered reservation
- 	holders.
- 	Please reference the SPC spec on the meaning of a reservation
--	holder if you want to use this type. 
-+	holder if you want to use this type.
- 
- 
- The following ioctl are supported:
- ----------------------------------
- 
- 1. IOC_PR_REGISTER
-+^^^^^^^^^^^^^^^^^^
- 
- This ioctl command registers a new reservation if the new_key argument
- is non-null.  If no existing reservation exists old_key must be zero,
-@@ -74,6 +70,7 @@ in old_key.
- 
- 
- 2. IOC_PR_RESERVE
-+^^^^^^^^^^^^^^^^^
- 
- This ioctl command reserves the device and thus restricts access for other
- devices based on the type argument.  The key argument must be the existing
-@@ -82,12 +79,14 @@ IOC_PR_REGISTER_IGNORE, IOC_PR_PREEMPT or IOC_PR_PREEMPT_ABORT commands.
- 
- 
- 3. IOC_PR_RELEASE
-+^^^^^^^^^^^^^^^^^
- 
- This ioctl command releases the reservation specified by key and flags
- and thus removes any access restriction implied by it.
- 
- 
- 4. IOC_PR_PREEMPT
-+^^^^^^^^^^^^^^^^^
- 
- This ioctl command releases the existing reservation referred to by
- old_key and replaces it with a new reservation of type for the
-@@ -95,11 +94,13 @@ reservation key new_key.
- 
- 
- 5. IOC_PR_PREEMPT_ABORT
-+^^^^^^^^^^^^^^^^^^^^^^^
- 
- This ioctl command works like IOC_PR_PREEMPT except that it also aborts
- any outstanding command sent over a connection identified by old_key.
- 
- 6. IOC_PR_CLEAR
-+^^^^^^^^^^^^^^^
- 
- This ioctl command unregisters both key and any other reservation key
- registered with the device and drops any existing reservation.
-@@ -111,7 +112,6 @@ Flags
- All the ioctls have a flag field.  Currently only one flag is supported:
- 
-  - PR_FL_IGNORE_KEY
--
- 	Ignore the existing reservation key.  This is commonly supported for
- 	IOC_PR_REGISTER, and some implementation may support the flag for
- 	IOC_PR_RESERVE.
-diff --git a/Documentation/block/queue-sysfs.txt b/Documentation/block/queue-sysfs.rst
-similarity index 99%
-rename from Documentation/block/queue-sysfs.txt
-rename to Documentation/block/queue-sysfs.rst
-index 83b457e24bba..9022249208b5 100644
---- a/Documentation/block/queue-sysfs.txt
-+++ b/Documentation/block/queue-sysfs.rst
-@@ -1,3 +1,4 @@
+ acpi_video_flags:
 +=================
- Queue sysfs files
- =================
  
-@@ -10,7 +11,7 @@ Files denoted with a RO postfix are readonly and the RW postfix means
- read-write.
+ flags
  
- add_random (RW)
------------------
-+---------------
- This file allows to turn off the disk entropy contribution. Default
- value of this file is '1'(on).
+ See Doc*/kernel/power/video.txt, it allows mode of video boot to be
+ set during run time.
  
-@@ -21,13 +22,13 @@ used by CPU-addressable storage to bypass the pagecache.  It shows '1'
- if true, '0' if not.
+-==============================================================
  
- discard_granularity (RO)
-------------------------
-+------------------------
- This shows the size of internal allocation of the device in bytes, if
- reported by the device. A value of '0' means device does not support
- the discard functionality.
+ auto_msgmni:
++============
  
- discard_max_hw_bytes (RO)
------------------------
-+-------------------------
- Devices that support discard functionality may have internal limits on
- the number of bytes that can be trimmed or unmapped in a single operation.
- The discard_max_bytes parameter is set by the device driver to the maximum
-diff --git a/Documentation/block/request.txt b/Documentation/block/request.rst
-similarity index 59%
-rename from Documentation/block/request.txt
-rename to Documentation/block/request.rst
-index 754e104ed369..747021e1ffdb 100644
---- a/Documentation/block/request.txt
-+++ b/Documentation/block/request.rst
-@@ -1,26 +1,37 @@
+ This variable has no effect and may be removed in future kernel
+ releases. Reading it always returns 0.
+@@ -139,9 +145,8 @@ Echoing "1" into this file enabled msgmni automatic recomputing.
+ Echoing "0" turned it off. auto_msgmni default value was 1.
+ 
+ 
+-==============================================================
 -
-+============================
- struct request documentation
-+============================
+ bootloader_type:
++================
  
- Jens Axboe <jens.axboe@oracle.com> 27/05/02
+ x86 bootloader identification
  
--1.0
--Index
+@@ -156,9 +161,9 @@ the value 340 = 0x154.
+ See the type_of_loader and ext_loader_type fields in
+ Documentation/x86/boot.rst for additional information.
  
--2.0 Struct request members classification
-+.. FIXME:
-+   No idea about what does mean - seems just some noise, so comment it
+-==============================================================
  
--	2.1 struct request members explanation
-+   1.0
-+   Index
-+
-+   2.0 Struct request members classification
-+
-+       2.1 struct request members explanation
-+
-+   3.0
-+
-+
-+   2.0
- 
--3.0
- 
- 
--2.0
- Short explanation of request members
-+====================================
- 
- Classification flags:
- 
-+	=	====================
- 	D	driver member
- 	B	block layer member
- 	I	I/O scheduler member
-+	=	====================
- 
- Unless an entry contains a D classification, a device driver must not access
- this member. Some members may contain D classifications, but should only be
-@@ -28,14 +39,13 @@ access through certain macros or functions (eg ->flags).
- 
- <linux/blkdev.h>
- 
--2.1
-+=============================== ======= =======================================
- Member				Flag	Comment
--------				----	-------
--
-+=============================== ======= =======================================
- struct list_head queuelist	BI	Organization on various internal
- 					queues
- 
--void *elevator_private		I	I/O scheduler private data
-+``void *elevator_private``	I	I/O scheduler private data
- 
- unsigned char cmd[16]		D	Driver can use this for setting up
- 					a cdb before execution, see
-@@ -71,18 +81,19 @@ unsigned int hard_cur_sectors	B	Used to keep current_nr_sectors sane
- 
- int tag				DB	TCQ tag, if assigned
- 
--void *special			D	Free to be used by driver
-+``void *special``		D	Free to be used by driver
- 
--char *buffer			D	Map of first segment, also see
-+``char *buffer``		D	Map of first segment, also see
- 					section on bouncing SECTION
- 
--struct completion *waiting	D	Can be used by driver to get signalled
-+``struct completion *waiting``	D	Can be used by driver to get signalled
- 					on request completion
- 
--struct bio *bio			DBI	First bio in request
-+``struct bio *bio``		DBI	First bio in request
- 
--struct bio *biotail		DBI	Last bio in request
-+``struct bio *biotail``		DBI	Last bio in request
- 
--struct request_queue *q		DB	Request queue this request belongs to
-+``struct request_queue *q``	DB	Request queue this request belongs to
- 
--struct request_list *rl		B	Request list this request came from
-+``struct request_list *rl``	B	Request list this request came from
-+=============================== ======= =======================================
-diff --git a/Documentation/block/stat.txt b/Documentation/block/stat.rst
-similarity index 89%
-rename from Documentation/block/stat.txt
-rename to Documentation/block/stat.rst
-index 0aace9cc536c..9c07bc22b0bc 100644
---- a/Documentation/block/stat.txt
-+++ b/Documentation/block/stat.rst
-@@ -1,3 +1,4 @@
-+===============================================
- Block layer statistics in /sys/block/<dev>/stat
- ===============================================
- 
-@@ -6,9 +7,12 @@ This file documents the contents of the /sys/block/<dev>/stat file.
- The stat file provides several statistics about the state of block
- device <dev>.
- 
--Q. Why are there multiple statistics in a single file?  Doesn't sysfs
-+Q.
-+   Why are there multiple statistics in a single file?  Doesn't sysfs
-    normally contain a single value per file?
--A. By having a single file, the kernel can guarantee that the statistics
-+
-+A.
-+   By having a single file, the kernel can guarantee that the statistics
-    represent a consistent snapshot of the state of the device.  If the
-    statistics were exported as multiple files containing one statistic
-    each, it would be impossible to guarantee that a set of readings
-@@ -18,8 +22,10 @@ The stat file consists of a single line of text containing 11 decimal
- values separated by whitespace.  The fields are summarized in the
- following table, and described in more detail below.
- 
-+
-+=============== ============= =================================================
- Name            units         description
------            -----         -----------
-+=============== ============= =================================================
- read I/Os       requests      number of read I/Os processed
- read merges     requests      number of read I/Os merged with in-queue I/O
- read sectors    sectors       number of sectors read
-@@ -35,6 +41,7 @@ discard I/Os    requests      number of discard I/Os processed
- discard merges  requests      number of discard I/Os merged with in-queue I/O
- discard sectors sectors       number of sectors discarded
- discard ticks   milliseconds  total wait time for discard requests
-+=============== ============= =================================================
- 
- read I/Os, write I/Os, discard I/0s
- ===================================
-diff --git a/Documentation/block/switching-sched.txt b/Documentation/block/switching-sched.rst
-similarity index 67%
-rename from Documentation/block/switching-sched.txt
-rename to Documentation/block/switching-sched.rst
-index 7977f6fb8b20..42042417380e 100644
---- a/Documentation/block/switching-sched.txt
-+++ b/Documentation/block/switching-sched.rst
-@@ -1,35 +1,39 @@
+ bootloader_version:
 +===================
-+Switching Scheduler
-+===================
+ 
+ x86 bootloader version
+ 
+@@ -168,27 +173,31 @@ file will contain the value 564 = 0x234.
+ See the type_of_loader and ext_loader_ver fields in
+ Documentation/x86/boot.rst for additional information.
+ 
+-==============================================================
+ 
+-cap_last_cap
++cap_last_cap:
++=============
+ 
+ Highest valid capability of the running kernel.  Exports
+ CAP_LAST_CAP from the kernel.
+ 
+-==============================================================
+ 
+ core_pattern:
++=============
+ 
+ core_pattern is used to specify a core dumpfile pattern name.
+-. max length 127 characters; default value is "core"
+-. core_pattern is used as a pattern template for the output filename;
 +
- To choose IO schedulers at boot time, use the argument 'elevator=deadline'.
- 'noop' and 'cfq' (the default) are also available. IO schedulers are assigned
- globally at boot time only presently.
++* max length 127 characters; default value is "core"
++* core_pattern is used as a pattern template for the output filename;
+   certain string patterns (beginning with '%') are substituted with
+   their actual values.
+-. backward compatibility with core_uses_pid:
++* backward compatibility with core_uses_pid:
++
+ 	If core_pattern does not include "%p" (default does not)
+ 	and core_uses_pid is set, then .PID will be appended to
+ 	the filename.
+-. corename format specifiers:
++
++* corename format specifiers::
++
+ 	%<NUL>	'%' is dropped
+ 	%%	output one '%'
+ 	%p	pid
+@@ -205,13 +214,14 @@ core_pattern is used to specify a core dumpfile pattern name.
+ 	%e	executable filename (may be shortened)
+ 	%E	executable path
+ 	%<OTHER> both are dropped
+-. If the first character of the pattern is a '|', the kernel will treat
++
++* If the first character of the pattern is a '|', the kernel will treat
+   the rest of the pattern as a command to run.  The core dump will be
+   written to the standard input of that program instead of to a file.
  
- Each io queue has a set of io scheduler tunables associated with it. These
- tunables control how the io scheduler works. You can find these entries
--in:
-+in::
+-==============================================================
  
--/sys/block/<device>/queue/iosched
-+	/sys/block/<device>/queue/iosched
+ core_pipe_limit:
++================
  
- assuming that you have sysfs mounted on /sys. If you don't have sysfs mounted,
--you can do so by typing:
-+you can do so by typing::
+ This sysctl is only applicable when core_pattern is configured to pipe
+ core files to a user space helper (when the first character of
+@@ -232,9 +242,9 @@ parallel, but that no waiting will take place (i.e. the collecting
+ process is not guaranteed access to /proc/<crashing pid>/).  This
+ value defaults to 0.
  
--# mount none /sys -t sysfs
-+	# mount none /sys -t sysfs
+-==============================================================
  
- It is possible to change the IO scheduler for a given block device on
- the fly to select one of mq-deadline, none, bfq, or kyber schedulers -
- which can improve that device's throughput.
+ core_uses_pid:
++==============
  
--To set a specific scheduler, simply do this:
-+To set a specific scheduler, simply do this::
+ The default coredump filename is "core".  By setting
+ core_uses_pid to 1, the coredump filename becomes core.PID.
+@@ -242,9 +252,9 @@ If core_pattern does not include "%p" (default does not)
+ and core_uses_pid is set, then .PID will be appended to
+ the filename.
  
--echo SCHEDNAME > /sys/block/DEV/queue/scheduler
-+	echo SCHEDNAME > /sys/block/DEV/queue/scheduler
+-==============================================================
  
- where SCHEDNAME is the name of a defined IO scheduler, and DEV is the
- device name (hda, hdb, sga, or whatever you happen to have).
+ ctrl-alt-del:
++=============
  
- The list of defined schedulers can be found by simply doing
- a "cat /sys/block/DEV/queue/scheduler" - the list of valid names
--will be displayed, with the currently selected scheduler in brackets:
-+will be displayed, with the currently selected scheduler in brackets::
+ When the value in this file is 0, ctrl-alt-del is trapped and
+ sent to the init(1) program to handle a graceful restart.
+@@ -252,14 +262,15 @@ When, however, the value is > 0, Linux's reaction to a Vulcan
+ Nerve Pinch (tm) will be an immediate reboot, without even
+ syncing its dirty buffers.
  
--# cat /sys/block/sda/queue/scheduler
--[mq-deadline] kyber bfq none
--# echo none >/sys/block/sda/queue/scheduler
--# cat /sys/block/sda/queue/scheduler
--[none] mq-deadline kyber bfq
-+  # cat /sys/block/sda/queue/scheduler
-+  [mq-deadline] kyber bfq none
-+  # echo none >/sys/block/sda/queue/scheduler
-+  # cat /sys/block/sda/queue/scheduler
-+  [none] mq-deadline kyber bfq
-diff --git a/Documentation/block/writeback_cache_control.txt b/Documentation/block/writeback_cache_control.rst
-similarity index 94%
-rename from Documentation/block/writeback_cache_control.txt
-rename to Documentation/block/writeback_cache_control.rst
-index 8a6bdada5f6b..2c752c57c14c 100644
---- a/Documentation/block/writeback_cache_control.txt
-+++ b/Documentation/block/writeback_cache_control.rst
-@@ -1,6 +1,6 @@
+-Note: when a program (like dosemu) has the keyboard in 'raw'
+-mode, the ctrl-alt-del is intercepted by the program before it
+-ever reaches the kernel tty layer, and it's up to the program
+-to decide what to do with it.
++Note:
++  when a program (like dosemu) has the keyboard in 'raw'
++  mode, the ctrl-alt-del is intercepted by the program before it
++  ever reaches the kernel tty layer, and it's up to the program
++  to decide what to do with it.
+ 
+-==============================================================
+ 
+ dmesg_restrict:
++===============
+ 
+ This toggle indicates whether unprivileged users are prevented
+ from using dmesg(8) to view messages from the kernel's log buffer.
+@@ -270,18 +281,21 @@ dmesg(8).
+ The kernel config option CONFIG_SECURITY_DMESG_RESTRICT sets the
+ default value of dmesg_restrict.
+ 
+-==============================================================
+ 
+ domainname & hostname:
++======================
+ 
+ These files can be used to set the NIS/YP domainname and the
+ hostname of your box in exactly the same way as the commands
+-domainname and hostname, i.e.:
+-# echo "darkstar" > /proc/sys/kernel/hostname
+-# echo "mydomain" > /proc/sys/kernel/domainname
+-has the same effect as
+-# hostname "darkstar"
+-# domainname "mydomain"
++domainname and hostname, i.e.::
++
++	# echo "darkstar" > /proc/sys/kernel/hostname
++	# echo "mydomain" > /proc/sys/kernel/domainname
++
++has the same effect as::
++
++	# hostname "darkstar"
++	# domainname "mydomain"
+ 
+ Note, however, that the classic darkstar.frop.org has the
+ hostname "darkstar" and DNS (Internet Domain Name Server)
+@@ -290,8 +304,9 @@ Information Service) or YP (Yellow Pages) domainname. These two
+ domain names are in general different. For a detailed discussion
+ see the hostname(1) man page.
+ 
+-==============================================================
++
+ hardlockup_all_cpu_backtrace:
++=============================
+ 
+ This value controls the hard lockup detector behavior when a hard
+ lockup condition is detected as to whether or not to gather further
+@@ -301,9 +316,10 @@ will be initiated.
+ 0: do nothing. This is the default behavior.
+ 
+ 1: on detection capture more debug information.
+-==============================================================
++
+ 
+ hardlockup_panic:
++=================
+ 
+ This parameter can be used to control whether the kernel panics
+ when a hard lockup is detected.
+@@ -314,16 +330,16 @@ when a hard lockup is detected.
+ See Documentation/lockup-watchdogs.txt for more information.  This can
+ also be set using the nmi_watchdog kernel parameter.
+ 
+-==============================================================
+ 
+ hotplug:
++========
+ 
+ Path for the hotplug policy agent.
+ Default value is "/sbin/hotplug".
+ 
+-==============================================================
+ 
+ hung_task_panic:
++================
+ 
+ Controls the kernel's behavior when a hung task is detected.
+ This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
+@@ -332,27 +348,28 @@ This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
+ 
+ 1: panic immediately.
+ 
+-==============================================================
+ 
+ hung_task_check_count:
++======================
+ 
+ The upper bound on the number of tasks that are checked.
+ This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
+ 
+-==============================================================
+ 
+ hung_task_timeout_secs:
++=======================
+ 
+ When a task in D state did not get scheduled
+ for more than this value report a warning.
+ This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
+ 
+ 0: means infinite timeout - no checking done.
++
+ Possible values to set are in range {0..LONG_MAX/HZ}.
+ 
+-==============================================================
+ 
+ hung_task_check_interval_secs:
++==============================
+ 
+ Hung task check interval. If hung task checking is enabled
+ (see hung_task_timeout_secs), the check is done every
+@@ -362,9 +379,9 @@ This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
+ 0 (default): means use hung_task_timeout_secs as checking interval.
+ Possible values to set are in range {0..LONG_MAX/HZ}.
+ 
+-==============================================================
+ 
+ hung_task_warnings:
++===================
+ 
+ The maximum number of warnings to report. During a check interval
+ if a hung task is detected, this value is decreased by 1.
+@@ -373,9 +390,9 @@ This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
+ 
+ -1: report an infinite number of warnings.
+ 
+-==============================================================
+ 
+ hyperv_record_panic_msg:
++========================
+ 
+ Controls whether the panic kmsg data should be reported to Hyper-V.
+ 
+@@ -383,9 +400,9 @@ Controls whether the panic kmsg data should be reported to Hyper-V.
+ 
+ 1: report the panic kmsg data. This is the default behavior.
+ 
+-==============================================================
+ 
+ kexec_load_disabled:
++====================
+ 
+ A toggle indicating if the kexec_load syscall has been disabled. This
+ value defaults to 0 (false: kexec_load enabled), but can be set to 1
+@@ -395,9 +412,9 @@ loaded before disabling the syscall, allowing a system to set up (and
+ later use) an image without it being altered. Generally used together
+ with the "modules_disabled" sysctl.
+ 
+-==============================================================
+ 
+ kptr_restrict:
++==============
+ 
+ This toggle indicates whether restrictions are placed on
+ exposing kernel addresses via /proc and other interfaces.
+@@ -420,16 +437,16 @@ values to unprivileged users is a concern.
+ When kptr_restrict is set to (2), kernel pointers printed using
+ %pK will be replaced with 0's regardless of privileges.
+ 
+-==============================================================
+ 
+ l2cr: (PPC only)
++================
+ 
+ This flag controls the L2 cache of G3 processor boards. If
+ 0, the cache is disabled. Enabled if nonzero.
+ 
+-==============================================================
+ 
+ modules_disabled:
++=================
+ 
+ A toggle value indicating if modules are allowed to be loaded
+ in an otherwise modular kernel.  This toggle defaults to off
+@@ -437,9 +454,9 @@ in an otherwise modular kernel.  This toggle defaults to off
+ neither loaded nor unloaded, and the toggle cannot be set back
+ to false.  Generally used with the "kexec_load_disabled" toggle.
+ 
+-==============================================================
+ 
+ msg_next_id, sem_next_id, and shm_next_id:
++==========================================
+ 
+ These three toggles allows to specify desired id for next allocated IPC
+ object: message, semaphore or shared memory respectively.
+@@ -448,21 +465,22 @@ By default they are equal to -1, which means generic allocation logic.
+ Possible values to set are in range {0..INT_MAX}.
+ 
+ Notes:
+-1) kernel doesn't guarantee, that new object will have desired id. So,
+-it's up to userspace, how to handle an object with "wrong" id.
+-2) Toggle with non-default value will be set back to -1 by kernel after
+-successful IPC object allocation. If an IPC object allocation syscall
+-fails, it is undefined if the value remains unmodified or is reset to -1.
++  1) kernel doesn't guarantee, that new object will have desired id. So,
++     it's up to userspace, how to handle an object with "wrong" id.
++  2) Toggle with non-default value will be set back to -1 by kernel after
++     successful IPC object allocation. If an IPC object allocation syscall
++     fails, it is undefined if the value remains unmodified or is reset to -1.
+ 
+-==============================================================
+ 
+ nmi_watchdog:
++=============
+ 
+ This parameter can be used to control the NMI watchdog
+ (i.e. the hard lockup detector) on x86 systems.
+ 
+-   0 - disable the hard lockup detector
+-   1 - enable the hard lockup detector
++0 - disable the hard lockup detector
++
++1 - enable the hard lockup detector
+ 
+ The hard lockup detector monitors each CPU for its ability to respond to
+ timer interrupts. The mechanism utilizes CPU performance counter registers
+@@ -470,15 +488,15 @@ that are programmed to generate Non-Maskable Interrupts (NMIs) periodically
+ while a CPU is busy. Hence, the alternative name 'NMI watchdog'.
+ 
+ The NMI watchdog is disabled by default if the kernel is running as a guest
+-in a KVM virtual machine. This default can be overridden by adding
++in a KVM virtual machine. This default can be overridden by adding::
+ 
+    nmi_watchdog=1
+ 
+ to the guest kernel command line (see Documentation/admin-guide/kernel-parameters.rst).
+ 
+-==============================================================
+ 
+-numa_balancing
++numa_balancing:
++===============
+ 
+ Enables/disables automatic page fault based NUMA memory
+ balancing. Memory is moved automatically to nodes
+@@ -500,10 +518,9 @@ faults may be controlled by the numa_balancing_scan_period_min_ms,
+ numa_balancing_scan_delay_ms, numa_balancing_scan_period_max_ms,
+ numa_balancing_scan_size_mb, and numa_balancing_settle_count sysctls.
+ 
+-==============================================================
++numa_balancing_scan_period_min_ms, numa_balancing_scan_delay_ms, numa_balancing_scan_period_max_ms, numa_balancing_scan_size_mb
++===============================================================================================================================
+ 
+-numa_balancing_scan_period_min_ms, numa_balancing_scan_delay_ms,
+-numa_balancing_scan_period_max_ms, numa_balancing_scan_size_mb
+ 
+ Automatic NUMA balancing scans tasks address space and unmaps pages to
+ detect if pages are properly placed or if the data should be migrated to a
+@@ -539,16 +556,18 @@ rate for each task.
+ numa_balancing_scan_size_mb is how many megabytes worth of pages are
+ scanned for a given scan.
+ 
+-==============================================================
+ 
+ osrelease, ostype & version:
++============================
+ 
+-# cat osrelease
+-2.1.88
+-# cat ostype
+-Linux
+-# cat version
+-#5 Wed Feb 25 21:49:24 MET 1998
++::
++
++  # cat osrelease
++  2.1.88
++  # cat ostype
++  Linux
++  # cat version
++  #5 Wed Feb 25 21:49:24 MET 1998
+ 
+ The files osrelease and ostype should be clear enough. Version
+ needs a little more clarification however. The '#5' means that
+@@ -556,9 +575,9 @@ this is the fifth kernel built from this source base and the
+ date behind it indicates the time the kernel was built.
+ The only way to tune these values is to rebuild the kernel :-)
+ 
+-==============================================================
+ 
+ overflowgid & overflowuid:
++==========================
+ 
+ if your architecture did not always support 32-bit UIDs (i.e. arm,
+ i386, m68k, sh, and sparc32), a fixed UID and GID will be returned to
+@@ -568,17 +587,17 @@ actual UID or GID would exceed 65535.
+ These sysctls allow you to change the value of the fixed UID and GID.
+ The default is 65534.
+ 
+-==============================================================
+ 
+ panic:
++======
+ 
+ The value in this file represents the number of seconds the kernel
+ waits before rebooting on a panic. When you use the software watchdog,
+ the recommended setting is 60.
+ 
+-==============================================================
+ 
+ panic_on_io_nmi:
++================
+ 
+ Controls the kernel's behavior when a CPU receives an NMI caused by
+ an IO error.
+@@ -591,20 +610,20 @@ an IO error.
+    servers issue this sort of NMI when the dump button is pushed,
+    and you can use this option to take a crash dump.
+ 
+-==============================================================
+ 
+ panic_on_oops:
++==============
+ 
+ Controls the kernel's behaviour when an oops or BUG is encountered.
+ 
+ 0: try to continue operation
+ 
+-1: panic immediately.  If the `panic' sysctl is also non-zero then the
++1: panic immediately.  If the `panic` sysctl is also non-zero then the
+    machine will be rebooted.
+ 
+-==============================================================
+ 
+ panic_on_stackoverflow:
++=======================
+ 
+ Controls the kernel's behavior when detecting the overflows of
+ kernel, IRQ and exception stacks except a user stack.
+@@ -614,9 +633,9 @@ This file shows up if CONFIG_DEBUG_STACKOVERFLOW is enabled.
+ 
+ 1: panic immediately.
+ 
+-==============================================================
+ 
+ panic_on_unrecovered_nmi:
++=========================
+ 
+ The default Linux behaviour on an NMI of either memory or unknown is
+ to continue operation. For many environments such as scientific
+@@ -627,9 +646,9 @@ A small number of systems do generate NMI's for bizarre random reasons
+ such as power management so the default is off. That sysctl works like
+ the existing panic controls already in that directory.
+ 
+-==============================================================
+ 
+ panic_on_warn:
++==============
+ 
+ Calls panic() in the WARN() path when set to 1.  This is useful to avoid
+ a kernel rebuild when attempting to kdump at the location of a WARN().
+@@ -638,25 +657,28 @@ a kernel rebuild when attempting to kdump at the location of a WARN().
+ 
+ 1: call panic() after printing out WARN() location.
+ 
+-==============================================================
+ 
+ panic_print:
++============
+ 
+ Bitmask for printing system info when panic happens. User can chose
+ combination of the following bits:
+ 
+-bit 0: print all tasks info
+-bit 1: print system memory info
+-bit 2: print timer info
+-bit 3: print locks info if CONFIG_LOCKDEP is on
+-bit 4: print ftrace buffer
++=====  ========================================
++bit 0  print all tasks info
++bit 1  print system memory info
++bit 2  print timer info
++bit 3  print locks info if CONFIG_LOCKDEP is on
++bit 4  print ftrace buffer
++=====  ========================================
++
++So for example to print tasks and memory info on panic, user can::
+ 
+-So for example to print tasks and memory info on panic, user can:
+   echo 3 > /proc/sys/kernel/panic_print
+ 
+-==============================================================
+ 
+ panic_on_rcu_stall:
++===================
+ 
+ When set to 1, calls panic() after RCU stall detection messages. This
+ is useful to define the root cause of RCU stalls using a vmcore.
+@@ -665,9 +687,9 @@ is useful to define the root cause of RCU stalls using a vmcore.
+ 
+ 1: panic() after printing RCU stall messages.
+ 
+-==============================================================
+ 
+ perf_cpu_time_max_percent:
++==========================
+ 
+ Hints to the kernel how much CPU time it should be allowed to
+ use to handle perf sampling events.  If the perf subsystem
+@@ -680,10 +702,12 @@ unexpectedly take too long to execute, the NMIs can become
+ stacked up next to each other so much that nothing else is
+ allowed to execute.
+ 
+-0: disable the mechanism.  Do not monitor or correct perf's
++0:
++   disable the mechanism.  Do not monitor or correct perf's
+    sampling rate no matter how CPU time it takes.
+ 
+-1-100: attempt to throttle perf's sample rate to this
++1-100:
++   attempt to throttle perf's sample rate to this
+    percentage of CPU.  Note: the kernel calculates an
+    "expected" length of each sample event.  100 here means
+    100% of that expected length.  Even if this is set to
+@@ -691,23 +715,30 @@ allowed to execute.
+    length is exceeded.  Set to 0 if you truly do not care
+    how much CPU is consumed.
+ 
+-==============================================================
+ 
+ perf_event_paranoid:
++====================
+ 
+ Controls use of the performance events system by unprivileged
+ users (without CAP_SYS_ADMIN).  The default value is 2.
+ 
+- -1: Allow use of (almost) all events by all users
++===  ==================================================================
++ -1  Allow use of (almost) all events by all users
++
+      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+->=0: Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN
++
++>=0  Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN
++
+      Disallow raw tracepoint access by users without CAP_SYS_ADMIN
+->=1: Disallow CPU event access by users without CAP_SYS_ADMIN
+->=2: Disallow kernel profiling by users without CAP_SYS_ADMIN
+ 
+-==============================================================
++>=1  Disallow CPU event access by users without CAP_SYS_ADMIN
++
++>=2  Disallow kernel profiling by users without CAP_SYS_ADMIN
++===  ==================================================================
++
+ 
+ perf_event_max_stack:
++=====================
+ 
+ Controls maximum number of stack frames to copy for (attr.sample_type &
+ PERF_SAMPLE_CALLCHAIN) configured events, for instance, when using
+@@ -718,17 +749,17 @@ enabled, otherwise writing to this file will return -EBUSY.
+ 
+ The default value is 127.
+ 
+-==============================================================
+ 
+ perf_event_mlock_kb:
++====================
+ 
+ Control size of per-cpu ring buffer not counted agains mlock limit.
+ 
+ The default value is 512 + 1 page
+ 
+-==============================================================
+ 
+ perf_event_max_contexts_per_stack:
++==================================
+ 
+ Controls maximum number of stack frame context entries for
+ (attr.sample_type & PERF_SAMPLE_CALLCHAIN) configured events, for
+@@ -739,25 +770,25 @@ enabled, otherwise writing to this file will return -EBUSY.
+ 
+ The default value is 8.
+ 
+-==============================================================
+ 
+ pid_max:
++========
+ 
+ PID allocation wrap value.  When the kernel's next PID value
+ reaches this value, it wraps back to a minimum PID value.
+ PIDs of value pid_max or larger are not allocated.
+ 
+-==============================================================
+ 
+ ns_last_pid:
++============
+ 
+ The last pid allocated in the current (the one task using this sysctl
+ lives in) pid namespace. When selecting a pid for a next task on fork
+ kernel tries to allocate a number starting from this one.
+ 
+-==============================================================
+ 
+ powersave-nap: (PPC only)
++=========================
+ 
+ If set, Linux-PPC will use the 'nap' mode of powersaving,
+ otherwise the 'doze' mode will be used.
+@@ -765,6 +796,7 @@ otherwise the 'doze' mode will be used.
+ ==============================================================
+ 
+ printk:
++=======
+ 
+ The four values in printk denote: console_loglevel,
+ default_message_loglevel, minimum_console_loglevel and
+@@ -774,25 +806,29 @@ These values influence printk() behavior when printing or
+ logging error messages. See 'man 2 syslog' for more info on
+ the different loglevels.
+ 
+-- console_loglevel: messages with a higher priority than
+-  this will be printed to the console
+-- default_message_loglevel: messages without an explicit priority
+-  will be printed with this priority
+-- minimum_console_loglevel: minimum (highest) value to which
+-  console_loglevel can be set
+-- default_console_loglevel: default value for console_loglevel
++- console_loglevel:
++	messages with a higher priority than
++	this will be printed to the console
++- default_message_loglevel:
++	messages without an explicit priority
++	will be printed with this priority
++- minimum_console_loglevel:
++	minimum (highest) value to which
++	console_loglevel can be set
++- default_console_loglevel:
++	default value for console_loglevel
+ 
+-==============================================================
+ 
+ printk_delay:
++=============
+ 
+ Delay each printk message in printk_delay milliseconds
+ 
+ Value from 0 - 10000 is allowed.
+ 
+-==============================================================
+ 
+ printk_ratelimit:
++=================
+ 
+ Some warning messages are rate limited. printk_ratelimit specifies
+ the minimum length of time between these messages (in jiffies), by
+@@ -800,48 +836,52 @@ default we allow one every 5 seconds.
+ 
+ A value of 0 will disable rate limiting.
+ 
+-==============================================================
+ 
+ printk_ratelimit_burst:
++=======================
+ 
+ While long term we enforce one message per printk_ratelimit
+ seconds, we do allow a burst of messages to pass through.
+ printk_ratelimit_burst specifies the number of messages we can
+ send before ratelimiting kicks in.
+ 
+-==============================================================
+ 
+ printk_devkmsg:
++===============
+ 
+ Control the logging to /dev/kmsg from userspace:
+ 
+-ratelimit: default, ratelimited
++ratelimit:
++	default, ratelimited
++
+ on: unlimited logging to /dev/kmsg from userspace
++
+ off: logging to /dev/kmsg disabled
+ 
+ The kernel command line parameter printk.devkmsg= overrides this and is
+ a one-time setting until next reboot: once set, it cannot be changed by
+ this sysctl interface anymore.
+ 
+-==============================================================
+ 
+ randomize_va_space:
++===================
+ 
+ This option can be used to select the type of process address
+ space randomization that is used in the system, for architectures
+ that support this feature.
+ 
+-0 - Turn the process address space randomization off.  This is the
++==  ===========================================================================
++0   Turn the process address space randomization off.  This is the
+     default for architectures that do not support this feature anyways,
+     and kernels that are booted with the "norandmaps" parameter.
+ 
+-1 - Make the addresses of mmap base, stack and VDSO page randomized.
++1   Make the addresses of mmap base, stack and VDSO page randomized.
+     This, among other things, implies that shared libraries will be
+     loaded to random addresses.  Also for PIE-linked binaries, the
+     location of code start is randomized.  This is the default if the
+     CONFIG_COMPAT_BRK option is enabled.
+ 
+-2 - Additionally enable heap randomization.  This is the default if
++2   Additionally enable heap randomization.  This is the default if
+     CONFIG_COMPAT_BRK is disabled.
+ 
+     There are a few legacy applications out there (such as some ancient
+@@ -854,18 +894,19 @@ that support this feature.
+     Systems with ancient and/or broken binaries should be configured
+     with CONFIG_COMPAT_BRK enabled, which excludes the heap from process
+     address space randomization.
++==  ===========================================================================
+ 
+-==============================================================
+ 
+ reboot-cmd: (Sparc only)
++========================
+ 
+ ??? This seems to be a way to give an argument to the Sparc
+ ROM/Flash boot loader. Maybe to tell it what to do after
+ rebooting. ???
+ 
+-==============================================================
+ 
+ rtsig-max & rtsig-nr:
++=====================
+ 
+ The file rtsig-max can be used to tune the maximum number
+ of POSIX realtime (queued) signals that can be outstanding
+@@ -873,9 +914,9 @@ in the system.
+ 
+ rtsig-nr shows the number of RT signals currently queued.
+ 
+-==============================================================
+ 
+ sched_energy_aware:
++===================
+ 
+ Enables/disables Energy Aware Scheduling (EAS). EAS starts
+ automatically on platforms where it can run (that is,
+@@ -884,17 +925,17 @@ Model available). If your platform happens to meet the
+ requirements for EAS but you do not want to use it, change
+ this value to 0.
+ 
+-==============================================================
+ 
+ sched_schedstats:
++=================
+ 
+ Enables/disables scheduler statistics. Enabling this feature
+ incurs a small amount of overhead in the scheduler but is
+ useful for debugging and performance tuning.
+ 
+-==============================================================
+ 
+ sg-big-buff:
++============
+ 
+ This file shows the size of the generic SCSI (sg) buffer.
+ You can't tune it just yet, but you could change it on
+@@ -905,9 +946,9 @@ There shouldn't be any reason to change this value. If
+ you can come up with one, you probably know what you
+ are doing anyway :)
+ 
+-==============================================================
+ 
+ shmall:
++=======
+ 
+ This parameter sets the total amount of shared memory pages that
+ can be used system wide. Hence, SHMALL should always be at least
+@@ -916,20 +957,20 @@ ceil(shmmax/PAGE_SIZE).
+ If you are not sure what the default PAGE_SIZE is on your Linux
+ system, you can run the following command:
+ 
+-# getconf PAGE_SIZE
++	# getconf PAGE_SIZE
+ 
+-==============================================================
+ 
+ shmmax:
++=======
+ 
+ This value can be used to query and set the run time limit
+ on the maximum shared memory segment size that can be created.
+ Shared memory segments up to 1Gb are now supported in the
+ kernel.  This value defaults to SHMMAX.
+ 
+-==============================================================
+ 
+ shm_rmid_forced:
++================
+ 
+ Linux lets you set resource limits, including how much memory one
+ process can consume, via setrlimit(2).  Unfortunately, shared memory
+@@ -948,28 +989,30 @@ need this.
+ Note that if you change this from 0 to 1, already created segments
+ without users and with a dead originative process will be destroyed.
+ 
+-==============================================================
+ 
+ sysctl_writes_strict:
++=====================
+ 
+ Control how file position affects the behavior of updating sysctl values
+ via the /proc/sys interface:
+ 
+-  -1 - Legacy per-write sysctl value handling, with no printk warnings.
++  ==   ======================================================================
++  -1   Legacy per-write sysctl value handling, with no printk warnings.
+        Each write syscall must fully contain the sysctl value to be
+        written, and multiple writes on the same sysctl file descriptor
+        will rewrite the sysctl value, regardless of file position.
+-   0 - Same behavior as above, but warn about processes that perform writes
++   0   Same behavior as above, but warn about processes that perform writes
+        to a sysctl file descriptor when the file position is not 0.
+-   1 - (default) Respect file position when writing sysctl strings. Multiple
++   1   (default) Respect file position when writing sysctl strings. Multiple
+        writes will append to the sysctl value buffer. Anything past the max
+        length of the sysctl value buffer will be ignored. Writes to numeric
+        sysctl entries must always be at file position 0 and the value must
+        be fully contained in the buffer sent in the write syscall.
++  ==   ======================================================================
+ 
+-==============================================================
+ 
+ softlockup_all_cpu_backtrace:
++=============================
+ 
+ This value controls the soft lockup detector thread's behavior
+ when a soft lockup condition is detected as to whether or not
+@@ -983,13 +1026,14 @@ NMI.
+ 
+ 1: on detection capture more debug information.
+ 
+-==============================================================
+ 
+-soft_watchdog
++soft_watchdog:
++==============
+ 
+ This parameter can be used to control the soft lockup detector.
+ 
+    0 - disable the soft lockup detector
++
+    1 - enable the soft lockup detector
+ 
+ The soft lockup detector monitors CPUs for threads that are hogging the CPUs
+@@ -999,9 +1043,9 @@ interrupts which are needed for the 'watchdog/N' threads to be woken up by
+ the watchdog timer function, otherwise the NMI watchdog - if enabled - can
+ detect a hard lockup condition.
+ 
+-==============================================================
+ 
+-stack_erasing
++stack_erasing:
++==============
+ 
+ This parameter can be used to control kernel stack erasing at the end
+ of syscalls for kernels built with CONFIG_GCC_PLUGIN_STACKLEAK.
+@@ -1015,37 +1059,40 @@ compilation sees a 1% slowdown, other systems and workloads may vary.
+ 
+   1: kernel stack erasing is enabled (default), it is performed before
+      returning to the userspace at the end of syscalls.
+-==============================================================
++
+ 
+ tainted
++=======
+ 
+ Non-zero if the kernel has been tainted. Numeric values, which can be
+ ORed together. The letters are seen in "Tainted" line of Oops reports.
+ 
+-     1 (P): proprietary module was loaded
+-     2 (F): module was force loaded
+-     4 (S): SMP kernel oops on an officially SMP incapable processor
+-     8 (R): module was force unloaded
+-    16 (M): processor reported a Machine Check Exception (MCE)
+-    32 (B): bad page referenced or some unexpected page flags
+-    64 (U): taint requested by userspace application
+-   128 (D): kernel died recently, i.e. there was an OOPS or BUG
+-   256 (A): an ACPI table was overridden by user
+-   512 (W): kernel issued warning
+-  1024 (C): staging driver was loaded
+-  2048 (I): workaround for bug in platform firmware applied
+-  4096 (O): externally-built ("out-of-tree") module was loaded
+-  8192 (E): unsigned module was loaded
+- 16384 (L): soft lockup occurred
+- 32768 (K): kernel has been live patched
+- 65536 (X): Auxiliary taint, defined and used by for distros
+-131072 (T): The kernel was built with the struct randomization plugin
++======  =====  ==============================================================
++     1  `(P)`  proprietary module was loaded
++     2  `(F)`  module was force loaded
++     4  `(S)`  SMP kernel oops on an officially SMP incapable processor
++     8  `(R)`  module was force unloaded
++    16  `(M)`  processor reported a Machine Check Exception (MCE)
++    32  `(B)`  bad page referenced or some unexpected page flags
++    64  `(U)`  taint requested by userspace application
++   128  `(D)`  kernel died recently, i.e. there was an OOPS or BUG
++   256  `(A)`  an ACPI table was overridden by user
++   512  `(W)`  kernel issued warning
++  1024  `(C)`  staging driver was loaded
++  2048  `(I)`  workaround for bug in platform firmware applied
++  4096  `(O)`  externally-built ("out-of-tree") module was loaded
++  8192  `(E)`  unsigned module was loaded
++ 16384  `(L)`  soft lockup occurred
++ 32768  `(K)`  kernel has been live patched
++ 65536  `(X)`  Auxiliary taint, defined and used by for distros
++131072  `(T)`  The kernel was built with the struct randomization plugin
++======  =====  ==============================================================
+ 
+ See Documentation/admin-guide/tainted-kernels.rst for more information.
+ 
+-==============================================================
+ 
+-threads-max
++threads-max:
++============
+ 
+ This value controls the maximum number of threads that can be created
+ using fork().
+@@ -1055,8 +1102,10 @@ maximum number of threads is created, the thread structures occupy only
+ a part (1/8th) of the available RAM pages.
+ 
+ The minimum value that can be written to threads-max is 20.
++
+ The maximum value that can be written to threads-max is given by the
+ constant FUTEX_TID_MASK (0x3fffffff).
++
+ If a value outside of this range is written to threads-max an error
+ EINVAL occurs.
+ 
+@@ -1064,9 +1113,9 @@ The value written is checked against the available RAM pages. If the
+ thread structures would occupy too much (more than 1/8th) of the
+ available RAM pages threads-max is reduced accordingly.
+ 
+-==============================================================
+ 
+ unknown_nmi_panic:
++==================
+ 
+ The value in this file affects behavior of handling NMI. When the
+ value is non-zero, unknown NMI is trapped and then panic occurs. At
+@@ -1075,28 +1124,29 @@ that time, kernel debugging information is displayed on console.
+ NMI switch that most IA32 servers have fires unknown NMI up, for
+ example.  If a system hangs up, try pressing the NMI switch.
+ 
+-==============================================================
+ 
+ watchdog:
++=========
+ 
+ This parameter can be used to disable or enable the soft lockup detector
+ _and_ the NMI watchdog (i.e. the hard lockup detector) at the same time.
+ 
+    0 - disable both lockup detectors
++
+    1 - enable both lockup detectors
+ 
+ The soft lockup detector and the NMI watchdog can also be disabled or
+ enabled individually, using the soft_watchdog and nmi_watchdog parameters.
+-If the watchdog parameter is read, for example by executing
++If the watchdog parameter is read, for example by executing::
+ 
+    cat /proc/sys/kernel/watchdog
+ 
+ the output of this command (0 or 1) shows the logical OR of soft_watchdog
+ and nmi_watchdog.
+ 
+-==============================================================
+ 
+ watchdog_cpumask:
++=================
+ 
+ This value can be used to control on which cpus the watchdog may run.
+ The default cpumask is all possible cores, but if NO_HZ_FULL is
+@@ -1111,13 +1161,13 @@ if a kernel lockup was suspected on those cores.
+ 
+ The argument value is the standard cpulist format for cpumasks,
+ so for example to enable the watchdog on cores 0, 2, 3, and 4 you
+-might say:
++might say::
+ 
+   echo 0,2-4 > /proc/sys/kernel/watchdog_cpumask
+ 
+-==============================================================
+ 
+ watchdog_thresh:
++================
+ 
+ This value can be used to control the frequency of hrtimer and NMI
+ events and the soft and hard lockup thresholds. The default threshold
+@@ -1125,5 +1175,3 @@ is 10 seconds.
+ 
+ The softlockup threshold is (2 * watchdog_thresh). Setting this
+ tunable to zero will disable lockup detection altogether.
 -
-+==========================================
- Explicit volatile write back cache control
--=====================================
-+==========================================
+-==============================================================
+diff --git a/Documentation/sysctl/net.txt b/Documentation/sysctl/net.rst
+similarity index 85%
+rename from Documentation/sysctl/net.txt
+rename to Documentation/sysctl/net.rst
+index 2ae91d3873bb..a7d44e71019d 100644
+--- a/Documentation/sysctl/net.txt
++++ b/Documentation/sysctl/net.rst
+@@ -1,12 +1,25 @@
+-Documentation for /proc/sys/net/*
+-	(c) 1999		Terrehon Bowden <terrehon@pacbell.net>
+-				Bodo Bauer <bb@ricochet.net>
+-	(c) 2000		Jorge Nerin <comandante@zaralinux.com>
+-	(c) 2009		Shen Feng <shen@cn.fujitsu.com>
++================================
++Documentation for /proc/sys/net/
++================================
  
- Introduction
- ------------
-@@ -31,7 +31,7 @@ the blkdev_issue_flush() helper for a pure cache flush.
+-For general info and legal blurb, please look in README.
++Copyright
+ 
+-==============================================================
++Copyright (c) 1999
++
++	- Terrehon Bowden <terrehon@pacbell.net>
++	- Bodo Bauer <bb@ricochet.net>
++
++Copyright (c) 2000
++
++	- Jorge Nerin <comandante@zaralinux.com>
++
++Copyright (c) 2009
++
++	- Shen Feng <shen@cn.fujitsu.com>
++
++For general info and legal blurb, please look in index.rst.
++
++------------------------------------------------------------------------------
+ 
+ This file contains the documentation for the sysctl files in
+ /proc/sys/net
+@@ -17,20 +30,22 @@ see only some of them, depending on your kernel's configuration.
  
  
- Forced Unit Access
-------------------
+ Table : Subdirectories in /proc/sys/net
+-..............................................................................
+- Directory Content             Directory  Content
+- core      General parameter   appletalk  Appletalk protocol
+- unix      Unix domain sockets netrom     NET/ROM
+- 802       E802 protocol       ax25       AX25
+- ethernet  Ethernet protocol   rose       X.25 PLP layer
+- ipv4      IP version 4        x25        X.25 protocol
+- ipx       IPX                 token-ring IBM token ring
+- bridge    Bridging            decnet     DEC net
+- ipv6      IP version 6        tipc       TIPC
+-..............................................................................
++
++ ========= =================== = ========== ==================
++ Directory Content               Directory  Content
++ ========= =================== = ========== ==================
++ core      General parameter     appletalk  Appletalk protocol
++ unix      Unix domain sockets   netrom     NET/ROM
++ 802       E802 protocol         ax25       AX25
++ ethernet  Ethernet protocol     rose       X.25 PLP layer
++ ipv4      IP version 4          x25        X.25 protocol
++ ipx       IPX                   token-ring IBM token ring
++ bridge    Bridging              decnet     DEC net
++ ipv6      IP version 6          tipc       TIPC
++ ========= =================== = ========== ==================
+ 
+ 1. /proc/sys/net/core - Network core options
+--------------------------------------------------------
++============================================
+ 
+ bpf_jit_enable
+ --------------
+@@ -44,6 +59,7 @@ restricted C into a sequence of BPF instructions. After program load
+ through bpf(2) and passing a verifier in the kernel, a JIT will then
+ translate these BPF proglets into native CPU instructions. There are
+ two flavors of JITs, the newer eBPF JIT currently supported on:
++
+   - x86_64
+   - x86_32
+   - arm64
+@@ -55,6 +71,7 @@ two flavors of JITs, the newer eBPF JIT currently supported on:
+   - riscv
+ 
+ And the older cBPF JIT supported on the following archs:
++
+   - mips
+   - ppc
+   - sparc
+@@ -65,10 +82,11 @@ compile them transparently. Older cBPF JITs can only translate
+ tcpdump filters, seccomp rules, etc, but not mentioned eBPF
+ programs loaded through bpf(2).
+ 
+-Values :
+-	0 - disable the JIT (default value)
+-	1 - enable the JIT
+-	2 - enable the JIT and ask the compiler to emit traces on kernel log.
++Values:
++
++	- 0 - disable the JIT (default value)
++	- 1 - enable the JIT
++	- 2 - enable the JIT and ask the compiler to emit traces on kernel log.
+ 
+ bpf_jit_harden
+ --------------
+@@ -76,10 +94,12 @@ bpf_jit_harden
+ This enables hardening for the BPF JIT compiler. Supported are eBPF
+ JIT backends. Enabling hardening trades off performance, but can
+ mitigate JIT spraying.
+-Values :
+-	0 - disable JIT hardening (default value)
+-	1 - enable JIT hardening for unprivileged users only
+-	2 - enable JIT hardening for all users
++
++Values:
++
++	- 0 - disable JIT hardening (default value)
++	- 1 - enable JIT hardening for unprivileged users only
++	- 2 - enable JIT hardening for all users
+ 
+ bpf_jit_kallsyms
+ ----------------
+@@ -89,9 +109,11 @@ addresses to the kernel, meaning they neither show up in traces nor
+ in /proc/kallsyms. This enables export of these addresses, which can
+ be used for debugging/tracing. If bpf_jit_harden is enabled, this
+ feature is disabled.
++
+ Values :
+-	0 - disable JIT kallsyms export (default value)
+-	1 - enable JIT kallsyms export for privileged users only
++
++	- 0 - disable JIT kallsyms export (default value)
++	- 1 - enable JIT kallsyms export for privileged users only
+ 
+ bpf_jit_limit
+ -------------
+@@ -102,7 +124,7 @@ been surpassed. bpf_jit_limit contains the value of the global limit
+ in bytes.
+ 
+ dev_weight
+---------------
++----------
+ 
+ The maximum number of packets that kernel can handle on a NAPI interrupt,
+ it's a Per-CPU variable. For drivers that support LRO or GRO_HW, a hardware
+@@ -111,7 +133,7 @@ aggregated packet is counted as one packet in this context.
+ Default: 64
+ 
+ dev_weight_rx_bias
+---------------
 +------------------
  
- The REQ_FUA flag can be OR ed into the r/w flags of a bio submitted from the
- filesystem and will make sure that I/O completion for this request is only
-@@ -62,14 +62,14 @@ flags themselves without any help from the block layer.
+ RPS (e.g. RFS, aRFS) processing is competing with the registered NAPI poll function
+ of the driver for the per softirq cycle netdev_budget. This parameter influences
+@@ -120,19 +142,22 @@ processing during RX softirq cycles. It is further meant for making current
+ dev_weight adaptable for asymmetric CPU needs on RX/TX side of the network stack.
+ (see dev_weight_tx_bias) It is effective on a per CPU basis. Determination is based
+ on dev_weight and is calculated multiplicative (dev_weight * dev_weight_rx_bias).
++
+ Default: 1
+ 
+ dev_weight_tx_bias
+---------------
++------------------
+ 
+ Scales the maximum number of packets that can be processed during a TX softirq cycle.
+ Effective on a per CPU basis. Allows scaling of current dev_weight for asymmetric
+ net stack processing needs. Be careful to avoid making TX softirq processing a CPU hog.
++
+ Calculation is based on dev_weight (dev_weight * dev_weight_tx_bias).
++
+ Default: 1
+ 
+ default_qdisc
+---------------
++-------------
+ 
+ The default queuing discipline to use for network devices. This allows
+ overriding the default of pfifo_fast with an alternative. Since the default
+@@ -144,17 +169,21 @@ which require setting up classes and bandwidths. Note that physical multiqueue
+ interfaces still use mq as root qdisc, which in turn uses this default for its
+ leaves. Virtual devices (like e.g. lo or veth) ignore this setting and instead
+ default to noqueue.
++
+ Default: pfifo_fast
+ 
+ busy_read
+-----------------
++---------
++
+ Low latency busy poll timeout for socket reads. (needs CONFIG_NET_RX_BUSY_POLL)
+ Approximate time in us to busy loop waiting for packets on the device queue.
+ This sets the default value of the SO_BUSY_POLL socket option.
+ Can be set or overridden per socket by setting socket option SO_BUSY_POLL,
+ which is the preferred method of enabling. If you need to enable the feature
+ globally via sysctl, a value of 50 is recommended.
++
+ Will increase power usage.
++
+ Default: 0 (off)
+ 
+ busy_poll
+@@ -167,7 +196,9 @@ For more than that you probably want to use epoll.
+ Note that only sockets with SO_BUSY_POLL set will be busy polled,
+ so you want to either selectively set SO_BUSY_POLL on those sockets or set
+ sysctl.net.busy_read globally.
++
+ Will increase power usage.
++
+ Default: 0 (off)
+ 
+ rmem_default
+@@ -185,6 +216,7 @@ tstamp_allow_data
+ Allow processes to receive tx timestamps looped together with the original
+ packet contents. If disabled, transmit timestamp requests from unprivileged
+ processes are dropped unless socket option SOF_TIMESTAMPING_OPT_TSONLY is set.
++
+ Default: 1 (on)
  
  
- Implementation details for request_fn based block drivers
----------------------------------------------------------------
-+---------------------------------------------------------
+@@ -250,19 +282,24 @@ randomly generated.
+ Some user space might need to gather its content even if drivers do not
+ provide ethtool -x support yet.
  
- For devices that do not support volatile write caches there is no driver
- support required, the block layer completes empty REQ_PREFLUSH requests before
- entering the driver and strips off the REQ_PREFLUSH and REQ_FUA bits from
- requests that have a payload.  For devices with volatile write caches the
- driver needs to tell the block layer that it supports flushing caches by
--doing:
-+doing::
+-myhost:~# cat /proc/sys/net/core/netdev_rss_key
+-84:50:f4:00:a8:15:d1:a7:e9:7f:1d:60:35:c7:47:25:42:97:74:ca:56:bb:b6:a1:d8: ... (52 bytes total)
++::
++
++  myhost:~# cat /proc/sys/net/core/netdev_rss_key
++  84:50:f4:00:a8:15:d1:a7:e9:7f:1d:60:35:c7:47:25:42:97:74:ca:56:bb:b6:a1:d8: ... (52 bytes total)
  
- 	blk_queue_write_cache(sdkp->disk->queue, true, false);
+ File contains nul bytes if no driver ever called netdev_rss_key_fill() function.
++
+ Note:
+-/proc/sys/net/core/netdev_rss_key contains 52 bytes of key,
+-but most drivers only use 40 bytes of it.
++  /proc/sys/net/core/netdev_rss_key contains 52 bytes of key,
++  but most drivers only use 40 bytes of it.
  
-@@ -77,7 +77,7 @@ and handle empty REQ_OP_FLUSH requests in its prep_fn/request_fn.  Note that
- REQ_PREFLUSH requests with a payload are automatically turned into a sequence
- of an empty REQ_OP_FLUSH request followed by the actual write by the block
- layer.  For devices that also support the FUA bit the block layer needs
--to be told to pass through the REQ_FUA bit using:
-+to be told to pass through the REQ_FUA bit using::
+-myhost:~# ethtool -x eth0
+-RX flow hash indirection table for eth0 with 8 RX ring(s):
+-    0:    0     1     2     3     4     5     6     7
+-RSS hash key:
+-84:50:f4:00:a8:15:d1:a7:e9:7f:1d:60:35:c7:47:25:42:97:74:ca:56:bb:b6:a1:d8:43:e3:c9:0c:fd:17:55:c2:3a:4d:69:ed:f1:42:89
++::
++
++  myhost:~# ethtool -x eth0
++  RX flow hash indirection table for eth0 with 8 RX ring(s):
++      0:    0     1     2     3     4     5     6     7
++  RSS hash key:
++  84:50:f4:00:a8:15:d1:a7:e9:7f:1d:60:35:c7:47:25:42:97:74:ca:56:bb:b6:a1:d8:43:e3:c9:0c:fd:17:55:c2:3a:4d:69:ed:f1:42:89
  
- 	blk_queue_write_cache(sdkp->disk->queue, true, true);
+ netdev_tstamp_prequeue
+ ----------------------
+@@ -293,7 +330,7 @@ user space is responsible for creating them if needed.
+ Default : 0  (for compatibility reasons)
  
-diff --git a/Documentation/blockdev/zram.rst b/Documentation/blockdev/zram.rst
-index 2111231c9c0f..6eccf13219ff 100644
---- a/Documentation/blockdev/zram.rst
-+++ b/Documentation/blockdev/zram.rst
-@@ -215,7 +215,7 @@ User space is advised to use the following files to read the device statistics.
+ devconf_inherit_init_net
+-----------------------------
++------------------------
  
- File /sys/block/zram<id>/stat
+ Controls if a new network namespace should inherit all current
+ settings under /proc/sys/net/{ipv4,ipv6}/conf/{all,default}/. By
+@@ -307,7 +344,7 @@ forced to reset to their default values.
+ Default : 0  (for compatibility reasons)
  
--Represents block layer statistics. Read Documentation/block/stat.txt for
-+Represents block layer statistics. Read Documentation/block/stat.rst for
- details.
+ 2. /proc/sys/net/unix - Parameters for Unix domain sockets
+--------------------------------------------------------
++----------------------------------------------------------
  
- File /sys/block/zram<id>/io_stat
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f5a2121294b3..fd6fab0dec77 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2929,7 +2929,7 @@ M:	Jens Axboe <axboe@kernel.dk>
- L:	linux-block@vger.kernel.org
- S:	Maintained
- F:	block/bfq-*
--F:	Documentation/block/bfq-iosched.txt
-+F:	Documentation/block/bfq-iosched.rst
+ There is only one file in this directory.
+ unix_dgram_qlen limits the max number of datagrams queued in Unix domain
+@@ -315,13 +352,13 @@ socket's buffer. It will not take effect unless PF_UNIX flag is specified.
  
- BFS FILE SYSTEM
- M:	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>
-diff --git a/block/Kconfig b/block/Kconfig
-index 56cb1695cd87..b16b3e075d31 100644
---- a/block/Kconfig
-+++ b/block/Kconfig
-@@ -110,7 +110,7 @@ config BLK_CMDLINE_PARSER
- 	which don't otherwise have any standardized method for listing the
- 	partitions on a block device.
  
--	See Documentation/block/cmdline-partition.txt for more information.
-+	See Documentation/block/cmdline-partition.rst for more information.
+ 3. /proc/sys/net/ipv4 - IPV4 settings
+--------------------------------------------------------
++-------------------------------------
+ Please see: Documentation/networking/ip-sysctl.txt and ipvs-sysctl.txt for
+ descriptions of these entries.
  
- config BLK_WBT
- 	bool "Enable support for block device writeback throttling"
-diff --git a/block/Kconfig.iosched b/block/Kconfig.iosched
-index 7a6b2f29a582..b89310a022ad 100644
---- a/block/Kconfig.iosched
-+++ b/block/Kconfig.iosched
-@@ -26,7 +26,7 @@ config IOSCHED_BFQ
- 	regardless of the device parameters and with any workload. It
- 	also guarantees a low latency to interactive and soft
- 	real-time applications.  Details in
--	Documentation/block/bfq-iosched.txt
-+	Documentation/block/bfq-iosched.rst
  
- config BFQ_GROUP_IOSCHED
-        bool "BFQ hierarchical scheduling support"
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 008c93d6b8d7..e8803fff8ea2 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -17,7 +17,7 @@
-  * low-latency capabilities. BFQ also supports full hierarchical
-  * scheduling through cgroups. Next paragraphs provide an introduction
-  * on BFQ inner workings. Details on BFQ benefits, usage and
-- * limitations can be found in Documentation/block/bfq-iosched.txt.
-+ * limitations can be found in Documentation/block/bfq-iosched.rst.
+ 4. Appletalk
+--------------------------------------------------------
++------------
+ 
+ The /proc/sys/net/appletalk  directory  holds the Appletalk configuration data
+ when Appletalk is loaded. The configurable parameters are:
+@@ -366,7 +403,7 @@ route flags, and the device the route is using.
+ 
+ 
+ 5. IPX
+--------------------------------------------------------
++------
+ 
+ The IPX protocol has no tunable values in proc/sys/net.
+ 
+@@ -391,14 +428,16 @@ gives the  destination  network, the router node (or Directly) and the network
+ address of the router (or Connected) for internal networks.
+ 
+ 6. TIPC
+--------------------------------------------------------
++-------
+ 
+ tipc_rmem
+-----------
++---------
+ 
+ The TIPC protocol now has a tunable for the receive memory, similar to the
+ tcp_rmem - i.e. a vector of 3 INTEGERs: (min, default, max)
+ 
++::
++
+     # cat /proc/sys/net/tipc/tipc_rmem
+     4252725 34021800        68043600
+     #
+@@ -409,7 +448,7 @@ is not at this point in time used in any meaningful way, but the triplet is
+ preserved in order to be consistent with things like tcp_rmem.
+ 
+ named_timeout
+---------------
++-------------
+ 
+ TIPC name table updates are distributed asynchronously in a cluster, without
+ any form of transaction handling. This means that different race scenarios are
+diff --git a/Documentation/sysctl/sunrpc.txt b/Documentation/sysctl/sunrpc.rst
+similarity index 62%
+rename from Documentation/sysctl/sunrpc.txt
+rename to Documentation/sysctl/sunrpc.rst
+index ae1ecac6f85a..09780a682afd 100644
+--- a/Documentation/sysctl/sunrpc.txt
++++ b/Documentation/sysctl/sunrpc.rst
+@@ -1,9 +1,14 @@
+-Documentation for /proc/sys/sunrpc/*	kernel version 2.2.10
+-	(c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
++===================================
++Documentation for /proc/sys/sunrpc/
++===================================
+ 
+-For general info and legal blurb, please look in README.
++kernel version 2.2.10
+ 
+-==============================================================
++Copyright (c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
++
++For general info and legal blurb, please look in index.rst.
++
++------------------------------------------------------------------------------
+ 
+ This file contains the documentation for the sysctl files in
+ /proc/sys/sunrpc and is valid for Linux kernel version 2.2.
+diff --git a/Documentation/sysctl/user.txt b/Documentation/sysctl/user.rst
+similarity index 77%
+rename from Documentation/sysctl/user.txt
+rename to Documentation/sysctl/user.rst
+index a5882865836e..650eaa03f15e 100644
+--- a/Documentation/sysctl/user.txt
++++ b/Documentation/sysctl/user.rst
+@@ -1,7 +1,12 @@
+-Documentation for /proc/sys/user/*	kernel version 4.9.0
+-	(c) 2016		Eric Biederman <ebiederm@xmission.com>
++=================================
++Documentation for /proc/sys/user/
++=================================
+ 
+-==============================================================
++kernel version 4.9.0
++
++Copyright (c) 2016		Eric Biederman <ebiederm@xmission.com>
++
++------------------------------------------------------------------------------
+ 
+ This file contains the documentation for the sysctl files in
+ /proc/sys/user.
+@@ -30,37 +35,44 @@ user namespace does not allow a user to escape their current limits.
+ 
+ Currently, these files are in /proc/sys/user:
+ 
+-- max_cgroup_namespaces
++max_cgroup_namespaces
++=====================
+ 
+   The maximum number of cgroup namespaces that any user in the current
+   user namespace may create.
+ 
+-- max_ipc_namespaces
++max_ipc_namespaces
++==================
+ 
+   The maximum number of ipc namespaces that any user in the current
+   user namespace may create.
+ 
+-- max_mnt_namespaces
++max_mnt_namespaces
++==================
+ 
+   The maximum number of mount namespaces that any user in the current
+   user namespace may create.
+ 
+-- max_net_namespaces
++max_net_namespaces
++==================
+ 
+   The maximum number of network namespaces that any user in the
+   current user namespace may create.
+ 
+-- max_pid_namespaces
++max_pid_namespaces
++==================
+ 
+   The maximum number of pid namespaces that any user in the current
+   user namespace may create.
+ 
+-- max_user_namespaces
++max_user_namespaces
++===================
+ 
+   The maximum number of user namespaces that any user in the current
+   user namespace may create.
+ 
+-- max_uts_namespaces
++max_uts_namespaces
++==================
+ 
+   The maximum number of user namespaces that any user in the current
+   user namespace may create.
+diff --git a/Documentation/sysctl/vm.txt b/Documentation/sysctl/vm.rst
+similarity index 85%
+rename from Documentation/sysctl/vm.txt
+rename to Documentation/sysctl/vm.rst
+index c5f0d44433a2..5aceb5cd5ce7 100644
+--- a/Documentation/sysctl/vm.txt
++++ b/Documentation/sysctl/vm.rst
+@@ -1,10 +1,16 @@
+-Documentation for /proc/sys/vm/*	kernel version 2.6.29
+-	(c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
+-	(c) 2008         Peter W. Morreale <pmorreale@novell.com>
++===============================
++Documentation for /proc/sys/vm/
++===============================
+ 
+-For general info and legal blurb, please look in README.
++kernel version 2.6.29
+ 
+-==============================================================
++Copyright (c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
++
++Copyright (c) 2008         Peter W. Morreale <pmorreale@novell.com>
++
++For general info and legal blurb, please look in index.rst.
++
++------------------------------------------------------------------------------
+ 
+ This file contains the documentation for the sysctl files in
+ /proc/sys/vm and is valid for Linux kernel version 2.6.29.
+@@ -68,9 +74,9 @@ Currently, these files are in /proc/sys/vm:
+ - watermark_scale_factor
+ - zone_reclaim_mode
+ 
+-==============================================================
+ 
+ admin_reserve_kbytes
++====================
+ 
+ The amount of free memory in the system that should be reserved for users
+ with the capability cap_sys_admin.
+@@ -97,25 +103,25 @@ On x86_64 this is about 128MB.
+ 
+ Changing this takes effect whenever an application requests memory.
+ 
+-==============================================================
+ 
+ block_dump
++==========
+ 
+ block_dump enables block I/O debugging when set to a nonzero value. More
+ information on block I/O debugging is in Documentation/laptops/laptop-mode.rst.
+ 
+-==============================================================
+ 
+ compact_memory
++==============
+ 
+ Available only when CONFIG_COMPACTION is set. When 1 is written to the file,
+ all zones are compacted such that free memory is available in contiguous
+ blocks where possible. This can be important for example in the allocation of
+ huge pages although processes will also directly compact memory as required.
+ 
+-==============================================================
+ 
+ compact_unevictable_allowed
++===========================
+ 
+ Available only when CONFIG_COMPACTION is set. When set to 1, compaction is
+ allowed to examine the unevictable lru (mlocked pages) for pages to compact.
+@@ -123,21 +129,22 @@ This should be used on systems where stalls for minor page faults are an
+ acceptable trade for large contiguous free memory.  Set to 0 to prevent
+ compaction from moving pages that are unevictable.  Default value is 1.
+ 
+-==============================================================
+ 
+ dirty_background_bytes
++======================
+ 
+ Contains the amount of dirty memory at which the background kernel
+ flusher threads will start writeback.
+ 
+-Note: dirty_background_bytes is the counterpart of dirty_background_ratio. Only
+-one of them may be specified at a time. When one sysctl is written it is
+-immediately taken into account to evaluate the dirty memory limits and the
+-other appears as 0 when read.
++Note:
++  dirty_background_bytes is the counterpart of dirty_background_ratio. Only
++  one of them may be specified at a time. When one sysctl is written it is
++  immediately taken into account to evaluate the dirty memory limits and the
++  other appears as 0 when read.
+ 
+-==============================================================
+ 
+ dirty_background_ratio
++======================
+ 
+ Contains, as a percentage of total available memory that contains free pages
+ and reclaimable pages, the number of pages at which the background kernel
+@@ -145,9 +152,9 @@ flusher threads will start writing out dirty data.
+ 
+ The total available memory is not equal to total system memory.
+ 
+-==============================================================
+ 
+ dirty_bytes
++===========
+ 
+ Contains the amount of dirty memory at which a process generating disk writes
+ will itself start writeback.
+@@ -161,18 +168,18 @@ Note: the minimum value allowed for dirty_bytes is two pages (in bytes); any
+ value lower than this limit will be ignored and the old configuration will be
+ retained.
+ 
+-==============================================================
+ 
+ dirty_expire_centisecs
++======================
+ 
+ This tunable is used to define when dirty data is old enough to be eligible
+ for writeout by the kernel flusher threads.  It is expressed in 100'ths
+ of a second.  Data which has been dirty in-memory for longer than this
+ interval will be written out next time a flusher thread wakes up.
+ 
+-==============================================================
+ 
+ dirty_ratio
++===========
+ 
+ Contains, as a percentage of total available memory that contains free pages
+ and reclaimable pages, the number of pages at which a process which is
+@@ -180,9 +187,9 @@ generating disk writes will itself start writing out dirty data.
+ 
+ The total available memory is not equal to total system memory.
+ 
+-==============================================================
+ 
+ dirtytime_expire_seconds
++========================
+ 
+ When a lazytime inode is constantly having its pages dirtied, the inode with
+ an updated timestamp will never get chance to be written out.  And, if the
+@@ -192,34 +199,39 @@ eventually gets pushed out to disk.  This tunable is used to define when dirty
+ inode is old enough to be eligible for writeback by the kernel flusher threads.
+ And, it is also used as the interval to wakeup dirtytime_writeback thread.
+ 
+-==============================================================
+ 
+ dirty_writeback_centisecs
++=========================
+ 
+-The kernel flusher threads will periodically wake up and write `old' data
++The kernel flusher threads will periodically wake up and write `old` data
+ out to disk.  This tunable expresses the interval between those wakeups, in
+ 100'ths of a second.
+ 
+ Setting this to zero disables periodic writeback altogether.
+ 
+-==============================================================
+ 
+ drop_caches
++===========
+ 
+ Writing to this will cause the kernel to drop clean caches, as well as
+ reclaimable slab objects like dentries and inodes.  Once dropped, their
+ memory becomes free.
+ 
+-To free pagecache:
++To free pagecache::
++
+ 	echo 1 > /proc/sys/vm/drop_caches
+-To free reclaimable slab objects (includes dentries and inodes):
++
++To free reclaimable slab objects (includes dentries and inodes)::
++
+ 	echo 2 > /proc/sys/vm/drop_caches
+-To free slab objects and pagecache:
++
++To free slab objects and pagecache::
++
+ 	echo 3 > /proc/sys/vm/drop_caches
+ 
+ This is a non-destructive operation and will not free any dirty objects.
+ To increase the number of objects freed by this operation, the user may run
+-`sync' prior to writing to /proc/sys/vm/drop_caches.  This will minimize the
++`sync` prior to writing to /proc/sys/vm/drop_caches.  This will minimize the
+ number of dirty objects on the system and create more candidates to be
+ dropped.
+ 
+@@ -233,16 +245,16 @@ dropped objects, especially if they were under heavy use.  Because of this,
+ use outside of a testing or debugging environment is not recommended.
+ 
+ You may see informational messages in your kernel log when this file is
+-used:
++used::
+ 
+ 	cat (1234): drop_caches: 3
+ 
+ These are informational only.  They do not mean that anything is wrong
+ with your system.  To disable them, echo 4 (bit 2) into drop_caches.
+ 
+-==============================================================
+ 
+ extfrag_threshold
++=================
+ 
+ This parameter affects whether the kernel will compact memory or direct
+ reclaim to satisfy a high-order allocation. The extfrag/extfrag_index file in
+@@ -254,9 +266,9 @@ implies that the allocation will succeed as long as watermarks are met.
+ The kernel will not compact memory in a zone if the
+ fragmentation index is <= extfrag_threshold. The default value is 500.
+ 
+-==============================================================
+ 
+ highmem_is_dirtyable
++====================
+ 
+ Available only for systems with CONFIG_HIGHMEM enabled (32b systems).
+ 
+@@ -274,30 +286,30 @@ OOM killer because some writers (e.g. direct block device writes) can
+ only use the low memory and they can fill it up with dirty data without
+ any throttling.
+ 
+-==============================================================
+ 
+ hugetlb_shm_group
++=================
+ 
+ hugetlb_shm_group contains group id that is allowed to create SysV
+ shared memory segment using hugetlb page.
+ 
+-==============================================================
+ 
+ laptop_mode
++===========
+ 
+ laptop_mode is a knob that controls "laptop mode". All the things that are
+ controlled by this knob are discussed in Documentation/laptops/laptop-mode.rst.
+ 
+-==============================================================
+ 
+ legacy_va_layout
++================
+ 
+ If non-zero, this sysctl disables the new 32-bit mmap layout - the kernel
+ will use the legacy (2.4) layout for all processes.
+ 
+-==============================================================
+ 
+ lowmem_reserve_ratio
++====================
+ 
+ For some specialised workloads on highmem machines it is dangerous for
+ the kernel to allow process memory to be allocated from the "lowmem"
+@@ -308,7 +320,7 @@ And on large highmem machines this lack of reclaimable lowmem memory
+ can be fatal.
+ 
+ So the Linux page allocator has a mechanism which prevents allocations
+-which _could_ use highmem from using too much lowmem.  This means that
++which *could* use highmem from using too much lowmem.  This means that
+ a certain amount of lowmem is defended from the possibility of being
+ captured into pinned user memory.
+ 
+@@ -316,39 +328,37 @@ captured into pinned user memory.
+ mechanism will also defend that region from allocations which could use
+ highmem or lowmem).
+ 
+-The `lowmem_reserve_ratio' tunable determines how aggressive the kernel is
++The `lowmem_reserve_ratio` tunable determines how aggressive the kernel is
+ in defending these lower zones.
+ 
+ If you have a machine which uses highmem or ISA DMA and your
+ applications are using mlock(), or if you are running with no swap then
+ you probably should change the lowmem_reserve_ratio setting.
+ 
+-The lowmem_reserve_ratio is an array. You can see them by reading this file.
+--
+-% cat /proc/sys/vm/lowmem_reserve_ratio
+-256     256     32
+--
++The lowmem_reserve_ratio is an array. You can see them by reading this file::
++
++	% cat /proc/sys/vm/lowmem_reserve_ratio
++	256     256     32
+ 
+ But, these values are not used directly. The kernel calculates # of protection
+ pages for each zones from them. These are shown as array of protection pages
+ in /proc/zoneinfo like followings. (This is an example of x86-64 box).
+-Each zone has an array of protection pages like this.
++Each zone has an array of protection pages like this::
+ 
+--
+-Node 0, zone      DMA
+-  pages free     1355
+-        min      3
+-        low      3
+-        high     4
++  Node 0, zone      DMA
++    pages free     1355
++          min      3
++          low      3
++          high     4
+ 	:
+ 	:
+-    numa_other   0
+-        protection: (0, 2004, 2004, 2004)
++      numa_other   0
++          protection: (0, 2004, 2004, 2004)
+ 	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-  pagesets
+-    cpu: 0 pcp: 0
+-        :
+--
++    pagesets
++      cpu: 0 pcp: 0
++          :
++
+ These protections are added to score to judge whether this zone should be used
+ for page allocation or should be reclaimed.
+ 
+@@ -359,20 +369,24 @@ not be used because pages_free(1355) is smaller than watermark + protection[2]
+ normal page requirement. If requirement is DMA zone(index=0), protection[0]
+ (=0) is used.
+ 
+-zone[i]'s protection[j] is calculated by following expression.
++zone[i]'s protection[j] is calculated by following expression::
+ 
+-(i < j):
+-  zone[i]->protection[j]
+-  = (total sums of managed_pages from zone[i+1] to zone[j] on the node)
+-    / lowmem_reserve_ratio[i];
+-(i = j):
+-   (should not be protected. = 0;
+-(i > j):
+-   (not necessary, but looks 0)
++  (i < j):
++    zone[i]->protection[j]
++    = (total sums of managed_pages from zone[i+1] to zone[j] on the node)
++      / lowmem_reserve_ratio[i];
++  (i = j):
++     (should not be protected. = 0;
++  (i > j):
++     (not necessary, but looks 0)
+ 
+ The default values of lowmem_reserve_ratio[i] are
++
++    === ====================================
+     256 (if zone[i] means DMA or DMA32 zone)
+-    32  (others).
++    32  (others)
++    === ====================================
++
+ As above expression, they are reciprocal number of ratio.
+ 256 means 1/256. # of protection pages becomes about "0.39%" of total managed
+ pages of higher zones on the node.
+@@ -381,9 +395,9 @@ If you would like to protect more pages, smaller values are effective.
+ The minimum value is 1 (1/1 -> 100%). The value less than 1 completely
+ disables protection of the pages.
+ 
+-==============================================================
+ 
+ max_map_count:
++==============
+ 
+ This file contains the maximum number of memory map areas a process
+ may have. Memory map areas are used as a side-effect of calling
+@@ -396,9 +410,9 @@ e.g., up to one or two maps per allocation.
+ 
+ The default value is 65536.
+ 
+-=============================================================
+ 
+ memory_failure_early_kill:
++==========================
+ 
+ Control how to kill processes when uncorrected memory error (typically
+ a 2bit error in a memory module) is detected in the background by hardware
+@@ -424,9 +438,9 @@ check handling and depends on the hardware capabilities.
+ 
+ Applications can override this setting individually with the PR_MCE_KILL prctl
+ 
+-==============================================================
+ 
+ memory_failure_recovery
++=======================
+ 
+ Enable memory failure recovery (when supported by the platform)
+ 
+@@ -434,9 +448,9 @@ Enable memory failure recovery (when supported by the platform)
+ 
+ 0: Always panic on a memory failure.
+ 
+-==============================================================
+ 
+-min_free_kbytes:
++min_free_kbytes
++===============
+ 
+ This is used to force the Linux VM to keep a minimum number
+ of kilobytes free.  The VM uses this number to compute a
+@@ -450,9 +464,9 @@ become subtly broken, and prone to deadlock under high loads.
+ 
+ Setting this too high will OOM your machine instantly.
+ 
+-=============================================================
+ 
+-min_slab_ratio:
++min_slab_ratio
++==============
+ 
+ This is available only on NUMA kernels.
+ 
+@@ -468,9 +482,9 @@ Note that slab reclaim is triggered in a per zone / node fashion.
+ The process of reclaiming slab memory is currently not node specific
+ and may not be fast.
+ 
+-=============================================================
+ 
+-min_unmapped_ratio:
++min_unmapped_ratio
++==================
+ 
+ This is available only on NUMA kernels.
+ 
+@@ -485,9 +499,9 @@ files and similar are considered.
+ 
+ The default is 1 percent.
+ 
+-==============================================================
+ 
+ mmap_min_addr
++=============
+ 
+ This file indicates the amount of address space  which a user process will
+ be restricted from mmapping.  Since kernel null dereference bugs could
+@@ -498,9 +512,9 @@ security module.  Setting this value to something like 64k will allow the
+ vast majority of applications to work correctly and provide defense in depth
+ against future potential kernel bugs.
+ 
+-==============================================================
+ 
+-mmap_rnd_bits:
++mmap_rnd_bits
++=============
+ 
+ This value can be used to select the number of bits to use to
+ determine the random offset to the base address of vma regions
+@@ -511,9 +525,9 @@ by the architecture's minimum and maximum supported values.
+ This value can be changed after boot using the
+ /proc/sys/vm/mmap_rnd_bits tunable
+ 
+-==============================================================
+ 
+-mmap_rnd_compat_bits:
++mmap_rnd_compat_bits
++====================
+ 
+ This value can be used to select the number of bits to use to
+ determine the random offset to the base address of vma regions
+@@ -525,35 +539,35 @@ architecture's minimum and maximum supported values.
+ This value can be changed after boot using the
+ /proc/sys/vm/mmap_rnd_compat_bits tunable
+ 
+-==============================================================
+ 
+ nr_hugepages
++============
+ 
+ Change the minimum size of the hugepage pool.
+ 
+ See Documentation/admin-guide/mm/hugetlbpage.rst
+ 
+-==============================================================
+ 
+ nr_hugepages_mempolicy
++======================
+ 
+ Change the size of the hugepage pool at run-time on a specific
+ set of NUMA nodes.
+ 
+ See Documentation/admin-guide/mm/hugetlbpage.rst
+ 
+-==============================================================
+ 
+ nr_overcommit_hugepages
++=======================
+ 
+ Change the maximum size of the hugepage pool. The maximum is
+ nr_hugepages + nr_overcommit_hugepages.
+ 
+ See Documentation/admin-guide/mm/hugetlbpage.rst
+ 
+-==============================================================
+ 
+ nr_trim_pages
++=============
+ 
+ This is available only on NOMMU kernels.
+ 
+@@ -568,16 +582,17 @@ The default value is 1.
+ 
+ See Documentation/nommu-mmap.txt for more information.
+ 
+-==============================================================
+ 
+ numa_zonelist_order
++===================
+ 
+ This sysctl is only for NUMA and it is deprecated. Anything but
+ Node order will fail!
+ 
+ 'where the memory is allocated from' is controlled by zonelists.
++
+ (This documentation ignores ZONE_HIGHMEM/ZONE_DMA32 for simple explanation.
+- you may be able to read ZONE_DMA as ZONE_DMA32...)
++you may be able to read ZONE_DMA as ZONE_DMA32...)
+ 
+ In non-NUMA case, a zonelist for GFP_KERNEL is ordered as following.
+ ZONE_NORMAL -> ZONE_DMA
+@@ -585,10 +600,10 @@ This means that a memory allocation request for GFP_KERNEL will
+ get memory from ZONE_DMA only when ZONE_NORMAL is not available.
+ 
+ In NUMA case, you can think of following 2 types of order.
+-Assume 2 node NUMA and below is zonelist of Node(0)'s GFP_KERNEL
++Assume 2 node NUMA and below is zonelist of Node(0)'s GFP_KERNEL::
+ 
+-(A) Node(0) ZONE_NORMAL -> Node(0) ZONE_DMA -> Node(1) ZONE_NORMAL
+-(B) Node(0) ZONE_NORMAL -> Node(1) ZONE_NORMAL -> Node(0) ZONE_DMA.
++  (A) Node(0) ZONE_NORMAL -> Node(0) ZONE_DMA -> Node(1) ZONE_NORMAL
++  (B) Node(0) ZONE_NORMAL -> Node(1) ZONE_NORMAL -> Node(0) ZONE_DMA.
+ 
+ Type(A) offers the best locality for processes on Node(0), but ZONE_DMA
+ will be used before ZONE_NORMAL exhaustion. This increases possibility of
+@@ -616,9 +631,9 @@ order will be selected.
+ Default order is recommended unless this is causing problems for your
+ system/application.
+ 
+-==============================================================
+ 
+ oom_dump_tasks
++==============
+ 
+ Enables a system-wide task dump (excluding kernel threads) to be produced
+ when the kernel performs an OOM-killing and includes such information as
+@@ -638,9 +653,9 @@ OOM killer actually kills a memory-hogging task.
+ 
+ The default value is 1 (enabled).
+ 
+-==============================================================
+ 
+ oom_kill_allocating_task
++========================
+ 
+ This enables or disables killing the OOM-triggering task in
+ out-of-memory situations.
+@@ -659,9 +674,9 @@ is used in oom_kill_allocating_task.
+ 
+ The default value is 0.
+ 
+-==============================================================
+ 
+-overcommit_kbytes:
++overcommit_kbytes
++=================
+ 
+ When overcommit_memory is set to 2, the committed address space is not
+ permitted to exceed swap plus this amount of physical RAM. See below.
+@@ -670,9 +685,9 @@ Note: overcommit_kbytes is the counterpart of overcommit_ratio. Only one
+ of them may be specified at a time. Setting one disables the other (which
+ then appears as 0 when read).
+ 
+-==============================================================
+ 
+-overcommit_memory:
++overcommit_memory
++=================
+ 
+ This value contains a flag that enables memory overcommitment.
+ 
+@@ -695,17 +710,17 @@ The default value is 0.
+ See Documentation/vm/overcommit-accounting.rst and
+ mm/util.c::__vm_enough_memory() for more information.
+ 
+-==============================================================
+ 
+-overcommit_ratio:
++overcommit_ratio
++================
+ 
+ When overcommit_memory is set to 2, the committed address
+ space is not permitted to exceed swap plus this percentage
+ of physical RAM.  See above.
+ 
+-==============================================================
+ 
+ page-cluster
++============
+ 
+ page-cluster controls the number of pages up to which consecutive pages
+ are read in from swap in a single attempt. This is the swap counterpart
+@@ -725,9 +740,9 @@ Lower values mean lower latencies for initial faults, but at the same time
+ extra faults and I/O delays for following faults if they would have been part of
+ that consecutive pages readahead would have brought in.
+ 
+-=============================================================
+ 
+ panic_on_oom
++============
+ 
+ This enables or disables panic on out-of-memory feature.
+ 
+@@ -747,14 +762,16 @@ above-mentioned. Even oom happens under memory cgroup, the whole
+ system panics.
+ 
+ The default value is 0.
++
+ 1 and 2 are for failover of clustering. Please select either
+ according to your policy of failover.
++
+ panic_on_oom=2+kdump gives you very strong tool to investigate
+ why oom happens. You can get snapshot.
+ 
+-=============================================================
+ 
+ percpu_pagelist_fraction
++========================
+ 
+ This is the fraction of pages at most (high mark pcp->high) in each zone that
+ are allocated for each per cpu page list.  The min value for this is 8.  It
+@@ -770,16 +787,16 @@ The initial value is zero.  Kernel does not use this value at boot time to set
+ the high water marks for each per cpu page list.  If the user writes '0' to this
+ sysctl, it will revert to this default behavior.
+ 
+-==============================================================
+ 
+ stat_interval
++=============
+ 
+ The time interval between which vm statistics are updated.  The default
+ is 1 second.
+ 
+-==============================================================
+ 
+ stat_refresh
++============
+ 
+ Any read or write (by root only) flushes all the per-cpu vm statistics
+ into their global totals, for more accurate reports when testing
+@@ -790,24 +807,26 @@ as 0) and "fails" with EINVAL if any are found, with a warning in dmesg.
+ (At time of writing, a few stats are known sometimes to be found negative,
+ with no ill effects: errors and warnings on these stats are suppressed.)
+ 
+-==============================================================
+ 
+ numa_stat
++=========
+ 
+ This interface allows runtime configuration of numa statistics.
+ 
+ When page allocation performance becomes a bottleneck and you can tolerate
+ some possible tool breakage and decreased numa counter precision, you can
+-do:
++do::
++
+ 	echo 0 > /proc/sys/vm/numa_stat
+ 
+ When page allocation performance is not a bottleneck and you want all
+-tooling to work, you can do:
++tooling to work, you can do::
++
+ 	echo 1 > /proc/sys/vm/numa_stat
+ 
+-==============================================================
+ 
+ swappiness
++==========
+ 
+ This control is used to define how aggressive the kernel will swap
+ memory pages.  Higher values will increase aggressiveness, lower values
+@@ -817,9 +836,9 @@ than the high water mark in a zone.
+ 
+ The default value is 60.
+ 
+-==============================================================
+ 
+ unprivileged_userfaultfd
++========================
+ 
+ This flag controls whether unprivileged users can use the userfaultfd
+ system calls.  Set this to 1 to allow unprivileged users to use the
+@@ -828,9 +847,9 @@ privileged users (with SYS_CAP_PTRACE capability).
+ 
+ The default value is 1.
+ 
+-==============================================================
+ 
+-- user_reserve_kbytes
++user_reserve_kbytes
++===================
+ 
+ When overcommit_memory is set to 2, "never overcommit" mode, reserve
+ min(3% of current process size, user_reserve_kbytes) of free memory.
+@@ -846,10 +865,9 @@ Any subsequent attempts to execute a command will result in
+ 
+ Changing this takes effect whenever an application requests memory.
+ 
+-==============================================================
+ 
+ vfs_cache_pressure
+-------------------
++==================
+ 
+ This percentage value controls the tendency of the kernel to reclaim
+ the memory which is used for caching of directory and inode objects.
+@@ -867,9 +885,9 @@ performance impact. Reclaim code needs to take various locks to find freeable
+ directory and inode objects. With vfs_cache_pressure=1000, it will look for
+ ten times more freeable objects than there are.
+ 
+-=============================================================
+ 
+-watermark_boost_factor:
++watermark_boost_factor
++======================
+ 
+ This factor controls the level of reclaim when memory is being fragmented.
+ It defines the percentage of the high watermark of a zone that will be
+@@ -887,9 +905,9 @@ fragmentation events that occurred in the recent past. If this value is
+ smaller than a pageblock then a pageblocks worth of pages will be reclaimed
+ (e.g.  2MB on 64-bit x86). A boost factor of 0 will disable the feature.
+ 
+-=============================================================
+ 
+-watermark_scale_factor:
++watermark_scale_factor
++======================
+ 
+ This factor controls the aggressiveness of kswapd. It defines the
+ amount of memory left in a node/system before kswapd is woken up and
+@@ -905,20 +923,22 @@ that the number of free pages kswapd maintains for latency reasons is
+ too small for the allocation bursts occurring in the system. This knob
+ can then be used to tune kswapd aggressiveness accordingly.
+ 
+-==============================================================
+ 
+-zone_reclaim_mode:
++zone_reclaim_mode
++=================
+ 
+ Zone_reclaim_mode allows someone to set more or less aggressive approaches to
+ reclaim memory when a zone runs out of memory. If it is set to zero then no
+ zone reclaim occurs. Allocations will be satisfied from other zones / nodes
+ in the system.
+ 
+-This is value ORed together of
++This is value OR'ed together of
+ 
+-1	= Zone reclaim on
+-2	= Zone reclaim writes dirty pages out
+-4	= Zone reclaim swaps pages
++=	===================================
++1	Zone reclaim on
++2	Zone reclaim writes dirty pages out
++4	Zone reclaim swaps pages
++=	===================================
+ 
+ zone_reclaim_mode is disabled by default.  For file servers or workloads
+ that benefit from having their data cached, zone_reclaim_mode should be
+@@ -942,5 +962,3 @@ of other processes running on other nodes will not be affected.
+ Allowing regular swap effectively restricts allocations to the local
+ node unless explicitly overridden by memory policies or cpuset
+ configurations.
+-
+-============ End of Document =================================
+diff --git a/Documentation/vm/unevictable-lru.rst b/Documentation/vm/unevictable-lru.rst
+index c6d94118fbcc..8ba656f37cd8 100644
+--- a/Documentation/vm/unevictable-lru.rst
++++ b/Documentation/vm/unevictable-lru.rst
+@@ -439,7 +439,7 @@ Compacting MLOCKED Pages
+ 
+ The unevictable LRU can be scanned for compactable regions and the default
+ behavior is to do so.  /proc/sys/vm/compact_unevictable_allowed controls
+-this behavior (see Documentation/sysctl/vm.txt).  Once scanning of the
++this behavior (see Documentation/sysctl/vm.rst).  Once scanning of the
+ unevictable LRU is enabled, the work of compaction is mostly handled by
+ the page migration code and the same work flow as described in MIGRATING
+ MLOCKED PAGES will apply.
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 4d9f55bf7d38..e0ea74bbb41d 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -372,7 +372,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
+ /**
+  * print_tainted - return a string to represent the kernel taint state.
   *
-  * BFQ is a proportional-share storage-I/O scheduling algorithm based
-  * on the slice-by-slice service scheme of CFQ. But BFQ assigns
-diff --git a/block/blk-integrity.c b/block/blk-integrity.c
-index 825c9c070458..ca39b4624cf8 100644
---- a/block/blk-integrity.c
-+++ b/block/blk-integrity.c
-@@ -383,7 +383,7 @@ static const struct blk_integrity_profile nop_profile = {
-  * send/receive integrity metadata it must use this function to register
-  * the capability with the block layer. The template is a blk_integrity
-  * struct with values appropriate for the underlying hardware. See
-- * Documentation/block/data-integrity.txt.
-+ * Documentation/block/data-integrity.rst.
-  */
- void blk_integrity_register(struct gendisk *disk, struct blk_integrity *template)
- {
-diff --git a/block/ioprio.c b/block/ioprio.c
-index 2e0559f157c8..77bcab11dce5 100644
---- a/block/ioprio.c
-+++ b/block/ioprio.c
-@@ -17,7 +17,7 @@
+- * For individual taint flag meanings, see Documentation/sysctl/kernel.txt
++ * For individual taint flag meanings, see Documentation/sysctl/kernel.rst
   *
-  * ioprio_set(PRIO_PROCESS, pid, prio);
-  *
-- * See also Documentation/block/ioprio.txt
-+ * See also Documentation/block/ioprio.rst
-  *
-  */
- #include <linux/gfp.h>
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index b8a682b5a1bb..2a2a2e82832e 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -25,7 +25,7 @@
- #include "blk-mq-sched.h"
- 
+  * The string is overwritten by the next call to print_tainted(),
+  * but is always NULL terminated.
+diff --git a/mm/swap.c b/mm/swap.c
+index 607c48229a1d..83a2a15f4836 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -8,7 +8,7 @@
  /*
-- * See Documentation/block/deadline-iosched.txt
-+ * See Documentation/block/deadline-iosched.rst
-  */
- static const int read_expire = HZ / 2;  /* max time before a read is submitted. */
- static const int write_expire = 5 * HZ; /* ditto for writes, these limits are SOFT! */
-diff --git a/block/partitions/cmdline.c b/block/partitions/cmdline.c
-index 60fb3df9897c..f1edd5452249 100644
---- a/block/partitions/cmdline.c
-+++ b/block/partitions/cmdline.c
-@@ -11,7 +11,7 @@
-  *
-  * The format for the command line is just like mtdparts.
-  *
-- * For further information, see "Documentation/block/cmdline-partition.txt"
-+ * For further information, see "Documentation/block/cmdline-partition.rst"
-  *
-  */
- 
+  * This file contains the default values for the operation of the
+  * Linux VM subsystem. Fine-tuning documentation can be found in
+- * Documentation/sysctl/vm.txt.
++ * Documentation/sysctl/vm.rst.
+  * Started 18.12.91
+  * Swap aging added 23.2.95, Stephen Tweedie.
+  * Buffermem limits added 12.3.98, Rik van Riel.
 -- 
 2.21.0
 
