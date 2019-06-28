@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F7FC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA87C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69A76208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E602F2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfF1Lw0 (ORCPT
+        id S1727039AbfF1Lwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:52:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56894 "EHLO huawei.com"
+        Fri, 28 Jun 2019 07:52:32 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56898 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726657AbfF1LwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:52:21 -0400
+        id S1726942AbfF1LwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 07:52:17 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1360BE2155ABB8ADAEF5;
+        by Forcepoint Email with ESMTP id 1B975946C79220174B22;
         Fri, 28 Jun 2019 19:52:11 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 28 Jun 2019 19:52:01 +0800
+ 14.3.439.0; Fri, 28 Jun 2019 19:52:02 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>
-Subject: [PATCH net-next 08/12] net: hns3: handle empty unknown interrupt
-Date:   Fri, 28 Jun 2019 19:50:14 +0800
-Message-ID: <1561722618-12168-9-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 11/12] net: hns3: remove RXD_VLD check in hns3_handle_bdinfo
+Date:   Fri, 28 Jun 2019 19:50:17 +0800
+Message-ID: <1561722618-12168-12-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
 References: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,60 +47,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since some MSI-X interrupt's status may be cleared by hardware,
-so when the driver receives the interrupt, reading
-HCLGE_VECTOR0_PF_OTHER_INT_STS_REG register will get an empty
-unknown interrupt. For this case, the irq handler should enable
-vector0 interrupt. This patch also use dev_info() instead of
-dev_dbg() in the hclge_check_event_cause(), since this information
-will be useful for normal usage.
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+The HNS3_RXD_VLD_B bit has already been checked in hns3_add_frag
+or hns3_handle_rx_bd before calling hns3_handle_bdinfo, so when
+hns3_handle_bdinfo is called, the HNS3_RXD_VLD_B bit is always
+set, which makes the checking in hns3_handle_bdinfo unnecessary.
+
+This patch removes the RXD_VLD_B checking in hns3_handle_bdinfo.
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 10 ----------
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |  1 -
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  1 -
+ 3 files changed, 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 896605f..62c6263 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2783,8 +2783,9 @@ static u32 hclge_check_event_cause(struct hclge_dev *hdev, u32 *clearval)
- 
- 	/* check for vector0 msix event source */
- 	if (msix_src_reg & HCLGE_VECTOR0_REG_MSIX_MASK) {
--		dev_dbg(&hdev->pdev->dev, "received event 0x%x\n",
--			msix_src_reg);
-+		dev_info(&hdev->pdev->dev, "received event 0x%x\n",
-+			 msix_src_reg);
-+		*clearval = msix_src_reg;
- 		return HCLGE_VECTOR0_EVENT_ERR;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 37f28bd..ab5a339 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1490,9 +1490,7 @@ static void hns3_nic_get_stats64(struct net_device *netdev,
+ 			start = u64_stats_fetch_begin_irq(&ring->syncp);
+ 			rx_bytes += ring->stats.rx_bytes;
+ 			rx_pkts += ring->stats.rx_pkts;
+-			rx_drop += ring->stats.non_vld_descs;
+ 			rx_drop += ring->stats.l2_err;
+-			rx_errors += ring->stats.non_vld_descs;
+ 			rx_errors += ring->stats.l2_err;
+ 			rx_errors += ring->stats.l3l4_csum_err;
+ 			rx_crc_errors += ring->stats.l2_err;
+@@ -2769,14 +2767,6 @@ static int hns3_handle_bdinfo(struct hns3_enet_ring *ring, struct sk_buff *skb)
+ 					       vlan_tag);
  	}
  
-@@ -2796,8 +2797,11 @@ static u32 hclge_check_event_cause(struct hclge_dev *hdev, u32 *clearval)
- 	}
- 
- 	/* print other vector0 event source */
--	dev_dbg(&hdev->pdev->dev, "cmdq_src_reg:0x%x, msix_src_reg:0x%x\n",
--		cmdq_src_reg, msix_src_reg);
-+	dev_info(&hdev->pdev->dev,
-+		 "CMDQ INT status:0x%x, other INT status:0x%x\n",
-+		 cmdq_src_reg, msix_src_reg);
-+	*clearval = msix_src_reg;
-+
- 	return HCLGE_VECTOR0_EVENT_OTHER;
- }
- 
-@@ -2876,7 +2880,8 @@ static irqreturn_t hclge_misc_irq_handle(int irq, void *data)
- 	}
- 
- 	/* clear the source of interrupt if it is not cause by reset */
--	if (event_cause == HCLGE_VECTOR0_EVENT_MBX) {
-+	if (!clearval ||
-+	    event_cause == HCLGE_VECTOR0_EVENT_MBX) {
- 		hclge_clear_event_cause(hdev, event_cause, clearval);
- 		hclge_enable_vector(&hdev->misc_vector, true);
- 	}
+-	if (unlikely(!(bd_base_info & BIT(HNS3_RXD_VLD_B)))) {
+-		u64_stats_update_begin(&ring->syncp);
+-		ring->stats.non_vld_descs++;
+-		u64_stats_update_end(&ring->syncp);
+-
+-		return -EINVAL;
+-	}
+-
+ 	if (unlikely(!desc->rx.pkt_len || (l234info & (BIT(HNS3_RXD_TRUNCAT_B) |
+ 				  BIT(HNS3_RXD_L2E_B))))) {
+ 		u64_stats_update_begin(&ring->syncp);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+index dd00640..a2b73d6 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+@@ -384,7 +384,6 @@ struct ring_stats {
+ 			u64 rx_err_cnt;
+ 			u64 reuse_pg_cnt;
+ 			u64 err_pkt_len;
+-			u64 non_vld_descs;
+ 			u64 err_bd_num;
+ 			u64 l2_err;
+ 			u64 l3l4_csum_err;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index 16034af..5bff98a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -44,7 +44,6 @@ static const struct hns3_stats hns3_rxq_stats[] = {
+ 	HNS3_TQP_STAT("errors", rx_err_cnt),
+ 	HNS3_TQP_STAT("reuse_pg_cnt", reuse_pg_cnt),
+ 	HNS3_TQP_STAT("err_pkt_len", err_pkt_len),
+-	HNS3_TQP_STAT("non_vld_descs", non_vld_descs),
+ 	HNS3_TQP_STAT("err_bd_num", err_bd_num),
+ 	HNS3_TQP_STAT("l2_err", l2_err),
+ 	HNS3_TQP_STAT("l3l4_csum_err", l3l4_csum_err),
 -- 
 2.7.4
 
