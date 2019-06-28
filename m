@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE12C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350BCC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948932133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A11B214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:17:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="By4INT2v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOwALMmP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfF1JRd (ORCPT
+        id S1727127AbfF1JRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:17:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38798 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfF1JRb (ORCPT
+        Fri, 28 Jun 2019 05:17:36 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42688 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfF1JRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:17:31 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y15so2672174pfn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 02:17:31 -0700 (PDT)
+        Fri, 28 Jun 2019 05:17:35 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k13so2310846pgq.9
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 02:17:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=H/MU7PygK8zh6vt4JAY4lXOfHMWy9RR6BrwI8h0UwRU=;
-        b=By4INT2vAEDcFvmjebojzKfSO1h91NuEbQ/dYkSfXpTY6XtaYe6DFOAQOw7p6foyjJ
-         M9S7443E5Hv+3qdSLyaAqFRKjkZxNAYx/CQ9E02TqwFKIjyLJCOBZIkIu1d4sYUdV92j
-         d1gMDu/4nRqqYR89PVlzojoElPtGNHGMwDlQ9Ig9xYBAEzHfTYcHrtuZwSJ8nazM0IXl
-         /2UTRL+pyGqJOQxu4Zv9H5lovFyeTVuF9Nq6NQ8IXddMqQH4nX4Lg1D+vOa/H4M8Qhpu
-         D0ja6p0XvNUtiJZ63oY0ZF565d0Fg/ZKmDru2hJr69J7FadTy0ZwQnWj5aY4PkfO3BLw
-         GBrQ==
+        bh=DLUTJXLdQkLyhFcrj8g3pP1Z0g9YIhydqET4TRsDxNk=;
+        b=AOwALMmPpDr219fQzQ4YfjSbYTm/+nRHtRNkmz3vdiEvs62orPSK80qJKwKUaxcHl5
+         PDnwgd6BfTM+6ivi/UZ15WHTqyXjv0izdDKT3h1YZ/LfQyD6sGEFvTY2sfu6TJ3lMhnE
+         D+MlnW/Zdp59Z0Vwx824oLGwwZdCNcB5h9V0eO6vuGBY7aB4wCovuX1vCmfGewYyHEbx
+         TtsQ9QgB7cCeXxnlnUVY7Tm2wAx9WW9Ehip4JA31b5Dz84ockgvP8IaY9yU7DrQtOBsw
+         xOxEWzP2gLdUL+myP4AXgfzSI7cxalVwzauePkljACdt7y/TrPi5Wyl4X4bnlQa0VFJ5
+         nUjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=H/MU7PygK8zh6vt4JAY4lXOfHMWy9RR6BrwI8h0UwRU=;
-        b=gV6sr61LMnOxFQpR5Pyh8fetmXza8EiHGvpNB3BZLf8VK0jj1OFzf9RNTHvwnfXCsI
-         58kEQPdIyxv5wx6cbfZGLfRLgNLhKQ35ZvB57l/ECwqzPuucr9J+vBT+dx3IZB8ZIYdi
-         28ArdHISsXmKg0jYsD6GvAlb0EkLI1LwrThTvLo9Cbpza6WXloC+3g+8Vc6gtiHPcSqI
-         k90vzrMMfPWco3/4ZbRNRQf1QJHruPjqSC4S61zyoO4eO/z/72nl+VKQ4bLPZ/bGdcEC
-         icqpGZxdCBJgfAMfRjR30JExbD876EdJGbUX1hahulNZIHlGncmBm60NWZgrtzGL25yQ
-         lOQA==
-X-Gm-Message-State: APjAAAVPAQVLPsnUGd+9ugOhdukuQ1szYdkvnc+dDhm9AusieiuQV9xr
-        /IJg0zHRZHpeTptNVW8hLts=
-X-Google-Smtp-Source: APXvYqzNVezJw0OGnz0SXX+WyseNaqlSLtlv7rUH8yyYnlGdMmgCzMF2kNrrkaONvmfs1UowoOCfQA==
-X-Received: by 2002:a17:90a:9a95:: with SMTP id e21mr11587737pjp.98.1561713450983;
-        Fri, 28 Jun 2019 02:17:30 -0700 (PDT)
+        bh=DLUTJXLdQkLyhFcrj8g3pP1Z0g9YIhydqET4TRsDxNk=;
+        b=e5Oub2P1rvIMGx24gI/+nXrEracgCe4ccYV9/6d9H8n48sjXuFFFrtKkvvpWblF53d
+         +CNlV4MLgbF+g0lRgXHf4zPE8nrW1+boGaJIqyY8QmLndRrbKGa/UV0JgolwmOTucYDK
+         N8yzANNy9Qvjeg14cN+gGnv+DMu0IaIjnd6XfnORyyyIJEbSJizoj5aTGP+QjhrnH5/B
+         xiKAyYaG1zjPOYi7AsqvuxLTbNS8dg9x4O4Mry3bDGQu0OTN53ProTMg8SdwTmirXW2c
+         vNk0UINFPFK1GSmLD5gU4s5ew0qbO+dXctY56fRWgrmSP+li8u3OmCVik3+dSPGP+TGy
+         sDKg==
+X-Gm-Message-State: APjAAAUDg0VXjfrJUSfiaqBMKsdDTTwseVc++cDzVkPEL8reZOWbuOKv
+        gUwQlTsDu0vhmVxbt/uZKaY=
+X-Google-Smtp-Source: APXvYqyYxvE7b1CBBlH1MlGCRdlM7n+xKStNN87rxPXf4yXPozHnDLk5K9fsRWxXziE2FFj2sQRPJQ==
+X-Received: by 2002:a17:90a:384d:: with SMTP id l13mr12038375pjf.86.1561713454883;
+        Fri, 28 Jun 2019 02:17:34 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id x65sm1754521pfd.139.2019.06.28.02.17.26
+        by smtp.gmail.com with ESMTPSA id x65sm1754521pfd.139.2019.06.28.02.17.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 02:17:30 -0700 (PDT)
+        Fri, 28 Jun 2019 02:17:34 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, linux-kernel@vger.kernel.org,
         longman@redhat.com, paulmck@linux.vnet.ibm.com,
         boqun.feng@gmail.com, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v3 24/30] locking/lockdep: Introduce mark_lock_unaccessed()
-Date:   Fri, 28 Jun 2019 17:15:22 +0800
-Message-Id: <20190628091528.17059-25-duyuyang@gmail.com>
+Subject: [PATCH v3 25/30] locking/lockdep: Add nest lock type
+Date:   Fri, 28 Jun 2019 17:15:23 +0800
+Message-Id: <20190628091528.17059-26-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190628091528.17059-1-duyuyang@gmail.com>
 References: <20190628091528.17059-1-duyuyang@gmail.com>
@@ -76,35 +76,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since in graph search, multiple matches may be needed, a matched lock
-needs to rejoin the search for another match, thereby introduce
-mark_lock_unaccessed().
+Add a macro LOCK_TYPE_NEST for nest lock type and mark the nested lock in
+check_deadlock_current(). Unlike the other LOCK_TYPE_* enums, this lock type
+is used only in lockdep.
+
+No functional change.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ kernel/locking/lockdep.c           | 7 +++++--
+ kernel/locking/lockdep_internals.h | 2 ++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 444eb62..e7610d2 100644
+index e7610d2..cb3a1d3 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -1449,6 +1449,15 @@ static inline void mark_lock_accessed(struct lock_list *lock,
- 	lock->class[forward]->dep_gen_id = lockdep_dependency_gen_id;
- }
+@@ -2517,6 +2517,7 @@ static inline void inc_chains(void)
+  *  0: on deadlock detected;
+  *  1: on OK;
+  *  LOCK_TYPE_RECURSIVE: on recursive read
++ *  LOCK_TYPE_NEST: on nest lock
+  */
+ static int
+ check_deadlock_current(struct task_struct *curr, struct held_lock *next)
+@@ -2546,7 +2547,7 @@ static inline void inc_chains(void)
+ 		 * nesting behaviour.
+ 		 */
+ 		if (nest)
+-			return LOCK_TYPE_RECURSIVE;
++			return LOCK_TYPE_NEST;
  
-+static inline void mark_lock_unaccessed(struct lock_list *lock)
-+{
-+	unsigned long nr;
+ 		print_deadlock_bug(curr, prev, next);
+ 		return 0;
+@@ -3049,12 +3050,14 @@ static int validate_chain(struct task_struct *curr, struct held_lock *next,
+ 
+ 		if (!ret)
+ 			return 0;
 +
-+	nr = lock - list_entries;
-+	WARN_ON(nr >= ARRAY_SIZE(list_entries)); /* Out-of-bounds, input fail */
-+	fw_dep_class(lock)->dep_gen_id--;
-+}
+ 		/*
+ 		 * Add dependency only if this lock is not the head of the
+ 		 * chain, and if it's not a second recursive-read lock. If
+ 		 * not, there is no need to check further.
+ 		 */
+-		if (!(chain->depth > 1 && ret != LOCK_TYPE_RECURSIVE))
++		if (!(chain->depth > 1 && ret != LOCK_TYPE_RECURSIVE &&
++		      ret != LOCK_TYPE_NEST))
+ 			goto out_unlock;
+ 	}
+ 
+diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
+index e9a8ed6..56fac83 100644
+--- a/kernel/locking/lockdep_internals.h
++++ b/kernel/locking/lockdep_internals.h
+@@ -26,6 +26,8 @@ enum lock_usage_bit {
+ #define LOCK_USAGE_DIR_MASK  2
+ #define LOCK_USAGE_STATE_MASK (~(LOCK_USAGE_READ_MASK | LOCK_USAGE_DIR_MASK))
+ 
++#define LOCK_TYPE_NEST	NR_LOCK_TYPE
 +
- static inline unsigned long lock_accessed(struct lock_list *lock, int forward)
- {
- 	unsigned long nr;
+ /*
+  * Usage-state bitmasks:
+  */
 -- 
 1.8.3.1
 
