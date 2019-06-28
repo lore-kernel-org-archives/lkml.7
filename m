@@ -2,120 +2,136 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E1CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FC1C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9E02083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B61B82086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfF1RVF (ORCPT
+        id S1726673AbfF1RW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:21:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22878 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726408AbfF1RVF (ORCPT
+        Fri, 28 Jun 2019 13:22:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9320 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726443AbfF1RW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:21:05 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SHK83h105904
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 13:21:04 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdn5qmyg9-1
+        Fri, 28 Jun 2019 13:22:59 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SHHHf3124252
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 13:22:56 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tdnvsu7ah-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 13:21:03 -0400
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 13:22:55 -0400
 Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 28 Jun 2019 18:21:02 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Fri, 28 Jun 2019 18:22:52 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Jun 2019 18:20:57 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SHKuk048431520
+        Fri, 28 Jun 2019 18:22:49 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SHMmP718743318
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 17:20:56 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25145B2064;
-        Fri, 28 Jun 2019 17:20:56 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 075A1B205F;
-        Fri, 28 Jun 2019 17:20:56 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Jun 2019 17:20:55 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 9E5DB16C5DE8; Fri, 28 Jun 2019 10:20:56 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 10:20:56 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Scott Wood <swood@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Reply-To: paulmck@linux.ibm.com
-References: <20190627155506.GU26519@linux.ibm.com>
- <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
- <20190627203612.GD26519@linux.ibm.com>
- <20190628141522.GF3402@hirez.programming.kicks-ass.net>
- <20190628155404.GV26519@linux.ibm.com>
- <20190628160408.GH32547@worktop.programming.kicks-ass.net>
+        Fri, 28 Jun 2019 17:22:48 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 95E794C04A;
+        Fri, 28 Jun 2019 17:22:48 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 55EB84C040;
+        Fri, 28 Jun 2019 17:22:48 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.21])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 28 Jun 2019 17:22:48 +0000 (GMT)
+Date:   Fri, 28 Jun 2019 19:22:47 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: [PATCH] kallsyms: exclude kasan local symbols on s390
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190628160408.GH32547@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Patchwork-Bot: notify
 X-TM-AS-GCONF: 00
-x-cbid: 19062817-0060-0000-0000-00000356C2C4
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011347; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01224567; UDB=6.00644528; IPR=6.01005760;
- MB=3.00027510; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-28 17:21:00
+x-cbid: 19062817-0012-0000-0000-0000032D7595
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062817-0061-0000-0000-000049F1045C
-Message-Id: <20190628172056.GW26519@linux.ibm.com>
+x-cbparentid: 19062817-0013-0000-0000-00002166B910
+Message-Id: <patch.git-3ffb613bd7b2.your-ad-here.call-01561742434-ext-8011@work.hours>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=520 adultscore=0 classifier=spam adjust=0 reason=mlx
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1906280198
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 06:04:08PM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 28, 2019 at 08:54:04AM -0700, Paul E. McKenney wrote:
-> > Thank you!  Plus it looks like scheduler_ipi() takes an early exit if
-> > ->wake_list is empty, regardless of TIF_NEED_RESCHED, right?
-> 
-> Yes, TIF_NEED_RESCHED is checked in the interrupt return path.
+gcc asan instrumentation emits the following sequence to store frame pc
+when the kernel is built with CONFIG_RELOCATABLE:
+debug/vsprintf.s:
+        .section        .data.rel.ro.local,"aw"
+        .align  8
+.LC3:
+        .quad   .LASANPC4826@GOTOFF
+.text
+        .align  8
+        .type   number, @function
+number:
+.LASANPC4826:
 
-OK, got it.  So the following sequence would be a valid way to get the
-scheduler's attention on the current CPU shortly after interrupts
-are re-enabled, even if the current CPU is already holding some
-rq or pi locks, correct?
+and in case reloc is issued for LASANPC label it also gets into .symtab
+with the same address as actual function symbol:
+$ nm -n vmlinux | grep 0000000001397150
+0000000001397150 t .LASANPC4826
+0000000001397150 t number
 
-	set_tsk_need_resched(current);
-	set_preempt_need_resched();
-	smp_send_reschedule(smp_processor_id());
+In the end kernel backtraces are almost unreadable:
+[  143.748476] Call Trace:
+[  143.748484] ([<000000002da3e62c>] .LASANPC2671+0x114/0x190)
+[  143.748492]  [<000000002eca1a58>] .LASANPC2612+0x110/0x160
+[  143.748502]  [<000000002de9d830>] print_address_description+0x80/0x3b0
+[  143.748511]  [<000000002de9dd64>] __kasan_report+0x15c/0x1c8
+[  143.748521]  [<000000002ecb56d4>] strrchr+0x34/0x60
+[  143.748534]  [<000003ff800a9a40>] kasan_strings+0xb0/0x148 [test_kasan]
+[  143.748547]  [<000003ff800a9bba>] kmalloc_tests_init+0xe2/0x528 [test_kasan]
+[  143.748555]  [<000000002da2117c>] .LASANPC4069+0x354/0x748
+[  143.748563]  [<000000002dbfbb16>] do_init_module+0x136/0x3b0
+[  143.748571]  [<000000002dbff3f4>] .LASANPC3191+0x2164/0x25d0
+[  143.748580]  [<000000002dbffc4c>] .LASANPC3196+0x184/0x1b8
+[  143.748587]  [<000000002ecdf2ec>] system_call+0xd8/0x2d8
 
-							Thanx, Paul
+Since LASANPC labels are not even unique and get into .symtab only due
+to relocs filter them out in kallsyms.
+
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+---
+ scripts/kallsyms.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index e17837f1d3f2..ae6504d07fd6 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -150,6 +150,9 @@ static int read_symbol(FILE *in, struct sym_entry *s)
+ 	/* exclude debugging symbols */
+ 	else if (stype == 'N' || stype == 'n')
+ 		return -1;
++	/* exclude s390 kasan local symbols */
++	else if (!strncmp(sym, ".LASANPC", 8))
++		return -1;
+ 
+ 	/* include the type field in the symbol name, so that it gets
+ 	 * compressed together */
+-- 
+2.21.0
 
