@@ -4,144 +4,412 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD62C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEEEC5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3062E2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E34D2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:28:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GJyI995X";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="fZCnvgTc"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TtZxRuTj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfF1H1f (ORCPT
+        id S1726567AbfF1H2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:27:35 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:53412 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725792AbfF1H1f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:27:35 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Fri, 28 Jun 2019 03:28:13 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57691 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726431AbfF1H2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 03:28:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B22BAC0A6E;
-        Fri, 28 Jun 2019 07:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561706854; bh=zYe5/mN81Wu4tL48o2Soq2Ioh9hXQALfNlBRak2re20=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=GJyI995X4UEHFz4nvJ2nZ9JqOn4Gry1IZ4Ux9HnmwLvoM3jx0L7WM7Rz89R2ZHosM
-         wwUHaxPDgPQCsM/h0vBRup7/UQb1vxPTlgyfTeqQPTACG3MQSh5NJ0YhxvMRZNDFQr
-         CG+yFn2DO9hVeEgVAMvWe9XkIx3eUuEFT2PYA9d6GepHEQBnq/IPL5EwvNYcI/5Bea
-         nMpVr+j1heb3SyAUotyduP1OslNs8Kc+Rt5WrW60OV54aIEzyr5hG1+BoDOM+RU+oO
-         9hPqi4lHmMaxd9QmY4FWIhtktwgfzNsB8I716PjkNaMWdZ4jEAYGtZASPfDQU2YBOl
-         CSgF0/cXCKYcQ==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 4A7EEA0093;
-        Fri, 28 Jun 2019 07:27:34 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 28 Jun 2019 00:27:33 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 28 Jun 2019 00:27:33 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zYe5/mN81Wu4tL48o2Soq2Ioh9hXQALfNlBRak2re20=;
- b=fZCnvgTcQpA7PDONJmRCNxklUTotTS1P7j0Z7wueIEC67Rr5hvOgW7IcdKm1r3opZqKk037CJflQQEDkMEqy6CiYpO90b1T1O9DcmHUUM/UajI6Cb4OO01/6JVu/TXNPqneWvMF+dHdyrYtprtvMeKUsMsRu+zCyZUSiL6lPags=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
- BN8PR12MB3457.namprd12.prod.outlook.com (20.178.212.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Fri, 28 Jun 2019 07:27:32 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c922:4285:22a6:6e]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c922:4285:22a6:6e%5]) with mapi id 15.20.2008.018; Fri, 28 Jun 2019
- 07:27:31 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: RE: [PATCH net-next 10/10] net: stmmac: Try to get C45 PHY if
- everything else fails
-Thread-Topic: [PATCH net-next 10/10] net: stmmac: Try to get C45 PHY if
- everything else fails
-Thread-Index: AQHVLCXCrx1niaeCs0CBNlrs4Af9k6auOg4AgADniCCAAF0vAIAAAOYggAAKKwCAASOeIA==
-Date:   Fri, 28 Jun 2019 07:27:31 +0000
-Message-ID: <BN8PR12MB32661430AED6693B860EBCC0D3FC0@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1561556555.git.joabreu@synopsys.com>
- <c7d1dbac1940853c22db8215ed60181b2abe3050.1561556556.git.joabreu@synopsys.com>
- <20190626200128.GH27733@lunn.ch>
- <BN8PR12MB3266A8396ACA97484A5E0CE7D3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190627132340.GC31189@lunn.ch>
- <BN8PR12MB32666DADBD1DD315026E9A2BD3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190627140316.GF31189@lunn.ch>
-In-Reply-To: <20190627140316.GF31189@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3892826d-0cd0-4657-9756-08d6fb9a1514
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN8PR12MB3457;
-x-ms-traffictypediagnostic: BN8PR12MB3457:
-x-microsoft-antispam-prvs: <BN8PR12MB3457B3621BAF20DDC0B6BA65D3FC0@BN8PR12MB3457.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00826B6158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(396003)(346002)(136003)(39860400002)(366004)(376002)(199004)(189003)(11346002)(25786009)(74316002)(3846002)(5660300002)(66066001)(6116002)(6436002)(55016002)(68736007)(4744005)(26005)(52536014)(9686003)(66946007)(73956011)(76116006)(64756008)(66556008)(4326008)(66476007)(8936002)(86362001)(66446008)(53936002)(256004)(8676002)(54906003)(14454004)(316002)(110136005)(81166006)(186003)(71190400001)(81156014)(478600001)(486006)(446003)(2906002)(76176011)(305945005)(7736002)(476003)(6506007)(229853002)(102836004)(6246003)(33656002)(6636002)(7696005)(99286004)(71200400001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3457;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jZVhHRCGw6F6IAyHCV9n0NIzpgRGxFW5a5aXOmLtFZZA2b+Xtddyq+kD6LePgilRcbr1uUO0f1axBJsFc9kTtX5uS4MQoByYYtzggj3fqbORXizngPtViBuF38wD748nEGpRVm1itPut9gboCHpzXRuHTyONJbrPzsfMv3uWhFekU92its4+IZ9lmtAmosgwv6SXcoOuhlH9TflzTGrDdgzb2JwuGv4hwIL47KgCY5SpikPhKIAYEkReAHP14gXt3bScGyTnpNRpCzEAwzTfdPiGYbzbAl0PjpqABg8f/99S3/s7mQ99/xTOQEfPq4igvqq1SWCPHf7teL9WHce5sunCm2zGYgNoMG/zTN35tuij7B7uiJkjk3Gn1LEAKM4DPS1gLOF4qIrxZdEVTfBCsHqzLiSlaeF4gKNHKtXHKqI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45ZpJl60q6z9s8m;
+        Fri, 28 Jun 2019 17:28:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561706889;
+        bh=KQj2LQ089BlTd7dI5gyCt+bO+s0CuBtt7KRYn+23UWM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TtZxRuTjAOW4dMuwmUVT8Jxa6QxP83VgtLzcsh0sRk+W5TT/KAPtVuur+1CGOJHXQ
+         Tu3XHFGb4K237CCHWUzfcAypymI1wit8kiTE6Kn3KjMlBagCJ/Y7mGGyqS1fdyWvym
+         wmiA2/5Olz3P3ZRHfnQIQFstqWG1SPqwseq273w3QMbOummQ1Kt9yr2Ekplen/mOks
+         OwJrzkPVV/dbKr958ye3CIGmprw+NaRBo5HgeTN8EsXvSMN4sUaM9Yqx5yUAURerKH
+         oCNw9+pQn3xSNqR70WjLU+w8RaV+xcJYNqoQBAyAHePbqpO4tDHHd9ILxG6FieRdkg
+         WUC4VCBDDVcRg==
+Date:   Fri, 28 Jun 2019 17:28:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: linux-next: manual merge of the gpio tree with the mfd tree
+Message-ID: <20190628172807.4ae7edfc@canb.auug.org.au>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3892826d-0cd0-4657-9756-08d6fb9a1514
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 07:27:31.4761
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3457
-X-OriginatorOrg: synopsys.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/jkUecS8sT4EF7dVutwrIyrx"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+--Sig_/jkUecS8sT4EF7dVutwrIyrx
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, Jun 27, 2019 at 01:33:59PM +0000, Jose Abreu wrote:
-> > From: Andrew Lunn <andrew@lunn.ch>
-> >=20
-> > > There have been some drivers gaining patches for ACPI. That is
-> > > probably the better long term solution, ask ACPI where is the PHY and
-> > > what MDIO protocol to use to talk to it.
-> >=20
-> > Hmmm, I'm not sure this is going to work that way ...
-> >=20
-> > My setup is a PCI EP which is hot-pluggable and as far as I know ACPI=20
-> > has only static content (????)
->=20
-> I've wanted to improve the PHY probe code for a while. I was thinking
-> we should add a flag to the MDIO bus driver structure indicating it
-> can do C45. When that flag is present, we should also scan the bus for
-> C45 devices, and register them as well.
->=20
-> With that in place, i think your problem goes away. Architecturally, i
-> think it is wrong that a MAC driver is registering PHY devices. The
-> MDIO core should do this.
+Hi all,
 
-Ok, I will drop this patch from the series until we come up with a=20
-better solution.
+Today's linux-next merge of the gpio tree got a conflict in:
+
+  drivers/gpio/Makefile
+
+between commit:
+
+  18bc64b3aebf ("gpio: Initial support for ROHM bd70528 GPIO block")
+
+from the mfd tree and commit:
+
+  db16bad6efd9 ("gpio: Sort GPIO drivers in Makefile")
+
+from the gpio tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpio/Makefile
+index 10efc4f743fe,9e400e34e300..000000000000
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@@ -17,155 -17,154 +17,155 @@@ obj-$(CONFIG_GPIO_GENERIC)	+=3D gpio-gene
+  # directly supported by gpio-generic
+  gpio-generic-$(CONFIG_GPIO_GENERIC)	+=3D gpio-mmio.o
+ =20
+- obj-$(CONFIG_GPIO_104_DIO_48E)	+=3D gpio-104-dio-48e.o
+- obj-$(CONFIG_GPIO_104_IDIO_16)	+=3D gpio-104-idio-16.o
+- obj-$(CONFIG_GPIO_104_IDI_48)	+=3D gpio-104-idi-48.o
+- obj-$(CONFIG_GPIO_74X164)	+=3D gpio-74x164.o
+- obj-$(CONFIG_GPIO_74XX_MMIO)	+=3D gpio-74xx-mmio.o
+- obj-$(CONFIG_GPIO_ADNP)		+=3D gpio-adnp.o
+- obj-$(CONFIG_GPIO_ADP5520)	+=3D gpio-adp5520.o
+- obj-$(CONFIG_GPIO_ADP5588)	+=3D gpio-adp5588.o
+- obj-$(CONFIG_GPIO_ALTERA)  	+=3D gpio-altera.o
+- obj-$(CONFIG_GPIO_ALTERA_A10SR)	+=3D gpio-altera-a10sr.o
+- obj-$(CONFIG_GPIO_AMD_FCH)	+=3D gpio-amd-fch.o
+- obj-$(CONFIG_GPIO_AMD8111)	+=3D gpio-amd8111.o
+- obj-$(CONFIG_GPIO_AMDPT)	+=3D gpio-amdpt.o
+- obj-$(CONFIG_GPIO_ARIZONA)	+=3D gpio-arizona.o
+- obj-$(CONFIG_GPIO_ATH79)	+=3D gpio-ath79.o
+- obj-$(CONFIG_GPIO_ASPEED)	+=3D gpio-aspeed.o
+- obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)	+=3D gpio-raspberrypi-exp.o
+- obj-$(CONFIG_GPIO_BCM_KONA)	+=3D gpio-bcm-kona.o
+- obj-$(CONFIG_GPIO_BD70528) 	+=3D gpio-bd70528.o
+- obj-$(CONFIG_GPIO_BD9571MWV)	+=3D gpio-bd9571mwv.o
+- obj-$(CONFIG_GPIO_BRCMSTB)	+=3D gpio-brcmstb.o
+- obj-$(CONFIG_GPIO_BT8XX)	+=3D gpio-bt8xx.o
+- obj-$(CONFIG_GPIO_CADENCE)	+=3D gpio-cadence.o
+- obj-$(CONFIG_GPIO_CLPS711X)	+=3D gpio-clps711x.o
+- obj-$(CONFIG_GPIO_CS5535)	+=3D gpio-cs5535.o
+- obj-$(CONFIG_GPIO_CRYSTAL_COVE)	+=3D gpio-crystalcove.o
+- obj-$(CONFIG_GPIO_DA9052)	+=3D gpio-da9052.o
+- obj-$(CONFIG_GPIO_DA9055)	+=3D gpio-da9055.o
+- obj-$(CONFIG_GPIO_DAVINCI)	+=3D gpio-davinci.o
+- obj-$(CONFIG_GPIO_DLN2)		+=3D gpio-dln2.o
+- obj-$(CONFIG_GPIO_DWAPB)	+=3D gpio-dwapb.o
+- obj-$(CONFIG_GPIO_EIC_SPRD)	+=3D gpio-eic-sprd.o
+- obj-$(CONFIG_GPIO_EM)		+=3D gpio-em.o
+- obj-$(CONFIG_GPIO_EP93XX)	+=3D gpio-ep93xx.o
+- obj-$(CONFIG_GPIO_EXAR)		+=3D gpio-exar.o
+- obj-$(CONFIG_GPIO_F7188X)	+=3D gpio-f7188x.o
+- obj-$(CONFIG_GPIO_FTGPIO010)	+=3D gpio-ftgpio010.o
+- obj-$(CONFIG_GPIO_GE_FPGA)	+=3D gpio-ge.o
+- obj-$(CONFIG_GPIO_GPIO_MM)	+=3D gpio-gpio-mm.o
+- obj-$(CONFIG_GPIO_GRGPIO)	+=3D gpio-grgpio.o
+- obj-$(CONFIG_GPIO_GW_PLD)	+=3D gpio-gw-pld.o
+- obj-$(CONFIG_GPIO_HLWD)		+=3D gpio-hlwd.o
+- obj-$(CONFIG_HTC_EGPIO)		+=3D gpio-htc-egpio.o
+- obj-$(CONFIG_GPIO_ICH)		+=3D gpio-ich.o
+- obj-$(CONFIG_GPIO_IOP)		+=3D gpio-iop.o
+- obj-$(CONFIG_GPIO_IXP4XX)	+=3D gpio-ixp4xx.o
+- obj-$(CONFIG_GPIO_IT87)		+=3D gpio-it87.o
+- obj-$(CONFIG_GPIO_JANZ_TTL)	+=3D gpio-janz-ttl.o
+- obj-$(CONFIG_GPIO_KEMPLD)	+=3D gpio-kempld.o
+- obj-$(CONFIG_ARCH_KS8695)	+=3D gpio-ks8695.o
+- obj-$(CONFIG_GPIO_INTEL_MID)	+=3D gpio-intel-mid.o
+- obj-$(CONFIG_GPIO_LOONGSON)	+=3D gpio-loongson.o
+- obj-$(CONFIG_GPIO_LP3943)	+=3D gpio-lp3943.o
+- obj-$(CONFIG_GPIO_LPC18XX)	+=3D gpio-lpc18xx.o
+- obj-$(CONFIG_ARCH_LPC32XX)	+=3D gpio-lpc32xx.o
+- obj-$(CONFIG_GPIO_LP873X)	+=3D gpio-lp873x.o
+- obj-$(CONFIG_GPIO_LP87565)	+=3D gpio-lp87565.o
+- obj-$(CONFIG_GPIO_LYNXPOINT)	+=3D gpio-lynxpoint.o
+- obj-$(CONFIG_GPIO_MADERA)	+=3D gpio-madera.o
+- obj-$(CONFIG_GPIO_MAX3191X)	+=3D gpio-max3191x.o
+- obj-$(CONFIG_GPIO_MAX730X)	+=3D gpio-max730x.o
+- obj-$(CONFIG_GPIO_MAX7300)	+=3D gpio-max7300.o
+- obj-$(CONFIG_GPIO_MAX7301)	+=3D gpio-max7301.o
+- obj-$(CONFIG_GPIO_MAX732X)	+=3D gpio-max732x.o
+- obj-$(CONFIG_GPIO_MAX77620)	+=3D gpio-max77620.o
+- obj-$(CONFIG_GPIO_MAX77650)	+=3D gpio-max77650.o
+- obj-$(CONFIG_GPIO_MB86S7X)	+=3D gpio-mb86s7x.o
+- obj-$(CONFIG_GPIO_MENZ127)	+=3D gpio-menz127.o
+- obj-$(CONFIG_GPIO_MERRIFIELD)	+=3D gpio-merrifield.o
+- obj-$(CONFIG_GPIO_MC33880)	+=3D gpio-mc33880.o
+- obj-$(CONFIG_GPIO_MC9S08DZ60)	+=3D gpio-mc9s08dz60.o
+- obj-$(CONFIG_GPIO_MLXBF)	+=3D gpio-mlxbf.o
+- obj-$(CONFIG_GPIO_ML_IOH)	+=3D gpio-ml-ioh.o
+- obj-$(CONFIG_GPIO_MM_LANTIQ)	+=3D gpio-mm-lantiq.o
+- obj-$(CONFIG_GPIO_MOCKUP)      +=3D gpio-mockup.o
+- obj-$(CONFIG_GPIO_MPC5200)	+=3D gpio-mpc5200.o
+- obj-$(CONFIG_GPIO_MPC8XXX)	+=3D gpio-mpc8xxx.o
+- obj-$(CONFIG_GPIO_MSIC)		+=3D gpio-msic.o
++ obj-$(CONFIG_GPIO_104_DIO_48E)		+=3D gpio-104-dio-48e.o
++ obj-$(CONFIG_GPIO_104_IDI_48)		+=3D gpio-104-idi-48.o
++ obj-$(CONFIG_GPIO_104_IDIO_16)		+=3D gpio-104-idio-16.o
++ obj-$(CONFIG_GPIO_74X164)		+=3D gpio-74x164.o
++ obj-$(CONFIG_GPIO_74XX_MMIO)		+=3D gpio-74xx-mmio.o
++ obj-$(CONFIG_GPIO_ADNP)			+=3D gpio-adnp.o
++ obj-$(CONFIG_GPIO_ADP5520)		+=3D gpio-adp5520.o
++ obj-$(CONFIG_GPIO_ADP5588)		+=3D gpio-adp5588.o
++ obj-$(CONFIG_GPIO_ALTERA_A10SR)		+=3D gpio-altera-a10sr.o
++ obj-$(CONFIG_GPIO_ALTERA)  		+=3D gpio-altera.o
++ obj-$(CONFIG_GPIO_AMD8111)		+=3D gpio-amd8111.o
++ obj-$(CONFIG_GPIO_AMD_FCH)		+=3D gpio-amd-fch.o
++ obj-$(CONFIG_GPIO_AMDPT)		+=3D gpio-amdpt.o
++ obj-$(CONFIG_GPIO_ARIZONA)		+=3D gpio-arizona.o
++ obj-$(CONFIG_GPIO_ASPEED)		+=3D gpio-aspeed.o
++ obj-$(CONFIG_GPIO_ATH79)		+=3D gpio-ath79.o
++ obj-$(CONFIG_GPIO_BCM_KONA)		+=3D gpio-bcm-kona.o
+++obj-$(CONFIG_GPIO_BD70528) 		+=3D gpio-bd70528.o
++ obj-$(CONFIG_GPIO_BD9571MWV)		+=3D gpio-bd9571mwv.o
++ obj-$(CONFIG_GPIO_BRCMSTB)		+=3D gpio-brcmstb.o
++ obj-$(CONFIG_GPIO_BT8XX)		+=3D gpio-bt8xx.o
++ obj-$(CONFIG_GPIO_CADENCE)		+=3D gpio-cadence.o
++ obj-$(CONFIG_GPIO_CLPS711X)		+=3D gpio-clps711x.o
++ obj-$(CONFIG_GPIO_SNPS_CREG)		+=3D gpio-creg-snps.o
++ obj-$(CONFIG_GPIO_CRYSTAL_COVE)		+=3D gpio-crystalcove.o
++ obj-$(CONFIG_GPIO_CS5535)		+=3D gpio-cs5535.o
++ obj-$(CONFIG_GPIO_DA9052)		+=3D gpio-da9052.o
++ obj-$(CONFIG_GPIO_DA9055)		+=3D gpio-da9055.o
++ obj-$(CONFIG_GPIO_DAVINCI)		+=3D gpio-davinci.o
++ obj-$(CONFIG_GPIO_DLN2)			+=3D gpio-dln2.o
++ obj-$(CONFIG_GPIO_DWAPB)		+=3D gpio-dwapb.o
++ obj-$(CONFIG_GPIO_EIC_SPRD)		+=3D gpio-eic-sprd.o
++ obj-$(CONFIG_GPIO_EM)			+=3D gpio-em.o
++ obj-$(CONFIG_GPIO_EP93XX)		+=3D gpio-ep93xx.o
++ obj-$(CONFIG_GPIO_EXAR)			+=3D gpio-exar.o
++ obj-$(CONFIG_GPIO_F7188X)		+=3D gpio-f7188x.o
++ obj-$(CONFIG_GPIO_FTGPIO010)		+=3D gpio-ftgpio010.o
++ obj-$(CONFIG_GPIO_GE_FPGA)		+=3D gpio-ge.o
++ obj-$(CONFIG_GPIO_GPIO_MM)		+=3D gpio-gpio-mm.o
++ obj-$(CONFIG_GPIO_GRGPIO)		+=3D gpio-grgpio.o
++ obj-$(CONFIG_GPIO_GW_PLD)		+=3D gpio-gw-pld.o
++ obj-$(CONFIG_GPIO_HLWD)			+=3D gpio-hlwd.o
++ obj-$(CONFIG_HTC_EGPIO)			+=3D gpio-htc-egpio.o
++ obj-$(CONFIG_GPIO_ICH)			+=3D gpio-ich.o
++ obj-$(CONFIG_GPIO_INTEL_MID)		+=3D gpio-intel-mid.o
++ obj-$(CONFIG_GPIO_IOP)			+=3D gpio-iop.o
++ obj-$(CONFIG_GPIO_IT87)			+=3D gpio-it87.o
++ obj-$(CONFIG_GPIO_IXP4XX)		+=3D gpio-ixp4xx.o
++ obj-$(CONFIG_GPIO_JANZ_TTL)		+=3D gpio-janz-ttl.o
++ obj-$(CONFIG_GPIO_KEMPLD)		+=3D gpio-kempld.o
++ obj-$(CONFIG_ARCH_KS8695)		+=3D gpio-ks8695.o
++ obj-$(CONFIG_GPIO_LOONGSON1)		+=3D gpio-loongson1.o
++ obj-$(CONFIG_GPIO_LOONGSON)		+=3D gpio-loongson.o
++ obj-$(CONFIG_GPIO_LP3943)		+=3D gpio-lp3943.o
++ obj-$(CONFIG_GPIO_LP873X)		+=3D gpio-lp873x.o
++ obj-$(CONFIG_GPIO_LP87565)		+=3D gpio-lp87565.o
++ obj-$(CONFIG_GPIO_LPC18XX)		+=3D gpio-lpc18xx.o
++ obj-$(CONFIG_ARCH_LPC32XX)		+=3D gpio-lpc32xx.o
++ obj-$(CONFIG_GPIO_LYNXPOINT)		+=3D gpio-lynxpoint.o
++ obj-$(CONFIG_GPIO_MADERA)		+=3D gpio-madera.o
++ obj-$(CONFIG_GPIO_MAX3191X)		+=3D gpio-max3191x.o
++ obj-$(CONFIG_GPIO_MAX7300)		+=3D gpio-max7300.o
++ obj-$(CONFIG_GPIO_MAX7301)		+=3D gpio-max7301.o
++ obj-$(CONFIG_GPIO_MAX730X)		+=3D gpio-max730x.o
++ obj-$(CONFIG_GPIO_MAX732X)		+=3D gpio-max732x.o
++ obj-$(CONFIG_GPIO_MAX77620)		+=3D gpio-max77620.o
++ obj-$(CONFIG_GPIO_MAX77650)		+=3D gpio-max77650.o
++ obj-$(CONFIG_GPIO_MB86S7X)		+=3D gpio-mb86s7x.o
++ obj-$(CONFIG_GPIO_MC33880)		+=3D gpio-mc33880.o
++ obj-$(CONFIG_GPIO_MC9S08DZ60)		+=3D gpio-mc9s08dz60.o
++ obj-$(CONFIG_GPIO_MENZ127)		+=3D gpio-menz127.o
++ obj-$(CONFIG_GPIO_MERRIFIELD)		+=3D gpio-merrifield.o
++ obj-$(CONFIG_GPIO_ML_IOH)		+=3D gpio-ml-ioh.o
++ obj-$(CONFIG_GPIO_MLXBF)		+=3D gpio-mlxbf.o
++ obj-$(CONFIG_GPIO_MM_LANTIQ)		+=3D gpio-mm-lantiq.o
++ obj-$(CONFIG_GPIO_MOCKUP)		+=3D gpio-mockup.o
++ obj-$(CONFIG_GPIO_MPC5200)		+=3D gpio-mpc5200.o
++ obj-$(CONFIG_GPIO_MPC8XXX)		+=3D gpio-mpc8xxx.o
++ obj-$(CONFIG_GPIO_MSIC)			+=3D gpio-msic.o
+  obj-$(CONFIG_GPIO_MT7621)		+=3D gpio-mt7621.o
+- obj-$(CONFIG_GPIO_MVEBU)        +=3D gpio-mvebu.o
+- obj-$(CONFIG_GPIO_MXC)		+=3D gpio-mxc.o
+- obj-$(CONFIG_GPIO_MXS)		+=3D gpio-mxs.o
+- obj-$(CONFIG_GPIO_OCTEON)	+=3D gpio-octeon.o
+- obj-$(CONFIG_GPIO_OMAP)		+=3D gpio-omap.o
+- obj-$(CONFIG_GPIO_PCA953X)	+=3D gpio-pca953x.o
+- obj-$(CONFIG_GPIO_PCF857X)	+=3D gpio-pcf857x.o
+- obj-$(CONFIG_GPIO_PCH)		+=3D gpio-pch.o
+- obj-$(CONFIG_GPIO_PCI_IDIO_16)	+=3D gpio-pci-idio-16.o
+- obj-$(CONFIG_GPIO_PCIE_IDIO_24)	+=3D gpio-pcie-idio-24.o
+- obj-$(CONFIG_GPIO_PISOSR)	+=3D gpio-pisosr.o
+- obj-$(CONFIG_GPIO_PL061)	+=3D gpio-pl061.o
++ obj-$(CONFIG_GPIO_MVEBU)		+=3D gpio-mvebu.o
++ obj-$(CONFIG_GPIO_MXC)			+=3D gpio-mxc.o
++ obj-$(CONFIG_GPIO_MXS)			+=3D gpio-mxs.o
++ obj-$(CONFIG_GPIO_OCTEON)		+=3D gpio-octeon.o
++ obj-$(CONFIG_GPIO_OMAP)			+=3D gpio-omap.o
++ obj-$(CONFIG_GPIO_PALMAS)		+=3D gpio-palmas.o
++ obj-$(CONFIG_GPIO_PCA953X)		+=3D gpio-pca953x.o
++ obj-$(CONFIG_GPIO_PCF857X)		+=3D gpio-pcf857x.o
++ obj-$(CONFIG_GPIO_PCH)			+=3D gpio-pch.o
++ obj-$(CONFIG_GPIO_PCIE_IDIO_24)		+=3D gpio-pcie-idio-24.o
++ obj-$(CONFIG_GPIO_PCI_IDIO_16)		+=3D gpio-pci-idio-16.o
++ obj-$(CONFIG_GPIO_PISOSR)		+=3D gpio-pisosr.o
++ obj-$(CONFIG_GPIO_PL061)		+=3D gpio-pl061.o
+  obj-$(CONFIG_GPIO_PMIC_EIC_SPRD)	+=3D gpio-pmic-eic-sprd.o
+- obj-$(CONFIG_GPIO_PXA)		+=3D gpio-pxa.o
+- obj-$(CONFIG_GPIO_RC5T583)	+=3D gpio-rc5t583.o
+- obj-$(CONFIG_GPIO_RDC321X)	+=3D gpio-rdc321x.o
+- obj-$(CONFIG_GPIO_RCAR)		+=3D gpio-rcar.o
+- obj-$(CONFIG_GPIO_REG)		+=3D gpio-reg.o
+- obj-$(CONFIG_ARCH_SA1100)	+=3D gpio-sa1100.o
++ obj-$(CONFIG_GPIO_PXA)			+=3D gpio-pxa.o
++ obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)	+=3D gpio-raspberrypi-exp.o
++ obj-$(CONFIG_GPIO_RC5T583)		+=3D gpio-rc5t583.o
++ obj-$(CONFIG_GPIO_RCAR)			+=3D gpio-rcar.o
++ obj-$(CONFIG_GPIO_RDC321X)		+=3D gpio-rdc321x.o
++ obj-$(CONFIG_GPIO_REG)			+=3D gpio-reg.o
++ obj-$(CONFIG_ARCH_SA1100)		+=3D gpio-sa1100.o
+  obj-$(CONFIG_GPIO_SAMA5D2_PIOBU)	+=3D gpio-sama5d2-piobu.o
+- obj-$(CONFIG_GPIO_SCH)		+=3D gpio-sch.o
+- obj-$(CONFIG_GPIO_SCH311X)	+=3D gpio-sch311x.o
+- obj-$(CONFIG_GPIO_SNPS_CREG)	+=3D gpio-creg-snps.o
+- obj-$(CONFIG_GPIO_SODAVILLE)	+=3D gpio-sodaville.o
+- obj-$(CONFIG_GPIO_SPEAR_SPICS)	+=3D gpio-spear-spics.o
+- obj-$(CONFIG_GPIO_SPRD)		+=3D gpio-sprd.o
+- obj-$(CONFIG_GPIO_STA2X11)	+=3D gpio-sta2x11.o
+- obj-$(CONFIG_GPIO_STMPE)	+=3D gpio-stmpe.o
+- obj-$(CONFIG_GPIO_STP_XWAY)	+=3D gpio-stp-xway.o
+- obj-$(CONFIG_GPIO_SYSCON)	+=3D gpio-syscon.o
+- obj-$(CONFIG_GPIO_TB10X)	+=3D gpio-tb10x.o
+- obj-$(CONFIG_GPIO_TC3589X)	+=3D gpio-tc3589x.o
+- obj-$(CONFIG_GPIO_TEGRA)	+=3D gpio-tegra.o
+- obj-$(CONFIG_GPIO_TEGRA186)	+=3D gpio-tegra186.o
+- obj-$(CONFIG_GPIO_THUNDERX)	+=3D gpio-thunderx.o
+- obj-$(CONFIG_GPIO_TIMBERDALE)	+=3D gpio-timberdale.o
+- obj-$(CONFIG_GPIO_PALMAS)	+=3D gpio-palmas.o
+- obj-$(CONFIG_GPIO_SIOX)		+=3D gpio-siox.o
+- obj-$(CONFIG_GPIO_TPIC2810)	+=3D gpio-tpic2810.o
+- obj-$(CONFIG_GPIO_TPS65086)	+=3D gpio-tps65086.o
+- obj-$(CONFIG_GPIO_TPS65218)	+=3D gpio-tps65218.o
+- obj-$(CONFIG_GPIO_TPS6586X)	+=3D gpio-tps6586x.o
+- obj-$(CONFIG_GPIO_TPS65910)	+=3D gpio-tps65910.o
+- obj-$(CONFIG_GPIO_TPS65912)	+=3D gpio-tps65912.o
+- obj-$(CONFIG_GPIO_TPS68470)	+=3D gpio-tps68470.o
+- obj-$(CONFIG_GPIO_TQMX86)	+=3D gpio-tqmx86.o
+- obj-$(CONFIG_GPIO_TS4800)	+=3D gpio-ts4800.o
+- obj-$(CONFIG_GPIO_TS4900)	+=3D gpio-ts4900.o
+- obj-$(CONFIG_GPIO_TS5500)	+=3D gpio-ts5500.o
+- obj-$(CONFIG_GPIO_TWL4030)	+=3D gpio-twl4030.o
+- obj-$(CONFIG_GPIO_TWL6040)	+=3D gpio-twl6040.o
+- obj-$(CONFIG_GPIO_UCB1400)	+=3D gpio-ucb1400.o
+- obj-$(CONFIG_GPIO_UNIPHIER)	+=3D gpio-uniphier.o
+- obj-$(CONFIG_GPIO_VF610)	+=3D gpio-vf610.o
+- obj-$(CONFIG_GPIO_VIPERBOARD)	+=3D gpio-viperboard.o
+- obj-$(CONFIG_GPIO_VR41XX)	+=3D gpio-vr41xx.o
+- obj-$(CONFIG_GPIO_VX855)	+=3D gpio-vx855.o
+- obj-$(CONFIG_GPIO_WHISKEY_COVE)	+=3D gpio-wcove.o
+- obj-$(CONFIG_GPIO_WINBOND)	+=3D gpio-winbond.o
+- obj-$(CONFIG_GPIO_WM831X)	+=3D gpio-wm831x.o
+- obj-$(CONFIG_GPIO_WM8350)	+=3D gpio-wm8350.o
+- obj-$(CONFIG_GPIO_WM8994)	+=3D gpio-wm8994.o
+- obj-$(CONFIG_GPIO_WS16C48)	+=3D gpio-ws16c48.o
+- obj-$(CONFIG_GPIO_XGENE)	+=3D gpio-xgene.o
+- obj-$(CONFIG_GPIO_XGENE_SB)	+=3D gpio-xgene-sb.o
+- obj-$(CONFIG_GPIO_XILINX)	+=3D gpio-xilinx.o
+- obj-$(CONFIG_GPIO_XLP)		+=3D gpio-xlp.o
+- obj-$(CONFIG_GPIO_XRA1403)	+=3D gpio-xra1403.o
+- obj-$(CONFIG_GPIO_XTENSA)	+=3D gpio-xtensa.o
+- obj-$(CONFIG_GPIO_ZEVIO)	+=3D gpio-zevio.o
+- obj-$(CONFIG_GPIO_ZYNQ)		+=3D gpio-zynq.o
+- obj-$(CONFIG_GPIO_ZX)		+=3D gpio-zx.o
+- obj-$(CONFIG_GPIO_LOONGSON1)	+=3D gpio-loongson1.o
++ obj-$(CONFIG_GPIO_SCH311X)		+=3D gpio-sch311x.o
++ obj-$(CONFIG_GPIO_SCH)			+=3D gpio-sch.o
++ obj-$(CONFIG_GPIO_SIOX)			+=3D gpio-siox.o
++ obj-$(CONFIG_GPIO_SODAVILLE)		+=3D gpio-sodaville.o
++ obj-$(CONFIG_GPIO_SPEAR_SPICS)		+=3D gpio-spear-spics.o
++ obj-$(CONFIG_GPIO_SPRD)			+=3D gpio-sprd.o
++ obj-$(CONFIG_GPIO_STA2X11)		+=3D gpio-sta2x11.o
++ obj-$(CONFIG_GPIO_STMPE)		+=3D gpio-stmpe.o
++ obj-$(CONFIG_GPIO_STP_XWAY)		+=3D gpio-stp-xway.o
++ obj-$(CONFIG_GPIO_SYSCON)		+=3D gpio-syscon.o
++ obj-$(CONFIG_GPIO_TB10X)		+=3D gpio-tb10x.o
++ obj-$(CONFIG_GPIO_TC3589X)		+=3D gpio-tc3589x.o
++ obj-$(CONFIG_GPIO_TEGRA186)		+=3D gpio-tegra186.o
++ obj-$(CONFIG_GPIO_TEGRA)		+=3D gpio-tegra.o
++ obj-$(CONFIG_GPIO_THUNDERX)		+=3D gpio-thunderx.o
++ obj-$(CONFIG_GPIO_TIMBERDALE)		+=3D gpio-timberdale.o
++ obj-$(CONFIG_GPIO_TPIC2810)		+=3D gpio-tpic2810.o
++ obj-$(CONFIG_GPIO_TPS65086)		+=3D gpio-tps65086.o
++ obj-$(CONFIG_GPIO_TPS65218)		+=3D gpio-tps65218.o
++ obj-$(CONFIG_GPIO_TPS6586X)		+=3D gpio-tps6586x.o
++ obj-$(CONFIG_GPIO_TPS65910)		+=3D gpio-tps65910.o
++ obj-$(CONFIG_GPIO_TPS65912)		+=3D gpio-tps65912.o
++ obj-$(CONFIG_GPIO_TPS68470)		+=3D gpio-tps68470.o
++ obj-$(CONFIG_GPIO_TQMX86)		+=3D gpio-tqmx86.o
++ obj-$(CONFIG_GPIO_TS4800)		+=3D gpio-ts4800.o
++ obj-$(CONFIG_GPIO_TS4900)		+=3D gpio-ts4900.o
++ obj-$(CONFIG_GPIO_TS5500)		+=3D gpio-ts5500.o
++ obj-$(CONFIG_GPIO_TWL4030)		+=3D gpio-twl4030.o
++ obj-$(CONFIG_GPIO_TWL6040)		+=3D gpio-twl6040.o
++ obj-$(CONFIG_GPIO_UCB1400)		+=3D gpio-ucb1400.o
++ obj-$(CONFIG_GPIO_UNIPHIER)		+=3D gpio-uniphier.o
++ obj-$(CONFIG_GPIO_VF610)		+=3D gpio-vf610.o
++ obj-$(CONFIG_GPIO_VIPERBOARD)		+=3D gpio-viperboard.o
++ obj-$(CONFIG_GPIO_VR41XX)		+=3D gpio-vr41xx.o
++ obj-$(CONFIG_GPIO_VX855)		+=3D gpio-vx855.o
++ obj-$(CONFIG_GPIO_WHISKEY_COVE)		+=3D gpio-wcove.o
++ obj-$(CONFIG_GPIO_WINBOND)		+=3D gpio-winbond.o
++ obj-$(CONFIG_GPIO_WM831X)		+=3D gpio-wm831x.o
++ obj-$(CONFIG_GPIO_WM8350)		+=3D gpio-wm8350.o
++ obj-$(CONFIG_GPIO_WM8994)		+=3D gpio-wm8994.o
++ obj-$(CONFIG_GPIO_WS16C48)		+=3D gpio-ws16c48.o
++ obj-$(CONFIG_GPIO_XGENE)		+=3D gpio-xgene.o
++ obj-$(CONFIG_GPIO_XGENE_SB)		+=3D gpio-xgene-sb.o
++ obj-$(CONFIG_GPIO_XILINX)		+=3D gpio-xilinx.o
++ obj-$(CONFIG_GPIO_XLP)			+=3D gpio-xlp.o
++ obj-$(CONFIG_GPIO_XRA1403)		+=3D gpio-xra1403.o
++ obj-$(CONFIG_GPIO_XTENSA)		+=3D gpio-xtensa.o
++ obj-$(CONFIG_GPIO_ZEVIO)		+=3D gpio-zevio.o
++ obj-$(CONFIG_GPIO_ZX)			+=3D gpio-zx.o
++ obj-$(CONFIG_GPIO_ZYNQ)			+=3D gpio-zynq.o
+
+--Sig_/jkUecS8sT4EF7dVutwrIyrx
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0VwYcACgkQAVBC80lX
+0GzAywf+NoxgvYEfqneZ6H5qA6ce6GqAxOZJtAIeh/esadU3YY0EFFvl2+N8ROMc
+sVqxLvOy15qgNY6lz37XluDJw/xq85EH5zL95mkBX0LhIZEqsOcWv3RDGiBPdxQt
+GRCEOQRCjY5DxOBFJJgYSJHBxD0eqyMr9iusrf7zYgfYelyubMyu7JfJ/iwD4A3Q
+m3kzwe5tWs07zsRUV7EGiCR5TfI1k+nKUDqjMKToTzJ4Wca/S+6/8CEL6pHjFfiB
+/KXt70nEgQZvATCtZkr29m0txT2c5UV3/2nWH38FwDTelZUkuM8YCIsuple3lBxd
+oSOPWkId9BEajc69Yu+tmQ8Umj4hDQ==
+=E933
+-----END PGP SIGNATURE-----
+
+--Sig_/jkUecS8sT4EF7dVutwrIyrx--
