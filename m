@@ -2,180 +2,192 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36462C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6B5C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090A3208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:34:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="a4Ocormi"
+	by mail.kernel.org (Postfix) with ESMTP id B4B31208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:36:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfF1Tev (ORCPT
+        id S1726977AbfF1TgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 15:34:51 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36745 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfF1Tev (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 15:34:51 -0400
-Received: by mail-pl1-f196.google.com with SMTP id k8so3793442plt.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EKxLa9hnb5xkY364WafvE1Ug+KyOxqGtL7a6TmMgs9A=;
-        b=a4Ocormi31rfgzjThkpX8okXS+lYlZmn0QcdifvMi+UbvpFL9Gie9lO5dB5KcFGeRY
-         p2IMoo9+u4aWWKIpN9pkEQblyzGV/btumv4tMf6KQcbcsiC/YnwZsfsJzONKt3iwn+ys
-         BO9lYzn7ZJpOjRj3dCtNv6rltCHNcJS5sLXIw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EKxLa9hnb5xkY364WafvE1Ug+KyOxqGtL7a6TmMgs9A=;
-        b=Wk02qOv+YE4q6mwlaGbv5puwl1gEi1FNpKDGgfBMOhBVHk8ZmwCUs0nMiJvxYyaR1K
-         PYtVx1rrUMCrRIlPJ0IhEhk0rJWPz+n6AuSX9hvGVypXjHkiwNHkxEu+r72FQeqRY6IL
-         TWN3qGcE+Q6pDm8LC1o2o4zGerAoirfpZpAcwfeLerzAZPs3mae3ra1bwbMeZ20ovfoc
-         nN5n2UrIA/hdI2fi1uqz4niH//cx35XstLCrAxqmM/b3OznUg9aQgvrlsVYFtE88e9Uh
-         tgh1ayc5A55lOVb3kwpjaIi3tYY1z3O3i9w2BlWX5wbvx9M4UyXoE2wuu2fSV8ti6Hua
-         iF6Q==
-X-Gm-Message-State: APjAAAUXlyxJBRwRcSmywodXk+Pt5RzSGIkIGV2RJJ0FazZ5pq3DpDjw
-        L490ho6HfsoDC2K/SJHYz+hgKRD9lZE8Bw==
-X-Google-Smtp-Source: APXvYqzG3hNnHjXkcQ3M+rogMmYvVt8Hga/QqKbzvLJhHfTm5UKcft5ek1E8wem2/fDUttYg17F1Zw==
-X-Received: by 2002:a17:902:848b:: with SMTP id c11mr13466303plo.217.1561750490161;
-        Fri, 28 Jun 2019 12:34:50 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 27sm2581900pgt.6.2019.06.28.12.34.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 12:34:49 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        mathieu.desnoyers@efficios.com, willy@infradead.org,
-        peterz@infradead.org, will.deacon@arm.com,
-        paulmck@linux.vnet.ibm.com, elena.reshetova@intel.com,
-        keescook@chromium.org, kernel-team@android.com,
-        kernel-hardening@lists.openwall.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH v2] Convert struct pid count to refcount_t
-Date:   Fri, 28 Jun 2019 15:34:42 -0400
-Message-Id: <20190628193442.94745-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        Fri, 28 Jun 2019 15:36:00 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:42826 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbfF1TgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 15:36:00 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hgwex-0003Qy-9H; Fri, 28 Jun 2019 13:35:48 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190626210018.GB6392@ziepe.ca>
+ <c25d3333-dcd5-3313-089b-7fbbd6fbd876@deltatee.com>
+ <20190627063223.GA7736@ziepe.ca>
+ <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
+ <20190627163504.GB9568@ziepe.ca>
+ <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
+ <20190628045705.GD3705@ziepe.ca>
+ <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
+ <20190628172926.GA3877@ziepe.ca>
+ <25a87c72-630b-e1f1-c858-9c8b417506fc@deltatee.com>
+ <20190628190931.GC3877@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <cb680437-9615-da42-ebc5-4751e024a45f@deltatee.com>
+Date:   Fri, 28 Jun 2019 13:35:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190628190931.GC3877@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct pid's count is an atomic_t field used as a refcount. Use
-refcount_t for it which is basically atomic_t but does additional
-checking to prevent use-after-free bugs.
 
-For memory ordering, the only change is with the following:
- -	if ((atomic_read(&pid->count) == 1) ||
- -	     atomic_dec_and_test(&pid->count)) {
- +	if (refcount_dec_and_test(&pid->count)) {
- 		kmem_cache_free(ns->pid_cachep, pid);
 
-Here the change is from:
-Fully ordered --> RELEASE + ACQUIRE (as per refcount-vs-atomic.rst)
-This ACQUIRE should take care of making sure the free happens after the
-refcount_dec_and_test().
+On 2019-06-28 1:09 p.m., Jason Gunthorpe wrote:
+> On Fri, Jun 28, 2019 at 12:29:32PM -0600, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2019-06-28 11:29 a.m., Jason Gunthorpe wrote:
+>>> On Fri, Jun 28, 2019 at 10:22:06AM -0600, Logan Gunthorpe wrote:
+>>>
+>>>>> Why not?  If we have a 'bar info' structure that could have data
+>>>>> transfer op callbacks, infact, I think we might already have similar
+>>>>> callbacks for migrating to/from DEVICE_PRIVATE memory with DMA..
+>>>>
+>>>> Well it could, in theory be done, but It just seems wrong to setup and
+>>>> wait for more DMA requests while we are in mid-progress setting up
+>>>> another DMA request. Especially when the block layer has historically
+>>>> had issues with stack sizes. It's also possible you might have multiple
+>>>> bio_vec's that have to each do a migration and with a hook here they'd
+>>>> have to be done serially.
+>>>
+>>> *shrug* this is just standard bounce buffering stuff...
+>>
+>> I don't know of any "standard" bounce buffering stuff that uses random
+>> other device's DMA engines where appropriate.
+> 
+> IMHO, it is conceptually the same as memcpy.. And probably we will not
+> ever need such optimization in dma map. Other copy places might be
+> different at least we have the option.
+>  
+>> IMO the bouncing in the DMA layer isn't a desirable thing, it was a
+>> necessary addition to work around various legacy platform issues and
+>> have existing code still work correctly. 
+> 
+> Of course it is not desireable! But there are many situations where we
+> do not have the luxury to work around the HW limits in the caller, so
+> those callers either have to not do DMA or they have to open code
+> bounce buffering - both are wrong.
 
-The above hunk also removes atomic_read() since it is not needed for the
-code to work and it is unclear how beneficial it is. The removal lets
-refcount_dec_and_test() check for cases where get_pid() happened before
-the object was freed.
+They don't have to open code it, they can use helpers and good coding
+practices. But the submitting driver is the one that's in the best
+position to figure this stuff out. Just like it is with the dma_map
+bouncing -- all it has to do is use dma_alloc_coherent(). If we don't
+write any submitting drivers that assume the dma_map API bounces than we
+should never have to deal with it.
 
-Cc: mathieu.desnoyers@efficios.com
-Cc: willy@infradead.org
-Cc: peterz@infradead.org
-Cc: will.deacon@arm.com
-Cc: paulmck@linux.vnet.ibm.com
-Cc: elena.reshetova@intel.com
-Cc: keescook@chromium.org
-Cc: kernel-team@android.com
-Cc: kernel-hardening@lists.openwall.com
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>>> What I see as the question is how to layout the BIO. 
+>>>
+>>> If we agree the bio should only have phys_addr_t then we need some
+>>> 'bar info' (ie at least the offset) in the dma map and some 'bar info'
+>>> (ie the DMA device) during the bio construciton.
+>>
+>> Per my other email, it was phys_addr_t plus hints on how to map the
+>> memory (bus address, dma_map_resource, or regular). This requires
+>> exactly two flag bits in the bio_vec and no interval tree or hash table.
+>> I don't want to have to pass bar info, other hooks, or anything like
+>> that to the block layer.
+> 
+> This scheme makes the assumption that the dma mapping struct device is
+> all you need, and we never need to know the originating struct device
+> during dma map. This is clearly safe if the two devices are on the
+> same PCIe segment
+> 
+> However, I'd feel more comfortable about that assumption if we had
+> code to support the IOMMU case, and know for sure it doesn't require
+> more info :(
 
----
-Only change from v1->v2 is to get rid of the atomic_read().
+The example I posted *does* support the IOMMU case. That was case (b1)
+in the description. The idea is that pci_p2pdma_dist() returns a
+distance with a high bit set (PCI_P2PDMA_THRU_HOST_BRIDGE) when an IOMMU
+mapping is required and the appropriate flag tells it to call
+dma_map_resource(). This way, it supports both same-segment and
+different-segments without needing any look ups in the map step.
 
- include/linux/pid.h | 5 +++--
- kernel/pid.c        | 7 +++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+For the only existing upstream use case (NVMe-of), this is ideal because
+we can calculate the mapping requirements exactly once ahead of any
+transfers. Then populating the bvecs and dma-mapping for each transfer
+is fast and doesn't require any additional work besides deciding where
+to get the memory from.
 
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 14a9a39da9c7..8cb86d377ff5 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -3,6 +3,7 @@
- #define _LINUX_PID_H
- 
- #include <linux/rculist.h>
-+#include <linux/refcount.h>
- 
- enum pid_type
- {
-@@ -56,7 +57,7 @@ struct upid {
- 
- struct pid
- {
--	atomic_t count;
-+	refcount_t count;
- 	unsigned int level;
- 	/* lists of tasks that use this pid */
- 	struct hlist_head tasks[PIDTYPE_MAX];
-@@ -69,7 +70,7 @@ extern struct pid init_struct_pid;
- static inline struct pid *get_pid(struct pid *pid)
- {
- 	if (pid)
--		atomic_inc(&pid->count);
-+		refcount_inc(&pid->count);
- 	return pid;
- }
- 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 20881598bdfa..89c4849fab5d 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -37,7 +37,7 @@
- #include <linux/init_task.h>
- #include <linux/syscalls.h>
- #include <linux/proc_ns.h>
--#include <linux/proc_fs.h>
-+#include <linux/refcount.h>
- #include <linux/sched/task.h>
- #include <linux/idr.h>
- 
-@@ -106,8 +106,7 @@ void put_pid(struct pid *pid)
- 		return;
- 
- 	ns = pid->numbers[pid->level].ns;
--	if ((atomic_read(&pid->count) == 1) ||
--	     atomic_dec_and_test(&pid->count)) {
-+	if (refcount_dec_and_test(&pid->count)) {
- 		kmem_cache_free(ns->pid_cachep, pid);
- 		put_pid_ns(ns);
- 	}
-@@ -210,7 +209,7 @@ struct pid *alloc_pid(struct pid_namespace *ns)
- 	}
- 
- 	get_pid_ns(ns);
--	atomic_set(&pid->count, 1);
-+	refcount_set(&pid->count, 1);
- 	for (type = 0; type < PIDTYPE_MAX; ++type)
- 		INIT_HLIST_HEAD(&pid->tasks[type]);
- 
--- 
-2.22.0.410.gd8fdbe21b5-goog
+For O_DIRECT and userspace RDMA, this should also be ideal, the real
+problem is how to get the necessary information out of the VMA. This
+isn't helped by having a lookup at the dma map step. But the provider
+driver is certainly going to be involved in creating the VMA so it
+should be able to easily provide the necessary hooks. Though there are
+still a bunch of challenges here.
+
+Maybe other use-cases are not this ideal but I suspect they should still
+be able to make use of the same flags. It's hard to say right now,
+though, because we haven't seen any other use cases.
+
+
+> Maybe you can hide these flags as some dma_map helper, then the
+> layering might be nicer:
+> 
+>   dma_map_set_bio_p2p_flags(bio, phys_addr, source dev, dest_dev) 
+> 
+> ?
+> 
+> ie the choice of flag scheme to use is opaque to the DMA layer.
+
+If there was such a use case, I suppose you could use a couple of flag
+bits to tell you how to interpret the other flag bits but, at the
+moment, I only see a need for 2 bits so we'll probably have a lot of
+spares for a long time. You could certainly have a 3rd bit which says do
+a lookup and try to figure out bouncing, but I don't think it's a good idea.
+
+>>> If we can spare 4-8 bits in the bio then I suggest a 'perfect hash
+>>> table'. Assign each registered P2P 'bar info' a small 4 bit id and
+>>> hash on that. It should be fast enough to not worry about the double
+>>> lookup.
+>>
+>> This feels like it's just setting us up to run into nasty limits based
+>> on the number of bits we actually have. The number of bits in a bio_vec
+>> will always be a precious resource. If I have a server chassis that
+>> exist today with 24 NVMe devices, and each device has a CMB, I'm already
+>> using up 6 of those bits. Then we might have DEVICE_PRIVATE and other
+>> uses on top of that.
+> 
+> A hash is an alternative data structure to a interval tree that has
+> better scaling for small numbers of BARs, which I think is our
+> case.
+
+But then you need a large and not necessarily future-proof number of
+bits in the bio_vec to store the hash.
+
+Logan
