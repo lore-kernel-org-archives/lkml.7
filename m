@@ -2,267 +2,229 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E42C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E74C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39DE32086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC4B2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:42:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfF1Qlo (ORCPT
+        id S1726923AbfF1Qm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:41:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:51622 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfF1Qln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:41:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8462928;
-        Fri, 28 Jun 2019 09:41:42 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 816453F706;
-        Fri, 28 Jun 2019 09:41:40 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 17:41:38 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 09/20] PCI: mobiveil: Correct inbound/outbound window
- setup routines
-Message-ID: <20190628164138.GC21829@e121166-lin.cambridge.arm.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-10-Zhiqiang.Hou@nxp.com>
+        Fri, 28 Jun 2019 12:42:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11220 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726605AbfF1Qm1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 12:42:27 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SGfrlQ074352
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:42:26 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdkgyrce8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:42:26 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Fri, 28 Jun 2019 17:42:24 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 28 Jun 2019 17:42:20 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SGgJLF32899302
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 16:42:19 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C3804A405B;
+        Fri, 28 Jun 2019 16:42:19 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 016B6A4051;
+        Fri, 28 Jun 2019 16:42:18 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.62.39])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Jun 2019 16:42:17 +0000 (GMT)
+From:   Parth Shah <parth@linux.ibm.com>
+Subject: Re: [RFCv3 0/8] TurboSched: A scheduler for sustaining Turbo
+ Frequencies for longer durations
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com
+References: <20190625043726.21490-1-parth@linux.ibm.com>
+ <20190628131430.qmbfocgujeyi3dbt@e110439-lin>
+Date:   Fri, 28 Jun 2019 22:12:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412083635.33626-10-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190628131430.qmbfocgujeyi3dbt@e110439-lin>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19062816-0012-0000-0000-0000032D73CB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062816-0013-0000-0000-00002166B72D
+Message-Id: <95d58f4e-4429-d3d6-0962-bb33a9aa4b75@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906280191
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 08:36:06AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Hi Patrick,
+
+Thank you for taking interest at the patch set.
+
+
+On 6/28/19 6:44 PM, Patrick Bellasi wrote:
+> On 25-Jun 10:07, Parth Shah wrote:
 > 
-> Outbound window routine:
->  - Remove unused var definitions and register read operations.
->  - Add the upper 32-bit cpu address setup of the window.
->  - Instead of blindly write, only change the fields specified.
->  - Mask the lower bits of window size in case override the
->    control bits.
->  - Check if the passing window number is available, instead of
->    the total number of the initialized windows.
+> [...]
 > 
-> Inbound window routine:
->  - Add parameter 'u64 cpu_addr' to specify the cpu address
->    of the window instead of using 'pci_addr'.
->  - Change 'int pci_addr' to 'u64 pci_addr', and add setup
->    of the upper 32-bit PCI address of the window.
->  - Move the PCIe PIO master enablement to mobiveil_host_init().
->  - Instead of blindly write, only change the fields specified.
->  - Mask the lower bits of window size in case override the
->    control bits.
->  - Check if the passing window number is available, instead of
->    the total number of the initialized windows.
->  - And add the statistic of initialized inbound windows.
+>> Implementation
+>> ==============
+>>
+>> These patches uses UCLAMP mechanism[2] used to clamp utilization from the
+>> userspace, which can be used to classify the jitter tasks. The task wakeup
+>> logic uses this information to pack such tasks onto cores which are already
+>> running busy with CPU intensive tasks. The task packing is done at
+>> `select_task_rq_fair` only so that in case of wrong decision load balancer
+>> may pull the classified jitter tasks for maximizing performance.
+>>
+>> Any tasks clamped with cpu.util.max=1 (with sched_setattr syscall) are
+>> classified as jitter tasks.
 > 
-> Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> ---
-> V5:
->  - Corrected and retouched the subject and changelog.
+> I don't like this approach, it's overloading the meaning of clamps and
+> it also brings in un-wanted side effects, like running jitter tasks at
+> the minimum OPP.
 > 
->  drivers/pci/controller/pcie-mobiveil.c | 70 +++++++++++++++-----------
->  1 file changed, 42 insertions(+), 28 deletions(-)
+> Do you have any expected minimum frequency for those jitter tasks ?
+> I expect those to be relatively small tasks but still perhaps it makes
+> sense to run them on higher then minimal OPP.
+>
 
-There are two things to be done here:
+I absolutely agree with you as it may overload the meaning of clamps.
+AFAIK, the only way to detect jitters is by looking at its utilization,
+where low util tasks are possibly jitters unless they are important tasks. If
+userspace tells if the task is clamped to least OPP, then it is an indication of
+low utilization or unimportant tasks, which we say a jitter.
 
-1) Separate fixes from refactoring
-2) Each fix should be standalone and solve one problem only
+Also, as we discussed in OSPM as well, if all the jitters are given a dedicated
+core by the scheduler, then UCLAMP ensures least OPP for such tasks which can help
+saving power a further bit, which can be channeled to busier core thus allowing
+them to sustain or boost turbo frequencies.
 
-The commit log is a list of changes, some of which I can't
-parse.
+I agree that it may have side-effects but I'm just putting idea out here.
+Also, I understand that task packing and frequency are not co-related but for
+this specific purpose of Turbo sustaining problem, jitters should be given least
+power so that others can have extra one, hence jitters should be given less
+frequency.
 
-You should split this patch as described above and repost it
-separately but first I will try to merge what I can from this
-series, do not repost as yet.
-
-Thanks,
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index e88afc792a5c..4ba458474e42 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -65,9 +65,13 @@
->  #define PAB_AXI_AMAP_CTRL(win)		PAB_REG_ADDR(0x0ba0, win)
->  #define  WIN_ENABLE_SHIFT		0
->  #define  WIN_TYPE_SHIFT			1
-> +#define  WIN_TYPE_MASK			0x3
-> +#define  WIN_SIZE_SHIFT			10
-> +#define  WIN_SIZE_MASK			0x3fffff
->  
->  #define PAB_EXT_AXI_AMAP_SIZE(win)	PAB_EXT_REG_ADDR(0xbaf0, win)
->  
-> +#define PAB_EXT_AXI_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0x80a0, win)
->  #define PAB_AXI_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x0ba4, win)
->  #define  AXI_WINDOW_ALIGN_MASK		3
->  
-> @@ -82,8 +86,10 @@
->  #define PAB_PEX_AMAP_CTRL(win)		PAB_REG_ADDR(0x4ba0, win)
->  #define  AMAP_CTRL_EN_SHIFT		0
->  #define  AMAP_CTRL_TYPE_SHIFT		1
-> +#define  AMAP_CTRL_TYPE_MASK		3
->  
->  #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0, win)
-> +#define PAB_EXT_PEX_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0xb4a0, win)
->  #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4, win)
->  #define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x4ba8, win)
->  #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac, win)
-> @@ -455,49 +461,51 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
->  }
->  
->  static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
-> -			       int pci_addr, u32 type, u64 size)
-> +			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
->  {
-> -	int pio_ctrl_val;
-> -	int amap_ctrl_dw;
-> +	u32 value;
->  	u64 size64 = ~(size - 1);
->  
-> -	if ((pcie->ib_wins_configured + 1) > pcie->ppio_wins) {
-> +	if (win_num >= pcie->ppio_wins) {
->  		dev_err(&pcie->pdev->dev,
->  			"ERROR: max inbound windows reached !\n");
->  		return;
->  	}
->  
-> -	pio_ctrl_val = csr_readl(pcie, PAB_PEX_PIO_CTRL);
-> -	pio_ctrl_val |= 1 << PIO_ENABLE_SHIFT;
-> -	csr_writel(pcie, pio_ctrl_val, PAB_PEX_PIO_CTRL);
-> -
-> -	amap_ctrl_dw = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
-> -	amap_ctrl_dw |= (type << AMAP_CTRL_TYPE_SHIFT) |
-> -			(1 << AMAP_CTRL_EN_SHIFT) |
-> -			lower_32_bits(size64);
-> -	csr_writel(pcie, amap_ctrl_dw, PAB_PEX_AMAP_CTRL(win_num));
-> +	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
-> +	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT |
-> +		 WIN_SIZE_MASK << WIN_SIZE_SHIFT);
-> +	value |= (type << AMAP_CTRL_TYPE_SHIFT) | (1 << AMAP_CTRL_EN_SHIFT) |
-> +		 (lower_32_bits(size64) & WIN_SIZE_MASK << WIN_SIZE_SHIFT);
-> +	csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
->  
->  	csr_writel(pcie, upper_32_bits(size64),
->  		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
->  
-> -	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
-> +	csr_writel(pcie, lower_32_bits(cpu_addr),
-> +		   PAB_PEX_AMAP_AXI_WIN(win_num));
-> +	csr_writel(pcie, upper_32_bits(cpu_addr),
-> +		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
-> +
-> +	csr_writel(pcie, lower_32_bits(pci_addr),
-> +		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
-> +	csr_writel(pcie, upper_32_bits(pci_addr),
-> +		   PAB_PEX_AMAP_PEX_WIN_H(win_num));
->  
-> -	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_PEX_WIN_L(win_num));
-> -	csr_writel(pcie, 0, PAB_PEX_AMAP_PEX_WIN_H(win_num));
-> +	pcie->ib_wins_configured++;
->  }
->  
->  /*
->   * routine to program the outbound windows
->   */
->  static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
-> -			       u64 cpu_addr, u64 pci_addr,
-> -			       u32 config_io_bit, u64 size)
-> +			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
->  {
->  
-> -	u32 value, type;
-> +	u32 value;
->  	u64 size64 = ~(size - 1);
->  
-> -	if ((pcie->ob_wins_configured + 1) > pcie->apio_wins) {
-> +	if (win_num >= pcie->apio_wins) {
->  		dev_err(&pcie->pdev->dev,
->  			"ERROR: max outbound windows reached !\n");
->  		return;
-> @@ -507,10 +515,12 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
->  	 * program Enable Bit to 1, Type Bit to (00) base 2, AXI Window Size Bit
->  	 * to 4 KB in PAB_AXI_AMAP_CTRL register
->  	 */
-> -	type = config_io_bit;
->  	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
-> -	csr_writel(pcie, 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
-> -		   lower_32_bits(size64), PAB_AXI_AMAP_CTRL(win_num));
-> +	value &= ~(WIN_TYPE_MASK << WIN_TYPE_SHIFT |
-> +		 WIN_SIZE_MASK << WIN_SIZE_SHIFT);
-> +	value |= 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
-> +		 (lower_32_bits(size64) & WIN_SIZE_MASK << WIN_SIZE_SHIFT);
-> +	csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
->  
->  	csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
->  
-> @@ -518,11 +528,10 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
->  	 * program AXI window base with appropriate value in
->  	 * PAB_AXI_AMAP_AXI_WIN0 register
->  	 */
-> -	value = csr_readl(pcie, PAB_AXI_AMAP_AXI_WIN(win_num));
-> -	csr_writel(pcie, cpu_addr & (~AXI_WINDOW_ALIGN_MASK),
-> +	csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
->  		   PAB_AXI_AMAP_AXI_WIN(win_num));
-> -
-> -	value = csr_readl(pcie, PAB_AXI_AMAP_PEX_WIN_H(win_num));
-> +	csr_writel(pcie, upper_32_bits(cpu_addr),
-> +		   PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
->  
->  	csr_writel(pcie, lower_32_bits(pci_addr),
->  		   PAB_AXI_AMAP_PEX_WIN_L(win_num));
-> @@ -604,6 +613,11 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  	value |= APIO_EN_MASK;
->  	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
->  
-> +	/* Enable PCIe PIO master */
-> +	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
-> +	value |= 1 << PIO_ENABLE_SHIFT;
-> +	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
-> +
->  	/*
->  	 * we'll program one outbound window for config reads and
->  	 * another default inbound window for all the upstream traffic
-> @@ -616,7 +630,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
->  
->  	/* memory inbound translation window */
-> -	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
-> +	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
->  
->  	/* Get the I/O and memory ranges from DT */
->  	resource_list_for_each_entry(win, &pcie->resources) {
-> -- 
-> 2.17.1
+> Why not just adding a new dedicated per-task scheduling attribute,
+> e.g. SCHED_FLAG_LATENCY_TOLERANT, and manage it via
+> sched_{set,get}attr() ?
 > 
+> I guess such a concept could work well on defining a generic
+> spread-vs-pack wakeup policy which is something Android also could
+> benefit from.
+> 
+
+I have made attempts to use per-task attributes for task classification in first
+series of TurboSched and it works fine.
+https://lwn.net/ml/linux-pm/20190322060621.27021-3-parth015@linux.vnet.ibm.com/
+
+Then from inputs from Dietmar, I thought of giving a try to UCLAMP for this purpose.
+But, now I guess having one more task attribute is useful as it can serve multiple
+purpose including android and task packing. I will add it v4 then.
+
+> However, what we will still be missing is a proper cgroups support.
+> Not always is possible and/or convenient to explicitly set per-task
+> attributes. But at the same time, AFAIK using cgroups to define
+> task properties which do not represent a "resource repartition" is
+> something very difficult to get accepted mainline.
+> 
+
+Yeah, I faced that problem in v2.
+https://lkml.org/lkml/2019/5/15/1395
+
+> In the past, back in 2011, there was an attempt to introduce a timer
+> slack controller, but apparently it was not very well received:
+> 
+>    Message-ID: <1300111524-5666-1-git-send-email-kirill@shutemov.name>
+>    https://lore.kernel.org/lkml/20110314164652.5b44fb9e.akpm@linux-foundation.org/
+> 
+> But perhaps now the times are more mature and we can try to come up
+> with compelling cases from both the server and the mobile world.
+> 
+
+The pointed patch series seems appealing and I will have a look at it. 
+
+>> We define a core to be non-idle if it is over 12.5% utilized of its
+>> capacity;
+> 
+> This looks like a random number, can you elaborate on that?
+
+It is an experimental value to define whether a "core" should be considered to be
+idle or not. This is because, even-though core is running few bunch of tasks summing
+upto around 10% of utilization in a core, it maybe going to shallower idle-states
+periodically which is kind of power-saving; placing new tasks on such core should
+be avoided as far as possible.
+
+I have just tested this on SMT-4/8 systems and it works as expected but at the end it
+is still an experimental value.
+
+> 
+>> the jitters are packed over these cores using First-fit
+>> approach.
+>>
+>> To demonstrate/benchmark, one can use a synthetic workload generator
+>> `turbo_bench.c`[1] available at
+>> https://github.com/parthsl/tools/blob/master/benchmarks/turbo_bench.c
+>>
+>> Following snippet demonstrates the use of TurboSched feature:
+>> ```
+>> i=8; ./turbo_bench -t 30 -h $i -n $((i*2)) -j
+>> ```
+>>
+>> Current implementation uses only jitter classified tasks to be packed on
+>> the first busy cores, but can be further optimized by getting userspace
+>> input of important tasks and keeping track of such tasks.
+>> This leads to optimized searching of non idle cores and also more
+>> accurate as userspace hints are safer than auto classified busy
+>> cores/tasks.
+> 
+> Hints from user-space looks like an interesting concept, could you
+> better elaborate what you are thinking about in this sense?
+> 
+
+Currently, we are just tagging tasks as jitters and packing it on already busier
+cores (>12.5% core utilization). Packing strategy is a simple first-fit algorithm
+looking for first core in a DIE where the waking-up jitter task can be accommodated.
+This is a lot of work in fast-path but can be optimized out. If user can also tag
+CPU intensive and/or important tasks then we can keep track of the cores occupying
+such tasks which can be used for task packing reducing the effort of finding non-idle.
+Again, this can be set with UCLAMP by cpu.util-min=SCHED_CAPACITY_SCALE.
+
+Infact, v1 does this but then I thought of breaking down problem into steps and this
+optimization can be introduced later.
+https://lwn.net/ml/linux-pm/20190322060621.27021-6-parth015@linux.vnet.ibm.com/
+
+So we can have some task attributes like task_type or similar which hints scheduler on
+several features like packing, spreading, or giving dedicated core where siblings will
+not be scheduled or even core scheduling, which in certain ways affect scheduling
+decisions.
+
+
+Thanks
+Parth
+
