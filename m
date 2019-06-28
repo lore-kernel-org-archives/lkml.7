@@ -2,150 +2,87 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91DCC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655C6C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC47F20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D73B2147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Za72r1rs"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lZ4TQX3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfF1EUG (ORCPT
+        id S1726587AbfF1EUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 00:20:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35495 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfF1EUE (ORCPT
+        Fri, 28 Jun 2019 00:20:41 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58032 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfF1EUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 00:20:04 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w24so2484323plp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 21:20:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QMVsVsENIq5jFVBrHyEsaAKaZZYq8Ei7fMqMQWtvxsQ=;
-        b=Za72r1rsgL7lhP8DM+xELMGe9NVDyDZjOKOxNxxq6eF8WPJ8VtTJmdiYTGT50kO17c
-         keHsNLt1GVHL+lmFKoqnzHVNSH8HO7aSpHAeYX2c2rqzXZl36P0TTkcvQQA0OKqdNsHH
-         VYNS/pktmMUG04o5AOQUBXaoWKPDZAogTLZMzd+HUZump9i3dxq24i2bnNM7HzoX55FK
-         i7IGNtitAzGdKdZiLK0ZH/OXqArRHCNMmLoi6LRJPvG1Yo0XFM5JDWKt6lJJjkerHnU0
-         izBhA47ziV/l+hyyNnUZdttQhcRSOOkZwK+pFrqpnxkp+14h2RsEltdhx+8i7if6W8V+
-         Lqiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QMVsVsENIq5jFVBrHyEsaAKaZZYq8Ei7fMqMQWtvxsQ=;
-        b=czRBkdDvXCLzli0+hcLU3wPP7zZg9a68arazEL+gkCmgwq82Hoqrl+k3hojhtqcXX2
-         kx+oE7Pi46YxoR+gbvjARgn7CFf+Q9g1b0zcO8hXDUlG0F5LGScW815uQkzGw4mBVOav
-         Js3aURSZtrDa1n0hrCy1xPhGBOtEA02wG4xFRqN3uhRmqjKDbNSVYtQaBRAGXb7YGgO+
-         Nxnwl/gky43yw1DGWSG5621Hjd7dpuWcDInb7KhC9K3jIaBQ3Oj67dru9fFujc7ajFkr
-         y/mrsWPqkqT7IjOwMZ/d4W7MdoGKUYpkaeTb2RGTRGIml/BOyQdorRHFqkuN5qvm8JoI
-         NJTg==
-X-Gm-Message-State: APjAAAXpMxokycFYfS1n9AmDpk/GMio21nJHUQmcoh+FR+jfv8n+PYP0
-        cKBhAc0Jy0ogu4IyF6DDlGAZqv3sGxM=
-X-Google-Smtp-Source: APXvYqzAfadCUE/mQqcPjchTjuq2EteuY+sMRrt9vCSdBvZRoQaSoVSh7CehrfYUOzkMJ8HsHtc+Tg==
-X-Received: by 2002:a17:902:8546:: with SMTP id d6mr8801004plo.207.1561695604386;
-        Thu, 27 Jun 2019 21:20:04 -0700 (PDT)
-Received: from localhost ([218.189.10.173])
-        by smtp.gmail.com with ESMTPSA id f10sm546776pgq.73.2019.06.27.21.20.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Jun 2019 21:20:04 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 12:19:52 +0800
-From:   Yue Hu <zbestahu@gmail.com>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     <yuchao0@huawei.com>, <gregkh@linuxfoundation.org>,
-        <linux-erofs@lists.ozlabs.org>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>, <huyue2@yulong.com>,
-        Miao Xie <miaoxie@huawei.com>
-Subject: Re: [PATCH] staging: erofs: don't check special inode layout
-Message-ID: <20190628121952.000028fc.zbestahu@gmail.com>
-In-Reply-To: <276837dc-b18a-6f20-fc33-d988dff5ae9f@huawei.com>
-References: <20190628034234.8832-1-zbestahu@gmail.com>
-        <276837dc-b18a-6f20-fc33-d988dff5ae9f@huawei.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 28 Jun 2019 00:20:41 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5S4KVjm018708;
+        Thu, 27 Jun 2019 23:20:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561695631;
+        bh=TggwOrOTARuDtQhTBOdx51iLtk8dv+A5tcd4Av8NBIo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=lZ4TQX3BK1DsDgiM5OthOhR5qruh8OVsmip+8T8aIMQm3wgLIP3BCSK+wj96InK1c
+         oHRgqo35JXn7Xx1AaFxcqCyMf/rwIRc3V6EEnRPJPRv+RTvnK/rEcbX7W7oTn4/uPI
+         2vQzkeIlCOeh5OZyjYDm4lhgd8K/0EzE3SG++zLE=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5S4KVP7023809
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Jun 2019 23:20:31 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 27
+ Jun 2019 23:20:31 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 27 Jun 2019 23:20:31 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5S4KSZx120807;
+        Thu, 27 Jun 2019 23:20:29 -0500
+Subject: Re: [PATCH 00/10] crypto: k3: Add sa2ul driver
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <t-kristo@ti.com>, <nm@ti.com>
+References: <20190618120843.18777-1-j-keerthy@ti.com>
+ <20190628041939.7yduk77x62twath6@gondor.apana.org.au>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <df7aab2c-bc4d-1390-4cbb-550873f33705@ti.com>
+Date:   Fri, 28 Jun 2019 09:51:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190628041939.7yduk77x62twath6@gondor.apana.org.au>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019 11:50:21 +0800
-Gao Xiang <gaoxiang25@huawei.com> wrote:
 
-> Hi Yue,
+
+On 28/06/19 9:49 AM, Herbert Xu wrote:
+> On Tue, Jun 18, 2019 at 05:38:33PM +0530, Keerthy wrote:
+>> The series adds Crypto hardware accelerator support for SA2UL.
+>> SA2UL stands for security accelerator ultra lite.
 > 
-> On 2019/6/28 11:42, Yue Hu wrote:
-> > From: Yue Hu <huyue2@yulong.com>
-> > 
-> > Currently, we will check if inode layout is compression or inline if
-> > the inode is special in fill_inode(). Also set ->i_mapping->a_ops for
-> > it. That is pointless since the both modes won't be set for special
-> > inode when creating EROFS filesystem image. So, let's avoid it.
-> > 
-> > Signed-off-by: Yue Hu <huyue2@yulong.com>  
-> 
-> Have you test this patch with some actual image with legacy mkfs since
-> new mkfs framework have not supported special inode...
+> Please cc linux-crypto@vger.kernel.org.
 
-Hi Xiang,
-
-I'm studying the testing :)
-
-However, already check the code handling for special inode in leagcy mkfs as below:
-
-```c
-                break;
-        case EROFS_FT_BLKDEV:
-        case EROFS_FT_CHRDEV:
-        case EROFS_FT_FIFO:
-        case EROFS_FT_SOCK:
-                mkfs_rank_inode(d);
-                break;
-
-        default:
-                erofs_err("inode[%s] file_type error =%d",
-                          d->i_fullpath,
-```
-
-No special inode layout operations, so this change should be fine.
-
-Thx.
-
-> 
-> I think that is fine in priciple, however, in case to introduce some potential
-> issues, I will test this patch later. I will give a Reviewed-by tag after I tested
-> this patch.
-
-Thanks.
+Okay. I will do that.
 
 > 
 > Thanks,
-> Gao Xiang
 > 
-> > ---
-> >  drivers/staging/erofs/inode.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-> > index 1433f25..2fe0f6d 100644
-> > --- a/drivers/staging/erofs/inode.c
-> > +++ b/drivers/staging/erofs/inode.c
-> > @@ -205,6 +205,7 @@ static int fill_inode(struct inode *inode, int isdir)
-> >  			S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
-> >  			inode->i_op = &erofs_generic_iops;
-> >  			init_special_inode(inode, inode->i_mode, inode->i_rdev);
-> > +			goto out_unlock;
-> >  		} else {
-> >  			err = -EIO;
-> >  			goto out_unlock;
-> >   
-
