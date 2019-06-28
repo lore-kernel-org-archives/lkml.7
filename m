@@ -2,114 +2,89 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA755C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA51BC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878FB208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:29:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cGp4BB8i"
+	by mail.kernel.org (Postfix) with ESMTP id D1EED2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfF1R3v (ORCPT
+        id S1726839AbfF1Rab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:29:51 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43467 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfF1R3u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:29:50 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i189so3312234pfg.10;
-        Fri, 28 Jun 2019 10:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=IUIM664RuoYp3t0CJ+jRlG/fXRbmpr3H3CbNoUOniDQ=;
-        b=cGp4BB8iY/HWK5zSL1tKXdzRHmLWKqHLCreucH7JfY1yeOY3DHoNakSACj3A0aFAJo
-         OakQmivazjArkrRSmNhPjpV/jcy8VjjUd1IFxxa4hc+kLucQqfcMg0bb/xDsbGVQVAoI
-         F1Fxezhdv3lN1JNcqTtn1X8TLL3gOoNwkBI2N3yrtTEvF/TKHx7Pk7EfP/JYugOIvMdO
-         S2Ai/UA1iER+L6zw/y38bjqLYboYCf2osWqU5uaf5126nrMPjJ10DorGo0Spqv3cBKKC
-         CeWAfpc0hD3VPxe4kYI2TAZB3ia9xdVH4Y5NT/rMsO0K1IQuyZYGgCkop5262nFpo55D
-         yxhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=IUIM664RuoYp3t0CJ+jRlG/fXRbmpr3H3CbNoUOniDQ=;
-        b=ERq+akFlT9hXnbKr2bVk4KvPrSIKaVn5KwuL1ZxX8e1c18ieapO/NfEU7vSn1ND75I
-         HdeoLwpwRWEitnEYI/hoPlcEVMY5q2iIp9OERPqLbuEcP6cTfxk5IBv4IV/5JjF2oxWI
-         h2a6wWbOeMYw1TjQq4mK162rJr56ti5rOh54TmLYolTVqpahL4Vad7r9fHBPs18xHY09
-         NYIkmuaeZ3+LkoWnQhJTHC1bD66nJQM/GKIq158dfv7kNtb9iixKDJA2tKgTIbgqRM1u
-         UqXz62ks8N1KsJtsCfKjOrJQTOo2kpyMCHAb7XmurahcHgK+9U3gOpHzwqpBaLPaLNMm
-         kLig==
-X-Gm-Message-State: APjAAAX0XTTVC8K2X6dWfP7IYjHTai0cBQjsnBwYa1kHeC64mJHVs+Df
-        YWdi7FLxtz4WzR/RaNCfMNKF7kCM
-X-Google-Smtp-Source: APXvYqx8BGf9qHObqT1DPpPcVSIXG/e1ybzvtIB73TWeZ38DOH92dPuLOD5eLh6hI6sucwHlkfXakw==
-X-Received: by 2002:a63:125c:: with SMTP id 28mr901781pgs.255.1561742990198;
-        Fri, 28 Jun 2019 10:29:50 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u21sm4051401pfm.70.2019.06.28.10.29.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 10:29:49 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 10:29:48 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Amy.Shih@advantech.com.tw
-Cc:     she90122@gmail.com, oakley.ding@advantech.com.tw,
-        jia.sui@advantech.com.cn, Jean Delvare <jdelvare@suse.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 2/9] hwmon: (nct7904) Changes comments in probe function.
-Message-ID: <20190628172948.GA25799@roeck-us.net>
+        Fri, 28 Jun 2019 13:30:31 -0400
+Received: from mail.us.es ([193.147.175.20]:49310 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbfF1Raa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 13:30:30 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id C777119D8BF
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 19:30:28 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id AE18C1021B2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 19:30:28 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 8CEC54EDAF; Fri, 28 Jun 2019 19:30:28 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 684BFA5B8;
+        Fri, 28 Jun 2019 19:30:24 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Fri, 28 Jun 2019 19:30:24 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [31.4.195.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 282454265A2F;
+        Fri, 28 Jun 2019 19:30:24 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 19:30:23 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     zhe.he@windriver.com
+Cc:     kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfilter: Fix remainder of pseudo-header protocol 0
+Message-ID: <20190628173023.f45mvwcdhnavnt42@salvia>
+References: <1561346258-272481-1-git-send-email-zhe.he@windriver.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1561346258-272481-1-git-send-email-zhe.he@windriver.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 08:10:00AM +0000, Amy.Shih@advantech.com.tw wrote:
-> From: "amy.shih" <amy.shih@advantech.com.tw>
+On Mon, Jun 24, 2019 at 11:17:38AM +0800, zhe.he@windriver.com wrote:
+> From: He Zhe <zhe.he@windriver.com>
 > 
-> Linux style for comments is the C89 "/* ... */" style,
-> changes the comments to Linux style.
+> Since v5.1-rc1, some types of packets do not get unreachable reply with the
+> following iptables setting. Fox example,
 > 
-> Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+> $ iptables -A INPUT -p icmp --icmp-type 8 -j REJECT
+> $ ping 127.0.0.1 -c 1
+> PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+> — 127.0.0.1 ping statistics —
+> 1 packets transmitted, 0 received, 100% packet loss, time 0ms
+> 
+> We should have got the following reply from command line, but we did not.
+> From 127.0.0.1 icmp_seq=1 Destination Port Unreachable
+> 
+> Yi Zhao reported it and narrowed it down to:
+> 7fc38225363d ("netfilter: reject: skip csum verification for protocols that don't support it"),
+> 
+> This is because nf_ip_checksum still expects pseudo-header protocol type 0 for
+> packets that are of neither TCP or UDP, and thus ICMP packets are mistakenly
+> treated as TCP/UDP.
+> 
+> This patch corrects the conditions in nf_ip_checksum and all other places that
+> still call it with protocol 0.
 
-Applied.
-
-Thanks,
-Guenter
-
-> ---
-> Changes in v2:
-> - Fix wrong style of comments.
-> 
->  drivers/hwmon/nct7904.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-> index 401ed4a4a576..710c30562fc1 100644
-> --- a/drivers/hwmon/nct7904.c
-> +++ b/drivers/hwmon/nct7904.c
-> @@ -542,13 +542,13 @@ static int nct7904_probe(struct i2c_client *client,
->  	if (ret < 0)
->  		return ret;
->  	if (ret & 0x80) {
-> -		data->enable_dts = 1; //Enable DTS & PECI
-> +		data->enable_dts = 1; /* Enable DTS & PECI */
->  	} else {
->  		ret = nct7904_read_reg(data, BANK_2, TSI_CTRL_REG);
->  		if (ret < 0)
->  			return ret;
->  		if (ret & 0x80)
-> -			data->enable_dts = 0x3; //Enable DTS & TSI
-> +			data->enable_dts = 0x3; /* Enable DTS & TSI */
->  	}
->  
->  	/* Check DTS enable status */
+Applied, thanks.
