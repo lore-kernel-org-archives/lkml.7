@@ -2,89 +2,121 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111DAC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B881C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D956820656
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D42B20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfF1KuM (ORCPT
+        id S1726710AbfF1Kvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:50:12 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53340 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfF1KuM (ORCPT
+        Fri, 28 Jun 2019 06:51:48 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:60229 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfF1Kvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:50:12 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 2D1F8276DF1
-Subject: Re: [PATCH] platform/chrome: lightbar: Get drvdata from parent in
- suspend/resume
-To:     Rajat Jain <rajatja@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, rajatxjain@gmail.com,
-        evgreen@google.com, gwendal@google.com
-References: <20190627214738.112614-1-rajatja@google.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <b34fb026-7924-204c-99ed-7e2a5a8ebc87@collabora.com>
-Date:   Fri, 28 Jun 2019 12:50:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 28 Jun 2019 06:51:48 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MrhHm-1iJ7tB3TDo-00nh66; Fri, 28 Jun 2019 12:51:33 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: davinci-vpbe: remove obsolete includes
+Date:   Fri, 28 Jun 2019 12:51:05 +0200
+Message-Id: <20190628105131.3130257-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190627214738.112614-1-rajatja@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:nxX3U+4ZM9iM1SCOcgx45eYQB4Et4Zv/+leVO4gmMA7AI92jFeX
+ TYGYg/KjFOoYbfz/uKsDqrS2TIiaCqmwoOagcExglGofX8Pe5Q5Q+piltjM8iQ/ePFYc09Y
+ Js7LavsFql/6kHhwBZc4/XHcizswY5N9/SJxP4Ya5T9kIXDiGLQmRtHP3uJZpIItAMfAVVs
+ ctdRcJdy8VKHxLPbygNwg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:r3l2W5Lr0F0=:V0QAAh8URiEwDA35SCFCAZ
+ 3ibhnFD1gMsYiK/bmbzf71iEyf6jkeKI/yBqBP0KrAh04KR8+eFWm5+7B3GClLjeiIefc1Y1A
+ Jb44Bc9XXldLHvAZuKcLbHtLXV6nU6QBF9KAUHajuwHV1Q6by5huuU2b11btJ8pRg+MbWQBMH
+ uetx8yXyV50c4tH/dmwZsBFDUq+u+KgGTzzZ1OOWsxDq3Iv4h/ZBYHhm5eEPeMF3zoMR04se/
+ +X7Y/K8LsWg2z6HvI0HjUxpDnnujn9cUkITIxFyo62zo3i8MZk4iNejWYmMTfsE95duhHznEZ
+ q1dYhDtEPWjl9RN25PCFdwFUlkGf54SGLCQXyXcGYE21Zx9nCRQSDD69jiWvXVXuslPmd432O
+ yyv5jzvquaE69rEHXnAtqgJWzyTryFXEjAuFk5S/Mqyc2j6lYXdDE9Lv2L2ynvUGRrlOcEqIQ
+ SIgvvX54zgTnHNxv/XhBRoRrtGKJ9Y81skLorqoRXtmk9ZidOiFXHz9yJu3gkdMmQQfyG8pSd
+ mdFGLVFJuMk7LHq0Z4eVTfqmdVllWh1mxddxyqkTZoV/8cDXpuhR3NTHFw8xRZF2EoeBEJGsU
+ Oq8N4I02cm4kBtxNoNIisoWQEZ1GdIhua2sAlB+lCj9HvELj+ZqnVnkSstY1G+K8z5KjrNxte
+ cabT/ytf8GK06GTtYayqDXsO5BWKHwayfmrYKMtMZmRKaVTZSzO/46y3ExxKEvt3oaJNbVUQh
+ 9liPHNqbMJnFO3B3MVbyhZR76NPLXF8xPqOpQA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The driver builds fine without these, and they cause build
+problems once davinci multiplatform support is enabled.
 
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/media/platform/davinci/vpbe_display.c | 4 ----
+ drivers/media/platform/davinci/vpbe_osd.c     | 5 -----
+ drivers/media/platform/davinci/vpbe_venc.c    | 5 -----
+ 3 files changed, 14 deletions(-)
 
-On 27/6/19 23:47, Rajat Jain wrote:
-> The lightbar driver never assigned the drvdata in probe method, and
-> thus there is nothing there. Need to get the ec_dev from the parent's
-> drvdata.
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
+diff --git a/drivers/media/platform/davinci/vpbe_display.c b/drivers/media/platform/davinci/vpbe_display.c
+index 000b191c42d8..18f9408013d1 100644
+--- a/drivers/media/platform/davinci/vpbe_display.c
++++ b/drivers/media/platform/davinci/vpbe_display.c
+@@ -19,10 +19,6 @@
+ 
+ #include <asm/pgtable.h>
+ 
+-#ifdef CONFIG_ARCH_DAVINCI
+-#include <mach/cputype.h>
+-#endif
+-
+ #include <media/v4l2-dev.h>
+ #include <media/v4l2-common.h>
+ #include <media/v4l2-ioctl.h>
+diff --git a/drivers/media/platform/davinci/vpbe_osd.c b/drivers/media/platform/davinci/vpbe_osd.c
+index 491842ef33c5..91b571a0ac2c 100644
+--- a/drivers/media/platform/davinci/vpbe_osd.c
++++ b/drivers/media/platform/davinci/vpbe_osd.c
+@@ -16,11 +16,6 @@
+ #include <linux/clk.h>
+ #include <linux/slab.h>
+ 
+-#ifdef CONFIG_ARCH_DAVINCI
+-#include <mach/cputype.h>
+-#include <mach/hardware.h>
+-#endif
+-
+ #include <media/davinci/vpss.h>
+ #include <media/v4l2-device.h>
+ #include <media/davinci/vpbe_types.h>
+diff --git a/drivers/media/platform/davinci/vpbe_venc.c b/drivers/media/platform/davinci/vpbe_venc.c
+index 425f91f07165..8caa084e5704 100644
+--- a/drivers/media/platform/davinci/vpbe_venc.c
++++ b/drivers/media/platform/davinci/vpbe_venc.c
+@@ -14,11 +14,6 @@
+ #include <linux/videodev2.h>
+ #include <linux/slab.h>
+ 
+-#ifdef CONFIG_ARCH_DAVINCI
+-#include <mach/hardware.h>
+-#include <mach/mux.h>
+-#endif
+-
+ #include <linux/platform_data/i2c-davinci.h>
+ 
+ #include <linux/io.h>
+-- 
+2.20.0
 
-Queued for 5.3
-
-Thanks,
-~ Enric
-
-> ---
->  drivers/platform/chrome/cros_ec_lightbar.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
-> index d30a6650b0b5..26117a8991b3 100644
-> --- a/drivers/platform/chrome/cros_ec_lightbar.c
-> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
-> @@ -600,7 +600,7 @@ static int cros_ec_lightbar_remove(struct platform_device *pd)
->  
->  static int __maybe_unused cros_ec_lightbar_resume(struct device *dev)
->  {
-> -	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev);
-> +	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
->  
->  	if (userspace_control)
->  		return 0;
-> @@ -610,7 +610,7 @@ static int __maybe_unused cros_ec_lightbar_resume(struct device *dev)
->  
->  static int __maybe_unused cros_ec_lightbar_suspend(struct device *dev)
->  {
-> -	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev);
-> +	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
->  
->  	if (userspace_control)
->  		return 0;
-> 
