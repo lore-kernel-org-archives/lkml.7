@@ -2,287 +2,195 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1D0C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B24DC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56652086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C35208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfF1PHw (ORCPT
+        id S1726822AbfF1PJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:07:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60008 "EHLO mx1.redhat.com"
+        Fri, 28 Jun 2019 11:09:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:49774 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfF1PHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:07:52 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5C828307CDF0;
-        Fri, 28 Jun 2019 15:07:51 +0000 (UTC)
-Received: from x1.home (ovpn-117-35.phx2.redhat.com [10.3.117.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C9156012E;
-        Fri, 28 Jun 2019 15:07:49 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 09:07:41 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-Message-ID: <20190628090741.51e8d18e@x1.home>
-In-Reply-To: <A2975661238FB949B60364EF0F2C257439F05415@SHSMSX104.ccr.corp.intel.com>
-References: <1560000071-3543-1-git-send-email-yi.l.liu@intel.com>
-        <1560000071-3543-10-git-send-email-yi.l.liu@intel.com>
-        <20190619222647.72efc76a@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F0164E@SHSMSX104.ccr.corp.intel.com>
-        <20190620150757.7b2fa405@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F02663@SHSMSX104.ccr.corp.intel.com>
-        <20190621095740.41e6e98e@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F05415@SHSMSX104.ccr.corp.intel.com>
-Organization: Red Hat
+        id S1726616AbfF1PJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:09:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D32B62B;
+        Fri, 28 Jun 2019 08:09:02 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 989CD3F706;
+        Fri, 28 Jun 2019 08:09:01 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 16:08:59 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Douglas RAILLARD <douglas.raillard@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, peterz@infradead.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com
+Subject: Re: [RFC PATCH v2 4/5] sched/cpufreq: Introduce sugov_cpu_ramp_boost
+Message-ID: <20190628150859.e6dhb2hxnmtshpwb@e110439-lin>
+References: <20190627171603.14767-1-douglas.raillard@arm.com>
+ <20190627171603.14767-5-douglas.raillard@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 28 Jun 2019 15:07:51 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627171603.14767-5-douglas.raillard@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019 08:20:38 +0000
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+Hi Douglas,
 
-> Hi Alex,
+On 27-Jun 18:16, Douglas RAILLARD wrote:
+> Use the utilization signals dynamic to detect when the utilization of a
+> set of tasks starts increasing because of a change in tasks' behavior.
+> This allows detecting when spending extra power for faster frequency
+> ramp up response would be beneficial to the reactivity of the system.
 > 
-> > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > Sent: Friday, June 21, 2019 11:58 PM
-> > To: Liu, Yi L <yi.l.liu@intel.com>
-> > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-> > 
-> > On Fri, 21 Jun 2019 10:23:10 +0000
-> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> >   
-> > > Hi Alex,
-> > >  
-> > > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > > Sent: Friday, June 21, 2019 5:08 AM
-> > > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-> > > >
-> > > > On Thu, 20 Jun 2019 13:00:34 +0000
-> > > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > > >  
-> > > > > Hi Alex,
-> > > > >  
-> > > > > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > > > > Sent: Thursday, June 20, 2019 12:27 PM
-> > > > > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > > > > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-> > > > > >
-> > > > > > On Sat,  8 Jun 2019 21:21:11 +0800
-> > > > > > Liu Yi L <yi.l.liu@intel.com> wrote:
-> > > > > >  
-> > > > > > > This patch adds sample driver named vfio-mdev-pci. It is to wrap
-> > > > > > > a PCI device as a mediated device. For a pci device, once bound
-> > > > > > > to vfio-mdev-pci driver, user space access of this device will
-> > > > > > > go through vfio mdev framework. The usage of the device follows
-> > > > > > > mdev management method. e.g. user should create a mdev before
-> > > > > > > exposing the device to user-space.  
-> > > [...]  
-> > > > >  
-> > > > > > However, the patch below just makes the mdev interface behave
-> > > > > > correctly, I can't make it work on my system because commit
-> > > > > > 7bd50f0cd2fd ("vfio/type1: Add domain at(de)taching group helpers")  
-> > > > >
-> > > > > What error did you encounter. I tested the patch with a device in a
-> > > > > singleton iommu group. I'm also searching a proper machine with
-> > > > > multiple devices in an iommu group and test it.  
-> > > >
-> > > > In vfio_iommu_type1, iommu backed mdev devices use the
-> > > > iommu_attach_device() interface, which includes:
-> > > >
-> > > >         if (iommu_group_device_count(group) != 1)
-> > > >                 goto out_unlock;
-> > > >
-> > > > So it's impossible to use with non-singleton groups currently.  
-> > >
-> > > Hmmm, I think it is no longer good to use iommu_attach_device() for iommu
-> > > backed mdev devices now. In this flow, the purpose here is to attach a device
-> > > to a domain and no need to check whether the device is in a singleton iommu
-> > > group. I think it would be better to use __iommu_attach_device() instead of
-> > > iommu_attach_device().  
-> > 
-> > That's a static and unexported, it's intentionally not an exposed
-> > interface.  We can't attach devices in the same group to separate
-> > domains allocated through iommu_domain_alloc(), this would violate the
-> > iommu group isolation principles.  
-> 
-> Go it. :-) Then not good to expose such interface. But to support devices in
-> non-singleton iommu group, we need to have a new interface which doesn't
-> count the devices but attach all the devices.
+> This ramp boost is computed as the difference
+> util_avg-util_est_enqueued. This number somehow represents a lower bound
+> of how much extra utilization this tasks is actually using, compared to
+> our best current stable knowledge of it (which is util_est_enqueued).
 
-We have iommu_attach_group(), we just need to track which groups are
-attached.
- 
-> > > Also I found a potential mutex lock issue if using iommu_attach_device().
-> > > In vfio_iommu_attach_group(), it uses iommu_group_for_each_dev() to loop
-> > > all the devices in the group. It holds group->mutex. And then  
-> > vfio_mdev_attach_domain()  
-> > > calls iommu_attach_device() which also tries to get group->mutex. This would be
-> > > an issue. If you are fine with it, I may post another patch for it. :-)  
-> > 
-> > Gack, yes, please send a patch.  
-> 
-> Would do it, may be together with the support of vfio-mdev-pci on devices in
-> non-singleton iommu group.
-> 
-> >   
-> > > > > > used iommu_attach_device() rather than iommu_attach_group() for non-aux
-> > > > > > mdev iommu_device.  Is there a requirement that the mdev parent device
-> > > > > > is in a singleton iommu group?  
-> > > > >
-> > > > > I don't think there should have such limitation. Per my understanding,
-> > > > > vfio-mdev-pci should also be able to bind to devices which shares
-> > > > > iommu group with other devices. vfio-pci works well for such devices.
-> > > > > And since the two drivers share most of the codes, I think vfio-mdev-pci
-> > > > > should naturally support it as well.  
-> > > >
-> > > > Yes, the difference though is that vfio.c knows when devices are in the
-> > > > same group, which mdev vfio.c only knows about the non-iommu backed
-> > > > group, not the group that is actually used for the iommu backing.  So
-> > > > we either need to enlighten vfio.c or further abstract those details in
-> > > > vfio_iommu_type1.c.  
-> > >
-> > > Not sure if it is necessary to introduce more changes to vfio.c or
-> > > vfio_iommu_type1.c. If it's only for the scenario which two devices share an
-> > > iommu_group, I guess it could be supported by using __iommu_attach_device()
-> > > which has no device counting for the group. But maybe I missed something
-> > > here. It would be great if you can elaborate a bit for it. :-)  
-> > 
-> > We need to use the group semantics, there's a reason
-> > __iommu_attach_device() is not exposed, it's an internal helper.  I
-> > think there's no way around that we need to somewhere track the actual
-> > group we're attaching to and have the smarts to re-use it for other
-> > devices in the same group.  
-> 
-> Hmmm, exposing __iommu_attach_device() is not good, let's forget it. :-)
-> 
-> > > > > > If this is a simplification, then
-> > > > > > vfio-mdev-pci should not bind to devices where this is violated since
-> > > > > > there's no way to use the device.  Can we support it though?  
-> > > > >
-> > > > > yeah, I think we need to support it.
-> > > > >  
-> > > > > > If I have two devices in the same group and bind them both to
-> > > > > > vfio-mdev-pci, I end up with three groups, one for each mdev device and
-> > > > > > the original physical device group.  vfio.c works with the mdev groups
-> > > > > > and will try to match both groups to the container.  vfio_iommu_type1.c
-> > > > > > also works with the mdev groups, except for the point where we actually
-> > > > > > try to attach a group to a domain, which is the only window where we use
-> > > > > > the iommu_device rather than the provided group, but we don't record
-> > > > > > that anywhere.  Should struct vfio_group have a pointer to a reference
-> > > > > > counted object that tracks the actual iommu_group attached, such that
-> > > > > > we can determine that the group is already attached to the domain and
-> > > > > > not try to attach again?  
-> > > > >
-> > > > > Agreed, we need to avoid such duplicated attach. Instead of adding
-> > > > > reference counted object in vfio_group. I'm also considering the logic
-> > > > > below:  
-> > >
-> > > Re-walked the code, I find the duplicated attach will happen on the vfio-mdev-pci
-> > > device as vfio_mdev_attach_domain() only attaches the parent devices of
-> > > iommu backed mdevs instead of all the devices within the physical iommu_group.
-> > > While for a vfio-pci device, it will use iommu_attach_group() which attaches all the
-> > > devices within the iommu backed group. The same with detach,
-> > > vfio_mdev_detach_domain() detaches selective devices instead of all devices  
-> > within  
-> > > the iommu backed group.  
-> > 
-> > Yep, that's not good, for the non-aux case we need to follow the usual
-> > group semantics or else we're limited to singleton groups.  
-> 
-> yep.
-> 
-> >   
-> > > > >     /*
-> > > > >       * Do this check in vfio_iommu_type1_attach_group(), after mdev_group
-> > > > >       * is initialized.
-> > > > >       */
-> > > > >     if (vfio_group->mdev_group) {
-> > > > >          /*
-> > > > >            * vfio_group->mdev_group is true means vfio_group->iommu_group
-> > > > >            * is not the actual iommu_group which is going to be attached to
-> > > > >            * domain. To avoid duplicate iommu_group attach, needs to check if
-> > > > >            * the actual iommu_group. vfio_get_parent_iommu_group() is a
-> > > > >            * newly added helper function which returns the actual attach
-> > > > >            * iommu_group going to be attached for this mdev group.
-> > > > >               */
-> > > > >          p_iommu_group = vfio_get_parent_iommu_group(
-> > > > >                                                                          vfio_group->iommu_group);
-> > > > >          list_for_each_entry(d, &iommu->domain_list, next) {
-> > > > >                  if (find_iommu_group(d, p_iommu_group)) {
-> > > > >                          mutex_unlock(&iommu->lock);
-> > > > >                          // skip group attach;
-> > > > >                  }
-> > > > >          }  
-> > > >
-> > > > We don't currently create a struct vfio_group for the parent, only for
-> > > > the mdev iommu group.  The iommu_attach for an iommu backed mdev
-> > > > doesn't leave any traces of where it is actually attached, we just
-> > > > count on retracing our steps for the detach.  That's why I'm thinking
-> > > > we need an object somewhere to track it and it needs to be reference
-> > > > counted so that if both a vfio-mdev-pci device and a vfio-pci device
-> > > > are using it, we leave it in place if either one is removed.  
-> > >
-> > > Hmmm, here we are talking about tracking in iommu_group level though
-> > > no good idea on where the object should  be placed yet. However, we may
-> > > need to tack in device level as I mentioned in above paragraph. If not,
-> > > there may be sequence issue. e.g. if vfio-mdev-pci device is attached
-> > > firstly, then the object will be initialized, and when vfio-pci device is
-> > > attached, we will find the attach should be skipped and just inc the ref count.
-> > > But actually it should not be skipped since the vfio-mdev-pci attach does not
-> > > attach all devices within the iommu backed group.  
-> > 
-> > We can't do that though, the entire group needs to be attached.  
-> 
-> Agree, may be getting another interface which is similar with
-> iommu_attach_device(), but works for devices which is in non-singleton
-> groups. So the attach for iommu backed mdev will also result in a sound
-> attach to all the devices which share iommu group with the parent device.
+Maybe it's worth to call out here that at rq-level we don't have an
+EWMA. However, the enqueued estimated utilization is derived by
+considering the _task_util_est() which factors in the moving average
+of tasks and thus makes the signal more stable even in case of tasks
+switching between big and small activations.
 
-iommu_attach_group()...
-
-> This is just like vfio-pci devices. For the object for tracking purpose may be
-> as below:
+> When the set of runnable tasks changes, the boost is disabled as the
+> impact of blocked utilization on util_avg will make the delta with
+> util_est_enqueued not very informative.
 > 
-> struct vfio_iommu_object {
-> 	struct iommu_group *group;
-> 	struct kref kref;
-> };
+> Signed-off-by: Douglas RAILLARD <douglas.raillard@arm.com>
+> ---
+>  kernel/sched/cpufreq_schedutil.c | 42 ++++++++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
 > 
-> And I think it should be per-domain and per-iommu backed group since
-> aux-domain support allows a iommu backed group to be attached to
-> multiple domains. I'm considering if it is ok to have a list in vfio_domain.
-> Before each domain attach, vfio should do a check in the list if the iommu
-> backed group has been attached already. For vfio-pci devices, use its iommu
-> group to do a search in the list. For vfio-mdev-pci devices, use its parent
-> devices iommu group to do a search. Thus avoid duplicate attach. Thoughts?
+> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> index 7ffc6fe3b670..3eabfd815195 100644
+> --- a/kernel/sched/cpufreq_schedutil.c
+> +++ b/kernel/sched/cpufreq_schedutil.c
+> @@ -60,6 +60,9 @@ struct sugov_cpu {
+>  	unsigned long		bw_dl;
+>  	unsigned long		max;
+>  
+> +	unsigned long		ramp_boost;
+> +	unsigned long		util_est_enqueued;
+> +
+>  	/* The field below is for single-CPU policies only: */
+>  #ifdef CONFIG_NO_HZ_COMMON
+>  	unsigned long		saved_idle_calls;
+> @@ -174,6 +177,41 @@ static void sugov_deferred_update(struct sugov_policy *sg_policy, u64 time,
+>  	}
+>  }
+>  
+> +static unsigned long sugov_cpu_ramp_boost(struct sugov_cpu *sg_cpu)
+> +{
+> +	return READ_ONCE(sg_cpu->ramp_boost);
+> +}
+> +
+> +static unsigned long sugov_cpu_ramp_boost_update(struct sugov_cpu *sg_cpu,
+> +						 unsigned long util)
+> +{
+> +	struct rq *rq = cpu_rq(sg_cpu->cpu);
 
-vfio_iommu_type1 already creates a struct vfio_iommu per container,
-which includes a linked list of struct vfio_domain objects, where each
-vfio_domain has a list of struct vfio_group objects.  So we need to
-include the iommu device iommu group in that latter list somehow.
-Thanks,
+Since you don't really need the rq below, maybe better:
 
-Alex
+        struct sched_avg *sa = &cpu_rq(sg_cpu->cpu)->cfs.avg;
+
+?
+
+> +	unsigned long util_est_enqueued;
+> +	unsigned long util_avg;
+> +	unsigned long boost = 0;
+> +
+> +	util_est_enqueued = READ_ONCE(rq->cfs.avg.util_est.enqueued);
+> +	util_avg = READ_ONCE(rq->cfs.avg.util_avg);
+> +
+> +	/*
+> +	 * Boost when util_avg becomes higher than the previous stable
+> +	 * knowledge of the enqueued tasks' set util, which is CPU's
+> +	 * util_est_enqueued.
+> +	 *
+> +	 * We try to spot changes in the workload itself, so we want to
+> +	 * avoid the noise of tasks being enqueued/dequeued. To do that,
+> +	 * we only trigger boosting when the "amount of work' enqueued
+> +	 * is stable.
+> +	 */
+> +	if (util_est_enqueued == sg_cpu->util_est_enqueued
+> +	    && util_avg > util_est_enqueued)
+> +		 boost = util_avg - util_est_enqueued;
+
+The above should be:
+
+
+ 	if (util_est_enqueued == sg_cpu->util_est_enqueue &&
+            util_avg > util_est_enqueued) {
+ 		 boost = util_avg - util_est_enqueued;
+        }
+
+but perhaps you can also go for a fast bailout with something like:
+
+        if (util_avg <= util_est_enqueued)
+                return 0;
+        if (util_est_enqueued == sg_cpu->util_est_enqueue)
+                boost = util_avg - util_est_enqueued;
+
+
+Moreover: could it make sense to add a threshold on a minimal boost
+value to return non zero?
+
+> +
+> +	sg_cpu->util_est_enqueued = util_est_enqueued;
+> +	WRITE_ONCE(sg_cpu->ramp_boost, boost);
+> +	return boost;
+
+You don't seem to use this returned value: should be void?
+
+> +}
+> +
+>  /**
+>   * get_next_freq - Compute a new frequency for a given cpufreq policy.
+>   * @sg_policy: schedutil policy object to compute the new frequency for.
+> @@ -504,6 +542,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+>  	busy = sugov_cpu_is_busy(sg_cpu);
+>  
+>  	util = sugov_get_util(sg_cpu);
+> +	sugov_cpu_ramp_boost_update(sg_cpu, util);
+>  	max = sg_cpu->max;
+>  	util = sugov_iowait_apply(sg_cpu, time, util, max);
+>  	next_f = get_next_freq(sg_policy, util, max);
+> @@ -544,6 +583,8 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
+>  		unsigned long j_util, j_max;
+>  
+>  		j_util = sugov_get_util(j_sg_cpu);
+> +		if (j_sg_cpu == sg_cpu)
+> +			sugov_cpu_ramp_boost_update(sg_cpu, j_util);
+>  		j_max = j_sg_cpu->max;
+>  		j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
+>  
+> @@ -553,6 +594,7 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
+>  		}
+>  	}
+>  
+> +
+>  	return get_next_freq(sg_policy, util, max);
+>  }
+
+
+Best,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
