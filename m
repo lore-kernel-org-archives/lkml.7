@@ -2,81 +2,185 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC46C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C2BC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B84F02083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E337A2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:55:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fgcg9151"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfF1Ny2 (ORCPT
+        id S1726832AbfF1Nz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 09:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726655AbfF1Ny2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:54:28 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C68B208E3;
-        Fri, 28 Jun 2019 13:54:26 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 09:54:24 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        mhiramat@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH] ftrace: Remove possible deadlock between
- register_kprobe() and ftrace_run_update_code()
-Message-ID: <20190628095424.1be42e21@gandalf.local.home>
-In-Reply-To: <20190628105232.6arwis5u33li6twr@pathway.suse.cz>
-References: <20190627081334.12793-1-pmladek@suse.com>
-        <alpine.LSU.2.21.1906280928410.17146@pobox.suse.cz>
-        <20190628105232.6arwis5u33li6twr@pathway.suse.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 28 Jun 2019 09:55:28 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34594 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfF1Nz1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 09:55:27 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y198so4050440lfa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 06:55:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CD0Dro/10uh0YhFuXjsGP3VvYGuc/+fjYwhH1KYhLws=;
+        b=Fgcg9151r7YwZPtCi7cLarJT3ZJd6rOMpdYh0wm/4ZyFNryTbCLRdLqjlHHn3SD/9V
+         VqdCWxPMfqwK81G7bX6yrCulEAYBg84Jr89U1z4cpf8EpmJqMvZx/lTk9ptK3ZkmAfHM
+         Me2uQRsrUZG0+6tDuESUn43ZUu3o6JgHmYvf9eWYAIbZWHVbSI+Ra2zdKUQMVOALIHGW
+         LElG82voYlEwKXKE8b6FCR8E68RMnU+dc+vYenK8R1MLRaNN85WRgLkcLHZuTn9bknJs
+         GHp47CtFBKgl7yHpjVa+wlYnU0XQJnf5U0qNSBNwUgUSPdkjUF8jKjrAh1zPDEk5SpCS
+         y2lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CD0Dro/10uh0YhFuXjsGP3VvYGuc/+fjYwhH1KYhLws=;
+        b=VqxDBIO04NjXkrCiU9LSb1mOfkw1cW6vrYyOPU+qwJ44dL1xo3JC1jUxv1y5giHdaz
+         XPzqL/GOB09sQ4F8lAe8ryBmrox7co7fa9BWCWaz5kJic8AGjWhFcvvkwnprvt3Olvh7
+         hFylFQJV9QQBfkpYP0YBXjgAc1gqoRKeK0pGaAAn2K/cip0cL1gad+qLdma9UA2L0TZF
+         D9cCoXAeZ7zjYUmo9l8H/rsyGLzS7w9V4PRPzGWMY+n6kuWYtH6uhamZzEqy9teiYE4H
+         HRB/VbF2bTtA/kEA4LbwK9X969fD3LW3RMqdK+AKO+9BqAr7yS7T1nmAy8hZE+dLCDBy
+         Mxow==
+X-Gm-Message-State: APjAAAV5EoJrYW/lvijZWf2BhyFQ3jbV2TaFM/Aq9QQLyrPHGY0dUmbg
+        Nvsk+e5QcM4TQVUkIGVUagqTkw==
+X-Google-Smtp-Source: APXvYqwoCKqttWz2S48+v+xWM2ZATbNuNG8QYn3pnYCURMxYNKhkuDT0oZ+a05iZB9c8QdCKHI5b8g==
+X-Received: by 2002:ac2:4303:: with SMTP id l3mr5150961lfh.107.1561730125453;
+        Fri, 28 Jun 2019 06:55:25 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id s3sm733680lji.38.2019.06.28.06.55.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Jun 2019 06:55:24 -0700 (PDT)
+Subject: Re: [PATCH 12/39] docs: interconnect.rst: add it to the driver-api
+ guide
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-pm@vger.kernel.org
+References: <cover.1561724493.git.mchehab+samsung@kernel.org>
+ <feb5e217face2ff3f2ccd5c3726192bf1250dd0d.1561724493.git.mchehab+samsung@kernel.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <595111a4-c565-75e9-ab7e-b008274ce75c@linaro.org>
+Date:   Fri, 28 Jun 2019 16:55:22 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <feb5e217face2ff3f2ccd5c3726192bf1250dd0d.1561724493.git.mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019 12:52:32 +0200
-Petr Mladek <pmladek@suse.com> wrote:
+On 6/28/19 15:30, Mauro Carvalho Chehab wrote:
+> This is intented for Kernel hackers audience.
 
-> On Fri 2019-06-28 09:32:03, Miroslav Benes wrote:
-> > On Thu, 27 Jun 2019, Petr Mladek wrote:  
-> > > @@ -2611,12 +2610,10 @@ static void ftrace_run_update_code(int command)
-> > >  {
-> > >  	int ret;
-> > >  
-> > > -	mutex_lock(&text_mutex);
-> > > -
-> > >  	ret = ftrace_arch_code_modify_prepare();
-> > >  	FTRACE_WARN_ON(ret);
-> > >  	if (ret)
-> > > -		goto out_unlock;
-> > > +		return ret;  
-> > 
-> > Should be just "return;", because the function is "static void".  
-> 
-> Grr, I usually check compiler warnings but I evidently skipped it
-> in this case :-(
-> 
-> Steven, should I send a fixed/folloup patch or will you just
-> fix it when pushing?
-> 
+s/intented/intended/
 
-I'll fix it up.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
--- Steve
+Reviewed-by: Georgi Djakov <georgi.djakov@linaro.org>
+
+Thanks!
+Georgi
+
+> ---
+>  Documentation/driver-api/index.rst                          | 1 +
+>  Documentation/{interconnect => driver-api}/interconnect.rst | 2 --
+>  MAINTAINERS                                                 | 2 +-
+>  3 files changed, 2 insertions(+), 3 deletions(-)
+>  rename Documentation/{interconnect => driver-api}/interconnect.rst (99%)
+> 
+> diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
+> index 2a0b57f12d1a..97bab578ea72 100644
+> --- a/Documentation/driver-api/index.rst
+> +++ b/Documentation/driver-api/index.rst
+> @@ -35,6 +35,7 @@ available subsections can be seen below.
+>     spi
+>     i2c
+>     i3c/index
+> +   interconnect
+>     hsi
+>     edac
+>     scsi
+> diff --git a/Documentation/interconnect/interconnect.rst b/Documentation/driver-api/interconnect.rst
+> similarity index 99%
+> rename from Documentation/interconnect/interconnect.rst
+> rename to Documentation/driver-api/interconnect.rst
+> index 56e331dab70e..c3e004893796 100644
+> --- a/Documentation/interconnect/interconnect.rst
+> +++ b/Documentation/driver-api/interconnect.rst
+> @@ -1,7 +1,5 @@
+>  .. SPDX-License-Identifier: GPL-2.0
+>  
+> -:orphan:
+> -
+>  =====================================
+>  GENERIC SYSTEM INTERCONNECT SUBSYSTEM
+>  =====================================
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 55996c9f2e0a..524e2c4300dc 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8273,7 +8273,7 @@ INTERCONNECT API
+>  M:	Georgi Djakov <georgi.djakov@linaro.org>
+>  L:	linux-pm@vger.kernel.org
+>  S:	Maintained
+> -F:	Documentation/interconnect/
+> +F:	Documentation/driver-api/interconnect.rst
+>  F:	Documentation/devicetree/bindings/interconnect/
+>  F:	drivers/interconnect/
+>  F:	include/dt-bindings/interconnect/
+> 
