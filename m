@@ -2,170 +2,139 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D929C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB027C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70222205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B48F205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:48:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="MS3nJFuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfF1Jni (ORCPT
+        id S1726543AbfF1Jsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:43:38 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52878 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbfF1Jni (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:43:38 -0400
-Received: from laptop (unknown [IPv6:2a01:e34:ee7d:73d0:5796:7015:7f6:aeeb])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: aragua)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 023D92603FD;
-        Fri, 28 Jun 2019 10:43:34 +0100 (BST)
-Message-ID: <08bd801ef543e99cf7e5a81633ad8bf7f5c5f202.camel@collabora.com>
-Subject: Re: [PATCH 2/2] iio: common: cros_ec_sensors: set default
- frequencies
-From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 28 Jun 2019 11:43:32 +0200
-In-Reply-To: <6ca7ee49-51f9-a65f-5f71-0eac04ee9434@collabora.com>
-References: <cover.1561642224.git.fabien.lahoudere@collabora.com>
-         <7d3972d1200065fe6e98a310e66f53a7ed12e281.1561642224.git.fabien.lahoudere@collabora.com>
-         <6ca7ee49-51f9-a65f-5f71-0eac04ee9434@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.2 (3.30.2-2.fc29) 
-Mime-Version: 1.0
+        Fri, 28 Jun 2019 05:48:43 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:6601 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbfF1Jsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 05:48:42 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45ZsQt4qzzz9v0wQ;
+        Fri, 28 Jun 2019 11:48:38 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=MS3nJFuQ; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id pZl8gME9hagL; Fri, 28 Jun 2019 11:48:38 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45ZsQt3hYvz9v0wP;
+        Fri, 28 Jun 2019 11:48:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1561715318; bh=WnV7UDb4Snu6Dal6gfhwWBwcbdeIzVY+ODIk60JqE8U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MS3nJFuQi4Hf5KytCdDPMJmuQIqksXtUv+pid9Fl/u0KJYekztCou460LJG5gykDi
+         W0Vg4NLAUntrhH3cTTCNfxD8RqTqB2eq1t9hBt3Cvfhtk44yuE1Q/jnMoowZgyadGh
+         e0lyr+rsJsM77xp5aZK7bDQEcJSoyrnZzOb0oqME=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9CEA88B967;
+        Fri, 28 Jun 2019 11:48:39 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id pmeNiNUhoS-G; Fri, 28 Jun 2019 11:48:39 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 19CB48B966;
+        Fri, 28 Jun 2019 11:48:38 +0200 (CEST)
+Subject: Re: [PATCH v2 27/27] sound: ppc: remove unneeded memset after
+ dma_alloc_coherent
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, Allison Randal <allison@lohutok.net>
+References: <20190628025055.16242-1-huangfq.daxian@gmail.com>
+ <83108dee-72f7-e56f-95f6-26162c9a0ccc@c-s.fr>
+ <CABXRUiT6jSP2xL9JyqngS9KBx_=fZ13x0UGGFPnQPrfh-_N5xQ@mail.gmail.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <ae51454e-68b1-bc82-8d8f-dbc273166dc3@c-s.fr>
+Date:   Fri, 28 Jun 2019 11:48:37 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <CABXRUiT6jSP2xL9JyqngS9KBx_=fZ13x0UGGFPnQPrfh-_N5xQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric
 
-Le jeudi 27 juin 2019 à 17:48 +0200, Enric Balletbo i Serra a écrit :
-> Hi Fabien,
+
+Le 28/06/2019 à 11:11, Fuqian Huang a écrit :
+> The merge commit log tells (dma-mapping: zero memory returned from
+> dma_alloc_* and deprecating the dma_zalloc_coherent).
+> I used this commit just want to say that dma_alloc_coherent  has
+> zeroed the allocated memory.
+> Sorry for this mistake.
 > 
-> On 27/6/19 16:04, Fabien Lahoudere wrote:
-> > Version 3 of the EC protocol provides min and max frequencies for
-> > EC sensors.
-> > Default frequencies are provided for earlier protocol.
-> > 
+> Maybe this commit 518a2f1925c3("dma-mapping: zero memory returned from
+> dma_alloc_*") is correct.
+
+Yes that looks appropriate. And it confirms it was already done on 
+powerpc, as that patch doesn't include any change in powerpc arch.
+
+Christophe
+
 > 
-> This patch should really go together with a respin of your previous
-> patchset to
-> 'Expose cros_ec_sensors frequency range via iio sysfs' [1]
+> Christophe Leroy <christophe.leroy@c-s.fr> 於 2019年6月28日週五 下午4:59寫道：
 > 
-> [1] https://www.spinics.net/lists/linux-iio/msg44963.html
-> 
-
-I agree, you're right. I will send only the first patch with Gwendal
-comments for v2.
-
-Thanks
-
-> > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> > Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
-> > ---
-> >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 44
-> > +++++++++++++++++++
-> >  .../linux/iio/common/cros_ec_sensors_core.h   |  3 ++
-> >  2 files changed, 47 insertions(+)
-> > 
-> > diff --git
-> > a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > index 2e0f97448e64..72f56d54cccd 100644
-> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > @@ -50,6 +50,37 @@ static int
-> > cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
-> >  	return ret;
-> >  }
-> >  
-> > +static void get_default_min_max_freq(enum motionsensor_type type,
-> > +				     u32 *min_freq,
-> > +				     u32 *max_freq)
-> > +{
-> > +	switch (type) {
-> > +	case MOTIONSENSE_TYPE_ACCEL:
-> > +	case MOTIONSENSE_TYPE_GYRO:
-> > +		*min_freq = 12500;
-> > +		*max_freq = 100000;
-> > +		break;
-> > +	case MOTIONSENSE_TYPE_MAG:
-> > +		*min_freq = 5000;
-> > +		*max_freq = 25000;
-> > +		break;
-> > +	case MOTIONSENSE_TYPE_PROX:
-> > +	case MOTIONSENSE_TYPE_LIGHT:
-> > +		*min_freq = 100;
-> > +		*max_freq = 50000;
-> > +		break;
-> > +	case MOTIONSENSE_TYPE_BARO:
-> > +		*min_freq = 250;
-> > +		*max_freq = 20000;
-> > +		break;
-> > +	case MOTIONSENSE_TYPE_ACTIVITY:
-> > +	default:
-> > +		*min_freq = 0;
-> > +		*max_freq = 0;
-> > +		break;
-> > +	}
-> > +}
-> > +
-> >  int cros_ec_sensors_core_init(struct platform_device *pdev,
-> >  			      struct iio_dev *indio_dev,
-> >  			      bool physical_device)
-> > @@ -100,6 +131,19 @@ int cros_ec_sensors_core_init(struct
-> > platform_device *pdev,
-> >  		}
-> >  		state->type = state->resp->info.type;
-> >  		state->loc = state->resp->info.location;
-> > +
-> > +		/* Value to stop the device */
-> > +		state->frequencies[0] = 0;
-> > +		if (state->msg->version < 3) {
-> > +			get_default_min_max_freq(state->resp-
-> > >info.type,
-> > +						 &state-
-> > >frequencies[1],
-> > +						 &state-
-> > >frequencies[2]);
-> > +		} else {
-> > +			state->frequencies[1] =
-> > +			    state->resp->info_3.min_frequency;
-> > +			state->frequencies[2] =
-> > +			    state->resp->info_3.max_frequency;
-> > +		}
-> >  	}
-> >  
-> >  	return 0;
-> > diff --git a/include/linux/iio/common/cros_ec_sensors_core.h
-> > b/include/linux/iio/common/cros_ec_sensors_core.h
-> > index 0c636b9fe8d7..94c87da22c04 100644
-> > --- a/include/linux/iio/common/cros_ec_sensors_core.h
-> > +++ b/include/linux/iio/common/cros_ec_sensors_core.h
-> > @@ -70,6 +70,9 @@ struct cros_ec_sensors_core_state {
-> >  				    unsigned long scan_mask, s16
-> > *data);
-> >  
-> >  	int curr_sampl_freq;
-> > +
-> > +	/* Disable, Min and Max Sampling Frequency in mHz */
-> > +	int frequencies[3];
-> >  };
-> >  
-> >  /**
-> > 
-
+>>
+>>
+>>
+>> Le 28/06/2019 à 04:50, Fuqian Huang a écrit :
+>>> In commit af7ddd8a627c
+>>> ("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
+>>> dma_alloc_coherent has already zeroed the memory.
+>>> So memset is not needed.
+>>
+>> You are refering to a merge commit, is that correct ?
+>>
+>> I can't see anything related in that commit, can you please pinpoint it ?
+>>
+>> As far as I can see, on powerpc the memory has always been zeroized
+>> (since 2005 at least).
+>>
+>> Christophe
+>>
+>>>
+>>> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+>>> ---
+>>>    sound/ppc/pmac.c | 1 -
+>>>    1 file changed, 1 deletion(-)
+>>>
+>>> diff --git a/sound/ppc/pmac.c b/sound/ppc/pmac.c
+>>> index 1b11e53f6a62..1ab12f4f8631 100644
+>>> --- a/sound/ppc/pmac.c
+>>> +++ b/sound/ppc/pmac.c
+>>> @@ -56,7 +56,6 @@ static int snd_pmac_dbdma_alloc(struct snd_pmac *chip, struct pmac_dbdma *rec, i
+>>>        if (rec->space == NULL)
+>>>                return -ENOMEM;
+>>>        rec->size = size;
+>>> -     memset(rec->space, 0, rsize);
+>>>        rec->cmds = (void __iomem *)DBDMA_ALIGN(rec->space);
+>>>        rec->addr = rec->dma_base + (unsigned long)((char *)rec->cmds - (char *)rec->space);
+>>>
+>>>
