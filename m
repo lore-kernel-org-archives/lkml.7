@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F9BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D75C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D6F2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EABFB2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561682713;
-	bh=mkQ8RibRw6gwWJhsHFhTnCmSfeTNicYA7fdSh0sooUk=;
+	s=default; t=1561682716;
+	bh=gkT6EDiC1IMj5K0ix6t8c4nRHIL5axGzqcojCIZCoPs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Bkr7IgLgnvhRN8uigcj+ezz6jAsjvL3PhpHft+moyHEqZKJqu1BMdvS99C+BRZ9Hj
-	 +1T9UX7K+Qq73b45hFI98LWiHVyepcxgipt6j+W8yF3xpFe+gl7KnAwNxUehXSJsn7
-	 FaaJW5pdgrzdpyB1KaMdGS0TH77xSZqKwqaI1qkU=
+	b=Je3DGE2xekOx7UHULHFLm6jbclzWtItlVq5YwfiwYOctRXHaPRYz7mFDgOyE9V/zh
+	 tEQQ77C6MTxzs+uiKCwLEMgxztF8BYVjIs+O+RZ/s/7erjs4mqWuJhQsD9AF94p7+V
+	 nPsqpBK1Tlao9lfLCQlQ0i/4xCwzwDxRCqooAYfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfF1ApH (ORCPT
+        id S1726793AbfF1ApP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 20:45:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33356 "EHLO mail.kernel.org"
+        Thu, 27 Jun 2019 20:45:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfF1ApF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 20:45:05 -0400
-Subject: Re: [GIT PULL] csky fixup gcc unwind for v5.2
+        id S1726739AbfF1ApH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 20:45:07 -0400
+Subject: Re: [GIT PULL] HID fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561682704;
-        bh=mkQ8RibRw6gwWJhsHFhTnCmSfeTNicYA7fdSh0sooUk=;
+        s=default; t=1561682706;
+        bh=gkT6EDiC1IMj5K0ix6t8c4nRHIL5axGzqcojCIZCoPs=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=sPFr68fkzqA2AQpQx4iZ50Gki2u/52yaOy05BXg/Cvv3tJuJo9kOfCMdIf2/gayx7
-         DnoKnAz2CRtOvtuQvoJMMEnnjYjFJOyG+Kp4sIFaQbYSCTG8xzt6KfIDbZkqwma2tY
-         KVslwiY6pLi5GRC0DEO+KmNYwOCyvZhJTPDiINo4=
+        b=j0Xjonmdz5SMhiwzl+If2pTY1Ip6bWk5U7y4/uhgcMrIfuu+jdExKI2plNIH48GAL
+         4x2b3aVkx6vR4HBKwxnjhJnWRSef5+LQiU1W2Aef5KsmtnibEeeOe2neGeZGQhWyHp
+         7lGmY23iwCkO8oeHyIkL5Wb37Wf6fO+PVns7opgc=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1561529663-29852-1-git-send-email-guoren@kernel.org>
-References: <1561529663-29852-1-git-send-email-guoren@kernel.org>
+In-Reply-To: <nycvar.YFH.7.76.1906271134320.27227@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1906271134320.27227@cbobk.fhfr.pm>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1561529663-29852-1-git-send-email-guoren@kernel.org>
-X-PR-Tracked-Remote: https://github.com/c-sky/csky-linux.git
- tags/csky-for-linus-5.2-fixup-gcc-unwind
-X-PR-Tracked-Commit-Id: 19e5e2ae9c883f5651eaaeab2f258e2c4b78fda3
+X-PR-Tracked-Message-Id: <nycvar.YFH.7.76.1906271134320.27227@cbobk.fhfr.pm>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+X-PR-Tracked-Commit-Id: b12bbdc5dd883f6575f57e529af26cd2c521b320
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 139ca258055057e64d59ec92b6fd1ad3ca3a9fbc
-Message-Id: <156168270492.1895.4552295813118856621.pr-tracker-bot@kernel.org>
-Date:   Fri, 28 Jun 2019 00:45:04 +0000
-To:     guoren@kernel.org
-Cc:     torvalds@linux-foundation.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-csky@vger.kernel.org
+X-PR-Merge-Commit-Id: 763cf1f2d9bfc8349c5791689074c8c17edf660d
+Message-Id: <156168270680.1895.6288156914906043251.pr-tracker-bot@kernel.org>
+Date:   Fri, 28 Jun 2019 00:45:06 +0000
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 26 Jun 2019 14:14:23 +0800:
+The pull request you sent on Thu, 27 Jun 2019 11:37:47 +0200 (CEST):
 
-> https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.2-fixup-gcc-unwind
+> git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/139ca258055057e64d59ec92b6fd1ad3ca3a9fbc
+https://git.kernel.org/torvalds/c/763cf1f2d9bfc8349c5791689074c8c17edf660d
 
 Thank you!
 
