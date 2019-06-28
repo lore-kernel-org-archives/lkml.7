@@ -2,129 +2,131 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B1CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A52C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCFC205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295B9204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:08:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="kgBPmYp+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="urIYMQLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbfF1SHa (ORCPT
+        id S1726872AbfF1SIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:07:30 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38464 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfF1SHa (ORCPT
+        Fri, 28 Jun 2019 14:08:24 -0400
+Received: from mail-pl1-f170.google.com ([209.85.214.170]:35648 "EHLO
+        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfF1SIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:07:30 -0400
-Received: by mail-pl1-f195.google.com with SMTP id 9so2888322ple.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:07:29 -0700 (PDT)
+        Fri, 28 Jun 2019 14:08:24 -0400
+Received: by mail-pl1-f170.google.com with SMTP id w24so3663875plp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:08:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=8ZhJI+lYgRUO8rdxMS+hjE1BURI/6fZ6/mpcmouJBCY=;
-        b=kgBPmYp+EjP5VQsfkBrRFPURU53KhnyLBrDQXUV4iUMlO25Edc8cP0efyJyCrx4dnW
-         AXcOe+bEVrHlbIXBP2Ul04vxmtLZGSkxVCnUubXtLSSmEN2rh2+nEGNMWI+Fd7V9zqRK
-         oi8ExmuZ9LWNLrJwpltjC1Z49nXffdkvi+KW8=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=G6tQj9JGt5eWV6Usl/0DEM4bXR28Xsa6XudzWBZRees=;
+        b=urIYMQLw7SgSurMotfZfSVmJc67vOh9HFHgSKGv5VupzUseVTLEXmT4xdsJnI7M+T9
+         OYncOZk2MSaN8ehZkyEwnW0GdRndb+7sm1ngQeAfY47Axmo6TSzaIf/nq+y0zynVLrLy
+         d/hK3wpwurXP4dybCFCwbMvYbG6iyoDoOem9/C+obwD/e34nssT8ZZ3OA7s+Zs3MHQFZ
+         zNKOsouJEhQWT5wUUBmyfWd39S7QVEZR1e3BRaQbNsI8/cIRgBUyKA9EmGXPaUwwGfB3
+         sk9Rl/U+Ol/TSHTDqiU7H9KoeYDOoMZc1vsZ+4sdoItr/3X0owjcXhKSfZgcTnEf66qY
+         hhFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=8ZhJI+lYgRUO8rdxMS+hjE1BURI/6fZ6/mpcmouJBCY=;
-        b=sBbo/sLy8CMEx126Oeo7hbh4iql7YtHts0eQE4Fon9EuUT8t8NSB5A2feODbYx7118
-         PWD0bpGUa6InHcXbr8twgBDA93SQhVmD0e7tQqkj82ac08CamQlNAA5geTmKTKQ1e7fx
-         +jJDnpW1lkWSmuIttQqzFKipbD7ow+JWJeRBPhYsw008YBPgFMbOkxKWaGClMykcce/8
-         k0VslU5q4WU7rJagXUlEpGUiu1liNgFukgvY4o0GhGreGlGw3eef8d9TIRclsTRh/Osu
-         V4MPVsvJLEdpmtnKcQFajkzKLx67+YKYiKUJmSKDq76jQ8eSw60wynaYR7Mv47cNomdQ
-         FBpw==
-X-Gm-Message-State: APjAAAWzj7cQuR26kCpbIV48Iw3rbKzZFSW8J3YnQfCe6HOznQnAHPmS
-        pVB9uadwVXqzd1p+17yqfV9WkA==
-X-Google-Smtp-Source: APXvYqz3rjeW8Whpvm3o8bP3fclk23APniYumJIl7rHCuaKTJRH5StXw3adl/naL/oOKyNjwoGnzHA==
-X-Received: by 2002:a17:902:d915:: with SMTP id c21mr13325253plz.335.1561745249278;
-        Fri, 28 Jun 2019 11:07:29 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id n2sm2412561pgp.27.2019.06.28.11.07.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 11:07:28 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 14:07:27 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Message-ID: <20190628180727.GE240964@google.com>
-References: <20190627153031.GA249127@google.com>
- <20190627155506.GU26519@linux.ibm.com>
- <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <20190628164008.GB240964@google.com>
- <20190628164559.GC240964@google.com>
- <20190628173011.GX26519@linux.ibm.com>
- <20190628174545.pwgwi3wxl2eapkvm@linutronix.de>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=G6tQj9JGt5eWV6Usl/0DEM4bXR28Xsa6XudzWBZRees=;
+        b=AgF6dPcaIz3bM+SMJMB0nwQF/hwM9ARId9N04FgDu1qLvhoZcJXJVGCd3VP+wmVRdK
+         QrukNtbOVaW/TgaBCBJU1ZS+1zkeyZy8F87QTa1TLacvcXne+LqmcTyOHOl9UwDSK8Lq
+         XkOTGFNtjkIfItitfKktKIL/G5y4kBTlFTU0+vc5QWGtJTmUUmd5yB6YaHhJfCaDO/cY
+         9ng87F19KfFrS5AGM+w1ztwM/oMrhY/DygY5iO2W9h+6VfX6/U8eNgEAGLDicGcUjTEZ
+         bKjcV+M4la9X6n8NDKZAXLnPubhGCrKGvkQMFVC4bieDVQH3VJDjlhM2O7GWMbU2IX/1
+         yHEQ==
+X-Gm-Message-State: APjAAAXWc219pHfNHAbnBcBzgK1Z5qXeyUsdgOEWoTzI8WVlFkYTqvT4
+        rXn3tN7xmaq5mtUdMKQALCWnVg==
+X-Google-Smtp-Source: APXvYqwgMrO9KnbOghS1eRTPHzN/QExULWcHo+Axo7AlQFrSWdgK3st/zL/VsoC8WPYxv1TleZVDSg==
+X-Received: by 2002:a17:902:a414:: with SMTP id p20mr12470690plq.187.1561745303607;
+        Fri, 28 Jun 2019 11:08:23 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id 196sm4065985pfy.167.2019.06.28.11.08.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Jun 2019 11:08:23 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
+        linux-gpio@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [RFC/RFT v2 12/14] arm64: dts: meson-g12a: enable DVFS on G12A boards
+In-Reply-To: <20190626090632.7540-13-narmstrong@baylibre.com>
+References: <20190626090632.7540-1-narmstrong@baylibre.com> <20190626090632.7540-13-narmstrong@baylibre.com>
+Date:   Fri, 28 Jun 2019 11:08:22 -0700
+Message-ID: <7himspr3ah.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190628174545.pwgwi3wxl2eapkvm@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 07:45:45PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-06-28 10:30:11 [-0700], Paul E. McKenney wrote:
-> > > I believe the .blocked field remains set even though we are not any more in a
-> > > reader section because of deferred processing of the blocked lists that you
-> > > mentioned yesterday.
-> > 
-> > That can indeed happen.  However, in current -rcu, that would mean
-> > that .deferred_qs is also set, which (if in_irq()) would prevent
-> > the raise_softirq_irqsoff() from being invoked.  Which was why I was
-> > asking the questions about whether in_irq() returns true within threaded
-> > interrupts yesterday.  If it does, I need to find if there is some way
-> > of determining whether rcu_read_unlock_special() is being called from
-> > a threaded interrupt in order to suppress the call to raise_softirq()
-> > in that case.
-> 
-> Please not that:
-> | void irq_exit(void)
-> | {
-> |…
-> in_irq() returns true
-> |         preempt_count_sub(HARDIRQ_OFFSET);
-> in_irq() returns false
-> |         if (!in_interrupt() && local_softirq_pending())
-> |                 invoke_softirq();
-> 
-> -> invoke_softirq() does
-> |        if (!force_irqthreads) {
-> |                 __do_softirq();
-> |         } else {
-> |                 wakeup_softirqd();
-> |         }
-> 
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-In my traces which I shared previous email, the wakeup_softirqd() gets
-called.
+> Enable DVFS for the U200, SEI520 and X96-Max Amlogic G12A based board
+> by setting the clock, OPP and supply for each CPU cores.
+>
+> The CPU cluster power supply can achieve 0.73V to 1.01V using a PWM
+> output clocked at 800KHz with an inverse duty-cycle.
+>
+> DVFS has been tested by running the arm64 cpuburn at [1] and cycling
+> between all the possible cpufreq translations and checking the final
+> frequency using the clock-measurer, script at [2].
+>
+> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+> [2] https://gist.github.com/superna9999/d4de964dbc0f84b7d527e1df2ddea25f
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-I thought force_irqthreads value is decided at boot time, so I got lost a bit
-with your comment.
+[...]
 
+> @@ -297,6 +316,34 @@
+>  	status = "okay";
+>  };
+>  
+> +&cpu0 {
+> +	cpu-supply = <&vddcpu>;
+> +	operating-points-v2 = <&cpu_opp_table>;
+> +	clocks = <&clkc CLKID_CPU_CLK>;
+> +	clock-latency = <50000>;
+> +};
+> +
+> +&cpu1 {
+> +	cpu-supply = <&vddcpu>;
+> +	operating-points-v2 = <&cpu_opp_table>;
+> +	clocks = <&clkc CLKID_CPU_CLK>;
+> +	clock-latency = <50000>;
+> +};
+> +
+> +&cpu2 {
+> +	cpu-supply = <&vddcpu>;
+> +	operating-points-v2 = <&cpu_opp_table>;
+> +	clocks = <&clkc CLKID_CPU_CLK>;
+> +	clock-latency = <50000>;
+> +};
+> +
+> +&cpu3 {
+> +	cpu-supply = <&vddcpu>;
+> +	operating-points-v2 = <&cpu_opp_table>;
+> +	clocks = <&clkc CLKID_CPU_CLK>;
+> +	clock-latency = <50000>;
+> +};
+
+Just curious where this max clock transtion (clock-latency) value came
+from.  Were you able to measure that somehow?
+
+Kevin
