@@ -2,140 +2,258 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE592C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E725C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E3320645
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E7F214DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:03:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mwPlN3yB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jNV5Y6IC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfF1NDg (ORCPT
+        id S1726927AbfF1NDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 09:03:36 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:60280 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfF1NDf (ORCPT
+        Fri, 28 Jun 2019 09:03:44 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:42904 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfF1NDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:03:35 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190628130334euoutp027f09eb5ca90d0dbbf50a446aae1a9070~sXnH7N0Cw1181711817euoutp02r
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 13:03:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190628130334euoutp027f09eb5ca90d0dbbf50a446aae1a9070~sXnH7N0Cw1181711817euoutp02r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561727014;
-        bh=VbBmh0lqoFIOdVgmHOPMjXBb/1mrJ2U1b6I2moJwAto=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=mwPlN3yBBU2PLxXQujGpz6gas1jzJ7a4jayeGBkTn5sIzg5RbJioLEWjPJhrBIkb0
-         skaI2rgerQgpkgNFLQ+qI76Lm85PpNuboRHzwhp2DtulRUxtaIEvV1jzWp9sL91h3h
-         6pqkp8naXK4UFMZSf1/tEbj5wUOmmd+gfYG+hWm0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190628130333eucas1p10bfb6c7946045e775963fb75e2007b62~sXnHPeKHD0052100521eucas1p1V;
-        Fri, 28 Jun 2019 13:03:33 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id EB.46.04298.520161D5; Fri, 28
-        Jun 2019 14:03:33 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190628130332eucas1p2b302e7dfdae6ee7a73c650f7e10d3f6e~sXnGT8QcT0994209942eucas1p2X;
-        Fri, 28 Jun 2019 13:03:32 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190628130332eusmtrp1b48d12dbc245b313516d2fc7055c34b0~sXnGF071t2018320183eusmtrp1M;
-        Fri, 28 Jun 2019 13:03:32 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-6c-5d16102504fc
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id E6.0C.04146.420161D5; Fri, 28
-        Jun 2019 14:03:32 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190628130331eusmtip20a23949761c8468302efce2c8937874b~sXnFlrF7y0827408274eusmtip2X;
-        Fri, 28 Jun 2019 13:03:31 +0000 (GMT)
-Subject: Re: [PATCH 07/12] fbdev: da8xx: add support for a regulator
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        David Lechner <david@lechnology.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <8c9f36c1-1c55-a2af-8b2f-4c6811e029f3@samsung.com>
-Date:   Fri, 28 Jun 2019 15:03:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Fri, 28 Jun 2019 09:03:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hNhbRK+lgaslS8SRTtf5siA3u2w3EzBwsK7J6J2XYis=; b=jNV5Y6ICUWEomVh/T/H1PUORD
+        Xmc/50YdpSCSitGdcfnblqm8K9MqezT5JWiFd0pJHJym9GRt9EpxtOTORcsSP8e1cSNaZh4e+HqW9
+        woWHRiXoepn/GKPrXO0PlpKT0vpgW62XocEMSxeXaqh6U03q6TZ5pduhuMJJkmZ0tWhAqVpfxQOh8
+        HTRkUnmIE1qRifuJZWHh+2ksixAx+iGLc72/JVL6NQXv1N+D7lAaQGY3n7AAtOO+eAO/S1XEgVDeP
+        OIxYJ8lrLsvH8SdLFVvFbDj2XGQ+wwM4FuH1TlGhLWafYJze9JqeK2k+vRUXP1ElPQM0QqNlLJKSR
+        9p8Vffm6A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgqWz-0000eb-W6; Fri, 28 Jun 2019 13:03:10 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AB49D2021621E; Fri, 28 Jun 2019 15:03:08 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 15:03:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     mingo@redhat.com, rostedt@goodmis.org, tj@kernel.org,
+        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        claudio@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
+        bristot@redhat.com, mathieu.poirier@linaro.org, lizefan@huawei.com,
+        cgroups@vger.kernel.org, Prateek Sood <prsood@codeaurora.org>
+Subject: Re: [PATCH v8 6/8] cgroup/cpuset: Change cpuset_rwsem and hotplug
+ lock order
+Message-ID: <20190628130308.GU3419@hirez.programming.kicks-ass.net>
+References: <20190628080618.522-1-juri.lelli@redhat.com>
+ <20190628080618.522-7-juri.lelli@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190625163434.13620-8-brgl@bgdev.pl>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEKsWRmVeSWpSXmKPExsWy7djPc7qqAmKxBrP7JC2+zD3FYrHrwTY2
-        izNv7rJbLGoQs7jy9T2bxYovM9ktnm5+zGRx/+tRRospf5YzWWx6fI3V4kTfB1aLy7vmsFns
-        793A5MDr8f5GK7vH4mu3WT12zrrL7rFpVSebx6f+k6wed67tYfO4332cyWPzknqP4ze2M3l8
-        3iQXwBXFZZOSmpNZllqkb5fAldH85jtrwSGWiqsrn7A3MD5i7mLk5JAQMJG43fGRqYuRi0NI
-        YAWjxPNLq6CcL4wSL6c2M0I4nxklDv/6xwbT8unUI3aIxHJGiZsX+qGq3jJKvDu1mAWkSljA
-        RWLm5o1gS0QE1CUWrLsHNpdZ4CizxMvLq8FGsQlYSUxsX8UIYvMK2EkcuwjRzCKgKrH5+Xqw
-        GlGBCIn7xzawQtQISpyc+QSshlPAWOLThlYwm1lAXOLWk/lMELa8xPa3c5hBlkkItHJITLjc
-        ww5xt4vE7I5jUG8LS7w6vgUqLiNxenIPC0TDOkaJvx0voLq3M0osnwzztbXE4eMXgc7gAFqh
-        KbF+lz5E2FFiZdMvFpCwhACfxI23ghBH8ElM2jadGSLMK9HRJgRRrSaxYdkGNpi1XTtXMk9g
-        VJqF5LVZSN6ZheSdWQh7FzCyrGIUTy0tzk1PLTbMSy3XK07MLS7NS9dLzs/dxAhMeaf/Hf+0
-        g/HrpaRDjAIcjEo8vD94xGKFWBPLiitzDzFKcDArifBKnhOJFeJNSaysSi3Kjy8qzUktPsQo
-        zcGiJM5bzfAgWkggPbEkNTs1tSC1CCbLxMEp1cDY7nZxt8bua3/rYxT9f/9Zq8YV/6st3H3W
-        +1wh499XbKWiFGo/LL9xP3i/xXknxRMzb/vmTf/3J1m/pi3F7fv+eMEVImJ9LnNuvyyRVee7
-        c6jh6ifTs7Fzb1ZOWvBQuvOB55mNvKt/LXPYzcazayP/y9ebDCrNM/bcXp/xWd5Rwj3tSFm/
-        elKgEktxRqKhFnNRcSIAtY1X63UDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEIsWRmVeSWpSXmKPExsVy+t/xe7oqAmKxBss7pC2+zD3FYrHrwTY2
-        izNv7rJbLGoQs7jy9T2bxYovM9ktnm5+zGRx/+tRRospf5YzWWx6fI3V4kTfB1aLy7vmsFns
-        793A5MDr8f5GK7vH4mu3WT12zrrL7rFpVSebx6f+k6wed67tYfO4332cyWPzknqP4ze2M3l8
-        3iQXwBWlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5eg
-        l9H85jtrwSGWiqsrn7A3MD5i7mLk5JAQMJH4dOoRO4gtJLCUUWLbevEuRg6guIzE8fVlECXC
-        En+udbF1MXIBlbxmlGhb8AKsV1jARWLm5o1gtoiAusSCdfeYQIqYBY4zSyx8MQWqYz2jxP3N
-        3xhBqtgErCQmtq8Cs3kF7CSOXVzMAmKzCKhKbH6+ng3EFhWIkDjzfgULRI2gxMmZT8BsTgFj
-        iU8bWsFsZqBtf+ZdYoawxSVuPZnPBGHLS2x/O4d5AqPQLCTts5C0zELSMgtJywJGllWMIqml
-        xbnpucWGesWJucWleel6yfm5mxiB8b3t2M/NOxgvbQw+xCjAwajEw7uASyxWiDWxrLgy9xCj
-        BAezkgiv5DmRWCHelMTKqtSi/Pii0pzU4kOMpkDPTWSWEk3OB6aevJJ4Q1NDcwtLQ3Njc2Mz
-        CyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjOJe8rPaa3WOeqR/s184terPkoWvP2/vt9ye
-        99fZSkW8zeuSyG/Vw/K1iksEj/+8JBRpZa09Kyzufuyz16Er+UJWnhRgi1a5nHjMN+vxdpFv
-        Czbu49W0kV2tuOTe8ZQFCy6+7ViX+tVo2al3fQv2H/yhnjcv/6GrpPQH645TIhJPsx8e+3V0
-        f6cSS3FGoqEWc1FxIgD3ihLoBQMAAA==
-X-CMS-MailID: 20190628130332eucas1p2b302e7dfdae6ee7a73c650f7e10d3f6e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190625163511epcas1p20ccb516dce9a56e222779ecfd0a1084f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190625163511epcas1p20ccb516dce9a56e222779ecfd0a1084f
-References: <20190625163434.13620-1-brgl@bgdev.pl>
-        <CGME20190625163511epcas1p20ccb516dce9a56e222779ecfd0a1084f@epcas1p2.samsung.com>
-        <20190625163434.13620-8-brgl@bgdev.pl>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628080618.522-7-juri.lelli@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 6/25/19 6:34 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Jun 28, 2019 at 10:06:16AM +0200, Juri Lelli wrote:
+> cpuset_rwsem is going to be acquired from sched_setscheduler() with a
+> following patch. There are however paths (e.g., spawn_ksoftirqd) in
+> which sched_scheduler() is eventually called while holding hotplug lock;
+> this creates a dependecy between hotplug lock (to be always acquired
+> first) and cpuset_rwsem (to be always acquired after hotplug lock).
 > 
-> We want to remove the hacky platform data callback for power control.
-> Add a regulator to the driver data and enable/disable it next to
-> the current panel_power_ctrl() calls. We will use it in subsequent
-> patch on da850-evm.
+> Fix paths which currently take the two locks in the wrong order (after
+> a following patch is applied).
+> Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+
+This all reminds me of this:
+
+  https://lkml.kernel.org/r/1510755615-25906-1-git-send-email-prsood@codeaurora.org
+
+Which sadly got reverted again. If we do this now (I've always been a
+proponent), then we can make that rebuild synchronous again, which
+should also help here IIRC.
+
+> ---
+>  include/linux/cpuset.h |  8 ++++----
+>  kernel/cgroup/cpuset.c | 22 +++++++++++++++++-----
+>  2 files changed, 21 insertions(+), 9 deletions(-)
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+> diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
+> index 934633a05d20..7f1478c26a33 100644
+> --- a/include/linux/cpuset.h
+> +++ b/include/linux/cpuset.h
+> @@ -40,14 +40,14 @@ static inline bool cpusets_enabled(void)
+>  
+>  static inline void cpuset_inc(void)
+>  {
+> -	static_branch_inc(&cpusets_pre_enable_key);
+> -	static_branch_inc(&cpusets_enabled_key);
+> +	static_branch_inc_cpuslocked(&cpusets_pre_enable_key);
+> +	static_branch_inc_cpuslocked(&cpusets_enabled_key);
+>  }
+>  
+>  static inline void cpuset_dec(void)
+>  {
+> -	static_branch_dec(&cpusets_enabled_key);
+> -	static_branch_dec(&cpusets_pre_enable_key);
+> +	static_branch_dec_cpuslocked(&cpusets_enabled_key);
+> +	static_branch_dec_cpuslocked(&cpusets_pre_enable_key);
+>  }
+>  
+>  extern int cpuset_init(void);
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index a7c0c8d8f132..d92b351f89e3 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -1026,8 +1026,8 @@ static void rebuild_sched_domains_locked(void)
+>  	cpumask_var_t *doms;
+>  	int ndoms;
+>  
+> +	lockdep_assert_cpus_held();
+>  	percpu_rwsem_assert_held(&cpuset_rwsem);
+> -	get_online_cpus();
+>  
+>  	/*
+>  	 * We have raced with CPU hotplug. Don't do anything to avoid
+> @@ -1036,19 +1036,17 @@ static void rebuild_sched_domains_locked(void)
+>  	 */
+>  	if (!top_cpuset.nr_subparts_cpus &&
+>  	    !cpumask_equal(top_cpuset.effective_cpus, cpu_active_mask))
+> -		goto out;
+> +		return;
+>  
+>  	if (top_cpuset.nr_subparts_cpus &&
+>  	   !cpumask_subset(top_cpuset.effective_cpus, cpu_active_mask))
+> -		goto out;
+> +		return;
+>  
+>  	/* Generate domain masks and attrs */
+>  	ndoms = generate_sched_domains(&doms, &attr);
+>  
+>  	/* Have scheduler rebuild the domains */
+>  	partition_and_rebuild_sched_domains(ndoms, doms, attr);
+> -out:
+> -	put_online_cpus();
+>  }
+>  #else /* !CONFIG_SMP */
+>  static void rebuild_sched_domains_locked(void)
+> @@ -1058,9 +1056,11 @@ static void rebuild_sched_domains_locked(void)
+>  
+>  void rebuild_sched_domains(void)
+>  {
+> +	get_online_cpus();
+>  	percpu_down_write(&cpuset_rwsem);
+>  	rebuild_sched_domains_locked();
+>  	percpu_up_write(&cpuset_rwsem);
+> +	put_online_cpus();
+>  }
+>  
+>  /**
+> @@ -2298,6 +2298,7 @@ static int cpuset_write_u64(struct cgroup_subsys_state *css, struct cftype *cft,
+>  	cpuset_filetype_t type = cft->private;
+>  	int retval = 0;
+>  
+> +	get_online_cpus();
+>  	percpu_down_write(&cpuset_rwsem);
+>  	if (!is_cpuset_online(cs)) {
+>  		retval = -ENODEV;
+> @@ -2335,6 +2336,7 @@ static int cpuset_write_u64(struct cgroup_subsys_state *css, struct cftype *cft,
+>  	}
+>  out_unlock:
+>  	percpu_up_write(&cpuset_rwsem);
+> +	put_online_cpus();
+>  	return retval;
+>  }
+>  
+> @@ -2345,6 +2347,7 @@ static int cpuset_write_s64(struct cgroup_subsys_state *css, struct cftype *cft,
+>  	cpuset_filetype_t type = cft->private;
+>  	int retval = -ENODEV;
+>  
+> +	get_online_cpus();
+>  	percpu_down_write(&cpuset_rwsem);
+>  	if (!is_cpuset_online(cs))
+>  		goto out_unlock;
+> @@ -2359,6 +2362,7 @@ static int cpuset_write_s64(struct cgroup_subsys_state *css, struct cftype *cft,
+>  	}
+>  out_unlock:
+>  	percpu_up_write(&cpuset_rwsem);
+> +	put_online_cpus();
+>  	return retval;
+>  }
+>  
+> @@ -2397,6 +2401,7 @@ static ssize_t cpuset_write_resmask(struct kernfs_open_file *of,
+>  	kernfs_break_active_protection(of->kn);
+>  	flush_work(&cpuset_hotplug_work);
+>  
+> +	get_online_cpus();
+>  	percpu_down_write(&cpuset_rwsem);
+>  	if (!is_cpuset_online(cs))
+>  		goto out_unlock;
+> @@ -2422,6 +2427,7 @@ static ssize_t cpuset_write_resmask(struct kernfs_open_file *of,
+>  	free_cpuset(trialcs);
+>  out_unlock:
+>  	percpu_up_write(&cpuset_rwsem);
+> +	put_online_cpus();
+>  	kernfs_unbreak_active_protection(of->kn);
+>  	css_put(&cs->css);
+>  	flush_workqueue(cpuset_migrate_mm_wq);
+> @@ -2552,6 +2558,7 @@ static ssize_t sched_partition_write(struct kernfs_open_file *of, char *buf,
+>  		return -EINVAL;
+>  
+>  	css_get(&cs->css);
+> +	get_online_cpus();
+>  	percpu_down_write(&cpuset_rwsem);
+>  	if (!is_cpuset_online(cs))
+>  		goto out_unlock;
+> @@ -2559,6 +2566,7 @@ static ssize_t sched_partition_write(struct kernfs_open_file *of, char *buf,
+>  	retval = update_prstate(cs, val);
+>  out_unlock:
+>  	percpu_up_write(&cpuset_rwsem);
+> +	put_online_cpus();
+>  	css_put(&cs->css);
+>  	return retval ?: nbytes;
+>  }
+> @@ -2764,6 +2772,7 @@ static int cpuset_css_online(struct cgroup_subsys_state *css)
+>  	if (!parent)
+>  		return 0;
+>  
+> +	get_online_cpus();
+>  	percpu_down_write(&cpuset_rwsem);
+>  
+>  	set_bit(CS_ONLINE, &cs->flags);
+> @@ -2816,6 +2825,7 @@ static int cpuset_css_online(struct cgroup_subsys_state *css)
+>  	spin_unlock_irq(&callback_lock);
+>  out_unlock:
+>  	percpu_up_write(&cpuset_rwsem);
+> +	put_online_cpus();
+>  	return 0;
+>  }
+>  
+> @@ -2834,6 +2844,7 @@ static void cpuset_css_offline(struct cgroup_subsys_state *css)
+>  {
+>  	struct cpuset *cs = css_cs(css);
+>  
+> +	get_online_cpus();
+>  	percpu_down_write(&cpuset_rwsem);
+>  
+>  	if (is_partition_root(cs))
+> @@ -2854,6 +2865,7 @@ static void cpuset_css_offline(struct cgroup_subsys_state *css)
+>  	clear_bit(CS_ONLINE, &cs->flags);
+>  
+>  	percpu_up_write(&cpuset_rwsem);
+> +	put_online_cpus();
+>  }
+>  
+>  static void cpuset_css_free(struct cgroup_subsys_state *css)
+> -- 
+> 2.17.2
+> 
