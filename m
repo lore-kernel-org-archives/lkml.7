@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,WEIRD_PORT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451B7C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3589EC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9192083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D0452133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561725145;
-	bh=WFGeLwOlFZbdVXS5h0WeG4V8ZwSVcJhDq3sd/2CPeo0=;
+	s=default; t=1561725148;
+	bh=SRy42SKp26XgE5ggZhIuBOo6gGE0SLYB/iZ60PqkmOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xLpBXJ1FICBS9NRaTc+segIbAI5d3gqsJJPjd/vsWZA7Hd+H+nhp0teiP3VkjpjIP
-	 t+20RA2iQ+qkKfpBmQ3tWgajbZsnytjr+FiTqb5XRvJ3Af26W29OVwgkpog+/eg6q8
-	 6f0WcssXuOysomtqTJIkVOAA0YSv7uj41wKzB19c=
+	b=xix0ud8tMdOPhtoVKBd5V9kxPRFvwZijpDiuLXFyzIOj2D3//aWKYLx9CICxpV74M
+	 kXhg8o3r322xv7afvYl7DQDMSNtc+xnBWMaVSL/YIS9mF4+WiUmEH/JEK/ho0/jga5
+	 J5igh1AipYhyCQftdJAD3iKvaKaTeF56HUzY28+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfF1McY (ORCPT
+        id S1727289AbfF1Mc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:32:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39334 "EHLO
+        Fri, 28 Jun 2019 08:32:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39346 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbfF1Mam (ORCPT
+        with ESMTP id S1727041AbfF1Mam (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:30:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,28 +34,34 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7J8GFXOXC+IsahgFkckgvyti7445SF8VB9Sumqq9uUc=; b=GbQemoOEwXARLFQleu5EcWNIIE
-        fdEAhyNTqyo3grcWlAVt3arziGjsdHks7HiHdSlngDlaEbP1Eqeq9MVo8OUBceYTeL/6zLVg1/dcU
-        UfJ5+nMnEOoT6YWgNEgj6MjE9fZfXdITbjy3OEH1MPHQgMuUQQPs3/ZVOQqzColEEJ1thEzTnjvbH
-        YY9joIENwEWfY8gFfL0PM9peiI6oRztYlLhWKHHhPIFWiwNICk2+5Pkw8eJn4VGAGbf8bFZvxPkCY
-        w97+3RLdZXK8NdGiZp1oQO4cEWjDzyItlyqGG9NLnFMG/i2HUAc1MdvDLtSH3Xi/Ma/B0+pXfLUgl
-        +GPfPteQ==;
+        bh=ykWkFsumL0ayFcjE+xBNFzyP+ofeeOxpiUoXLTtt7vY=; b=LTqUMzhs41rcttK/soKsV1UIN3
+        LoQYuPajw1HHFL3YMIv6D/yUuQALnQpcQF+7onrNI2iaTqsK0bQhqVi6IcXycksWISx+3RYnjdf17
+        tZmbpoV0iiQiRPnnceV3TnvbhhxiCsrTMIRbKsi307xqI2e+13y6x8j01plF4zNJvms+sK/kw0ntj
+        VFwVV7+OHkOjg2f2viWFKJhidq1uDrBkrPhQASslBz23bXxo285FdMvebQPdXkBUUxEPg0WZm3PLS
+        /lpZjBKvAzRqLugjwDvvLJVrOKpwzptQCzjefAKUmashyWLkZJfeFZZfkDwLjKeNK0uRr1tA6mtFg
+        IREdxPVw==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1W-000552-3x; Fri, 28 Jun 2019 12:30:38 +0000
+        id 1hgq1U-00055T-Lv; Fri, 28 Jun 2019 12:30:36 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005Ty-UM; Fri, 28 Jun 2019 09:30:34 -0300
+        id 1hgq1S-0005Sa-Fu; Fri, 28 Jun 2019 09:30:34 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 38/39] docs: locking: add it to the main index
-Date:   Fri, 28 Jun 2019 09:30:31 -0300
-Message-Id: <9cb659cc11d881b812a494475616e0f46ade51cb.1561724493.git.mchehab+samsung@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Ning Sun <ning.sun@intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        tboot-devel@lists.sourceforge.net,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH 21/39] docs: x86: move two x86-specific files to x86 arch dir
+Date:   Fri, 28 Jun 2019 09:30:14 -0300
+Message-Id: <caa8ba95b2b74a93e588edfa6bbd50b7bfa7ee09.1561724493.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
 References: <cover.1561724493.git.mchehab+samsung@kernel.org>
@@ -66,37 +72,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The locking directory is part of the Kernel API bookset. Add
-it to the index file.
+Those two docs belong to the x86 architecture:
+
+   Documentation/Intel-IOMMU.txt -> Documentation/x86/intel-iommu.rst
+   Documentation/intel_txt.txt -> Documentation/x86/intel_txt.rst
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/index.rst         | 1 +
- Documentation/locking/index.rst | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ Documentation/x86/index.rst                            | 2 ++
+ Documentation/{Intel-IOMMU.txt => x86/intel-iommu.rst} | 0
+ Documentation/{intel_txt.txt => x86/intel_txt.rst}     | 0
+ MAINTAINERS                                            | 2 +-
+ security/Kconfig                                       | 2 +-
+ 5 files changed, 4 insertions(+), 2 deletions(-)
+ rename Documentation/{Intel-IOMMU.txt => x86/intel-iommu.rst} (100%)
+ rename Documentation/{intel_txt.txt => x86/intel_txt.rst} (100%)
 
-diff --git a/Documentation/index.rst b/Documentation/index.rst
-index 075c732501a2..13c3188f6a68 100644
---- a/Documentation/index.rst
-+++ b/Documentation/index.rst
-@@ -96,6 +96,7 @@ needed).
+diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+index f2de1b2d3ac7..af64c4bb4447 100644
+--- a/Documentation/x86/index.rst
++++ b/Documentation/x86/index.rst
+@@ -20,6 +20,8 @@ x86-specific Documentation
+    mtrr
+    pat
+    intel_mpx
++   intel-iommu
++   intel_txt
+    amd-memory-encryption
+    pti
+    mds
+diff --git a/Documentation/Intel-IOMMU.txt b/Documentation/x86/intel-iommu.rst
+similarity index 100%
+rename from Documentation/Intel-IOMMU.txt
+rename to Documentation/x86/intel-iommu.rst
+diff --git a/Documentation/intel_txt.txt b/Documentation/x86/intel_txt.rst
+similarity index 100%
+rename from Documentation/intel_txt.txt
+rename to Documentation/x86/intel_txt.rst
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3f0f654d1166..29d1498ad39d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8259,7 +8259,7 @@ L:	tboot-devel@lists.sourceforge.net
+ W:	http://tboot.sourceforge.net
+ T:	hg http://tboot.hg.sourceforge.net:8000/hgroot/tboot/tboot
+ S:	Supported
+-F:	Documentation/intel_txt.txt
++F:	Documentation/x86/intel_txt.rst
+ F:	include/linux/tboot.h
+ F:	arch/x86/kernel/tboot.c
  
-    driver-api/index
-    core-api/index
-+   locking/index
-    accounting/index
-    block/index
-    cdrom/index
-diff --git a/Documentation/locking/index.rst b/Documentation/locking/index.rst
-index ef5da7fe9aac..626a463f7e42 100644
---- a/Documentation/locking/index.rst
-+++ b/Documentation/locking/index.rst
-@@ -1,4 +1,4 @@
--:orphan:
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/security/Kconfig b/security/Kconfig
+index 06a30851511a..0d65594b5196 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -121,7 +121,7 @@ config INTEL_TXT
+ 	  See <http://www.intel.com/technology/security/> for more information
+ 	  about Intel(R) TXT.
+ 	  See <http://tboot.sourceforge.net> for more information about tboot.
+-	  See Documentation/intel_txt.txt for a description of how to enable
++	  See Documentation/x86/intel_txt.rst for a description of how to enable
+ 	  Intel TXT support in a kernel boot.
  
- =======
- locking
+ 	  If you are unsure as to whether this is required, answer N.
 -- 
 2.21.0
 
