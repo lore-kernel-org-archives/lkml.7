@@ -2,89 +2,72 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723F2C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBC2C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B10A2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:42:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDTzYlFn"
+	by mail.kernel.org (Postfix) with ESMTP id CD53E2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfF1Fmy (ORCPT
+        id S1727028AbfF1Fm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 28 Jun 2019 01:42:56 -0400
+Received: from verein.lst.de ([213.95.11.210]:45086 "EHLO newverein.lst.de"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726867AbfF1Fmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 01:42:54 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36186 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfF1Fmx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 01:42:53 -0400
-Received: by mail-wm1-f66.google.com with SMTP id u8so7695341wmm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 22:42:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WUmauarPYj2SQlusGyMDBTJmU8hMPlbsUq3l5nJNX88=;
-        b=TDTzYlFnKgzjZQ9gI/SNj822C1vpURAvVYRfwCO6x+WFL/tArkz9HkDgem1AmYnkN8
-         VkOc2wFbtDh/vBJJxiNcP+GdkZpfce+UmJ6f6jRmHr/kcx/Rf+wFodmSgMl1qD6qa4SS
-         KfjhEScvVvScxqLgPnnfnMgp+1muYMviMKyoY/YtdYrTiso0lZQU5FRsJHhE8UntwGQl
-         aT6uTm7KoIY09VX4nVRnOC1u09cp0uwWIeJH38WL3ZBIS0zIuDXc4/spAKm2EkmoQHZx
-         62c7yUbNJVk2C5XNjnyYTOnuukHTrvVwUGft7ACLwKsZe+smc//GrsoTSQ/U8kIfjX5R
-         ZSSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WUmauarPYj2SQlusGyMDBTJmU8hMPlbsUq3l5nJNX88=;
-        b=iL0irEQRrA2TzaqbuWy4sTBH+sUT6A9moVzxVytWXEm56hJFTmDp36B38CwCqaKkNV
-         PD5IDTts2O5wy9sPRWhf2KtVONB81QAUXmyJaB6Jja+WX/Pu+7Ma5UujWVdIqjZHoXn0
-         l5erbmyOR80xahAZ0WZBOk7TviGjdEtVW1pYVgAFGP4uEwZHmniCckK3+xFftgeePh7P
-         ToZGBMCMPP1Hp2SSuKMV05uS/TQ7SdNwMKrA6d28X4pFsPWEDfv51exeQBQkkBaKNS6i
-         nvnPiqJRb3/qGtNCj5MryZnE1XpwiETMxn34Q62gGyHkdhEo+OURaXGrV4JbHPHKmwX4
-         cxEg==
-X-Gm-Message-State: APjAAAWPtyPP9wrKvBBUXYhk2U9UCjhgcg7kDYK4kh75jaBC2ACMIwgv
-        mQpY3k1RAQbYNPL3rwJTA5Uso+8P5xT5eDYsSS8=
-X-Google-Smtp-Source: APXvYqwAOqZmkppeFcMiIoFt4MysbFWIxUza8rc+k5ahTj8SHHHqKDGGqzwqY8kpvHG18Av+CAe4jlnYhZGZ4p0Z0Ng=
-X-Received: by 2002:a7b:c247:: with SMTP id b7mr6041397wmj.13.1561700571802;
- Thu, 27 Jun 2019 22:42:51 -0700 (PDT)
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 0A0EF68CEC; Fri, 28 Jun 2019 07:42:52 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 07:42:51 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: lift the xfs writepage code into iomap v2
+Message-ID: <20190628054251.GC26902@lst.de>
+References: <20190627104836.25446-1-hch@lst.de> <20190628013256.GE5179@magnolia>
 MIME-Version: 1.0
-References: <20190628032544.8317-1-Anson.Huang@nxp.com>
-In-Reply-To: <20190628032544.8317-1-Anson.Huang@nxp.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Fri, 28 Jun 2019 08:42:40 +0300
-Message-ID: <CAEnQRZDgbgmKXaLNVoe0N5e_voGkC45gqp0bUjPJsSh4CXOc+w@mail.gmail.com>
-Subject: Re: [PATCH V2] soc: imx-scu: Add SoC UID(unique identifier) support
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628013256.GE5179@magnolia>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 6:36 AM <Anson.Huang@nxp.com> wrote:
->
-> From: Anson Huang <Anson.Huang@nxp.com>
->
-> Add i.MX SCU SoC's UID(unique identifier) support, user
-> can read it from sysfs:
->
-> root@imx8qxpmek:~# cat /sys/devices/soc0/soc_uid
-> 7B64280B57AC1898
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Thu, Jun 27, 2019 at 06:32:56PM -0700, Darrick J. Wong wrote:
+> I think Dave has voiced some valid concerns about our ability to support
+> this code over the long term once we start sharing it with other fses.
+> XFS has a longish history of sailing away from generic code so that we
+> can remove awkward abstractions which aren't working well for us.  If
+> we're going to continue to go our own way with things like file locking
+> and mapping I wonder how long we'd keep using the iomap ioends before
+> moving away again.  How well will that iomap code avoid bitrot once XFS
+> does that?
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+As outlied in my mail to Dave I agree with the high level issue.
+But I very much thing that the writeback code is and should be generic.
+For one it is much more tightly integrated with other iomap code
+than with XFS.  And second the kernel doesn't have a sane generic
+writeback implementation.  We have like three different crappy buffer
+head ones, and anyone wanting to sanely implement writeback currently
+has to write their own, which is a major PITA.
+
+> How does that sound?  Who are the other potential users?
+
+The immediate current user is Damiens zonefs, which is just a thin
+abstraction on top of zones in zoned block devices.  Then my plan has
+always been to convert gfs2 over to it, away from buffer heads.  With
+btrfs now joining iomap land I'd be really excited to move it over,
+but we'll see how feasily that is.  But with gfs2 done I think we
+also are ready to convert anything currently using plain old buffer
+heads over, so things like sysvfs, minix, jfs, etc.  While that isn't
+a priority and will take a while it will help with my grand overall
+scheme of killing buffer_heads, at least for the data path.
