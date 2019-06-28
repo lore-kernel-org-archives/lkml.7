@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA8BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156F0C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884412133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8AB4208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:16:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="goNqNhx4"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="h9MlfGsw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfF1OQ2 (ORCPT
+        id S1726846AbfF1OQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 10:16:28 -0400
-Received: from mout.web.de ([212.227.17.12]:42359 "EHLO mout.web.de"
+        Fri, 28 Jun 2019 10:16:37 -0400
+Received: from mout.web.de ([212.227.17.12]:56307 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbfF1OQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 10:16:27 -0400
+        id S1726616AbfF1OQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 10:16:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1561731371;
+        s=dbaedf251592; t=1561731374;
         bh=EhlgD4OxUpSkqoFWG7/7Dq7I5UiCGhuvGXHoYj+a1Gg=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=goNqNhx49UgMRSN92Xeb2jyW+yTv2nUxqhP9G0ChNWb/I6nhEwnLzJqw/mV5WcL+T
-         5BeUzezljKRWZE/OEXU0PoQzmYR8ZPmVSKNGb0RbVUO2tIGQXSVk+Vbyq3tWMrOQDo
-         5FEVyClw5i+FXM+UlaQN5oMMYC9M9YfMwtYFcy/w=
+        b=h9MlfGsw2Xyi+Mh4ElJxdCkyyNjn+CwrNaAJGNi39ludy5CJNUOhqhsdNJfRf67ct
+         jCmLgSObBxWBc+AbkOup+ygKy6EUXmF40NKeAstdE0c78EB38CT8VyLl40rMAQ4wMB
+         ZDs8XqPvO+AlwQsbbJcPbGKIWxR9Q4TocB1huo6k=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.53.73]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LvBV8-1ig5MG3ABe-010Hx6; Fri, 28
- Jun 2019 16:16:10 +0200
+Received: from [192.168.1.2] ([78.48.53.73]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lopa3-1iDkiT0El1-00gtGZ; Fri, 28
+ Jun 2019 16:16:14 +0200
 Subject: Re: [v2] coccinelle: semantic code search for missing of_node_put
 To:     Julia Lawall <julia.lawall@lip6.fr>, cocci@systeme.lip6.fr
 Cc:     Wen Yang <wen.yang99@zte.com.cn>, linux-kernel@vger.kernel.org,
@@ -89,7 +89,7 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <223dfac0-deab-0525-fd5b-ccd2350fd5e2@web.de>
+Message-ID: <36196c4e-a09f-3d0d-5a08-68fa53ee740a@web.de>
 Date:   Fri, 28 Jun 2019 16:16:08 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
@@ -98,27 +98,27 @@ In-Reply-To: <alpine.DEB.2.21.1906281304470.2538@hadrien>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:y53BM6cdr0iYY/gExgJ05K4r7XD9WgGNmrmhAUw0kUUbxPTOPng
- oocuNl1AL9rnpB4RcnJddIchPItUg2BWk5rz4qmVGGt/57oaEDdVCLwfcnFZ3gIcInfKIis
- KjLoDjZpX7VTwpROKOxLEHhYrq8N93kn4PJ6/rHYVC4lMRjytKfyw22FiR4NDSNeRGlQFZW
- mZUgsAtKHUzXjQ4P/EPfw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uJj/Q0Etm4E=:qeoodpNkCi/PKbSZTJ3IRn
- qkxovJR+RcXS6VeIZs3DroaPWsJUVwAdgW4arXlsPhdnD0dWpLfaQaIYoX9gDhyqUqPK5Ue3w
- cxkA6yhyJesW7W3xRqq2vlz/O4YVnFpaDzLp5VJhr46s0r/JGNufHgoT1u3tmUtbY7NbJaJ6p
- DlHRQBVJc+sG0b2sx0VFI0WzQYsP7fEbZ7sPSyCUgAP1R/U1AyMHQF7VSjl5gKXjal5hY9BYB
- hgYUz4yh/XM0iqV2Od31/iWpfGJ9ejrs+T1BlCg88vrSpqWr1K5xHJDFiJQWv7ROmDxYr5Psx
- Hrp1pQD+iutQQS30la5TW9JHhZDVYfinkSwguGCfezGbW/UNpcE2F2a1pSZwu0VwXMN3dqpzL
- C72YktyGRIweVLhgo0/twcoVKRwOAypFifXnV9lSJgXrvDxETKmROROFXKveZ87KPl/sZjLnU
- xl5gNarsWzDv5UyEgGbvlsCifFDgyJNMERFuUdBuJfDhdM7jRRgVOWjuvtBiEiYzeqwQEiLui
- KIbTmVfsrQS4kbJEfI44elLOXjJga5RxRMQwZ39g3ISyOx8oqTA8keRlYD4UTX62tl16tm+oz
- DtvyNxly0risArxhQcFMMUk28PW3CZhxTTUY3gbYEFDUzvzDw+GNnUwJ+aL4JGCt600O5aIqo
- ZA3LvFFxDkoh2/+El5UtRExWGPAkc8+j1l3GxEOxFILEUipKFqYCyUBCizy9/u9VrgV6D8om4
- lfEjHLWMxoOGG+WnljREF76G5yVO9eCTtdvyxoR/zPUOCOKuhzFQVr7NZrDbYcLEq4blhZQM7
- hYrTOEcMZXwNwJKgsBLq6qlvwxG1rgtZCPTztDGaz8MZ2eCTKZ8fF+Jom9pQPgTUNu8qhutlo
- 0/HTjVhREU92pfvk+sfJPBLbH1bIe+fEvc1m89fAtsdqyBJ+k2ENY7/YKRPhYDaVbAbatf8+0
- 4gLFn8L8sMufJcpJqsA/g5IKWG78pWrUxIBgOKgmla4nahUkaB3v2klkfaY7cpKaSgh9HUEt1
- nHMhTs0LdJLBKSiwsRfh7FgnTqxRfJHCVC3hKHmtHncpUh4D4/TEoYEpT3nI1a4LBb/wDyFNI
- 7CJzVT41LiaKmoxOnFJchZSj/xJmlqHR/jD
+X-Provags-ID: V03:K1:6TJzD2OmbcEscAXcpelpi6muhWm2XruDunxrw6Hn4QD7cbKMWEv
+ jaUb9yB/oshUFhslLAKq1uMMBk3agHq8+KruUQlYg3/reQo1ZTDEL5Ou/QfklU18ulO4TAQ
+ B5AycFN2RAFswnpfg3aBMi5MYHdOAprJFGFRp5sM9ItrFLuH+ToDmBRTC6VxQmY0k3dAJYd
+ qAFHTRSziJ7GSBU4nG2sA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0GExo9EVfMo=:gzCcthGy6SzAXhBtSASr76
+ tcAq5wkIF0hMe0eylDzNtkQteMtc9o00i+MCE3nwuRzNQMqTY4vB9LxR0mcEA+OqWYHxagaGl
+ 5bgrv5tiFDxV13R/9pQ43evQtDTEIZ/qIsjPjQ7v8vjbyrzrHwwUdu156kuss6YveKHp8+USw
+ EZUKtb5mem1iTP+Ivote0y0JMpXcnDlQ415qxs5C2OBxY3NeU4yN2OZPpowPsr0lcOUOnp+l1
+ tBTloFYVLy91CkNaKrVEwjSDG3eIVD3yox93iTOeQLl3qhoAFzIy3FAqeMGyK1H05Alsf4wKq
+ YoBrhaWm9IECPOd0y1tpkrm1HwgJzl4hgf4WFlqGpen9VfnsuK1QFSvZ5bmAPXr5lDREzsADs
+ sLtm/+JfrRBRR/gse3TrCSANC1J3lA5IGSSWstnwv9pGJ5hOAQbZi0ocurqnhIItqyOSxmeFR
+ 9AeWqU+etMBahneA6AmJjdVEtk/WWtsm4v5KIW3iDd8ZQWRVk8DE13e2SCLA9PMSglLzOB5ch
+ 84pKdILbxbspVqDPiMvFss5kMi9lqFFIqU8iYzubme4r49Ly4/+I4sDtBgNc1Vn8d1Xx0bBDP
+ Qywg92eOkUvX7ok4+Gmp7xP1Z4oHUird9l5aYd6KEW/0RsxEFZZMQBSs1k3XdgAWF+DH96HFr
+ 6T/XVykTJJugk38WY3HFFQA1UmjtJek2Z1E0H4LVKnkFS9sFpIb7PmK/nozwShOFtjXjwivzV
+ WbF3cJ1+TauUnSNjtvm93okuJTRQN4DyfC7q29lEhZtUkiPc8jzmUycRhGpyINCBXz7riNMhi
+ EuYxUEvZpXeE77DnIfNiOJlrQeITRaSU6qguLQn2qMrowW1ajVQGYCrBVFjNKV7IXturhBTs8
+ KkhzhluqboTz/y6DF4St40mETBIji5/MGWYwdvZVE0jM4mlHAsEAdul9Zn0j62o5BVx2U2Sm7
+ gU/KCI3uOXZ8QxVcNyA7RJk9NxzABaLz41mLGrWJebxB3iYYRBcATENPftJbY5SLBoNSyWgL8
+ iNxIGPd+LfP+1IID54KP/aIP7AP6MDqFGw7FTuz9sYFlYk9aNKVFQn1hVaUE0F11x3c4bGWyb
+ XPQmQdhw1BoBzu4u6Ocg1tn2cgotmRh3H18
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
