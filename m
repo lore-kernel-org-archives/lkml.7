@@ -2,198 +2,155 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C913BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82928C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF8E2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526AC2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pch69Xzl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="upp295eE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfF1Ajk (ORCPT
+        id S1726671AbfF1AnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 20:39:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52248 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfF1Ajk (ORCPT
+        Thu, 27 Jun 2019 20:43:20 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34824 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfF1AnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 20:39:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dn34CJYtdeAdfgrMOdzs/RPX0u6ZoHpXvhuSS9M6Llg=; b=Pch69XzlDh4te4bL9dzpMY9Jt
-        0qjUt3DwCUucvEbBp7tio9AniFfq4tMzDDQLKexK+pMMw9i7qrRxGUNsxIAn/MRu9FNHW5PzTp3cA
-        cNveYRTAHrvxyXTpINNMlFEKjGErWBs4rEsd2WG4nGTQxGoM7GaLRsbaCLRB4pSDL8iLLo7AE1wGR
-        d+BvsmwhdhEK5Prtdtjkf+QOMWtzneMO6t3YXR6G/3HCkmaLtLD12ZPp23ecNzJ1bZxTepazks6oJ
-        oWt8nqqUzq8Tmi09Ejy0GX+/bXlvon/tHTtTq9eoBLJD1pNRfGvd+6GZb8/5vTdr64AB+6tqQVo0z
-        s1sERlxWA==;
-Received: from [186.213.242.156] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgevQ-000587-UE; Fri, 28 Jun 2019 00:39:37 +0000
-Date:   Thu, 27 Jun 2019 21:39:30 -0300
-From:   Mauro Carvalho Chehab <mchehab@infradead.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org, tglx@linutronix.de,
-        mingo@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        mchehab+samsung@kernel.org, linux-tip-commits@vger.kernel.org,
-        docutils-develop@lists.sourceforge.net
-Subject: Re: [tip:timers/core] hrtimer: Use a bullet for the returns bullet
- list
-Message-ID: <20190627213930.0d28a072@coco.lan>
-In-Reply-To: <3740b16e5d0a3144e2d48af7cf56ae8020c3f9af.camel@perches.com>
-References: <74ddad7dac331b4e5ce4a90e15c8a49e3a16d2ac.1561372382.git.mchehab+samsung@kernel.org>
-        <tip-516337048fa40496ae5ca9863c367ec991a44d9a@git.kernel.org>
-        <3740b16e5d0a3144e2d48af7cf56ae8020c3f9af.camel@perches.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <mchehab@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Thu, 27 Jun 2019 20:43:19 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w24so2203721plp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 17:43:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=XK5NFZh7pG1K+u3GPFcGObWPOefyWYFPM8I5XfkBG/8=;
+        b=upp295eE4zrZ2rfDBy6cAlytz9+pNGthZTHLKTr1OO9dTOiMZf6JwjuEq8ekcHwklm
+         cZv7vb8Oym6r76qlAR2DGFlE+Fbgscpula7GgOLKLeBbiFxjKOlKf23bv6QUIvRVWaHE
+         Ea+r/DyVrIdjoJq+E65Gw199EVyBXO2RUkgTDAb6ac+RO8yV6feWGc6NCWESOj4QnZ+6
+         wxVgJDAGElxaJAHNExlL90/amJQsDPcePEhhadmUwuhv9YNJvTpqQWp/tp7mCG/2hSjS
+         b/Zb6zy2r9GhjEZ8w8H3xBiCMMbqthMSoge28/XS+uZd9P1/BJZP4YQ0MGL2gbG8GElv
+         DoPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XK5NFZh7pG1K+u3GPFcGObWPOefyWYFPM8I5XfkBG/8=;
+        b=pCYNhtpDZmyG2w8gicLTFCqtROKa95I27aTD4QS2QGf9KstgohyIET0V/EsruKZuqk
+         MEUItpRa9GSdpt4Oq5AKlhe5/OjRTk9kMAp7+Yc+qXRak4WoBNiWMuZ0L5ZYpdDuI2aJ
+         Rm9AIOQJexnjtCi8fMs7+/jMGFtmSO8pB4736S1sUDEr4riaPFtA6RYzs4RMZvEIKmeZ
+         j8IIRmCF3R6OS+noOM0tV2QJhYpaSCN2HUbCrDLkzIabEwXUuyfE+GrA2Uzr+m5Tx9tG
+         Bc60dGOVYHXM8x32W7fHC3iHQ/xHw6yASWnpGSDr+LeeuGZAMng+WiIQ8TJTVvK+sTNr
+         5dTQ==
+X-Gm-Message-State: APjAAAV5GUlN1XThNezL0Ll1uJLEJOnmX2YA7kvulCQYLeBYQ5OZE6nP
+        Ocz/z0AkOXzP++Z1rKPaR2fbpfclEj4=
+X-Google-Smtp-Source: APXvYqxegHsYVbbcs7Qa6pW5xQvySaMtUe0xaNM73KyiAwlrJT2OfQixsRUUai9jwK7wPOKdbdO+NA==
+X-Received: by 2002:a17:902:7b84:: with SMTP id w4mr7879007pll.22.1561682598960;
+        Thu, 27 Jun 2019 17:43:18 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id n89sm11927802pjc.0.2019.06.27.17.43.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 27 Jun 2019 17:43:18 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2] sched/nohz: Optimize get_nohz_timer_target()
+Date:   Fri, 28 Jun 2019 08:43:12 +0800
+Message-Id: <1561682593-12071-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 27 Jun 2019 15:08:59 -0700
-Joe Perches <joe@perches.com> escreveu:
+From: Wanpeng Li <wanpengli@tencent.com>
 
-> On Thu, 2019-06-27 at 14:46 -0700, tip-bot for Mauro Carvalho Chehab
-> wrote:
-> > Commit-ID:  516337048fa40496ae5ca9863c367ec991a44d9a
-> > Gitweb:     https://git.kernel.org/tip/516337048fa40496ae5ca9863c367ec991a44d9a
-> > Author:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > AuthorDate: Mon, 24 Jun 2019 07:33:26 -0300
-> > Committer:  Thomas Gleixner <tglx@linutronix.de>
-> > CommitDate: Thu, 27 Jun 2019 23:30:04 +0200
-> > 
-> > hrtimer: Use a bullet for the returns bullet list
-> > 
-> > That gets rid of this warning:
-> > 
-> >    ./kernel/time/hrtimer.c:1119: WARNING: Block quote ends without a blank line; unexpected unindent.  
-> 
-> Doesn't this form occur multiple dozens of times in
-> kernel sources?
-> 
-> For instance:
-> 
-> $ git grep -B3 -A5 -P "^ \* Returns:?$" | \
->   grep -P -A8 '\-\s+\*\s*@\w+:'
+On a machine, cpu 0 is used for housekeeping, the other 39 cpus in the 
+same socket are in nohz_full mode. We can observe huge time burn in the 
+loop for seaching nearest busy housekeeper cpu by ftrace.
 
-Yes, this is a common pattern, but not all patterns that match the above
-regex are broken.
+  2)               |       get_nohz_timer_target() {
+  2)   0.240 us    |         housekeeping_test_cpu();
+  2)   0.458 us    |         housekeeping_test_cpu();
 
-> 
-> I think the warning is odd at best and docutils might
-> be updated or the warning ignored or suppressed.
-> 
-> > and displays nicely both at the source code and at the produced
-> > documentation.  
+  ...
 
-The warnings are painful - and they're the main reason why I wrote this
-change: - I wanted to avoid new warnings actually unrelated to my
-changes that were sometimes appearing while doing incremental
-"make htmldocs" on a big patchset that I've been rebasing almost every
-week over the last two months.
+  2)   0.292 us    |         housekeeping_test_cpu();
+  2)   0.240 us    |         housekeeping_test_cpu();
+  2)   0.227 us    |         housekeeping_any_cpu();
+  2) + 43.460 us   |       }
+  
+This patch optimizes the searching logic by finding a nearest housekeeper
+cpu in the housekeeping cpumask, it can minimize the worst searching time 
+from ~44us to < 10us in my testing. In addition, the last iterated busy 
+housekeeper can become a random candidate while current CPU is a better 
+fallback if it is a housekeeper.
 
--
+Cc: Ingo Molnar <mingo@redhat.com> 
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+v1 -> v2:
+ * current CPU is a better fallback if it is a housekeeper
 
-Yet, did you try to look how this pattern will appear at the html and pdf
-output? Something like this:
+ kernel/sched/core.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-	sound/soc/codecs/wm8960.c: * Returns:
-	sound/soc/codecs/wm8960.c- *  -1, in case no sysclk frequency available found
-	sound/soc/codecs/wm8960.c- * >=0, in case we could derive bclk and lrclk from sysclk using
-	sound/soc/codecs/wm8960.c- *      (@sysclk_idx, @dac_idx, @bclk_idx) dividers
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 102dfcf..04a0f6a 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -539,27 +539,32 @@ void resched_cpu(int cpu)
+  */
+ int get_nohz_timer_target(void)
+ {
+-	int i, cpu = smp_processor_id();
++	int i, cpu = smp_processor_id(), default_cpu = -1;
+ 	struct sched_domain *sd;
+ 
+-	if (!idle_cpu(cpu) && housekeeping_cpu(cpu, HK_FLAG_TIMER))
+-		return cpu;
++	if (housekeeping_cpu(cpu, HK_FLAG_TIMER)) {
++		if (!idle_cpu(cpu))
++			return cpu;
++		default_cpu = cpu;
++	}
+ 
+ 	rcu_read_lock();
+ 	for_each_domain(cpu, sd) {
+-		for_each_cpu(i, sched_domain_span(sd)) {
++		for_each_cpu_and(i, sched_domain_span(sd),
++			housekeeping_cpumask(HK_FLAG_TIMER)) {
+ 			if (cpu == i)
+ 				continue;
+ 
+-			if (!idle_cpu(i) && housekeeping_cpu(i, HK_FLAG_TIMER)) {
++			if (!idle_cpu(i)) {
+ 				cpu = i;
+ 				goto unlock;
+ 			}
+ 		}
+ 	}
+ 
+-	if (!housekeeping_cpu(cpu, HK_FLAG_TIMER))
+-		cpu = housekeeping_any_cpu(HK_FLAG_TIMER);
++	if (default_cpu == -1)
++		default_cpu = housekeeping_any_cpu(HK_FLAG_TIMER);
++	cpu = default_cpu;
+ unlock:
+ 	rcu_read_unlock();
+ 	return cpu;
+-- 
+1.8.3.1
 
-
-Will be displayed as:
-
-	**Returns:**
-	  -1, in case no sysclk frequency available found **>=0, in case we could derive bclk and lrclk from sysclk using** (@sysclk_idx, @dac_idx, @bclk_idx) dividers
-
-
-(where **foo**) means that "foo" will be printed in bold.
-
-E. g. it will just merge all returns values into a single line and, if 
-there are alignment differences, it will make the previous line bold
-and produce a warning.
-
-On some places, however, what's there will be properly displayed,
-like this one:
-**
- * wimax_reset - Reset a WiMAX device
- *
- * @wimax_dev: WiMAX device descriptor
- *
- * Returns:
- *
- * %0 if ok and a warm reset was done (the device still exists in
- * the system).
- *
- * -%ENODEV if a cold/bus reset had to be done (device has
- * disconnected and reconnected, so current handle is not valid
- * any more).
- *
- * -%EINVAL if the device is not even registered.
- *
- * Any other negative error code shall be considered as
- * non-recoverable.
- *
-
-As there are blank lines between each value, making each return code a
-different line.
-
-This one:
-
-tools/lib/traceevent/parse-filter.c: * Returns:
-tools/lib/traceevent/parse-filter.c- *  1 if the two filters hold the same content.
-tools/lib/traceevent/parse-filter.c- *  0 if they do not.
-
-will also not mangle too much, as the dots will help for someone to 
-understand, if reading the html/pdf output, like this:
-
-	**Returns:**
-	  1 if the two filters hold the same content. 0 if they do not.
-
-So, it all depends on the context.
-
--
-
-While it would likely be possible to improve kernel-doc to present better
-results, I'm afraid that it would be too complex for simple regex
-expressions, and hard to tune, as it would be a hint-based approach,
-and doing a natural language processing would be too much effort.
-
-
-> 
-> > diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c  
-> []
-> > @@ -1114,9 +1114,10 @@ EXPORT_SYMBOL_GPL(hrtimer_start_range_ns);
-> >   * @timer:	hrtimer to stop
-> >   *
-> >   * Returns:
-> > - *  0 when the timer was not active
-> > - *  1 when the timer was active
-> > - * -1 when the timer is currently executing the callback function and
-> > + *
-> > + *  *  0 when the timer was not active
-> > + *  *  1 when the timer was active
-> > + *  * -1 when the timer is currently executing the callback function and
-> >   *    cannot be stopped
-> >   */
-> >  int hrtimer_try_to_cancel(struct hrtimer *timer)  
-> 
-
-
-
-Thanks,
-Mauro
