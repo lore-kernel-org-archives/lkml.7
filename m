@@ -2,212 +2,90 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCD9C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E208C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1662133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C41E2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:35:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfF1Gfi (ORCPT
+        id S1727223AbfF1Gf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 02:35:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35358 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbfF1Gfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 02:35:38 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9138383F3B;
-        Fri, 28 Jun 2019 06:35:32 +0000 (UTC)
-Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 432965D705;
-        Fri, 28 Jun 2019 06:35:22 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 08:35:20 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     davem@davemloft.net, grygorii.strashko@ti.com, saeedm@mellanox.com,
-        leon@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, ilias.apalodimas@linaro.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        brouer@redhat.com
-Subject: Re: [PATCH v4 net-next 1/4] net: core: page_pool: add user cnt
- preventing pool deletion
-Message-ID: <20190628083520.4203cb41@carbon>
-In-Reply-To: <20190627220245.GA3269@khorivan>
-References: <20190625175948.24771-1-ivan.khoronzhuk@linaro.org>
-        <20190625175948.24771-2-ivan.khoronzhuk@linaro.org>
-        <20190627214317.237e5926@carbon>
-        <20190627220245.GA3269@khorivan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 28 Jun 2019 06:35:37 +0000 (UTC)
+        Fri, 28 Jun 2019 02:35:57 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48343 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbfF1Gf4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 02:35:56 -0400
+Received: from mail-pl1-f200.google.com ([209.85.214.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hgkUF-0006YV-Ek
+        for linux-kernel@vger.kernel.org; Fri, 28 Jun 2019 06:35:55 +0000
+Received: by mail-pl1-f200.google.com with SMTP id a5so2942660pla.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 23:35:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=rg763IUCOLn//QYbXaACukPUtIg7NLpq/IpQFYmUqJE=;
+        b=do+Pk5H006brFCfu8N0hQwoMLG9Mw2qEyEVtYmC/ag3P26+0w3vyUqh/1BYICILHhQ
+         dLY/wTpJUpD+8RKYtKBsN+OKn2KsXYj13qySBUNlt9WgqEp/NnuOu1a54ZJ8rZkcniEN
+         WtcTnB/tY1xymIOTgzV8xgur7+YUiDWDnE8zFXWhyugvn9UON/pNsCBkeVs/hSnVdLMo
+         OK5BSTR7Nnxo+TKOZzvyI99qLs6vDc0azM47rC+SeM2VfR4NHhzmJmr4jYuoBXdl0kcj
+         fbz7V35FjoffrxiZSIvjB++CzjuwrPEPDfJ2VA2451UaKjztbnOgGlWW51SiwRhx/Vs5
+         fphA==
+X-Gm-Message-State: APjAAAUxsG6ySDby+jUyKXXjCTQLgdLv96mom5Fh4Y+uVDPjgWyCrhBw
+        sdnWUkK+0DCpV6TxK9lHulXehbzpOXd67q0KUIZwl4x0W8Z4u+DaXpWEUJv4lLR4YfXcgOZdlU7
+        ub4A6OJbbNQT5wSKPq/06sC31TGtwQ/e3q/hkDpXYLQ==
+X-Received: by 2002:a17:902:b187:: with SMTP id s7mr9423313plr.309.1561703754229;
+        Thu, 27 Jun 2019 23:35:54 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz/yhCRthlAYn0qft94ePOe14fr0LxwjUI5ovriF1juSlUqvtRTiY4W+tbeXRLlc/X6/7OijQ==
+X-Received: by 2002:a17:902:b187:: with SMTP id s7mr9423296plr.309.1561703753996;
+        Thu, 27 Jun 2019 23:35:53 -0700 (PDT)
+Received: from 2001-b011-380f-3511-c09f-cbfd-7c09-2630.dynamic-ip6.hinet.net (2001-b011-380f-3511-c09f-cbfd-7c09-2630.dynamic-ip6.hinet.net. [2001:b011:380f:3511:c09f:cbfd:7c09:2630])
+        by smtp.gmail.com with ESMTPSA id s43sm1175750pjb.10.2019.06.27.23.35.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 23:35:53 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: ca0132 audio in Ubuntu 19.04 only after Windows 10 started, missing
+ ctefx-r3di.bin
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <156113479576.29306.8491703251507627705.malone@gac.canonical.com>
+Date:   Fri, 28 Jun 2019 14:35:51 +0800
+Cc:     alsa-devel@alsa-project.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Message-Id: <B0FDD5B2-EA6F-4ABC-8BF5-6231AA31EB70@canonical.com>
+References: <156097935391.32250.14918304155094222078.malonedeb@chaenomeles.canonical.com>
+ <156113479576.29306.8491703251507627705.malone@gac.canonical.com>
+To:     conmanx360@gmail.com
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019 01:02:47 +0300
-Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+Hi Connor,
 
-> Hi Jesper, thanks you remember about it.
-> 
-> >
-> >I don't think that "create" and "free" routines paring looks "more
-> >correct" together.
-> >
-> >Maybe we can scale back your solution(?), via creating a page_pool_get()
-> >and page_pool_put() API that can be used by your driver, to keep the
-> >page_pool object after a xdp_rxq_info_unreg() call.  Then you can use
-> >it for two xdp_rxq_info structs, and call page_pool_put() after you
-> >have unregistered both.
-> >
-> >The API would basically be:
-> >
-> >diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> >index b366f59885c1..691ddacfb5a6 100644
-> >--- a/net/core/page_pool.c
-> >+++ b/net/core/page_pool.c
-> >@@ -357,6 +357,10 @@ static void __warn_in_flight(struct page_pool *pool)
-> > void __page_pool_free(struct page_pool *pool)
-> > {
-> >        WARN(pool->alloc.count, "API usage violation");
-> >+
-> >+       if (atomic_read(&pool->user_cnt) != 0)
-> >+               return;
-> >+
-> >        WARN(!ptr_ring_empty(&pool->ring), "ptr_ring is not empty");
-> >
-> >        /* Can happen due to forced shutdown */
-> >@@ -372,6 +376,19 @@ void __page_pool_free(struct page_pool *pool)
-> > }
-> > EXPORT_SYMBOL(__page_pool_free);
-> >
-> >+void page_pool_put(struct page_pool *pool)
-> >+{
-> >+       if (!atomic_dec_and_test(&pool->user_cnt))
-> >+               __page_pool_free(pool);
-> >+}
-> >+EXPORT_SYMBOL(page_pool_put);
-> >+
-> >+void page_pool_get(struct page_pool *pool)
-> >+{
-> >+       atomic_inc(&pool->user_cnt);
-> >+}
-> >+EXPORT_SYMBOL(page_pool_get);
-> >+  
-> 
-> I have another solution that doesn't touch page pool and adds modifications
-> to xdp allocator. As for me it looks better and work wider, I don't need to
-> think about this in the driver also.
-> 
-> It's supposed allocator works as before, no any changes to mlx5 and
-> page_pool API and its usage and seems like fits your requirements.
-> It still supposes that allocator runs under same napi softirq but allows
-> to reuse allocator.
-> 
-> I have not verified yet, but looks like:
-> 
-> diff --git a/include/net/xdp_priv.h b/include/net/xdp_priv.h
-> index 6a8cba6ea79a..995b21da2f27 100644
-> --- a/include/net/xdp_priv.h
-> +++ b/include/net/xdp_priv.h
-> @@ -18,6 +18,7 @@ struct xdp_mem_allocator {
->  	struct rcu_head rcu;
->  	struct delayed_work defer_wq;
->  	unsigned long defer_warn;
-> +	unsigned long refcnt;
->  };
->  
->  #endif /* __LINUX_NET_XDP_PRIV_H__ */
-> diff --git a/net/core/xdp.c b/net/core/xdp.c
-> index f98ab6b98674..6239483e3793 100644
-> --- a/net/core/xdp.c
-> +++ b/net/core/xdp.c
-> @@ -98,6 +98,12 @@ static bool __mem_id_disconnect(int id, bool force)
->  		WARN(1, "Request remove non-existing id(%d), driver bug?", id);
->  		return true;
->  	}
-> +
-> +	if (--xa->refcnt) {
-> +		mutex_unlock(&mem_id_lock);
-> +		return true;
+The bug was filed at Launchpad [1], I think the most notable error is
+[    3.768667] snd_hda_intel 0000:00:1f.3: Direct firmware load for  
+ctefx-r3di.bin failed with error -2
 
-This doesn't work.  This function __mem_id_disconnect() can be called
-multiple times. E.g. if there are in-flight packets.
+The firmware is indeed listed in patch_ca0132.c, but looks like there’s no  
+corresponding file in linux-firmware.
 
+Can you please take a look at the bug?
 
-> +	}
-> +
->  	xa->disconnect_cnt++;
->  
->  	/* Detects in-flight packet-pages for page_pool */
-> @@ -312,6 +318,33 @@ static bool __is_supported_mem_type(enum xdp_mem_type type)
->  	return true;
->  }
->  
-> +static struct xdp_mem_allocator *xdp_allocator_get(void *allocator)
-> +{
-> +	struct xdp_mem_allocator *xae, *xa == NULL;
-> +	struct rhashtable_iter iter;
-> +
-> +	mutex_lock(&mem_id_lock);
-> +	rhashtable_walk_enter(mem_id_ht, &iter);
-> +	do {
-> +		rhashtable_walk_start(&iter);
-> +
-> +		while ((xae = rhashtable_walk_next(&iter)) && !IS_ERR(xae)) {
-> +			if (xae->allocator == allocator) {
-> +				xae->refcnt++;
-> +				xa = xae;
-> +				break;
-> +			}
-> +		}
-> +
-> +		rhashtable_walk_stop(&iter);
-> +
-> +	} while (xae == ERR_PTR(-EAGAIN));
-> +	rhashtable_walk_exit(&iter);
-> +	mutex_unlock(&mem_id_lock);
-> +
-> +	return xa;
-> +}
-> +
->  int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
->  			       enum xdp_mem_type type, void *allocator)
->  {
-> @@ -347,6 +380,9 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
->  		}
->  	}
->  
-> +	if (xdp_allocator_get(allocator))
-> +		return 0;
-> +
->  	xdp_alloc = kzalloc(sizeof(*xdp_alloc), gfp);
->  	if (!xdp_alloc)
->  		return -ENOMEM;
-> @@ -360,6 +396,7 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
->  	xdp_rxq->mem.id = id;
->  	xdp_alloc->mem  = xdp_rxq->mem;
->  	xdp_alloc->allocator = allocator;
-> +	xdp_alloc->refcnt = 1;
->  
->  	/* Insert allocator into ID lookup table */
->  	ptr = rhashtable_insert_slow(mem_id_ht, &id, &xdp_alloc->node);
-> 
-> 
+[1] https://bugs.launchpad.net/bugs/1833470
 
+Kai-Heng
 
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
