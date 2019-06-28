@@ -2,151 +2,134 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19610C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931A8C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C36208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A96D208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:36:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="5VXljABH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfF1WeC (ORCPT
+        id S1727031AbfF1Wg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 18:34:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41902 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726563AbfF1WeB (ORCPT
+        Fri, 28 Jun 2019 18:36:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37136 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfF1WgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 18:34:01 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SMVtVc097104;
-        Fri, 28 Jun 2019 18:33:37 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdtv11n5s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Jun 2019 18:33:37 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5SMWAlp097783;
-        Fri, 28 Jun 2019 18:33:37 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdtv11n5f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Jun 2019 18:33:37 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5SMTYEn010551;
-        Fri, 28 Jun 2019 22:33:36 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma03dal.us.ibm.com with ESMTP id 2t9by7r9vc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Jun 2019 22:33:36 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SMXX1G64618938
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 22:33:33 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5303BE04F;
-        Fri, 28 Jun 2019 22:33:33 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64C9DBE051;
-        Fri, 28 Jun 2019 22:33:30 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.221.58])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Fri, 28 Jun 2019 22:33:30 +0000 (GMT)
-References: <20190521044912.1375-1-bauerman@linux.ibm.com> <20190521044912.1375-4-bauerman@linux.ibm.com> <3b45cc84-273b-b333-831c-85c501b7e78e@ozlabs.ru>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>
-Subject: Re: [RFC PATCH 03/12] powerpc/prom_init: Add the ESM call to prom_init
-In-reply-to: <3b45cc84-273b-b333-831c-85c501b7e78e@ozlabs.ru>
-Date:   Fri, 28 Jun 2019 19:33:24 -0300
-Message-ID: <87mui1732j.fsf@morokweng.localdomain>
+        Fri, 28 Jun 2019 18:36:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5SMYaNi081645;
+        Fri, 28 Jun 2019 22:34:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=5BXhuEPFDddiNAekJ5I66ugIZ3EfVPNNcHP0UgKmH0Q=;
+ b=5VXljABHIjidxf57ErkYPFevR2jYLr2wVGjAft6Mg6kxKJlEcuPUPxmVLLaSUNDB8snT
+ MgP4XvSli4cRvyVCs9jRVuqvDJWTqFAo6g1+zej/pz18mozLa782ppJEPGz9G4y9AE6o
+ rHS+NOIQYUgWWgwKGU1+MEt7B64GTiVOpP0Zpqks64FTacCvwIUrMrCkm/Wx4+VDWTct
+ AcQ32t6H7CeIz5yGlhqDZceWBo1nWdkuPLRMaNKDx8BVQCYNRN3s6+JSUc8hYXz5YnwY
+ F94fRkEapNe1cAdOrupa6iWPY8RcQmV7gkCp1rQeQ/JHauQv+ZSKg/slYWp+spezFIp1 Pg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t9cyqyn13-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 22:34:55 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5SMXaR9104757;
+        Fri, 28 Jun 2019 22:34:55 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2tat7e675n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 22:34:55 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5SMYrei010475;
+        Fri, 28 Jun 2019 22:34:54 GMT
+Received: from [10.132.91.175] (/10.132.91.175)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 28 Jun 2019 15:34:53 -0700
+Subject: Re: [PATCH v3 5/7] sched: SIS_CORE to disable idle core search
+To:     Parth Shah <parth@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net
+References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
+ <20190627012919.4341-6-subhra.mazumdar@oracle.com>
+ <0e0f3347-c262-2917-76d7-88dddf4e9122@linux.ibm.com>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <59ab08d5-8b7c-00b9-230b-7c0b307a675f@oracle.com>
+Date:   Fri, 28 Jun 2019 15:29:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=8 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906280258
+In-Reply-To: <0e0f3347-c262-2917-76d7-88dddf4e9122@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906280258
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906280259
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hello Alexey,
-
-Thanks for reviewing this patch!
-
-Alexey Kardashevskiy <aik@ozlabs.ru> writes:
-
-> On 21/05/2019 14:49, Thiago Jung Bauermann wrote:
->> @@ -1707,6 +1723,43 @@ static void __init prom_close_stdin(void)
->>  	}
->>  }
->>  
->> +#ifdef CONFIG_PPC_SVM
->> +static int prom_rtas_os_term_hcall(uint64_t args)
+On 6/28/19 12:01 PM, Parth Shah wrote:
 >
->
-> This is just an rtas hcall, nothing special about "os-term".
+> On 6/27/19 6:59 AM, subhra mazumdar wrote:
+>> Use SIS_CORE to disable idle core search. For some workloads
+>> select_idle_core becomes a scalability bottleneck, removing it improves
+>> throughput. Also there are workloads where disabling it can hurt latency,
+>> so need to have an option.
+>>
+>> Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
+>> ---
+>>   kernel/sched/fair.c | 8 +++++---
+>>   1 file changed, 5 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index c1ca88e..6a74808 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -6280,9 +6280,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+>>   	if (!sd)
+>>   		return target;
+>>
+>> -	i = select_idle_core(p, sd, target);
+>> -	if ((unsigned)i < nr_cpumask_bits)
+>> -		return i;
+>> +	if (sched_feat(SIS_CORE)) {
+>> +		i = select_idle_core(p, sd, target);
+>> +		if ((unsigned)i < nr_cpumask_bits)
+>> +			return i;
+>> +	}
+> This can have significant performance loss if disabled. The select_idle_core spreads
+> workloads quickly across the cores, hence disabling this leaves much of the work to
+> be offloaded to load balancer to move task across the cores. Latency sensitive
+> and long running multi-threaded workload should see the regression under this conditions.
+Yes in case of SPARC SMT8 I did notice that (see cover letter). That's why
+it is a feature that is ON by default, but can be turned OFF for specific
+workloads on x86 SMT2 that can benefit from it.
+> Also, systems like POWER9 has sd_llc as a pair of core only. So it
+> won't benefit from the limits and hence also hiding your code in select_idle_cpu
+> behind static keys will be much preferred.
+If it doesn't hurt then I don't see the point.
 
-Sorry, unfortunately I don't understand how we're treating os-term
-especially. Do you mean that we should inline this function directly
-into prom_rtas_os_term()?
+Thanks,
+Subhra
 
->> +{
->> +	register uint64_t arg1 asm("r3") = 0xf000;
->> +	register uint64_t arg2 asm("r4") = args;
->> +
->> +	asm volatile("sc 1\n" : "=r" (arg1) :
->> +			"r" (arg1),
->> +			"r" (arg2) :);
->> +	return arg1;
->> +}
->> +
->> +static struct rtas_args __prombss os_term_args;
->> +
->> +static void __init prom_rtas_os_term(char *str)
->> +{
->> +	phandle rtas_node;
->> +	__be32 val;
->> +	u32 token;
->> +
->> +	prom_printf("%s: start...\n", __func__);
->> +	rtas_node = call_prom("finddevice", 1, 1, ADDR("/rtas"));
->> +	prom_printf("rtas_node: %x\n", rtas_node);
->> +	if (!PHANDLE_VALID(rtas_node))
->> +		return;
->> +
->> +	val = 0;
->> +	prom_getprop(rtas_node, "ibm,os-term", &val, sizeof(val));
->> +	token = be32_to_cpu(val);
->> +	prom_printf("ibm,os-term: %x\n", token);
->> +	if (token == 0)
->> +		prom_panic("Could not get token for ibm,os-term\n");
->> +	os_term_args.token = cpu_to_be32(token);
->> +	prom_rtas_os_term_hcall((uint64_t)&os_term_args);
->> +}
->> +#endif /* CONFIG_PPC_SVM */
->> +
->>  /*
->>   * Allocate room for and instantiate RTAS
->>   */
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
