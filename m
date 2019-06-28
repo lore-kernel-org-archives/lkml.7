@@ -2,112 +2,139 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88B0C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B409C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889CE205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IKVorRDR"
+	by mail.kernel.org (Postfix) with ESMTP id 04E76205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfF1K2Z (ORCPT
+        id S1726688AbfF1K3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:28:25 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33305 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfF1K2Y (ORCPT
+        Fri, 28 Jun 2019 06:29:53 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:36897 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfF1K3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:28:24 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y17so3656190lfe.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 03:28:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uNia+wXcww8hJhPTXh8yCLt0TR3O7aaW7PyNXd3ivCM=;
-        b=IKVorRDRsqKEUM0hcVl2t5iU7B8+N4xQ56gnE/B0TdoxPE0f06DGV1Th3bnGVPq+1i
-         qlOJbbrdlJWGYB2HGyV/JbdKNdMgZH9cyHeWFO9XiY5LT4+XFkdj4mO9fAtZF/PIRgRL
-         QsOfuUs4WXfJQ9yaUWnoReSSMZtIgKJlc1k7j6J/e3aNmQoK5MC7YHX0WpUu/l6naqlC
-         UFNH2eoSon5kdtoLPbZLbBRvk0s7tiEQVtwKkuuyAUuftFUTUMqeSmFrOXbLfmHfotyX
-         k3wxCIRXYcHy6YjAhtcIkgNwuzbYoSWXsk/UZx3BWa6ZCuJupTnj5F5XXV3J4GKI/RjQ
-         emoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uNia+wXcww8hJhPTXh8yCLt0TR3O7aaW7PyNXd3ivCM=;
-        b=JMOsjYhGKkN8QEbCxsVYLm3Fs2YjsWyRj0OsnKy03YrFXvN3iM49HUVVUwnFuCz4gj
-         Q8C22NMIbsuwrF7xnOclGWHJny3WA99x07ESySqoKJaO5H/os4Gv1yKxtGhhUOD0c6Cm
-         sjjd7uW3uf7l1GzGC4oCqbOT94py2SL5KdzCI2yCYOSPrcF81ZwF9H0Bl3ImFRC3vPXa
-         vbDuYLr0qRT8aHjeUVRdTm2BaIfjKgrfSPD407Oh5rDzgpZQxy6t8jw46QUmFl0alRXK
-         yuMXMfQi6Tnn7Rfff1oiakWfk0YZnCxNqaUZZUkSw4mhUotMxUoMl3ygXC3CRGC8VAco
-         EnMQ==
-X-Gm-Message-State: APjAAAUinh0b9pJlCK0TbLMUMkxtwjxmuQc+6y/M1p8jJi5dMHTqDFBw
-        luF/Yx/Zvfj/j3qopBbGNRm5XMLnH5dhA+Pw4JwBhA==
-X-Google-Smtp-Source: APXvYqyTSELuCwdqtXQ6xfh9OQghPYDZrodDsVKXcdIIzGQolnUkGedUB3xgSLIxsiO7L8/FxlqG97FHQGkNNX4PzBg=
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr4549883lfu.141.1561717702644;
- Fri, 28 Jun 2019 03:28:22 -0700 (PDT)
+        Fri, 28 Jun 2019 06:29:53 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MekGB-1iEUSN2CMH-00aisc; Fri, 28 Jun 2019 12:29:22 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Yuyang Du <duyuyang@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] locking/lockdep: clean up #ifdef checks
+Date:   Fri, 28 Jun 2019 12:29:03 +0200
+Message-Id: <20190628102919.2345242-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
-In-Reply-To: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Jun 2019 11:28:11 +0100
-Message-ID: <CACRpkdYD7Z7XX9wXFtBehJG_4NCt=m_MNsR5cESPRnO3tomKmQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] extcon: Add fsa9480 extcon driver
-To:     =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Donggeun Kim <dg77.kim@samsung.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:8e/xrGp11CLAguE8bdi1+n04EkhlKPOQBlU5GTABjwnScXJ9Eob
+ bHPV+QQKXSFk509jwouOk4slwYQkTXOpAek6xtTQJMJhI+Vr48rs/w9lIqnPPV+6VFtNS9C
+ 6O4DRU45klDso7IAXMdItfb/d7mm0PxsCv2RB+cWHnrC6GAJhJLdEN7ldQAxWl2Xt2hKW/p
+ MZdgOe+PbvBWMj4TT09UQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oIfgM93huCo=:gXILo7squPk+PHdn2SMEaS
+ YTIJ+GCtelKegLo4qmcuJ3dxiXtIZMeRjMfPeMZXjIqEmP1seFNotQW/yrKx9bKC+SF/2vinu
+ bjkJxjm4b3MNbzNUF4oMhcVIrlPBOLBmvJ+JUDndYdyWgREXszgaKcZaghAyRpIA8wlBGRlnP
+ wmrnJvOMUXgpDEdZGFY5/VXG3hH+SxReJZ2xByLjeG4KyxXrGCOPT+NjdqjPP8SkMTigVItVC
+ NkypHY3VkpJdvmA+K31OI/8j0NiyrKcT33D9ml7BIGfbjdnzPJ5IXd+vN6xhAv9QMgTS7hDgg
+ gw1jEWwjTjmhV4Nux9ltifEKMZnk8MRU6gvL6iNDni6ofkArVD+y9yBC7b7Tcag5LCt6NpRBP
+ 71m+0K9aGmYkaJbnWGowxOdygyQw4/95BXOxEpStUxRcDSqRhF8enYdhLYHOgg38S7143VoQ9
+ p0giVODXJ161dFMMDJFMwI5AwivkjpcKIZlgpAWts6r5i/IfLIuJqa3pzcw9WDbIXPHdWl/8p
+ osYABE9Ne3jgCVPw3pqwcNHxBCcwDA6zw0jw3QOT+CvA1ctQc2yaNk1JT/gFk52JpqoVHJxnt
+ iKrbuiecblpYYX0kq4+3dL9gSoT44CKzxvQ1CikojAF3te4MjoBMKaYxRVTqbPtS9GycBqwW0
+ 3e4C4nvSaqryMAdy5XMl6ap6G2U6Vy04tcDOJjNvSh4FAh2XUnYcM5RZDw7PY4JDKXOqUj2Jt
+ P3N7qb2ykiuk4zqHg79sBR5hEExDW3c0d1IFFQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 12:14 PM Pawe=C5=82 Chmiel
-<pawel.mikolaj.chmiel@gmail.com> wrote:
+As Will Deacon points out, CONFIG_PROVE_LOCKING implies TRACE_IRQFLAGS,
+so the conditions I added in the previous patch, and some others in the
+same file can be simplified by only checking for the former.
 
-> This small patchset adds support for Fairchild Semiconductor FSA9480
-> microUSB switch.
->
-> It has been tested on Samsung Galaxy S and Samsung Fascinate 4G,
-> but it can be found also on other Samsung Aries (s5pv210) based devices.
->
-> Tomasz Figa (2):
->   dt-bindings: extcon: Add support for fsa9480 switch
->   extcon: Add fsa9480 extcon driver
+No functional change.
 
-This is surely an important driver since almost all elder Samsung
-mobiles use this kind of switch. So
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 886532aee3cd ("locking/lockdep: Move mark_lock() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ kernel/locking/lockdep.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-This driver I see is already sent to Greg for inclusion in the next kernel.
-I just wonder if you guys are even aware of this driver for the same
-hardware added by Donggeun Kim in 2011:
-drivers/misc/fsa9480.c
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 341f52117f88..4861cf8e274b 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -448,7 +448,7 @@ static void print_lockdep_off(const char *bug_msg)
+ 
+ unsigned long nr_stack_trace_entries;
+ 
+-#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
++#ifdef CONFIG_PROVE_LOCKING
+ /*
+  * Stack-trace: tightly packed array of stack backtrace
+  * addresses. Protected by the graph_lock.
+@@ -491,7 +491,7 @@ unsigned int max_lockdep_depth;
+ DEFINE_PER_CPU(struct lockdep_stats, lockdep_stats);
+ #endif
+ 
+-#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
++#ifdef CONFIG_PROVE_LOCKING
+ /*
+  * Locking printouts:
+  */
+@@ -2969,7 +2969,7 @@ static void check_chain_key(struct task_struct *curr)
+ #endif
+ }
+ 
+-#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
++#ifdef CONFIG_PROVE_LOCKING
+ static int mark_lock(struct task_struct *curr, struct held_lock *this,
+ 		     enum lock_usage_bit new_bit);
+ 
+@@ -3608,7 +3608,7 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
+ 	return ret;
+ }
+ 
+-#else /* defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING) */
++#else /* CONFIG_PROVE_LOCKING */
+ 
+ static inline int
+ mark_usage(struct task_struct *curr, struct held_lock *hlock, int check)
+@@ -3627,7 +3627,7 @@ static inline int separate_irq_context(struct task_struct *curr,
+ 	return 0;
+ }
+ 
+-#endif /* defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING) */
++#endif /* CONFIG_PROVE_LOCKING */
+ 
+ /*
+  * Initialize a lock instance's lock-class mapping info:
+@@ -4321,8 +4321,7 @@ static void __lock_unpin_lock(struct lockdep_map *lock, struct pin_cookie cookie
+  */
+ static void check_flags(unsigned long flags)
+ {
+-#if defined(CONFIG_PROVE_LOCKING) && defined(CONFIG_DEBUG_LOCKDEP) && \
+-    defined(CONFIG_TRACE_IRQFLAGS)
++#if defined(CONFIG_PROVE_LOCKING) && defined(CONFIG_DEBUG_LOCKDEP)
+ 	if (!debug_locks)
+ 		return;
+ 
+-- 
+2.20.0
 
-That said I am all for pulling in this new driver because it is surely
-better and supports device tree.
-
-But can we please also send Greg a patch to delete the old driver
-so we don't have two of them now?
-
-The old driver have no in-tree users so it can be deleted without
-side effects. Out-of-tree users can certainly adapt to the new
-extcon driver.
-
-If you want I can send a deletion patch for the misc driver?
-
-Yours,
-Linus Walleij
