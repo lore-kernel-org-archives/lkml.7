@@ -2,171 +2,104 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18018C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B411C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF1B4208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBEF32064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:24:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="V005/t26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfF1PVv (ORCPT
+        id S1726819AbfF1PYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:21:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:49976 "EHLO foss.arm.com"
+        Fri, 28 Jun 2019 11:24:17 -0400
+Received: from mout.gmx.net ([212.227.15.15]:58013 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbfF1PVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:21:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C99C28;
-        Fri, 28 Jun 2019 08:21:50 -0700 (PDT)
-Received: from [192.168.122.164] (u201426.austin.arm.com [10.118.28.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11A1B3F706;
-        Fri, 28 Jun 2019 08:21:50 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] ACPI/PPTT: Add support for ACPI 6.3 thread flag
-To:     John Garry <john.garry@huawei.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, lenb@kernel.org
-References: <20190614223158.49575-1-jeremy.linton@arm.com>
- <20190614223158.49575-2-jeremy.linton@arm.com>
- <667f95c0-5aa9-f460-a49a-e6dfefc027d8@arm.com>
- <2d1b547f-f9ee-391c-c4f3-0232a08a86bc@arm.com>
- <718438d0-8648-897a-83e8-801146a0af86@arm.com>
- <f6f7f9bb-547d-3fd3-f3f8-1d55181f63d7@huawei.com>
- <11fb712f-b3c2-5491-89ee-ea7efb18ddd8@arm.com>
- <63f6c6a8-9d79-ae75-3c15-96bded9b14e4@huawei.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <b7877a38-6c30-af7d-f627-1618684afb55@arm.com>
-Date:   Fri, 28 Jun 2019 10:21:49 -0500
+        id S1726686AbfF1PYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:24:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1561735437;
+        bh=nshWUM9Ial/mf04VgQojEVFHvNnxFuhVht1LXxXTMjs=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=V005/t26iHPy3IYQysg9nJ0s7iRbYBYACP3+SsPbrniz9VehXXgpMHAXX1LEzi5OA
+         yyY78BMlRdBJP9fiHd3DpHiHH09RgAO3YZFJCWRwFXxc9P+2PcVsDT0n6BsvR8P89r
+         UyyDRHnEhB4jfbTwTX6CWRx+ClcoFlZFwBb6G/Go=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.162] ([37.4.249.111]) by mail.gmx.com (mrgmx001
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0MLNpK-1hgKlT0DeU-000fxr; Fri, 28
+ Jun 2019 17:23:57 +0200
+Subject: Re: [PATCH] spi: spi-bcm2835.c: Fix 3-wire mode
+To:     =?UTF-8?Q?Nuno_S=c3=a1?= <nuno.sa@analog.com>, broonie@kernel.org,
+        eric@anholt.net, Martin Sperl <kernel@martin.sperl.org>,
+        Lukas Wunner <lukas@wunner.de>
+Cc:     f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+References: <20190628123023.4696-1-nuno.sa@analog.com>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <1b932c61-982b-aae0-1fef-3c574e7d17eb@gmx.net>
+Date:   Fri, 28 Jun 2019 17:23:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <63f6c6a8-9d79-ae75-3c15-96bded9b14e4@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190628123023.4696-1-nuno.sa@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:g5PhiWHkkz3XBbA68000ZtOOSFncG6Lh3B7zaH8UEnRmlj9LSu7
+ bvwDBwyI0hEnEc1mKxmBfRUfWu4NMRO99rufOyff5Dc3tU/uzCvLZl0yU5GJ0onkdKhaxwK
+ QJuHUwZ5UmDRqy28J14hzi+eF2h1Eug2xrdoDjJyWetD9YCPZQp6orzz9UjxcP/Ji6lyozO
+ TcrGlRAXcpDq/LoiaH+Cw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:A0rZTWBd6s8=:ZnhyxFh1FnnJ0ZEpCDPvE5
+ qzRz2NSk4OCFxG8VdEBssbVdpjlBuInjlZ14cN9CrAdMlriiPBa09KL5jjXtwXfenqLtdsgtB
+ WC48DFzggtufVS6A3BT3hj6RFJqmobsSRU57noFTrhRQg8jOvJS61KFFey6JXZ0l2WTJH3OQf
+ mWwcffrfwU16E6Kla5dMYv8ZH6uvnamFVuPpgiPmQshK4S5G+/BYhdQv89krlgsXHvhHkYGLH
+ wlv7f/9rHD6T8DhHwjf0vfwc3AnG3sAidHWFHjYtvIX3eu6WdTtA0ScPxXxNlNUKpts7ZfWNi
+ H5QVS1vF/8PnY/m2Y5Hz8727SetXYkV9o8HC1yfKQmyBcT+NgZGDGJa95jGdWQHc+9TAKFSij
+ Q2q7k/Sbtxsm9utnZ1+4mmilPZZRtrsD2d4e/hup6VuTQE2OdMWwQYAy+FAIyqj8DR1yJzON2
+ D523eJKfzUTIt2JZTMOtEUT/pn4JCuHdfvT3UbHsG6vhWvjWmY/qeVOg0Bhp/rDNcfZzz0BYW
+ CMfRKQgkXqkjpqDz1l7MApNQGDucLwX8NaLbkU/KBZu934WPp0AKk/4KSkL8ixH/Mi5T0Gdn4
+ 9EBnvQm7jSTakj5i4JTQez1rGceYVLN/AYfuS0WK9KLE75mcef86acwJILjmoB8ilSu5uqyx2
+ GqtynnfaBlJrVkex+vvaYdYtlW+rv7Ti6xq+Jd84H+VYtP3UQSqoUKOaKLWUPAf0v3kobq+we
+ C/2NN+5n5TY/OEOygLuQkyfBt9ZoRmJk9MdeDrX7RPhVk5M6SV9FhMvE4xIy8wryS5jQRLKyr
+ K7HT3GROuQUbWVhMOh55appdoJYfn7n1d4VX+r5ziOO9+TXTZzij8Tow6VpJZNqnWmyYgFE2N
+ /04vJ+cb+LB++ula10ICgxbkHK1r0nqoTVKsmoZrHUCfZM9U0TAX2LvFf5x/B48nWPeGOPCkH
+ 4iT21LjFFP/q0avGdDvR/mpHme1rh0eLfgm39tl6vFOFp45kcj45iXaM3o046hDWPu6HsMYUO
+ q1qzqpyprh8UQ2Je23/YHFuxC2fQELlZA6kMOCW5Bt05iBYgrS0TseNXMKkG+IdD/6UQLEczV
+ Mkbi5utSmXKR/4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Nuno,
 
-On 6/19/19 4:15 AM, John Garry wrote:
-> On 18/06/2019 22:28, Jeremy Linton wrote:
->> Hi,
->>
->> On 6/18/19 12:23 PM, John Garry wrote:
->>> On 18/06/2019 15:40, Valentin Schneider wrote:
->>>> On 18/06/2019 15:21, Jeremy Linton wrote:
->>>> [...]
->>>>>>> + * Return: -ENOENT if the PPTT doesn't exist, the CPU cannot be
->>>>>>> found or
->>>>>>> + *       the table revision isn't new enough.
->>>>>>> + * Otherwise returns flag value
->>>>>>> + */
->>>>>>
->>>>>> Nit: strictly speaking we're not returning the flag value but its 
->>>>>> mask
->>>>>> applied to the flags field. I don't think anyone will care about
->>>>>> getting
->>>>>> the actual flag value, but it should be made obvious in the doc:
->>>>>
->>>>> Or I clarify the code to actually do what the comments says. Maybe
->>>>> that is what John G was also pointing out too?
->>>>>
->>>
->>> No, I was just saying that the kernel topology can be broken without
->>> this series.
->>>
->>>>
->>>> Mmm I didn't find any reply from John regarding this in v1, but I
->>>> wouldn't
->>>> mind either way, as long as the doc & code are aligned.
->>>>
->>>
->>> BTW, to me, function acpi_pptt_cpu_is_thread() seems to try to do too
->>> much, i.e. check if the PPTT is new enough to support the thread flag
->>> and also check if it is set for a specific cpu. I'd consider separate
->>> functions here.
->>
-> 
-> Hi,
-> 
->> ? Your suggesting replacing the
->>
-> 
-> I am not saying definitely that this should be changed, it's just that 
-> acpi_pptt_cpu_is_thread() returning false, true, or "no entry" is not a 
-> typical API format.
-> 
-> How about acpi_pptt_support_thread_info(cpu) and 
-> acpi_pptt_cpu_is_threaded(cpu), both returning false/true only?
+Am 28.06.19 um 14:30 schrieb Nuno S=C3=A1:
+> As stated in
+> https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/READM=
+E.md,
+> one of rx or tx buffer's must be null. However, if DMA is enabled, the
+> driver sets the SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX on the
+> controller flags. Hence, the spi core will provide dummy buffers even if
+> one of the buffers was set to null by the device driver. Thus, the
+> communication with the 3-wire device fails.
+>
+> This patch uses the prepare_message callback to look for the device mode
+> and sets/clears the SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX on a
+> per spi message basis. It also assumes that DMA is not supported on
+> half-duplex devices.
+>
+> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-I'm not sure we want to be exporting what is effectively a version check 
-into the rest of the code. Plus, AFAIK it doesn't really simplify 
-anything except the case of ACPI machines with revision 1 PPTTs, because 
-those would only be doing a single check and assuming the state of the 
-MT bit. That MT check is suspect anyway, although AFAIK it gets the 
-right answer on all machines that predate ACPI 6.3..
+i never tested the 3-wire mode. Could you please describe your test setup?
 
+@Martin, @Lukas Are you fine with this patch?
 
-> 
-> None of this is ideal.
-> 
-> BTW, Have you audited which arm64 systems have MT bit set legitimately?
-
-Not formally, given I don't have access to everything available.
-
-> 
->>
->> if (table->revision >= rev)
-> 
-> I know that checking the table revision is not on the fast path, but it 
-> seems unnecessarily inefficient to always read it this way, I mean 
-> calling acpi_table_get().
-> 
-> Can you have a static value for the table revision? Or is this just how 
-> other table info is accessed in ACPI code?
-
-Yes caching the revision internally would save a get/put per core, for 
-older machines. I don't think its a big deal in normal operation but its 
-a couple extra lines so...
-
-I will post it with an internally cached saved_pptt_rev. That will save 
-CPU count get/puts in the case where the revision isn't new enough.
-
-
-> 
->>     cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
->>
->> check with
->>
->> if (revision_check(table, rev))
->>     cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
->>
->>
->> and a function like
->>
->> static int revision_check(acpixxxx *table, int rev)
->> {
->>     return (table->revision >= rev);
->> }
->>
->> Although, frankly if one were to do this, it should probably be a macro
->> with the table type, and used in the dozen or so other places I found
->> doing similar checks (spcr, iort, etc).
->>
->> Or something else?
->>
->>
->>
->>
-> 
-> thanks,
-> John
