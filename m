@@ -4,113 +4,176 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89577C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A1AC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 669A12064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 006072086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfF1CmN (ORCPT
+        id S1726805AbfF1CoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:42:13 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59216 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726476AbfF1CmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:42:12 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5CDEC5EA8D2C2FE829FE;
-        Fri, 28 Jun 2019 10:42:08 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 28 Jun
- 2019 10:42:04 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: allocate blocks for pinned file
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20190627170504.71700-1-jaegeuk@kernel.org>
- <f64cdddd-807e-2918-744b-56ced47a94dd@huawei.com>
- <20190628021551.GA10489@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <a8bfab96-f98f-c637-8ba0-caf702080b6f@huawei.com>
-Date:   Fri, 28 Jun 2019 10:42:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 27 Jun 2019 22:44:23 -0400
+Received: from lgeamrelo12.lge.com ([156.147.23.52]:57211 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726476AbfF1CoX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 22:44:23 -0400
+Received: from unknown (HELO lgemrelse7q.lge.com) (156.147.1.151)
+        by 156.147.23.52 with ESMTP; 28 Jun 2019 11:44:20 +0900
+X-Original-SENDERIP: 156.147.1.151
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.151 with ESMTP; 28 Jun 2019 11:44:20 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Fri, 28 Jun 2019 11:43:39 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: Re: [PATCH v2] rcu: Change return type of
+ rcu_spawn_one_boost_kthread()
+Message-ID: <20190628024339.GA13650@X58A-UD3R>
+References: <1561619266-8850-1-git-send-email-byungchul.park@lge.com>
+ <20190627134240.GB215968@google.com>
+ <20190627205703.GF26519@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190628021551.GA10489@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627205703.GF26519@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/28 10:15, Jaegeuk Kim wrote:
-> On 06/28, Chao Yu wrote:
->> Hi Jaegeuk,
->>
->> On 2019/6/28 1:05, Jaegeuk Kim wrote:
->>> This patch allows fallocate to allocate physical blocks for pinned file.
->>
->> Quoted from manual of fallocate(2):
->> "
->> Any subregion within the range specified by offset and len that did not contain
->> data before the  call  will  be  initialized  to zero.
->>
->> If  the  FALLOC_FL_KEEP_SIZE  flag  is specified in mode .... Preallocating
->> zeroed blocks beyond the end of the file in this manner is useful for optimizing
->> append workloads.
->> "
->>
->> As quoted description, our change may break the rule of fallocate(, mode = 0),
->> because with after this change, we can't guarantee that preallocated physical
->> block contains zeroed data
->>
->> Should we introduce an additional ioctl for this case? Or maybe add one more
->> flag in fallocate() for unzeroed block preallocation, not sure.
+On Thu, Jun 27, 2019 at 01:57:03PM -0700, Paul E. McKenney wrote:
+> On Thu, Jun 27, 2019 at 09:42:40AM -0400, Joel Fernandes wrote:
+> > On Thu, Jun 27, 2019 at 04:07:46PM +0900, Byungchul Park wrote:
+> > > Hello,
+> > > 
+> > > I tested if the WARN_ON_ONCE() is fired with my box and it was ok.
+> > 
+> > Looks pretty safe to me and nice clean up!
+> > 
+> > Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > 
-> I thought like that, but this is a very corner case for the pinned file only in
-> f2fs. And, the pinned file is also indeed used by this purpose.
+> Agreed, but I still cannot find where this applies.  I did try rcu/next,
+> which is currently here:
+> 
+> commit b989ff070574ad8b8621d866de0a8e9a65d42c80 (rcu/rcu/next, rcu/next)
+> Merge: 4289ee7d5a83 11ca7a9d541d
+> Author: Paul E. McKenney <paulmck@linux.ibm.com>
+> Date:   Mon Jun 24 09:12:39 2019 -0700
+> 
+>     Merge LKMM and RCU commits
+> 
+> Help?
 
-Okay, I think we need to find one place to document such behavior that is not
-matching regular poxis fallocate's sematic, user should be noticed about it.
+commit 204d7a60670f3f6399a4d0826667ab7863b3e429
+
+     Merge LKMM and RCU commits
+
+I made it on top of the above. And could you tell me which branch I'd
+better use when developing. I think it's been changing sometimes.
+
+Thank you for the answer in advance!
 
 Thanks,
+Byungchul
 
+> 							Thanx, Paul
 > 
-> Thanks,
-> 
->>
->> Thanks,
->>
->>>
->>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>> ---
->>>  fs/f2fs/file.c | 7 ++++++-
->>>  1 file changed, 6 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>> index e7c368db8185..cdfd4338682d 100644
->>> --- a/fs/f2fs/file.c
->>> +++ b/fs/f2fs/file.c
->>> @@ -1528,7 +1528,12 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
->>>  	if (off_end)
->>>  		map.m_len++;
->>>  
->>> -	err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_AIO);
->>> +	if (f2fs_is_pinned_file(inode))
->>> +		map.m_seg_type = CURSEG_COLD_DATA;
->>> +
->>> +	err = f2fs_map_blocks(inode, &map, 1, (f2fs_is_pinned_file(inode) ?
->>> +						F2FS_GET_BLOCK_PRE_DIO :
->>> +						F2FS_GET_BLOCK_PRE_AIO));
->>>  	if (err) {
->>>  		pgoff_t last_off;
->>>  
->>>
-> .
-> 
+> >  - Joel
+> > 
+> > > 
+> > > Thanks,
+> > > Byungchul
+> > > 
+> > > Changes from v1
+> > > -. WARN_ON_ONCE() on failing to create rcu_boost_kthread.
+> > > -. Changed title and commit message a bit.
+> > > 
+> > > ---8<---
+> > > From 7100fcf82202f063f70f45def208ea5198412f5a Mon Sep 17 00:00:00 2001
+> > > From: Byungchul Park <byungchul.park@lge.com>
+> > > Date: Thu, 27 Jun 2019 15:58:10 +0900
+> > > Subject: [PATCH v2] rcu: Change return type of rcu_spawn_one_boost_kthread()
+> > > 
+> > > The return value of rcu_spawn_one_boost_kthread() is not used any
+> > > longer. Change return type of that function from int to void.
+> > > 
+> > > Signed-off-by: Byungchul Park <byungchul.park@lge.com>
+> > > ---
+> > >  kernel/rcu/tree_plugin.h | 17 ++++++++---------
+> > >  1 file changed, 8 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > index 1102765..3c8444e 100644
+> > > --- a/kernel/rcu/tree_plugin.h
+> > > +++ b/kernel/rcu/tree_plugin.h
+> > > @@ -1131,7 +1131,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
+> > >   * already exist.  We only create this kthread for preemptible RCU.
+> > >   * Returns zero if all is well, a negated errno otherwise.
+> > >   */
+> > > -static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> > > +static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> > >  {
+> > >  	int rnp_index = rnp - rcu_get_root();
+> > >  	unsigned long flags;
+> > > @@ -1139,25 +1139,24 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> > >  	struct task_struct *t;
+> > >  
+> > >  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
+> > > -		return 0;
+> > > +		return;
+> > >  
+> > >  	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
+> > > -		return 0;
+> > > +		return;
+> > >  
+> > >  	rcu_state.boost = 1;
+> > >  	if (rnp->boost_kthread_task != NULL)
+> > > -		return 0;
+> > > +		return;
+> > >  	t = kthread_create(rcu_boost_kthread, (void *)rnp,
+> > >  			   "rcub/%d", rnp_index);
+> > > -	if (IS_ERR(t))
+> > > -		return PTR_ERR(t);
+> > > +	if (WARN_ON_ONCE(IS_ERR(t)))
+> > > +		return;
+> > >  	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+> > >  	rnp->boost_kthread_task = t;
+> > >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+> > >  	sp.sched_priority = kthread_prio;
+> > >  	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
+> > >  	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
+> > > -	return 0;
+> > >  }
+> > >  
+> > >  static void rcu_cpu_kthread_setup(unsigned int cpu)
+> > > @@ -1265,7 +1264,7 @@ static void __init rcu_spawn_boost_kthreads(void)
+> > >  	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
+> > >  		return;
+> > >  	rcu_for_each_leaf_node(rnp)
+> > > -		(void)rcu_spawn_one_boost_kthread(rnp);
+> > > +		rcu_spawn_one_boost_kthread(rnp);
+> > >  }
+> > >  
+> > >  static void rcu_prepare_kthreads(int cpu)
+> > > @@ -1275,7 +1274,7 @@ static void rcu_prepare_kthreads(int cpu)
+> > >  
+> > >  	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
+> > >  	if (rcu_scheduler_fully_active)
+> > > -		(void)rcu_spawn_one_boost_kthread(rnp);
+> > > +		rcu_spawn_one_boost_kthread(rnp);
+> > >  }
+> > >  
+> > >  #else /* #ifdef CONFIG_RCU_BOOST */
+> > > -- 
+> > > 1.9.1
+> > > 
