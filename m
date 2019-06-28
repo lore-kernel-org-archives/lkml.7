@@ -2,184 +2,135 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAF1C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C64C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87313208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:00:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARp+PRzs"
+	by mail.kernel.org (Postfix) with ESMTP id 661272086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfF1MAN (ORCPT
+        id S1726940AbfF1MAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:00:13 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39976 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfF1MAM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:00:12 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p11so6002763wre.7;
-        Fri, 28 Jun 2019 05:00:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zFhViWU2ix/FGtwFa2dw2ZghUA5CNul/fAu8w0UyxW8=;
-        b=ARp+PRzs5JzuKsvLfkHkuhA2bBmmH2qEuAsiROw3mHouKomY2trDc2A1XPrxeo/0KR
-         tHG3hS3pVUFyUc8UiEnzT59Bgt8mIOTl66vJZ2nNbcU4nzV8nHDKFMhK6lLil2j2JZ2y
-         ITiI7ICg7ll7qf26pm/nmSRnJ6thM27BMscaaUheHMc8W/dET5lEabjWvXUn9K3k+jg3
-         NJdhemc+u4dH3zxq3eP8r82yLzXgz+1M2kaEGFMF0Mq0LnC+ldngmS3GDzZgCDTH8KXu
-         TFk/V+5wWbbUDikwlY7OHjxqGiNXfmGE+gJhk+TTE2wYV95LjxO2RTCHI4f/nI8gwkhg
-         tMZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zFhViWU2ix/FGtwFa2dw2ZghUA5CNul/fAu8w0UyxW8=;
-        b=izG6XClqkuGB4gy2r/sqAPBboZgboeBYxG90QIPNvkNnONovmhI1Ib6hWp4B4+VmiR
-         DAIYhP2vsnWsY+xEMse05AB+gseshVDdLd4flg37kx2cM4IJP150pYfvRppHRzQMYftK
-         jidm+vxrbGOdcwhxTFwT+xKlaTGT0aR9/xXmm4kufxwm/g9g5tbTEEPyyZhX2Bq3S9m1
-         ga8GmaQxByK9GY7WE+/H/4ghvYF9ydyaCGD9OGw/7MR5PUMYqVcQFlv7ehZr78R9z3qv
-         X+Il7khejq5QSRc5OLnkpZmu2qo3T/oto5RN1Z7TZ9hYsUOKnoR/+z7td924yRa7CZ30
-         Ibqw==
-X-Gm-Message-State: APjAAAWkGlX246V8gSz4h79CW6PlDg6eMGT9amUbRjdG25fx9hA+58uf
-        K2I6qKUmp+o9MpZmgFEQSCmu5Q3ZOEo=
-X-Google-Smtp-Source: APXvYqwHNfcDEyvEEko3CDQl75vx4ggUJxH8AlV3szGQA1YFMXUfDlUD37+YRKrpHDNf9O4d+YFZ6A==
-X-Received: by 2002:adf:cc85:: with SMTP id p5mr7204435wrj.47.1561723209234;
-        Fri, 28 Jun 2019 05:00:09 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id t15sm2014117wrx.84.2019.06.28.05.00.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 05:00:08 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v5.3-rc1
-Date:   Fri, 28 Jun 2019 14:00:02 +0200
-Message-Id: <20190628120002.19597-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 28 Jun 2019 08:00:52 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36468 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726721AbfF1MAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 08:00:52 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E603A6D45061BF9FB631;
+        Fri, 28 Jun 2019 20:00:49 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Jun 2019
+ 20:00:42 +0800
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+To:     <david.oberhollenzer@sigma-star.at>, <richard@nod.at>,
+        <david@sigma-star.at>, <boris.brezillon@free-electrons.com>,
+        <yi.zhang@huawei.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <chengzhihao1@huawei.com>
+Subject: [PATCH RFC v2] mtd: ubi: Add fastmap sysfs attribute
+Date:   Fri, 28 Jun 2019 20:06:21 +0800
+Message-ID: <1561723581-70340-1-git-send-email-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+The UBI device can be attached to a MTD device via fastmap by setting
+CONFIG_MTD_UBI_FASTMAP to 'y' (If there already exists a fastmap on the
+UBI device). To support some debugging scenarios, attaching process by
+fastmap can be confirmed in dmesg. If the UBI device is attached by
+fastmap, logs like following will appear in dmesg:
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+  ubi0: attached by fastmap
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+If multiple UBI devices are attached to multiple MTD devices at the same
+time, how to distinguish which UBI devices are successfully attached by
+fastmap? Extracting attaching information for each UBI device one by one
+from dmesg is a way. A better method is to record fastmap existence in
+sysfs, so it can be obtained by userspace tools.
 
-are available in the Git repository at:
+This patch exposes fastmap on sysfs. Suppose you attach an UBI device to a
+MTD device by fastmap: if fastmap equals to '1', that is, the fastmap
+generated before last detaching operation is confirmed valid. Else, there
+may be some problems with old fastmap. Besides, userspace tool can also
+check whether the fastmap updating triggered by other operations (such as
+resize volume) is successful by reading this sysfs attribute.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.3-rc1
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+---
+ Documentation/ABI/stable/sysfs-class-ubi | 15 +++++++++++++++
+ drivers/mtd/ubi/build.c                  |  9 ++++++++-
+ 2 files changed, 23 insertions(+), 1 deletion(-)
 
-for you to fetch changes up to 3d25025ce9c2f364ea4ee76f1461c8714b9c0b6d:
+diff --git a/Documentation/ABI/stable/sysfs-class-ubi b/Documentation/ABI/stable/sysfs-class-ubi
+index a6b3240..1d96cf0 100644
+--- a/Documentation/ABI/stable/sysfs-class-ubi
++++ b/Documentation/ABI/stable/sysfs-class-ubi
+@@ -116,6 +116,21 @@ Description:
+ 		device, and "0\n" if it is cleared. UBI devices mark themselves
+ 		as read-only when they detect an unrecoverable error.
+ 
++What:		/sys/class/ubi/ubiX/fastmap
++Date:		June 2019
++KernelVersion:	5.2
++Contact:	linux-mtd@lists.infradead.org
++Description:
++		Contains ASCII "1\n" if there exists a fastmap on UBI device,
++		and "0\n" if there not exists a fastmap on UBI device. After
++		attaching the UBI device to a MTD device via fastmap, userspace
++		tool can sense that there is a fastmap on UBI device  by
++		checking sysfs attribute 'fastmap', that is, the fastmap
++		generated before last detaching operation is valid. In addition,
++		userspace tool can also check whether the fastmap updating
++		triggered by volume operation is successful by reading this
++		sysfs attribute.
++
+ What:		/sys/class/ubi/ubiX/total_eraseblocks
+ Date:		July 2006
+ KernelVersion:	2.6.22
+diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
+index d636bbe..0cd6b8e 100644
+--- a/drivers/mtd/ubi/build.c
++++ b/drivers/mtd/ubi/build.c
+@@ -140,6 +140,8 @@ static struct device_attribute dev_mtd_num =
+ 	__ATTR(mtd_num, S_IRUGO, dev_attribute_show, NULL);
+ static struct device_attribute dev_ro_mode =
+ 	__ATTR(ro_mode, S_IRUGO, dev_attribute_show, NULL);
++static struct device_attribute dev_fastmap =
++	__ATTR(fastmap, S_IRUGO, dev_attribute_show, NULL);
+ 
+ /**
+  * ubi_volume_notify - send a volume change notification.
+@@ -378,7 +380,11 @@ static ssize_t dev_attribute_show(struct device *dev,
+ 		ret = sprintf(buf, "%d\n", ubi->mtd->index);
+ 	else if (attr == &dev_ro_mode)
+ 		ret = sprintf(buf, "%d\n", ubi->ro_mode);
+-	else
++	else if (attr == &dev_fastmap) {
++		down_write(&ubi->fm_protect);
++		ret = sprintf(buf, "%d\n", ubi->fm ? 1 : 0);
++		up_write(&ubi->fm_protect);
++	} else
+ 		ret = -EINVAL;
+ 
+ 	ubi_put_device(ubi);
+@@ -398,6 +404,7 @@ static struct attribute *ubi_dev_attrs[] = {
+ 	&dev_bgt_enabled.attr,
+ 	&dev_mtd_num.attr,
+ 	&dev_ro_mode.attr,
++	&dev_fastmap.attr,
+ 	NULL
+ };
+ ATTRIBUTE_GROUPS(ubi_dev);
+-- 
+2.7.4
 
-  pwm: fsl-ftm: Make sure to unlock mutex on failure (2019-06-26 11:39:25 +0200)
-
-I'm sending this out early for this cycle because I have travel plans
-that will likely intersect with the merge window.
-
-Thanks,
-Thierry
-
-----------------------------------------------------------------
-pwm: Changes for v5.3-rc1
-
-This set of changes contains a new driver for SiFive SoCs as well as
-enhancements to the core (device links are used to track dependencies
-between PWM providers and consumers, support for PWM controllers via
-ACPI, sysfs will now suspend/resume PWMs that it has claimed) and
-various existing drivers.
-
-----------------------------------------------------------------
-Claudiu Beznea (1):
-      pwm: atmel-hlcdc: Add compatible for SAM9X60 HLCDC's PWM
-
-Fabrice Gasnier (5):
-      dt-bindings: pwm: stm32-lp: Document pin control sleep state
-      pwm: stm32-lp: Add power management support
-      pwm: Add consumer device link
-      dt-bindings: pwm: stm32: Add #pwm-cells
-      pwm: stm32: Use 3 cells ->of_xlate()
-
-Martin Blumenstingl (14):
-      pwm: meson: Unify the parameter list of meson_pwm_{enable, disable}
-      pwm: meson: Use devm_clk_get_optional() to get the input clock
-      pwm: meson: Use GENMASK and FIELD_PREP for the lo and hi values
-      pwm: meson: Change MISC_CLK_SEL_WIDTH to MISC_CLK_SEL_MASK
-      pwm: meson: Don't duplicate the polarity internally
-      pwm: meson: Pass struct pwm_device to meson_pwm_calc()
-      pwm: meson: Add the meson_pwm_channel data to struct meson_pwm
-      pwm: meson: Add the per-channel register offsets and bits in a struct
-      pwm: meson: Move pwm_set_chip_data() to meson_pwm_request()
-      pwm: meson: Simplify the calculation of the pre-divider and count
-      pwm: meson: Read the full hardware state in meson_pwm_get_state()
-      pwm: meson: Don't cache struct pwm_state internally
-      pwm: meson: Add support PWM_POLARITY_INVERSED when disabling
-      pwm: meson: Add documentation to the driver
-
-Neil Armstrong (2):
-      pwm: meson: Update with SPDX Licence identifier
-      pwm: meson: Fix the G12A AO clock parents order
-
-Nikolaus Voss (2):
-      pwm: Add support referencing PWMs from ACPI
-      leds: pwm: Support ACPI via firmware-node framework
-
-Patrick Havelange (2):
-      pwm: fsl-ftm: More relaxed permissions for updating period
-      pwm: fsl-ftm: Use write protection for prescaler & polarity
-
-Paul Cercueil (4):
-      dt-bindings: pwm: jz47xx: Remove unused compatible strings
-      pwm: jz4740: Remove unused devicetree compatible strings
-      pwm: jz4740: Apply configuration atomically
-      pwm: jz4740: Force TCU2 channels to return to their init level
-
-Sean Young (1):
-      pwm: bcm2835: Improve precision of PWM
-
-Thierry Reding (1):
-      pwm: fsl-ftm: Make sure to unlock mutex on failure
-
-Yash Shah (2):
-      pwm: sifive: Add DT documentation for SiFive PWM Controller
-      pwm: sifive: Add a driver for SiFive SoC PWM
-
-Yoshihiro Shimoda (3):
-      pwm: Add power management descriptions
-      pwm: sysfs: Add suspend/resume support
-      pwm: rcar: Remove suspend/resume support
-
- .../devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt |   5 +-
- .../devicetree/bindings/pwm/pwm-sifive.txt         |  33 ++
- .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |   9 +-
- .../devicetree/bindings/pwm/pwm-stm32.txt          |   3 +
- Documentation/pwm.txt                              |   7 +
- drivers/leds/leds-pwm.c                            |  45 ++-
- drivers/pwm/Kconfig                                |  11 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/core.c                                 | 172 ++++++++-
- drivers/pwm/pwm-atmel-hlcdc.c                      |   1 +
- drivers/pwm/pwm-bcm2835.c                          |   8 +-
- drivers/pwm/pwm-fsl-ftm.c                          | 383 ++++++++++----------
- drivers/pwm/pwm-jz4740.c                           |  49 ++-
- drivers/pwm/pwm-meson.c                            | 386 ++++++++++-----------
- drivers/pwm/pwm-rcar.c                             |  39 ---
- drivers/pwm/pwm-sifive.c                           | 339 ++++++++++++++++++
- drivers/pwm/pwm-stm32-lp.c                         |  25 ++
- drivers/pwm/pwm-stm32.c                            |   2 +
- drivers/pwm/sysfs.c                                | 102 ++++++
- include/linux/pwm.h                                |  16 +-
- 20 files changed, 1154 insertions(+), 482 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
- create mode 100644 drivers/pwm/pwm-sifive.c
