@@ -2,98 +2,226 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9699CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451ACC5B577
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6141A20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0827C2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:38:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="rukbDA3C"
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="qDntbU8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfF1Chq (ORCPT
+        id S1726849AbfF1CiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:37:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35766 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfF1Chp (ORCPT
+        Thu, 27 Jun 2019 22:38:12 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38206 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbfF1CiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:37:45 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so2349053plp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:37:45 -0700 (PDT)
+        Thu, 27 Jun 2019 22:38:12 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z75so1890662pgz.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:38:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=roaztKtTkRu8pn3yWaNhfvLdHNSmDj0YJDhL6E5EN+0=;
-        b=rukbDA3CpnhMC7Q3iFXSeQ2HtDS7nCRUjmzI73bUUVB22U1aRiyRjlQ9Zh9EDbi/V6
-         U4nUJWUK3Xh6Y54+Rkfas3b5KPNZvIxPiAhdgV2OIj+WJMHyXoPqJSU83OaUclWn90Zi
-         PZjEXxHlwrWFKhfq0Qk49+IaZcw6ssGei44MrIbwlLKRPkOwkzkv0jM9rEnCw+vOeIMs
-         EITDkhfRKI28nKKknobZm+0zSIMv9Y0taN+4zXHhKeq4bxbPJ5A1d+mGh3ZDq75As6oV
-         1TeJtBZJKbzU+16ItZURdexunhMxEY1sMlyuc5o8w5rmUK/A6mh1iNBSsYsz0dh8QW0J
-         TRkQ==
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b+GLZ8M6m+0RiomYK5+gI+yu7sTNTSRUBHps1OHnh/A=;
+        b=qDntbU8G38cfZcDrqbTvKfyIyS4PnVVQdM/rkqtCu43rh9MpBivm7CbKPCsy/yhUTS
+         wRWwbxr8tQSWvngDmyCa3iqNVDKvBh+7lznv86EmwBf6zX9r5McrPnvJTwhWpq0o0XIo
+         JrnbckqJsTsgIXXBZwB4F26jCSyUCGlc/2kB19escyrQDiP38Spb2g0bZLXY4g8gypgT
+         LBreZQtAp5Jf6BEqXBTolQKJDW5wrMxzYb5+hz1UEMUKvteHRk8xNMD8zSuJauGGV1Mq
+         Oeg66KJMO/dKbW/9+28PNa+QwFDjqYir5oUfHtmZosichOUlOM5on8TKJsC4osY3PwI5
+         Sbsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=roaztKtTkRu8pn3yWaNhfvLdHNSmDj0YJDhL6E5EN+0=;
-        b=D2Bbo5tOpgi5pvSqkU8Z7EMi/+7k+IOXjLOmdIKTxrhYE1mquCyGY9qGIVONTaDm3W
-         brx+uIXlUD0yp4CXQIhkz+OefPU3wx93izm+29t2y/LKUCmiO6x4klSByiCfn6r6BZ4n
-         YBhHumRN/yJ3W83S46jPWmiT9rdaZKbc0r/SRPnGLvVP2a4WQbepIJC9HSuxyXjpjyVq
-         rEMPOmlkg7qMaux5DTx9gLHAJq31imR6nBcfuuZWHmMX04yghuRXxNl+UfRweJfseziv
-         BbYkUkkN8TlUhYXNKJa5a7FrUtnW6hwG7cXsKORceBa2jx7RIZFZ2Wm685lWr65/h93M
-         TwcQ==
-X-Gm-Message-State: APjAAAXyX69XGdQwZcGmty+j5pbWtJi55HV8pWu0cquOddVFdY3dKu7M
-        SZTCadJV7IrOY///kYq/wailghFiMDY=
-X-Google-Smtp-Source: APXvYqzYqfCBc3iTV+51i6xo/8yVdkZVszMsUp8lcRHzgFH+naQmZdFlCFa4RWgCh79DR5QAEdb9+g==
-X-Received: by 2002:a17:902:8f93:: with SMTP id z19mr8245017plo.97.1561689465143;
-        Thu, 27 Jun 2019 19:37:45 -0700 (PDT)
-Received: from localhost.localdomain (p2517222-ipngn21701marunouchi.tokyo.ocn.ne.jp. [118.7.246.222])
-        by smtp.gmail.com with ESMTPSA id i3sm368206pgq.40.2019.06.27.19.37.42
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b+GLZ8M6m+0RiomYK5+gI+yu7sTNTSRUBHps1OHnh/A=;
+        b=gFXM7COcr0rREyGQIPrONRqi8ns7tENI2MOzYM8B3G+89WmxRb9GXw/FkC5P7L6hd/
+         v7SA8YjFQAaCMTSSoDgBSZvmhSaFoYJvBG+z+QfL4htJt5q11YNgcWfNvexDmIH6FHTu
+         9mz3glace+r5ublZgOJcjZ9kLvEXzFTKLJwkAd0mZqxjhl5Y4tJyl1ZVxnbqI0goABrK
+         MYNLW1o7aJZR1oaiuSAFpckUQbVIyVR0cgJGBpSsDFgBfpVToWdfD3LEIiyX/GQ4OiE8
+         9Os9WAbsfELF72hinGvcEkBbMeZFUJLCAZ/M8PhtkgrBRUfL6kSpbrCPKx8AAhz2AjOw
+         hmEw==
+X-Gm-Message-State: APjAAAV4y4zjSVV/taRo5fWaOuKNL5NzfSO5idYoaa1XbvKDbK7UK6O+
+        XCPPU4Xjr8HDOvIVTnQtY8/CCw==
+X-Google-Smtp-Source: APXvYqxUAXmRXenMPdCCnV02LqbuIin87jCuhFY2druebwVMqBcL7dQC6Q8odc74AdYxOxdC6QeDbQ==
+X-Received: by 2002:a17:90a:216f:: with SMTP id a102mr10217638pje.29.1561689491546;
+        Thu, 27 Jun 2019 19:38:11 -0700 (PDT)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id v184sm440013pfb.82.2019.06.27.19.38.10
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 19:37:44 -0700 (PDT)
-From:   Eiichi Tsukata <devel@etsukata.com>
-To:     davem@davemloft.net, edumazet@google.com, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>
-Subject: [PATCH net-next] net/ipv6: Fix misuse of proc_dointvec "flowlabel_reflect"
-Date:   Fri, 28 Jun 2019 11:37:14 +0900
-Message-Id: <20190628023714.1923-1-devel@etsukata.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 27 Jun 2019 19:38:11 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 19:38:10 -0700
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        bpf <bpf@vger.kernel.org>, lkp@01.org
+Subject: Re: [bpf/tools] cd17d77705:
+ kernel_selftests.bpf.test_sock_addr.sh.fail
+Message-ID: <20190628023810.GF4866@mini-arch>
+References: <20190627090446.GG7221@shao2-debian>
+ <20190627155029.GC4866@mini-arch>
+ <20190627172932.GD4866@mini-arch>
+ <CAEf4Bzbf8OE9TUV2Pq7HZp3PYhoUgMzH-Gs+GMafTPwPc_jYxA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4Bzbf8OE9TUV2Pq7HZp3PYhoUgMzH-Gs+GMafTPwPc_jYxA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-/proc/sys/net/ipv6/flowlabel_reflect assumes written value to be in the
-range of 0 to 3. Use proc_dointvec_minmax instead of proc_dointvec.
+On 06/27, Andrii Nakryiko wrote:
+> On Thu, Jun 27, 2019 at 10:29 AM Stanislav Fomichev <sdf@fomichev.me> wrote:
+> >
+> > On 06/27, Stanislav Fomichev wrote:
+> > > On 06/27, kernel test robot wrote:
+> > > > FYI, we noticed the following commit (built with gcc-7):
+> > > >
+> > > > commit: cd17d77705780e2270937fb3cbd2b985adab3edc ("bpf/tools: sync bpf.h")
+> > > > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> > > >
+> > > > in testcase: kernel_selftests
+> > > > with following parameters:
+> > > >
+> > > >     group: kselftests-00
+> > > >
+> > > > test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
+> > > > test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+> > > >
+> > > >
+> > > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+> > > >
+> > > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> > > >
+> > > > # 55: (18) r1 = 0x100000000000000
+> > > > # ; ctx->user_ip6[2] = bpf_htonl(DST_REWRITE_IP6_2);
+> > > > # 57: (7b) *(u64 *)(r6 +16) = r1
+> > > > # invalid bpf_context access off=16 size=8
+> > > This looks like clang doing single u64 write for user_ip6[2] and
+> > > user_ip6[3] instead of two u32. I don't think we allow that.
+> > >
+> > > I've seen this a couple of times myself while playing with some
+> > > progs, but not sure what's the right way to 'fix' it.
+> > >
+> > Any thoughts about the patch below? Another way to "fix" it
+> 
+> I'll give it a more thorough look a bit later, but see my comments below.
+> 
+> > would be to mark context accesses 'volatile' in bpf progs, but that sounds
+> > a bit gross.
+> >
+> > diff --git a/include/linux/filter.h b/include/linux/filter.h
+> > index 43b45d6db36d..34a14c950e60 100644
+> > --- a/include/linux/filter.h
+> > +++ b/include/linux/filter.h
+> > @@ -746,6 +746,20 @@ bpf_ctx_narrow_access_ok(u32 off, u32 size, u32 size_default)
+> >         return size <= size_default && (size & (size - 1)) == 0;
+> >  }
+> >
+> > +static inline bool __bpf_ctx_wide_store_ok(u32 off, u32 size)
+> 
+> It seems like bpf_ctx_wide_store_ok and __bpf_ctx_wide_store_ok are
+> used only inside net/core/filter.c, why declaring them in header file?
+I wanted it to be next to bpf_ctx_narrow_access_ok which does the
+reverse operation for reads.
 
-Fixes: 323a53c41292 ("ipv6: tcp: enable flowlabel reflection in some RST packets")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
----
- net/ipv6/sysctl_net_ipv6.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > +{
+> > +       /* u64 access is aligned and fits into the field size */
+> > +       return off % sizeof(__u64) == 0 && off + sizeof(__u64) <= size;
+> > +}
+> > +
+> > +#define bpf_ctx_wide_store_ok(off, size, type, field) \
+> > +       (size == sizeof(__u64) && \
+> > +        off >= offsetof(type, field) && \
+> > +        off < offsetofend(type, field) ? \
+> > +       __bpf_ctx_wide_store_ok(off - offsetof(type, field), \
+> > +                                FIELD_SIZEOF(type, field)) : 0)
+> 
+> Why do you need ternary operator instead of just a chain of &&s?
+Good point. I didn't spend too much time on the patch tbh :-)
+If it looks good in general, I can add proper tests and do a
+proper submition, this patch is just to get the discussion started.
 
-diff --git a/net/ipv6/sysctl_net_ipv6.c b/net/ipv6/sysctl_net_ipv6.c
-index 6d86fac472e7..831573461e19 100644
---- a/net/ipv6/sysctl_net_ipv6.c
-+++ b/net/ipv6/sysctl_net_ipv6.c
-@@ -114,7 +114,7 @@ static struct ctl_table ipv6_table_template[] = {
- 		.data		= &init_net.ipv6.sysctl.flowlabel_reflect,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= &zero,
- 		.extra2		= &three,
- 	},
--- 
-2.21.0
+> It also seems like you can avoid macro and use plain function if
+> instead of providing (type, field) you provide values of offsetof and
+> offsetofend (offsetofend - offsetof should equal FIELD_SIZEOF(type,
+> field), shouldn't it?).
+But then I'd have to copy-paste the args of offsetof/offsetofend at
+the caller, right? I wanted the caller to be clean and simple.
 
+> >  #define bpf_classic_proglen(fprog) (fprog->len * sizeof(fprog->filter[0]))
+> >
+> >  static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
+> > diff --git a/net/core/filter.c b/net/core/filter.c
+> > index 2014d76e0d2a..2d3787a439ae 100644
+> > --- a/net/core/filter.c
+> > +++ b/net/core/filter.c
+> > @@ -6849,6 +6849,16 @@ static bool sock_addr_is_valid_access(int off, int size,
+> >                         if (!bpf_ctx_narrow_access_ok(off, size, size_default))
+> >                                 return false;
+> >                 } else {
+> > +                       if (bpf_ctx_wide_store_ok(off, size,
+> > +                                                 struct bpf_sock_addr,
+> > +                                                 user_ip6))
+> > +                               return true;
+> > +
+> > +                       if (bpf_ctx_wide_store_ok(off, size,
+> > +                                                 struct bpf_sock_addr,
+> > +                                                 msg_src_ip6))
+> > +                               return true;
+> > +
+> >                         if (size != size_default)
+> >                                 return false;
+> >                 }
+> > @@ -7689,9 +7699,6 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
+> >  /* SOCK_ADDR_STORE_NESTED_FIELD_OFF() has semantic similar to
+> >   * SOCK_ADDR_LOAD_NESTED_FIELD_SIZE_OFF() but for store operation.
+> >   *
+> > - * It doesn't support SIZE argument though since narrow stores are not
+> > - * supported for now.
+> > - *
+> >   * In addition it uses Temporary Field TF (member of struct S) as the 3rd
+> >   * "register" since two registers available in convert_ctx_access are not
+> >   * enough: we can't override neither SRC, since it contains value to store, nor
+> > @@ -7699,7 +7706,7 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
+> >   * instructions. But we need a temporary place to save pointer to nested
+> >   * structure whose field we want to store to.
+> >   */
+> > -#define SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, OFF, TF)                       \
+> > +#define SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, SIZE, OFF, TF)         \
+> >         do {                                                                   \
+> >                 int tmp_reg = BPF_REG_9;                                       \
+> >                 if (si->src_reg == tmp_reg || si->dst_reg == tmp_reg)          \
+> > @@ -7710,8 +7717,7 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
+> >                                       offsetof(S, TF));                        \
+> >                 *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(S, F), tmp_reg,         \
+> >                                       si->dst_reg, offsetof(S, F));            \
+> > -               *insn++ = BPF_STX_MEM(                                         \
+> > -                       BPF_FIELD_SIZEOF(NS, NF), tmp_reg, si->src_reg,        \
+> > +               *insn++ = BPF_STX_MEM(SIZE, tmp_reg, si->src_reg,              \
+> >                         bpf_target_off(NS, NF, FIELD_SIZEOF(NS, NF),           \
+> >                                        target_size)                            \
+> >                                 + OFF);                                        \
+> > @@ -7723,8 +7729,8 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
+> >                                                       TF)                      \
+> >         do {                                                                   \
+> >                 if (type == BPF_WRITE) {                                       \
+> > -                       SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, OFF,    \
+> > -                                                        TF);                  \
+> > +                       SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, SIZE,   \
+> > +                                                        OFF, TF);             \
+> >                 } else {                                                       \
+> >                         SOCK_ADDR_LOAD_NESTED_FIELD_SIZE_OFF(                  \
+> >                                 S, NS, F, NF, SIZE, OFF);  \
