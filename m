@@ -4,72 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED638C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91814C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5AF120645
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C771208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YDD2atzx";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MTOsE/U7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z8w/Lg4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfF1QxV (ORCPT
+        id S1726864AbfF1QyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:53:21 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37484 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbfF1QxV (ORCPT
+        Fri, 28 Jun 2019 12:54:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38532 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfF1QyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:53:21 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 27FCB607B9; Fri, 28 Jun 2019 16:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561740800;
-        bh=V7wmU0Kva7km0q3SpmFHioNzkW8n/gaU2WsiJCh+Oy4=;
-        h=To:From:Subject:Date:From;
-        b=YDD2atzx84kHEdPaLuqDTBSThjD/ULUwy2ugE1BPyISzBG5n7qlS7+mve4mE+bpC1
-         Zr3zkrHl8NDwSTdxaJdNeyXhjwrRHlMXlzfGkSq1+BWz7a1OMzzqqSD3Rqrw3vPWb4
-         n0vh4sXbczwmbBfmqqb65b9QFZJzEsP/CKjnlUyA=
-Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2452E60300
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 16:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561740799;
-        bh=V7wmU0Kva7km0q3SpmFHioNzkW8n/gaU2WsiJCh+Oy4=;
-        h=To:From:Subject:Date:From;
-        b=MTOsE/U7+KXPGeQ0lAUj2fPT6X3lceIfmh9mrjHRj2+IIaeEeeHfBMCO4Uyl0ghMO
-         h/BO0EtVf2qWF5b52UhxRCsixQYvFONeXARM4VZVrkllhLGGnPdo9WhTPtl0UHf6bN
-         pTTz/XwhYZQUhXs9CqX8PEAOLViZcCFvELWiqk0c=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2452E60300
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-To:     lkml <linux-kernel@vger.kernel.org>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Subject: Perf framework : Cluster based counter support
-Message-ID: <7ce0c077-06ef-676f-1f7b-61f3ba8589d1@codeaurora.org>
-Date:   Fri, 28 Jun 2019 22:23:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 28 Jun 2019 12:54:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4aCzK6AWV7v8l05GIE3EDguMtt1Ba9XnxuuiQ3Rlk3Q=; b=Z8w/Lg4IyFUwGyPbT6LlhpKWU
+        wUw/qfThpPpDK1EVkDTJ1UJiw38r1aWCtwbytMCtGAED4QvCWUMKs5Oh/6QO0Wybph75WFSCNiE4z
+        SSCY5E2KKmjqFf4YfC/RXkZbftMs0PDsnBkPp83MsdPmHC1whEcp4+szoDy/HcGbBBak06He3xVFX
+        Dv2t+nDoKM8qsnEYpPu09UUtlaDwdS+RkH8iyE0U10HWCA+u5ZYlH/WcMlbenvCowHplBHyZKDmM9
+        2YOpnvA7s/rZiLu/O8vCEzzqGKQwJz/jt4166JDneHDGirGpfGEMfS4Uo/xcZIJl7ErIdb9zvCDZq
+        /5Yxuz+9w==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgu8f-0002TR-BH; Fri, 28 Jun 2019 16:54:17 +0000
+Date:   Fri, 28 Jun 2019 09:54:17 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+Message-ID: <20190628165417.GD4286@bombadil.infradead.org>
+References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190627123415.GA4286@bombadil.infradead.org>
+ <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
+ <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+ <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
+ <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
+ <20190627195948.GB4286@bombadil.infradead.org>
+ <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
+ <20190628163721.GC4286@bombadil.infradead.org>
+ <CAPcyv4jeRwhYWnGw9RrfDA54RRa9LK4JPuF3zQ-av=HdRqCTJw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jeRwhYWnGw9RrfDA54RRa9LK4JPuF3zQ-av=HdRqCTJw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On Fri, Jun 28, 2019 at 09:39:01AM -0700, Dan Williams wrote:
+> On Fri, Jun 28, 2019 at 9:37 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > That was the conclusion I came to; that one thread holding the mmap sem
+> > for read isn't being woken up when it should be.  Just need to find it ...
+> > obviously it's something to do with the PMD entries.
+> 
+> Can you explain to me one more time, yes I'm slow on the uptake on
+> this, the difference between xas_load() and xas_find_conflict() and
+> why it's ok for dax_lock_page() to use xas_load() while
+> grab_mapping_entry() uses xas_find_conflict()?
 
-Is it looks considerable to add cluster based event support to add in 
-current perf event framework and later
-in userspace perf to support such events ?
-
-Thanks,
-Mukesh
-
+When used with a non-zero 'order', xas_find_conflict() will return
+an entry whereas xas_load() might return a pointer to a node.
+dax_lock_page() always uses a zero order, so they would always do the
+same thing (xas_find_conflict() would be less efficient).
