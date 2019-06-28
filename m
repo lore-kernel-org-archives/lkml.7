@@ -2,111 +2,187 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112D4C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5A3C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCB4E2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:30:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Nv/ZMtER"
+	by mail.kernel.org (Postfix) with ESMTP id 2D8092133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfF1HaY (ORCPT
+        id S1726931AbfF1Hal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:30:24 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:48026 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726502AbfF1H3Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:29:25 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5A2B2C0BF5;
-        Fri, 28 Jun 2019 07:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561706965; bh=3trC633LXHdsbnL+z8ckfvG37DH+gbMbhg4GLhNIJwk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=Nv/ZMtER7FkR6UkUeKnLy57LYbPV1xDoVoPwD+6ixNY0gxsd+/mvlmgwaWwcqJdk9
-         zkqlZ+ZRFzhiUZp8vCPXO3l3eaLEgRWRwYYlS/X36p8xIIRpgBAInlbt7uc8hKGdF8
-         gtszstQY92+YLDGoEY9RVJbt8CARGWSx5IPitHcYUdah/t6T1Yt+JwyfhPHyKzY1Bd
-         V3h8wWh6UMODdBeM4jATqmeCTliIXdjgQb5id0LqWcSvZecGFgY6mZv1WIqffOKu5j
-         0/ZOYS3CB9we6ASg/yAIjj1e30b4T8cwBPOyxRRYA/POoIQsvp3Ux/lhu+EtnJjTcX
-         0RSCbIwbK92lg==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id C8E3FA005C;
-        Fri, 28 Jun 2019 07:29:23 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 53A2A3E945;
-        Fri, 28 Jun 2019 09:29:23 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next v2 01/10] net: stmmac: dwxgmac: Enable EDMA by default
-Date:   Fri, 28 Jun 2019 09:29:12 +0200
-Message-Id: <c5fa7360c60654003685a6b0e0c3b5cb30cefb22.1561706801.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1561706800.git.joabreu@synopsys.com>
-References: <cover.1561706800.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1561706800.git.joabreu@synopsys.com>
-References: <cover.1561706800.git.joabreu@synopsys.com>
+        Fri, 28 Jun 2019 03:30:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60936 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726484AbfF1Hak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 03:30:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 27D27B609;
+        Fri, 28 Jun 2019 07:30:39 +0000 (UTC)
+Subject: Re: [PATCH v2 09/18] drm/vram: drop
+ drm_gem_vram_driver_gem_prime_mmap
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        ckoenig.leichtzumerken@gmail.com,
+        open list <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
+References: <20190621115755.8481-1-kraxel@redhat.com>
+ <20190621115755.8481-10-kraxel@redhat.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
+ IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
+ AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
+ 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
+ hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
+ YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
+ 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
+ tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
+ R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
+ E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
+ kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
+ 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
+ 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
+ A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
+ NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
+ VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
+ iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
+ VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
+ iNx9uqqx
+Message-ID: <d3610263-421b-4c4f-faaa-0b8a8d905f07@suse.de>
+Date:   Fri, 28 Jun 2019 09:30:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <20190621115755.8481-10-kraxel@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="SjuG3ISsctN3WUhn3ZUuTIOWBXlLTl6ww"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the EDMA feature by default which gives higher performance.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--SjuG3ISsctN3WUhn3ZUuTIOWBXlLTl6ww
+Content-Type: multipart/mixed; boundary="ICaAVP5Xc9uWp5y40PIWZuKzwVKaFAzz8";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>,
+ ckoenig.leichtzumerken@gmail.com, open list <linux-kernel@vger.kernel.org>,
+ David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
+Message-ID: <d3610263-421b-4c4f-faaa-0b8a8d905f07@suse.de>
+Subject: Re: [PATCH v2 09/18] drm/vram: drop
+ drm_gem_vram_driver_gem_prime_mmap
+References: <20190621115755.8481-1-kraxel@redhat.com>
+ <20190621115755.8481-10-kraxel@redhat.com>
+In-Reply-To: <20190621115755.8481-10-kraxel@redhat.com>
 
-Changes from v1:
-	- Do not use magic values (David)
+--ICaAVP5Xc9uWp5y40PIWZuKzwVKaFAzz8
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 4 ++++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 2 ++
- 2 files changed, 6 insertions(+)
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index b8296eb41011..c9e802faabb5 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -177,6 +177,10 @@
- #define XGMAC_BLEN8			BIT(2)
- #define XGMAC_BLEN4			BIT(1)
- #define XGMAC_UNDEF			BIT(0)
-+#define XGMAC_TX_EDMA_CTRL		0x00003040
-+#define XGMAC_TDPS			GENMASK(29, 0)
-+#define XGMAC_RX_EDMA_CTRL		0x00003044
-+#define XGMAC_RDPS			GENMASK(29, 0)
- #define XGMAC_DMA_CH_CONTROL(x)		(0x00003100 + (0x80 * (x)))
- #define XGMAC_PBLx8			BIT(16)
- #define XGMAC_DMA_CH_TX_CONTROL(x)	(0x00003104 + (0x80 * (x)))
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-index 7861a938420a..42448973c36e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-@@ -122,6 +122,8 @@ static void dwxgmac2_dma_axi(void __iomem *ioaddr, struct stmmac_axi *axi)
- 	}
- 
- 	writel(value, ioaddr + XGMAC_DMA_SYSBUS_MODE);
-+	writel(XGMAC_TDPS, ioaddr + XGMAC_TX_EDMA_CTRL);
-+	writel(XGMAC_RDPS, ioaddr + XGMAC_RX_EDMA_CTRL);
- }
- 
- static void dwxgmac2_dma_rx_mode(void __iomem *ioaddr, int mode,
--- 
-2.7.4
+Am 21.06.19 um 13:57 schrieb Gerd Hoffmann:
+> The wrapper doesn't do anything any more, drop it.
+>=20
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  include/drm/drm_gem_vram_helper.h     |  4 +---
+>  drivers/gpu/drm/drm_gem_vram_helper.c | 17 -----------------
+>  2 files changed, 1 insertion(+), 20 deletions(-)
+>=20
+> diff --git a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vr=
+am_helper.h
+> index 7b9f50ba3fce..2ada671a2a6b 100644
+> --- a/include/drm/drm_gem_vram_helper.h
+> +++ b/include/drm/drm_gem_vram_helper.h
+> @@ -137,8 +137,6 @@ void drm_gem_vram_driver_gem_prime_unpin(struct drm=
+_gem_object *obj);
+>  void *drm_gem_vram_driver_gem_prime_vmap(struct drm_gem_object *obj);
+>  void drm_gem_vram_driver_gem_prime_vunmap(struct drm_gem_object *obj,
+>  					  void *vaddr);
+> -int drm_gem_vram_driver_gem_prime_mmap(struct drm_gem_object *obj,
+> -				       struct vm_area_struct *vma);
+> =20
+>  #define DRM_GEM_VRAM_DRIVER_PRIME \
+>  	.gem_prime_export =3D drm_gem_prime_export, \
+> @@ -147,6 +145,6 @@ int drm_gem_vram_driver_gem_prime_mmap(struct drm_g=
+em_object *obj,
+>  	.gem_prime_unpin  =3D drm_gem_vram_driver_gem_prime_unpin, \
+>  	.gem_prime_vmap	  =3D drm_gem_vram_driver_gem_prime_vmap, \
+>  	.gem_prime_vunmap =3D drm_gem_vram_driver_gem_prime_vunmap, \
+> -	.gem_prime_mmap	  =3D drm_gem_vram_driver_gem_prime_mmap
+> +	.gem_prime_mmap	  =3D drm_gem_prime_mmap
+> =20
+>  #endif
+> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/dr=
+m_gem_vram_helper.c
+> index 2e474dee30df..d78761802374 100644
+> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+> @@ -619,20 +619,3 @@ void drm_gem_vram_driver_gem_prime_vunmap(struct d=
+rm_gem_object *gem,
+>  	drm_gem_vram_unpin(gbo);
+>  }
+>  EXPORT_SYMBOL(drm_gem_vram_driver_gem_prime_vunmap);
+> -
+> -/**
+> - * drm_gem_vram_driver_gem_prime_mmap() - \
+> -	Implements &struct drm_driver.gem_prime_mmap
+> - * @gem:	The GEM object to map
+> - * @vma:	The VMA describing the mapping
+> - *
+> - * Returns:
+> - * 0 on success, or
+> - * a negative errno code otherwise.
+> - */
+> -int drm_gem_vram_driver_gem_prime_mmap(struct drm_gem_object *gem,
+> -				       struct vm_area_struct *vma)
+> -{
+> -	return drm_gem_prime_mmap(gem, vma);
+> -}
+> -EXPORT_SYMBOL(drm_gem_vram_driver_gem_prime_mmap);
+>=20
 
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG N=C3=BCrnberg)
+
+
+--ICaAVP5Xc9uWp5y40PIWZuKzwVKaFAzz8--
+
+--SjuG3ISsctN3WUhn3ZUuTIOWBXlLTl6ww
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl0Vwh4ACgkQaA3BHVML
+eiOMUQf+PZ8j9q4zK3Eq6XY9xecI/H6s1jGpv8Dlt7GOlTitpIYDEca5p0rtecHV
+hwGkLB7me8EsfPyt1tWlEuizxBbZFuaKSzViPfvy75ug/Xzc0rugUv2zW4Uv44v7
+cAfswUkI42HBGXDscxcwYO3cyIGnVrK50yWzbJfvS4XfD13oE+lRBs0OvZ4ltDps
+Pb+sH0X5vGE1HunXO0w+HcpbjfHXEokKsSRuSN4HpbxwV+qE5MMfJXfEH+YzNFpo
+K4/XL5PydjkbHn48Hh2S3Vs0OVy3xySC6MDtwYaxJdPOdQej9SrjHUb8bN5n5Wyj
+37b8Lz3kqSlpLfcxChTpZpkqHo3l6g==
+=u0ug
+-----END PGP SIGNATURE-----
+
+--SjuG3ISsctN3WUhn3ZUuTIOWBXlLTl6ww--
