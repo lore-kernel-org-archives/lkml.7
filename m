@@ -2,118 +2,131 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ADAC5B578
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC64C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90BC920828
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:50:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=usp-br.20150623.gappssmtp.com header.i=@usp-br.20150623.gappssmtp.com header.b="n/pLk2Bl"
+	by mail.kernel.org (Postfix) with ESMTP id 8A850214DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfF1TuJ (ORCPT
+        id S1727101AbfF1Tu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 15:50:09 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38078 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfF1TuJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 15:50:09 -0400
-Received: by mail-qk1-f194.google.com with SMTP id a27so5907948qkk.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=usp-br.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jZRO3VzZkmVCxDN0Eltf5dWSrbxlKFxXjJd0EkGNJt8=;
-        b=n/pLk2Blz54TcW6mfCs+FT0vklOVTcqyX4q8d20Z5/ABNjFoWsNfTzqHH9v8r6HAOd
-         hi3GeNg2iC0l4UAzKGKW9zJpOprL+2Xl4ffvrV38Ga1vJAEjEUY2oEQcUJnIQJ/uEMFx
-         0UjTXgBGOdiay5zb8VP1umXEMoArjkcwYJSRaKLea3uwry1q/1wF0poXZlzbNZnb1Qjq
-         NPiYjRL4T+WybrjBX8IJRQZghCWPlXD8EvA5y3mZi6wEC5kt2OdrGqWi9FcYL+fgfZwq
-         kKCzds0GscXsXABZu45uYi+N/pEHmU8Irve6DJWBcSkktZjY0uxXW1kJougZOvyo/UhX
-         SDDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jZRO3VzZkmVCxDN0Eltf5dWSrbxlKFxXjJd0EkGNJt8=;
-        b=I2wNJ2t5iSKvOMYo3vf12StK/BjtmdkELiX5PKmSj3UvPb+5D/H8BOhPwzj7rXtdvt
-         EB70VODKz2GvSW3b7EWzAQr15p3Qayh64EBo7iwSGaQoI4yl6eb/gqhw3aioO2dEm0q5
-         v9HZqv/qj9Ai40wGprxIY7TSLjPDhol+Bt8FgS/qprs3YUYrR5CCIFnQ1S0bAuyij7qE
-         cj1onJMquRpLBRgpBvu4R9LeyNh7i1cNmrPlUhYBCAkYqW6rjE6Tda4VuWg4RmmPlS39
-         DZVD7Tbh0xkL/4zvqXIeP5kr0k1RjtoRGF/RGK8FDEbj9/UpOAwSJtPrgseQ537O4Pz9
-         W65g==
-X-Gm-Message-State: APjAAAVsm3qPEMrOeCYJ0rM1I06U4Lg3jxw0nIgUuUx6LiNu/b3xQoLR
-        66cByt+/1fVuxQnNYyWuqVLJwQ==
-X-Google-Smtp-Source: APXvYqwoB+1hTX6NcQcoYm7J38heVzgt5n/r06M3b9POecQl9mwE7FfNXzKKP8Nnuns04rRl+HTCwQ==
-X-Received: by 2002:a37:4e17:: with SMTP id c23mr10251959qkb.34.1561751407986;
-        Fri, 28 Jun 2019 12:50:07 -0700 (PDT)
-Received: from greta.semfio.usp.br ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id c55sm1535141qtk.53.2019.06.28.12.50.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 12:50:07 -0700 (PDT)
-From:   =?UTF-8?q?B=C3=A1rbara=20Fernandes?= <barbara.fernandes@usp.br>
-To:     lars@metafoo.de, Michael.Hennerich@analog.com,
-        stefan.popa@analog.com, jic23@kernel.org, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, gregkh@linuxfoundation.org
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
-        =?UTF-8?q?B=C3=A1rbara=20Fernandes?= <barbara.fernandes@usp.br>,
-        Wilson Sales <spoonm@spoonm.org>
-Subject: [PATCH v2] staging: iio: ad7192: create of_device_id array
-Date:   Fri, 28 Jun 2019 16:49:22 -0300
-Message-Id: <20190628194922.13277-1-barbara.fernandes@usp.br>
+        Fri, 28 Jun 2019 15:50:28 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42462 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726819AbfF1Tu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 15:50:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 12:50:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,428,1557212400"; 
+   d="scan'208";a="164756004"
+Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Jun 2019 12:50:26 -0700
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [RFC PATCH 1/3] mm: Introduce VM_IBT for CET legacy code bitmap
+Date:   Fri, 28 Jun 2019 12:41:56 -0700
+Message-Id: <20190628194158.2431-1-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create list of compatible device ids to be matched with those stated in
-the device tree.
+The previous discussion of the IBT legacy code bitmap is here:
 
-Signed-off-by: Bárbara Fernandes <barbara.fernandes@usp.br>
-Signed-off-by: Wilson Sales <spoonm@spoonm.org>
-Co-developed by: Wilson Sales <spoonm@spoonm.org>
+    https://lkml.org/lkml/2019/6/6/1032
+
+When CET Indirect Branch Tracking (IBT) is enabled, the processor expects
+every branch target is an ENDBR instruction, or the target's address is
+marked as legacy in the legacy code bitmap.  The bitmap covers the whole
+user-mode address space (TASK_SIZE_MAX for 64-bit, TASK_SIZE for IA32),
+and each bit represents one page of linear address range.
+
+This patch introduces VM_IBT for the bitmap.
+
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- drivers/staging/iio/adc/ad7192.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ fs/proc/task_mmu.c | 3 +++
+ include/linux/mm.h | 8 ++++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-index 3d74da9d37e7..70118db98d94 100644
---- a/drivers/staging/iio/adc/ad7192.c
-+++ b/drivers/staging/iio/adc/ad7192.c
-@@ -810,11 +810,23 @@ static const struct spi_device_id ad7192_id[] = {
- 	{"ad7195", ID_AD7195},
- 	{}
- };
-+
- MODULE_DEVICE_TABLE(spi, ad7192_id);
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 66725e262a77..d707390285d3 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -663,6 +663,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
+ #endif /* CONFIG_ARCH_HAS_PKEYS */
+ #ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
+ 		[ilog2(VM_SHSTK)]	= "ss",
++#endif
++#ifdef CONFIG_X86_INTEL_BRANCH_TRACKING_USER
++		[ilog2(VM_IBT)]		= "bt",
+ #endif
+ 	};
+ 	size_t i;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 921bae5fa7ab..a8da5bdfd7c9 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -299,12 +299,14 @@ extern unsigned int kobjsize(const void *objp);
+ #define VM_HIGH_ARCH_BIT_3	35	/* bit only usable on 64-bit architectures */
+ #define VM_HIGH_ARCH_BIT_4	36	/* bit only usable on 64-bit architectures */
+ #define VM_HIGH_ARCH_BIT_5	37	/* bit only usable on 64-bit architectures */
++#define VM_HIGH_ARCH_BIT_6	38	/* bit only usable on 64-bit architectures */
+ #define VM_HIGH_ARCH_0	BIT(VM_HIGH_ARCH_BIT_0)
+ #define VM_HIGH_ARCH_1	BIT(VM_HIGH_ARCH_BIT_1)
+ #define VM_HIGH_ARCH_2	BIT(VM_HIGH_ARCH_BIT_2)
+ #define VM_HIGH_ARCH_3	BIT(VM_HIGH_ARCH_BIT_3)
+ #define VM_HIGH_ARCH_4	BIT(VM_HIGH_ARCH_BIT_4)
+ #define VM_HIGH_ARCH_5	BIT(VM_HIGH_ARCH_BIT_5)
++#define VM_HIGH_ARCH_6	BIT(VM_HIGH_ARCH_BIT_6)
+ #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
  
-+static const struct of_device_id ad7192_of_match[] = {
-+	{ .compatible = "adi,ad7190" },
-+	{ .compatible = "adi,ad7192" },
-+	{ .compatible = "adi,ad7193" },
-+	{ .compatible = "adi,ad7195" },
-+	{}
-+};
+ #ifdef CONFIG_ARCH_HAS_PKEYS
+@@ -348,6 +350,12 @@ extern unsigned int kobjsize(const void *objp);
+ # define VM_SHSTK	VM_NONE
+ #endif
+ 
++#ifdef CONFIG_X86_INTEL_BRANCH_TRACKING_USER
++# define VM_IBT		VM_HIGH_ARCH_6
++#else
++# define VM_IBT		VM_NONE
++#endif
 +
-+MODULE_DEVICE_TABLE(of, ad7192_of_match);
-+
- static struct spi_driver ad7192_driver = {
- 	.driver = {
- 		.name	= "ad7192",
-+		.of_match_table = ad7192_of_match,
- 	},
- 	.probe		= ad7192_probe,
- 	.remove		= ad7192_remove,
+ #ifndef VM_GROWSUP
+ # define VM_GROWSUP	VM_NONE
+ #endif
 -- 
 2.17.1
 
