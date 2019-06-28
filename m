@@ -2,147 +2,135 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FD6C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9ADC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC129208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:57:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561726657;
-	bh=XEYDarb8NSLXAMTxaRlXcywzzmI5a0jxNDElYQMapA4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ipYPO5+IwYyC3nSuMH+Ukvp/+OX95oBIzSfQpMXXAQV3pnpiEGgad8cuB8wikDRnk
-	 4pY3oo/U1l+Q2+yK3h6xmQXquBSo4enSRdYsx3TX4iu7MXUEeCgywW4kXU5Wu1rHVA
-	 ybWJXgjQ6gBKctJeHCuMoFQAEuyQrJs3vL5df/C4=
+	by mail.kernel.org (Postfix) with ESMTP id 22F592063F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:57:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vsvc9FDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfF1M5g (ORCPT
+        id S1726934AbfF1M5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:57:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbfF1M5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:57:36 -0400
-Received: from localhost.localdomain (unknown [60.186.221.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD1F82063F;
-        Fri, 28 Jun 2019 12:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561726655;
-        bh=XEYDarb8NSLXAMTxaRlXcywzzmI5a0jxNDElYQMapA4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=A+yLbvKdzNksnNInnFSB+NO+OkPfr+84GXHFoD7NIWw+B1ukMT10UITZCWrS3N2lp
-         lf+3RS+tLBE8PfiM6tO6bW9nb9Kiq9My83vHCYlUXdtYreeh9WDvdG76X99a1rKA/+
-         32ZGOv9Y5ljQtbtN33aPrQ2y11WGyjB+2NkgYqkY=
-From:   guoren@kernel.org
-To:     arnd@arndb.de
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH] csky: Fixup abiv1 memset error
-Date:   Fri, 28 Jun 2019 20:57:28 +0800
-Message-Id: <1561726648-24871-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Fri, 28 Jun 2019 08:57:44 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38384 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfF1M5n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 08:57:43 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r12so10778770edo.5;
+        Fri, 28 Jun 2019 05:57:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6ueum79s2anlYRWAS9FzgzUG5wD5wG/lgkeWFXCOZvM=;
+        b=Vsvc9FDKFPgRzauk8Np3VxKo8ItjOarCG/RlvXleY2TbKd28c/x/ep7DNZ2QsaFtp+
+         qPSDxgbdaCVLAqkDqePuAf4kl1Gs+fC421GxUCMubv5o3NHu37Q/B7uFx3zKlYCBCo62
+         DmrkABGvkTzrFhmRrV2eZEswUp+1+/IH3k0Y4+9APWCbJK9CrbH8GWoTzvFwonJOEhod
+         JSUAMZmjsu6UFkipC2194iWXuqzUzdV2EEHWRI5SVToBk2QGi6wnHjvqC7iL4i/QGyPe
+         EChj5ytcdah2+5MBwfJQMcFvMc73KIHiTSIgRs7kmPMwFXI904fprhovqJVFndOWvapW
+         fLWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6ueum79s2anlYRWAS9FzgzUG5wD5wG/lgkeWFXCOZvM=;
+        b=lYsMv7lhf9v20T5PllNPPggBsdr1LBir7F7F28Qqe/Nr/IYc4v+gYZDN3+2JsbQAR8
+         yQ2h2RNwl9yu5nViP2sKb5zBBXi4M4EyhZ4D+tBbphPoRTIRli9gR/dNMIfngJ8vqfmh
+         Rhg2lKLY45lZhK0zvZVvl6JnGeCCM3I0JCKOTfWrBUo/bszob8JfpnR47vnALfMl1OmQ
+         bSGBn+Gk76XWSbMvEKWWHVNnTjdLQbRXjpjCGUxHuHEXV6dN9XdKMVwALvlABApSWR50
+         vJwhtiyHo7nuTXN+Ck4d6RJca0lqyWEe+DwekhhzDDdLpTw3OQV+K+6afyJmo+aXFnSy
+         kvsA==
+X-Gm-Message-State: APjAAAXo3dZ8hvEiTuEIJ5tiQ8LvwW0FMXMm+hd8fb8yyCYoufrBn3/h
+        VxJ2CuN+l4i4eFbWSqOwWKbB7zlGptP83fredTA=
+X-Google-Smtp-Source: APXvYqx/IMk24rdtcifnHuLMV6DCNhTAzYuxxQja93vW7hEYjOvG7wHyp/9qq5VtECkxVyq2rfOAvLhGOZyY7X4lzP4=
+X-Received: by 2002:a17:906:951:: with SMTP id j17mr8540123ejd.174.1561726661672;
+ Fri, 28 Jun 2019 05:57:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190627020515.5660-1-masneyb@onstation.org>
+In-Reply-To: <20190627020515.5660-1-masneyb@onstation.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 28 Jun 2019 05:57:26 -0700
+Message-ID: <CAF6AEGvFE46aKCBP5de_Bx_hFcTyF0Vc9B1PebBZjGZmw9zh2g@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH] drm/msm: correct NULL pointer dereference in context_init
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        "Kristian H. Kristensen" <hoegsberg@google.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+On Wed, Jun 26, 2019 at 7:05 PM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Correct attempted NULL pointer dereference in context_init() when
+> running without an IOMMU.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Fixes: 295b22ae596c ("drm/msm: Pass the MMU domain index in struct msm_file_private")
+> ---
+> The no IOMMU case seems like functionality that we may want to keep
+> based on this comment:
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/msm/adreno/a3xx_gpu.c#L523
+> Once I get the msm8974 interconnect driver done, I'm going to look into
+> what needs to be done to get the IOMMU working on the Nexus 5.
+>
+> Alternatively, for development purposes, maybe we could have a NOOP
+> IOMMU driver that would allow us to remove these NULL checks that are
+> sprinkled throughout the code. I haven't looked into this in detail.
+> Thoughts?
 
-Current memset implementation in abiv1 is wrong and it'll cause unalign
-access. Just remove it and use the generic one. This patch will cause
-performance degradation and we will improve it with a new design in next
-patchset.
+yeah, we probably want to keep !iommu support, it is at least useful
+for bringup of new (or old) devices.  But tends to bitrot a since it
+isn't a case that gets tested much once iommu is in place.  Perhaps
+there is a way to have a null iommu/aspace, although I'm not quite
+sure how that would work..
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
----
- arch/csky/abiv1/Makefile         |  1 -
- arch/csky/abiv1/inc/abi/string.h |  3 ---
- arch/csky/abiv1/memset.c         | 37 -------------------------------------
- arch/csky/abiv1/strksyms.c       |  1 -
- 4 files changed, 42 deletions(-)
- delete mode 100644 arch/csky/abiv1/memset.c
+Anyways,
 
-diff --git a/arch/csky/abiv1/Makefile b/arch/csky/abiv1/Makefile
-index e52b42b..601ce3b 100644
---- a/arch/csky/abiv1/Makefile
-+++ b/arch/csky/abiv1/Makefile
-@@ -5,5 +5,4 @@ obj-y					+= bswapsi.o
- obj-y					+= cacheflush.o
- obj-y					+= mmap.o
- obj-y					+= memcpy.o
--obj-y					+= memset.o
- obj-y					+= strksyms.o
-diff --git a/arch/csky/abiv1/inc/abi/string.h b/arch/csky/abiv1/inc/abi/string.h
-index 5abe80b..0cd4338 100644
---- a/arch/csky/abiv1/inc/abi/string.h
-+++ b/arch/csky/abiv1/inc/abi/string.h
-@@ -7,7 +7,4 @@
- #define __HAVE_ARCH_MEMCPY
- extern void *memcpy(void *, const void *, __kernel_size_t);
- 
--#define __HAVE_ARCH_MEMSET
--extern void *memset(void *, int, __kernel_size_t);
--
- #endif /* __ABI_CSKY_STRING_H */
-diff --git a/arch/csky/abiv1/memset.c b/arch/csky/abiv1/memset.c
-deleted file mode 100644
-index b4aa75b..0000000
---- a/arch/csky/abiv1/memset.c
-+++ /dev/null
-@@ -1,37 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
--
--#include <linux/types.h>
--
--void *memset(void *dest, int c, size_t l)
--{
--	char *d = dest;
--	int ch = c & 0xff;
--	int tmp = (ch | ch << 8 | ch << 16 | ch << 24);
--
--	while (((uintptr_t)d & 0x3) && l--)
--		*d++ = ch;
--
--	while (l >= 16) {
--		*(((u32 *)d))   = tmp;
--		*(((u32 *)d)+1) = tmp;
--		*(((u32 *)d)+2) = tmp;
--		*(((u32 *)d)+3) = tmp;
--		l -= 16;
--		d += 16;
--	}
--
--	while (l > 3) {
--		*(((u32 *)d)) = tmp;
--		l -= 4;
--		d += 4;
--	}
--
--	while (l) {
--		*d = ch;
--		l--;
--		d++;
--	}
--
--	return dest;
--}
-diff --git a/arch/csky/abiv1/strksyms.c b/arch/csky/abiv1/strksyms.c
-index 436995c..c7ccbb2 100644
---- a/arch/csky/abiv1/strksyms.c
-+++ b/arch/csky/abiv1/strksyms.c
-@@ -4,4 +4,3 @@
- #include <linux/module.h>
- 
- EXPORT_SYMBOL(memcpy);
--EXPORT_SYMBOL(memset);
--- 
-2.7.4
+Reviewed-by: Rob Clark <robdclark@gmail.com>
 
+(I guess this can go in via drm-misc-fixes unless we get some more
+fixes to justify sending msm-fixes MR..)
+
+>
+>  drivers/gpu/drm/msm/msm_drv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index 451bd4508793..83047cb2c735 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -619,7 +619,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+>
+>         msm_submitqueue_init(dev, ctx);
+>
+> -       ctx->aspace = priv->gpu->aspace;
+> +       ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
+>         file->driver_priv = ctx;
+>
+>         return 0;
+> --
+> 2.20.1
+>
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
