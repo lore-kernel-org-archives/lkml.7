@@ -6,32 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88319C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2CDC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9CD208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBC4217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfF1LVx (ORCPT
+        id S1726859AbfF1LVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:21:53 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35288 "EHLO
+        Fri, 28 Jun 2019 07:21:55 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35305 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbfF1LVs (ORCPT
+        with ESMTP id S1726562AbfF1LVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:21:48 -0400
+        Fri, 28 Jun 2019 07:21:50 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hgowr-00021p-N4; Fri, 28 Jun 2019 13:21:45 +0200
-Message-Id: <20190628111440.098196390@linutronix.de>
+        id 1hgowu-00022M-BK; Fri, 28 Jun 2019 13:21:48 +0200
+Message-Id: <20190628111440.550568228@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 28 Jun 2019 13:11:49 +0200
+Date:   Fri, 28 Jun 2019 13:11:54 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Robert Hodaszi <Robert.Hodaszi@digi.com>
-Subject: [patch V2 1/6] genirq: Delay deactivation in free_irq()
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Jan Beulich <jbeulich@suse.com>
+Subject: [patch V2 6/6] x86/irq: Seperate unused system vectors from spurious
+ entry again
 References: <20190628111148.828731433@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -40,146 +42,201 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When interrupts are shutdown, they are immediately deactivated in the
-irqdomain hierarchy. While this looks obviously correct there is a subtle
-issue:
+Quite some time ago the interrupt entry stubs for unused vectors in the
+system vector range got removed and directly mapped to the spurious
+interrupt vector entry point.
 
-There might be an interrupt in flight when free_irq() is invoking the
-shutdown. This is properly handled at the irq descriptor / primary handler
-level, but the deactivation might completely disable resources which are
-required to acknowledge the interrupt.
+Sounds reasonable, but it's subtly broken. The spurious interrupt vector
+entry point pushes vector number 0xFF on the stack which makes the whole
+logic in __smp_spurious_interrupt() pointless.
 
-Split the shutdown code and deactivate the interrupt after synchronization
-in free_irq(). Fixup all other usage sites where this is not an issue to
-invoke the combined shutdown_and_deactivate() function instead.
+As a consequence any spurious interrupt which comes from a vector != 0xFF
+is treated as a real spurious interrupt (vector 0xFF) and not
+acknowledged. That subsequently stalls all interrupt vectors of equal and
+lower priority, which brings the system to a grinding halt.
 
-This still might be an issue if the interrupt in flight servicing is
-delayed on a remote CPU beyond the invocation of synchronize_irq(), but
-that cannot be handled at that level and needs to be handled in the
-synchronize_irq() context.
+This can happen because even on 64-bit the system vector space is not
+guaranteed to be fully populated. A full compile time handling of the
+unused vectors is not possible because quite some of them are conditonally
+populated at runtime.
 
-Fixes: f8264e34965a ("irqdomain: Introduce new interfaces to support hierarchy irqdomains")
-Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
+Bring the entry stubs back, which wastes 160 bytes if all stubs are unused,
+but gains the proper handling back. There is no point to selectively spare
+some of the stubs which are known at compile time as the required code in
+the IDT management would be way larger and convoluted.
+
+Do not route the spurious entries through common_interrupt and do_IRQ() as
+the original code did. Route it to smp_spurious_interrupt() which evaluates
+the vector number and acts accordingly now that the real vector numbers are
+handed in.
+
+Fixup the pr_warn so the actual spurious vector (0xff) is clearly
+distiguished from the other vectors and also note for the vectored case
+whether it was pending in the ISR or not.
+
+ "Spurious APIC interrupt (vector 0xFF) on CPU#0, should never happen."
+ "Spurious interrupt vector 0xed on CPU#1. Acked."
+ "Spurious interrupt vector 0xee on CPU#1. Not pending!."
+
+Fixes: 2414e021ac8d ("x86: Avoid building unused IRQ entry stubs")
+Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Jan Beulich <jbeulich@suse.com>
 ---
+ arch/x86/entry/entry_32.S     |   24 ++++++++++++++++++++++++
+ arch/x86/entry/entry_64.S     |   30 ++++++++++++++++++++++++++----
+ arch/x86/include/asm/hw_irq.h |    2 ++
+ arch/x86/kernel/apic/apic.c   |   33 ++++++++++++++++++++++-----------
+ arch/x86/kernel/idt.c         |    3 ++-
+ 5 files changed, 76 insertions(+), 16 deletions(-)
 
-V2: Fix comment and add Reviewed tag
-
----
- kernel/irq/autoprobe.c  |    6 +++---
- kernel/irq/chip.c       |    6 ++++++
- kernel/irq/cpuhotplug.c |    2 +-
- kernel/irq/internals.h  |    1 +
- kernel/irq/manage.c     |   12 +++++++++++-
- 5 files changed, 22 insertions(+), 5 deletions(-)
-
---- a/kernel/irq/autoprobe.c
-+++ b/kernel/irq/autoprobe.c
-@@ -90,7 +90,7 @@ unsigned long probe_irq_on(void)
- 			/* It triggered already - consider it spurious. */
- 			if (!(desc->istate & IRQS_WAITING)) {
- 				desc->istate &= ~IRQS_AUTODETECT;
--				irq_shutdown(desc);
-+				irq_shutdown_and_deactivate(desc);
- 			} else
- 				if (i < 32)
- 					mask |= 1 << i;
-@@ -127,7 +127,7 @@ unsigned int probe_irq_mask(unsigned lon
- 				mask |= 1 << i;
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1104,6 +1104,30 @@ ENTRY(irq_entries_start)
+     .endr
+ END(irq_entries_start)
  
- 			desc->istate &= ~IRQS_AUTODETECT;
--			irq_shutdown(desc);
-+			irq_shutdown_and_deactivate(desc);
- 		}
- 		raw_spin_unlock_irq(&desc->lock);
- 	}
-@@ -169,7 +169,7 @@ int probe_irq_off(unsigned long val)
- 				nr_of_irqs++;
- 			}
- 			desc->istate &= ~IRQS_AUTODETECT;
--			irq_shutdown(desc);
-+			irq_shutdown_and_deactivate(desc);
- 		}
- 		raw_spin_unlock_irq(&desc->lock);
- 	}
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -314,6 +314,12 @@ void irq_shutdown(struct irq_desc *desc)
- 		}
- 		irq_state_clr_started(desc);
- 	}
-+}
++#ifdef CONFIG_X86_LOCAL_APIC
++	.align 8
++ENTRY(spurious_entries_start)
++    vector=FIRST_SYSTEM_VECTOR
++    .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
++	pushl	$(~vector+0x80)			/* Note: always in signed byte range */
++    vector=vector+1
++	jmp	common_spurious
++	.align	8
++    .endr
++END(spurious_entries_start)
 +
++common_spurious:
++	ASM_CLAC
++	addl	$-0x80, (%esp)			/* Adjust vector into the [-256, -1] range */
++	SAVE_ALL switch_stacks=1
++	ENCODE_FRAME_POINTER
++	TRACE_IRQS_OFF
++	movl	%esp, %eax
++	call	smp_spurious_interrupt
++	jmp	ret_from_intr
++ENDPROC(common_interrupt)
++#endif
 +
-+void irq_shutdown_and_deactivate(struct irq_desc *desc)
-+{
-+	irq_shutdown(desc);
+ /*
+  * the CPU automatically disables interrupts when executing an IRQ vector,
+  * so IRQ-flags tracing has to follow that:
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -375,6 +375,18 @@ ENTRY(irq_entries_start)
+     .endr
+ END(irq_entries_start)
+ 
++	.align 8
++ENTRY(spurious_entries_start)
++    vector=FIRST_SYSTEM_VECTOR
++    .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
++	UNWIND_HINT_IRET_REGS
++	pushq	$(~vector+0x80)			/* Note: always in signed byte range */
++	jmp	common_spurious
++	.align	8
++	vector=vector+1
++    .endr
++END(spurious_entries_start)
++
+ .macro DEBUG_ENTRY_ASSERT_IRQS_OFF
+ #ifdef CONFIG_DEBUG_ENTRY
+ 	pushq %rax
+@@ -571,10 +583,20 @@ END(interrupt_entry)
+ 
+ /* Interrupt entry/exit. */
+ 
+-	/*
+-	 * The interrupt stubs push (~vector+0x80) onto the stack and
+-	 * then jump to common_interrupt.
+-	 */
++/*
++ * The interrupt stubs push (~vector+0x80) onto the stack and
++ * then jump to common_spurious/interrupt.
++ */
++common_spurious:
++	addq	$-0x80, (%rsp)			/* Adjust vector to [-256, -1] range */
++	call	interrupt_entry
++	UNWIND_HINT_REGS indirect=1
++	call	smp_spurious_interrupt		/* rdi points to pt_regs */
++	jmp	ret_from_intr
++END(common_spurious)
++_ASM_NOKPROBE(common_spurious)
++
++/* common_interrupt is a hotpath. Align it */
+ 	.p2align CONFIG_X86_L1_CACHE_SHIFT
+ common_interrupt:
+ 	addq	$-0x80, (%rsp)			/* Adjust vector to [-256, -1] range */
+--- a/arch/x86/include/asm/hw_irq.h
++++ b/arch/x86/include/asm/hw_irq.h
+@@ -150,6 +150,8 @@ extern char irq_entries_start[];
+ #define trace_irq_entries_start irq_entries_start
+ #endif
+ 
++extern char spurious_entries_start[];
++
+ #define VECTOR_UNUSED		NULL
+ #define VECTOR_SHUTDOWN		((void *)~0UL)
+ #define VECTOR_RETRIGGERED	((void *)~1UL)
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2040,21 +2040,32 @@ void __init register_lapic_address(unsig
+ 	entering_irq();
+ 	trace_spurious_apic_entry(vector);
+ 
++	inc_irq_stat(irq_spurious_count);
++
++	/*
++	 * If this is a spurious interrupt then do not acknowledge
++	 */
++	if (vector == SPURIOUS_APIC_VECTOR) {
++		/* See SDM vol 3 */
++		pr_info("Spurious APIC interrupt (vector 0xFF) on CPU#%d, should never happen.\n",
++			smp_processor_id());
++		goto out;
++	}
++
  	/*
- 	 * This must be called even if the interrupt was never started up,
- 	 * because the activation can happen before the interrupt is
---- a/kernel/irq/cpuhotplug.c
-+++ b/kernel/irq/cpuhotplug.c
-@@ -116,7 +116,7 @@ static bool migrate_one_irq(struct irq_d
- 		 */
- 		if (irqd_affinity_is_managed(d)) {
- 			irqd_set_managed_shutdown(d);
--			irq_shutdown(desc);
-+			irq_shutdown_and_deactivate(desc);
- 			return false;
- 		}
- 		affinity = cpu_online_mask;
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -82,6 +82,7 @@ extern int irq_activate_and_startup(stru
- extern int irq_startup(struct irq_desc *desc, bool resend, bool force);
- 
- extern void irq_shutdown(struct irq_desc *desc);
-+extern void irq_shutdown_and_deactivate(struct irq_desc *desc);
- extern void irq_enable(struct irq_desc *desc);
- extern void irq_disable(struct irq_desc *desc);
- extern void irq_percpu_enable(struct irq_desc *desc, unsigned int cpu);
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/random.h>
- #include <linux/interrupt.h>
-+#include <linux/irqdomain.h>
- #include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/sched/rt.h>
-@@ -1699,6 +1700,7 @@ static struct irqaction *__free_irq(stru
- 	/* If this was the last handler, shut down the IRQ line: */
- 	if (!desc->action) {
- 		irq_settings_clr_disable_unlazy(desc);
-+		/* Only shutdown. Deactivate after synchronize_hardirq() */
- 		irq_shutdown(desc);
+-	 * Check if this really is a spurious interrupt and ACK it
+-	 * if it is a vectored one.  Just in case...
+-	 * Spurious interrupts should not be ACKed.
++	 * If it is a vectored one, verify it's set in the ISR. If set,
++	 * acknowledge it.
+ 	 */
+ 	v = apic_read(APIC_ISR + ((vector & ~0x1f) >> 1));
+-	if (v & (1 << (vector & 0x1f)))
++	if (v & (1 << (vector & 0x1f))) {
++		pr_info("Spurious interrupt (vector 0x%02x) on CPU#%d. Acked\n",
++			vector, smp_processor_id());
+ 		ack_APIC_irq();
+-
+-	inc_irq_stat(irq_spurious_count);
+-
+-	/* see sw-dev-man vol 3, chapter 7.4.13.5 */
+-	pr_info("spurious APIC interrupt through vector %02x on CPU#%d, "
+-		"should never happen.\n", vector, smp_processor_id());
+-
++	} else {
++		pr_info("Spurious interrupt (vector 0x%02x) on CPU#%d. Not pending!\n",
++			vector, smp_processor_id());
++	}
++out:
+ 	trace_spurious_apic_exit(vector);
+ 	exiting_irq();
+ }
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -319,7 +319,8 @@ void __init idt_setup_apic_and_irq_gates
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
+ 		set_bit(i, system_vectors);
+-		set_intr_gate(i, spurious_interrupt);
++		entry = spurious_entries_start + 8 * (i - FIRST_SYSTEM_VECTOR);
++		set_intr_gate(i, entry);
  	}
- 
-@@ -1768,6 +1770,14 @@ static struct irqaction *__free_irq(stru
- 		 * require it to deallocate resources over the slow bus.
- 		 */
- 		chip_bus_lock(desc);
-+		/*
-+		 * There is no interrupt on the fly anymore. Deactivate it
-+		 * completely.
-+		 */
-+		raw_spin_lock_irqsave(&desc->lock, flags);
-+		irq_domain_deactivate_irq(&desc->irq_data);
-+		raw_spin_unlock_irqrestore(&desc->lock, flags);
-+
- 		irq_release_resources(desc);
- 		chip_bus_sync_unlock(desc);
- 		irq_remove_timings(desc);
-@@ -1855,7 +1865,7 @@ static const void *__cleanup_nmi(unsigne
- 	}
- 
- 	irq_settings_clr_disable_unlazy(desc);
--	irq_shutdown(desc);
-+	irq_shutdown_and_deactivate(desc);
- 
- 	irq_release_resources(desc);
- 
+ #endif
+ }
 
 
