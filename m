@@ -2,151 +2,201 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F5AC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843ADC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3BEC2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:44:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ArWvWp5p"
+	by mail.kernel.org (Postfix) with ESMTP id 5D04A2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfF1Eou (ORCPT
+        id S1726726AbfF1EpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 00:44:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33946 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbfF1Eou (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 00:44:50 -0400
-Received: by mail-pl1-f194.google.com with SMTP id i2so2517143plt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 21:44:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hl6Pnq3xmamo6vmydBFzkBduZblIOAKNn76di+zQvGg=;
-        b=ArWvWp5pND/lULGeiiBYq6FEwP8p5dbr+MdcNPFR2BzY0chrPL6fMADb9DDlqSXbPp
-         nGMaut7nZwa7plZh313G3DdV9Rhdbu8/dnIvEysC8NUXtwTofGM6qYax8bpercPIPKBO
-         Z8sgFuTkhQXgmGDAxn536HqD06p0cEXUtYYnk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hl6Pnq3xmamo6vmydBFzkBduZblIOAKNn76di+zQvGg=;
-        b=VMefK/qLQMtCYT0csi8r4jsyeop/PyFy9z+8CHHxseUyjB7BCZnRzhkL8DVVnguyjg
-         uFa2BY9k2/ERHpIcae+B3eECy3g4pStdjIYnVrztyaLsp4h9wq5s8K6OP3A1U4LLrBQu
-         +8mOVcOvnKAh838GL4z5g0g24U2sBPONX0GyzkcFUahT+clT6l1C6PDv9FxEzMtgwWng
-         mlqu0caeA312e0O9L3o19MF045aKOmeIZuhya8zxK25rgxGohPt3f24saVwMOaf8TNpU
-         5ih+rruXEkO8lTHWZrYu3WRjWFMA96pzUoXjPhTqRwP8tYv2BvfdW7YJ618ype7XfVL3
-         fzBg==
-X-Gm-Message-State: APjAAAWCGq263mK0wf08CZPo32kiIBCBKwc5YKEcgg5sQtY/URc4OynM
-        p5py+JKqZnv048cZ4C8UjwExvw==
-X-Google-Smtp-Source: APXvYqxyD53Q4D6YjfYZpwSQr5iBPVpFjp/1qcQRyBbAVksVmFchZUGIkAn9E7IYzwslmLgUq6AIFw==
-X-Received: by 2002:a17:902:301:: with SMTP id 1mr936859pld.323.1561697089853;
-        Thu, 27 Jun 2019 21:44:49 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id q13sm675562pgq.90.2019.06.27.21.44.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 21:44:49 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     groeck@chromium.org, drinkcat@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] block, bfq: NULL out the bic when it's no longer valid
-Date:   Thu, 27 Jun 2019 21:44:09 -0700
-Message-Id: <20190628044409.128823-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 28 Jun 2019 00:45:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:40244 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbfF1EpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 00:45:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B5DA344;
+        Thu, 27 Jun 2019 21:45:10 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.40.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 805AA3F706;
+        Thu, 27 Jun 2019 21:45:06 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC 1/2] mm/sparsemem: Add vmem_altmap support in vmemmap_populate_basepages()
+Date:   Fri, 28 Jun 2019 10:14:42 +0530
+Message-Id: <1561697083-7329-2-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1561697083-7329-1-git-send-email-anshuman.khandual@arm.com>
+References: <1561697083-7329-1-git-send-email-anshuman.khandual@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In reboot tests on several devices we were seeing a "use after free"
-when slub_debug or KASAN was enabled.  The kernel complained about:
+Generic vmemmap_populate_basepages() is used across platforms for vmemmap
+as standard or as fallback when huge pages mapping fails. On arm64 it is
+used for configs with ARM64_SWAPPER_USES_SECTION_MAPS applicable both for
+ARM64_16K_PAGES and ARM64_64K_PAGES which cannot use huge pages because of
+alignment requirements.
 
-  Unable to handle kernel paging request at virtual address 6b6b6c2b
+This prevents those configs from allocating from device memory for vmemap
+mapping as vmemmap_populate_basepages() does not support vmem_altmap. This
+enables that required support. Each architecture should evaluate and decide
+on enabling device based base page allocation when appropriate. Hence this
+keeps it disabled for all architectures to preserve the existing semantics.
 
-...which is a classic sign of use after free under slub_debug.  The
-stack crawl in kgdb looked like:
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-ia64@vger.kernel.org
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
 
- 0  test_bit (addr=<optimized out>, nr=<optimized out>)
- 1  bfq_bfqq_busy (bfqq=<optimized out>)
- 2  bfq_select_queue (bfqd=<optimized out>)
- 3  __bfq_dispatch_request (hctx=<optimized out>)
- 4  bfq_dispatch_request (hctx=<optimized out>)
- 5  0xc056ef00 in blk_mq_do_dispatch_sched (hctx=0xed249440)
- 6  0xc056f728 in blk_mq_sched_dispatch_requests (hctx=0xed249440)
- 7  0xc0568d24 in __blk_mq_run_hw_queue (hctx=0xed249440)
- 8  0xc0568d94 in blk_mq_run_work_fn (work=<optimized out>)
- 9  0xc024c5c4 in process_one_work (worker=0xec6d4640, work=0xed249480)
- 10 0xc024cff4 in worker_thread (__worker=0xec6d4640)
-
-Digging in kgdb, it could be found that, though bfqq looked fine,
-bfqq->bic had been freed.
-
-Through further digging, I postulated that perhaps it is illegal to
-access a "bic" (AKA an "icq") after bfq_exit_icq() had been called
-because the "bic" can be freed at some point in time after this call
-is made.  I confirmed that there certainly were cases where the exact
-crashing code path would access the "bic" after bfq_exit_icq() had
-been called.  Sspecifically I set the "bfqq->bic" to (void *)0x7 and
-saw that the bic was 0x7 at the time of the crash.
-
-To understand a bit more about why this crash was fairly uncommon (I
-saw it only once in a few hundred reboots), you can see that much of
-the time bfq_exit_icq_fbqq() fully frees the bfqq and thus it can't
-access the ->bic anymore.  The only case it doesn't is if
-bfq_put_queue() sees a reference still held.
-
-However, even in the case when bfqq isn't freed, the crash is still
-rare.  Why?  I tracked what happened to the "bic" after the exit
-routine.  It doesn't get freed right away.  Rather,
-put_io_context_active() eventually called put_io_context() which
-queued up freeing on a workqueue.  The freeing then actually happened
-later than that through call_rcu().  Despite all these delays, some
-extra debugging showed that all the hoops could be jumped through in
-time and the memory could be freed causing the original crash.  Phew!
-
-To make a long story short, assuming it truly is illegal to access an
-icq after the "exit_icq" callback is finished, this patch is needed.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
-Most of the testing of this was done on the Chrome OS 4.19 kernel with
-BFQ backported (thanks to Paolo's help).  I did manage to reproduce a
-crash on mainline Linux (v5.2-rc6) though.
+ arch/arm64/mm/mmu.c      |  2 +-
+ arch/ia64/mm/discontig.c |  2 +-
+ arch/x86/mm/init_64.c    |  4 ++--
+ include/linux/mm.h       |  5 +++--
+ mm/sparse-vmemmap.c      | 16 +++++++++++-----
+ 5 files changed, 18 insertions(+), 11 deletions(-)
 
-To see some of the techniques used to debug this, see
-<https://crrev.com/c/1679134> and <https://crrev.com/c/1681258/1>.
-
-I'll also note that on linuxnext (next-20190627) I saw some other
-use-after-frees that seemed related to BFQ but haven't had time to
-debug.  They seemed unrelated.
-
- block/bfq-iosched.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index f8d430f88d25..6c0cff03f8f6 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -4584,6 +4584,7 @@ static void bfq_exit_icq_bfqq(struct bfq_io_cq *bic, bool is_sync)
- 		unsigned long flags;
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 194c84e..39e18d1 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -982,7 +982,7 @@ static void remove_pagetable(unsigned long start, unsigned long end,
+ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+ 		struct vmem_altmap *altmap)
+ {
+-	return vmemmap_populate_basepages(start, end, node);
++	return vmemmap_populate_basepages(start, end, node, NULL);
+ }
+ #else	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
+ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+diff --git a/arch/ia64/mm/discontig.c b/arch/ia64/mm/discontig.c
+index 05490dd..faefd7e 100644
+--- a/arch/ia64/mm/discontig.c
++++ b/arch/ia64/mm/discontig.c
+@@ -660,7 +660,7 @@ void arch_refresh_nodedata(int update_node, pg_data_t *update_pgdat)
+ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+ 		struct vmem_altmap *altmap)
+ {
+-	return vmemmap_populate_basepages(start, end, node);
++	return vmemmap_populate_basepages(start, end, node, NULL);
+ }
  
- 		spin_lock_irqsave(&bfqd->lock, flags);
-+		bfqq->bic = NULL;
- 		bfq_exit_bfqq(bfqd, bfqq);
- 		bic_set_bfqq(bic, NULL, is_sync);
- 		spin_unlock_irqrestore(&bfqd->lock, flags);
+ void vmemmap_free(unsigned long start, unsigned long end,
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 8335ac6..c67ad5d 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1509,7 +1509,7 @@ static int __meminit vmemmap_populate_hugepages(unsigned long start,
+ 			vmemmap_verify((pte_t *)pmd, node, addr, next);
+ 			continue;
+ 		}
+-		if (vmemmap_populate_basepages(addr, next, node))
++		if (vmemmap_populate_basepages(addr, next, node, NULL))
+ 			return -ENOMEM;
+ 	}
+ 	return 0;
+@@ -1527,7 +1527,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+ 				__func__);
+ 		err = -ENOMEM;
+ 	} else
+-		err = vmemmap_populate_basepages(start, end, node);
++		err = vmemmap_populate_basepages(start, end, node, NULL);
+ 	if (!err)
+ 		sync_global_pgds(start, end - 1);
+ 	return err;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index c6ae9eb..dda9bd4 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2758,14 +2758,15 @@ pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
+ p4d_t *vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node);
+ pud_t *vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node);
+ pmd_t *vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node);
+-pte_t *vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node);
++pte_t *vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
++			    struct vmem_altmap *altmap);
+ void *vmemmap_alloc_block(unsigned long size, int node);
+ struct vmem_altmap;
+ void *vmemmap_alloc_block_buf(unsigned long size, int node);
+ void *altmap_alloc_block_buf(unsigned long size, struct vmem_altmap *altmap);
+ void vmemmap_verify(pte_t *, int, unsigned long, unsigned long);
+ int vmemmap_populate_basepages(unsigned long start, unsigned long end,
+-			       int node);
++			       int node, struct vmem_altmap *altmap);
+ int vmemmap_populate(unsigned long start, unsigned long end, int node,
+ 		struct vmem_altmap *altmap);
+ void vmemmap_populate_print_last(void);
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index 7fec057..d333b75 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -140,12 +140,18 @@ void __meminit vmemmap_verify(pte_t *pte, int node,
+ 			start, end - 1);
+ }
+ 
+-pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node)
++pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
++				       struct vmem_altmap *altmap)
+ {
+ 	pte_t *pte = pte_offset_kernel(pmd, addr);
+ 	if (pte_none(*pte)) {
+ 		pte_t entry;
+-		void *p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
++		void *p;
++
++		if (altmap)
++			p = altmap_alloc_block_buf(PAGE_SIZE, altmap);
++		else
++			p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
+ 		if (!p)
+ 			return NULL;
+ 		entry = pfn_pte(__pa(p) >> PAGE_SHIFT, PAGE_KERNEL);
+@@ -213,8 +219,8 @@ pgd_t * __meminit vmemmap_pgd_populate(unsigned long addr, int node)
+ 	return pgd;
+ }
+ 
+-int __meminit vmemmap_populate_basepages(unsigned long start,
+-					 unsigned long end, int node)
++int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
++					 int node, struct vmem_altmap *altmap)
+ {
+ 	unsigned long addr = start;
+ 	pgd_t *pgd;
+@@ -236,7 +242,7 @@ int __meminit vmemmap_populate_basepages(unsigned long start,
+ 		pmd = vmemmap_pmd_populate(pud, addr, node);
+ 		if (!pmd)
+ 			return -ENOMEM;
+-		pte = vmemmap_pte_populate(pmd, addr, node);
++		pte = vmemmap_pte_populate(pmd, addr, node, altmap);
+ 		if (!pte)
+ 			return -ENOMEM;
+ 		vmemmap_verify(pte, node, addr, addr + PAGE_SIZE);
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.7.4
 
