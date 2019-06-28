@@ -2,152 +2,104 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6555DC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC949C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39FB12064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42C62063F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:08:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="HGkuCf9E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfF1IHJ (ORCPT
+        id S1726858AbfF1IId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:07:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41321 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfF1IGi (ORCPT
+        Fri, 28 Jun 2019 04:08:33 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:3746 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726463AbfF1IId (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:06:38 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so5233230wrm.8
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 01:06:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=1v9Wyn7iwUdwNAPe/wicZ1s65Wur1rKRI0dtWQllWvE=;
-        b=JfGXUjFoEwV9gWxpzW0ZRVC+xojja58MQKsVzi/eEhP/9khBd5r8YZ885FxPAMWLcO
-         xKbXB86EhhxpGJDbvWRQBV/Q8L0YxRdUB4PUBZu7/xQsGom8aJ2F6uChuAtRBYgK/+dL
-         TUI048XpDV53n9UP3Bhl24mm62tRJp+bVIdYNN1FAWNn2nxPqLhg1f+CkPRJsLDUrx3q
-         o12TEqwKnbd0CJ5ceCugr/IISgaBF3QcldboL1Pfn4AiFwQ8nMdZ2uEMWm7RZT5u/2do
-         qoopSRlflXcDsaqM+AFPOCIuV2SPWkRYpCxAS/+pZ0jvN1Rebyi6cblrGArlLLeiigPg
-         2FHA==
-X-Gm-Message-State: APjAAAW1av394VJf7pKnVx+CtK1qGEleE11rwlRmN+cI6wKn8rCucbJC
-        Nq5lVhlq/+3WW2AyaawlNJJKSA==
-X-Google-Smtp-Source: APXvYqxfTry0rDN3ZWc44QEXzcfVqD2IcCAo/Bgl44+jgumVXWDlHjVCTkLXWyeTfG9MRRPV/b/SBQ==
-X-Received: by 2002:a5d:4751:: with SMTP id o17mr875145wrs.127.1561709197134;
-        Fri, 28 Jun 2019 01:06:37 -0700 (PDT)
-Received: from localhost.localdomain.com ([151.29.165.245])
-        by smtp.gmail.com with ESMTPSA id z19sm1472774wmi.7.2019.06.28.01.06.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Jun 2019 01:06:36 -0700 (PDT)
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
-        tj@kernel.org
-Cc:     linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        claudio@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
-        bristot@redhat.com, mathieu.poirier@linaro.org, lizefan@huawei.com,
-        cgroups@vger.kernel.org
-Subject: [PATCH v8 2/8] sched/core: Streamlining calls to task_rq_unlock()
-Date:   Fri, 28 Jun 2019 10:06:12 +0200
-Message-Id: <20190628080618.522-3-juri.lelli@redhat.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190628080618.522-1-juri.lelli@redhat.com>
-References: <20190628080618.522-1-juri.lelli@redhat.com>
+        Fri, 28 Jun 2019 04:08:33 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5S86Ra3029283;
+        Fri, 28 Jun 2019 10:08:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=aYrirpoqz+aG/SQ1qsY5AmsZmle4+vE9RtqR8rZ9598=;
+ b=HGkuCf9Ellhs7g7RnW79DSMJOik7rwV+W45VuapLC4qfoyW+5nPK2aL7Mcmo//z7K4Mz
+ BBq6bl2ZtBwiUBjeiZvrEMRYYEtyXeSL7/WN5auI7YMrJ0mT8TlWuJ+O32VrW8dL0M6V
+ bxDiFOlEbOWd2XfpMsxORrrESzOD43MFWUjl6EUy+c/OgtkKayZZ2vm6QaBEkmKqC5qj
+ 3T50lT2M2BlT2nYiVduhMcSzNAPceES/wyDaq5/iont1jv8yHPqrG/XwT1Gch7kfl7Xi
+ A3mx/SSiHcjtBX9V0PBIchXq8BAaA7rZ5TlXM4E0moT0bXt/GfEarZ+SC+T4m/0krczX 4A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2tcyq0cwck-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 28 Jun 2019 10:08:17 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 36BA131;
+        Fri, 28 Jun 2019 08:08:17 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 164F116AF;
+        Fri, 28 Jun 2019 08:08:17 +0000 (GMT)
+Received: from localhost (10.75.127.46) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun 2019 10:08:16
+ +0200
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <robh+dt@kernel.org>,
+        <alexandre.torgue@st.com>
+CC:     <mcoquelin.stm32@gmail.com>, <fabrice.gasnier@st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>
+Subject: [PATCH 4/4] ARM: dts: stm32: add booster for ADC analog switches on stm32mp157c
+Date:   Fri, 28 Jun 2019 10:08:09 +0200
+Message-ID: <1561709289-11174-5-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1561709289-11174-1-git-send-email-fabrice.gasnier@st.com>
+References: <1561709289-11174-1-git-send-email-fabrice.gasnier@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Booster for ADC analog input switches can be used when Vdda is below 2.7V
+to get maximum ADC analog performances.
+Add booster for ADC analog switches on stm32mp157c.
 
-Calls to task_rq_unlock() are done several times in function
-__sched_setscheduler().  This is fine when only the rq lock needs to be
-handled but not so much when other locks come into play.
-
-This patch streamlines the release of the rq lock so that only one
-location need to be modified when dealing with more than one lock.
-
-No change of functionality is introduced by this patch.
-
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- kernel/sched/core.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/stm32mp157c.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 874c427742a9..acd6a9fe85bc 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4222,8 +4222,8 @@ static int __sched_setscheduler(struct task_struct *p,
- 	 * Changing the policy of the stop threads its a very bad idea:
- 	 */
- 	if (p == rq->stop) {
--		task_rq_unlock(rq, p, &rf);
--		return -EINVAL;
-+		retval = -EINVAL;
-+		goto unlock;
- 	}
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index 2afeee6..2dd5162 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -109,6 +109,12 @@
+ 		};
+ 	};
  
- 	/*
-@@ -4239,8 +4239,8 @@ static int __sched_setscheduler(struct task_struct *p,
- 			goto change;
- 
- 		p->sched_reset_on_fork = reset_on_fork;
--		task_rq_unlock(rq, p, &rf);
--		return 0;
-+		retval = 0;
-+		goto unlock;
- 	}
- change:
- 
-@@ -4253,8 +4253,8 @@ static int __sched_setscheduler(struct task_struct *p,
- 		if (rt_bandwidth_enabled() && rt_policy(policy) &&
- 				task_group(p)->rt_bandwidth.rt_runtime == 0 &&
- 				!task_group_is_autogroup(task_group(p))) {
--			task_rq_unlock(rq, p, &rf);
--			return -EPERM;
-+			retval = -EPERM;
-+			goto unlock;
- 		}
- #endif
- #ifdef CONFIG_SMP
-@@ -4269,8 +4269,8 @@ static int __sched_setscheduler(struct task_struct *p,
- 			 */
- 			if (!cpumask_subset(span, &p->cpus_allowed) ||
- 			    rq->rd->dl_bw.bw == 0) {
--				task_rq_unlock(rq, p, &rf);
--				return -EPERM;
-+				retval = -EPERM;
-+				goto unlock;
- 			}
- 		}
- #endif
-@@ -4289,8 +4289,8 @@ static int __sched_setscheduler(struct task_struct *p,
- 	 * is available.
- 	 */
- 	if ((dl_policy(policy) || dl_task(p)) && sched_dl_overflow(p, policy, attr)) {
--		task_rq_unlock(rq, p, &rf);
--		return -EBUSY;
-+		retval = -EBUSY;
-+		goto unlock;
- 	}
- 
- 	p->sched_reset_on_fork = reset_on_fork;
-@@ -4346,6 +4346,10 @@ static int __sched_setscheduler(struct task_struct *p,
- 	preempt_enable();
- 
- 	return 0;
++	booster: regulator-booster {
++		compatible = "st,stm32mp1-booster";
++		st,syscfg = <&syscfg>;
++		status = "disabled";
++	};
 +
-+unlock:
-+	task_rq_unlock(rq, p, &rf);
-+	return retval;
- }
- 
- static int _sched_setscheduler(struct task_struct *p, int policy,
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
 -- 
-2.17.2
+2.7.4
 
