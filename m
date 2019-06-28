@@ -2,113 +2,94 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CBEC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E540C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456D82070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561711448;
-	bh=o6V86oek2kjSAYllqdbRs9diWyYXGQbO50xPH7OpvSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B2N9weJe0jpVZiArm7DSE3Rm9ISMEZjtUkcJkSK5VSrceEZwnG1a/7i2PUiHHOsz4
-	 sJhBGUb1gjYzMFWsc84wqDUDDVxJbOZHMf88Z7oTk/3gmLNw0PtZFw1Vwp7VMNRhPH
-	 uLovkfy3smUJEJqbr9SYC9y48Xf2y2wqVkMMcnqk=
+	by mail.kernel.org (Postfix) with ESMTP id 352592070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfF1IoG (ORCPT
+        id S1726578AbfF1Ioh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:44:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbfF1IoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:44:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFA8D2070D;
-        Fri, 28 Jun 2019 08:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561711445;
-        bh=o6V86oek2kjSAYllqdbRs9diWyYXGQbO50xPH7OpvSM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ykGpmU6sP2eEgs8/lrb6HffixI0ak35r4b72eAIqMwJZJOc2Batv1QLFrvWcFA20k
-         vIn+SxScmErc5TuHgzKadINK17LTRa+KL8Z+sw4PElRPhx/L8I3R/YcOETnnWp3EyR
-         AzDVn+te4PTN2POdKWghJYgV/+4uWiiGlME9CeSM=
-Date:   Fri, 28 Jun 2019 10:44:02 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatxjain@gmail.com>
-Subject: Re: PCI/AER sysfs files violate the rules of how sysfs works
-Message-ID: <20190628084402.GA28386@kroah.com>
-References: <20190621072911.GA21600@kroah.com>
- <20190621141550.GG82584@google.com>
- <CACK8Z6FXS3VoaqxmwXCR2vnp-TSE5zGMi6Zt1w_LxskTguMw=Q@mail.gmail.com>
+        Fri, 28 Jun 2019 04:44:37 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:53737 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbfF1Ioh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:44:37 -0400
+X-Originating-IP: 86.250.200.211
+Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D638BFF813;
+        Fri, 28 Jun 2019 08:44:23 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 10:44:23 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     masonccyang@mxic.com.tw
+Cc:     anders.roxell@linaro.org, bbrezillon@kernel.org,
+        broonie@kernel.org, christophe.kerello@st.com,
+        computersforpeace@gmail.com, devicetree@vger.kernel.org,
+        dwmw2@infradead.org, jianxin.pan@amlogic.com, juliensu@mxic.com.tw,
+        lee.jones@linaro.org, liang.yang@amlogic.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, paul@crapouillou.net, paul.burton@mips.com,
+        richard@nod.at, stefan@agner.ch, vigneshr@ti.com
+Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add Macronix Raw NAND controller
+Message-ID: <20190628104423.5eb3058a@xps13>
+In-Reply-To: <OF2EDB7089.FAD92F61-ON48258427.002D122A-48258427.002ECEF3@mxic.com.tw>
+References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw>
+        <1561443056-13766-2-git-send-email-masonccyang@mxic.com.tw>
+        <20190627193635.29abff43@xps13>
+        <OFDDC43C05.7B4092B5-ON48258427.001EE57E-48258427.002122D1@mxic.com.tw>
+        <20190628091836.3148d450@xps13>
+        <OF2EDB7089.FAD92F61-ON48258427.002D122A-48258427.002ECEF3@mxic.com.tw>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACK8Z6FXS3VoaqxmwXCR2vnp-TSE5zGMi6Zt1w_LxskTguMw=Q@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 05:56:59PM -0700, Rajat Jain wrote:
-> On Fri, Jun 21, 2019 at 7:15 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Fri, Jun 21, 2019 at 09:29:11AM +0200, Greg KH wrote:
-> > > Hi,
-> > >
-> > > When working on some documentation scripts to show the
-> > > Documentation/ABI/ files in an automated way, I ran across this "gem" of
-> > > a sysfs file: Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> > >
-> > > In it you describe how the files
-> > > /sys/bus/pci/devices/<dev>/aer_dev_correctable and
-> > > /sys/bus/pci/devices/<dev>/aer_dev_fatal and
-> > > /sys/bus/pci/devices/<dev>/aer_dev_nonfatal
-> > > all display a bunch of text on multiple lines.
-> > >
-> > > This violates the "one value per sysfs file" rule, and should never have
-> > > been merged as-is :(
-> > >
-> > > Please fix it up to be a lot of individual files if your really need all
-> > > of those different values.
-> >
-> > Sorry about that.  Do you think we're safe in changing the sysfs ABI
-> > by removing the original files and replacing them with new, better
-> > ones?  This is pretty new and hopefully not widely used yet.
-> 
-> Hi Bjorn / Greg,
-> 
-> I'm thinking of having a named group  for AER stats so that all the
-> individual counter attributes are put under a subdirectory (called
-> "aer_stats") in the sysfs, instead of cluttering the PCI device
-> directory. I expect to have the following counters in there:
-> 
-> dev_err_corr_<correctible_error_name>  (Total 8 such files)
-> dev_err_fatal_<fatal_error_name> (Total 17 Such files)
-> dev_err_nonfatal_<fatal_error_name> (Total 17 Such files)
-> 
-> dev_total_err_corr (1file)
-> dev_total_err_fatal (1file)
-> dev_total_err_nonfatal (1file)
-> 
-> rootport_total_err_corr (1file - only for rootports)
-> rootport_total_err_fatal (1file - only for rootports)
-> rootport_total_err_nonfatal (1file - only for rootports)
-> 
-> Please let me know if this sounds ok.
+Hi Mason,
 
-Sounds good to me.
+masonccyang@mxic.com.tw wrote on Fri, 28 Jun 2019 16:31:16 +0800:
 
-thanks,
+> Hi Miquel,
+> 
+> > >   
+> > > > > Add a driver for Macronix raw NAND controller.   
+> > > > 
+> > > > Could you pass userspace major MTD tests and can you   
+> attach/mount/edit
+> > > > a UBI/UBIFS storage?   
+> > > 
+> > > mtd_debug passed and using dd utility to read and write 
+> > > with md5sum checking passed.  
+> > 
+> > Please don't use dd, use nanddump/nandwrite/flasherase/nandbiterrs and
+> > run the other tests from the mtd-utils test suite (available in
+> > Buildroot for instance).
+> >   
+> 
+> Got it.
+> 
+> But may I know why 'dd' utility is not preferences ?
+> I generate a random data file and write to Flash by
+> using dd with bs=page size and read data back from Flash.
+> Checking data by md5sum.
 
-greg k-h
+Because dd works on block devices. MTD devices are way different. You
+cannot write to OOB with dd. You cannot erase before write with dd. And
+dd does not know about bad blocks. Please simply avoid using dd.
+
+> The write and read testing data size is easily adjustable.
+
+So are the MTD utils.
+
+Thanks,
+Miquèl
