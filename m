@@ -2,278 +2,171 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A061C5B576
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE7AC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08B52064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:56:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4SCkeIe"
+	by mail.kernel.org (Postfix) with ESMTP id E2D7B2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfF1B4x (ORCPT
+        id S1726487AbfF1B7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:56:53 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41769 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfF1B4x (ORCPT
+        Thu, 27 Jun 2019 21:59:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17808 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725770AbfF1B7K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:56:53 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c11so3514320qkk.8;
-        Thu, 27 Jun 2019 18:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0i4kJCzdFi1eKWT/Uh5ABrL3ICyPfUoX7aaK4/fBK80=;
-        b=i4SCkeIeve7atg+6hpytb+v5x6EIKiwnxQ25tNHm5IjSEhGNCU3S1skO10lySeJ0pl
-         LnTrlUS6At33fAbKD1AQJs7RMLdZSFO7M7gYHJlkcsqo+NdOSAPvUwCIqiilKxA9J8Kl
-         ui6HOgwU3JJWAjQaaWmw4Y96UKx/LJjqsma4IskllaSTvcX+1hbOkuW7BJ4Frtc+ZCJ1
-         ASHzSYqjbL0qBPSmyl7zR9kHQsPPwjD+X2kR7b2SaOoGaKpx6Qb/oFLf4UDeqDyp0C0d
-         UN8OvATvZ3I1j/gH3/EGVnj4ZOEBkA9U+BDoqk0O6fbMOREGALVYCx4wBEwSxqAe7qx6
-         GvVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0i4kJCzdFi1eKWT/Uh5ABrL3ICyPfUoX7aaK4/fBK80=;
-        b=XmKzoI8CUrHIGlWlNYsm0uRkFzZ+HEsPQlmIRR/8Dmu0noSQ33NiQ7UNtiFB3PeEkr
-         HlnznKpE7Z84dn5o5dS1IFuMPAUt1T/Twp8MQktdPBHT2zZaSXjCWx4PbuA2M9t5ZKz0
-         Q1bcyzNY0dOHpYwzzt4iGm2sZTcwXW7I40eFdzgUDKVGJQsMenJe0MN0KQOFASKO5gII
-         qWFJPBxfkgQw5kQOyZ/msr3Ph+xncUfyVlPCtPEDu1nqOL0pWma2piT81mw+0dNFlZGi
-         t2lh2aYyBPsxiaVQelO/maYNn6zsjqDTXT5SAAHNakc7DewXPAIk3OwNrPZPs5mLfvqY
-         OiXw==
-X-Gm-Message-State: APjAAAUSNb12W9B9FX1onhxXIGtmyAcf68LJ6CgazzOJroY5fN5p1EtY
-        Xz+dA3lGk8kBSpErrADg/5dO5ycFN6WC+Qq2j61X9foLePxb0Q==
-X-Google-Smtp-Source: APXvYqzOTcm9NKv/sFbRZ4uKO9DpJr8/FOJVEOpmpSay1So1xdXCTcoyv9lWGDlleBFqYLp/WFtF0z1bH9FpytjrDXQ=
-X-Received: by 2002:a37:a095:: with SMTP id j143mr6633284qke.449.1561687011590;
- Thu, 27 Jun 2019 18:56:51 -0700 (PDT)
+        Thu, 27 Jun 2019 21:59:10 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5S1vDtd041017;
+        Thu, 27 Jun 2019 21:58:49 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2td76ad7mt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Jun 2019 21:58:49 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5S1tCOI009374;
+        Fri, 28 Jun 2019 01:58:48 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01wdc.us.ibm.com with ESMTP id 2t9by7ajaw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jun 2019 01:58:48 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5S1wklw29294852
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 01:58:46 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 989EABE04F;
+        Fri, 28 Jun 2019 01:58:46 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C8451BE051;
+        Fri, 28 Jun 2019 01:58:42 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.218.134])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Fri, 28 Jun 2019 01:58:42 +0000 (GMT)
+References: <20190129134750-mutt-send-email-mst@kernel.org> <877eefxvyb.fsf@morokweng.localdomain> <20190204144048-mutt-send-email-mst@kernel.org> <87ef71seve.fsf@morokweng.localdomain> <20190320171027-mutt-send-email-mst@kernel.org> <87tvfvbwpb.fsf@morokweng.localdomain> <20190323165456-mutt-send-email-mst@kernel.org> <87a7go71hz.fsf@morokweng.localdomain> <20190520090939-mutt-send-email-mst@kernel.org> <877ea26tk8.fsf@morokweng.localdomain> <20190603211528-mutt-send-email-mst@kernel.org>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Michael Roth <mdroth@linux.vnet.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>
+Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+In-reply-to: <20190603211528-mutt-send-email-mst@kernel.org>
+Date:   Thu, 27 Jun 2019 22:58:40 -0300
+Message-ID: <877e96qxm7.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-References: <20190627090446.GG7221@shao2-debian> <20190627155029.GC4866@mini-arch>
-In-Reply-To: <20190627155029.GC4866@mini-arch>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 27 Jun 2019 18:56:39 -0700
-Message-ID: <CAEf4Bzb1y=rZ9yeRP7TDrvW9wiOwKHkCdHAqjNh+7xSkrBOk6A@mail.gmail.com>
-Subject: Re: [bpf/tools] cd17d77705: kernel_selftests.bpf.test_sock_addr.sh.fail
-To:     Stanislav Fomichev <sdf@fomichev.me>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        bpf <bpf@vger.kernel.org>, lkp@01.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906280014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 8:50 AM Stanislav Fomichev <sdf@fomichev.me> wrote:
+
+Michael S. Tsirkin <mst@redhat.com> writes:
+
+> On Mon, Jun 03, 2019 at 10:13:59PM -0300, Thiago Jung Bauermann wrote:
+>>
+>>
+>> Michael S. Tsirkin <mst@redhat.com> writes:
+>>
+>> > On Wed, Apr 17, 2019 at 06:42:00PM -0300, Thiago Jung Bauermann wrote:
+>> >> I rephrased it in terms of address translation. What do you think of
+>> >> this version? The flag name is slightly different too:
+>> >>
+>> >>
+>> >> VIRTIO_F_ACCESS_PLATFORM_NO_TRANSLATION This feature has the same
+>> >>     meaning as VIRTIO_F_ACCESS_PLATFORM both when set and when not set,
+>> >>     with the exception that address translation is guaranteed to be
+>> >>     unnecessary when accessing memory addresses supplied to the device
+>> >>     by the driver. Which is to say, the device will always use physical
+>> >>     addresses matching addresses used by the driver (typically meaning
+>> >>     physical addresses used by the CPU) and not translated further. This
+>> >>     flag should be set by the guest if offered, but to allow for
+>> >>     backward-compatibility device implementations allow for it to be
+>> >>     left unset by the guest. It is an error to set both this flag and
+>> >>     VIRTIO_F_ACCESS_PLATFORM.
+>> >
+>> >
+>> > OK so VIRTIO_F_ACCESS_PLATFORM is designed to allow unpriveledged
+>> > drivers. This is why devices fail when it's not negotiated.
+>>
+>> Just to clarify, what do you mean by unprivileged drivers? Is it drivers
+>> implemented in guest userspace such as with VFIO? Or unprivileged in
+>> some other sense such as needing to use bounce buffers for some reason?
 >
-> On 06/27, kernel test robot wrote:
-> > FYI, we noticed the following commit (built with gcc-7):
-> >
-> > commit: cd17d77705780e2270937fb3cbd2b985adab3edc ("bpf/tools: sync bpf.=
-h")
-> > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> >
-> > in testcase: kernel_selftests
-> > with following parameters:
-> >
-> >       group: kselftests-00
-> >
-> > test-description: The kernel contains a set of "self tests" under the t=
-ools/testing/selftests/ directory. These are intended to be small unit test=
-s to exercise individual code paths in the kernel.
-> > test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> >
-> >
-> > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2=
- -m 8G
-> >
-> > caused below changes (please refer to attached dmesg/kmsg for entire lo=
-g/backtrace):
-> >
-> > # ; int connect_v6_prog(struct bpf_sock_addr *ctx)
-> > # 0: (bf) r6 =3D r1
-> > # 1: (18) r1 =3D 0x100000000000000
-> > # ; tuple.ipv6.daddr[0] =3D bpf_htonl(DST_REWRITE_IP6_0);
-> > # 3: (7b) *(u64 *)(r10 -16) =3D r1
-> > # 4: (b7) r1 =3D 169476096
-> > # ; memset(&tuple.ipv6.sport, 0, sizeof(tuple.ipv6.sport));
-> > # 5: (63) *(u32 *)(r10 -8) =3D r1
-> > # 6: (b7) r7 =3D 0
-> > # ; tuple.ipv6.daddr[0] =3D bpf_htonl(DST_REWRITE_IP6_0);
-> > # 7: (7b) *(u64 *)(r10 -24) =3D r7
-> > # 8: (7b) *(u64 *)(r10 -32) =3D r7
-> > # 9: (7b) *(u64 *)(r10 -40) =3D r7
-> > # ; if (ctx->type !=3D SOCK_STREAM && ctx->type !=3D SOCK_DGRAM)
-> > # 10: (61) r1 =3D *(u32 *)(r6 +32)
-> > # ; if (ctx->type !=3D SOCK_STREAM && ctx->type !=3D SOCK_DGRAM)
-> > # 11: (bf) r2 =3D r1
-> > # 12: (07) r2 +=3D -1
-> > # 13: (67) r2 <<=3D 32
-> > # 14: (77) r2 >>=3D 32
-> > # 15: (25) if r2 > 0x1 goto pc+33
-> > #  R1=3Dinv(id=3D0,umax_value=3D4294967295,var_off=3D(0x0; 0xffffffff))=
- R2=3Dinv(id=3D0,umax_value=3D1,var_off=3D(0x0; 0x1)) R6=3Dctx(id=3D0,off=
-=3D0,imm=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm =
-fp-24=3D00000000 fp-32=3D00000000 fp-40=3D00000000
-> > # ; else if (ctx->type =3D=3D SOCK_STREAM)
-> > # 16: (55) if r1 !=3D 0x1 goto pc+8
-> > #  R1=3Dinv1 R2=3Dinv(id=3D0,umax_value=3D1,var_off=3D(0x0; 0x1)) R6=3D=
-ctx(id=3D0,off=3D0,imm=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-=
-16=3Dmmmmmmmm fp-24=3D00000000 fp-32=3D00000000 fp-40=3D00000000
-> > # 17: (bf) r2 =3D r10
-> > # ; sk =3D bpf_sk_lookup_tcp(ctx, &tuple, sizeof(tuple.ipv6),
-> > # 18: (07) r2 +=3D -40
-> > # 19: (bf) r1 =3D r6
-> > # 20: (b7) r3 =3D 36
-> > # 21: (b7) r4 =3D -1
-> > # 22: (b7) r5 =3D 0
-> > # 23: (85) call bpf_sk_lookup_tcp#84
-> > # 24: (05) goto pc+7
-> > # ; if (!sk)
-> > # 32: (15) if r0 =3D=3D 0x0 goto pc+16
-> > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R6=3Dctx(id=3D0,off=
-=3D0,imm=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm =
-fp-24=3Dmmmmmmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > # ; if (sk->src_ip6[0] !=3D tuple.ipv6.daddr[0] ||
-> > # 33: (61) r1 =3D *(u32 *)(r0 +28)
-> > # ; if (sk->src_ip6[0] !=3D tuple.ipv6.daddr[0] ||
-> > # 34: (61) r2 =3D *(u32 *)(r10 -24)
-> > # ; if (sk->src_ip6[0] !=3D tuple.ipv6.daddr[0] ||
-> > # 35: (5d) if r1 !=3D r2 goto pc+11
-> > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=3Dinv(id=3D0,uma=
-x_value=3D4294967295,var_off=3D(0x0; 0xffffffff)) R2=3Dinv(id=3D0,umax_valu=
-e=3D4294967295,var_off=3D(0x0; 0xffffffff)) R6=3Dctx(id=3D0,off=3D0,imm=3D0=
-) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm fp-24=3Dmmmm=
-mmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > # ; sk->src_ip6[1] !=3D tuple.ipv6.daddr[1] ||
-> > # 36: (61) r1 =3D *(u32 *)(r0 +32)
-> > # ; sk->src_ip6[1] !=3D tuple.ipv6.daddr[1] ||
-> > # 37: (61) r2 =3D *(u32 *)(r10 -20)
-> > # ; sk->src_ip6[1] !=3D tuple.ipv6.daddr[1] ||
-> > # 38: (5d) if r1 !=3D r2 goto pc+8
-> > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=3Dinv(id=3D0,uma=
-x_value=3D4294967295,var_off=3D(0x0; 0xffffffff)) R2=3Dinv(id=3D0,umax_valu=
-e=3D4294967295,var_off=3D(0x0; 0xffffffff)) R6=3Dctx(id=3D0,off=3D0,imm=3D0=
-) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm fp-24=3Dmmmm=
-mmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > # ; sk->src_ip6[2] !=3D tuple.ipv6.daddr[2] ||
-> > # 39: (61) r1 =3D *(u32 *)(r0 +36)
-> > # ; sk->src_ip6[2] !=3D tuple.ipv6.daddr[2] ||
-> > # 40: (61) r2 =3D *(u32 *)(r10 -16)
-> > # ; sk->src_ip6[2] !=3D tuple.ipv6.daddr[2] ||
-> > # 41: (5d) if r1 !=3D r2 goto pc+5
-> > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=3Dinv(id=3D0,uma=
-x_value=3D4294967295,var_off=3D(0x0; 0xffffffff)) R2=3Dinv(id=3D0,umax_valu=
-e=3D4294967295,var_off=3D(0x0; 0xffffffff)) R6=3Dctx(id=3D0,off=3D0,imm=3D0=
-) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm fp-24=3Dmmmm=
-mmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > # ; sk->src_ip6[3] !=3D tuple.ipv6.daddr[3] ||
-> > # 42: (61) r1 =3D *(u32 *)(r0 +40)
-> > # ; sk->src_ip6[3] !=3D tuple.ipv6.daddr[3] ||
-> > # 43: (61) r2 =3D *(u32 *)(r10 -12)
-> > # ; sk->src_ip6[3] !=3D tuple.ipv6.daddr[3] ||
-> > # 44: (5d) if r1 !=3D r2 goto pc+2
-> > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=3Dinv(id=3D0,uma=
-x_value=3D4294967295,var_off=3D(0x0; 0xffffffff)) R2=3Dinv(id=3D0,umax_valu=
-e=3D4294967295,var_off=3D(0x0; 0xffffffff)) R6=3Dctx(id=3D0,off=3D0,imm=3D0=
-) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm fp-24=3Dmmmm=
-mmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > # ; sk->src_port !=3D DST_REWRITE_PORT6) {
-> > # 45: (61) r1 =3D *(u32 *)(r0 +44)
-> > # ; if (sk->src_ip6[0] !=3D tuple.ipv6.daddr[0] ||
-> > # 46: (15) if r1 =3D=3D 0x1a0a goto pc+4
-> > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=3Dinv(id=3D0,uma=
-x_value=3D4294967295,var_off=3D(0x0; 0xffffffff)) R2=3Dinv(id=3D0,umax_valu=
-e=3D4294967295,var_off=3D(0x0; 0xffffffff)) R6=3Dctx(id=3D0,off=3D0,imm=3D0=
-) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm fp-24=3Dmmmm=
-mmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > # ; bpf_sk_release(sk);
-> > # 47: (bf) r1 =3D r0
-> > # 48: (85) call bpf_sk_release#86
-> > # ; }
-> > # 49: (bf) r0 =3D r7
-> > # 50: (95) exit
-> > #
-> > # from 46 to 51: R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=3D=
-inv6666 R2=3Dinv(id=3D0,umax_value=3D4294967295,var_off=3D(0x0; 0xffffffff)=
-) R6=3Dctx(id=3D0,off=3D0,imm=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????m=
-mmm fp-16=3Dmmmmmmmm fp-24=3Dmmmmmmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm ref=
-s=3D2
-> > # ; bpf_sk_release(sk);
-> > # 51: (bf) r1 =3D r0
-> > # 52: (85) call bpf_sk_release#86
-> > # 53: (b7) r1 =3D 2586
-> > # ; ctx->user_port =3D bpf_htons(DST_REWRITE_PORT6);
-> > # 54: (63) *(u32 *)(r6 +24) =3D r1
-> > # 55: (18) r1 =3D 0x100000000000000
-> > # ; ctx->user_ip6[2] =3D bpf_htonl(DST_REWRITE_IP6_2);
-> > # 57: (7b) *(u64 *)(r6 +16) =3D r1
-> > # invalid bpf_context access off=3D16 size=3D8
-> This looks like clang doing single u64 write for user_ip6[2] and
-> user_ip6[3] instead of two u32. I don't think we allow that.
+> I had drivers in guest userspace in mind.
+
+Great. Thanks for clarifying.
+
+I don't think this flag would work for guest userspace drivers. Should I
+add a note about that in the flag definition?
+
+>> > This confuses me.
+>> > If driver is unpriveledged then what happens with this flag?
+>> > It can supply any address it wants. Will that corrupt kernel
+>> > memory?
+>>
+>> Not needing address translation doesn't necessarily mean that there's no
+>> IOMMU. On powerpc we don't use VIRTIO_F_ACCESS_PLATFORM but there's
+>> always an IOMMU present. And we also support VFIO drivers. The VFIO API
+>> for pseries (sPAPR section in Documentation/vfio.txt) has extra ioctls
+>> to program the IOMMU.
+>>
+>> For our use case, we don't need address translation because we set up an
+>> identity mapping in the IOMMU so that the device can use guest physical
+>> addresses.
 >
-> I've seen this a couple of times myself while playing with some
-> progs, but not sure what's the right way to 'fix' it.
+> And can it access any guest physical address?
 
-So I bisected this to the commit below. That change effectively makes
-`struct bpf_sock_addr` 8-byte aligned, which apparently triggers some
-optimization in clang to generate this 8-byte write for two
-consecutive 4-byte array elements.
+Sorry, I was mistaken. We do support VFIO in guests but not for virtio
+devices, only for regular PCI devices. In which case they will use
+address translation.
 
-
-commit cd17d77705780e2270937fb3cbd2b985adab3edc (HEAD, refs/bisect/bad)
-Author: Stanislav Fomichev <sdf@google.com>
-Date:   Wed Jun 12 10:30:39 2019 -0700
-
-    bpf/tools: sync bpf.h
-
-    Add sk to struct bpf_sock_addr and struct bpf_sock_ops.
-
-    Cc: Martin Lau <kafai@fb.com>
-    Signed-off-by: Stanislav Fomichev <sdf@google.com>
-    Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.=
-h
-index ae0907d8c03a..d0a23476f887 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -3247,6 +3247,7 @@ struct bpf_sock_addr {
-        __u32 msg_src_ip6[4];   /* Allows 1,2,4-byte read an 4-byte write.
-                                 * Stored in network byte order.
-                                 */
-+       __bpf_md_ptr(struct bpf_sock *, sk);
- };
-
- /* User bpf_sock_ops struct to access socket values and specify request op=
-s
-@@ -3298,6 +3299,7 @@ struct bpf_sock_ops {
-        __u32 sk_txhash;
-        __u64 bytes_received;
-        __u64 bytes_acked;
-+       __bpf_md_ptr(struct bpf_sock *, sk);
- };
-
- /* Definitions for bpf_sock_ops_cb_flags */
-
-
-
+>> If the guest kernel is concerned that an unprivileged driver could
+>> jeopardize its integrity it should not negotiate this feature flag.
 >
-> > # processed 49 insns (limit 1000000) max_states_per_insn 0 total_states=
- 13 peak_states 13 mark_read 11
-> > #
-> > # libbpf: -- END LOG --
-> > # libbpf: failed to load program 'cgroup/connect6'
-> > # libbpf: failed to load object './connect6_prog.o'
-> > # (test_sock_addr.c:752: errno: Bad file descriptor) >>> Loading progra=
-m (./connect6_prog.o) error.
+> Unfortunately flag negotiation is done through config space
+> and so can be overwritten by the driver.
+
+Ok, so the guest kernel has to forbid VFIO access on devices where this
+flag is advertised.
+
+>> Perhaps there should be a note about this in the flag definition? This
+>> concern is platform-dependant though. I don't believe it's an issue in
+>> pseries.
+>
+> Again ACCESS_PLATFORM has a pretty open definition. It does actually
+> say it's all up to the platform.
+>
+> Specifically how will VIRTIO_F_ACCESS_PLATFORM_NO_TRANSLATION be
+> implemented portably? virtio has no portable way to know
+> whether DMA API bypasses translation.
+
+The fact that VIRTIO_F_ACCESS_PLATFORM_NO_TRANSLATION is set
+communicates that knowledge to virtio. There is a shared understanding
+between the guest and the host about what this flag being set means.
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
