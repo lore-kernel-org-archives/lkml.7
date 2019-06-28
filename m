@@ -2,102 +2,141 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1623FC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40881C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CE7205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4B8205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfF1JlI (ORCPT
+        id S1726652AbfF1Jm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:41:08 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34792 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbfF1JlH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:41:07 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgnNN-0008IE-FH; Fri, 28 Jun 2019 11:41:01 +0200
-Date:   Fri, 28 Jun 2019 11:41:00 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Robert Hodaszi <Robert.Hodaszi@digi.com>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org
-Subject: Re: [patch 2/5] genirq: Add optional hardware synchronization for
- shutdown
-In-Reply-To: <dbcd11d3-c967-a0a0-02a6-86d162f93a56@arm.com>
-Message-ID: <alpine.DEB.2.21.1906281128310.1802@nanos.tec.linutronix.de>
-References: <20190625111353.863718167@linutronix.de> <20190625112405.666964552@linutronix.de> <dbcd11d3-c967-a0a0-02a6-86d162f93a56@arm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 28 Jun 2019 05:42:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:43844 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbfF1Jm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 05:42:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FEC628;
+        Fri, 28 Jun 2019 02:42:56 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E4B553F718;
+        Fri, 28 Jun 2019 02:42:53 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 10:42:51 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v6 3/3] arm64: kexec_file: add rng-seed support
+Message-ID: <20190628094251.GC36437@lakrids.cambridge.arm.com>
+References: <20190612043258.166048-1-hsinyi@chromium.org>
+ <20190612043258.166048-4-hsinyi@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612043258.166048-4-hsinyi@chromium.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc,
+On Wed, Jun 12, 2019 at 12:33:02PM +0800, Hsin-Yi Wang wrote:
+> Adding "rng-seed" to dtb. It's fine to add this property if original
+> fdt doesn't contain it. Since original seed will be wiped after
+> read, so use a default size 128 bytes here.
 
-On Fri, 28 Jun 2019, Marc Zyngier wrote:
-> On 25/06/2019 12:13, Thomas Gleixner wrote:
-> >  
-> >  	int		(*irq_set_affinity)(struct irq_data *data, const struct cpumask *dest, bool force);
-> >  	int		(*irq_retrigger)(struct irq_data *data);
-> > +	int		(*irq_inflight)(struct irq_data *data);
+Why is 128 bytes the default value?
+
+I didn't see an update to Documentation/devicetree/bindings/chosen.txt,
+so it's not clear to me precisely what we expect.
+
 > 
-> I wonder how different this irq_inflight() is from the irq_get_irqchip_state()
-> that can already report a number of states from the HW.
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+> change log v5->v6:
+> * no change
+> ---
+>  arch/arm64/kernel/machine_kexec_file.c | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
 > 
-> It is also unclear to me how "in flight" maps to the internal state of
-> the interrupt controller: Is it pending? Acked? If the interrupt has been
-> masked already, pending should be harmless (the interrupt won't fire anymore).
-> But seeing it in the acked would probably mean that it is on its way to being
-> handled, with a potential splat.
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index 58871333737a..d40fde72a023 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> @@ -27,6 +27,8 @@
+>  #define FDT_PROP_INITRD_END	"linux,initrd-end"
+>  #define FDT_PROP_BOOTARGS	"bootargs"
+>  #define FDT_PROP_KASLR_SEED	"kaslr-seed"
+> +#define FDT_PROP_RNG_SEED	"rng-seed"
+> +#define RNG_SEED_SIZE		128
+>  
+>  const struct kexec_file_ops * const kexec_file_loaders[] = {
+>  	&kexec_image_ops,
+> @@ -102,6 +104,23 @@ static int setup_dtb(struct kimage *image,
+>  				FDT_PROP_KASLR_SEED);
+>  	}
+>  
+> +	/* add rng-seed */
+> +	if (rng_is_initialized()) {
+> +		void *rng_seed = kmalloc(RNG_SEED_SIZE, GFP_ATOMIC);
 
-in flight means that the interrupt chip (in the offending case the IO-APIC)
-has that interrupt raised internally _AND_ already propagated to the
-destination CPU (in this case the local APIC of the destination). The CPU
-has accepted the interrupt and now the chip is in a state where it waits
-for it to be acknowledged. If we proceed in that state then the destination
-CPU will eventually handle it _after_ all the resources are freed. But that
-means that the in flight/wait for acknowledge state becomes stale because
-the handling CPU does not find the connection to that chip anymore.
+For 128 bytes, it would be better to use a buffer on the stack. That
+avoids the possibility of the allocation failing.
 
-> > +		/*
-> > +		 * If requested and supported, check at the chip whether it
-> > +		 * is in flight at the hardware level:
-> > +		 */
-> > +		if (!inprogress && sync_chip && chip && chip->irq_inflight)
-> > +			inprogress = chip->irq_inflight(irqd);
-> 
-> To expand on what I was trying to exptree above, I wonder if that would 
-> be similar to in effect to:
-> 
-> 		if (!inprogress && sync_chip && chip && chip->irq_get_irqchip_state)
-> 			chip->irq_get_irqchip_state(irqd, IRQCHIP_STATE_ACTIVE, &inprogress);
+> +		get_random_bytes(rng_seed, RNG_SEED_SIZE);
+> +
+> +		ret = fdt_setprop(dtb, off, FDT_PROP_RNG_SEED, rng_seed,
+> +				RNG_SEED_SIZE);
+> +		kfree(rng_seed);
+> +
+> +		if (ret)
+> +			goto out;
 
-Ah, indeed that could be mapped to it.
-
-I'm happy to get rid of the extra callback. Now the question is whether
-this would would give an headache for any of the chips which already
-implement that callback and whether it needs to become conditional on the
-trigger type at the core level. For the IO-APIC this state is only defined
-for level type which makes sense as edge is fire and forget.
+If the RNG wasn't initialised, we'd carry on with a warning. Why do we
+follow a different policy here?
 
 Thanks,
+Mark.
 
-	tglx
+> +
+> +	} else {
+> +		pr_notice("RNG is not initialised: omitting \"%s\" property\n",
+> +				FDT_PROP_RNG_SEED);
+> +	}
+> +
+>  out:
+>  	if (ret)
+>  		return (ret == -FDT_ERR_NOSPACE) ? -ENOMEM : -EINVAL;
+> @@ -110,7 +129,8 @@ static int setup_dtb(struct kimage *image,
+>  }
+>  
+>  /*
+> - * More space needed so that we can add initrd, bootargs and kaslr-seed.
+> + * More space needed so that we can add initrd, bootargs, kaslr-seed, and
+> + * rng-seed.
+>   */
+>  #define DTB_EXTRA_SPACE 0x1000
+>  
+> -- 
+> 2.20.1
+> 
