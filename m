@@ -7,20 +7,20 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=DATE_IN_PAST_03_06,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EF2C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF554C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A8B208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D1A2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:36:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aeh+7bB1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cn9+BQDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfF1Ngf (ORCPT
+        id S1726916AbfF1Ngd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 09:36:35 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:43260 "EHLO
+        Fri, 28 Jun 2019 09:36:33 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43256 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfF1NgZ (ORCPT
+        with ESMTP id S1726616AbfF1NgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 09:36:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -29,20 +29,20 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rorvJ83/GJfpFUnkyS0VqTsFbxx61BGDfOfB2UeyKjc=; b=aeh+7bB1HRnS0rfHO2F0gJVj7x
-        UdIv90rumkn4EF9GonR+C97MF8+jKxDjXS7jUUzPgxfjLcGXySBPzP6ssB5ILoegEKXRbkCVi5OGt
-        Jb5nEUJWtKrwtkeGcALIfT3Yg5H+mD8X+udaODcl7m0VPTmmtd8+X8AJLq/irdfc72Sc7Fjl4qiMn
-        t7pWbN+STiQrG/KejsC0W8UnVPI/ynQCDd1qMefP14sXpoxa5WxrrB4BU9qCfcbzEVQQ4+9bhDwjG
-        4nKItnXpCFLujvpmbuPQL1UHKi32FWKnpnX7mOiQZ+9f05KeMK+LzSR3k2bfH+OSkTfNkgDrJfZIa
-        2I0YHyHw==;
+        bh=vnE+x2ECRCteGktx7zBzJWESW14d+4IL+cy0q0uzTns=; b=cn9+BQDxkRTs0PCdZAnuNiaXKG
+        y1cqbEMAkbqkRszRWPcP6YuKfw8hR84HEi1VKNEquWIUQcwltqduhSyoFrNHgCRoPNTOsuKh4eluH
+        GQ3+Rw5rT6vwQ+t/SnyIyW9pqp03oxOBTMsW3LLPjmzGWollv/EPbLypAXmwWTWddwtuZIv7uHv9g
+        rcpNBoh48etcn8SKckpXSdroxMCpOdrOJgt120WuNzRwLYwZFzylthWhCzHFkeH9HErWc45oBBssK
+        Rmis6oBhfj+wzgBRvKdadRyVDjY2CEgb+jGJF4bFe0qOHL7tgvE0e1M2Jzi9cljYVWNWLGctxk0iM
+        ZE47IIcA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgr2s-0000nD-CY; Fri, 28 Jun 2019 13:36:07 +0000
+        id 1hgr2s-0000nG-Ht; Fri, 28 Jun 2019 13:36:07 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 8D72320AB8992; Fri, 28 Jun 2019 15:36:03 +0200 (CEST)
-Message-Id: <20190628103224.716910079@infradead.org>
+        id 9A77D20AB8995; Fri, 28 Jun 2019 15:36:03 +0200 (CEST)
+Message-Id: <20190628103224.888336008@infradead.org>
 User-Agent: quilt/0.65
-Date:   Fri, 28 Jun 2019 12:21:18 +0200
+Date:   Fri, 28 Jun 2019 12:21:21 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org, peterz@infradead.org, linux-kernel@vger.kernel.org
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -53,7 +53,7 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Andy Lutomirski <luto@kernel.org>,
         Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
         Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [RFC][PATCH 5/8] jump_label, x86: Improve error when we fail expected text
+Subject: [RFC][PATCH 8/8] jump_label, x86: Enable JMP8/NOP2 support
 References: <20190628102113.360432762@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,61 +62,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is only a single usage site left, remove the function and extend
-the print to include more information, like the expected text and the
-patch type.
+Enable and emit short JMP/NOP jump_label entries.
+
+Much thanks to Josh for (re)discovering the .skip trick to
+conditionally emit variable length text.
+
+Due to how early we enable jump_labels on x86, if any of this comes
+apart, the machine is completely dead. Qemu+GDB saved the day this
+time.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/kernel/jump_label.c |   24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ arch/x86/include/asm/jump_label.h |   37 +++++++++++++++++++++++++++++++------
+ arch/x86/kernel/jump_label.c      |    5 ++++-
+ 2 files changed, 35 insertions(+), 7 deletions(-)
 
+--- a/arch/x86/include/asm/jump_label.h
++++ b/arch/x86/include/asm/jump_label.h
+@@ -31,7 +31,35 @@
+ static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
+ {
+ 	asm_volatile_goto("1:"
+-		".byte " __stringify(STATIC_KEY_INIT_NOP) "\n\t"
++
++		".set disp, %l[l_yes] - (1b + 2) \n\t"
++		".set sign, disp >> 31 \n\t"
++		".set res, (disp >> 7) ^ sign \n\t"
++		".set is_byte, -(res == 0) \n\t"
++		".set is_long, -(res != 0) \n\t"
++
++#ifdef CONFIG_X86_64
++		".skip is_byte, 0x66 \n\t"
++		".skip is_byte, 0x90 \n\t"
++#else
++		".skip is_byte, 0x89 \n\t"
++		".skip is_byte, 0xf6 \n\t"
++#endif
++
++#ifdef CONFIG_X86_64
++		".skip is_long, 0x0f \n\t"
++		".skip is_long, 0x1f \n\t"
++		".skip is_long, 0x44 \n\t"
++		".skip is_long, 0x00 \n\t"
++		".skip is_long, 0x00 \n\t"
++#else
++		".skip is_long, 0x3e \n\t"
++		".skip is_long, 0x8d \n\t"
++		".skip is_long, 0x74 \n\t"
++		".skip is_long, 0x26 \n\t"
++		".skip is_long, 0x00 \n\t"
++#endif
++
+ 		JUMP_TABLE_ENTRY
+ 		: :  "i" (key), "i" (branch) : : l_yes);
+ 
+@@ -43,8 +71,7 @@ static __always_inline bool arch_static_
+ static __always_inline bool arch_static_branch_jump(struct static_key *key, bool branch)
+ {
+ 	asm_volatile_goto("1:"
+-		".byte 0xe9 \n\t"
+-		".long %l[l_yes] - (. + 4) \n\t"
++		"jmp %l[l_yes] \n\t"
+ 		JUMP_TABLE_ENTRY
+ 		: :  "i" (key), "i" (branch) : : l_yes);
+ 
+@@ -59,9 +86,7 @@ extern int arch_jump_entry_size(struct j
+ 
+ .macro STATIC_BRANCH_FALSE_LIKELY target, key
+ .Lstatic_jump_\@:
+-	/* Equivalent to "jmp.d32 \target" */
+-	.byte		0xe9
+-	.long		\target - (. + 4)
++	jmp \target
+ 
+ 	.pushsection __jump_table, "aw"
+ 	_ASM_ALIGN
 --- a/arch/x86/kernel/jump_label.c
 +++ b/arch/x86/kernel/jump_label.c
-@@ -24,17 +24,6 @@ union jump_code_union {
- 	} __attribute__((packed));
- };
+@@ -29,7 +29,10 @@ union jump_code_union {
  
--static void bug_at(unsigned char *ip, int line)
--{
--	/*
--	 * The location is not an op that we were expecting.
--	 * Something went wrong. Crash the box, as something could be
--	 * corrupting the kernel.
--	 */
--	pr_crit("jump_label: Fatal kernel bug, unexpected op at %pS [%p] (%5ph) %d\n", ip, ip, ip, line);
--	BUG();
--}
--
- static void __jump_label_set_jump_code(struct jump_entry *entry,
- 				       enum jump_label_type type,
- 				       union jump_code_union *code,
-@@ -42,6 +31,7 @@ static void __jump_label_set_jump_code(s
+ static inline bool __jump_disp_is_byte(s32 disp)
  {
- 	const unsigned char default_nop[] = { STATIC_KEY_INIT_NOP };
- 	const unsigned char *ideal_nop = ideal_nops[NOP_ATOMIC5];
-+	unsigned char *ip = (void *)jump_entry_code(entry);
- 	const void *expect;
- 	int line;
+-	return false;
++	s32 sign;
++	disp -= JMP8_INSN_SIZE;
++	sign = disp >> 31;
++	return ((disp >> 7) ^ sign) == 0;
+ }
  
-@@ -57,8 +47,16 @@ static void __jump_label_set_jump_code(s
- 		expect = code->code; line = __LINE__;
- 	}
- 
--	if (memcmp((void *)jump_entry_code(entry), expect, JUMP_LABEL_NOP_SIZE))
--		bug_at((void *)jump_entry_code(entry), line);
-+	if (memcmp(ip, expect, JUMP_LABEL_NOP_SIZE)) {
-+		/*
-+		 * The location is not an op that we were expecting.
-+		 * Something went wrong. Crash the box, as something could be
-+		 * corrupting the kernel.
-+		 */
-+		pr_crit("jump_label: Fatal kernel bug, unexpected op at %pS [%p] (%5ph != %5ph)) line:%d init:%d type:%d\n",
-+				ip, ip, ip, expect, line, init, type);
-+		BUG();
-+	}
- 
- 	if (type == JUMP_LABEL_NOP)
- 		memcpy(code, ideal_nop, JUMP_LABEL_NOP_SIZE);
+ int arch_jump_entry_size(struct jump_entry *entry)
 
 
