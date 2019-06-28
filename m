@@ -2,104 +2,212 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B411C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BCFC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBEF32064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3933B2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:24:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="V005/t26"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BtPgXcHa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfF1PYR (ORCPT
+        id S1726846AbfF1PYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:24:17 -0400
-Received: from mout.gmx.net ([212.227.15.15]:58013 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfF1PYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:24:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1561735437;
-        bh=nshWUM9Ial/mf04VgQojEVFHvNnxFuhVht1LXxXTMjs=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=V005/t26iHPy3IYQysg9nJ0s7iRbYBYACP3+SsPbrniz9VehXXgpMHAXX1LEzi5OA
-         yyY78BMlRdBJP9fiHd3DpHiHH09RgAO3YZFJCWRwFXxc9P+2PcVsDT0n6BsvR8P89r
-         UyyDRHnEhB4jfbTwTX6CWRx+ClcoFlZFwBb6G/Go=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.111]) by mail.gmx.com (mrgmx001
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0MLNpK-1hgKlT0DeU-000fxr; Fri, 28
- Jun 2019 17:23:57 +0200
-Subject: Re: [PATCH] spi: spi-bcm2835.c: Fix 3-wire mode
-To:     =?UTF-8?Q?Nuno_S=c3=a1?= <nuno.sa@analog.com>, broonie@kernel.org,
-        eric@anholt.net, Martin Sperl <kernel@martin.sperl.org>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
-References: <20190628123023.4696-1-nuno.sa@analog.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <1b932c61-982b-aae0-1fef-3c574e7d17eb@gmx.net>
-Date:   Fri, 28 Jun 2019 17:23:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190628123023.4696-1-nuno.sa@analog.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:g5PhiWHkkz3XBbA68000ZtOOSFncG6Lh3B7zaH8UEnRmlj9LSu7
- bvwDBwyI0hEnEc1mKxmBfRUfWu4NMRO99rufOyff5Dc3tU/uzCvLZl0yU5GJ0onkdKhaxwK
- QJuHUwZ5UmDRqy28J14hzi+eF2h1Eug2xrdoDjJyWetD9YCPZQp6orzz9UjxcP/Ji6lyozO
- TcrGlRAXcpDq/LoiaH+Cw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:A0rZTWBd6s8=:ZnhyxFh1FnnJ0ZEpCDPvE5
- qzRz2NSk4OCFxG8VdEBssbVdpjlBuInjlZ14cN9CrAdMlriiPBa09KL5jjXtwXfenqLtdsgtB
- WC48DFzggtufVS6A3BT3hj6RFJqmobsSRU57noFTrhRQg8jOvJS61KFFey6JXZ0l2WTJH3OQf
- mWwcffrfwU16E6Kla5dMYv8ZH6uvnamFVuPpgiPmQshK4S5G+/BYhdQv89krlgsXHvhHkYGLH
- wlv7f/9rHD6T8DhHwjf0vfwc3AnG3sAidHWFHjYtvIX3eu6WdTtA0ScPxXxNlNUKpts7ZfWNi
- H5QVS1vF/8PnY/m2Y5Hz8727SetXYkV9o8HC1yfKQmyBcT+NgZGDGJa95jGdWQHc+9TAKFSij
- Q2q7k/Sbtxsm9utnZ1+4mmilPZZRtrsD2d4e/hup6VuTQE2OdMWwQYAy+FAIyqj8DR1yJzON2
- D523eJKfzUTIt2JZTMOtEUT/pn4JCuHdfvT3UbHsG6vhWvjWmY/qeVOg0Bhp/rDNcfZzz0BYW
- CMfRKQgkXqkjpqDz1l7MApNQGDucLwX8NaLbkU/KBZu934WPp0AKk/4KSkL8ixH/Mi5T0Gdn4
- 9EBnvQm7jSTakj5i4JTQez1rGceYVLN/AYfuS0WK9KLE75mcef86acwJILjmoB8ilSu5uqyx2
- GqtynnfaBlJrVkex+vvaYdYtlW+rv7Ti6xq+Jd84H+VYtP3UQSqoUKOaKLWUPAf0v3kobq+we
- C/2NN+5n5TY/OEOygLuQkyfBt9ZoRmJk9MdeDrX7RPhVk5M6SV9FhMvE4xIy8wryS5jQRLKyr
- K7HT3GROuQUbWVhMOh55appdoJYfn7n1d4VX+r5ziOO9+TXTZzij8Tow6VpJZNqnWmyYgFE2N
- /04vJ+cb+LB++ula10ICgxbkHK1r0nqoTVKsmoZrHUCfZM9U0TAX2LvFf5x/B48nWPeGOPCkH
- 4iT21LjFFP/q0avGdDvR/mpHme1rh0eLfgm39tl6vFOFp45kcj45iXaM3o046hDWPu6HsMYUO
- q1qzqpyprh8UQ2Je23/YHFuxC2fQELlZA6kMOCW5Bt05iBYgrS0TseNXMKkG+IdD/6UQLEczV
- Mkbi5utSmXKR/4=
+        Fri, 28 Jun 2019 11:24:51 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:41840 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfF1PYu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:24:50 -0400
+Received: by mail-pl1-f201.google.com with SMTP id i3so3698695plb.8
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 08:24:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=ZsiRx6xvzXROMUfoU65xDsRvBFu/S3BDc/iiU2HXWv4=;
+        b=BtPgXcHakceSysUUvvTmVSqsGhdHXi1kTosXaG1TL6r/NdCk16Kn1UZudJwQ8FryNT
+         MqMKLaTqfEshncO9iNRq3T2l4bFQs9lSi8YCG2CnMALJaJycGYuXhHwviqJu5AP4riC8
+         i3YxItLgROyPMkeYXhbQ+04IIo3s28z1I4gbaqa10tstGRhTEsE7azL2mH+zTyglgFCp
+         TB0VyCvjbF3Vt92IjWzM5k50QSqsGJtJ7QBekyVLXcBao3UchX5g5/oua87eS/1oWJUt
+         brlC1HXwtP1z0swdd16RFVvCEJ2o2gDNUQpf/2Rc7F1tgTQ+cEGt2lKpSg+CStlr7gF1
+         zxUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=ZsiRx6xvzXROMUfoU65xDsRvBFu/S3BDc/iiU2HXWv4=;
+        b=aDF8IjqC1TfFabMeeRVG7sceVFMLaihUaSnsTgRamRdB8OJFLSgG8sdu0J6ohDvraC
+         R1B9Af+Qfzvt/+2Rh85XbP+wboaqvtLve0k1FxEX0mVPmob0q6cXSy3lCXP8QfYvliIC
+         G6JsU8/20wPVvtM59MMUcSrbWxHD+Jv+xei/fOsAsSvT+693kUHkS/Zs7mQtuCuq6wRa
+         brHoRh5K3iVViIk8fP0Peh4W8D+Gq8kiNOa/wJXt2QNZB/T6sOBXy78f//T79DqMwN+f
+         oTi/H7WtxPTmtJGNT+jQe9tDzf6Z+4R/M70NKPr/Tp9G1lyncg9+vKXsgkAat4PgMq1s
+         nNLg==
+X-Gm-Message-State: APjAAAU1KVcCr08dPjgiP+7fUn/+LCNQRP1KPvHckptgFzswzoZ1CuYd
+        PMYPKM/oejHdm2BMG6VA+ZnWc7vod3UH/w==
+X-Google-Smtp-Source: APXvYqzEojWmbhFHT2oTqcaA/Uz0vqGKl0ZGIuOIBoO2lEvVjVcxnQ2cWLOCM1OrJQdFMc9IHU4lEf3YCZuZ6w==
+X-Received: by 2002:a63:f953:: with SMTP id q19mr9792545pgk.367.1561735489272;
+ Fri, 28 Jun 2019 08:24:49 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 08:24:19 -0700
+Message-Id: <20190628152421.198994-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v4 1/3] mm, oom: refactor dump_tasks for memcg OOMs
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        David Rientjes <rientjes@google.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>,
+        Paul Jackson <pj@sgi.com>, Nick Piggin <npiggin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nuno,
+dump_tasks() traverses all the existing processes even for the memcg OOM
+context which is not only unnecessary but also wasteful.  This imposes a
+long RCU critical section even from a contained context which can be quite
+disruptive.
 
-Am 28.06.19 um 14:30 schrieb Nuno S=C3=A1:
-> As stated in
-> https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/READM=
-E.md,
-> one of rx or tx buffer's must be null. However, if DMA is enabled, the
-> driver sets the SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX on the
-> controller flags. Hence, the spi core will provide dummy buffers even if
-> one of the buffers was set to null by the device driver. Thus, the
-> communication with the 3-wire device fails.
->
-> This patch uses the prepare_message callback to look for the device mode
-> and sets/clears the SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX on a
-> per spi message basis. It also assumes that DMA is not supported on
-> half-duplex devices.
->
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Change dump_tasks() to be aligned with select_bad_process and use
+mem_cgroup_scan_tasks to selectively traverse only processes of the target
+memcg hierarchy during memcg OOM.
 
-i never tested the 3-wire mode. Could you please describe your test setup?
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>
+Cc: Paul Jackson <pj@sgi.com>
+Cc: Nick Piggin <npiggin@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+---
+Changelog since v3:
+- None
 
-@Martin, @Lukas Are you fine with this patch?
+Changelog since v2:
+- Updated the commit message.
+
+Changelog since v1:
+- Divide the patch into two patches.
+
+ mm/oom_kill.c | 68 ++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 40 insertions(+), 28 deletions(-)
+
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 085abc91024d..a940d2aa92d6 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -380,10 +380,38 @@ static void select_bad_process(struct oom_control *oc)
+ 	}
+ }
+ 
++static int dump_task(struct task_struct *p, void *arg)
++{
++	struct oom_control *oc = arg;
++	struct task_struct *task;
++
++	if (oom_unkillable_task(p, NULL, oc->nodemask))
++		return 0;
++
++	task = find_lock_task_mm(p);
++	if (!task) {
++		/*
++		 * This is a kthread or all of p's threads have already
++		 * detached their mm's.  There's no need to report
++		 * them; they can't be oom killed anyway.
++		 */
++		return 0;
++	}
++
++	pr_info("[%7d] %5d %5d %8lu %8lu %8ld %8lu         %5hd %s\n",
++		task->pid, from_kuid(&init_user_ns, task_uid(task)),
++		task->tgid, task->mm->total_vm, get_mm_rss(task->mm),
++		mm_pgtables_bytes(task->mm),
++		get_mm_counter(task->mm, MM_SWAPENTS),
++		task->signal->oom_score_adj, task->comm);
++	task_unlock(task);
++
++	return 0;
++}
++
+ /**
+  * dump_tasks - dump current memory state of all system tasks
+- * @memcg: current's memory controller, if constrained
+- * @nodemask: nodemask passed to page allocator for mempolicy ooms
++ * @oc: pointer to struct oom_control
+  *
+  * Dumps the current memory state of all eligible tasks.  Tasks not in the same
+  * memcg, not in the same cpuset, or bound to a disjoint set of mempolicy nodes
+@@ -391,37 +419,21 @@ static void select_bad_process(struct oom_control *oc)
+  * State information includes task's pid, uid, tgid, vm size, rss,
+  * pgtables_bytes, swapents, oom_score_adj value, and name.
+  */
+-static void dump_tasks(struct mem_cgroup *memcg, const nodemask_t *nodemask)
++static void dump_tasks(struct oom_control *oc)
+ {
+-	struct task_struct *p;
+-	struct task_struct *task;
+-
+ 	pr_info("Tasks state (memory values in pages):\n");
+ 	pr_info("[  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n");
+-	rcu_read_lock();
+-	for_each_process(p) {
+-		if (oom_unkillable_task(p, memcg, nodemask))
+-			continue;
+ 
+-		task = find_lock_task_mm(p);
+-		if (!task) {
+-			/*
+-			 * This is a kthread or all of p's threads have already
+-			 * detached their mm's.  There's no need to report
+-			 * them; they can't be oom killed anyway.
+-			 */
+-			continue;
+-		}
++	if (is_memcg_oom(oc))
++		mem_cgroup_scan_tasks(oc->memcg, dump_task, oc);
++	else {
++		struct task_struct *p;
+ 
+-		pr_info("[%7d] %5d %5d %8lu %8lu %8ld %8lu         %5hd %s\n",
+-			task->pid, from_kuid(&init_user_ns, task_uid(task)),
+-			task->tgid, task->mm->total_vm, get_mm_rss(task->mm),
+-			mm_pgtables_bytes(task->mm),
+-			get_mm_counter(task->mm, MM_SWAPENTS),
+-			task->signal->oom_score_adj, task->comm);
+-		task_unlock(task);
++		rcu_read_lock();
++		for_each_process(p)
++			dump_task(p, oc);
++		rcu_read_unlock();
+ 	}
+-	rcu_read_unlock();
+ }
+ 
+ static void dump_oom_summary(struct oom_control *oc, struct task_struct *victim)
+@@ -453,7 +465,7 @@ static void dump_header(struct oom_control *oc, struct task_struct *p)
+ 			dump_unreclaimable_slab();
+ 	}
+ 	if (sysctl_oom_dump_tasks)
+-		dump_tasks(oc->memcg, oc->nodemask);
++		dump_tasks(oc);
+ 	if (p)
+ 		dump_oom_summary(oc, p);
+ }
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
