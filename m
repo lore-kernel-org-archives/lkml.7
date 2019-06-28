@@ -2,157 +2,109 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59491C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6CDC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381C8206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E70120644
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfF1Icm (ORCPT
+        id S1726583AbfF1IeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:32:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50696 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfF1Icl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:32:41 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hgmJC-0001IW-1I; Fri, 28 Jun 2019 08:32:38 +0000
-Subject: Re: [PATCH] net: stmmac: add sanity check to
- device_property_read_u32_array call
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
-        kernel-janitors@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
-        peppe.cavallaro@st.com
-References: <20190617165836.4673-1-colin.king@canonical.com>
- <20190619051308.23582-1-martin.blumenstingl@googlemail.com>
- <92f9e5a6-d2a2-6bf2-ff8a-2430fe977f93@canonical.com>
- <CAFBinCDmYVPDMcwAAYhMfxxuTsG=xunduN58_8e20zE_Mhmb7Q@mail.gmail.com>
- <CAFBinCC-LLpfXQRFcKBbUpCfKc0S9Xtt60QrhEThsOFV-T7vFw@mail.gmail.com>
- <c46d2d17-c35b-46f0-0674-0c55bea3a272@canonical.com>
- <CAFBinCBk5aPVE+vq5px3QKS1T_R=WGXXxEJMC9X676KGvi9jdg@mail.gmail.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <26646ff1-059f-fb2d-e05d-43009aeb2150@canonical.com>
-Date:   Fri, 28 Jun 2019 09:32:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 28 Jun 2019 04:34:22 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10390 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbfF1IeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:34:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 01:34:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,427,1557212400"; 
+   d="scan'208";a="183642900"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 28 Jun 2019 01:34:18 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 28 Jun 2019 11:34:17 +0300
+Date:   Fri, 28 Jun 2019 11:34:17 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, nv@vosn.de
+Subject: Re: [PATCH] drivers/usb/typec/tps6598x.c: fix two bugs
+Message-ID: <20190628083417.GA21701@kuha.fi.intel.com>
+References: <20190628081235.19205-1-nikolaus.voss@loewensteinmedical.de>
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCBk5aPVE+vq5px3QKS1T_R=WGXXxEJMC9X676KGvi9jdg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628081235.19205-1-nikolaus.voss@loewensteinmedical.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/06/2019 05:15, Martin Blumenstingl wrote:
-> On Tue, Jun 25, 2019 at 9:58 AM Colin Ian King <colin.king@canonical.com> wrote:
->>
->> On 25/06/2019 05:44, Martin Blumenstingl wrote:
->>> Hi Colin,
->>>
->>> On Thu, Jun 20, 2019 at 3:34 AM Martin Blumenstingl
->>> <martin.blumenstingl@googlemail.com> wrote:
->>>>
->>>> Hi Colin,
->>>>
->>>> On Wed, Jun 19, 2019 at 8:55 AM Colin Ian King <colin.king@canonical.com> wrote:
->>>>>
->>>>> On 19/06/2019 06:13, Martin Blumenstingl wrote:
->>>>>> Hi Colin,
->>>>>>
->>>>>>> Currently the call to device_property_read_u32_array is not error checked
->>>>>>> leading to potential garbage values in the delays array that are then used
->>>>>>> in msleep delays.  Add a sanity check to the property fetching.
->>>>>>>
->>>>>>> Addresses-Coverity: ("Uninitialized scalar variable")
->>>>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>>>>> I have also sent a patch [0] to fix initialize the array.
->>>>>> can you please look at my patch so we can work out which one to use?
->>>>>>
->>>>>> my concern is that the "snps,reset-delays-us" property is optional,
->>>>>> the current dt-bindings documentation states that it's a required
->>>>>> property. in reality it isn't, there are boards (two examples are
->>>>>> mentioned in my patch: [0]) without it.
->>>>>>
->>>>>> so I believe that the resulting behavior has to be:
->>>>>> 1. don't delay if this property is missing (instead of delaying for
->>>>>>    <garbage value> ms)
->>>>>> 2. don't error out if this property is missing
->>>>>>
->>>>>> your patch covers #1, can you please check whether #2 is also covered?
->>>>>> I tested case #2 when submitting my patch and it worked fine (even
->>>>>> though I could not reproduce the garbage values which are being read
->>>>>> on some boards)
->>> in the meantime I have tested your patch.
->>> when I don't set the "snps,reset-delays-us" property then I get the
->>> following error:
->>>   invalid property snps,reset-delays-us
->>>
->>> my patch has landed in the meantime: [0]
->>> how should we proceed with your patch?
-
-Your fix is good, so I think we should just drop/forget about my fix.
-
-Colin
-
->>
->> I'm out of the office today. I'll get back to you on this tomorrow.
-> gentle ping
-> (I will be away for the weekend but I can reply on Monday)
+On Fri, Jun 28, 2019 at 10:12:35AM +0200, Nikolaus Voss wrote:
+> 1. Portinfo bit field is 3 bits wide, not 2 bits. This led to
+>    a wrong driver configuration for some tps6598x configurations.
 > 
+> 2. Writing 4CC commands with tps6598x_write_4cc() already has
+>    a pointer arg, don't reference it when using as arg to
+>    tps6598x_block_write(). Correcting this enforces the constness
+>    of the pointer to propagate to tps6598x_block_write(), so add
+>    the const qualifier there to avoid the warning.
 
+Like Greg said, if please supply separate patches. Also, if these are
+fixes, then please mark them as such with appropriate tags:
+
+        Fixes: ....
+        Cc: stable@...
+
+
+> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+> ---
+>  drivers/usb/typec/tps6598x.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/tps6598x.c b/drivers/usb/typec/tps6598x.c
+> index c674abe3cf99..a38d1409f15b 100644
+> --- a/drivers/usb/typec/tps6598x.c
+> +++ b/drivers/usb/typec/tps6598x.c
+> @@ -41,7 +41,7 @@
+>  #define TPS_STATUS_VCONN(s)		(!!((s) & BIT(7)))
+>  
+>  /* TPS_REG_SYSTEM_CONF bits */
+> -#define TPS_SYSCONF_PORTINFO(c)		((c) & 3)
+> +#define TPS_SYSCONF_PORTINFO(c)		((c) & 7)
+>  
+>  enum {
+>  	TPS_PORTINFO_SINK,
+> @@ -127,7 +127,7 @@ tps6598x_block_read(struct tps6598x *tps, u8 reg, void *val, size_t len)
+>  }
+>  
+>  static int tps6598x_block_write(struct tps6598x *tps, u8 reg,
+> -				void *val, size_t len)
+> +				const void *val, size_t len)
+>  {
+>  	u8 data[TPS_MAX_LEN + 1];
+>  
+> @@ -173,7 +173,7 @@ static inline int tps6598x_write64(struct tps6598x *tps, u8 reg, u64 val)
+>  static inline int
+>  tps6598x_write_4cc(struct tps6598x *tps, u8 reg, const char *val)
+>  {
+> -	return tps6598x_block_write(tps, reg, &val, sizeof(u32));
+> +	return tps6598x_block_write(tps, reg, val, 4);
+>  }
+>  
+>  static int tps6598x_read_partner_identity(struct tps6598x *tps)
+> -- 
+> 2.17.1
+
+thanks,
+
+-- 
+heikki
