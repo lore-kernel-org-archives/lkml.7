@@ -2,40 +2,38 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=FUZZY_XPILL,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2E2C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B4EC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7AD2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCBB2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfF1Lwk (ORCPT
+        id S1727086AbfF1Lwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:52:40 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56944 "EHLO huawei.com"
+        Fri, 28 Jun 2019 07:52:44 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56946 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726936AbfF1LwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726957AbfF1LwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 07:52:16 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1FE9EA34AF9716592401;
+        by Forcepoint Email with ESMTP id 0EF133EF71519E55BB0D;
         Fri, 28 Jun 2019 19:52:11 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 28 Jun 2019 19:52:00 +0800
+ 14.3.439.0; Fri, 28 Jun 2019 19:52:02 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
+        <linuxarm@huawei.com>, Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 06/12] net: hns3: add Asym Pause support to fix autoneg problem
-Date:   Fri, 28 Jun 2019 19:50:12 +0800
-Message-ID: <1561722618-12168-7-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 12/12] net: hns3: optimize the CSQ cmd error handling
+Date:   Fri, 28 Jun 2019 19:50:18 +0800
+Message-ID: <1561722618-12168-13-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
 References: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,87 +46,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Peng Li <lipeng321@huawei.com>
 
-Local device and link partner config auto-negotiation on both,
-local device config pause frame use as: rx on/tx off,
-link partner config pause frame use as: rx off/tx on.
+If CMDQ ring is full, hclge_cmd_send may return directly, but IMP still
+working and HW pointer changed, SW ring pointer do not match the HW
+pointer. This patch update the SW pointer every time when the space is
+full, so it can work normally next time if IMP and HW still working.
 
-We except the result is:
-Local device:
-Autonegotiate:  on
-RX:             on
-TX:             off
-RX negotiated:  on
-TX negotiated:  off
-
-Link partner:
-Autonegotiate:  on
-RX:             off
-TX:             on
-RX negotiated:  off
-TX negotiated:  on
-
-But actually, the result of Local device and link partner is both:
-Autonegotiate:  on
-RX:             off
-TX:             off
-RX negotiated:  off
-TX negotiated:  off
-
-The root cause is that the supported flag is has only Pause,
-reference to the function genphy_config_advert():
-static int genphy_config_advert(struct phy_device *phydev)
-{
-	...
-	linkmode_and(phydev->advertising, phydev->advertising,
-		     phydev->supported);
-	...
-}
-The pause frame use of link partner is rx off/tx on, so its
-advertising only set the bit Asym_Pause, and the supported is
-only set the bit Pause, so the result of linkmode_and(), is
-rx off/tx off.
-
-This patch adds Asym_Pause to the supported flag to fix it.
-
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 1 +
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c | 7 +++++++
- 2 files changed, 8 insertions(+)
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c    | 15 ++++++++++++---
+ .../net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c  | 19 ++++++++++++++-----
+ 2 files changed, 26 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index b2faebd..896605f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -1061,6 +1061,7 @@ static void hclge_parse_copper_link_mode(struct hclge_dev *hdev,
- 	linkmode_set_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, supported);
- 	linkmode_set_bit(ETHTOOL_LINK_MODE_TP_BIT, supported);
- 	linkmode_set_bit(ETHTOOL_LINK_MODE_Pause_BIT, supported);
-+	linkmode_set_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT, supported);
- }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+index 7a3bde7..667c3be 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+@@ -232,6 +232,7 @@ static int hclge_cmd_check_retval(struct hclge_hw *hw, struct hclge_desc *desc,
+ int hclge_cmd_send(struct hclge_hw *hw, struct hclge_desc *desc, int num)
+ {
+ 	struct hclge_dev *hdev = container_of(hw, struct hclge_dev, hw);
++	struct hclge_cmq_ring *csq = &hw->cmq.csq;
+ 	struct hclge_desc *desc_to_use;
+ 	bool complete = false;
+ 	u32 timeout = 0;
+@@ -241,8 +242,16 @@ int hclge_cmd_send(struct hclge_hw *hw, struct hclge_desc *desc, int num)
  
- static void hclge_parse_link_mode(struct hclge_dev *hdev, u8 speed_ability)
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
-index d906d09..abb1b43 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
-@@ -224,6 +224,13 @@ int hclge_mac_connect_phy(struct hnae3_handle *handle)
- 	linkmode_and(phydev->supported, phydev->supported, mask);
- 	linkmode_copy(phydev->advertising, phydev->supported);
+ 	spin_lock_bh(&hw->cmq.csq.lock);
  
-+	/* supported flag is Pause and Asym Pause, but default advertising
-+	 * should be rx on, tx on, so need clear Asym Pause in advertising
-+	 * flag
-+	 */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
-+			   phydev->advertising);
+-	if (num > hclge_ring_space(&hw->cmq.csq) ||
+-	    test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state)) {
++	if (test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state)) {
++		spin_unlock_bh(&hw->cmq.csq.lock);
++		return -EBUSY;
++	}
 +
- 	return 0;
- }
++	if (num > hclge_ring_space(&hw->cmq.csq)) {
++		/* If CMDQ ring is full, SW HEAD and HW HEAD may be different,
++		 * need update the SW HEAD pointer csq->next_to_clean
++		 */
++		csq->next_to_clean = hclge_read_dev(hw, HCLGE_NIC_CSQ_HEAD_REG);
+ 		spin_unlock_bh(&hw->cmq.csq.lock);
+ 		return -EBUSY;
+ 	}
+@@ -280,7 +289,7 @@ int hclge_cmd_send(struct hclge_hw *hw, struct hclge_desc *desc, int num)
+ 	}
+ 
+ 	if (!complete) {
+-		retval = -EAGAIN;
++		retval = -EBADE;
+ 	} else {
+ 		retval = hclge_cmd_check_retval(hw, desc, num, ntc);
+ 	}
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index e1588c0..31db6d6 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -188,6 +188,7 @@ void hclgevf_cmd_setup_basic_desc(struct hclgevf_desc *desc,
+ int hclgevf_cmd_send(struct hclgevf_hw *hw, struct hclgevf_desc *desc, int num)
+ {
+ 	struct hclgevf_dev *hdev = (struct hclgevf_dev *)hw->hdev;
++	struct hclgevf_cmq_ring *csq = &hw->cmq.csq;
+ 	struct hclgevf_desc *desc_to_use;
+ 	bool complete = false;
+ 	u32 timeout = 0;
+@@ -199,8 +200,17 @@ int hclgevf_cmd_send(struct hclgevf_hw *hw, struct hclgevf_desc *desc, int num)
+ 
+ 	spin_lock_bh(&hw->cmq.csq.lock);
+ 
+-	if (num > hclgevf_ring_space(&hw->cmq.csq) ||
+-	    test_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state)) {
++	if (test_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state)) {
++		spin_unlock_bh(&hw->cmq.csq.lock);
++		return -EBUSY;
++	}
++
++	if (num > hclgevf_ring_space(&hw->cmq.csq)) {
++		/* If CMDQ ring is full, SW HEAD and HW HEAD may be different,
++		 * need update the SW HEAD pointer csq->next_to_clean
++		 */
++		csq->next_to_clean = hclgevf_read_dev(hw,
++						      HCLGEVF_NIC_CSQ_HEAD_REG);
+ 		spin_unlock_bh(&hw->cmq.csq.lock);
+ 		return -EBUSY;
+ 	}
+@@ -263,14 +273,13 @@ int hclgevf_cmd_send(struct hclgevf_hw *hw, struct hclgevf_desc *desc, int num)
+ 	}
+ 
+ 	if (!complete)
+-		status = -EAGAIN;
++		status = -EBADE;
+ 
+ 	/* Clean the command send queue */
+ 	handle = hclgevf_cmd_csq_clean(hw);
+-	if (handle != num) {
++	if (handle != num)
+ 		dev_warn(&hdev->pdev->dev,
+ 			 "cleaned %d, need to clean %d\n", handle, num);
+-	}
+ 
+ 	spin_unlock_bh(&hw->cmq.csq.lock);
  
 -- 
 2.7.4
