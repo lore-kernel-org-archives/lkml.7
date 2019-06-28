@@ -2,121 +2,102 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97E7C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06FDC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C416E2147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A8F214DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:47:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Lh/PXUfN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfF1Fn7 (ORCPT
+        id S1726891AbfF1FrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 01:43:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51766 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726622AbfF1Fn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 01:43:59 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 605775AFE9;
-        Fri, 28 Jun 2019 05:43:58 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 93C796012E;
-        Fri, 28 Jun 2019 05:43:52 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id C0C3D16E05; Fri, 28 Jun 2019 07:43:46 +0200 (CEST)
-Date:   Fri, 28 Jun 2019 07:43:46 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Zhenyu Wang <zhenyuw@linux.intel.com>
-Cc:     "Zhang, Tina" <tina.zhang@intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Yuan, Hang" <hang.yuan@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
-Subject: Re: [RFC PATCH v3 0/4] Deliver vGPU display vblank event to userspace
-Message-ID: <20190628054346.3uc3k4c4cffrqcy3@sirius.home.kraxel.org>
-References: <20190627033802.1663-1-tina.zhang@intel.com>
- <20190627062231.57tywityo6uyhmyd@sirius.home.kraxel.org>
- <237F54289DF84E4997F34151298ABEBC876835E5@SHSMSX101.ccr.corp.intel.com>
- <20190627103133.6ekdwazggi5j5lcl@sirius.home.kraxel.org>
- <20190628032149.GD9684@zhen-hp.sh.intel.com>
+        Fri, 28 Jun 2019 01:47:09 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44738 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfF1FrJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 01:47:09 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so9944857iob.11
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 22:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=fvuYML5uzQgIUwNz7fCS/6vO91+ePnv6G7iaXOVewbE=;
+        b=Lh/PXUfNzB9+Yc3PqmnULJsPt2VQgNpCN5/zylaX+Hmw9OmqW6glMZiI3omQZX96Fc
+         nCBpzg8MUVLXTC+3j7tC4tgeXYCZRZWJE/eUPLQwk46X7HbLafSb3pVCBoJyA/mSANfq
+         /tb0Vv6rv6sERdmMPDB8fMeo7dUe+noq9BDGDjJfW4BEHMIy+d8lgrO7SgWFQUPtARLC
+         Z+GWSFmkad/CsxXWM1JNvClu1KF/qEUBefedqYubAQ9icruKIkzRehlNlZNMbX5Njaif
+         PVdGoXQaCWlxSwnkNwT0Vznkmj93gOQUcTNGkDEvbiTpDOjoo3rZ2mS+1SEUJkW/JNZS
+         p3gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=fvuYML5uzQgIUwNz7fCS/6vO91+ePnv6G7iaXOVewbE=;
+        b=TQDCUT4CmZIRbo0JA95I/FikuV79GMZFu0aVp2BUJ65Ar5d993BkStijBrd09CCPFN
+         DE3M0N+tlAl+e9ekt/I98d0ZGmq1KLYYM8l8GxmsP3vCNlvfp1K9GYVkYLDyfZ4/Lk0R
+         fa6XcKoFE2Q9d4H9FHJbNgpYWmeJgegE1u/AqWGL5lMWpkibgUmbU/WJ7+PZFHAYihWo
+         D78ZYQzbhAVOE7j63OXJ4upgIpg5xKoqKhFjc+5SHVAKaKJCAs4/y5DcMAkHygEFJHwW
+         qDlf2fy4zAmxwDBRHyjZYGkTX7tvj/5UtEnrwuAkKZEFWxgJommY7/33gnVfAezPLaZi
+         Orug==
+X-Gm-Message-State: APjAAAUAwjHvYwpzo1yZnWUqYMbBXjNK1kg90hk7kF7BcVVNts7ga1WO
+        xSEJmWM9Q1qyc54TNHlyYIpBsA==
+X-Google-Smtp-Source: APXvYqyMCUI3j/PylnvKJ/FaopK/bHzh4vEpw/kHIraAfhhNgKnEs1KXhjU6FRT2a0v5mz1ckRca9w==
+X-Received: by 2002:a5d:81c6:: with SMTP id t6mr8927688iol.86.1561700828423;
+        Thu, 27 Jun 2019 22:47:08 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id r5sm1049107iom.42.2019.06.27.22.47.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 22:47:07 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 22:47:06 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>
+cc:     linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Anup Patel <anup@brainfault.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "maintainer:X86 ARCHITECTURE 32-BIT AND 64-BIT" <x86@kernel.org>,
+        linux-mm@kvack.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Gary Guo <gary@garyguo.net>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-riscv@lists.infradead.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v3 3/3] RISC-V: Update tlb flush counters
+In-Reply-To: <20190429212750.26165-4-atish.patra@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1906272243530.3867@viisi.sifive.com>
+References: <20190429212750.26165-1-atish.patra@wdc.com> <20190429212750.26165-4-atish.patra@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628032149.GD9684@zhen-hp.sh.intel.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 28 Jun 2019 05:43:58 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 11:21:49AM +0800, Zhenyu Wang wrote:
-> On 2019.06.27 12:31:33 +0200, Gerd Hoffmann wrote:
-> > > >   Hi,
-> > > > 
-> > > > > Instead of delivering page flip events, we choose to post display
-> > > > > vblank event. Handling page flip events for both primary plane and
-> > > > > cursor plane may make user space quite busy, although we have the
-> > > > > mask/unmask mechansim for mitigation. Besides, there are some cases
-> > > > > that guest app only uses one framebuffer for both drawing and display.
-> > > > > In such case, guest OS won't do the plane page flip when the
-> > > > > framebuffer is updated, thus the user land won't be notified about the
-> > > > updated framebuffer.
-> > > > 
-> > > > What happens when the guest is idle and doesn't draw anything to the
-> > > > framebuffer?
-> > > The vblank event will be delivered to userspace as well, unless guest OS disable the pipe.
-> > > Does it make sense to vfio/display?
-> > 
-> > Getting notified only in case there are actual display updates would be
-> > a nice optimization, assuming the hardware is able to do that.  If the
-> > guest pageflips this is obviously trivial.  Not sure this is possible in
-> > case the guest renders directly to the frontbuffer.
-> > 
-> > What exactly happens when the guest OS disables the pipe?  Is a vblank
-> > event delivered at least once?  That would be very useful because it
-> > will be possible for userspace to stop polling altogether without
-> > missing the "guest disabled pipe" event.
-> > 
+On Mon, 29 Apr 2019, Atish Patra wrote:
+
+> The TLB flush counters under vmstat seems to be very helpful while
+> debugging TLB flush performance in RISC-V.
 > 
-> It looks like purpose to use vblank here is to replace user space
-> polling totally by kernel event? Which just act as display update
-> event to replace user space timer to make it query and update
-> planes?
-
-I think it makes sense to design it that way, so userspace will either
-use the events (when supported by the driver) or a timer (fallback if
-not) but not both.
-
-> Although in theory vblank is not appropriate for this which
-> doesn't align with plane update or possible front buffer rendering at
-> all, but looks it's just a compromise e.g not sending event for every
-> cursor position change, etc.
+> Update the counters in every TLB flush methods respectively.
 > 
-> I think we need to define semantics for this event properly, e.g user
-> space purely depends on this event for display update, the opportunity
-> for issuing this event is controlled by driver when it's necessary for
-> update, etc. Definitely not named as vblank event or only issue at vblank,
-> that need to happen for other plane change too.
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 
-I think it should be "display update notification", i.e. userspace
-should check for plane changes and update the display.
+This one doesn't apply any longer.  Care to update and repost?
 
-Most events will probably come from vblank (typically plane update are
-actually committed at vblank time to avoid tearing, right?).  That is an
-implementation detail though.
 
-cheers,
-  Gerd
-
+- Paul
