@@ -2,108 +2,189 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1027C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C43C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D00208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F2B20828
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:48:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GyMkM3xX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfF1TpM (ORCPT
+        id S1727015AbfF1TsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 15:45:12 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:60050 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfF1TpM (ORCPT
+        Fri, 28 Jun 2019 15:48:10 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43536 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbfF1TsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 15:45:12 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1029)
-        id 5A4D22007696; Fri, 28 Jun 2019 12:45:11 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by linux.microsoft.com (Postfix) with ESMTP id 4A08C301032E;
-        Fri, 28 Jun 2019 12:45:11 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 12:45:11 -0700 (PDT)
-From:   Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
-X-X-Sender: jaskarankhurana@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
-To:     Eric Biggers <ebiggers@kernel.org>
-cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
-        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com,
-        mpatocka@redhat.com, gmazyland@gmail.com
-Subject: Re: [RFC PATCH v5 0/1] Add dm verity root hash pkcs7 sig
- validation.
-In-Reply-To: <20190628040041.GB673@sol.localdomain>
-Message-ID: <alpine.LRH.2.21.1906281242110.2789@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com> <20190628040041.GB673@sol.localdomain>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Fri, 28 Jun 2019 15:48:10 -0400
+Received: by mail-pl1-f195.google.com with SMTP id cl9so3797148plb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:48:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ChUBsFBboxFApcwFzipwESnSheECBArimENf95+mlCA=;
+        b=GyMkM3xXsRMmPGKX8Vnxcr/EmxSkiug4l0EL/232vcgqVdymn1s+EbaJ9pzrNErpIg
+         KmLfx6IePQaOTTV1ssVPFg6VgCUh0YDh2X34cbJaqARjQOOkzfmDUEFNiW06oVIJjLno
+         ThTVxw4hvNEkBlqG9vbvyVU5qCbRz7EskzHU0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ChUBsFBboxFApcwFzipwESnSheECBArimENf95+mlCA=;
+        b=cnfqOstu6I7BNxCaQGMCkI2w39n6EFTAFmcfbwi1ac7TCoSgjh8ADxt2zM8i8hlRBm
+         gAbiYivCBqXK4UJsAL0lnI1XLK1JDGpibF8U8+Xt7zCwz0UmjdJjda7kmA5QC6DikmSd
+         e7lG/oHp4O8ISFFNX0JLTwux/fyzOeVCg9QJUObPEph7HLewPjXvIwWKGoEperX+r51k
+         V/dcNkVpfkivWSNxC8RQ/ZTufQYEUESW7cFHoKcUipohU3eiAh5oHRuhhWIGH3SmUvZ9
+         pR1KsnOdZeqzs6JNoEWTK+vhmCzzuGrfXh+yw/iSAkB9nBXxWIhxbMiWq6LO3VjRWId/
+         Mzkg==
+X-Gm-Message-State: APjAAAX0u7vF6u2Kg6uNisWQEywm3HmoxuzoCywoEmf3tkrfMUsGrrvI
+        j+fykGdC/+argVVbViI+wZxudQ==
+X-Google-Smtp-Source: APXvYqxtv8TvNyn4zJpKrD6/mQH7c5fJYCsEEAuMAFHUWiXMb2hDoGhrYZltpHjmwQWPslPiSMyGpQ==
+X-Received: by 2002:a17:902:9896:: with SMTP id s22mr2769927plp.4.1561751289344;
+        Fri, 28 Jun 2019 12:48:09 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m11sm2593670pjv.21.2019.06.28.12.48.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Jun 2019 12:48:06 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 12:48:05 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+        willy@infradead.org, peterz@infradead.org, will.deacon@arm.com,
+        paulmck@linux.vnet.ibm.com, elena.reshetova@intel.com,
+        kernel-team@android.com, kernel-hardening@lists.openwall.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v2] Convert struct pid count to refcount_t
+Message-ID: <201906281248.7D03C318A1@keescook>
+References: <20190628193442.94745-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628193442.94745-1-joel@joelfernandes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 28, 2019 at 03:34:42PM -0400, Joel Fernandes (Google) wrote:
+> struct pid's count is an atomic_t field used as a refcount. Use
+> refcount_t for it which is basically atomic_t but does additional
+> checking to prevent use-after-free bugs.
+> 
+> For memory ordering, the only change is with the following:
+>  -	if ((atomic_read(&pid->count) == 1) ||
+>  -	     atomic_dec_and_test(&pid->count)) {
+>  +	if (refcount_dec_and_test(&pid->count)) {
+>  		kmem_cache_free(ns->pid_cachep, pid);
+> 
+> Here the change is from:
+> Fully ordered --> RELEASE + ACQUIRE (as per refcount-vs-atomic.rst)
+> This ACQUIRE should take care of making sure the free happens after the
+> refcount_dec_and_test().
+> 
+> The above hunk also removes atomic_read() since it is not needed for the
+> code to work and it is unclear how beneficial it is. The removal lets
+> refcount_dec_and_test() check for cases where get_pid() happened before
+> the object was freed.
+> 
+> Cc: mathieu.desnoyers@efficios.com
+> Cc: willy@infradead.org
+> Cc: peterz@infradead.org
+> Cc: will.deacon@arm.com
+> Cc: paulmck@linux.vnet.ibm.com
+> Cc: elena.reshetova@intel.com
+> Cc: keescook@chromium.org
+> Cc: kernel-team@android.com
+> Cc: kernel-hardening@lists.openwall.com
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Hello Eric,
-On Thu, 27 Jun 2019, Eric Biggers wrote:
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-> On Wed, Jun 19, 2019 at 12:10:47PM -0700, Jaskaran Khurana wrote:
->> This patch set adds in-kernel pkcs7 signature checking for the roothash of
->> the dm-verity hash tree.
->> The verification is to support cases where the roothash is not secured by
->> Trusted Boot, UEFI Secureboot or similar technologies.
->> One of the use cases for this is for dm-verity volumes mounted after boot,
->> the root hash provided during the creation of the dm-verity volume has to
->> be secure and thus in-kernel validation implemented here will be used
->> before we trust the root hash and allow the block device to be created.
->>
->> Why we are doing validation in the Kernel?
->>
->> The reason is to still be secure in cases where the attacker is able to
->> compromise the user mode application in which case the user mode validation
->> could not have been trusted.
->> The root hash signature validation in the kernel along with existing
->> dm-verity implementation gives a higher level of confidence in the
->> executable code or the protected data. Before allowing the creation of
->> the device mapper block device the kernel code will check that the detached
->> pkcs7 signature passed to it validates the roothash and the signature is
->> trusted by builtin keys set at kernel creation. The kernel should be
->> secured using Verified boot, UEFI Secure Boot or similar technologies so we
->> can trust it.
->>
->> What about attacker mounting non dm-verity volumes to run executable
->> code?
->>
->> This verification can be used to have a security architecture where a LSM
->> can enforce this verification for all the volumes and by doing this it can
->> ensure that all executable code runs from signed and trusted dm-verity
->> volumes.
->>
->> Further patches will be posted that build on this and enforce this
->> verification based on policy for all the volumes on the system.
->>
->
-> I don't understand your justification for this feature.
->
-> If userspace has already been pwned severely enough for the attacker to be
-> executing arbitrary code with CAP_SYS_ADMIN (which is what the device mapper
-> ioctls need), what good are restrictions on loading more binaries from disk?
->
-> Please explain your security model.
->
-> - Eric
->
+-Kees
 
-In a datacenter like environment, this will protect the system from below 
-attacks:
+> 
+> ---
+> Only change from v1->v2 is to get rid of the atomic_read().
+> 
+>  include/linux/pid.h | 5 +++--
+>  kernel/pid.c        | 7 +++----
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/pid.h b/include/linux/pid.h
+> index 14a9a39da9c7..8cb86d377ff5 100644
+> --- a/include/linux/pid.h
+> +++ b/include/linux/pid.h
+> @@ -3,6 +3,7 @@
+>  #define _LINUX_PID_H
+>  
+>  #include <linux/rculist.h>
+> +#include <linux/refcount.h>
+>  
+>  enum pid_type
+>  {
+> @@ -56,7 +57,7 @@ struct upid {
+>  
+>  struct pid
+>  {
+> -	atomic_t count;
+> +	refcount_t count;
+>  	unsigned int level;
+>  	/* lists of tasks that use this pid */
+>  	struct hlist_head tasks[PIDTYPE_MAX];
+> @@ -69,7 +70,7 @@ extern struct pid init_struct_pid;
+>  static inline struct pid *get_pid(struct pid *pid)
+>  {
+>  	if (pid)
+> -		atomic_inc(&pid->count);
+> +		refcount_inc(&pid->count);
+>  	return pid;
+>  }
+>  
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 20881598bdfa..89c4849fab5d 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -37,7 +37,7 @@
+>  #include <linux/init_task.h>
+>  #include <linux/syscalls.h>
+>  #include <linux/proc_ns.h>
+> -#include <linux/proc_fs.h>
+> +#include <linux/refcount.h>
+>  #include <linux/sched/task.h>
+>  #include <linux/idr.h>
+>  
+> @@ -106,8 +106,7 @@ void put_pid(struct pid *pid)
+>  		return;
+>  
+>  	ns = pid->numbers[pid->level].ns;
+> -	if ((atomic_read(&pid->count) == 1) ||
+> -	     atomic_dec_and_test(&pid->count)) {
+> +	if (refcount_dec_and_test(&pid->count)) {
+>  		kmem_cache_free(ns->pid_cachep, pid);
+>  		put_pid_ns(ns);
+>  	}
+> @@ -210,7 +209,7 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+>  	}
+>  
+>  	get_pid_ns(ns);
+> -	atomic_set(&pid->count, 1);
+> +	refcount_set(&pid->count, 1);
+>  	for (type = 0; type < PIDTYPE_MAX; ++type)
+>  		INIT_HLIST_HEAD(&pid->tasks[type]);
+>  
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
 
-1.Prevents attacker from deploying scripts that run arbitrary executables on the system.
-2.Prevents physically present malicious admin to run arbitrary code on the
-   machine.
-
-Regards,
-Jaskaran
+-- 
+Kees Cook
