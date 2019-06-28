@@ -2,138 +2,115 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E558C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89577C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADDD2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 669A12064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbfF1Cka (ORCPT
+        id S1726734AbfF1CmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:40:30 -0400
-Received: from smtprelay0011.hostedemail.com ([216.40.44.11]:45887 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726476AbfF1Ck3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:40:29 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 24ED36D83;
-        Fri, 28 Jun 2019 02:40:28 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: jump91_5b258eb197f18
-X-Filterd-Recvd-Size: 4127
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 28 Jun 2019 02:40:26 +0000 (UTC)
-Message-ID: <2f1c88882fde00beebb6066e9bd561287f5932c5.camel@perches.com>
-Subject: Re: [tip:timers/core] hrtimer: Use a bullet for the returns bullet
- list
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab@infradead.org>
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org, tglx@linutronix.de,
-        mingo@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        mchehab+samsung@kernel.org, linux-tip-commits@vger.kernel.org,
-        docutils-develop@lists.sourceforge.net
-Date:   Thu, 27 Jun 2019 19:40:24 -0700
-In-Reply-To: <20190627213930.0d28a072@coco.lan>
-References: <74ddad7dac331b4e5ce4a90e15c8a49e3a16d2ac.1561372382.git.mchehab+samsung@kernel.org>
-         <tip-516337048fa40496ae5ca9863c367ec991a44d9a@git.kernel.org>
-         <3740b16e5d0a3144e2d48af7cf56ae8020c3f9af.camel@perches.com>
-         <20190627213930.0d28a072@coco.lan>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Thu, 27 Jun 2019 22:42:13 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59216 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726476AbfF1CmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 22:42:12 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5CDEC5EA8D2C2FE829FE;
+        Fri, 28 Jun 2019 10:42:08 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 28 Jun
+ 2019 10:42:04 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: allocate blocks for pinned file
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190627170504.71700-1-jaegeuk@kernel.org>
+ <f64cdddd-807e-2918-744b-56ced47a94dd@huawei.com>
+ <20190628021551.GA10489@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <a8bfab96-f98f-c637-8ba0-caf702080b6f@huawei.com>
+Date:   Fri, 28 Jun 2019 10:42:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20190628021551.GA10489@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-27 at 21:39 -0300, Mauro Carvalho Chehab wrote:
-> Em Thu, 27 Jun 2019 15:08:59 -0700
-> Joe Perches <joe@perches.com> escreveu:
-[]
-> > > hrtimer: Use a bullet for the returns bullet list
-> > > 
-> > > That gets rid of this warning:
-> > > 
-> > >    ./kernel/time/hrtimer.c:1119: WARNING: Block quote ends without a blank line; unexpected unindent.  
-> > 
-> > Doesn't this form occur multiple dozens of times in
-> > kernel sources?
-> > 
-> > For instance:
-> > 
-> > $ git grep -B3 -A5 -P "^ \* Returns:?$" | \
-> >   grep -P -A8 '\-\s+\*\s*@\w+:'
+On 2019/6/28 10:15, Jaegeuk Kim wrote:
+> On 06/28, Chao Yu wrote:
+>> Hi Jaegeuk,
+>>
+>> On 2019/6/28 1:05, Jaegeuk Kim wrote:
+>>> This patch allows fallocate to allocate physical blocks for pinned file.
+>>
+>> Quoted from manual of fallocate(2):
+>> "
+>> Any subregion within the range specified by offset and len that did not contain
+>> data before the  call  will  be  initialized  to zero.
+>>
+>> If  the  FALLOC_FL_KEEP_SIZE  flag  is specified in mode .... Preallocating
+>> zeroed blocks beyond the end of the file in this manner is useful for optimizing
+>> append workloads.
+>> "
+>>
+>> As quoted description, our change may break the rule of fallocate(, mode = 0),
+>> because with after this change, we can't guarantee that preallocated physical
+>> block contains zeroed data
+>>
+>> Should we introduce an additional ioctl for this case? Or maybe add one more
+>> flag in fallocate() for unzeroed block preallocation, not sure.
 > 
-> Yes, this is a common pattern, but not all patterns that match the above
-> regex are broken.
+> I thought like that, but this is a very corner case for the pinned file only in
+> f2fs. And, the pinned file is also indeed used by this purpose.
+
+Okay, I think we need to find one place to document such behavior that is not
+matching regular poxis fallocate's sematic, user should be noticed about it.
+
+Thanks,
+
 > 
-> > I think the warning is odd at best and docutils might
-> > be updated or the warning ignored or suppressed.
-> > 
-> > > and displays nicely both at the source code and at the produced
-> > > documentation.  
+> Thanks,
 > 
-> The warnings are painful - and they're the main reason why I wrote this
-> change: - I wanted to avoid new warnings actually unrelated to my
-> changes that were sometimes appearing while doing incremental
-> "make htmldocs" on a big patchset that I've been rebasing almost every
-> week over the last two months.
+>>
+>> Thanks,
+>>
+>>>
+>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>> ---
+>>>  fs/f2fs/file.c | 7 ++++++-
+>>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>> index e7c368db8185..cdfd4338682d 100644
+>>> --- a/fs/f2fs/file.c
+>>> +++ b/fs/f2fs/file.c
+>>> @@ -1528,7 +1528,12 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
+>>>  	if (off_end)
+>>>  		map.m_len++;
+>>>  
+>>> -	err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_AIO);
+>>> +	if (f2fs_is_pinned_file(inode))
+>>> +		map.m_seg_type = CURSEG_COLD_DATA;
+>>> +
+>>> +	err = f2fs_map_blocks(inode, &map, 1, (f2fs_is_pinned_file(inode) ?
+>>> +						F2FS_GET_BLOCK_PRE_DIO :
+>>> +						F2FS_GET_BLOCK_PRE_AIO));
+>>>  	if (err) {
+>>>  		pgoff_t last_off;
+>>>  
+>>>
+> .
 > 
-> -
-> 
-> Yet, did you try to look how this pattern will appear at the html and pdf
-> output?
-
-No I did not.
-
-I just would like to avoid changing perfectly intelligible
-kernel-doc content into something less directly readable for
-the sake of external output.
-
-I don't use the externally generated formatted output docs.
-I read and use the source when necessary.
-
-Automatic creation of bulleted blocks from relatively
-unformatted content is a hard problem.
-
-I appreciate the work Mauro, I just would like to minimize
-the necessary changes if possible.
-
-The grep I did was trivial, I'm sure there are better tools
-to isolate the kernel-doc bits where the Return: block
-is emitted.
-
-
->  Something like this:
-> 
-> 	sound/soc/codecs/wm8960.c: * Returns:
-> 	sound/soc/codecs/wm8960.c- *  -1, in case no sysclk frequency available found
-> 	sound/soc/codecs/wm8960.c- * >=0, in case we could derive bclk and lrclk from sysclk using
-> 	sound/soc/codecs/wm8960.c- *      (@sysclk_idx, @dac_idx, @bclk_idx) dividers
-> 
-> 
-> Will be displayed as:
-> 
-> 	**Returns:**
-> 	  -1, in case no sysclk frequency available found **>=0, in case we could derive bclk and lrclk from sysclk using** (@sysclk_idx, @dac_idx, @bclk_idx) dividers
-> (where **foo**) means that "foo" will be printed in bold.> 
-
-That's a yuck from me.
-
-> While it would likely be possible to improve kernel-doc to present better
-> results, I'm afraid that it would be too complex for simple regex
-> expressions, and hard to tune, as it would be a hint-based approach,
-> and doing a natural language processing would be too much effort.
-
-Yeah, tough problem.  I don't envy it.
-
-cheers and g'luck...
-
