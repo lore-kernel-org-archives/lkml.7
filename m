@@ -7,58 +7,61 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFFDC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E548C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147EA208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D1E20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561741001;
-	bh=QkBNEdmX/H3/l1teEu0uZoDZD8t9RC3V6jjGJ09soY4=;
+	s=default; t=1561741004;
+	bh=5pp1nH95z/dD1QQ+dMol6mNEbJExxFrM7gnMlCEvDIE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=UHC8LO5hN2UoPLrcI+Tc/7hjtR1r6KjFFZyDQmhoppQ2I9b8s1XAQAwPeZISOrnTf
-	 h4sVvhKHyv8JTNwxHpeAizE+7IwAbtaG53RizI+dUOQMr2YF9Zk93Q8y9rkhOxwGSR
-	 OdqHiiCixn9ZPo7DKDXUJC9N+CIxvy4Dm6RI7lcc=
+	b=zmVUyovu+1ir8QUmln4Ctwa/zrZO1ozNVCrUFrkPB2hUNHMESh3JVGQYOt9FneYUH
+	 UD9VQtarav1o2LwHx64TMKJB+uLVsLN5YcxBf6L7rps1ZUxdGG1l3ir0DpwNCePcPK
+	 aioCE1/9vfJGpjBrOdZk0PIdgDl+shnVtU/n7fr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfF1Q4j (ORCPT
+        id S1727033AbfF1Q4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:56:39 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42514 "EHLO
+        Fri, 28 Jun 2019 12:56:43 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42616 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbfF1Q4i (ORCPT
+        with ESMTP id S1726956AbfF1Q4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:56:38 -0400
+        Fri, 28 Jun 2019 12:56:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=GjcHksA4qGiaUnr9QTbALLeGH/gj9DkhMrZ1SbHiikw=; b=oCkunyEKReYW
-        4gnQc44v2vTEo2iacdCajWGkArNGwSog1x2I5M2pXvT5EYfFVoX1gmqFPsw+NauMsl67SlUgOtHWB
-        vp/U+MmYkgpuTKiFFwqORf8UsFlaW0iOuc2aszy1orc/dpEUqAiAPBzEKXhapa4kLhEb4R33z7xA4
-        lJZvw=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        List-Archive; bh=iDKc40FydAHvdXLFNwmMjAx1GM+vsXmu1CM9PROUYY4=; b=sTFFxXe07FaF
+        /Vb6DqwLJZ3Ir44c5J+ZPxdRp2YdrODpWMdm3ZaPBdOodXjmH+b7g2lEHhHmUejekBnxya3cNAE9L
+        oYov+sWXYLdeMONNCYO1M7xn7s35IeUmIkdqnKmMyhfAh4qJ8ceEH05oYf2sA+4ldLSJIb4MW2kjb
+        IGK+4=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hguAm-0007BF-D7; Fri, 28 Jun 2019 16:56:28 +0000
+        id 1hguAs-0007D4-E1; Fri, 28 Jun 2019 16:56:34 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id CAB93440049; Fri, 28 Jun 2019 17:56:27 +0100 (BST)
+        id 0A62C440049; Fri, 28 Jun 2019 17:56:34 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        kernel-janitors@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>
-Subject: Applied "ASoC: topology: fix memory leaks on sm, se and sbe" to the asoc tree
-In-Reply-To: <20190627133208.9550-1-colin.king@canonical.com>
+To:     Ludovic Barre <ludovic.barre@st.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "dt-bindings: spi: stm32-qspi: add dma properties" to the spi tree
+In-Reply-To: <1561621439-7305-1-git-send-email-ludovic.Barre@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190628165627.CAB93440049@finisterre.sirena.org.uk>
-Date:   Fri, 28 Jun 2019 17:56:27 +0100 (BST)
+Message-Id: <20190628165634.0A62C440049@finisterre.sirena.org.uk>
+Date:   Fri, 28 Jun 2019 17:56:34 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +69,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: topology: fix memory leaks on sm, se and sbe
+   dt-bindings: spi: stm32-qspi: add dma properties
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,63 +94,35 @@ to this mail.
 Thanks,
 Mark
 
-From 1ad741d0e8e8ecccc16aa9ccb8362575197d91bf Mon Sep 17 00:00:00 2001
-From: Colin Ian King <colin.king@canonical.com>
-Date: Thu, 27 Jun 2019 14:32:08 +0100
-Subject: [PATCH] ASoC: topology: fix memory leaks on sm, se and sbe
+From cae86eac98cd90934f94072028c362550338e084 Mon Sep 17 00:00:00 2001
+From: Ludovic Barre <ludovic.barre@st.com>
+Date: Thu, 27 Jun 2019 09:43:58 +0200
+Subject: [PATCH] dt-bindings: spi: stm32-qspi: add dma properties
 
-Currently when a kstrdup fails the error exit paths don't free
-the allocations for sm, se and sbe.  This can be fixed by assigning
-kc[i].private_value to these before doing the ksrtdup so that the error
-exit path will be able to free these objects.
+This patch adds description of dma properties (optional).
 
-Addresses-Coverity: ("Resource leak")
-Fixes: 9f90af3a9952 ("ASoC: topology: Consolidate and fix asoc_tplg_dapm_widget_*_create flow")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/soc-topology.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index fc1f1d6f9e92..dc463f1a9e24 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1326,10 +1326,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dmixer_create(
- 		dev_dbg(tplg->dev, " adding DAPM widget mixer control %s at %d\n",
- 			mc->hdr.name, i);
+diff --git a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+index adeeb63e84b9..bfc038b9478d 100644
+--- a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+@@ -19,8 +19,11 @@ Required properties:
+ - reg: chip-Select number (QSPI controller may connect 2 flashes)
+ - spi-max-frequency: max frequency of spi bus
  
-+		kc[i].private_value = (long)sm;
- 		kc[i].name = kstrdup(mc->hdr.name, GFP_KERNEL);
- 		if (kc[i].name == NULL)
- 			goto err_sm;
--		kc[i].private_value = (long)sm;
- 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 		kc[i].access = mc->hdr.access;
+-Optional property:
++Optional properties:
+ - spi-rx-bus-width: see ./spi-bus.txt for the description
++- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
++Documentation/devicetree/bindings/dma/dma.txt.
++- dma-names: DMA request names should include "tx" and "rx" if present.
  
-@@ -1412,10 +1412,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
- 		dev_dbg(tplg->dev, " adding DAPM widget enum control %s\n",
- 			ec->hdr.name);
- 
-+		kc[i].private_value = (long)se;
- 		kc[i].name = kstrdup(ec->hdr.name, GFP_KERNEL);
- 		if (kc[i].name == NULL)
- 			goto err_se;
--		kc[i].private_value = (long)se;
- 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 		kc[i].access = ec->hdr.access;
- 
-@@ -1524,10 +1524,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dbytes_create(
- 			"ASoC: adding bytes kcontrol %s with access 0x%x\n",
- 			be->hdr.name, be->hdr.access);
- 
-+		kc[i].private_value = (long)sbe;
- 		kc[i].name = kstrdup(be->hdr.name, GFP_KERNEL);
- 		if (kc[i].name == NULL)
- 			goto err_sbe;
--		kc[i].private_value = (long)sbe;
- 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 		kc[i].access = be->hdr.access;
+ Example:
  
 -- 
 2.20.1
