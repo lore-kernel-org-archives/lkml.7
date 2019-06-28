@@ -2,190 +2,154 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	URIBL_SBL,URIBL_SBL_A autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F68C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1EEC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEABB206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5924B206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:48:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="K2ssyNit"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfF1Hof (ORCPT
+        id S1726528AbfF1Hsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:44:35 -0400
-Received: from lgeamrelo12.lge.com ([156.147.23.52]:43364 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726385AbfF1Hof (ORCPT
+        Fri, 28 Jun 2019 03:48:32 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:46317 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfF1Hsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:44:35 -0400
-Received: from unknown (HELO lgeamrelo04.lge.com) (156.147.1.127)
-        by 156.147.23.52 with ESMTP; 28 Jun 2019 16:44:31 +0900
-X-Original-SENDERIP: 156.147.1.127
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.127 with ESMTP; 28 Jun 2019 16:44:31 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Fri, 28 Jun 2019 16:43:50 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Scott Wood <swood@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, kernel-team@lge.com
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Message-ID: <20190628074350.GA11214@X58A-UD3R>
-References: <20190627103455.01014276@gandalf.local.home>
- <20190627153031.GA249127@google.com>
- <20190627155506.GU26519@linux.ibm.com>
- <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
- <20190627203612.GD26519@linux.ibm.com>
- <20190628073138.GB13650@X58A-UD3R>
+        Fri, 28 Jun 2019 03:48:31 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="Nicolas.Ferre@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.63,426,1557212400"; 
+   d="scan'208";a="38691445"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jun 2019 00:48:23 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 28 Jun 2019 00:48:22 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Fri, 28 Jun 2019 00:48:22 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=etz58AQuh/mcXoM4nd68Vm4JLqzugP3DwDOhDCftJ6xj/k/8xokoRmd0J91Iu8JgTJ3dis5EkSRLYP01ZdN3G2VNaRdkbX+DcAPizRL7jFsYLI+tK2sdQ9UNp8I3c5lSb6rtUY+Nd93cQrWZ9ij7rR0YPzhzpeiWMyOG4CbB2so=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GgiMdyIeQW4yFsmqMo4R261fF/haD72pVxxUrDjsFyQ=;
+ b=Kpjheco0bnHjX5YGCHc0FzuO9HUWLOgooBSxbweFXNiYMYAwkdk2kjFSMJ+mtZNWmu2bEWfoxKFX/8sPfohwAybiIntzey4x688oyzT2htNKFSAF48k0GeYuKX2Hi0SHmMj2olCJxjaTwiINEDeuaeiMNnhd0MnDpUXSjKkz/1U=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GgiMdyIeQW4yFsmqMo4R261fF/haD72pVxxUrDjsFyQ=;
+ b=K2ssyNitm/NpFOgKVRlMbrgZd+SjJJJE4nbaqq80eDp3y7P+c2GIm0vGa3e6d38z3jO3hFwlVJEfg3eXNUaLWplXkD25MwfRQgnWA2gntz8YAGfCkx3y8ukzU7osyOYux0xoI5Pc/hO2+rw0wBN/YT/AKQnK24MFGquM4e0kHrk=
+Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
+ MWHPR11MB1838.namprd11.prod.outlook.com (10.175.52.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Fri, 28 Jun 2019 07:48:22 +0000
+Received: from MWHPR11MB1662.namprd11.prod.outlook.com
+ ([fe80::7534:63dc:8504:c2b3]) by MWHPR11MB1662.namprd11.prod.outlook.com
+ ([fe80::7534:63dc:8504:c2b3%6]) with mapi id 15.20.2008.019; Fri, 28 Jun 2019
+ 07:48:22 +0000
+From:   <Nicolas.Ferre@microchip.com>
+To:     <boris.brezillon@collabora.com>, <sam@ravnborg.org>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <bbrezillon@kernel.org>, <alexandre.belloni@bootlin.com>,
+        <Claudiu.Beznea@microchip.com>, <peda@axentia.se>
+Subject: Re: [PATCH] MAINTAINERS: add Sam Ravnborg for drm/atmel_hlcdc
+Thread-Topic: [PATCH] MAINTAINERS: add Sam Ravnborg for drm/atmel_hlcdc
+Thread-Index: AQHVLS234T2mTAnbKkOZSPCGA5TOq6awlrIAgAAaoAA=
+Date:   Fri, 28 Jun 2019 07:48:22 +0000
+Message-ID: <f879b0eb-9559-7615-a044-5808b714a234@microchip.com>
+References: <20190627211643.GA19853@ravnborg.org>
+ <20190628081256.230165ae@collabora.com>
+In-Reply-To: <20190628081256.230165ae@collabora.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0281.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a1::29) To MWHPR11MB1662.namprd11.prod.outlook.com
+ (2603:10b6:301:e::15)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [213.41.198.74]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5b932627-fb2b-4883-97e2-08d6fb9cfe2f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB1838;
+x-ms-traffictypediagnostic: MWHPR11MB1838:
+x-microsoft-antispam-prvs: <MWHPR11MB18386E29970D95820A34F7CDE0FC0@MWHPR11MB1838.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 00826B6158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(346002)(366004)(396003)(136003)(199004)(189003)(72206003)(31696002)(229853002)(86362001)(2906002)(66066001)(73956011)(66946007)(66476007)(64756008)(66446008)(66556008)(8676002)(53936002)(6436002)(476003)(2616005)(6486002)(6512007)(81156014)(81166006)(14454004)(486006)(102836004)(71200400001)(256004)(4326008)(446003)(36756003)(25786009)(26005)(11346002)(68736007)(76176011)(305945005)(5660300002)(6116002)(3846002)(52116002)(386003)(6506007)(53546011)(7736002)(54906003)(110136005)(99286004)(186003)(316002)(6246003)(478600001)(8936002)(31686004)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1838;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: wJ+zQYpPWPc1/tDEJoG0JIoe8cS6jlb6iTRNDW2QmoMNeE5z6mSS6P9SK1rV8RIi0rqx5SDtu/8Z4q5UcrHapQfX/0gdaTOzCtwjLFX+qjoypnz9ah7eIXSABoBhcVKZTDThc9P3nw1f598f0ldEU7gh511L9DGUVFVmDfLx47q1Czbfmn7zyT9UAPapSzDNigUyCL/LgbiiTXddWJTgqDeaJ8tXJzu1DVZcHnDtAKdbsl1YuP64O5ZAUgLSUTuRH8hCmvtfMp6uuKUmISQ41KjDwDtfZQAj6xSkKibmcXswGF4Mo4wUwjmeM5xdD1mRb/k/29S0Tln2vSTtN2s5EPr8QzHC7JApjssFv7eMV+A4lSJCamrVdBDbuRH5QooZBuj8DNF2Wle+JM+V5lnctll8TMENQ0aXb/LlfrEZLMo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <23B5457F24C75E4097BB8A779EFBBC14@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628073138.GB13650@X58A-UD3R>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b932627-fb2b-4883-97e2-08d6fb9cfe2f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 07:48:22.1779
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nicolas.ferre@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1838
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 04:31:38PM +0900, Byungchul Park wrote:
-> On Thu, Jun 27, 2019 at 01:36:12PM -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 27, 2019 at 03:17:27PM -0500, Scott Wood wrote:
-> > > On Thu, 2019-06-27 at 11:41 -0700, Paul E. McKenney wrote:
-> > > > On Thu, Jun 27, 2019 at 02:16:38PM -0400, Joel Fernandes wrote:
-> > > > > 
-> > > > > I think the fix should be to prevent the wake-up not based on whether we
-> > > > > are
-> > > > > in hard/soft-interrupt mode but that we are doing the rcu_read_unlock()
-> > > > > from
-> > > > > a scheduler path (if we can detect that)
-> > > > 
-> > > > Or just don't do the wakeup at all, if it comes to that.  I don't know
-> > > > of any way to determine whether rcu_read_unlock() is being called from
-> > > > the scheduler, but it has been some time since I asked Peter Zijlstra
-> > > > about that.
-> > > > 
-> > > > Of course, unconditionally refusing to do the wakeup might not be happy
-> > > > thing for NO_HZ_FULL kernels that don't implement IRQ work.
-> > > 
-> > > Couldn't smp_send_reschedule() be used instead?
-> > 
-> > Good point.  If current -rcu doesn't fix things for Sebastian's case,
-> > that would be well worth looking at.  But there must be some reason
-> > why Peter Zijlstra didn't suggest it when he instead suggested using
-> > the IRQ work approach.
-> > 
-> > Peter, thoughts?
-> 
-
-+cc kernel-team@lge.com
-(I'm sorry for more noise on the thread.)
-
-> Hello,
-> 
-> Isn't the following scenario possible?
-> 
-> The original code
-> -----------------
-> rcu_read_lock();
-> ...
-> /* Experdite */
-> WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> ...
-> __rcu_read_unlock();
-> 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> 		rcu_read_unlock_special(t);
-> 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> 		barrier();  /* ->rcu_read_unlock_special load before assign */
-> 		t->rcu_read_lock_nesting = 0;
-> 
-> The reordered code by machine
-> -----------------------------
-> rcu_read_lock();
-> ...
-> /* Experdite */
-> WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> ...
-> __rcu_read_unlock();
-> 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> 		rcu_read_unlock_special(t);
-> 		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
-> 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> 		barrier();  /* ->rcu_read_unlock_special load before assign */
-> 
-> An interrupt happens
-> --------------------
-> rcu_read_lock();
-> ...
-> /* Experdite */
-> WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> ...
-> __rcu_read_unlock();
-> 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> 		rcu_read_unlock_special(t);
-> 		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
-> <--- Handle an (any) irq
-> 	rcu_read_lock();
-> 	/* This call should be skipped */
-> 	rcu_read_unlock_special(t);
-> 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> 		barrier();  /* ->rcu_read_unlock_special load before assign */
-> 
-> We don't have to handle the special thing twice like this which is one
-> reason to cause the problem even though another problem is of course to
-> call ttwu w/o being aware it's within a context holding pi lock.
-> 
-> Apart from the discussion about how to avoid ttwu in an improper
-> condition, I think the following is necessary. I may have something
-> missing. It would be appreciated if you let me know in case I'm wrong.
-> 
-> Anyway, logically I think we should prevent reordering between
-> t->rcu_read_lock_nesting and t->rcu_read_unlock_special.b.exp_hint not
-> only by compiler but also by machine like the below.
-> 
-> Do I miss something?
-> 
-> Thanks,
-> Byungchul
-> 
-> ---8<---
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 3c8444e..9b137f1 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -412,7 +412,13 @@ void __rcu_read_unlock(void)
->  		barrier();  /* assign before ->rcu_read_unlock_special load */
->  		if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
->  			rcu_read_unlock_special(t);
-> -		barrier();  /* ->rcu_read_unlock_special load before assign */
-> +		/*
-> +		 * Prevent reordering between clearing
-> +		 * t->rcu_reak_unlock_special in
-> +		 * rcu_read_unlock_special() and the following
-> +		 * assignment to t->rcu_read_lock_nesting.
-> +		 */
-> +		smp_wmb();
->  		t->rcu_read_lock_nesting = 0;
->  	}
->  	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
-> 
-> 
+T24gMjgvMDYvMjAxOSBhdCAwODoxMiwgQm9yaXMgQnJlemlsbG9uIHdyb3RlOg0KPiBPbiBUaHUs
+IDI3IEp1biAyMDE5IDIzOjE2OjQzICswMjAwDQo+IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3Jn
+Lm9yZz4gd3JvdGU6DQo+IA0KPj4gSSBoYXZlIGFncmVlZCB3aXRoIEJvcmlzIEJyZXppbGxvbiB0
+aGF0IHdlIHdpbGwgc2hhcmUgdGhlDQo+PiBtYWludGFpbmVyIHJvbGUgZm9yIHRoZSBkcm0vYXRt
+ZWxfaGxjZGMgZHJpdmVyLg0KPj4gTmljb2xhcyBGZXJyZSBmcm9tIE1pY3JvY2hpcCBoYXMgZG9u
+YXRlZCBhIGZldyBib2FyZHMgdGhhdA0KPj4gYWxsb3dzIG1lIHRvIHRlc3QgdGhpbmdzIC0gdGhh
+bmtzIQ0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9y
+Zz4NCj4+IENjOiBCb3JpcyBCcmV6aWxsb24gPGJicmV6aWxsb25Aa2VybmVsLm9yZz4NCj4gDQo+
+IEFja2VkLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBjb2xsYWJvcmEuY29t
+Pg0KDQpPZiBjb3Vyc2U6DQpBY2tlZC1ieTogTmljb2xhcyBGZXJyZSA8bmljb2xhcy5mZXJyZUBt
+aWNyb2NoaXAuY29tPg0KDQpUaGFua3MgYSBsb3QgU2FtIGZvciB0YWtpbmcgdGhpcyBtYWludGFp
+bmVyIHJvbGUhDQoNCkJlc3QgcmVnYXJkcywNCiAgIE5pY29sYXMNCg0KPj4gQ2M6IE5pY29sYXMg
+RmVycmUgPG5pY29sYXMuZmVycmVAbWljcm9jaGlwLmNvbT4NCj4+IENjOiBBbGV4YW5kcmUgQmVs
+bG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5jb20+DQo+PiBDYzogQ2xhdWRpdSBCZXpu
+ZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+PiBDYzogUGV0ZXIgUm9zaW4gPHBl
+ZGFAYXhlbnRpYS5zZT4NCj4+IC0tLQ0KPj4gICBNQUlOVEFJTkVSUyB8IDEgKw0KPj4gICAxIGZp
+bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5F
+UlMgYi9NQUlOVEFJTkVSUw0KPj4gaW5kZXggNTE1YTgxZmRiN2Q2Li4wYTc2NzE2ODc0YmQgMTAw
+NjQ0DQo+PiAtLS0gYS9NQUlOVEFJTkVSUw0KPj4gKysrIGIvTUFJTlRBSU5FUlMNCj4+IEBAIC01
+MjUxLDYgKzUyNTEsNyBAQCBGOglEb2N1bWVudGF0aW9uL2dwdS9tZXNvbi5yc3QNCj4+ICAgVDoJ
+Z2l0IGdpdDovL2Fub25naXQuZnJlZWRlc2t0b3Aub3JnL2RybS9kcm0tbWlzYw0KPj4gICANCj4+
+ICAgRFJNIERSSVZFUlMgRk9SIEFUTUVMIEhMQ0RDDQo+PiArTToJU2FtIFJhdm5ib3JnIDxzYW1A
+cmF2bmJvcmcub3JnPg0KPj4gICBNOglCb3JpcyBCcmV6aWxsb24gPGJicmV6aWxsb25Aa2VybmVs
+Lm9yZz4NCj4+ICAgTDoJZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0KPj4gICBTOglT
+dXBwb3J0ZWQNCj4gDQo+IA0KPiANCg0KDQotLSANCk5pY29sYXMgRmVycmUNCg==
