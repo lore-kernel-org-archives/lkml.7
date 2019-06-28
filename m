@@ -2,146 +2,106 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEF2C5B578
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DF1C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB7D205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891D4205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfF1SxI (ORCPT
+        id S1726993AbfF1SxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:53:08 -0400
-Received: from mga07.intel.com ([134.134.136.100]:56007 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726563AbfF1SxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:53:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 11:53:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,428,1557212400"; 
-   d="asc'?scan'208";a="314213610"
-Received: from rarober1-mobl.amr.corp.intel.com ([10.251.157.137])
-  by orsmga004.jf.intel.com with ESMTP; 28 Jun 2019 11:53:03 -0700
-Message-ID: <fee5dd422d88806ee0b5a6b84f14cd6d50351343.camel@intel.com>
-Subject: Re: [PATCH 24/39] docs: driver-model: move it to the driver-api book
-From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Kershner <david.kershner@unisys.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        sparmaintainer@unisys.com, devel@driverdev.osuosl.org,
-        cocci@systeme.lip6.fr
-Date:   Fri, 28 Jun 2019 11:53:03 -0700
-In-Reply-To: <920ff36c66233113b1825ab504fe675ed5a5bd7b.1561724493.git.mchehab+samsung@kernel.org>
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
-         <920ff36c66233113b1825ab504fe675ed5a5bd7b.1561724493.git.mchehab+samsung@kernel.org>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-K11StWmkFkExVL88vQz+"
-User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
+        Fri, 28 Jun 2019 14:53:11 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:57264 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726909AbfF1SxJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 14:53:09 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TVRxcr9_1561747966;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TVRxcr9_1561747966)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 29 Jun 2019 02:52:57 +0800
+Subject: Re: [PATCH] mm, vmscan: prevent useless kswapd loops
+To:     Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Hillf Danton <hdanton@sina.com>, Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20190628015520.13357-1-shakeelb@google.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <6e28c8ce-96e1-5a1e-bd06-d1df5856094e@linux.alibaba.com>
+Date:   Fri, 28 Jun 2019 11:52:46 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190628015520.13357-1-shakeelb@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-K11StWmkFkExVL88vQz+
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-06-28 at 09:30 -0300, Mauro Carvalho Chehab wrote:
-> The audience for the Kernel driver-model is clearly Kernel hackers.
->=20
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-
-For the 'ice' driver changes.
-
+On 6/27/19 6:55 PM, Shakeel Butt wrote:
+> On production we have noticed hard lockups on large machines running
+> large jobs due to kswaps hoarding lru lock within isolate_lru_pages when
+> sc->reclaim_idx is 0 which is a small zone. The lru was couple hundred
+> GiBs and the condition (page_zonenum(page) > sc->reclaim_idx) in
+> isolate_lru_pages was basically skipping GiBs of pages while holding the
+> LRU spinlock with interrupt disabled.
+>
+> On further inspection, it seems like there are two issues:
+>
+> 1) If the kswapd on the return from balance_pgdat() could not sleep
+> (maybe all zones are still unbalanced), the classzone_idx is set to 0,
+> unintentionally, and the whole reclaim cycle of kswapd will try to reclaim
+> only the lowest and smallest zone while traversing the whole memory.
+>
+> 2) Fundamentally isolate_lru_pages() is really bad when the allocation
+> has woken kswapd for a smaller zone on a very large machine running very
+> large jobs. It can hoard the LRU spinlock while skipping over 100s of
+> GiBs of pages.
+>
+> This patch only fixes the (1). The (2) needs a more fundamental solution.
+>
+> Fixes: e716f2eb24de ("mm, vmscan: prevent kswapd sleeping prematurely
+> due to mismatched classzone_idx")
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
 > ---
->  Documentation/{ =3D> driver-api}/driver-model/binding.rst       | 0
->  Documentation/{ =3D> driver-api}/driver-model/bus.rst           | 0
->  Documentation/{ =3D> driver-api}/driver-model/class.rst         | 0
->  .../{ =3D> driver-api}/driver-model/design-patterns.rst         | 0
->  Documentation/{ =3D> driver-api}/driver-model/device.rst        | 0
->  Documentation/{ =3D> driver-api}/driver-model/devres.rst        | 0
->  Documentation/{ =3D> driver-api}/driver-model/driver.rst        | 0
->  Documentation/{ =3D> driver-api}/driver-model/index.rst         | 2 --
->  Documentation/{ =3D> driver-api}/driver-model/overview.rst      | 0
->  Documentation/{ =3D> driver-api}/driver-model/platform.rst      | 0
->  Documentation/{ =3D> driver-api}/driver-model/porting.rst       | 2 +-
->  Documentation/driver-api/gpio/driver.rst                      | 2 +-
->  Documentation/driver-api/index.rst                            | 1 +
->  Documentation/eisa.txt                                        | 4 ++--
->  Documentation/filesystems/sysfs.txt                           | 2 +-
->  Documentation/hwmon/submitting-patches.rst                    | 2 +-
->  Documentation/translations/zh_CN/filesystems/sysfs.txt        | 2 +-
->  drivers/base/platform.c                                       | 2 +-
->  drivers/gpio/gpio-cs5535.c                                    | 2 +-
->  drivers/net/ethernet/intel/ice/ice_main.c                     | 2 +-
->  drivers/staging/unisys/Documentation/overview.txt             | 4 ++--
->  include/linux/device.h                                        | 2 +-
->  include/linux/platform_device.h                               | 2 +-
->  scripts/coccinelle/free/devm_free.cocci                       | 2 +-
->  24 files changed, 16 insertions(+), 17 deletions(-)
->  rename Documentation/{ =3D> driver-api}/driver-model/binding.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/bus.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/class.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/design-patterns.rst
-> (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/device.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/devres.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/driver.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/index.rst (96%)
->  rename Documentation/{ =3D> driver-api}/driver-model/overview.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/platform.rst (100%)
->  rename Documentation/{ =3D> driver-api}/driver-model/porting.rst (99%)
+>   mm/vmscan.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 9e3292ee5c7c..786dacfdfe29 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -3908,7 +3908,7 @@ static int kswapd(void *p)
+>   
+>   		/* Read the new order and classzone_idx */
+>   		alloc_order = reclaim_order = pgdat->kswapd_order;
+> -		classzone_idx = kswapd_classzone_idx(pgdat, 0);
+> +		classzone_idx = kswapd_classzone_idx(pgdat, classzone_idx);
 
+I'm a little bit confused by the fix. What happen if kswapd is waken for 
+a lower zone? It looks kswapd may just reclaim the higher zone instead 
+of the lower zone?
 
---=-K11StWmkFkExVL88vQz+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+For example, after bootup, classzone_idx should be (MAX_NR_ZONES - 1), 
+if GFP_DMA is used for allocation and kswapd is waken up for ZONE_DMA, 
+kswapd_classzone_idx would still return (MAX_NR_ZONES - 1) since 
+kswapd_classzone_idx(pgdat, classzone_idx) returns the max classzone_idx.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl0WYg8ACgkQ5W/vlVpL
-7c71FA//aLp3imbzpY3ovZhJWfkCedgU23P55ANWPX+9LogGHwK/qtSXQlpOFKet
-AKb3TrRqbgzziAdpNGCgC9phQ5qo56UwhI6PAf+WweUQV0Q1y5VX9Uvis12Zut4i
-CiScVqBx3+Fgaj1KRXxoZKTmpdqsGCgQAr4BsqQUxYBWYk9al+iBz4YlqS2kQtyr
-HClWQ4taQ6T6xaVHnCkIZA5NaSvOnaQClg33sPyvWTXrXbnlcBnJ3pXttlOKpXRA
-ImO2jo16IYZFDpqCzlQpC1WjXz6vvFrHb2ukosXmYvNPBj33a//vD5PTvn6WUPkX
-euZ5dRMaHjCY6XA9lZ5/KgHgckHO7TuzNzOP1VNCfit1lszA5M4p74nAFeL4XfYy
-EKvosns0N5hrxl0M3VqtLfi4vqyC0S52SHeGzQ9Jugfi3Ey4f+RfGU1bqRlWu1SI
-4g/JtpDavi2dT/jer5JSX55XMnSPpHEGl5I7M8osiMSqUx1wsnubuT4StxBu5U5y
-MY11YSpOWwq1ufPph3M6Bd05gJxQxfY9mbQojyHl+gQm88PlF6tSvgKRyvFChfK1
-eBb+uyphD9mFl06ZVtimDSW8C/X7uCylET5CPahyh6Cb/Z2QfRuh07V1t7Jr0nox
-KZLcjeAWq2BLZnk+TBikfnYQZ+/29kyml3N+Dm/cP7JByhm53bo=
-=wwuU
------END PGP SIGNATURE-----
-
---=-K11StWmkFkExVL88vQz+--
+>   		pgdat->kswapd_order = 0;
+>   		pgdat->kswapd_classzone_idx = MAX_NR_ZONES;
+>   
 
