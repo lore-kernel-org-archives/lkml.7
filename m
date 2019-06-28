@@ -2,89 +2,104 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B03C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1BBC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCB9208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86712208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:44:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="jdecO9TB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfF1DkP (ORCPT
+        id S1727099AbfF1DoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:40:15 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:52406 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbfF1DkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:40:13 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 778DB1A02E9;
-        Fri, 28 Jun 2019 05:40:11 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BD7131A02D8;
-        Fri, 28 Jun 2019 05:40:00 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A72F740318;
-        Fri, 28 Jun 2019 11:39:37 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
-        viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com,
-        l.stach@pengutronix.de, abel.vesa@nxp.com,
-        andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca,
-        agx@sigxcpu.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 5/5] arm64: dts: imx8mm: Add system counter node
-Date:   Fri, 28 Jun 2019 11:30:41 +0800
-Message-Id: <20190628033041.8513-5-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20190628033041.8513-1-Anson.Huang@nxp.com>
-References: <20190628033041.8513-1-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 27 Jun 2019 23:44:23 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46708 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfF1DoX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 23:44:23 -0400
+Received: by mail-io1-f67.google.com with SMTP id i10so9468949iol.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 20:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H94wx8BA9J9GrxF8s1ReCKmwP5vlxA1zO/6P1Z9SjDk=;
+        b=jdecO9TBf25X5vOPSzeZ6Q4Ub0nwztKuiukrJk0YmMpJGrQ+ZiSaFzZuw0B5MNNJKz
+         kcDBVaWNphJ1LgXyee3sUAIP2DCieVutHU8EhQnsUDHISPESChbnx3yePpe5tyvhS0k6
+         1ffm+c1WspOZlgOIE9I+ki+KVft/O87Wizxw/Hz5MhjtK1URq0zDwUK8uWHBGzkk0o33
+         ca/ZDi2qfNvAwBJ7up4l/em+s1655WtwzAdCVowMPrkkah/D4dB5L5TNFuxU7X7UwbzS
+         TyOapXZLKsEKvXeiesdHoc+yq87LUrG4ax6oxGM1kaBXTYqYKeFltfNmDSHmJJWtotWp
+         ziIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H94wx8BA9J9GrxF8s1ReCKmwP5vlxA1zO/6P1Z9SjDk=;
+        b=Oxw/cUrsXrAKchgSTguRSOAE9qWpIciRZkprZtrLrHGi11uCq4HDEOr3XVKDI4XKlK
+         AVMxECflRJXMeox4Jb6nomvdx6WWGGuZCXN688It+zx60lEM+oy7Wai5LVaUTngkl/fZ
+         X5vBIe7fR5DnI2b1nUKfIsts/RoYxfs39uukt0HeKc1uW3FuI1h7MQg0mbqjf+E+UjJB
+         z5Uh7wvRzcB9tm+a/ecpPEaIkfGZ8C3kh3gDixqjThxGEKZ+dbMguRwKi9cGP1us7v9I
+         GHmZhLFDdsUwkm7d9d5G6oVCOUfcvJD2kwKoA1S8YZyrSKiTNPEphwYpvUxXgLiShFg8
+         SZTg==
+X-Gm-Message-State: APjAAAXr0XEH5cQLnZ5AqAwBRQ25IjIQWfcwoxW4Zs3UINXtaD4m2dRs
+        zIB0yItOE8LrtU8FTxYLNnly5hR5kHK9CklVwX6gQw==
+X-Google-Smtp-Source: APXvYqyw4c0/vIh1E6dBJwb49Zf7BaKQa7FwdAtik0IPSMljBy6iQV1QjStKVAh/l+dSKdDkRtw6KqRyH4Gy8jCzw4k=
+X-Received: by 2002:a6b:ee15:: with SMTP id i21mr7951115ioh.281.1561693462611;
+ Thu, 27 Jun 2019 20:44:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190619120337.78624-1-olof@lixom.net> <20190628000033.ipcypg4kny2whfz7@treble>
+In-Reply-To: <20190628000033.ipcypg4kny2whfz7@treble>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Fri, 28 Jun 2019 11:44:10 +0800
+Message-ID: <CAOesGMjqhEi8rEnYy8JxvRV8HE_eRxfiXtmZNErWYwAX6ni12Q@mail.gmail.com>
+Subject: Re: [PATCH] objtool: Be lenient about -Wundef
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Fri, Jun 28, 2019 at 8:00 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Wed, Jun 19, 2019 at 05:03:37AM -0700, Olof Johansson wrote:
+> > Some libelf versions use undefined macros, which combined with newer GCC
+> > makes for errors from system headers. This isn't overly useful to fail
+> > compiling objtool for.
+> >
+> > Error as seen:
+> >
+> > cc1: all warnings being treated as errors
+> > In file included from arch/x86/../../elf.h:10,
+> >                  from arch/x86/decode.c:14:
+> > /usr/include/libelf/gelf.h:25:5: error: "__LIBELF_INTERNAL__" is not defined, evaluates to 0 [-Werror=undef]
+> >  #if __LIBELF_INTERNAL__
+> >      ^~~~~~~~~~~~~~~~~~~
+> >
+> > For this reason, skip -Wundef on objtool.
+> >
+> > Signed-off-by: Olof Johansson <olof@lixom.net>
+>
+> Sorry for the delay, I was out last week and I'm still getting caught
+> up.
+>
+> Which libelf was this?  I'm guessing it's the old non-elfutils version
+> which has been unmaintained for 10 years (and which doesn't work with
+> objtool anyway).
+>
+> It would be nice if we could figure out a way to detect that libelf and
+> report a more useful error for it.
 
-Add i.MX8MM system counter node to enable timer-imx-sysctr
-broadcast timer driver.
+Yeah, looks like my docker image pulled in the very old libelf 0.8.13,
+but has elfutils available. I'll switch it over locally to resolve
+this.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-New patch:
-	- As i.MX8MM clock driver will be soon moved to using platform driver model, so the patch
-	  series I sent out for i.MX8MM system counter driver support will need rework accordingly,
-	  so I add the i.MX8MM DT support in this patch series, it uses same method as i.MX8MQ's
-	  system counter driver.
----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 63f4731..aa985a0 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -528,6 +528,14 @@
- 				#pwm-cells = <2>;
- 				status = "disabled";
- 			};
-+
-+			system_counter: timer@306a0000 {
-+				compatible = "nxp,sysctr-timer";
-+				reg = <0x306a0000 0x30000>;
-+				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				clock-frequency = <8000000>;
-+			};
- 		};
- 
- 		aips3: bus@30800000 {
--- 
-2.7.4
-
+-Olof
