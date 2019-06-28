@@ -2,83 +2,105 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229A0C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEB5C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0F62133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:33:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="D1ToJybd"
+	by mail.kernel.org (Postfix) with ESMTP id E1F382083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfF1Qdv (ORCPT
+        id S1726906AbfF1Qd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:33:51 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40014 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbfF1Qdu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:33:50 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e8so6547890otl.7
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 09:33:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C5XhcDU6eHDsjHZSBvruupbGEAPLyXEBQaVgsJASp/M=;
-        b=D1ToJybdEnzma0OsziYT5+nxDaSkNPJrp7CNsMBtITOLU9+/6mSU8iSJzl0odLczf6
-         J+NJ1U3WVt6iz4ZNtK7O4B+I6SwhPHdmd0LCP3FM9Q7M8PpdCLD3yCikHMF8JisbHojD
-         8KdWhr837Jg14qpnK2c26np5bgqk4Sdt9wQpeW52XG/+opLeMhyE5Zeknlc5DM7hM1vd
-         gJXR5dqR48+7h+PE8PF0EAZtcQGoyieYya5bpdNretH4jGkw3uFBm3qz/4rEkogPFffJ
-         I8zmVSNFi8wJTP08HjuI3oB0cMcDmI8+DeCY4U9/lHmynz1ISjtE4qtidP1lMsdP9lD1
-         2zlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C5XhcDU6eHDsjHZSBvruupbGEAPLyXEBQaVgsJASp/M=;
-        b=B2LJ9X+WQ5OM6aZkNyk/pkqbysveftYK5uteMMOXqzZOw587KoJ7MdHDLLKLnpYTUj
-         NCxBVuARmbEMHA12ceKnonVD4vaGnzri3206KUCMLyBs2BUIFVjQGnzFFFy96jLQdxni
-         jpCF+dbU0gymnTgTAU6BV4TERoLlY85XXK9InL4lALGFScZ5uLdZa5n9Lqf3QISTe717
-         c5CFxjkb2JCj4krVWT9T2aWETApmLyTgBOlpq766dNwfNO7tLE3Bmket1qvc+5+5KX+w
-         Bu5Oaacn6wcnwzSwJjGKn4kdCIAB2L/rGepoZBsyKiteP5taIM15xs73OIX/I2ZP0pJl
-         FODw==
-X-Gm-Message-State: APjAAAWVlXZSEJv+bKTLwMrTGR9BjQ145+pN+FKIotcjyqmFui16P9ON
-        jpyeArLM2RTkthRIggvheI6NMdtUnXhYsW1mLq7K92pv
-X-Google-Smtp-Source: APXvYqzzYpdHgz4eglyne1uwTiVU7YP+ALyFG4sJtW5FcR4KUORfrVfDmiYmCAAGckLspi0ARU5vSc0QNvBcZT5BUKc=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr8593114oto.207.1561739630274;
- Fri, 28 Jun 2019 09:33:50 -0700 (PDT)
+        Fri, 28 Jun 2019 12:33:59 -0400
+Received: from fieldses.org ([173.255.197.46]:37464 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726667AbfF1Qd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 12:33:59 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id A1FCA1CE6; Fri, 28 Jun 2019 12:33:58 -0400 (EDT)
+Date:   Fri, 28 Jun 2019 12:33:58 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
+Message-ID: <20190628163358.GA31800@fieldses.org>
+References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
+ <1561042275-12723-9-git-send-email-bfields@redhat.com>
+ <20190621174544.GC25590@fieldses.org>
+ <201906211431.E6552108@keescook>
+ <20190622190058.GD5343@fieldses.org>
+ <201906221320.5BFC134713@keescook>
+ <20190624210512.GA20331@fieldses.org>
+ <20190626162149.GB4144@fieldses.org>
+ <20190627202124.GC16388@fieldses.org>
+ <201906272054.6954C08FA@keescook>
 MIME-Version: 1.0
-References: <cover.1561724493.git.mchehab+samsung@kernel.org> <bd756f3565213887a1fe82a382f7dfe7f9119f1f.1561724493.git.mchehab+samsung@kernel.org>
-In-Reply-To: <bd756f3565213887a1fe82a382f7dfe7f9119f1f.1561724493.git.mchehab+samsung@kernel.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 28 Jun 2019 09:33:39 -0700
-Message-ID: <CAPcyv4jGcXEvqYZ5aE1QUCd-zeJ8cO=yGtjcwGbYd59A+6FYxw@mail.gmail.com>
-Subject: Re: [PATCH 04/39] docs: nvdimm: add it to the driver-api book
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201906272054.6954C08FA@keescook>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 5:30 AM Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
->
-> The descriptions here are from Kernel driver's PoV.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+On Thu, Jun 27, 2019 at 08:58:22PM -0700, Kees Cook wrote:
+> On Thu, Jun 27, 2019 at 04:21:24PM -0400, J. Bruce Fields wrote:
+> > No, I was confused: "\n" is non-printable according to isprint(), so
+> > ESCAPE_ANY_NP *will* escape it.  So this isn't quite so bad.  SSIDs are
+> > usually printed as '%*pE', so arguably we should be escaping the single
+> > quote character too, but at least we're not allowing line breaks
+> > through.  I don't know about non-ascii.
+> 
+> Okay, cool. Given that most things are just trying to log, it seems like
+> it should be safe to have %pE escape non-ascii, non-printable, \, ', and "?
+> 
+> And if we changing that, we're likely changing
+> string_escape_mem(). Looking at callers of string_escape_mem() makes my
+> head spin...
 
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+kstrdup_quotable:
+	- only a few callers, mostly just logging, but
+	  msm_gpu_crashstate_capture uses it to generate some data that
+	  looks like it goes in a crashdump.  Dunno if there might be
+	  some utility depending on the current escaping. On the other
+	  hand, kstrdup_quotable uses ESCAPE_HEX, "\f\n\r\t\v\a\e\\\""
+	  so those characters are all escaped as \xNN, so I'd hope
+	  any parser would be prepared to unescape any hex character,
+	  they'd have to go out of their way to do anything else.
+string_escape_str:
+	- proc_task_name: ESCAPE_SPACE|ESCAPE_SPECIAL, "\n\\", used for
+	  command name in /proc/<pid>/stat{us}.  No way do I want to
+	  change the format of those files at all.
+	- seq_escape: ESCAPE_OCTAL, esc: haven't surveyed callers
+	  carefully, but this probably shouldn't be changed.
+	- qword_add: ESCAPE_OCTAL, "\\ \n\t", some nfsd upcalls.  Fine
+	  as they are, but the other side will happily accept any octal
+	  or hex escaping.
+string_escape_mem_any_np, string_escape_str_any_np:
+	- totally unused.
+escaped_string: this is the vsnprintf logic.  Tons of users, haven't had
+	a chance to look at them all.  Almost all %*pE, the exceptions
+	don't look important.
+
+So the only flag values we care about are ESCAPE_HEX, ESCAPE_OCTAL,
+ESCAPE_SPACE|ESCAPE_SPECIAL, and ESCAPE_ANY_NP.
+
+So this could be cleaned up some if we wanted.
+
+> Anyway, I don't want to block you needlessly. What would like to have
+> be next steps here?
+
+I might still be interested in some cleanup, I find the current logic
+unnecessarily confusing.
+
+But I may just give up and go with my existing patch and put
+off that project indefinitely, especially if there's no real need to fix
+the existing callers.
+
+I don't know....
+
+--b.
