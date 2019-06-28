@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBF9C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5724C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9772086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B5A2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:50:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vG3d8acL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntcAz/iX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfF1Xtv (ORCPT
+        id S1727034AbfF1Xud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 19:49:51 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42660 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfF1Xtv (ORCPT
+        Fri, 28 Jun 2019 19:50:33 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41840 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfF1Xuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 19:49:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x17so7838293wrl.9;
-        Fri, 28 Jun 2019 16:49:48 -0700 (PDT)
+        Fri, 28 Jun 2019 19:50:32 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so7838786wrm.8
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 16:50:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Q7IEImnfjv+A3lRFXyTXResy2KVoDPFK5pOWIOXw67k=;
-        b=vG3d8acLaTa36M8Qk+1Ig6NnkHOM4RXcyJFhhNYvfAeittbGLBIk42dMPmgjNUsdn5
-         FuYVQa5cR7tHr2HSfddbCSHiQE09EEBRNwSaFvQfSxIOOjgnN2uv5TAD5a7xmftR1T5T
-         pwq8FCkeB+h/d/mMeVatdy/dOi9jzYpHc8DizVguo7L2LBu1Frni/N7D6Ji4+QESaydA
-         6CkAd7WRlSIFr1DbePAevzpDomH5OxStI3Qj/Gndq12vMLl42ZMaSDAnZbNnui7niT0N
-         L8iltdGDiezmYdLexEiKRS5zIuJc3XejBOaAIAXAiVoL2uKNPXt8Eu2bcyM+3tG1iuQq
-         qUqA==
+        bh=aNV4HFwYEt0yMBPXIayN1RSWc1G6NoGgFBBw4GTp5vk=;
+        b=ntcAz/iX3Za+9ICjms1KoX9O6oWxXHxtQyDQwCbgMtkqPtk18/HptKLGS6omz63608
+         bJU9/zeMqmKOPtdM+RoyfYd/q8NZtn+hlFteOxVYWQ0baUiHP/Dp7qn1LHLcwe1/NQTF
+         n58RcsjDnxlmuKe688QDphz0tSXV7FlLD0WGnmmEK08j/NRUNmJCIhyDnpiZzzGeqGi1
+         azbIwGfNPGLKNPk0FUf+HxtcM5FpYTc48xjxV6euLmPHk0U7vh2n2FD25akO0letVvPY
+         m4XD1MGVns6LUmGSq736lCwKlUDkxZFJenjANpe2th+KMb8U6FD3xp3Jc38BO7m5keTh
+         x+wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q7IEImnfjv+A3lRFXyTXResy2KVoDPFK5pOWIOXw67k=;
-        b=efl1VCKG1NYIg7r+3lfhRYNejOx43sBJ1Kc0eXNNu6mVfCP1b0u039z0+Gu5t4YtbY
-         rH+BL4TgleBliOVN31BPRCOzkDbe1OViXRs5DldV77zTQClyvnXEgV3lbtu7UaGBUNih
-         W+F4nIAEtEmc3qDk51CGuTm97WqMsg6fwc0T/DaDqtDBuvIFuZ/ceEccnT854sJsLgmx
-         xQQTyB+GxosAkuVrNL6nd1BITc7oyKvafTWroIV8LG61yi+j3JzAzyBBqJNqQ6brsZJe
-         K8dLlJropWuXwSirFrKY+Hu6fl45XrpiOryzY2/+XqBMEpWjQ5H2CKPy5PkvaDERzOFB
-         NNnA==
-X-Gm-Message-State: APjAAAX2eakf8urgZovgroMVsn46EWD7AxdNBWQ5jVyDumcByputo/Pk
-        lqctfBICko/r4hQMy/9VYlw=
-X-Google-Smtp-Source: APXvYqxqv88pnNrGXl9e9tW3mOegaQe/CRnhjJlMga0gyKaLHiB23YZKxAYNn9ymY4Gf8UHD1YMp7A==
-X-Received: by 2002:adf:fecd:: with SMTP id q13mr9877353wrs.97.1561765788237;
-        Fri, 28 Jun 2019 16:49:48 -0700 (PDT)
+        bh=aNV4HFwYEt0yMBPXIayN1RSWc1G6NoGgFBBw4GTp5vk=;
+        b=QI4BPYbDh5Ag6R1U6i0whrq0rBXzlBO0CzFoDDlNWeYpMKIBNGjBchEVWg1ajRwB6B
+         aY0MwYD5V7HGFGMXEu64Sxm2RE/OXyVuW/DB7vCwDaSLQiKeYcMUw6jR2oH8DGF38fzj
+         FAke7UNZPw2+TfQGQS36qUa3H1lzF8upF5/VltwWBfCJCKld+tHvkGNYVcUh8JkcIWXR
+         u+7UDJFF2cD5HQi6qdrnxiQrUQwa0DNL7ZtYiqE3rgQrn4YyhZFo4acS5Ty//IFaJQzv
+         Kip2Pv/p4OhU36hmOJOSt0UwoWKksoXSOibq99AZ6RmFRVXVZXPEHijmCvZ8pidISscB
+         Fkyw==
+X-Gm-Message-State: APjAAAU6Se9PxWwBckZWiTLMNNocPONGxlgA0JzPkgvGBu1aSqVkGKGy
+        kHITqyLnR5pQ3CB6KClNFW8=
+X-Google-Smtp-Source: APXvYqwqZ6SOsptqFa/q0p+yLVXdp/0KY0BruP6v8sEZ6TBSCu0PSTL3/w4chYZ3COstYSLzG9RhTw==
+X-Received: by 2002:adf:de90:: with SMTP id w16mr9322571wrl.217.1561765830682;
+        Fri, 28 Jun 2019 16:50:30 -0700 (PDT)
 Received: from localhost (p200300E41F2AB200021F3CFFFE37B91B.dip0.t-ipconnect.de. [2003:e4:1f2a:b200:21f:3cff:fe37:b91b])
-        by smtp.gmail.com with ESMTPSA id s188sm3658105wmf.40.2019.06.28.16.49.47
+        by smtp.gmail.com with ESMTPSA id n2sm423403wmi.38.2019.06.28.16.50.29
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 16:49:47 -0700 (PDT)
-Date:   Sat, 29 Jun 2019 01:49:46 +0200
+        Fri, 28 Jun 2019 16:50:29 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 01:50:28 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Douglas Anderson <dianders@chromium.org>
 Cc:     Heiko Stuebner <heiko@sntech.de>,
@@ -69,21 +69,18 @@ Cc:     Heiko Stuebner <heiko@sntech.de>,
         Ezequiel Garcia <ezequiel@collabora.com>,
         Enric =?utf-8?B?QmFsbGV0YsOy?= <enric.balletbo@collabora.com>,
         Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
-        Eric Anholt <eric@anholt.net>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v5 2/7] drm/panel: simple: Add ability to override
- typical timing
-Message-ID: <20190628234946.GB1189@mithrandir>
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v5 4/7] drm/panel: simple: Use display_timing for Innolux
+ n116bge
+Message-ID: <20190628235028.GC1189@mithrandir>
 References: <20190401171724.215780-1-dianders@chromium.org>
- <20190401171724.215780-3-dianders@chromium.org>
+ <20190401171724.215780-5-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="NDin8bjvE/0mNLFQ"
+        protocol="application/pgp-signature"; boundary="Fig2xvG2VGoz8o/s"
 Content-Disposition: inline
-In-Reply-To: <20190401171724.215780-3-dianders@chromium.org>
+In-Reply-To: <20190401171724.215780-5-dianders@chromium.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -91,80 +88,71 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---NDin8bjvE/0mNLFQ
-Content-Type: text/plain; charset=utf-8
+--Fig2xvG2VGoz8o/s
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 01, 2019 at 10:17:19AM -0700, Douglas Anderson wrote:
-> From: Sean Paul <seanpaul@chromium.org>
+On Mon, Apr 01, 2019 at 10:17:21AM -0700, Douglas Anderson wrote:
+> Convert the Innolux n116bge from using a fixed mode to specifying a
+> display timing with min/typ/max values.
 >=20
-> This patch adds the ability to override the typical display timing for a
-> given panel. This is useful for devices which have timing constraints
-> that do not apply across the entire display driver (eg: to avoid
-> crosstalk between panel and digitizer on certain laptops). The rules are
-> as follows:
+> Note that the n116bge's datasheet doesn't fit too well into DRM's way
+> of specifying things.  Specifically the panel's datasheet just
+> specifies the vertical blanking period and horizontal blanking period
+> and doesn't break things out.  For now we'll leave everything as a
+> fixed value but just allow adjusting the pixel clock.  I've added a
+> comment on what the datasheet claims so someone could later expand
+> things to fit their needs if they wanted to test other blanking
+> periods.
 >=20
-> - panel must not specify fixed mode (since the override mode will
->   either be the same as the fixed mode, or we'll be unable to
->   check the bounds of the overried)
-> - panel must specify at least one display_timing range which will be
->   used to ensure the override mode fits within its bounds
+> The goal here is to be able to specify the panel timings in the device
+> tree for several rk3288 Chromebooks (like rk3288-veryon-jerry).  These
+> Chromebooks have all been running in the downstream kernel with the
+> standard porches and sync lengths but just with a slightly slower
+> pixel clock because the 76.42 MHz clock is not achievable from the
+> fixed PLL that was available.  These Chromebooks only achieve a
+> refresh rate of ~58 Hz.  While it's probable that we could adjust the
+> timings to achieve 60 Hz it's probably wisest to match what's been
+> running on these devices all these years.
 >=20
-> Changes in v2:
->  - Parse the full display-timings node (using the native-mode) (Rob)
-> Changes in v3:
->  - No longer parse display-timings subnode, use panel-timing (Rob)
+> I'll note that though the upstream kernel has always tried to achieve
+> 76.42 MHz, it has actually been running at 74.25 MHz also since the
+> video processor is parented off the same fixed PLL.
+>=20
 > Changes in v4:
->  - Don't add mode from timing if override was specified (Thierry)
->  - Add warning if timing and fixed mode was specified (Thierry)
->  - Don't add fixed mode if timing was specified (Thierry)
->  - Refactor/rename a bit to avoid extra indentation from "if" tests
->  - i should be unsigned (Thierry)
->  - Add annoying WARN_ONs for some cases (Thierry)
->  - Simplify 'No display_timing found' handling (Thierry)
->  - Rename to panel_simple_parse_override_mode() (Thierry)
+>  - display_timing for Innolux n116bge new for v4.
+>=20
 > Changes in v5:
 >  - Added Heiko's Tested-by
 >=20
-> Cc: Doug Anderson <dianders@chromium.org>
-> Cc: Eric Anholt <eric@anholt.net>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: St=C3=A9phane Marchesin <marcheu@chromium.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > Tested-by: Heiko Stuebner <heiko@sntech.de>
 > ---
 >=20
->  drivers/gpu/drm/panel/panel-simple.c | 109 +++++++++++++++++++++++++--
->  1 file changed, 104 insertions(+), 5 deletions(-)
+>  drivers/gpu/drm/panel/panel-simple.c | 37 +++++++++++++++++-----------
+>  1 file changed, 23 insertions(+), 14 deletions(-)
 
 Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
---NDin8bjvE/0mNLFQ
+--Fig2xvG2VGoz8o/s
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Wp5oACgkQ3SOs138+
-s6HkOA//aJRj++gDyHqyv+35Dnz1qJOb04MLQT25wHlW53LhiXm6APFDfKgu6GY1
-jEhdqsfBT7y0c+yM8SQRwJx44H4QN8YbkqpH0jFsvLli7S8oalKWtu6ti1nRv1XB
-oW2oTzn340rTKD1zeqQL1A26GF7G3COyKIOBhW+yHNAGA4gqi3XMi3RwKP0tLYWa
-1zpI7ZMQw8kwprzPZZbsEnfRYj1R5YUfBO1252HaixMStJbJGj5vfhKFE2H7wTJv
-zCz0JlxX6kepkO7aHmrwOWHYgnvrcCaphJy8YBWMhsBRN7UdOlLjjcBtvqGidKbc
-5bBZucu8NOKSBVKP9V7HlWgQjoCI4uPXSJ+Z9G+NemzcqFtLOYAgGezKiTVjnw1T
-AvEbEQ2ed9MPm2Yt93ozVgR0fvTqeJu0t5ybGaVhUXqevtek7HTCDbCiY+oFLBGs
-ubaXXPCJaYls415YuHWxeIOBuyuyAkSihPy9JB2SZ5jZbXgRiXFrppGI+/zcTklX
-InfVw9QwQMMHay+FhcnET0HkWiD47kvEnVBmaeHoMEnYKrE3p1IVZMXlzQsLqefL
-ADaFGSl0UIS5kyS6yB/b82C2XkyuyFqG40ohDu3qpa2ShzY7iovd1rJBRFmI22/3
-05j4j/3dS0eGTqoVVM1zpmdAaIvHaw7GbVjIEsd0BtG+51TIhW4=
-=P4R1
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Wp8QACgkQ3SOs138+
+s6EONRAAnI/lLg3nbvC+NPG+zh2EdypmFBjJwDAq/ZiG0VNTPe0pgjIbyg+vVcKD
+TS4SdyIlPL3I043HPwObBM/Y+O1MOcWwuEMxlnTSN0+R0pgyifAawX55sCE14MW0
+gf0GUEJcysayA0957o8Zfrvlh74nTmNOPyfp0MlpIXMoKZ7Zh3TMD7i0e4J7rfxM
+39xPhrNSLUYM0+fiTAYO3hcy3KGZ01CpLP17+djBgsDDjV+0uDXl6I6FNm9oHvNa
+bgbwx2urFytaX9PkFc/DfYYf6o/olkB1XZHxRRJfMZuys2L1cjQB+5zy6PjQ8GIM
+mScJALEwkxAKaidmyZ9lPm+a4CsMJF/s+XeG5MpVp6J63w8RdRCyqPRYQFcJkExR
+FyxI76LaRZ/wntJOBPgayCa19n3eNyL8KzEy259zNvOhluuzYpKQA+rqjGk2iXy/
+hQPgNnKtbu9x2Gh3AnzfxDwqalLX7/+ksHbTDXoXnuxa9HMlBDXuwbw721MMmzea
+k4MfVF5pUkQAFp5OODbhg5tlZH4zV0RIZdMvHR2/elsSP23+27kgvxqS7tDor493
+jUnLz3GuOGarkedkx9ywBbiNZJOlr6xAJlxW6jgr/hUNmaZ5Da4JwJr8S/3MCUyD
+xxMPQvzI/Sacn0JL2kD9cE1ojFOJOxLskiTWEv0tZtChQR2hoXk=
+=ZuxI
 -----END PGP SIGNATURE-----
 
---NDin8bjvE/0mNLFQ--
+--Fig2xvG2VGoz8o/s--
