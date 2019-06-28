@@ -2,76 +2,163 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E58CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9629C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE362064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zer0a/jP"
+	by mail.kernel.org (Postfix) with ESMTP id 87F742064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfF1HZY (ORCPT
+        id S1726505AbfF1H0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:25:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49804 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfF1HZV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:25:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=L59glztjBFdzd0vpM/vAEVkumpBm6raQTV6rgoEfnoA=; b=Zer0a/jPvQOc99VEP2rbwm2/r
-        584J1SYdkxFucp5cUWZZtRfM2ngZMJlyoVBRF7VAcuc9sdLj4zpuDbbeDkVeZ7SE2NFhttNNXosU4
-        vVv5+fJP/Yfs975tI2b2X3ophH2KxjRVMrFHOUsdEsHpaPWhmD8RtnDj6skxrqp6ERc7mGcKHBWHC
-        3xG9cHW7TpLICuZD6pgbV07Wi6izh7qeZmTFqyTl6lkqlBv9GQnZMm3F0S2sQ9khVB1bBCAkN+4Se
-        BpfeStB3nggiwQp3CYx98ofVBk9bQxwWNPyq7Izwiad12RzO1bJ/LVqYNjVgfidNRGBtM7eGj65dx
-        4/jZ5dS9g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hglG2-0001az-TF; Fri, 28 Jun 2019 07:25:18 +0000
-Date:   Fri, 28 Jun 2019 00:25:18 -0700
-From:   'Christoph Hellwig' <hch@infradead.org>
-To:     kanchan <joshi.k@samsung.com>
-Cc:     'Christoph Hellwig' <hch@infradead.org>, 'Jan Kara' <jack@suse.cz>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, anshul@samsung.com,
-        linux-fsdevel@vger.kernel.org, prakash.v@samsung.com,
-        linux-ext4@vger.kernel.org
-Subject: Re: [PATCH v5 0/7] Extend write-hint framework, and add write-hint
- for Ext4 journal
-Message-ID: <20190628072518.GA25577@infradead.org>
-References: <CGME20190425112347epcas2p1f7be48b8f0d2203252b8c9dd510c1b61@epcas2p1.samsung.com>
- <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
- <20190510170249.GA26907@infradead.org>
- <00fb01d50c71$dd358e50$97a0aaf0$@samsung.com>
- <20190520142719.GA15705@infradead.org>
- <20190521082528.GA17709@quack2.suse.cz>
- <20190521082846.GA11024@infradead.org>
- <20190522102530.GK17019@quack2.suse.cz>
- <00f301d52c1d$58f1e820$0ad5b860$@samsung.com>
+        Fri, 28 Jun 2019 03:26:05 -0400
+Received: from mga14.intel.com ([192.55.52.115]:36076 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfF1H0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 03:26:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 00:26:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,426,1557212400"; 
+   d="asc'?scan'208";a="337831152"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
+  by orsmga005.jf.intel.com with ESMTP; 28 Jun 2019 00:26:01 -0700
+Date:   Fri, 28 Jun 2019 15:23:36 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        "Zhang, Tina" <tina.zhang@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+Subject: Re: [RFC PATCH v3 0/4] Deliver vGPU display vblank event to userspace
+Message-ID: <20190628072336.GI9684@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20190627033802.1663-1-tina.zhang@intel.com>
+ <20190627062231.57tywityo6uyhmyd@sirius.home.kraxel.org>
+ <237F54289DF84E4997F34151298ABEBC876835E5@SHSMSX101.ccr.corp.intel.com>
+ <20190627103133.6ekdwazggi5j5lcl@sirius.home.kraxel.org>
+ <20190628032149.GD9684@zhen-hp.sh.intel.com>
+ <20190628054346.3uc3k4c4cffrqcy3@sirius.home.kraxel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="rKA5vZE+r0k9Fj4x"
 Content-Disposition: inline
-In-Reply-To: <00f301d52c1d$58f1e820$0ad5b860$@samsung.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190628054346.3uc3k4c4cffrqcy3@sirius.home.kraxel.org>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 06:17:29PM +0530, kanchan wrote:
-> Christoph, 
-> May I know if you have thoughts about what Jan mentioned below? 
 
-As said I fundamentally disagree with exposting the streams mess at
-the block layer.  I have no problem with setting a hint on the journal,
-but I do object to exposting the streams mess even more.
+--rKA5vZE+r0k9Fj4x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2019.06.28 07:43:46 +0200, Gerd Hoffmann wrote:
+> On Fri, Jun 28, 2019 at 11:21:49AM +0800, Zhenyu Wang wrote:
+> > On 2019.06.27 12:31:33 +0200, Gerd Hoffmann wrote:
+> > > > >   Hi,
+> > > > >=20
+> > > > > > Instead of delivering page flip events, we choose to post displ=
+ay
+> > > > > > vblank event. Handling page flip events for both primary plane =
+and
+> > > > > > cursor plane may make user space quite busy, although we have t=
+he
+> > > > > > mask/unmask mechansim for mitigation. Besides, there are some c=
+ases
+> > > > > > that guest app only uses one framebuffer for both drawing and d=
+isplay.
+> > > > > > In such case, guest OS won't do the plane page flip when the
+> > > > > > framebuffer is updated, thus the user land won't be notified ab=
+out the
+> > > > > updated framebuffer.
+> > > > >=20
+> > > > > What happens when the guest is idle and doesn't draw anything to =
+the
+> > > > > framebuffer?
+> > > > The vblank event will be delivered to userspace as well, unless gue=
+st OS disable the pipe.
+> > > > Does it make sense to vfio/display?
+> > >=20
+> > > Getting notified only in case there are actual display updates would =
+be
+> > > a nice optimization, assuming the hardware is able to do that.  If the
+> > > guest pageflips this is obviously trivial.  Not sure this is possible=
+ in
+> > > case the guest renders directly to the frontbuffer.
+> > >=20
+> > > What exactly happens when the guest OS disables the pipe?  Is a vblank
+> > > event delivered at least once?  That would be very useful because it
+> > > will be possible for userspace to stop polling altogether without
+> > > missing the "guest disabled pipe" event.
+> > >=20
+> >=20
+> > It looks like purpose to use vblank here is to replace user space
+> > polling totally by kernel event? Which just act as display update
+> > event to replace user space timer to make it query and update
+> > planes?
+>=20
+> I think it makes sense to design it that way, so userspace will either
+> use the events (when supported by the driver) or a timer (fallback if
+> not) but not both.
+
+Agree. It's more of a userspace choice.
+
+>=20
+> > Although in theory vblank is not appropriate for this which
+> > doesn't align with plane update or possible front buffer rendering at
+> > all, but looks it's just a compromise e.g not sending event for every
+> > cursor position change, etc.
+> >=20
+> > I think we need to define semantics for this event properly, e.g user
+> > space purely depends on this event for display update, the opportunity
+> > for issuing this event is controlled by driver when it's necessary for
+> > update, etc. Definitely not named as vblank event or only issue at vbla=
+nk,
+> > that need to happen for other plane change too.
+>=20
+> I think it should be "display update notification", i.e. userspace
+> should check for plane changes and update the display.
+>=20
+> Most events will probably come from vblank (typically plane update are
+> actually committed at vblank time to avoid tearing, right?).  That is an
+> implementation detail though.
+>=20
+
+Yeah, vblank should be a good time, although driver might also do
+optimization e.g checking actual plane change between vblank to see if
+there's any real change, etc. Also that will depend on driver
+implementation.
+
+--=20
+Open Source Technology Center, Intel ltd.
+
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--rKA5vZE+r0k9Fj4x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXRXAeAAKCRCxBBozTXgY
+JzcJAJ99sboSlBBi5kAeve4/+OCTN6lXIACdGzcAGEF9FVJ0lUnUKRRsuvkmp/Y=
+=qe3W
+-----END PGP SIGNATURE-----
+
+--rKA5vZE+r0k9Fj4x--
