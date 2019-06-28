@@ -2,84 +2,97 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F76C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0920C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A5F20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822A4208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:04:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vhETsdku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfF1RDc (ORCPT
+        id S1726731AbfF1RE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:03:32 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:40824 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfF1RDb (ORCPT
+        Fri, 28 Jun 2019 13:04:26 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45122 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbfF1REZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:03:31 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 386D080617;
-        Fri, 28 Jun 2019 19:03:28 +0200 (CEST)
-Date:   Fri, 28 Jun 2019 19:03:26 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH] kbuild: get rid of misleading $(AS) from documents
-Message-ID: <20190628170326.GB12826@ravnborg.org>
-References: <20190628020433.19156-1-yamada.masahiro@socionext.com>
+        Fri, 28 Jun 2019 13:04:25 -0400
+Received: by mail-io1-f65.google.com with SMTP id e3so13938355ioc.12;
+        Fri, 28 Jun 2019 10:04:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QzmSngCldiet4Ce1UUt+feV2L1nSDfkHJ0UbTbBtSwA=;
+        b=vhETsdkuDe/z0ufBVN7g2tHejedidw9mY1L+Dpur6jpmPLxofvv9DXmhAd95D4AJna
+         +9SoN+e3XnHPOFxt3zeOmVAW/mAIWDiP4gebZBptnoy33f++TvLg5xFvL/XOI26I6J9O
+         Ejse/xmZpsc5w2WSsNB5O10+Q5+E5K5KsTmhyIBqvc0pjF7owwz3eibv03XhI1RwY8dy
+         y+pbKNNJ+z3aXYJ8kbHEQlVA+E1mdFye0cH5rfAcgU92GRm6bGM02yIRpSFQl7HKBzXI
+         bxO4/s2RIcmjrITor6dqg7xdG81sdj/FsnAAetrIeI16BLCU83TxurSJOhsoqwlL83el
+         ZmIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QzmSngCldiet4Ce1UUt+feV2L1nSDfkHJ0UbTbBtSwA=;
+        b=HylfKKGNV6R9KFswr9uC4wBntlSfOIz0hKfgPzTUXYLDJmvezZ2PlrxUWbUkwIglrF
+         a7BpQPeq+iYfbrGxGJTxGs4aSSr1pGo4Ahm6otjwNrU3TM8rJ3+uDFf0ZdBBb+Pn51H8
+         gD8HKkSRBVl7zvctC1o/jcuO0xZxEgU5948FBKf7eSScJjbSqaZKMK6Z5hPuUZkD6e1M
+         atPqZsNUMR5DBwg1ZfAUBVAGYfWD3I4HI1o+U6hTD0NVSu5DJqvgFXHgrIetqCEB7JS2
+         BtijjM318OHgxb4/imZmG3gyF6oLh4ejEQM+apcWcye7+6HRa0QTcFO2c+K2yaDuBO5P
+         9anA==
+X-Gm-Message-State: APjAAAWA3KdUEJR5IDqjqghmmsMtSEC3shFveict4ocAQD53ORyxtRMD
+        6JiTbkqq4RXkPM8M7KnwIRI=
+X-Google-Smtp-Source: APXvYqyCJ2GraWa9zHtNqffQN5Ep3QkJtBmxhF4jLYFjvo11r028ZjaElr2UWdpM0P3kEKnLDXJkuA==
+X-Received: by 2002:a6b:f711:: with SMTP id k17mr2212810iog.273.1561741464749;
+        Fri, 28 Jun 2019 10:04:24 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:a468:85d6:9e2b:8578? ([2601:282:800:fd80:a468:85d6:9e2b:8578])
+        by smtp.googlemail.com with ESMTPSA id p10sm3762067iob.54.2019.06.28.10.04.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Jun 2019 10:04:23 -0700 (PDT)
+Subject: Re: [PATCH v4] net: netfilter: Fix rpfilter dropping vrf packets by
+ mistake
+To:     Miaohe Lin <linmiaohe@huawei.com>, pablo@netfilter.org,
+        kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     mingfangsen@huawei.com
+References: <1561712803-195184-1-git-send-email-linmiaohe@huawei.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <4d8ff353-5bda-35b5-cdc2-ccf3fe8b97fa@gmail.com>
+Date:   Fri, 28 Jun 2019 11:04:22 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628020433.19156-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=m9WLzkJrn2f4Qo16t4EA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <1561712803-195184-1-git-send-email-linmiaohe@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro.
+On 6/28/19 3:06 AM, Miaohe Lin wrote:
+> diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
+> index 6bcaf7357183..3c4a1772c15f 100644
+> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
+> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
+> @@ -55,6 +55,10 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+>  	if (rpfilter_addr_linklocal(&iph->saddr)) {
+>  		lookup_flags |= RT6_LOOKUP_F_IFACE;
+>  		fl6.flowi6_oif = dev->ifindex;
+> +	/* Set flowi6_oif for vrf devices to lookup route in l3mdev domain. */
+> +	} else if (netif_is_l3_master(dev) || netif_is_l3_slave(dev)) {
+> +		lookup_flags |= FLOWI_FLAG_SKIP_NH_OIF;
 
-On Fri, Jun 28, 2019 at 11:04:33AM +0900, Masahiro Yamada wrote:
-> The assembler files in the kernel are *.S instead of *.s, so they must
-> be preprocessed. Hence, we always use $(CC) as an assembler driver.
-> 
-> $(AS) is almost unused in Kbuild. As of writing, there is just one user.
-> 
->   $ git grep '$(AS)' -- :^Documentation
->   drivers/net/wan/Makefile:  AS68K = $(AS)
-> 
-> The documentation about *_AFLAGS* sounds like the flags were passed
-> to $(AS). This is somewhat misleading since we do not invoke $(AS)
-> directly.
-Thanks, another of your many nice cleanups.
-
->  AFLAGS_KERNEL
->  --------------------------------------------------
-> -Additional options for $(AS) when used for assembler
-> -code for code that is compiled as built-in.
-> +Additional options when used for assembling code that is compiled as built-in.
-To me reading "assembling code" make me think of something else than the
-assembler.
-It would be nice to spell out that we talk about the assembler
-everywhere. Even though the assembler is invoked via gcc.
-This comments applies to a few places, some where "assembling" was used
-in the old text.
-
-Other than this - looks good!
-
-	Sam
+you don't need to set that flag here. It is done by the fib_rules code
+as needed.
