@@ -4,94 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77D7C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F17C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9744D2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EFD20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbfF1BVT (ORCPT
+        id S1726678AbfF1B3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:21:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53530 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726606AbfF1BVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:21:19 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 88F9A307D91F;
-        Fri, 28 Jun 2019 01:21:18 +0000 (UTC)
-Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 88A9E60BEC;
-        Fri, 28 Jun 2019 01:21:12 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 20:21:09 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Petr Mladek <pmladek@suse.com>,
-        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH] ftrace/x86: Add a comment to why we take text_mutex in
- ftrace_arch_code_modify_prepare()
-Message-ID: <20190628012109.p7a2whpsnad5vjz7@treble>
-References: <20190627211819.5a591f52@gandalf.local.home>
+        Thu, 27 Jun 2019 21:29:38 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:19118 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726606AbfF1B3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 21:29:38 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B5073DD15909C132DC9D;
+        Fri, 28 Jun 2019 09:29:35 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 28 Jun
+ 2019 09:29:26 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: allocate blocks for pinned file
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190627170504.71700-1-jaegeuk@kernel.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <f64cdddd-807e-2918-744b-56ced47a94dd@huawei.com>
+Date:   Fri, 28 Jun 2019 09:29:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190627211819.5a591f52@gandalf.local.home>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 28 Jun 2019 01:21:18 +0000 (UTC)
+In-Reply-To: <20190627170504.71700-1-jaegeuk@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 09:18:19PM -0400, Steven Rostedt wrote:
+Hi Jaegeuk,
+
+On 2019/6/28 1:05, Jaegeuk Kim wrote:
+> This patch allows fallocate to allocate physical blocks for pinned file.
+
+Quoted from manual of fallocate(2):
+"
+Any subregion within the range specified by offset and len that did not contain
+data before the  call  will  be  initialized  to zero.
+
+If  the  FALLOC_FL_KEEP_SIZE  flag  is specified in mode .... Preallocating
+zeroed blocks beyond the end of the file in this manner is useful for optimizing
+append workloads.
+"
+
+As quoted description, our change may break the rule of fallocate(, mode = 0),
+because with after this change, we can't guarantee that preallocated physical
+block contains zeroed data
+
+Should we introduce an additional ioctl for this case? Or maybe add one more
+flag in fallocate() for unzeroed block preallocation, not sure.
+
+Thanks,
+
 > 
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> 
-> Taking the text_mutex in ftrace_arch_code_modify_prepare() is to fix a
-> race against module loading and live kernel patching that might try to
-> change the text permissions while ftrace has it as read/write. This
-> really needs to be documented in the code. Add a comment that does such.
-> 
-> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 > ---
->  arch/x86/kernel/ftrace.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  fs/f2fs/file.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> index 33786044d5ac..d7e93b2783fd 100644
-> --- a/arch/x86/kernel/ftrace.c
-> +++ b/arch/x86/kernel/ftrace.c
-> @@ -36,6 +36,11 @@
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index e7c368db8185..cdfd4338682d 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -1528,7 +1528,12 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
+>  	if (off_end)
+>  		map.m_len++;
 >  
->  int ftrace_arch_code_modify_prepare(void)
->  {
-> +	/*
-> +	 * Need to grab text_mutex to prevent a race from module loading
-> +	 * and live kernel patching from changing the text permissions while
-> +	 * ftrace has it set to "read/write".
-> +	 */
->  	mutex_lock(&text_mutex);
->  	set_kernel_text_rw();
->  	set_all_modules_text_rw();
-> -- 
-> 2.20.1
+> -	err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_AIO);
+> +	if (f2fs_is_pinned_file(inode))
+> +		map.m_seg_type = CURSEG_COLD_DATA;
+> +
+> +	err = f2fs_map_blocks(inode, &map, 1, (f2fs_is_pinned_file(inode) ?
+> +						F2FS_GET_BLOCK_PRE_DIO :
+> +						F2FS_GET_BLOCK_PRE_AIO));
+>  	if (err) {
+>  		pgoff_t last_off;
+>  
 > 
-
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-
--- 
-Josh
