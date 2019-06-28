@@ -2,910 +2,1233 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F327C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7FFC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14BE22133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575E3214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561724553;
-	bh=PsHTU8Erd+vtKNKmSlyXDC3LQk8ZNGmFsW4B4wWBAAU=;
+	s=default; t=1561724558;
+	bh=2WYjySjaVZvvfoBblbUO4SASwV0in+D1IbVXd+CPFsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QKilHgqJBo1k4kOXvwmgPhDvAR1leLDd2Gvny4dGAn3yk6Ds/kW1mAqQd808vW+6/
-	 ZFZZMzOoxdeWsOBXGR/tRA4jdYWHd6n/DtcEL1u/Ti21WgVas3B4K9CJQyJRKluKu4
-	 zLEAimXgfxhBeA0/xRP69f80ZwH0lVDZzxZojBxM=
+	b=CSSydYQFxDF/hfbEw3s3Qt2p4WxR0DHNFHLt8DzQjNSJRnRYd50kF3ph0zs4mbtgu
+	 PSzxiqaergh8c8M5sQVY3kgubtQbiYIp5K+yGfHWvnFep1KCcH7gZNeWaKTpngQ8iH
+	 G+VdS1aOE244u5hFEhaqmvrSTrwp3I1JKwJiPp5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfF1MWZ (ORCPT
+        id S1727291AbfF1MWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:22:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58878 "EHLO
+        Fri, 28 Jun 2019 08:22:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58824 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbfF1MUs (ORCPT
+        with ESMTP id S1726827AbfF1MUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:20:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ia8axAJLdhpvWbY463d2N4OqOe3tarfo78y8xKsRdDk=; b=B2fpstdn1UvbAfGJVdcTE41xhU
-        99HTplGpN7rJe3XgCXifWu5DP1KIxzA7NEQv9SZjCa004uZFfxe3d8OcDauxVQysyjfZmHGJRXgwZ
-        YBfutqKRtIEq8Yn2fgInEZSHOhAEuBTCSo+sSVcXVZbzzWoNPuJa05vh30SofDYCcy6u6NUzPq/hu
-        6zaqTR8w2MBu+5erb+pl4niI+ZIoM7UoqyWDoEyZbeC3ehXam+c/MwNOGUvXVvQVxOeqNGf0zdYQ6
-        SbewJ3ghvbWQYxsIKIlpefx5jYT9nivuF/F0b8v8RgynDr2RVCwvxNKXKtA+umgGuLsJiSrvHSPLG
-        xzzgFYCg==;
+        bh=2OXw+2e9N9IZkp5AtNSvCVduVumnKQnNMmbaCr4HMQ4=; b=d4PDV2lQFFooWikplRtME6DbFK
+        skYi7OObpjwmp+eJGnSZ31g+1s6TaOC1glifrdb5z6CvSidFzZXsJH9lhjmcZFKgvKgvoozt9D3U4
+        KcTRiWHLblFhYj8/WnxT2L3fqQ3aNoilvfjkksjQFRwopGmNcQEASs1g0qtD0Z7hGPMvQZTPku+lp
+        9yWjQx7WR1FzE6vdh13USu8eJBoHSIIg3hzE/YzmYGI9kCmnxl/8VoPMCOj2jdHBKvjA5vAdLrB61
+        kN4aKNqPXIsvcvJQ06v5IEGgBsOce7nK1vbkAOtEFcLni0336e9BIrEspdmZa+cvItlAX5CerV617
+        Bn76StuQ==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgprv-0000AH-Q4; Fri, 28 Jun 2019 12:20:44 +0000
+        id 1hgprv-0000AI-Q6; Fri, 28 Jun 2019 12:20:44 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgprt-000598-Rd; Fri, 28 Jun 2019 09:20:41 -0300
+        id 1hgprt-00059D-SV; Fri, 28 Jun 2019 09:20:41 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH 29/43] docs: mtd: convert to ReST
-Date:   Fri, 28 Jun 2019 09:20:25 -0300
-Message-Id: <6d8d1e7e5f4e390bb1eafea2468c67389c95a7e3.1561723980.git.mchehab+samsung@kernel.org>
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org
+Subject: [PATCH 30/43] docs: nvdimm: convert to ReST
+Date:   Fri, 28 Jun 2019 09:20:26 -0300
+Message-Id: <951fdc9197ffd04cf77168d47685e1299f7d9d73.1561723980.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561723979.git.mchehab+samsung@kernel.org>
 References: <cover.1561723979.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the mtd documentation files to ReST, add an
+Rename the nvdimm documentation files to ReST, add an
 index for them and adjust in order to produce a nice html
 output via the Sphinx build system.
-
-It should be noticed that Sphinx doesn't handle very well
-URLs with dots in the middle. Thankfully, internally, the '.'
-char is translated to %2E, so we can jus use %2E instead of
-dots, and this will work fine on both text and processed files.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/mtd/index.rst                   |  12 +
- .../mtd/{intel-spi.txt => intel-spi.rst}      |  46 +-
- .../mtd/{nand_ecc.txt => nand_ecc.rst}        | 481 ++++++++++--------
- .../mtd/{spi-nor.txt => spi-nor.rst}          |   7 +-
- drivers/mtd/nand/raw/nand_ecc.c               |   2 +-
- 5 files changed, 306 insertions(+), 242 deletions(-)
- create mode 100644 Documentation/mtd/index.rst
- rename Documentation/mtd/{intel-spi.txt => intel-spi.rst} (71%)
- rename Documentation/mtd/{nand_ecc.txt => nand_ecc.rst} (67%)
- rename Documentation/mtd/{spi-nor.txt => spi-nor.rst} (94%)
+ Documentation/nvdimm/{btt.txt => btt.rst}     | 140 ++---
+ Documentation/nvdimm/index.rst                |  12 +
+ .../nvdimm/{nvdimm.txt => nvdimm.rst}         | 518 ++++++++++--------
+ .../nvdimm/{security.txt => security.rst}     |   4 +-
+ drivers/nvdimm/Kconfig                        |   2 +-
+ 5 files changed, 387 insertions(+), 289 deletions(-)
+ rename Documentation/nvdimm/{btt.txt => btt.rst} (71%)
+ create mode 100644 Documentation/nvdimm/index.rst
+ rename Documentation/nvdimm/{nvdimm.txt => nvdimm.rst} (60%)
+ rename Documentation/nvdimm/{security.txt => security.rst} (99%)
 
-diff --git a/Documentation/mtd/index.rst b/Documentation/mtd/index.rst
+diff --git a/Documentation/nvdimm/btt.txt b/Documentation/nvdimm/btt.rst
+similarity index 71%
+rename from Documentation/nvdimm/btt.txt
+rename to Documentation/nvdimm/btt.rst
+index e293fb664924..2d8269f834bd 100644
+--- a/Documentation/nvdimm/btt.txt
++++ b/Documentation/nvdimm/btt.rst
+@@ -1,9 +1,10 @@
++=============================
+ BTT - Block Translation Table
+ =============================
+ 
+ 
+ 1. Introduction
+----------------
++===============
+ 
+ Persistent memory based storage is able to perform IO at byte (or more
+ accurately, cache line) granularity. However, we often want to expose such
+@@ -25,7 +26,7 @@ provides atomic sector updates.
+ 
+ 
+ 2. Static Layout
+-----------------
++================
+ 
+ The underlying storage on which a BTT can be laid out is not limited in any way.
+ The BTT, however, splits the available space into chunks of up to 512 GiB,
+@@ -33,43 +34,43 @@ called "Arenas".
+ 
+ Each arena follows the same layout for its metadata, and all references in an
+ arena are internal to it (with the exception of one field that points to the
+-next arena). The following depicts the "On-disk" metadata layout:
++next arena). The following depicts the "On-disk" metadata layout::
+ 
+ 
+-  Backing Store     +------->  Arena
+-+---------------+   |   +------------------+
+-|               |   |   | Arena info block |
+-|    Arena 0    +---+   |       4K         |
+-|     512G      |       +------------------+
+-|               |       |                  |
+-+---------------+       |                  |
+-|               |       |                  |
+-|    Arena 1    |       |   Data Blocks    |
+-|     512G      |       |                  |
+-|               |       |                  |
+-+---------------+       |                  |
+-|       .       |       |                  |
+-|       .       |       |                  |
+-|       .       |       |                  |
+-|               |       |                  |
+-|               |       |                  |
+-+---------------+       +------------------+
+-                        |                  |
+-                        |     BTT Map      |
+-                        |                  |
+-                        |                  |
+-                        +------------------+
+-                        |                  |
+-                        |     BTT Flog     |
+-                        |                  |
+-                        +------------------+
+-                        | Info block copy  |
+-                        |       4K         |
+-                        +------------------+
++    Backing Store     +------->  Arena
++  +---------------+   |   +------------------+
++  |               |   |   | Arena info block |
++  |    Arena 0    +---+   |       4K         |
++  |     512G      |       +------------------+
++  |               |       |                  |
++  +---------------+       |                  |
++  |               |       |                  |
++  |    Arena 1    |       |   Data Blocks    |
++  |     512G      |       |                  |
++  |               |       |                  |
++  +---------------+       |                  |
++  |       .       |       |                  |
++  |       .       |       |                  |
++  |       .       |       |                  |
++  |               |       |                  |
++  |               |       |                  |
++  +---------------+       +------------------+
++                          |                  |
++                          |     BTT Map      |
++                          |                  |
++                          |                  |
++                          +------------------+
++                          |                  |
++                          |     BTT Flog     |
++                          |                  |
++                          +------------------+
++                          | Info block copy  |
++                          |       4K         |
++                          +------------------+
+ 
+ 
+ 3. Theory of Operation
+-----------------------
++======================
+ 
+ 
+ a. The BTT Map
+@@ -79,31 +80,37 @@ The map is a simple lookup/indirection table that maps an LBA to an internal
+ block. Each map entry is 32 bits. The two most significant bits are special
+ flags, and the remaining form the internal block number.
+ 
++======== =============================================================
+ Bit      Description
+-31 - 30	: Error and Zero flags - Used in the following way:
+-	 Bit		      Description
+-	31 30
+-	-----------------------------------------------------------------------
+-	 00	Initial state. Reads return zeroes; Premap = Postmap
+-	 01	Zero state: Reads return zeroes
+-	 10	Error state: Reads fail; Writes clear 'E' bit
+-	 11	Normal Block – has valid postmap
++======== =============================================================
++31 - 30	 Error and Zero flags - Used in the following way:
+ 
++	   == ==  ====================================================
++	   31 30  Description
++	   == ==  ====================================================
++	   0  0	  Initial state. Reads return zeroes; Premap = Postmap
++	   0  1	  Zero state: Reads return zeroes
++	   1  0	  Error state: Reads fail; Writes clear 'E' bit
++	   1  1	  Normal Block – has valid postmap
++	   == ==  ====================================================
+ 
+-29 - 0	: Mappings to internal 'postmap' blocks
++29 - 0	 Mappings to internal 'postmap' blocks
++======== =============================================================
+ 
+ 
+ Some of the terminology that will be subsequently used:
+ 
+-External LBA  : LBA as made visible to upper layers.
+-ABA           : Arena Block Address - Block offset/number within an arena
+-Premap ABA    : The block offset into an arena, which was decided upon by range
++============	================================================================
++External LBA	LBA as made visible to upper layers.
++ABA		Arena Block Address - Block offset/number within an arena
++Premap ABA	The block offset into an arena, which was decided upon by range
+ 		checking the External LBA
+-Postmap ABA   : The block number in the "Data Blocks" area obtained after
++Postmap ABA	The block number in the "Data Blocks" area obtained after
+ 		indirection from the map
+-nfree	      : The number of free blocks that are maintained at any given time.
++nfree		The number of free blocks that are maintained at any given time.
+ 		This is the number of concurrent writes that can happen to the
+ 		arena.
++============	================================================================
+ 
+ 
+ For example, after adding a BTT, we surface a disk of 1024G. We get a read for
+@@ -121,19 +128,21 @@ i.e. Every write goes to a "free" block. A running list of free blocks is
+ maintained in the form of the BTT flog. 'Flog' is a combination of the words
+ "free list" and "log". The flog contains 'nfree' entries, and an entry contains:
+ 
+-lba     : The premap ABA that is being written to
+-old_map : The old postmap ABA - after 'this' write completes, this will be a
++========  =====================================================================
++lba       The premap ABA that is being written to
++old_map   The old postmap ABA - after 'this' write completes, this will be a
+ 	  free block.
+-new_map : The new postmap ABA. The map will up updated to reflect this
++new_map   The new postmap ABA. The map will up updated to reflect this
+ 	  lba->postmap_aba mapping, but we log it here in case we have to
+ 	  recover.
+-seq	: Sequence number to mark which of the 2 sections of this flog entry is
++seq	  Sequence number to mark which of the 2 sections of this flog entry is
+ 	  valid/newest. It cycles between 01->10->11->01 (binary) under normal
+ 	  operation, with 00 indicating an uninitialized state.
+-lba'	: alternate lba entry
+-old_map': alternate old postmap entry
+-new_map': alternate new postmap entry
+-seq'	: alternate sequence number.
++lba'	  alternate lba entry
++old_map'  alternate old postmap entry
++new_map'  alternate new postmap entry
++seq'	  alternate sequence number.
++========  =====================================================================
+ 
+ Each of the above fields is 32-bit, making one entry 32 bytes. Entries are also
+ padded to 64 bytes to avoid cache line sharing or aliasing. Flog updates are
+@@ -147,8 +156,10 @@ c. The concept of lanes
+ 
+ While 'nfree' describes the number of concurrent IOs an arena can process
+ concurrently, 'nlanes' is the number of IOs the BTT device as a whole can
+-process.
+- nlanes = min(nfree, num_cpus)
++process::
++
++	nlanes = min(nfree, num_cpus)
++
+ A lane number is obtained at the start of any IO, and is used for indexing into
+ all the on-disk and in-memory data structures for the duration of the IO. If
+ there are more CPUs than the max number of available lanes, than lanes are
+@@ -180,10 +191,10 @@ e. In-memory data structure: map locks
+ --------------------------------------
+ 
+ Consider a case where two writer threads are writing to the same LBA. There can
+-be a race in the following sequence of steps:
++be a race in the following sequence of steps::
+ 
+-free[lane] = map[premap_aba]
+-map[premap_aba] = postmap_aba
++	free[lane] = map[premap_aba]
++	map[premap_aba] = postmap_aba
+ 
+ Both threads can update their respective free[lane] with the same old, freed
+ postmap_aba. This has made the layout inconsistent by losing a free entry, and
+@@ -202,6 +213,7 @@ On startup, we analyze the BTT flog to create our list of free blocks. We walk
+ through all the entries, and for each lane, of the set of two possible
+ 'sections', we always look at the most recent one only (based on the sequence
+ number). The reconstruction rules/steps are simple:
++
+ - Read map[log_entry.lba].
+ - If log_entry.new matches the map entry, then log_entry.old is free.
+ - If log_entry.new does not match the map entry, then log_entry.new is free.
+@@ -228,7 +240,7 @@ Write:
+ 1.  Convert external LBA to Arena number + pre-map ABA
+ 2.  Get a lane (and take lane_lock)
+ 3.  Use lane to index into in-memory free list and obtain a new block, next flog
+-        index, next sequence number
++    index, next sequence number
+ 4.  Scan the RTT to check if free block is present, and spin/wait if it is.
+ 5.  Write data to this free block
+ 6.  Read map to get the existing post-map ABA entry for this pre-map ABA
+@@ -245,6 +257,7 @@ Write:
+ An arena would be in an error state if any of the metadata is corrupted
+ irrecoverably, either due to a bug or a media error. The following conditions
+ indicate an error:
++
+ - Info block checksum does not match (and recovering from the copy also fails)
+ - All internal available blocks are not uniquely and entirely addressed by the
+   sum of mapped blocks and free blocks (from the BTT flog).
+@@ -263,11 +276,10 @@ The BTT can be set up on any disk (namespace) exposed by the libnvdimm subsystem
+ (pmem, or blk mode). The easiest way to set up such a namespace is using the
+ 'ndctl' utility [1]:
+ 
+-For example, the ndctl command line to setup a btt with a 4k sector size is:
++For example, the ndctl command line to setup a btt with a 4k sector size is::
+ 
+     ndctl create-namespace -f -e namespace0.0 -m sector -l 4k
+ 
+ See ndctl create-namespace --help for more options.
+ 
+ [1]: https://github.com/pmem/ndctl
+-
+diff --git a/Documentation/nvdimm/index.rst b/Documentation/nvdimm/index.rst
 new file mode 100644
-index 000000000000..4fdae418ac97
+index 000000000000..1a3402d3775e
 --- /dev/null
-+++ b/Documentation/mtd/index.rst
++++ b/Documentation/nvdimm/index.rst
 @@ -0,0 +1,12 @@
 +:orphan:
 +
-+==============================
-+Memory Technology Device (MTD)
-+==============================
++===================================
++Non-Volatile Memory Device (NVDIMM)
++===================================
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+   intel-spi
-+   nand_ecc
-+   spi-nor
-diff --git a/Documentation/mtd/intel-spi.txt b/Documentation/mtd/intel-spi.rst
-similarity index 71%
-rename from Documentation/mtd/intel-spi.txt
-rename to Documentation/mtd/intel-spi.rst
-index bc357729c2cb..0e6d9cd5388d 100644
---- a/Documentation/mtd/intel-spi.txt
-+++ b/Documentation/mtd/intel-spi.rst
-@@ -1,5 +1,6 @@
-+==============================
- Upgrading BIOS using intel-spi
--------------------------------
-+==============================
++   nvdimm
++   btt
++   security
+diff --git a/Documentation/nvdimm/nvdimm.txt b/Documentation/nvdimm/nvdimm.rst
+similarity index 60%
+rename from Documentation/nvdimm/nvdimm.txt
+rename to Documentation/nvdimm/nvdimm.rst
+index 1669f626b037..08f855cbb4e6 100644
+--- a/Documentation/nvdimm/nvdimm.txt
++++ b/Documentation/nvdimm/nvdimm.rst
+@@ -1,8 +1,14 @@
+-			  LIBNVDIMM: Non-Volatile Devices
+-	      libnvdimm - kernel / libndctl - userspace helper library
+-			   linux-nvdimm@lists.01.org
+-				      v13
++===============================
++LIBNVDIMM: Non-Volatile Devices
++===============================
  
- Many Intel CPUs like Baytrail and Braswell include SPI serial flash host
- controller which is used to hold BIOS and other platform specific data.
-@@ -36,45 +37,45 @@ Linux.
-     module parameter to modprobe).
- 
-  4) Once the board is up and running again, find the right MTD partition
--    (it is named as "BIOS"):
-+    (it is named as "BIOS")::
- 
--    # cat /proc/mtd
--    dev:    size   erasesize  name
--    mtd0: 00800000 00001000 "BIOS"
-+	# cat /proc/mtd
-+	dev:    size   erasesize  name
-+	mtd0: 00800000 00001000 "BIOS"
- 
-     So here it will be /dev/mtd0 but it may vary.
- 
-- 5) Make backup of the existing image first:
-+ 5) Make backup of the existing image first::
- 
--    # dd if=/dev/mtd0ro of=bios.bak
--    16384+0 records in
--    16384+0 records out
--    8388608 bytes (8.4 MB) copied, 10.0269 s, 837 kB/s
-+	# dd if=/dev/mtd0ro of=bios.bak
-+	16384+0 records in
-+	16384+0 records out
-+	8388608 bytes (8.4 MB) copied, 10.0269 s, 837 kB/s
- 
-- 6) Verify the backup
-+ 6) Verify the backup:
- 
--    # sha1sum /dev/mtd0ro bios.bak
--    fdbb011920572ca6c991377c4b418a0502668b73  /dev/mtd0ro
--    fdbb011920572ca6c991377c4b418a0502668b73  bios.bak
-+	# sha1sum /dev/mtd0ro bios.bak
-+	fdbb011920572ca6c991377c4b418a0502668b73  /dev/mtd0ro
-+	fdbb011920572ca6c991377c4b418a0502668b73  bios.bak
- 
-     The SHA1 sums must match. Otherwise do not continue any further!
- 
-  7) Erase the SPI serial flash. After this step, do not reboot the
--    board! Otherwise it will not start anymore.
-+    board! Otherwise it will not start anymore::
- 
--    # flash_erase /dev/mtd0 0 0
--    Erasing 4 Kibyte @ 7ff000 -- 100 % complete
-+	# flash_erase /dev/mtd0 0 0
-+	Erasing 4 Kibyte @ 7ff000 -- 100 % complete
- 
-  8) Once completed without errors you can write the new BIOS image:
- 
-     # dd if=MNW2MAX1.X64.0092.R01.1605221712.bin of=/dev/mtd0
- 
-  9) Verify that the new content of the SPI serial flash matches the new
--    BIOS image:
-+    BIOS image::
- 
--    # sha1sum /dev/mtd0ro MNW2MAX1.X64.0092.R01.1605221712.bin
--    9b4df9e4be2057fceec3a5529ec3d950836c87a2  /dev/mtd0ro
--    9b4df9e4be2057fceec3a5529ec3d950836c87a2 MNW2MAX1.X64.0092.R01.1605221712.bin
-+	# sha1sum /dev/mtd0ro MNW2MAX1.X64.0092.R01.1605221712.bin
-+	9b4df9e4be2057fceec3a5529ec3d950836c87a2  /dev/mtd0ro
-+	9b4df9e4be2057fceec3a5529ec3d950836c87a2 MNW2MAX1.X64.0092.R01.1605221712.bin
- 
-     The SHA1 sums should match.
- 
-@@ -84,5 +85,6 @@ Linux.
- References
- ----------
- 
--[1] https://firmware.intel.com/sites/default/files/MinnowBoard.MAX_.X64.92.R01.zip
-+[1] https://firmware.intel.com/sites/default/files/MinnowBoard%2EMAX_%2EX64%2E92%2ER01%2Ezip
++libnvdimm - kernel / libndctl - userspace helper library
 +
- [2] http://www.linux-mtd.infradead.org/
-diff --git a/Documentation/mtd/nand_ecc.txt b/Documentation/mtd/nand_ecc.rst
-similarity index 67%
-rename from Documentation/mtd/nand_ecc.txt
-rename to Documentation/mtd/nand_ecc.rst
-index f8c3284bf6a7..e8d3c53a5056 100644
---- a/Documentation/mtd/nand_ecc.txt
-+++ b/Documentation/mtd/nand_ecc.rst
-@@ -1,3 +1,7 @@
-+==========================
-+NAND Error-correction Code
-+==========================
++linux-nvdimm@lists.01.org
 +
- Introduction
- ============
++Version 13
++
++.. contents:
  
-@@ -37,63 +41,79 @@ sometimes also referred to as xor. In C the operator for xor is ^
- Back to ecc.
- Let's give a small figure:
- 
-+=========  ==== ==== ==== ==== ==== ==== ==== ====   === === === === ====
- byte   0:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp2 rp4 ... rp14
- byte   1:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp2 rp4 ... rp14
- byte   2:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp3 rp4 ... rp14
- byte   3:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp3 rp4 ... rp14
- byte   4:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp2 rp5 ... rp14
--....
-+...
- byte 254:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp3 rp5 ... rp15
- byte 255:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp3 rp5 ... rp15
-            cp1  cp0  cp1  cp0  cp1  cp0  cp1  cp0
-            cp3  cp3  cp2  cp2  cp3  cp3  cp2  cp2
-            cp5  cp5  cp5  cp5  cp4  cp4  cp4  cp4
-+=========  ==== ==== ==== ==== ==== ==== ==== ====   === === === === ====
- 
- This figure represents a sector of 256 bytes.
- cp is my abbreviation for column parity, rp for row parity.
- 
- Let's start to explain column parity.
--cp0 is the parity that belongs to all bit0, bit2, bit4, bit6.
--so the sum of all bit0, bit2, bit4 and bit6 values + cp0 itself is even.
-+
-+- cp0 is the parity that belongs to all bit0, bit2, bit4, bit6.
-+
-+  so the sum of all bit0, bit2, bit4 and bit6 values + cp0 itself is even.
-+
- Similarly cp1 is the sum of all bit1, bit3, bit5 and bit7.
--cp2 is the parity over bit0, bit1, bit4 and bit5
--cp3 is the parity over bit2, bit3, bit6 and bit7.
--cp4 is the parity over bit0, bit1, bit2 and bit3.
--cp5 is the parity over bit4, bit5, bit6 and bit7.
-+
-+- cp2 is the parity over bit0, bit1, bit4 and bit5
-+- cp3 is the parity over bit2, bit3, bit6 and bit7.
-+- cp4 is the parity over bit0, bit1, bit2 and bit3.
-+- cp5 is the parity over bit4, bit5, bit6 and bit7.
-+
- Note that each of cp0 .. cp5 is exactly one bit.
- 
- Row parity actually works almost the same.
--rp0 is the parity of all even bytes (0, 2, 4, 6, ... 252, 254)
--rp1 is the parity of all odd bytes (1, 3, 5, 7, ..., 253, 255)
--rp2 is the parity of all bytes 0, 1, 4, 5, 8, 9, ...
--(so handle two bytes, then skip 2 bytes).
--rp3 is covers the half rp2 does not cover (bytes 2, 3, 6, 7, 10, 11, ...)
--for rp4 the rule is cover 4 bytes, skip 4 bytes, cover 4 bytes, skip 4 etc.
--so rp4 calculates parity over bytes 0, 1, 2, 3, 8, 9, 10, 11, 16, ...)
--and rp5 covers the other half, so bytes 4, 5, 6, 7, 12, 13, 14, 15, 20, ..
-+
-+- rp0 is the parity of all even bytes (0, 2, 4, 6, ... 252, 254)
-+- rp1 is the parity of all odd bytes (1, 3, 5, 7, ..., 253, 255)
-+- rp2 is the parity of all bytes 0, 1, 4, 5, 8, 9, ...
-+  (so handle two bytes, then skip 2 bytes).
-+- rp3 is covers the half rp2 does not cover (bytes 2, 3, 6, 7, 10, 11, ...)
-+- for rp4 the rule is cover 4 bytes, skip 4 bytes, cover 4 bytes, skip 4 etc.
-+
-+  so rp4 calculates parity over bytes 0, 1, 2, 3, 8, 9, 10, 11, 16, ...)
-+- and rp5 covers the other half, so bytes 4, 5, 6, 7, 12, 13, 14, 15, 20, ..
-+
- The story now becomes quite boring. I guess you get the idea.
--rp6 covers 8 bytes then skips 8 etc
--rp7 skips 8 bytes then covers 8 etc
--rp8 covers 16 bytes then skips 16 etc
--rp9 skips 16 bytes then covers 16 etc
--rp10 covers 32 bytes then skips 32 etc
--rp11 skips 32 bytes then covers 32 etc
--rp12 covers 64 bytes then skips 64 etc
--rp13 skips 64 bytes then covers 64 etc
--rp14 covers 128 bytes then skips 128
--rp15 skips 128 bytes then covers 128
-+
-+- rp6 covers 8 bytes then skips 8 etc
-+- rp7 skips 8 bytes then covers 8 etc
-+- rp8 covers 16 bytes then skips 16 etc
-+- rp9 skips 16 bytes then covers 16 etc
-+- rp10 covers 32 bytes then skips 32 etc
-+- rp11 skips 32 bytes then covers 32 etc
-+- rp12 covers 64 bytes then skips 64 etc
-+- rp13 skips 64 bytes then covers 64 etc
-+- rp14 covers 128 bytes then skips 128
-+- rp15 skips 128 bytes then covers 128
- 
- In the end the parity bits are grouped together in three bytes as
- follows:
-+
-+=====  ===== ===== ===== ===== ===== ===== ===== =====
- ECC    Bit 7 Bit 6 Bit 5 Bit 4 Bit 3 Bit 2 Bit 1 Bit 0
-+=====  ===== ===== ===== ===== ===== ===== ===== =====
- ECC 0   rp07  rp06  rp05  rp04  rp03  rp02  rp01  rp00
- ECC 1   rp15  rp14  rp13  rp12  rp11  rp10  rp09  rp08
- ECC 2   cp5   cp4   cp3   cp2   cp1   cp0      1     1
-+=====  ===== ===== ===== ===== ===== ===== ===== =====
- 
- I detected after writing this that ST application note AN1823
- (http://www.st.com/stonline/) gives a much
- nicer picture.(but they use line parity as term where I use row parity)
- Oh well, I'm graphically challenged, so suffer with me for a moment :-)
-+
- And I could not reuse the ST picture anyway for copyright reasons.
+ 	Glossary
+ 	Overview
+@@ -40,49 +46,57 @@
  
  
-@@ -101,9 +121,10 @@ Attempt 0
- =========
- 
- Implementing the parity calculation is pretty simple.
--In C pseudocode:
--for (i = 0; i < 256; i++)
--{
-+In C pseudocode::
+ Glossary
+---------
+-
+-PMEM: A system-physical-address range where writes are persistent.  A
+-block device composed of PMEM is capable of DAX.  A PMEM address range
+-may span an interleave of several DIMMs.
+-
+-BLK: A set of one or more programmable memory mapped apertures provided
+-by a DIMM to access its media.  This indirection precludes the
+-performance benefit of interleaving, but enables DIMM-bounded failure
+-modes.
+-
+-DPA: DIMM Physical Address, is a DIMM-relative offset.  With one DIMM in
+-the system there would be a 1:1 system-physical-address:DPA association.
+-Once more DIMMs are added a memory controller interleave must be
+-decoded to determine the DPA associated with a given
+-system-physical-address.  BLK capacity always has a 1:1 relationship
+-with a single-DIMM's DPA range.
+-
+-DAX: File system extensions to bypass the page cache and block layer to
+-mmap persistent memory, from a PMEM block device, directly into a
+-process address space.
+-
+-DSM: Device Specific Method: ACPI method to to control specific
+-device - in this case the firmware.
+-
+-DCR: NVDIMM Control Region Structure defined in ACPI 6 Section 5.2.25.5.
+-It defines a vendor-id, device-id, and interface format for a given DIMM.
+-
+-BTT: Block Translation Table: Persistent memory is byte addressable.
+-Existing software may have an expectation that the power-fail-atomicity
+-of writes is at least one sector, 512 bytes.  The BTT is an indirection
+-table with atomic update semantics to front a PMEM/BLK block device
+-driver and present arbitrary atomic sector sizes.
+-
+-LABEL: Metadata stored on a DIMM device that partitions and identifies
+-(persistently names) storage between PMEM and BLK.  It also partitions
+-BLK storage to host BTTs with different parameters per BLK-partition.
+-Note that traditional partition tables, GPT/MBR, are layered on top of a
+-BLK or PMEM device.
++========
 +
-+  for (i = 0; i < 256; i++)
-+  {
-     if (i & 0x01)
-        rp1 = bit7 ^ bit6 ^ bit5 ^ bit4 ^ bit3 ^ bit2 ^ bit1 ^ bit0 ^ rp1;
-     else
-@@ -142,7 +163,7 @@ for (i = 0; i < 256; i++)
-     cp3 = bit7 ^ bit6 ^ bit3 ^ bit2 ^ cp3
-     cp4 = bit3 ^ bit2 ^ bit1 ^ bit0 ^ cp4
-     cp5 = bit7 ^ bit6 ^ bit5 ^ bit4 ^ cp5
--}
-+  }
++PMEM:
++  A system-physical-address range where writes are persistent.  A
++  block device composed of PMEM is capable of DAX.  A PMEM address range
++  may span an interleave of several DIMMs.
++
++BLK:
++  A set of one or more programmable memory mapped apertures provided
++  by a DIMM to access its media.  This indirection precludes the
++  performance benefit of interleaving, but enables DIMM-bounded failure
++  modes.
++
++DPA:
++  DIMM Physical Address, is a DIMM-relative offset.  With one DIMM in
++  the system there would be a 1:1 system-physical-address:DPA association.
++  Once more DIMMs are added a memory controller interleave must be
++  decoded to determine the DPA associated with a given
++  system-physical-address.  BLK capacity always has a 1:1 relationship
++  with a single-DIMM's DPA range.
++
++DAX:
++  File system extensions to bypass the page cache and block layer to
++  mmap persistent memory, from a PMEM block device, directly into a
++  process address space.
++
++DSM:
++  Device Specific Method: ACPI method to to control specific
++  device - in this case the firmware.
++
++DCR:
++  NVDIMM Control Region Structure defined in ACPI 6 Section 5.2.25.5.
++  It defines a vendor-id, device-id, and interface format for a given DIMM.
++
++BTT:
++  Block Translation Table: Persistent memory is byte addressable.
++  Existing software may have an expectation that the power-fail-atomicity
++  of writes is at least one sector, 512 bytes.  The BTT is an indirection
++  table with atomic update semantics to front a PMEM/BLK block device
++  driver and present arbitrary atomic sector sizes.
++
++LABEL:
++  Metadata stored on a DIMM device that partitions and identifies
++  (persistently names) storage between PMEM and BLK.  It also partitions
++  BLK storage to host BTTs with different parameters per BLK-partition.
++  Note that traditional partition tables, GPT/MBR, are layered on top of a
++  BLK or PMEM device.
  
  
- Analysis 0
-@@ -167,82 +188,84 @@ This leads to:
- Attempt 1
- =========
+ Overview
+---------
++========
  
--const char parity[256] = {
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0
--};
+ The LIBNVDIMM subsystem provides support for three types of NVDIMMs, namely,
+ PMEM, BLK, and NVDIMM devices that can simultaneously support both PMEM
+@@ -96,19 +110,30 @@ accessible via BLK.  When that occurs a LABEL is needed to reserve DPA
+ for exclusive access via one mode a time.
+ 
+ Supporting Documents
+-ACPI 6: http://www.uefi.org/sites/default/files/resources/ACPI_6.0.pdf
+-NVDIMM Namespace: http://pmem.io/documents/NVDIMM_Namespace_Spec.pdf
+-DSM Interface Example: http://pmem.io/documents/NVDIMM_DSM_Interface_Example.pdf
+-Driver Writer's Guide: http://pmem.io/documents/NVDIMM_Driver_Writers_Guide.pdf
++--------------------
++
++ACPI 6:
++	http://www.uefi.org/sites/default/files/resources/ACPI_6.0.pdf
++NVDIMM Namespace:
++	http://pmem.io/documents/NVDIMM_Namespace_Spec.pdf
++DSM Interface Example:
++	http://pmem.io/documents/NVDIMM_DSM_Interface_Example.pdf
++Driver Writer's Guide:
++	http://pmem.io/documents/NVDIMM_Driver_Writers_Guide.pdf
+ 
+ Git Trees
+-LIBNVDIMM: https://git.kernel.org/cgit/linux/kernel/git/djbw/nvdimm.git
+-LIBNDCTL: https://github.com/pmem/ndctl.git
+-PMEM: https://github.com/01org/prd
++---------
++
++LIBNVDIMM:
++	https://git.kernel.org/cgit/linux/kernel/git/djbw/nvdimm.git
++LIBNDCTL:
++	https://github.com/pmem/ndctl.git
++PMEM:
++	https://github.com/01org/prd
+ 
+ 
+ LIBNVDIMM PMEM and BLK
+-------------------
++======================
+ 
+ Prior to the arrival of the NFIT, non-volatile memory was described to a
+ system in various ad-hoc ways.  Usually only the bare minimum was
+@@ -122,38 +147,39 @@ For each NVDIMM access method (PMEM, BLK), LIBNVDIMM provides a block
+ device driver:
+ 
+     1. PMEM (nd_pmem.ko): Drives a system-physical-address range.  This
+-    range is contiguous in system memory and may be interleaved (hardware
+-    memory controller striped) across multiple DIMMs.  When interleaved the
+-    platform may optionally provide details of which DIMMs are participating
+-    in the interleave.
++       range is contiguous in system memory and may be interleaved (hardware
++       memory controller striped) across multiple DIMMs.  When interleaved the
++       platform may optionally provide details of which DIMMs are participating
++       in the interleave.
+ 
+-    Note that while LIBNVDIMM describes system-physical-address ranges that may
+-    alias with BLK access as ND_NAMESPACE_PMEM ranges and those without
+-    alias as ND_NAMESPACE_IO ranges, to the nd_pmem driver there is no
+-    distinction.  The different device-types are an implementation detail
+-    that userspace can exploit to implement policies like "only interface
+-    with address ranges from certain DIMMs".  It is worth noting that when
+-    aliasing is present and a DIMM lacks a label, then no block device can
+-    be created by default as userspace needs to do at least one allocation
+-    of DPA to the PMEM range.  In contrast ND_NAMESPACE_IO ranges, once
+-    registered, can be immediately attached to nd_pmem.
++       Note that while LIBNVDIMM describes system-physical-address ranges that may
++       alias with BLK access as ND_NAMESPACE_PMEM ranges and those without
++       alias as ND_NAMESPACE_IO ranges, to the nd_pmem driver there is no
++       distinction.  The different device-types are an implementation detail
++       that userspace can exploit to implement policies like "only interface
++       with address ranges from certain DIMMs".  It is worth noting that when
++       aliasing is present and a DIMM lacks a label, then no block device can
++       be created by default as userspace needs to do at least one allocation
++       of DPA to the PMEM range.  In contrast ND_NAMESPACE_IO ranges, once
++       registered, can be immediately attached to nd_pmem.
+ 
+     2. BLK (nd_blk.ko): This driver performs I/O using a set of platform
+-    defined apertures.  A set of apertures will access just one DIMM.
+-    Multiple windows (apertures) allow multiple concurrent accesses, much like
+-    tagged-command-queuing, and would likely be used by different threads or
+-    different CPUs.
++       defined apertures.  A set of apertures will access just one DIMM.
++       Multiple windows (apertures) allow multiple concurrent accesses, much like
++       tagged-command-queuing, and would likely be used by different threads or
++       different CPUs.
+ 
+-    The NFIT specification defines a standard format for a BLK-aperture, but
+-    the spec also allows for vendor specific layouts, and non-NFIT BLK
+-    implementations may have other designs for BLK I/O.  For this reason
+-    "nd_blk" calls back into platform-specific code to perform the I/O.
+-    One such implementation is defined in the "Driver Writer's Guide" and "DSM
+-    Interface Example".
++       The NFIT specification defines a standard format for a BLK-aperture, but
++       the spec also allows for vendor specific layouts, and non-NFIT BLK
++       implementations may have other designs for BLK I/O.  For this reason
++       "nd_blk" calls back into platform-specific code to perform the I/O.
++
++       One such implementation is defined in the "Driver Writer's Guide" and "DSM
++       Interface Example".
+ 
+ 
+ Why BLK?
+---------
++========
+ 
+ While PMEM provides direct byte-addressable CPU-load/store access to
+ NVDIMM storage, it does not provide the best system RAS (recovery,
+@@ -162,12 +188,15 @@ system-physical-address address causes a CPU exception while an access
+ to a corrupted address through an BLK-aperture causes that block window
+ to raise an error status in a register.  The latter is more aligned with
+ the standard error model that host-bus-adapter attached disks present.
++
+ Also, if an administrator ever wants to replace a memory it is easier to
+ service a system at DIMM module boundaries.  Compare this to PMEM where
+ data could be interleaved in an opaque hardware specific manner across
+ several DIMMs.
+ 
+ PMEM vs BLK
++-----------
++
+ BLK-apertures solve these RAS problems, but their presence is also the
+ major contributing factor to the complexity of the ND subsystem.  They
+ complicate the implementation because PMEM and BLK alias in DPA space.
+@@ -185,13 +214,14 @@ carved into an arbitrary number of BLK devices with discontiguous
+ extents.
+ 
+ BLK-REGIONs, PMEM-REGIONs, Atomic Sectors, and DAX
+---------------------------------------------------
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+ One of the few
+ reasons to allow multiple BLK namespaces per REGION is so that each
+ BLK-namespace can be configured with a BTT with unique atomic sector
+ sizes.  While a PMEM device can host a BTT the LABEL specification does
+ not provide for a sector size to be specified for a PMEM namespace.
++
+ This is due to the expectation that the primary usage model for PMEM is
+ via DAX, and the BTT is incompatible with DAX.  However, for the cases
+ where an application or filesystem still needs atomic sector update
+@@ -200,52 +230,52 @@ LIBNVDIMM/NDCTL: Block Translation Table "btt"
+ 
+ 
+ Example NVDIMM Platform
+------------------------
++=======================
+ 
+ For the remainder of this document the following diagram will be
+-referenced for any example sysfs layouts.
++referenced for any example sysfs layouts::
+ 
+ 
+-                             (a)               (b)           DIMM   BLK-REGION
+-          +-------------------+--------+--------+--------+
+-+------+  |       pm0.0       | blk2.0 | pm1.0  | blk2.1 |    0      region2
+-| imc0 +--+- - - region0- - - +--------+        +--------+
+-+--+---+  |       pm0.0       | blk3.0 | pm1.0  | blk3.1 |    1      region3
+-   |      +-------------------+--------v        v--------+
+-+--+---+                               |                 |
+-| cpu0 |                                     region1
+-+--+---+                               |                 |
+-   |      +----------------------------^        ^--------+
+-+--+---+  |           blk4.0           | pm1.0  | blk4.0 |    2      region4
+-| imc1 +--+----------------------------|        +--------+
+-+------+  |           blk5.0           | pm1.0  | blk5.0 |    3      region5
+-          +----------------------------+--------+--------+
++                               (a)               (b)           DIMM   BLK-REGION
++            +-------------------+--------+--------+--------+
++  +------+  |       pm0.0       | blk2.0 | pm1.0  | blk2.1 |    0      region2
++  | imc0 +--+- - - region0- - - +--------+        +--------+
++  +--+---+  |       pm0.0       | blk3.0 | pm1.0  | blk3.1 |    1      region3
++     |      +-------------------+--------v        v--------+
++  +--+---+                               |                 |
++  | cpu0 |                                     region1
++  +--+---+                               |                 |
++     |      +----------------------------^        ^--------+
++  +--+---+  |           blk4.0           | pm1.0  | blk4.0 |    2      region4
++  | imc1 +--+----------------------------|        +--------+
++  +------+  |           blk5.0           | pm1.0  | blk5.0 |    3      region5
++            +----------------------------+--------+--------+
+ 
+ In this platform we have four DIMMs and two memory controllers in one
+ socket.  Each unique interface (BLK or PMEM) to DPA space is identified
+ by a region device with a dynamically assigned id (REGION0 - REGION5).
+ 
+     1. The first portion of DIMM0 and DIMM1 are interleaved as REGION0. A
+-    single PMEM namespace is created in the REGION0-SPA-range that spans most
+-    of DIMM0 and DIMM1 with a user-specified name of "pm0.0". Some of that
+-    interleaved system-physical-address range is reclaimed as BLK-aperture
+-    accessed space starting at DPA-offset (a) into each DIMM.  In that
+-    reclaimed space we create two BLK-aperture "namespaces" from REGION2 and
+-    REGION3 where "blk2.0" and "blk3.0" are just human readable names that
+-    could be set to any user-desired name in the LABEL.
++       single PMEM namespace is created in the REGION0-SPA-range that spans most
++       of DIMM0 and DIMM1 with a user-specified name of "pm0.0". Some of that
++       interleaved system-physical-address range is reclaimed as BLK-aperture
++       accessed space starting at DPA-offset (a) into each DIMM.  In that
++       reclaimed space we create two BLK-aperture "namespaces" from REGION2 and
++       REGION3 where "blk2.0" and "blk3.0" are just human readable names that
++       could be set to any user-desired name in the LABEL.
+ 
+     2. In the last portion of DIMM0 and DIMM1 we have an interleaved
+-    system-physical-address range, REGION1, that spans those two DIMMs as
+-    well as DIMM2 and DIMM3.  Some of REGION1 is allocated to a PMEM namespace
+-    named "pm1.0", the rest is reclaimed in 4 BLK-aperture namespaces (for
+-    each DIMM in the interleave set), "blk2.1", "blk3.1", "blk4.0", and
+-    "blk5.0".
++       system-physical-address range, REGION1, that spans those two DIMMs as
++       well as DIMM2 and DIMM3.  Some of REGION1 is allocated to a PMEM namespace
++       named "pm1.0", the rest is reclaimed in 4 BLK-aperture namespaces (for
++       each DIMM in the interleave set), "blk2.1", "blk3.1", "blk4.0", and
++       "blk5.0".
+ 
+     3. The portion of DIMM2 and DIMM3 that do not participate in the REGION1
+-    interleaved system-physical-address range (i.e. the DPA address past
+-    offset (b) are also included in the "blk4.0" and "blk5.0" namespaces.
+-    Note, that this example shows that BLK-aperture namespaces don't need to
+-    be contiguous in DPA-space.
++       interleaved system-physical-address range (i.e. the DPA address past
++       offset (b) are also included in the "blk4.0" and "blk5.0" namespaces.
++       Note, that this example shows that BLK-aperture namespaces don't need to
++       be contiguous in DPA-space.
+ 
+     This bus is provided by the kernel under the device
+     /sys/devices/platform/nfit_test.0 when CONFIG_NFIT_TEST is enabled and
+@@ -254,7 +284,7 @@ by a region device with a dynamically assigned id (REGION0 - REGION5).
+ 
+ 
+ LIBNVDIMM Kernel Device Model and LIBNDCTL Userspace API
+-----------------------------------------------------
++========================================================
+ 
+ What follows is a description of the LIBNVDIMM sysfs layout and a
+ corresponding object hierarchy diagram as viewed through the LIBNDCTL
+@@ -263,12 +293,18 @@ NVDIMM Platform which is also the LIBNVDIMM bus used in the LIBNDCTL unit
+ test.
+ 
+ LIBNDCTL: Context
++-----------------
++
+ Every API call in the LIBNDCTL library requires a context that holds the
+ logging parameters and other library instance state.  The library is
+ based on the libabc template:
+-https://git.kernel.org/cgit/linux/kernel/git/kay/libabc.git
++
++	https://git.kernel.org/cgit/linux/kernel/git/kay/libabc.git
+ 
+ LIBNDCTL: instantiate a new library context example
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
 +::
  
--void ecc1(const unsigned char *buf, unsigned char *code)
--{
--    int i;
--    const unsigned char *bp = buf;
--    unsigned char cur;
--    unsigned char rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
--    unsigned char rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
--    unsigned char par;
-+  const char parity[256] = {
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0
-+  };
+ 	struct ndctl_ctx *ctx;
  
--    par = 0;
--    rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
--    rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
--    rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
--    rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
-+  void ecc1(const unsigned char *buf, unsigned char *code)
-+  {
-+      int i;
-+      const unsigned char *bp = buf;
-+      unsigned char cur;
-+      unsigned char rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
-+      unsigned char rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
-+      unsigned char par;
+@@ -278,7 +314,7 @@ LIBNDCTL: instantiate a new library context example
+ 		return NULL;
  
--    for (i = 0; i < 256; i++)
--    {
--        cur = *bp++;
--        par ^= cur;
--        if (i & 0x01) rp1 ^= cur; else rp0 ^= cur;
--        if (i & 0x02) rp3 ^= cur; else rp2 ^= cur;
--        if (i & 0x04) rp5 ^= cur; else rp4 ^= cur;
--        if (i & 0x08) rp7 ^= cur; else rp6 ^= cur;
--        if (i & 0x10) rp9 ^= cur; else rp8 ^= cur;
--        if (i & 0x20) rp11 ^= cur; else rp10 ^= cur;
--        if (i & 0x40) rp13 ^= cur; else rp12 ^= cur;
--        if (i & 0x80) rp15 ^= cur; else rp14 ^= cur;
--    }
--    code[0] =
--        (parity[rp7] << 7) |
--        (parity[rp6] << 6) |
--        (parity[rp5] << 5) |
--        (parity[rp4] << 4) |
--        (parity[rp3] << 3) |
--        (parity[rp2] << 2) |
--        (parity[rp1] << 1) |
--        (parity[rp0]);
--    code[1] =
--        (parity[rp15] << 7) |
--        (parity[rp14] << 6) |
--        (parity[rp13] << 5) |
--        (parity[rp12] << 4) |
--        (parity[rp11] << 3) |
--        (parity[rp10] << 2) |
--        (parity[rp9]  << 1) |
--        (parity[rp8]);
--    code[2] =
--        (parity[par & 0xf0] << 7) |
--        (parity[par & 0x0f] << 6) |
--        (parity[par & 0xcc] << 5) |
--        (parity[par & 0x33] << 4) |
--        (parity[par & 0xaa] << 3) |
--        (parity[par & 0x55] << 2);
--    code[0] = ~code[0];
--    code[1] = ~code[1];
--    code[2] = ~code[2];
--}
-+      par = 0;
-+      rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
-+      rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
-+      rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
-+      rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
+ LIBNVDIMM/LIBNDCTL: Bus
+--------------------
++-----------------------
+ 
+ A bus has a 1:1 relationship with an NFIT.  The current expectation for
+ ACPI based systems is that there is only ever one platform-global NFIT.
+@@ -288,9 +324,10 @@ we use this capability to test multiple NFIT configurations in the unit
+ test.
+ 
+ LIBNVDIMM: control class device in /sys/class
++---------------------------------------------
+ 
+ This character device accepts DSM messages to be passed to DIMM
+-identified by its NFIT handle.
++identified by its NFIT handle::
+ 
+ 	/sys/class/nd/ndctl0
+ 	|-- dev
+@@ -300,10 +337,15 @@ identified by its NFIT handle.
+ 
+ 
+ LIBNVDIMM: bus
++--------------
 +
-+      for (i = 0; i < 256; i++)
-+      {
-+          cur = *bp++;
-+          par ^= cur;
-+          if (i & 0x01) rp1 ^= cur; else rp0 ^= cur;
-+          if (i & 0x02) rp3 ^= cur; else rp2 ^= cur;
-+          if (i & 0x04) rp5 ^= cur; else rp4 ^= cur;
-+          if (i & 0x08) rp7 ^= cur; else rp6 ^= cur;
-+          if (i & 0x10) rp9 ^= cur; else rp8 ^= cur;
-+          if (i & 0x20) rp11 ^= cur; else rp10 ^= cur;
-+          if (i & 0x40) rp13 ^= cur; else rp12 ^= cur;
-+          if (i & 0x80) rp15 ^= cur; else rp14 ^= cur;
-+      }
-+      code[0] =
-+          (parity[rp7] << 7) |
-+          (parity[rp6] << 6) |
-+          (parity[rp5] << 5) |
-+          (parity[rp4] << 4) |
-+          (parity[rp3] << 3) |
-+          (parity[rp2] << 2) |
-+          (parity[rp1] << 1) |
-+          (parity[rp0]);
-+      code[1] =
-+          (parity[rp15] << 7) |
-+          (parity[rp14] << 6) |
-+          (parity[rp13] << 5) |
-+          (parity[rp12] << 4) |
-+          (parity[rp11] << 3) |
-+          (parity[rp10] << 2) |
-+          (parity[rp9]  << 1) |
-+          (parity[rp8]);
-+      code[2] =
-+          (parity[par & 0xf0] << 7) |
-+          (parity[par & 0x0f] << 6) |
-+          (parity[par & 0xcc] << 5) |
-+          (parity[par & 0x33] << 4) |
-+          (parity[par & 0xaa] << 3) |
-+          (parity[par & 0x55] << 2);
-+      code[0] = ~code[0];
-+      code[1] = ~code[1];
-+      code[2] = ~code[2];
-+  }
- 
- Still pretty straightforward. The last three invert statements are there to
- give a checksum of 0xff 0xff 0xff for an empty flash. In an empty flash
-@@ -293,88 +316,90 @@ Let's give it a try...
- Attempt 2
- =========
- 
--extern const char parity[256];
 +::
  
--void ecc2(const unsigned char *buf, unsigned char *code)
--{
--    int i;
--    const unsigned long *bp = (unsigned long *)buf;
--    unsigned long cur;
--    unsigned long rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
--    unsigned long rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
--    unsigned long par;
-+  extern const char parity[256];
+ 	struct nvdimm_bus *nvdimm_bus_register(struct device *parent,
+ 	       struct nvdimm_bus_descriptor *nfit_desc);
  
--    par = 0;
--    rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
--    rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
--    rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
--    rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
-+  void ecc2(const unsigned char *buf, unsigned char *code)
-+  {
-+      int i;
-+      const unsigned long *bp = (unsigned long *)buf;
-+      unsigned long cur;
-+      unsigned long rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
-+      unsigned long rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
-+      unsigned long par;
- 
--    for (i = 0; i < 64; i++)
--    {
--        cur = *bp++;
--        par ^= cur;
--        if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
--        if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
--        if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
--        if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
--        if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
--        if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
--    }
--    /*
--       we need to adapt the code generation for the fact that rp vars are now
--       long; also the column parity calculation needs to be changed.
--       we'll bring rp4 to 15 back to single byte entities by shifting and
--       xoring
--    */
--    rp4 ^= (rp4 >> 16); rp4 ^= (rp4 >> 8); rp4 &= 0xff;
--    rp5 ^= (rp5 >> 16); rp5 ^= (rp5 >> 8); rp5 &= 0xff;
--    rp6 ^= (rp6 >> 16); rp6 ^= (rp6 >> 8); rp6 &= 0xff;
--    rp7 ^= (rp7 >> 16); rp7 ^= (rp7 >> 8); rp7 &= 0xff;
--    rp8 ^= (rp8 >> 16); rp8 ^= (rp8 >> 8); rp8 &= 0xff;
--    rp9 ^= (rp9 >> 16); rp9 ^= (rp9 >> 8); rp9 &= 0xff;
--    rp10 ^= (rp10 >> 16); rp10 ^= (rp10 >> 8); rp10 &= 0xff;
--    rp11 ^= (rp11 >> 16); rp11 ^= (rp11 >> 8); rp11 &= 0xff;
--    rp12 ^= (rp12 >> 16); rp12 ^= (rp12 >> 8); rp12 &= 0xff;
--    rp13 ^= (rp13 >> 16); rp13 ^= (rp13 >> 8); rp13 &= 0xff;
--    rp14 ^= (rp14 >> 16); rp14 ^= (rp14 >> 8); rp14 &= 0xff;
--    rp15 ^= (rp15 >> 16); rp15 ^= (rp15 >> 8); rp15 &= 0xff;
--    rp3 = (par >> 16); rp3 ^= (rp3 >> 8); rp3 &= 0xff;
--    rp2 = par & 0xffff; rp2 ^= (rp2 >> 8); rp2 &= 0xff;
--    par ^= (par >> 16);
--    rp1 = (par >> 8); rp1 &= 0xff;
--    rp0 = (par & 0xff);
--    par ^= (par >> 8); par &= 0xff;
-+      par = 0;
-+      rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
-+      rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
-+      rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
-+      rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
- 
--    code[0] =
--        (parity[rp7] << 7) |
--        (parity[rp6] << 6) |
--        (parity[rp5] << 5) |
--        (parity[rp4] << 4) |
--        (parity[rp3] << 3) |
--        (parity[rp2] << 2) |
--        (parity[rp1] << 1) |
--        (parity[rp0]);
--    code[1] =
--        (parity[rp15] << 7) |
--        (parity[rp14] << 6) |
--        (parity[rp13] << 5) |
--        (parity[rp12] << 4) |
--        (parity[rp11] << 3) |
--        (parity[rp10] << 2) |
--        (parity[rp9]  << 1) |
--        (parity[rp8]);
--    code[2] =
--        (parity[par & 0xf0] << 7) |
--        (parity[par & 0x0f] << 6) |
--        (parity[par & 0xcc] << 5) |
--        (parity[par & 0x33] << 4) |
--        (parity[par & 0xaa] << 3) |
--        (parity[par & 0x55] << 2);
--    code[0] = ~code[0];
--    code[1] = ~code[1];
--    code[2] = ~code[2];
--}
-+      for (i = 0; i < 64; i++)
-+      {
-+          cur = *bp++;
-+          par ^= cur;
-+          if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
-+          if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
-+          if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
-+          if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
-+          if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
-+          if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
-+      }
-+      /*
-+         we need to adapt the code generation for the fact that rp vars are now
-+         long; also the column parity calculation needs to be changed.
-+         we'll bring rp4 to 15 back to single byte entities by shifting and
-+         xoring
-+      */
-+      rp4 ^= (rp4 >> 16); rp4 ^= (rp4 >> 8); rp4 &= 0xff;
-+      rp5 ^= (rp5 >> 16); rp5 ^= (rp5 >> 8); rp5 &= 0xff;
-+      rp6 ^= (rp6 >> 16); rp6 ^= (rp6 >> 8); rp6 &= 0xff;
-+      rp7 ^= (rp7 >> 16); rp7 ^= (rp7 >> 8); rp7 &= 0xff;
-+      rp8 ^= (rp8 >> 16); rp8 ^= (rp8 >> 8); rp8 &= 0xff;
-+      rp9 ^= (rp9 >> 16); rp9 ^= (rp9 >> 8); rp9 &= 0xff;
-+      rp10 ^= (rp10 >> 16); rp10 ^= (rp10 >> 8); rp10 &= 0xff;
-+      rp11 ^= (rp11 >> 16); rp11 ^= (rp11 >> 8); rp11 &= 0xff;
-+      rp12 ^= (rp12 >> 16); rp12 ^= (rp12 >> 8); rp12 &= 0xff;
-+      rp13 ^= (rp13 >> 16); rp13 ^= (rp13 >> 8); rp13 &= 0xff;
-+      rp14 ^= (rp14 >> 16); rp14 ^= (rp14 >> 8); rp14 &= 0xff;
-+      rp15 ^= (rp15 >> 16); rp15 ^= (rp15 >> 8); rp15 &= 0xff;
-+      rp3 = (par >> 16); rp3 ^= (rp3 >> 8); rp3 &= 0xff;
-+      rp2 = par & 0xffff; rp2 ^= (rp2 >> 8); rp2 &= 0xff;
-+      par ^= (par >> 16);
-+      rp1 = (par >> 8); rp1 &= 0xff;
-+      rp0 = (par & 0xff);
-+      par ^= (par >> 8); par &= 0xff;
++::
 +
-+      code[0] =
-+          (parity[rp7] << 7) |
-+          (parity[rp6] << 6) |
-+          (parity[rp5] << 5) |
-+          (parity[rp4] << 4) |
-+          (parity[rp3] << 3) |
-+          (parity[rp2] << 2) |
-+          (parity[rp1] << 1) |
-+          (parity[rp0]);
-+      code[1] =
-+          (parity[rp15] << 7) |
-+          (parity[rp14] << 6) |
-+          (parity[rp13] << 5) |
-+          (parity[rp12] << 4) |
-+          (parity[rp11] << 3) |
-+          (parity[rp10] << 2) |
-+          (parity[rp9]  << 1) |
-+          (parity[rp8]);
-+      code[2] =
-+          (parity[par & 0xf0] << 7) |
-+          (parity[par & 0x0f] << 6) |
-+          (parity[par & 0xcc] << 5) |
-+          (parity[par & 0x33] << 4) |
-+          (parity[par & 0xaa] << 3) |
-+          (parity[par & 0x55] << 2);
-+      code[0] = ~code[0];
-+      code[1] = ~code[1];
-+      code[2] = ~code[2];
+ 	/sys/devices/platform/nfit_test.0/ndbus0
+ 	|-- commands
+ 	|-- nd
+@@ -324,7 +366,9 @@ LIBNVDIMM: bus
+ 	`-- wait_probe
+ 
+ LIBNDCTL: bus enumeration example
+-Find the bus handle that describes the bus from Example NVDIMM Platform
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++Find the bus handle that describes the bus from Example NVDIMM Platform::
+ 
+ 	static struct ndctl_bus *get_bus_by_provider(struct ndctl_ctx *ctx,
+ 			const char *provider)
+@@ -342,7 +386,7 @@ Find the bus handle that describes the bus from Example NVDIMM Platform
+ 
+ 
+ LIBNVDIMM/LIBNDCTL: DIMM (NMEM)
+----------------------------
++-------------------------------
+ 
+ The DIMM device provides a character device for sending commands to
+ hardware, and it is a container for LABELs.  If the DIMM is defined by
+@@ -355,11 +399,16 @@ Range Mapping Structure", and there is no requirement that they actually
+ be physical DIMMs, so we use a more generic name.
+ 
+ LIBNVDIMM: DIMM (NMEM)
++^^^^^^^^^^^^^^^^^^^^^^
++
++::
+ 
+ 	struct nvdimm *nvdimm_create(struct nvdimm_bus *nvdimm_bus, void *provider_data,
+ 			const struct attribute_group **groups, unsigned long flags,
+ 			unsigned long *dsm_mask);
+ 
++::
++
+ 	/sys/devices/platform/nfit_test.0/ndbus0
+ 	|-- nmem0
+ 	|   |-- available_slots
+@@ -384,15 +433,20 @@ LIBNVDIMM: DIMM (NMEM)
+ 
+ 
+ LIBNDCTL: DIMM enumeration example
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+ Note, in this example we are assuming NFIT-defined DIMMs which are
+ identified by an "nfit_handle" a 32-bit value where:
+-Bit 3:0 DIMM number within the memory channel
+-Bit 7:4 memory channel number
+-Bit 11:8 memory controller ID
+-Bit 15:12 socket ID (within scope of a Node controller if node controller is present)
+-Bit 27:16 Node Controller ID
+-Bit 31:28 Reserved
++
++   - Bit 3:0 DIMM number within the memory channel
++   - Bit 7:4 memory channel number
++   - Bit 11:8 memory controller ID
++   - Bit 15:12 socket ID (within scope of a Node controller if node
++     controller is present)
++   - Bit 27:16 Node Controller ID
++   - Bit 31:28 Reserved
++
++::
+ 
+ 	static struct ndctl_dimm *get_dimm_by_handle(struct ndctl_bus *bus,
+ 	       unsigned int handle)
+@@ -413,7 +467,7 @@ Bit 31:28 Reserved
+ 	dimm = get_dimm_by_handle(bus, DIMM_HANDLE(0, 0, 0, 0, 0));
+ 
+ LIBNVDIMM/LIBNDCTL: Region
+-----------------------
++--------------------------
+ 
+ A generic REGION device is registered for each PMEM range or BLK-aperture
+ set.  Per the example there are 6 regions: 2 PMEM and 4 BLK-aperture
+@@ -435,13 +489,15 @@ emits, "devtype" duplicates the DEVTYPE variable stored by udev at the
+ at the 'add' event, and finally, the optional "spa_index" is provided in
+ the case where the region is defined by a SPA.
+ 
+-LIBNVDIMM: region
++LIBNVDIMM: region::
+ 
+ 	struct nd_region *nvdimm_pmem_region_create(struct nvdimm_bus *nvdimm_bus,
+ 			struct nd_region_desc *ndr_desc);
+ 	struct nd_region *nvdimm_blk_region_create(struct nvdimm_bus *nvdimm_bus,
+ 			struct nd_region_desc *ndr_desc);
+ 
++::
++
+ 	/sys/devices/platform/nfit_test.0/ndbus0
+ 	|-- region0
+ 	|   |-- available_size
+@@ -468,10 +524,11 @@ LIBNVDIMM: region
+ 	[..]
+ 
+ LIBNDCTL: region enumeration example
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+ Sample region retrieval routines based on NFIT-unique data like
+ "spa_index" (interleave set id) for PMEM and "nfit_handle" (dimm id) for
+-BLK.
++BLK::
+ 
+ 	static struct ndctl_region *get_pmem_region_by_spa_index(struct ndctl_bus *bus,
+ 			unsigned int spa_index)
+@@ -518,33 +575,33 @@ REGION name generic and expects userspace to always consider the
+ region-attributes for four reasons:
+ 
+     1. There are already more than two REGION and "namespace" types.  For
+-    PMEM there are two subtypes.  As mentioned previously we have PMEM where
+-    the constituent DIMM devices are known and anonymous PMEM.  For BLK
+-    regions the NFIT specification already anticipates vendor specific
+-    implementations.  The exact distinction of what a region contains is in
+-    the region-attributes not the region-name or the region-devtype.
++       PMEM there are two subtypes.  As mentioned previously we have PMEM where
++       the constituent DIMM devices are known and anonymous PMEM.  For BLK
++       regions the NFIT specification already anticipates vendor specific
++       implementations.  The exact distinction of what a region contains is in
++       the region-attributes not the region-name or the region-devtype.
+ 
+     2. A region with zero child-namespaces is a possible configuration.  For
+-    example, the NFIT allows for a DCR to be published without a
+-    corresponding BLK-aperture.  This equates to a DIMM that can only accept
+-    control/configuration messages, but no i/o through a descendant block
+-    device.  Again, this "type" is advertised in the attributes ('mappings'
+-    == 0) and the name does not tell you much.
++       example, the NFIT allows for a DCR to be published without a
++       corresponding BLK-aperture.  This equates to a DIMM that can only accept
++       control/configuration messages, but no i/o through a descendant block
++       device.  Again, this "type" is advertised in the attributes ('mappings'
++       == 0) and the name does not tell you much.
+ 
+     3. What if a third major interface type arises in the future?  Outside
+-    of vendor specific implementations, it's not difficult to envision a
+-    third class of interface type beyond BLK and PMEM.  With a generic name
+-    for the REGION level of the device-hierarchy old userspace
+-    implementations can still make sense of new kernel advertised
+-    region-types.  Userspace can always rely on the generic region
+-    attributes like "mappings", "size", etc and the expected child devices
+-    named "namespace".  This generic format of the device-model hierarchy
+-    allows the LIBNVDIMM and LIBNDCTL implementations to be more uniform and
+-    future-proof.
++       of vendor specific implementations, it's not difficult to envision a
++       third class of interface type beyond BLK and PMEM.  With a generic name
++       for the REGION level of the device-hierarchy old userspace
++       implementations can still make sense of new kernel advertised
++       region-types.  Userspace can always rely on the generic region
++       attributes like "mappings", "size", etc and the expected child devices
++       named "namespace".  This generic format of the device-model hierarchy
++       allows the LIBNVDIMM and LIBNDCTL implementations to be more uniform and
++       future-proof.
+ 
+     4. There are more robust mechanisms for determining the major type of a
+-    region than a device name.  See the next section, How Do I Determine the
+-    Major Type of a Region?
++       region than a device name.  See the next section, How Do I Determine the
++       Major Type of a Region?
+ 
+ How Do I Determine the Major Type of a Region?
+ ----------------------------------------------
+@@ -553,7 +610,8 @@ Outside of the blanket recommendation of "use libndctl", or simply
+ looking at the kernel header (/usr/include/linux/ndctl.h) to decode the
+ "nstype" integer attribute, here are some other options.
+ 
+-    1. module alias lookup:
++1. module alias lookup
++^^^^^^^^^^^^^^^^^^^^^^
+ 
+     The whole point of region/namespace device type differentiation is to
+     decide which block-device driver will attach to a given LIBNVDIMM namespace.
+@@ -569,28 +627,31 @@ looking at the kernel header (/usr/include/linux/ndctl.h) to decode the
+     the resulting namespaces.  The output from module resolution is more
+     accurate than a region-name or region-devtype.
+ 
+-    2. udev:
++2. udev
++^^^^^^^
+ 
+-    The kernel "devtype" is registered in the udev database
+-    # udevadm info --path=/devices/platform/nfit_test.0/ndbus0/region0
+-    P: /devices/platform/nfit_test.0/ndbus0/region0
+-    E: DEVPATH=/devices/platform/nfit_test.0/ndbus0/region0
+-    E: DEVTYPE=nd_pmem
+-    E: MODALIAS=nd:t2
+-    E: SUBSYSTEM=nd
++    The kernel "devtype" is registered in the udev database::
+ 
+-    # udevadm info --path=/devices/platform/nfit_test.0/ndbus0/region4
+-    P: /devices/platform/nfit_test.0/ndbus0/region4
+-    E: DEVPATH=/devices/platform/nfit_test.0/ndbus0/region4
+-    E: DEVTYPE=nd_blk
+-    E: MODALIAS=nd:t3
+-    E: SUBSYSTEM=nd
++	# udevadm info --path=/devices/platform/nfit_test.0/ndbus0/region0
++	P: /devices/platform/nfit_test.0/ndbus0/region0
++	E: DEVPATH=/devices/platform/nfit_test.0/ndbus0/region0
++	E: DEVTYPE=nd_pmem
++	E: MODALIAS=nd:t2
++	E: SUBSYSTEM=nd
++
++	# udevadm info --path=/devices/platform/nfit_test.0/ndbus0/region4
++	P: /devices/platform/nfit_test.0/ndbus0/region4
++	E: DEVPATH=/devices/platform/nfit_test.0/ndbus0/region4
++	E: DEVTYPE=nd_blk
++	E: MODALIAS=nd:t3
++	E: SUBSYSTEM=nd
+ 
+     ...and is available as a region attribute, but keep in mind that the
+     "devtype" does not indicate sub-type variations and scripts should
+     really be understanding the other attributes.
+ 
+-    3. type specific attributes:
++3. type specific attributes
++^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+     As it currently stands a BLK-aperture region will never have a
+     "nfit/spa_index" attribute, but neither will a non-NFIT PMEM region.  A
+@@ -600,7 +661,7 @@ looking at the kernel header (/usr/include/linux/ndctl.h) to decode the
+ 
+ 
+ LIBNVDIMM/LIBNDCTL: Namespace
+--------------------------
++-----------------------------
+ 
+ A REGION, after resolving DPA aliasing and LABEL specified boundaries,
+ surfaces one or more "namespace" devices.  The arrival of a "namespace"
+@@ -608,12 +669,14 @@ device currently triggers either the nd_blk or nd_pmem driver to load
+ and register a disk/block device.
+ 
+ LIBNVDIMM: namespace
++^^^^^^^^^^^^^^^^^^^^
++
+ Here is a sample layout from the three major types of NAMESPACE where
+ namespace0.0 represents DIMM-info-backed PMEM (note that it has a 'uuid'
+ attribute), namespace2.0 represents a BLK namespace (note it has a
+ 'sector_size' attribute) that, and namespace6.0 represents an anonymous
+ PMEM namespace (note that has no 'uuid' attribute due to not support a
+-LABEL).
++LABEL)::
+ 
+ 	/sys/devices/platform/nfit_test.0/ndbus0/region0/namespace0.0
+ 	|-- alt_name
+@@ -656,76 +719,84 @@ LABEL).
+ 	`-- uevent
+ 
+ LIBNDCTL: namespace enumeration example
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ Namespaces are indexed relative to their parent region, example below.
+ These indexes are mostly static from boot to boot, but subsystem makes
+ no guarantees in this regard.  For a static namespace identifier use its
+ 'uuid' attribute.
+ 
+-static struct ndctl_namespace *get_namespace_by_id(struct ndctl_region *region,
+-                unsigned int id)
+-{
+-        struct ndctl_namespace *ndns;
++::
+ 
+-        ndctl_namespace_foreach(region, ndns)
+-                if (ndctl_namespace_get_id(ndns) == id)
+-                        return ndns;
++  static struct ndctl_namespace
++  *get_namespace_by_id(struct ndctl_region *region, unsigned int id)
++  {
++          struct ndctl_namespace *ndns;
+ 
+-        return NULL;
+-}
++          ndctl_namespace_foreach(region, ndns)
++                  if (ndctl_namespace_get_id(ndns) == id)
++                          return ndns;
++
++          return NULL;
 +  }
  
- The parity array is not shown any more. Note also that for these
- examples I kinda deviated from my regular programming style by allowing
-@@ -403,28 +428,32 @@ lookups
- Attempt 3
- =========
- 
--Odd replaced:
--        if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
--        if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
--        if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
--        if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
--        if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
--        if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
--with
--        if (i & 0x01) rp5 ^= cur;
--        if (i & 0x02) rp7 ^= cur;
--        if (i & 0x04) rp9 ^= cur;
--        if (i & 0x08) rp11 ^= cur;
--        if (i & 0x10) rp13 ^= cur;
--        if (i & 0x20) rp15 ^= cur;
-+Odd replaced::
- 
--        and outside the loop added:
--        rp4  = par ^ rp5;
--        rp6  = par ^ rp7;
--        rp8  = par ^ rp9;
--        rp10  = par ^ rp11;
--        rp12  = par ^ rp13;
--        rp14  = par ^ rp15;
-+          if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
-+          if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
-+          if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
-+          if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
-+          if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
-+          if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
+ LIBNDCTL: namespace creation example
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +
-+with::
-+
-+          if (i & 0x01) rp5 ^= cur;
-+          if (i & 0x02) rp7 ^= cur;
-+          if (i & 0x04) rp9 ^= cur;
-+          if (i & 0x08) rp11 ^= cur;
-+          if (i & 0x10) rp13 ^= cur;
-+          if (i & 0x20) rp15 ^= cur;
-+
-+and outside the loop added::
-+
-+          rp4  = par ^ rp5;
-+          rp6  = par ^ rp7;
-+          rp8  = par ^ rp9;
-+          rp10  = par ^ rp11;
-+          rp12  = par ^ rp13;
-+          rp14  = par ^ rp15;
+ Idle namespaces are automatically created by the kernel if a given
+ region has enough available capacity to create a new namespace.
+ Namespace instantiation involves finding an idle namespace and
+ configuring it.  For the most part the setting of namespace attributes
+ can occur in any order, the only constraint is that 'uuid' must be set
+ before 'size'.  This enables the kernel to track DPA allocations
+-internally with a static identifier.
++internally with a static identifier::
  
- And after that the code takes about 30% more time, although the number of
- statements is reduced. This is also reflected in the assembly code.
-@@ -448,7 +477,7 @@ Attempt 4
- =========
+-static int configure_namespace(struct ndctl_region *region,
+-                struct ndctl_namespace *ndns,
+-                struct namespace_parameters *parameters)
+-{
+-        char devname[50];
++  static int configure_namespace(struct ndctl_region *region,
++                  struct ndctl_namespace *ndns,
++                  struct namespace_parameters *parameters)
++  {
++          char devname[50];
  
- Unrolled the loop 1, 2, 3 and 4 times.
--For 4 the code starts with:
-+For 4 the code starts with::
+-        snprintf(devname, sizeof(devname), "namespace%d.%d",
+-                        ndctl_region_get_id(region), paramaters->id);
++          snprintf(devname, sizeof(devname), "namespace%d.%d",
++                          ndctl_region_get_id(region), paramaters->id);
  
-     for (i = 0; i < 4; i++)
-     {
-@@ -471,8 +500,11 @@ Analysis 4
- ==========
- 
- Unrolling once gains about 15%
-+
- Unrolling twice keeps the gain at about 15%
-+
- Unrolling three times gives a gain of 30% compared to attempt 2.
-+
- Unrolling four times gives a marginal improvement compared to unrolling
- three times.
- 
-@@ -492,8 +524,10 @@ Attempt 5
- 
- Effectively so all odd digit rp assignments in the loop were removed.
- This included the else clause of the if statements.
--Of course after the loop we need to correct things by adding code like:
-+Of course after the loop we need to correct things by adding code like::
-+
-     rp5 = par ^ rp4;
-+
- Also the initial assignments (rp5 = 0; etc) could be removed.
- Along the line I also removed the initialisation of rp0/1/2/3.
- 
-@@ -513,7 +547,7 @@ statement. Time for yet another version!
- Attempt 6
- =========
- 
--THe code within the for loop was changed to:
-+THe code within the for loop was changed to::
- 
-     for (i = 0; i < 4; i++)
-     {
-@@ -564,13 +598,17 @@ million iterations in order not to lose too much accuracy. This one
- definitely seemed to be the jackpot!
- 
- There is a little bit more room for improvement though. There are three
--places with statements:
--rp4 ^= cur; rp6 ^= cur;
-+places with statements::
-+
-+	rp4 ^= cur; rp6 ^= cur;
-+
- It seems more efficient to also maintain a variable rp4_6 in the while
- loop; This eliminates 3 statements per loop. Of course after the loop we
--need to correct by adding:
--    rp4 ^= rp4_6;
--    rp6 ^= rp4_6
-+need to correct by adding::
-+
-+	rp4 ^= rp4_6;
-+	rp6 ^= rp4_6
-+
- Furthermore there are 4 sequential assignments to rp8. This can be
- encoded slightly more efficiently by saving tmppar before those 4 lines
- and later do rp8 = rp8 ^ tmppar ^ notrp8;
-@@ -582,7 +620,7 @@ Time for a new test!
- Attempt 7
- =========
- 
--The new code now looks like:
-+The new code now looks like::
- 
-     for (i = 0; i < 4; i++)
-     {
-@@ -644,9 +682,12 @@ Although it seems that the code within the loop cannot be optimised
- further there is still room to optimize the generation of the ecc codes.
- We can simply calculate the total parity. If this is 0 then rp4 = rp5
- etc. If the parity is 1, then rp4 = !rp5;
-+
- But if rp4 = rp5 we do not need rp5 etc. We can just write the even bits
--in the result byte and then do something like
-+in the result byte and then do something like::
-+
-     code[0] |= (code[0] << 1);
-+
- Lets test this.
+-        ndctl_namespace_set_alt_name(ndns, devname);
+-        /* 'uuid' must be set prior to setting size! */
+-        ndctl_namespace_set_uuid(ndns, paramaters->uuid);
+-        ndctl_namespace_set_size(ndns, paramaters->size);
+-        /* unlike pmem namespaces, blk namespaces have a sector size */
+-        if (parameters->lbasize)
+-                ndctl_namespace_set_sector_size(ndns, parameters->lbasize);
+-        ndctl_namespace_enable(ndns);
+-}
++          ndctl_namespace_set_alt_name(ndns, devname);
++          /* 'uuid' must be set prior to setting size! */
++          ndctl_namespace_set_uuid(ndns, paramaters->uuid);
++          ndctl_namespace_set_size(ndns, paramaters->size);
++          /* unlike pmem namespaces, blk namespaces have a sector size */
++          if (parameters->lbasize)
++                  ndctl_namespace_set_sector_size(ndns, parameters->lbasize);
++          ndctl_namespace_enable(ndns);
++  }
  
  
-@@ -657,11 +698,13 @@ Changed the code but again this slightly degrades performance. Tried all
- kind of other things, like having dedicated parity arrays to avoid the
- shift after parity[rp7] << 7; No gain.
- Change the lookup using the parity array by using shift operators (e.g.
--replace parity[rp7] << 7 with:
--rp7 ^= (rp7 << 4);
--rp7 ^= (rp7 << 2);
--rp7 ^= (rp7 << 1);
--rp7 &= 0x80;
-+replace parity[rp7] << 7 with::
+ Why the Term "namespace"?
++^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+     1. Why not "volume" for instance?  "volume" ran the risk of confusing
+-    ND (libnvdimm subsystem) to a volume manager like device-mapper.
++       ND (libnvdimm subsystem) to a volume manager like device-mapper.
+ 
+     2. The term originated to describe the sub-devices that can be created
+-    within a NVME controller (see the nvme specification:
+-    http://www.nvmexpress.org/specifications/), and NFIT namespaces are
+-    meant to parallel the capabilities and configurability of
+-    NVME-namespaces.
++       within a NVME controller (see the nvme specification:
++       http://www.nvmexpress.org/specifications/), and NFIT namespaces are
++       meant to parallel the capabilities and configurability of
++       NVME-namespaces.
+ 
+ 
+ LIBNVDIMM/LIBNDCTL: Block Translation Table "btt"
+----------------------------------------------
++-------------------------------------------------
+ 
+ A BTT (design document: http://pmem.io/2014/09/23/btt.html) is a stacked
+ block device driver that fronts either the whole block device or a
+ partition of a block device emitted by either a PMEM or BLK NAMESPACE.
+ 
+ LIBNVDIMM: btt layout
++^^^^^^^^^^^^^^^^^^^^^
 +
-+	rp7 ^= (rp7 << 4);
-+	rp7 ^= (rp7 << 2);
-+	rp7 ^= (rp7 << 1);
-+	rp7 &= 0x80;
+ Every region will start out with at least one BTT device which is the
+ seed device.  To activate it set the "namespace", "uuid", and
+ "sector_size" attributes and then bind the device to the nd_pmem or
+-nd_blk driver depending on the region type.
++nd_blk driver depending on the region type::
+ 
+ 	/sys/devices/platform/nfit_test.1/ndbus0/region0/btt0/
+ 	|-- namespace
+@@ -739,10 +810,12 @@ nd_blk driver depending on the region type.
+ 	`-- uuid
+ 
+ LIBNDCTL: btt creation example
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +
- No gain.
+ Similar to namespaces an idle BTT device is automatically created per
+ region.  Each time this "seed" btt device is configured and enabled a new
+ seed is created.  Creating a BTT configuration involves two steps of
+-finding and idle BTT and assigning it to consume a PMEM or BLK namespace.
++finding and idle BTT and assigning it to consume a PMEM or BLK namespace::
  
- The only marginal change was inverting the parity bits, so we can remove
-@@ -683,13 +726,16 @@ Correcting errors
+ 	static struct ndctl_btt *get_idle_btt(struct ndctl_region *region)
+ 	{
+@@ -787,29 +860,28 @@ Summary LIBNDCTL Diagram
+ ------------------------
  
- For correcting errors I again used the ST application note as a starter,
- but I also peeked at the existing code.
+ For the given example above, here is the view of the objects as seen by the
+-LIBNDCTL API:
+-            +---+
+-            |CTX|    +---------+   +--------------+  +---------------+
+-            +-+-+  +-> REGION0 +---> NAMESPACE0.0 +--> PMEM8 "pm0.0" |
+-              |    | +---------+   +--------------+  +---------------+
+-+-------+     |    | +---------+   +--------------+  +---------------+
+-| DIMM0 <-+   |    +-> REGION1 +---> NAMESPACE1.0 +--> PMEM6 "pm1.0" |
+-+-------+ |   |    | +---------+   +--------------+  +---------------+
+-| DIMM1 <-+ +-v--+ | +---------+   +--------------+  +---------------+
+-+-------+ +-+BUS0+---> REGION2 +-+-> NAMESPACE2.0 +--> ND6  "blk2.0" |
+-| DIMM2 <-+ +----+ | +---------+ | +--------------+  +----------------------+
+-+-------+ |        |             +-> NAMESPACE2.1 +--> ND5  "blk2.1" | BTT2 |
+-| DIMM3 <-+        |               +--------------+  +----------------------+
+-+-------+          | +---------+   +--------------+  +---------------+
+-                   +-> REGION3 +-+-> NAMESPACE3.0 +--> ND4  "blk3.0" |
+-                   | +---------+ | +--------------+  +----------------------+
+-                   |             +-> NAMESPACE3.1 +--> ND3  "blk3.1" | BTT1 |
+-                   |               +--------------+  +----------------------+
+-                   | +---------+   +--------------+  +---------------+
+-                   +-> REGION4 +---> NAMESPACE4.0 +--> ND2  "blk4.0" |
+-                   | +---------+   +--------------+  +---------------+
+-                   | +---------+   +--------------+  +----------------------+
+-                   +-> REGION5 +---> NAMESPACE5.0 +--> ND1  "blk5.0" | BTT0 |
+-                     +---------+   +--------------+  +---------------+------+
+-
++LIBNDCTL API::
+ 
++              +---+
++              |CTX|    +---------+   +--------------+  +---------------+
++              +-+-+  +-> REGION0 +---> NAMESPACE0.0 +--> PMEM8 "pm0.0" |
++                |    | +---------+   +--------------+  +---------------+
++  +-------+     |    | +---------+   +--------------+  +---------------+
++  | DIMM0 <-+   |    +-> REGION1 +---> NAMESPACE1.0 +--> PMEM6 "pm1.0" |
++  +-------+ |   |    | +---------+   +--------------+  +---------------+
++  | DIMM1 <-+ +-v--+ | +---------+   +--------------+  +---------------+
++  +-------+ +-+BUS0+---> REGION2 +-+-> NAMESPACE2.0 +--> ND6  "blk2.0" |
++  | DIMM2 <-+ +----+ | +---------+ | +--------------+  +----------------------+
++  +-------+ |        |             +-> NAMESPACE2.1 +--> ND5  "blk2.1" | BTT2 |
++  | DIMM3 <-+        |               +--------------+  +----------------------+
++  +-------+          | +---------+   +--------------+  +---------------+
++                     +-> REGION3 +-+-> NAMESPACE3.0 +--> ND4  "blk3.0" |
++                     | +---------+ | +--------------+  +----------------------+
++                     |             +-> NAMESPACE3.1 +--> ND3  "blk3.1" | BTT1 |
++                     |               +--------------+  +----------------------+
++                     | +---------+   +--------------+  +---------------+
++                     +-> REGION4 +---> NAMESPACE4.0 +--> ND2  "blk4.0" |
++                     | +---------+   +--------------+  +---------------+
++                     | +---------+   +--------------+  +----------------------+
++                     +-> REGION5 +---> NAMESPACE5.0 +--> ND1  "blk5.0" | BTT0 |
++                       +---------+   +--------------+  +---------------+------+
+diff --git a/Documentation/nvdimm/security.txt b/Documentation/nvdimm/security.rst
+similarity index 99%
+rename from Documentation/nvdimm/security.txt
+rename to Documentation/nvdimm/security.rst
+index 4c36c05ca98e..ad9dea099b34 100644
+--- a/Documentation/nvdimm/security.txt
++++ b/Documentation/nvdimm/security.rst
+@@ -1,4 +1,5 @@
+-NVDIMM SECURITY
++===============
++NVDIMM Security
+ ===============
+ 
+ 1. Introduction
+@@ -138,4 +139,5 @@ This command is only available when the master security is enabled, indicated
+ by the extended security status.
+ 
+ [1]: http://pmem.io/documents/NVDIMM_DSM_Interface-V1.8.pdf
 +
- The algorithm itself is pretty straightforward. Just xor the given and
- the calculated ecc. If all bytes are 0 there is no problem. If 11 bits
- are 1 we have one correctable bit error. If there is 1 bit 1, we have an
- error in the given ecc code.
-+
- It proved to be fastest to do some table lookups. Performance gain
- introduced by this is about a factor 2 on my system when a repair had to
- be done, and 1% or so if no repair had to be done.
-+
- Code size increased from 330 bytes to 686 bytes for this function.
- (gcc 4.2, -O3)
+ [2]: http://www.t13.org/documents/UploadedDocuments/docs2006/e05179r4-ACS-SecurityClarifications.pdf
+diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
+index 54500798f23a..e89c1c332407 100644
+--- a/drivers/nvdimm/Kconfig
++++ b/drivers/nvdimm/Kconfig
+@@ -33,7 +33,7 @@ config BLK_DEV_PMEM
+ 	  Documentation/admin-guide/kernel-parameters.rst).  This driver converts
+ 	  these persistent memory ranges into block devices that are
+ 	  capable of DAX (direct-access) file system mappings.  See
+-	  Documentation/nvdimm/nvdimm.txt for more details.
++	  Documentation/nvdimm/nvdimm.rst for more details.
  
-@@ -700,8 +746,10 @@ Conclusion
- The gain when calculating the ecc is tremendous. Om my development hardware
- a speedup of a factor of 18 for ecc calculation was achieved. On a test on an
- embedded system with a MIPS core a factor 7 was obtained.
-+
- On a test with a Linksys NSLU2 (ARMv5TE processor) the speedup was a factor
- 5 (big endian mode, gcc 4.1.2, -O3)
-+
- For correction not much gain could be obtained (as bitflips are rare). Then
- again there are also much less cycles spent there.
+ 	  Say Y if you want to use an NVDIMM
  
-@@ -711,4 +759,5 @@ out of it with an assembler program, but due to pipeline behaviour etc
- this is very tricky (at least for intel hw).
- 
- Author: Frans Meulenbroeks
-+
- Copyright (C) 2008 Koninklijke Philips Electronics NV.
-diff --git a/Documentation/mtd/spi-nor.txt b/Documentation/mtd/spi-nor.rst
-similarity index 94%
-rename from Documentation/mtd/spi-nor.txt
-rename to Documentation/mtd/spi-nor.rst
-index da1fbff5a24c..f5333e3bf486 100644
---- a/Documentation/mtd/spi-nor.txt
-+++ b/Documentation/mtd/spi-nor.rst
-@@ -1,5 +1,6 @@
--                          SPI NOR framework
--               ============================================
-+=================
-+SPI NOR framework
-+=================
- 
- Part I - Why do we need this framework?
- ---------------------------------------
-@@ -23,7 +24,7 @@ This framework just adds a new layer between the MTD and the SPI bus driver.
- With this new layer, the SPI NOR controller driver does not depend on the
- m25p80 code anymore.
- 
--   Before this framework, the layer is like:
-+Before this framework, the layer is like::
- 
-                    MTD
-          ------------------------
-diff --git a/drivers/mtd/nand/raw/nand_ecc.c b/drivers/mtd/nand/raw/nand_ecc.c
-index 223fbd8052b3..f6a7808db818 100644
---- a/drivers/mtd/nand/raw/nand_ecc.c
-+++ b/drivers/mtd/nand/raw/nand_ecc.c
-@@ -11,7 +11,7 @@
-  *   Thomas Gleixner (tglx@linutronix.de)
-  *
-  * Information on how this algorithm works and how it was developed
-- * can be found in Documentation/mtd/nand_ecc.txt
-+ * can be found in Documentation/mtd/nand_ecc.rst
-  */
- 
- #include <linux/types.h>
 -- 
 2.21.0
 
