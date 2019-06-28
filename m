@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DFBC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB80C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBF4208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE5C2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561725201;
-	bh=Tp1aYAIYfs+mXjhcme24RAxISbz2gVLfttEzx4qwiDI=;
+	s=default; t=1561725208;
+	bh=atWIC6pd0P9ks+BKxNdcknEs270Fqf4AV6IRFbaQIo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYFgPMxYy1Q3JL0UjCftrIxTu8s1t5yYAbipnj1KyJGzXAZ/4Qp+WhndqpVIYE6cu
-	 4lB8NSYEb9atEKgzc9/dcfxgeaPDX0JsFjNgKshAFfCeVXjZM6Zgx9YvvHeZstiQnv
-	 s9KI9jjzuJ4x4EJ7zooJD9BdJKRL0sCGjcXBWDMk=
+	b=pkLDAuu5sor7winKlXrEv2QXz4j+MIVBVw3rZ6to+AdabpANVQBlhnNhjuODOrM2L
+	 n3BmhtHsf13q8hTIaNtLXl8hj3NFFhtg2MNGFvhSk9r0H+3WN85qJMA3ZX/YYC49cP
+	 VCkAtvevpssFR+ixsQSDkNJiyj7yFBdfAEqDEVVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbfF1MdU (ORCPT
+        id S1727158AbfF1Md0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:33:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39076 "EHLO
+        Fri, 28 Jun 2019 08:33:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39084 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfF1Mai (ORCPT
+        with ESMTP id S1726844AbfF1Mai (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:30:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7MbZA8hMINwLJB+YG9K/YLFBCqsE56YC0IfqYAoULdo=; b=Ue5XoknhidO3GpC3j/2X+b5P5s
-        ukhhnPHkX/S47cpwea3376ASb1OYnJSMzF7aMj1TuOx1aYG2RDq2do18JB1LqDzQu7WZQSAcWwhtX
-        flgBJX8e1KOHqO3lQrODTuX87Z/oUmc/ieiVPmebU2rGgmp+ZLKPceSqrTa524rXTDfQbqmKDWZ2i
-        klyub71V84pU1895p19g1xFQFOnTMKK+d0lWnejtOXCTH+uGE3nulDvPc8mdWJYUzxjbPPx+Cwcie
-        7++uDV9oUs99QfPmepCjPwsIgEIGPPbkOFlZjCysQec2lmVA2mq48BDiEHq2hYKAf7UeBl3fK91zw
-        +381fjBQ==;
+        bh=IqWEXjmAHEFCos1bD4o5Gfyjo268jeIGTqrPbZTv3dg=; b=dxhhGwaCM8G3iEpTeQPU2cP54E
+        ZgGGsVfxnK8wE9OXMCXc+12tzZH5gLogHYE+LIgGNnOzwjALDWMFJdW4+3wYto0Iy+M4Gq2f9iA6U
+        TiaeeBp7y9fi+LwOFNSiXGgscfLu5Z++91H8faXijkh5xA+ma093ramly87MDcryKlTUdPvKZxRNU
+        cxD0G3hke5LFIZm21sYACTvo/A49KZ3J1t5qreccMLihOuOi+mEBVZ/ciL+OFllV182dy/wcHGEHU
+        ZgpvdkqpeIEc8E/Ims46+xEM2xw3qWXaJ3N3sQZspUiG/KQOYABKRHXDVsRV5ykNL5+GyLkMxIFbo
+        Zbw7mNNw==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1U-000552-3P; Fri, 28 Jun 2019 12:30:36 +0000
+        id 1hgq1U-00054w-0H; Fri, 28 Jun 2019 12:30:36 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005RY-59; Fri, 28 Jun 2019 09:30:34 -0300
+        id 1hgq1S-0005RJ-2Z; Fri, 28 Jun 2019 09:30:34 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 08/39] docs: mmc: move it to the driver-api
-Date:   Fri, 28 Jun 2019 09:30:01 -0300
-Message-Id: <b48cf5642fdef0201ee54392b3edb7b026be650c.1561724493.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 05/39] docs: namespace: move it to the admin-guide
+Date:   Fri, 28 Jun 2019 09:29:58 -0300
+Message-Id: <9ad8354dd29c631cb39b8a19ec9d735e27bacabc.1561724493.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
 References: <cover.1561724493.git.mchehab+samsung@kernel.org>
@@ -64,64 +64,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of the stuff here is related to the kAPI.
+As stated at the documentation, this is meant to be for
+users to better understand namespaces.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/driver-api/index.rst                   | 1 +
- Documentation/{ => driver-api}/mmc/index.rst         | 2 --
- Documentation/{ => driver-api}/mmc/mmc-async-req.rst | 0
- Documentation/{ => driver-api}/mmc/mmc-dev-attrs.rst | 0
- Documentation/{ => driver-api}/mmc/mmc-dev-parts.rst | 0
- Documentation/{ => driver-api}/mmc/mmc-tools.rst     | 0
- 6 files changed, 1 insertion(+), 2 deletions(-)
- rename Documentation/{ => driver-api}/mmc/index.rst (94%)
- rename Documentation/{ => driver-api}/mmc/mmc-async-req.rst (100%)
- rename Documentation/{ => driver-api}/mmc/mmc-dev-attrs.rst (100%)
- rename Documentation/{ => driver-api}/mmc/mmc-dev-parts.rst (100%)
- rename Documentation/{ => driver-api}/mmc/mmc-tools.rst (100%)
+ Documentation/admin-guide/index.rst                             | 1 +
+ .../{ => admin-guide}/namespaces/compatibility-list.rst         | 0
+ Documentation/{ => admin-guide}/namespaces/index.rst            | 2 --
+ Documentation/{ => admin-guide}/namespaces/resource-control.rst | 0
+ 4 files changed, 1 insertion(+), 2 deletions(-)
+ rename Documentation/{ => admin-guide}/namespaces/compatibility-list.rst (100%)
+ rename Documentation/{ => admin-guide}/namespaces/index.rst (91%)
+ rename Documentation/{ => admin-guide}/namespaces/resource-control.rst (100%)
 
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index a8b3634287de..55354eacc8bd 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -44,6 +44,7 @@ available subsections can be seen below.
-    miscellaneous
-    mei/index
-    mtd/index
-+   mmc/index
-    nvdimm/index
-    w1
-    rapidio/index
-diff --git a/Documentation/mmc/index.rst b/Documentation/driver-api/mmc/index.rst
-similarity index 94%
-rename from Documentation/mmc/index.rst
-rename to Documentation/driver-api/mmc/index.rst
-index 3305478ddadb..9aaf64951a8c 100644
---- a/Documentation/mmc/index.rst
-+++ b/Documentation/driver-api/mmc/index.rst
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index b7e6d18f80ca..42819addebc6 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -76,6 +76,7 @@ configure specific aspects of kernel behavior to your liking.
+    thunderbolt
+    LSM/index
+    mm/index
++   namespaces/index
+    perf-security
+    acpi/index
+ 
+diff --git a/Documentation/namespaces/compatibility-list.rst b/Documentation/admin-guide/namespaces/compatibility-list.rst
+similarity index 100%
+rename from Documentation/namespaces/compatibility-list.rst
+rename to Documentation/admin-guide/namespaces/compatibility-list.rst
+diff --git a/Documentation/namespaces/index.rst b/Documentation/admin-guide/namespaces/index.rst
+similarity index 91%
+rename from Documentation/namespaces/index.rst
+rename to Documentation/admin-guide/namespaces/index.rst
+index bf40625dd11a..713ec4949fa7 100644
+--- a/Documentation/namespaces/index.rst
++++ b/Documentation/admin-guide/namespaces/index.rst
 @@ -1,5 +1,3 @@
 -:orphan:
 -
- ========================
- MMC/SD/SDIO card support
- ========================
-diff --git a/Documentation/mmc/mmc-async-req.rst b/Documentation/driver-api/mmc/mmc-async-req.rst
+ ==========
+ Namespaces
+ ==========
+diff --git a/Documentation/namespaces/resource-control.rst b/Documentation/admin-guide/namespaces/resource-control.rst
 similarity index 100%
-rename from Documentation/mmc/mmc-async-req.rst
-rename to Documentation/driver-api/mmc/mmc-async-req.rst
-diff --git a/Documentation/mmc/mmc-dev-attrs.rst b/Documentation/driver-api/mmc/mmc-dev-attrs.rst
-similarity index 100%
-rename from Documentation/mmc/mmc-dev-attrs.rst
-rename to Documentation/driver-api/mmc/mmc-dev-attrs.rst
-diff --git a/Documentation/mmc/mmc-dev-parts.rst b/Documentation/driver-api/mmc/mmc-dev-parts.rst
-similarity index 100%
-rename from Documentation/mmc/mmc-dev-parts.rst
-rename to Documentation/driver-api/mmc/mmc-dev-parts.rst
-diff --git a/Documentation/mmc/mmc-tools.rst b/Documentation/driver-api/mmc/mmc-tools.rst
-similarity index 100%
-rename from Documentation/mmc/mmc-tools.rst
-rename to Documentation/driver-api/mmc/mmc-tools.rst
+rename from Documentation/namespaces/resource-control.rst
+rename to Documentation/admin-guide/namespaces/resource-control.rst
 -- 
 2.21.0
 
