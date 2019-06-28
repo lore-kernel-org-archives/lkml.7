@@ -2,79 +2,78 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975D6C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2976EC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546552083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:25:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AKHLtbO6"
+	by mail.kernel.org (Postfix) with ESMTP id 00F592083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfF1XZL (ORCPT
+        id S1726946AbfF1X1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 19:25:11 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49118 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfF1XZK (ORCPT
+        Fri, 28 Jun 2019 19:27:30 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:53018 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfF1X13 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 19:25:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Gh2oFWghIHrTNBD1izTrFr/szmDBJru7LcJZzZ60QQE=; b=AKHLtbO6XygZYXVGOGSvdmbRs8
-        tP5/GyaWvQKDrfHJge2h1bLiufWgk20kBE38Q+DTV7rPATeG9rC6ta3x2vFBejKYEifKG+OOvfyoO
-        A18DgC1fp76BLBKoP7VxiTzkqU6ljwgMdFYpN9csriayEV2tMKbt/daU3dxj1UfUI3jIe9d/JquU+
-        EdFhoj6gPyuQQPeqoZ3obr1tBUIImUVI8cPSw9OedzYuubwg+rmv+6UgDDuGrLsjA1XB+7nxP1HWd
-        PKNzfvUKtg0z47BuQsc4W7Gn5HQROvK2riVA/pwi2h5oSiVs7F2nKe0EwfPfsQxVfP1ZAUQk4q9ho
-        Cta0Qjcg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hh0Er-0004Pq-8Q; Fri, 28 Jun 2019 23:25:05 +0000
-Subject: Re: [PATCH] f2fs: fix 32-bit linking
-To:     Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Qiuyang Sun <sunqiuyang@huawei.com>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Wang Shilong <wangshilong1991@gmail.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-References: <20190628104007.2721479-1-arnd@arndb.de>
- <20190628124422.GA9888@infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1d121a83-6042-fc5e-4440-ea0f53f0bc51@infradead.org>
-Date:   Fri, 28 Jun 2019 16:25:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 28 Jun 2019 19:27:29 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1029)
+        id 07D5F2007697; Fri, 28 Jun 2019 16:27:28 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by linux.microsoft.com (Postfix) with ESMTP id DD9873007AB2;
+        Fri, 28 Jun 2019 16:27:28 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 16:27:28 -0700 (PDT)
+From:   Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
+X-X-Sender: jaskarankhurana@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
+To:     Eric Biggers <ebiggers@kernel.org>
+cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com,
+        mpatocka@redhat.com, gmazyland@gmail.com
+Subject: Re: [RFC PATCH v5 0/1] Add dm verity root hash pkcs7 sig
+ validation.
+In-Reply-To: <20190628203450.GD103946@gmail.com>
+Message-ID: <alpine.LRH.2.21.1906281552350.26685@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com> <20190628040041.GB673@sol.localdomain> <alpine.LRH.2.21.1906281242110.2789@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter> <20190628203450.GD103946@gmail.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190628124422.GA9888@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/19 5:44 AM, Christoph Hellwig wrote:
-> On Fri, Jun 28, 2019 at 12:39:52PM +0200, Arnd Bergmann wrote:
->> Not all architectures support get_user() with a 64-bit argument:
-> 
-> Which architectures are still missing?  I think we finally need to
-> get everyone in line instead of repeatedly working around the lack
-> of minor arch support.
-> 
 
-arch/microblaze/include/asm/uaccess.c does not support get_user()
-with a size of 8.
+Hello Eric,
 
--- 
-~Randy
+On Fri, 28 Jun 2019, Eric Biggers wrote:
+
+>> In a datacenter like environment, this will protect the system from below
+>> attacks:
+>>
+>> 1.Prevents attacker from deploying scripts that run arbitrary executables on the system.
+>> 2.Prevents physically present malicious admin to run arbitrary code on the
+>>   machine.
+>>
+>> Regards,
+>> Jaskaran
+>
+> So you are trying to protect against people who already have a root shell?
+>
+> Can't they just e.g. run /usr/bin/python and type in some Python code?
+>
+> Or run /usr/bin/curl and upload all your secret data to their server.
+>
+> - Eric
+>
+
+You are correct, it would not be feasible for a general purpose distro, 
+but for embedded systems and other cases where there is a more tightly 
+locked-down system.
+
+Regards,
+Jaskaran.
