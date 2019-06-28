@@ -2,129 +2,90 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405C3C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF4EC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182402086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561697604;
-	bh=xyfM4ZWcVSKm8cjlTQWt6Dt2SEgAkACNyGwMNKTacAo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hELT7dTP3W8pS9p64U/PyU79BlRYX2sjTl2YN24BbW8+rytQ8exhMGjWcT3DzfOpB
-	 7B7/57y0tKK+vne0j1omh+iu/q5KY7iRaiv3BQjf9zJdQSkdIzsmKEUYzTQMmurMqT
-	 xwpXpl8h2n86JwsDG88afhSHVmrf3PeOmzqQN2h8=
+	by mail.kernel.org (Postfix) with ESMTP id A0CDE20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:56:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PlfixOl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfF1ExW (ORCPT
+        id S1726678AbfF1E40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 00:53:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfF1ExW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 00:53:22 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC29A20656;
-        Fri, 28 Jun 2019 04:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561697600;
-        bh=xyfM4ZWcVSKm8cjlTQWt6Dt2SEgAkACNyGwMNKTacAo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z3bBPa40+DwkDvULVLnnYbo1JZ4XWv6vjxv/VDsDg4XaHDOxyLs/a29o2G5izpXRS
-         tV9rI2CL2aUtlgnfH29W2eShhpazNje3MwhMuKTERKz5mbpC59ewRFYE2CXkMeCQdj
-         aQLfoPNd/8LGSWv1cB0P8081htHFDUfJPm7MmVg4=
-Date:   Thu, 27 Jun 2019 21:53:18 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        t-kristo@ti.com, linux-crypto@vger.kernel.org, nm@ti.com
-Subject: Re: [RESEND PATCH 00/10] crypto: k3: Add sa2ul driver
-Message-ID: <20190628045318.GC673@sol.localdomain>
-References: <20190628042745.28455-1-j-keerthy@ti.com>
+        Fri, 28 Jun 2019 00:56:26 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40865 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfF1E40 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 00:56:26 -0400
+Received: by mail-lf1-f66.google.com with SMTP id a9so3073957lff.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 21:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Volcz+38jFTPOHhlSCwFUXULczOSSWdKlXjynAvXZDg=;
+        b=PlfixOl+QPoGMyaFe2Hbgr7TdZEGndH1m9uWyDNz30knzSu4v0OqSV1jZjRpegQuon
+         JyW7CENbD7XnwFyJzLjt84XB2fT/64UHTpHcz/E/9dtFSysS0SqOPgXDb8HS47OX1f89
+         K8pPh311m/Yv1NK8pQ5/b/UADCH/nk1O0ChludFMf1bWhV+8jfnnNXjnknGTJSleKP8q
+         Obcx3GVTQTRUpERYC/FPi+iZrZEOP2o38tbH0QU5v2dbZQeW8lGL3QzeinimF1gOc14F
+         Px8jxHBHiXyRcuuWyi/itTtAWe6QbrGaajI4wjEzxDS5mChRAIFYbd3ENwM0OxiD0mpW
+         HM6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Volcz+38jFTPOHhlSCwFUXULczOSSWdKlXjynAvXZDg=;
+        b=H2E3Xfa5Be5SVKCrqib8vDp+DPf6K9rx6u3onsAcQ9XBSeydKMZqs9rtFYmf6wMDrk
+         ssPOE84d2zJybDxuukvHPB2rbuuzRSW50hZ7drHoGHojgKxrRJFZyi8aBNtCQfNBDL8K
+         X7WLh4H0NaVnZIjoKIlXDCTcMis5VqKoyMkXY47vMWy/20RNF7Vlx5ltMsH3lTifgzg6
+         gV7B7hzQdIU+BmZoFBg3VSIbIfwLpwrJcqPDi1Q8GTDIf8D6xIvLSko0EZaOLwV/Csiv
+         RRJhJ9y+PFgAFvtk0wgt4Q20YiWYKu+yNDRjbElf3grMGufzAMhScWEvwVv0dmH8LUE5
+         Kgnw==
+X-Gm-Message-State: APjAAAWCF2XzKYEC+HlfdgMj0uuOLbILJxuMYMsPxvvI0c2BusFoHntf
+        o9rhXfCGkHOaC/6cjqh4tgwkap1tDUSQWk5Xh5oDaQ==
+X-Google-Smtp-Source: APXvYqzlzqZOsDs2VTwjk724loQUgJL+eZ4KD/HJzBLf212IMOapwwrzRfTAmHgtC+qcnuRrWo1dAJmH4ez/SKwGT1g=
+X-Received: by 2002:a19:6602:: with SMTP id a2mr3799436lfc.25.1561697784041;
+ Thu, 27 Jun 2019 21:56:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190628042745.28455-1-j-keerthy@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1561624486-22867-1-git-send-email-yash.shah@sifive.com> <alpine.DEB.2.21.9999.1906270911270.12689@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1906270911270.12689@viisi.sifive.com>
+From:   Yash Shah <yash.shah@sifive.com>
+Date:   Fri, 28 Jun 2019 10:25:47 +0530
+Message-ID: <CAJ2_jOGVJotV73YP9JTr4hDDWgH-Jr6Cfn2Pscx49wR78JocNg@mail.gmail.com>
+Subject: Re: [PATCH] riscv: ccache: Remove unused variable
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Keerthy,
+On Thu, Jun 27, 2019 at 9:43 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> On Thu, 27 Jun 2019, Yash Shah wrote:
+>
+> > Reading the count register clears the interrupt signal. Currently, the
+> > count registers are read into 'regval' variable but the variable is
+> > never used. Therefore remove it.
+> >
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+>
+> This is a good start.  Could you also add comments in the code that
+> describe what those reads are doing, as you did in the patch description?
+> Otherwise they look pretty mysterious.
+>
 
-On Fri, Jun 28, 2019 at 09:57:35AM +0530, Keerthy wrote:
-> The series adds Crypto hardware accelerator support for SA2UL.
-> SA2UL stands for security accelerator ultra lite.
-> 
-> The Security Accelerator (SA2_UL) subsystem provides hardware
-> cryptographic acceleration for the following use cases:
-> • Encryption and authentication for secure boot
-> • Encryption and authentication of content in applications
->   requiring DRM (digital rights management) and
->   content/asset protection
-> The device includes one instantiation of SA2_UL named SA2_UL0
-> 
-> SA2UL needs on tx channel and a pair of rx dma channels.
-> 
-> This series has dependency on UDMA series. Hence is based on top of:
-> 
-> https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105
-> 
-> The above series adds couple of dmaengine APIs that are used
-> by the sa2ul driver. Hence there is a hard dependency on the
-> above series.
-> 
-> Resending with linux-crypto list in Cc.
-> 
-> Keerthy (10):
->   dt-bindings: crypto: k3: Add sa2ul bindings documentation
->   crypto: sa2ul: Add crypto driver
->   crypto: sa2ul: Add AES ECB Mode support
->   crypto: sa2ul: Add aead support for hmac(sha1)cbc(aes) algorithm
->   crypto: sha256_generic: Export the Transform function
->   crypto: sa2ul: Add hmac(sha256)cbc(aes) AEAD Algo support
->   crypto: sa2ul: Add hmac(sha1) HMAC algorithm support
->   crypto: sa2ul: Add hmac(sha256) HMAC algorithm support
->   sa2ul: Add 3DES ECB & CBC Mode support
->   arm64: dts: k3-am6: Add crypto accelarator node
-> 
->  .../devicetree/bindings/crypto/sa2ul.txt      |   47 +
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |   33 +
->  crypto/sha256_generic.c                       |    3 +-
->  drivers/crypto/Kconfig                        |   17 +
->  drivers/crypto/Makefile                       |    1 +
->  drivers/crypto/sa2ul.c                        | 2232 +++++++++++++++++
->  drivers/crypto/sa2ul.h                        |  384 +++
->  include/crypto/sha.h                          |    1 +
->  8 files changed, 2717 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/crypto/sa2ul.txt
->  create mode 100644 drivers/crypto/sa2ul.c
->  create mode 100644 drivers/crypto/sa2ul.h
+Sure, will add comments and send v2
 
-Did you run the crypto self-tests on this driver?  i.e. boot a kernel with
-
-	# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
-	CONFIG_DEBUG_KERNEL=y
-	CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
-
-What are the results?
-
-Also, this patchset does not compile for me.
-
-Error: arch/arm64/boot/dts/ti/k3-am65-main.dtsi:103.33-34 syntax error
-FATAL ERROR: Unable to parse input tree
-  DTC     arch/arm64/boot/dts/nvidia/tegra210-p2571.dtb
-make[2]: *** [scripts/Makefile.lib:294: arch/arm64/boot/dts/ti/k3-am654-base-board.dtb] Error 1
-make[1]: *** [scripts/Makefile.build:489: arch/arm64/boot/dts/ti] Error 2
-make[1]: *** Waiting for unfinished jobs....
-
-- Eric
+>
+> - Paul
