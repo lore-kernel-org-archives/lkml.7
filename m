@@ -2,380 +2,205 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AF8C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FE5C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0367820644
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E2C208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:29:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbYw+9tb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mTT4mMrl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfF1NZU (ORCPT
+        id S1726828AbfF1N3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 09:25:20 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34327 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfF1NZU (ORCPT
+        Fri, 28 Jun 2019 09:29:00 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35612 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfF1N3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:25:20 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so3266587plt.1;
-        Fri, 28 Jun 2019 06:25:18 -0700 (PDT)
+        Fri, 28 Jun 2019 09:29:00 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d126so2995719pfd.2;
+        Fri, 28 Jun 2019 06:28:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=32ErQPXIbrc8JNIUwd6ZeT6JCviUE7r1Zg+q3Fn+0pw=;
-        b=gbYw+9tbXyA+d+t38B7uTwBqE1dR3/xm6u36GO/TZrfzSNV5MkdMLL4+u/zJz8k8b1
-         gDeaoO4WP6ZWnm9wpSpxwuyEfMZd7bDi5wcOx6eSCFdU2gtu9iJDOa/HNd1mamLsYJIG
-         tQ7/AsfEIJlnvOR2zWd5z038mybVkihvgJgZKUpy2YECrt+6fE3+PsreuYmVwiZeiC63
-         ywxARD6lOd4LCZvAEFT4YMlxslaSH/1xwhZD689bhr/FIEGe84jflWU/pqvkTE1Aec3H
-         usUtVEhO8a+MjVDQQzhEpjSvqoeFUBHBRk1ky8G2CEUnYXwhJsSr+qldxiUtsLKvP4TG
-         obbw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1O8DrbpTmciwFV9+bKnWkKjm8kYVUsRM9LK8+PMCsEQ=;
+        b=mTT4mMrlMn4nt1uoYeRFLnfXyesfH80IKsVF+J+x6Ab+MSLwe+k6FyhzEd1k2Zh64w
+         BKovir0BKXq3/kzP8T/Krr5tujkf+gOIjpqPad2JqhHQwlTFMm9nyk+U8sS7IvFJUrb+
+         xUS18x7vvjKjq18Pn7cV03gnaEfHixPB1WFjRnAdII8xlhHyqnMu6Zt5dMynfvx/Yqnr
+         YzjRbYe4Ap91jVoAcwFT73kpmvbz3eEQ/3wIOYjstKnmjqwzmI2PYuIphEkdE2Gsz0ha
+         bwbon+EbzDOAFA8RJ7zi4B8LIoYvym4EvthLZI0FkfTW/aic57XTsg9vAa0TrHtlq/Zl
+         L7KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=32ErQPXIbrc8JNIUwd6ZeT6JCviUE7r1Zg+q3Fn+0pw=;
-        b=OjfX4aXbKIdqPSMaokCHvTs6Kpa2lz8RALU9dsL3GCALoea7i486SMPRV2iUiTmVCj
-         rgxrG9SsmPb5KXWX9jOIqlBmX1nK1Vx0LMH8x2AU6zAZaRrJfZD9E2amL7iD6lvC7uy7
-         ja/H7rJNRaO9i4WavVJpgZRPHQoSKJAzXMEOlZcnLcL+rb0gEaap0FjMC44iR4wd03NJ
-         RaDtK3MTH2VwGALZUdIEJ5QzuZKPGXT5my8MLf2EuEeQEf9vuR9dMlYBnO29JGlR2qy9
-         t8aYo3afHrQgocKrLn93/Son0Yscs5jerpuS1oE+Rho747myRQBdAcDGsEZ6BMVnnPRg
-         CJhQ==
-X-Gm-Message-State: APjAAAUuQorGauhmh8HqCg1u6WuuRQQ+V9baJUIMGsfDQayEudbMDgGq
-        HDjPgesio1y2AVmwsjXGMeM=
-X-Google-Smtp-Source: APXvYqxP3R0x+RIGncA0GElcVIS8Sdr+5ymvIKEp2v9V52Y+ZiiI7pW13eMmX5euQ6+C1sTqg1u3kQ==
-X-Received: by 2002:a17:902:8d92:: with SMTP id v18mr11839312plo.211.1561728318418;
-        Fri, 28 Jun 2019 06:25:18 -0700 (PDT)
-Received: from bnva-HP-Pavilion-g6-Notebook-PC.domain.name ([117.241.203.131])
-        by smtp.gmail.com with ESMTPSA id y19sm2355134pfe.150.2019.06.28.06.25.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 06:25:17 -0700 (PDT)
-From:   Vandana BN <bnvandana@gmail.com>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-sh@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mchehab@kernel.org
-Cc:     skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Vandana BN <bnvandana@gmail.com>
-Subject: [PATCH v2] Documentation:sh:convert register-banks.txt  and new-machine.txt to rst format.
-Date:   Fri, 28 Jun 2019 18:54:59 +0530
-Message-Id: <20190628132459.5409-1-bnvandana@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190627063347.11137-1-bnvandana@gmail.com>
-References: <20190627063347.11137-1-bnvandana@gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=1O8DrbpTmciwFV9+bKnWkKjm8kYVUsRM9LK8+PMCsEQ=;
+        b=NuKpVC+4Sf25t+1YlHHVDfZDW1P0AuyQ9PjfWnZzjAIorki/x0mjwT9sijLVe/Cn89
+         4C6ov7z+X1YdeDfN+xNd8c118loGpY4ZyBMT9+Gs4dblhpL8BV4HE/fKnOTUa3eZMtas
+         uy/66Z56OMCAxWdszfOAPrnIZI3T+OQVQtsCz2sS2PNfv49OZJp7g6/igl77xe+1V75R
+         R3Qg5SJMwby70OPPsquySklF+1LJsuYiekL4CMJHmYVAn9D5r7/yPZVq7v5ADP0modxu
+         p6wWHN0us5PGYm+nSIKdhMTvXswqU23wCE+XWRWAEUGo4rIgXlaL05KbVjvbMpMkWT2T
+         +jXw==
+X-Gm-Message-State: APjAAAX1+6ZKMUlZAI3qA4HDPLPrL03RM/AqKp/UpT+pYvf1/oJJsrWb
+        ap4IjBpmhd8HzBQf51W7D/E=
+X-Google-Smtp-Source: APXvYqx3g+cSIJx81oO2RRodX9tHqRs3xn7vs37XmTWqnH1ATbRwp7PXlYj9JRV4u/2CI1VrWW28ag==
+X-Received: by 2002:a63:2ec9:: with SMTP id u192mr430039pgu.16.1561728538929;
+        Fri, 28 Jun 2019 06:28:58 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g92sm2066814pje.11.2019.06.28.06.28.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Jun 2019 06:28:57 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 06:28:56 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Fabian Schindlatz <fabian.schindlatz@fau.de>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Rudolf Marek <r.marek@assembler.cz>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas =?iso-8859-1?Q?R=F6thenbacher?= 
+        <thomas.roethenbacher@fau.de>, linux-kernel@i4.cs.fau.de
+Subject: Re: [PATCH v2] hwmon: Correct struct allocation style
+Message-ID: <20190628132856.GA22498@roeck-us.net>
+References: <9160e7fe-7229-a097-48f7-d882cc760b53@roeck-us.net>
+ <20190627152738.29645-1-fabian.schindlatz@fau.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190627152738.29645-1-fabian.schindlatz@fau.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch converts new-machine.txt and register-banks.txt to ReST format, No content
-change.
-Added new-machine.rst and register-banks.rst to sh/index.rst
+On Thu, Jun 27, 2019 at 05:27:38PM +0200, Fabian Schindlatz wrote:
+> Use sizeof(*var) instead of sizeof(struct var_type) as argument to
+> kalloc() and friends to comply with the kernel coding style.
+> 
+> Co-developed-by: Thomas Röthenbacher <thomas.roethenbacher@fau.de>
+> Signed-off-by: Thomas Röthenbacher <thomas.roethenbacher@fau.de>
+> Signed-off-by: Fabian Schindlatz <fabian.schindlatz@fau.de>
+> Cc: linux-kernel@i4.cs.fau.de
 
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
----
- Documentation/sh/index.rst                    |   6 +
- .../sh/{new-machine.txt => new-machine.rst}   | 171 +++++++++---------
- ...{register-banks.txt => register-banks.rst} |   8 +-
- 3 files changed, 100 insertions(+), 85 deletions(-)
- rename Documentation/sh/{new-machine.txt => new-machine.rst} (79%)
- rename Documentation/sh/{register-banks.txt => register-banks.rst} (90%)
+Applied to hwmon-next. Note that it is in general much easier for me
+if such patches are applied against mainline (or hwmon-next), not
+against linux-next.
 
-diff --git a/Documentation/sh/index.rst b/Documentation/sh/index.rst
-index bc8db7ba894a..25471d3fc294 100644
---- a/Documentation/sh/index.rst
-+++ b/Documentation/sh/index.rst
-@@ -57,3 +57,9 @@ Maple
+Guenter
 
- .. kernel-doc:: drivers/sh/maple/maple.c
-    :export:
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   new-machine
-+   register-banks
-diff --git a/Documentation/sh/new-machine.txt b/Documentation/sh/new-machine.rst
-similarity index 79%
-rename from Documentation/sh/new-machine.txt
-rename to Documentation/sh/new-machine.rst
-index e0961a66130b..b16c33342642 100644
---- a/Documentation/sh/new-machine.txt
-+++ b/Documentation/sh/new-machine.rst
-@@ -1,8 +1,8 @@
-+================================
-+Adding a new board to LinuxSH
-+================================
-
--                Adding a new board to LinuxSH
--               ================================
--
--               Paul Mundt <lethal@linux-sh.org>
-+Paul Mundt <lethal@linux-sh.org>
-
- This document attempts to outline what steps are necessary to add support
- for new boards to the LinuxSH port under the new 2.5 and 2.6 kernels. This
-@@ -19,65 +19,67 @@ include/asm-sh/. For the new kernel, things are broken out by board type,
- companion chip type, and CPU type. Looking at a tree view of this directory
- hierarchy looks like the following:
-
--Board-specific code:
--
--.
--|-- arch
--|   `-- sh
--|       `-- boards
--|           |-- adx
--|           |   `-- board-specific files
--|           |-- bigsur
--|           |   `-- board-specific files
--|           |
--|           ... more boards here ...
--|
--`-- include
--    `-- asm-sh
--        |-- adx
--        |   `-- board-specific headers
--        |-- bigsur
--        |   `-- board-specific headers
--        |
--	.. more boards here ...
--
--Next, for companion chips:
--.
--`-- arch
--    `-- sh
--        `-- cchips
--            `-- hd6446x
--                `-- hd64461
--                    `-- cchip-specific files
-+Board-specific code::
-+
-+ .
-+ |-- arch
-+ |   `-- sh
-+ |       `-- boards
-+ |           |-- adx
-+ |           |   `-- board-specific files
-+ |           |-- bigsur
-+ |           |   `-- board-specific files
-+ |           |
-+ |           ... more boards here ...
-+ |
-+ `-- include
-+     `-- asm-sh
-+         |-- adx
-+         |   `-- board-specific headers
-+         |-- bigsur
-+         |   `-- board-specific headers
-+         |
-+       	 .. more boards here ...
-+
-+Next, for companion chips::
-+
-+ .
-+ `-- arch
-+     `-- sh
-+         `-- cchips
-+             `-- hd6446x
-+                 `-- hd64461
-+                     `-- cchip-specific files
-
- ... and so on. Headers for the companion chips are treated the same way as
- board-specific headers. Thus, include/asm-sh/hd64461 is home to all of the
- hd64461-specific headers.
-
--Finally, CPU family support is also abstracted:
--.
--|-- arch
--|   `-- sh
--|       |-- kernel
--|       |   `-- cpu
--|       |       |-- sh2
--|       |       |   `-- SH-2 generic files
--|       |       |-- sh3
--|       |       |   `-- SH-3 generic files
--|       |       `-- sh4
--|       |           `-- SH-4 generic files
--|       `-- mm
--|           `-- This is also broken out per CPU family, so each family can
--|               have their own set of cache/tlb functions.
--|
--`-- include
--    `-- asm-sh
--        |-- cpu-sh2
--        |   `-- SH-2 specific headers
--        |-- cpu-sh3
--        |   `-- SH-3 specific headers
--        `-- cpu-sh4
--            `-- SH-4 specific headers
-+Finally, CPU family support is also abstracted::
-+
-+ .
-+ |-- arch
-+ |   `-- sh
-+ |       |-- kernel
-+ |       |   `-- cpu
-+ |       |       |-- sh2
-+ |       |       |   `-- SH-2 generic files
-+ |       |       |-- sh3
-+ |       |       |   `-- SH-3 generic files
-+ |       |       `-- sh4
-+ |       |           `-- SH-4 generic files
-+ |       `-- mm
-+ |           `-- This is also broken out per CPU family, so each family can
-+ |               have their own set of cache/tlb functions.
-+ |
-+ `-- include
-+     `-- asm-sh
-+         |-- cpu-sh2
-+         |   `-- SH-2 specific headers
-+         |-- cpu-sh3
-+         |   `-- SH-3 specific headers
-+         `-- cpu-sh4
-+             `-- SH-4 specific headers
-
- It should be noted that CPU subtypes are _not_ abstracted. Thus, these still
- need to be dealt with by the CPU family specific code.
-@@ -112,18 +114,20 @@ setup code, we're required at the very least to provide definitions for
- get_system_type() and platform_setup(). For our imaginary board, this
- might look something like:
-
--/*
-- * arch/sh/boards/vapor/setup.c - Setup code for imaginary board
-- */
--#include <linux/init.h>
-+.. code-block:: c
-+
-+    /*
-+     * arch/sh/boards/vapor/setup.c - Setup code for imaginary board
-+     */
-+    #include <linux/init.h>
-
--const char *get_system_type(void)
--{
--	return "FooTech Vaporboard";
--}
-+    const char *get_system_type(void)
-+    {
-+        return "FooTech Vaporboard";
-+    }
-
--int __init platform_setup(void)
--{
-+    int __init platform_setup(void)
-+    {
-   	/*
- 	 * If our hardware actually existed, we would do real
- 	 * setup here. Though it's also sane to leave this empty
-@@ -136,7 +140,8 @@ int __init platform_setup(void)
- 	/* And whatever else ... */
-
- 	return 0;
--}
-+    }
-+
-
- Our new imaginary board will also have to tie into the machvec in order for it
- to be of any use.
-@@ -172,16 +177,17 @@ sufficient.
-    vector.
-
-    Note that these prototypes are generated automatically by setting
--   __IO_PREFIX to something sensible. A typical example would be:
-+   __IO_PREFIX to something sensible. A typical example would be::
-
- 	#define __IO_PREFIX vapor
-    	#include <asm/io_generic.h>
-
-+
-    somewhere in the board-specific header. Any boards being ported that still
-    have a legacy io.h should remove it entirely and switch to the new model.
-
-  - Add machine vector definitions to the board's setup.c. At a bare minimum,
--   this must be defined as something like:
-+   this must be defined as something like::
-
- 	struct sh_machine_vector mv_vapor __initmv = {
- 		.mv_name = "vapor",
-@@ -202,11 +208,11 @@ Large portions of the build system are now entirely dynamic, and merely
- require the proper entry here and there in order to get things done.
-
- The first thing to do is to add an entry to arch/sh/Kconfig, under the
--"System type" menu:
-+"System type" menu::
-
--config SH_VAPOR
--	bool "Vapor"
--	help
-+ config SH_VAPOR
-+	 bool "Vapor"
-+	 help
- 	  select Vapor if configuring for a FooTech Vaporboard.
-
- next, this has to be added into arch/sh/Makefile. All boards require a
-@@ -232,6 +238,8 @@ space restating it here. After this is done, you will be able to use
- implicit checks for your board if you need this somewhere throughout the
- common code, such as:
-
-+::
-+
- 	/* Make sure we're on the FooTech Vaporboard */
- 	if (!mach_is_vapor())
- 		return -ENODEV;
-@@ -253,12 +261,13 @@ build target, and it will be implicitly listed as such in the help text.
- Looking at the 'make help' output, you should now see something like:
-
- Architecture specific targets (sh):
--  zImage                  - Compressed kernel image (arch/sh/boot/zImage)
--  adx_defconfig           - Build for adx
--  cqreek_defconfig        - Build for cqreek
--  dreamcast_defconfig     - Build for dreamcast
--...
--  vapor_defconfig         - Build for vapor
-+
-+ - zImage                  - Compressed kernel image (arch/sh/boot/zImage)
-+ - adx_defconfig           - Build for adx
-+ - cqreek_defconfig        - Build for cqreek
-+ - dreamcast_defconfig     - Build for dreamcast
-+ - ...
-+ - vapor_defconfig         - Build for vapor
-
- which then allows you to do:
-
-diff --git a/Documentation/sh/register-banks.txt b/Documentation/sh/register-banks.rst
-similarity index 90%
-rename from Documentation/sh/register-banks.txt
-rename to Documentation/sh/register-banks.rst
-index a6719f2f6594..acccfaf80355 100644
---- a/Documentation/sh/register-banks.txt
-+++ b/Documentation/sh/register-banks.rst
-@@ -1,8 +1,9 @@
--	Notes on register bank usage in the kernel
--	==========================================
-+==========================================
-+Notes on register bank usage in the kernel
-+==========================================
-
- Introduction
--------------
-+============
-
- The SH-3 and SH-4 CPU families traditionally include a single partial register
- bank (selected by SR.RB, only r0 ... r7 are banked), whereas other families
-@@ -30,4 +31,3 @@ Presently the kernel uses several of these registers.
- 		- The SR.IMASK interrupt handler makes use of this to set the
- 		  interrupt priority level (used by local_irq_enable())
- 	- r7_bank (current)
--
---
-2.17.1
-
+> ---
+>  drivers/hwmon/acpi_power_meter.c | 3 +--
+>  drivers/hwmon/coretemp.c         | 4 ++--
+>  drivers/hwmon/fschmd.c           | 2 +-
+>  drivers/hwmon/sch56xx-common.c   | 2 +-
+>  drivers/hwmon/via-cputemp.c      | 5 ++---
+>  drivers/hwmon/w83793.c           | 2 +-
+>  6 files changed, 8 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+> index 6ba1a08253f0..48c4570c61d7 100644
+> --- a/drivers/hwmon/acpi_power_meter.c
+> +++ b/drivers/hwmon/acpi_power_meter.c
+> @@ -862,8 +862,7 @@ static int acpi_power_meter_add(struct acpi_device *device)
+>  	if (!device)
+>  		return -EINVAL;
+>  
+> -	resource = kzalloc(sizeof(struct acpi_power_meter_resource),
+> -			   GFP_KERNEL);
+> +	resource = kzalloc(sizeof(*resource), GFP_KERNEL);
+>  	if (!resource)
+>  		return -ENOMEM;
+>  
+> diff --git a/drivers/hwmon/coretemp.c b/drivers/hwmon/coretemp.c
+> index fe6618e49dc4..0361115d25dd 100644
+> --- a/drivers/hwmon/coretemp.c
+> +++ b/drivers/hwmon/coretemp.c
+> @@ -433,7 +433,7 @@ static struct temp_data *init_temp_data(unsigned int cpu, int pkg_flag)
+>  {
+>  	struct temp_data *tdata;
+>  
+> -	tdata = kzalloc(sizeof(struct temp_data), GFP_KERNEL);
+> +	tdata = kzalloc(sizeof(*tdata), GFP_KERNEL);
+>  	if (!tdata)
+>  		return NULL;
+>  
+> @@ -532,7 +532,7 @@ static int coretemp_probe(struct platform_device *pdev)
+>  	struct platform_data *pdata;
+>  
+>  	/* Initialize the per-zone data structures */
+> -	pdata = devm_kzalloc(dev, sizeof(struct platform_data), GFP_KERNEL);
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+>  	if (!pdata)
+>  		return -ENOMEM;
+>  
+> diff --git a/drivers/hwmon/fschmd.c b/drivers/hwmon/fschmd.c
+> index fa0c2f1fb443..d464dcbe5ac8 100644
+> --- a/drivers/hwmon/fschmd.c
+> +++ b/drivers/hwmon/fschmd.c
+> @@ -1090,7 +1090,7 @@ static int fschmd_probe(struct i2c_client *client,
+>  	int i, err;
+>  	enum chips kind = id->driver_data;
+>  
+> -	data = kzalloc(sizeof(struct fschmd_data), GFP_KERNEL);
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+>  	if (!data)
+>  		return -ENOMEM;
+>  
+> diff --git a/drivers/hwmon/sch56xx-common.c b/drivers/hwmon/sch56xx-common.c
+> index 6c84780e358e..0d6d20814183 100644
+> --- a/drivers/hwmon/sch56xx-common.c
+> +++ b/drivers/hwmon/sch56xx-common.c
+> @@ -401,7 +401,7 @@ struct sch56xx_watchdog_data *sch56xx_watchdog_register(struct device *parent,
+>  		return NULL;
+>  	}
+>  
+> -	data = kzalloc(sizeof(struct sch56xx_watchdog_data), GFP_KERNEL);
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+>  	if (!data)
+>  		return NULL;
+>  
+> diff --git a/drivers/hwmon/via-cputemp.c b/drivers/hwmon/via-cputemp.c
+> index 8264e849e588..0feb1d0b5e13 100644
+> --- a/drivers/hwmon/via-cputemp.c
+> +++ b/drivers/hwmon/via-cputemp.c
+> @@ -114,8 +114,7 @@ static int via_cputemp_probe(struct platform_device *pdev)
+>  	int err;
+>  	u32 eax, edx;
+>  
+> -	data = devm_kzalloc(&pdev->dev, sizeof(struct via_cputemp_data),
+> -			    GFP_KERNEL);
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+>  	if (!data)
+>  		return -ENOMEM;
+>  
+> @@ -223,7 +222,7 @@ static int via_cputemp_online(unsigned int cpu)
+>  		goto exit;
+>  	}
+>  
+> -	pdev_entry = kzalloc(sizeof(struct pdev_entry), GFP_KERNEL);
+> +	pdev_entry = kzalloc(sizeof(*pdev_entry), GFP_KERNEL);
+>  	if (!pdev_entry) {
+>  		err = -ENOMEM;
+>  		goto exit_device_put;
+> diff --git a/drivers/hwmon/w83793.c b/drivers/hwmon/w83793.c
+> index 46f5dfec8d0a..b37106c6f26d 100644
+> --- a/drivers/hwmon/w83793.c
+> +++ b/drivers/hwmon/w83793.c
+> @@ -1669,7 +1669,7 @@ static int w83793_probe(struct i2c_client *client,
+>  	int files_pwm = ARRAY_SIZE(w83793_left_pwm) / 5;
+>  	int files_temp = ARRAY_SIZE(w83793_temp) / 6;
+>  
+> -	data = kzalloc(sizeof(struct w83793_data), GFP_KERNEL);
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+>  	if (!data) {
+>  		err = -ENOMEM;
+>  		goto exit;
