@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDED6C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0929DC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE022133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7EE62133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKroMCdZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="El54/Fxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfF1JQj (ORCPT
+        id S1726970AbfF1JQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:16:39 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44121 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbfF1JQi (ORCPT
+        Fri, 28 Jun 2019 05:16:43 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36853 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbfF1JQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:16:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n2so2308700pgp.11
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 02:16:38 -0700 (PDT)
+        Fri, 28 Jun 2019 05:16:43 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so2672213pfl.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 02:16:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Bhgb5naUglE4xsB+rw48UAWdmj/6OVm+0PrcgO/5JCA=;
-        b=eKroMCdZWVn8IGRSez2qvfN/Fwu7KhfrgY1zIbcX1XTUYMw3Uj2+Ml7+k65kv5Qg1q
-         nvTSsmX4g/5dcRGXw7YlADqV5x5X8XsSo2pZfCv/DbXX4USrWAdNEzacPjr9wXEwxAe8
-         AqogW+Cr+8CvCRsTyVgOiA+trJ/cmjMuUbalhzJhM/R/Luylgmp+rzsePB5u2zJNoEGk
-         idpwTi14qLueQQCnrB8AfmfItM7z8ap7XeWiCyQvMpEDPKGdCViI8rK06mPKuqmVyE1F
-         By6exXiETZGbGfHx5NZaz6ONtER9MMAOj16ehvCUE+ACF27hMiEMXGdVEemJT02q0g10
-         MXig==
+        bh=ZHPOoRqSRjVm8Jf/89G0zJiwwNRFSrQP8sanvOv03zc=;
+        b=El54/FxaO79tdgg9kUiDlWO1OKhn44cp79V4ytHtDntACjC3RqdXgYywI1+fTNUH7b
+         gR5YtoQrYINXFTUq2XRdRK5vVijHRIFpLWDnlMcTmiuRiR5I0yicOuqIjJKTmwxPe8YQ
+         KyUpYXDdy3Pjzc1wj5QRUHe+QU4X4MihIwgRSEnr2TmCV5a0W6HNRU+ZI6Cwo4/gDW79
+         hKh2Pfu1z8LBGclF5fXIzkA1YVn0vU1vG7dKZ8t2kZ5in0iJ9VjWZtjNMqTSkG2i48G3
+         pcX+4G3j2qfdbcKKFpqoOxTjW028NlJuo0PVZ3tIss55OQqJEZUGddiZXNTkrH/xJSkH
+         +z5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Bhgb5naUglE4xsB+rw48UAWdmj/6OVm+0PrcgO/5JCA=;
-        b=jSeoRUh0+PxzLG+0NregAtBIShae9+Qd+Yih4sAtzEYWKX8zDEtDfolmT9+aqYUjWP
-         v+44bDiHEfuRTkGahtY4X/qr36GXuzAjNSwuDRst3v9zqvUl9tGju+aJu2kTJDPY135g
-         gDuVQ6hJVN8bi+phIt8pg2CbClvy/9zR4vdcbdE6GW+PEcxJ81nFv8KPUmu8sEAmWA8/
-         zI+e8voxnDEOvZTIGm9zqAU6+9LksOgR61NdLe8BMSrVe8wtUnJIdhnqrNf9OfdGnuKL
-         p5chcALBwCJY+tFD+aRUMPC7nPk62rblDheKpExRICVlzLGfg2WbLERbm23Fpxg3Fx1a
-         ZYpw==
-X-Gm-Message-State: APjAAAUwptlVBo3ibXyGPQBoLa9j7B8dDIxHk+vY//R2fPlg3n4eb7cJ
-        /7S7DlhgrU0VOHpBFGDoA23jArkspRN/CA==
-X-Google-Smtp-Source: APXvYqw2WE686YgJnMy20sAO7EChA3SVffDbLz7izQuS0zaPQrJLMLpC02aph8zqhrT5WUFm6AgbLg==
-X-Received: by 2002:a17:90a:2506:: with SMTP id j6mr12202496pje.129.1561713397767;
-        Fri, 28 Jun 2019 02:16:37 -0700 (PDT)
+        bh=ZHPOoRqSRjVm8Jf/89G0zJiwwNRFSrQP8sanvOv03zc=;
+        b=lvwy7IJVyqoWnBMP8+jsMSunZf//4Tfpx6LwN5wgegaaevudM8VRgsUkBQnoRpurfN
+         UEKEZrwpYiPjF9PxL7BGdO9jfE5bwPabXEfGeMihJ8wT44EA81TUfgtBOAJb4uQazwzO
+         8H5A/zxFjlBZKLXr2p/KH9IdwNc0XSbquKptilFBGV9/8Zw/037TFuomnz6uqCRjBM8M
+         5meNrkuTlCseH6YHqZiy2zEws7Y7F9PrLRNwXdzlb17O1ga58RttcfbQVGnaBqIt0V/4
+         ueVum/ZI9UG5YrLVh/TOVe4TeRv69EKSUxuRERZ56ALA8ah5T8jLJFyu4sjLTvdJPOoM
+         hqFw==
+X-Gm-Message-State: APjAAAXBrScH35GlZzb6QtkpGpIN5CXLGr6pku+uqHTCZfeAOROJVXJ9
+        rPmiSxqRFKjEerNuUfPfvj8=
+X-Google-Smtp-Source: APXvYqwdoRWosNJuKkoyfBLiD4jXSfEUW9SeRK9iuJfgEozmXUCvER3d0Bq4T4RFqRod3IZqG/nmPg==
+X-Received: by 2002:a17:90a:8a15:: with SMTP id w21mr11937620pjn.134.1561713402212;
+        Fri, 28 Jun 2019 02:16:42 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id x65sm1754521pfd.139.2019.06.28.02.16.33
+        by smtp.gmail.com with ESMTPSA id x65sm1754521pfd.139.2019.06.28.02.16.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 02:16:37 -0700 (PDT)
+        Fri, 28 Jun 2019 02:16:41 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, linux-kernel@vger.kernel.org,
         longman@redhat.com, paulmck@linux.vnet.ibm.com,
         boqun.feng@gmail.com, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v3 12/30] locking/lockdep: Treat every lock dependency as in a new lock chain
-Date:   Fri, 28 Jun 2019 17:15:10 +0800
-Message-Id: <20190628091528.17059-13-duyuyang@gmail.com>
+Subject: [PATCH v3 13/30] locking/lockdep: Combine lock_lists in struct lock_class into an array
+Date:   Fri, 28 Jun 2019 17:15:11 +0800
+Message-Id: <20190628091528.17059-14-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190628091528.17059-1-duyuyang@gmail.com>
 References: <20190628091528.17059-1-duyuyang@gmail.com>
@@ -76,308 +76,234 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For a lock chain that has a lock on top of a trylock or a multiple of
-consecutive trylocks, if they are in the same context, we check each
-prev trylock -> next and the first prev non-trylock -> next lock
-dependency, illustrated as:
+We are going to combine forward dependency lock_lists and backward
+dependency lock_lists. Combing locks_before and locks_after lists, this
+patch makes the code after all this a bit clearer.
 
-    (The top is the latest lock.)
-
-    Lock1
-    Trylock2
-    Trylock3
-    Lock4
-    ...
-
-If the prev lock is not the direct previous lock to next (e.g., Trylock3
-and Lock4), this dependency may not have a lock chain associated with
-it. IOW, we may never make a lock chain, but the chain is actually
-checked in such circumstances. This patch fixes this by treating each
-such depdnency as if it is from a new lock chain. If the chain already
-exists, then this is a chain hit and the check is actually not needed.
-
-After this, it is guarantteed that each dependency has at least a lock
-chain associated with it.
+No functional change.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 223 +++++++++++++++++++++++------------------------
- 1 file changed, 108 insertions(+), 115 deletions(-)
+ include/linux/lockdep.h       |  6 ++---
+ kernel/locking/lockdep.c      | 63 +++++++++++++++++++------------------------
+ kernel/locking/lockdep_proc.c |  2 +-
+ 3 files changed, 32 insertions(+), 39 deletions(-)
 
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 5e0a1a9..62eba72 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -92,10 +92,10 @@ struct lock_class {
+ 
+ 	/*
+ 	 * These fields represent a directed graph of lock dependencies,
+-	 * to every node we attach a list of "forward" and a list of
+-	 * "backward" graph nodes.
++	 * to every node we attach a list of "forward" graph nodes
++	 * @dep_list[1] and a list of "backward" graph nodes @dep_list[0].
+ 	 */
+-	struct list_head		locks_after, locks_before;
++	struct list_head		dep_list[2];
+ 
+ 	struct lockdep_subclass_key	*key;
+ 	unsigned int			subclass;
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 5d19dc6..6f457ef 100644
+index 6f457ef..39210a4 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -1207,6 +1207,11 @@ static bool is_dynamic_key(const struct lock_class_key *key)
+@@ -833,8 +833,7 @@ static bool in_list(struct list_head *e, struct list_head *h)
  }
  
- #ifdef CONFIG_PROVE_LOCKING
-+static inline struct
-+lock_chain *lookup_chain_cache_add(struct task_struct *curr,
-+				   struct held_lock *hlock,
-+				   u64 chain_key, int depth);
-+
  /*
-  * Allocate a lockdep entry. (assumes the graph_lock held, returns
-  * with NULL on failure)
-@@ -2432,87 +2437,6 @@ static inline void inc_chains(void)
- 	return 2;
- }
- 
--/*
-- * Add the dependency to all directly-previous locks that are 'relevant'.
-- * The ones that are relevant are (in increasing distance from curr):
-- * all consecutive trylock entries and the final non-trylock entry - or
-- * the end of this context's lock-chain - whichever comes first.
-- */
--static int
--check_prevs_add(struct task_struct *curr, struct held_lock *next,
--		struct lock_chain *chain)
--{
--	struct lock_trace trace = { .nr_entries = 0 };
--	int depth = curr->lockdep_depth;
--	struct held_lock *hlock;
--
--	/*
--	 * Debugging checks.
--	 *
--	 * Depth must not be zero for a non-head lock:
--	 */
--	if (!depth)
--		goto out_bug;
--	/*
--	 * At least two relevant locks must exist for this
--	 * to be a head:
--	 */
--	if (curr->held_locks[depth].irq_context !=
--			curr->held_locks[depth-1].irq_context)
--		goto out_bug;
--
--	for (;;) {
--		int distance = curr->lockdep_depth - depth + 1;
--		hlock = curr->held_locks + depth - 1;
--
--		/*
--		 * Only non-recursive-read entries get new dependencies
--		 * added:
--		 */
--		if (hlock->read != 2 && hlock->check) {
--			int ret = check_prev_add(curr, hlock, next, distance,
--						 &trace, chain);
--			if (!ret)
--				return 0;
--
--			/*
--			 * Stop after the first non-trylock entry,
--			 * as non-trylock entries have added their
--			 * own direct dependencies already, so this
--			 * lock is connected to them indirectly:
--			 */
--			if (!hlock->trylock)
--				break;
--		}
--
--		depth--;
--		/*
--		 * End of lock-stack?
--		 */
--		if (!depth)
--			break;
--		/*
--		 * Stop the search if we cross into another context:
--		 */
--		if (curr->held_locks[depth].irq_context !=
--				curr->held_locks[depth-1].irq_context)
--			break;
--	}
--	return 1;
--out_bug:
--	if (!debug_locks_off_graph_unlock())
--		return 0;
--
--	/*
--	 * Clearly we all shouldn't be here, but since we made it we
--	 * can reliable say we messed up our state. See the above two
--	 * gotos for reasons why we could possibly end up here.
--	 */
--	WARN_ON(1);
--
--	return 0;
--}
--
- struct lock_chain lock_chains[MAX_LOCKDEP_CHAINS];
- static DECLARE_BITMAP(lock_chains_in_use, MAX_LOCKDEP_CHAINS);
- int nr_chain_hlocks;
-@@ -2810,66 +2734,135 @@ static inline struct lock_chain *lookup_chain_cache(u64 chain_key)
- 	return add_chain_cache(curr, hlock, chain_key, depth);
- }
- 
--static int validate_chain(struct task_struct *curr, struct held_lock *hlock,
-+/*
-+ * Check whether last held lock:
-+ *
-+ * - is irq-safe, if this lock is irq-unsafe
-+ * - is softirq-safe, if this lock is hardirq-unsafe
-+ *
-+ * And check whether the new lock's dependency graph could lead back to the
-+ * previous lock:
-+ *
-+ * - within the current held-lock stack or
-+ * - across our accumulated lock dependency graph
-+ *
-+ * any of these scenarios could lead to a deadlock.
-+ */
-+static int validate_chain(struct task_struct *curr, struct held_lock *next,
- 			  u64 chain_key)
+- * Check whether entry @e occurs in any of the locks_after or locks_before
+- * lists.
++ * Check whether entry @e occurs in any of the dep lists.
+  */
+ static bool in_any_class_list(struct list_head *e)
  {
- 	struct lock_chain *chain;
-+	struct lock_trace trace = { .nr_entries = 0 };
-+	struct held_lock *hlock;
-+	int depth = curr->lockdep_depth;
-+
- 	/*
- 	 * Trylock needs to maintain the stack of held locks, but it
--	 * does not add new dependencies, because trylock can be done
--	 * in any order.
--	 *
-+	 * does not add new dependencies unless it is taken, because
-+	 * attempting to acquire a trylock does not block.
-+	 */
-+	if (next->trylock || !next->check)
-+		return 1;
-+
-+	/*
-+	 * Add the dependency to all previous locks that are 'relevant'. The
-+	 * ones that are relevant are (in increasing distance from next lock
-+	 * to acquire): all consecutive trylock entries and the final
-+	 * non-trylock entry - or the end of this context's lock-chain
-+	 * - whichever comes first.
-+	 */
-+chain_again:
-+	hlock = curr->held_locks + depth - 1;
-+
-+	/*
- 	 * We look up the chain_key and do the O(N^2) check and update of
--	 * the dependencies only if this is a new dependency chain.
--	 * (If lookup_chain_cache_add() return with 1 it acquires
--	 * graph_lock for us)
-+	 * the dependencies only if this is a new dependency chain. (If
-+	 * lookup_chain_cache_add() return with 1 it acquires graph_lock for
-+	 * us.)
- 	 */
--	if (!hlock->trylock && hlock->check &&
--	    (chain = lookup_chain_cache_add(curr, hlock, chain_key,
--					    curr->lockdep_depth))) {
--		/*
--		 * Check whether last held lock:
--		 *
--		 * - is irq-safe, if this lock is irq-unsafe
--		 * - is softirq-safe, if this lock is hardirq-unsafe
--		 *
--		 * And check whether the new lock's dependency graph
--		 * could lead back to the previous lock:
--		 *
--		 * - within the current held-lock stack
--		 * - across our accumulated lock dependency records
--		 *
--		 * any of these scenarios could lead to a deadlock.
--		 */
-+	chain = lookup_chain_cache_add(curr, next, chain_key, depth);
-+	if (depth == curr->lockdep_depth) {
-+		int ret;
-+
-+		if (!chain)
-+			return 1;
- 		/*
- 		 * The simple case: does the current hold the same lock
- 		 * already?
- 		 */
--		int ret = check_deadlock_current(curr, hlock);
-+		ret = check_deadlock_current(curr, next);
+@@ -843,8 +842,8 @@ static bool in_any_class_list(struct list_head *e)
  
- 		if (!ret)
- 			return 0;
- 		/*
--		 * Add dependency only if this lock is not the head
--		 * of the chain, and if it's not a secondary read-lock:
-+		 * Add dependency only if this lock is not the head of the
-+		 * chain, and if it's not a second recursive-read lock. If
-+		 * not, there is no need to check further.
- 		 */
--		if (chain->depth > 1 && ret != 2) {
--			if (!check_prevs_add(curr, hlock, chain))
-+		if (!(chain->depth > 1 && ret != 2))
-+			goto out_unlock;
-+	}
-+
-+	/*
-+	 * Only non-recursive-read entries get new dependencies
-+	 * added:
-+	 */
-+	if (chain) {
-+		if (hlock->read != 2 && hlock->check) {
-+			int distance = curr->lockdep_depth - depth + 1;
-+
-+			if (!check_prev_add(curr, hlock, next, distance,
-+					    &trace, chain))
- 				return 0;
- 		}
- 
- 		graph_unlock();
--	} else {
--		/* after lookup_chain_cache_add(): */
--		if (unlikely(!debug_locks))
--			return 0;
+ 	for (i = 0; i < ARRAY_SIZE(lock_classes); i++) {
+ 		class = &lock_classes[i];
+-		if (in_list(e, &class->locks_after) ||
+-		    in_list(e, &class->locks_before))
++		if (in_list(e, &class->dep_list[0]) ||
++		    in_list(e, &class->dep_list[1]))
+ 			return true;
+ 	}
+ 	return false;
+@@ -932,9 +931,9 @@ static bool __check_data_structures(void)
+ 	/* Check whether all classes have valid lock lists. */
+ 	for (i = 0; i < ARRAY_SIZE(lock_classes); i++) {
+ 		class = &lock_classes[i];
+-		if (!class_lock_list_valid(class, &class->locks_before))
++		if (!class_lock_list_valid(class, &class->dep_list[0]))
+ 			return false;
+-		if (!class_lock_list_valid(class, &class->locks_after))
++		if (!class_lock_list_valid(class, &class->dep_list[1]))
+ 			return false;
  	}
  
-+	/*
-+	 * Stop after the first non-trylock entry, as non-trylock entries
-+	 * have added their own direct dependencies already, so this lock is
-+	 * connected to them indirectly:
-+	 */
-+	if (!hlock->trylock)
-+		goto out;
-+
-+	depth--;
-+	/*
-+	 * End of lock-stack?
-+	 */
-+	if (!depth)
-+		goto out;
-+	/*
-+	 * Stop the search if we cross into another context:
-+	 */
-+	if (curr->held_locks[depth].irq_context !=
-+			curr->held_locks[depth-1].irq_context)
-+		goto out;
-+
-+	/*
-+	 * This is another direct dependency with a further previous lock
-+	 * that is separated by a trylock. We compose a lock chain out of
-+	 * this, then calculate the chain key, and look it up in the
-+	 * lock_chains. If it exists the check is actually not needed.
-+	 */
-+	chain_key = iterate_chain_key(hlock->prev_chain_key,
-+				      hlock_class(next) - lock_classes);
-+
-+	goto chain_again;
-+
-+out_unlock:
-+	graph_unlock();
-+out:
-+	/* after lookup_chain_cache_add(): */
-+	if (unlikely(!debug_locks))
-+		return 0;
-+
- 	return 1;
+@@ -1030,8 +1029,8 @@ static void init_data_structures_once(void)
+ 
+ 	for (i = 0; i < ARRAY_SIZE(lock_classes); i++) {
+ 		list_add_tail(&lock_classes[i].lock_entry, &free_lock_classes);
+-		INIT_LIST_HEAD(&lock_classes[i].locks_after);
+-		INIT_LIST_HEAD(&lock_classes[i].locks_before);
++		INIT_LIST_HEAD(&lock_classes[i].dep_list[0]);
++		INIT_LIST_HEAD(&lock_classes[i].dep_list[1]);
+ 	}
  }
- #else
- static inline int validate_chain(struct task_struct *curr,
--				 struct held_lock *hlock,
-+				 struct held_lock *next,
- 				 u64 chain_key)
+ 
+@@ -1160,8 +1159,8 @@ static bool is_dynamic_key(const struct lock_class_key *key)
+ 	class->key = key;
+ 	class->name = lock->name;
+ 	class->subclass = subclass;
+-	WARN_ON_ONCE(!list_empty(&class->locks_before));
+-	WARN_ON_ONCE(!list_empty(&class->locks_after));
++	WARN_ON_ONCE(!list_empty(&class->dep_list[0]));
++	WARN_ON_ONCE(!list_empty(&class->dep_list[1]));
+ 	class->name_version = count_matching_names(class);
+ 	/*
+ 	 * We use RCU's safe list-add method to make
+@@ -1380,15 +1379,14 @@ static inline int get_lock_depth(struct lock_list *child)
+ /*
+  * Return the forward or backward dependency list.
+  *
+- * @lock:   the lock_list to get its class's dependency list
+- * @offset: the offset to struct lock_class to determine whether it is
+- *          locks_after or locks_before
++ * @lock:    the lock_list to get its class's dependency list
++ * @forward: the forward dep list or backward dep list
+  */
+-static inline struct list_head *get_dep_list(struct lock_list *lock, int offset)
++static inline struct list_head *get_dep_list(struct lock_list *lock, int forward)
  {
- 	return 1;
+-	void *lock_class = lock->class;
++	struct lock_class *class = lock->class;
+ 
+-	return lock_class + offset;
++	return &class->dep_list[forward];
+ }
+ 
+ /*
+@@ -1398,8 +1396,7 @@ static inline struct list_head *get_dep_list(struct lock_list *lock, int offset)
+ static int __bfs(struct lock_list *source_entry,
+ 		 void *data,
+ 		 int (*match)(struct lock_list *entry, void *data),
+-		 struct lock_list **target_entry,
+-		 int offset)
++		 struct lock_list **target_entry, int forward)
+ {
+ 	struct lock_list *entry;
+ 	struct lock_list *lock;
+@@ -1413,7 +1410,7 @@ static int __bfs(struct lock_list *source_entry,
+ 		goto exit;
+ 	}
+ 
+-	head = get_dep_list(source_entry, offset);
++	head = get_dep_list(source_entry, forward);
+ 	if (list_empty(head))
+ 		goto exit;
+ 
+@@ -1427,7 +1424,7 @@ static int __bfs(struct lock_list *source_entry,
+ 			goto exit;
+ 		}
+ 
+-		head = get_dep_list(lock, offset);
++		head = get_dep_list(lock, forward);
+ 
+ 		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
+ 
+@@ -1460,9 +1457,7 @@ static inline int __bfs_forwards(struct lock_list *src_entry,
+ 			int (*match)(struct lock_list *entry, void *data),
+ 			struct lock_list **target_entry)
+ {
+-	return __bfs(src_entry, data, match, target_entry,
+-		     offsetof(struct lock_class, locks_after));
+-
++	return __bfs(src_entry, data, match, target_entry, 1);
+ }
+ 
+ static inline int __bfs_backwards(struct lock_list *src_entry,
+@@ -1470,9 +1465,7 @@ static inline int __bfs_backwards(struct lock_list *src_entry,
+ 			int (*match)(struct lock_list *entry, void *data),
+ 			struct lock_list **target_entry)
+ {
+-	return __bfs(src_entry, data, match, target_entry,
+-		     offsetof(struct lock_class, locks_before));
+-
++	return __bfs(src_entry, data, match, target_entry, 0);
+ }
+ 
+ static void print_lock_trace(struct lock_trace *trace, unsigned int spaces)
+@@ -2375,7 +2368,7 @@ static inline void inc_chains(void)
+ 	 *  chains - the second one will be new, but L1 already has
+ 	 *  L2 added to its dependency list, due to the first chain.)
+ 	 */
+-	list_for_each_entry(entry, &hlock_class(prev)->locks_after, entry) {
++	list_for_each_entry(entry, &hlock_class(prev)->dep_list[1], entry) {
+ 		if (entry->class == hlock_class(next)) {
+ 			debug_atomic_inc(nr_redundant);
+ 
+@@ -2422,14 +2415,14 @@ static inline void inc_chains(void)
+ 	 * to the previous lock's dependency list:
+ 	 */
+ 	ret = add_lock_to_list(hlock_class(next), hlock_class(prev),
+-			       &hlock_class(prev)->locks_after,
++			       &hlock_class(prev)->dep_list[1],
+ 			       next->acquire_ip, distance, trace);
+ 
+ 	if (!ret)
+ 		return 0;
+ 
+ 	ret = add_lock_to_list(hlock_class(prev), hlock_class(next),
+-			       &hlock_class(next)->locks_before,
++			       &hlock_class(next)->dep_list[0],
+ 			       next->acquire_ip, distance, trace);
+ 	if (!ret)
+ 		return 0;
+@@ -4740,8 +4733,8 @@ static void zap_class(struct pending_free *pf, struct lock_class *class)
+ 		nr_list_entries--;
+ 		list_del_rcu(&entry->entry);
+ 	}
+-	if (list_empty(&class->locks_after) &&
+-	    list_empty(&class->locks_before)) {
++	if (list_empty(&class->dep_list[0]) &&
++	    list_empty(&class->dep_list[1])) {
+ 		list_move_tail(&class->lock_entry, &pf->zapped);
+ 		hlist_del_rcu(&class->hash_entry);
+ 		WRITE_ONCE(class->key, NULL);
+@@ -4762,12 +4755,12 @@ static void reinit_class(struct lock_class *class)
+ 	const unsigned int offset = offsetof(struct lock_class, key);
+ 
+ 	WARN_ON_ONCE(!class->lock_entry.next);
+-	WARN_ON_ONCE(!list_empty(&class->locks_after));
+-	WARN_ON_ONCE(!list_empty(&class->locks_before));
++	WARN_ON_ONCE(!list_empty(&class->dep_list[0]));
++	WARN_ON_ONCE(!list_empty(&class->dep_list[1]));
+ 	memset(p + offset, 0, sizeof(*class) - offset);
+ 	WARN_ON_ONCE(!class->lock_entry.next);
+-	WARN_ON_ONCE(!list_empty(&class->locks_after));
+-	WARN_ON_ONCE(!list_empty(&class->locks_before));
++	WARN_ON_ONCE(!list_empty(&class->dep_list[0]));
++	WARN_ON_ONCE(!list_empty(&class->dep_list[1]));
+ }
+ 
+ static inline int within(const void *addr, void *start, unsigned long size)
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 58ed889..dc0dfae 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -82,7 +82,7 @@ static int l_show(struct seq_file *m, void *v)
+ 	print_name(m, class);
+ 	seq_puts(m, "\n");
+ 
+-	list_for_each_entry(entry, &class->locks_after, entry) {
++	list_for_each_entry(entry, &class->dep_list[1], entry) {
+ 		if (entry->distance == 1) {
+ 			seq_printf(m, " -> [%p] ", entry->class->key);
+ 			print_name(m, entry->class);
 -- 
 1.8.3.1
 
