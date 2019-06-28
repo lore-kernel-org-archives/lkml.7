@@ -2,153 +2,146 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97522C5B57B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00779C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759CF214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A60214DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Lb3lcQCJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kyTd38Qs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfF1Slj (ORCPT
+        id S1726785AbfF1So3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:41:39 -0400
-Received: from mail-eopbgr680096.outbound.protection.outlook.com ([40.107.68.96]:59556
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726497AbfF1Sli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:41:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fExCDPy2DRiTZAkM2VeUX6WX+vcLVkzEFrt6yAnj5bEkbLV/D1nwbyiOnNTM3htUHvVJvWmX/BObemY2qH3QEyyWJ+KDZUdBwZ9Ii+lR5bWFvvszfnxVephhe/wWT/jf97ElIBFXZK+rU4/nkLNVJqIszEYrW6tY/JlDcLUabrWhWEZOl5DQgj+8qKtzlRccym5uhaWBXj8OiFLuFjscN4IWqOIKbPULudow53u8+rMgT9jQTfsZsLUXPLpuMVek/frHdntTMJQvJksHSo8NM+FzZe4BwMYYYfUH7NVzaBBqXu+eT7cbTaKRDGFQJmoPt0jm4/fo57tQdPQ11psKVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mLwjYMi/BBolilHTYkIuishxYaJTpZbSDu6cNT6co3s=;
- b=bE45Itfz0p6WciEKE9dKPByIEds8lxtkHtBt9K0HzCUVlwlJV6JJlW74EC5Hj/9XOXqd8O02OvVhdnaDyBTFKplKPsl8D32VxGBieNbWS8Kfr8rj+ROazYfQOm3+383/ZSxJOZoD2zdK6oucVqONMoyg1FF6KECZ4dQk38jlTdWhiIpurYCZWeVxW/HuE6t9Zi7aPKzeE2mVl4leWB/anRtOPzC7aYRFxakuxbPF3BJpLs8FyqXJsQxs/rPnYfGFvpj0m9FxAuweMN/4C3pHZC2t4+3G/f73FeTzw5whMTTAA11dpwiN1FlelJCkmJtrGud1fRtqbt9kuWdJEdKnHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microsoft.com;dmarc=pass action=none
- header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mLwjYMi/BBolilHTYkIuishxYaJTpZbSDu6cNT6co3s=;
- b=Lb3lcQCJ12mg4HhBY+MWgt8+bXn6kYN3YYTjyBNCTiAgbP2JdUaHJMJoGcnMOKYU9uKqAIbElR3y439rl8mx1iOxlkXkrdBkedGSpOc0zzx7ztm6bhmE8RSoCmftKCUBaoGanmho9T6Q/o/zAincWfCG6a6KMn2afrurIySzyOA=
-Received: from BL0PR2101MB1348.namprd21.prod.outlook.com (20.177.244.150) by
- BL0PR2101MB0979.namprd21.prod.outlook.com (52.132.20.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.4; Fri, 28 Jun 2019 18:40:56 +0000
-Received: from BL0PR2101MB1348.namprd21.prod.outlook.com
- ([fe80::4814:2790:9342:9582]) by BL0PR2101MB1348.namprd21.prod.outlook.com
- ([fe80::4814:2790:9342:9582%2]) with mapi id 15.20.2052.005; Fri, 28 Jun 2019
- 18:40:56 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Sasha Levin <sashal@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: RE: [PATCH v6 18/19] x86: Add support for generic vDSO
-Thread-Topic: [PATCH v6 18/19] x86: Add support for generic vDSO
-Thread-Index: AQHVFvJX/FWqgsMYXUWDuWvrdwhvDKaDyyHwgBdL5YCAAKgjAIAMJX0AgAHb0oCAADMqgIAAGq6AgAAKXgCAB3oPIA==
-Date:   Fri, 28 Jun 2019 18:40:56 +0000
-Message-ID: <BL0PR2101MB1348C26A569D83E9D7BB03CDD7FC0@BL0PR2101MB1348.namprd21.prod.outlook.com>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-19-vincenzo.frascino@arm.com>
- <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
- <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
- <20190614211710.GQ1513@sasha-vm>
- <alpine.DEB.2.21.1906221542270.5503@nanos.tec.linutronix.de>
- <20190623190929.GL2226@sasha-vm>
- <alpine.DEB.2.21.1906240006090.32342@nanos.tec.linutronix.de>
- <BYAPR21MB135202F46C4B023B51EBBFD0D7E00@BYAPR21MB1352.namprd21.prod.outlook.com>
- <alpine.DEB.2.21.1906240221550.32342@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1906240221550.32342@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-28T18:40:54.3514619Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=12c4760d-43f5-416f-b56a-135069a968d4;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 70d38258-35d1-4317-571d-08d6fbf82869
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BL0PR2101MB0979;
-x-ms-traffictypediagnostic: BL0PR2101MB0979:
-x-microsoft-antispam-prvs: <BL0PR2101MB09791FE051D90F996EBA6326D7FC0@BL0PR2101MB0979.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 00826B6158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(136003)(39860400002)(396003)(366004)(189003)(199004)(4744005)(76116006)(4326008)(73956011)(446003)(10290500003)(478600001)(11346002)(5660300002)(68736007)(6246003)(71190400001)(71200400001)(33656002)(486006)(6436002)(25786009)(66066001)(99286004)(8990500004)(66476007)(14444005)(102836004)(256004)(66946007)(186003)(6916009)(7696005)(26005)(76176011)(54906003)(229853002)(6506007)(64756008)(66446008)(476003)(10090500001)(66556008)(86362001)(7736002)(305945005)(14454004)(74316002)(53936002)(52536014)(7416002)(316002)(2906002)(22452003)(9686003)(8676002)(8936002)(3846002)(6116002)(81156014)(81166006)(55016002)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB0979;H:BL0PR2101MB1348.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bHsin/NqNsXiytgX5zQnA258TkoJJuSoswu0uRaEiI76OTPz/cktBkMt7i6upscG7j3ppy/2eAT5Q4SUBudM8NoQFkxXW+8bpPN7vrDm01FgjR/2wNj7Gh/kJAlrHEF+vn7NnWOQeTFcBuOroI9fqO8yMd4FW3kDb4puD51K+E/GsmootqPGrRzbI5tF7gG69jxEhZVmiOvm4RlHmLMvCwkZ+52sTWzduP0VbuR1jw25SKAXuJTTz1jFJd4t61F4nsghE6+/GJgLvojhD/+CjxqWKma/UUiwhyCUDcShceWLSiOzyXL+7GqWf0t/94cTJ/XBN/dozmr/3Nd3uk0nECBwmtRdam7x19rimz56hLkfw6dd6WsRjhVlmyuGoLCS5bXyXJw6os/nG9CddCDuF8bJb7sQE6BhFRsDNgs91Lk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 28 Jun 2019 14:44:29 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40222 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfF1So2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 14:44:28 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a93so3726328pla.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:44:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8ICRQXbhD4k5gkrjYWUCNLpqdugrkLTq1Vx2puXpxxs=;
+        b=kyTd38QsGKQjnVXftWi5tvIU8gEX4QfDPHXjl2glvXlGxmewnXR5IyiY/vs9DGA4eL
+         Q5W+oAj/7vxEku7JV6mu94ySEnp/+5HfiegDcNR3j/zW06o8ZmzLYbTCbebcOhwfoq7r
+         8NrFCson333FPLaWIlwa8JBktz0/6zmtmLBxYHyYBSXfHPSmkan0UNgrGHZBxFRyom1s
+         BQFSkbyGOMuPgiNanY5LTmLFeLjmcomrV3iUcIFxZqKxKQ91Wk8pk/MF9tUqQuz0yD/O
+         Y2YASZ1ZRVzbd/e5LsnK/FTmsT3qy4UryEMwqMHsW4oyW38AmoxLNTJOOg8suGGi+L/9
+         Dk0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8ICRQXbhD4k5gkrjYWUCNLpqdugrkLTq1Vx2puXpxxs=;
+        b=XlOsadcm4K/ZV/RZBvByzILM1qRo3BvB1JjHjAihmvzNTHTc9vku70qOqs55fqVnC7
+         bIJ2kv9W5rk4dz0/4kj9i7k8S1shhTdyfPuYsF9RdyhIxdiZvv2wt+svCHuOCPspOy3E
+         q4j5PKCP1wLjXKAfYmmfO5BzA5xqQx9aLOGv7l0vmr9+74ANxcuHl7wE4vkMCRL0IQfM
+         5jB10pLVEOobeMNM8fBR0vua21lFW3+Feiea7cASDc0BUbb3fkPz5wGlyqNtwXjHdA6x
+         2vBHpX2+5y47QLAKpSwxWxlns6Hj8n/8z+tbvhRHr06vlK9X91IJw8uweLqRHumH5Imi
+         aJ3w==
+X-Gm-Message-State: APjAAAXHWq4mIy8g6zQhUMCk2STLh2+gZ0ThSw2DcrEBdSZulaGZ+/Gr
+        aV2OTxrukHkDM7bV+7kPhgeiSklTKPo9K5VIjaLeTg==
+X-Google-Smtp-Source: APXvYqyXUb2Iee3BoGT7w2f+SONO80weM4D3nGBR0kSNEFydLE7pEwcm21NfVhhvQac9AQ0TcVT+7adspWwoVd0GcTI=
+X-Received: by 2002:a17:902:9f93:: with SMTP id g19mr13121233plq.223.1561747467714;
+ Fri, 28 Jun 2019 11:44:27 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70d38258-35d1-4317-571d-08d6fbf82869
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 18:40:56.6446
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0979
+References: <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
+ <20190624203737.GL3436@hirez.programming.kicks-ass.net> <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
+ <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
+ <20190625071846.GN3436@hirez.programming.kicks-ass.net> <CANiq72=zzZ+Cx8uM+5UW7HeB9XtbXRhXmC2y2tz5EzPX77gHMw@mail.gmail.com>
+ <CAKwvOdn5j8Hkc_jrLMbhg-4jbNya+agtMJi=c9o01RPCno1Q+w@mail.gmail.com>
+ <20190626084927.GI3419@hirez.programming.kicks-ass.net> <CAKwvOdkp7qnwLGY2=TOx=FQa1k2hEkdi1PO+9GfZkTQEUh49Rg@mail.gmail.com>
+ <20190627071250.GZ3402@hirez.programming.kicks-ass.net> <20190628133105.GD3463@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190628133105.GD3463@hirez.programming.kicks-ass.net>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 28 Jun 2019 11:44:16 -0700
+Message-ID: <CAKwvOdkx+=Z5-Ov4CY6y+XhMCNWa35BBFUdQWgP49PBTLr-Erg@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Shawn Landden <shawn@git.icu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Chandler Carruth <chandlerc@google.com>,
+        Jann Horn <jannh@google.com>, Bill Wendling <morbo@google.com>,
+        Alexander Potapenko <glider@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de> Sent: Sunday, June 23, 2019 5:25=
- PM
->=20
-> I don't care whether this goes into 5.3 or later. If you can provide me
-> rebased self contained patches on top of
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/vdso
->=20
-> I'm happy to pull them in on top.
->=20
+On Fri, Jun 28, 2019 at 6:31 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Jun 27, 2019 at 09:12:50AM +0200, Peter Zijlstra wrote:
+>
+> > Josh came up with the following:
+> >
+> > +             /* If the jump target is close, do a 2-byte nop: */
+> > +             ".skip -(%l[l_yes] - 1b <= 126), 0x66\n"
+> > +             ".skip -(%l[l_yes] - 1b <= 126), 0x90\n"
+> > +             /* Otherwise do a 5-byte nop: */
+> > +             ".skip -(%l[l_yes] - 1b > 126), 0x0f\n"
+> > +             ".skip -(%l[l_yes] - 1b > 126), 0x1f\n"
+> > +             ".skip -(%l[l_yes] - 1b > 126), 0x44\n"
+> > +             ".skip -(%l[l_yes] - 1b > 126), 0x00\n"
+> > +             ".skip -(%l[l_yes] - 1b > 126), 0x00\n"
+> >
+> > Which is a wonderfully gruesome hack :-) So I'll be playing with that
+> > for a bit.
+>
+> For those with interest; full patches at:
+>
+>   https://lkml.kernel.org/r/20190628102113.360432762@infradead.org
 
-I've sent out "v4" of the patch set to create a Hyper-V clocksource, based
-on the above tree.  It is contained to Hyper-V code, plus updating a #inclu=
-de
-statement in two of the VDSO files and in one KVM file.  If the KVM file
-update is problematic, the patch set can just wait until 5.3-rc1.
+Do you have a branch pushed that I can pull this from to quickly test w/ Clang?
 
-Michael
+The .skip trick is wild; I don't quite understand the negation in the
+above or patch 8/8 for is_byte/is_long.
+
+Also, the comment on 8/8 about patching early hits home; we had a
+sign-extending-booleans bug that was causing the address calculation
+to be off by two.  Jann and Bill had to help me debug that one, and
+funnily enough Kees fixed it in LLVM.  Fetching exception frames out
+of early_idt_handler_common has been my most memorable kernel
+debugging experience to date, and hope I don't have to do that ever
+again.  Kees this week adjusted where arm64 does static_key enablement
+(moved it earlier for Alexander Potapenko's slab
+initialization/poisoning set).
+
+For the wrong __jump_table entry; I consider that a critical issue we
+need to fix before the clang-9 release.  I'm unloading my current
+responsibilities at work to be able to sit and focus on bug.  I'll
+probably start a new thread with you, tglx, Josh, and our mailing list
+next week (sorry for co-opting this thread).  I have been using
+creduce quite successfully for finding and fixing our previous codegen
+bugs (https://nickdesaulniers.github.io/blog/2019/01/18/finding-compiler-bugs-with-c-reduce/),
+but I need to sit and understand the precise failure more in order to
+reduce the input.  We can see pretty well where in the compilation
+pipeline things go wrong; I just find it hard to page through large
+inputs such as whole translation units.
+-- 
+Thanks,
+~Nick Desaulniers
