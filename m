@@ -2,63 +2,161 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FADDC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6E7C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62A2520645
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECFA205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfF1QTP (ORCPT
+        id S1726836AbfF1QWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:19:15 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:46952 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfF1QTO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:19:14 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B37B814E03857;
-        Fri, 28 Jun 2019 09:19:13 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 09:19:13 -0700 (PDT)
-Message-Id: <20190628.091913.1877817778159344419.davem@davemloft.net>
-To:     Jose.Abreu@synopsys.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Joao.Pinto@synopsys.com, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, sergei.shtylyov@cogentembedded.com
-Subject: Re: [PATCH net-next v2] net: stmmac: Fix case when PHY handle is
- not present
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <654cfe790807c6dfcc69c610c9692efb8c9a6179.1561706654.git.joabreu@synopsys.com>
-References: <654cfe790807c6dfcc69c610c9692efb8c9a6179.1561706654.git.joabreu@synopsys.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Fri, 28 Jun 2019 12:22:22 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:39208 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726667AbfF1QWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 12:22:22 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hgtdb-0000Xu-VQ; Fri, 28 Jun 2019 10:22:12 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190626065708.GB24531@lst.de>
+ <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+ <20190626202107.GA5850@ziepe.ca>
+ <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+ <20190626210018.GB6392@ziepe.ca>
+ <c25d3333-dcd5-3313-089b-7fbbd6fbd876@deltatee.com>
+ <20190627063223.GA7736@ziepe.ca>
+ <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
+ <20190627163504.GB9568@ziepe.ca>
+ <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
+ <20190628045705.GD3705@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
+Date:   Fri, 28 Jun 2019 10:22:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190628045705.GD3705@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 28 Jun 2019 09:19:14 -0700 (PDT)
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Date: Fri, 28 Jun 2019 09:25:07 +0200
 
-> Some DT bindings do not have the PHY handle. Let's fallback to manually
-> discovery in case phylink_of_phy_connect() fails.
-> 
-> Changes from v1:
-> 	- Fixup comment style (Sergei)
-> 
-> Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
-> Reported-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> Tested-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-Applied, thanks.
+On 2019-06-27 10:57 p.m., Jason Gunthorpe wrote:
+> On Thu, Jun 27, 2019 at 10:49:43AM -0600, Logan Gunthorpe wrote:
+> 
+>>> I don't think a GPU/FPGA driver will be involved, this would enter the
+>>> block layer through the O_DIRECT path or something generic.. This the
+>>> general flow I was suggesting to Dan earlier
+>>
+>> I would say the O_DIRECT path has to somehow call into the driver
+>> backing the VMA to get an address to appropriate memory (in some way
+>> vaguely similar to how we were discussing at LSF/MM)
+> 
+> Maybe, maybe no. For something like VFIO the PTE already has the
+> correct phys_addr_t and we don't need to do anything..
+> 
+> For DEVICE_PRIVATE we need to get the phys_addr_t out - presumably
+> through a new pagemap op?
+
+I don't know much about either VFIO or DEVICE_PRIVATE, but I'd still
+wager there would be a better way to handle it before they submit it to
+the block layer.
+
+>> If P2P can't be done at that point, then the provider driver would
+>> do the copy to system memory, in the most appropriate way, and
+>> return regular pages for O_DIRECT to submit to the block device.
+> 
+> That only makes sense for the migratable DEVICE_PRIVATE case, it
+> doesn't help the VFIO-like case, there you'd need to bounce buffer.
+> 
+>>>> I think it would be a larger layering violation to have the NVMe driver
+>>>> (for example) memcpy data off a GPU's bar during a dma_map step to
+>>>> support this bouncing. And it's even crazier to expect a DMA transfer to
+>>>> be setup in the map step.
+>>>
+>>> Why? Don't we already expect the DMA mapper to handle bouncing for
+>>> lots of cases, how is this case different? This is the best place to
+>>> place it to make it shared.
+>>
+>> This is different because it's special memory where the DMA mapper
+>> can't possibly know the best way to transfer the data.
+> 
+> Why not?  If we have a 'bar info' structure that could have data
+> transfer op callbacks, infact, I think we might already have similar
+> callbacks for migrating to/from DEVICE_PRIVATE memory with DMA..
+
+Well it could, in theory be done, but It just seems wrong to setup and
+wait for more DMA requests while we are in mid-progress setting up
+another DMA request. Especially when the block layer has historically
+had issues with stack sizes. It's also possible you might have multiple
+bio_vec's that have to each do a migration and with a hook here they'd
+have to be done serially.
+
+>> One could argue that the hook to the GPU/FPGA driver could be in the
+>> mapping step but then we'd have to do lookups based on an address --
+>> where as the VMA could more easily have a hook back to whatever driver
+>> exported it.
+> 
+> The trouble with a VMA hook is that it is only really avaiable when
+> working with the VA, and it is not actually available during GUP, you
+> have to have a GUP-like thing such as hmm_range_snapshot that is
+> specifically VMA based. And it is certainly not available during dma_map.
+
+Yup, I'm hoping some of the GUP cleanups will help with that but it's
+definitely a problem. I never said the VMA would be available at dma_map
+time nor would I want it to be. I expect it to be available before we
+submit the request to the block layer and it really only applies to the
+O_DIRECT path and maybe a similar thing in the RDMA path.
+
+> When working with VMA's/etc it seems there are some good reasons to
+> drive things off of the PTE content (either via struct page & pgmap or
+> via phys_addr_t & barmap)
+> 
+> I think the best reason to prefer a uniform phys_addr_t is that it
+> does give us the option to copy the data to/from CPU memory. That
+> option goes away as soon as the bio sometimes provides a dma_addr_t.
+
+Not really. phys_addr_t alone doesn't give us a way to copy data. You
+need a lookup table on that address and a couple of hooks.
+
+> At least for RDMA, we do have some cases (like siw/rxe, hfi) where
+> they sometimes need to do that copy. I suspect the block stack is
+> similar, in the general case.
+
+But the whole point of the use cases I'm trying to serve is to avoid the
+root complex. If the block layer randomly decides to ephemerally copy
+the data back to the CPU (for integrity or something) then we've
+accomplished nothing and shouldn't have put the data in the BAR to begin
+with. Similarly, for DEVICE_PRIVATE, I'd have guessed it wouldn't want
+to use ephemeral copies but actually migrate the memory semi-permanently
+to the CPU for more than one transaction and I would argue that it makes
+the most sense to make these decisions before the data gets to the block
+layer.
+
+Logan
