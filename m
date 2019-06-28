@@ -2,180 +2,168 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9931AC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA678C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DC5208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C7A208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:18:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1fXxgpa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qIXffgO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfF1JSA (ORCPT
+        id S1726892AbfF1JSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:18:00 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45109 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbfF1JR5 (ORCPT
+        Fri, 28 Jun 2019 05:18:18 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41314 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfF1JSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:17:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r1so2652661pfq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 02:17:56 -0700 (PDT)
+        Fri, 28 Jun 2019 05:18:18 -0400
+Received: by mail-ot1-f65.google.com with SMTP id o101so4985291ota.8;
+        Fri, 28 Jun 2019 02:18:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kx50gKxxvtisjg2F9jTuTtWq9FlFRr48sDE6Gi1A0+k=;
-        b=W1fXxgpa2QJmCiq0E/w5BYay+5rnTBm7AlUrJnOR69m2kZJVJTxibswftMXUZH9Nz9
-         2M5VerT/2/t9Hb/RwULHuBcwHXDD2K+yi0hZGhZdhlSfZXUKV+nPZgRccHQzfNt2n5j4
-         d7iwpNdXM1L52U3h+QJelMxmHL2TWk1AcKcM/NynCHSG7/B1OGG/g7zvzkgOkE3LQbmx
-         PASUcNdRlxAjVx13w7mZqxV/jXXXUAHeZdz/JO4mVTlY95AfNAlPsUhF/BH4nY8HFrvv
-         QSY2t7CO67m53JdmjfMd7jl22cpCRHDbFk42JBn5TbGn/YmHh43kKXnD1FqWQ2nSzLj/
-         VVOg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Wwb05O6HKmp/1+G1ivJzQDQ2IsQa1XZFAR/Po+4k1QA=;
+        b=qIXffgO41fk3qz+GkeefZ8FzlqAD3+QBPcDfUGP/gv7zaLd4Bc6lYr+r8q2swc/p1O
+         tFUMeUXh9ptGtZedwQcTH5gbD4jDsH1Vrkqt3f1p6WF0hPzrIE5VUOB1jDTN7rRiOECP
+         phPkVkzrbtYL2ms0yv8mwz585niK0g2D3ik+RuOetz767alBYAbSJBB3JyBDk9aIiN15
+         3pVJmf62/dQ6i5hGglixp5mlQTNEoHdNy+F7aHAcFmAfxDxEs+HPbjn2WXh0Qp+GJHqS
+         oDTmHPamP4LtiT3RkX+QVbPJrs9Xc4alCiM9Cpx8BPyDpjJDQJGjsN4j+FATnM3PWv9p
+         cAPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kx50gKxxvtisjg2F9jTuTtWq9FlFRr48sDE6Gi1A0+k=;
-        b=D1lIbfbUziaqVXFolZLhC21WLY9s0UfvIoJNdu7+2xOqa3JMyn5gYbIDHZoEbQ1Nd2
-         XFXtrCFn4khkLy0KKU6KS82fj9lN6zMLttL+WW90CC+G3Xsowiykalh6HhUiz2Crt8N/
-         e1iD3eOY9mPjkof/FcGlqPgFBbErszHX6aSEHrP6OnTL594d/BzIH1ojXuodj0EUTVco
-         VRplYVzuLQwRS4py0vNGFVye539QuF2FY1SIq4eEdwPdQArWFaJuKStRDTD8ALw97Egg
-         6M6BegUPpFYWNI5POm5RLylDZME3nfmxgsGElu9l7vZaJ19q4VkbA/2fJkNFjstV3a7o
-         Ygkg==
-X-Gm-Message-State: APjAAAVbkRpzrEwVNBv+Hw2bbQQVs8XEwvPWN3qc3W4zHD2IBr0UTiWq
-        2cDpdbUMX7+c0VY3yq4/vBs=
-X-Google-Smtp-Source: APXvYqyZ0TkA/PFv5rMHPnbFiMqpVk10f2MJQ4ofipgVEqOaxKvhOPTTdjBoxl8L8VbHB+puLEGxwQ==
-X-Received: by 2002:a63:6155:: with SMTP id v82mr8132865pgb.304.1561713476075;
-        Fri, 28 Jun 2019 02:17:56 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id x65sm1754521pfd.139.2019.06.28.02.17.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 02:17:55 -0700 (PDT)
-From:   Yuyang Du <duyuyang@gmail.com>
-To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        longman@redhat.com, paulmck@linux.vnet.ibm.com,
-        boqun.feng@gmail.com, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v3 30/30] locking/lockdep: Remove irq-safe to irq-unsafe read check
-Date:   Fri, 28 Jun 2019 17:15:28 +0800
-Message-Id: <20190628091528.17059-31-duyuyang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20190628091528.17059-1-duyuyang@gmail.com>
-References: <20190628091528.17059-1-duyuyang@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Wwb05O6HKmp/1+G1ivJzQDQ2IsQa1XZFAR/Po+4k1QA=;
+        b=GxitmF+AaY1adib4jbPiqHW66HCpXZb3YnVLSwsTtQB+Zt1x27s8hXwRzTmj+eMizt
+         b3ezYmY/W5Wm2nCAaDW7+2Gr2vGPtyqxpn8QtsgnvzpLqv4TL7qAcK0SGvz4bHFegsJ+
+         /05yzVRRLH+FBMBbfzEpdRGHLXanr718ZHub+XS4SZRr4l699FY/81N3Ajedz4SsOBoj
+         flNGpTV90dGMTjrTpBdnycft03vVXN0iAGj1yRoSXlGZjYlhGtRGxZG4ow81GVaPeBOl
+         F2nI01fcj8bVpyoJbEqmDamJUxXln/gDhBrFwH6MIfA84AlheqjRmv3cG//dTm+FOAgd
+         u8sA==
+X-Gm-Message-State: APjAAAVRLaFoqLb7RkoVO1k1JRSmITDDHG4eIu/HOiyZpu1fOOly4/2D
+        RNG1Kq14KqhLjG8GUkb0G7L2fsykgDnJ6Jz//YQ=
+X-Google-Smtp-Source: APXvYqy0OGiXB+dLsI0Yi0340De/J8CNrgd9i+tIQHNw+GNxFznYrfPBXkEyoQroku6QxDaPa2OloPqCZ6rtHzcIWd0=
+X-Received: by 2002:a9d:4590:: with SMTP id x16mr6707074ote.254.1561713497622;
+ Fri, 28 Jun 2019 02:18:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
+ <20190610143420.GA6594@flask> <20190611011100.GB24835@linux.intel.com>
+ <CANRm+Cwv5jqxBW=Ss5nkX7kZM3_Y-Ucs66yx5+wN09=W4pUdzA@mail.gmail.com>
+ <F136E492-5350-49EE-A856-FBAEDB12FF99@gmail.com> <CANRm+CyZcvuT80ixp9f0FNmjN+rTUtw8MshtBG0Uk4L1B1UjDw@mail.gmail.com>
+ <153047ED-75E2-4E70-BC33-C5FF27C08638@gmail.com> <CANRm+Cx6Z=jxLaXqwhBDpVTsKH8mgoo4iC=U8GbAAJz-5gk5ZA@mail.gmail.com>
+ <28BF5471-57E8-41FE-B401-D49D57D01A63@gmail.com> <CANRm+CwnShNXmDi7yCZNc=oWrmFO7BTQ-MHxd1f5LRV8+YMJEg@mail.gmail.com>
+In-Reply-To: <CANRm+CwnShNXmDi7yCZNc=oWrmFO7BTQ-MHxd1f5LRV8+YMJEg@mail.gmail.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 28 Jun 2019 17:18:06 +0800
+Message-ID: <CANRm+CyKx4uMkAe7maTg8nwBvkA7SCi2CnSwrghDs1nPuWNg5A@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
+To:     Nadav Amit <nadav.amit@gmail.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a lockdep warning:
+On Fri, 28 Jun 2019 at 17:12, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> On Wed, 12 Jun 2019 at 09:37, Nadav Amit <nadav.amit@gmail.com> wrote:
+> >
+> > > On Jun 11, 2019, at 6:18 PM, Wanpeng Li <kernellwp@gmail.com> wrote:
+> > >
+> > > On Wed, 12 Jun 2019 at 00:57, Nadav Amit <nadav.amit@gmail.com> wrote=
+:
+> > >>> On Jun 11, 2019, at 3:02 AM, Wanpeng Li <kernellwp@gmail.com> wrote=
+:
+> > >>>
+> > >>> On Tue, 11 Jun 2019 at 09:48, Nadav Amit <nadav.amit@gmail.com> wro=
+te:
+> > >>>>> On Jun 10, 2019, at 6:45 PM, Wanpeng Li <kernellwp@gmail.com> wro=
+te:
+> > >>>>>
+> > >>>>> On Tue, 11 Jun 2019 at 09:11, Sean Christopherson
+> > >>>>> <sean.j.christopherson@intel.com> wrote:
+> > >>>>>> On Mon, Jun 10, 2019 at 04:34:20PM +0200, Radim Kr=C4=8Dm=C3=A1=
+=C5=99 wrote:
+> > >>>>>>> 2019-05-30 09:05+0800, Wanpeng Li:
+> > >>>>>>>> The idea is from Xen, when sending a call-function IPI-many to=
+ vCPUs,
+> > >>>>>>>> yield if any of the IPI target vCPUs was preempted. 17% perfor=
+mance
+> > >>>>>>>> increasement of ebizzy benchmark can be observed in an over-su=
+bscribe
+> > >>>>>>>> environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-f=
+unction
+> > >>>>>>>> IPI-many since call-function is not easy to be trigged by user=
+space
+> > >>>>>>>> workload).
+> > >>>>>>>
+> > >>>>>>> Have you checked if we could gain performance by having the yie=
+ld as an
+> > >>>>>>> extension to our PV IPI call?
+> > >>>>>>>
+> > >>>>>>> It would allow us to skip the VM entry/exit overhead on the cal=
+ler.
+> > >>>>>>> (The benefit of that might be negligible and it also poses a
+> > >>>>>>> complication when splitting the target mask into several PV IPI
+> > >>>>>>> hypercalls.)
+> > >>>>>>
+> > >>>>>> Tangetially related to splitting PV IPI hypercalls, are there an=
+y major
+> > >>>>>> hurdles to supporting shorthand?  Not having to generate the mas=
+k for
+> > >>>>>> ->send_IPI_allbutself and ->kvm_send_ipi_all seems like an easy =
+to way
+> > >>>>>> shave cycles for affected flows.
+> > >>>>>
+> > >>>>> Not sure why shorthand is not used for native x2apic mode.
+> > >>>>
+> > >>>> Why do you say so? native_send_call_func_ipi() checks if allbutsel=
+f
+> > >>>> shorthand should be used and does so (even though the check can be=
+ more
+> > >>>> efficient - I=E2=80=99m looking at that code right now=E2=80=A6)
+> > >>>
+> > >>> Please continue to follow the apic/x2apic driver. Just apic_flat se=
+t
+> > >>> APIC_DEST_ALLBUT/APIC_DEST_ALLINC to ICR.
+> > >>
+> > >> Indeed - I was sure by the name that it does it correctly. That=E2=
+=80=99s stupid.
+> > >>
+> > >> I=E2=80=99ll add it to the patch-set I am working on (TLB shootdown =
+improvements),
+> > >> if you don=E2=80=99t mind.
+> > >
+> > > Original for hotplug cpu safe.
+> > > https://lwn.net/Articles/138365/
+> > > https://lwn.net/Articles/138368/
+> > > Not sure shortcut native support is acceptable, I will play my
+> > > kvm_send_ipi_allbutself and kvm_send_ipi_all. :)
+> >
+> > Yes, I saw these threads before. But I think the test in
+> > native_send_call_func_ipi() should take care of it.
+>
+> Good news, https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/lo=
+g/?h=3DWIP.x86/ipi
+> Thomas who also is the hotplug state machine author introduces
+> shorthands support to native kernel now, I will add the support to
+> kvm_send_ipi_allbutself() and kvm_send_ipi_all() after his work
+> complete.
 
-  ========================================================
-  WARNING: possible irq lock inversion dependency detected
-  5.1.0-rc7+ #141 Not tainted
-  --------------------------------------------------------
-  kworker/8:2/328 just changed the state of lock:
-  0000000007f1a95b (&(&host->lock)->rlock){-...}, at: ata_bmdma_interrupt+0x27/0x1c0 [libata]
-  but this lock took another, HARDIRQ-READ-unsafe lock in the past:
-   (&trig->leddev_list_lock){.+.?}
+Hmm, should fallback to native shorthands when support.
 
-and interrupts could create inverse lock ordering between them.
-
-other info that might help us debug this:
-   Possible interrupt unsafe locking scenario:
-
-         CPU0                    CPU1
-         ----                    ----
-    lock(&trig->leddev_list_lock);
-                                 local_irq_disable();
-                                 lock(&(&host->lock)->rlock);
-                                 lock(&trig->leddev_list_lock);
-    <Interrupt>
-      lock(&(&host->lock)->rlock);
-
- *** DEADLOCK ***
-
-This splat is a false positive, which is enabled by the addition of
-recursive read locks in the graph. Specifically, trig->leddev_list_lock is a
-rwlock_t type, which was not in the graph before recursive read lock support
-was added in lockdep.
-
-This false positve is caused by a "false-positive" check in IRQ usage check.
-
-In mark_lock_irq(), the following checks are currently performed:
-
-   ----------------------------------
-  |   ->      | unsafe | read unsafe |
-  |----------------------------------|
-  | safe      |  F  B  |    F* B*    |
-  |----------------------------------|
-  | read safe |  F* B* |      -      |
-   ----------------------------------
-
-Where:
-F: check_usage_forwards
-B: check_usage_backwards
-*: check enabled by STRICT_READ_CHECKS
-
-But actually the safe -> unsafe read dependency does not create a deadlock
-scenario.
-
-Fix this by simply removing those two checks, and since safe read -> unsafe
-is indeed a problem, these checks are not actually strict per se, so remove
-the macro STRICT_READ_CHECKS, and we have the following checks:
-
-   ----------------------------------
-  |   ->      | unsafe | read unsafe |
-  |----------------------------------|
-  | safe      |  F  B  |      -      |
-  |----------------------------------|
-  | read safe |  F  B  |      -      |
-   ----------------------------------
-
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
----
- kernel/locking/lockdep.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index c7ba647..d12ab0e 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3558,8 +3558,6 @@ static int SOFTIRQ_verbose(struct lock_class *class)
- 	return 0;
- }
- 
--#define STRICT_READ_CHECKS	1
--
- static int (*state_verbose_f[])(struct lock_class *class) = {
- #define LOCKDEP_STATE(__STATE) \
- 	__STATE##_verbose,
-@@ -3605,7 +3603,7 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
- 	 * Validate that the lock dependencies don't have conflicting usage
- 	 * states.
- 	 */
--	if ((!read || STRICT_READ_CHECKS) &&
-+	if ((!read || !dir) &&
- 			!usage(curr, this, excl_bit, state_name(new_bit & ~LOCK_USAGE_READ_MASK)))
- 		return 0;
- 
-@@ -3616,7 +3614,7 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
- 		if (!valid_state(curr, this, new_bit, excl_bit + LOCK_USAGE_READ_MASK))
- 			return 0;
- 
--		if (STRICT_READ_CHECKS &&
-+		if (dir &&
- 			!usage(curr, this, excl_bit + LOCK_USAGE_READ_MASK,
- 				state_name(new_bit + LOCK_USAGE_READ_MASK)))
- 			return 0;
--- 
-1.8.3.1
-
+Regards,
+Wanpeng Li
