@@ -6,140 +6,146 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79999C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56D3C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9DB214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A2020828
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfF1PyK (ORCPT
+        id S1726942AbfF1Pyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:54:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10960 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726830AbfF1PyK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:54:10 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SFqZJj080249
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:54:09 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdk9dfeng-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:54:09 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 28 Jun 2019 16:54:08 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Jun 2019 16:54:05 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SFs47D21365184
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 15:54:04 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2671BB2068;
-        Fri, 28 Jun 2019 15:54:04 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08788B205F;
-        Fri, 28 Jun 2019 15:54:04 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Jun 2019 15:54:03 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 8A3F716C39B7; Fri, 28 Jun 2019 08:54:04 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 08:54:04 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Scott Wood <swood@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Reply-To: paulmck@linux.ibm.com
-References: <20190627103455.01014276@gandalf.local.home>
- <20190627153031.GA249127@google.com>
- <20190627155506.GU26519@linux.ibm.com>
- <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
- <20190627203612.GD26519@linux.ibm.com>
- <20190628141522.GF3402@hirez.programming.kicks-ass.net>
+        Fri, 28 Jun 2019 11:54:47 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:38384 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726686AbfF1Pyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:54:47 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hgtCs-0008QY-EA; Fri, 28 Jun 2019 09:54:35 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190625170115.GA9746@lst.de>
+ <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+ <20190626065708.GB24531@lst.de>
+ <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+ <20190626202107.GA5850@ziepe.ca>
+ <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+ <20190627090843.GB11548@lst.de>
+ <89889319-e778-7772-ab36-dc55b59826be@deltatee.com>
+ <20190627170027.GE10652@lst.de>
+ <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
+ <20190628133837.GA3801@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <10b2b013-5b2e-f642-9524-9551809c03a3@deltatee.com>
+Date:   Fri, 28 Jun 2019 09:54:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628141522.GF3402@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062815-0052-0000-0000-000003D810D5
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011347; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01224538; UDB=6.00644510; IPR=6.01005731;
- MB=3.00027509; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-28 15:54:07
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062815-0053-0000-0000-0000617E8289
-Message-Id: <20190628155404.GV26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=961 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906280183
+In-Reply-To: <20190628133837.GA3801@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 04:15:22PM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 27, 2019 at 01:36:12PM -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 27, 2019 at 03:17:27PM -0500, Scott Wood wrote:
-> > > On Thu, 2019-06-27 at 11:41 -0700, Paul E. McKenney wrote:
-> > > > On Thu, Jun 27, 2019 at 02:16:38PM -0400, Joel Fernandes wrote:
-> > > > > 
-> > > > > I think the fix should be to prevent the wake-up not based on whether we
-> > > > > are
-> > > > > in hard/soft-interrupt mode but that we are doing the rcu_read_unlock()
-> > > > > from
-> > > > > a scheduler path (if we can detect that)
-> > > > 
-> > > > Or just don't do the wakeup at all, if it comes to that.  I don't know
-> > > > of any way to determine whether rcu_read_unlock() is being called from
-> > > > the scheduler, but it has been some time since I asked Peter Zijlstra
-> > > > about that.
-> > > > 
-> > > > Of course, unconditionally refusing to do the wakeup might not be happy
-> > > > thing for NO_HZ_FULL kernels that don't implement IRQ work.
-> > > 
-> > > Couldn't smp_send_reschedule() be used instead?
-> > 
-> > Good point.  If current -rcu doesn't fix things for Sebastian's case,
-> > that would be well worth looking at.  But there must be some reason
-> > why Peter Zijlstra didn't suggest it when he instead suggested using
-> > the IRQ work approach.
-> > 
-> > Peter, thoughts?
-> 
-> I've not exactly kept up with the thread; but irq_work allows you to run
-> some actual code on the remote CPU which is often useful and it is only
-> a little more expensive than smp_send_reschedule().
-> 
-> Also, just smp_send_reschedule() doesn't really do anything without
-> first poking TIF_NEED_RESCHED (or other scheduler state) and if you want
-> to do both, there's other helpers you should use, like resched_cpu().
 
-Thank you!  Plus it looks like scheduler_ipi() takes an early exit if
-->wake_list is empty, regardless of TIF_NEED_RESCHED, right?
 
-							Thanx, Paul
+On 2019-06-28 7:38 a.m., Christoph Hellwig wrote:
+> On Thu, Jun 27, 2019 at 12:00:35PM -0600, Logan Gunthorpe wrote:
+>>> It is not.  (c) is fundamentally very different as it is not actually
+>>> an operation that ever goes out to the wire at all, and which is why the
+>>> actual physical address on the wire does not matter at all.
+>>> Some interfaces like NVMe have designed it in a way that it the commands
+>>> used to do this internal transfer look like (b2), but that is just their
+>>> (IMHO very questionable) interface design choice, that produces a whole
+>>> chain of problems.
+>>
+>> >From the mapping device's driver's perspective yes, but from the
+>> perspective of a submitting driver they would be the same.
+> 
+> With your dma_addr_t scheme it won't be the same, as you'd need
+> a magic way to generate the internal addressing and stuff it into
+> the dma_addr_t.  With a phys_addr_t based scheme they should basically
+> be all the same.
+
+Yes, I see the folly in the dma_addr_t scheme now. I like the
+phys_addr_t ideas we have been discussing.
+
+>> Yes, you did suggest them. But what I'm trying to suggest is we don't
+>> *necessarily* need the lookup. For demonstration purposes only, a
+>> submitting driver could very roughly potentially do:
+>>
+>> struct bio_vec vec;
+>> dist = pci_p2pdma_dist(provider_pdev, mapping_pdev);
+>> if (dist < 0) {
+>>      /* use regular memory */
+>>      vec.bv_addr = virt_to_phys(kmalloc(...));
+>>      vec.bv_flags = 0;
+>> } else if (dist & PCI_P2PDMA_THRU_HOST_BRIDGE) {
+>>      vec.bv_addr = pci_p2pmem_alloc_phys(provider_pdev, ...);
+>>      vec.bv_flags = BVEC_MAP_RESOURCE;
+>> } else {
+>>      vec.bv_addr = pci_p2pmem_alloc_bus_addr(provider_pdev, ...);
+>>      vec.bv_flags = BVEC_MAP_BUS_ADDR;
+>> }
+> 
+> That doesn't look too bad, except..
+> 
+>> -- And a mapping driver would roughly just do:
+>>
+>> dma_addr_t dma_addr;
+>> if (vec.bv_flags & BVEC_MAP_BUS_ADDR) {
+>>      if (pci_bus_addr_in_bar(mapping_pdev, vec.bv_addr, &bar, &off))  {
+>>           /* case (c) */
+>>           /* program the DMA engine with bar and off */
+> 
+> Why bother with that here if we could also let the caller handle
+> that? pci_p2pdma_dist() should be able to trivially find that out
+> based on provider_dev == mapping_dev.
+
+True, in fact pci_p2pdma_dist() should return 0 in that case.
+
+Though the driver will still have to do a range compare to figure out
+which BAR the address belongs to and find the offset.
+
+>> The real difficulty here is that you'd really want all the above handled
+>> by a dma_map_bvec() so it can combine every vector hitting the IOMMU
+>> into a single continuous IOVA -- but it's hard to fit case (c) into that
+>> equation. So it might be that a dma_map_bvec() handles cases (a), (b1)
+>> and (b2) and the mapping driver has to then check each resulting DMA
+>> vector for pci_bus_addr_in_bar() while it is programming the DMA engine
+>> to deal with case (c).
+> 
+> I'd do it the other way around.  pci_p2pdma_dist is used to find
+> the p2p type.  The p2p type is stuff into the bio_vec, and we then:
+> 
+>  (1) manually check for case (c) in driver for drivers that want to
+>      treat it different from (b)
+>  (2) we then have a dma mapping wrapper that checks the p2p type
+>      and does the right thing for the rest.
+
+Sure, that could make sense.
+
+I imagine there's a lot of details that are wrong or could be done
+better in my example. The purpose of it was just to demonstrate that we
+can do it without a lookup in an interval tree on the physical address.
+
+Logan
 
