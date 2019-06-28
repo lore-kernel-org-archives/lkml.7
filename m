@@ -2,139 +2,430 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB027C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7593C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B48F205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:48:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="MS3nJFuQ"
+	by mail.kernel.org (Postfix) with ESMTP id A9EB2208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfF1Jsn (ORCPT
+        id S1726616AbfF1JvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:48:43 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:6601 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbfF1Jsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:48:42 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45ZsQt4qzzz9v0wQ;
-        Fri, 28 Jun 2019 11:48:38 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=MS3nJFuQ; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id pZl8gME9hagL; Fri, 28 Jun 2019 11:48:38 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45ZsQt3hYvz9v0wP;
-        Fri, 28 Jun 2019 11:48:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1561715318; bh=WnV7UDb4Snu6Dal6gfhwWBwcbdeIzVY+ODIk60JqE8U=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=MS3nJFuQi4Hf5KytCdDPMJmuQIqksXtUv+pid9Fl/u0KJYekztCou460LJG5gykDi
-         W0Vg4NLAUntrhH3cTTCNfxD8RqTqB2eq1t9hBt3Cvfhtk44yuE1Q/jnMoowZgyadGh
-         e0lyr+rsJsM77xp5aZK7bDQEcJSoyrnZzOb0oqME=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9CEA88B967;
-        Fri, 28 Jun 2019 11:48:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id pmeNiNUhoS-G; Fri, 28 Jun 2019 11:48:39 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 19CB48B966;
-        Fri, 28 Jun 2019 11:48:38 +0200 (CEST)
-Subject: Re: [PATCH v2 27/27] sound: ppc: remove unneeded memset after
- dma_alloc_coherent
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
+        Fri, 28 Jun 2019 05:51:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34811 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfF1JvN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 05:51:13 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1hgnWd-0008O2-IS; Fri, 28 Jun 2019 11:50:35 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, Allison Randal <allison@lohutok.net>
-References: <20190628025055.16242-1-huangfq.daxian@gmail.com>
- <83108dee-72f7-e56f-95f6-26162c9a0ccc@c-s.fr>
- <CABXRUiT6jSP2xL9JyqngS9KBx_=fZ13x0UGGFPnQPrfh-_N5xQ@mail.gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <ae51454e-68b1-bc82-8d8f-dbc273166dc3@c-s.fr>
-Date:   Fri, 28 Jun 2019 11:48:37 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer implementation
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+        <20190607162349.18199-2-john.ogness@linutronix.de>
+        <20190618114747.GQ3436@hirez.programming.kicks-ass.net>
+        <87k1df28x4.fsf@linutronix.de>
+        <20190626224034.GK2490@worktop.programming.kicks-ass.net>
+Date:   Fri, 28 Jun 2019 11:50:33 +0200
+Message-ID: <87mui2ujh2.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CABXRUiT6jSP2xL9JyqngS9KBx_=fZ13x0UGGFPnQPrfh-_N5xQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-06-27, Peter Zijlstra <peterz@infradead.org> wrote:
+>> This is a long response, but we are getting into some fine details
+>> about the memory barriers (as well as battling my communication skill
+>> level).
+>
+> So I'm going to reply piecewise to this... so not such long emails,
+> but more of them.
 
+I am not sure if I should wait to respond until you've finished going
+through the full patch. I will respond to this email and if you would
+like me to wait on further responses, just let me know. Thanks.
 
-Le 28/06/2019 à 11:11, Fuqian Huang a écrit :
-> The merge commit log tells (dma-mapping: zero memory returned from
-> dma_alloc_* and deprecating the dma_zalloc_coherent).
-> I used this commit just want to say that dma_alloc_coherent  has
-> zeroed the allocated memory.
-> Sorry for this mistake.
-> 
-> Maybe this commit 518a2f1925c3("dma-mapping: zero memory returned from
-> dma_alloc_*") is correct.
-
-Yes that looks appropriate. And it confirms it was already done on 
-powerpc, as that patch doesn't include any change in powerpc arch.
-
-Christophe
-
-> 
-> Christophe Leroy <christophe.leroy@c-s.fr> 於 2019年6月28日週五 下午4:59寫道：
-> 
->>
->>
->>
->> Le 28/06/2019 à 04:50, Fuqian Huang a écrit :
->>> In commit af7ddd8a627c
->>> ("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
->>> dma_alloc_coherent has already zeroed the memory.
->>> So memset is not needed.
->>
->> You are refering to a merge commit, is that correct ?
->>
->> I can't see anything related in that commit, can you please pinpoint it ?
->>
->> As far as I can see, on powerpc the memory has always been zeroized
->> (since 2005 at least).
->>
->> Christophe
->>
+>>>> +static void add_descr_list(struct prb_reserved_entry *e)
+>>>> +{
+>>>> +	struct printk_ringbuffer *rb = e->rb;
+>>>> +	struct prb_list *l = &rb->descr_list;
+>>>> +	struct prb_descr *d = e->descr;
+>>>> +	struct prb_descr *newest_d;
+>>>> +	unsigned long newest_id;
+>>>> +
+>>>> +	/* set as newest */
+>>>> +	do {
+>>>> +		/* MB5: synchronize add descr */
+>>>> +		newest_id = smp_load_acquire(&l->newest);
+>>>> +		newest_d = TO_DESCR(rb, newest_id);
+>>>> +
+>>>> +		if (newest_id == EOL)
+>>>> +			WRITE_ONCE(d->seq, 1);
+>>>> +		else
+>>>> +			WRITE_ONCE(d->seq, READ_ONCE(newest_d->seq) + 1);
+>>>> +		/*
+>>>> +		 * MB5: synchronize add descr
+>>>> +		 *
+>>>> +		 * In particular: next written before cmpxchg
+>>>> +		 */
+>>>> +	} while (cmpxchg_release(&l->newest, newest_id, e->id) != newest_id);
 >>>
->>> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
->>> ---
->>>    sound/ppc/pmac.c | 1 -
->>>    1 file changed, 1 deletion(-)
->>>
->>> diff --git a/sound/ppc/pmac.c b/sound/ppc/pmac.c
->>> index 1b11e53f6a62..1ab12f4f8631 100644
->>> --- a/sound/ppc/pmac.c
->>> +++ b/sound/ppc/pmac.c
->>> @@ -56,7 +56,6 @@ static int snd_pmac_dbdma_alloc(struct snd_pmac *chip, struct pmac_dbdma *rec, i
->>>        if (rec->space == NULL)
->>>                return -ENOMEM;
->>>        rec->size = size;
->>> -     memset(rec->space, 0, rsize);
->>>        rec->cmds = (void __iomem *)DBDMA_ALIGN(rec->space);
->>>        rec->addr = rec->dma_base + (unsigned long)((char *)rec->cmds - (char *)rec->space);
->>>
->>>
+>>> What does this pair with? I find ->newest usage in:
+>> 
+>> It is pairing with the smp_load_acquire() at the beginning of this
+>> loop (also labeled MB5) that is running simultaneously on another
+>> CPU. I am avoiding a possible situation that a new descriptor is
+>> added but the store of "next" from the previous descriptor is not yet
+>> visible and thus the cmpxchg following will fail, which is not
+>> allowed. (Note that "next" is set to EOL shortly before this function
+>> is called.)
+>> 
+>> The litmus test for this is:
+>> 
+>> P0(int *newest, int *d_next)
+>> {
+>>         // set descr->next to EOL (terminates list)
+>>         WRITE_ONCE(*d_next, 1);
+>> 
+>>         // set descr as newest
+>>         smp_store_release(*newest, 1);
+>> }
+>> 
+>> P1(int *newest, int *d_next)
+>> {
+>>         int local_newest;
+>>         int local_next;
+>> 
+>>         // get newest descriptor
+>>         local_newest = smp_load_acquire(*newest);
+>> 
+>>         // a new descriptor is set as the newest
+>>         // (not relevant here)
+>> 
+>>         // read descr->next of previous newest
+>>         // (must be EOL!)
+>>         local_next = READ_ONCE(*d_next);
+>> }
+>> 
+>> exists (1:local_newest=1 /\ 1:local_next=0)
+>
+> I'm having trouble connecting your P1's READ_ONCE() to the actual
+> code. You say that is in the same function, but I cannot find a LOAD
+> there that would care about the ACQUIRE.
+
+P1's READ_ONCE() is the READ part of the cmpxchg a few lines below:
+
+                WARN_ON_ONCE(cmpxchg_release(&newest_d->next,
+                                             EOL, e->id) != EOL);
+
+Note that the cmpxchg is a _release because of MB6 (a different memory
+barrier pair). But only the READ part of that cmpxchg synchronizes with
+MB5.
+
+Also note that cmpxchg is used only because of bug checking. If instead
+it becomes a blind store (such as you suggest below), then it changes to
+smp_store_release().
+
+While investigating this (and the lack of a LOAD), I realized that the
+smp_load_acquire() is not needed because @seq is dependent on the load
+of @newest. I have implemented and tested these changes. I also added
+setting the list terminator to this function, since all callers would
+have to do it anyway. Also, I spent a lot of time trying to put in
+comments that I think are _understandable_ and _acceptable_.
+
+@Peter: I expect they are way too long for you.
+
+@Andrea: Is this starting to become something that you would like to
+see?
+
+/**
+ * add_descr_list() - Add a descriptor to the descriptor list.
+ *
+ * @e: An entry that has already reserved data.
+ *
+ * The provided entry contains a pointer to a descriptor that has already
+ * been reserved for this entry. However, the reserved descriptor is not
+ * yet on the list. Add this descriptor as the newest item.
+ *
+ * A descriptor is added in two steps. The first step is to make this
+ * descriptor the newest. The second step is to update @next of the former
+ * newest descriptor to point to this one (or set @oldest to this one if
+ * this will be the first descriptor on the list).
+ */
+static void add_descr_list(struct prb_reserved_entry *e)
+{
+	struct printk_ringbuffer *rb = e->rb;
+	struct prb_list *l = &rb->descr_list;
+	struct prb_descr *d = e->descr;
+	struct prb_descr *newest_d;
+	unsigned long newest_id;
+
+	WRITE_ONCE(d->next, EOL);
+
+	do {
+		newest_id = READ_ONCE(l->newest);
+		newest_d = TO_DESC(rb, newest_id);
+
+		if (newest_id == EOL) {
+			WRITE_ONCE(d->seq, 1);
+		} else {
+			/*
+			 * MB5-read: synchronize setting newest descr
+			 *
+			 * context-pair: 2 writers adding a descriptor via
+			 * add_descr_list().
+			 *
+			 * @newest will load before @seq due to a data
+			 * dependency, therefore, the stores of @seq
+			 * and @next from the pairing MB5-write context
+			 * will be visible.
+			 *
+			 * Although @next is not loaded by this context,
+			 * this context must overwrite the stored @next
+			 * value of the pairing MB5-write context.
+			 */
+			WRITE_ONCE(d->seq, READ_ONCE(newest_d->seq) + 1);
+		}
+
+		/*
+		 * MB5-write: synchronize setting newest descr
+		 *
+		 * context-pair: 2 writers adding a descriptor via
+		 * add_descr_list().
+		 *
+		 * Ensure that @next and @seq are stored before @d is
+		 * visible via @newest. The pairing MB5-read context
+		 * must load this @seq value and must overwrite this
+		 * @next value.
+		 */
+	} while (cmpxchg_release(&l->newest, newest_id, e->id) != newest_id);
+
+	if (unlikely(newest_id == EOL)) {
+		/*
+		 * MB0-write: synchronize adding first descr
+		 *
+		 * context-pair: 1 writer adding the first descriptor via
+		 * add_descr_list(), 1 reader getting the beginning of
+		 * the list via iter_peek_next_id().
+		 *
+		 * This context recently assigned new values for @id,
+		 * @next, @seq. Ensure these are stored before the first
+		 * store to @oldest so that the new values are visible
+		 * to the reader in the pairing MB0-read context.
+		 *
+		 * Note: Before this store, the value of @oldest is EOL.
+		 */
+		smp_store_release(&l->oldest, e->id);
+	} else {
+		/*
+		 * MB6-write: synchronize linking new descr
+		 *
+		 * context-pair-1: 1 writer adding a descriptor via
+		 * add_descr_list(), 1 writer removing a descriptor via
+		 * remove_oldest_descr().
+		 *
+		 * If this is a recycled descriptor, this context
+		 * recently stored a new @oldest value. Ensure that
+		 * @oldest is stored before storing @next so that
+		 * if the pairing MB6-read context sees a non-EOL
+		 * @next value, it is ensured that it will also see
+		 * an updated @oldest value.
+		 *
+		 * context-pair-2: 1 writer adding a descriptor via
+		 * add_descr_list(), 1 reader iterating the list via
+		 * prb_iter_next_valid_entry().
+		 *
+		 * This context recently assigned new values for @id,
+		 * @next, @seq, @data, @data_next. Ensure these are
+		 * stored before storing @next of the previously
+		 * newest descriptor so that the new values are
+		 * visible to the iterating reader in the pairing
+		 * MB6-read context.
+		 *
+		 * Note: Before this store, the value of @next of the
+		 * previously newest descriptor is EOL.
+		 */
+		smp_store_release(&newest_d->next, e->id);
+	}
+}
+
+The smp_rmb() calls in the reader functions are then commented and
+marked with the appropriate MB0-read and MB6-read labels.
+
+> Afaict prb_list is a list head not a list node (calling it just _list
+> is confusing at best).
+
+OK.
+
+> You have a single linked list going from the tail to the head, while
+> adding to the head and removing from the tail. And that sounds like a
+> FIFO queue:
+
+Yes, but with one important feature: the nodes in the FIFO queue are
+labeled with ordered sequence numbers. This is important for printk. I
+talk more about this below.
+
+> 	struct lqueue_head {
+> 		struct lqueue_node *head, *tail;
+> 	};
+>
+> 	struct lqueue_node {
+> 		struct lqueue_node *next;
+> 	};
+>
+> 	void lqueue_push(struct lqueue_head *h, struct lqueue_node *n)
+> 	{
+> 		struct lqueue_node *prev;
+>
+> 		n->next = NULL;
+
+Is this safe? Do all compilers understand that @next must be stored
+before the xchg() of @head? I would have chosen WRITE_ONCE().
+
+> 		/*
+> 		 * xchg() implies RELEASE; and thereby ensures @n is
+> 		 * complete before getting published.
+> 		 */
+> 		prev = xchg(&h->head, n);
+
+Unfortunately it is not that simple because of sequence numbers. A node
+must be assigned a sequence number that is +1 of the previous node. This
+must be done before exchanging the head because immediately after the
+xchg() on the head, another CPU could then add on to us and expects our
+sequence number to already be set.
+
+This is why I need cmpxchg() here.
+
+> 		/*
+> 		 * xchg() implies ACQUIRE; and thereby ensures @tail is
+> 		 * written after @head, see lqueue_pop()'s smp_rmb().
+> 		 */
+> 		if (prev)
+> 			WRITE_ONCE(prev->next, n);
+
+This needs to be a store_release() so that a reader cannot read @n but
+the store to @next is not yet visible. The memory barriers of the above
+xchg() do not apply here because readers never read @head.
+
+> 		else
+> 			WRITE_ONCE(h->tail, n);
+
+Ditto, but for the tail node in particular.
+
+> 	}
+>
+> 	struct lqueue_node *lqueue_pop(struct lqueue_head *h)
+> 	{
+> 		struct lqueue_node *head, *tail, *next;
+>
+> 		do {
+> 			tail = READ_ONCE(h->tail);
+> 			/* If the list is empty, nothing to remove. */
+> 			if (!tail)
+> 				return NULL;
+>
+> 			/*
+> 			 * If we see @tail, we must then also see @head.
+> 			 * Pairs with the xchg() in lqueue_push(),
+> 			 * ensure no false positive on the singleton
+> 			 * test below.
+> 			 */
+> 			smp_rmb();
+> 			head = READ_ONCE(h->head);
+>
+> 			/* If there is but one item; fail to remove. */
+> 			if (head == tail)
+> 				return NULL;
+>
+> 			next = smp_cond_load_relaxed(&tail->next, VAL);
+
+What if a writer is adding a 2nd node to the queue and is interrupted by
+an NMI directly after the xchg() in lqueue_push()? Then we have:
+
+    * head != tail
+    * tail->next == NULL
+
+If that interrupting NMI calls lqueue_pop(), the NMI will spin
+forever. The following cmpxchg() is not allowed to happen as long as
+tail->next is NULL.
+
+This is why I synchronize on @next instead, using (tail && !tail->next)
+for the singleton test.
+
+> 		} while (cmpxchg(h->tail, tail, next) != tail);
+>
+> 		return tail;
+> 	}
+>
+> Now, you appear to be using desc_ids instead of pointers, but since
+> you're not using the actual wrap value; I don't see the benefit of
+> using those IDs over straight pointers.
+
+The documentation mentions that descriptor ids are used to identify
+pointers to invalid descriptors. This is used by the readers, see
+iter_peek_next_id() and prb_iter_next_valid_entry().
+
+IDs are used for:
+
+- @next of descriptors on the list
+- @id, @id_next in the reader iterator
+- @id in the data blocks
+
+If changed to pointers, iterators would need to additionally store @seq
+values to be able to identifiy if the entry they are pointing to is the
+entry they expect.
+
+The only advantage I see with pointers is that the ringbuffer could be
+more useful generally, independent of whether the data is separate or
+within the nodes or if the nodes are statically or dynamically
+allocated. That is something worth having, even if it is not printk
+related.
+
+Are you implicitly requesting me to split the prb_ringbuffer and instead
+base it on a new "lockless multi-writer multi-reader sequenced FIFO
+queue" data structure?
+
+> That is, unless I've overlooked some subtle ABA issue, but then, your
+> code doesn't seem to mention that, and I think we're good because if
+> we re-use an entry, it can never get back in the same location, since
+> we never allow an empty list
+
+I do not understand what you mean here. If a reader has a pointer to an
+entry, the entry behind that pointer can certainly change. But that
+isn't a problem. The reader will recognize that.
+
+> (might also be fixable, haven't tought too hard on this).
+
+:-)
+
+> That said, the above has cmpxchg() vs WRITE_ONCE() and is therefore
+> not safe on a number of our architectures. We can either not care
+> about performance and use xchg() for the ->tail store, or use
+> atomic_long_t and suffer ugly casting.
+
+cmpxchg_release() vs WRITE_ONCE() is not safe?! Can you point me to
+documentation about this?
+
+> But the above is, IMO, a more useful and readable abstraction. Let me
+> continue in another email (probably tomorrow).
+
+Thank you for taking the time for this.
+
+John Ogness
