@@ -2,117 +2,104 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF05C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAFEC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832592086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:01:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vvNL9fbJ"
+	by mail.kernel.org (Postfix) with ESMTP id C95ED2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:03:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfF1GBn (ORCPT
+        id S1727116AbfF1GDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 02:01:43 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34562 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbfF1GBm (ORCPT
+        Fri, 28 Jun 2019 02:03:39 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:53484 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbfF1GDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 02:01:42 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so2623808plt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 23:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yPRaQJzmFQwYi8hosJXjNAPxaw+qeTsDk1d+L2uAT1Q=;
-        b=vvNL9fbJcjLCGE94UWKp38ok8N+6iZufXNYCef+hRYEt93VhjGYVeKaRdM9GFD0kq5
-         /fTAzVWftSGRxWLvIiQf0tEwg7U4Mg2PAXVQyVIBmnSB2eO0Mvl3jq1wg7cvLF844thv
-         cwA/XYaRACYItx2RywEjMnWdNCJV8fMJSSIgsjnTiZWsICUaHkFztJsRNVxtTvyJn5fq
-         EkQxIQ7yqinxpgFe9RfhZkChUKYaAQyXeCMDcPD0hZ0uSWkb2unPMoaeDDbKx33qhn4m
-         3sitMlJ2o/JTlsEHUBVmNpqoNA6tt79R8WgiXArCix4nvxu+S9XZVtdQ6gxEJWAenFg8
-         zpkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yPRaQJzmFQwYi8hosJXjNAPxaw+qeTsDk1d+L2uAT1Q=;
-        b=QqR7hlFQ5FrdutPKFS2tPHkwFTSV/aEWpPiO0velkABkLRDfMhM89ANj0k6/4S5Syi
-         erUHSDkSttNbaaqN6ilTQXK+I2sykIJRJXwDtiR2C0aYPvIqdY8IZbe2rseymuoojl4n
-         KqTbK1koIPr4lOQEvQuyeuS2U+3wGSe94si9eyec1cbjt17LrRU9X4xB9V4A6nL81M2T
-         03CwEOwPRYT7zmNz038SL+HNX8JNGevgDYbc+v2FtGt/DJ62KvM5nGwiwWx/ke2UO4GJ
-         LzPlTOiH2UY6/wabOkVmZdkqT88BYuRXeJieZ5wQszaoOayWxjHZc14bAP+RtBdghmUq
-         IKNQ==
-X-Gm-Message-State: APjAAAW0zvHTeija193a3bGSkBy/XT+v/sggotTf3oN1jZ0rnWwNq2Ge
-        IIr0uN5pTGnZSJH8/dpM/wc56g==
-X-Google-Smtp-Source: APXvYqzbAhcap8BbHfMDCoOkrOvthmGqMacGqdcSZfyzVyXrEL6joFCpneO3Qz+XBoTszEuWTC1xEA==
-X-Received: by 2002:a17:902:8490:: with SMTP id c16mr9620055plo.1.1561701702042;
-        Thu, 27 Jun 2019 23:01:42 -0700 (PDT)
-Received: from localhost ([122.172.211.128])
-        by smtp.gmail.com with ESMTPSA id c9sm975912pfn.3.2019.06.27.23.01.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 23:01:41 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 11:31:39 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     rjw@rjwysocki.net, edubezval@gmail.com,
-        linux-kernel@vger.kernel.org,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Keerthy <j-keerthy@ti.com>,
-        "open list:THERMAL/CPU_COOLING" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:TI BANDGAP AND THERMAL DRIVER" 
-        <linux-omap@vger.kernel.org>
-Subject: Re: [PATCH V4 3/3] thermal/drivers/cpu_cooling:
- cpufreq_cooling_register returns an int
-Message-ID: <20190628060139.czridjqrblu2ufjj@vireshk-i7>
-References: <20190627210209.32600-1-daniel.lezcano@linaro.org>
- <20190627210209.32600-3-daniel.lezcano@linaro.org>
+        Fri, 28 Jun 2019 02:03:39 -0400
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+        by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x5S63GbX015888
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Thu, 27 Jun 2019 23:03:16 -0700 (PDT)
+Received: from [128.224.162.221] (128.224.162.221) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 27 Jun
+ 2019 23:03:16 -0700
+Subject: Re: [PATCH] netfilter: Fix remainder of pseudo-header protocol 0
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+CC:     <kadlec@blackhole.kfki.hu>, <fw@strlen.de>, <davem@davemloft.net>,
+        <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1561346258-272481-1-git-send-email-zhe.he@windriver.com>
+ <20190627184903.atdcwk4wnfaayyer@salvia>
+From:   He Zhe <zhe.he@windriver.com>
+Message-ID: <aafd41fb-b58e-a402-c8fe-5eeffc7a7755@windriver.com>
+Date:   Fri, 28 Jun 2019 14:03:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627210209.32600-3-daniel.lezcano@linaro.org>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190627184903.atdcwk4wnfaayyer@salvia>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [128.224.162.221]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-06-19, 23:02, Daniel Lezcano wrote:
-> It looks like after the changes in the patch the only reason for
-> returning (struct thermal_cooling_device *) from
-> cpufreq_cooling_register() is error checking, but it would be much
-> more straightforward to return int for this purpose.
-> 
-> Moreover, that would prevent the callers of it from doing incorrect
-> things with the returned pointers (like using it to unregister the
-> cooling device).
-> 
-> Replace the returned value an integer instead of a pointer to a
-> thermal cooling device structure.
-> 
-> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  drivers/thermal/cpu_cooling.c                 | 63 +++++++++----------
->  drivers/thermal/imx_thermal.c                 |  6 +-
->  .../ti-soc-thermal/ti-thermal-common.c        |  7 +--
->  include/linux/cpu_cooling.h                   | 16 ++---
->  4 files changed, 40 insertions(+), 52 deletions(-)
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
--- 
-viresh
+On 6/28/19 2:49 AM, Pablo Neira Ayuso wrote:
+> On Mon, Jun 24, 2019 at 11:17:38AM +0800, zhe.he@windriver.com wrote:
+>> From: He Zhe <zhe.he@windriver.com>
+>>
+>> Since v5.1-rc1, some types of packets do not get unreachable reply with the
+>> following iptables setting. Fox example,
+>>
+>> $ iptables -A INPUT -p icmp --icmp-type 8 -j REJECT
+>> $ ping 127.0.0.1 -c 1
+>> PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+>> — 127.0.0.1 ping statistics —
+>> 1 packets transmitted, 0 received, 100% packet loss, time 0ms
+>>
+>> We should have got the following reply from command line, but we did not.
+>> From 127.0.0.1 icmp_seq=1 Destination Port Unreachable
+>>
+>> Yi Zhao reported it and narrowed it down to:
+>> 7fc38225363d ("netfilter: reject: skip csum verification for protocols that don't support it"),
+>>
+>> This is because nf_ip_checksum still expects pseudo-header protocol type 0 for
+>> packets that are of neither TCP or UDP, and thus ICMP packets are mistakenly
+>> treated as TCP/UDP.
+>>
+>> This patch corrects the conditions in nf_ip_checksum and all other places that
+>> still call it with protocol 0.
+> Looking at 7fc38225363dd8f19e667ad7c77b63bc4a5c065d, I wonder this can
+> be fixed while simplifying it...
+>
+> I think nf_reject_verify_csum() is useless?
+>
+> In your patch, now you explicitly check for IPPROTO_TCP and
+> IPPROTO_UDP to validate the checksum.
+
+Thanks for your review.
+
+I suppose the two main points of 7fc38225363d are valid and I was trying to
+align with them and fix them:
+1) Skip csum verification for protocols that don't support it.
+2) Remove the protocol 0 used to indicate non-TCP/UDP packets, and use actual
+   types instead to be clear.
+
+1) uses nf_reject_verify_csum to skip those that should be skipped and leaves
+the protocols that support csum to the rest of the logic including
+nf_ip_checksum. But 2) removes the "0" transition from the rest of the
+logic and thus causes this issue. So I add the explicit check against TCP/UDP to
+nf_ip_checksum. And nf_reject_verify_csum is still useful.
+
+Zhe
+
+>
+
