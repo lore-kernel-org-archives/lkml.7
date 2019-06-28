@@ -2,101 +2,127 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CEFC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C65EC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAF862070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379462070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfF1G4n convert rfc822-to-8bit (ORCPT
+        id S1727275AbfF1G6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 02:56:43 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:36860 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbfF1G4n (ORCPT
+        Fri, 28 Jun 2019 02:58:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26414 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726719AbfF1G6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 02:56:43 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 7C8296089331;
-        Fri, 28 Jun 2019 08:56:41 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id CklqlVsz2Y-i; Fri, 28 Jun 2019 08:56:41 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 2CA096089332;
-        Fri, 28 Jun 2019 08:56:41 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id KBjp4V1tNdXd; Fri, 28 Jun 2019 08:56:41 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 00C1F6089331;
-        Fri, 28 Jun 2019 08:56:40 +0200 (CEST)
-Date:   Fri, 28 Jun 2019 08:56:40 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <1264454795.19263.1561705000880.JavaMail.zimbra@nod.at>
-In-Reply-To: <20190627174101.4291-1-huangfq.daxian@gmail.com>
-References: <20190627174101.4291-1-huangfq.daxian@gmail.com>
-Subject: Re: [PATCH 44/87] fs: jffs2: replace kmalloc and memset with
- kzalloc
+        Fri, 28 Jun 2019 02:58:11 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5S6vl7F063789
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 02:58:10 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tdba1e27w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 02:58:09 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Fri, 28 Jun 2019 07:58:08 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 28 Jun 2019 07:58:05 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5S6w4J825166148
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 06:58:04 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8B3C1A4054;
+        Fri, 28 Jun 2019 06:58:04 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F9A9A405B;
+        Fri, 28 Jun 2019 06:58:03 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Fri, 28 Jun 2019 06:58:02 +0000 (GMT)
+Date:   Fri, 28 Jun 2019 06:58:02 +0000
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH RESEND v3] sched/isolation: Prefer housekeeping cpu in
+ local node
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <1561682593-12071-1-git-send-email-wanpengli@tencent.com>
+ <1561682593-12071-2-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
-Thread-Topic: jffs2: replace kmalloc and memset with kzalloc
-Thread-Index: /mS+4pTDjR7Av4sfrwGnQFfj/xIdQQ==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <1561682593-12071-2-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19062806-0012-0000-0000-0000032D4AF3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062806-0013-0000-0000-000021668BCF
+Message-Id: <20190628065802.GA27699@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906280079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
-> Von: "Fuqian Huang" <huangfq.daxian@gmail.com>
-> CC: "Fuqian Huang" <huangfq.daxian@gmail.com>, "David Woodhouse" <dwmw2@infradead.org>, "richard" <richard@nod.at>,
-> "linux-mtd" <linux-mtd@lists.infradead.org>, "linux-kernel" <linux-kernel@vger.kernel.org>
-> Gesendet: Donnerstag, 27. Juni 2019 19:41:00
-> Betreff: [PATCH 44/87] fs: jffs2: replace kmalloc and memset with kzalloc
+* Wanpeng Li <kernellwp@gmail.com> [2019-06-28 08:43:13]:
 
-> kmalloc + memset(0) -> kzalloc
-> 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> ---
-> fs/jffs2/erase.c | 4 +---
-> 1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/fs/jffs2/erase.c b/fs/jffs2/erase.c
-> index 83b8f06b4a64..30c4385c6545 100644
-> --- a/fs/jffs2/erase.c
-> +++ b/fs/jffs2/erase.c
-> @@ -43,7 +43,7 @@ static void jffs2_erase_block(struct jffs2_sb_info *c,
-> 	jffs2_dbg(1, "%s(): erase block %#08x (range %#08x-%#08x)\n",
-> 		  __func__,
-> 		  jeb->offset, jeb->offset, jeb->offset + c->sector_size);
-> -	instr = kmalloc(sizeof(struct erase_info), GFP_KERNEL);
-> +	instr = kzalloc(sizeof(struct erase_info), GFP_KERNEL);
-> 	if (!instr) {
-> 		pr_warn("kmalloc for struct erase_info in jffs2_erase_block failed. Refiling
-> 		block for later\n");
 
-You missed this "kmalloc" instance. :-D
+>  
+> +/*
+> + * sched_numa_find_closest() - given the NUMA topology, find the cpu
+> + *                             closest to @cpu from @cpumask.
+> + * cpumask: cpumask to find a cpu from
+> + * cpu: cpu to be close to
+> + *
+> + * returns: cpu, or >= nr_cpu_ids when nothing found (or !NUMA).
 
-> 		mutex_lock(&c->erase_free_sem);
-> @@ -57,8 +57,6 @@ static void jffs2_erase_block(struct jffs2_sb_info *c,
-> 		return;
-> 	}
-> 
-> -	memset(instr, 0, sizeof(*instr));
-> -
-> 	instr->addr = jeb->offset;
-> 	instr->len = c->sector_size;
+One nit:
+I dont see sched_numa_find_closest returning anything greater than
+nr_cpu_ids. So 's/>= //' for the above comment.
 
-Thanks,
-//richard
+> + */
+> +int sched_numa_find_closest(const struct cpumask *cpus, int cpu)
+> +{
+> +#ifdef CONFIG_NUMA
+> +	int i, j = cpu_to_node(cpu);
+> +
+> +	for (i = 0; i < sched_domains_numa_levels; i++) {
+> +		cpu = cpumask_any_and(cpus, sched_domains_numa_masks[i][j]);
+> +		if (cpu < nr_cpu_ids)
+> +			return cpu;
+> +	}
+> +#endif
+> +	return nr_cpu_ids;
+> +}
+> +
+
+Should we have a static function for sched_numa_find_closest instead of
+having #ifdef in the function?
+
+>  static int __sdt_alloc(const struct cpumask *cpu_map)
+>  {
+>  	struct sched_domain_topology_level *tl;
+
+-- 
+Thanks and Regards
+Srikar Dronamraju
+
