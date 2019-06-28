@@ -2,124 +2,148 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFF5C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0618C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F762053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA58B208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:46:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9RTCSQn"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="s1ahvOzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfF1QnE (ORCPT
+        id S1726879AbfF1QqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:43:04 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46617 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfF1QnE (ORCPT
+        Fri, 28 Jun 2019 12:46:03 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36498 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfF1QqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:43:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id 65so4694210oid.13
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 09:43:04 -0700 (PDT)
+        Fri, 28 Jun 2019 12:46:02 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c13so2833756pgg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 09:46:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QFpm0UumsX4I37gj4rXPxQSbpBWGeOyG5IyhPSbjXkU=;
-        b=q9RTCSQnZxpTkNaRIo3OFvfTXF0T70elNpWwXG6dQojmPGV3ToN5VmSJp1wsOrc+16
-         41ha3a13CdvAhsI+OmoYnjkOHIyDRf/5yJBpD9LN0zcc8GNL0DadTGOCeo2t+smzWm/L
-         DvLfIYiSyc4GZ/0zur4lHkHXbRdSAvnJ+BF31t2AXTKqlrovWOxRgPnna+6dZbs/CLUc
-         vJvPJyLvid3Z/ATKqRbyhwl6/DFYYmp8zY3OnuhSV06DztcwHiJ5FvM+fR5FZqIzED4N
-         QpFKBe21HlFd/zae9hTsV+aMbgOCYN6Gji1xu7bnana2WAFvaxE9xUVnpdh8BhfS1XYw
-         5dVw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LAeW0vM39GC0KmaPFoxhW1ECWQ2nzJIxGxsqVk3ozU8=;
+        b=s1ahvOzzyovEDLX3qaJdoioW0tayuZCblu5PiB30XizYnRrPbobs+w6Kz10R8WYQa8
+         MF5wdtx7mdFAQz73jeEs79G1OqkX6UPmZ5kwnbkCFoFKZwn8tgoaZJQn5uo2w108KOMQ
+         sLrlY4NNgYXD/cW3remFZk6M8CdXyapZRGXiM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QFpm0UumsX4I37gj4rXPxQSbpBWGeOyG5IyhPSbjXkU=;
-        b=VKJVHlbvAIwloj56EMym18gGJf93+bFeYM7xdmMI1q9WGklo4ZSVkRF3IZNgBn1bLs
-         80jEJzMYzaheG+lCkWq7WLXBKkyxyKAdop+k0zIQz6iH9JI57tV1y72CW80/3mNGBRYV
-         WWGJhjFcAsMlLGIVy76poPRvIZ9uJM1jB6OJ2tw0RnFDBDgf6V31cquQ8tF4i2cmf8qA
-         N7AvTWx7VSaESMLafTEvk6s8z9bFi3J5afCq8MdEUIySNPVFYmS0fSIYZGP2gnKIiXMV
-         ALExKZ6w2uK30/aWoGzvLKkiaedtfFz9c62Ng9kiRAdmNpCCPE57WgekvUd95T+f30fH
-         /sDQ==
-X-Gm-Message-State: APjAAAXdbyWzFCHOedw3X4wWuSMfBPKpqM7PYLFsOfycYV5tAyKWl334
-        jBWY02HmqNs+2LPhJ+hBlI/mY/3KbJTPKOByMI8=
-X-Google-Smtp-Source: APXvYqyPz5KQWvD+eakc5Lbbg9Fv9cJ+JpDlnFXrqCXzg3AuNaADqkkNAfxo1NOd5rgX2ljaHm/mIqQDuVCP+JsY+FA=
-X-Received: by 2002:aca:c7c6:: with SMTP id x189mr2102706oif.4.1561740183467;
- Fri, 28 Jun 2019 09:43:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LAeW0vM39GC0KmaPFoxhW1ECWQ2nzJIxGxsqVk3ozU8=;
+        b=uJiwi+4Sf9zNFY/xCF4aL+FnED3Ytwutc7mVJWqbmdnAwA0e+jvsMNbn+scJRpZmo/
+         xGlHP1iQq+4OXhpiTY5cVzfAMnD3H4PfwClwBrJ08rLgPhmBaTR+EEcrkT+Y8cG0gSV5
+         Gxyhtd9Q9z3Fs0y6yq6HVp9RT+KLWA2uEr6fb9/odiMBswvke5Ah5JsZ5nzgfI946wcc
+         Bse636klAEfEHlAVVqtb4YuPWUy/9kHPCXwQMOk6dj7cVtN5AXQ2tuBUs9eHUdmtgfvR
+         0VfpKAq1H1dlmdoaJ5rVJ9FDastSdkHCmsJ+AHgkFpnliIEuS7ySR/adv9JQOEFQ2Mm3
+         7GoQ==
+X-Gm-Message-State: APjAAAVUo5ZDjVIy9P8rxFDXZuXo7YiCibo5r25loKWrgSwx/G9i62On
+        pFn6kkIvPPdr0k/L1Rv7+tsCng==
+X-Google-Smtp-Source: APXvYqw7KdGoTGxdx+l6Ql/QFa2Oy4oNmNSCqo+9DSf0VtsXpyaLtPevZfEYUq0F0F156OIse1TGvw==
+X-Received: by 2002:a17:90a:3463:: with SMTP id o90mr14704574pjb.15.1561740361965;
+        Fri, 28 Jun 2019 09:46:01 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id w16sm3545366pfj.85.2019.06.28.09.46.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 28 Jun 2019 09:46:01 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 12:45:59 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Message-ID: <20190628164559.GC240964@google.com>
+References: <20190626162558.GY26519@linux.ibm.com>
+ <20190627142436.GD215968@google.com>
+ <20190627103455.01014276@gandalf.local.home>
+ <20190627153031.GA249127@google.com>
+ <20190627155506.GU26519@linux.ibm.com>
+ <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
+ <20190627173831.GW26519@linux.ibm.com>
+ <20190627181638.GA209455@google.com>
+ <20190627184107.GA26519@linux.ibm.com>
+ <20190628164008.GB240964@google.com>
 MIME-Version: 1.0
-References: <156097935391.32250.14918304155094222078.malonedeb@chaenomeles.canonical.com>
- <156113479576.29306.8491703251507627705.malone@gac.canonical.com>
- <B0FDD5B2-EA6F-4ABC-8BF5-6231AA31EB70@canonical.com> <s5hh88a6pig.wl-tiwai@suse.de>
- <4E6239D9-3A70-4D66-9F88-453EB268DA2A@canonical.com>
-In-Reply-To: <4E6239D9-3A70-4D66-9F88-453EB268DA2A@canonical.com>
-From:   Connor McAdams <conmanx360@gmail.com>
-Date:   Fri, 28 Jun 2019 12:42:52 -0400
-Message-ID: <CAM8Agx0Mx+B3VeANVkO+3EZAuRPZ8z-GB0npeJwWPvQ54YaMxg@mail.gmail.com>
-Subject: Re: [alsa-devel] ca0132 audio in Ubuntu 19.04 only after Windows 10
- started, missing ctefx-r3di.bin
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628164008.GB240964@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hm... not sure the firmware will fix this issue, as it falls back to
-the default ctefx.bin firmware which should work fine. But it's worth
-a shot.
+On Fri, Jun 28, 2019 at 12:40:08PM -0400, Joel Fernandes wrote:
+> On Thu, Jun 27, 2019 at 11:41:07AM -0700, Paul E. McKenney wrote:
+> [snip]
+> > > > > And we should document this somewhere for future sanity preservation
+> > > > > :-D
+> > > > 
+> > > > Or adjust the code and requirements to make it more sane, if feasible.
+> > > > 
+> > > > My current (probably wildly unreliable) guess that the conditions in
+> > > > rcu_read_unlock_special() need adjusting.  I was assuming that in_irq()
+> > > > implies a hardirq context, in other words that in_irq() would return
+> > > > false from a threaded interrupt handler.  If in_irq() instead returns
+> > > > true from within a threaded interrupt handler, then this code in
+> > > > rcu_read_unlock_special() needs fixing:
+> > > > 
+> > > > 		if ((exp || in_irq()) && irqs_were_disabled && use_softirq &&
+> > > > 		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
+> > > > 			// Using softirq, safe to awaken, and we get
+> > > > 			// no help from enabling irqs, unlike bh/preempt.
+> > > > 			raise_softirq_irqoff(RCU_SOFTIRQ);
+> > > > 
+> > > > The fix would be replacing the calls to in_irq() with something that
+> > > > returns true only if called from within a hardirq context.
+> > > > Thoughts?
+> > > 
+> > > I am not sure if this will fix all cases though?
+> > > 
+> > > I think the crux of the problem is doing a recursive wake up. The threaded
+> > > IRQ probably just happens to be causing it here, it seems to me this problem
+> > > can also occur on a non-threaded irq system (say current_reader() in your
+> > > example executed in a scheduler path in process-context and not from an
+> > > interrupt). Is that not possible?
+> > 
+> > In the non-threaded case, invoking raise_softirq*() from hardirq context
+> > just sets a bit in a per-CPU variable.  Now, to Sebastian's point, we
+> > are only sort of in hardirq context in this case due to being called
+> > from irq_exit(), but the failure we are seeing might well be a ways
+> > downstream of the actual root-cause bug.
+> 
+> Hi Paul,
+> I was talking about calling of rcu_read_unlock_special from a normal process
+> context from the scheduler.
+> 
+> In the below traces, it shows that only the PREEMPT_MASK offset is set at the
+> time of the issue. Both HARD AND SOFT IRQ masks are not enabled, which means
+> the lock up is from a normal process context.
+> 
+> I think I finally understood why the issue shows up only with threadirqs in
+> my setup. If I build x86_64_defconfig, the CONFIG_IRQ_FORCED_THREADING=y
+> option is set. And booting this with threadirqs, it always tries to
+> wakeup_ksoftirqd in invoke_softirq.
+> 
+> I believe what happens is, at an in-opportune time when the .blocked field is
+> set for the preempted task, an interrupt is received. This timing is quite in
+> auspicious because t->rcu_read_unlock_special just happens to have its
+> .blocked field set even though it is not in a reader-section.
 
-His card looks like it's being identified properly, and I've had
-reports from others with the same motherboard codecs not having
-issues.
+I believe the .blocked field remains set even though we are not any more in a
+reader section because of deferred processing of the blocked lists that you
+mentioned yesterday.
 
-There's not too much that I can really troubleshoot with these cards,
-as I lack the documentation. All that I know is from capturing the HDA
-verbs from a Windows virtual machine with PCI passthrough.
-
-The only thing I can really think of is GPIO potentially, but that
-would be re-set when the Linux driver is booted up. I know some users
-have to do a full on shutdown to clear the cards internal memory for
-it to work in Linux, but it sounds like he may have already done that.
-
-I'll look into this a little bit when I get some time, but the issue
-is that I don't have too many options/ideas on what could be
-potentially wrong.
-
-On Fri, Jun 28, 2019 at 5:29 AM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> at 17:13, Takashi Iwai <tiwai@suse.de> wrote:
->
-> > On Fri, 28 Jun 2019 08:35:51 +0200,
-> > Kai-Heng Feng wrote:
-> >> Hi Connor,
-> >>
-> >> The bug was filed at Launchpad [1], I think the most notable error is
-> >> [    3.768667] snd_hda_intel 0000:00:1f.3: Direct firmware load for
-> >> ctefx-r3di.bin failed with error -2
-> >>
-> >> The firmware is indeed listed in patch_ca0132.c, but looks like
-> >> there=E2=80=99s no  corresponding file in linux-firmware.
-> >
-> > FYI, the firmware is found in alsa-firmware git repo for now.
->
-> Got it, thanks for the info. Didn=E2=80=99t know there=E2=80=99s alsa-fir=
-mware repo.
->
-> Kai-Heng
->
-> >
-> >
-> > Takashi
->
->
