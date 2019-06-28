@@ -2,247 +2,137 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C050CC4646D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51886C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6AD20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C0A20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:02:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jDt+2wbF"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="EEFB2bfz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfF1RBt (ORCPT
+        id S1726822AbfF1RCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:01:49 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37666 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfF1RBs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:01:48 -0400
-Received: by mail-io1-f67.google.com with SMTP id e5so13993430iok.4
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 10:01:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jekRiyXby/ZNHvnRLwy0otLYNAMVnEOWk6Q0hHIP03c=;
-        b=jDt+2wbFWKv8S3taFNa0rh6QRpyE8hsvXmRKA4qfFd0xOFZys/zV0ydUWASnn5WEtV
-         XrYg+yEJqyLK1upIptYifp2BuG9RyYoYKsjaH0agWUPYOU6azmWCKyq1jnnDT1cPMyKs
-         j0BgnApGi3Taf8xfEHeZAUGEtyw2dLpjg5TdE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jekRiyXby/ZNHvnRLwy0otLYNAMVnEOWk6Q0hHIP03c=;
-        b=KcJ0+zZuLW9tpitqKIcLs+AyVCtxZh/GBH+NrrgF96+/ZgYqjRPIYZ4OutfSBnDhvZ
-         i48/WQIsn2gSm5o9+SzsxdxFwaMY9PwK+DQhgdmpAkBq0LdkJiKW/HGEglXUSDCi3CY9
-         H1rv4idVosaWcPGGTU/u7lQNHyH5oLgrN471vTwY7vaRVg5x/c/iPtX428r7bN5v+T8n
-         TVVtnh1MimQE9hyiZ5TU2rvlxY8OswZZUX2Qs6KsPwRgJE1/4QF6GrHeckLeD7ftq9TQ
-         Y+bAsb0JKB+YbBL7hHjdyPpw/AE9HInnwS+epUEh+eYjI09VfLuS0ymTZvK8yjklgBHR
-         IbnQ==
-X-Gm-Message-State: APjAAAXQT8nhJ+r6W+OyUWDH9i8Kbt1zT8QhCpndCu1lNqwm0rSttsuY
-        tG2aKMenpSKFSO+D4z+JztPJG9XxvUWo2ORBYfHNbA==
-X-Google-Smtp-Source: APXvYqzpL9wAKentjGIEFBMqJlm2688B0OlFLpgqBB54Jf+U1HvM6TgX+N4wFeX3Jf4VseQEvxKVUtv0sk3OftZQSss=
-X-Received: by 2002:a5e:8518:: with SMTP id i24mr11744200ioj.149.1561741307842;
- Fri, 28 Jun 2019 10:01:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1561642224.git.fabien.lahoudere@collabora.com>
- <4724b46665d919cae0ea3b60e334053b0b17d686.1561642224.git.fabien.lahoudere@collabora.com>
- <f8df78b4-8ae9-f292-cf70-ef682a4a47f4@collabora.com> <CAPUE2ut=imx=mhV_iyMwaYmfkFJ0zw3Jvsbxf+TbfqV1Sa_WJw@mail.gmail.com>
- <0af8a4bc994b4e90cb0d079d1c7f105dd2a60e32.camel@collabora.com> <b0820d4d-fe21-95bc-fde6-08613a33525b@collabora.com>
-In-Reply-To: <b0820d4d-fe21-95bc-fde6-08613a33525b@collabora.com>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Fri, 28 Jun 2019 10:01:36 -0700
-Message-ID: <CAPUE2uvRPPEgiCwQc=Qf8aOMo8c6+J4p-dL8Sm0FVLB39Kf9TQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] iio: common: cros_ec_sensors: determine protocol version
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 28 Jun 2019 13:02:31 -0400
+Received: from mail-eopbgr60044.outbound.protection.outlook.com ([40.107.6.44]:14050
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726682AbfF1RCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 13:02:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=IxczjIUX47SlEfJYKoaREQQKFOfyym85joRLApmCR72W4WGLYtBNjfYt1kxQyub6qzLLShmH72FrtV23LqP3o8iX6ar3HpsJuMEiNoUowvo0XYBkV5LGx5T5w13p54XHvsXlDZPBmGU58fljMIHP63QztpW/l4QS5EeffMnUX9U=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4jwEvvXUPY88v4ZIhjZnxTRkKIFmTLxalBf1YgUdmjQ=;
+ b=IL2dXY4OhYgLg4sz80I+UjCUNx0tbxM2db9p8Rj4GEi73Vbn2LoNrBd/QesM81z5Ewvi3FE100nrUYiPwNTMPiHPmekoSRVEviuvM7KW0NlnEllbySczlJfJn83hESXfDbtCK79uD9CqMfHEZwdIQ7KNOs6MSDDDZJEMfkTi0jo=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4jwEvvXUPY88v4ZIhjZnxTRkKIFmTLxalBf1YgUdmjQ=;
+ b=EEFB2bfzg7R35ekPU9Is2C89hjDR2HVzz4USps+O4m1NTKt+eYNlqIRj3E2ge6F/POzMOyUDha3b1hEf+LsigHTYKKrxng13GVQrHo6GM6Ax0e6+cdYdlpzyfuAMTKZ8Mfl0hly1OH3BuZGrWaCybS6QbzW/MMtLrT/8xaiY6rc=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6255.eurprd05.prod.outlook.com (20.178.205.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Fri, 28 Jun 2019 17:02:26 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Fri, 28 Jun 2019
+ 17:02:25 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Christoph Hellwig <hch@lst.de>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
+Thread-Topic: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
+Thread-Index: AQHVLBqgvimki3zmIk2l4xtSxGbkyKaxNtmAgAANxQCAAAmqgA==
+Date:   Fri, 28 Jun 2019 17:02:25 +0000
+Message-ID: <20190628170219.GA3608@mellanox.com>
+References: <20190626122724.13313-1-hch@lst.de>
+ <20190626122724.13313-17-hch@lst.de> <20190628153827.GA5373@mellanox.com>
+ <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
+In-Reply-To: <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR21CA0002.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::12) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [76.14.1.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dca8a338-cacd-4cc5-0d77-08d6fbea6507
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6255;
+x-ms-traffictypediagnostic: VI1PR05MB6255:
+x-microsoft-antispam-prvs: <VI1PR05MB62553740A223896F85BB96E0CFFC0@VI1PR05MB6255.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 00826B6158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(346002)(396003)(136003)(39860400002)(189003)(199004)(66446008)(8936002)(6916009)(6436002)(66556008)(33656002)(476003)(53546011)(305945005)(186003)(66066001)(64756008)(3846002)(54906003)(11346002)(26005)(6486002)(6116002)(2906002)(36756003)(68736007)(478600001)(7736002)(14454004)(316002)(486006)(2616005)(86362001)(53936002)(4326008)(5660300002)(71200400001)(52116002)(73956011)(6246003)(446003)(66476007)(1076003)(81156014)(99286004)(6512007)(81166006)(6506007)(76176011)(8676002)(25786009)(256004)(71190400001)(386003)(7416002)(66946007)(102836004)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6255;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1/O3iWmC49vqkfTuIb6GxfWPtwbqlTXEwu/cBsHqgZFr2n42TM+T/WLayFGiGhm+ClF7k7H7WUE5ScOm5f7mNwpOaJ2m6+C/qIgtmbduzmKBWANaB4Y6zJk2MXtcp/2cDewi2NNgVZMcdqG+shOFEZviCpMTl8VgoJwlcdSKhcbH3SB44zT3BumCqIU+JKIVw/udzgLHzpk/eZIEwaRxWtsKiG4ZAXBrn/TKiIsN/R2nelXN904cX8vuCjLBox1h4WQpnKa9WZYuy0Mo3i5a1DTUxZ9YeAVXwwoc99ba/G4FOOLxcYGnK1rN22ApkFcP+1qbQMRlchBa3NqffF8YBZvd9af8O0rVEqn6WhFeIyMn2zFyJFtulrLXO6EmInoYzncEs54QmipsPRyLPFYFYGOGNuqU9O92ImK00scWKAY=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <F315CA51D2C30A40AD4C5447E0263858@eurprd05.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dca8a338-cacd-4cc5-0d77-08d6fbea6507
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 17:02:25.8791
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6255
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 6:46 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Fabien, Gwendal,
->
-> On 28/6/19 13:37, Fabien Lahoudere wrote:
-> > Le jeudi 27 juin 2019 =C3=A0 14:59 -0700, Gwendal Grignou a =C3=A9crit =
-:
-> >> On Thu, Jun 27, 2019 at 8:59 AM Enric Balletbo i Serra
-> >> <enric.balletbo@collabora.com> wrote:
-> >>> Hi,
-> >>>
-> >>> cc'ing Doug, Gwendal and Enrico that might be interested to give a
-> >>> review.
-> >>>
-> >>> This patch can be picked alone without 2/2, an is needed to have
-> >>> cros-ec-sensors
-> >>> legacy support on ARM (see [1] and [2])
-> >>>
-> >>> Jonathan, as [1] and [2] will go through the chrome-platform tree
-> >>> if you don't
-> >>> mind I'd also like to carry with this patch once you're fine with
-> >>> it.
-> >>>
-> >>> Thanks,
-> >>> ~ Enric
-> >>>
-> >>> [1] https://patchwork.kernel.org/patch/11014329/
-> >>> [2] https://patchwork.kernel.org/patch/11014327/
-> >>>
-> >>> On 27/6/19 16:04, Fabien Lahoudere wrote:
-> >>>> This patch adds a function to determine which version of the
-> >>>> protocol is used to communicate with EC.
-> >>>>
-> >>>> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> >>>> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
-> >>>
-> >>> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> >>>
-> >>>> ---
-> >>>>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 36
-> >>>> ++++++++++++++++++-
-> >>>>  1 file changed, 35 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git
-> >>>> a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> >>>> b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> >>>> index 130362ca421b..2e0f97448e64 100644
-> >>>> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> >>>> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> >>>> @@ -25,6 +25,31 @@ static char *cros_ec_loc[] =3D {
-> >>>>       [MOTIONSENSE_LOC_MAX] =3D "unknown",
-> >>>>  };
-> >>>>
-> >>>> +static int cros_ec_get_host_cmd_version_mask(struct
-> >>>> cros_ec_device *ec_dev,
-> >>>> +                                          u16 cmd_offset, u16
-> >>>> cmd, u32 *mask)
-> >>>> +{
-> >>>> +     int ret;
-> >>>> +     struct {
-> >>>> +             struct cros_ec_command msg;
-> >>>> +             union {
-> >>>> +                     struct ec_params_get_cmd_versions params;
-> >>>> +                     struct ec_response_get_cmd_versions resp;
-> >>>> +             };
-> >>>> +     } __packed buf =3D {
-> >>>> +             .msg =3D {
-> >> add
-> >> .version =3D 0,
-> >> As the variable is coming from the stack, the version should be set.
-> >>>> +                     .command =3D EC_CMD_GET_CMD_VERSIONS +
-> >>>> cmd_offset,
-> >>>> +                     .insize =3D sizeof(struct
-> >>>> ec_response_get_cmd_versions),
-> >>>> +                     .outsize =3D sizeof(struct
-> >>>> ec_params_get_cmd_versions)
-> >>>> +                     },
-> >>>> +             .params =3D {.cmd =3D cmd}
-> >>>> +     };
-> >>>> +
-> >>>> +     ret =3D cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-> >>>> +     if (ret >=3D 0)
-> >> It should be > 0: when the command is a success, it returns the
-> >> number
-> >> of byte in the response buffer. When don't expect =3D=3D 0  here, beca=
-use
-> >> when successful, EC_CMD_GET_CMD_VERSIONS will return a mask.
-> >>>> +             *mask =3D buf.resp.version_mask;
-> >>>> +     return ret;
-> >>>> +}
-> >>>> +
-> >>>>  int cros_ec_sensors_core_init(struct platform_device *pdev,
-> >>>>                             struct iio_dev *indio_dev,
-> >>>>                             bool physical_device)
-> >>>> @@ -33,6 +58,8 @@ int cros_ec_sensors_core_init(struct
-> >>>> platform_device *pdev,
-> >>>>       struct cros_ec_sensors_core_state *state =3D
-> >>>> iio_priv(indio_dev);
-> >>>>       struct cros_ec_dev *ec =3D dev_get_drvdata(pdev->dev.parent);
-> >>>>       struct cros_ec_sensor_platform *sensor_platform =3D
-> >>>> dev_get_platdata(dev);
-> >>>> +     u32 ver_mask;
-> >>>> +     int ret;
-> >>>>
-> >>>>       platform_set_drvdata(pdev, indio_dev);
-> >>>>
-> >>>> @@ -47,8 +74,15 @@ int cros_ec_sensors_core_init(struct
-> >>>> platform_device *pdev,
-> >>>>
-> >>>>       mutex_init(&state->cmd_lock);
-> >>>>
-> >>>> +     ret =3D cros_ec_get_host_cmd_version_mask(state->ec,
-> >>>> +                                             ec->cmd_offset,
-> >>>> +                                             EC_CMD_MOTION_SENSE
-> >>>> _CMD,
-> >>>> +                                             &ver_mask);
-> >>>> +     if (ret < 0)
-> >> Use:
-> >> if (ret <=3D 0 || ver_mask =3D=3D 0) {
-> >> In case the EC is really old or misbehaving, we don't want to set an
-> >> invalid version later.
+On Fri, Jun 28, 2019 at 09:27:44AM -0700, Dan Williams wrote:
+> On Fri, Jun 28, 2019 at 8:39 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
 > >
-> > To not return a positive value on error if ret >=3D 0 and ver_mask =3D =
-0
-> > I would prefer this:
+> > On Wed, Jun 26, 2019 at 02:27:15PM +0200, Christoph Hellwig wrote:
+> > > The functionality is identical to the one currently open coded in
+> > > device-dax.
+> > >
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > >  drivers/dax/dax-private.h |  4 ----
+> > >  drivers/dax/device.c      | 43 -------------------------------------=
+--
+> > >  2 files changed, 47 deletions(-)
 > >
-> >       if (ret <=3D 0)
-> >               return ret;
+> > DanW: I think this series has reached enough review, did you want
+> > to ack/test any further?
 > >
-> >       if (ver_mask =3D=3D 0)
-> >               return -EIO;
-> >
-> > Let me know if I am wrong
-> >
->
-> Ok, after discussing with Fabien I think I understood all this and I was
-> confused. So the thing is that some very old EC sets the version_mask to =
-0 and
-> the communication succeeds. I think all this deserves a comment in the co=
-de for
-> dummies like me :-)
-Looking into the code, when the command is successful, the EC would
-return 4 and a valid ver_mask, otherwise ret would -EPROTO (EC answers
-INVALID_PARAM).
+> > This needs to land in hmm.git soon to make the merge window.
+>=20
+> I was awaiting a decision about resolving the collision with Ira's
+> patch before testing the final result again [1]. You can go ahead and
+> add my reviewed-by for the series, but my tested-by should be on the
+> final state of the series.
 
-So the original code will work as is. Thanks for your help about C
-[partial] Initialization.
+The conflict looks OK to me, I think we can let Andrew and Linus
+resolve it.
 
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Tested-by: Gwendal Grignou <gwendal@chromium.org>
-
->
-> Thanks,
-> ~ Enric
->
-> >>>> +
->  return ret;
-> >>>> +
-> >>>>       /* Set up the host command structure. */
-> >>>> -     state->msg->version =3D 2;
-> >>>> +     state->msg->version =3D fls(ver_mask) - 1;;
-> >>>>       state->msg->command =3D EC_CMD_MOTION_SENSE_CMD + ec-
-> >>>>> cmd_offset;
-> >>>>       state->msg->outsize =3D sizeof(struct
-> >>>> ec_params_motion_sense);
-> >>>>
-> >>>>
-> >
+Thanks,
+Jason
