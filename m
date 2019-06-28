@@ -2,111 +2,209 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4806C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D882C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A162133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:32:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561710754;
-	bh=Y3zOX4QjS97/6U883kdWo4iIWGlNUzZF0xiiCLQxMvw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w4feDv+c4wm5l1JOFcIKldw3XzO0WchFxEjV6AzbQyxFjt5T6gM/zUzU+0qdu/SgI
-	 bkwVL9sa0AMh/Ms1rkEC4VugkNCpqTEi1Qaa2+bfYC8wY56t21zVmgFENduTNcfBCa
-	 ZIf3mr1xn++8A7SGMJPw2SxJtcqVlY1hjEexHEH8=
+	by mail.kernel.org (Postfix) with ESMTP id 61CB62053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfF1Icd (ORCPT
+        id S1726697AbfF1Ici (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:32:33 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34663 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbfF1Icc (ORCPT
+        Fri, 28 Jun 2019 04:32:38 -0400
+Received: from twhmllg4.macronix.com ([211.75.127.132]:51313 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbfF1Ici (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:32:32 -0400
-Received: by mail-wm1-f66.google.com with SMTP id w9so8805377wmd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 01:32:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r/IUTxeJg0cdHhhwgdpdWiUMuEMp0fQUvu2hchnWouE=;
-        b=NdGxWIREBuow7vpX+Y+GBM7Ohi9wEyyqM6xOtQxyGQcX1evIm/WGud0OcJpeV6M895
-         H4lquNMF0qz0IPo4lx2M2oOiQEZwedOdN+ZuJqpXBpPrEzFwoFekNV8lMa+5OekcGDKH
-         833YcW584z5wXHWdohTCjp7aCMh8R3G7gfVmqFXC00tdi333SZsrcryW5gGR2tAoS88u
-         PP8OvCtqoKWVE42gokzAi0ycLAou6G+Z6B3FvSs7UoxvGP9K/GiIxMxDKF5YE5bVvrXt
-         lZ1GjiTUSyQhHy1peW0urQwLDn8AyWfUxSo+QE7K7Dou7WkJCOg8tB6oHo/Dw9lsqFSG
-         TqfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r/IUTxeJg0cdHhhwgdpdWiUMuEMp0fQUvu2hchnWouE=;
-        b=ZUTeWxp0FuWcs8M6z646GTVrshMjLeP/GRUCGvUV3ELP0Xa+cGxlnnMlnscZ5YFRg9
-         UP1BzIzA7CGlwH41RtT5/8He3tF9WrAWYMrc9fqiHQK5glSPcIjG/d4cskHlBx5wGE5p
-         eomOi17Xn17C6/eqoF8Qnwy1P3xpoJp8h6PgXWQtecO7pvqamS2iGUR1qxJUWp6NSNPS
-         fkpyc11L01Mhf98TptMuKj1AiKsc/nPBoBXaDDhBSS2MwmFcHlV6M51t/XxpLF31eeM3
-         MqhF9fSav4TctLLslYcRulCRfay5Kc1Ec7KYozPOGddOcRafdhlffXzqq2K7DXrwijlF
-         Y0oQ==
-X-Gm-Message-State: APjAAAUvrjZl2iJhUvv8cjAmEHIPbr7hHTh6sbWYqq/EWhef0+We+i8A
-        kpAFmRur4bq5ymDeOz/0FAo=
-X-Google-Smtp-Source: APXvYqx0Gq5qOjlDqngCtjivEZswbsjU694MSn6oT/2J1awzq7aH2XJGJxuKVht/6HXWiDJlYz1iYw==
-X-Received: by 2002:a1c:c145:: with SMTP id r66mr6265165wmf.139.1561710750759;
-        Fri, 28 Jun 2019 01:32:30 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id l1sm1201490wmg.13.2019.06.28.01.32.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 01:32:30 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 10:32:27 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ravi Shankar <ravi.v.shankar@intel.com>
-Subject: Re: [patch 26/29] x86/hpet: Consolidate clockevent functions
-Message-ID: <20190628083227.GA21661@gmail.com>
-References: <20190623132340.463097504@linutronix.de>
- <20190623132436.461437795@linutronix.de>
- <20190626211753.GB101255@gmail.com>
- <alpine.DEB.2.21.1906280041160.32342@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1906280052380.32342@nanos.tec.linutronix.de>
+        Fri, 28 Jun 2019 04:32:38 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x5S8VFLX077566;
+        Fri, 28 Jun 2019 16:31:15 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id AE28135DC1DE6750D845;
+        Fri, 28 Jun 2019 16:31:15 +0800 (CST)
+In-Reply-To: <20190628091836.3148d450@xps13>
+References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw> <1561443056-13766-2-git-send-email-masonccyang@mxic.com.tw>
+        <20190627193635.29abff43@xps13> <OFDDC43C05.7B4092B5-ON48258427.001EE57E-48258427.002122D1@mxic.com.tw> <20190628091836.3148d450@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     anders.roxell@linaro.org, bbrezillon@kernel.org,
+        broonie@kernel.org, christophe.kerello@st.com,
+        computersforpeace@gmail.com, devicetree@vger.kernel.org,
+        dwmw2@infradead.org, jianxin.pan@amlogic.com, juliensu@mxic.com.tw,
+        lee.jones@linaro.org, liang.yang@amlogic.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, paul@crapouillou.net, paul.burton@mips.com,
+        richard@nod.at, stefan@agner.ch, vigneshr@ti.com
+Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add Macronix Raw NAND controller
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906280052380.32342@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-KeepSent: 2EDB7089:FAD92F61-48258427:002D122A;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF2EDB7089.FAD92F61-ON48258427.002D122A-48258427.002ECEF3@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Fri, 28 Jun 2019 16:31:16 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/06/28 PM 04:31:15,
+        Serialize complete at 2019/06/28 PM 04:31:15
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x5S8VFLX077566
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Thomas Gleixner <tglx@linutronix.de> wrote:
+Hi Miquel,
 
-> On Fri, 28 Jun 2019, Thomas Gleixner wrote:
-> > On Wed, 26 Jun 2019, Ingo Molnar wrote:
-> > > 
-> > >  s/hpet_clkevt_msi_resume
-> > >   /hpet_clkevt_tick_resume
-> > > 
-> > > ... unless the name variations have some hidden purpose and meaning?
 > > 
-> > Historical but we want to preserve some of the old stuff for sentimental
-> > reasons.
+> > > > Add a driver for Macronix raw NAND controller. 
+> > > 
+> > > Could you pass userspace major MTD tests and can you 
+attach/mount/edit
+> > > a UBI/UBIFS storage? 
+> > 
+> > mtd_debug passed and using dd utility to read and write 
+> > with md5sum checking passed.
 > 
-> The msi_resume naming actually has a real reason as there is also the
-> legacy_resume one.
+> Please don't use dd, use nanddump/nandwrite/flasherase/nandbiterrs and
+> run the other tests from the mtd-utils test suite (available in
+> Buildroot for instance).
+> 
 
-Makes sense!
+Got it.
 
-Thanks,
+But may I know why 'dd' utility is not preferences ?
+I generate a random data file and write to Flash by
+using dd with bs=page size and read data back from Flash.
+Checking data by md5sum.
+The write and read testing data size is easily adjustable.
 
-	Ingo
+
+> > 
+> > > > +static int mxic_nfc_clk_enable(struct mxic_nand_ctlr *nfc)
+> > > > +{
+> > > > +   int ret;
+> > > > +
+> > > > +   ret = clk_prepare_enable(nfc->send_clk);
+> > > > +   if (ret)
+> > > > +      return ret;
+> > > > +
+> > > > +   ret = clk_prepare_enable(nfc->send_dly_clk);
+> > > > +   if (ret)
+> > > > +      goto err_send_dly_clk; 
+> > > 
+> > > I'm not sure why you only enable 2 out of 3 clocks and also why ou
+> > > handle two of them here (which is great, I prefer having a separate
+> > > helper for that) and the other one elsewhere?
+> > > 
+> > 
+> > send_clk and send_dly_clk are device domain clocks.
+> > 
+> > send_clk is clock without phase delay to ps_clk, used for sending 
+device
+> > signals except for SIO[7:0].
+> > send_dly_clk is clock with phase delay to ps_clk, used for sending 
+> > SIO[7:0]
+> > 
+> > ps_clk is system domain clock and it's a source clock of send_clk and 
+> > send_dly_clk.
+> 
+> And why is that explaining the fact that you configure them in
+> different places? You can explain this with a nice comment at the top
+> of the function, but I would rather prefer that you handle all three
+> clocks in one go if possible.
+> 
+
+okay, will patch it.
+
+> > > > +static int mxic_nfc_data_xfer(struct mxic_nand_ctlr *nfc, const 
+void 
+> > *txbuf,
+> > > > +               void *rxbuf, unsigned int len)
+> > > > +{
+> > > > +   unsigned int pos = 0;
+> > > > +
+> > > > +   while (pos < len) {
+> > > > +      unsigned int nbytes = len - pos;
+> > > > +      u32 data = 0xffffffff;
+> > > > +      u32 sts;
+> > > > +      int ret;
+> > > > +
+> > > > +      if (nbytes > 4)
+> > > > +         nbytes = 4;
+> > > > +
+> > > > +      if (txbuf)
+> > > > +         memcpy(&data, txbuf + pos, nbytes);
+> > > > +
+> > > > +      ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
+> > > > +                sts & INT_TX_EMPTY, 0, USEC_PER_SEC);
+> > > > +      if (ret)
+> > > > +         return ret;
+> > > > +
+> > > > +      writel(data, nfc->regs + TXD(nbytes % 4));
+> > > > +
+> > > > +      if (rxbuf) {
+> > > > +         ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
+> > > > +                   sts & INT_TX_EMPTY, 0,
+> > > > +                   USEC_PER_SEC);
+> > > > +         if (ret)
+> > > > +            return ret;
+> > > > +
+> > > > +         ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
+> > > > +                   sts & INT_RX_NOT_EMPTY, 0,
+> > > > +                   USEC_PER_SEC);
+> > > > +         if (ret)
+> > > > +            return ret;
+> > > > +
+> > > > +         data = readl(nfc->regs + RXD);
+> > > > +         data >>= (8 * (4 - nbytes));
+> > > > +         memcpy(rxbuf + pos, &data, nbytes);
+> > > > +         WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY);
+> > > > +      } else {
+> > > > +         readl(nfc->regs + RXD);
+> > > > +      }
+> > > > +      WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY); 
+> > > 
+> > > WARN_ON() is maybe a bit overkill here? 
+> > 
+> > should I remove it ?
+> 
+> I would stick to regular dev_warn.
+
+Got it, will patch it.
+
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
