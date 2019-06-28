@@ -2,114 +2,124 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099B4C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A38CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFBC5208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DFD2147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ZFUpCXQy";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TcvD6wq/"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="2BroReMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbfF1Cjo (ORCPT
+        id S1727064AbfF1Cjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:39:44 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:50689 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726748AbfF1Cjm (ORCPT
+        Thu, 27 Jun 2019 22:39:51 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43297 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbfF1Cju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:39:42 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7E9093483;
-        Thu, 27 Jun 2019 22:39:41 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 27 Jun 2019 22:39:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=ADqhvifrknPuz
-        OYzjNxXRssrypRVqiE51aZTMCvODu0=; b=ZFUpCXQy6B8uj0ca88kY34wx9NsTW
-        nUjr5VFG7dhZvf8CVFBWzSbgULrOcaxoe9sNPrLvUaj+oL3FhA06vVh5xgVPsG8K
-        2j4bbWRrw3sheZhasI/Nw5SaE5C58EESA13xOH5kbckMjZIbSs8d50Tkoe5DMFjT
-        GlVs7J1IgpNS6nWgcpVCz6EMZkLGatXOD/mjn4Pqzverr4M+aVDD63hs/SOwxeEV
-        gdI7TTIuf4TEDXNdiJ3EdfRe/caTjxuRlT2lXEpnevJJ1IF5XgE/bDtgdJtjC0dM
-        kIFhPUQOcC/3oHliOUQ2658UQwORvn33ROO/qzypdW3bMwgCvetbg5r/A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=ADqhvifrknPuzOYzjNxXRssrypRVqiE51aZTMCvODu0=; b=TcvD6wq/
-        aS2ba3+jDjzka/vzn1IAo8Td4r8TE0/t1pxAaI4c5PRB6DYCbyNwz3cXMpGglyWB
-        iz3OLf+Pd/LmyRKVkPL5Ib9Vs6expRxAJEArw7gWTuLoMiE+lJPwn6K4OpudHOoH
-        FykfS3L496SpeQ4dyeNqOIUob3cTOln2H75YU2p5/BGgcf0FkL0r3qb/RBWojZlV
-        Ie6aaPzonmsl3ViqvAvn90SeFDigpr75qT67pBCX9QcGMPX6NIfdQE4IAxwF9Iui
-        +gSw43orPBJndzNTohgMwaLIxQ1dd62Q3+sZl2t0XM2P58/olpFkF07NwdtV1R/2
-        lzfTh3/QlwJbfQ==
-X-ME-Sender: <xms:7X0VXYAGuohFMY5g3ytuF5SFQ4MMGGRbnKTqdYf1i2QIuRM01KcW9Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudelgdeiudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomheptehnughrvgif
-    ucflvghffhgvrhihuceorghnughrvgifsegrjhdrihgurdgruheqnecukfhppedvtddvrd
-    ekuddrudekrdeftdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdr
-    ihgurdgruhenucevlhhushhtvghrufhiiigvpeef
-X-ME-Proxy: <xmx:7X0VXcAt3aDT5XckrP3KkgvKfFd_FWCrgfgZTrQE_bOcgmFaGA1jiw>
-    <xmx:7X0VXQJaVibh-beRUVk9rE9lsd826w2OsNjrZTTj8YJRbn5Znjqmrw>
-    <xmx:7X0VXeTIa0G12SlZ49phXbBfGYUIwwm2w7JGMwYymGl8eDO8c6An8A>
-    <xmx:7X0VXcJxIYy1E3Lqkxq9a_-_8O7rFr5daoopP9pglOX2jGdulDzVxA>
-Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3F15A380074;
-        Thu, 27 Jun 2019 22:39:37 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-gpio@vger.kernel.org
-Cc:     ryan_chen@aspeedtech.com, Andrew Jeffery <andrew@aj.id.au>,
-        linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Johnny Huang <johnny_huang@aspeedtech.com>
-Subject: [PATCH v2 6/8] pinctrl: aspeed: Clarify comment about strapping W1C
-Date:   Fri, 28 Jun 2019 12:08:36 +0930
-Message-Id: <20190628023838.15426-7-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190628023838.15426-1-andrew@aj.id.au>
-References: <20190628023838.15426-1-andrew@aj.id.au>
+        Thu, 27 Jun 2019 22:39:50 -0400
+Received: by mail-ot1-f66.google.com with SMTP id i8so4447464oth.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:39:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i+w5fn2Y32/L39vIbDWdR2CfVz49VqoI4F4CB/r+uKs=;
+        b=2BroReMxSyl7fumvZHFYCsXog9so/PwacI6uZo45fszzwoTUhDjTDVIC3dmDgkvhjI
+         1vPIrM+hSnKeAwrkzbGzAjTEPTTgmqOwCVSZQUdIDrvAxKA2cMV8Dr6GunOjfoKKRYiR
+         i8n913ea5p94gaxe2NpjIpJwUJ2qhzkQ+wHLtf//YGUdDQeqhjuL7sHzp6EjAr//ec01
+         XTKGHBCDcdPjUSb8oFPiQDfaUdsVI1ufjKYoVyP6pZsvPych6kooqkVWEaGAH73GpfeW
+         Q64A9UAnw0STfqhTNC283nlq9ZOnnmCyzDAjw3roZzNRDyNGYbLpCBliRHdGmg3LI7kY
+         Wv/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i+w5fn2Y32/L39vIbDWdR2CfVz49VqoI4F4CB/r+uKs=;
+        b=PGL9K+CpLFQFnm552+XLE9vglxVQkP8jXJUugp0rDVpd6FwMYz/KL+C5fgJSKDYz+A
+         sH2m7Ybl/i/wyATtEEARrodXzbn+Xf57wtOgT4OuBOSEAapNzPzsTBI/WFRA1kLHZdVU
+         gx74oG7S6AGLdLWDnnE/T53on8Hjw87D90DmNVtOhSY5pUM+JPOgIwDNmUuKYLtMhaFd
+         gXlaU2HCpARIpaPKqkYrR9gApM+n2jSWhaowfDunDyVR0TsvHOelj8jFRn7z35yabkp0
+         LoMIlIixVYjblmPJ9+qJd2o9Vi+DMAQxzLYXVI6jGrt4MeS8ExSYLUyiXDtanzP2m/cB
+         bVyA==
+X-Gm-Message-State: APjAAAWSuSI9BuRhN0+AG+uA9a8AndyqD6hzpgAE+LmHmdYH9ks9ieKx
+        NmmcB1JRCbalgbxosuk6aozctLtGRUTw/g1Zb5su7BpdYkg=
+X-Google-Smtp-Source: APXvYqwSf5cu88/vylJhhX2x15ji/SfzGkHLqjJ94ZW0+LXDsKMlI1/GoQT5qpbwxtU93udva3CYg32AyPTcsoNMv3U=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr5967248oto.207.1561689589382;
+ Thu, 27 Jun 2019 19:39:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190627123415.GA4286@bombadil.infradead.org> <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
+ <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+ <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
+ <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com> <20190627195948.GB4286@bombadil.infradead.org>
+In-Reply-To: <20190627195948.GB4286@bombadil.infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 27 Jun 2019 19:39:37 -0700
+Message-ID: <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Writes of 1 to SCU7C clear set bits in SCU70, the hardware strapping
-register. The information was correct if you squinted while reading, but
-hopefully switching the order of the registers as listed conveys it
-better.
+On Thu, Jun 27, 2019 at 12:59 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Thu, Jun 27, 2019 at 12:09:29PM -0700, Dan Williams wrote:
+> > > This bug feels like we failed to unlock, or unlocked the wrong entry
+> > > and this hunk in the bisected commit looks suspect to me. Why do we
+> > > still need to drop the lock now that the radix_tree_preload() calls
+> > > are gone?
+> >
+> > Nevermind, unmapp_mapping_pages() takes a sleeping lock, but then I
+> > wonder why we don't restart the lookup like the old implementation.
+>
+> We have the entry locked:
+>
+>                 /*
+>                  * Make sure 'entry' remains valid while we drop
+>                  * the i_pages lock.
+>                  */
+>                 dax_lock_entry(xas, entry);
+>
+>                 /*
+>                  * Besides huge zero pages the only other thing that gets
+>                  * downgraded are empty entries which don't need to be
+>                  * unmapped.
+>                  */
+>                 if (dax_is_zero_entry(entry)) {
+>                         xas_unlock_irq(xas);
+>                         unmap_mapping_pages(mapping,
+>                                         xas->xa_index & ~PG_PMD_COLOUR,
+>                                         PG_PMD_NR, false);
+>                         xas_reset(xas);
+>                         xas_lock_irq(xas);
+>                 }
+>
+> If something can remove a locked entry, then that would seem like the
+> real bug.  Might be worth inserting a lookup there to make sure that it
+> hasn't happened, I suppose?
 
-Cc: Johnny Huang <johnny_huang@aspeedtech.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Acked-by: Joel Stanley <joel@jms.id.au>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Nope, added a check, we do in fact get the same locked entry back
+after dropping the lock.
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-index 4c775b8ffdc4..b510bb475851 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-@@ -209,7 +209,7 @@ static int aspeed_sig_expr_set(const struct aspeed_sig_expr *expr,
- 		if (desc->ip == ASPEED_IP_SCU && desc->reg == HW_STRAP2)
- 			continue;
- 
--		/* On AST2500, Set bits in SCU7C are cleared from SCU70 */
-+		/* On AST2500, Set bits in SCU70 are cleared from SCU7C */
- 		if (desc->ip == ASPEED_IP_SCU && desc->reg == HW_STRAP1) {
- 			unsigned int rev_id;
- 
--- 
-2.20.1
+The deadlock revolves around the mmap_sem. One thread holds it for
+read and then gets stuck indefinitely in get_unlocked_entry(). Once
+that happens another rocksdb thread tries to mmap and gets stuck
+trying to take the mmap_sem for write. Then all new readers, including
+ps and top that try to access a remote vma, then get queued behind
+that write.
 
+It could also be the case that we're missing a wake up.
