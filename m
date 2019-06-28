@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D93C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95D9C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC1F208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9AF208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVcaiuJe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="roiBrov5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfF1JPs (ORCPT
+        id S1726722AbfF1JPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:15:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35356 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfF1JPs (ORCPT
+        Fri, 28 Jun 2019 05:15:53 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35361 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfF1JPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:15:48 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so2911785plp.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 02:15:48 -0700 (PDT)
+        Fri, 28 Jun 2019 05:15:52 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w24so2911893plp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 02:15:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MLF10tHXSYj9nlQOchCpax5oxJ4CM95wZZZyCb5aYKQ=;
-        b=fVcaiuJep4MSYMlT4ryvMOy4WMX248CdSsJXwtQNkTSEFa+jimM0sjIK5pCODQ0wrG
-         SDLLzBFHmhxERswiwzL9RaK5w8vKu3/oPUd+v5nBmWxGdR1amcJg5H9PFxcVXpgNpTxE
-         UqZxB/Gb5RdsFSqiXfRq+gzzJMmq2mHZksoyuDDkAwrdwhR9S9X/sp5kwErjq9NX3DBo
-         WFqkbrJlJbx8DFwT8Kp63wPycofD8cD/pR4j+VEBJx7p9JrSfPZ/kM5ERq+yEMbYtBgv
-         +X5J30h0y6ni9/aULs7bSjKFken08KuoqOPmUWsFxKp1KUslyEnMbYeJJPQOSh54lAk8
-         OWaw==
+        bh=8ZupqnYwdfry1yDlXcIvfj0C01TyC2YPNUbKz1TOZak=;
+        b=roiBrov5fpCRmVYIJCjceBC0rbNG5/vkCUUjuHOd52D33+4pAG4Grwu0jhlyUHI2zu
+         XZI0M70wU/LuSr02xV3Y9+gidtGOriKOeeB4kGpBHeK0H9SSa0a/DP4kuO6Lx3lP4DKT
+         sCbGND7lVARatvP1K0S1+SwnjRUtg4K7oeVEfaLaT9w69k2EZycaMqe6xWko7lMTML4M
+         vJJeSP/iLHfFvN3zT8jYM7C4IGfnIDqTVx9CAwcQ3E0CGK/R3vBadkkMsug+2a8ZIkyJ
+         3epxb2+5BJPaYXQTRMUOnx1Pj/tIAduN1pvjqY12AE95NNNT7RolxtmHjqbXZ+H9IVrS
+         bfRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MLF10tHXSYj9nlQOchCpax5oxJ4CM95wZZZyCb5aYKQ=;
-        b=ppvjvp3fXAkqAsgUZakTgzz1YUfwDUsAuWxDYlr9Y/eiucEebHbxBJIB88tUBQ4LkE
-         FntjYXJPNSQcu79rkVnelX+RHPw1mnq/lo0gwm8GrYpmptsQRGBQGt86qFPiUOvOK1Kh
-         4GkR+pak5LOlvGlWoXlk6S3IVNn4Px9DMoC+4j8oZgDoAuOhwjyn+aEushVtHH8e7jou
-         7yR+4HXa1ArlJzX14eiQOjbbB0hjJwTzWM1hYfOqJocNsILRQrJ3lPrAfxJvgli4MNua
-         JWT7E1mq/ZnEQ0w6H/VOQC06Fv8XF5BK6DMnj9Go9+H/CKm8QgKFnLfHAPF8Yfy5Kkvb
-         H6Tg==
-X-Gm-Message-State: APjAAAWlH2WqBl7vkz0EEM2jd/O7yyr0tCHnl6UCqhOgtS9vDlml+5Vq
-        IOkvTwD1NRxzyDSmRPgEWHg=
-X-Google-Smtp-Source: APXvYqwQ9/oC6Q5HdxnbnLCzvvjjjNyj2w6SeKAEzz4kBImalTAq5TojsXsdjvms4wvmjJqErm70pA==
-X-Received: by 2002:a17:902:363:: with SMTP id 90mr10061456pld.340.1561713347883;
-        Fri, 28 Jun 2019 02:15:47 -0700 (PDT)
+        bh=8ZupqnYwdfry1yDlXcIvfj0C01TyC2YPNUbKz1TOZak=;
+        b=Y3qOlqSUTe5Ui4KDMKU6d0vry1y3n8xrDVwPdIB7I4mrTZyxddZ6YtBEsXAzfhoW+q
+         AjbcrEpv6YALEA0ulT8OocQ0BfenqxxuN5vRhRlf6wb3PhsS28ZbA9IG9zF5ZqaSfI+r
+         HUaAsr4KPgSrw2RP3yjIRibTH0oPflPjZEkbznSHcSrQbLoj8uZofFXOycziJ4x65z3B
+         u47YCIXHiL3EByjZ4nrA9489lsR7IGnNNj0CIEuunLJeLvnCKbnbwS5fpOBDPSYtGsfF
+         R5tEtQDIE8rr5uduJTOaUeNA2na+tP5QvPbhd0XD53ya11SKYtzy7UVbrEwjLCwlAKHp
+         T9WQ==
+X-Gm-Message-State: APjAAAVqT4OlXt8LBFpFC0lagkEdoys1J6l0Mo/htQu64RhdGpoqV8JP
+        S0ryo4acAv972dUnodXT2To=
+X-Google-Smtp-Source: APXvYqxk0+eTz6UMuYx8L/729aHdSYoLDv/cyKXJIazMzAD8zGbgpDTEsqiTTfdIGUukxYnjAWtgag==
+X-Received: by 2002:a17:902:7247:: with SMTP id c7mr10188437pll.202.1561713352391;
+        Fri, 28 Jun 2019 02:15:52 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id x65sm1754521pfd.139.2019.06.28.02.15.43
+        by smtp.gmail.com with ESMTPSA id x65sm1754521pfd.139.2019.06.28.02.15.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 02:15:47 -0700 (PDT)
+        Fri, 28 Jun 2019 02:15:51 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, linux-kernel@vger.kernel.org,
         longman@redhat.com, paulmck@linux.vnet.ibm.com,
         boqun.feng@gmail.com, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v3 01/30] locking/lockdep: Rename deadlock check functions
-Date:   Fri, 28 Jun 2019 17:14:59 +0800
-Message-Id: <20190628091528.17059-2-duyuyang@gmail.com>
+Subject: [PATCH v3 02/30] locking/lockdep: Change return type of add_chain_cache()
+Date:   Fri, 28 Jun 2019 17:15:00 +0800
+Message-Id: <20190628091528.17059-3-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190628091528.17059-1-duyuyang@gmail.com>
 References: <20190628091528.17059-1-duyuyang@gmail.com>
@@ -76,84 +76,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deadlock checks are performed at two places:
+The function add_chain_cache() adds a new chain - the current lock chain
+- into the lock_chains cache if it does not exist in there.
 
- - Within current's held lock stack, check for lock recursion deadlock.
- - Within dependency graph, check for lock inversion deadlock.
-
-Rename the two relevant functions for later use. Plus, with
-recursive-read locks, only a dependency circle in graph is not a
-sufficient condition for lock inversion deadlocks anymore, so
-check_noncircular() is not entirely accurate.
+Previously if failed to add an integer 0 is returned and if successful 1
+is returned. Change the return type to the pointer of the chain if the
+new chain is added or NULL if otherwise.
 
 No functional change.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ kernel/locking/lockdep.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 341f521..e30e9e4 100644
+index e30e9e4..3546894 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -1714,8 +1714,8 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
-  * Print an error and return 0 if it does.
+@@ -2714,12 +2714,12 @@ static struct lock_chain *alloc_lock_chain(void)
+  * Adds a dependency chain into chain hashtable. And must be called with
+  * graph_lock held.
+  *
+- * Return 0 if fail, and graph_lock is released.
+- * Return 1 if succeed, with graph_lock held.
++ * Return NULL if failed, and graph_lock is released.
++ * Return the new chain if successful, with graph_lock held.
   */
- static noinline int
--check_noncircular(struct held_lock *src, struct held_lock *target,
--		  struct lock_trace *trace)
-+check_deadlock_graph(struct held_lock *src, struct held_lock *target,
-+		     struct lock_trace *trace)
+-static inline int add_chain_cache(struct task_struct *curr,
+-				  struct held_lock *hlock,
+-				  u64 chain_key)
++static inline struct lock_chain *add_chain_cache(struct task_struct *curr,
++						 struct held_lock *hlock,
++						 u64 chain_key)
  {
- 	int ret;
- 	struct lock_list *uninitialized_var(target_entry);
-@@ -2302,7 +2302,8 @@ static inline void inc_chains(void)
+ 	struct lock_class *class = hlock_class(hlock);
+ 	struct hlist_head *hash_head = chainhashentry(chain_key);
+@@ -2732,16 +2732,16 @@ static inline int add_chain_cache(struct task_struct *curr,
+ 	 * lockdep won't complain about its own locking errors.
+ 	 */
+ 	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
+-		return 0;
++		return NULL;
+ 
+ 	chain = alloc_lock_chain();
+ 	if (!chain) {
+ 		if (!debug_locks_off_graph_unlock())
+-			return 0;
++			return NULL;
+ 
+ 		print_lockdep_off("BUG: MAX_LOCKDEP_CHAINS too low!");
+ 		dump_stack();
+-		return 0;
++		return NULL;
+ 	}
+ 	chain->chain_key = chain_key;
+ 	chain->irq_context = hlock->irq_context;
+@@ -2762,18 +2762,18 @@ static inline int add_chain_cache(struct task_struct *curr,
+ 		nr_chain_hlocks += chain->depth;
+ 	} else {
+ 		if (!debug_locks_off_graph_unlock())
+-			return 0;
++			return NULL;
+ 
+ 		print_lockdep_off("BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!");
+ 		dump_stack();
+-		return 0;
++		return NULL;
+ 	}
+ 
+ 	hlist_add_head_rcu(&chain->entry, hash_head);
+ 	debug_atomic_inc(chain_lookup_misses);
+ 	inc_chains();
+ 
+-	return 1;
++	return chain;
  }
  
  /*
-- * Check whether we are holding such a class already.
-+ * Check whether we are holding such a class already in the current
-+ * held lock stack.
-  *
-  * (Note that this has to be done separately, because the graph cannot
-  * detect such classes of deadlocks.)
-@@ -2310,7 +2311,7 @@ static inline void inc_chains(void)
-  * Returns: 0 on deadlock detected, 1 on OK, 2 on recursive read
-  */
- static int
--check_deadlock(struct task_struct *curr, struct held_lock *next)
-+check_deadlock_current(struct task_struct *curr, struct held_lock *next)
- {
- 	struct held_lock *prev;
- 	struct held_lock *nest = NULL;
-@@ -2394,7 +2395,7 @@ static inline void inc_chains(void)
- 
- 	/*
- 	 * Prove that the new <prev> -> <next> dependency would not
--	 * create a circular dependency in the graph. (We do this by
-+	 * create a deadlock scenario in the graph. (We do this by
- 	 * a breadth-first search into the graph starting at <next>,
- 	 * and check whether we can reach <prev>.)
- 	 *
-@@ -2402,7 +2403,7 @@ static inline void inc_chains(void)
- 	 * MAX_CIRCULAR_QUEUE_SIZE) which keeps track of a breadth of nodes
- 	 * in the graph whose neighbours are to be checked.
- 	 */
--	ret = check_noncircular(next, prev, trace);
-+	ret = check_deadlock_graph(next, prev, trace);
- 	if (unlikely(ret <= 0))
- 		return 0;
- 
-@@ -2878,7 +2879,7 @@ static int validate_chain(struct task_struct *curr,
- 		 * The simple case: does the current hold the same lock
- 		 * already?
- 		 */
--		int ret = check_deadlock(curr, hlock);
-+		int ret = check_deadlock_current(curr, hlock);
- 
- 		if (!ret)
- 			return 0;
 -- 
 1.8.3.1
 
