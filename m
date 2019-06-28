@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CC2C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E395C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B9A2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CE32086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfF1Uth (ORCPT
+        id S1726863AbfF1Uth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 28 Jun 2019 16:49:37 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:38476 "EHLO
+Received: from shelob.surriel.com ([96.67.55.147]:38504 "EHLO
         shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbfF1Utf (ORCPT
+        with ESMTP id S1726791AbfF1Utg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 16:49:35 -0400
+        Fri, 28 Jun 2019 16:49:36 -0400
 Received: from imladris.surriel.com ([96.67.55.152])
         by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.92)
         (envelope-from <riel@shelob.surriel.com>)
-        id 1hgxo6-0007TL-KI; Fri, 28 Jun 2019 16:49:18 -0400
+        id 1hgxo6-0007TL-Fu; Fri, 28 Jun 2019 16:49:18 -0400
 From:   Rik van Riel <riel@surriel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-team@fb.com, pjt@google.com, dietmar.eggemann@arm.com,
         peterz@infradead.org, mingo@redhat.com, morten.rasmussen@arm.com,
         tglx@linutronix.de, mgorman@techsingularity.net,
         vincent.guittot@linaro.org, Rik van Riel <riel@surriel.com>
-Subject: [PATCH 05/10] sched,fair: remove cfs rqs from leaf_cfs_rq_list bottom up
-Date:   Fri, 28 Jun 2019 16:49:08 -0400
-Message-Id: <20190628204913.10287-6-riel@surriel.com>
+Subject: [PATCH 02/10] sched: change /proc/sched_debug fields
+Date:   Fri, 28 Jun 2019 16:49:05 -0400
+Message-Id: <20190628204913.10287-3-riel@surriel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190628204913.10287-1-riel@surriel.com>
 References: <20190628204913.10287-1-riel@surriel.com>
@@ -44,83 +44,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reducing the overhead of the CPU controller is achieved by not walking
-all the sched_entities every time a task is enqueued or dequeued.
-
-One of the things being checked every single time is whether the cfs_rq
-is on the rq->leaf_cfs_rq_list.
-
-By only removing a cfs_rq from the list once it no longer has children
-on the list, we can avoid walking the sched_entity hierarchy if the bottom
-cfs_rq is on the list, once the runqueues have been flattened.
+Remove some fields from /proc/sched_debug that are removed from
+sched_entity in a subsequent patch, and add h_load, which comes in
+very handy to debug CPU controller weight distribution.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
 ---
- kernel/sched/fair.c  | 17 +++++++++++++++++
- kernel/sched/sched.h |  1 +
- 2 files changed, 18 insertions(+)
+ kernel/sched/debug.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 63cb40253b26..e41feacc45d9 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -286,6 +286,13 @@ static inline bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
- 
- 	cfs_rq->on_list = 1;
- 
-+	/*
-+	 * If the tmp_alone_branch cursor was moved, it means a child cfs_rq
-+	 * is already on the list ahead of us.
-+	 */
-+	if (rq->tmp_alone_branch != &rq->leaf_cfs_rq_list)
-+		cfs_rq->children_on_list++;
-+
- 	/*
- 	 * Ensure we either appear before our parent (if already
- 	 * enqueued) or force our parent to appear after us when it is
-@@ -311,6 +318,7 @@ static inline bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
- 		 * list.
- 		 */
- 		rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
-+		cfs_rq->tg->parent->cfs_rq[cpu]->children_on_list++;
- 		return true;
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 14c6a8716ba1..f6beaca97a09 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -416,11 +416,9 @@ static void print_cfs_group_stats(struct seq_file *m, int cpu, struct task_group
  	}
  
-@@ -359,6 +367,11 @@ static inline void list_del_leaf_cfs_rq(struct cfs_rq *cfs_rq)
- 		if (rq->tmp_alone_branch == &cfs_rq->leaf_cfs_rq_list)
- 			rq->tmp_alone_branch = cfs_rq->leaf_cfs_rq_list.prev;
+ 	P(se->load.weight);
+-	P(se->runnable_weight);
+ #ifdef CONFIG_SMP
+ 	P(se->avg.load_avg);
+ 	P(se->avg.util_avg);
+-	P(se->avg.runnable_load_avg);
+ #endif
  
-+		if (cfs_rq->tg->parent) {
-+			int cpu = cpu_of(rq);
-+			cfs_rq->tg->parent->cfs_rq[cpu]->children_on_list--;
-+		}
-+
- 		list_del_rcu(&cfs_rq->leaf_cfs_rq_list);
- 		cfs_rq->on_list = 0;
- 	}
-@@ -7687,6 +7700,10 @@ static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
- 	if (cfs_rq->avg.util_sum)
- 		return false;
+ #undef PN_SCHEDSTAT
+@@ -538,7 +536,6 @@ void print_cfs_rq(struct seq_file *m, int cpu, struct cfs_rq *cfs_rq)
+ 	SEQ_printf(m, "  .%-30s: %d\n", "nr_running", cfs_rq->nr_running);
+ 	SEQ_printf(m, "  .%-30s: %ld\n", "load", cfs_rq->load.weight);
+ #ifdef CONFIG_SMP
+-	SEQ_printf(m, "  .%-30s: %ld\n", "runnable_weight", cfs_rq->runnable_weight);
+ 	SEQ_printf(m, "  .%-30s: %lu\n", "load_avg",
+ 			cfs_rq->avg.load_avg);
+ 	SEQ_printf(m, "  .%-30s: %lu\n", "runnable_load_avg",
+@@ -547,17 +544,15 @@ void print_cfs_rq(struct seq_file *m, int cpu, struct cfs_rq *cfs_rq)
+ 			cfs_rq->avg.util_avg);
+ 	SEQ_printf(m, "  .%-30s: %u\n", "util_est_enqueued",
+ 			cfs_rq->avg.util_est.enqueued);
+-	SEQ_printf(m, "  .%-30s: %ld\n", "removed.load_avg",
+-			cfs_rq->removed.load_avg);
+ 	SEQ_printf(m, "  .%-30s: %ld\n", "removed.util_avg",
+ 			cfs_rq->removed.util_avg);
+-	SEQ_printf(m, "  .%-30s: %ld\n", "removed.runnable_sum",
+-			cfs_rq->removed.runnable_sum);
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 	SEQ_printf(m, "  .%-30s: %lu\n", "tg_load_avg_contrib",
+ 			cfs_rq->tg_load_avg_contrib);
+ 	SEQ_printf(m, "  .%-30s: %ld\n", "tg_load_avg",
+ 			atomic_long_read(&cfs_rq->tg->load_avg));
++	SEQ_printf(m, "  .%-30s: %lu\n", "h_load",
++			cfs_rq->h_load);
+ #endif
+ #endif
+ #ifdef CONFIG_CFS_BANDWIDTH
+@@ -961,10 +956,8 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 		   "nr_involuntary_switches", (long long)p->nivcsw);
  
-+	/* Remove decayed parents once their decayed children are gone. */
-+	if (cfs_rq->children_on_list)
-+		return false;
-+
- 	return true;
- }
- 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 32978a8de8ce..4f8acbab0fb2 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -557,6 +557,7 @@ struct cfs_rq {
- 	 * This list is used during load balance.
- 	 */
- 	int			on_list;
-+	int			children_on_list;
- 	struct list_head	leaf_cfs_rq_list;
- 	struct task_group	*tg;	/* group that "owns" this runqueue */
- 
+ 	P(se.load.weight);
+-	P(se.runnable_weight);
+ #ifdef CONFIG_SMP
+ 	P(se.avg.load_sum);
+-	P(se.avg.runnable_load_sum);
+ 	P(se.avg.util_sum);
+ 	P(se.avg.load_avg);
+ 	P(se.avg.runnable_load_avg);
 -- 
 2.20.1
 
