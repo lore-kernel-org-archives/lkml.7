@@ -2,105 +2,111 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE28C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A30C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B092020645
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F0520645
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfF1NhT (ORCPT
+        id S1726796AbfF1Nim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 09:37:19 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:45915 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726664AbfF1NhT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:37:19 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id gr3vhmL0sSfvXgr3yhS9im; Fri, 28 Jun 2019 15:37:17 +0200
-Subject: Re: [PATCH v2 00/11] Venus stateful Codec API
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Vikash Garodia <vgarodia@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>
-References: <20190628130002.24293-1-stanimir.varbanov@linaro.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <9c3399a8-4fc6-3117-10ee-3395cee034da@xs4all.nl>
-Date:   Fri, 28 Jun 2019 15:37:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 28 Jun 2019 09:38:42 -0400
+Received: from verein.lst.de ([213.95.11.211]:38826 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726655AbfF1Nim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 09:38:42 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8BA79227A81; Fri, 28 Jun 2019 15:38:37 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 15:38:37 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190628133837.GA3801@lst.de>
+References: <20190625170115.GA9746@lst.de> <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com> <20190626065708.GB24531@lst.de> <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com> <20190626202107.GA5850@ziepe.ca> <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com> <20190627090843.GB11548@lst.de> <89889319-e778-7772-ab36-dc55b59826be@deltatee.com> <20190627170027.GE10652@lst.de> <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <20190628130002.24293-1-stanimir.varbanov@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfK9Yvy8TSAOpVdctQbKSiaJLdA9YrUHCjxTdzggXbbTuxa7REtky8kGOIOb0Go0+ghoOFhwS6Sd+J15tIhOPYuG6KaD46wEG65xvFborgAFOOOuojzqe
- f0k8c45tWPL0tji79rPDFc5usfkKvGzp6rVkp6TjCYuqYWLptx/W6m0x4y07y4k+XwUXjc9NyQGqgOnSIGP+WY0wOwA61KAHWqhS4n0Pmc9rKk3K2hF7XKAB
- eeVoBlkv1c+GDBvdy9YCsLTei+5Wk4e9z7qwx/Vw4ZoRdebqJmCA7JWp2hn8NlpxW2hyIyu0+c9Te/GslgwaCEv1LcdChXm0AjLWnmVZ6+lgaw4VPfhTdOYd
- wHOWhr7oK9yBfEPFHbzfaV/1QQlaISRQ3M+xqbiugi7arRhp1gc9wjCZQG4zNBq+DZ6xra5BbUmMTZf8izG5Rn6ssTJacw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/19 2:59 PM, Stanimir Varbanov wrote:
-> Hello,
+On Thu, Jun 27, 2019 at 12:00:35PM -0600, Logan Gunthorpe wrote:
+> > It is not.  (c) is fundamentally very different as it is not actually
+> > an operation that ever goes out to the wire at all, and which is why the
+> > actual physical address on the wire does not matter at all.
+> > Some interfaces like NVMe have designed it in a way that it the commands
+> > used to do this internal transfer look like (b2), but that is just their
+> > (IMHO very questionable) interface design choice, that produces a whole
+> > chain of problems.
 > 
-> Here is v2 of the Venus transition to stateful codec API
-> compliance. The v2 can be found at [1].
+> >From the mapping device's driver's perspective yes, but from the
+> perspective of a submitting driver they would be the same.
+
+With your dma_addr_t scheme it won't be the same, as you'd need
+a magic way to generate the internal addressing and stuff it into
+the dma_addr_t.  With a phys_addr_t based scheme they should basically
+be all the same.
+
+> Yes, you did suggest them. But what I'm trying to suggest is we don't
+> *necessarily* need the lookup. For demonstration purposes only, a
+> submitting driver could very roughly potentially do:
 > 
-> Changes since v1:
->  * codec_state is now enum
->  * dropped IS_OUT and IS_CAP macros and use vb2_start_streaming_called()
->  * corrected g_fmt and reconfig logic
->  * s/vdec_dst_buffers_done/vdec_cancel_dst_buffers
->  * use v4l2_m2m_ioctl_try_decoder_cmd M2M helper
->  * various fixes to make v4l2-compliance pass the streaming test
+> struct bio_vec vec;
+> dist = pci_p2pdma_dist(provider_pdev, mapping_pdev);
+> if (dist < 0) {
+>      /* use regular memory */
+>      vec.bv_addr = virt_to_phys(kmalloc(...));
+>      vec.bv_flags = 0;
+> } else if (dist & PCI_P2PDMA_THRU_HOST_BRIDGE) {
+>      vec.bv_addr = pci_p2pmem_alloc_phys(provider_pdev, ...);
+>      vec.bv_flags = BVEC_MAP_RESOURCE;
+> } else {
+>      vec.bv_addr = pci_p2pmem_alloc_bus_addr(provider_pdev, ...);
+>      vec.bv_flags = BVEC_MAP_BUS_ADDR;
+> }
+
+That doesn't look too bad, except..
+
+> -- And a mapping driver would roughly just do:
 > 
-> To test the streaming with --stream-from-hdr v4l2-compliance option I have
-> to make the following hack (it is needed because the size of decoder input
-> buffers (OUTPUT queue) is not enough for the h264 bitstream, i.e the driver
-> default resolution is 64x64 but the h264 stream is 320x240):
-> 
-> diff --git a/utils/v4l2-compliance/v4l2-test-buffers.cpp b/utils/v4l2-compliance/v4l2-test-buffers.cpp
-> index c71dcf65b721..dc0fcf20d3e4 100644
-> --- a/utils/v4l2-compliance/v4l2-test-buffers.cpp
-> +++ b/utils/v4l2-compliance/v4l2-test-buffers.cpp
-> @@ -1294,6 +1294,11 @@ int testMmap(struct node *node, unsigned frame_count, enum poll_mode pollmode)
->                                         fmt.s_sizeimage(fmt.g_sizeimage(p) * 2, p);
->                         }
->                         fail_on_test(q.create_bufs(node, 1, &fmt));
-> +
-> +                       for (unsigned p = 0; p < fmt.g_num_planes(); p++)
-> +                               fmt.s_sizeimage(fmt.g_sizeimage(p) * 2, p);
-> +                       node->s_fmt(fmt);
-> +
->                         fail_on_test(q.reqbufs(node, 2));
->                 }
->                 if (v4l_type_is_output(type))
+> dma_addr_t dma_addr;
+> if (vec.bv_flags & BVEC_MAP_BUS_ADDR) {
+>      if (pci_bus_addr_in_bar(mapping_pdev, vec.bv_addr, &bar, &off))  {
+>           /* case (c) */
+>           /* program the DMA engine with bar and off */
 
-Does the venus driver set sizeimage based on the given output resolution?
+Why bother with that here if we could also let the caller handle
+that? pci_p2pdma_dist() should be able to trivially find that out
+based on provider_dev == mapping_dev.
 
-E.g. if v4l2-compliance would first set the output resolution to 320x240,
-is the returned sizeimage value OK in that case?
+> The real difficulty here is that you'd really want all the above handled
+> by a dma_map_bvec() so it can combine every vector hitting the IOMMU
+> into a single continuous IOVA -- but it's hard to fit case (c) into that
+> equation. So it might be that a dma_map_bvec() handles cases (a), (b1)
+> and (b2) and the mapping driver has to then check each resulting DMA
+> vector for pci_bus_addr_in_bar() while it is programming the DMA engine
+> to deal with case (c).
 
-And this also means that the venus driver requires each buffer to have
-a single compressed frame, right? I.e. it can't be spread over multiple
-OUTPUT buffers.
+I'd do it the other way around.  pci_p2pdma_dist is used to find
+the p2p type.  The p2p type is stuff into the bio_vec, and we then:
 
-We really need to let userspace know about such restrictions.
-
-Stanimir, can you list the restrictions of the decoder for the various
-codecs?
-
-Regards,
-
-	Hans
+ (1) manually check for case (c) in driver for drivers that want to
+     treat it different from (b)
+ (2) we then have a dma mapping wrapper that checks the p2p type
+     and does the right thing for the rest.
