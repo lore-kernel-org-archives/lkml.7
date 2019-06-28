@@ -2,136 +2,94 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8965C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437EFC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B620C205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C7A121670
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561736790;
+	bh=ogM5DFuL0hpNwB08hnvvzh1goOaGyhrCIOR73aDgEQY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RP/MKh1ZBmVdxgwihbgL3QMGG04wG3ZGf4an/ZFE61vWKb7mh+XQo5dGkRsdluzSI
+	 EArBpIvI28X1DasSTIyoEhhHmzy9fZsh0ULDRW+rJIoy9+3LIgW35rsrCgt2ZPSZW/
+	 yoRDYLRWMAh1Tvn9YH75smBuPUUGQI0NMR7ZGbik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfF1Ppp (ORCPT
+        id S1726961AbfF1Pq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:45:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46420 "EHLO mx1.redhat.com"
+        Fri, 28 Jun 2019 11:46:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbfF1Ppo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:45:44 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726686AbfF1Pq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:46:28 -0400
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DB60B3092652;
-        Fri, 28 Jun 2019 15:45:38 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5DEAA5D704;
-        Fri, 28 Jun 2019 15:45:36 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 11/11] fsinfo: proc - add sb operation fsinfo() [ver #15]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
-        christian@brauner.io, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 28 Jun 2019 16:45:35 +0100
-Message-ID: <156173673559.14042.17529988400865163194.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156173661696.14042.17822154531324224780.stgit@warthog.procyon.org.uk>
-References: <156173661696.14042.17822154531324224780.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        by mail.kernel.org (Postfix) with ESMTPSA id F213221670;
+        Fri, 28 Jun 2019 15:46:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561736787;
+        bh=ogM5DFuL0hpNwB08hnvvzh1goOaGyhrCIOR73aDgEQY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NZ28gVG09tUT0i0jwUS2iQsrBsikCeynWpoIZLEW4lJl2MD/4E9HHsekABXJCrsjB
+         QXUjawBUTAMvwJWKMqlRIr2pghSl7b+zwS5Vsb02ZIWINFUlAsGJGN8qOYSUqyUcPh
+         81BW7HcKlY3bb2S5ugxN7GVkqN+vr3SaAXIiI928=
+Received: by mail-qt1-f176.google.com with SMTP id s15so6769461qtk.9;
+        Fri, 28 Jun 2019 08:46:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAWJAojNcm4gua4Br76vTVnBgxiqN5JEv1fmEXhtoHgLbpsu3nG+
+        UyV2KSol+9MH/ry5nkzjcaxYZkmaX1GhFGK3wQ==
+X-Google-Smtp-Source: APXvYqyYBF/8wndwALugA2vJeelD3HLa6psVbvGS9oxdpy8J0nCqfRMpO4Ufp2igGgyxsfOpTntYKJCwPnhVM1XNc7s=
+X-Received: by 2002:ac8:368a:: with SMTP id a10mr8814969qtc.143.1561736786114;
+ Fri, 28 Jun 2019 08:46:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 28 Jun 2019 15:45:43 +0000 (UTC)
+References: <20190628023838.15426-1-andrew@aj.id.au> <20190628023838.15426-4-andrew@aj.id.au>
+In-Reply-To: <20190628023838.15426-4-andrew@aj.id.au>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 28 Jun 2019 09:46:14 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJKF1H6YtFTG-xFhGztdDpMKBihW732Wx6HMUhCw27vNw@mail.gmail.com>
+Message-ID: <CAL_JsqJKF1H6YtFTG-xFhGztdDpMKBihW732Wx6HMUhCw27vNw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/8] dt-bindings: pinctrl: aspeed: Convert AST2500
+ bindings to json-schema
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Johnny Huang <johnny_huang@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Kent <raven@themaw.net>
+On Thu, Jun 27, 2019 at 8:39 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> Convert ASPEED pinctrl bindings to DT schema format using json-schema.
+>
+> Cc: Johnny Huang <johnny_huang@aspeedtech.com>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+> In v2:
+>
+> * Enforce function/group names in bindings
+> * Move description above properties
+> * Simplify specification of compatible
+> * Cleanup license specification
+>
+>  .../pinctrl/aspeed,ast2500-pinctrl.txt        | 119 ----------------
+>  .../pinctrl/aspeed,ast2500-pinctrl.yaml       | 134 ++++++++++++++++++
+>  2 files changed, 134 insertions(+), 119 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
 
-The new fsinfo() system call adds a new super block operation
-->fsinfo() which is used by file systems to provide file
-system specific information for fsinfo() requests.
-
-The fsinfo() request FSINFO_ATTR_PARAMETERS provides the same
-function as sb operation ->show_options() so it needs to be
-implemented by any file system that provides ->show_options()
-as a minimum.
-
-Also add a simple FSINFO_ATTR_CAPABILITIES implementation.
-
-Signed-off-by: Ian Kent <raven@themaw.net>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/proc/inode.c |   37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index 5f8d215b3fd0..28c287aff6aa 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -24,6 +24,7 @@
- #include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/mount.h>
-+#include <linux/fsinfo.h>
- 
- #include <linux/uaccess.h>
- 
-@@ -115,6 +116,39 @@ static int proc_show_options(struct seq_file *seq, struct dentry *root)
- 	return 0;
- }
- 
-+#ifdef CONFIG_FSINFO
-+/*
-+ * Get filesystem information.
-+ */
-+static int proc_fsinfo(struct path *path, struct fsinfo_kparams *params)
-+{
-+	struct super_block *sb = path->dentry->d_sb;
-+	struct pid_namespace *pid = sb->s_fs_info;
-+	struct fsinfo_capabilities *caps;
-+
-+	switch (params->request) {
-+	case FSINFO_ATTR_CAPABILITIES:
-+		caps = params->buffer;
-+		fsinfo_set_cap(caps, FSINFO_CAP_IS_KERNEL_FS);
-+		fsinfo_set_cap(caps, FSINFO_CAP_NOT_PERSISTENT);
-+		return sizeof(*caps);
-+
-+	case FSINFO_ATTR_PARAMETERS:
-+		fsinfo_note_sb_params(params, sb->s_flags);
-+		if (!gid_eq(pid->pid_gid, GLOBAL_ROOT_GID))
-+			fsinfo_note_paramf(params, "gid", "%u",
-+				from_kgid_munged(&init_user_ns, pid->pid_gid));
-+		if (pid->hide_pid != HIDEPID_OFF)
-+			fsinfo_note_paramf(params, "hidepid",
-+					  "%u", pid->hide_pid);
-+		return params->usage;
-+
-+	default:
-+		return generic_fsinfo(path, params);
-+	}
-+}
-+#endif /* CONFIG_FSINFO */
-+
- const struct super_operations proc_sops = {
- 	.alloc_inode	= proc_alloc_inode,
- 	.free_inode	= proc_free_inode,
-@@ -122,6 +156,9 @@ const struct super_operations proc_sops = {
- 	.evict_inode	= proc_evict_inode,
- 	.statfs		= simple_statfs,
- 	.show_options	= proc_show_options,
-+#ifdef CONFIG_FSINFO
-+	.fsinfo		= proc_fsinfo,
-+#endif
- };
- 
- enum {BIAS = -1U<<31};
-
+Reviewed-by: Rob Herring <robh@kernel.org>
