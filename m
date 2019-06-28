@@ -7,308 +7,187 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AA0C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A66C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DDDA208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9648E208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561725077;
-	bh=gN24mhpZPdqhQreBaX4FNtk/aXC0wDFFgtXDeD6+OAI=;
+	s=default; t=1561725083;
+	bh=xmHCNjVoJevBrhW4x9IcFU/JFDWpNbudEbrzyF5jXXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=luUMRnhcmLm6rihSsENiXWO8Vc0C74O6BPLAwKGHqsl1LeiiNNMLrmbk5pSEqqGrD
-	 GjXNHI46LphS2Ls3gbtvJXfYw4e53cBA0bV5UEDQW9Y4XZVfBQhnDMkA5oIZtaECji
-	 6NifeZfSTZwRlxCUUpUGzpMg60tfO7AcHtGwjZIk=
+	b=J7NLt48XUtyDZNBqogMXntN6dYlaxeQ/6qddKux3DswVOyZw+qPRsh6jlJz+HyhNc
+	 ys08+tgbatsbzi5fXPx6X/RBVWT2//AFl7j/wmDHdOf2SEIRzf5Es48yEHL+J6nicH
+	 yf6YKf7UBOKd46mqOz+HEHPduL02KUALdmtWymdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfF1MbH (ORCPT
+        id S1727192AbfF1Mas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:31:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39868 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727188AbfF1Mas (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:30:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39182 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbfF1Man (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 08:30:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HNTqLR7YTpiCGsfcYzZ23NBv7IuWobNYT8gokGCe3wo=; b=jOK9yEioolCXopD1Wq607Z9fR/
-        HdMohOTqYZUqXwti9GCkq6A/d0XRGI45pI0UuIi32KZf8+8qIJi/BsB/AXDe18qx+EYe0Kb3wSpax
-        BC4JBaEQFMDtp2rNHNAnVRNUlknvpaqomnsjSBYvbRksF4hQ8rk5FWq7VHR0xaVHdGiXcLi1mhWOL
-        7W1t49Fu8buHnGzEJsAmMVi6F8H7jPn2lzXVU6ILBj0+0XL7flg8ydZvEIxgxJvmRKTD407ivUgCs
-        DzquqTFZLZPqC91AwCHE5X0N6bEReQ7mAXvdb4/R1QTVyQNWjSXZTkOmieePIKqiGiHsO2c6fu0nx
-        yzEbLWYg==;
+        bh=e7PI9xcipbF07o8l7bOvfTR9teu/JtxbkDUbu2d3wzA=; b=ky2z+0udABzsP4et8Uaot7GiuW
+        2Yotbf4DBoCpouCXHDKG2WipZYhqQD1MhrS/+Cbc4YL+VCbF8KDtldJXibnZHkvpIh3XyFkRUU7Ye
+        HTt8ThFJN1QBmcZKGPVcqoy43iR09f2NNULlBM9I2jUksBA6rMvInjyftg/9Hhr8JhVRhAS48QQnI
+        rYJD9KGmRNCMiyWW/t99iZ2SL7UXGwrU0wcpJzyRDqbBYpvmqfelcF5HHIrjkM8Tb7VM5whwMUT5R
+        p+P9LeMW5MWg1kwJCl20kxZK2BDi+ZJ4FFF859YQl3rPxx5rvK3YUbDtfU8PPeKSBfWPiFtsKf10i
+        hYclQnZw==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1U-00055N-Fq; Fri, 28 Jun 2019 12:30:36 +0000
+        id 1hgq1U-00055a-Lt; Fri, 28 Jun 2019 12:30:36 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005SM-DP; Fri, 28 Jun 2019 09:30:34 -0300
+        id 1hgq1S-0005Sz-KA; Fri, 28 Jun 2019 09:30:34 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
-Subject: [PATCH 18/39] docs: admin-guide: add kdump documentation into it
-Date:   Fri, 28 Jun 2019 09:30:11 -0300
-Message-Id: <654e7591c044632c06257e0f069a52c0bb993554.1561724493.git.mchehab+samsung@kernel.org>
+        Justin Sanders <justin@coraid.com>
+Subject: [PATCH 26/39] docs: aoe: add it to the driver-api book
+Date:   Fri, 28 Jun 2019 09:30:19 -0300
+Message-Id: <654ed60bf8a921e162b46c487c6c77cf76419918.1561724493.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
 References: <cover.1561724493.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Kdump documentation describes procedures with admins use
-in order to solve issues on their systems.
+Those files belong to the admin guide, so add them.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/admin-guide/bug-hunting.rst            | 4 ++--
- Documentation/admin-guide/index.rst                  | 1 +
- Documentation/{ => admin-guide}/kdump/gdbmacros.txt  | 0
- Documentation/{ => admin-guide}/kdump/index.rst      | 1 -
- Documentation/{ => admin-guide}/kdump/kdump.rst      | 0
- Documentation/{ => admin-guide}/kdump/vmcoreinfo.rst | 0
- Documentation/admin-guide/kernel-parameters.txt      | 6 +++---
- Documentation/powerpc/firmware-assisted-dump.rst     | 2 +-
- Documentation/translations/zh_CN/oops-tracing.txt    | 4 ++--
- Documentation/watchdog/hpwdt.rst                     | 2 +-
- MAINTAINERS                                          | 2 +-
- arch/arm/Kconfig                                     | 2 +-
- arch/arm64/Kconfig                                   | 2 +-
- arch/sh/Kconfig                                      | 2 +-
- arch/x86/Kconfig                                     | 4 ++--
- 15 files changed, 16 insertions(+), 16 deletions(-)
- rename Documentation/{ => admin-guide}/kdump/gdbmacros.txt (100%)
- rename Documentation/{ => admin-guide}/kdump/index.rst (97%)
- rename Documentation/{ => admin-guide}/kdump/kdump.rst (100%)
- rename Documentation/{ => admin-guide}/kdump/vmcoreinfo.rst (100%)
+ Documentation/{ => admin-guide}/aoe/aoe.rst         | 4 ++--
+ Documentation/{ => admin-guide}/aoe/autoload.sh     | 0
+ Documentation/{ => admin-guide}/aoe/examples.rst    | 0
+ Documentation/{ => admin-guide}/aoe/index.rst       | 2 --
+ Documentation/{ => admin-guide}/aoe/status.sh       | 0
+ Documentation/{ => admin-guide}/aoe/todo.rst        | 0
+ Documentation/{ => admin-guide}/aoe/udev-install.sh | 0
+ Documentation/{ => admin-guide}/aoe/udev.txt        | 2 +-
+ Documentation/admin-guide/index.rst                 | 1 +
+ MAINTAINERS                                         | 2 +-
+ 10 files changed, 5 insertions(+), 6 deletions(-)
+ rename Documentation/{ => admin-guide}/aoe/aoe.rst (97%)
+ rename Documentation/{ => admin-guide}/aoe/autoload.sh (100%)
+ rename Documentation/{ => admin-guide}/aoe/examples.rst (100%)
+ rename Documentation/{ => admin-guide}/aoe/index.rst (95%)
+ rename Documentation/{ => admin-guide}/aoe/status.sh (100%)
+ rename Documentation/{ => admin-guide}/aoe/todo.rst (100%)
+ rename Documentation/{ => admin-guide}/aoe/udev-install.sh (100%)
+ rename Documentation/{ => admin-guide}/aoe/udev.txt (93%)
 
-diff --git a/Documentation/admin-guide/bug-hunting.rst b/Documentation/admin-guide/bug-hunting.rst
-index b761aa2a51d2..44b8a4edd348 100644
---- a/Documentation/admin-guide/bug-hunting.rst
-+++ b/Documentation/admin-guide/bug-hunting.rst
-@@ -90,9 +90,9 @@ the disk is not available then you have three options:
-     run a null modem to a second machine and capture the output there
-     using your favourite communication program.  Minicom works well.
+diff --git a/Documentation/aoe/aoe.rst b/Documentation/admin-guide/aoe/aoe.rst
+similarity index 97%
+rename from Documentation/aoe/aoe.rst
+rename to Documentation/admin-guide/aoe/aoe.rst
+index 58747ecec71d..a05e751363a0 100644
+--- a/Documentation/aoe/aoe.rst
++++ b/Documentation/admin-guide/aoe/aoe.rst
+@@ -20,7 +20,7 @@ driver.  The aoetools are on sourceforge.
  
--(3) Use Kdump (see Documentation/kdump/kdump.rst),
-+(3) Use Kdump (see Documentation/admin-guide/kdump/kdump.rst),
-     extract the kernel ring buffer from old memory with using dmesg
--    gdbmacro in Documentation/kdump/gdbmacros.txt.
-+    gdbmacro in Documentation/admin-guide/kdump/gdbmacros.txt.
+   http://aoetools.sourceforge.net/
  
- Finding the bug's location
- --------------------------
+-The scripts in this Documentation/aoe directory are intended to
++The scripts in this Documentation/admin-guide/aoe directory are intended to
+ document the use of the driver and are not necessary if you install
+ the aoetools.
+ 
+@@ -86,7 +86,7 @@ Using sysfs
+   a convenient way.  Users with aoetools should use the aoe-stat
+   command::
+ 
+-    root@makki root# sh Documentation/aoe/status.sh
++    root@makki root# sh Documentation/admin-guide/aoe/status.sh
+        e10.0            eth3              up
+        e10.1            eth3              up
+        e10.2            eth3              up
+diff --git a/Documentation/aoe/autoload.sh b/Documentation/admin-guide/aoe/autoload.sh
+similarity index 100%
+rename from Documentation/aoe/autoload.sh
+rename to Documentation/admin-guide/aoe/autoload.sh
+diff --git a/Documentation/aoe/examples.rst b/Documentation/admin-guide/aoe/examples.rst
+similarity index 100%
+rename from Documentation/aoe/examples.rst
+rename to Documentation/admin-guide/aoe/examples.rst
+diff --git a/Documentation/aoe/index.rst b/Documentation/admin-guide/aoe/index.rst
+similarity index 95%
+rename from Documentation/aoe/index.rst
+rename to Documentation/admin-guide/aoe/index.rst
+index 4394b9b7913c..d71c5df15922 100644
+--- a/Documentation/aoe/index.rst
++++ b/Documentation/admin-guide/aoe/index.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ =======================
+ ATA over Ethernet (AoE)
+ =======================
+diff --git a/Documentation/aoe/status.sh b/Documentation/admin-guide/aoe/status.sh
+similarity index 100%
+rename from Documentation/aoe/status.sh
+rename to Documentation/admin-guide/aoe/status.sh
+diff --git a/Documentation/aoe/todo.rst b/Documentation/admin-guide/aoe/todo.rst
+similarity index 100%
+rename from Documentation/aoe/todo.rst
+rename to Documentation/admin-guide/aoe/todo.rst
+diff --git a/Documentation/aoe/udev-install.sh b/Documentation/admin-guide/aoe/udev-install.sh
+similarity index 100%
+rename from Documentation/aoe/udev-install.sh
+rename to Documentation/admin-guide/aoe/udev-install.sh
+diff --git a/Documentation/aoe/udev.txt b/Documentation/admin-guide/aoe/udev.txt
+similarity index 93%
+rename from Documentation/aoe/udev.txt
+rename to Documentation/admin-guide/aoe/udev.txt
+index 54feda5a0772..5fb756466bc7 100644
+--- a/Documentation/aoe/udev.txt
++++ b/Documentation/admin-guide/aoe/udev.txt
+@@ -11,7 +11,7 @@
+ #   udev_rules="/etc/udev/rules.d/"
+ #   bash# ls /etc/udev/rules.d/
+ #   10-wacom.rules  50-udev.rules
+-#   bash# cp /path/to/linux/Documentation/aoe/udev.txt \
++#   bash# cp /path/to/linux/Documentation/admin-guide/aoe/udev.txt \
+ #           /etc/udev/rules.d/60-aoe.rules
+ #  
+ 
 diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 9899b78dbe50..65e821a03aca 100644
+index c073af461cdf..be3b86db8171 100644
 --- a/Documentation/admin-guide/index.rst
 +++ b/Documentation/admin-guide/index.rst
-@@ -39,6 +39,7 @@ problems and bugs in particular.
-    ramoops
-    dynamic-debug-howto
-    init
-+   kdump/index
-    perf/index
- 
- This is the beginning of a section with information of interest to
-diff --git a/Documentation/kdump/gdbmacros.txt b/Documentation/admin-guide/kdump/gdbmacros.txt
-similarity index 100%
-rename from Documentation/kdump/gdbmacros.txt
-rename to Documentation/admin-guide/kdump/gdbmacros.txt
-diff --git a/Documentation/kdump/index.rst b/Documentation/admin-guide/kdump/index.rst
-similarity index 97%
-rename from Documentation/kdump/index.rst
-rename to Documentation/admin-guide/kdump/index.rst
-index 2b17fcf6867a..8e2ebd0383cd 100644
---- a/Documentation/kdump/index.rst
-+++ b/Documentation/admin-guide/kdump/index.rst
-@@ -1,4 +1,3 @@
--:orphan:
- 
- ================================================================
- Documentation for Kdump - The kexec-based Crash Dumping Solution
-diff --git a/Documentation/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-similarity index 100%
-rename from Documentation/kdump/kdump.rst
-rename to Documentation/admin-guide/kdump/kdump.rst
-diff --git a/Documentation/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-similarity index 100%
-rename from Documentation/kdump/vmcoreinfo.rst
-rename to Documentation/admin-guide/kdump/vmcoreinfo.rst
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index e38b96d061f4..9b535c0e22f3 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -708,14 +708,14 @@
- 			[KNL, x86_64] select a region under 4G first, and
- 			fall back to reserve region above 4G when '@offset'
- 			hasn't been specified.
--			See Documentation/kdump/kdump.rst for further details.
-+			See Documentation/admin-guide/kdump/kdump.rst for further details.
- 
- 	crashkernel=range1:size1[,range2:size2,...][@offset]
- 			[KNL] Same as above, but depends on the memory
- 			in the running system. The syntax of range is
- 			start-[end] where start and end are both
- 			a memory unit (amount[KMG]). See also
--			Documentation/kdump/kdump.rst for an example.
-+			Documentation/admin-guide/kdump/kdump.rst for an example.
- 
- 	crashkernel=size[KMG],high
- 			[KNL, x86_64] range could be above 4G. Allow kernel
-@@ -1207,7 +1207,7 @@
- 			Specifies physical address of start of kernel core
- 			image elf header and optionally the size. Generally
- 			kexec loader will pass this option to capture kernel.
--			See Documentation/kdump/kdump.rst for details.
-+			See Documentation/admin-guide/kdump/kdump.rst for details.
- 
- 	enable_mtrr_cleanup [X86]
- 			The kernel tries to adjust MTRR layout from continuous
-diff --git a/Documentation/powerpc/firmware-assisted-dump.rst b/Documentation/powerpc/firmware-assisted-dump.rst
-index d7fa7c35dd12..9ca12830a48e 100644
---- a/Documentation/powerpc/firmware-assisted-dump.rst
-+++ b/Documentation/powerpc/firmware-assisted-dump.rst
-@@ -61,7 +61,7 @@ as follows:
-          the default calculated size. Use this option if default
-          boot memory size is not sufficient for second kernel to
-          boot successfully. For syntax of crashkernel= parameter,
--         refer to Documentation/kdump/kdump.rst. If any offset is
-+         refer to Documentation/admin-guide/kdump/kdump.rst. If any offset is
-          provided in crashkernel= parameter, it will be ignored
-          as fadump uses a predefined offset to reserve memory
-          for boot memory dump preservation in case of a crash.
-diff --git a/Documentation/translations/zh_CN/oops-tracing.txt b/Documentation/translations/zh_CN/oops-tracing.txt
-index 368ddd05b304..c5f3bda7abcb 100644
---- a/Documentation/translations/zh_CN/oops-tracing.txt
-+++ b/Documentation/translations/zh_CN/oops-tracing.txt
-@@ -53,8 +53,8 @@ cat /proc/kmsg > file， 然而你必须介入中止传输， kmsg是一个“
- （2）用串口终端启动（请参看Documentation/admin-guide/serial-console.rst），运行一个null
- modem到另一台机器并用你喜欢的通讯工具获取输出。Minicom工作地很好。
- 
--（3）使用Kdump（请参看Documentation/kdump/kdump.rst），
--使用在Documentation/kdump/gdbmacros.txt中定义的dmesg gdb宏，从旧的内存中提取内核
-+（3）使用Kdump（请参看Documentation/admin-guide/kdump/kdump.rst），
-+使用在Documentation/admin-guide/kdump/gdbmacros.txt中定义的dmesg gdb宏，从旧的内存中提取内核
- 环形缓冲区。
- 
- 完整信息
-diff --git a/Documentation/watchdog/hpwdt.rst b/Documentation/watchdog/hpwdt.rst
-index 94a96371113e..49c647dba8aa 100644
---- a/Documentation/watchdog/hpwdt.rst
-+++ b/Documentation/watchdog/hpwdt.rst
-@@ -59,7 +59,7 @@ Last reviewed: 08/20/2018
-  and loop forever.  This is generally not what a watchdog user wants.
- 
-  For those wishing to learn more please see:
--	Documentation/kdump/kdump.rst
-+	Documentation/admin-guide/kdump/kdump.rst
- 	Documentation/admin-guide/kernel-parameters.txt (panic=)
- 	Your Linux Distribution specific documentation.
+@@ -82,6 +82,7 @@ configure specific aspects of kernel behavior to your liking.
+    namespaces/index
+    perf-security
+    acpi/index
++   aoe/index
+    device-mapper/index
+    laptops/index
  
 diff --git a/MAINTAINERS b/MAINTAINERS
-index d35ff73f718a..4c622a19ab7d 100644
+index 664e2a827544..2791b443ab8e 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -8622,7 +8622,7 @@ R:	Vivek Goyal <vgoyal@redhat.com>
- L:	kexec@lists.infradead.org
- W:	http://lse.sourceforge.net/kdump/
- S:	Maintained
--F:	Documentation/kdump/
-+F:	Documentation/admin-guide/kdump/
+@@ -2650,7 +2650,7 @@ ATA OVER ETHERNET (AOE) DRIVER
+ M:	"Justin Sanders" <justin@coraid.com>
+ W:	http://www.openaoe.org/
+ S:	Supported
+-F:	Documentation/aoe/
++F:	Documentation/admin-guide/aoe/
+ F:	drivers/block/aoe/
  
- KEENE FM RADIO TRANSMITTER DRIVER
- M:	Hans Verkuil <hverkuil@xs4all.nl>
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 8bf8985ec667..d5bd4350fcbd 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -2025,7 +2025,7 @@ config CRASH_DUMP
- 	  kdump/kexec. The crash dump kernel must be compiled to a
- 	  memory address not used by the main kernel
- 
--	  For more details see Documentation/kdump/kdump.rst
-+	  For more details see Documentation/admin-guide/kdump/kdump.rst
- 
- config AUTO_ZRELADDR
- 	bool "Auto calculation of the decompressed kernel image address"
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index accb045997c6..e1ea69994e0f 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -997,7 +997,7 @@ config CRASH_DUMP
- 	  reserved region and then later executed after a crash by
- 	  kdump/kexec.
- 
--	  For more details see Documentation/kdump/kdump.rst
-+	  For more details see Documentation/admin-guide/kdump/kdump.rst
- 
- config XEN_DOM0
- 	def_bool y
-diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index 31a7d12db705..c2858ac6a46a 100644
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -626,7 +626,7 @@ config CRASH_DUMP
- 	  to a memory address not used by the main kernel using
- 	  PHYSICAL_START.
- 
--	  For more details see Documentation/kdump/kdump.rst
-+	  For more details see Documentation/admin-guide/kdump/kdump.rst
- 
- config KEXEC_JUMP
- 	bool "kexec jump (EXPERIMENTAL)"
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index c9d59ca5e3ac..489fd833b980 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2057,7 +2057,7 @@ config CRASH_DUMP
- 	  to a memory address not used by the main kernel or BIOS using
- 	  PHYSICAL_START, or it must be built as a relocatable image
- 	  (CONFIG_RELOCATABLE=y).
--	  For more details see Documentation/kdump/kdump.rst
-+	  For more details see Documentation/admin-guide/kdump/kdump.rst
- 
- config KEXEC_JUMP
- 	bool "kexec jump"
-@@ -2094,7 +2094,7 @@ config PHYSICAL_START
- 	  the reserved region.  In other words, it can be set based on
- 	  the "X" value as specified in the "crashkernel=YM@XM"
- 	  command line boot parameter passed to the panic-ed
--	  kernel. Please take a look at Documentation/kdump/kdump.rst
-+	  kernel. Please take a look at Documentation/admin-guide/kdump/kdump.rst
- 	  for more details about crash dumps.
- 
- 	  Usage of bzImage for capturing the crash dump is recommended as
+ ATHEROS 71XX/9XXX GPIO DRIVER
 -- 
 2.21.0
 
