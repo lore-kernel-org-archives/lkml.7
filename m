@@ -2,141 +2,170 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40881C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D929C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4B8205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70222205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfF1Jm5 (ORCPT
+        id S1726669AbfF1Jni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:42:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:43844 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbfF1Jm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:42:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FEC628;
-        Fri, 28 Jun 2019 02:42:56 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E4B553F718;
-        Fri, 28 Jun 2019 02:42:53 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 10:42:51 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v6 3/3] arm64: kexec_file: add rng-seed support
-Message-ID: <20190628094251.GC36437@lakrids.cambridge.arm.com>
-References: <20190612043258.166048-1-hsinyi@chromium.org>
- <20190612043258.166048-4-hsinyi@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612043258.166048-4-hsinyi@chromium.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        Fri, 28 Jun 2019 05:43:38 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52878 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfF1Jni (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 05:43:38 -0400
+Received: from laptop (unknown [IPv6:2a01:e34:ee7d:73d0:5796:7015:7f6:aeeb])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: aragua)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 023D92603FD;
+        Fri, 28 Jun 2019 10:43:34 +0100 (BST)
+Message-ID: <08bd801ef543e99cf7e5a81633ad8bf7f5c5f202.camel@collabora.com>
+Subject: Re: [PATCH 2/2] iio: common: cros_ec_sensors: set default
+ frequencies
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 28 Jun 2019 11:43:32 +0200
+In-Reply-To: <6ca7ee49-51f9-a65f-5f71-0eac04ee9434@collabora.com>
+References: <cover.1561642224.git.fabien.lahoudere@collabora.com>
+         <7d3972d1200065fe6e98a310e66f53a7ed12e281.1561642224.git.fabien.lahoudere@collabora.com>
+         <6ca7ee49-51f9-a65f-5f71-0eac04ee9434@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.2 (3.30.2-2.fc29) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 12:33:02PM +0800, Hsin-Yi Wang wrote:
-> Adding "rng-seed" to dtb. It's fine to add this property if original
-> fdt doesn't contain it. Since original seed will be wiped after
-> read, so use a default size 128 bytes here.
+Hi Enric
 
-Why is 128 bytes the default value?
-
-I didn't see an update to Documentation/devicetree/bindings/chosen.txt,
-so it's not clear to me precisely what we expect.
-
+Le jeudi 27 juin 2019 à 17:48 +0200, Enric Balletbo i Serra a écrit :
+> Hi Fabien,
 > 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> change log v5->v6:
-> * no change
-> ---
->  arch/arm64/kernel/machine_kexec_file.c | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
+> On 27/6/19 16:04, Fabien Lahoudere wrote:
+> > Version 3 of the EC protocol provides min and max frequencies for
+> > EC sensors.
+> > Default frequencies are provided for earlier protocol.
+> > 
 > 
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> index 58871333737a..d40fde72a023 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> @@ -27,6 +27,8 @@
->  #define FDT_PROP_INITRD_END	"linux,initrd-end"
->  #define FDT_PROP_BOOTARGS	"bootargs"
->  #define FDT_PROP_KASLR_SEED	"kaslr-seed"
-> +#define FDT_PROP_RNG_SEED	"rng-seed"
-> +#define RNG_SEED_SIZE		128
->  
->  const struct kexec_file_ops * const kexec_file_loaders[] = {
->  	&kexec_image_ops,
-> @@ -102,6 +104,23 @@ static int setup_dtb(struct kimage *image,
->  				FDT_PROP_KASLR_SEED);
->  	}
->  
-> +	/* add rng-seed */
-> +	if (rng_is_initialized()) {
-> +		void *rng_seed = kmalloc(RNG_SEED_SIZE, GFP_ATOMIC);
-
-For 128 bytes, it would be better to use a buffer on the stack. That
-avoids the possibility of the allocation failing.
-
-> +		get_random_bytes(rng_seed, RNG_SEED_SIZE);
-> +
-> +		ret = fdt_setprop(dtb, off, FDT_PROP_RNG_SEED, rng_seed,
-> +				RNG_SEED_SIZE);
-> +		kfree(rng_seed);
-> +
-> +		if (ret)
-> +			goto out;
-
-If the RNG wasn't initialised, we'd carry on with a warning. Why do we
-follow a different policy here?
-
-Thanks,
-Mark.
-
-> +
-> +	} else {
-> +		pr_notice("RNG is not initialised: omitting \"%s\" property\n",
-> +				FDT_PROP_RNG_SEED);
-> +	}
-> +
->  out:
->  	if (ret)
->  		return (ret == -FDT_ERR_NOSPACE) ? -ENOMEM : -EINVAL;
-> @@ -110,7 +129,8 @@ static int setup_dtb(struct kimage *image,
->  }
->  
->  /*
-> - * More space needed so that we can add initrd, bootargs and kaslr-seed.
-> + * More space needed so that we can add initrd, bootargs, kaslr-seed, and
-> + * rng-seed.
->   */
->  #define DTB_EXTRA_SPACE 0x1000
->  
-> -- 
-> 2.20.1
+> This patch should really go together with a respin of your previous
+> patchset to
+> 'Expose cros_ec_sensors frequency range via iio sysfs' [1]
 > 
+> [1] https://www.spinics.net/lists/linux-iio/msg44963.html
+> 
+
+I agree, you're right. I will send only the first patch with Gwendal
+comments for v2.
+
+Thanks
+
+> > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+> > Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
+> > ---
+> >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 44
+> > +++++++++++++++++++
+> >  .../linux/iio/common/cros_ec_sensors_core.h   |  3 ++
+> >  2 files changed, 47 insertions(+)
+> > 
+> > diff --git
+> > a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > index 2e0f97448e64..72f56d54cccd 100644
+> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > @@ -50,6 +50,37 @@ static int
+> > cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+> >  	return ret;
+> >  }
+> >  
+> > +static void get_default_min_max_freq(enum motionsensor_type type,
+> > +				     u32 *min_freq,
+> > +				     u32 *max_freq)
+> > +{
+> > +	switch (type) {
+> > +	case MOTIONSENSE_TYPE_ACCEL:
+> > +	case MOTIONSENSE_TYPE_GYRO:
+> > +		*min_freq = 12500;
+> > +		*max_freq = 100000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_MAG:
+> > +		*min_freq = 5000;
+> > +		*max_freq = 25000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_PROX:
+> > +	case MOTIONSENSE_TYPE_LIGHT:
+> > +		*min_freq = 100;
+> > +		*max_freq = 50000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_BARO:
+> > +		*min_freq = 250;
+> > +		*max_freq = 20000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_ACTIVITY:
+> > +	default:
+> > +		*min_freq = 0;
+> > +		*max_freq = 0;
+> > +		break;
+> > +	}
+> > +}
+> > +
+> >  int cros_ec_sensors_core_init(struct platform_device *pdev,
+> >  			      struct iio_dev *indio_dev,
+> >  			      bool physical_device)
+> > @@ -100,6 +131,19 @@ int cros_ec_sensors_core_init(struct
+> > platform_device *pdev,
+> >  		}
+> >  		state->type = state->resp->info.type;
+> >  		state->loc = state->resp->info.location;
+> > +
+> > +		/* Value to stop the device */
+> > +		state->frequencies[0] = 0;
+> > +		if (state->msg->version < 3) {
+> > +			get_default_min_max_freq(state->resp-
+> > >info.type,
+> > +						 &state-
+> > >frequencies[1],
+> > +						 &state-
+> > >frequencies[2]);
+> > +		} else {
+> > +			state->frequencies[1] =
+> > +			    state->resp->info_3.min_frequency;
+> > +			state->frequencies[2] =
+> > +			    state->resp->info_3.max_frequency;
+> > +		}
+> >  	}
+> >  
+> >  	return 0;
+> > diff --git a/include/linux/iio/common/cros_ec_sensors_core.h
+> > b/include/linux/iio/common/cros_ec_sensors_core.h
+> > index 0c636b9fe8d7..94c87da22c04 100644
+> > --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> > +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> > @@ -70,6 +70,9 @@ struct cros_ec_sensors_core_state {
+> >  				    unsigned long scan_mask, s16
+> > *data);
+> >  
+> >  	int curr_sampl_freq;
+> > +
+> > +	/* Disable, Min and Max Sampling Frequency in mHz */
+> > +	int frequencies[3];
+> >  };
+> >  
+> >  /**
+> > 
+
