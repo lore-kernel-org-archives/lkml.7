@@ -2,95 +2,161 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540FDC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AABFC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFA4214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080932086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ItA1RAIJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWvOtAdo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfF1Xq7 (ORCPT
+        id S1727041AbfF1Xrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 19:46:59 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49242 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfF1Xq6 (ORCPT
+        Fri, 28 Jun 2019 19:47:53 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55535 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfF1Xrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 19:46:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Q6ZtwkMkJB2wj9e6jMlcIrqBM+LdxiqCoy8WdZ3lBrQ=; b=ItA1RAIJ3lULQInJzm4QIZ2Iar
-        /dNb4IJwa3BMmZLRQbFflMUf/0BAhSaP+hVtYhM8FE5gupwWx8TfTtioKvSapVtGtckyx8BGP+qmG
-        nytSZvNXd+/yU0Xb//JyyVWiovqG4xWQPM1tH/YqJHouBv7gCVRjQ5to+4GfpbUlZNv+d8cSdHOX7
-        2NSrBw8FisJ3deLfn4DQkS8WJukpFBeViAWEGf+f1tPyUd1MO89U7hnLzuCWWnRBmClaifmId7yUV
-        dfbNYcI3Ss2MJMf7EUxLMJ+G5v/wjgFweIb9c7WmWxeDq6bEjUnbQoSGACB0+CuPT4WAdhbl4g/ls
-        ys8S4pJA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hh0Zs-0004UV-N9; Fri, 28 Jun 2019 23:46:49 +0000
-Subject: Re: linux-next: Tree for Jun 28 (power/reset/reboot-mode)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nandor Han <nandor.han@vaisala.com>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-References: <20190628203840.1f74e739@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <bb7b5d1a-97b5-7f74-4075-eeb290fd9508@infradead.org>
-Date:   Fri, 28 Jun 2019 16:46:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 28 Jun 2019 19:47:52 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a15so10580727wmj.5;
+        Fri, 28 Jun 2019 16:47:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WpQcKsFD0NKZ7fPE5iTV9T6ToE9rNRS6uT4dH8oCPLc=;
+        b=TWvOtAdomHPpfqXEDjnGsUAE3rCGlYqAN8dwbsRG1MOzi5mIpkI8S96tuE/Kpa2n+B
+         Jo1O0Xs8KFecgA39TZq8DETewatPBOCRCN3NeiriIwStN5Ndeby3p39OFU4WVMISyxU+
+         LNEovz2X/nWrrvbC8zBvcDYzWt0Tfpjup3ksupEMAN6CG92A/piwxTfEzBw7bOGKgqgD
+         pP4c1YFtF1XLhmrbm3hfbQWaXuxAG2JfA6rCx2iekseDJ0RyTKZTbEUfMEgouKmJg7cZ
+         WvwWbI21l39jAFtFVdXg5Cs8/+zfbca73AR0vrdT+95M4lIGJIz3+ZkJn5/2067p6gMy
+         GQuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WpQcKsFD0NKZ7fPE5iTV9T6ToE9rNRS6uT4dH8oCPLc=;
+        b=Kp9s3E2xWUq9WjuPy6QM8CVFH50sKZNYIhqyRgIpi8OvssVA53zNnEAnMFiXl4uiJB
+         rLzbSSneuKoRkEz+ygieQPLl97X04a2eJD94H2w98iFSEHHPIIru284evTFkok2WdD2G
+         QYp8DSRbEte8vOcvItybJHnznXPyMRKzjCTOQ80knN4sHXl0Tn5VntvlG4PXfwERF4D3
+         nR+6tsJCbiuPVqo+jjivq3pe5B563tX/gRriURBI1NJj8IcOt/AZchxxTQh/r5WP93ws
+         6w5/4PJ8dFb7+sx2Fa9/tjKjMpb3y+ugS0P7KNtORZ7nwf1C2T3fOGblSet3mRvcwzog
+         9g5A==
+X-Gm-Message-State: APjAAAX4aTKAPaJwbhtMFi1WXGOphnCx/DTD039miILSkOpVfSHI2yte
+        7SRimclU8JPFesdUFsBH7os=
+X-Google-Smtp-Source: APXvYqw6ZEMnpha5XCDbIvNtiOuep0jp4imvqTJh2Woy7CGxoh5T4N0DDfQGVf/ZJoBoO90+uDIqLg==
+X-Received: by 2002:a7b:c313:: with SMTP id k19mr8328858wmj.2.1561765670272;
+        Fri, 28 Jun 2019 16:47:50 -0700 (PDT)
+Received: from localhost (p200300E41F2AB200021F3CFFFE37B91B.dip0.t-ipconnect.de. [2003:e4:1f2a:b200:21f:3cff:fe37:b91b])
+        by smtp.gmail.com with ESMTPSA id 18sm2622459wmg.43.2019.06.28.16.47.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 28 Jun 2019 16:47:48 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 01:47:47 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Enric =?utf-8?B?QmFsbGV0YsOy?= <enric.balletbo@collabora.com>,
+        Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
+        Eric Anholt <eric@anholt.net>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v5 1/7] dt-bindings: Add panel-timing subnode to
+ simple-panel
+Message-ID: <20190628234747.GA1189@mithrandir>
+References: <20190401171724.215780-1-dianders@chromium.org>
+ <20190401171724.215780-2-dianders@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190628203840.1f74e739@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
+Content-Disposition: inline
+In-Reply-To: <20190401171724.215780-2-dianders@chromium.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/19 3:38 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20190627:
-> 
 
-on x86_64:
+--4Ckj6UjgE2iN1+kY
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-when CONFIG_OF is not set/enabled, but
-CONFIG_NVMEM_REBOOT_MODE=m selects REBOOT_MODE:
+On Mon, Apr 01, 2019 at 10:17:18AM -0700, Douglas Anderson wrote:
+> From: Sean Paul <seanpaul@chromium.org>
+>=20
+> This patch adds a new subnode to simple-panel allowing us to override
+> the typical timing expressed in the panel's display_timing.
+>=20
+> Changes in v2:
+>  - Split out the binding into a new patch (Rob)
+>  - display-timings is a new section (Rob)
+>  - Use the full display-timings subnode instead of picking the timing
+>    out (Rob/Thierry)
+> Changes in v3:
+>  - Go back to using the timing subnode directly, but rename to
+>    panel-timing (Rob)
+> Changes in v4:
+>  - Simplify desc. for when override should be used (Thierry/Laurent)
+>  - Removed Rob H review since it's been a year and wording changed
+> Changes in v5:
+>  - Removed bit about OS may ignore (Rob/Ezequiel)
+>=20
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: St=C3=A9phane Marchesin <marcheu@chromium.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-rockchip@lists.infradead.org
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>=20
+>  .../bindings/display/panel/simple-panel.txt   | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 
-  CC [M]  drivers/power/reset/reboot-mode.o
-../drivers/power/reset/reboot-mode.c: In function ‘reboot_mode_register’:
-../drivers/power/reset/reboot-mode.c:72:2: error: implicit declaration of function ‘for_each_property_of_node’ [-Werror=implicit-function-declaration]
-  for_each_property_of_node(np, prop) {
-  ^
-../drivers/power/reset/reboot-mode.c:72:38: error: expected ‘;’ before ‘{’ token
-  for_each_property_of_node(np, prop) {
-                                      ^
-../drivers/power/reset/reboot-mode.c:109:1: warning: label ‘error’ defined but not used [-Wunused-label]
- error:
- ^
-../drivers/power/reset/reboot-mode.c:67:9: warning: unused variable ‘len’ [-Wunused-variable]
-  size_t len = strlen(PREFIX);
-         ^
-../drivers/power/reset/reboot-mode.c: At top level:
-../drivers/power/reset/reboot-mode.c:42:12: warning: ‘reboot_mode_notify’ defined but not used [-Wunused-function]
- static int reboot_mode_notify(struct notifier_block *this,
-            ^
+Sorry for taking so long to get back to this, sounds good to me:
 
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
--- 
-~Randy
+--4Ckj6UjgE2iN1+kY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Wpx0ACgkQ3SOs138+
+s6FkAA//dq1vkl6yNj7/hlMzdjFe9maoEW7fwyt9MG/kUuV2+7K/iB2hj9M9DaKS
+36rSIataHUoMbKAZprhPFKpa4Ux0KVuFcld+pU/GfvX1ux+omwfYZioEtkacrlFa
+FVpTSbqsQm/A1a6jTK/44si7bTgnG3AiJ7Nz+7+VBEn0Fsf+Hua9GUbwMHCPz1lb
+fRuJXIEGj6s9ZnCd/2YevxcrAscypxSeU5kAePyZF2i7bdeta2TR7655vYQkdqOb
+nNFz+2R53UC5P4K9ekNZPue3QivyLjyN9M+OCmf+uSkdCK2RLF/lGKDtzcxtbMJF
+FK4bsJRqF0icbG7bQucnIIIf5zgUFWuURWyzciqEa0TjnkqIy4Ugdw7iUY6MERlE
+fn2u1wJAjWuztuyl9FSOgBs86zFvlnW79FkX7q4Db4BZSU1c7Vld08Cw0/scsuuW
+fwJMzZSf/vSshfuJrXRo8wB+YsU7WgY0Y6v7IYx+5r3gvxKAGy02i/rjvPRb+e9c
+0kvQKZqBYPxZDv3xkWZHLD4fZo5vkluDnxxTU/6omXTRCsqIAS26XZ8jlXE5fcHk
+0hfy2HaCXhG7ckpQusum9uasjhcpQg3QKxul3oqM2iD1XvJIwcBwJq15pMvUm5w3
+Qqm5DatatB3t0U+G84KTeIEzFIBNjeLY0kNjTOa0Ke9GRDyGoEU=
+=lrYn
+-----END PGP SIGNATURE-----
+
+--4Ckj6UjgE2iN1+kY--
