@@ -2,257 +2,210 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0571CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9B7C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C77208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:13:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="mKRe8Alr"
+	by mail.kernel.org (Postfix) with ESMTP id 0EC2620828
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfF1UNH (ORCPT
+        id S1727188AbfF1UZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 16:13:07 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32972 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfF1UNH (ORCPT
+        Fri, 28 Jun 2019 16:25:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13624 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727095AbfF1UZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 16:13:07 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x15so3541312pfq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 13:13:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Amybm5wgl2x2y4DQCaMoG+V1yEtg0sPRIUl33wffDtM=;
-        b=mKRe8AlrdnV37n3R/e0SHNzE+3TaRdo7lnVjd4bk7zs18tyFuBsAGMZHZK9VXigKCu
-         R5iAFeyGORMt8fI4mpk1wAToBG3AU3HhUuMYUMx0Sso1lVU4mcDpfNSQJhRdkPscHDqX
-         Ml6S23r0uzZ8QaD9QdC77KfCUsiXhgo2cx8MRcf157hmjVV2hJjJM3rEwbCSeoDH9VZt
-         Hmq+tkQSuNw7cExfaeTka61npJLRDz2tbji/7zeexm8MvNyg0rdldyznTPoI8jtdD49A
-         7GeSioTJ8HINNRMJXfedXTJSLaaUkAYMcwq5aOLBGzug+T5YhID5mraITrUN4Ba9zAPc
-         V+0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Amybm5wgl2x2y4DQCaMoG+V1yEtg0sPRIUl33wffDtM=;
-        b=cGLtSbNRuWuGJ8qIWrrk6AOGYksNY2Dx9HL9oLjKn+tDNBVbDMV+Cq1KUqhpaWjxGj
-         XFl+K2W9fuwjR/iCEIKWGncSk9eWKt4PL/DcP6v6eG+NpzBbmjO3zxRFiP4Ugwe0ljua
-         nfVD37jn3CnpNZQE65Fgvuos96BwLa1MPg/jZs1ZQ1QeMpDVMB0tc6kBmpbULWYCLgKu
-         xC/gYIMR7sT2X6tT+SdlX7ky+3/npJUWQgz6JmP1h5T4a5TZylS5kX9F8yqOnMvtUpcH
-         yv7qFCSZgY7a18U9pD0GwELu+Iv9PnO+jDCgHYCBNnpwhMIllCCBHhLtaFxRA+9edHHN
-         2FTQ==
-X-Gm-Message-State: APjAAAXYjjNMpVd0ayu6hfcmCWk33/kMJ1YE9lGtw6Wvj6WhPKWzNpWJ
-        +K66LbtfyOWuPt1aIHhuRFBpIg==
-X-Google-Smtp-Source: APXvYqwQlwGbq08xmhQ85fDT2HBB2aE1HikF9eJeJ1GGjCpdJuPoVVznmuu95mz+s5u5C1T4GmGPlQ==
-X-Received: by 2002:a63:d006:: with SMTP id z6mr11354160pgf.364.1561752785884;
-        Fri, 28 Jun 2019 13:13:05 -0700 (PDT)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id 30sm3217597pjk.17.2019.06.28.13.13.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 13:13:05 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 13:13:04 -0700
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        bpf <bpf@vger.kernel.org>, lkp@01.org
-Subject: Re: [bpf/tools] cd17d77705:
- kernel_selftests.bpf.test_sock_addr.sh.fail
-Message-ID: <20190628201304.GA6757@mini-arch>
-References: <20190627090446.GG7221@shao2-debian>
- <20190627155029.GC4866@mini-arch>
- <20190627172932.GD4866@mini-arch>
- <CAEf4Bzbf8OE9TUV2Pq7HZp3PYhoUgMzH-Gs+GMafTPwPc_jYxA@mail.gmail.com>
- <20190628023810.GF4866@mini-arch>
- <CAEf4BzbKkE0DYc0faaHThqyEbAu6qA1pFpUJ0uhX5xVd7Q7zSg@mail.gmail.com>
+        Fri, 28 Jun 2019 16:25:42 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SKMjbX093211;
+        Fri, 28 Jun 2019 16:25:01 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdqe858vf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jun 2019 16:25:00 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5SKMtnJ028696;
+        Fri, 28 Jun 2019 20:24:59 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01wdc.us.ibm.com with ESMTP id 2t9by7fsm4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jun 2019 20:24:59 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SKOwVO48300300
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 20:24:58 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A73C0B2065;
+        Fri, 28 Jun 2019 20:24:58 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79BD5B2064;
+        Fri, 28 Jun 2019 20:24:58 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Jun 2019 20:24:58 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 4CF1B16C5D5C; Fri, 28 Jun 2019 13:24:59 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 13:24:59 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH RT 4/4] rcutorture: Avoid problematic critical
+ section nesting
+Message-ID: <20190628202459.GD26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190621163821.rm2rhsnvfo5tnjul@linutronix.de>
+ <20190621235955.GK26519@linux.ibm.com>
+ <20190626110847.2dfdf72c@gandalf.local.home>
+ <8462f30720637ec0da377aa737d26d2cad424d36.camel@redhat.com>
+ <20190627180007.GA27126@linux.ibm.com>
+ <5f4b1e594352ee776c4ccbe2760fee3a72345434.camel@redhat.com>
+ <20190627205051.GE26519@linux.ibm.com>
+ <4dc801b715baae4a87043fed20f682409446bb09.camel@redhat.com>
+ <20190628005257.GM26519@linux.ibm.com>
+ <6787428b6647a228b4259968ac3d2ea89b10628a.camel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzbKkE0DYc0faaHThqyEbAu6qA1pFpUJ0uhX5xVd7Q7zSg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <6787428b6647a228b4259968ac3d2ea89b10628a.camel@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906280233
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/28, Andrii Nakryiko wrote:
-> On Thu, Jun 27, 2019 at 7:38 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
-> >
-> > On 06/27, Andrii Nakryiko wrote:
-> > > On Thu, Jun 27, 2019 at 10:29 AM Stanislav Fomichev <sdf@fomichev.me> wrote:
-> > > >
-> > > > On 06/27, Stanislav Fomichev wrote:
-> > > > > On 06/27, kernel test robot wrote:
-> > > > > > FYI, we noticed the following commit (built with gcc-7):
-> > > > > >
-> > > > > > commit: cd17d77705780e2270937fb3cbd2b985adab3edc ("bpf/tools: sync bpf.h")
-> > > > > > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> > > > > >
-> > > > > > in testcase: kernel_selftests
-> > > > > > with following parameters:
-> > > > > >
-> > > > > >     group: kselftests-00
-> > > > > >
-> > > > > > test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
-> > > > > > test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> > > > > >
-> > > > > >
-> > > > > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> > > > > >
-> > > > > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> > > > > >
-> > > > > > # 55: (18) r1 = 0x100000000000000
-> > > > > > # ; ctx->user_ip6[2] = bpf_htonl(DST_REWRITE_IP6_2);
-> > > > > > # 57: (7b) *(u64 *)(r6 +16) = r1
-> > > > > > # invalid bpf_context access off=16 size=8
-> > > > > This looks like clang doing single u64 write for user_ip6[2] and
-> > > > > user_ip6[3] instead of two u32. I don't think we allow that.
-> > > > >
-> > > > > I've seen this a couple of times myself while playing with some
-> > > > > progs, but not sure what's the right way to 'fix' it.
-> > > > >
-> > > > Any thoughts about the patch below? Another way to "fix" it
-> > >
-> > > I'll give it a more thorough look a bit later, but see my comments below.
-> > >
-> > > > would be to mark context accesses 'volatile' in bpf progs, but that sounds
-> > > > a bit gross.
-> > > >
-> > > > diff --git a/include/linux/filter.h b/include/linux/filter.h
-> > > > index 43b45d6db36d..34a14c950e60 100644
-> > > > --- a/include/linux/filter.h
-> > > > +++ b/include/linux/filter.h
-> > > > @@ -746,6 +746,20 @@ bpf_ctx_narrow_access_ok(u32 off, u32 size, u32 size_default)
-> > > >         return size <= size_default && (size & (size - 1)) == 0;
-> > > >  }
-> > > >
-> > > > +static inline bool __bpf_ctx_wide_store_ok(u32 off, u32 size)
-> > >
-> > > It seems like bpf_ctx_wide_store_ok and __bpf_ctx_wide_store_ok are
-> > > used only inside net/core/filter.c, why declaring them in header file?
-> > I wanted it to be next to bpf_ctx_narrow_access_ok which does the
-> > reverse operation for reads.
+On Fri, Jun 28, 2019 at 02:37:24PM -0500, Scott Wood wrote:
+> On Thu, 2019-06-27 at 17:52 -0700, Paul E. McKenney wrote:
+> > On Thu, Jun 27, 2019 at 05:46:27PM -0500, Scott Wood wrote:
+> > > On Thu, 2019-06-27 at 13:50 -0700, Paul E. McKenney wrote:
+> > > > If by IPI-to-self you mean the IRQ work trick, that isn't implemented
+> > > > across all architectures yet, is it?
+> > > 
+> > > Right... smp_send_reschedule() has wider coverage, but even then there's
+> > > some hardware that just can't do it reasonably (e.g. pre-APIC x86).
+> > 
+> > Except that smp_send_reschedule() won't do anything unless the scheduler
+> > things something needs to be done, as it its wake list is non-empty.
+> > Which might explain why Peter Zijlstra didn't suggest it.
 > 
-> Ah, ok, I see that bpf_ctx_narrow_access_ok is used in
-> kernel/bpf/cgroup.c as well and bpf_ctx_wide_store_ok might be useful
-> in some other contexts as well, let's keep it here.
-> 
-> >
-> > > > +{
-> > > > +       /* u64 access is aligned and fits into the field size */
-> > > > +       return off % sizeof(__u64) == 0 && off + sizeof(__u64) <= size;
-> > > > +}
-> > > > +
-> > > > +#define bpf_ctx_wide_store_ok(off, size, type, field) \
-> > > > +       (size == sizeof(__u64) && \
-> > > > +        off >= offsetof(type, field) && \
-> > > > +        off < offsetofend(type, field) ? \
-> > > > +       __bpf_ctx_wide_store_ok(off - offsetof(type, field), \
-> > > > +                                FIELD_SIZEOF(type, field)) : 0)
-> 
-> This would be sufficient, right?
-Thanks, that looks much better and is actually more correct than my
-implementation. We should really look at the off alignment, not
-the off-offsetof(type, field) as I did.
+> The wake list stuff is separate from the original purpose of the IPI, which
+> is to hit the need_resched check on IRQ exit.  When that happens, the
+> scheduler will call into RCU, even if it doesn't change threads.  
 
-> #define bpf_ctx_wide_store_ok(off, size, type, field) \
->         size == sizeof(__u64) &&                      \
->         off >= offsetof(type, field) &&               \
->         off + size <= offsetofend(type, field) &&     \
->         off % sizeof(__u64) == 0
+Got it, thank you!
+
+> > > So I guess the options are:
+> > > 
+> > > 1. Accept that such hardware might experience delayed grace period
+> > > completion in certain configurations,
+> > > 2. Have such hardware check for need_resched in local_irq_enable() (not
+> > > nice
+> > > if sharing a kernel build with hardware that doesn't need it), or
+> > > 3. Forbid the sequence (enforced by debug checks).  Again, this would
+> > > only
+> > > prohibit rcu_read_lock()/local_irq_disable()/rcu_read_unlock()/
+> > > local_irq_enable() *without* preempt disabling around the IRQ-disabled
+> > > region.
+> > 
+> > 4. If further testing continues to show it to be reliable, continue
+> > using the scheme in -rcu.
 > 
-> > >
-> > > Why do you need ternary operator instead of just a chain of &&s?
-> > Good point. I didn't spend too much time on the patch tbh :-)
-> > If it looks good in general, I can add proper tests and do a
-> > proper submition, this patch is just to get the discussion started.
+> If the testing isn't done on machines that can't do the IPI then it's
+> basically option #1.  FWIW I don't think option #1 is unreasonable given
+> that we're talking about very old and/or specialized hardware, and we're
+> only talking about delays, not a crash (maybe limit the ability to use
+> nohz_full on such hardware?).  Of course if it turns out people are actually
+> trying to run (modern versions of) RT on such hardware, that might be
+> different. :-)
+
+Having tried and failed to remove DEC Alpha support several times, I
+know which way to bet.  Though DEC Alpha support is no longer much of a
+burden on the non-Alpha portions of Linux, so no longer much motivation
+for removing its support.
+
+> > 5. Use a short-duration hrtimer to get a clean environment in short
+> > order.  Yes, the timer might fire while preemption and/or softirqs
+> > are disabled, but then the code can rely on the following
+> > preempt_enable(), local_bh_enable(), or whatever.  This condition
+> > should be sufficiently rare to avoid issues with hrtimer overhead.
 > 
-> Consider it started. :) Talking with Yonghong about preventing this
-> from happening in the first place in Clang, it seems like that would
-> be harder and more cumbersome than supporting in BPF verifier. So
-> please go ahead and submit a proper patch.
->
-> >
-> > > It also seems like you can avoid macro and use plain function if
-> > > instead of providing (type, field) you provide values of offsetof and
-> > > offsetofend (offsetofend - offsetof should equal FIELD_SIZEOF(type,
-> > > field), shouldn't it?).
-> > But then I'd have to copy-paste the args of offsetof/offsetofend at
-> > the caller, right? I wanted the caller to be clean and simple.
+> Yeah, I considered that but was hesitant due to overhead -- at least in the
+> case of the example I gave (pre-APIC x86), arming a oneshot timer is pretty
+> slow.  Plus, some hardware might entirely lack one-shot timer capability.
+
+The overhead is incurred in a rare case, and on systems lacking oneshot
+timer it is always possible to fall back on normal timers, albeit with
+fixed-time added delays.  But yes, this does add a bit of complexity.
+
+Alternatively, assuming this case is rare, normal timers might suffice
+without the need for hrtimers.
+
+> > 6. Use smp_call_function_single() to IPI some other poor slob of a
+> > CPU, which then does the same back.  Non-waiting version in both
+> > cases, of course.
 > 
-> Yeah, that's a bit verbose, I agree. I don't mind macro, so no worries.
+> I was assuming any hardware that can't do smp_send_reschedule() is not SMP.
+
+I have no idea either way.
+
+> > Probably others as well.
+> > 
+> > > > Why not simply make rcutorture cyheck whether it is running in a
+> > > > PREEMPT_RT_FULL environment and avoid the PREEMPT_RT_FULL-unfriendly
+> > > > testing only in that case?
+> > > > 
+> > > > And should we later get to a place where the PREEMPT_RT_FULL-
+> > > > unfriendly
+> > > > scenarios are prohibited across all kernel configurations, then the
+> > > > module
+> > > > parameter can be removed.  Again, until we know (as opposed to
+> > > > suspect)
+> > > > that these scenarios really don't happen, mainline rcutorture must
+> > > > continue testing them.
+> > > 
+> > > Yes, I already acknowledged that debug checks detecting the sequences
+> > > should
+> > > come before the test removal
+> > 
+> > OK, good to hear.  As you may have noticed, I was getting the impression
+> > that you might have changed your mind on this point.  ;-)
+> > 
+> > >                              (including this patch as an RFC at this
+> > > point
+> > > was mainly meant as a demonstration of what's needed to get rcutorture
+> > > to
+> > > pass), but it'd be nice to have some idea of whether there would be
+> > > opposition to the concept before coding up the checks.  I'd rather not
+> > > continue the state of "these sequences can blow up on RT and we don't
+> > > know
+> > > if they exist or not" any longer than necessary.  Plus, only one of the
+> > > sequences is exclusively an RT issue (though it's the one with the worst
+> > > consequences).
+> > 
+> > Steve Rostedt's point about enlisting the aid of lockdep seems worth
+> > looking into.
 > 
-> >
-> > > >  #define bpf_classic_proglen(fprog) (fprog->len * sizeof(fprog->filter[0]))
-> > > >
-> > > >  static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
-> > > > diff --git a/net/core/filter.c b/net/core/filter.c
-> > > > index 2014d76e0d2a..2d3787a439ae 100644
-> > > > --- a/net/core/filter.c
-> > > > +++ b/net/core/filter.c
-> > > > @@ -6849,6 +6849,16 @@ static bool sock_addr_is_valid_access(int off, int size,
-> > > >                         if (!bpf_ctx_narrow_access_ok(off, size, size_default))
-> > > >                                 return false;
-> > > >                 } else {
-> > > > +                       if (bpf_ctx_wide_store_ok(off, size,
-> > > > +                                                 struct bpf_sock_addr,
-> > > > +                                                 user_ip6))
-> > > > +                               return true;
-> > > > +
-> > > > +                       if (bpf_ctx_wide_store_ok(off, size,
-> > > > +                                                 struct bpf_sock_addr,
-> > > > +                                                 msg_src_ip6))
-> > > > +                               return true;
-> > > > +
-> > > >                         if (size != size_default)
-> > > >                                 return false;
-> > > >                 }
-> > > > @@ -7689,9 +7699,6 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
-> > > >  /* SOCK_ADDR_STORE_NESTED_FIELD_OFF() has semantic similar to
-> > > >   * SOCK_ADDR_LOAD_NESTED_FIELD_SIZE_OFF() but for store operation.
-> > > >   *
-> > > > - * It doesn't support SIZE argument though since narrow stores are not
-> > > > - * supported for now.
-> > > > - *
-> > > >   * In addition it uses Temporary Field TF (member of struct S) as the 3rd
-> > > >   * "register" since two registers available in convert_ctx_access are not
-> > > >   * enough: we can't override neither SRC, since it contains value to store, nor
-> > > > @@ -7699,7 +7706,7 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
-> > > >   * instructions. But we need a temporary place to save pointer to nested
-> > > >   * structure whose field we want to store to.
-> > > >   */
-> > > > -#define SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, OFF, TF)                       \
-> > > > +#define SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, SIZE, OFF, TF)         \
-> > > >         do {                                                                   \
-> > > >                 int tmp_reg = BPF_REG_9;                                       \
-> > > >                 if (si->src_reg == tmp_reg || si->dst_reg == tmp_reg)          \
-> > > > @@ -7710,8 +7717,7 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
-> > > >                                       offsetof(S, TF));                        \
-> > > >                 *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(S, F), tmp_reg,         \
-> > > >                                       si->dst_reg, offsetof(S, F));            \
-> > > > -               *insn++ = BPF_STX_MEM(                                         \
-> > > > -                       BPF_FIELD_SIZEOF(NS, NF), tmp_reg, si->src_reg,        \
-> > > > +               *insn++ = BPF_STX_MEM(SIZE, tmp_reg, si->src_reg,              \
-> > > >                         bpf_target_off(NS, NF, FIELD_SIZEOF(NS, NF),           \
-> > > >                                        target_size)                            \
-> > > >                                 + OFF);                                        \
-> > > > @@ -7723,8 +7729,8 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
-> > > >                                                       TF)                      \
-> > > >         do {                                                                   \
-> > > >                 if (type == BPF_WRITE) {                                       \
-> > > > -                       SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, OFF,    \
-> > > > -                                                        TF);                  \
-> > > > +                       SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, SIZE,   \
-> > > > +                                                        OFF, TF);             \
-> > > >                 } else {                                                       \
-> > > >                         SOCK_ADDR_LOAD_NESTED_FIELD_SIZE_OFF(                  \
-> > > >                                 S, NS, F, NF, SIZE, OFF);  \
+> Sure.  I was just concerned by the "Linus was against enforcing this in the
+> past" comment and was hoping for more details.
+
+It is sometimes the case that showing that something never happens makes
+people more comfortable with enforcing that something.
+
+							Thanx, Paul
