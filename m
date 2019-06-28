@@ -2,105 +2,140 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E3FC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D241C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61412086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0A32086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VF6Qdhuv"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="JDDcgtRG";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="bKbrVutP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfF1W7E (ORCPT
+        id S1726925AbfF1W7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 18:59:04 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37965 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfF1W7E (ORCPT
+        Fri, 28 Jun 2019 18:59:41 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:55340 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726863AbfF1W7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 18:59:04 -0400
-Received: by mail-lf1-f66.google.com with SMTP id b11so4981422lfa.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 15:59:03 -0700 (PDT)
+        Fri, 28 Jun 2019 18:59:39 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E270FC0BD5;
+        Fri, 28 Jun 2019 22:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561762778; bh=aUcgd2RW73NnRbfKGSAnJZAUWnkBSN3fazVaHRexBIA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=JDDcgtRGXVKelBiEPyqJ0RQ52svzDEifFpWC22lZBd6ylcecyc3ZrKMS8+DY0whlw
+         /qa63nUHL8JoVPvaYC80o3RMwUY1uGDs13E7ok1hqMXNHvwFR5jQRdAAqBpqjIRH7V
+         SJH0HzyWIyKxrPSrQdPIYNBM6i7Fm1+YZHz1WdbXPQuL965/4EDyBmEfFLFBSdDVkE
+         kHYEWymWUbFSbykKAhe2l2MAqDk4pC67BbN2GxpUr98cDLIPucl8FrCA5ovHH7RQmF
+         d5yhGf7XagWBDC38ozjtapH4IarsDBIzXG/VcYXIFGVDhaII9vAO3YKFTR+H/8MQi1
+         nopfQshlX2CCg==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 078F4A0067;
+        Fri, 28 Jun 2019 22:59:36 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 28 Jun 2019 15:59:36 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 28 Jun 2019 15:59:35 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5hxr737kZawIDdGnBRfezwRYZfPo+N/0q3w7Fxi9l4A=;
-        b=VF6Qdhuv7A1bSXPlb3IW1+FrjzPu/5kLqJR8Bz3t4QYSsRmFGPpUKtjDK+76denozn
-         16FGNec6EkruICXjbpFZ9+3J36uau6xjWzLCfmQ1pkX2GY6gfKFgHUUoAsIpsrM4gUfb
-         2J1/qNcGNldERB23rgLKXTx1gg+Ws1OyBf04k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5hxr737kZawIDdGnBRfezwRYZfPo+N/0q3w7Fxi9l4A=;
-        b=ejEZLcDCQG3+pxmPS2q5eAoEBpQ6LwEu7fdbbhPGElW0ZeKggclWhiscUEXKoZWGDy
-         lERLP33dev5rynidCGEVhwqfMHkmhBitvz6N05MYVYDH/du2g7Umz9kjFibvtMaxgYFG
-         z10XPQD7hfQctZr9KL3Vs6R/GDmfDpaxNUxs+ojWbXzPorJU8Vt6Z6uH1kK7lcBG4RiU
-         sHKNQoONMxmBDaU79Zh6uDdtsWvUKdsgmVF8a76qsM3lJefTXzdZNy8eQ6+2mSCLaTgt
-         QM3xVKt2axCPTLShH6Wx2fGY8BxGEbS85VwhfXB9ZXrkDIkcw3YNqLCy+SL1NfymxJ61
-         /vZg==
-X-Gm-Message-State: APjAAAUWPCIvpZRCspYbY37GGG1GRK2TxnKvwfT15lZwvaEOroBcVWVl
-        tDTtzhWVclfiSIW79VQWFJ9Ct3Biibs=
-X-Google-Smtp-Source: APXvYqxrYs0aqqtV5K0SyVy6l6Ew3l34pxbsI7+M1Zs8MjKyEE3eojvs6PLJB9eepC371yWhg9eICg==
-X-Received: by 2002:ac2:495e:: with SMTP id o30mr6144562lfi.140.1561762742024;
-        Fri, 28 Jun 2019 15:59:02 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id p5sm1137963ljb.91.2019.06.28.15.59.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 15:59:01 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id a21so7490619ljh.7
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 15:59:00 -0700 (PDT)
-X-Received: by 2002:a2e:9758:: with SMTP id f24mr7644626ljj.58.1561762740673;
- Fri, 28 Jun 2019 15:59:00 -0700 (PDT)
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aUcgd2RW73NnRbfKGSAnJZAUWnkBSN3fazVaHRexBIA=;
+ b=bKbrVutPY6dobuQkd8dXWJVAb5gjbDrWSDD7kpc1r2y4Kwcp4TgqJyaQXD3DY8BL+oJcZU5i8j7yBFitzq5/csdgHlx3o4IUwZvXaiu6zZ0iRg/+c4yIe62lK1/ZX56CfrauDqu3isB51vBdd85a0eQs28x7C+0Qkx4sAMvaEjc=
+Received: from BN6PR1201MB0035.namprd12.prod.outlook.com (10.174.238.140) by
+ BN6PR1201MB0097.namprd12.prod.outlook.com (10.174.114.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.17; Fri, 28 Jun 2019 22:59:34 +0000
+Received: from BN6PR1201MB0035.namprd12.prod.outlook.com
+ ([fe80::c4ec:41a0:dfb5:767f]) by BN6PR1201MB0035.namprd12.prod.outlook.com
+ ([fe80::c4ec:41a0:dfb5:767f%10]) with mapi id 15.20.2032.019; Fri, 28 Jun
+ 2019 22:59:34 +0000
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>,
+        Jason Baron <jbaron@redhat.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Ard Biesheuvel" <ard.biesheuvel@linaro.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+Thread-Topic: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+Thread-Index: AQHVLgUfQUnMGryojE2rPVU+oeatwQ==
+Date:   Fri, 28 Jun 2019 22:59:33 +0000
+Message-ID: <7ef18a49-cc5a-6cd1-bed3-beec003a73c3@synopsys.com>
+References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+x-originating-ip: [198.182.56.5]
+x-clientproxiedby: BYAPR11CA0102.namprd11.prod.outlook.com
+ (2603:10b6:a03:f4::43) To BN6PR1201MB0035.namprd12.prod.outlook.com
+ (2603:10b6:405:4d::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vgupta@synopsys.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2fd736b0-db3c-409b-50c2-08d6fc1c491d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR1201MB0097;
+x-ms-traffictypediagnostic: BN6PR1201MB0097:
+x-microsoft-antispam-prvs: <BN6PR1201MB00976A764A7D8CD2C2CB5F4AB6FC0@BN6PR1201MB0097.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 00826B6158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(346002)(376002)(396003)(39860400002)(199004)(189003)(31696002)(186003)(14444005)(66946007)(229853002)(6506007)(486006)(11346002)(8676002)(476003)(68736007)(4326008)(64126003)(2616005)(2501003)(65826007)(52116002)(5660300002)(76176011)(8936002)(81166006)(99286004)(53546011)(7736002)(58126008)(305945005)(81156014)(478600001)(53936002)(6436002)(26005)(73956011)(65956001)(3846002)(66556008)(6246003)(64756008)(316002)(25786009)(6486002)(2906002)(6512007)(31686004)(446003)(6116002)(102836004)(36756003)(66446008)(256004)(386003)(71190400001)(71200400001)(86362001)(54906003)(66066001)(65806001)(4744005)(110136005)(14454004)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1201MB0097;H:BN6PR1201MB0035.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 0Hpotk1mk3HwPce7w5+raYtKU8mOooh1vWpMPoz+BKXDXNGSLr2dUsNIcV6t3gYEJbFCh0C9O/kPF8UnnbhTgRx3scyEZuI6xRbLRVc2ESVuM1Ri1t3aX7uid/5/24RcKFSXE1Pw+/TwnEB0xfyx93Ccrh/D37XEfN0f9rOI+WWibCqlyIACg13iPPHyxx7/Qfxr0jR8QxfVJZ4G6K2NFBGoiscKRa8e4NzFt+BEt+US1owwyUUhkUuQwzwChI+nO1bWmNS7cSP3JQyRPN6nznUCdTK2DSmQFFXB0q7jNsdWekT3u5l2ryKJn64tza7CPPzurraVVGFLikHkqCbf+Oc2nANGaUhuFtPo9OsP7z4rNztjCYFJFuqkm6ntETRyqWx1lyztrPUynRiNu9+it8puDqti7wniuSzxVK5VjzM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <31BEBB84CB2C8E47993409B6B497028A@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190627003616.20767-1-sashal@kernel.org> <20190627003616.20767-14-sashal@kernel.org>
-In-Reply-To: <20190627003616.20767-14-sashal@kernel.org>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Fri, 28 Jun 2019 15:58:49 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXPyGECiq9gZmFj8TU6Gmt2epQtuBqnGqRWad79DJT589w@mail.gmail.com>
-Message-ID: <CA+ASDXPyGECiq9gZmFj8TU6Gmt2epQtuBqnGqRWad79DJT589w@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.19 14/60] mwifiex: Abort at too short BSS
- descriptor element
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fd736b0-db3c-409b-50c2-08d6fc1c491d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 22:59:34.0419
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vgupta@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0097
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 5:49 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Takashi Iwai <tiwai@suse.de>
->
-> [ Upstream commit 685c9b7750bfacd6fc1db50d86579980593b7869 ]
->
-> Currently mwifiex_update_bss_desc_with_ie() implicitly assumes that
-> the source descriptor entries contain the enough size for each type
-> and performs copying without checking the source size.  This may lead
-> to read over boundary.
->
-> Fix this by putting the source size check in appropriate places.
->
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-
-For the record, this fixup is still aiming for 5.2, correcting some
-potential mistakes in this patch:
-
-63d7ef36103d mwifiex: Don't abort on small, spec-compliant vendor IEs
-
-So you might want to hold off a bit, and grab them both.
-
-Brian
+T24gNi8xOC8xOSA5OjE2IEFNLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+IE9uIDYvMTQvMTkgOTo0
+MSBBTSwgRXVnZW5peSBQYWx0c2V2IHdyb3RlOg0KPj4gSW1wbGVtZW50IGp1bXAgbGFiZWwgcGF0
+Y2hpbmcgZm9yIEFSQy4gSnVtcCBsYWJlbHMgcHJvdmlkZQ0KPj4gYW4gaW50ZXJmYWNlIHRvIGdl
+bmVyYXRlIGR5bmFtaWMgYnJhbmNoZXMgdXNpbmcNCj4+IHNlbGYtbW9kaWZ5aW5nIGNvZGUuDQo+
+Pg0KPj4gVGhpcyBhbGxvd3MgdXMgdG8gaW1wbGVtZW50IGNvbmRpdGlvbmFsIGJyYW5jaGVzIHdo
+ZXJlDQo+PiBjaGFuZ2luZyBicmFuY2ggZGlyZWN0aW9uIGlzIGV4cGVuc2l2ZSBidXQgYnJhbmNo
+IHNlbGVjdGlvbg0KPj4gaXMgYmFzaWNhbGx5ICdmcmVlJw0KPj4NCj4+IFRoaXMgaW1wbGVtZW50
+YXRpb24gdXNlcyAzMi1iaXQgTk9QIGFuZCBCUkFOQ0ggaW5zdHJ1Y3Rpb25zDQo+PiB3aGljaCBm
+b3JjZWQgdG8gYmUgYWxpZ25lZCBieSA0IHRvIGd1YXJhbnRlZSB0aGF0IHRoZXkgZG9uJ3QNCj4+
+IGNyb3NzIEwxIGNhY2hlIGxpbmUgYW5kIGNhbiBiZSB1cGRhdGUgYXRvbWljYWxseS4NCj4+DQo+
+PiBTaWduZWQtb2ZmLWJ5OiBFdWdlbml5IFBhbHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5
+cy5jb20+DQo+IA0KPiBMR1RNIG92ZXJhbGwgLSBuaXRzIGJlbG93Lg0KDQpAUGV0ZXIgY2FuIHdl
+IGhhdmUgeW91ciByZXZpZXdlZC9hY2sgb3Igc29tZSBzdWNoIGFzc3VtaW5nIHlvdSBkb24ndCBo
+YXZlIGFueQ0Kb2JqZWN0aW9ucyAhDQoNClRoeCwNCi1WaW5lZXQNCg==
