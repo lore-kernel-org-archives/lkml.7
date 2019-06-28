@@ -2,251 +2,202 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD35C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EABBC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A57D2147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A152086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="mRCXT8DI";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="AIguh8n4"
+	dkim=pass (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="t3LWMp68";
+	dkim=pass (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="t3LWMp68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfF1GkC (ORCPT
+        id S1727220AbfF1GmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 02:40:02 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:54928 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfF1GkC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 02:40:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1561704041; x=1593240041;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=nRhFlmYNp3gYbeF9Q2/oebTs2rJTDTVmhBdRoRfZNS4=;
-  b=mRCXT8DINQZIUAx0VcTyOtrMFCIfvyNHu2ChVWNB0X4VvFIO5CLOij9C
-   5a9jnm0zStUj4KozTskEGSComjGLVXN92tX4W5T/7GjL/mDAoMKLwAHf+
-   wW1ofD7CKIkv1oBGWezkJCGS0jDMU2ixIrOmWFIASD7u3v2U8Q/+Githm
-   F4NFu7NmYY5qsqaeM+O7eLKP65PfsjuDXO7stwyj75EeS1DLMvcMplDak
-   3yTs4QdtvWnAbn8LAHzNZ2G4/X0s8XAHES7gjcCH4F3ffxdxG1uSIm84V
-   liukavy+hK1njIuRWfuiIdWu3HYhk5AxcuRqOvapM7/gbq15HgWanrLiU
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.63,426,1557158400"; 
-   d="scan'208";a="211577689"
-Received: from mail-by2nam05lp2051.outbound.protection.outlook.com (HELO NAM05-BY2-obe.outbound.protection.outlook.com) ([104.47.50.51])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Jun 2019 14:40:39 +0800
+        Fri, 28 Jun 2019 02:42:16 -0400
+Received: from mail-eopbgr50050.outbound.protection.outlook.com ([40.107.5.50]:41142
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726648AbfF1GmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 02:42:16 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=qUCyTptd8IoiY3Fy/WEjj56WaEN5e8Ca7/MbiaJu9xfN9HLY5V5iueXZuY789+bNL77J5vEcUGOAkwfhjxWozYMmBOBVPMm+vgVwmJVNOUqgEhwGPbfLQ9o60JaKLVni7x29KaR0chBlJLUF0L8mvZkYwu17NW0LWzsndAj/d7o=
+ b=wjgX4vtRgJz9XlABmtwhVQAGPlT/F/GuXMUxc4okERsDACs6pdxuYXcZmQZy9794a9zyrzlWBMKnRSgL7+aLrSxsxvPCgDYEBTCbRBcd5fuD2hISwrEd9/Yx4iY03ScPmvpRvbjuozoFoD6+WuwUfkjL6lTYlM42XuAsCGGMEL0=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=testarcselector01;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ESmkexQp6xMXPePZbCqOfeCVTYm7TK103WeA/yyskxM=;
- b=d4dvgo3DfHmsH7qypiDeE/mY9vS9Xh2Y7Vs1sAxtBnk3+wOXlmzLoIJR8FAeNg5Bi3gxgqJR+stf/cjB0DsIhjmg6CDtm1qIR0ALrx3IcFDrZp4808ajDfa6r84lI0ea/aMq/BtZNVzau+rbsGfClSCr/nteq0KCz3PZ0SGMtrI=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
+ bh=DwzE1sHOqaLUidb5inxc+PDrGziKwOnAADVzCn9e7nA=;
+ b=pD1vUDSZLt1jIJfdUOfz+gtdMVRHA5X9QFeN6vFl1XlDqw+t2LN0MynB0omMqnYJoCaGN0uElEfInAyjshdB4CqTz7MaQ70JuooZOoVux+/J2U07aEN2uRELm7Ylw1EF2kURJokCGY5bHha4WIWIlJt6wAE4V0C2PzpjnZjN73Q=
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
+ 52.166.56.231) smtp.rcpttodomain=kernel.org
+ smtp.mailfrom=topicproducts.com;dmarc=none action=none
+ header.from=topic.nl;dkim=pass (signature was verified)
+ header.d=topicbv.onmicrosoft.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ d=topicbv.onmicrosoft.com; s=selector1-topicbv-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ESmkexQp6xMXPePZbCqOfeCVTYm7TK103WeA/yyskxM=;
- b=AIguh8n4uwl8WOwr8+aN8x8J8n+hPCF7pIgSku6MRj8I8ruJibLafVd02rSBUe+Wk0G6IAdk9wSiOxypUVLrfd6jK7OLORPZRKCc+8dXtBPXMcmEMcCgU9tmx43A5Xlk/Fpw6URzGNR9S5tKi17V7yaE+gWwZjzYtPHd3IddVyE=
-Received: from SN6PR04MB5231.namprd04.prod.outlook.com (20.177.254.85) by
- SN6PR04MB5119.namprd04.prod.outlook.com (52.135.116.161) with Microsoft SMTP
+ bh=DwzE1sHOqaLUidb5inxc+PDrGziKwOnAADVzCn9e7nA=;
+ b=t3LWMp68RqMcb8BZ7+gv+llKdMzdSiRrY53PnMR+8HM1ibedlKGtZKuNXOBkKextg7DRs58ikEFGr5yh5wSXcu4BZQ4+sGf0WplWvwlAQSZwY3gv/c3SxHKL/9pElK/52v5AQCOw194l7vLv3KpObxGh5nuhgxi5cedILSyaKj8=
+Received: from AM3PR04CA0127.eurprd04.prod.outlook.com (2603:10a6:207::11) by
+ AM6PR0402MB3943.eurprd04.prod.outlook.com (2603:10a6:209:1c::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.16; Fri, 28 Jun
+ 2019 06:42:10 +0000
+Received: from VE1EUR01FT006.eop-EUR01.prod.protection.outlook.com
+ (2a01:111:f400:7e01::201) by AM3PR04CA0127.outlook.office365.com
+ (2603:10a6:207::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2008.16 via Frontend
+ Transport; Fri, 28 Jun 2019 06:42:10 +0000
+Authentication-Results: spf=pass (sender IP is 52.166.56.231)
+ smtp.mailfrom=topicproducts.com; kernel.org; dkim=pass (signature was
+ verified) header.d=topicbv.onmicrosoft.com;kernel.org; dmarc=none action=none
+ header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topicproducts.com
+ designates 52.166.56.231 as permitted sender)
+ receiver=protection.outlook.com; client-ip=52.166.56.231;
+ helo=westeu11-emailsignatures-cloud.codetwo.com;
+Received: from westeu11-emailsignatures-cloud.codetwo.com (52.166.56.231) by
+ VE1EUR01FT006.mail.protection.outlook.com (10.152.2.127) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2032.15 via Frontend Transport; Fri, 28 Jun 2019 06:42:07 +0000
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (104.47.2.57) by westeu11-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Fri, 28 Jun 2019 06:42:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=topicbv.onmicrosoft.com; s=selector1-topicbv-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DwzE1sHOqaLUidb5inxc+PDrGziKwOnAADVzCn9e7nA=;
+ b=t3LWMp68RqMcb8BZ7+gv+llKdMzdSiRrY53PnMR+8HM1ibedlKGtZKuNXOBkKextg7DRs58ikEFGr5yh5wSXcu4BZQ4+sGf0WplWvwlAQSZwY3gv/c3SxHKL/9pElK/52v5AQCOw194l7vLv3KpObxGh5nuhgxi5cedILSyaKj8=
+Received: from AM6PR04MB6341.eurprd04.prod.outlook.com (10.255.168.18) by
+ AM6PR04MB5510.eurprd04.prod.outlook.com (20.178.93.203) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.18; Fri, 28 Jun 2019 06:39:59 +0000
-Received: from SN6PR04MB5231.namprd04.prod.outlook.com
- ([fe80::5005:99a1:65aa:f088]) by SN6PR04MB5231.namprd04.prod.outlook.com
- ([fe80::5005:99a1:65aa:f088%6]) with mapi id 15.20.2008.014; Fri, 28 Jun 2019
- 06:39:59 +0000
-From:   Naohiro Aota <Naohiro.Aota@wdc.com>
-To:     Anand Jain <anand.jain@oracle.com>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        David Sterba <dsterba@suse.com>
-CC:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        =?iso-8859-1?Q?Matias_Bj=F8rling?= <mb@lightnvm.io>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH 09/19] btrfs: limit super block locations in HMZONED mode
-Thread-Topic: [PATCH 09/19] btrfs: limit super block locations in HMZONED mode
-Thread-Index: AQHVHTKI41mlZbldhUiKC20uoMUKKg==
-Date:   Fri, 28 Jun 2019 06:39:54 +0000
-Message-ID: <SN6PR04MB52315AB9E229D0BAAB930D5B8CFC0@SN6PR04MB5231.namprd04.prod.outlook.com>
-References: <20190607131025.31996-1-naohiro.aota@wdc.com>
- <20190607131025.31996-10-naohiro.aota@wdc.com>
- <0ca3c475-fe10-4135-ddc9-7a82cc966d9a@oracle.com>
-Accept-Language: en-US
+ 15.20.2032.17; Fri, 28 Jun 2019 06:42:04 +0000
+Received: from AM6PR04MB6341.eurprd04.prod.outlook.com
+ ([fe80::d131:60b8:d270:2d31]) by AM6PR04MB6341.eurprd04.prod.outlook.com
+ ([fe80::d131:60b8:d270:2d31%3]) with mapi id 15.20.2008.014; Fri, 28 Jun 2019
+ 06:42:03 +0000
+From:   Mike Looijmans <mike.looijmans@topic.nl>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH v3] clk: Add Si5341/Si5340 driver
+Thread-Topic: [PATCH v3] clk: Add Si5341/Si5340 driver
+Thread-Index: AQHVDLPMIEuInQjXdEeduGfQk/CG7aawPvwAgACgywA=
+Date:   Fri, 28 Jun 2019 06:42:03 +0000
+Message-ID: <41fd54ba-1acc-eb44-dcb0-0d52e570ae72@topic.nl>
+References: <20190424090038.18353-1-mike.looijmans@topic.nl>
+ <155623538292.15276.10999401088770081919@swboyd.mtv.corp.google.com>
+ <20190517132352.31221-1-mike.looijmans@topic.nl>
+ <20190627210633.A21EC2075E@mail.kernel.org>
+In-Reply-To: <20190627210633.A21EC2075E@mail.kernel.org>
+Accept-Language: nl-NL, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Naohiro.Aota@wdc.com; 
-x-originating-ip: [199.255.47.8]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+x-clientproxiedby: AM0PR05CA0056.eurprd05.prod.outlook.com
+ (2603:10a6:208:be::33) To AM6PR04MB6341.eurprd04.prod.outlook.com
+ (2603:10a6:20b:d9::18)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=mike.looijmans@topicproducts.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [81.173.50.109]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ea6f06c6-7936-476d-7c3d-08d6fb937130
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB5119;
-x-ms-traffictypediagnostic: SN6PR04MB5119:
-x-microsoft-antispam-prvs: <SN6PR04MB5119A80413B27896960723708CFC0@SN6PR04MB5119.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+X-MS-Office365-Filtering-Correlation-Id: 98a0d053-0f09-4061-a2be-08d6fb93bec5
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR04MB5510;
+X-MS-TrafficTypeDiagnostic: AM6PR04MB5510:|AM6PR0402MB3943:
+X-Microsoft-Antispam-PRVS: <AM6PR0402MB3943E72F8ECDACE8F310ECBF96FC0@AM6PR0402MB3943.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;OLM:7691;
 x-forefront-prvs: 00826B6158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(366004)(39860400002)(136003)(396003)(199004)(189003)(8676002)(6116002)(74316002)(66556008)(7696005)(66946007)(71200400001)(25786009)(305945005)(3846002)(4326008)(99286004)(81156014)(81166006)(66446008)(8936002)(7416002)(71190400001)(5660300002)(66476007)(73956011)(229853002)(446003)(486006)(64756008)(68736007)(66066001)(91956017)(14454004)(76116006)(7736002)(476003)(6246003)(9686003)(54906003)(14444005)(316002)(72206003)(110136005)(53936002)(55016002)(6436002)(6666004)(256004)(76176011)(186003)(478600001)(2906002)(52536014)(86362001)(53546011)(2501003)(26005)(6506007)(102836004)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5119;H:SN6PR04MB5231.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: uI3ajd+JN2RD30EasG4Zco/e28nG10i1vdiqunRoVQo0AK8sGSzY3MlYam7+SMsglVJ00eCHOld2vICSjy4v2DQXsTZB0Mu4GGutT//GFQ4JNQtm/ztapJiMD0izvqXJ7zm5uiKVTsh69VmQypnlmDVGRDbCdJk41Dk2WZsP0AE6FQtOK6r4lYxvFS3BpAV41leJHBYyZeujqeQ3YOjrap3Ppooaz6vYO27xvlrRm9SzB8DtKfYs3u/lps3fUa5ID+e0pqzjAHHWplsJO9iq8jLM4gtZ52qjKa3PzUJWAz6C0OfJx/8b/hIsLBPLdNGI3RErmVjlE0CgNpVLToaU7mo/tiLEgFAX+kbqpzsQ/gqA5C6V2io/sQQoxk4Hli+4hWqreLJsMgeDGN8JDEUrOKw8FLo5LzQfKHXw6amBX0A=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(39840400004)(136003)(376002)(346002)(366004)(396003)(189003)(199004)(51914003)(14454004)(73956011)(66946007)(110136005)(54906003)(446003)(68736007)(31686004)(58126008)(2616005)(316002)(11346002)(71200400001)(5660300002)(71190400001)(476003)(42882007)(186003)(52116002)(66476007)(99286004)(386003)(6506007)(64756008)(53546011)(76176011)(66446008)(65826007)(66556008)(26005)(6246003)(14444005)(7736002)(44832011)(74482002)(6116002)(229853002)(64126003)(31696002)(8676002)(102836004)(6436002)(6486002)(3846002)(486006)(2906002)(2501003)(4326008)(25786009)(8936002)(6512007)(36756003)(53936002)(508600001)(66066001)(81156014)(65956001)(256004)(81166006)(65806001)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5510;H:AM6PR04MB6341.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: topicproducts.com does not
+ designate permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: dL7Kb0CBtmlMlwzk2rEimtVVuLtUczwxFRLbh+upuSQk/ROnb7G3MuPe+wU4rIcifzRNzLAPad/6CTqCYy+2pXOVSDBOVrbl3a6YMua7+daMKdE6MiytOLQS5dLqOj2gMVA8DrEMJf9+yyw1mccWE243IqgKjhwYJHYd4zdKkNYkSD1wJ+V7+dr5/mMxZNQQHMhEGrvXcblSrxPHt8QlwweA3Lv4+Z07OoPJhFaIl8VxYZn9XyrFcb6g2dD28w18YZ2chqzbCIGIcC20lRJwQGqwMxiBzah4Oc2q9Q+sWwqfcLQ2YX2bm76wiYsRA1HIZMOp9RQ1W/p+Dd6MOWvrWTEKaWojSFsL6kDBBNGFNOgHeZREFtzwuAaoWb0dHkbP/7/3pZNz/unlDKuzaKlWyum78U9w69FZT2kSISwNE1E=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5F486ACA22FAE94994A00FE546945DA0@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea6f06c6-7936-476d-7c3d-08d6fb937130
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 06:39:54.8658
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5510
+X-CodeTwo-MessageID: 41365bf4-4b82-4e73-aab5-b82dfe198b49.20190628064205@westeu11-emailsignatures-cloud.codetwo.com
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR01FT006.eop-EUR01.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:52.166.56.231;IPV:NLI;CTRY:NL;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(376002)(39840400004)(2980300002)(189003)(51914003)(199004)(14454004)(508600001)(26005)(436003)(356004)(3846002)(42882007)(246002)(229853002)(102836004)(11346002)(36756003)(58126008)(25786009)(7596002)(4326008)(305945005)(8676002)(316002)(31686004)(8936002)(336012)(486006)(6246003)(106002)(2501003)(6512007)(54906003)(7636002)(7736002)(47776003)(110136005)(2486003)(53546011)(186003)(74482002)(44832011)(65806001)(76176011)(23676004)(64126003)(99286004)(6116002)(6506007)(65826007)(70586007)(14444005)(66066001)(65956001)(386003)(446003)(70206006)(31696002)(6486002)(476003)(2616005)(126002)(50466002)(2906002)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3943;H:westeu11-emailsignatures-cloud.codetwo.com;FPR:;SPF:Pass;LANG:en;PTR:westeu11-emailsignatures-cloud.codetwo.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: bc6926b2-c1c7-4380-0e96-08d6fb93bafc
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(710020)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR0402MB3943;
+X-Forefront-PRVS: 00826B6158
+X-Microsoft-Antispam-Message-Info: 8/0d2CuqEeMmGENP9f9QEmqUQ3qJmWHSYdc4BrkPn8Cfw+tm2puML/eSkmk9jsu5RlqmSO2C8+2zgsNU7zu7CossszWgOUO6Kj6Su63+gkf+T6mWJ39teclDDR4zXsy6HObpMEqst0tDOjWpU/1BPqtfMwIuS2zABS6GSvM4lVcutxWK4D2J82SMYXBXSWUSsvHVmtoRB1YwrlhQ+n/3wZQnkIZNbU8Xl++F0PUNlAO7zLgOCV9tQUYSiV7mHt5qM2co3VUDEz9KGKdhmGzgMgLhAJYAlJuCLfdMNijIccsjtCA78GAvfb8a2I9jSvE9T2azr9Tyba++d8BRgFvHl155uNThXcT2CjmS0mOAdCRP0dYbOC5ff9ZSDZRvh5flCfiAORLUY1z8cBguq6o/C5bmP+A3+H7BMl1R2VCfoaY=
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2019 06:42:07.9336
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Naohiro.Aota1@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5119
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98a0d053-0f09-4061-a2be-08d6fb93bec5
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[52.166.56.231];Helo=[westeu11-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3943
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/06/28 12:56, Anand Jain wrote:=0A=
-> On 7/6/19 9:10 PM, Naohiro Aota wrote:=0A=
->> When in HMZONED mode, make sure that device super blocks are located in=
-=0A=
->> randomly writable zones of zoned block devices. That is, do not write su=
-per=0A=
->> blocks in sequential write required zones of host-managed zoned block=0A=
->> devices as update would not be possible.=0A=
-> =0A=
->    By design all copies of SB must be updated at each transaction,=0A=
->    as they are redundant copies they must match at the end of=0A=
->    each transaction.=0A=
-> =0A=
->    Instead of skipping the sb updates, why not alter number of=0A=
->    copies at the time of mkfs.btrfs?=0A=
-> =0A=
-> Thanks, Anand=0A=
-=0A=
-That is exactly what the patched code does. It updates all the SB=0A=
-copies, but it just avoids writing a copy to sequential writing=0A=
-required zones. Mkfs.btrfs do the same. So, all the available SB=0A=
-copies always match after a transaction. At the SB location in a=0A=
-sequential write required zone, you will see zeroed region (in the=0A=
-next version of the patch series), but that is easy to ignore: it=0A=
-lacks even BTRFS_MAGIC.=0A=
-=0A=
-The number of SB copy available on HMZONED device will vary=0A=
-by its zone size and its zone layout.=0A=
-=0A=
-Thanks,=0A=
-=0A=
-> =0A=
->> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
->> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>=0A=
->> ---=0A=
->>    fs/btrfs/disk-io.c     | 11 +++++++++++=0A=
->>    fs/btrfs/disk-io.h     |  1 +=0A=
->>    fs/btrfs/extent-tree.c |  4 ++++=0A=
->>    fs/btrfs/scrub.c       |  2 ++=0A=
->>    4 files changed, 18 insertions(+)=0A=
->>=0A=
->> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c=0A=
->> index 7c1404c76768..ddbb02906042 100644=0A=
->> --- a/fs/btrfs/disk-io.c=0A=
->> +++ b/fs/btrfs/disk-io.c=0A=
->> @@ -3466,6 +3466,13 @@ struct buffer_head *btrfs_read_dev_super(struct b=
-lock_device *bdev)=0A=
->>    	return latest;=0A=
->>    }=0A=
->>    =0A=
->> +int btrfs_check_super_location(struct btrfs_device *device, u64 pos)=0A=
->> +{=0A=
->> +	/* any address is good on a regular (zone_size =3D=3D 0) device */=0A=
->> +	/* non-SEQUENTIAL WRITE REQUIRED zones are capable on a zoned device *=
-/=0A=
->> +	return device->zone_size =3D=3D 0 || !btrfs_dev_is_sequential(device, =
-pos);=0A=
->> +}=0A=
->> +=0A=
->>    /*=0A=
->>     * Write superblock @sb to the @device. Do not wait for completion, a=
-ll the=0A=
->>     * buffer heads we write are pinned.=0A=
->> @@ -3495,6 +3502,8 @@ static int write_dev_supers(struct btrfs_device *d=
-evice,=0A=
->>    		if (bytenr + BTRFS_SUPER_INFO_SIZE >=3D=0A=
->>    		    device->commit_total_bytes)=0A=
->>    			break;=0A=
->> +		if (!btrfs_check_super_location(device, bytenr))=0A=
->> +			continue;=0A=
->>    =0A=
->>    		btrfs_set_super_bytenr(sb, bytenr);=0A=
->>    =0A=
->> @@ -3561,6 +3570,8 @@ static int wait_dev_supers(struct btrfs_device *de=
-vice, int max_mirrors)=0A=
->>    		if (bytenr + BTRFS_SUPER_INFO_SIZE >=3D=0A=
->>    		    device->commit_total_bytes)=0A=
->>    			break;=0A=
->> +		if (!btrfs_check_super_location(device, bytenr))=0A=
->> +			continue;=0A=
->>    =0A=
->>    		bh =3D __find_get_block(device->bdev,=0A=
->>    				      bytenr / BTRFS_BDEV_BLOCKSIZE,=0A=
->> diff --git a/fs/btrfs/disk-io.h b/fs/btrfs/disk-io.h=0A=
->> index a0161aa1ea0b..70e97cd6fa76 100644=0A=
->> --- a/fs/btrfs/disk-io.h=0A=
->> +++ b/fs/btrfs/disk-io.h=0A=
->> @@ -141,6 +141,7 @@ struct extent_map *btree_get_extent(struct btrfs_ino=
-de *inode,=0A=
->>    		struct page *page, size_t pg_offset, u64 start, u64 len,=0A=
->>    		int create);=0A=
->>    int btrfs_get_num_tolerated_disk_barrier_failures(u64 flags);=0A=
->> +int btrfs_check_super_location(struct btrfs_device *device, u64 pos);=
-=0A=
->>    int __init btrfs_end_io_wq_init(void);=0A=
->>    void __cold btrfs_end_io_wq_exit(void);=0A=
->>    =0A=
->> diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c=0A=
->> index 3d41d840fe5c..ae2c895d08c4 100644=0A=
->> --- a/fs/btrfs/extent-tree.c=0A=
->> +++ b/fs/btrfs/extent-tree.c=0A=
->> @@ -267,6 +267,10 @@ static int exclude_super_stripes(struct btrfs_block=
-_group_cache *cache)=0A=
->>    			return ret;=0A=
->>    	}=0A=
->>    =0A=
->> +	/* we won't have super stripes in sequential zones */=0A=
->> +	if (cache->alloc_type =3D=3D BTRFS_ALLOC_SEQ)=0A=
->> +		return 0;=0A=
->> +=0A=
->>    	for (i =3D 0; i < BTRFS_SUPER_MIRROR_MAX; i++) {=0A=
->>    		bytenr =3D btrfs_sb_offset(i);=0A=
->>    		ret =3D btrfs_rmap_block(fs_info, cache->key.objectid,=0A=
->> diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c=0A=
->> index f7b29f9db5e2..36ad4fad7eaf 100644=0A=
->> --- a/fs/btrfs/scrub.c=0A=
->> +++ b/fs/btrfs/scrub.c=0A=
->> @@ -3720,6 +3720,8 @@ static noinline_for_stack int scrub_supers(struct =
-scrub_ctx *sctx,=0A=
->>    		if (bytenr + BTRFS_SUPER_INFO_SIZE >=0A=
->>    		    scrub_dev->commit_total_bytes)=0A=
->>    			break;=0A=
->> +		if (!btrfs_check_super_location(scrub_dev, bytenr))=0A=
->> +			continue;=0A=
->>    =0A=
->>    		ret =3D scrub_pages(sctx, bytenr, BTRFS_SUPER_INFO_SIZE, bytenr,=0A=
->>    				  scrub_dev, BTRFS_EXTENT_FLAG_SUPER, gen, i,=0A=
->>=0A=
-> =0A=
-> =0A=
-=0A=
+T24gMjctMDYtMTkgMjM6MDYsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gUXVvdGluZyBNaWtlIExv
+b2lqbWFucyAoMjAxOS0wNS0xNyAwNjoyMzo1MikNCj4+IEFkZHMgYSBkcml2ZXIgZm9yIHRoZSBT
+aTUzNDEgYW5kIFNpNTM0MCBjaGlwcy4gVGhlIGRyaXZlciBkb2VzIG5vdCBmdWxseQ0KPj4gc3Vw
+cG9ydCBhbGwgZmVhdHVyZXMgb2YgdGhlc2UgY2hpcHMsIGJ1dCBhbGxvd3MgdGhlIGNoaXAgdG8g
+YmUgdXNlZA0KPj4gd2l0aG91dCBhbnkgc3VwcG9ydCBmcm9tIHRoZSAiY2xvY2tidWlsZGVyIHBy
+byIgc29mdHdhcmUuDQo+Pg0KPj4gSWYgdGhlIGNoaXAgaXMgcHJlcHJvZ3JhbW1lZCwgdGhhdCBp
+cywgeW91IGJvdWdodCBvbmUgd2l0aCBzb21lIGRlZmF1bHRzDQo+PiBidXJuZWQgaW4sIG9yIHlv
+dSBwcm9ncmFtbWVkIHRoZSBOVk0gaW4gc29tZSB3YXksIHRoZSBkcml2ZXIgd2lsbCBqdXN0DQo+
+PiB0YWtlIG92ZXIgdGhlIGN1cnJlbnQgc2V0dGluZ3MgYW5kIG9ubHkgY2hhbmdlIHRoZW0gb24g
+ZGVtYW5kLiBPdGhlcndpc2UNCj4+IHRoZSBpbnB1dCBtdXN0IGJlIGEgZml4ZWQgWFRBTCBpbiBp
+dHMgbW9zdCBiYXNpYyBjb25maWd1cmF0aW9uIChubw0KPj4gcHJlZGl2aWRlcnMsIG5vIGZlZWRi
+YWNrLCBldGMuKS4NCj4+DQo+PiBUaGUgZHJpdmVyIHN1cHBvcnRzIGR5bmFtaWMgY2hhbmdlcyBv
+ZiBtdWx0aXN5bnRoLCBvdXRwdXQgZGl2aWRlcnMgYW5kDQo+PiBlbmFibGluZyBvciBwb3dlcmlu
+ZyBkb3duIG91dHB1dHMgYW5kIG11bHRpc3ludGhzLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IE1p
+a2UgTG9vaWptYW5zIDxtaWtlLmxvb2lqbWFuc0B0b3BpYy5ubD4NCj4+IC0tLQ0KPiANCj4gQXBw
+bGllZCB0byBjbGstbmV4dCArIHNvbWUgZml4ZXMuIEknbSBub3Qgc3VwZXIgdGhyaWxsZWQgYWJv
+dXQgdGhlIGtIeg0KPiB0aGluZyBidXQgd2UgZG9uJ3QgaGF2ZSBhIHNvbHV0aW9uIGZvciBpdCBy
+aWdodCBub3cgc28gbWlnaHQgYXMgd2VsbA0KPiBjb21lIGJhY2sgdG8gaXQgbGF0ZXIuDQoNClRo
+YW5rcyBmb3IgdGhlIGZpeGVzLiBBbmQgSSdtIG5vdCBleGFjdGx5IHByb3VkIG9mIHRoYXQga0h6
+IHBhcnQgZWl0aGVyLg0KDQpXaGlsZSB0aGlua2luZyBhYm91dCBhIHNvbHV0aW9uLCBJJ3ZlIGFs
+c28gaGFkIGEgdXNlIGNhc2UgZm9yIGxlc3MgdGhhbiAxSHogDQpmcmVxdWVuY3kgYWRqdXN0bWVu
+dCAoYSB2aWRlbyBjbG9jayB0byAiZm9sbG93IiBhbm90aGVyIG9uZSkuIFRoZXNlIGNsb2NrIA0K
+Z2VuZXJhdG9ycyBhbGxvdyBmb3IgcmlkaWN1bG91cyByYW5nZXMgYW5kIGFjY3VyYWN5LCB5b3Ug
+Y2FuIHJlcXVlc3QgaXQgdG8gDQpnZW5lcmF0ZSBhIDIwMDAwMDAwMC4wMDA1IEh6IGNsb2NrLg0K
+DQoNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2Nsay1zaTUzNDEuYyBiL2RyaXZlcnMvY2xr
+L2Nsay1zaTUzNDEuYw0KPiBpbmRleCAxYTMxMDgzNWI1M2MuLjcyNDI0ZWI3ZTVmOCAxMDA2NDQN
+Cj4gLS0tIGEvZHJpdmVycy9jbGsvY2xrLXNpNTM0MS5jDQo+ICsrKyBiL2RyaXZlcnMvY2xrL2Ns
+ay1zaTUzNDEuYw0KPiBAQCAtMzc0LDcgKzM3NCw3IEBAIHN0YXRpYyB1bnNpZ25lZCBsb25nIHNp
+NTM0MV9jbGtfcmVjYWxjX3JhdGUoc3RydWN0IGNsa19odyAqaHcsDQo+ICAgCSAqLw0KPiAgIAlz
+aGlmdCA9IDA7DQo+ICAgCXJlcyA9IG1fbnVtOw0KPiAtCXdoaWxlIChyZXMgJiAweGZmZmYwMDAw
+MDAwMCkgew0KPiArCXdoaWxlIChyZXMgJiAweGZmZmYwMDAwMDAwMFVMTCkgew0KPiAgIAkJKytz
+aGlmdDsNCj4gICAJCXJlcyA+Pj0gMTsNCj4gICAJfQ0KPiBAQCAtOTIxLDcgKzkyMSw3IEBAIHN0
+YXRpYyBpbnQgc2k1MzQxX3dyaXRlX211bHRpcGxlKHN0cnVjdCBjbGtfc2k1MzQxICpkYXRhLA0K
+PiAgIAlyZXR1cm4gMDsNCj4gICB9DQo+ICAgDQo+IC1jb25zdCBzdHJ1Y3Qgc2k1MzQxX3JlZ19k
+ZWZhdWx0IHNpNTM0MV9wcmVhbWJsZVtdID0gew0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBzaTUz
+NDFfcmVnX2RlZmF1bHQgc2k1MzQxX3ByZWFtYmxlW10gPSB7DQo+ICAgCXsgMHgwQjI1LCAweDAw
+IH0sDQo+ICAgCXsgMHgwNTAyLCAweDAxIH0sDQo+ICAgCXsgMHgwNTA1LCAweDAzIH0sDQo+IEBA
+IC05OTQsNyArOTk0LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCByZWdtYXBfcmFuZ2Ugc2k1MzQx
+X3JlZ21hcF92b2xhdGlsZV9yYW5nZVtdID0gew0KPiAgIAlyZWdtYXBfcmVnX3JhbmdlKFNJNTM0
+MV9TWU5USF9OX1VQRCg0KSwgU0k1MzQxX1NZTlRIX05fVVBEKDQpKSwNCj4gICB9Ow0KPiAgIA0K
+PiAtY29uc3Qgc3RydWN0IHJlZ21hcF9hY2Nlc3NfdGFibGUgc2k1MzQxX3JlZ21hcF92b2xhdGls
+ZSA9IHsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnbWFwX2FjY2Vzc190YWJsZSBzaTUzNDFf
+cmVnbWFwX3ZvbGF0aWxlID0gew0KPiAgIAkueWVzX3JhbmdlcyA9IHNpNTM0MV9yZWdtYXBfdm9s
+YXRpbGVfcmFuZ2UsDQo+ICAgCS5uX3llc19yYW5nZXMgPSBBUlJBWV9TSVpFKHNpNTM0MV9yZWdt
+YXBfdm9sYXRpbGVfcmFuZ2UpLA0KPiAgIH07DQo+IEBAIC0xMDE2LDcgKzEwMTYsNiBAQCBzdGF0
+aWMgY29uc3Qgc3RydWN0IHJlZ21hcF9jb25maWcgc2k1MzQxX3JlZ21hcF9jb25maWcgPSB7DQo+
+ICAgCS5yZWdfYml0cyA9IDgsDQo+ICAgCS52YWxfYml0cyA9IDgsDQo+ICAgCS5jYWNoZV90eXBl
+ID0gUkVHQ0FDSEVfUkJUUkVFLA0KPiAtCS5tYXhfcmVnaXN0ZXIgPSAwLA0KPiAgIAkucmFuZ2Vz
+ID0gc2k1MzQxX3JlZ21hcF9yYW5nZXMsDQo+ICAgCS5udW1fcmFuZ2VzID0gQVJSQVlfU0laRShz
+aTUzNDFfcmVnbWFwX3JhbmdlcyksDQo+ICAgCS5tYXhfcmVnaXN0ZXIgPSBTSTUzNDFfUkVHSVNU
+RVJfTUFYLA0KPiBAQCAtMTMyOCw3ICsxMzI3LDcgQEAgTU9EVUxFX0RFVklDRV9UQUJMRShpMmMs
+IHNpNTM0MV9pZCk7DQo+ICAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgY2xrX3Np
+NTM0MV9vZl9tYXRjaFtdID0gew0KPiAgIAl7IC5jb21wYXRpYmxlID0gInNpbGFicyxzaTUzNDAi
+IH0sDQo+ICAgCXsgLmNvbXBhdGlibGUgPSAic2lsYWJzLHNpNTM0MSIgfSwNCj4gLQl7IH0sDQo+
+ICsJeyB9DQo+ICAgfTsNCj4gICBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBjbGtfc2k1MzQxX29m
+X21hdGNoKTsNCj4gICANCj4gDQoNCg==
