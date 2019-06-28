@@ -2,134 +2,136 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201E7C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498C3C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2844208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24AA7214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfF1OKQ (ORCPT
+        id S1726781AbfF1ONp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 10:10:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:48680 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbfF1OKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 10:10:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 891092B;
-        Fri, 28 Jun 2019 07:10:15 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10DAB3F706;
-        Fri, 28 Jun 2019 07:10:13 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 15:10:11 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Douglas Raillard <douglas.raillard@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH] sched/fair: util_est: fast ramp-up EWMA on utilization
- increases
-Message-ID: <20190628141011.d4oo5ezp4kxgrfnn@e110439-lin>
-References: <20190620150555.15717-1-patrick.bellasi@arm.com>
- <CAKfTPtDTfyBvfwE6_gtjxJoPNS6YGQ7rrLcjg_M-jr=YSc+FNA@mail.gmail.com>
- <20190628100751.lpcwsouacsi2swkm@e110439-lin>
- <20190628123800.GS3419@hirez.programming.kicks-ass.net>
- <CAKfTPtCyC5R40xjzQjp8qJchay9WzucuE4E-CduR46tNBh0uRg@mail.gmail.com>
+        Fri, 28 Jun 2019 10:13:45 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:34370 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726616AbfF1ONp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 10:13:45 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 5FF8B634C7F;
+        Fri, 28 Jun 2019 17:13:27 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1hgrd0-0000lV-Ns; Fri, 28 Jun 2019 17:13:26 +0300
+Date:   Fri, 28 Jun 2019 17:13:26 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc:     mchehab@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        robh@kernel.org, nicolas.ferre@microchip.com,
+        paulmck@linux.ibm.com, mark.rutland@arm.com, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joao.Pinto@synopsys.com
+Subject: Re: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
+ Host
+Message-ID: <20190628141326.swgl3kg4fj5pmlqx@valkosipuli.retiisi.org.uk>
+References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+ <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtCyC5R40xjzQjp8qJchay9WzucuE4E-CduR46tNBh0uRg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-Jun 15:51, Vincent Guittot wrote:
-> On Fri, 28 Jun 2019 at 14:38, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, Jun 28, 2019 at 11:08:14AM +0100, Patrick Bellasi wrote:
-> > > On 26-Jun 13:40, Vincent Guittot wrote:
-> > > > Hi Patrick,
-> > > >
-> > > > On Thu, 20 Jun 2019 at 17:06, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-> > > > >
-> > > > > The estimated utilization for a task is currently defined based on:
-> > > > >  - enqueued: the utilization value at the end of the last activation
-> > > > >  - ewma:     an exponential moving average which samples are the enqueued values
-> > > > >
-> > > > > According to this definition, when a task suddenly change it's bandwidth
-> > > > > requirements from small to big, the EWMA will need to collect multiple
-> > > > > samples before converging up to track the new big utilization.
-> > > > >
-> > > > > Moreover, after the PELT scale invariance update [1], in the above scenario we
-> > > > > can see that the utilization of the task has a significant drop from the first
-> > > > > big activation to the following one. That's implied by the new "time-scaling"
-> > > >
-> > > > Could you give us more details about this? I'm not sure to understand
-> > > > what changes between the 1st big activation and the following one ?
-> > >
-> > > We are after a solution for the problem Douglas Raillard discussed at
-> > > OSPM, specifically the "Task util drop after 1st idle" highlighted in
-> > > slide 6 of his presentation:
-> > >
-> > >   http://retis.sssup.it/ospm-summit/Downloads/02_05-Douglas_Raillard-How_can_we_make_schedutil_even_more_effective.pdf
-> > >
-> >
-> > So I see the problem, and I don't hate the patch, but I'm still
-> > struggling to understand how exactly it related to the time-scaling
-> > stuff. Afaict the fundamental problem here is layering two averages. The
+Hi Luis,
+
+Thank you for the patchset.
+
+On Tue, Jun 11, 2019 at 09:20:50PM +0200, Luis Oliveira wrote:
+> From: Luis Oliveira <lolivei@synopsys.com>
 > 
-> AFAICT, it's not related to the time-scaling
+> Add bindings for Synopsys DesignWare MIPI CSI-2 host.
 > 
-> In fact the big 1st activation happens because task runs at low OPP
-> and hasn't enough time to finish its running phase before the time to
-> begin the next one happens. This means that the task will run several
-> computations phase in one go which is no more a 75% task.
+> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+> ---
+> Changelog
+> v3-v4
+> - remove "plat" from the block name @rob @laurent
+> - remove "phy-names" when single-entry @rob
+> - remove "snps,output-type" -> went to the driver config @laurent
+> 
+>  .../devicetree/bindings/media/snps,dw-csi.txt      | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/snps,dw-csi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi.txt b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
+> new file mode 100644
+> index 0000000..613b7f9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
+> @@ -0,0 +1,41 @@
+> +Synopsys DesignWare CSI-2 Host controller
+> +
+> +Description
+> +-----------
+> +
+> +This HW block is used to receive image coming from an MIPI CSI-2 compatible
+> +camera.
+> +
+> +Required properties:
+> +- compatible		: shall be "snps,dw-csi"
+> +- reg			: physical base address and size of the device memory
+> +			  mapped registers;
+> +- interrupts		: DW CSI-2 Host interrupts
+> +- phys			: List of one PHY specifier (as defined in
+> +			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
+> +			  This PHY is a MIPI DPHY working in RX mode.
+> +- resets		: Reference to a reset controller (optional)
+> +
+> +The per-board settings:
+> + - port sub-node describing a single endpoint connected to the camera as
+> +   described in video-interfaces.txt[1].
 
-But in that case, running multiple activations back to back, should we
-not expect the util_avg to exceed the 75% mark?
+Which endpoint properties in video-interfaces.txt are relevant for the
+hardware? Which values may they have?
 
+> +
+> +Example:
+> +
+> +	csi2: csi2@3000 {
+> +		compatible = "snps,dw-csi";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = < 0x03000 0x7FF>;
 
-> From a pelt PoV, the task is far larger than a 75% task and its
-> utilization too because it runs far longer (even after scaling time
-> with frequency).
+reg = <0x03000 0x7FF>;
 
-Which thus should match my expectation above, no?
+> +		phys = <&mipi_dphy_rx>;
+> +		resets = <&dw_rst 1>;
+> +		interrupts = <2>;
+> +
+> +		port@0 {
+> +			reg = <0>;
 
-> Once cpu reaches a high enough OPP that enable to have sleep phase
-> between each running phases, the task load tracking comes back to the
-> normal slope increase (the one that would have happen if task would
-> have jump from 5% to 75% but already running at max OPP)
+You can drop "@0" and the reg property.
 
-
-Indeed, I can see from the plots a change in slope. But there is also
-that big drop after the first big activation: 375 units in 1.1ms.
-
-Is that expected? I guess yes, since we fix the clock_pelt with the
-lost_idle_time.
-
-
-> > second (EWMA in our case) will always lag/delay the input of the first
-> > (PELT).
-> >
-> > The time-scaling thing might make matters worse, because that helps PELT
-> > ramp up faster, but that is not the primary issue.
-> >
-> > Or am I missing something?
+> +			csi_ep1: endpoint {
+> +				remote-endpoint = <&camera_1>;
+> +				data-lanes = <1 2>;
+> +			};
+> +		};
+> +	};
 
 -- 
-#include <best/regards.h>
+Kind regards,
 
-Patrick Bellasi
+Sakari Ailus
