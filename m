@@ -4,56 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B172EC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F37C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822732182B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC66F214DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561725043;
-	bh=lGipDTy9Xv+1IKiqiceja9XVu12I6jbAerwWSuc0tzM=;
+	s=default; t=1561725047;
+	bh=kf1GOI6foCeZoUlqcpX+tJ7TBpZADn5a2nmES3LCPp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zp9r7o5Kyk7pIwNxPJwS/OsGosZIA7pxAHmFSUEofd4Vg3Jt99PLm2RTurz8shoo7
-	 29C4X0TUSVmSXKAoF27AD6NkgoxC9bMWsNwpD8srzAHrbn8nHYe+mDxLAq7CsMZrX7
-	 bJQ4uZDCeMrTRwAA/PCEoi4iIVIUSIIsMPCAKWEs=
+	b=KaGmaDIUzsC4Rd9YdEA9WLGphNUNe2me98tmMn6Qo7HHlSZgaGjhgCPAwhRgNVoOA
+	 Gq8iU65VkpGf+VRDgnzWCc+15xJTeyoGLpgNJHDAiwzAMv/2Th8z7Go8kLuX7w18aG
+	 /YKFCbdTtZYrTaqtu42yt0XR/eD1waucwPoXQVqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfF1Mam (ORCPT
+        id S1727170AbfF1Maq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:30:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39124 "EHLO
+        Fri, 28 Jun 2019 08:30:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39254 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbfF1Mai (ORCPT
+        with ESMTP id S1726944AbfF1Mak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:30:38 -0400
+        Fri, 28 Jun 2019 08:30:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uAxc64m0YT9J0kbGiEkc+YaJw8vJxgW+inXWfdPD3Qw=; b=LY3wMBFBIqG8+KElqz7riZgz86
-        pV5wBJUFxDt6hvK/wynT8kI8cmkKIBiYw6tqGOUuaw4pQg+sGR+LbFgodNRijDZA1U7exZU1DVyL/
-        3LxuMVGvYRGwjQcsNLczibXMoZuBMNXgtxV8925kezoqtIQndXqKSBPaQ/DIeNta+1bqpVN+7dzwi
-        XP3LAgPLkTutL9dUXqhuaKcALvgU0kh5M+JykR0L8VNu2hNe7l0LpPstnbaTgWoygnmjz65N1RyT7
-        +0id112akVCASW71orwA+weM1V6mYQ+XpwyNHwjHUaUZ20nclGTwQ2aCAtAVtj/mplbphW2x1Vgck
-        t5Lbecvg==;
+        bh=zII5lYqfAV6Dv/1vdlGrUpmQd0t8s5Xk0MQllo77src=; b=QMdyrqAceSryUV22cBi3MRrTgt
+        3cFDKnoqsJ5dHJh9LoMDSwmwT3M6ZflEnYx+Hcerg4s1juteOOYv8V4X/nmVlQzRWxkSxtuWtySO7
+        T4Fc9UJjN2gm7TRcJBz1RrjQF7iWirHg8uS3tEifEoPeg/EJ4RM8vzS3FA+/9CZKNuIIPSj9mUsMT
+        3zkMBVtI2JsY3zbv2Dil0fejPzMpK00lIZrp18xYuOIGLFSn4Gx71h+FGtzFTXeICc/nSFaGSSwGt
+        8bLpBSi33Q4C0ZuEdeiOXtGJbVD7yj8SPlR4M1CUcyH9MndxlG39MUsT13gZk6Ij1ItJn01gEY9So
+        lEnWQTbQ==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1U-00055t-O1; Fri, 28 Jun 2019 12:30:36 +0000
+        id 1hgq1U-00055V-Jj; Fri, 28 Jun 2019 12:30:36 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005Td-Qy; Fri, 28 Jun 2019 09:30:34 -0300
+        id 1hgq1S-0005Sg-Gl; Fri, 28 Jun 2019 09:30:34 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 34/39] docs: add a memory-devices subdir to driver-api
-Date:   Fri, 28 Jun 2019 09:30:27 -0300
-Message-Id: <93469c726df18907ce08fe60642690f67e367b57.1561724493.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 22/39] docs: ocxl.rst: add it to the uAPI book
+Date:   Fri, 28 Jun 2019 09:30:15 -0300
+Message-Id: <ee63ec4412f2f8c87da877f67f693f2cd85c1a37.1561724493.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
 References: <cover.1561724493.git.mchehab+samsung@kernel.org>
@@ -64,81 +67,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two docs describing memory device drivers.
-
-Add both to this new chapter of the driver-api.
+The content of this file is user-faced.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/driver-api/index.rst               |  1 +
- .../driver-api/memory-devices/index.rst          | 16 ++++++++++++++++
- .../{ => driver-api}/memory-devices/ti-emif.rst  |  2 +-
- .../memory-devices}/ti-gpmc.rst                  |  2 +-
- 4 files changed, 19 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/driver-api/memory-devices/index.rst
- rename Documentation/{ => driver-api}/memory-devices/ti-emif.rst (98%)
- rename Documentation/{bus-devices => driver-api/memory-devices}/ti-gpmc.rst (99%)
+ Documentation/{ => userspace-api}/accelerators/ocxl.rst | 2 --
+ Documentation/userspace-api/index.rst                   | 1 +
+ MAINTAINERS                                             | 2 +-
+ 3 files changed, 2 insertions(+), 3 deletions(-)
+ rename Documentation/{ => userspace-api}/accelerators/ocxl.rst (99%)
 
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index 12d68c3ab792..e33849b948c7 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -79,6 +79,7 @@ available subsections can be seen below.
-    isapnp
-    generic-counter
-    lightnvm-pblk
-+   memory-devices/index
-    men-chameleon-bus
-    ntb
-    nvmem
-diff --git a/Documentation/driver-api/memory-devices/index.rst b/Documentation/driver-api/memory-devices/index.rst
-new file mode 100644
-index 000000000000..87549828f6ab
---- /dev/null
-+++ b/Documentation/driver-api/memory-devices/index.rst
-@@ -0,0 +1,16 @@
-+=========================
-+Memory Controller drivers
-+=========================
-+
-+.. toctree::
-+    :maxdepth: 1
-+
-+    ti-emif
-+    ti-gpmc
-+
-+.. only::  subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-diff --git a/Documentation/memory-devices/ti-emif.rst b/Documentation/driver-api/memory-devices/ti-emif.rst
-similarity index 98%
-rename from Documentation/memory-devices/ti-emif.rst
-rename to Documentation/driver-api/memory-devices/ti-emif.rst
-index c9242294e63c..dea2ad9bcd7e 100644
---- a/Documentation/memory-devices/ti-emif.rst
-+++ b/Documentation/driver-api/memory-devices/ti-emif.rst
-@@ -1,4 +1,4 @@
--:orphan:
-+.. SPDX-License-Identifier: GPL-2.0
- 
- ===============================
- TI EMIF SDRAM Controller Driver
-diff --git a/Documentation/bus-devices/ti-gpmc.rst b/Documentation/driver-api/memory-devices/ti-gpmc.rst
+diff --git a/Documentation/accelerators/ocxl.rst b/Documentation/userspace-api/accelerators/ocxl.rst
 similarity index 99%
-rename from Documentation/bus-devices/ti-gpmc.rst
-rename to Documentation/driver-api/memory-devices/ti-gpmc.rst
-index 87c366e418be..33efcb81f080 100644
---- a/Documentation/bus-devices/ti-gpmc.rst
-+++ b/Documentation/driver-api/memory-devices/ti-gpmc.rst
-@@ -1,4 +1,4 @@
+rename from Documentation/accelerators/ocxl.rst
+rename to Documentation/userspace-api/accelerators/ocxl.rst
+index b1cea19a90f5..14cefc020e2d 100644
+--- a/Documentation/accelerators/ocxl.rst
++++ b/Documentation/userspace-api/accelerators/ocxl.rst
+@@ -1,5 +1,3 @@
 -:orphan:
-+.. SPDX-License-Identifier: GPL-2.0
+-
+ ========================================================
+ OpenCAPI (Open Coherent Accelerator Processor Interface)
+ ========================================================
+diff --git a/Documentation/userspace-api/index.rst b/Documentation/userspace-api/index.rst
+index a3233da7fa88..ad494da40009 100644
+--- a/Documentation/userspace-api/index.rst
++++ b/Documentation/userspace-api/index.rst
+@@ -20,6 +20,7 @@ place where this information is gathered.
+    seccomp_filter
+    unshare
+    spec_ctrl
++   accelerators/ocxl
  
- ========================================
- GPMC (General Purpose Memory Controller)
+ .. only::  subproject and html
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 29d1498ad39d..f723371dccd0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11483,7 +11483,7 @@ F:	arch/powerpc/include/asm/pnv-ocxl.h
+ F:	drivers/misc/ocxl/
+ F:	include/misc/ocxl*
+ F:	include/uapi/misc/ocxl.h
+-F:	Documentation/accelerators/ocxl.rst
++F:	Documentation/userspace-api/accelerators/ocxl.rst
+ 
+ OMAP AUDIO SUPPORT
+ M:	Peter Ujfalusi <peter.ujfalusi@ti.com>
 -- 
 2.21.0
 
