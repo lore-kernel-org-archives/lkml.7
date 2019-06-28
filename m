@@ -2,165 +2,164 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5136BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEDCC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15DC72086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517462086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:33:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RXf/SFfj"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GLfhj2ca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfF1BaU (ORCPT
+        id S1726694AbfF1Bda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:30:20 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:45787 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbfF1BaU (ORCPT
+        Thu, 27 Jun 2019 21:33:30 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60442 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726606AbfF1Bd3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:30:20 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190628013017epoutp0429f98fcca1e93b26f029dfaccff75c5f~sOJzvm6bk2092920929epoutp04K
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 01:30:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190628013017epoutp0429f98fcca1e93b26f029dfaccff75c5f~sOJzvm6bk2092920929epoutp04K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561685417;
-        bh=ffnQ15nGob+u1jxBjPgSlbpYxPywcFIA5tLlnd806EI=;
-        h=To:Cc:From:Subject:Date:References:From;
-        b=RXf/SFfjPYjMEqyMBJKYX8xkXSSlqDtX2mA/KL4KAH1dDYI7vliMuaivAl0FVSYpW
-         20Kx0ZOiquJAfzjsh/lHFyD2NC3vkMBwpdL2xDek5k618aUQNjKzcsiYscv9crUXIT
-         zwwuqIZSG7NjaJP1eShOGo5TKHMmDuZskfojuFkQ=
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.158]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190628013013epcas1p17597943468463b771722d5313fc5513c~sOJwDFxVS2609926099epcas1p1G;
-        Fri, 28 Jun 2019 01:30:13 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A9.D9.04108.F9D651D5; Fri, 28 Jun 2019 10:30:08 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190628013007epcas1p405af6ef75a8164072459694c2b17385a~sOJqWN6Xa1800218002epcas1p4k;
-        Fri, 28 Jun 2019 01:30:07 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190628013007epsmtrp2635607a45265cad3d2c410064ff63e5e~sOJqVZ5uM2300923009epsmtrp2M;
-        Fri, 28 Jun 2019 01:30:07 +0000 (GMT)
-X-AuditID: b6c32a39-8b7ff7000000100c-fc-5d156d9f6dca
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        06.9B.03662.F9D651D5; Fri, 28 Jun 2019 10:30:07 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190628013007epsmtip158e7267c172cae93daacd4b399efb9cc~sOJqMsUqN2343323433epsmtip1i;
-        Fri, 28 Jun 2019 01:30:07 +0000 (GMT)
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chanwoo Choi (samsung.com)" <cw00.choi@samsung.com>,
-        "Chanwoo Choi (chanwoo@kernel.org)" <chanwoo@kernel.org>,
-        =?UTF-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [GIT PULL] extcon next for v5.3
-Organization: Samsung Electronics
-Message-ID: <d312e5b6-3faf-ad5e-fc2e-c6f8b09ea9ec@samsung.com>
-Date:   Fri, 28 Jun 2019 10:32:45 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Thu, 27 Jun 2019 21:33:29 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S1SmAF121609;
+        Fri, 28 Jun 2019 01:33:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=iTffa50HD491h3uo63eZ68s9ZeVc6ii6J0ieF1QBP2M=;
+ b=GLfhj2ca7KUob0ZvSjm06x0C65UezaKgq7GW3HhBUuzWr4YqU35pwXLgfuiZlxBAZZ51
+ RjMBeTvy511th0lgsnpNUKkn1aSq7AvIl272l4m0PTlGhFuUEo8GVB+XU6WzTEY71iA8
+ JLbYknd5B7vXb/qs+r0IRJHZOG/DUzjWFT/hQTWocG81R8Wr9JzWi2D83KchFVBwe82O
+ rBXZesRhcafmhWKz6qxFOj6Me8ktH2eGfX4R/lBf5O6XHTqWkhKJHj+8mZzipzl+PkSf
+ sLp6A7bH+K6Cd7yuKZ8ix+yca4nU52mMxXrn3AUhD6ObUNNEc/zfD6bPQauOXgPcCUHY dA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2t9brtk4w3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 01:33:01 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S1Wwj4003786;
+        Fri, 28 Jun 2019 01:33:01 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2t99f5apcg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 01:33:00 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5S1WvTF002302;
+        Fri, 28 Jun 2019 01:32:57 GMT
+Received: from localhost (/10.145.179.81)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Jun 2019 18:32:56 -0700
+Date:   Thu, 27 Jun 2019 18:32:56 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: lift the xfs writepage code into iomap v2
+Message-ID: <20190628013256.GE5179@magnolia>
+References: <20190627104836.25446-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKJsWRmVeSWpSXmKPExsWy7bCmru6CXNFYgx91FhNvXGGxuP7lOatF
-        8+L1bBaXd81hs7jduILNgdVj06pONo/9c9ewe/RtWcXo8XmTXABLVLZNRmpiSmqRQmpecn5K
-        Zl66rZJ3cLxzvKmZgaGuoaWFuZJCXmJuqq2Si0+ArltmDtBaJYWyxJxSoFBAYnGxkr6dTVF+
-        aUmqQkZ+cYmtUmpBSk6BZYFecWJucWleul5yfq6VoYGBkSlQYUJ2xqfHDawFb/gqOruesTUw
-        3ubuYuTkkBAwkdj6ZDZ7FyMXh5DADkaJzu55jBDOJ0aJc49PsEI43xgl7p78xwbTcuTFQajE
-        XkaJrfe2M0M47xklmh7fB6sSEdCQeHn0FgtIglngDaPEvs+drCAJNgEtif0vboAVCQMVvTp9
-        CszmF1CUuPrjMSOIzStgJ3F76x92EJtFQFXi1extTCC2qECExOUtu6BqBCVOznzCAmIzC4hL
-        3HoynwnClpfY/nYO2EUSAgfYJDbeaAZKcAA5LhJrlppDvCAs8er4FnYIW0ri87u9UK9VS6w8
-        eYQNoreDUWLL/gusEAljif1LJ4PNYRbQlFi/Sx8irCix8/dcRoi9fBLvvvawQqzilehoE4Io
-        UZa4/OAuE4QtKbG4vZMNosRDomN+6QRGxVlInpmF5JlZSJ6ZhbB3ASPLKkax1ILi3PTUYsMC
-        U+TY3sQITpJaljsYj53zOcQowMGoxMOrsFMkVog1say4MvcQowQHs5IIr+Q5oBBvSmJlVWpR
-        fnxRaU5q8SFGU2BYT2SWEk3OBybwvJJ4Q1MjY2NjCxNDM1NDQyVx3njumzFCAumJJanZqakF
-        qUUwfUwcnFINjN41mutar7y5G8nn39XLmsInE3Ru0dfko6/P3H4nYcrzNEbQf73g1y2aB2TC
-        Mi+UPQ041jpz0odNR3meP88Quci/b22w8XPXJk4x7dmZYW9U+vq+2DD4JebUnulq8r9WvPLr
-        h7b5nrN0Nzie23wyt2pZhuH2VrcKHlvhudpTjO54isQyn08xUWIpzkg01GIuKk4EADmnL5mo
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJLMWRmVeSWpSXmKPExsWy7bCSnO78XNFYg+0bhC0m3rjCYnH9y3NW
-        i+bF69ksLu+aw2Zxu3EFmwOrx6ZVnWwe++euYffo27KK0ePzJrkAligum5TUnMyy1CJ9uwSu
-        jE+PG1gL3vBVdHY9Y2tgvM3dxcjJISFgInHkxUHWLkYuDiGB3YwS++atYIRISEpMu3iUuYuR
-        A8gWljh8uBii5i2jxLQzJ8FqRAQ0JF4evcUCkmAWeMMo0b9mCztIgk1AS2L/ixtsILYwUNGr
-        06fAbH4BRYmrPx6DNfMK2Enc3voHrJ5FQFXi1extTCC2qECERF/bbDaIGkGJkzOfsIDYzALq
-        En/mXWKGsMUlbj2ZzwRhy0tsfzuHeQKj4CwkLbOQtMxC0jILScsCRpZVjJKpBcW56bnFhgVG
-        eanlesWJucWleel6yfm5mxjBEaCltYPxxIn4Q4wCHIxKPLwKO0VihVgTy4orcw8xSnAwK4nw
-        Sp4DCvGmJFZWpRblxxeV5qQWH2KU5mBREueVzz8WKSSQnliSmp2aWpBaBJNl4uCUamBsl2r+
-        96nSxkx2m275hSTNRWKNb2ZPcSuaVR0sVus0Z7O1/dz1kh63Ox1UhFef2s5p8//1kr0rraRX
-        ilXU88w3VA9fsC0gMEKq8mTImWiD//6N++ZrZEXnJSqLJQRonAwI3OOS5W359Id18HupVYs+
-        fHjZ0M1f6/0k0c3+jMmKs6EsXGsu7VFiKc5INNRiLipOBACzWXR+fAIAAA==
-X-CMS-MailID: 20190628013007epcas1p405af6ef75a8164072459694c2b17385a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190628013007epcas1p405af6ef75a8164072459694c2b17385a
-References: <CGME20190628013007epcas1p405af6ef75a8164072459694c2b17385a@epcas1p4.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627104836.25446-1-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906280009
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906280008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Greg,
+On Thu, Jun 27, 2019 at 12:48:23PM +0200, Christoph Hellwig wrote:
+> Hi all,
+> 
+> this series cleans up the xfs writepage code
 
-This is extcon-next pull request for v5.3. I add detailed description of
-this pull request on below. Please pull extcon with following updates.
+Ok.  Patches #2 and #3 are trivial so I put them in my internal branch.
 
-[Detailed description for this pull request]
-1. Add new extcon-fsa9480 extcon provider driver
-- It is extcon provider driver for Fairchild Semiconductor
-FSA9480 microUSB switch and accessory detector chip which
-detects the kind of external connector like usb, charger,
-audio, video and so on.
+By now I'm sure everyone's noticed that I suspect that patch #7 fixes
+the generic/475 crash that Eryu reported, so I've added it to my
+internal branch for testing.
 
-2.
-- Add the exception handling code for extcon-arizona.c
-when using the regmap interface.
+Patch #8 is a simple cleanup so I put that one in too.  If I notice any
+problems with either of these two patches then I can always back them
+out before the next push to for-next.  I'd wanted to make those cleanups
+for a while and they're more or less what I would've done.
 
-Best Regards,
-Chanwoo Choi
+> and then lifts it to
+> fs/iomap.c so that it could be use by other file system.  I've been
+> wanting to this for a while so that I could eventually convert gfs2
+> over to it, but I never got to it.  Now Damien has a new zonefs
+> file system for semi-raw access to zoned block devices that would
+> like to use the iomap code instead of reinventing it, so I finally
+> had to do the work.
 
+Sooo many conflicted feelings on this question. :)
 
-The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
+I agree with Christoph that sharing /high quality/ code in the kernel
+has served the kernel well over the years and I want that to continue.
+Sharing the lower part of our writeback code so filesystems can opt out
+of writing their own code to map dirty pages to storage extents and
+attach them to struct bios is (I think) a good strategy.
 
-  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
+However, I don't think sharing crap code in the kernel is serving us
+well. I dislike this recent development where we decide to wire up XFS
+to some new API, beat on it aggressively, and then spend months sorting
+out how to make it work the way people think it does.  I do not wish to
+see any of the iomap code bit rot to the point that it becomes a
+nightmare to someone else.
 
-are available in the git repository at:
+I think Dave has voiced some valid concerns about our ability to support
+this code over the long term once we start sharing it with other fses.
+XFS has a longish history of sailing away from generic code so that we
+can remove awkward abstractions which aren't working well for us.  If
+we're going to continue to go our own way with things like file locking
+and mapping I wonder how long we'd keep using the iomap ioends before
+moving away again.  How well will that iomap code avoid bitrot once XFS
+does that?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/extcon.git tags/extcon-next-for-5.3
+We are already past -rc6, so I think the second part of the series
+(patches #10-13) is too late for 5.3.  I need more time to think about
+how this would work out in the scenario where (a) we take on the extra
+work of ensuring that our writeback improvements don't screw things up
+for everyone else, or (b) we end up forking away after a while.
 
-for you to fetch changes up to 0937fbb7abeb165ef0ac6a56a3a6f041eca6dbde:
+To be clear, I don't have a problem with the idea of iomap containing a
+common ioend creation library, but I would really like to see what it
+looks like to share the code with actual users.  I haven't seen any yet,
+though at this early stage I am not surprised.
 
-  extcon: fsa9480: Fix Kconfig warning and build errors (2019-06-26 17:27:39 +0900)
+I think what I want to do is to proceed on a provisional basis -- create
+a branch off of the next -rc1 (perhaps omitting the part that removes
+xfs ioend processing) and let's see where zonedfs et. al. go from there.
 
-----------------------------------------------------------------
-Charles Keepax (1):
-      extcon: arizona: Correct error handling on regmap_update_bits_check
+How does that sound?  Who are the other potential users?
 
-Randy Dunlap (1):
-      extcon: fsa9480: Fix Kconfig warning and build errors
+> This new version should have addressed all comments from the review,
+> except that I haven't split iomap.c, which is a little too invasive
+> with other pending changes to the file.  I do however offer to submit
+> a split right at the end of the merge window when it is least invasive.
 
-Tomasz Figa (2):
-      dt-bindings: extcon: Add support for fsa9480 switch
-      extcon: Add fsa9480 extcon driver
+Already working on it, will send it tomorrow or tonight or something.
 
- .../devicetree/bindings/extcon/extcon-fsa9480.txt  |  19 +
- drivers/extcon/Kconfig                             |  12 +
- drivers/extcon/Makefile                            |   1 +
- drivers/extcon/extcon-arizona.c                    |  33 +-
- drivers/extcon/extcon-fsa9480.c                    | 395 +++++++++++++++++++++
- 5 files changed, 447 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
- create mode 100644 drivers/extcon/extcon-fsa9480.c
+--D
+
+> Changes since v1:
+>  - rebased to the latest xfs for-next tree
+>  - keep the preallocated transactions for size updates
+>  - rename list_pop to list_pop_entry and related cleanups
+>  - better document the nofs context handling
+>  - document that the iomap tracepoints are not a stable API
