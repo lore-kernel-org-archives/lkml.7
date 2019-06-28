@@ -2,128 +2,138 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EB8C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AECEC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67282208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 417002070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:55:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KRBcK5Qa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfF1DvJ (ORCPT
+        id S1727168AbfF1DzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:51:09 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:57719 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726748AbfF1DvJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:51:09 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07491465|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.348959-0.0103707-0.64067;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03299;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.Er3LMMF_1561693861;
-Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.Er3LMMF_1561693861)
-          by smtp.aliyun-inc.com(10.147.42.16);
-          Fri, 28 Jun 2019 11:51:02 +0800
-Subject: Re: [RESEND PATCH v2] mtd: spinand: read return badly if the last
- page has bitflips
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1561424549-784-1-git-send-email-liaoweixiong@allwinnertech.com>
- <20190625030807.GA11074@kroah.com>
- <97adf58f-4771-90f1-bdaf-5a9d00eef768@kontron.de>
- <20190627190644.25aaaf31@xps13> <20190627201742.34059cdf@xps13>
-From:   liaoweixiong <liaoweixiong@allwinnertech.com>
-Message-ID: <26a4597e-3881-73a2-07e3-6171ddd15d51@allwinnertech.com>
-Date:   Fri, 28 Jun 2019 11:51:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 27 Jun 2019 23:55:16 -0400
+Received: from ozlabs.org ([203.11.71.1]:35679 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726817AbfF1DzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 23:55:15 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Zjb42J7Nz9s7h;
+        Fri, 28 Jun 2019 13:55:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561694112;
+        bh=E7+sBd3+tvi8PaqXxixyn9dYJbuB3JNjSvB/N/pRXdM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KRBcK5QaQg/BeZMHLHiq6oklB1jL1crrU34K0LceA0krsh14Kg2l81SZkRLbq6b8N
+         wyYYzh22OKBG0fFcRXrqVnquTJjPKI33BjZgniJvy55xJhJoQLHt4b92r+ov5YcoHa
+         lWlqvinOByA42DZyjqMWVsWw/yFXJ2ZGTUoX85nXhauX/BEJNWevSutrfRzQTblusU
+         qrbZUk5z3K3/YA8t+ItOZzJwJigOD66NOmD8/Vk2VqOKGq8b68nMCC3tET50lJHmim
+         yheysdRJcSfHAQMKXVUvR37gFfI0KWGZnputVvg+zKdgpIHzzgh5EOpab/naBh2Uyu
+         58uAZRj3pD5AQ==
+Date:   Fri, 28 Jun 2019 13:55:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: linux-next: manual merge of the battery tree with the pci tree
+Message-ID: <20190628135511.34853c19@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190627201742.34059cdf@xps13>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/bMZKEXnBAx5LYXOGzReQV=g"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
+--Sig_/bMZKEXnBAx5LYXOGzReQV=g
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2019/6/28 AM2:17, Miquel Raynal wrote:
-> Hi Miquel,
-> 
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote on Thu, 27 Jun 2019
-> 19:06:44 +0200:
-> 
->> Hello,
->>
->> Schrempf Frieder <frieder.schrempf@kontron.de> wrote on Tue, 25 Jun
->> 2019 07:04:06 +0000:
->>
->>> Hi liaoweixiong,
->>>
->>> On 25.06.19 05:08, Greg KH wrote:  
->>>> On Tue, Jun 25, 2019 at 09:02:29AM +0800, liaoweixiong wrote:    
->>>>> In case of the last page containing bitflips (ret > 0),
->>>>> spinand_mtd_read() will return that number of bitflips for the last
->>>>> page. But to me it looks like it should instead return max_bitflips like
->>>>> it does when the last page read returns with 0.
->>>>>
->>>>> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>  
->>
->> Please write your entire official first/last name(s)
->>
+Hi all,
 
-OK.
+Today's linux-next merge of the battery tree got a conflict in:
 
->>>>> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
->>>>> Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>  
->>
->> I am waiting your next version with Acked-by instead of Rewieved-by
->> tags and Greg's comment addressed.
-> 
-> Sorry for the mistake, R-b tags are fine here, don't touch that.
-> The rest needs to be fixed though.
-> 
+  Documentation/power/power_supply_class.txt
 
-OK.
+between commit:
 
->>>>> Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")  
->>
->> Finally, when we ask you to resend a patch, it means sending a new
->> version of the patch. So in the subject, you should not use the
->> [RESEND] keyword (which means you are sending something again exactly
->> as it was before, you just got ignored, for example) but instead you
->> should increment the version number (v3) and also write a nice
->> changelog after the three dashes '---' (will be ignored by Git when
->> applying).
->>
->> I would like to queue this for the next release so if you can do it
->> ASAP, that would be great.
->>
+  151f4e2bdc7a ("docs: power: convert docs to ReST and rename to *.rst")
 
-I will do it right now.
+from the pci tree and commit:
 
->> Thank you,
->> Miquèl
-> 
-> 
-> 
-> 
-> Thanks,
-> Miquèl
-> 
+  49c9cd95bb6d ("power: supply: add input power and voltage limit propertie=
+s")
 
--- 
-liaoweixiong
+from the battery tree.
+
+I fixed it up (I deleted the file and adde the following merge fix patch)
+and can carry the fix as necessary. This is now fixed as far as linux-next
+is concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 28 Jun 2019 13:52:44 +1000
+Subject: [PATCH] power: supply: update for conversion to .rst
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ Documentation/power/power_supply_class.rst | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/Documentation/power/power_supply_class.rst b/Documentation/pow=
+er/power_supply_class.rst
+index 3f2c3fe38a61..883b2ef63119 100644
+--- a/Documentation/power/power_supply_class.rst
++++ b/Documentation/power/power_supply_class.rst
+@@ -166,6 +166,14 @@ INPUT_CURRENT_LIMIT
+   input current limit programmed by charger. Indicates
+   the current drawn from a charging source.
+=20
++INPUT_VOLTAGE_LIMIT
++  input voltage limit programmed by charger. Indicates
++  the voltage limit from a charging source.
++
++INPUT_POWER_LIMIT
++  input power limit programmed by charger. Indicates
++  the power limit from a charging source.
++
+ CHARGE_CONTROL_LIMIT
+   current charge control limit setting
+ CHARGE_CONTROL_LIMIT_MAX
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/bMZKEXnBAx5LYXOGzReQV=g
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0Vj58ACgkQAVBC80lX
+0Gzmzgf/Y+92RSl/KxL8S/LWesEglgsA7dtU1Kfnr4rRxXr0MbFyIrBvAFybdX8B
+pdcsL0yR4LwsDCgizL2pdwsTdCashVKoOEnyX4gEYR6UVeFpjCqo7+ERWYNQ5J0u
+IcHoAcMQ2d6qDOAakqKU1VFy2BVpC0PM4cp5aIdTxd6Fy8zcdinh4jHTQ5kD/gIK
+AS3zy5JoU085x9MzRysjsSt6nJSxR5teaFg+l4VllybFR/j0Xv6YrZ/YK+QVhQ2o
+hNoTpYdFIzjWwNjcDeJ099dWe0i60tHCuQoV6AULHQNulbVEEVYQ76HVB+JI16IC
+g/sYtOa2UMDX1r35UyBoOuXoQrjUeg==
+=fGY/
+-----END PGP SIGNATURE-----
+
+--Sig_/bMZKEXnBAx5LYXOGzReQV=g--
