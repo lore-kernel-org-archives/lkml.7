@@ -2,164 +2,179 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEDCC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C32C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517462086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:33:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GLfhj2ca"
+	by mail.kernel.org (Postfix) with ESMTP id 732F32086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfF1Bda (ORCPT
+        id S1726723AbfF1Bdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:33:30 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60442 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbfF1Bd3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:33:29 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S1SmAF121609;
-        Fri, 28 Jun 2019 01:33:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=iTffa50HD491h3uo63eZ68s9ZeVc6ii6J0ieF1QBP2M=;
- b=GLfhj2ca7KUob0ZvSjm06x0C65UezaKgq7GW3HhBUuzWr4YqU35pwXLgfuiZlxBAZZ51
- RjMBeTvy511th0lgsnpNUKkn1aSq7AvIl272l4m0PTlGhFuUEo8GVB+XU6WzTEY71iA8
- JLbYknd5B7vXb/qs+r0IRJHZOG/DUzjWFT/hQTWocG81R8Wr9JzWi2D83KchFVBwe82O
- rBXZesRhcafmhWKz6qxFOj6Me8ktH2eGfX4R/lBf5O6XHTqWkhKJHj+8mZzipzl+PkSf
- sLp6A7bH+K6Cd7yuKZ8ix+yca4nU52mMxXrn3AUhD6ObUNNEc/zfD6bPQauOXgPcCUHY dA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t9brtk4w3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 01:33:01 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S1Wwj4003786;
-        Fri, 28 Jun 2019 01:33:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2t99f5apcg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 01:33:00 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5S1WvTF002302;
-        Fri, 28 Jun 2019 01:32:57 GMT
-Received: from localhost (/10.145.179.81)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 18:32:56 -0700
-Date:   Thu, 27 Jun 2019 18:32:56 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: lift the xfs writepage code into iomap v2
-Message-ID: <20190628013256.GE5179@magnolia>
-References: <20190627104836.25446-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627104836.25446-1-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906280009
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906280008
+        Thu, 27 Jun 2019 21:33:41 -0400
+Received: from mga05.intel.com ([192.55.52.43]:41598 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726606AbfF1Bdk (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 21:33:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 18:33:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,425,1557212400"; 
+   d="scan'208";a="189283597"
+Received: from skl.sh.intel.com ([10.239.159.132])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Jun 2019 18:33:38 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v6 0/7] perf diff: diff cycles at basic block level
+Date:   Fri, 28 Jun 2019 17:22:57 +0800
+Message-Id: <1561713784-30533-1-git-send-email-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 12:48:23PM +0200, Christoph Hellwig wrote:
-> Hi all,
-> 
-> this series cleans up the xfs writepage code
+In some cases small changes in hot loops can show big differences.
+But it's difficult to identify these differences.
 
-Ok.  Patches #2 and #3 are trivial so I put them in my internal branch.
+perf diff currently can only diff symbols (functions). We can also expand
+it to diff cycles of individual programs blocks as reported by timed LBR.
+This would allow to identify changes in specific code accurately.
 
-By now I'm sure everyone's noticed that I suspect that patch #7 fixes
-the generic/475 crash that Eryu reported, so I've added it to my
-internal branch for testing.
+With this patch set, for example,
 
-Patch #8 is a simple cleanup so I put that one in too.  If I notice any
-problems with either of these two patches then I can always back them
-out before the next push to for-next.  I'd wanted to make those cleanups
-for a while and they're more or less what I would've done.
+ $ perf record -b ./div
+ $ perf record -b ./div
+ $ perf diff -c cycles
 
-> and then lifts it to
-> fs/iomap.c so that it could be use by other file system.  I've been
-> wanting to this for a while so that I could eventually convert gfs2
-> over to it, but I never got to it.  Now Damien has a new zonefs
-> file system for semi-raw access to zoned block devices that would
-> like to use the iomap code instead of reinventing it, so I finally
-> had to do the work.
+ # Event 'cycles'
+ #
+ # Baseline                                       [Program Block Range] Cycles Diff  Shared Object     Symbol
+ # ........  ......................................................................  ................  ..................................
+ #
+     48.75%                                             [div.c:42 -> div.c:45]  147  div               [.] main
+     48.75%                                             [div.c:31 -> div.c:40]    4  div               [.] main
+     48.75%                                             [div.c:40 -> div.c:40]    0  div               [.] main
+     48.75%                                             [div.c:42 -> div.c:42]    0  div               [.] main
+     48.75%                                             [div.c:42 -> div.c:44]    0  div               [.] main
+     19.02%                                 [random_r.c:357 -> random_r.c:360]    0  libc-2.23.so      [.] __random_r
+     19.02%                                 [random_r.c:357 -> random_r.c:373]    0  libc-2.23.so      [.] __random_r
+     19.02%                                 [random_r.c:357 -> random_r.c:376]    0  libc-2.23.so      [.] __random_r
+     19.02%                                 [random_r.c:357 -> random_r.c:380]    0  libc-2.23.so      [.] __random_r
+     19.02%                                 [random_r.c:357 -> random_r.c:392]    0  libc-2.23.so      [.] __random_r
+     16.17%                                     [random.c:288 -> random.c:291]    0  libc-2.23.so      [.] __random
+     16.17%                                     [random.c:288 -> random.c:291]    0  libc-2.23.so      [.] __random
+     16.17%                                     [random.c:288 -> random.c:295]    0  libc-2.23.so      [.] __random
+     16.17%                                     [random.c:288 -> random.c:297]    0  libc-2.23.so      [.] __random
+     16.17%                                     [random.c:291 -> random.c:291]    0  libc-2.23.so      [.] __random
+     16.17%                                     [random.c:293 -> random.c:293]    0  libc-2.23.so      [.] __random
+      8.21%                                             [div.c:22 -> div.c:22]  148  div               [.] compute_flag
+      8.21%                                             [div.c:22 -> div.c:25]    0  div               [.] compute_flag
+      8.21%                                             [div.c:27 -> div.c:28]    0  div               [.] compute_flag
+      5.52%                                           [rand.c:26 -> rand.c:27]    0  libc-2.23.so      [.] rand
+      5.52%                                           [rand.c:26 -> rand.c:28]    0  libc-2.23.so      [.] rand
+      2.27%                                         [rand@plt+0 -> rand@plt+0]    0  div               [.] rand@plt
+      0.01%                                 [entry_64.S:694 -> entry_64.S:694]   16  [kernel.vmlinux]  [k] native_irq_return_iret
+      0.00%                                       [fair.c:7676 -> fair.c:7665]  162  [kernel.vmlinux]  [k] update_blocked_averages
 
-Sooo many conflicted feelings on this question. :)
+ '[Program Block Range]' indicates the range of program basic block
+ (start -> end). If we can find the source line it prints the source
+ line otherwise it prints the symbol+offset instead.
 
-I agree with Christoph that sharing /high quality/ code in the kernel
-has served the kernel well over the years and I want that to continue.
-Sharing the lower part of our writeback code so filesystems can opt out
-of writing their own code to map dirty pages to storage extents and
-attach them to struct bios is (I think) a good strategy.
+ v6:
+ ---
+ Remove the 'ops' argument in hists__add_entry_block. No functional change.
 
-However, I don't think sharing crap code in the kernel is serving us
-well. I dislike this recent development where we decide to wire up XFS
-to some new API, beat on it aggressively, and then spend months sorting
-out how to make it work the way people think it does.  I do not wish to
-see any of the iomap code bit rot to the point that it becomes a
-nightmare to someone else.
+ Changed patches
+  perf util: Add block_info in hist_entry 
+  perf diff: Use hists to manage basic blocks per symbol
 
-I think Dave has voiced some valid concerns about our ability to support
-this code over the long term once we start sharing it with other fses.
-XFS has a longish history of sailing away from generic code so that we
-can remove awkward abstractions which aren't working well for us.  If
-we're going to continue to go our own way with things like file locking
-and mapping I wonder how long we'd keep using the iomap ioends before
-moving away again.  How well will that iomap code avoid bitrot once XFS
-does that?
+ v5:
+ ---
+ Only the patch 'perf diff: Use hists to manage basic blocks per symbol'
+ is changed in v5. Since we still carry block_info in 'struct hist_entry'
+ so we don't need our own new/free ops for hist entries. And the block_info
+ is released in hist_entry__delete.
 
-We are already past -rc6, so I think the second part of the series
-(patches #10-13) is too late for 5.3.  I need more time to think about
-how this would work out in the scenario where (a) we take on the extra
-work of ensuring that our writeback improvements don't screw things up
-for everyone else, or (b) we end up forking away after a while.
+ v4:
+ ---
+ Use source lines or symbol+offset to indicate the basic block.
 
-To be clear, I don't have a problem with the idea of iomap containing a
-common ioend creation library, but I would really like to see what it
-looks like to share the code with actual users.  I haven't seen any yet,
-though at this early stage I am not surprised.
+ Changed patches:
+  perf diff: Print the basic block cycles diff
+  perf diff: Documentation -c cycles option
 
-I think what I want to do is to proceed on a provisional basis -- create
-a branch off of the next -rc1 (perhaps omitting the part that removes
-xfs ioend processing) and let's see where zonedfs et. al. go from there.
+ v3:
+ ---
+ In v3, the major change is to move most of block stuffs from
+ 'struct hist_entry' to new structure 'struct block_hist' and
+ update the code accordingly. But we still have to keep the
+ block_info in 'struct hist_entry' since we need to compare by
+ block info when inserting new entry to hists.
 
-How does that sound?  Who are the other potential users?
+ Others are minor changes, such as abs() -> labs(), removing
+ duplicated ops and etc.
 
-> This new version should have addressed all comments from the review,
-> except that I haven't split iomap.c, which is a little too invasive
-> with other pending changes to the file.  I do however offer to submit
-> a split right at the end of the merge window when it is least invasive.
+ Changed patches:
+  perf diff: Use hists to manage basic blocks per symbol
+  perf diff: Link same basic blocks among different data
+  perf diff: Print the basic block cycles diff
 
-Already working on it, will send it tomorrow or tonight or something.
+ v2:
+ ---
+ Keep standard perf diff format.
 
---D
+ Following is the v1 output.
 
-> Changes since v1:
->  - rebased to the latest xfs for-next tree
->  - keep the preallocated transactions for size updates
->  - rename list_pop to list_pop_entry and related cleanups
->  - better document the nofs context handling
->  - document that the iomap tracepoints are not a stable API
+ # perf diff --basic-block
+
+ # Cycles diff  Basic block (start:end)
+ # ...........  .......................
+ #
+          -208  hrtimer_interrupt (30b9e0:30ba42)
+          -157  update_blocked_averages (2bf9f2:2bfa63)
+          -126  interrupt_entry (c00880:c0093a)
+           -86  hrtimer_interrupt (30bb29:30bb32)
+           -74  hrtimer_interrupt (30ba65:30bac4)
+           -56  update_blocked_averages (2bf980:2bf9d3)
+            48  update_blocked_averages (2bf934:2bf942)
+           -35  native_write_msr (267900:26790b)
+            26  native_irq_return_iret (c00a27:c00a27)
+            22  rcu_check_callbacks (2febb6:2febdc)
+           -21  __hrtimer_run_queues (30b220:30b2a3)
+            19  pvclock_gtod_notify (14ba0:14c1b)
+           -18  task_tick_fair (2c5d29:2c5d41)
+
+Jin Yao (7):
+  perf util: Create block_info structure
+  perf util: Add block_info in hist_entry
+  perf diff: Check if all data files with branch stacks
+  perf diff: Use hists to manage basic blocks per symbol
+  perf diff: Link same basic blocks among different data
+  perf diff: Print the basic block cycles diff
+  perf diff: Documentation -c cycles option
+
+ tools/perf/Documentation/perf-diff.txt |  17 +-
+ tools/perf/builtin-diff.c              | 385 ++++++++++++++++++++++++++++++++-
+ tools/perf/ui/stdio/hist.c             |  27 +++
+ tools/perf/util/hist.c                 |  41 +++-
+ tools/perf/util/hist.h                 |   8 +
+ tools/perf/util/sort.h                 |  13 ++
+ tools/perf/util/srcline.c              |   4 +-
+ tools/perf/util/symbol.c               |  22 ++
+ tools/perf/util/symbol.h               |  23 ++
+ tools/perf/util/symbol_conf.h          |   4 +-
+ 10 files changed, 532 insertions(+), 12 deletions(-)
+
+-- 
+2.7.4
+
