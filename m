@@ -2,171 +2,68 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D13BC5B577
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03D6C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2364420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:54:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P20VVlmj"
+	by mail.kernel.org (Postfix) with ESMTP id 7206B2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561683306;
+	bh=AeykGisETI19pMTMY7Y0ctoaJTVvUm9DspONR5Tte4Y=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=bquh80ghyTWlUGcOH1CS0Ae3djqX/VQ1Pq8VKrE5N8Kui5WnWhlxsaxPrtd+Qp93z
+	 BoGkcOMiGX37ObIfhsx2CCw6lfXxsknfaquZjKx7B6bCjH20Qog56X57ZHwqqVSikO
+	 FjCqJWDw/8Jr94I2Yy5+vP+Q29mx0k/lYjIPugU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfF1AyQ (ORCPT
+        id S1726823AbfF1AzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 20:54:16 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38604 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfF1AyQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 20:54:16 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S0DYMF078901;
-        Fri, 28 Jun 2019 00:53:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=w85fdhBnDnSJZdF4gNrdI0qjj60PNfiLCX8rThOx2Mc=;
- b=P20VVlmj6tAjCBXzHGd1RrYIQG6BmeSTSOuaxXOGRdPYYkxXTebWzWb18ng4X2r49PCT
- 5PA8vd4ebmFvRxj9a4tn3F7M8k50nBhxUCC4U+lq4RGT9H4vUFwH/ug+Dp9SYPT3gk+Q
- 3w2ksCK6bxrtATMMo7Qx6qICm3dLGaD8vei07r/NQO5I4TB2sA9MePPxY6rWAdAgIBte
- M8Q+9BNoaXipbEwwXmhBye6lBXoiJEcaPJvOey2deZ37EQoKhjwPHIjjDQTD7a4xol4H
- uz7vTc7DS4cjg8zPtTbBAxnq1jj3y/TZK5FnXXGTD76uOAEQbiFFq16Cr3cZVATbtnSf ow== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2t9cyqtwqm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 00:53:09 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S0q2Zb124249;
-        Fri, 28 Jun 2019 00:53:09 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2t99f5aace-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 00:53:08 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5S0r4D6010716;
-        Fri, 28 Jun 2019 00:53:04 GMT
-Received: from [10.191.27.62] (/10.191.27.62)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 17:53:04 -0700
-Subject: Re: [PATCH v2 6/7] locking/spinlocks, paravirt, hyperv: Correct the
- hv_nopvspin case
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
-        bp@alien8.de, hpa@zytor.com, boris.ostrovsky@oracle.com,
-        jgross@suse.com, sstabellini@kernel.org, peterz@infradead.org,
-        srinivas.eeda@oracle.com, Waiman Long <longman@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-hyperv@vger.kernel.org
-References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
- <1561377779-28036-7-git-send-email-zhenzhong.duan@oracle.com>
- <20190627222851.GC11506@sasha-vm>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <eaeb5e52-5fa8-20c9-bc5c-090572718511@oracle.com>
-Date:   Fri, 28 Jun 2019 08:53:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190627222851.GC11506@sasha-vm>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906280001
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906280001
+        Thu, 27 Jun 2019 20:55:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726640AbfF1AzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 20:55:04 -0400
+Subject: Re: [GIT PULL] fixes for v5.2-rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561683303;
+        bh=AeykGisETI19pMTMY7Y0ctoaJTVvUm9DspONR5Tte4Y=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=DwUktA+HC2hC4FnxRIDud/FykKoMb8mMajyc+rQuc5DsE4+ClRVLEyoRu56sxZZz/
+         AgacqhE8+3QGyH9FHZLEWfJ7nxfPUU3QzoI7OtHadShdLAlusmb8wpjN4QvHgosSOK
+         QA4bjLLvNTnawBcTi4MZt5O5wCXXzWkNqJPKgIoE=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190627112430.6590-1-christian@brauner.io>
+References: <20190627112430.6590-1-christian@brauner.io>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190627112430.6590-1-christian@brauner.io>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux
+ tags/for-linus-20190627
+X-PR-Tracked-Commit-Id: 30d158b143b6575261ab610ae7b1b4f7fe3830b3
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 7a702b4e82d8730d6964bfd98b3b024c126e9846
+Message-Id: <156168330366.8716.3052438043309398771.pr-tracker-bot@kernel.org>
+Date:   Fri, 28 Jun 2019 00:55:03 +0000
+To:     Christian Brauner <christian@brauner.io>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        ldv@altlinux.org, viro@zeniv.linux.org.uk, jannh@google.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The pull request you sent on Thu, 27 Jun 2019 13:24:30 +0200:
 
-On 2019/6/28 6:28, Sasha Levin wrote:
-> On Mon, Jun 24, 2019 at 08:02:58PM +0800, Zhenzhong Duan wrote:
->> With the boot parameter "hv_nopvspin" specified a Hyperv guest should
->> not make use of paravirt spinlocks, but behave as if running on bare
->> metal. This is not true, however, as the qspinlock code will fall back
->> to a test-and-set scheme when it is detecting a hypervisor.
->>
->> In order to avoid this disable the virt_spin_lock_key.
->>
->> Same change for XEN is already in Commit e6fd28eb3522
->> ("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case")
->>
->> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
->> Cc: Waiman Long <longman@redhat.com>
->> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
->> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
->> Cc: Haiyang Zhang <haiyangz@microsoft.com>
->> Cc: Stephen Hemminger <sthemmin@microsoft.com>
->> Cc: Sasha Levin <sashal@kernel.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: linux-hyperv@vger.kernel.org
->> ---
->> arch/x86/hyperv/hv_spinlock.c | 3 +++
->> 1 file changed, 3 insertions(+)
->>
->> diff --git a/arch/x86/hyperv/hv_spinlock.c 
->> b/arch/x86/hyperv/hv_spinlock.c
->> index 07f21a0..d90b4b0 100644
->> --- a/arch/x86/hyperv/hv_spinlock.c
->> +++ b/arch/x86/hyperv/hv_spinlock.c
->> @@ -64,6 +64,9 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
->>
->> void __init hv_init_spinlocks(void)
->> {
->> +    if (unlikely(!hv_pvspin))
->> +        static_branch_disable(&virt_spin_lock_key);
->
-> This should be combined in the conditional under it, which already
-> attempts to disable PV spinlocks, note how hv_pvspin is checked there.
-> hc_pvspin isn't the only reason we would disable PV spinlocks on hyperv.
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-20190627
 
-In virt_spin_lock() there is a comment as below. The test-and-set spinlock
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/7a702b4e82d8730d6964bfd98b3b024c126e9846
 
-is an optimization to hypervisor platform when PV spinlock is unsupported.
+Thank you!
 
-         /*
-          * On hypervisors without PARAVIRT_SPINLOCKS support we fall
-          * back to a Test-and-Set spinlock, because fair locks have
-          * horrible lock 'holder' preemption issues.
-          */
-
-
-So my understanding is:
-
-If hv_pvspin=0 by command line, we want to behave as if running on bare 
-metal(the fair locks path).
-
-Though there is performance regression, but it's not that important when 
-we use hv_pvspin=0.
-
-If PV spinlock is disabled by other reasons, we prefer the optimization 
-path.
-
->
-> Also, there's no need for the unlikely() here, it's only getting called
-> once...
-
-Ok, I'll removed it.
-
-
-Thanks
-
-Zhenzhong
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
