@@ -2,60 +2,86 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C43C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2C3C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974C0208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CE420665
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:10:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfF1KKn (ORCPT
+        id S1726674AbfF1KKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:10:43 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:41878 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfF1KKm (ORCPT
+        Fri, 28 Jun 2019 06:10:51 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52176 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfF1KKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:10:42 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: by mail.steuer-voss.de (Postfix, from userid 1000)
-        id 0EA014A8B1; Fri, 28 Jun 2019 12:10:41 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id 0B98543ED7;
-        Fri, 28 Jun 2019 12:10:41 +0200 (CEST)
-Date:   Fri, 28 Jun 2019 12:10:41 +0200 (CEST)
-From:   Nikolaus Voss <nv@vosn.de>
-X-X-Sender: nv@fox.voss.local
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] drivers/usb/typec/tps6598x.c: fix portinfo width
-In-Reply-To: <20190628095843.GB21701@kuha.fi.intel.com>
-Message-ID: <alpine.DEB.2.20.1906281208190.21573@fox.voss.local>
-References: <20190628083417.GA21701@kuha.fi.intel.com> <f8daf204d49fff00db33e2b417a20afcc58ad56e.1561712364.git.nikolaus.voss@loewensteinmedical.de> <20190628095843.GB21701@kuha.fi.intel.com>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        Fri, 28 Jun 2019 06:10:51 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id B325380683; Fri, 28 Jun 2019 12:10:38 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 12:10:50 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     kernel list <linux-kernel@vger.kernel.org>, jaegeuk@kernel.org,
+        yuchao0@huawei.com, linux-f2fs-devel@lists.sourceforge.net,
+        Qiuyang Sun <sunqiuyang@huawei.com>
+Subject: Re: Next 20190621: fails to link f2fs in x86-32
+Message-ID: <20190628101050.GA7745@amd>
+References: <20190621110311.GF24145@amd>
+ <20190621214657.1624e5a4@canb.auug.org.au>
+ <20190622174945.GA30317@amd>
+ <20190624101844.50e4c4ff@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
+Content-Disposition: inline
+In-Reply-To: <20190624101844.50e4c4ff@canb.auug.org.au>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019, Heikki Krogerus wrote:
-> On Fri, Jun 28, 2019 at 11:01:08AM +0200, Nikolaus Voss wrote:
->> Portinfo bit field is 3 bits wide, not 2 bits. This led to
->> a wrong driver configuration for some tps6598x configurations.
->>
->> Fixes: 0a4c005bd171 ("usb: typec: driver for TI TPS6598x USB Power Delivery controllers")
->> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
->
-> Shouldn't this be applied to the stable trees as well?
 
-Oh, yes, forgot that again... Greg, could you...?
+--/04w6evG8XlLl3ft
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Niko
+On Mon 2019-06-24 10:20:52, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> On Sat, 22 Jun 2019 19:49:45 +0200 Pavel Machek <pavel@ucw.cz> wrote:
+> >
+> > ld: fs/f2fs/gc.o: in function `f2fs_resize_fs':
+> > gc.c:(.text+0x3a91): undefined reference to `__umoddi3'
+> > ld: gc.c:(.text+0x3b70): undefined reference to `__udivdi3'
+> > make: *** [Makefile:1052: vmlinux] Error 1
+>=20
+> This should be fixed in today's linux-next.
 
-[...]
+Thanks, I tested 5.2.0-rc6-next-20190627+ and that seems to work here.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--/04w6evG8XlLl3ft
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0V56kACgkQMOfwapXb+vJ32ACcCv+1kImpwXc0zptPPZyuFcmp
+4pYAoLpPKrNoRcAK1WsX9uQ+gudk09zk
+=MTJn
+-----END PGP SIGNATURE-----
+
+--/04w6evG8XlLl3ft--
