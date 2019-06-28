@@ -2,171 +2,169 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE7AC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826A0C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D7B2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB532064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfF1B7K (ORCPT
+        id S1726558AbfF1CDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:59:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17808 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725770AbfF1B7K (ORCPT
+        Thu, 27 Jun 2019 22:03:02 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:36781 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725770AbfF1CDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:59:10 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5S1vDtd041017;
-        Thu, 27 Jun 2019 21:58:49 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2td76ad7mt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Jun 2019 21:58:49 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5S1tCOI009374;
-        Fri, 28 Jun 2019 01:58:48 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01wdc.us.ibm.com with ESMTP id 2t9by7ajaw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Jun 2019 01:58:48 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5S1wklw29294852
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 01:58:46 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 989EABE04F;
-        Fri, 28 Jun 2019 01:58:46 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C8451BE051;
-        Fri, 28 Jun 2019 01:58:42 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.218.134])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Fri, 28 Jun 2019 01:58:42 +0000 (GMT)
-References: <20190129134750-mutt-send-email-mst@kernel.org> <877eefxvyb.fsf@morokweng.localdomain> <20190204144048-mutt-send-email-mst@kernel.org> <87ef71seve.fsf@morokweng.localdomain> <20190320171027-mutt-send-email-mst@kernel.org> <87tvfvbwpb.fsf@morokweng.localdomain> <20190323165456-mutt-send-email-mst@kernel.org> <87a7go71hz.fsf@morokweng.localdomain> <20190520090939-mutt-send-email-mst@kernel.org> <877ea26tk8.fsf@morokweng.localdomain> <20190603211528-mutt-send-email-mst@kernel.org>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Michael Roth <mdroth@linux.vnet.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>
-Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-In-reply-to: <20190603211528-mutt-send-email-mst@kernel.org>
-Date:   Thu, 27 Jun 2019 22:58:40 -0300
-Message-ID: <877e96qxm7.fsf@morokweng.localdomain>
+        Thu, 27 Jun 2019 22:03:02 -0400
+X-UUID: c2ece93bab67479591380ff8da29426a-20190628
+X-UUID: c2ece93bab67479591380ff8da29426a-20190628
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1235482751; Fri, 28 Jun 2019 10:02:55 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Jun 2019 10:02:52 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Jun 2019 10:02:51 +0800
+Message-ID: <1561687371.29330.11.camel@mtksdaap41>
+Subject: Re: [v5 2/3] drm/mediatek: separate mipi_tx to different file
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Thierry Reding" <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        "Inki Dae" <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        "Sean Paul" <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        "Andy Yan" <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Fri, 28 Jun 2019 10:02:51 +0800
+In-Reply-To: <20190627025901.28418-3-jitao.shi@mediatek.com>
+References: <20190627025901.28418-1-jitao.shi@mediatek.com>
+         <20190627025901.28418-3-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906280014
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24722.000
+X-TM-AS-Result: No-10.247700-8.000000-10
+X-TMASE-MatchedRID: L8tZF6zWW2rmLzc6AOD8DfHkpkyUphL9APiR4btCEeZJK2eJhY02w+Z5
+        Gn23AeDZBCJmNbrkQwEB1c8PTXnqofI1YbpS1+avgmAd4Attpn/YuVu0X/rOkBpX1zEL4nq3zod
+        Om+zp8Klvb8FTrUVVI7tTg4w4u0QPVdgv/fqHkl7obINHZkH5xqgmQ5FI9tvDDlLOAk1ICsupTt
+        npKpQyOnuvCtBi52L250DWRAwkrYTtmWsUlPYSbZXIRfiL5JZTGEfoClqBl86bKItl61J/ycnjL
+        TA/UDoAoTCA5Efyn8CNo+PRbWqfRDsAVzN+Ov/sHFf9y5qyR15CjO3g32i4QW3xAkDtY0KKM0RM
+        yIBWAJybBCcU0pWFpQ==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--10.247700-8.000000
+X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24722.000
+X-TM-SNTS-SMTP: 5329DA286C4A6660442E20F3A9F915E02E66B2517D31A07EE8877C820797CA0F2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Jitao:
 
-Michael S. Tsirkin <mst@redhat.com> writes:
+On Thu, 2019-06-27 at 10:59 +0800, Jitao Shi wrote:
+> Different IC has different mipi_tx setting of dsi.
+> This patch separates the mipi_tx hardware relate part for mt8173.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/Makefile             |   1 +
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        | 343 ++----------------
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |  49 +++
+>  drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c | 289 +++++++++++++++
+>  4 files changed, 363 insertions(+), 319 deletions(-)
+>  create mode 100644 drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+>  create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c
+> 
 
-> On Mon, Jun 03, 2019 at 10:13:59PM -0300, Thiago Jung Bauermann wrote:
->>
->>
->> Michael S. Tsirkin <mst@redhat.com> writes:
->>
->> > On Wed, Apr 17, 2019 at 06:42:00PM -0300, Thiago Jung Bauermann wrote:
->> >> I rephrased it in terms of address translation. What do you think of
->> >> this version? The flag name is slightly different too:
->> >>
->> >>
->> >> VIRTIO_F_ACCESS_PLATFORM_NO_TRANSLATION This feature has the same
->> >>     meaning as VIRTIO_F_ACCESS_PLATFORM both when set and when not set,
->> >>     with the exception that address translation is guaranteed to be
->> >>     unnecessary when accessing memory addresses supplied to the device
->> >>     by the driver. Which is to say, the device will always use physical
->> >>     addresses matching addresses used by the driver (typically meaning
->> >>     physical addresses used by the CPU) and not translated further. This
->> >>     flag should be set by the guest if offered, but to allow for
->> >>     backward-compatibility device implementations allow for it to be
->> >>     left unset by the guest. It is an error to set both this flag and
->> >>     VIRTIO_F_ACCESS_PLATFORM.
->> >
->> >
->> > OK so VIRTIO_F_ACCESS_PLATFORM is designed to allow unpriveledged
->> > drivers. This is why devices fail when it's not negotiated.
->>
->> Just to clarify, what do you mean by unprivileged drivers? Is it drivers
->> implemented in guest userspace such as with VFIO? Or unprivileged in
->> some other sense such as needing to use bounce buffers for some reason?
->
-> I had drivers in guest userspace in mind.
+[snip]
 
-Great. Thanks for clarifying.
+> @@ -391,10 +101,8 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct mtk_mipi_tx *mipi_tx;
+>  	struct resource *mem;
+> -	struct clk *ref_clk;
+>  	const char *ref_clk_name;
+>  	struct clk_init_data clk_init = {
+> -		.ops = &mtk_mipi_tx_pll_ops,
+>  		.num_parents = 1,
+>  		.parent_names = (const char * const *)&ref_clk_name,
+>  		.flags = CLK_SET_RATE_GATE,
+> @@ -408,6 +116,7 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	mipi_tx->driver_data = of_device_get_match_data(dev);
+> +
+>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	mipi_tx->regs = devm_ioremap_resource(dev, mem);
+>  	if (IS_ERR(mipi_tx->regs)) {
+> @@ -416,13 +125,14 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	ref_clk = devm_clk_get(dev, NULL);
+> -	if (IS_ERR(ref_clk)) {
+> -		ret = PTR_ERR(ref_clk);
+> +	mipi_tx->ref_clk = devm_clk_get(dev, NULL);
 
-I don't think this flag would work for guest userspace drivers. Should I
-add a note about that in the flag definition?
+I think you need not to keep ref_clk in driver private data because you
+would not use it any more.
 
->> > This confuses me.
->> > If driver is unpriveledged then what happens with this flag?
->> > It can supply any address it wants. Will that corrupt kernel
->> > memory?
->>
->> Not needing address translation doesn't necessarily mean that there's no
->> IOMMU. On powerpc we don't use VIRTIO_F_ACCESS_PLATFORM but there's
->> always an IOMMU present. And we also support VFIO drivers. The VFIO API
->> for pseries (sPAPR section in Documentation/vfio.txt) has extra ioctls
->> to program the IOMMU.
->>
->> For our use case, we don't need address translation because we set up an
->> identity mapping in the IOMMU so that the device can use guest physical
->> addresses.
->
-> And can it access any guest physical address?
+Regards,
+CK
 
-Sorry, I was mistaken. We do support VFIO in guests but not for virtio
-devices, only for regular PCI devices. In which case they will use
-address translation.
+> +	if (IS_ERR(mipi_tx->ref_clk)) {
+> +		ret = PTR_ERR(mipi_tx->ref_clk);
+>  		dev_err(dev, "Failed to get reference clock: %d\n", ret);
+>  		return ret;
+>  	}
+> -	ref_clk_name = __clk_get_name(ref_clk);
+> +
+> +	ref_clk_name = __clk_get_name(mipi_tx->ref_clk);
+>  
+>  	ret = of_property_read_string(dev->of_node, "clock-output-names",
+>  				      &clk_init.name);
+> @@ -431,6 +141,8 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	clk_init.ops = mipi_tx->driver_data->mipi_tx_clk_ops;
+> +
+>  	mipi_tx->pll_hw.init = &clk_init;
+>  	mipi_tx->pll = devm_clk_register(dev, &mipi_tx->pll_hw);
+>  	if (IS_ERR(mipi_tx->pll)) {
+> @@ -465,20 +177,12 @@ static int mtk_mipi_tx_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
 
->> If the guest kernel is concerned that an unprivileged driver could
->> jeopardize its integrity it should not negotiate this feature flag.
->
-> Unfortunately flag negotiation is done through config space
-> and so can be overwritten by the driver.
 
-Ok, so the guest kernel has to forbid VFIO access on devices where this
-flag is advertised.
 
->> Perhaps there should be a note about this in the flag definition? This
->> concern is platform-dependant though. I don't believe it's an issue in
->> pseries.
->
-> Again ACCESS_PLATFORM has a pretty open definition. It does actually
-> say it's all up to the platform.
->
-> Specifically how will VIRTIO_F_ACCESS_PLATFORM_NO_TRANSLATION be
-> implemented portably? virtio has no portable way to know
-> whether DMA API bypasses translation.
 
-The fact that VIRTIO_F_ACCESS_PLATFORM_NO_TRANSLATION is set
-communicates that knowledge to virtio. There is a shared understanding
-between the guest and the host about what this flag being set means.
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
