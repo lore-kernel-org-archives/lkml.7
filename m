@@ -2,287 +2,243 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 817B1C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F132BC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC9020644
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:51:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561704707;
-	bh=SioYLHz/1CTC17aB359/G+bAFbYCJOFebHCZihN4FzM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dlyIh1PpvOZVI5oKrk/WsLX/Q08Taauqopbew1fQkvqo94DQEo60YkMPjDJwxg/45
-	 OqMj1htnkYPOWjwo7wEDscpe1ZLuT45uaToeotmcsOdVhsem0z6LOARmfvm7RBTEYW
-	 o3N4ylILyUH/Wwj3MIgxR0hJyUmoDQWRc+HaDeCY=
+	by mail.kernel.org (Postfix) with ESMTP id B66E92070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:53:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ITpBzfxG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727204AbfF1Gvp (ORCPT
+        id S1727267AbfF1GxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 02:51:45 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43390 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbfF1Gvp (ORCPT
+        Fri, 28 Jun 2019 02:53:00 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57060 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbfF1GxA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 02:51:45 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cl9so2679620plb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 23:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mCstpKpvgbBC+V+ZGiWFlCxOPjghNzZbXr1kJOJkGEc=;
-        b=Cv6URamx2iez5Bj7TuIlhxGqHMOHEygYhuPAvLwOBofBDUglWIMw6QdOGPE73NQ6+i
-         jav6fRvR0NxwWAYc3M4mcV4KkwniIE0+DN9BgNIy7ng1I8LL3V9c861VT0Mkbmx7mC9N
-         XGLVsuuq500ozM+G8Ui+mQjISaOIxPaU3cOkGDCtd9Vyy9OgRtlfuNKeA+I7aE3nz2Hr
-         taBSqBi3qcGKuPWxaNJoWNCupfRrMuMfUeLAzTyq3HwfoaGB9JSEheS21EIa6ByWe/jg
-         oQ3malVO0XGQYEpnPI6g+Au35JqstM4w6ueSgeJmsm2dmTDleG4RBR1U+TdoyM29PAjK
-         AFXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mCstpKpvgbBC+V+ZGiWFlCxOPjghNzZbXr1kJOJkGEc=;
-        b=r8fbvhPJgCv8uF0qDm+BstF3cy7wHU+l5L4rDpv+1Ru5qEEMW2R8UVOl003aTl5Qfo
-         eee3utr/X2MceOGjpC+AzSlQuiNzztdASxZBbjPHwVeLiWsRgEbMVUxW0LJywxG0BLFj
-         masm+gZoHp/63C71R/oSeIFerennC8cekAf5vJojmHZCFogBZD4zrRAv1ukqy7B++lRD
-         Zx0lc/CyixRlwN6/2g0temG3Gc6cJAr5CGLnWRa3CHdvvjEEHTwz6sMHBE0FcfL+IQli
-         pMdQK0BGfUCWldjpx3H3cej6jHHKjZIG1MKuBYMNaNMZa2sm4cxIipocyUuAvV9c5oPg
-         BPaw==
-X-Gm-Message-State: APjAAAV8uTbcFqRm6DL9XOK2u+aLa6G6FMboD5XkyQ9STLT2/9YOPcaC
-        f+wCWfrWdw3cyWN1se2J3j7asMfe
-X-Google-Smtp-Source: APXvYqx0UNr92nbIQgrbFzeisVKRoLX5W8EvyZ4FlCsQmFV+ndqxBqkjfrAhnW2TJAC39KbTxs9vPA==
-X-Received: by 2002:a17:902:542:: with SMTP id 60mr9722394plf.68.1561704703972;
-        Thu, 27 Jun 2019 23:51:43 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id a21sm1303140pfi.27.2019.06.27.23.51.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 23:51:42 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 15:51:38 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Kuo-Hsin Yang <vovoy@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] mm: vmscan: fix not scanning anonymous pages when
- detecting file refaults
-Message-ID: <20190628065138.GA251482@google.com>
-References: <20190619080835.GA68312@google.com>
- <20190627184123.GA11181@cmpxchg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627184123.GA11181@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 28 Jun 2019 02:53:00 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S6ma39137515;
+        Fri, 28 Jun 2019 06:52:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=QxpF7A7VqqYgUBiGg3AYtQoXMzS/FBMwBgDKlFdbQkU=;
+ b=ITpBzfxGhhOymg0jtX5qWEr7fjEkdRmORNUhOC7/LII86xAnUYKLiSv7vH4cA66z1lsh
+ JZCsbvCfY5l3b/UmtPZXSZzPriNh5Om5xS9z2yaqaohZucrwiiU54baHBc8izoNqYSO9
+ Kv6powxhtMYdEXswjVTyXV22h7a+4Yhc5CzvT2+b8yhePlTVQhoo6zJYjnxlM5Y1q8QD
+ aoq6CbloLKpyJElNgyxYYThFzvWkpo03SZFs4VeJ+H/tiJ9HVUhhzctZ2A0vROBWV8Nb
+ 6snchyjGAjpPmk2teWBJrjtUlmgY2JkO1ra6vbLE4WErZegECnUtKhtSkNa/vrBrYKTR sw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2t9brtky9a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 06:52:48 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S6pxCh020750;
+        Fri, 28 Jun 2019 06:52:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2t99f5dvq1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 06:52:48 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5S6qkGM024129;
+        Fri, 28 Jun 2019 06:52:46 GMT
+Received: from dhcp-10-186-50-241.sg.oracle.com (/10.186.50.241)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Jun 2019 23:52:45 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 09/19] btrfs: limit super block locations in HMZONED mode
+From:   Anand Jain <anand.jain@oracle.com>
+In-Reply-To: <SN6PR04MB52315AB9E229D0BAAB930D5B8CFC0@SN6PR04MB5231.namprd04.prod.outlook.com>
+Date:   Fri, 28 Jun 2019 14:52:40 +0800
+Cc:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <57A75561-4582-4711-8A1E-1B45F673BF14@oracle.com>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-10-naohiro.aota@wdc.com>
+ <0ca3c475-fe10-4135-ddc9-7a82cc966d9a@oracle.com>
+ <SN6PR04MB52315AB9E229D0BAAB930D5B8CFC0@SN6PR04MB5231.namprd04.prod.outlook.com>
+To:     Naohiro Aota <Naohiro.Aota@wdc.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906280077
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906280077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johannes,
 
-On Thu, Jun 27, 2019 at 02:41:23PM -0400, Johannes Weiner wrote:
-> On Wed, Jun 19, 2019 at 04:08:35PM +0800, Kuo-Hsin Yang wrote:
-> > When file refaults are detected and there are many inactive file pages,
-> > the system never reclaim anonymous pages, the file pages are dropped
-> > aggressively when there are still a lot of cold anonymous pages and
-> > system thrashes. This issue impacts the performance of applications with
-> > large executable, e.g. chrome.
-> > 
-> > When file refaults are detected. inactive_list_is_low() may return
-> > different values depends on the actual_reclaim parameter, the following
-> > 2 conditions could be satisfied at the same time.
-> > 
-> > 1) inactive_list_is_low() returns false in get_scan_count() to trigger
-> >    scanning file lists only.
-> > 2) inactive_list_is_low() returns true in shrink_list() to allow
-> >    scanning active file list.
-> > 
-> > In that case vmscan would only scan file lists, and as active file list
-> > is also scanned, inactive_list_is_low() may keep returning false in
-> > get_scan_count() until file cache is very low.
-> > 
-> > Before commit 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in
-> > cache workingset transition"), inactive_list_is_low() never returns
-> > different value in get_scan_count() and shrink_list() in one
-> > shrink_node_memcg() run. The original design should be that when
-> > inactive_list_is_low() returns false for file lists, vmscan only scan
-> > inactive file list. As only inactive file list is scanned,
-> > inactive_list_is_low() would soon return true.
-> > 
-> > This patch makes the return value of inactive_list_is_low() independent
-> > of actual_reclaim.
-> > 
-> > The problem can be reproduced by the following test program.
-> > 
-> > ---8<---
-> > void fallocate_file(const char *filename, off_t size)
-> > {
-> > 	struct stat st;
-> > 	int fd;
-> > 
-> > 	if (!stat(filename, &st) && st.st_size >= size)
-> > 		return;
-> > 
-> > 	fd = open(filename, O_WRONLY | O_CREAT, 0600);
-> > 	if (fd < 0) {
-> > 		perror("create file");
-> > 		exit(1);
-> > 	}
-> > 	if (posix_fallocate(fd, 0, size)) {
-> > 		perror("fallocate");
-> > 		exit(1);
-> > 	}
-> > 	close(fd);
-> > }
-> > 
-> > long *alloc_anon(long size)
-> > {
-> > 	long *start = malloc(size);
-> > 	memset(start, 1, size);
-> > 	return start;
-> > }
-> > 
-> > long access_file(const char *filename, long size, long rounds)
-> > {
-> > 	int fd, i;
-> > 	volatile char *start1, *end1, *start2;
-> > 	const int page_size = getpagesize();
-> > 	long sum = 0;
-> > 
-> > 	fd = open(filename, O_RDONLY);
-> > 	if (fd == -1) {
-> > 		perror("open");
-> > 		exit(1);
-> > 	}
-> > 
-> > 	/*
-> > 	 * Some applications, e.g. chrome, use a lot of executable file
-> > 	 * pages, map some of the pages with PROT_EXEC flag to simulate
-> > 	 * the behavior.
-> > 	 */
-> > 	start1 = mmap(NULL, size / 2, PROT_READ | PROT_EXEC, MAP_SHARED,
-> > 		      fd, 0);
-> > 	if (start1 == MAP_FAILED) {
-> > 		perror("mmap");
-> > 		exit(1);
-> > 	}
-> > 	end1 = start1 + size / 2;
-> > 
-> > 	start2 = mmap(NULL, size / 2, PROT_READ, MAP_SHARED, fd, size / 2);
-> > 	if (start2 == MAP_FAILED) {
-> > 		perror("mmap");
-> > 		exit(1);
-> > 	}
-> > 
-> > 	for (i = 0; i < rounds; ++i) {
-> > 		struct timeval before, after;
-> > 		volatile char *ptr1 = start1, *ptr2 = start2;
-> > 		gettimeofday(&before, NULL);
-> > 		for (; ptr1 < end1; ptr1 += page_size, ptr2 += page_size)
-> > 			sum += *ptr1 + *ptr2;
-> > 		gettimeofday(&after, NULL);
-> > 		printf("File access time, round %d: %f (sec)\n", i,
-> > 		       (after.tv_sec - before.tv_sec) +
-> > 		       (after.tv_usec - before.tv_usec) / 1000000.0);
-> > 	}
-> > 	return sum;
-> > }
-> > 
-> > int main(int argc, char *argv[])
-> > {
-> > 	const long MB = 1024 * 1024;
-> > 	long anon_mb, file_mb, file_rounds;
-> > 	const char filename[] = "large";
-> > 	long *ret1;
-> > 	long ret2;
-> > 
-> > 	if (argc != 4) {
-> > 		printf("usage: thrash ANON_MB FILE_MB FILE_ROUNDS\n");
-> > 		exit(0);
-> > 	}
-> > 	anon_mb = atoi(argv[1]);
-> > 	file_mb = atoi(argv[2]);
-> > 	file_rounds = atoi(argv[3]);
-> > 
-> > 	fallocate_file(filename, file_mb * MB);
-> > 	printf("Allocate %ld MB anonymous pages\n", anon_mb);
-> > 	ret1 = alloc_anon(anon_mb * MB);
-> > 	printf("Access %ld MB file pages\n", file_mb);
-> > 	ret2 = access_file(filename, file_mb * MB, file_rounds);
-> > 	printf("Print result to prevent optimization: %ld\n",
-> > 	       *ret1 + ret2);
-> > 	return 0;
-> > }
-> > ---8<---
-> > 
-> > Running the test program on 2GB RAM VM with kernel 5.2.0-rc5, the
-> > program fills ram with 2048 MB memory, access a 200 MB file for 10
-> > times. Without this patch, the file cache is dropped aggresively and
-> > every access to the file is from disk.
-> > 
-> >   $ ./thrash 2048 200 10
-> >   Allocate 2048 MB anonymous pages
-> >   Access 200 MB file pages
-> >   File access time, round 0: 2.489316 (sec)
-> >   File access time, round 1: 2.581277 (sec)
-> >   File access time, round 2: 2.487624 (sec)
-> >   File access time, round 3: 2.449100 (sec)
-> >   File access time, round 4: 2.420423 (sec)
-> >   File access time, round 5: 2.343411 (sec)
-> >   File access time, round 6: 2.454833 (sec)
-> >   File access time, round 7: 2.483398 (sec)
-> >   File access time, round 8: 2.572701 (sec)
-> >   File access time, round 9: 2.493014 (sec)
-> > 
-> > With this patch, these file pages can be cached.
-> > 
-> >   $ ./thrash 2048 200 10
-> >   Allocate 2048 MB anonymous pages
-> >   Access 200 MB file pages
-> >   File access time, round 0: 2.475189 (sec)
-> >   File access time, round 1: 2.440777 (sec)
-> >   File access time, round 2: 2.411671 (sec)
-> >   File access time, round 3: 1.955267 (sec)
-> >   File access time, round 4: 0.029924 (sec)
-> >   File access time, round 5: 0.000808 (sec)
-> >   File access time, round 6: 0.000771 (sec)
-> >   File access time, round 7: 0.000746 (sec)
-> >   File access time, round 8: 0.000738 (sec)
-> >   File access time, round 9: 0.000747 (sec)
-> > 
-> > Fixes: 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in cache workingset transition")
-> > Signed-off-by: Kuo-Hsin Yang <vovoy@chromium.org>
-> 
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> 
-> Your change makes sense - we should indeed not force cache trimming
-> only while the page cache is experiencing refaults.
-> 
-> I can't say I fully understand the changelog, though. The problem of
 
-I guess the point of the patch is "actual_reclaim" paramter made divergency
-to balance file vs. anon LRU in get_scan_count. Thus, it ends up scanning
-file LRU active/inactive list at file thrashing state.
+> On 28 Jun 2019, at 2:39 PM, Naohiro Aota <Naohiro.Aota@wdc.com> wrote:
+>=20
+> On 2019/06/28 12:56, Anand Jain wrote:
+>> On 7/6/19 9:10 PM, Naohiro Aota wrote:
+>>> When in HMZONED mode, make sure that device super blocks are located =
+in
+>>> randomly writable zones of zoned block devices. That is, do not =
+write super
+>>> blocks in sequential write required zones of host-managed zoned =
+block
+>>> devices as update would not be possible.
+>>=20
+>>   By design all copies of SB must be updated at each transaction,
+>>   as they are redundant copies they must match at the end of
+>>   each transaction.
+>>=20
+>>   Instead of skipping the sb updates, why not alter number of
+>>   copies at the time of mkfs.btrfs?
+>>=20
+>> Thanks, Anand
+>=20
+> That is exactly what the patched code does. It updates all the SB
+> copies, but it just avoids writing a copy to sequential writing
+> required zones. Mkfs.btrfs do the same. So, all the available SB
+> copies always match after a transaction. At the SB location in a
+> sequential write required zone, you will see zeroed region (in the
+> next version of the patch series), but that is easy to ignore: it
+> lacks even BTRFS_MAGIC.
+>=20
 
-So, Fixes: 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in cache workingset transition")
-would make sense to me since it introduces the parameter.
+ Right, I saw the related Btrfs-progs patches at a later time,
+ there are piles of emails after a vacation.;-)
 
-> forcing cache trimming while there is enough page cache is older than
-> the commit you refer to. It could be argued that this commit is
-> incomplete - it could have added refault detection not just to
-> inactive:active file balancing, but also the file:anon balancing; but
-> it didn't *cause* this problem.
-> 
-> Shouldn't this be
-> 
-> Fixes: e9868505987a ("mm,vmscan: only evict file pages when we have plenty")
-> Fixes: 7c5bd705d8f9 ("mm: memcg: only evict file pages when we have plenty")
+> The number of SB copy available on HMZONED device will vary
+> by its zone size and its zone layout.
 
-That would affect, too but it would be trouble to have stable backport
-since we don't have refault machinery in there.
+
+Thanks, Anand
+
+> Thanks,
+>=20
+>>=20
+>>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+>>> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
+>>> ---
+>>>   fs/btrfs/disk-io.c     | 11 +++++++++++
+>>>   fs/btrfs/disk-io.h     |  1 +
+>>>   fs/btrfs/extent-tree.c |  4 ++++
+>>>   fs/btrfs/scrub.c       |  2 ++
+>>>   4 files changed, 18 insertions(+)
+>>>=20
+>>> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+>>> index 7c1404c76768..ddbb02906042 100644
+>>> --- a/fs/btrfs/disk-io.c
+>>> +++ b/fs/btrfs/disk-io.c
+>>> @@ -3466,6 +3466,13 @@ struct buffer_head =
+*btrfs_read_dev_super(struct block_device *bdev)
+>>>   	return latest;
+>>>   }
+>>>=20
+>>> +int btrfs_check_super_location(struct btrfs_device *device, u64 =
+pos)
+>>> +{
+>>> +	/* any address is good on a regular (zone_size =3D=3D 0) device =
+*/
+>>> +	/* non-SEQUENTIAL WRITE REQUIRED zones are capable on a zoned =
+device */
+>>> +	return device->zone_size =3D=3D 0 || =
+!btrfs_dev_is_sequential(device, pos);
+>>> +}
+>>> +
+>>>   /*
+>>>    * Write superblock @sb to the @device. Do not wait for =
+completion, all the
+>>>    * buffer heads we write are pinned.
+>>> @@ -3495,6 +3502,8 @@ static int write_dev_supers(struct =
+btrfs_device *device,
+>>>   		if (bytenr + BTRFS_SUPER_INFO_SIZE >=3D
+>>>   		    device->commit_total_bytes)
+>>>   			break;
+>>> +		if (!btrfs_check_super_location(device, bytenr))
+>>> +			continue;
+>>>=20
+>>>   		btrfs_set_super_bytenr(sb, bytenr);
+>>>=20
+>>> @@ -3561,6 +3570,8 @@ static int wait_dev_supers(struct btrfs_device =
+*device, int max_mirrors)
+>>>   		if (bytenr + BTRFS_SUPER_INFO_SIZE >=3D
+>>>   		    device->commit_total_bytes)
+>>>   			break;
+>>> +		if (!btrfs_check_super_location(device, bytenr))
+>>> +			continue;
+>>>=20
+>>>   		bh =3D __find_get_block(device->bdev,
+>>>   				      bytenr / BTRFS_BDEV_BLOCKSIZE,
+>>> diff --git a/fs/btrfs/disk-io.h b/fs/btrfs/disk-io.h
+>>> index a0161aa1ea0b..70e97cd6fa76 100644
+>>> --- a/fs/btrfs/disk-io.h
+>>> +++ b/fs/btrfs/disk-io.h
+>>> @@ -141,6 +141,7 @@ struct extent_map *btree_get_extent(struct =
+btrfs_inode *inode,
+>>>   		struct page *page, size_t pg_offset, u64 start, u64 len,
+>>>   		int create);
+>>>   int btrfs_get_num_tolerated_disk_barrier_failures(u64 flags);
+>>> +int btrfs_check_super_location(struct btrfs_device *device, u64 =
+pos);
+>>>   int __init btrfs_end_io_wq_init(void);
+>>>   void __cold btrfs_end_io_wq_exit(void);
+>>>=20
+>>> diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+>>> index 3d41d840fe5c..ae2c895d08c4 100644
+>>> --- a/fs/btrfs/extent-tree.c
+>>> +++ b/fs/btrfs/extent-tree.c
+>>> @@ -267,6 +267,10 @@ static int exclude_super_stripes(struct =
+btrfs_block_group_cache *cache)
+>>>   			return ret;
+>>>   	}
+>>>=20
+>>> +	/* we won't have super stripes in sequential zones */
+>>> +	if (cache->alloc_type =3D=3D BTRFS_ALLOC_SEQ)
+>>> +		return 0;
+>>> +
+>>>   	for (i =3D 0; i < BTRFS_SUPER_MIRROR_MAX; i++) {
+>>>   		bytenr =3D btrfs_sb_offset(i);
+>>>   		ret =3D btrfs_rmap_block(fs_info, cache->key.objectid,
+>>> diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+>>> index f7b29f9db5e2..36ad4fad7eaf 100644
+>>> --- a/fs/btrfs/scrub.c
+>>> +++ b/fs/btrfs/scrub.c
+>>> @@ -3720,6 +3720,8 @@ static noinline_for_stack int =
+scrub_supers(struct scrub_ctx *sctx,
+>>>   		if (bytenr + BTRFS_SUPER_INFO_SIZE >
+>>>   		    scrub_dev->commit_total_bytes)
+>>>   			break;
+>>> +		if (!btrfs_check_super_location(scrub_dev, bytenr))
+>>> +			continue;
+>>>=20
+>>>   		ret =3D scrub_pages(sctx, bytenr, BTRFS_SUPER_INFO_SIZE, =
+bytenr,
+>>>   				  scrub_dev, BTRFS_EXTENT_FLAG_SUPER, =
+gen, i,
+>>>=20
+>>=20
+>>=20
+>=20
+
