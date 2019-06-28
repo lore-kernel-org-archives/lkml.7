@@ -4,86 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A4CC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6C2C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A384208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E931205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfF1Kcl (ORCPT
+        id S1726812AbfF1KeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:32:41 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:40313 "EHLO
+        Fri, 28 Jun 2019 06:34:13 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:33457 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfF1Kck (ORCPT
+        with ESMTP id S1726550AbfF1KeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:32:40 -0400
+        Fri, 28 Jun 2019 06:34:13 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N1g3U-1iiM2L2LVY-0122IQ; Fri, 28 Jun 2019 12:32:33 +0200
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M4JVv-1hgX5U2JRx-000Hmo; Fri, 28 Jun 2019 12:34:01 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>
+To:     Russell King <linux@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] devfreq: tegra20: add COMMON_CLK dependency
-Date:   Fri, 28 Jun 2019 12:32:20 +0200
-Message-Id: <20190628103232.2467959-1-arnd@arndb.de>
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/armada: fix debugfs link error
+Date:   Fri, 28 Jun 2019 12:33:40 +0200
+Message-Id: <20190628103359.2516007-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:xhFrlLf9WRsFZysgRMvpYZSAo7T4pW2ZaZmYc/wRs8vpFy7E5xr
- 7S6L2CV+f/6B7ifuk+MUFRIU2zmgkCGWtDzIk/q+RgA7IPl4Ap38X0eSLPjfCNpQ82srMRg
- zdVBYAgJItSmqT4CIRsnDCakn7wW9YUMYTX8RNn3zS6BCLn4mNBj2vnk4WvzzwJqI2qi0kw
- C+0O7XnNbUwrnjnp26opw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xWmgNnRSzZw=:QqmRafXxr6ylAwu1Ap+5OY
- P12lZ4lA9RESodDWEaBL0WU3oJlpyVGCL1b1ZXYaUbvI5q6eJPGTrs9HBJ0A+T29cvtMNSG3Q
- dph3QEsfhgXnlmLgYy8GweuZkEjvPM9a3piyIP9t7A+6MvxDpZEg7pzg1pK6pxWK049Czp0Xc
- yw5LCD5Mlp7M8dXI7jY8651fxBkfvfAtuuRG6Jul3NqfjwJqsH5IatDgOof2Pt41pB0UzAdy0
- wf9Nx6OzFqrHCcZMam50WME1TalCWo+SsgqnMVhIUIHApmd5ka69qwHJJCBUmgoNvlgGZ7g0S
- a6UR25e9yiHiRcPourvTxU9oS9zjqGIKdVgvtWwmsmWcbYIvHft9Pb5spQFCGbUyczjLWEPJY
- jbzOhhkb7zeoY9EiQtU18hhxYaUQj1ekorObFi2RwFam6vXVq/ZNa1uvQAC8C2NBVZb4DEu2i
- Lw3+rra7W698ApYCMgLCzlcPzfgY6ktakra1XOTREG1zjV9yWFHrCdTJQja5jOhnEHfFFYdwQ
- YLQxZIWRO6uSd4y/R8x6jS7GLK4lJUuJP+wYS0BrjULlbJC6qI1H99XrOHP9gfpG9BAqDtZT0
- XS/T1L4He9T7w8ZxESPId+BUCJ2SLaK5XplHAIoRGkuo/TeiscYovgZz1v+QR7z15niA6YlX0
- qzjcKDxlCQrmQbcJGemD2T1el4RrvZ9SkCMKfBwAPcGV1olIvV5q6DF8KFyf86J0y4Uq77MR0
- 5lkFHeg3MSj3W1QTgnlAZpkY7H5WLVBjXgZr2w==
+X-Provags-ID: V03:K1:yDMdCFNWi3eU4ukD4Asr7J3rQl5xwCdYhWLt3CtMOZ0hUYFIVP0
+ TN6nF1GWbhjRGe5AH0LiQ9iSfgDYTsV5YQjtAF49GKiyIbUdB56yLZ4vgitW4ndREs6VNRr
+ XkiMQi+73hO8i64aUnRo/CspzmUQgF20+bQmrefYvEus5jIt2eFZjWVmUDp6cEgTjB1F9zd
+ +4QDLSFXVhUEWpYEMDfrA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WII6mkT31vU=:BJ3SdIyV3vMTpydYamkxj3
+ DQJ7SUbnIXLT8VuLoKVLblLnbDI/iGV1QFIjaBputIyypzuRsuVz9SoAlCRLZ0/V/49TaYKc8
+ g9mMlRbYjtcoiraCXQawDU1tgPJdFXcJacv4m/RjC4LLVYx7SlSid2m2isZdt6n+L73VZGUfu
+ 8ioGU3ZxwLRLzKHaXWU6tdGGoopQJNsjIcQ9hw99N05MOXgYYwoWRkn7LUCNC7c9MZgh18DJ4
+ mKQR1DRFJvFfDvhkD4LpmqUasp17SZTasN1iJ6FuR5L2VxnhDjWuw3/vnKjf4Ug8vlCsHtiDy
+ OjPFGIzKi5jJlrsy3DctMBgmhARIee2QXsmXgfuILwzFDiHE2A5WpKV7VIYjik8xTRCwvsBiP
+ fz1+vTdI6Xyd5IpWY+DC9y1xzqjE0SPPruvX5zexTObFOr+88SMPl1qA64vPZf16/vlRglbsR
+ sXYGwz4ZmOybPKI8ZdQAsjFamsQVgpOTmmk0bq+c0VyvfmK7LrkRqhQ8oNSLsIlUC3JozMH0x
+ igINaxkEZXuOUsTL2GRbwDlF96yGL4yW/tqSjTb5GXP8aqdcdi4VCPd+Bg5l6iHhLEKMnp5Fp
+ NMBPKaRjnrpayLeo+YSvO6KE0WEtDA14YWtMZoHKKyA6MIwbrcTYg4RSSMpJ0R9JBNBG/nV+R
+ aVS21HUCWOrZEQzN53AdaIAUS+44q1TKitFQCJj9sdyIsRoaXJZKwdSGJtGiP+V5C1WahM5N1
+ TFkifZmoEny1NieOKP1F0CNeCChPt83nYiyOkg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compile-testing the new driver on platforms without CONFIG_COMMON_CLK
-leads to a link error:
+Debugfs can be disabled at compile time, causing a link error
+with the newly restructured code:
 
-drivers/devfreq/tegra20-devfreq.o: In function `tegra_devfreq_target':
-tegra20-devfreq.c:(.text+0x288): undefined reference to `clk_set_min_rate'
+drivers/gpu/drm/armada/armada_crtc.o: In function `armada_drm_crtc_late_register':
+armada_crtc.c:(.text+0x974): undefined reference to `armada_drm_crtc_debugfs_init'
 
-Add a dependency on COMMON_CLK to avoid this.
+Make the code into the debugfs init function conditional.
 
-Fixes: 1d39ee8dad6d ("PM / devfreq: Introduce driver for NVIDIA Tegra20")
+Fixes: 05ec8bd524ba ("drm/armada: redo CRTC debugfs files")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/devfreq/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/armada/armada_crtc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index f3b242987fd9..defe1d438710 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -107,6 +107,7 @@ config ARM_TEGRA_DEVFREQ
- config ARM_TEGRA20_DEVFREQ
- 	tristate "NVIDIA Tegra20 DEVFREQ Driver"
- 	depends on (TEGRA_MC && TEGRA20_EMC) || COMPILE_TEST
-+	depends on COMMON_CLK
- 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
- 	select PM_OPP
- 	help
+diff --git a/drivers/gpu/drm/armada/armada_crtc.c b/drivers/gpu/drm/armada/armada_crtc.c
+index e3a5964d8a65..03d3fd00fe00 100644
+--- a/drivers/gpu/drm/armada/armada_crtc.c
++++ b/drivers/gpu/drm/armada/armada_crtc.c
+@@ -773,7 +773,9 @@ static void armada_drm_crtc_destroy(struct drm_crtc *crtc)
+ 
+ static int armada_drm_crtc_late_register(struct drm_crtc *crtc)
+ {
+-	armada_drm_crtc_debugfs_init(drm_to_armada_crtc(crtc));
++	if (IS_ENABLED(CONFIG_DEBUG_FS))
++		armada_drm_crtc_debugfs_init(drm_to_armada_crtc(crtc));
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.0
 
