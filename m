@@ -5,250 +5,182 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C3CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF874C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828DE2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE14B2133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:01:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fe6ArrEh"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="F50dR304"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfF1IAC (ORCPT
+        id S1726664AbfF1IBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:00:02 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:16188 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbfF1IAC (ORCPT
+        Fri, 28 Jun 2019 04:01:21 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:45014 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfF1IBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:00:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1561708800; x=1593244800;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=4qGS+AQAGSNeAG/Cjn3Fouyx+bazTFBBQ+/Oq4UuvLw=;
-  b=fe6ArrEhR34tnN6IZSBGi3QVu+bOb+qYNZUEmkzzzhhUBuPHtbE1nuf1
-   VSp5KEkwvNYRwf79ih+knd29bPanqdAggUKUWUVtltw1ZV6Gm5Fh5rGhQ
-   niG9wwyMklRN768biJ7nlxJoJxltsSr0ruaAtIbtZJ7fz+IqBxxfHBrYk
-   o=;
-X-IronPort-AV: E=Sophos;i="5.62,426,1554768000"; 
-   d="scan'208";a="408511790"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 28 Jun 2019 07:59:57 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id 5DEEAA0581;
-        Fri, 28 Jun 2019 07:59:56 +0000 (UTC)
-Received: from EX13D08UEB004.ant.amazon.com (10.43.60.142) by
- EX13MTAUEB001.ant.amazon.com (10.43.60.129) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 28 Jun 2019 07:59:56 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D08UEB004.ant.amazon.com (10.43.60.142) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 28 Jun 2019 07:59:55 +0000
-Received: from u6cf1b7119fa15b.ant.amazon.com (10.28.85.98) by
- mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 28 Jun 2019 07:59:50 +0000
-Subject: Re: [PATCH v3 4/5] Added build and install scripts
-To:     Alexander Graf <graf@amazon.com>, Sam Caccavale <samcacc@amazon.de>
-CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
-        <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
-        <karahmed@amazon.de>, <andrew.cooper3@citrix.com>,
-        <JBeulich@suse.com>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <paullangton4@gmail.com>,
-        <anirudhkaushik@google.com>, <x86@kernel.org>,
-        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190624142414.22096-1-samcacc@amazon.de>
- <20190624142414.22096-5-samcacc@amazon.de>
- <e0b29f4d-7471-c5d8-c9d4-2a352831a4bd@amazon.com>
-From:   <samcacc@amazon.com>
-Message-ID: <6fa5e9de-7b66-76ba-0b98-e11f890e076a@amazon.com>
-Date:   Fri, 28 Jun 2019 09:59:49 +0200
+        Fri, 28 Jun 2019 04:01:19 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190628080117euoutp02995ad71bdee338f3f720480d28b40db6~sTfMKnXom1117011170euoutp02Y
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 08:01:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190628080117euoutp02995ad71bdee338f3f720480d28b40db6~sTfMKnXom1117011170euoutp02Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561708877;
+        bh=wcgcV0tJwUzmXVmNXDGn4ZkkEJhhcwPdUNLlNuG05po=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=F50dR3047CR+jwhOCx/qfu+sSDjC+EjPweVha1V78tIIbF2yZy1xvX1pXMrNBnN15
+         rgoqPu/ocKBbMUGZNeW3AImNXbW1nBMATeK1wXNrAeVs3B3ulp2J3Qb0ODvOJDKPWw
+         8o7ArQMMKZEJXrgmTV9TVnWQDzAmFNLd+2OVg5W0=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190628080116eucas1p29b9b99feeba3a229e081a2cfcf916838~sTfLbq3vP1442914429eucas1p2M;
+        Fri, 28 Jun 2019 08:01:16 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 07.9B.04325.B49C51D5; Fri, 28
+        Jun 2019 09:01:15 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190628080115eucas1p1edc82651728719c2413ffc16b576a0ed~sTfKrzTTu2969929699eucas1p1I;
+        Fri, 28 Jun 2019 08:01:15 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190628080115eusmtrp12959d6a6fcc277d7fbac5bd93f35e34c~sTfKdtbt32149521495eusmtrp1r;
+        Fri, 28 Jun 2019 08:01:15 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-d8-5d15c94b888e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id FC.D6.04146.B49C51D5; Fri, 28
+        Jun 2019 09:01:15 +0100 (BST)
+Received: from [106.109.129.180] (unknown [106.109.129.180]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190628080114eusmtip1b8fee092190bf5f677ed1f155cc87b4f~sTfJ1ltX31983619836eusmtip11;
+        Fri, 28 Jun 2019 08:01:14 +0000 (GMT)
+Subject: Re: [PATCH bpf v5 2/2] xdp: fix hang while unregistering device
+ bound to xdp socket
+To:     Jonathan Lemon <jonathan.lemon@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+From:   Ilya Maximets <i.maximets@samsung.com>
+Message-ID: <2190070e-db72-6fbe-8dc9-7567847e48ff@samsung.com>
+Date:   Fri, 28 Jun 2019 11:01:09 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <e0b29f4d-7471-c5d8-c9d4-2a352831a4bd@amazon.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <74C6C13C-651D-4CD1-BCA1-1B8998A4FA31@gmail.com>
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKKsWRmVeSWpSXmKPExsWy7djPc7reJ0VjDTrXWFj8advAaPH5yHE2
+        i8ULvzFbzDnfwmJxpf0nu8WxFy1sFrvWzWS2uLxrDpvFikMngGILxCy29+9jdOD22LLyJpPH
+        zll32T0W73nJ5NF14xKzx/Tuh8wefVtWMXp83iQXwB7FZZOSmpNZllqkb5fAlbFneQt7wWOB
+        ir4dU5gaGG/wdjFyckgImEj8fnyOuYuRi0NIYAWjxOHL6xghnC+MEjdO32GDcD4zShzf/YwN
+        pmXqkSksILaQwHJGieYl5RBFHxklDsydBVYkLBAnsaz7HyOILSKgK7FvQyc7SBGzwG0mie3b
+        TrCCJNgEdCROrT4CVsQrYCfxYsVfoCIODhYBVYkf7aIgYVGBCInLW3ZBlQhKnJz5hAWkhFPA
+        VuLUpnKQMLOAuETTl5WsELa8RPPW2WDvSAhcY5e4cPQ4E8TRLhJb93yGsoUlXh3fwg5hy0ic
+        ntzDAmHXS9xveckI0dzBKDH90D+oBnuJLa/Pgd3GLKApsX6XPogpIeAocXimFoTJJ3HjrSDE
+        CXwSk7ZNZ4YI80p0tAlBzFCR+H1wOTOELSVx891n9gmMSrOQ/DULyTOzkDwzC2HtAkaWVYzi
+        qaXFuempxcZ5qeV6xYm5xaV56XrJ+bmbGIGJ6/S/4193MO77k3SIUYCDUYmHV2GnSKwQa2JZ
+        cWXuIUYJDmYlEV7Jc0Ah3pTEyqrUovz4otKc1OJDjNIcLErivNUMD6KFBNITS1KzU1MLUotg
+        skwcnFINjPu75nvNy5440ab22oWDJs/OW1xNl4tw+Xvh1YKN5tJTLHd3HJQtUahU+BQXGLFs
+        QdkBo/d6Lr9ElJ77xsf6PVQPbKuoWPzqXZ3xAfmlP55/8O1a8OqSYL+4lPpN5vPyLXmh3x5u
+        eCY1fzPX6qzYR2USHgn3BUUvG8kHKjGftJEx7bB/ovbIW4mlOCPRUIu5qDgRAH9MtJhYAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBIsWRmVeSWpSXmKPExsVy+t/xu7reJ0VjDX5c47b407aB0eLzkeNs
+        FosXfmO2mHO+hcXiSvtPdotjL1rYLHatm8lscXnXHDaLFYdOAMUWiFls79/H6MDtsWXlTSaP
+        nbPusnss3vOSyaPrxiVmj+ndD5k9+rasYvT4vEkugD1Kz6Yov7QkVSEjv7jEVina0MJIz9DS
+        Qs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL2PP8hb2gscCFX07pjA1MN7g7WLk5JAQMJGY
+        emQKSxcjF4eQwFJGie/PprBBJKQkfvy6wAphC0v8udYFFhcSeM8o8eFtGogtLBAnMfXANGYQ
+        W0RAV2Lfhk52EJtZ4DaTxJStURBDvzBKLDr7FyzBJqAjcWr1EUYQm1fATuLFCpA4BweLgKrE
+        j3ZRkLCoQIREX9tsNogSQYmTM5+wgJRwCthKnNpUDjFeXeLPvEvMELa4RNOXlawQtrxE89bZ
+        zBMYhWYh6Z6FpGUWkpZZSFoWMLKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93ECIzVbcd+bt7B
+        eGlj8CFGAQ5GJR5ehZ0isUKsiWXFlbmHGCU4mJVEeCXPAYV4UxIrq1KL8uOLSnNSiw8xmgK9
+        NpFZSjQ5H5hG8kriDU0NzS0sDc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MNYV
+        nn46o9+5wixU4XPYjiUZK+WUC/rZ3WvC9x398kuTq2DZAatDaSKiu478SWP4aMxzPCGpkLVr
+        979lgtoJwS+OZy8NPXMjdfOiN5Urttt+37Lo9euns75vUWK1ql0clnzpnw/vKn3Zaffb0/gn
+        m33jiaxzFFxqc2TpIzc9U/PI8K6gNSFOq5VYijMSDbWYi4oTAaZyV5HrAgAA
+X-CMS-MailID: 20190628080115eucas1p1edc82651728719c2413ffc16b576a0ed
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190627101540eucas1p149805b39e12bf7ecf5864b7ff1b0c934
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190627101540eucas1p149805b39e12bf7ecf5864b7ff1b0c934
+References: <20190627101529.11234-1-i.maximets@samsung.com>
+        <CGME20190627101540eucas1p149805b39e12bf7ecf5864b7ff1b0c934@eucas1p1.samsung.com>
+        <20190627101529.11234-3-i.maximets@samsung.com>
+        <74C6C13C-651D-4CD1-BCA1-1B8998A4FA31@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/27/19 6:57 PM, Alexander Graf wrote:
+On 28.06.2019 1:04, Jonathan Lemon wrote:
+> On 27 Jun 2019, at 3:15, Ilya Maximets wrote:
 > 
-> 
-> On 24.06.19 16:24, Sam Caccavale wrote:
->> install_afl.sh installs AFL locally and emits AFLPATH,
->> build.sh, and run.sh build and run respectively
+>> Device that bound to XDP socket will not have zero refcount until the
+>> userspace application will not close it. This leads to hang inside
+>> 'netdev_wait_allrefs()' if device unregistering requested:
 >>
+>>   # ip link del p1
+>>   < hang on recvmsg on netlink socket >
+>>
+>>   # ps -x | grep ip
+>>   5126  pts/0    D+   0:00 ip link del p1
+>>
+>>   # journalctl -b
+>>
+>>   Jun 05 07:19:16 kernel:
+>>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
+>>
+>>   Jun 05 07:19:27 kernel:
+>>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
+>>   ...
+>>
+>> Fix that by implementing NETDEV_UNREGISTER event notification handler
+>> to properly clean up all the resources and unref device.
+>>
+>> This should also allow socket killing via ss(8) utility.
+>>
+>> Fixes: 965a99098443 ("xsk: add support for bind for Rx")
+>> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
 >> ---
+>>  include/net/xdp_sock.h |  5 +++
+>>  net/xdp/xdp_umem.c     | 10 ++---
+>>  net/xdp/xdp_umem.h     |  1 +
+>>  net/xdp/xsk.c          | 87 ++++++++++++++++++++++++++++++++++++------
+>>  4 files changed, 87 insertions(+), 16 deletions(-)
 >>
->> v1 -> v2:
->>   - Introduced this patch
->>
->> v2 -> v3:
->>   - Moved non-essential development scripts to a later patch
->>
->> Signed-off-by: Sam Caccavale <samcacc@amazon.de>
->> ---
->>   tools/fuzz/x86ie/scripts/afl-many       | 31 +++++++++++++++++++++++
->>   tools/fuzz/x86ie/scripts/build.sh       | 33 +++++++++++++++++++++++++
->>   tools/fuzz/x86ie/scripts/install_afl.sh | 17 +++++++++++++
->>   tools/fuzz/x86ie/scripts/run.sh         | 10 ++++++++
->>   4 files changed, 91 insertions(+)
->>   create mode 100755 tools/fuzz/x86ie/scripts/afl-many
->>   create mode 100755 tools/fuzz/x86ie/scripts/build.sh
->>   create mode 100755 tools/fuzz/x86ie/scripts/install_afl.sh
->>   create mode 100755 tools/fuzz/x86ie/scripts/run.sh
->>
->> diff --git a/tools/fuzz/x86ie/scripts/afl-many
->> b/tools/fuzz/x86ie/scripts/afl-many
->> new file mode 100755
->> index 000000000000..e55ff115a777
->> --- /dev/null
->> +++ b/tools/fuzz/x86ie/scripts/afl-many
->> @@ -0,0 +1,31 @@
->> +#!/bin/bash
->> +# SPDX-License-Identifier: GPL-2.0+
->> +# This is for running AFL over NPROC or `nproc` cores with normal AFL
->> options ex:
->> +# ulimit -Sv $[21999999999 << 10];
->> ./tools/fuzz/x86ie/scripts/afl-many -m 22000000000 -i $FUZZDIR/in -o
->> $FUZZDIR/out tools/fuzz/x86ie/afl-harness @@
->> +
->> +export AFL_NO_AFFINITY=1
->> +
->> +while [ -z "$sync_dir" ]; do
->> +  while getopts ":o:" opt; do
->> +    case "${opt}" in
->> +      o)
->> +        sync_dir="${OPTARG}"
->> +        ;;
->> +      *)
->> +        ;;
->> +    esac
->> +  done
->> +  ((OPTIND++))
->> +  [ $OPTIND -gt $# ] && break
->> +done
->> +
->> +# AFL/linux do some weird stuff with core affinity and will often run
->> +# N processes over < N virtual cores.  In order to avoid that, we
->> taskset
->> +# each process to its own core.
->> +for i in $(seq 1 $(( ${NPROC:-$(nproc)} - 1)) ); do
->> +    taskset -c "$i" ./afl-fuzz -S "slave$i" $@ >/dev/null 2>&1 &
->> +done
->> +taskset -c 0 ./afl-fuzz -M master $@ >/dev/null 2>&1 &
->> +
->> +watch -n1 "echo \"Executing '$AFLPATH/afl-fuzz $@' on
->> ${NPROC:-$(nproc)} cores.\" && $AFLPATH/afl-whatsup -s ${sync_dir}"
->> +pkill afl-fuzz
->> diff --git a/tools/fuzz/x86ie/scripts/build.sh
->> b/tools/fuzz/x86ie/scripts/build.sh
->> new file mode 100755
->> index 000000000000..032762bf56ef
->> --- /dev/null
->> +++ b/tools/fuzz/x86ie/scripts/build.sh
->> @@ -0,0 +1,33 @@
->> +#!/bin/bash
->> +# SPDX-License-Identifier: GPL-2.0+
->> +# Run from root of linux via `./tools/fuzz/x86ie/scripts/build.sh`
->> +
->> +kernel_objects="arch/x86/kvm/emulate.o arch/x86/lib/retpoline.o
->> lib/find_bit.o"
->> +
->> +disable() { sed -i -r "/\b$1\b/c\# $1" .config; }
->> +enable() { sed -i -r "/\b$1\b/c\\$1=y" .config; }
->> +
->> +make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} defconfig
->> +
->> +enable "CONFIG_DEBUG_INFO"
->> +enable "CONFIG_STACKPROTECTOR"
->> +
->> +yes ' ' | make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} $kernel_objects
->> +
->> +omit_arg () { args=$(echo "$args" | sed "s/ $1//g"); }
->> +add_arg () { args+=" $1"; }
->> +
->> +rebuild () {
->> +  args="$(head -1 $(dirname $1)/.$(basename $1).cmd | sed -e 's/.*:=
->> //g')"
->> +  omit_arg "-mcmodel=kernel"
->> +  omit_arg "-mpreferred-stack-boundary=3"
->> +  add_arg "-fsanitize=address"
->> +  echo -e "Rebuilding $1 with \n$args"
->> +  eval "$args"
->> +}
->> +
->> +for object in $kernel_objects; do
->> +  rebuild $object
->> +done
->> +
->> +make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} tools/fuzz
->> diff --git a/tools/fuzz/x86ie/scripts/install_afl.sh
->> b/tools/fuzz/x86ie/scripts/install_afl.sh
->> new file mode 100755
->> index 000000000000..3bdbdf2a040b
->> --- /dev/null
->> +++ b/tools/fuzz/x86ie/scripts/install_afl.sh
->> @@ -0,0 +1,17 @@
->> +#!/bin/bash
->> +# SPDX-License-Identifier: GPL-2.0+
->> +# Can be run where ever, but usually run from linux root:
->> +# `source ./tools/fuzz/x86ie/scripts/install_afl.sh`
->> +# (must be sourced to get the AFLPATH envvar, otherwise set manually)
->> +
->> +wget http://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz
->> +mkdir -p afl
->> +tar xzf afl-latest.tgz -C afl --strip-components 1
->> +
->> +pushd afl
->> +set AFL_USE_ASAN
->> +make clean all
->> +export AFLPATH="$(pwd)"
->> +popd
->> +
->> +sudo bash -c "echo core >/proc/sys/kernel/core_pattern"
+>> diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
+>> index d074b6d60f8a..82d153a637c7 100644
+>> --- a/include/net/xdp_sock.h
+>> +++ b/include/net/xdp_sock.h
+>> @@ -61,6 +61,11 @@ struct xdp_sock {
+>>      struct xsk_queue *tx ____cacheline_aligned_in_smp;
+>>      struct list_head list;
+>>      bool zc;
+>> +    enum {
+>> +        XSK_UNINITIALIZED = 0,
+>> +        XSK_BINDED,
+>> +        XSK_UNBINDED,
+>> +    } state;
 > 
-> What is this? :)
-> 
-> Surely if it's important to generate core dumps, it's not only important
-> during installation, no?
+> I'd prefer that these were named better, perhaps:
+>    XSK_READY,
+>    XSK_BOUND,
+>    XSK_UNBOUND,
 
-Yep... missed this.  I'll move it to run.sh right before alf-many is
-invoked.  It would be nice to not have to sudo but it seems the only
-alternative is an envvar AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES which
-just ignores AFL's warning if your system isn't going to produce core
-dumps (which will cause AFL to miss some crashes, as the name suggests).
-
-Thanks for all the feedback thusfar,
-Sam
+Sure. Thanks for suggestion!
 
 > 
-> Alex
+> Other than that:
+> Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
 > 
->> diff --git a/tools/fuzz/x86ie/scripts/run.sh
->> b/tools/fuzz/x86ie/scripts/run.sh
->> new file mode 100755
->> index 000000000000..0571cd524c01
->> --- /dev/null
->> +++ b/tools/fuzz/x86ie/scripts/run.sh
->> @@ -0,0 +1,10 @@
->> +#!/bin/bash
->> +# SPDX-License-Identifier: GPL-2.0+
->> +
->> +FUZZDIR="${FUZZDIR:-$(pwd)/fuzz}"
->> +
->> +mkdir -p $FUZZDIR/in
->> +cp tools/fuzz/x86ie/rand_sample.bin $FUZZDIR/in
->> +mkdir -p $FUZZDIR/out
->> +
->> +screen bash -c "ulimit -Sv $[21999999999 << 10];
->> ./tools/fuzz/x86ie/scripts/afl-many -m 22000000000 -i $FUZZDIR/in -o
->> $FUZZDIR/out tools/fuzz/x86ie/afl-harness @@"
->>
 
+I'll send a new version with the new state names keeping your ACK.
+
+Best regards, Ilya Maximets.
