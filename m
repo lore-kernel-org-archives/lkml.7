@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C94ADC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A73DC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3635208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9061214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbfF1WHr (ORCPT
+        id S1726906AbfF1WHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 18:07:47 -0400
-Received: from mga05.intel.com ([192.55.52.43]:49434 "EHLO mga05.intel.com"
+        Fri, 28 Jun 2019 18:07:54 -0400
+Received: from mga17.intel.com ([192.55.52.151]:44146 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbfF1WHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726818AbfF1WHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 18:07:47 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 15:07:46 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 15:07:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,429,1557212400"; 
-   d="scan'208";a="183771159"
+   d="scan'208";a="338031188"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Jun 2019 15:07:46 -0700
+  by orsmga005.jf.intel.com with ESMTP; 28 Jun 2019 15:07:46 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 6439F301BCC; Fri, 28 Jun 2019 15:07:46 -0700 (PDT)
+        id 5D8D230054C; Fri, 28 Jun 2019 15:07:46 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 3/3] perf tools metric: Don't include duration_time in group
-Date:   Fri, 28 Jun 2019 15:07:37 -0700
-Message-Id: <20190628220737.13259-3-andi@firstfloor.org>
+Subject: [PATCH 2/3] perf list: Avoid extra : for --raw metrics
+Date:   Fri, 28 Jun 2019 15:07:36 -0700
+Message-Id: <20190628220737.13259-2-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190628220737.13259-1-andi@firstfloor.org>
 References: <20190628220737.13259-1-andi@firstfloor.org>
@@ -49,59 +49,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The Memory_BW metric generates groups including duration_time,
-which maps to a software event.
-
-For some reason this makes the group always not count.
-
-Always put duration_time outside a group when generating metrics.
-It's always the same time, so no need to group it.
+When printing the metrics raw, don't print : after the metricgroups.
+This helps the command line completion to complete those too.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/util/metricgroup.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ tools/perf/util/metricgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 1c85c9624c58..17ec05e17e7b 100644
+index fabdb6dde88e..1c85c9624c58 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -410,6 +410,7 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 			const char **ids;
- 			int idnum;
- 			struct egroup *eg;
-+			bool no_group = false;
+@@ -376,7 +376,7 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
+ 		struct mep *me = container_of(node, struct mep, nd);
  
- 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
- 
-@@ -420,11 +421,25 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 				strbuf_addf(events, ",");
- 			for (j = 0; j < idnum; j++) {
- 				pr_debug("found event %s\n", ids[j]);
-+				/*
-+				 * Duration time maps to a software event and can make
-+				 * groups not count. Always use it outside a
-+				 * group.
-+				 */
-+				if (!strcmp(ids[j], "duration_time")) {
-+					if (j > 0)
-+						strbuf_addf(events, "}:W,");
-+					strbuf_addf(events, "duration_time");
-+					no_group = true;
-+					continue;
-+				}
- 				strbuf_addf(events, "%s%s",
--					j == 0 ? "{" : ",",
-+					j == 0 || no_group ? "{" : ",",
- 					ids[j]);
-+				no_group = false;
- 			}
--			strbuf_addf(events, "}:W");
-+			if (!no_group)
-+				strbuf_addf(events, "}:W");
- 
- 			eg = malloc(sizeof(struct egroup));
- 			if (!eg) {
+ 		if (metricgroups)
+-			printf("%s%s%s", me->name, metrics ? ":" : "", raw ? " " : "\n");
++			printf("%s%s%s", me->name, metrics && !raw ? ":" : "", raw ? " " : "\n");
+ 		if (metrics)
+ 			metricgroup__print_strlist(me->metrics, raw);
+ 		next = rb_next(node);
 -- 
 2.20.1
 
