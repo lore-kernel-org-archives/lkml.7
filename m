@@ -2,138 +2,195 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AECEC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F59C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 417002070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319FE2147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:56:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KRBcK5Qa"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jfYXyDgO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfF1DzQ (ORCPT
+        id S1727255AbfF1D4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:55:16 -0400
-Received: from ozlabs.org ([203.11.71.1]:35679 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbfF1DzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:55:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Zjb42J7Nz9s7h;
-        Fri, 28 Jun 2019 13:55:12 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561694112;
-        bh=E7+sBd3+tvi8PaqXxixyn9dYJbuB3JNjSvB/N/pRXdM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KRBcK5QaQg/BeZMHLHiq6oklB1jL1crrU34K0LceA0krsh14Kg2l81SZkRLbq6b8N
-         wyYYzh22OKBG0fFcRXrqVnquTJjPKI33BjZgniJvy55xJhJoQLHt4b92r+ov5YcoHa
-         lWlqvinOByA42DZyjqMWVsWw/yFXJ2ZGTUoX85nXhauX/BEJNWevSutrfRzQTblusU
-         qrbZUk5z3K3/YA8t+ItOZzJwJigOD66NOmD8/Vk2VqOKGq8b68nMCC3tET50lJHmim
-         yheysdRJcSfHAQMKXVUvR37gFfI0KWGZnputVvg+zKdgpIHzzgh5EOpab/naBh2Uyu
-         58uAZRj3pD5AQ==
-Date:   Fri, 28 Jun 2019 13:55:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: linux-next: manual merge of the battery tree with the pci tree
-Message-ID: <20190628135511.34853c19@canb.auug.org.au>
+        Thu, 27 Jun 2019 23:56:15 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56060 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfF1D4P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 23:56:15 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S3ssRB017302;
+        Fri, 28 Jun 2019 03:56:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=qoSzCPCCpXWHwOhkoHrIjqbxyk10xabogj8Yt3/QUS0=;
+ b=jfYXyDgO6mbJw+tTplAh4kIQep1m/UfLsztlmoIkTJs8ouObELdPPyMPt/7ML+Bp2Rql
+ gFEf/eYP/0MoWa14+74N7sIMkvMtrfwxrbgG1wbD9iPNzOns6qd/93ekVybl6rhRAgh1
+ 46jYE7tazyt9SAdsXSsq1Z1w18WpMOVNGm+XC9y2irWSQsaYF/1untylkGP8gqLHI4yk
+ lvb9lpNQ2TzFW7RNV2PqmDdG57PVEpmOYoFuVi6wIUGFejqlnJRqmkLp5EGhj+hYDVPF
+ ct5SjwYFAERb2/6zl2MHn7tFBuCQ3AVmzcNIb87dh6WLW8LMzqEUQ8WOz3fXJC33BiJN oQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2t9brtke49-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 03:56:02 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S3txhF054313;
+        Fri, 28 Jun 2019 03:56:01 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2t99f5bwqv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 03:56:01 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5S3tw8h021176;
+        Fri, 28 Jun 2019 03:55:59 GMT
+Received: from [10.190.130.61] (/192.188.170.109)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Jun 2019 20:55:58 -0700
+Subject: Re: [PATCH 09/19] btrfs: limit super block locations in HMZONED mode
+To:     Naohiro Aota <naohiro.aota@wdc.com>, linux-btrfs@vger.kernel.org,
+        David Sterba <dsterba@suse.com>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        linux-fsdevel@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-10-naohiro.aota@wdc.com>
+From:   Anand Jain <anand.jain@oracle.com>
+Message-ID: <0ca3c475-fe10-4135-ddc9-7a82cc966d9a@oracle.com>
+Date:   Fri, 28 Jun 2019 11:55:51 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/bMZKEXnBAx5LYXOGzReQV=g"; protocol="application/pgp-signature"
+In-Reply-To: <20190607131025.31996-10-naohiro.aota@wdc.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906280039
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906280039
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bMZKEXnBAx5LYXOGzReQV=g
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 7/6/19 9:10 PM, Naohiro Aota wrote:
+> When in HMZONED mode, make sure that device super blocks are located in
+> randomly writable zones of zoned block devices. That is, do not write super
+> blocks in sequential write required zones of host-managed zoned block
+> devices as update would not be possible.
 
-Hi all,
+  By design all copies of SB must be updated at each transaction,
+  as they are redundant copies they must match at the end of
+  each transaction.
 
-Today's linux-next merge of the battery tree got a conflict in:
+  Instead of skipping the sb updates, why not alter number of
+  copies at the time of mkfs.btrfs?
 
-  Documentation/power/power_supply_class.txt
+Thanks, Anand
 
-between commit:
 
-  151f4e2bdc7a ("docs: power: convert docs to ReST and rename to *.rst")
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
+> ---
+>   fs/btrfs/disk-io.c     | 11 +++++++++++
+>   fs/btrfs/disk-io.h     |  1 +
+>   fs/btrfs/extent-tree.c |  4 ++++
+>   fs/btrfs/scrub.c       |  2 ++
+>   4 files changed, 18 insertions(+)
+> 
+> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+> index 7c1404c76768..ddbb02906042 100644
+> --- a/fs/btrfs/disk-io.c
+> +++ b/fs/btrfs/disk-io.c
+> @@ -3466,6 +3466,13 @@ struct buffer_head *btrfs_read_dev_super(struct block_device *bdev)
+>   	return latest;
+>   }
+>   
+> +int btrfs_check_super_location(struct btrfs_device *device, u64 pos)
+> +{
+> +	/* any address is good on a regular (zone_size == 0) device */
+> +	/* non-SEQUENTIAL WRITE REQUIRED zones are capable on a zoned device */
+> +	return device->zone_size == 0 || !btrfs_dev_is_sequential(device, pos);
+> +}
+> +
+>   /*
+>    * Write superblock @sb to the @device. Do not wait for completion, all the
+>    * buffer heads we write are pinned.
+> @@ -3495,6 +3502,8 @@ static int write_dev_supers(struct btrfs_device *device,
+>   		if (bytenr + BTRFS_SUPER_INFO_SIZE >=
+>   		    device->commit_total_bytes)
+>   			break;
+> +		if (!btrfs_check_super_location(device, bytenr))
+> +			continue;
+>   
+>   		btrfs_set_super_bytenr(sb, bytenr);
+>   
+> @@ -3561,6 +3570,8 @@ static int wait_dev_supers(struct btrfs_device *device, int max_mirrors)
+>   		if (bytenr + BTRFS_SUPER_INFO_SIZE >=
+>   		    device->commit_total_bytes)
+>   			break;
+> +		if (!btrfs_check_super_location(device, bytenr))
+> +			continue;
+>   
+>   		bh = __find_get_block(device->bdev,
+>   				      bytenr / BTRFS_BDEV_BLOCKSIZE,
+> diff --git a/fs/btrfs/disk-io.h b/fs/btrfs/disk-io.h
+> index a0161aa1ea0b..70e97cd6fa76 100644
+> --- a/fs/btrfs/disk-io.h
+> +++ b/fs/btrfs/disk-io.h
+> @@ -141,6 +141,7 @@ struct extent_map *btree_get_extent(struct btrfs_inode *inode,
+>   		struct page *page, size_t pg_offset, u64 start, u64 len,
+>   		int create);
+>   int btrfs_get_num_tolerated_disk_barrier_failures(u64 flags);
+> +int btrfs_check_super_location(struct btrfs_device *device, u64 pos);
+>   int __init btrfs_end_io_wq_init(void);
+>   void __cold btrfs_end_io_wq_exit(void);
+>   
+> diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+> index 3d41d840fe5c..ae2c895d08c4 100644
+> --- a/fs/btrfs/extent-tree.c
+> +++ b/fs/btrfs/extent-tree.c
+> @@ -267,6 +267,10 @@ static int exclude_super_stripes(struct btrfs_block_group_cache *cache)
+>   			return ret;
+>   	}
+>   
+> +	/* we won't have super stripes in sequential zones */
+> +	if (cache->alloc_type == BTRFS_ALLOC_SEQ)
+> +		return 0;
+> +
+>   	for (i = 0; i < BTRFS_SUPER_MIRROR_MAX; i++) {
+>   		bytenr = btrfs_sb_offset(i);
+>   		ret = btrfs_rmap_block(fs_info, cache->key.objectid,
+> diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+> index f7b29f9db5e2..36ad4fad7eaf 100644
+> --- a/fs/btrfs/scrub.c
+> +++ b/fs/btrfs/scrub.c
+> @@ -3720,6 +3720,8 @@ static noinline_for_stack int scrub_supers(struct scrub_ctx *sctx,
+>   		if (bytenr + BTRFS_SUPER_INFO_SIZE >
+>   		    scrub_dev->commit_total_bytes)
+>   			break;
+> +		if (!btrfs_check_super_location(scrub_dev, bytenr))
+> +			continue;
+>   
+>   		ret = scrub_pages(sctx, bytenr, BTRFS_SUPER_INFO_SIZE, bytenr,
+>   				  scrub_dev, BTRFS_EXTENT_FLAG_SUPER, gen, i,
+> 
 
-from the pci tree and commit:
-
-  49c9cd95bb6d ("power: supply: add input power and voltage limit propertie=
-s")
-
-from the battery tree.
-
-I fixed it up (I deleted the file and adde the following merge fix patch)
-and can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 28 Jun 2019 13:52:44 +1000
-Subject: [PATCH] power: supply: update for conversion to .rst
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- Documentation/power/power_supply_class.rst | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/power/power_supply_class.rst b/Documentation/pow=
-er/power_supply_class.rst
-index 3f2c3fe38a61..883b2ef63119 100644
---- a/Documentation/power/power_supply_class.rst
-+++ b/Documentation/power/power_supply_class.rst
-@@ -166,6 +166,14 @@ INPUT_CURRENT_LIMIT
-   input current limit programmed by charger. Indicates
-   the current drawn from a charging source.
-=20
-+INPUT_VOLTAGE_LIMIT
-+  input voltage limit programmed by charger. Indicates
-+  the voltage limit from a charging source.
-+
-+INPUT_POWER_LIMIT
-+  input power limit programmed by charger. Indicates
-+  the power limit from a charging source.
-+
- CHARGE_CONTROL_LIMIT
-   current charge control limit setting
- CHARGE_CONTROL_LIMIT_MAX
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/bMZKEXnBAx5LYXOGzReQV=g
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0Vj58ACgkQAVBC80lX
-0Gzmzgf/Y+92RSl/KxL8S/LWesEglgsA7dtU1Kfnr4rRxXr0MbFyIrBvAFybdX8B
-pdcsL0yR4LwsDCgizL2pdwsTdCashVKoOEnyX4gEYR6UVeFpjCqo7+ERWYNQ5J0u
-IcHoAcMQ2d6qDOAakqKU1VFy2BVpC0PM4cp5aIdTxd6Fy8zcdinh4jHTQ5kD/gIK
-AS3zy5JoU085x9MzRysjsSt6nJSxR5teaFg+l4VllybFR/j0Xv6YrZ/YK+QVhQ2o
-hNoTpYdFIzjWwNjcDeJ099dWe0i60tHCuQoV6AULHQNulbVEEVYQ76HVB+JI16IC
-g/sYtOa2UMDX1r35UyBoOuXoQrjUeg==
-=fGY/
------END PGP SIGNATURE-----
-
---Sig_/bMZKEXnBAx5LYXOGzReQV=g--
