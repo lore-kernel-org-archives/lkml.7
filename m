@@ -2,118 +2,76 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CF3C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D041AC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95A4208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E652208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfF1MNW (ORCPT
+        id S1727193AbfF1MNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:13:22 -0400
-Received: from mga04.intel.com ([192.55.52.120]:32923 "EHLO mga04.intel.com"
+        Fri, 28 Jun 2019 08:13:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42414 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726836AbfF1MNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:13:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 05:13:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,427,1557212400"; 
-   d="scan'208";a="189422313"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga002.fm.intel.com with SMTP; 28 Jun 2019 05:13:15 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Fri, 28 Jun 2019 15:13:15 +0300
-Date:   Fri, 28 Jun 2019 15:13:15 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Robert Beckett <bob.beckett@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH v4 2/2] Revert "drm/vblank: Do not update vblank count if
- interrupts are already disabled."
-Message-ID: <20190628121315.GH5942@intel.com>
-References: <cover.1561722822.git.bob.beckett@collabora.com>
- <fc4a6e587e4570227f67a82f2d0e9520934e717e.1561722822.git.bob.beckett@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fc4a6e587e4570227f67a82f2d0e9520934e717e.1561722822.git.bob.beckett@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726646AbfF1MNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 08:13:48 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0312F30C1214;
+        Fri, 28 Jun 2019 12:13:43 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C76510013D9;
+        Fri, 28 Jun 2019 12:13:39 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id C17B917472; Fri, 28 Jun 2019 14:13:38 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Chia-I Wu <olvaffe@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 01/12] drm/virtio: pass gem reservation object to ttm init
+Date:   Fri, 28 Jun 2019 14:13:27 +0200
+Message-Id: <20190628121338.24398-2-kraxel@redhat.com>
+In-Reply-To: <20190628121338.24398-1-kraxel@redhat.com>
+References: <20190628121338.24398-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 28 Jun 2019 12:13:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 01:05:32PM +0100, Robert Beckett wrote:
-> If interrupts are already disabled, then the timestamp for the vblank
-> does not get updated, causing a stale timestamp to be reported to
-> userland while disabling crtcs.
-> 
-> This reverts commit 68036b08b91bc491ccc308f902616a570a49227c.
+With this gem and ttm will use the same reservation object,
+so mixing and matching ttm / gem reservation helpers should
+work fine.
 
-Please cc the people involved in that. And I'd drop the lkml cc.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+---
+ drivers/gpu/drm/virtio/virtgpu_object.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 
-> Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
-> ---
->  drivers/gpu/drm/drm_vblank.c | 18 ++++++++----------
->  1 file changed, 8 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-> index 7dabb2bdb733..aeb9734d7799 100644
-> --- a/drivers/gpu/drm/drm_vblank.c
-> +++ b/drivers/gpu/drm/drm_vblank.c
-> @@ -371,25 +371,23 @@ void drm_vblank_disable_and_save(struct drm_device *dev, unsigned int pipe)
->  	spin_lock_irqsave(&dev->vblank_time_lock, irqflags);
->  
->  	/*
-> -	 * Update vblank count and disable vblank interrupts only if the
-> -	 * interrupts were enabled. This avoids calling the ->disable_vblank()
-> -	 * operation in atomic context with the hardware potentially runtime
-> -	 * suspended.
-> +	 * Only disable vblank interrupts if they're enabled. This avoids
-> +	 * calling the ->disable_vblank() operation in atomic context with the
-> +	 * hardware potentially runtime suspended.
->  	 */
-> -	if (!vblank->enabled)
-> -		goto out;
-> +	if (vblank->enabled) {
-> +		__disable_vblank(dev, pipe);
-> +		vblank->enabled = false;
-> +	}
->  
->  	/*
-> -	 * Update the count and timestamp to maintain the
-> +	 * Always update the count and timestamp to maintain the
->  	 * appearance that the counter has been ticking all along until
->  	 * this time. This makes the count account for the entire time
->  	 * between drm_crtc_vblank_on() and drm_crtc_vblank_off().
->  	 */
->  	drm_update_vblank_count(dev, pipe, false);
-> -	__disable_vblank(dev, pipe);
-> -	vblank->enabled = false;
->  
-> -out:
->  	spin_unlock_irqrestore(&dev->vblank_time_lock, irqflags);
->  }
->  
-> -- 
-> 2.18.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
+diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+index b2da31310d24..242766d644a7 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_object.c
++++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+@@ -132,7 +132,8 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
+ 	virtio_gpu_init_ttm_placement(bo);
+ 	ret = ttm_bo_init(&vgdev->mman.bdev, &bo->tbo, params->size,
+ 			  ttm_bo_type_device, &bo->placement, 0,
+-			  true, acc_size, NULL, NULL,
++			  true, acc_size, NULL,
++			  bo->gem_base.resv,
+ 			  &virtio_gpu_ttm_bo_destroy);
+ 	/* ttm_bo_init failure will call the destroy */
+ 	if (ret != 0)
 -- 
-Ville Syrjälä
-Intel
+2.18.1
+
