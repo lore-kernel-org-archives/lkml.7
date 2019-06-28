@@ -2,89 +2,149 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17870C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3576DC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE04206A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1206D206A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfF1CaO (ORCPT
+        id S1726617AbfF1CgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:30:14 -0400
-Received: from mga04.intel.com ([192.55.52.120]:23860 "EHLO mga04.intel.com"
+        Thu, 27 Jun 2019 22:36:13 -0400
+Received: from mga06.intel.com ([134.134.136.31]:22507 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbfF1CaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:30:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1725770AbfF1CgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 22:36:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 19:30:12 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 19:36:12 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,426,1557212400"; 
-   d="scan'208";a="360925345"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Jun 2019 19:30:11 -0700
-Date:   Fri, 28 Jun 2019 10:13:33 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, yilun.xu@intel.com,
-        gregkh@linuxfoundation.org, atull@kernel.org
-Subject: Re: [PATCH v4 05/15] Documentation: fpga: dfl: add descriptions for
- virtualization and new interfaces.
-Message-ID: <20190628021333.GB9994@hao-dev>
-References: <1561610695-5414-1-git-send-email-hao.wu@intel.com>
- <1561610695-5414-6-git-send-email-hao.wu@intel.com>
- <20190628011256.GB5671@archbook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628011256.GB5671@archbook>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+   d="scan'208";a="189296330"
+Received: from unknown (HELO luv-build.sc.intel.com) ([172.25.110.25])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Jun 2019 19:36:11 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>
+Cc:     Alan Cox <alan.cox@intel.com>, Tony Luck <tony.luck@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jordan Borgner <mail@jordan-borgner.de>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Mohammad Etemadi <mohammad.etemadi@intel.com>,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Subject: [PATCH v2 0/2] Speed MTRR programming up when we can
+Date:   Thu, 27 Jun 2019 19:35:35 -0700
+Message-Id: <1561689337-19390-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 06:12:56PM -0700, Moritz Fischer wrote:
-> Hi Wu,
-> 
-> On Thu, Jun 27, 2019 at 12:44:45PM +0800, Wu Hao wrote:
-> > This patch adds virtualization support description for DFL based
-> > FPGA devices (based on PCIe SRIOV), and introductions to new
-> > interfaces added by new dfl private feature drivers.
-> > 
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Acked-by: Alan Tull <atull@kernel.org>
-> > ---
-> >  Documentation/fpga/dfl.txt | 101 +++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 101 insertions(+)
-> > 
-> > diff --git a/Documentation/fpga/dfl.txt b/Documentation/fpga/dfl.txt
-> > index 6df4621..a22631f 100644
-> > --- a/Documentation/fpga/dfl.txt
-> > +++ b/Documentation/fpga/dfl.txt
-> 
-> This got re{named,formatted} in linux-next. I've tried to fix it before sending it
-> to Greg.
+This is the second iteration of this patchset. The first iteration can be
+viewed here [1]. 
 
-Many Thanks for the help! :)
+Programming MTRR registers in multi-processor systems is a rather lengthy
+process. Furthermore, all processors must program these registers in lock
+step and with interrupts disabled; the process also involves flushing
+caches and TLBs twice. As a result, the process may take a considerable
+amount of time.
 
-I think I need rebase thermal/power management (hwmon) and perf support
-patchsets as they update this documentation file too. But I feel we
-can go ahead on code review for the other patches, if there are some
-comments received and something need to fix, i can put fixes together in
-the next version.
+In some platforms, this can lead to a large skew of the refined-jiffies
+clock source. Early when booting, if no other clock is available (e.g.,
+booting with hpet=disabled), the refined-jiffies clock source is used to
+monitor the TSC clock source. If the skew of refined-jiffies is too large,
+Linux wrongly assumes that the TSC is unstable:
 
-Thanks
-Hao
+     clocksource: timekeeping watchdog on CPU1: Marking clocksource
+          'tsc-early' as unstable because the skew is too large:
+     clocksource: 'refined-jiffies' wd_now: fffedc10 wd_last:
+          fffedb90 mask: ffffffff
+     clocksource: 'tsc-early' cs_now: 5eccfddebc cs_last: 5e7e3303d4
+          mask: ffffffffffffffff
+     tsc: Marking TSC unstable due to clocksource watchdog
 
-> 
-> Thanks,
-> Moritz
+As per my measurements, around 98% of the time needed by the procedure to
+program MTRRs in multi-processor systems is spent flushing caches with
+wbinvd(). As per the Section 11.11.8 of the Intel 64 and IA 32
+Architectures Software Developer's Manual, it is not necessary to flush
+caches if the CPU supports cache self-snooping. Thus, skipping the cache
+flushes can reduce by several tens of milliseconds the time needed to
+complete the programming of the MTRR registers.
+
+However, there exist CPU models with errata that affect their self-
+snooping capabilities. Such errata may cause unpredictable behavior,
+machine check errors, or hangs. For instance:
+
+     "Where two different logical processors have the same code page
+      mapped with two different memory types Specifically if one code
+      page is mapped by one logical processor as write back and by
+      another as uncacheable and certain instruction timing conditions
+      occur the system may experience unpredictable behaviour." [2].
+
+Similar errata are reported in other processors as well [3], [4], [5],
+[6], and [7].
+
+Thus, in order to confidently leverage self-snooping for the MTRR
+programming algorithm, we must first clear such feature in models with
+known errata.
+
+By measuring the execution time of mtrr_aps_init() (from which MTRRs
+in all CPUs are programmed in lock-step at boot), I find savings in the
+time required to program MTRRs as follows:
+
+Platform                      time-with-wbinvd(ms) time-no-wbinvd(ms)
+104-core (208 LP) Skylake            1437                 28
+2-core (4 LP) Haswell                 114                  2
+
+LP = Logical Processor
+
+Thanks and BR,
+Ricardo
+
+Changes since v1:
+
+ * Relocated comment on the utility of cache self-snooping from
+   check_memory_type_self_snoop_errata() to the prepare_set() function
+   of the generic MTRR programming ops (Thomas Gleixner).
+ * In early_init_intel(), moved check_memory_type_self_snoop_errata()
+   next to check_mpx_erratum() for improved readability.
+
+[1]. https://lkml.org/lkml/2019/6/27/828
+[2]. Erratum BF52, 
+https://www.intel.com/content/dam/www/public/us/en/documents/specification-updates/xeon-3600-specification-update.pdf
+[3]. Erratum BK47, 
+https://www.mouser.com/pdfdocs/2ndgencorefamilymobilespecificationupdate.pdf
+[4]. Erratum AAO54, 
+https://www.intel.com/content/dam/www/public/us/en/documents/specification-updates/xeon-c5500-c3500-spec-update.pdf
+[5]. Errata AZ39, AZ42, 
+https://www.intel.com/content/dam/support/us/en/documents/processors/mobile/celeron/sb/320121.pdf
+[6]. Errata AQ51, AQ102, AQ104, 
+https://www.intel.com/content/dam/www/public/us/en/documents/specification-updates/pentium-dual-core-desktop-e2000-specification-update.pdf
+[7]. Errata AN107, AN109, 
+https://www.intel.com/content/dam/www/public/us/en/documents/specification-updates/pentium-dual-core-specification-update.pdf
+
+Ricardo Neri (2):
+  x86/cpu/intel: Clear cache self-snoop capability in CPUs with known
+    errata
+  x86, mtrr: generic: Skip cache flushes on CPUs with cache
+    self-snooping
+
+ arch/x86/kernel/cpu/intel.c        | 27 +++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/mtrr/generic.c | 15 +++++++++++++--
+ 2 files changed, 40 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
