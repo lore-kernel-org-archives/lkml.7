@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0CAC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5035C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9516208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1B69208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 20:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfF1Utg (ORCPT
+        id S1726952AbfF1Ut7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 16:49:36 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:38548 "EHLO
+        Fri, 28 Jun 2019 16:49:59 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:38464 "EHLO
         shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfF1Utg (ORCPT
+        with ESMTP id S1726787AbfF1Utg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 16:49:36 -0400
 Received: from imladris.surriel.com ([96.67.55.152])
         by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.92)
         (envelope-from <riel@shelob.surriel.com>)
-        id 1hgxo6-0007TL-Nu; Fri, 28 Jun 2019 16:49:18 -0400
+        id 1hgxo6-0007TL-Le; Fri, 28 Jun 2019 16:49:18 -0400
 From:   Rik van Riel <riel@surriel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-team@fb.com, pjt@google.com, dietmar.eggemann@arm.com,
         peterz@infradead.org, mingo@redhat.com, morten.rasmussen@arm.com,
         tglx@linutronix.de, mgorman@techsingularity.net,
         vincent.guittot@linaro.org, Rik van Riel <riel@surriel.com>
-Subject: [PATCH 08/10] sched,fair: refactor enqueue/dequeue_entity
-Date:   Fri, 28 Jun 2019 16:49:11 -0400
-Message-Id: <20190628204913.10287-9-riel@surriel.com>
+Subject: [PATCH 06/10] sched,cfs: use explicit cfs_rq of parent se helper
+Date:   Fri, 28 Jun 2019 16:49:09 -0400
+Message-Id: <20190628204913.10287-7-riel@surriel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190628204913.10287-1-riel@surriel.com>
 References: <20190628204913.10287-1-riel@surriel.com>
@@ -44,159 +44,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor enqueue_entity, dequeue_entity, and update_load_avg, in order
-to split out the things we still want to happen at every level in the
-cgroup hierarchy with a flat runqueue from the things we only need to
-happen once.
+Use an explicit "cfs_rq of parent sched_entity" helper in a few
+strategic places, where cfs_rq_of(se) may no longer point at the
+right runqueue once we flatten the hierarchical cgroup runqueues.
 
-No functional changes.
+No functional change.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
 ---
- kernel/sched/fair.c | 64 +++++++++++++++++++++++++++++----------------
- 1 file changed, 42 insertions(+), 22 deletions(-)
+ kernel/sched/fair.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 8da2823401ca..a751e7a9b228 100644
+index e41feacc45d9..d48bff5118fc 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -3480,7 +3480,7 @@ static void detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- #define DO_ATTACH	0x4
- 
- /* Update task and its cfs_rq load average */
--static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
-+static inline bool update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
- {
- 	u64 now = cfs_rq_clock_pelt(cfs_rq);
- 	int decayed;
-@@ -3509,6 +3509,8 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- 
- 	} else if (decayed && (flags & UPDATE_TG))
- 		update_tg_load_avg(cfs_rq, 0);
-+
-+	return decayed;
+@@ -276,6 +276,15 @@ static inline struct cfs_rq *group_cfs_rq(struct sched_entity *grp)
+ 	return grp->my_q;
  }
  
- #ifndef CONFIG_64BIT
-@@ -3725,9 +3727,10 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
- #define SKIP_AGE_LOAD	0x0
- #define DO_ATTACH	0x0
- 
--static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int not_used1)
-+static inline bool update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int not_used1)
- {
- 	cfs_rq_util_change(cfs_rq, 0);
-+	return false;
- }
- 
- static inline void remove_entity_load_avg(struct sched_entity *se) {}
-@@ -3850,6 +3853,24 @@ static inline void check_schedstat_required(void)
-  * CPU and an up-to-date min_vruntime on the destination CPU.
-  */
- 
-+static bool
-+enqueue_entity_groups(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
++/* runqueue owned by the parent entity; the root cfs_rq for a top level se */
++static inline struct cfs_rq *group_cfs_rq_of_parent(struct sched_entity *se)
 +{
-+	/*
-+	 * When enqueuing a sched_entity, we must:
-+	 *   - Update loads to have both entity and cfs_rq synced with now.
-+	 *   - Add its load to cfs_rq->runnable_avg
-+	 *   - For group_entity, update its weight to reflect the new share of
-+	 *     its group cfs_rq
-+	 *   - Add its new weight to cfs_rq->load.weight
-+	 */
-+	if (!update_load_avg(cfs_rq, se, UPDATE_TG | DO_ATTACH))
-+		return false;
++	if (se->parent)
++		return group_cfs_rq(se->parent);
 +
-+	update_cfs_group(se);
-+	return true;
++	return cfs_rq_of(se);
 +}
 +
- static void
- enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+ static inline bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
  {
-@@ -3874,16 +3895,6 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
- 	if (renorm && !curr)
- 		se->vruntime += cfs_rq->min_vruntime;
+ 	struct rq *rq = rq_of(cfs_rq);
+@@ -3297,7 +3306,7 @@ static inline int propagate_entity_load_avg(struct sched_entity *se)
  
--	/*
--	 * When enqueuing a sched_entity, we must:
--	 *   - Update loads to have both entity and cfs_rq synced with now.
--	 *   - Add its load to cfs_rq->runnable_avg
--	 *   - For group_entity, update its weight to reflect the new share of
--	 *     its group cfs_rq
--	 *   - Add its new weight to cfs_rq->load.weight
--	 */
--	update_load_avg(cfs_rq, se, UPDATE_TG | DO_ATTACH);
--	update_cfs_group(se);
- 	enqueue_runnable_load_avg(cfs_rq, se);
- 	account_entity_enqueue(cfs_rq, se);
+ 	gcfs_rq->propagate = 0;
  
-@@ -3950,14 +3961,9 @@ static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se)
+-	cfs_rq = cfs_rq_of(se);
++	cfs_rq = group_cfs_rq_of_parent(se);
  
- static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq);
+ 	add_tg_cfs_propagate(cfs_rq, gcfs_rq->prop_runnable_sum);
  
--static void
--dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
-+static bool
-+dequeue_entity_groups(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
- {
--	/*
--	 * Update run-time statistics of the 'current'.
--	 */
--	update_curr(cfs_rq);
--
- 	/*
- 	 * When dequeuing a sched_entity, we must:
- 	 *   - Update loads to have both entity and cfs_rq synced with now.
-@@ -3966,7 +3972,21 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
- 	 *   - For group entity, update its weight to reflect the new share
- 	 *     of its group cfs_rq.
- 	 */
--	update_load_avg(cfs_rq, se, UPDATE_TG);
-+	if (!update_load_avg(cfs_rq, se, UPDATE_TG))
-+		return false;
-+	update_cfs_group(se);
-+
-+	return true;
-+}
-+
-+static void
-+dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
-+{
-+	/*
-+	 * Update run-time statistics of the 'current'.
-+	 */
-+	update_curr(cfs_rq);
-+
- 	dequeue_runnable_load_avg(cfs_rq, se);
+@@ -7778,7 +7787,7 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
  
- 	update_stats_dequeue(cfs_rq, se, flags);
-@@ -3990,8 +4010,6 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
- 	/* return excess runtime on last dequeue */
- 	return_cfs_rq_runtime(cfs_rq);
- 
--	update_cfs_group(se);
--
- 	/*
- 	 * Now advance min_vruntime if @se was the entity holding it back,
- 	 * except when: DEQUEUE_SAVE && !DEQUEUE_MOVE, in this case we'll be
-@@ -5156,6 +5174,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 		if (se->on_rq)
+ 	WRITE_ONCE(cfs_rq->h_load_next, NULL);
+ 	for_each_sched_entity(se) {
+-		cfs_rq = cfs_rq_of(se);
++		cfs_rq = group_cfs_rq_of_parent(se);
+ 		WRITE_ONCE(cfs_rq->h_load_next, se);
+ 		if (cfs_rq->last_h_load_update == now)
  			break;
- 		cfs_rq = cfs_rq_of(se);
-+		enqueue_entity_groups(cfs_rq, se, flags);
- 		enqueue_entity(cfs_rq, se, flags);
+@@ -7801,7 +7810,7 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
  
- 		/*
-@@ -5238,6 +5257,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ static unsigned long task_se_h_load(struct sched_entity *se)
+ {
+-	struct cfs_rq *cfs_rq = cfs_rq_of(se);
++	struct cfs_rq *cfs_rq = group_cfs_rq_of_parent(se);
+ 
+ 	update_cfs_rq_h_load(cfs_rq);
+ 	return div64_ul(se->avg.load_avg * cfs_rq->h_load,
+@@ -10148,7 +10157,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+ 	struct sched_entity *se = &curr->se;
  
  	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
-+		dequeue_entity_groups(cfs_rq, se, flags);
- 		dequeue_entity(cfs_rq, se, flags);
+-		cfs_rq = cfs_rq_of(se);
++		cfs_rq = group_cfs_rq_of_parent(se);
+ 		entity_tick(cfs_rq, se, queued);
+ 	}
  
- 		/*
 -- 
 2.20.1
 
