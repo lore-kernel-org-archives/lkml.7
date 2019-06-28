@@ -2,113 +2,97 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3989CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1CEC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F02C5208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF47208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:17:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfF1BOl (ORCPT
+        id S1726720AbfF1BRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:14:41 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52498 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726605AbfF1BOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:14:41 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D1238800C514BC90051C;
-        Fri, 28 Jun 2019 09:14:38 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 28 Jun 2019 09:14:35 +0800
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <hkallweit1@gmail.com>, <gregkh@linuxfoundation.org>,
-        <tglx@linutronix.de>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <pbonzini@redhat.com>,
-        <rkrcmar@redhat.com>, <kvm@vger.kernel.org>
-Subject: [PATCH v3 net-next] net: link_watch: prevent starvation when processing linkwatch wq
-Date:   Fri, 28 Jun 2019 09:13:19 +0800
-Message-ID: <1561684399-235123-1-git-send-email-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Thu, 27 Jun 2019 21:17:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37110 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726633AbfF1BRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 21:17:37 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B6BF2307CDD5;
+        Fri, 28 Jun 2019 01:17:36 +0000 (UTC)
+Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AE6215D9D2;
+        Fri, 28 Jun 2019 01:17:28 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 20:17:25 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Petr Mladek <pmladek@suse.com>,
+        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
+        torvalds@linux-foundation.org
+Subject: Re: [PATCH] ftrace: Remove possible deadlock between
+ register_kprobe() and ftrace_run_update_code()
+Message-ID: <20190628011725.rctv3chdlqwkfwcx@treble>
+References: <20190627081334.12793-1-pmladek@suse.com>
+ <20190627224729.tshtq4bhzhneq24w@treble>
+ <20190627190457.703a486e@gandalf.local.home>
+ <alpine.DEB.2.21.1906280106360.32342@nanos.tec.linutronix.de>
+ <20190627231952.nqkbtcculvo2ddif@treble>
+ <20190627211304.7e21fd77@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190627211304.7e21fd77@gandalf.local.home>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 28 Jun 2019 01:17:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When user has configured a large number of virtual netdev, such
-as 4K vlans, the carrier on/off operation of the real netdev
-will also cause it's virtual netdev's link state to be processed
-in linkwatch. Currently, the processing is done in a work queue,
-which may cause rtnl locking starvation problem and worker
-starvation problem for other work queue, such as irqfd_inject wq.
+On Thu, Jun 27, 2019 at 09:13:04PM -0400, Steven Rostedt wrote:
+> On Thu, 27 Jun 2019 18:19:52 -0500
+> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> 
+> 
+> > Maybe a comment or two would help though.
+> > 
+> 
+> I'm adding the following change.  Care to add a "reviewed-by" for this
+> one?
+> 
+> -- Steve
+> 
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 33786044d5ac..d7e93b2783fd 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -36,6 +36,11 @@
+>  
+>  int ftrace_arch_code_modify_prepare(void)
+>  {
+> +	/*
+> +	 * Need to grab text_mutex to prevent a race from module loading
+> +	 * and live kernel patching from changing the text permissions while
+> +	 * ftrace has it set to "read/write".
+> +	 */
+>  	mutex_lock(&text_mutex);
+>  	set_kernel_text_rw();
+>  	set_all_modules_text_rw();
 
-This patch releases the cpu when link watch worker has processed
-a fixed number of netdev' link watch event, and schedule the
-work queue again when there is still link watch event remaining.
+For the patch+comment:
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
----
-V2: use cond_resched and rtnl_unlock after processing a fixed
-    number of events
-V3: fall back to v1 and change commit log to reflect that.
----
----
- net/core/link_watch.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-diff --git a/net/core/link_watch.c b/net/core/link_watch.c
-index 04fdc95..f153e06 100644
---- a/net/core/link_watch.c
-+++ b/net/core/link_watch.c
-@@ -163,9 +163,16 @@ static void linkwatch_do_dev(struct net_device *dev)
- 
- static void __linkwatch_run_queue(int urgent_only)
- {
-+#define MAX_DO_DEV_PER_LOOP	100
-+
-+	int do_dev = MAX_DO_DEV_PER_LOOP;
- 	struct net_device *dev;
- 	LIST_HEAD(wrk);
- 
-+	/* Give urgent case more budget */
-+	if (urgent_only)
-+		do_dev += MAX_DO_DEV_PER_LOOP;
-+
- 	/*
- 	 * Limit the number of linkwatch events to one
- 	 * per second so that a runaway driver does not
-@@ -184,7 +191,7 @@ static void __linkwatch_run_queue(int urgent_only)
- 	spin_lock_irq(&lweventlist_lock);
- 	list_splice_init(&lweventlist, &wrk);
- 
--	while (!list_empty(&wrk)) {
-+	while (!list_empty(&wrk) && do_dev > 0) {
- 
- 		dev = list_first_entry(&wrk, struct net_device, link_watch_list);
- 		list_del_init(&dev->link_watch_list);
-@@ -195,9 +202,13 @@ static void __linkwatch_run_queue(int urgent_only)
- 		}
- 		spin_unlock_irq(&lweventlist_lock);
- 		linkwatch_do_dev(dev);
-+		do_dev--;
- 		spin_lock_irq(&lweventlist_lock);
- 	}
- 
-+	/* Add the remaining work back to lweventlist */
-+	list_splice_init(&wrk, &lweventlist);
-+
- 	if (!list_empty(&lweventlist))
- 		linkwatch_schedule_work(0);
- 	spin_unlock_irq(&lweventlist_lock);
 -- 
-2.8.1
-
+Josh
