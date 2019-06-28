@@ -2,228 +2,161 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DEBC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57450C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD13208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20DEF208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 22:26:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z73awaPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfF1WZz (ORCPT
+        id S1726927AbfF1W0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 18:25:55 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42910 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726794AbfF1WZy (ORCPT
+        Fri, 28 Jun 2019 18:26:54 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59402 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfF1W0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 18:25:54 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SMLl82044790
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 18:25:53 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdtn1sv7n-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 18:25:53 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 28 Jun 2019 23:25:51 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Jun 2019 23:25:48 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SMPlPC47972702
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 22:25:47 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33011B2064;
-        Fri, 28 Jun 2019 22:25:47 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 056AAB205F;
-        Fri, 28 Jun 2019 22:25:47 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Jun 2019 22:25:46 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id EC07D16C2EA4; Fri, 28 Jun 2019 15:25:47 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 15:25:47 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Reply-To: paulmck@linux.ibm.com
-References: <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <20190628135433.GE3402@hirez.programming.kicks-ass.net>
- <20190628153050.GU26519@linux.ibm.com>
- <20190628184026.fds6scgi2pnjnc5p@linutronix.de>
- <20190628185219.GA26519@linux.ibm.com>
- <20190628192407.GA89956@google.com>
- <20190628200423.GB26519@linux.ibm.com>
- <20190628214018.GB249127@google.com>
+        Fri, 28 Jun 2019 18:26:53 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5SMOl0S075632;
+        Fri, 28 Jun 2019 22:26:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=oqSUoiJdWLE36BvKu2xAdYA8FMkDEKWgkJvdTjKfEHY=;
+ b=z73awaPo3Rlm5lk1iPDx25iqF0jquEENOqT1y1Cw4S1KmS89toWRr5Q4gu0U+jz0PjiP
+ ZvBtaiwhJTBKKOh4Pe1ac2iKrKbBNSFcUrAXZjdWzLKrZFcHYOgXdokaLmYbrRVjhGwo
+ VSIOn05/wEj0yW682HoO/8TZ28xyqYuYeZj359GbDtAN1i/6BXUAwstzT7No6JkPDFFY
+ F5EuftxCmnAfM2dhRoL02TQ3cEqre6lRq0klHJQObMwRL0K5Efc5Qlf9M3KQYmOOzfBh
+ Diii/tydU2yDq9bj3mHSjUL3f/S8gH83ooRCLgJFrswRS2dqwcfO7erabdRb+PiWU4nb vQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t9cyqymh8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 22:26:16 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5SMPXBL090087;
+        Fri, 28 Jun 2019 22:26:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2tat7e64ug-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 22:26:16 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5SMQEq0026256;
+        Fri, 28 Jun 2019 22:26:14 GMT
+Received: from [10.132.91.175] (/10.132.91.175)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 28 Jun 2019 15:26:13 -0700
+Subject: Re: [PATCH v3 1/7] sched: limit cpu search in select_idle_cpu
+To:     Parth Shah <parth@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net
+References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
+ <20190627012919.4341-2-subhra.mazumdar@oracle.com>
+ <68baf89b-6d77-4eff-3aac-f96b72f98bae@linux.ibm.com>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <e8dc35a9-f46a-b83d-fb7d-f8284ba712c6@oracle.com>
+Date:   Fri, 28 Jun 2019 15:21:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628214018.GB249127@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062822-0072-0000-0000-0000044253D7
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011348; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01224669; UDB=6.00644589; IPR=6.01005861;
- MB=3.00027512; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-28 22:25:51
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062822-0073-0000-0000-00004CB284B7
-Message-Id: <20190628222547.GE26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906280256
+In-Reply-To: <68baf89b-6d77-4eff-3aac-f96b72f98bae@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906280256
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906280257
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 05:40:18PM -0400, Joel Fernandes wrote:
-> Hi Paul,
-> 
-> On Fri, Jun 28, 2019 at 01:04:23PM -0700, Paul E. McKenney wrote:
-> [snip]
-> > > > > Commit
-> > > > > - 23634ebc1d946 ("rcu: Check for wakeup-safe conditions in
-> > > > >    rcu_read_unlock_special()") does not trigger the bug within 94
-> > > > >    attempts.
-> > > > > 
-> > > > > - 48d07c04b4cc1 ("rcu: Enable elimination of Tree-RCU softirq
-> > > > >   processing") needed 12 attempts to trigger the bug.
-> > > > 
-> > > > That matches my belief that 23634ebc1d946 ("rcu: Check for wakeup-safe
-> > > > conditions in rcu_read_unlock_special()") will at least greatly decrease
-> > > > the probability of this bug occurring.
-> > > 
-> > > I was just typing a reply that I can't reproduce it with:
-> > >   rcu: Check for wakeup-safe conditions in rcu_read_unlock_special()
-> > > 
-> > > I am trying to revert enough of this patch to see what would break things,
-> > > however I think a better exercise might be to understand more what the patch
-> > > does why it fixes things in the first place ;-) It is probably the
-> > > deferred_qs thing.
-> > 
-> > The deferred_qs flag is part of it!  Looking forward to hearing what
-> > you come up with as being the critical piece of this commit.
-> 
-> The new deferred_qs flag indeed saves the machine from the dead-lock.
-> 
-> If we don't want the deferred_qs, then the below patch also fixes the issue.
-> However, I am more sure than not that it does not handle all cases (such as
-> what if we previously had an expedited grace period IPI in a previous reader
-> section and had to to defer processing. Then it seems a similar deadlock
-> would present. But anyway, the below patch does fix it for me! It is based on
-> your -rcu tree commit 23634ebc1d946f19eb112d4455c1d84948875e31 (rcu: Check
-> for wakeup-safe conditions in rcu_read_unlock_special()).
 
-The point here being that you rely on .b.blocked rather than
-.b.deferred_qs.  Hmmm...  There are a number of places that check all
-the bits via the .s leg of the rcu_special union.  The .s check in
-rcu_preempt_need_deferred_qs() should be OK because it is conditioned
-on t->rcu_read_lock_nesting of zero or negative.
+On 6/28/19 11:47 AM, Parth Shah wrote:
+>
+> On 6/27/19 6:59 AM, subhra mazumdar wrote:
+>> Put upper and lower limit on cpu search of select_idle_cpu. The lower limit
+>> is amount of cpus in a core while upper limit is twice that. This ensures
+>> for any architecture we will usually search beyond a core. The upper limit
+>> also helps in keeping the search cost low and constant.
+>>
+>> Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
+>> ---
+>>   kernel/sched/fair.c | 15 +++++++++++----
+>>   1 file changed, 11 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index f35930f..b58f08f 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -6188,7 +6188,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+>>   	u64 avg_cost, avg_idle;
+>>   	u64 time, cost;
+>>   	s64 delta;
+>> -	int cpu, nr = INT_MAX;
+>> +	int cpu, limit, floor, nr = INT_MAX;
+>>
+>>   	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
+>>   	if (!this_sd)
+>> @@ -6206,10 +6206,17 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+>>
+>>   	if (sched_feat(SIS_PROP)) {
+>>   		u64 span_avg = sd->span_weight * avg_idle;
+>> -		if (span_avg > 4*avg_cost)
+>> +		floor = cpumask_weight(topology_sibling_cpumask(target));
+>> +		if (floor < 2)
+>> +			floor = 2;
+>> +		limit = floor << 1;
+> Is upper limit an experimental value only or it has any arch specific significance?
+> Because, AFAIU, systems like POWER9 might have benefit for searching for 4-cores
+> due to its different cache model. So it can be tuned for arch specific builds then.
+The lower bound and upper bound were 1 core and 2 core respectively. That
+is done as to search beyond one core and at the same time not to search
+too much. It is heuristic that seemed to work well on all archs coupled
+with the moving window mechanism. Does 4 vs 2 make any difference on your
+POWER9? AFAIR it didn't on SPARC SMT8.
+>
+> Also variable names can be changed for better readability.
+> floor -> weight_clamp_min
+> limit -> weight_clamp_max
+> or something similar
+OK.
 
-Do rest of those also work out OK?
-
-It would be nice to remove the flag, but doing so clearly needs careful
-review and testing.
-
-							Thanx, Paul
-
-> ---8<-----------------------
-> 
-> From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> Subject: [PATCH] Fix RCU recursive deadlock
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  include/linux/sched.h    |  2 +-
->  kernel/rcu/tree_plugin.h | 17 +++++++++++++----
->  2 files changed, 14 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 942a44c1b8eb..347e6dfcc91b 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -565,7 +565,7 @@ union rcu_special {
->  		u8			blocked;
->  		u8			need_qs;
->  		u8			exp_hint; /* Hint for performance. */
-> -		u8			deferred_qs;
-> +		u8			pad;
->  	} b; /* Bits. */
->  	u32 s; /* Set of bits. */
->  };
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 75110ea75d01..5b9b12c1ba5c 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -455,7 +455,6 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
->  		local_irq_restore(flags);
->  		return;
->  	}
-> -	t->rcu_read_unlock_special.b.deferred_qs = false;
->  	if (special.b.need_qs) {
->  		rcu_qs();
->  		t->rcu_read_unlock_special.b.need_qs = false;
-> @@ -608,13 +607,24 @@ static void rcu_read_unlock_special(struct task_struct *t)
->  	if (preempt_bh_were_disabled || irqs_were_disabled) {
->  		t->rcu_read_unlock_special.b.exp_hint = false;
->  		// Need to defer quiescent state until everything is enabled.
-> +
-> +		/* If unlock_special was called in the current reader section
-> +		 * just because we were blocked in a previous reader section,
-> +		 * then raising softirqs can deadlock. This is because the
-> +		 * scheduler executes RCU sections with preemption disabled,
-> +		 * however it may have previously blocked in a previous
-> +		 * non-scheduler reader section and .blocked got set.  It is
-> +		 * never safe to call unlock_special from the scheduler path
-> +		 * due to recursive wake ups (unless we are in_irq(), so
-> +		 * prevent this by checking if we were previously blocked.
-> +		 */
->  		if (irqs_were_disabled && use_softirq &&
-> -		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
-> +		    (!t->rcu_read_unlock_special.b.blocked || in_irq())) {
->  			// Using softirq, safe to awaken, and we get
->  			// no help from enabling irqs, unlike bh/preempt.
->  			raise_softirq_irqoff(RCU_SOFTIRQ);
->  		} else if (irqs_were_disabled && !use_softirq &&
-> -			   !t->rcu_read_unlock_special.b.deferred_qs) {
-> +			   !t->rcu_read_unlock_special.b.blocked) {
->  			// Safe to awaken and we get no help from enabling
->  			// irqs, unlike bh/preempt.
->  			invoke_rcu_core();
-> @@ -623,7 +633,6 @@ static void rcu_read_unlock_special(struct task_struct *t)
->  			set_tsk_need_resched(current);
->  			set_preempt_need_resched();
->  		}
-> -		t->rcu_read_unlock_special.b.deferred_qs = true;
->  		local_irq_restore(flags);
->  		return;
->  	}
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
-
+Thanks,
+Subhra
+>
+>
+>> +		if (span_avg > floor*avg_cost) {
+>>   			nr = div_u64(span_avg, avg_cost);
+>> -		else
+>> -			nr = 4;
+>> +			if (nr > limit)
+>> +				nr = limit;
+>> +		} else {
+>> +			nr = floor;
+>> +		}
+>>   	}
+>>
+>>   	time = local_clock();
+>>
+>
+> Best,
+> Parth
+>
