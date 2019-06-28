@@ -2,88 +2,128 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A171FC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EB8C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1D3208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67282208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfF1Dun (ORCPT
+        id S1727217AbfF1DvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:50:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:19088 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726748AbfF1Dun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:50:43 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7CB03DD74085E2E76CE9;
-        Fri, 28 Jun 2019 11:50:40 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 28 Jun
- 2019 11:50:30 +0800
-Subject: Re: [PATCH] staging: erofs: don't check special inode layout
-To:     Yue Hu <zbestahu@gmail.com>, <yuchao0@huawei.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-erofs@lists.ozlabs.org>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>, <huyue2@yulong.com>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20190628034234.8832-1-zbestahu@gmail.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <276837dc-b18a-6f20-fc33-d988dff5ae9f@huawei.com>
-Date:   Fri, 28 Jun 2019 11:50:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Thu, 27 Jun 2019 23:51:09 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:57719 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726748AbfF1DvJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 23:51:09 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07491465|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.348959-0.0103707-0.64067;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03299;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.Er3LMMF_1561693861;
+Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.Er3LMMF_1561693861)
+          by smtp.aliyun-inc.com(10.147.42.16);
+          Fri, 28 Jun 2019 11:51:02 +0800
+Subject: Re: [RESEND PATCH v2] mtd: spinand: read return badly if the last
+ page has bitflips
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+References: <1561424549-784-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <20190625030807.GA11074@kroah.com>
+ <97adf58f-4771-90f1-bdaf-5a9d00eef768@kontron.de>
+ <20190627190644.25aaaf31@xps13> <20190627201742.34059cdf@xps13>
+From:   liaoweixiong <liaoweixiong@allwinnertech.com>
+Message-ID: <26a4597e-3881-73a2-07e3-6171ddd15d51@allwinnertech.com>
+Date:   Fri, 28 Jun 2019 11:51:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190628034234.8832-1-zbestahu@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190627201742.34059cdf@xps13>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yue,
+Hi Miquel,
 
-On 2019/6/28 11:42, Yue Hu wrote:
-> From: Yue Hu <huyue2@yulong.com>
+On 2019/6/28 AM2:17, Miquel Raynal wrote:
+> Hi Miquel,
 > 
-> Currently, we will check if inode layout is compression or inline if
-> the inode is special in fill_inode(). Also set ->i_mapping->a_ops for
-> it. That is pointless since the both modes won't be set for special
-> inode when creating EROFS filesystem image. So, let's avoid it.
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote on Thu, 27 Jun 2019
+> 19:06:44 +0200:
 > 
-> Signed-off-by: Yue Hu <huyue2@yulong.com>
+>> Hello,
+>>
+>> Schrempf Frieder <frieder.schrempf@kontron.de> wrote on Tue, 25 Jun
+>> 2019 07:04:06 +0000:
+>>
+>>> Hi liaoweixiong,
+>>>
+>>> On 25.06.19 05:08, Greg KH wrote:  
+>>>> On Tue, Jun 25, 2019 at 09:02:29AM +0800, liaoweixiong wrote:    
+>>>>> In case of the last page containing bitflips (ret > 0),
+>>>>> spinand_mtd_read() will return that number of bitflips for the last
+>>>>> page. But to me it looks like it should instead return max_bitflips like
+>>>>> it does when the last page read returns with 0.
+>>>>>
+>>>>> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>  
+>>
+>> Please write your entire official first/last name(s)
+>>
 
-Have you test this patch with some actual image with legacy mkfs since
-new mkfs framework have not supported special inode...
+OK.
 
-I think that is fine in priciple, however, in case to introduce some potential
-issues, I will test this patch later. I will give a Reviewed-by tag after I tested
-this patch.
-
-Thanks,
-Gao Xiang
-
-> ---
->  drivers/staging/erofs/inode.c | 1 +
->  1 file changed, 1 insertion(+)
+>>>>> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+>>>>> Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>  
+>>
+>> I am waiting your next version with Acked-by instead of Rewieved-by
+>> tags and Greg's comment addressed.
 > 
-> diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-> index 1433f25..2fe0f6d 100644
-> --- a/drivers/staging/erofs/inode.c
-> +++ b/drivers/staging/erofs/inode.c
-> @@ -205,6 +205,7 @@ static int fill_inode(struct inode *inode, int isdir)
->  			S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
->  			inode->i_op = &erofs_generic_iops;
->  			init_special_inode(inode, inode->i_mode, inode->i_rdev);
-> +			goto out_unlock;
->  		} else {
->  			err = -EIO;
->  			goto out_unlock;
+> Sorry for the mistake, R-b tags are fine here, don't touch that.
+> The rest needs to be fixed though.
 > 
+
+OK.
+
+>>>>> Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")  
+>>
+>> Finally, when we ask you to resend a patch, it means sending a new
+>> version of the patch. So in the subject, you should not use the
+>> [RESEND] keyword (which means you are sending something again exactly
+>> as it was before, you just got ignored, for example) but instead you
+>> should increment the version number (v3) and also write a nice
+>> changelog after the three dashes '---' (will be ignored by Git when
+>> applying).
+>>
+>> I would like to queue this for the next release so if you can do it
+>> ASAP, that would be great.
+>>
+
+I will do it right now.
+
+>> Thank you,
+>> Miquèl
+> 
+> 
+> 
+> 
+> Thanks,
+> Miquèl
+> 
+
+-- 
+liaoweixiong
