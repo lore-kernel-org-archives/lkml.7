@@ -2,128 +2,91 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1F3C5B576
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ABBC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34602133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67DDC2147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:33:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B612IMjs"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="j3/vYyma"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfF1Dd0 (ORCPT
+        id S1727137AbfF1Ddo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:33:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46780 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfF1Dd0 (ORCPT
+        Thu, 27 Jun 2019 23:33:44 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41421 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfF1Ddo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:33:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S3TSew007988;
-        Fri, 28 Jun 2019 03:33:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=XNssvwhy0FbfTsDRiG4Jc4n0gxEcgk+h9kgGBaf6yys=;
- b=B612IMjsJyLVvw8Qo/0g+i+P65yj4D6xHhdGChgwKNAAs37fSaG+C8zwmv8q3ZYuyzJf
- TQ8degHnK0z8iQxvVPJqeO5/NL+HUsZsCJRZuWGIZF2g9GGezRqpN/ctLgPNVS3rAS02
- 8wfH2XhIknCVjBZn9/gwxz0Dgb/4g74fKSj2M2jHm1Ks1NQFJQx605urvkrYO8KkAoAD
- +2EHyi2fh5pYjh46ZuFbfuNkh8JNiH+wGBDfvD24fliuVqs6pQpibiDO3wXk5LyNBiJT
- 9R3R9DoRL87ZupAoACpRmIp1QzcGCOAu28BqVIygTFUNiRYWX9S/lH24IVKA4kcvRxyh Xg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2t9cyqu92g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 03:33:05 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5S3VaJo143693;
-        Fri, 28 Jun 2019 03:33:04 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2t9acdk8w5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 03:33:04 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5S3X4O7003148;
-        Fri, 28 Jun 2019 03:33:04 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 20:33:03 -0700
-Date:   Thu, 27 Jun 2019 20:33:03 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Zorro Lang <zlang@redhat.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/13] xfs: allow merging ioends over append boundaries
-Message-ID: <20190628033303.GA1404256@magnolia>
-References: <20190627104836.25446-1-hch@lst.de>
- <20190627104836.25446-8-hch@lst.de>
- <20190627182309.GP5171@magnolia>
- <20190627214304.GB30113@42.do-not-panic.com>
- <20190628025204.GI30864@dhcp-12-102.nay.redhat.com>
+        Thu, 27 Jun 2019 23:33:44 -0400
+Received: by mail-qk1-f194.google.com with SMTP id c11so3651231qkk.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 20:33:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s1RS6E5PRN57yOy1tYlbByux0wGDN3f2cPvXBUEANB4=;
+        b=j3/vYymaGTY9IcV7GL0KLyubMvndda1C3iUYZ0W7l9Rp3vx498JPcHm+V8Tu9f62K7
+         AevWXDphCYvjoCdVwStXWF1ZNysAQbovt5ya3UZbmERkHpXc0qKLuHLhuTUNfeim+4uZ
+         zKE3k8KMtKLAxa7YO4+w8rYo9FMTk+8D8/MxuetQHwoJZLWOGiiAokkwr2kvLWrnpl67
+         o+bHa6cPsnMxQlhsLgdQFXT4AWL4yP8tyZv5M4MOfGj8CSqMwJorqgOwMIv5tKR+VaId
+         qxHV7+Ax2NfcB7fPSPvEzsloH0l5angQ5LoykG1rms61R+yfD+kyKF+OT7y9Gc91HcLN
+         zMRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s1RS6E5PRN57yOy1tYlbByux0wGDN3f2cPvXBUEANB4=;
+        b=Me3PjbpsXiIJMI4EyOEGpZR2X2IjFIfffY4+hf0QwyKD8c21UKLvpANNnodrotKF60
+         CaQKJYNkMmBy+LVCfc+Mjt+pv502acvcuRn7UjwjXWWaRHlJ3v86Ko37pLoaN867g7vd
+         NqIpsKEYReFKmNduckNV0mOdzVjAqTG1FzHFniefov+K5YAc5FMntmhs0Uk6ACzNPJrK
+         8Y4LcVc2iJFPpGRQDagS4iWi7YiDfvcSHY+rd33+9Hdpl5BMHvQZfoO/EDuDe66NN5+Q
+         taUFThcBkIgSnDQYLK6NCNobefkS2TUTzT45vraWsFOzAfANWEX7IIuMeJUhO4gQbISb
+         d2hw==
+X-Gm-Message-State: APjAAAW1RwdtmBgxZf6n40y9iezspcBVN/+ecL7Q3rdl+TJL2h4H4BnQ
+        u2I2u9g/PxonTmkcBHeFD61ajzctF0hw0CtrDUKF4Q==
+X-Google-Smtp-Source: APXvYqwDEbFcf8s43hRmtYsyMp24XK0twiLhBZgp4lzqIP7N5hGiLxNNyqnLyE6boN7g/IJpnqTEmXYhR4p9fn72/Bg=
+X-Received: by 2002:a37:9c88:: with SMTP id f130mr6652703qke.457.1561692822897;
+ Thu, 27 Jun 2019 20:33:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628025204.GI30864@dhcp-12-102.nay.redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=977
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906280033
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906280033
+References: <alpine.DEB.2.21.1904031206440.1967@nanos.tec.linutronix.de>
+ <20190627085419.27854-1-drake@endlessm.com> <alpine.DEB.2.21.1906271546010.32342@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1906271546010.32342@nanos.tec.linutronix.de>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Fri, 28 Jun 2019 11:33:31 +0800
+Message-ID: <CAD8Lp46XnwQu4NWaXurz5ZcBs7dGb1gY=0Fy83w9EC9_V-7Oeg@mail.gmail.com>
+Subject: Re: No 8254 PIT & no HPET on new Intel N3350 platforms causes kernel
+ panic during early boot
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        david.e.box@linux.intel.com,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 10:52:04AM +0800, Zorro Lang wrote:
-> On Thu, Jun 27, 2019 at 09:43:04PM +0000, Luis Chamberlain wrote:
-> > On Thu, Jun 27, 2019 at 11:23:09AM -0700, Darrick J. Wong wrote:
-> > > On Thu, Jun 27, 2019 at 12:48:30PM +0200, Christoph Hellwig wrote:
-> > > > There is no real problem merging ioends that go beyond i_size into an
-> > > > ioend that doesn't.  We just need to move the append transaction to the
-> > > > base ioend.  Also use the opportunity to use a real error code instead
-> > > > of the magic 1 to cancel the transactions, and write a comment
-> > > > explaining the scheme.
-> > > > 
-> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > 
-> > > Reading through this patch, I have a feeling it fixes the crash that
-> > > Zorro has been seeing occasionally with generic/475...
-> > > 
-> > > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > Zorro, can you confirm? If so it would be great to also refer to
-> > the respective bugzilla entry #203947 [0].
-> 
-> Sure, I'll give it a test. But it's so hard to reproduce, I need long enough
-> time to prove "the panic's gone".
-> 
-> BTW, should I only merge this single patch to test, or merge your whole patchset
-> with 13 patches?
+On Thu, Jun 27, 2019 at 10:07 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> Nah. That extra timer works thing is just another bandaid.
+>
+> What I had in mind is something like the below. That's on top of
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/apic
+>
+> Be warned. It's neither compiled nor tested, so keep a fire extinguisher
+> handy. If it explodes you own the pieces.
 
-Just this one patch.
+Thanks, it works, and makes sense!
 
---D
+I'll add a commit message and send it as a patch, just one quick
+function naming question... did you mean apic_and_tsc_needs_pit() or
+apic_needs_pit()? That's the only compile fix needed.
 
-> Thanks,
-> Zorro
-> 
-> > 
-> > [0] https://bugzilla.kernel.org/show_bug.cgi?id=203947
-> > 
-> >   Luis
+Daniel
