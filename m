@@ -2,212 +2,58 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2B3C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C56C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B58E208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2520B208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:11:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfF1JL1 (ORCPT
+        id S1726759AbfF1JLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:11:27 -0400
-Received: from lgeamrelo12.lge.com ([156.147.23.52]:57385 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726702AbfF1JL0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:11:26 -0400
-Received: from unknown (HELO lgemrelse7q.lge.com) (156.147.1.151)
-        by 156.147.23.52 with ESMTP; 28 Jun 2019 18:11:23 +0900
-X-Original-SENDERIP: 156.147.1.151
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.151 with ESMTP; 28 Jun 2019 18:11:23 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Fri, 28 Jun 2019 18:10:42 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Scott Wood <swood@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, kernel-team@lge.com
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Message-ID: <20190628091042.GA11339@X58A-UD3R>
-References: <20190627153031.GA249127@google.com>
- <20190627155506.GU26519@linux.ibm.com>
- <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
- <20190627203612.GD26519@linux.ibm.com>
- <20190628073138.GB13650@X58A-UD3R>
- <20190628074350.GA11214@X58A-UD3R>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628074350.GA11214@X58A-UD3R>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Fri, 28 Jun 2019 05:11:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52246 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726587AbfF1JLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 05:11:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 11FA0AC4E;
+        Fri, 28 Jun 2019 09:11:35 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 11:11:34 +0200
+Message-ID: <s5hk1d66pmh.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Dennis Wassenberg <dennis.wassenberg@secunet.com>
+Cc:     Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
+        <po-hsu.lin@canonical.com>, <qkrwngud825@gmail.com>,
+        <broonie@kernel.org>, <pierre-louis.bossart@linux.intel.com>,
+        <perex@perex.cz>, <jurica.vukadin@rt-rk.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/realtek - Change front mic location for Lenovo M710q
+In-Reply-To: <d529f0d8-31f5-aa03-c9bc-9bed58ed6137@secunet.com>
+References: <d529f0d8-31f5-aa03-c9bc-9bed58ed6137@secunet.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 04:43:50PM +0900, Byungchul Park wrote:
-> On Fri, Jun 28, 2019 at 04:31:38PM +0900, Byungchul Park wrote:
-> > On Thu, Jun 27, 2019 at 01:36:12PM -0700, Paul E. McKenney wrote:
-> > > On Thu, Jun 27, 2019 at 03:17:27PM -0500, Scott Wood wrote:
-> > > > On Thu, 2019-06-27 at 11:41 -0700, Paul E. McKenney wrote:
-> > > > > On Thu, Jun 27, 2019 at 02:16:38PM -0400, Joel Fernandes wrote:
-> > > > > > 
-> > > > > > I think the fix should be to prevent the wake-up not based on whether we
-> > > > > > are
-> > > > > > in hard/soft-interrupt mode but that we are doing the rcu_read_unlock()
-> > > > > > from
-> > > > > > a scheduler path (if we can detect that)
-> > > > > 
-> > > > > Or just don't do the wakeup at all, if it comes to that.  I don't know
-> > > > > of any way to determine whether rcu_read_unlock() is being called from
-> > > > > the scheduler, but it has been some time since I asked Peter Zijlstra
-> > > > > about that.
-> > > > > 
-> > > > > Of course, unconditionally refusing to do the wakeup might not be happy
-> > > > > thing for NO_HZ_FULL kernels that don't implement IRQ work.
-> > > > 
-> > > > Couldn't smp_send_reschedule() be used instead?
-> > > 
-> > > Good point.  If current -rcu doesn't fix things for Sebastian's case,
-> > > that would be well worth looking at.  But there must be some reason
-> > > why Peter Zijlstra didn't suggest it when he instead suggested using
-> > > the IRQ work approach.
-> > > 
-> > > Peter, thoughts?
-> > 
+On Fri, 28 Jun 2019 10:54:53 +0200,
+Dennis Wassenberg wrote:
 > 
-> +cc kernel-team@lge.com
-> (I'm sorry for more noise on the thread.)
+> On M710q Lenovo ThinkCentre machine, there are two front mics,
+> we change the location for one of them to avoid conflicts.
 > 
-> > Hello,
-> > 
-> > Isn't the following scenario possible?
-> > 
-> > The original code
-> > -----------------
-> > rcu_read_lock();
-> > ...
-> > /* Experdite */
-> > WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> > ...
-> > __rcu_read_unlock();
-> > 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> > 		rcu_read_unlock_special(t);
-> > 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> > 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> > 		barrier();  /* ->rcu_read_unlock_special load before assign */
-> > 		t->rcu_read_lock_nesting = 0;
-> > 
-> > The reordered code by machine
-> > -----------------------------
-> > rcu_read_lock();
-> > ...
-> > /* Experdite */
-> > WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> > ...
-> > __rcu_read_unlock();
-> > 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> > 		rcu_read_unlock_special(t);
-> > 		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
-> > 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> > 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> > 		barrier();  /* ->rcu_read_unlock_special load before assign */
-> > 
-> > An interrupt happens
-> > --------------------
-> > rcu_read_lock();
-> > ...
-> > /* Experdite */
-> > WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> > ...
-> > __rcu_read_unlock();
-> > 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> > 		rcu_read_unlock_special(t);
-> > 		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
-> > <--- Handle an (any) irq
-> > 	rcu_read_lock();
-> > 	/* This call should be skipped */
-> > 	rcu_read_unlock_special(t);
-> > 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> > 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> > 		barrier();  /* ->rcu_read_unlock_special load before assign */
+> Signed-off-by: Dennis Wassenberg <dennis.wassenberg@secunet.com>
 
-I was confused it was a LOAD access. The example should be changed a bit.
+Applied now.  Thanks.
 
 
-
-The original code
------------------
-rcu_read_lock();
-...
-/* Experdite */
-WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-...
-__rcu_read_unlock();
-	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-		rcu_read_unlock_special(t);
-			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-			rcu_preempt_deferred_qs_irqrestore(t, flags);
-		barrier();  /* ->rcu_read_unlock_special load before assign */
-		t->rcu_read_lock_nesting = 0;
-
-The reordered code by machine
------------------------------
-rcu_read_lock();
-...
-/* Experdite */
-WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-...
-__rcu_read_unlock();
-	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-		rcu_read_unlock_special(t);
-			rcu_preempt_deferred_qs_irqrestore(t, flags);
-		barrier();  /* ->rcu_read_unlock_special load before assign */
-		t->rcu_read_lock_nesting = 0;
-			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-
-An interrupt happens
---------------------
-rcu_read_lock();
-...
-/* Experdite */
-WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-...
-__rcu_read_unlock();
-	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-		rcu_read_unlock_special(t);
-			rcu_preempt_deferred_qs_irqrestore(t, flags);
-		barrier();  /* ->rcu_read_unlock_special load before assign */
-		t->rcu_read_lock_nesting = 0;
-<--- Handle an (any) irq
-rcu_read_lock();
-/* This call should be skipped */
-rcu_read_unlock_special(t);
-			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-
-
-
-Now that I re-made the example, I'm afraid it'd be no problem because
-anyway it'd be within a cpu so it can see inside of the store-buffer of
-the cpu.
-
-I'm sorry. Please ignore my suggestion here.
+Takashi
