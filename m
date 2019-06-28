@@ -2,155 +2,178 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B0BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8CDC5B578
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5346A208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB36F2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:09:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwJkYmlV"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ApiOTl2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbfF1TJa (ORCPT
+        id S1726983AbfF1TJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 15:09:30 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:35281 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfF1TJ3 (ORCPT
+        Fri, 28 Jun 2019 15:09:39 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35081 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfF1TJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 15:09:29 -0400
-Received: by mail-yw1-f67.google.com with SMTP id d204so1273410ywb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:09:29 -0700 (PDT)
+        Fri, 28 Jun 2019 15:09:38 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w24so3753147plp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:09:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=449XblN0l6jdSpOjx7Le/3IqqVPDOSTgCHH+i4/r88o=;
-        b=RwJkYmlVlijyN+MdHEcsc/YkWXFHbxv6OIZkk8PW1SaKrqUkU4fHbzvSS+akaO4nKJ
-         i6LbJHgvh5NNQ/1TcsiCaZ7tlgrDlRwyuv3+yQI86w2JvxYBUKVsWJgz2Cpe6qwwgXU7
-         0LZvYeauQQw+Bvb29wDhyZ3m31MkK4MDDKAi4HZ3XV4Bu70IrVR48eR2bwCB2hxR6mD2
-         +wHSl+xMwGtEhLZZP+QMQfPOX2YUYOGt/1Mak9xZQntcC8vEZ33oKXGWlfQNSDt/mNOH
-         tq7JM9XiZF40GmB1Co4DzcIsNaIMZTJLSeQU5aR7iY1aHdy2XVIDHO9wus01nNmzwCUx
-         xskQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=V6v+ChBPjDEkXeOyVL5WvJjC6m+aI/H7zTWv+Pb4ySg=;
+        b=ApiOTl2ueSukYFkNah+vjl4vAZhsxgdyJZ8GrApbUEHrL2ifv9zSROVGfq52Y1UHv3
+         jYH9POnFQ9yngjkv85OxF/I8nZeG5jD5N8uRS5l/zb+IqKwuhJg/5vMXa02pMvXuOsz3
+         HYQ+xUuy27yxIlFhLsVFlMKlZLJZc94cLwpg/yeqydRHEGGVDt64rtPn82MK03shusAr
+         m/TrdHQQ3aV6n6Vv+9bS2cn7+Uka0KOu++iK+9dh2XdTRy5tLMzGSOFDxjJp6yn2agbI
+         ln7WGR3VdDUrbjU8q8uQacYahDvy3e3E1eFzr8b1eY415IHxqTLqpwkOgcDugYjeH+i7
+         +sHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=449XblN0l6jdSpOjx7Le/3IqqVPDOSTgCHH+i4/r88o=;
-        b=ojxt5V55BAidRWesGkQtYGUNljqqaU6PxdTQPBDBEA+yMqI7CA3Q5oTPsrNdcHt+tf
-         yZ3KQB8Zqd3uDcLVZGuhWiCnbzkSogr1tK5KGqw2WX0bi/50v5wohaWoRR29/Mi/uidG
-         ICYiuaAbXahTJLuszgbzs2fmKvtnftWF3mFumiV2y7BCYyU58xAOPZP2Vp3CWuLSERFm
-         4Dl98B9b4AYQrHukWO/g7Jfysn7QYxUCLarg7mXvix4PEOruzHDhisluOtX3w8xfW+M7
-         +xfYKck8X36WOMqPhBvHjoptn+OjXMTeRIKr+L/o3tOfnokRGsoCT7fTz+SNhlHZZlyU
-         CGkQ==
-X-Gm-Message-State: APjAAAWYr7d19bUiAhjkyxCIa+YlB0Jsz8m1M/rBHqxaqqqLfC4ATwZQ
-        p2aNoRnbM51kOqufR+UZ3R9zmenY
-X-Google-Smtp-Source: APXvYqwhqzl1ZPN0l2DqnhSLolIuZ4nldoNy1vRRFyOrCNRXxAySNYFiI7xva7ltOXpVCsdxiTH8ig==
-X-Received: by 2002:a81:2995:: with SMTP id p143mr7124568ywp.3.1561748968026;
-        Fri, 28 Jun 2019 12:09:28 -0700 (PDT)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id w17sm710676yww.82.2019.06.28.12.09.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 12:09:26 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id n3so4704240ybn.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:09:26 -0700 (PDT)
-X-Received: by 2002:a25:99c4:: with SMTP id q4mr7787823ybo.390.1561748966368;
- Fri, 28 Jun 2019 12:09:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=V6v+ChBPjDEkXeOyVL5WvJjC6m+aI/H7zTWv+Pb4ySg=;
+        b=QuqXGlDx1y8qcVsd4+A8OFSk3XOB5mmO3sFYIOAfdlZ408cFL0YAwC+MllcPY3Ms/s
+         bZ8g5BOluB9SBHKIui4s/jK1CQMXEIzJOXnoG9R+UusX1RrC4KtbwAcQJ81aSTw5Onh9
+         XGcW+NsSoCP05K3vZCx5L5pOgY+ACNqVmeQ6JRZQ6t4XzFCC3/dDA1YdYp/5fmUJ4yj8
+         ElPUQ8PUNurISfelh30PnyUzs/T17x1PgkVijGtfNZ2Aa6rexfKzQUsQS1aZu2fa6TI1
+         YUyuX31lhC04Xmob+R5v6T4T1eg+pUHN/17+SAZjQoEQ8cS2pIoZpxlwRskBBJWPhrSZ
+         WAKg==
+X-Gm-Message-State: APjAAAXqtaOgoH+srHv//ad5wxe6DZ8w2Yup0Dpqj0TWn0Hcn8ei59Dc
+        xpXq1AWaHlB+V2FCsm4vBqfHiQ==
+X-Google-Smtp-Source: APXvYqwFQy/tc32tInYqRQ3bQI7rptoLYbxDx6uCGkLXXCzcIjRb+a+mrA3L2cQ2IbpjP7BiMBXHuw==
+X-Received: by 2002:a17:902:f089:: with SMTP id go9mr13409423plb.81.1561748977536;
+        Fri, 28 Jun 2019 12:09:37 -0700 (PDT)
+Received: from ziepe.ca ([216.9.110.14])
+        by smtp.gmail.com with ESMTPSA id r88sm2982578pjb.8.2019.06.28.12.09.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Jun 2019 12:09:36 -0700 (PDT)
+Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hgwFX-0004Gx-D3; Fri, 28 Jun 2019 16:09:31 -0300
+Date:   Fri, 28 Jun 2019 16:09:31 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190628190931.GC3877@ziepe.ca>
+References: <20190626210018.GB6392@ziepe.ca>
+ <c25d3333-dcd5-3313-089b-7fbbd6fbd876@deltatee.com>
+ <20190627063223.GA7736@ziepe.ca>
+ <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
+ <20190627163504.GB9568@ziepe.ca>
+ <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
+ <20190628045705.GD3705@ziepe.ca>
+ <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
+ <20190628172926.GA3877@ziepe.ca>
+ <25a87c72-630b-e1f1-c858-9c8b417506fc@deltatee.com>
 MIME-Version: 1.0
-References: <cover.1561706800.git.joabreu@synopsys.com> <e4e9ee4cb9c3e7957fe0a09f88b20bc011e2bd4c.1561706801.git.joabreu@synopsys.com>
-In-Reply-To: <e4e9ee4cb9c3e7957fe0a09f88b20bc011e2bd4c.1561706801.git.joabreu@synopsys.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Fri, 28 Jun 2019 15:08:50 -0400
-X-Gmail-Original-Message-ID: <CA+FuTSc4MFfjBNpvN2hRh9_MRmxSYw2xY6wp32Hsbw0E=pqUdw@mail.gmail.com>
-Message-ID: <CA+FuTSc4MFfjBNpvN2hRh9_MRmxSYw2xY6wp32Hsbw0E=pqUdw@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 06/10] net: stmmac: Do not disable interrupts
- when cleaning TX
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <25a87c72-630b-e1f1-c858-9c8b417506fc@deltatee.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 3:30 AM Jose Abreu <Jose.Abreu@synopsys.com> wrote:
->
-> This is a performance killer and anyways the interrupts are being
-> disabled by RX NAPI so no need to disable them again.
+On Fri, Jun 28, 2019 at 12:29:32PM -0600, Logan Gunthorpe wrote:
+> 
+> 
+> On 2019-06-28 11:29 a.m., Jason Gunthorpe wrote:
+> > On Fri, Jun 28, 2019 at 10:22:06AM -0600, Logan Gunthorpe wrote:
+> > 
+> >>> Why not?  If we have a 'bar info' structure that could have data
+> >>> transfer op callbacks, infact, I think we might already have similar
+> >>> callbacks for migrating to/from DEVICE_PRIVATE memory with DMA..
+> >>
+> >> Well it could, in theory be done, but It just seems wrong to setup and
+> >> wait for more DMA requests while we are in mid-progress setting up
+> >> another DMA request. Especially when the block layer has historically
+> >> had issues with stack sizes. It's also possible you might have multiple
+> >> bio_vec's that have to each do a migration and with a hook here they'd
+> >> have to be done serially.
+> > 
+> > *shrug* this is just standard bounce buffering stuff...
+> 
+> I don't know of any "standard" bounce buffering stuff that uses random
+> other device's DMA engines where appropriate.
 
-By the
+IMHO, it is conceptually the same as memcpy.. And probably we will not
+ever need such optimization in dma map. Other copy places might be
+different at least we have the option.
+ 
+> IMO the bouncing in the DMA layer isn't a desirable thing, it was a
+> necessary addition to work around various legacy platform issues and
+> have existing code still work correctly. 
 
-        if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
-                stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
-                napi_schedule_irqoff(&ch->rx_napi);
-        }
+Of course it is not desireable! But there are many situations where we
+do not have the luxury to work around the HW limits in the caller, so
+those callers either have to not do DMA or they have to open code
+bounce buffering - both are wrong.
 
-branch directly above? If so, is it possible to have fewer rx than tx
-queues and miss this?
+> > What I see as the question is how to layout the BIO. 
+> > 
+> > If we agree the bio should only have phys_addr_t then we need some
+> > 'bar info' (ie at least the offset) in the dma map and some 'bar info'
+> > (ie the DMA device) during the bio construciton.
+> 
+> Per my other email, it was phys_addr_t plus hints on how to map the
+> memory (bus address, dma_map_resource, or regular). This requires
+> exactly two flag bits in the bio_vec and no interval tree or hash table.
+> I don't want to have to pass bar info, other hooks, or anything like
+> that to the block layer.
 
-this logic seems more complex than needed?
+This scheme makes the assumption that the dma mapping struct device is
+all you need, and we never need to know the originating struct device
+during dma map. This is clearly safe if the two devices are on the
+same PCIe segment
 
-        if (status)
-                status |= handle_rx | handle_tx;
+However, I'd feel more comfortable about that assumption if we had
+code to support the IOMMU case, and know for sure it doesn't require
+more info :(
 
-        if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
+But I suppose it is also reasonable that only the IOMMU case would
+have the expensive 'bar info' lookup or something.
 
-        }
+Maybe you can hide these flags as some dma_map helper, then the
+layering might be nicer:
 
-        if ((status & handle_tx) && (chan < priv->plat->tx_queues_to_use)) {
+  dma_map_set_bio_p2p_flags(bio, phys_addr, source dev, dest_dev) 
 
-        }
+?
 
-status & handle_rx implies status & handle_tx and vice versa.
+ie the choice of flag scheme to use is opaque to the DMA layer.
 
+> > If we can spare 4-8 bits in the bio then I suggest a 'perfect hash
+> > table'. Assign each registered P2P 'bar info' a small 4 bit id and
+> > hash on that. It should be fast enough to not worry about the double
+> > lookup.
+> 
+> This feels like it's just setting us up to run into nasty limits based
+> on the number of bits we actually have. The number of bits in a bio_vec
+> will always be a precious resource. If I have a server chassis that
+> exist today with 24 NVMe devices, and each device has a CMB, I'm already
+> using up 6 of those bits. Then we might have DEVICE_PRIVATE and other
+> uses on top of that.
 
->
-> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-> Cc: Joao Pinto <jpinto@synopsys.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> index 4a5941caaadc..e8f3e76889c8 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -2061,10 +2061,8 @@ static int stmmac_napi_check(struct stmmac_priv *priv, u32 chan)
->                 napi_schedule_irqoff(&ch->rx_napi);
->         }
->
-> -       if ((status & handle_tx) && (chan < priv->plat->tx_queues_to_use)) {
-> -               stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
-> +       if ((status & handle_tx) && (chan < priv->plat->tx_queues_to_use))
->                 napi_schedule_irqoff(&ch->tx_napi);
-> -       }
->
->         return status;
->  }
-> @@ -3570,8 +3568,8 @@ static int stmmac_napi_poll_tx(struct napi_struct *napi, int budget)
->         work_done = stmmac_tx_clean(priv, DMA_TX_SIZE, chan);
->         work_done = min(work_done, budget);
->
-> -       if (work_done < budget && napi_complete_done(napi, work_done))
-> -               stmmac_enable_dma_irq(priv, priv->ioaddr, chan);
-> +       if (work_done < budget)
-> +               napi_complete_done(napi, work_done);
+A hash is an alternative data structure to a interval tree that has
+better scaling for small numbers of BARs, which I think is our
+case.
 
-It does seem odd that stmmac_napi_poll_rx and stmmac_napi_poll_tx both
-call stmmac_enable_dma_irq(..) independent of the other. Shouldn't the
-IRQ remain masked while either is active or scheduled? That is almost
-what this patch does, though not exactly.
+Jason
