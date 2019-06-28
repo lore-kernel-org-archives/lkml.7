@@ -2,284 +2,123 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58287C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A992BC5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DA42133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E132133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:27:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="cPvbsvWj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UNTDR6Vx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfF1J1W (ORCPT
+        id S1726901AbfF1J1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:27:22 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:6495 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfF1J1T (ORCPT
+        Fri, 28 Jun 2019 05:27:36 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51404 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbfF1J1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:27:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1561714037; x=1593250037;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=C/tK+eqyZfG3DvgrHIxJojkuSm1mtm+8YcEFaCfljVI=;
-  b=cPvbsvWja2/24yNlu/GXN6j/rMdJ4FrrXk5jTSuo2lOGlvAAvLF+ZW0/
-   Fjah368Wa1fxUQbKUS7lX9RU1ng5Vydbkw5zgMy2D7clK8buW9VOiesBO
-   LdgEEcWvtI52uy2xka1yEENy2Z1JwZiiYZPtqoIzk9n0aLlCL6NznUEdc
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.62,427,1554768000"; 
-   d="scan'208";a="772444188"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 28 Jun 2019 09:27:15 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 1E467A0565;
-        Fri, 28 Jun 2019 09:27:11 +0000 (UTC)
-Received: from EX13D08UEE001.ant.amazon.com (10.43.62.126) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 28 Jun 2019 09:26:54 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D08UEE001.ant.amazon.com (10.43.62.126) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 28 Jun 2019 09:26:53 +0000
-Received: from u6cf1b7119fa15b.ant.amazon.com (10.28.85.98) by
- mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Fri, 28 Jun 2019 09:26:49 +0000
-From:   Sam Caccavale <samcacc@amazon.de>
-CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
-        <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
-        <graf@amazon.de>, <karahmed@amazon.de>,
-        <andrew.cooper3@citrix.com>, <JBeulich@suse.com>,
-        <pbonzini@redhat.com>, <rkrcmar@redhat.com>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <paullangton4@gmail.com>, <x86@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sam Caccavale <samcacc@amazon.de>
-Subject: [PATCH v4 5/5] Development scripts for crash triage and deploy
-Date:   Fri, 28 Jun 2019 11:26:21 +0200
-Message-ID: <20190628092621.17823-6-samcacc@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190628092621.17823-1-samcacc@amazon.de>
-References: <20190628092621.17823-1-samcacc@amazon.de>
+        Fri, 28 Jun 2019 05:27:35 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5S9RPEV126238;
+        Fri, 28 Jun 2019 04:27:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561714045;
+        bh=4lzPTixTG6HYSgsn449rIrKsahuLP+3PBJPmON8xrr4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UNTDR6Vxo0+1Ve9+XKa4fqdgbb4dTQfBP3P/TemSWllJ36pW7/Vkibve6y7pozgvI
+         jyaaOCIn670GkXKsQomRv4snxP7ddP/uR7CbJqZlOM8V1SuPZC5IStmsW712rX+Ef8
+         bXZsH05AYCfBwF9pB0MgKMadJHQ1RBKVXzFUO9g0=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5S9RP7W009488
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Jun 2019 04:27:25 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 28
+ Jun 2019 04:27:24 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 28 Jun 2019 04:27:24 -0500
+Received: from [172.24.190.229] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5S9RLiG100189;
+        Fri, 28 Jun 2019 04:27:22 -0500
+Subject: Re: [PATCH] iommu/arm-smmu-v3: Fix incorrect fields being passed to
+ prefetch command
+To:     <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <wmills@ti.com>, <nsekhar@ti.com>, <lokeshvutla@ti.com>
+References: <20190628090953.23606-1-p-yadav1@ti.com>
+From:   Pratyush Yadav <p-yadav1@ti.com>
+Message-ID: <b0866cd5-d073-601c-f95e-95a7128d4d75@ti.com>
+Date:   Fri, 28 Jun 2019 14:57:43 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190628090953.23606-1-p-yadav1@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not meant for upstream consumption.
 
----
 
-v2 -> v3:
- - Introduced this patch as a place for non-essential dev scripts
+On 28/06/19 2:39 PM, Pratyush Yadav wrote:> According to the SMMUv3 spec [0] section 4.2.1, command 0x1
+> (CMD_PREFETCH_CONFIG) does not take address and size as parameters. It
+> only takes  StreamID, SSec, SubstreamID, and SSV. Address and Size are
+> parameters for command 0x2 (CMD_PREFETCH_ADDR).
+> 
+> Tested on kernel 4.19 on TI J721E SOC.
 
-v3 -> v4:
- - Made deploy_remote.sh use a 1d timeout
- - Removed core dump setup from install_afl.sh
- - Added core dump setup into deploy_remote.sh
+Even though I only tested on 4.19 because I don't have the setup to run 
+mainline master on this SOC, the patch is based on mainline master and I
+did compile-test it.
 
-Signed-off-by: Sam Caccavale <samcacc@amazon.de>
----
- tools/fuzz/x86ie/scripts/bin.sh               | 49 +++++++++++++++++++
- tools/fuzz/x86ie/scripts/coalesce.sh          |  5 ++
- tools/fuzz/x86ie/scripts/deploy.sh            |  9 ++++
- tools/fuzz/x86ie/scripts/deploy_remote.sh     | 10 ++++
- tools/fuzz/x86ie/scripts/gen_output.sh        | 11 +++++
- tools/fuzz/x86ie/scripts/install_afl.sh       |  2 -
- .../fuzz/x86ie/scripts/install_deps_ubuntu.sh |  5 ++
- tools/fuzz/x86ie/scripts/rebuild.sh           |  6 +++
- tools/fuzz/x86ie/scripts/summarize.sh         |  9 ++++
- 9 files changed, 104 insertions(+), 2 deletions(-)
- create mode 100755 tools/fuzz/x86ie/scripts/bin.sh
- create mode 100755 tools/fuzz/x86ie/scripts/coalesce.sh
- create mode 100644 tools/fuzz/x86ie/scripts/deploy.sh
- create mode 100755 tools/fuzz/x86ie/scripts/deploy_remote.sh
- create mode 100755 tools/fuzz/x86ie/scripts/gen_output.sh
- create mode 100755 tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
- create mode 100755 tools/fuzz/x86ie/scripts/rebuild.sh
- create mode 100755 tools/fuzz/x86ie/scripts/summarize.sh
-
-diff --git a/tools/fuzz/x86ie/scripts/bin.sh b/tools/fuzz/x86ie/scripts/bin.sh
-new file mode 100755
-index 000000000000..6383a883ff33
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/bin.sh
-@@ -0,0 +1,49 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+if [ "$#" -lt 3 ]; then
-+  echo "Usage: './bin path/to/afl-harness path/to/afl_crash [path/to/linux/src/root]'"
-+  exit
-+fi
-+
-+export AFL_HARNESS="$1"
-+export LINUX_SRC="$3"
-+
-+diagnose_segfault() {
-+  SOURCE=$(gdb -batch -ex r -ex 'bt 2' --args $@ 2>&1 | grep -Po '#1.* \K([^ ]+:[0-9]+)');
-+  IFS=: read FILE LINE <<< "$SOURCE"
-+
-+  OP="$(sed -n "${LINE}p" "$LINUX_SRC/$FILE" 2>/dev/null)"
-+  if [ $? -ne 0 ]; then
-+    OP="$(sed -n "${LINE}p" "$LINUX_SRC/tools/fuzz/x86_instruction_emulation/$FILE" 2>/dev/null)"
-+  fi
-+
-+  OP="$(echo $OP | grep -Po 'ops->\K([^(]+)')"
-+  if [ -z "$OP" ]; then
-+    echo "SEGV: unknown, in $FILE:$LINE"
-+  else
-+    echo "Expected: segfaulting on emulator->$OP"
-+  fi
-+}
-+export -f diagnose_segfault
-+
-+bin() {
-+  OUTPUT=$(bash -c "timeout 1s $AFL_HARNESS $1 2>&1" 2>&1)
-+  RETVAL=$?
-+
-+  echo "$OUTPUT"
-+  if [ $RETVAL -eq 0 ]; then
-+    echo "Terminated successfully"
-+  elif [ $RETVAL -eq 124 ]; then
-+    echo "Unknown: killed due to timeout.  Loop likely."
-+  elif echo "$OUTPUT" | grep -q "SEGV"; then
-+    echo "$(diagnose_segfault $AFL_HARNESS $1)"
-+  elif echo "$OUTPUT" | grep -q "FPE"; then
-+    echo "Expected: floating point exception."
-+  else
-+    echo "Unknown cause of crash."
-+  fi
-+}
-+export -f bin
-+
-+echo "$(bin $2 2>&1)"
-diff --git a/tools/fuzz/x86ie/scripts/coalesce.sh b/tools/fuzz/x86ie/scripts/coalesce.sh
-new file mode 100755
-index 000000000000..b15d583c2c32
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/coalesce.sh
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+
-+mkdir -p all
-+rm -rf all/*
-+find . -type f -wholename '*crashes/id*' | parallel 'cp {} ./all/$(basename $(dirname {//})):{/}'
-diff --git a/tools/fuzz/x86ie/scripts/deploy.sh b/tools/fuzz/x86ie/scripts/deploy.sh
-new file mode 100644
-index 000000000000..f95c3aa2b5b5
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/deploy.sh
-@@ -0,0 +1,9 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+REMOTE=$1
-+DSTDIR=/dev/shm
-+
-+rsync -av $(pwd) $REMOTE:$DSTDIR
-+
-+ssh $REMOTE "cd $DSTDIR/$(basename $(pwd)); bash -s tools/fuzz/x86_instruction_emulation/scripts/deploy_remote.sh"
-diff --git a/tools/fuzz/x86ie/scripts/deploy_remote.sh b/tools/fuzz/x86ie/scripts/deploy_remote.sh
-new file mode 100755
-index 000000000000..a903294e145a
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/deploy_remote.sh
-@@ -0,0 +1,10 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+SCRIPTDIR=$(pwd)/tools/fuzz/x86ie/scripts
-+
-+$SCRIPTDIR/install_deps_ubuntu.sh
-+source $SCRIPTDIR/install_afl.sh
-+CC=$AFLPATH/afl-gcc $SCRIPTDIR/build.sh
-+sudo bash -c "echo core >/proc/sys/kernel/core_pattern"
-+TIMEOUT="${TIMEOUT:-1d}" FUZZDIR="${FUZZDIR:-$(pwd)/fuzz}" $SCRIPTDIR/run.sh
-diff --git a/tools/fuzz/x86ie/scripts/gen_output.sh b/tools/fuzz/x86ie/scripts/gen_output.sh
-new file mode 100755
-index 000000000000..6c0707eb6d08
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/gen_output.sh
-@@ -0,0 +1,11 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+if [ "$#" -lt 3 ]; then
-+  echo "Usage: '$0 path/to/afl-harness path/to/afl_crash_dir path/to/linux/src/root'"
-+  exit
-+fi
-+
-+mkdir -p output
-+rm -rf output/*
-+find $2 -type f | parallel ./bin.sh $1 {} $3 '>' ./output/{/}.out
-diff --git a/tools/fuzz/x86ie/scripts/install_afl.sh b/tools/fuzz/x86ie/scripts/install_afl.sh
-index 3bdbdf2a040b..e05e9942cc19 100755
---- a/tools/fuzz/x86ie/scripts/install_afl.sh
-+++ b/tools/fuzz/x86ie/scripts/install_afl.sh
-@@ -13,5 +13,3 @@ set AFL_USE_ASAN
- make clean all
- export AFLPATH="$(pwd)"
- popd
--
--sudo bash -c "echo core >/proc/sys/kernel/core_pattern"
-diff --git a/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh b/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
-new file mode 100755
-index 000000000000..5525bc8b659c
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+sudo apt update
-+sudo apt install -y make gcc wget screen build-essential libssh-dev flex bison libelf-dev bc
-diff --git a/tools/fuzz/x86ie/scripts/rebuild.sh b/tools/fuzz/x86ie/scripts/rebuild.sh
-new file mode 100755
-index 000000000000..809a4551cb0c
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/rebuild.sh
-@@ -0,0 +1,6 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+make clean
-+make tools/fuzz_clean
-+FUZZDIR="./fuzz" ./tools/fuzz/x86ie/scripts/build.sh
-diff --git a/tools/fuzz/x86ie/scripts/summarize.sh b/tools/fuzz/x86ie/scripts/summarize.sh
-new file mode 100755
-index 000000000000..27761f283ee3
---- /dev/null
-+++ b/tools/fuzz/x86ie/scripts/summarize.sh
-@@ -0,0 +1,9 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+if [ "$#" -lt 1 ]; then
-+  echo "Usage: '$0 path/to/output/dir'"
-+  exit
-+fi
-+
-+time bash -c "find $1 -type f -exec tail -n 1 {} \; | sort | uniq -c | sort -rn"
+> [0] https://static.docs.arm.com/ihi0070/a/IHI_0070A_SMMUv3.pdf
+> 
+> Signed-off-by: Pratyush Yadav <p-yadav1@ti.com>
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 4d5a694f02c2..2d4dfd909436 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -413,6 +413,7 @@ struct arm_smmu_cmdq_ent {
+>  	/* Command-specific fields */
+>  	union {
+>  		#define CMDQ_OP_PREFETCH_CFG	0x1
+> +		#define CMDQ_OP_PREFETCH_ADDR	0x2
+>  		struct {
+>  			u32			sid;
+>  			u8			size;
+> @@ -805,10 +806,12 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
+>  	case CMDQ_OP_TLBI_EL2_ALL:
+>  	case CMDQ_OP_TLBI_NSNH_ALL:
+>  		break;
+> -	case CMDQ_OP_PREFETCH_CFG:
+> -		cmd[0] |= FIELD_PREP(CMDQ_PREFETCH_0_SID, ent->prefetch.sid);
+> +	case CMDQ_OP_PREFETCH_ADDR:
+>  		cmd[1] |= FIELD_PREP(CMDQ_PREFETCH_1_SIZE, ent->prefetch.size);
+>  		cmd[1] |= ent->prefetch.addr & CMDQ_PREFETCH_1_ADDR_MASK;
+> +		/* Fallthrough */
+> +	case CMDQ_OP_PREFETCH_CFG:
+> +		cmd[0] |= FIELD_PREP(CMDQ_PREFETCH_0_SID, ent->prefetch.sid);
+>  		break;
+>  	case CMDQ_OP_CFGI_STE:
+>  		cmd[0] |= FIELD_PREP(CMDQ_CFGI_0_SID, ent->cfgi.sid);
+> 
 -- 
-2.17.1
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+Regards,
+Pratyush Yadav
