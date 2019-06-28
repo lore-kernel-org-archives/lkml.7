@@ -2,103 +2,107 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5D6C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD48C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E012086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF7A2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561725464;
+	bh=K3UBGXrrHfd4Rj6E4sYT2Xo8TM8WdQzvGLsW84DNbmY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pr+DJ/wAI7i9M8qfFexZfgkp5v81ZLZ2baVToojjlwOgjd1LdJAz4fU/RY+ZMgnnY
+	 j9N4A2YlDctWTqPoCUtcvR7cHHMvGDh8emIHZ5Gd0pIUWBTl+uOzdfyzbJNdYVa/aP
+	 umsUNkMSiVxFuNMqvRjnd2YCeh4KLjrMY5qPawSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfF1Mhc (ORCPT
+        id S1727165AbfF1Mhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:37:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45224 "EHLO mx1.redhat.com"
+        Fri, 28 Jun 2019 08:37:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbfF1MhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:37:25 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726657AbfF1Mhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 08:37:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C5146C059B9F;
-        Fri, 28 Jun 2019 12:37:24 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-117-102.ams2.redhat.com [10.36.117.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CC67C5D98E;
-        Fri, 28 Jun 2019 12:37:18 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] vsock/virtio: fix flush of works during the .remove()
-Date:   Fri, 28 Jun 2019 14:36:59 +0200
-Message-Id: <20190628123659.139576-4-sgarzare@redhat.com>
-In-Reply-To: <20190628123659.139576-1-sgarzare@redhat.com>
-References: <20190628123659.139576-1-sgarzare@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 931D22086D;
+        Fri, 28 Jun 2019 12:37:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561725461;
+        bh=K3UBGXrrHfd4Rj6E4sYT2Xo8TM8WdQzvGLsW84DNbmY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eAx3cZYO9TbLmxfJsvb08T1MROzkNh1KsIMn4RpIHOzGOiM3IlGcluHRsll0SqLzO
+         FtpwpndZu4NOK0XrNWqRpb/ti5PNaGeunsEkPxmbFyU+C1QvdaBQcWVIfvOYDBfL0H
+         muRjP0UnsdqYgUcCFyLzvTxG1+Fyef2TKX8kR9+o=
+Date:   Fri, 28 Jun 2019 14:37:38 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Donggeun Kim <dg77.kim@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 0/2] extcon: Add fsa9480 extcon driver
+Message-ID: <20190628123738.GA25339@kroah.com>
+References: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
+ <CACRpkdYD7Z7XX9wXFtBehJG_4NCt=m_MNsR5cESPRnO3tomKmQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 28 Jun 2019 12:37:24 +0000 (UTC)
+In-Reply-To: <CACRpkdYD7Z7XX9wXFtBehJG_4NCt=m_MNsR5cESPRnO3tomKmQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch moves the flush of works after vdev->config->del_vqs(vdev),
-because we need to be sure that no workers run before to free the
-'vsock' object.
+On Fri, Jun 28, 2019 at 11:28:11AM +0100, Linus Walleij wrote:
+> On Fri, Jun 21, 2019 at 12:14 PM Paweł Chmiel
+> <pawel.mikolaj.chmiel@gmail.com> wrote:
+> 
+> > This small patchset adds support for Fairchild Semiconductor FSA9480
+> > microUSB switch.
+> >
+> > It has been tested on Samsung Galaxy S and Samsung Fascinate 4G,
+> > but it can be found also on other Samsung Aries (s5pv210) based devices.
+> >
+> > Tomasz Figa (2):
+> >   dt-bindings: extcon: Add support for fsa9480 switch
+> >   extcon: Add fsa9480 extcon driver
+> 
+> This is surely an important driver since almost all elder Samsung
+> mobiles use this kind of switch. So
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> This driver I see is already sent to Greg for inclusion in the next kernel.
+> I just wonder if you guys are even aware of this driver for the same
+> hardware added by Donggeun Kim in 2011:
+> drivers/misc/fsa9480.c
+> 
+> That said I am all for pulling in this new driver because it is surely
+> better and supports device tree.
+> 
+> But can we please also send Greg a patch to delete the old driver
+> so we don't have two of them now?
+> 
+> The old driver have no in-tree users so it can be deleted without
+> side effects. Out-of-tree users can certainly adapt to the new
+> extcon driver.
+> 
+> If you want I can send a deletion patch for the misc driver?
 
-Since we stopped the workers using the [tx|rx|event]_run flags,
-we are sure no one is accessing the device while we are calling
-vdev->config->reset(vdev), so we can safely move the workers' flush.
+Please, I'll gladly take a patch that deletes code :)
 
-Before the vdev->config->del_vqs(vdev), workers can be scheduled
-by VQ callbacks, so we must flush them after del_vqs(), to avoid
-use-after-free of 'vsock' object.
+thanks,
 
-Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- net/vmw_vsock/virtio_transport.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-index 1b44ec6f3f6c..96dafa978268 100644
---- a/net/vmw_vsock/virtio_transport.c
-+++ b/net/vmw_vsock/virtio_transport.c
-@@ -680,12 +680,6 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
- 	rcu_assign_pointer(the_virtio_vsock, NULL);
- 	synchronize_rcu();
- 
--	flush_work(&vsock->loopback_work);
--	flush_work(&vsock->rx_work);
--	flush_work(&vsock->tx_work);
--	flush_work(&vsock->event_work);
--	flush_work(&vsock->send_pkt_work);
--
- 	/* Reset all connected sockets when the device disappear */
- 	vsock_for_each_connected_socket(virtio_vsock_reset_sock);
- 
-@@ -740,6 +734,15 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
- 	/* Delete virtqueues and flush outstanding callbacks if any */
- 	vdev->config->del_vqs(vdev);
- 
-+	/* Other works can be queued before 'config->del_vqs()', so we flush
-+	 * all works before to free the vsock object to avoid use after free.
-+	 */
-+	flush_work(&vsock->loopback_work);
-+	flush_work(&vsock->rx_work);
-+	flush_work(&vsock->tx_work);
-+	flush_work(&vsock->event_work);
-+	flush_work(&vsock->send_pkt_work);
-+
- 	mutex_unlock(&the_virtio_vsock_mutex);
- 
- 	kfree(vsock);
--- 
-2.20.1
-
+greg k-h
