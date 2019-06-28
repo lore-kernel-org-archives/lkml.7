@@ -2,463 +2,115 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64D2C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838D2C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9145F2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:55:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StjXNGZ/"
+	by mail.kernel.org (Postfix) with ESMTP id 6DFF32083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:57:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfF1RzS (ORCPT
+        id S1726839AbfF1R5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:55:18 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43199 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfF1RzR (ORCPT
+        Fri, 28 Jun 2019 13:57:24 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57592 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbfF1R5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:55:17 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cl9so3632784plb.10;
-        Fri, 28 Jun 2019 10:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5mtqm2h2+VZjGMu4oNeQihR8XXbIQd/Um6Njm+TfFqE=;
-        b=StjXNGZ/s4D3bTdmXhpfN87U7/h3E3RyIqSozsesMh3pnnpvEGarSjHtPiZS+tMarN
-         BxmNj91PZHKoYPultodCES7tnpsD8pwZleUbMQk1yW0a9vxukMjs9NXNkJ8+OG4zwRxz
-         l9l4wEEfmCxRqjlGU/0ncBrzYb9jrfv0vOnx75ORY9ORGH838OF8WejfzjVZG/SB+QjB
-         uAykkOE4X07kSwlSHfRAt+AeYjAdAf8UzHQXqRnow0Usdf58Gu74i+7NS6q+g883mdf1
-         lkeTgIRQPntTJbRMOgKssMeIsRFqZ+8aE8h/h8VT8Ra+0MYUJPy1noRtGiu4kZ0VX5q+
-         hDCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5mtqm2h2+VZjGMu4oNeQihR8XXbIQd/Um6Njm+TfFqE=;
-        b=XMJSXVMCHqwiFnkJrMhRggWgrX12uNEg2RMpP2gHLdzN1x8ZJ8YD5C3bMOG784Qaa5
-         NXobIHt/5b/qySGcH9Jl4LYVntNcPYmZa3fvIFQQLopzns5Q4luiBl88j22olcX7v3XY
-         kjcj/HzTFfFjTbdhPfNQXJIAqccKNYAnK6Puv1t3tOO4bB1gEjMyt8UtiVtq4GbOvXAS
-         ZNRUEbztVU+hNcpDZc+2bVBtnx2YuLZ+VRV0FzosVb5cjNxJuXw5mvLrjo3mw1nvvOEC
-         huy4+w6EDlavsIKltMLJNo5GFw/d/HXqmMMk4KYNGxFEViDIPuSxrWrW+CMQcXhldqKt
-         Y46Q==
-X-Gm-Message-State: APjAAAX3Eb4BDPt7D1AOyvRq4urIL/7j443hR5RLyjW7HFv0BtS15spC
-        VHMhQpXYlaz1Hvm/dopGP05Ke5Ic
-X-Google-Smtp-Source: APXvYqx8g6jfGCs8SX7IJU7k3X/Ozgo2TtV6PlWyDFukwe5CGqgH9HzdaNm3G0SPOawU7G0/JYAh2Q==
-X-Received: by 2002:a17:902:54f:: with SMTP id 73mr12804287plf.246.1561744516155;
-        Fri, 28 Jun 2019 10:55:16 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u21sm4091253pfm.70.2019.06.28.10.55.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 10:55:15 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 10:55:14 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, jdelvare@suse.com, atull@kernel.org,
-        gregkh@linuxfoundation.org, Luwei Kang <luwei.kang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v4 3/3] fpga: dfl: fme: add power management support
-Message-ID: <20190628175514.GB25890@roeck-us.net>
-References: <1561611218-5800-1-git-send-email-hao.wu@intel.com>
- <1561611218-5800-4-git-send-email-hao.wu@intel.com>
+        Fri, 28 Jun 2019 13:57:24 -0400
+Received: from hades.home (unknown [IPv6:2a00:23c5:58d:db00:36ee:cfb1:e0d:7749])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: martyn)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 8FD1A260D87;
+        Fri, 28 Jun 2019 18:57:22 +0100 (BST)
+From:   Martyn Welch <martyn.welch@collabora.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@lists.collabora.co.uk, devicetree@vger.kernel.org,
+        Martyn Welch <martyn.welch@collabora.com>
+Subject: [PATCH v2 1/2] dt-bindings: Add binding document for NOA1305
+Date:   Fri, 28 Jun 2019 18:57:12 +0100
+Message-Id: <20190628175713.14831-1-martyn.welch@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561611218-5800-4-git-send-email-hao.wu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 12:53:38PM +0800, Wu Hao wrote:
-> This patch adds support for power management private feature under
-> FPGA Management Engine (FME). This private feature driver registers
-> a hwmon for power (power1_input), thresholds information, e.g.
-> (power1_max / crit / max_alarm / crit_alarm) and also read-only sysfs
-> interfaces for other power management information. For configuration,
-> user could write threshold values via above power1_max / crit sysfs
-> interface under hwmon too.
-> 
-> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> ---
-> v2: create a dfl_fme_power hwmon to expose power sysfs interfaces.
->     move all sysfs interfaces under hwmon
->         consumed          --> hwmon power1_input
->         threshold1        --> hwmon power1_cap
->         threshold2        --> hwmon power1_crit
->         threshold1_status --> hwmon power1_cap_status
->         threshold2_status --> hwmon power1_crit_status
->         xeon_limit        --> hwmon power1_xeon_limit
->         fpga_limit        --> hwmon power1_fpga_limit
+Document the ON Semiconductor NOA1305 ambient light sensor devicetree
+bindings.
 
-How do those limits differ from the other limits ?
-We do have powerX_cap and powerX_cap_max, and from the context
-it appears that you could possibly at least use power1_cap_max
-(and power1_cap instead of power1_max) instead of
-power1_fpga_limit.
+Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+---
 
->         ltr               --> hwmon power1_ltr
-> v3: rename some hwmon sysfs interfaces to follow hwmon ABI.
-> 	power1_cap         --> power1_max
-> 	power1_cap_status  --> power1_max_alarm
-> 	power1_crit_status --> power1_crit_alarm
+Changes:
+v2: Same as v1.
 
-power1_cap is standard ABI, and since the value is enforced by HW,
-it should be usable.
+ .../bindings/iio/light/noa1305.yaml           | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/noa1305.yaml
 
->     update sysfs doc for above sysfs interface changes.
->     replace scnprintf with sprintf in sysfs interface.
-> v4: use HWMON_CHANNEL_INFO.
->     update date in sysfs doc.
-> ---
->  Documentation/ABI/testing/sysfs-platform-dfl-fme |  67 +++++++
->  drivers/fpga/dfl-fme-main.c                      | 221 +++++++++++++++++++++++
->  2 files changed, 288 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> index 2cd17dc..a669548 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> @@ -127,6 +127,7 @@ Contact:	Wu Hao <hao.wu@intel.com>
->  Description:	Read-Only. Read this file to get the name of hwmon device, it
->  		supports values:
->  		    'dfl_fme_thermal' - thermal hwmon device name
-> +		    'dfl_fme_power'   - power hwmon device name
->  
->  What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_input
->  Date:		June 2019
-> @@ -183,3 +184,69 @@ Description:	Read-Only. Read this file to get the policy of hardware threshold1
->  		(see 'temp1_max'). It only supports two values (policies):
->  		    0 - AP2 state (90% throttling)
->  		    1 - AP1 state (50% throttling)
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_input
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-Only. It returns current FPGA power consumption in uW.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_max
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-Write. Read this file to get current hardware power
-> +		threshold1 in uW. If power consumption rises at or above
-> +		this threshold, hardware starts 50% throttling.
-> +		Write this file to set current hardware power threshold1 in uW.
-> +		As hardware only accepts values in Watts, so input value will
-> +		be round down per Watts (< 1 watts part will be discarded).
-> +		Write fails with -EINVAL if input parsing fails or input isn't
-> +		in the valid range (0 - 127000000 uW).
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_crit
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-Write. Read this file to get current hardware power
-> +		threshold2 in uW. If power consumption rises at or above
-> +		this threshold, hardware starts 90% throttling.
-> +		Write this file to set current hardware power threshold2 in uW.
-> +		As hardware only accepts values in Watts, so input value will
-> +		be round down per Watts (< 1 watts part will be discarded).
-> +		Write fails with -EINVAL if input parsing fails or input isn't
-> +		in the valid range (0 - 127000000 uW).
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_max_alarm
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. It returns 1 if power consumption is currently at or
-> +		above hardware threshold1 (see 'power1_max'), otherwise 0.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_crit_alarm
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. It returns 1 if power consumption is currently at or
-> +		above hardware threshold2 (see 'power1_crit'), otherwise 0.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_xeon_limit
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-Only. It returns power limit for XEON in uW.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_fpga_limit
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-Only. It returns power limit for FPGA in uW.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_ltr
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. Read this file to get current Latency Tolerance
-> +		Reporting (ltr) value. This ltr impacts the CPU low power
-> +		state in integrated solution.
+diff --git a/Documentation/devicetree/bindings/iio/light/noa1305.yaml b/Documentation/devicetree/bindings/iio/light/noa1305.yaml
+new file mode 100644
+index 000000000000..17e7f140b69b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/noa1305.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/noa1305.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ON Semiconductor NOA1305 Ambient Light Sensor
++
++maintainers:
++  - Martyn Welch <martyn.welch@collabora.com>
++
++description: |
++  Ambient sensing with an i2c interface.
++
++  https://www.onsemi.com/pub/Collateral/NOA1305-D.PDF
++
++properties:
++  compatible:
++    enum:
++      - onnn,noa1305
++
++  reg:
++    maxItems: 1
++
++  vin-supply:
++    description: Regulator that provides power to the sensor
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        light@39 {
++                compatible = "onnn,noa1305";
++                reg = <0x39>;
++        };
++    };
++...
+-- 
+2.20.1
 
-Does that attribute add any value without any kind of unit or an explanation
-of its meaning ? What is userspace supposed to do with that information ?
-Without context, it is just a meaningless number.
-
-Also, it appears that the information is supposed to be passed to power
-management via the set_latency_tolerance() callback. If so, it would be
-reported there. Would it possibly make more sense to use that interface ?
-
-> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> index 59ff9f1..9225b68 100644
-> --- a/drivers/fpga/dfl-fme-main.c
-> +++ b/drivers/fpga/dfl-fme-main.c
-> @@ -400,6 +400,223 @@ static void fme_thermal_mgmt_uinit(struct platform_device *pdev,
->  	.uinit = fme_thermal_mgmt_uinit,
->  };
->  
-> +#define FME_PWR_STATUS		0x8
-> +#define FME_LATENCY_TOLERANCE	BIT_ULL(18)
-> +#define PWR_CONSUMED		GENMASK_ULL(17, 0)
-> +
-> +#define FME_PWR_THRESHOLD	0x10
-> +#define PWR_THRESHOLD1		GENMASK_ULL(6, 0)	/* in Watts */
-> +#define PWR_THRESHOLD2		GENMASK_ULL(14, 8)	/* in Watts */
-> +#define PWR_THRESHOLD_MAX	0x7f			/* in Watts */
-> +#define PWR_THRESHOLD1_STATUS	BIT_ULL(16)
-> +#define PWR_THRESHOLD2_STATUS	BIT_ULL(17)
-> +
-> +#define FME_PWR_XEON_LIMIT	0x18
-> +#define XEON_PWR_LIMIT		GENMASK_ULL(14, 0)	/* in 0.1 Watts */
-> +#define XEON_PWR_EN		BIT_ULL(15)
-> +#define FME_PWR_FPGA_LIMIT	0x20
-> +#define FPGA_PWR_LIMIT		GENMASK_ULL(14, 0)	/* in 0.1 Watts */
-> +#define FPGA_PWR_EN		BIT_ULL(15)
-> +
-> +#define PWR_THRESHOLD_MAX_IN_UW (PWR_THRESHOLD_MAX * 1000000)
-> +
-> +static int power_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> +			    u32 attr, int channel, long *val)
-> +{
-> +	struct dfl_feature *feature = dev_get_drvdata(dev);
-> +	u64 v;
-> +
-> +	switch (attr) {
-> +	case hwmon_power_input:
-> +		v = readq(feature->ioaddr + FME_PWR_STATUS);
-> +		*val = (long)(FIELD_GET(PWR_CONSUMED, v) * 1000000);
-> +		break;
-> +	case hwmon_power_max:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		*val = (long)(FIELD_GET(PWR_THRESHOLD1, v) * 1000000);
-> +		break;
-> +	case hwmon_power_crit:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		*val = (long)(FIELD_GET(PWR_THRESHOLD2, v) * 1000000);
-> +		break;
-> +	case hwmon_power_max_alarm:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		*val = (long)FIELD_GET(PWR_THRESHOLD1_STATUS, v);
-> +		break;
-> +	case hwmon_power_crit_alarm:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		*val = (long)FIELD_GET(PWR_THRESHOLD2_STATUS, v);
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int power_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
-> +			     u32 attr, int channel, long val)
-> +{
-> +	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev->parent);
-> +	struct dfl_feature *feature = dev_get_drvdata(dev);
-> +	int ret = 0;
-> +	u64 v;
-> +
-> +	if (val < 0 || val > PWR_THRESHOLD_MAX_IN_UW)
-> +		return -EINVAL;
-
-We usually use clamp_val() in such cases because there is no useful means
-for the user to know the valid range.
-
-> +
-> +	val = val / 1000000;
-> +
-> +	mutex_lock(&pdata->lock);
-> +
-> +	switch (attr) {
-> +	case hwmon_power_max:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		v &= ~PWR_THRESHOLD1;
-> +		v |= FIELD_PREP(PWR_THRESHOLD1, val);
-> +		writeq(v, feature->ioaddr + FME_PWR_THRESHOLD);
-> +		break;
-> +	case hwmon_power_crit:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		v &= ~PWR_THRESHOLD2;
-> +		v |= FIELD_PREP(PWR_THRESHOLD2, val);
-> +		writeq(v, feature->ioaddr + FME_PWR_THRESHOLD);
-> +		break;
-> +	default:
-> +		ret = -EOPNOTSUPP;
-> +		break;
-> +	}
-> +
-> +	mutex_unlock(&pdata->lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static umode_t power_hwmon_attrs_visible(const void *drvdata,
-> +					 enum hwmon_sensor_types type,
-> +					 u32 attr, int channel)
-> +{
-> +	switch (attr) {
-> +	case hwmon_power_input:
-> +	case hwmon_power_max_alarm:
-> +	case hwmon_power_crit_alarm:
-> +		return 0444;
-> +	case hwmon_power_max:
-> +	case hwmon_power_crit:
-> +		return 0644;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct hwmon_ops power_hwmon_ops = {
-> +	.is_visible = power_hwmon_attrs_visible,
-> +	.read = power_hwmon_read,
-> +	.write = power_hwmon_write,
-> +};
-> +
-> +static const struct hwmon_channel_info *power_hwmon_info[] = {
-> +	HWMON_CHANNEL_INFO(power, HWMON_P_INPUT |
-> +				  HWMON_P_MAX   | HWMON_P_MAX_ALARM |
-> +				  HWMON_P_CRIT  | HWMON_P_CRIT_ALARM),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_chip_info power_hwmon_chip_info = {
-> +	.ops = &power_hwmon_ops,
-> +	.info = power_hwmon_info,
-> +};
-> +
-> +static ssize_t power1_xeon_limit_show(struct device *dev,
-> +				      struct device_attribute *attr, char *buf)
-> +{
-> +	struct dfl_feature *feature = dev_get_drvdata(dev);
-> +	u16 xeon_limit = 0;
-> +	u64 v;
-> +
-> +	v = readq(feature->ioaddr + FME_PWR_XEON_LIMIT);
-> +
-> +	if (FIELD_GET(XEON_PWR_EN, v))
-> +		xeon_limit = FIELD_GET(XEON_PWR_LIMIT, v);
-> +
-> +	return sprintf(buf, "%u\n", xeon_limit * 100000);
-> +}
-> +
-> +static ssize_t power1_fpga_limit_show(struct device *dev,
-> +				      struct device_attribute *attr, char *buf)
-> +{
-> +	struct dfl_feature *feature = dev_get_drvdata(dev);
-> +	u16 fpga_limit = 0;
-> +	u64 v;
-> +
-> +	v = readq(feature->ioaddr + FME_PWR_FPGA_LIMIT);
-> +
-> +	if (FIELD_GET(FPGA_PWR_EN, v))
-> +		fpga_limit = FIELD_GET(FPGA_PWR_LIMIT, v);
-> +
-> +	return sprintf(buf, "%u\n", fpga_limit * 100000);
-> +}
-> +
-> +static ssize_t power1_ltr_show(struct device *dev,
-> +			       struct device_attribute *attr, char *buf)
-> +{
-> +	struct dfl_feature *feature = dev_get_drvdata(dev);
-> +	u64 v;
-> +
-> +	v = readq(feature->ioaddr + FME_PWR_STATUS);
-> +
-> +	return sprintf(buf, "%u\n",
-> +		       (unsigned int)FIELD_GET(FME_LATENCY_TOLERANCE, v));
-> +}
-> +
-> +static DEVICE_ATTR_RO(power1_xeon_limit);
-> +static DEVICE_ATTR_RO(power1_fpga_limit);
-> +static DEVICE_ATTR_RO(power1_ltr);
-> +
-> +static struct attribute *power_extra_attrs[] = {
-> +	&dev_attr_power1_xeon_limit.attr,
-> +	&dev_attr_power1_fpga_limit.attr,
-> +	&dev_attr_power1_ltr.attr,
-> +	NULL
-> +};
-> +
-> +ATTRIBUTE_GROUPS(power_extra);
-> +
-> +static int fme_power_mgmt_init(struct platform_device *pdev,
-> +			       struct dfl_feature *feature)
-> +{
-> +	struct device *hwmon;
-> +
-> +	dev_dbg(&pdev->dev, "FME Power Management Init.\n");
-> +
-> +	hwmon = devm_hwmon_device_register_with_info(&pdev->dev,
-> +						     "dfl_fme_power", feature,
-> +						     &power_hwmon_chip_info,
-> +						     power_extra_groups);
-> +	if (IS_ERR(hwmon)) {
-> +		dev_err(&pdev->dev, "Fail to register power hwmon\n");
-> +		return PTR_ERR(hwmon);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void fme_power_mgmt_uinit(struct platform_device *pdev,
-> +				 struct dfl_feature *feature)
-> +{
-> +	dev_dbg(&pdev->dev, "FME Power Management UInit.\n");
-> +}
-> +
-> +static const struct dfl_feature_id fme_power_mgmt_id_table[] = {
-> +	{.id = FME_FEATURE_ID_POWER_MGMT,},
-> +	{0,}
-> +};
-> +
-> +static const struct dfl_feature_ops fme_power_mgmt_ops = {
-> +	.init = fme_power_mgmt_init,
-> +	.uinit = fme_power_mgmt_uinit,
-> +};
-> +
->  static struct dfl_feature_driver fme_feature_drvs[] = {
->  	{
->  		.id_table = fme_hdr_id_table,
-> @@ -418,6 +635,10 @@ static void fme_thermal_mgmt_uinit(struct platform_device *pdev,
->  		.ops = &fme_thermal_mgmt_ops,
->  	},
->  	{
-> +		.id_table = fme_power_mgmt_id_table,
-> +		.ops = &fme_power_mgmt_ops,
-> +	},
-> +	{
->  		.ops = NULL,
->  	},
->  };
-> -- 
-> 1.8.3.1
-> 
