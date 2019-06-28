@@ -2,135 +2,185 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF11C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC4AC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C56205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E382F205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:26:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfF1OZg (ORCPT
+        id S1726809AbfF1O0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 10:25:36 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:49665 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726657AbfF1OZg (ORCPT
+        Fri, 28 Jun 2019 10:26:52 -0400
+Received: from mail.parknet.co.jp ([210.171.160.6]:52996 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfF1O0w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 10:25:36 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id groghmkzvSfvXgrojhSKck; Fri, 28 Jun 2019 16:25:34 +0200
-Subject: Re: [PATCH v2 00/11] Venus stateful Codec API
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Vikash Garodia <vgarodia@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>
-References: <20190628130002.24293-1-stanimir.varbanov@linaro.org>
- <9c3399a8-4fc6-3117-10ee-3395cee034da@xs4all.nl>
- <997204c7-c702-868c-9a49-52fefc9ab3d2@linaro.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <eba506ce-4d63-649a-80e6-efad20125263@xs4all.nl>
-Date:   Fri, 28 Jun 2019 16:25:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 28 Jun 2019 10:26:52 -0400
+X-Greylist: delayed 510 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Jun 2019 10:26:51 EDT
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id DCD4B1B457C;
+        Fri, 28 Jun 2019 23:18:20 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-12) with ESMTPS id x5SEIJXb030638
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Fri, 28 Jun 2019 23:18:20 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-12) with ESMTPS id x5SEIJNM008995
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Fri, 28 Jun 2019 23:18:19 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id x5SEIJDd008994;
+        Fri, 28 Jun 2019 23:18:19 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH] fat: Add nobarrier to workaround the strange behavior of device
+Date:   Fri, 28 Jun 2019 23:18:19 +0900
+Message-ID: <871rzdrdxw.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.50 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <997204c7-c702-868c-9a49-52fefc9ab3d2@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfP4U0sffZFgGGIjkmEosNs6f8o7NOxHPyMVsD+CxZXiAQGf73FZsgd7fjOZUeonrrYp06FI1VKvQgVZPLQJwpSyEVCBQPquDAvfI+bXMAQr4ZY9SIX65
- tn01Ckgk+ig51I7C58IE97XClt/1iWtq3bMOiH+KUCHlWeBTO33Xo8OA3w6Cha7j3iDHCLiKClFQf8jQ6cZ1ewCZ+u4mufTc+QUz4f0XL8ZjlokPZvwA0wEE
- ARGUB13+yYMC5oCvBn03IdESqlKGVadj4izCPOUTvcOxuMp2w/cyvXGrrQnVngAEdJMklvcia0QHMKKPCN9MvtcX29gVqhgXeV6ifLKc5+6Hniwabv1pjVJE
- g6KtR9uU73bqfDnII6h+70q8wHtgyHxKVzFDOVRvY6ttHOqW38r8fnEz3tcsGjE3p3Ik7vlB5qh7tn80drLUbY/yhP50Vg==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/19 4:23 PM, Stanimir Varbanov wrote:
-> Hi Hans,
-> 
-> On 6/28/19 4:37 PM, Hans Verkuil wrote:
->> On 6/28/19 2:59 PM, Stanimir Varbanov wrote:
->>> Hello,
->>>
->>> Here is v2 of the Venus transition to stateful codec API
->>> compliance. The v2 can be found at [1].
->>>
->>> Changes since v1:
->>>  * codec_state is now enum
->>>  * dropped IS_OUT and IS_CAP macros and use vb2_start_streaming_called()
->>>  * corrected g_fmt and reconfig logic
->>>  * s/vdec_dst_buffers_done/vdec_cancel_dst_buffers
->>>  * use v4l2_m2m_ioctl_try_decoder_cmd M2M helper
->>>  * various fixes to make v4l2-compliance pass the streaming test
->>>
->>> To test the streaming with --stream-from-hdr v4l2-compliance option I have
->>> to make the following hack (it is needed because the size of decoder input
->>> buffers (OUTPUT queue) is not enough for the h264 bitstream, i.e the driver
->>> default resolution is 64x64 but the h264 stream is 320x240):
->>>
->>> diff --git a/utils/v4l2-compliance/v4l2-test-buffers.cpp b/utils/v4l2-compliance/v4l2-test-buffers.cpp
->>> index c71dcf65b721..dc0fcf20d3e4 100644
->>> --- a/utils/v4l2-compliance/v4l2-test-buffers.cpp
->>> +++ b/utils/v4l2-compliance/v4l2-test-buffers.cpp
->>> @@ -1294,6 +1294,11 @@ int testMmap(struct node *node, unsigned frame_count, enum poll_mode pollmode)
->>>                                         fmt.s_sizeimage(fmt.g_sizeimage(p) * 2, p);
->>>                         }
->>>                         fail_on_test(q.create_bufs(node, 1, &fmt));
->>> +
->>> +                       for (unsigned p = 0; p < fmt.g_num_planes(); p++)
->>> +                               fmt.s_sizeimage(fmt.g_sizeimage(p) * 2, p);
->>> +                       node->s_fmt(fmt);
->>> +
->>>                         fail_on_test(q.reqbufs(node, 2));
->>>                 }
->>>                 if (v4l_type_is_output(type))
->>
->> Does the venus driver set sizeimage based on the given output resolution?
-> 
-> Yes.
-> 
->>
->> E.g. if v4l2-compliance would first set the output resolution to 320x240,
->> is the returned sizeimage value OK in that case?
-> 
-> Yes.
-> 
-> Here are few options to me:
->  - set the correct resolution
->  - set 0x0 and sizeimage at some arbitrary value (1 or 2MB). Despite if
-> the bitstream is 4K it will not be enough if the bitrate is huge.
->  - invent some mechanism to trigger reconfiguration on the OUTPUT queue
-> as well (similar to the CAPTURE queue)
-> 
->>
->> And this also means that the venus driver requires each buffer to have
->> a single compressed frame, right? I.e. it can't be spread over multiple
->> OUTPUT buffers.
-> 
-> I cannot say for sure but that is how all downstream cases uses it i.e.
-> one compressed frame per input buffer. I wonder if you fill input
-> decoder buffer with many compressed frames in one input decoder buffer
-> how you pass the timestamp for every packet?
-> 
->>
->> We really need to let userspace know about such restrictions.
->>
->> Stanimir, can you list the restrictions of the decoder for the various
->> codecs?
-> 
-> What you mean? Restrictions like "one compressed frame per input buffer"?
-> 
 
-Yes :-)
+There was the report of strange behavior of device with recent
+blkdev_issue_flush() position change.
 
-Regards,
+The following is simplified usbmon trace.
 
-	Hans
+ 4203   9.160230         host -> 1.25.1       USBMS 95 SCSI: Synchronize Cache(10) LUN: 0x00 (LBA: 0x00000000, Len: 0)
+ 4206   9.164911       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Synchronize Cache(10)) (Good)
+ 4207   9.323927         host -> 1.25.1       USBMS 95 SCSI: Read(10) LUN: 0x00 (LBA: 0x00279950, Len: 240)
+ 4212   9.327138       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Read(10)) (Good)
+
+[...]
+
+ 7323  10.202167         host -> 1.25.1       USBMS 95 SCSI: Synchronize Cache(10) LUN: 0x00 (LBA: 0x00000000, Len: 0)
+ 7326  10.432266       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Synchronize Cache(10)) (Good)
+ 7327  10.769092         host -> 1.25.1       USBMS 95 SCSI: Test Unit Ready LUN: 0x00 
+ 7330  10.769192       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Test Unit Ready) (Good)
+ 7335  12.849093         host -> 1.25.1       USBMS 95 SCSI: Test Unit Ready LUN: 0x00 
+ 7338  12.849206       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Test Unit Ready) (Check Condition)
+ 7339  12.849209         host -> 1.25.1       USBMS 95 SCSI: Request Sense LUN: 0x00
+ 
+If "Synchronize Cache" command issued then there is idle time, the
+device stop to process further commands, and behave as like no media.
+(it returns NOT_READY [MEDIUM NOT PRESENT] for SENSE command, and this
+happened on Kindle) [just a guess, the device is trying to detect the
+"safe-unplug" operation of Windows or such?]
+
+To workaround those devices and provide flexibility, this adds
+"barrier"/"nobarrier" mount options to fat driver.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+---
+
+ fs/fat/fat.h   |    1 +
+ fs/fat/file.c  |    8 ++++++--
+ fs/fat/inode.c |   16 ++++++++++++++--
+ 3 files changed, 21 insertions(+), 4 deletions(-)
+
+diff -puN fs/fat/fat.h~fat-nobarrier fs/fat/fat.h
+--- linux/fs/fat/fat.h~fat-nobarrier	2019-06-28 21:22:18.146191739 +0900
++++ linux-hirofumi/fs/fat/fat.h	2019-06-28 21:59:11.693934616 +0900
+@@ -51,6 +51,7 @@ struct fat_mount_options {
+ 		 tz_set:1,	   /* Filesystem timestamps' offset set */
+ 		 rodir:1,	   /* allow ATTR_RO for directory */
+ 		 discard:1,	   /* Issue discard requests on deletions */
++		 barrier:1,	   /* Issue FLUSH command */
+ 		 dos1xfloppy:1;	   /* Assume default BPB for DOS 1.x floppies */
+ };
+ 
+diff -puN fs/fat/file.c~fat-nobarrier fs/fat/file.c
+--- linux/fs/fat/file.c~fat-nobarrier	2019-06-28 21:22:18.147191734 +0900
++++ linux-hirofumi/fs/fat/file.c	2019-06-28 21:59:11.693934616 +0900
+@@ -193,17 +193,21 @@ static int fat_file_release(struct inode
+ int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
+ {
+ 	struct inode *inode = filp->f_mapping->host;
++	struct msdos_sb_info *sbi = MSDOS_SB(inode->i_sb);
+ 	int err;
+ 
+ 	err = __generic_file_fsync(filp, start, end, datasync);
+ 	if (err)
+ 		return err;
+ 
+-	err = sync_mapping_buffers(MSDOS_SB(inode->i_sb)->fat_inode->i_mapping);
++	err = sync_mapping_buffers(sbi->fat_inode->i_mapping);
+ 	if (err)
+ 		return err;
+ 
+-	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
++	if (sbi->options.barrier)
++		err = blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
++
++	return err;
+ }
+ 
+ 
+diff -puN fs/fat/inode.c~fat-nobarrier fs/fat/inode.c
+--- linux/fs/fat/inode.c~fat-nobarrier	2019-06-28 21:22:18.148191730 +0900
++++ linux-hirofumi/fs/fat/inode.c	2019-06-28 21:59:11.694934611 +0900
+@@ -1016,6 +1016,8 @@ static int fat_show_options(struct seq_f
+ 		seq_puts(m, ",nfs=stale_rw");
+ 	if (opts->discard)
+ 		seq_puts(m, ",discard");
++	if (!opts->barrier)
++		seq_puts(m, ",nobarrier");
+ 	if (opts->dos1xfloppy)
+ 		seq_puts(m, ",dos1xfloppy");
+ 
+@@ -1031,8 +1033,9 @@ enum {
+ 	Opt_shortname_winnt, Opt_shortname_mixed, Opt_utf8_no, Opt_utf8_yes,
+ 	Opt_uni_xl_no, Opt_uni_xl_yes, Opt_nonumtail_no, Opt_nonumtail_yes,
+ 	Opt_obsolete, Opt_flush, Opt_tz_utc, Opt_rodir, Opt_err_cont,
+-	Opt_err_panic, Opt_err_ro, Opt_discard, Opt_nfs, Opt_time_offset,
+-	Opt_nfs_stale_rw, Opt_nfs_nostale_ro, Opt_err, Opt_dos1xfloppy,
++	Opt_err_panic, Opt_err_ro, Opt_discard, Opt_barrier, Opt_nobarrier,
++	Opt_nfs, Opt_time_offset, Opt_nfs_stale_rw, Opt_nfs_nostale_ro,
++	Opt_err, Opt_dos1xfloppy,
+ };
+ 
+ static const match_table_t fat_tokens = {
+@@ -1062,6 +1065,8 @@ static const match_table_t fat_tokens =
+ 	{Opt_err_panic, "errors=panic"},
+ 	{Opt_err_ro, "errors=remount-ro"},
+ 	{Opt_discard, "discard"},
++	{Opt_barrier, "barrier"},
++	{Opt_nobarrier, "nobarrier"},
+ 	{Opt_nfs_stale_rw, "nfs"},
+ 	{Opt_nfs_stale_rw, "nfs=stale_rw"},
+ 	{Opt_nfs_nostale_ro, "nfs=nostale_ro"},
+@@ -1146,6 +1151,7 @@ static int parse_options(struct super_bl
+ 	opts->numtail = 1;
+ 	opts->usefree = opts->nocase = 0;
+ 	opts->tz_set = 0;
++	opts->barrier = 1;
+ 	opts->nfs = 0;
+ 	opts->errors = FAT_ERRORS_RO;
+ 	*debug = 0;
+@@ -1335,6 +1341,12 @@ static int parse_options(struct super_bl
+ 		case Opt_discard:
+ 			opts->discard = 1;
+ 			break;
++		case Opt_barrier:
++			opts->barrier = 1;
++			break;
++		case Opt_nobarrier:
++			opts->barrier = 0;
++			break;
+ 
+ 		/* obsolete mount options */
+ 		case Opt_obsolete:
+_
+
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
