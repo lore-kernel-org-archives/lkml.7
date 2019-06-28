@@ -2,88 +2,127 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CF2C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1D6C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B32208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561719842;
-	bh=617G/COSgHc1PxFQNtQ74y+onsCaA4vkrdPfIUClF1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OEPen1SRye0M6YKi4u/Jt+WhMU9gmbxtrKGImbi9wkV1REZ0OSRP2jvAzJHt/u+b6
-	 nQi1O6U4wr5BC2/PHyeHnmM0yFNeM+M1W796SsLOMfASjJ3piEPnaKw4NLxRmllNeT
-	 GaekmnZg5NZmdBl9hbqh3l1ma/xBhjiiSOla3J4E=
+	by mail.kernel.org (Postfix) with ESMTP id 32D3A20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:05:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbR0sg/r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfF1LEA (ORCPT
+        id S1726695AbfF1LFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:04:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbfF1LEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:04:00 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75BDC20645;
-        Fri, 28 Jun 2019 11:03:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561719839;
-        bh=617G/COSgHc1PxFQNtQ74y+onsCaA4vkrdPfIUClF1Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oO+e/+SF6aE/wnCBgn1fDu34odP5B+RANepyWNkxGB52xVZ7bGJ1ngBcg15zCG/8t
-         9QlRt0pjssRmzV+p1NBwA5yewiLXiC7Qd2B2RFRPB9nNJd/L8UcynncrcNxh2v+Z+Y
-         VLBQukF2ihVI61tOymZp2ILpyERFrnguU9yPna5o=
-Date:   Fri, 28 Jun 2019 12:03:54 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Waiman Long <longman@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Yuyang Du <duyuyang@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+        Fri, 28 Jun 2019 07:05:52 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44706 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfF1LFw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 07:05:52 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x47so5729690qtk.11;
+        Fri, 28 Jun 2019 04:05:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TQD3Jo1dHRA0U9Z4yvwoDM+Y9nWZex8/mcRO751hgME=;
+        b=YbR0sg/rKOaL03h+DiWSU4ysk+NT9PL05a9fYsci+cy5FuCTxEGXRSPg6Ob8+B1zVt
+         tAukj1brmVUfLw3n3mSbZmLPxUi6wC58oph5iHZnzM4iu1IkKQvEmHb9JmKRnMdsWRPs
+         yNpG4gVrlMsxUE/NyoolJK/TyeGIX65K4GpPpB2aaT02l1yKwDLpq4k6QU7PoHXHPRdN
+         rH8od9VPAaSOn8OIO52k0BAUeGtN+TsvTnak8pAX0R/mhM8q36pr6muDCxkivLN4ju1N
+         EMkCIWeZgh9r/h/1cAatBOaDo2s0DuDCR0vHr+Cb8XL5ubkigSb+ttAhexG/z2X29/2S
+         a3RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TQD3Jo1dHRA0U9Z4yvwoDM+Y9nWZex8/mcRO751hgME=;
+        b=r2UU7Nk0ORDq6suMa6fLb7BMa/BtJ/2LHl2sD3kkxXWx4rY6Ctw9jmhiB5VzE3lJe4
+         kZg9imze8gbxICZB6kEFsMFiy/DK0lbs4YC3GcWYQNSB9jXzBvpnBmNApdOa0nb/zL8p
+         ZY0v09BQDhXGX9NZCKe4znAMYnW3J8dKkGaRdGMQxUViUklH/oGwfujEGp8wF5Bmnr3y
+         WoA7w25eziUjP4253vdUvCvSjMNXZdxIVoMsqN5VwYl+7TkR6PzggAnr+Ig6M6lN5Xf4
+         rPUbsMjTgW+ZCVa/gO1qCznKU2cHN18FAlMTUxoYs6EexXDq+JOmcGESeLqZwnAlK7RD
+         +MoA==
+X-Gm-Message-State: APjAAAUMkBLtDalrHuy9bHCJkIsMXV1ygX8coOYlm2XY+4PVuXj0t6xf
+        dxZoCLzAmt0epLSmPTBIVO3BfXHM
+X-Google-Smtp-Source: APXvYqz9LySnjsdwQIaft4JM8+Lb467eu+Ucee2kMKLVnLBEwkvbZf9YsKomfFNthGEB3eEYjOdvgg==
+X-Received: by 2002:a0c:bd9a:: with SMTP id n26mr7481819qvg.25.1561719951477;
+        Fri, 28 Jun 2019 04:05:51 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id n3sm806816qkk.54.2019.06.28.04.05.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Jun 2019 04:05:51 -0700 (PDT)
+Subject: Re: [PATCH] devfreq: tegra20: add COMMON_CLK dependency
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] locking/lockdep: clean up #ifdef checks
-Message-ID: <20190628110353.ijd42pbhqfsdsi2n@willie-the-truck>
-References: <20190628102919.2345242-1-arnd@arndb.de>
+References: <20190628103232.2467959-1-arnd@arndb.de>
+ <c2701295-0fd6-c5ec-59d4-6e6b3b3bdb8e@gmail.com>
+Message-ID: <cbf6cff3-f5f5-66ea-9cca-86eb93f23c50@gmail.com>
+Date:   Fri, 28 Jun 2019 14:05:48 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628102919.2345242-1-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <c2701295-0fd6-c5ec-59d4-6e6b3b3bdb8e@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
-
-On Fri, Jun 28, 2019 at 12:29:03PM +0200, Arnd Bergmann wrote:
-> As Will Deacon points out, CONFIG_PROVE_LOCKING implies TRACE_IRQFLAGS,
-> so the conditions I added in the previous patch, and some others in the
-> same file can be simplified by only checking for the former.
+28.06.2019 14:00, Dmitry Osipenko пишет:
+> 28.06.2019 13:32, Arnd Bergmann пишет:
+>> Compile-testing the new driver on platforms without CONFIG_COMMON_CLK
+>> leads to a link error:
+>>
+>> drivers/devfreq/tegra20-devfreq.o: In function `tegra_devfreq_target':
+>> tegra20-devfreq.c:(.text+0x288): undefined reference to `clk_set_min_rate'
+>>
+>> Add a dependency on COMMON_CLK to avoid this.
+>>
+>> Fixes: 1d39ee8dad6d ("PM / devfreq: Introduce driver for NVIDIA Tegra20")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>>  drivers/devfreq/Kconfig | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>> index f3b242987fd9..defe1d438710 100644
+>> --- a/drivers/devfreq/Kconfig
+>> +++ b/drivers/devfreq/Kconfig
+>> @@ -107,6 +107,7 @@ config ARM_TEGRA_DEVFREQ
+>>  config ARM_TEGRA20_DEVFREQ
+>>  	tristate "NVIDIA Tegra20 DEVFREQ Driver"
+>>  	depends on (TEGRA_MC && TEGRA20_EMC) || COMPILE_TEST
+>> +	depends on COMMON_CLK
+>>  	select DEVFREQ_GOV_SIMPLE_ONDEMAND
+>>  	select PM_OPP
+>>  	help
+>>
 > 
-> No functional change.
+> How is it possible to happen? There is a stub for clk_set_min_rate() when COMMON_CLK
+> is disabled .. Could you please show the kernel's config that causes the problem?
 > 
-> Fixes: 886532aee3cd ("locking/lockdep: Move mark_lock() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  kernel/locking/lockdep.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
+> Moreover that was me who added the missing stub for clk_set_min_rate() in [1] to fix [2].
+> 
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/include/linux/clk.h?id=b88c9f4129dcec941e5a26508e991c08051ed1ac
+> 
+> [2] https://lists.01.org/pipermail/kbuild-all/2019-April/060292.html
+> 
+> So this patch looks wrong to me because apparently it fixes a non-existent problem.
+> 
 
-Thanks for following up on this. I think it makes the code easier to read,
-so:
-
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
+Oh, wait. That was "implicit declaration" and this one is "undefined reference"!
+Still looks like something else need to be fixed..
