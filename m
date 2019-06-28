@@ -2,100 +2,131 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5741C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA23CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0B4215EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:25:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZqqtvpWT"
+	by mail.kernel.org (Postfix) with ESMTP id AE8D82147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfF1GZ2 (ORCPT
+        id S1727116AbfF1GaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 02:25:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49566 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbfF1GZ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 02:25:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4d9xnAvzKNkkKyPVhbNWAJgevDr+ZONW8crz3L7aYjI=; b=ZqqtvpWT6F+C1D+QtuJqHAWai
-        uyjEpVcMj9vNnnPmrg2FzhaAwvR9hEofJ6E/w0PenlzpX6j2Q3cblEQIHmJq4ElsVXeTAadomieGP
-        JNvbqiCX6aUaVhYf7UO9vxHzO/3npSzKnkLlloXkQKcYTOXKuJUCzPWxSLnERLp9Nj2uieXtjW5eL
-        The79HBgwGA5iNt0u4tle6tLHWgdNfbVPhAV99z3nb/fwFHCfAsVLQXU98SzpMh054DI8/prAN1Mf
-        GsoVleFtHveNLTxM+uCuj6qdnblDTMnbQidDYwnyad9soVQTwVFNTEWsNU9IPzhdhIN7k5MSgt8pP
-        iaz6za/Ow==;
-Received: from 089144214055.atnat0023.highway.a1.net ([89.144.214.55] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgkK6-0002mU-88; Fri, 28 Jun 2019 06:25:26 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     ysato@users.sourceforge.jp, dalias@libc.org
-Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sh: clkfwk: don't pass void pointers to ioread*
-Date:   Fri, 28 Jun 2019 08:25:24 +0200
-Message-Id: <20190628062524.5436-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
+        Fri, 28 Jun 2019 02:30:01 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19090 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726749AbfF1GaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 02:30:01 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7FCF8961B4C08289F9D8;
+        Fri, 28 Jun 2019 14:29:58 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Jun 2019
+ 14:29:50 +0800
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+To:     <david.oberhollenzer@sigma-star.at>, <richard@nod.at>,
+        <david@sigma-star.at>, <boris.brezillon@free-electrons.com>,
+        <yi.zhang@huawei.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <chengzhihao1@huawei.com>
+Subject: [PATCH RFC] mtd: ubi: Add fastmap sysfs attribute
+Date:   Fri, 28 Jun 2019 14:35:28 +0800
+Message-ID: <1561703728-91792-1-git-send-email-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Passing pointers with a const attrіbute to the ioread* functions
-causes a lot of compiler warnings, so remove the extra attributes.
+The UBI device can be attached to a MTD device via fastmap by set
+CONFIG_MTD_UBI_FASTMAP to 'y' (If there already exists a fastmap on the
+UBI device). To support some debugging scenarios, attaching process by
+fastmap can be confirmed in dmesg. If the UBI device is attached by
+fastmap, logs like following will appear in dmesg:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+  ubi0: attached by fastmap
+
+If multiple UBI devices are attached to multiple MTD devices at the same
+time, how to distinguish which UBI devices are successfully attached by
+fastmap? Extracting attaching information for each UBI device one by one
+from dmesg is a way. A better method is to record fastmap existence in
+sysfs, so it can be obtained by userspace tools.
+
+This patch exposes fastmap on sysfs. Suppose you attach an UBI device to a
+MTD device by fastmap: if fastmap equals to '1', that is, the fastmap
+generated before last detaching operation is confirmed valid. Else, there
+may be some problems with old fastmap. Besides, userspace tool can also
+check whether the fastmap updating triggered by other operations (such as
+resize volume) is successful by reading this sysfs attribute.
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- drivers/sh/clk/cpg.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/ABI/stable/sysfs-class-ubi | 15 +++++++++++++++
+ drivers/mtd/ubi/build.c                  |  5 +++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/drivers/sh/clk/cpg.c b/drivers/sh/clk/cpg.c
-index eeb028b9cdb3..4f3d99d37809 100644
---- a/drivers/sh/clk/cpg.c
-+++ b/drivers/sh/clk/cpg.c
-@@ -36,17 +36,17 @@ static void sh_clk_write(int value, struct clk *clk)
- 		iowrite32(value, clk->mapped_reg);
- }
+diff --git a/Documentation/ABI/stable/sysfs-class-ubi b/Documentation/ABI/stable/sysfs-class-ubi
+index a6b3240..1d96cf0 100644
+--- a/Documentation/ABI/stable/sysfs-class-ubi
++++ b/Documentation/ABI/stable/sysfs-class-ubi
+@@ -116,6 +116,21 @@ Description:
+ 		device, and "0\n" if it is cleared. UBI devices mark themselves
+ 		as read-only when they detect an unrecoverable error.
  
--static unsigned int r8(const void __iomem *addr)
-+static unsigned int r8(void __iomem *addr)
- {
- 	return ioread8(addr);
- }
++What:		/sys/class/ubi/ubiX/fastmap
++Date:		June 2019
++KernelVersion:	5.2
++Contact:	linux-mtd@lists.infradead.org
++Description:
++		Contains ASCII "1\n" if there exists a fastmap on UBI device,
++		and "0\n" if there not exists a fastmap on UBI device. After
++		attaching the UBI device to a MTD device via fastmap, userspace
++		tool can sense that there is a fastmap on UBI device  by
++		checking sysfs attribute 'fastmap', that is, the fastmap
++		generated before last detaching operation is valid. In addition,
++		userspace tool can also check whether the fastmap updating
++		triggered by volume operation is successful by reading this
++		sysfs attribute.
++
+ What:		/sys/class/ubi/ubiX/total_eraseblocks
+ Date:		July 2006
+ KernelVersion:	2.6.22
+diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
+index d636bbe..7cce44f 100644
+--- a/drivers/mtd/ubi/build.c
++++ b/drivers/mtd/ubi/build.c
+@@ -140,6 +140,8 @@ static struct device_attribute dev_mtd_num =
+ 	__ATTR(mtd_num, S_IRUGO, dev_attribute_show, NULL);
+ static struct device_attribute dev_ro_mode =
+ 	__ATTR(ro_mode, S_IRUGO, dev_attribute_show, NULL);
++static struct device_attribute dev_fastmap =
++	__ATTR(fastmap, S_IRUGO, dev_attribute_show, NULL);
  
--static unsigned int r16(const void __iomem *addr)
-+static unsigned int r16(void __iomem *addr)
- {
- 	return ioread16(addr);
- }
+ /**
+  * ubi_volume_notify - send a volume change notification.
+@@ -378,6 +380,8 @@ static ssize_t dev_attribute_show(struct device *dev,
+ 		ret = sprintf(buf, "%d\n", ubi->mtd->index);
+ 	else if (attr == &dev_ro_mode)
+ 		ret = sprintf(buf, "%d\n", ubi->ro_mode);
++	else if (attr == &dev_fastmap)
++		ret = sprintf(buf, "%d\n", ubi->fm ? 1 : 0);
+ 	else
+ 		ret = -EINVAL;
  
--static unsigned int r32(const void __iomem *addr)
-+static unsigned int r32(void __iomem *addr)
- {
- 	return ioread32(addr);
- }
-@@ -55,7 +55,7 @@ static int sh_clk_mstp_enable(struct clk *clk)
- {
- 	sh_clk_write(sh_clk_read(clk) & ~(1 << clk->enable_bit), clk);
- 	if (clk->status_reg) {
--		unsigned int (*read)(const void __iomem *addr);
-+		unsigned int (*read)(void __iomem *addr);
- 		int i;
- 		void __iomem *mapped_status = (phys_addr_t)clk->status_reg -
- 			(phys_addr_t)clk->enable_reg + clk->mapped_reg;
+@@ -398,6 +402,7 @@ static struct attribute *ubi_dev_attrs[] = {
+ 	&dev_bgt_enabled.attr,
+ 	&dev_mtd_num.attr,
+ 	&dev_ro_mode.attr,
++	&dev_fastmap.attr,
+ 	NULL
+ };
+ ATTRIBUTE_GROUPS(ubi_dev);
 -- 
-2.20.1
+2.7.4
 
