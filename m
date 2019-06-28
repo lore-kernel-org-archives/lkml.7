@@ -8,64 +8,73 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1542FC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2709C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8E72086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9252086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:49:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvCSLEHt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUmdL4kU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfF1Ct3 (ORCPT
+        id S1727127AbfF1Ctq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:49:29 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37684 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfF1Ct3 (ORCPT
+        Thu, 27 Jun 2019 22:49:46 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42828 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfF1Ctq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:49:29 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 25so1901866pgy.4;
-        Thu, 27 Jun 2019 19:49:28 -0700 (PDT)
+        Thu, 27 Jun 2019 22:49:46 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so2186079pff.9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=4C5R5TDz5kYfK5urhURKV4Q0K9ak9s1wycDaZJheC38=;
-        b=GvCSLEHtZiEcR0GG9tSMeSuqnh1OSm+/hrURMzQ+UtBinq8LKrVWTNfDjzT0lOKTj5
-         3C0wPIQBrjfl2gQEGrgr1hzds7RA7V98mJyacnN+85W+5PgOcVDiclc5ujKfYYA4Bl2+
-         weitp4ZdNjhRqLF1hI5tFXhOgTh7yM7Q5JqiVBM82/7dcMOKAIRaGlSJPW4UnnByGlvV
-         WDij43/BPNPJ1LLBIi6yJLYhPgN29dFjyOaY7MprTfyS/177Cfytsb3GC0a9izDRhAAX
-         FvD8pRzxAu5FkKQ6ySbGp/so6AbgXQ3lbuRhoyp3BwwNHeUZ7KLBO2stL8dx8Yh6wD1C
-         IUiQ==
+        bh=BjZs4QmT9Rq6xJfvVoRrPidd5HcnRoBaVWi/hg75COg=;
+        b=XUmdL4kUPfZgTYfBdqlqn0WkAet+SkaoA+caF+woKXYmNDKQ9vsgqvdsOThS+Va4J9
+         84qyPrmEHSvP0yh8znX08527pWn/XH1bntADASOLRGw8DOqzGjwK+cJQk5wpuGKjv9GG
+         AJHFf3fjm2bLMrLnOgBtPw9bnZ13jflSB1h388xemN3Ad59kR5Q6MmSCQWM3Urk5WaOT
+         EnDTeFN5/A5rtqNkwsGOLP7XWtnLPK01XW0Fx+L/kx7/7QGbYGNzr8vA+Huqln5QbatT
+         Hns6EW28DT5Vzva24YZH5PEMvq7RfKe7IYMc/T4jzwIQ5xRbWn0qm9H1fbcA9yzQeFu+
+         yJHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4C5R5TDz5kYfK5urhURKV4Q0K9ak9s1wycDaZJheC38=;
-        b=SXM1kajuUPCZzmo8hi1J5YcOhU0Mzjjws0i9xlug5nZek3W6yfjn6nZp4D0Sm0gSXN
-         LyB9eNBY4BQH8VqNq13nMr0G3SY9l5Fg/Mj5Tx0LysxCJTJmxWi3devu5l6T2mi1Zyu2
-         BpOVcQlk5Nq9Wj8lYqW0WrT+wYuUyhQSmRCmeiA+NKXyRoMJ7BqRbh5L+5YRdRDn0CR4
-         sptW1Se2e0t7KqgxhoJYGZxnoq5aQ1jCJbkmEpvwRQ0s6JdkJyLW4n0eYRJgLxX6y51m
-         uzKyS1uzqtlf7huZXxX+NuKLgY6q3dZz6EglNgyKxe79WwL/DCBFDzalM2dzIh1XaYla
-         0AhQ==
-X-Gm-Message-State: APjAAAXjpSTi2rSlLkYzctCbL1VHFT9UHIHgZoDSb+V32LymU8VxPY2a
-        u+PY7wbzTaAGnIhjHuYvCzw=
-X-Google-Smtp-Source: APXvYqwWbU6whNOo/stsWH4IGL7RrRuUYv3RXVxPL/nwY8LBxjXls5w4AEbYJJDNldIRLDAKkpm+Pw==
-X-Received: by 2002:a63:190d:: with SMTP id z13mr7040452pgl.191.1561690168538;
-        Thu, 27 Jun 2019 19:49:28 -0700 (PDT)
+        bh=BjZs4QmT9Rq6xJfvVoRrPidd5HcnRoBaVWi/hg75COg=;
+        b=HWok6eRQ7dcQyKcH39Ao5NdhOPn3CMBfUWKSgPBHAmo4gCPF0FyVlf119o08eCzHnf
+         OH2VSUBQ9QpSHnu5vvn0Yu00UL7P0IybdEy1Cdn5W2qntOji5E0W8h1gf5lNR8IKifDT
+         RZ7W/mreAXGojzZKNIB7+DuaogZkE3n8dwnZWPoVptxklDdWpQKl3F2O3sK+KnKuKMq7
+         9kE6hUlv26Koorx71Smcur695YHDsKNakoYcBIoG0DzzrI+IMx53l1WvfB1n5kezAcrr
+         l1Og0SFybNx9ez8UW0++z6mghZOE8r96rBUdmFF2Vkum6+d+ERiPJkYPyO45AcKOdo2M
+         lY8g==
+X-Gm-Message-State: APjAAAX1jIu8MJzIn55cg4At6iZ7K3PhbhvyP29mpi+T3v9GKjlW1LGi
+        AqFmd7MN1IxA+5FNiyDhUio=
+X-Google-Smtp-Source: APXvYqz9mlzjLxYpAkSvC41BFQNvhTAPafuvUKQKdp9gxiY2E2Kb/qDNS3oWbbgVTV/qawHxw911pw==
+X-Received: by 2002:a17:90a:cd04:: with SMTP id d4mr10368889pju.128.1561690185607;
+        Thu, 27 Jun 2019 19:49:45 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id u65sm10891072pjb.1.2019.06.27.19.49.25
+        by smtp.googlemail.com with ESMTPSA id w1sm562908pjt.30.2019.06.27.19.49.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 19:49:28 -0700 (PDT)
+        Thu, 27 Jun 2019 19:49:45 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        QLogic-Storage-Upstream@cavium.com, qla2xxx-upstream@qlogic.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 18/27] scsi: use zeroing allocator rather than allocator followed by memset 0
-Date:   Fri, 28 Jun 2019 10:49:21 +0800
-Message-Id: <20190628024922.15754-1-huangfq.daxian@gmail.com>
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Michael Straube <straube.linux@gmail.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Dafna Hirschfeld <dafna3@gmail.com>,
+        Omer Efrat <omer.efrat@tandemg.com>,
+        Quytelda Kahja <quytelda@tamalin.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Emanuel Bennici <benniciemanuel78@gmail.com>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 19/27] staging: rtl8*: use zeroing allocator rather than allocator followed with memset 0
+Date:   Fri, 28 Jun 2019 10:49:29 +0800
+Message-Id: <20190628024935.15806-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,94 +82,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace allocator followed by memset with 0 with zeroing allocator.
+Use zeroing allocator rather than allocator followed with memset 0.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/scsi/lpfc/lpfc_debugfs.c | 5 +----
- drivers/scsi/qedf/qedf_dbg.c     | 3 +--
- drivers/scsi/qla2xxx/qla_attr.c  | 7 ++-----
- 3 files changed, 4 insertions(+), 11 deletions(-)
+ drivers/staging/rtl8188eu/os_dep/mlme_linux.c     |  3 +--
+ drivers/staging/rtl8712/rtl871x_io.c              |  4 +---
+ drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c |  8 ++------
+ drivers/staging/rtl8723bs/os_dep/ioctl_linux.c    | 12 +++---------
+ 4 files changed, 7 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_debugfs.c b/drivers/scsi/lpfc/lpfc_debugfs.c
-index 1ee857d9d165..0dfac41f2fa8 100644
---- a/drivers/scsi/lpfc/lpfc_debugfs.c
-+++ b/drivers/scsi/lpfc/lpfc_debugfs.c
-@@ -6017,7 +6017,7 @@ lpfc_debugfs_initialize(struct lpfc_vport *vport)
- 				 phba->hba_debugfs_root,
- 				 phba, &lpfc_debugfs_op_slow_ring_trc);
- 		if (!phba->slow_ring_trc) {
--			phba->slow_ring_trc = kmalloc(
-+			phba->slow_ring_trc = kzalloc(
- 				(sizeof(struct lpfc_debugfs_trc) *
- 				lpfc_debugfs_max_slow_ring_trc),
- 				GFP_KERNEL);
-@@ -6028,9 +6028,6 @@ lpfc_debugfs_initialize(struct lpfc_vport *vport)
- 				goto debug_failed;
- 			}
- 			atomic_set(&phba->slow_ring_trc_cnt, 0);
--			memset(phba->slow_ring_trc, 0,
--				(sizeof(struct lpfc_debugfs_trc) *
--				lpfc_debugfs_max_slow_ring_trc));
- 		}
+diff --git a/drivers/staging/rtl8188eu/os_dep/mlme_linux.c b/drivers/staging/rtl8188eu/os_dep/mlme_linux.c
+index 9db11b16cb93..250acb01d1a9 100644
+--- a/drivers/staging/rtl8188eu/os_dep/mlme_linux.c
++++ b/drivers/staging/rtl8188eu/os_dep/mlme_linux.c
+@@ -98,10 +98,9 @@ void rtw_report_sec_ie(struct adapter *adapter, u8 authmode, u8 *sec_ie)
+ 	if (authmode == _WPA_IE_ID_) {
+ 		RT_TRACE(_module_mlme_osdep_c_, _drv_info_,
+ 			 ("rtw_report_sec_ie, authmode=%d\n", authmode));
+-		buff = rtw_malloc(IW_CUSTOM_MAX);
++		buff = rtw_zmalloc(IW_CUSTOM_MAX);
+ 		if (!buff)
+ 			return;
+-		memset(buff, 0, IW_CUSTOM_MAX);
+ 		p = buff;
+ 		p += sprintf(p, "ASSOCINFO(ReqIEs =");
+ 		len = sec_ie[1] + 2;
+diff --git a/drivers/staging/rtl8712/rtl871x_io.c b/drivers/staging/rtl8712/rtl871x_io.c
+index 17dafeffd6f4..87024d6a465e 100644
+--- a/drivers/staging/rtl8712/rtl871x_io.c
++++ b/drivers/staging/rtl8712/rtl871x_io.c
+@@ -107,13 +107,11 @@ uint r8712_alloc_io_queue(struct _adapter *adapter)
+ 	INIT_LIST_HEAD(&pio_queue->processing);
+ 	INIT_LIST_HEAD(&pio_queue->pending);
+ 	spin_lock_init(&pio_queue->lock);
+-	pio_queue->pallocated_free_ioreqs_buf = kmalloc(NUM_IOREQ *
++	pio_queue->pallocated_free_ioreqs_buf = kzalloc(NUM_IOREQ *
+ 						(sizeof(struct io_req)) + 4,
+ 						GFP_ATOMIC);
+ 	if ((pio_queue->pallocated_free_ioreqs_buf) == NULL)
+ 		goto alloc_io_queue_fail;
+-	memset(pio_queue->pallocated_free_ioreqs_buf, 0,
+-			(NUM_IOREQ * (sizeof(struct io_req)) + 4));
+ 	pio_queue->free_ioreqs_buf = pio_queue->pallocated_free_ioreqs_buf + 4
+ 			- ((addr_t)(pio_queue->pallocated_free_ioreqs_buf)
+ 			& 3);
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+index db553f2e4c0b..f8e0723f5d1f 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+@@ -1078,12 +1078,10 @@ static int cfg80211_rtw_add_key(struct wiphy *wiphy, struct net_device *ndev,
+ 	DBG_871X("pairwise =%d\n", pairwise);
  
- 		snprintf(name, sizeof(name), "nvmeio_trc");
-diff --git a/drivers/scsi/qedf/qedf_dbg.c b/drivers/scsi/qedf/qedf_dbg.c
-index e0387e495261..0d2aed82882a 100644
---- a/drivers/scsi/qedf/qedf_dbg.c
-+++ b/drivers/scsi/qedf/qedf_dbg.c
-@@ -106,11 +106,10 @@ qedf_dbg_info(struct qedf_dbg_ctx *qedf, const char *func, u32 line,
- int
- qedf_alloc_grc_dump_buf(u8 **buf, uint32_t len)
- {
--		*buf = vmalloc(len);
-+		*buf = vzalloc(len);
- 		if (!(*buf))
- 			return -ENOMEM;
+ 	param_len = sizeof(struct ieee_param) + params->key_len;
+-	param = rtw_malloc(param_len);
++	param = rtw_zmalloc(param_len);
+ 	if (param == NULL)
+ 		return -1;
  
--		memset(*buf, 0, len);
- 		return 0;
- }
- 
-diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
-index 8d560c562e9c..dabd139fdaeb 100644
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -382,7 +382,7 @@ qla2x00_sysfs_write_optrom_ctl(struct file *filp, struct kobject *kobj,
- 		ha->optrom_region_size = size;
- 
- 		ha->optrom_state = QLA_SREADING;
--		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
-+		ha->optrom_buffer = vzalloc(ha->optrom_region_size);
- 		if (ha->optrom_buffer == NULL) {
- 			ql_log(ql_log_warn, vha, 0x7062,
- 			    "Unable to allocate memory for optrom retrieval "
-@@ -404,7 +404,6 @@ qla2x00_sysfs_write_optrom_ctl(struct file *filp, struct kobject *kobj,
- 		    "Reading flash region -- 0x%x/0x%x.\n",
- 		    ha->optrom_region_start, ha->optrom_region_size);
- 
--		memset(ha->optrom_buffer, 0, ha->optrom_region_size);
- 		ha->isp_ops->read_optrom(vha, ha->optrom_buffer,
- 		    ha->optrom_region_start, ha->optrom_region_size);
- 		break;
-@@ -457,7 +456,7 @@ qla2x00_sysfs_write_optrom_ctl(struct file *filp, struct kobject *kobj,
- 		ha->optrom_region_size = size;
- 
- 		ha->optrom_state = QLA_SWRITING;
--		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
-+		ha->optrom_buffer = vzalloc(ha->optrom_region_size);
- 		if (ha->optrom_buffer == NULL) {
- 			ql_log(ql_log_warn, vha, 0x7066,
- 			    "Unable to allocate memory for optrom update "
-@@ -471,8 +470,6 @@ qla2x00_sysfs_write_optrom_ctl(struct file *filp, struct kobject *kobj,
- 		ql_dbg(ql_dbg_user, vha, 0x7067,
- 		    "Staging flash region write -- 0x%x/0x%x.\n",
- 		    ha->optrom_region_start, ha->optrom_region_size);
+-	memset(param, 0, param_len);
 -
--		memset(ha->optrom_buffer, 0, ha->optrom_region_size);
- 		break;
- 	case 3:
- 		if (ha->optrom_state != QLA_SWRITING) {
+ 	param->cmd = IEEE_CMD_SET_ENCRYPTION;
+ 	memset(param->sta_addr, 0xff, ETH_ALEN);
+ 
+@@ -2167,15 +2165,13 @@ static int cfg80211_rtw_connect(struct wiphy *wiphy, struct net_device *ndev,
+ 		{
+ 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+ 			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
+-			pwep = rtw_malloc(wep_total_len);
++			pwep = rtw_zmalloc(wep_total_len);
+ 			if (pwep == NULL) {
+ 				DBG_871X(" wpa_set_encryption: pwep allocate fail !!!\n");
+ 				ret = -ENOMEM;
+ 				goto exit;
+ 			}
+ 
+-			memset(pwep, 0, wep_total_len);
+-
+ 			pwep->KeyLength = wep_key_len;
+ 			pwep->Length = wep_total_len;
+ 
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+index e3d356952875..1491d420929c 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+@@ -478,14 +478,12 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
+ 		if (wep_key_len > 0) {
+ 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+ 			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
+-			pwep = rtw_malloc(wep_total_len);
++			pwep = rtw_zmalloc(wep_total_len);
+ 			if (pwep == NULL) {
+ 				RT_TRACE(_module_rtl871x_ioctl_os_c, _drv_err_, (" wpa_set_encryption: pwep allocate fail !!!\n"));
+ 				goto exit;
+ 			}
+ 
+-			memset(pwep, 0, wep_total_len);
+-
+ 			pwep->KeyLength = wep_key_len;
+ 			pwep->Length = wep_total_len;
+ 
+@@ -2144,12 +2142,10 @@ static int rtw_wx_set_enc_ext(struct net_device *dev,
+ 	int ret = 0;
+ 
+ 	param_len = sizeof(struct ieee_param) + pext->key_len;
+-	param = rtw_malloc(param_len);
++	param = rtw_zmalloc(param_len);
+ 	if (param == NULL)
+ 		return -1;
+ 
+-	memset(param, 0, param_len);
+-
+ 	param->cmd = IEEE_CMD_SET_ENCRYPTION;
+ 	memset(param->sta_addr, 0xff, ETH_ALEN);
+ 
+@@ -3522,14 +3518,12 @@ static int rtw_set_encryption(struct net_device *dev, struct ieee_param *param,
+ 		if (wep_key_len > 0) {
+ 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+ 			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
+-			pwep = rtw_malloc(wep_total_len);
++			pwep = rtw_zmalloc(wep_total_len);
+ 			if (pwep == NULL) {
+ 				DBG_871X(" r871x_set_encryption: pwep allocate fail !!!\n");
+ 				goto exit;
+ 			}
+ 
+-			memset(pwep, 0, wep_total_len);
+-
+ 			pwep->KeyLength = wep_key_len;
+ 			pwep->Length = wep_total_len;
+ 
 -- 
 2.11.0
 
