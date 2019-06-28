@@ -2,94 +2,162 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A0DC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B116BC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3F9205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561736831;
-	bh=IvQrseI2FT7GlH+2IVTYalj+9dZqPkQ+umge7Io8BYs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=10pmjG4mZmkgtQDzQuBnbutaUBcr1SzvUvM8M29RHYThSxrCpYtLje/JuycgmkbrX
-	 BO5euXtwPu7bZ9DrgSNFESgZ4v5tYBvoBilflltwTpsgBD1filor3+0N/kP4IVXuWI
-	 5U94jM5GkxJQP5qNZE53RnVk6wxNcj4n0/PRRh20=
+	by mail.kernel.org (Postfix) with ESMTP id 94823205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfF1PrK (ORCPT
+        id S1727177AbfF1PrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:47:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58494 "EHLO mail.kernel.org"
+        Fri, 28 Jun 2019 11:47:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:21314 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726707AbfF1PrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:47:09 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726935AbfF1PrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:47:18 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B2692133F;
-        Fri, 28 Jun 2019 15:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561736828;
-        bh=IvQrseI2FT7GlH+2IVTYalj+9dZqPkQ+umge7Io8BYs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qiBPRUh2Rl/4JkSewXW0u5fTbCvxhNAiAvyoKPvWUekoyPQH5NWCaeHqoHo8wrx/z
-         +F+dnsHWd+I11+gyHYSrt7TBj0HOf3gNZZL6EP0gSEQayXinWtxuzoeLJlLC3Nqneu
-         JmWm7oUz6pJSL2mRKcrxq7zpVd4D504DPYgODGcs=
-Received: by mail-qt1-f182.google.com with SMTP id h21so6754833qtn.13;
-        Fri, 28 Jun 2019 08:47:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAVm769vb6eCqE84DT2Z2CnllTQdbZLG/vJ5dBUMAkJ7crySoC/b
-        phL8pUeNGz9wUrZhhh/urajHJ/jDG3244mntIg==
-X-Google-Smtp-Source: APXvYqzI7nz1Eud6yl97g4IKf/vW5/y3ZQY7AiYHNAFU5cp6XG9kpOIjyOkxG/G+hIZCgCZpbktv/2gOhf4y7pIKPB0=
-X-Received: by 2002:aed:3f10:: with SMTP id p16mr8736951qtf.110.1561736827529;
- Fri, 28 Jun 2019 08:47:07 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id B2ABA30832D8;
+        Fri, 28 Jun 2019 15:47:17 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1167B60BE0;
+        Fri, 28 Jun 2019 15:47:15 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 2/6] vfs: Introduce a non-repeating system-unique superblock
+ ID [ver #15]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
+        christian@brauner.io, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 28 Jun 2019 16:47:15 +0100
+Message-ID: <156173683525.14728.15345430508651294965.stgit@warthog.procyon.org.uk>
+In-Reply-To: <156173681842.14728.9331700785061885270.stgit@warthog.procyon.org.uk>
+References: <156173681842.14728.9331700785061885270.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-References: <20190628023838.15426-1-andrew@aj.id.au> <20190628023838.15426-3-andrew@aj.id.au>
-In-Reply-To: <20190628023838.15426-3-andrew@aj.id.au>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 28 Jun 2019 09:46:56 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKjDyuDjeBBqhF=2ceG2h0WiJC6QKtHJ-=yL3XqxXF0Hw@mail.gmail.com>
-Message-ID: <CAL_JsqKjDyuDjeBBqhF=2ceG2h0WiJC6QKtHJ-=yL3XqxXF0Hw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] dt-bindings: pinctrl: aspeed: Convert AST2400
- bindings to json-schema
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Johnny Huang <johnny_huang@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 28 Jun 2019 15:47:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 8:39 PM Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> Convert ASPEED pinctrl bindings to DT schema format using json-schema
->
-> Cc: Johnny Huang <johnny_huang@aspeedtech.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
-> In v2:
->
-> * Enforce function/group names in bindings
-> * Move description above properties
-> * Simplify specification of compatible
-> * Cleanup license specification
->
->  .../pinctrl/aspeed,ast2400-pinctrl.txt        | 80 ------------------
->  .../pinctrl/aspeed,ast2400-pinctrl.yaml       | 81 +++++++++++++++++++
->  2 files changed, 81 insertions(+), 80 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+Introduce an (effectively) non-repeating system-unique superblock ID that
+can be used to determine that two object are in the same superblock without
+risking reuse of the ID in the meantime (as is possible with device IDs).
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The ID is time-based to make it harder to use it as a covert communications
+channel.
+
+Also make it so that this ID can be fetched by the fsinfo() system call.
+The ID added so that superblock notification messages will also be able to
+be tagged with it.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ fs/fsinfo.c               |    1 +
+ fs/super.c                |   24 ++++++++++++++++++++++++
+ include/linux/fs.h        |    3 +++
+ samples/vfs/test-fsinfo.c |    1 +
+ 4 files changed, 29 insertions(+)
+
+diff --git a/fs/fsinfo.c b/fs/fsinfo.c
+index 4eaa33b2188b..aee7fedace19 100644
+--- a/fs/fsinfo.c
++++ b/fs/fsinfo.c
+@@ -87,6 +87,7 @@ static int fsinfo_generic_ids(struct path *path, struct fsinfo_ids *p)
+ 	p->f_fstype	= sb->s_magic;
+ 	p->f_dev_major	= MAJOR(sb->s_dev);
+ 	p->f_dev_minor	= MINOR(sb->s_dev);
++	p->f_sb_id	= sb->s_unique_id;
+ 
+ 	memcpy(&p->f_fsid, &buf.f_fsid, sizeof(p->f_fsid));
+ 	strlcpy(p->f_fs_name, path->dentry->d_sb->s_type->name,
+diff --git a/fs/super.c b/fs/super.c
+index 2739f57515f8..c04f9481a708 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -43,6 +43,8 @@ static int thaw_super_locked(struct super_block *sb);
+ 
+ static LIST_HEAD(super_blocks);
+ static DEFINE_SPINLOCK(sb_lock);
++static u64 sb_last_identifier;
++static u64 sb_identifier_offset;
+ 
+ static char *sb_writers_name[SB_FREEZE_LEVELS] = {
+ 	"sb_writers",
+@@ -187,6 +189,27 @@ static void destroy_unused_super(struct super_block *s)
+ 	destroy_super_work(&s->destroy_work);
+ }
+ 
++/*
++ * Generate a unique identifier for a superblock.
++ */
++static void generate_super_id(struct super_block *s)
++{
++	u64 id = ktime_to_ns(ktime_get());
++
++	spin_lock(&sb_lock);
++
++	id += sb_identifier_offset;
++	if (id <= sb_last_identifier) {
++		id = sb_last_identifier + 1;
++		sb_identifier_offset = sb_last_identifier - id;
++	}
++
++	sb_last_identifier = id;
++	spin_unlock(&sb_lock);
++
++	s->s_unique_id = id;
++}
++
+ /**
+  *	alloc_super	-	create new superblock
+  *	@type:	filesystem type superblock should belong to
+@@ -270,6 +293,7 @@ static struct super_block *alloc_super(struct file_system_type *type, int flags,
+ 		goto fail;
+ 	if (list_lru_init_memcg(&s->s_inode_lru, &s->s_shrink))
+ 		goto fail;
++	generate_super_id(s);
+ 	return s;
+ 
+ fail:
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 50f58eac3e1f..61098cded376 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1527,6 +1527,9 @@ struct super_block {
+ 
+ 	spinlock_t		s_inode_wblist_lock;
+ 	struct list_head	s_inodes_wb;	/* writeback inodes */
++
++	/* Superblock event notifications */
++	u64			s_unique_id;
+ } __randomize_layout;
+ 
+ /* Helper functions so that in most cases filesystems will
+diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
+index 6389ae781cbb..27c4bb93c219 100644
+--- a/samples/vfs/test-fsinfo.c
++++ b/samples/vfs/test-fsinfo.c
+@@ -185,6 +185,7 @@ static void dump_attr_IDS(union reply *r, int size)
+ 	printf("\tdev   : %02x:%02x\n", f->f_dev_major, f->f_dev_minor);
+ 	printf("\tfs    : type=%x name=%s\n", f->f_fstype, f->f_fs_name);
+ 	printf("\tfsid  : %llx\n", (unsigned long long)f->f_fsid);
++	printf("\tsbid  : %llx\n", (unsigned long long)f->f_sb_id);
+ }
+ 
+ static void dump_attr_LIMITS(union reply *r, int size)
+
