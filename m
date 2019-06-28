@@ -2,145 +2,147 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09195C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA8EC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCAD12177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:44:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561729484;
-	bh=+0zLeWQKdKrT3YDep1cBSf2sRQS/dWfrS+5JDQ+En2Q=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=RUTZDk00QxypM3LHWNHEX9dLrNtc5CecfRQ1AGjJJnqMS5wEyQFTByl7tp2mgil5A
-	 cAk/Ygcb58dNiGXzva+YJVAy+gpDyqh7+g5tUee++pALKYEgd3PTTsIlZEvZRBgyrS
-	 jxXxdG11FVqmd5WLn9dJjZ+u1XnMHZ/PDSITMBp4=
+	by mail.kernel.org (Postfix) with ESMTP id 4F3EA2147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:45:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="wun9D4eS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfF1Non (ORCPT
+        id S1726812AbfF1NpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 09:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726606AbfF1Nom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:44:42 -0400
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 893BF20645;
-        Fri, 28 Jun 2019 13:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561729481;
-        bh=+0zLeWQKdKrT3YDep1cBSf2sRQS/dWfrS+5JDQ+En2Q=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=HUXJk3hu/EvYyczTsPOuBzc1mTEOloYhiKYIScGmOtevKSzw8i7K1pIpe3ccU6r6P
-         oJM8EbRaEHawjiWvkQ7ym+36/myztutVP19R63w47R4nFnbpORh3pzZUV7CzI1eGvt
-         Sg2/z0Lh9Q1qw7oz9NiolJhPlxoeqCz9Trp6QQPE=
-Message-ID: <1561729480.9333.10.camel@kernel.org>
-Subject: Re: [PATCH 0/4] tracing: Improve error messages for histogram
- sorting
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     rostedt@goodmis.org, linux-kernel@vger.kernel.org
-Date:   Fri, 28 Jun 2019 08:44:40 -0500
-In-Reply-To: <20190628151645.a81b327d8e0d7c68d521b24e@kernel.org>
-References: <cover.1561647046.git.zanussi@kernel.org>
-         <20190628151645.a81b327d8e0d7c68d521b24e@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
+        Fri, 28 Jun 2019 09:45:04 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36916 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbfF1NpE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 09:45:04 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 19so3022659pfa.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 06:45:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XbPOuTGysikAITXS24kr0Gn9yAEvZ2nHVWbh4wIZuOc=;
+        b=wun9D4eSGb7Iasfxj7gOKN1Y0eX5kR7Hq96Od97Cj9YnvQj+gRosUVQ3Ku4oYt8GMr
+         NZIICpU4ObsOI8c6++GhMXsW7gzO8At+tcAJG4AG7ytOr5Ef6rUHHdiJTEPkzy4Ktv5H
+         jK8aFmYkwB4ApRZOiRFPMSxJ5mCuIXztFDi0nEszzyXT/O/W1s3uv9V078Xa1BdNg8mT
+         DaFCkd+ax8PvpUqd++C047JITLuIt/3UvCwoecCQC9c4ZUySfat7tay4qCnkcLkXOmmX
+         /Lp6gygEr6nipTARPNddbs84Gh5zDPj6CKQR6IrgjK5hUdoPOaDdSnfXCZV4K0TCpQDZ
+         ELWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XbPOuTGysikAITXS24kr0Gn9yAEvZ2nHVWbh4wIZuOc=;
+        b=qh2fHGjaOWBh2IEt33Tm3Ew9kRxgfReCbEUOZIvMA6f955rqpHloGD+xKQTjqlJpuC
+         PedrGXi/Mx1OapTOJnuc3ub4Qb6qluIHfROXjALfMEuFPttWoTBboNqFqcgdfu7nM2P6
+         TDvGRmF1fjIZoiPZ3E1QY7ie8uRI6GjNC5yMih/RVUdRY+JPi6sKaKOFgwrVf06rLRfx
+         mwz9ht4+9zAwCEXvSZ6eIZsglVr/t7zknPMPrSvenKWJyTzh8IpMGGq6L6wgii7FFGW9
+         7ypariVBoDuMgjnPhK+pSufVn9HMoy5rWCdOTTbq6e1i2YUojq0faaCQKD4ctn81md4x
+         Y22A==
+X-Gm-Message-State: APjAAAX6ZBTl8gza3KAHc8/nGDlpuvYEeDkb2I4vyxcq1TSjfBVm0WzM
+        QhgHjacIJp8idzLhTlUngHia26ad+05IbQ==
+X-Google-Smtp-Source: APXvYqzyFlO9g2fJA/Bw9M9oo/erU+84oIwDj5JrmbJWEGYU6LOw4J/6q9ZW7xquajGG4wt73WVFJg==
+X-Received: by 2002:a63:5444:: with SMTP id e4mr8773310pgm.451.1561729503213;
+        Fri, 28 Jun 2019 06:45:03 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id u2sm2096104pjv.30.2019.06.28.06.45.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Jun 2019 06:45:01 -0700 (PDT)
+Subject: Re: [PATCH] block, bfq: NULL out the bic when it's no longer valid
+To:     Douglas Anderson <dianders@chromium.org>,
+        Paolo Valente <paolo.valente@linaro.org>
+Cc:     groeck@chromium.org, drinkcat@chromium.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190628044409.128823-1-dianders@chromium.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <9048aa45-ecf3-c80d-a973-4aeb86adde23@kernel.dk>
+Date:   Fri, 28 Jun 2019 07:45:00 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <20190628044409.128823-1-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
+On 6/27/19 10:44 PM, Douglas Anderson wrote:
+> In reboot tests on several devices we were seeing a "use after free"
+> when slub_debug or KASAN was enabled.  The kernel complained about:
+> 
+>    Unable to handle kernel paging request at virtual address 6b6b6c2b
+> 
+> ...which is a classic sign of use after free under slub_debug.  The
+> stack crawl in kgdb looked like:
+> 
+>   0  test_bit (addr=<optimized out>, nr=<optimized out>)
+>   1  bfq_bfqq_busy (bfqq=<optimized out>)
+>   2  bfq_select_queue (bfqd=<optimized out>)
+>   3  __bfq_dispatch_request (hctx=<optimized out>)
+>   4  bfq_dispatch_request (hctx=<optimized out>)
+>   5  0xc056ef00 in blk_mq_do_dispatch_sched (hctx=0xed249440)
+>   6  0xc056f728 in blk_mq_sched_dispatch_requests (hctx=0xed249440)
+>   7  0xc0568d24 in __blk_mq_run_hw_queue (hctx=0xed249440)
+>   8  0xc0568d94 in blk_mq_run_work_fn (work=<optimized out>)
+>   9  0xc024c5c4 in process_one_work (worker=0xec6d4640, work=0xed249480)
+>   10 0xc024cff4 in worker_thread (__worker=0xec6d4640)
+> 
+> Digging in kgdb, it could be found that, though bfqq looked fine,
+> bfqq->bic had been freed.
+> 
+> Through further digging, I postulated that perhaps it is illegal to
+> access a "bic" (AKA an "icq") after bfq_exit_icq() had been called
+> because the "bic" can be freed at some point in time after this call
+> is made.  I confirmed that there certainly were cases where the exact
+> crashing code path would access the "bic" after bfq_exit_icq() had
+> been called.  Sspecifically I set the "bfqq->bic" to (void *)0x7 and
+> saw that the bic was 0x7 at the time of the crash.
+> 
+> To understand a bit more about why this crash was fairly uncommon (I
+> saw it only once in a few hundred reboots), you can see that much of
+> the time bfq_exit_icq_fbqq() fully frees the bfqq and thus it can't
+> access the ->bic anymore.  The only case it doesn't is if
+> bfq_put_queue() sees a reference still held.
+> 
+> However, even in the case when bfqq isn't freed, the crash is still
+> rare.  Why?  I tracked what happened to the "bic" after the exit
+> routine.  It doesn't get freed right away.  Rather,
+> put_io_context_active() eventually called put_io_context() which
+> queued up freeing on a workqueue.  The freeing then actually happened
+> later than that through call_rcu().  Despite all these delays, some
+> extra debugging showed that all the hoops could be jumped through in
+> time and the memory could be freed causing the original crash.  Phew!
+> 
+> To make a long story short, assuming it truly is illegal to access an
+> icq after the "exit_icq" callback is finished, this patch is needed.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> Most of the testing of this was done on the Chrome OS 4.19 kernel with
+> BFQ backported (thanks to Paolo's help).  I did manage to reproduce a
+> crash on mainline Linux (v5.2-rc6) though.
+> 
+> To see some of the techniques used to debug this, see
+> <https://crrev.com/c/1679134> and <https://crrev.com/c/1681258/1>.
+> 
+> I'll also note that on linuxnext (next-20190627) I saw some other
+> use-after-frees that seemed related to BFQ but haven't had time to
+> debug.  They seemed unrelated.
 
-On Fri, 2019-06-28 at 15:16 +0900, Masami Hiramatsu wrote:
-> On Thu, 27 Jun 2019 10:35:15 -0500
-> Tom Zanussi <zanussi@kernel.org> wrote:
-> 
-> > Hi,
-> > 
-> > These patches add some improvements for histogram sorting,
-> > addressing
-> > some shortcomings pointed out by Masami.
-> > 
-> > In order to address the specific problem pointed out by Masami, as
-> > well as add additional related error messages, the first patch
-> > does some simplification of assignment parsing.
-> > 
-> > The second patch actually adds the new error messages.
-> > 
-> > The fourth patch adds a new testcase for hist trigger parsing,
-> > similar
-> > to the same kind of tests for kprobes and uprobes.  Additional
-> > tests
-> > covering all possible hist trigger errors should/will be added here
-> > in
-> > the future.
-> > 
-> > The third patch just adds a missing hist: prefix to the error log
-> > so
-> > that the testcases work properly, and which should have been there
-> > anyway.
-> > 
-> > Thanks,
-> 
-> 
-> Hi Tom,
-> 
-> These patches look good to me :)
-> 
-> Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-> 
-> for all patches. BTW, if you think there is a bug and the 1st one
-> fixes it,
-> please add Fixes: tag.
-> 
+Applied for 5.3, but I marked it for stable as well.
 
-Yeah, I'll submit a v2 that adds that.
+-- 
+Jens Axboe
 
-Thanks for the review,
-
-Tom
-
-
-> Thank you,
-> > 
-> > Tom
-> > 
-> > The following changes since commit
-> > a124692b698b00026a58d89831ceda2331b2e1d0:
-> > 
-> >   ftrace: Enable trampoline when rec count returns back to one
-> > (2019-05-25 23:04:43 -0400)
-> > 
-> > are available in the git repository at:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-
-> > trace.git ftrace-hist-sort-err-msgs-v1
-> > 
-> > Tom Zanussi (4):
-> >   tracing: Simplify assignment parsing for hist triggers
-> >   tracing: Add hist trigger error messages for sort specification
-> >   tracing: Add 'hist:' to hist trigger error log error string
-> >   tracing: Add new testcases for hist trigger parsing errors
-> > 
-> >  kernel/trace/trace_events_hist.c                   | 94
-> > +++++++++++-----------
-> >  .../test.d/trigger/trigger-hist-syntax-errors.tc   | 32 ++++++++
-> >  2 files changed, 78 insertions(+), 48 deletions(-)
-> >  create mode 100644
-> > tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-syntax-
-> > errors.tc
-> > 
-> > -- 
-> > 2.14.1
-> > 
-> 
-> 
