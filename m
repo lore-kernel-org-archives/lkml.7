@@ -5,42 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE69C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF417C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F9320656
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF77320656
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:15:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Esh937kS"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ru2F0sXy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfF1COu (ORCPT
+        id S1726718AbfF1CPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:14:50 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19569 "EHLO
+        Thu, 27 Jun 2019 22:15:00 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19578 "EHLO
         hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfF1CNg (ORCPT
+        with ESMTP id S1726574AbfF1CNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Jun 2019 22:13:36 -0400
 Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1577cc0000>; Thu, 27 Jun 2019 19:13:32 -0700
+        id <B5d1577cc0001>; Thu, 27 Jun 2019 19:13:33 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 27 Jun 2019 19:13:34 -0700
+  Thu, 27 Jun 2019 19:13:35 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 27 Jun 2019 19:13:34 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
- 2019 02:13:33 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
- 2019 02:13:33 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+        by hqpgpgate102.nvidia.com on Thu, 27 Jun 2019 19:13:35 -0700
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
+ 2019 02:13:34 +0000
+Received: from HQMAIL108.nvidia.com (172.18.146.13) by hqmail110.nvidia.com
+ (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
+ 2019 02:13:34 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
  Transport; Fri, 28 Jun 2019 02:13:33 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.155]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d1577cd0003>; Thu, 27 Jun 2019 19:13:33 -0700
+        id <B5d1577ce0001>; Thu, 27 Jun 2019 19:13:34 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -53,9 +53,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH V5 03/18] clk: tegra: Save and restore divider rate
-Date:   Thu, 27 Jun 2019 19:12:37 -0700
-Message-ID: <1561687972-19319-4-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V5 07/18] clk: tegra: Support for saving and restoring OSC context
+Date:   Thu, 27 Jun 2019 19:12:41 -0700
+Message-ID: <1561687972-19319-8-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
 References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
@@ -63,94 +63,84 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561688012; bh=Nd1v90bh7Ho/ojHQIob7we6JLN3yOOpS5vD9L3b3q98=;
+        t=1561688013; bh=2YFtJYfYZEkx9Rsc+PePUh2qyM9iqhHjKzUjU/RdnjE=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=Esh937kSEIxLY5xzF34aqQUtuPveBpeB1+nKe2kKdtZPlDKZvqf40pCp06i5UiEB1
-         xXRmpZoHaizLBqysekD4RVh1r325jzvpheJ8ZfQeYberKYZPpErAZl+XEebBG5BnN5
-         VYoAyMorKOAx6j5HoBLbFfzBAmPJiuWDK1p8o1IuNhCgdctGwpvgGAlCxu+uW89TuL
-         LrB190AUWCAb47w+UrRQToxSDwJmKqKuYOfW9l8l2MEz3yywJjTV9mSRPHSBIg3Ow0
-         C2KdNSdMxUjHEoH7yh6nHoTYg67JNc8rPrH+XgJOyGl2IV0Cr6Ov38s2Nd1i1c7h2n
-         dp00VSTv97YPw==
+        b=ru2F0sXyh8TG8aU8SgAnqEObkpZejB+BCea1b9og7ZdN4iE/v87ZYy5gSa1GIkXrz
+         9SKFvyCMUlfXiLyYKy3dJ1SftIWWlXbZWzLU7kzztUjJWIDPYAp6ay+Vbr/mHRTRiE
+         lRc/TAwSPEOvECwL4dajrFXcftD5b5jZ/5H2J5DcV0RnJcqXdQFNEMBO2YOTLpfYZX
+         fNoFb+n6exbQOwV+6/UEUOC+XdSMhwQ4FVLMoWA8dwYd0WtdN4kBNvzEVvdHOUzgSt
+         l0/Z2km643rWaGpb/T4ADmkS/+JQZPgYshOcPI6GLjaLZhcaaUtxFghVTvOMANbQc5
+         GdlQQ0TyT7K/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements context save and restore for clock divider.
+This patch adds support for storing OSC clock frequency and the
+drive-strength during OSC clock init and creates an API to restore
+OSC control register value from the saved context.
 
-During system suspend, core power goes off and looses the settings
-of the Tegra CAR controller registers.
-
-So during suspend entry the context of clock divider is saved and
-on resume context is restored back for normal operation.
+This API is invoked by Tegra210 clock driver during system resume
+to restore the  OSC clock settings.
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/clk/tegra/clk-divider.c | 23 +++++++++++++++++++++++
- drivers/clk/tegra/clk.h         |  2 ++
- 2 files changed, 25 insertions(+)
+ drivers/clk/tegra/clk-tegra-fixed.c | 14 ++++++++++++++
+ drivers/clk/tegra/clk.h             |  1 +
+ 2 files changed, 15 insertions(+)
 
-diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
-index e76731fb7d69..ecb7ff9ce97e 100644
---- a/drivers/clk/tegra/clk-divider.c
-+++ b/drivers/clk/tegra/clk-divider.c
-@@ -109,10 +109,33 @@ static int clk_frac_div_set_rate(struct clk_hw *hw, unsigned long rate,
- 	return 0;
+diff --git a/drivers/clk/tegra/clk-tegra-fixed.c b/drivers/clk/tegra/clk-tegra-fixed.c
+index 8d91b2b191cf..e8df0ccbffd0 100644
+--- a/drivers/clk/tegra/clk-tegra-fixed.c
++++ b/drivers/clk/tegra/clk-tegra-fixed.c
+@@ -17,7 +17,10 @@
+ #define OSC_CTRL			0x50
+ #define OSC_CTRL_OSC_FREQ_SHIFT		28
+ #define OSC_CTRL_PLL_REF_DIV_SHIFT	26
++#define OSC_CTRL_MASK			(0x3f2 |	\
++					(0xf << OSC_CTRL_OSC_FREQ_SHIFT))
+ 
++static u32 osc_ctrl_ctx;
+ int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
+ 			      unsigned long *input_freqs, unsigned int num,
+ 			      unsigned int clk_m_div, unsigned long *osc_freq,
+@@ -29,6 +32,7 @@ int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
+ 	unsigned osc_idx;
+ 
+ 	val = readl_relaxed(clk_base + OSC_CTRL);
++	osc_ctrl_ctx = val & OSC_CTRL_MASK;
+ 	osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
+ 
+ 	if (osc_idx < num)
+@@ -96,3 +100,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk *tegra_clks)
+ 		*dt_clk = clk;
+ 	}
  }
- 
-+static int clk_divider_save_context(struct clk_hw *hw)
++
++void tegra_clk_osc_resume(void __iomem *clk_base)
 +{
-+	struct tegra_clk_frac_div *divider = to_clk_frac_div(hw);
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+	unsigned long parent_rate = clk_hw_get_rate(parent);
++	u32 val;
 +
-+	divider->rate = clk_frac_div_recalc_rate(hw, parent_rate);
-+
-+	return 0;
++	val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
++	val |= osc_ctrl_ctx;
++	writel_relaxed(val, clk_base + OSC_CTRL);
++	fence_udelay(2, clk_base);
 +}
-+
-+static void clk_divider_restore_context(struct clk_hw *hw)
-+{
-+	struct tegra_clk_frac_div *divider = to_clk_frac_div(hw);
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+	unsigned long parent_rate = clk_hw_get_rate(parent);
-+
-+	if (clk_frac_div_set_rate(hw, divider->rate, parent_rate) < 0)
-+		WARN_ON(1);
-+}
-+
- const struct clk_ops tegra_clk_frac_div_ops = {
- 	.recalc_rate = clk_frac_div_recalc_rate,
- 	.set_rate = clk_frac_div_set_rate,
- 	.round_rate = clk_frac_div_round_rate,
-+	.save_context = clk_divider_save_context,
-+	.restore_context = clk_divider_restore_context,
- };
- 
- struct clk *tegra_clk_register_divider(const char *name,
 diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index 905bf1096558..83623f5f55f3 100644
+index c66b0a73bb01..a687ed6127b6 100644
 --- a/drivers/clk/tegra/clk.h
 +++ b/drivers/clk/tegra/clk.h
-@@ -42,6 +42,7 @@ struct clk *tegra_clk_register_sync_source(const char *name,
-  * @width:	width of the divider bit field
-  * @frac_width:	width of the fractional bit field
-  * @lock:	register lock
-+ * @rate:	rate during suspend and resume
-  *
-  * Flags:
-  * TEGRA_DIVIDER_ROUND_UP - This flags indicates to round up the divider value.
-@@ -62,6 +63,7 @@ struct tegra_clk_frac_div {
- 	u8		width;
- 	u8		frac_width;
- 	spinlock_t	*lock;
-+	unsigned long	rate;
- };
+@@ -863,6 +863,7 @@ void tegra_cclkg_burst_policy_save_context(void);
+ void tegra_cclkg_burst_policy_restore_context(void);
+ void tegra_sclk_cclklp_burst_policy_save_context(void);
+ void tegra_sclk_cpulp_burst_policy_restore_context(void);
++void tegra_clk_osc_resume(void __iomem *clk_base);
  
- #define to_clk_frac_div(_hw) container_of(_hw, struct tegra_clk_frac_div, hw)
+ /* Combined read fence with delay */
+ #define fence_udelay(delay, reg)	\
 -- 
 2.7.4
 
