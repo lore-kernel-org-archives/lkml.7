@@ -2,165 +2,149 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D463EC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09744C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2A520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE2520656
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:58:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ei28byz3"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JxblWpm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfF1E5U (ORCPT
+        id S1726944AbfF1E6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 00:57:20 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40568 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfF1E5U (ORCPT
+        Fri, 28 Jun 2019 00:58:04 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:17874 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfF1E6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 00:57:20 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so2533108pla.7;
-        Thu, 27 Jun 2019 21:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OR3h7WVLUUcHv2ZQw3/q57OQjyW+UVNhTLXPtjGCrJ0=;
-        b=ei28byz3zaf69sNEyIoUnVyolQau6p1sOqIfjBqdwpVsQXxy5XzHcEtcvgFWzsUItj
-         GjPTqfpmpzWDeM98iaQq5KvqmOmG/XfTrqheGfDYMhUL+QykDquFlkfhKCodwz2lE/u8
-         Krr25RkrF4y2Ga8uPPoyOcsEF7tPdkBuq9QiBPy38UjjQEy91uBKvBmCMFndkrvb4bFd
-         DtKwQk+bAMueFtqBBzrsoX7pxxDJSO2aUnwSRkywkC6jQej39VqzqRR71RMyC4+pT3e0
-         HT+ulB+mEWC1dIvoy22exsNg5A1aijtcyD16uH3xINMfIvjcLCc0aGEulzpLq4IodNwI
-         R96g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OR3h7WVLUUcHv2ZQw3/q57OQjyW+UVNhTLXPtjGCrJ0=;
-        b=CuQnKvQU+nuxRHxB/IXrnOuoAbnmxKTF5TrVIG3koNeSxUOi270vGNDNGv2ZSiZiYG
-         U+KpvvcdxU77s4B5tDddIFV09zaRJA3mc1awx8Tar9iuRGVpc69MnOm5qKuRTzxnSmfB
-         rsw53LeVS0W/dvWTHI8P+c6q2rLDu/PwpS/xz3dQfy9bOVl+JPuQiAJcW6MdkQyX0RoD
-         Mn5+4pPjxEGP2YlHT/gTH2o6iY2QKkPDOt4d3rR+Qa8lJRzYJT2yHwgxHYei8x/va3eU
-         p5qvaFDXF91jjHq3Kp37Yx8lzk+QECdTIEpOp3uq9iXFgWbqNQqCE9b7CC5BT7rcVTY8
-         iW2w==
-X-Gm-Message-State: APjAAAXLlfgmejagTGZahaRya7wKheFW+vEOfBBc868eMWJJErcksnso
-        IQnc0/kpeR3DBTZNuX0EJjc=
-X-Google-Smtp-Source: APXvYqxTafNgX712/BPSdB59aYvCszobul2tZO9M0XwL4VGiLruBAtR90duYAn9pzgt5uwdCJ/xEeg==
-X-Received: by 2002:a17:902:e512:: with SMTP id ck18mr8694515plb.53.1561697838971;
-        Thu, 27 Jun 2019 21:57:18 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e184sm842745pfa.169.2019.06.27.21.57.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 21:57:17 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 21:57:16 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, groeck@chromium.org,
-        drinkcat@chromium.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block, bfq: NULL out the bic when it's no longer valid
-Message-ID: <20190628045716.GA17274@roeck-us.net>
-References: <20190628044409.128823-1-dianders@chromium.org>
+        Fri, 28 Jun 2019 00:58:04 -0400
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x5S4vmF1019231;
+        Fri, 28 Jun 2019 13:57:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5S4vmF1019231
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561697869;
+        bh=SIK/nAM+sI54EJmk0mR1Usgw9j5vfYmGFrOtLjOZzLg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JxblWpm3C3r7r01gYCOajBSW84T6W3cnHh34fYXfzFs98o7YC0XLfQPjyIZJOe7wM
+         PY/Z814YyNy19enS/Ou211c5U7rm691JuQCgggAcE2sGPHLAj9wwCQolzRkbPaDRiu
+         FrTXIynHp8sn8Ga5l38WmMbWouAfZu8DxdTPzh8CSEslepOK3tMS5SQS+4VtUehZ9t
+         NSNHzUy1OY+BQNhszkLRTwslt4vvB1fQRAdLZXk9kVNL+2+OwXetOycQuOQ2VOQRtf
+         XghTnCtXDc6J9Kd7iUMUzD/WmoM3yPHVBRQHQLacTI0FvtiDEE2S7qU0bYPKqALUUD
+         5RDATmr7n88Ew==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id m8so3223822vsj.0;
+        Thu, 27 Jun 2019 21:57:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAVu7n6CngMno4scf2pMdH3Hmq9hLhKhaaiLPuIUzywdwnzZSMaq
+        //TzyUqqq0KFjBboz92i6ufgqEomdtaXqA+s3JY=
+X-Google-Smtp-Source: APXvYqyyvmsd8AAk5R7aaNFgntOJs2TjX0FeQ1b2WdSaf2T0LzzKUcfk9Z8oacISJcBzf5zvmHjL7/Pj9m8miFmaa6o=
+X-Received: by 2002:a67:d46:: with SMTP id 67mr4682467vsn.181.1561697868020;
+ Thu, 27 Jun 2019 21:57:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628044409.128823-1-dianders@chromium.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190627163903.28398-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190627163903.28398-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 28 Jun 2019 13:57:12 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARj+A1JDnUmA_ZFC5Shsy7Tg37LtXS27H7ZTgDbp5BO2w@mail.gmail.com>
+Message-ID: <CAK7LNARj+A1JDnUmA_ZFC5Shsy7Tg37LtXS27H7ZTgDbp5BO2w@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Compile-test UAPI and kernel headers
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-riscv@lists.infradead.org, Sam Ravnborg <sam@ravnborg.org>,
+        Kees Cook <keescook@chromium.org>, xdp-newbies@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Anton Vorontsov <anton@enomsg.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Colin Cross <ccross@android.com>, bpf@vger.kernel.org,
+        Martin KaFai Lau <kafai@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 09:44:09PM -0700, Douglas Anderson wrote:
-> In reboot tests on several devices we were seeing a "use after free"
-> when slub_debug or KASAN was enabled.  The kernel complained about:
-> 
->   Unable to handle kernel paging request at virtual address 6b6b6c2b
-> 
-> ...which is a classic sign of use after free under slub_debug.  The
-> stack crawl in kgdb looked like:
-> 
->  0  test_bit (addr=<optimized out>, nr=<optimized out>)
->  1  bfq_bfqq_busy (bfqq=<optimized out>)
->  2  bfq_select_queue (bfqd=<optimized out>)
->  3  __bfq_dispatch_request (hctx=<optimized out>)
->  4  bfq_dispatch_request (hctx=<optimized out>)
->  5  0xc056ef00 in blk_mq_do_dispatch_sched (hctx=0xed249440)
->  6  0xc056f728 in blk_mq_sched_dispatch_requests (hctx=0xed249440)
->  7  0xc0568d24 in __blk_mq_run_hw_queue (hctx=0xed249440)
->  8  0xc0568d94 in blk_mq_run_work_fn (work=<optimized out>)
->  9  0xc024c5c4 in process_one_work (worker=0xec6d4640, work=0xed249480)
->  10 0xc024cff4 in worker_thread (__worker=0xec6d4640)
-> 
-> Digging in kgdb, it could be found that, though bfqq looked fine,
-> bfqq->bic had been freed.
-> 
-> Through further digging, I postulated that perhaps it is illegal to
-> access a "bic" (AKA an "icq") after bfq_exit_icq() had been called
-> because the "bic" can be freed at some point in time after this call
-> is made.  I confirmed that there certainly were cases where the exact
-> crashing code path would access the "bic" after bfq_exit_icq() had
-> been called.  Sspecifically I set the "bfqq->bic" to (void *)0x7 and
-                ^^^
+On Fri, Jun 28, 2019 at 1:41 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> 1/4: Compile-test exported headers (reworked in v2)
+>
+> 2/4: fix a flaw I noticed when I was working on this series.
+>      Avoid generating intermediate wrappers.
+>
+> 3/4: maybe useful for 4/4 and in some other places.
+>      Add header-test-pattern-y syntax.
+>
+> 4/4: Compile-test kernel-space headers in include/.
+>      v2: compile as many headers as possible.
+>      v3: exclude more headers causing build errors
 
-> saw that the bic was 0x7 at the time of the crash.
-> 
-> To understand a bit more about why this crash was fairly uncommon (I
-> saw it only once in a few hundred reboots), you can see that much of
-> the time bfq_exit_icq_fbqq() fully frees the bfqq and thus it can't
-> access the ->bic anymore.  The only case it doesn't is if
-> bfq_put_queue() sees a reference still held.
-> 
-> However, even in the case when bfqq isn't freed, the crash is still
-> rare.  Why?  I tracked what happened to the "bic" after the exit
-> routine.  It doesn't get freed right away.  Rather,
-> put_io_context_active() eventually called put_io_context() which
-> queued up freeing on a workqueue.  The freeing then actually happened
-> later than that through call_rcu().  Despite all these delays, some
-> extra debugging showed that all the hoops could be jumped through in
-> time and the memory could be freed causing the original crash.  Phew!
-> 
-> To make a long story short, assuming it truly is illegal to access an
-> icq after the "exit_icq" callback is finished, this patch is needed.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Nicely done ... thanks!
+I push this series to
+ git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+ header-test-v3
+for somebody who wants to test it.
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
 
-> ---
-> Most of the testing of this was done on the Chrome OS 4.19 kernel with
-> BFQ backported (thanks to Paolo's help).  I did manage to reproduce a
-> crash on mainline Linux (v5.2-rc6) though.
-> 
-> To see some of the techniques used to debug this, see
-> <https://crrev.com/c/1679134> and <https://crrev.com/c/1681258/1>.
-> 
-> I'll also note that on linuxnext (next-20190627) I saw some other
-> use-after-frees that seemed related to BFQ but haven't had time to
-> debug.  They seemed unrelated.
-> 
->  block/bfq-iosched.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-> index f8d430f88d25..6c0cff03f8f6 100644
-> --- a/block/bfq-iosched.c
-> +++ b/block/bfq-iosched.c
-> @@ -4584,6 +4584,7 @@ static void bfq_exit_icq_bfqq(struct bfq_io_cq *bic, bool is_sync)
->  		unsigned long flags;
->  
->  		spin_lock_irqsave(&bfqd->lock, flags);
-> +		bfqq->bic = NULL;
->  		bfq_exit_bfqq(bfqd, bfqq);
->  		bic_set_bfqq(bic, NULL, is_sync);
->  		spin_unlock_irqrestore(&bfqd->lock, flags);
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
+
+>
+> Masahiro Yamada (4):
+>   kbuild: compile-test UAPI headers to ensure they are self-contained
+>   kbuild: do not create wrappers for header-test-y
+>   kbuild: support header-test-pattern-y
+>   kbuild: compile-test kernel headers to ensure they are self-contained
+>
+>  .gitignore                         |    1 -
+>  Documentation/dontdiff             |    1 -
+>  Documentation/kbuild/makefiles.txt |   13 +-
+>  Makefile                           |    4 +-
+>  include/Kbuild                     | 1250 ++++++++++++++++++++++++++++
+>  init/Kconfig                       |   22 +
+>  scripts/Makefile.build             |   10 +-
+>  scripts/Makefile.lib               |   13 +-
+>  scripts/cc-system-headers.sh       |    8 +
+>  usr/.gitignore                     |    1 -
+>  usr/Makefile                       |    2 +
+>  usr/include/.gitignore             |    3 +
+>  usr/include/Makefile               |  134 +++
+>  13 files changed, 1449 insertions(+), 13 deletions(-)
+>  create mode 100644 include/Kbuild
+>  create mode 100755 scripts/cc-system-headers.sh
+>  create mode 100644 usr/include/.gitignore
+>  create mode 100644 usr/include/Makefile
+>
+> --
+> 2.17.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+--
+Best Regards
+Masahiro Yamada
