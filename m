@@ -4,386 +4,275 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE11CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDEEC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C69B208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF7DA208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561729164;
-	bh=Zz4I2Zc8Y4oVDDkGMpX2kEmE8ymQCXwUHg8ED9aiwhM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fD4dXt8eiO8hLPm+0mT523SRLHo1JL2v6hRxNd4LWtgeKOTPqr9X4o5W+qAsvi1ab
-	 TjwU6TEL4AcyE3czGQ2e3zi1M8uXWEZ9+WbQMnY4GXdYM7cRsOhfj06xMZv0mx15M3
-	 R/0xrS/ooQI6clz2xz0irXKogULPI8ybB5JWJQAM=
+	s=default; t=1561729367;
+	bh=5ceO/Tq9Tf+56g0egKcMO4r+dlVrsAfjE5f1N+iaWgs=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=i6EechytSVEcnLiBipNl25sj+E8wQEx4pmVWSLww/gCuldCsu3YVbuBJszs9GYkTo
+	 mSza63uYEHTNtI/QWQXmxlBElopgz2lHXRLyK4zz6cDMi+s5s1CjPD/YF1hVW3rgc5
+	 VRtMl228hAWNGzekyIM/WQHVo6LY6nkttLuOBlow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbfF1NjX (ORCPT
+        id S1726725AbfF1Nmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 09:39:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56768 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfF1NjW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:39:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Hd+4YFDiBJERyhN7PHFcmfikFE7KlUt1avVVgYQ6YVE=; b=h5NtAtFWCjXPJAeBvvp27srXa
-        EIuxp0c4dUINEzOvnIwc/QaboVPbSeLVLS06mhEpJHxAlExcYKswDAgGUxy/NhloX9MMBK/HBGZt+
-        Oz+2VZe8p0roNDDePtEFDwBhFYaFizmf9ERGO6Y1ZArgw4hBh+ixVWf/szAYEFO4w/WQhzowhP8s3
-        x/GJa19+VLErBh3b79Fw2KAy9Eu0UudyQzK0ugsVAmDfWzvgab4s2DsuqM5Ldy1BCBI4sCLCK/rtH
-        vcva1nF3pPkUgx21Dlr/p27r1Pq7mSplHFOctUB/lY+3E+KPcEeWak0yhegSeFQP8/ISSqkZF/7hJ
-        7bkmTul3Q==;
-Received: from [186.213.242.156] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgr5z-0007Xn-Ou; Fri, 28 Jun 2019 13:39:20 +0000
-Date:   Fri, 28 Jun 2019 10:39:15 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Vandana BN <bnvandana@gmail.com>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-sh@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] Documentation:sh:convert register-banks.txt  and
- new-machine.txt to rst format.
-Message-ID: <20190628103915.3ce83637@coco.lan>
-In-Reply-To: <20190628132459.5409-1-bnvandana@gmail.com>
-References: <20190627063347.11137-1-bnvandana@gmail.com>
-        <20190628132459.5409-1-bnvandana@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 28 Jun 2019 09:42:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbfF1Nmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 09:42:45 -0400
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 514EA20645;
+        Fri, 28 Jun 2019 13:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561729363;
+        bh=5ceO/Tq9Tf+56g0egKcMO4r+dlVrsAfjE5f1N+iaWgs=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=xSyOER+fZRqnkwog9N0L4fx10nJ3MBs/mnrObwO4PsZMHOmc3lOXOxcTQ/3/Z/t/v
+         HGCwswD1LRdHC7+50GhN8UBL5pnthRRJnEOkya05tI64VthyBAKRLq1SCJ9OYEs2bn
+         4fEsKi+w9LMCvJpMIn3TrdOjnExjuWfvxwxH4agw=
+Message-ID: <1561729362.9333.8.camel@kernel.org>
+Subject: Re: [PATCH 1/4] tracing: Simplify assignment parsing for hist
+ triggers
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     rostedt@goodmis.org, linux-kernel@vger.kernel.org
+Date:   Fri, 28 Jun 2019 08:42:42 -0500
+In-Reply-To: <20190628143940.23b8f53f0ef754e9c6a5b947@kernel.org>
+References: <cover.1561647046.git.zanussi@kernel.org>
+         <17ac912dcec67c85e371b47dd2f55ae7c082b5f6.1561647046.git.zanussi@kernel.org>
+         <20190628143940.23b8f53f0ef754e9c6a5b947@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 28 Jun 2019 18:54:59 +0530
-Vandana BN <bnvandana@gmail.com> escreveu:
+Hi Masami,
 
-> This patch converts new-machine.txt and register-banks.txt to ReST format, No content
-> change.
-> Added new-machine.rst and register-banks.rst to sh/index.rst
+On Fri, 2019-06-28 at 14:39 +0900, Masami Hiramatsu wrote:
+> On Thu, 27 Jun 2019 10:35:16 -0500
+> Tom Zanussi <zanussi@kernel.org> wrote:
 > 
-> Signed-off-by: Vandana BN <bnvandana@gmail.com>
-> ---
->  Documentation/sh/index.rst                    |   6 +
->  .../sh/{new-machine.txt => new-machine.rst}   | 171 +++++++++---------
->  ...{register-banks.txt => register-banks.rst} |   8 +-
->  3 files changed, 100 insertions(+), 85 deletions(-)
->  rename Documentation/sh/{new-machine.txt => new-machine.rst} (79%)
->  rename Documentation/sh/{register-banks.txt => register-banks.rst} (90%)
+> > In the process of adding better error messages for sorting, I
+> > realized
+> > that strsep was being used incorrectly and some of the error paths
+> > I
+> > was expecting to be hit weren't and just fell through to the common
+> > invalid key error case.
 > 
-> diff --git a/Documentation/sh/index.rst b/Documentation/sh/index.rst
-> index bc8db7ba894a..25471d3fc294 100644
-> --- a/Documentation/sh/index.rst
-> +++ b/Documentation/sh/index.rst
-> @@ -57,3 +57,9 @@ Maple
-> 
->  .. kernel-doc:: drivers/sh/maple/maple.c
->     :export:
-> +
-> +.. toctree::
-> +   :maxdepth: 2
-> +
-> +   new-machine
-> +   register-banks
-
-Hmm... adding a toctree at the end doesn't seem the best thing to do.
-
-Adding it at the beginning (just after the title) would be a little
-better, but IMHO, moving the kernel-doc markups to another file
-would make it to look better.
-
-The remaining patch looks ok on my eyes.
-
-> diff --git a/Documentation/sh/new-machine.txt b/Documentation/sh/new-machine.rst
-> similarity index 79%
-> rename from Documentation/sh/new-machine.txt
-> rename to Documentation/sh/new-machine.rst
-> index e0961a66130b..b16c33342642 100644
-> --- a/Documentation/sh/new-machine.txt
-> +++ b/Documentation/sh/new-machine.rst
-> @@ -1,8 +1,8 @@
-> +================================
-> +Adding a new board to LinuxSH
-> +================================
-> 
-> -                Adding a new board to LinuxSH
-> -               ================================
-> -
-> -               Paul Mundt <lethal@linux-sh.org>
-> +Paul Mundt <lethal@linux-sh.org>
-> 
->  This document attempts to outline what steps are necessary to add support
->  for new boards to the LinuxSH port under the new 2.5 and 2.6 kernels. This
-> @@ -19,65 +19,67 @@ include/asm-sh/. For the new kernel, things are broken out by board type,
->  companion chip type, and CPU type. Looking at a tree view of this directory
->  hierarchy looks like the following:
-> 
-> -Board-specific code:
-> -
-> -.
-> -|-- arch
-> -|   `-- sh
-> -|       `-- boards
-> -|           |-- adx
-> -|           |   `-- board-specific files
-> -|           |-- bigsur
-> -|           |   `-- board-specific files
-> -|           |
-> -|           ... more boards here ...
-> -|
-> -`-- include
-> -    `-- asm-sh
-> -        |-- adx
-> -        |   `-- board-specific headers
-> -        |-- bigsur
-> -        |   `-- board-specific headers
-> -        |
-> -	.. more boards here ...
-> -
-> -Next, for companion chips:
-> -.
-> -`-- arch
-> -    `-- sh
-> -        `-- cchips
-> -            `-- hd6446x
-> -                `-- hd64461
-> -                    `-- cchip-specific files
-> +Board-specific code::
-> +
-> + .
-> + |-- arch
-> + |   `-- sh
-> + |       `-- boards
-> + |           |-- adx
-> + |           |   `-- board-specific files
-> + |           |-- bigsur
-> + |           |   `-- board-specific files
-> + |           |
-> + |           ... more boards here ...
-> + |
-> + `-- include
-> +     `-- asm-sh
-> +         |-- adx
-> +         |   `-- board-specific headers
-> +         |-- bigsur
-> +         |   `-- board-specific headers
-> +         |
-> +       	 .. more boards here ...
-> +
-> +Next, for companion chips::
-> +
-> + .
-> + `-- arch
-> +     `-- sh
-> +         `-- cchips
-> +             `-- hd6446x
-> +                 `-- hd64461
-> +                     `-- cchip-specific files
-> 
->  ... and so on. Headers for the companion chips are treated the same way as
->  board-specific headers. Thus, include/asm-sh/hd64461 is home to all of the
->  hd64461-specific headers.
-> 
-> -Finally, CPU family support is also abstracted:
-> -.
-> -|-- arch
-> -|   `-- sh
-> -|       |-- kernel
-> -|       |   `-- cpu
-> -|       |       |-- sh2
-> -|       |       |   `-- SH-2 generic files
-> -|       |       |-- sh3
-> -|       |       |   `-- SH-3 generic files
-> -|       |       `-- sh4
-> -|       |           `-- SH-4 generic files
-> -|       `-- mm
-> -|           `-- This is also broken out per CPU family, so each family can
-> -|               have their own set of cache/tlb functions.
-> -|
-> -`-- include
-> -    `-- asm-sh
-> -        |-- cpu-sh2
-> -        |   `-- SH-2 specific headers
-> -        |-- cpu-sh3
-> -        |   `-- SH-3 specific headers
-> -        `-- cpu-sh4
-> -            `-- SH-4 specific headers
-> +Finally, CPU family support is also abstracted::
-> +
-> + .
-> + |-- arch
-> + |   `-- sh
-> + |       |-- kernel
-> + |       |   `-- cpu
-> + |       |       |-- sh2
-> + |       |       |   `-- SH-2 generic files
-> + |       |       |-- sh3
-> + |       |       |   `-- SH-3 generic files
-> + |       |       `-- sh4
-> + |       |           `-- SH-4 generic files
-> + |       `-- mm
-> + |           `-- This is also broken out per CPU family, so each family can
-> + |               have their own set of cache/tlb functions.
-> + |
-> + `-- include
-> +     `-- asm-sh
-> +         |-- cpu-sh2
-> +         |   `-- SH-2 specific headers
-> +         |-- cpu-sh3
-> +         |   `-- SH-3 specific headers
-> +         `-- cpu-sh4
-> +             `-- SH-4 specific headers
-> 
->  It should be noted that CPU subtypes are _not_ abstracted. Thus, these still
->  need to be dealt with by the CPU family specific code.
-> @@ -112,18 +114,20 @@ setup code, we're required at the very least to provide definitions for
->  get_system_type() and platform_setup(). For our imaginary board, this
->  might look something like:
-> 
-> -/*
-> - * arch/sh/boards/vapor/setup.c - Setup code for imaginary board
-> - */
-> -#include <linux/init.h>
-> +.. code-block:: c
-> +
-> +    /*
-> +     * arch/sh/boards/vapor/setup.c - Setup code for imaginary board
-> +     */
-> +    #include <linux/init.h>
-> 
-> -const char *get_system_type(void)
-> -{
-> -	return "FooTech Vaporboard";
-> -}
-> +    const char *get_system_type(void)
-> +    {
-> +        return "FooTech Vaporboard";
-> +    }
-> 
-> -int __init platform_setup(void)
-> -{
-> +    int __init platform_setup(void)
-> +    {
->    	/*
->  	 * If our hardware actually existed, we would do real
->  	 * setup here. Though it's also sane to leave this empty
-> @@ -136,7 +140,8 @@ int __init platform_setup(void)
->  	/* And whatever else ... */
-> 
->  	return 0;
-> -}
-> +    }
-> +
-> 
->  Our new imaginary board will also have to tie into the machvec in order for it
->  to be of any use.
-> @@ -172,16 +177,17 @@ sufficient.
->     vector.
-> 
->     Note that these prototypes are generated automatically by setting
-> -   __IO_PREFIX to something sensible. A typical example would be:
-> +   __IO_PREFIX to something sensible. A typical example would be::
-> 
->  	#define __IO_PREFIX vapor
->     	#include <asm/io_generic.h>
-> 
-> +
->     somewhere in the board-specific header. Any boards being ported that still
->     have a legacy io.h should remove it entirely and switch to the new model.
-> 
->   - Add machine vector definitions to the board's setup.c. At a bare minimum,
-> -   this must be defined as something like:
-> +   this must be defined as something like::
-> 
->  	struct sh_machine_vector mv_vapor __initmv = {
->  		.mv_name = "vapor",
-> @@ -202,11 +208,11 @@ Large portions of the build system are now entirely dynamic, and merely
->  require the proper entry here and there in order to get things done.
-> 
->  The first thing to do is to add an entry to arch/sh/Kconfig, under the
-> -"System type" menu:
-> +"System type" menu::
-> 
-> -config SH_VAPOR
-> -	bool "Vapor"
-> -	help
-> + config SH_VAPOR
-> +	 bool "Vapor"
-> +	 help
->  	  select Vapor if configuring for a FooTech Vaporboard.
-> 
->  next, this has to be added into arch/sh/Makefile. All boards require a
-> @@ -232,6 +238,8 @@ space restating it here. After this is done, you will be able to use
->  implicit checks for your board if you need this somewhere throughout the
->  common code, such as:
-> 
-> +::
-> +
->  	/* Make sure we're on the FooTech Vaporboard */
->  	if (!mach_is_vapor())
->  		return -ENODEV;
-> @@ -253,12 +261,13 @@ build target, and it will be implicitly listed as such in the help text.
->  Looking at the 'make help' output, you should now see something like:
-> 
->  Architecture specific targets (sh):
-> -  zImage                  - Compressed kernel image (arch/sh/boot/zImage)
-> -  adx_defconfig           - Build for adx
-> -  cqreek_defconfig        - Build for cqreek
-> -  dreamcast_defconfig     - Build for dreamcast
-> -...
-> -  vapor_defconfig         - Build for vapor
-> +
-> + - zImage                  - Compressed kernel image (arch/sh/boot/zImage)
-> + - adx_defconfig           - Build for adx
-> + - cqreek_defconfig        - Build for cqreek
-> + - dreamcast_defconfig     - Build for dreamcast
-> + - ...
-> + - vapor_defconfig         - Build for vapor
-> 
->  which then allows you to do:
-> 
-> diff --git a/Documentation/sh/register-banks.txt b/Documentation/sh/register-banks.rst
-> similarity index 90%
-> rename from Documentation/sh/register-banks.txt
-> rename to Documentation/sh/register-banks.rst
-> index a6719f2f6594..acccfaf80355 100644
-> --- a/Documentation/sh/register-banks.txt
-> +++ b/Documentation/sh/register-banks.rst
-> @@ -1,8 +1,9 @@
-> -	Notes on register bank usage in the kernel
-> -	==========================================
-> +==========================================
-> +Notes on register bank usage in the kernel
-> +==========================================
-> 
->  Introduction
-> -------------
-> +============
-> 
->  The SH-3 and SH-4 CPU families traditionally include a single partial register
->  bank (selected by SR.RB, only r0 ... r7 are banked), whereas other families
-> @@ -30,4 +31,3 @@ Presently the kernel uses several of these registers.
->  		- The SR.IMASK interrupt handler makes use of this to set the
->  		  interrupt priority level (used by local_irq_enable())
->  	- r7_bank (current)
-> -
-> --
-> 2.17.1
+> Would you mean this includes a bugfix too?
 > 
 
+Yes, though not actually a problem or visible to the user.  This
+basically cleans things up so that the next patch adding the error
+messages works as expected.
 
+Tom
 
-Thanks,
-Mauro
+> > 
+> > It also became obvious that for keyword assignments, it wasn't
+> > necessary to save the full assignment and reparse it later, and
+> > having
+> > a common empty-assignment check would also make more sense in terms
+> > of
+> > error processing.
+> > 
+> > Change the code to fix these problems and simplify it for new error
+> > message changes in a subsequent patch.
+> > 
+> > Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> 
+> Anyway looks good to me.
+> 
+> Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> Thanks,
+> 
+> > ---
+> >  kernel/trace/trace_events_hist.c | 70 ++++++++++++++++----------
+> > --------------
+> >  1 file changed, 27 insertions(+), 43 deletions(-)
+> > 
+> > diff --git a/kernel/trace/trace_events_hist.c
+> > b/kernel/trace/trace_events_hist.c
+> > index ca6b0dff60c5..964d032f51c6 100644
+> > --- a/kernel/trace/trace_events_hist.c
+> > +++ b/kernel/trace/trace_events_hist.c
+> > @@ -1985,12 +1985,6 @@ static int parse_map_size(char *str)
+> >  	unsigned long size, map_bits;
+> >  	int ret;
+> >  
+> > -	strsep(&str, "=");
+> > -	if (!str) {
+> > -		ret = -EINVAL;
+> > -		goto out;
+> > -	}
+> > -
+> >  	ret = kstrtoul(str, 0, &size);
+> >  	if (ret)
+> >  		goto out;
+> > @@ -2050,25 +2044,25 @@ static int parse_action(char *str, struct
+> > hist_trigger_attrs *attrs)
+> >  static int parse_assignment(struct trace_array *tr,
+> >  			    char *str, struct hist_trigger_attrs
+> > *attrs)
+> >  {
+> > -	int ret = 0;
+> > +	int len, ret = 0;
+> >  
+> > -	if ((str_has_prefix(str, "key=")) ||
+> > -	    (str_has_prefix(str, "keys="))) {
+> > -		attrs->keys_str = kstrdup(str, GFP_KERNEL);
+> > +	if ((len = str_has_prefix(str, "key=")) ||
+> > +	    (len = str_has_prefix(str, "keys="))) {
+> > +		attrs->keys_str = kstrdup(str + len, GFP_KERNEL);
+> >  		if (!attrs->keys_str) {
+> >  			ret = -ENOMEM;
+> >  			goto out;
+> >  		}
+> > -	} else if ((str_has_prefix(str, "val=")) ||
+> > -		   (str_has_prefix(str, "vals=")) ||
+> > -		   (str_has_prefix(str, "values="))) {
+> > -		attrs->vals_str = kstrdup(str, GFP_KERNEL);
+> > +	} else if ((len = str_has_prefix(str, "val=")) ||
+> > +		   (len = str_has_prefix(str, "vals=")) ||
+> > +		   (len = str_has_prefix(str, "values="))) {
+> > +		attrs->vals_str = kstrdup(str + len, GFP_KERNEL);
+> >  		if (!attrs->vals_str) {
+> >  			ret = -ENOMEM;
+> >  			goto out;
+> >  		}
+> > -	} else if (str_has_prefix(str, "sort=")) {
+> > -		attrs->sort_key_str = kstrdup(str, GFP_KERNEL);
+> > +	} else if ((len = str_has_prefix(str, "sort="))) {
+> > +		attrs->sort_key_str = kstrdup(str + len,
+> > GFP_KERNEL);
+> >  		if (!attrs->sort_key_str) {
+> >  			ret = -ENOMEM;
+> >  			goto out;
+> > @@ -2079,12 +2073,8 @@ static int parse_assignment(struct
+> > trace_array *tr,
+> >  			ret = -ENOMEM;
+> >  			goto out;
+> >  		}
+> > -	} else if (str_has_prefix(str, "clock=")) {
+> > -		strsep(&str, "=");
+> > -		if (!str) {
+> > -			ret = -EINVAL;
+> > -			goto out;
+> > -		}
+> > +	} else if ((len = str_has_prefix(str, "clock="))) {
+> > +		str += len;
+> >  
+> >  		str = strstrip(str);
+> >  		attrs->clock = kstrdup(str, GFP_KERNEL);
+> > @@ -2092,8 +2082,8 @@ static int parse_assignment(struct
+> > trace_array *tr,
+> >  			ret = -ENOMEM;
+> >  			goto out;
+> >  		}
+> > -	} else if (str_has_prefix(str, "size=")) {
+> > -		int map_bits = parse_map_size(str);
+> > +	} else if ((len = str_has_prefix(str, "size="))) {
+> > +		int map_bits = parse_map_size(str + len);
+> >  
+> >  		if (map_bits < 0) {
+> >  			ret = map_bits;
+> > @@ -2133,8 +2123,14 @@ parse_hist_trigger_attrs(struct trace_array
+> > *tr, char *trigger_str)
+> >  
+> >  	while (trigger_str) {
+> >  		char *str = strsep(&trigger_str, ":");
+> > +		char *rhs;
+> >  
+> > -		if (strchr(str, '=')) {
+> > +		rhs = strchr(str, '=');
+> > +		if (rhs) {
+> > +			if (!strlen(++rhs)) {
+> > +				ret = -EINVAL;
+> > +				goto free;
+> > +			}
+> >  			ret = parse_assignment(tr, str, attrs);
+> >  			if (ret)
+> >  				goto free;
+> > @@ -4459,10 +4455,6 @@ static int create_val_fields(struct
+> > hist_trigger_data *hist_data,
+> >  	if (!fields_str)
+> >  		goto out;
+> >  
+> > -	strsep(&fields_str, "=");
+> > -	if (!fields_str)
+> > -		goto out;
+> > -
+> >  	for (i = 0, j = 1; i < TRACING_MAP_VALS_MAX &&
+> >  		     j < TRACING_MAP_VALS_MAX; i++) {
+> >  		field_str = strsep(&fields_str, ",");
+> > @@ -4557,10 +4549,6 @@ static int create_key_fields(struct
+> > hist_trigger_data *hist_data,
+> >  	if (!fields_str)
+> >  		goto out;
+> >  
+> > -	strsep(&fields_str, "=");
+> > -	if (!fields_str)
+> > -		goto out;
+> > -
+> >  	for (i = n_vals; i < n_vals + TRACING_MAP_KEYS_MAX; i++) {
+> >  		field_str = strsep(&fields_str, ",");
+> >  		if (!field_str)
+> > @@ -4718,12 +4706,6 @@ static int create_sort_keys(struct
+> > hist_trigger_data *hist_data)
+> >  	if (!fields_str)
+> >  		goto out;
+> >  
+> > -	strsep(&fields_str, "=");
+> > -	if (!fields_str) {
+> > -		ret = -EINVAL;
+> > -		goto out;
+> > -	}
+> > -
+> >  	for (i = 0; i < TRACING_MAP_SORT_KEYS_MAX; i++) {
+> >  		struct hist_field *hist_field;
+> >  		char *field_str, *field_name;
+> > @@ -4732,9 +4714,11 @@ static int create_sort_keys(struct
+> > hist_trigger_data *hist_data)
+> >  		sort_key = &hist_data->sort_keys[i];
+> >  
+> >  		field_str = strsep(&fields_str, ",");
+> > -		if (!field_str) {
+> > -			if (i == 0)
+> > -				ret = -EINVAL;
+> > +		if (!field_str)
+> > +			break;
+> > +
+> > +		if (!*field_str) {
+> > +			ret = -EINVAL;
+> >  			break;
+> >  		}
+> >  
+> > @@ -4744,7 +4728,7 @@ static int create_sort_keys(struct
+> > hist_trigger_data *hist_data)
+> >  		}
+> >  
+> >  		field_name = strsep(&field_str, ".");
+> > -		if (!field_name) {
+> > +		if (!field_name || !*field_name) {
+> >  			ret = -EINVAL;
+> >  			break;
+> >  		}
+> > -- 
+> > 2.14.1
+> > 
+> 
+> 
