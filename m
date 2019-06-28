@@ -2,148 +2,93 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CCAC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E32C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CC62064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7B92086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="f9i63ToX"
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="N+xv87vs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfF1CGP (ORCPT
+        id S1726498AbfF1CJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:06:15 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:58777 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfF1CGP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:06:15 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x5S24bLt004905;
-        Fri, 28 Jun 2019 11:04:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x5S24bLt004905
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561687479;
-        bh=yjzub9I4CsKXLSVnhexVECUsjlcS8Xskdwg+YsVHiTs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=f9i63ToXZF6WKlaT5nMAm7ALq+7kZeHOKPTmzXC1eWQPWP/qlEO1mYUJvoS5Z2H+F
-         YnPDFA4qjbN5T2kxl+BubSe5kaE9WiEL3xUbfQUdIeDHPL3a01IJm5gTpr9oj9vpnZ
-         81vKm+2TuMUy4OW1A9prEPWQXKqnh6ay8PxZE+/TrvhDZg2NUJJtf2aOw9UhYfTm1P
-         +zy+r3hGML1VjgbI2hShAuONiN39xZdHQBFzpQgcmDCdlet67xZ2aVNqkru8iXZgPn
-         bImL8vmbrj2lUUvlQDarblWlPXAW//lyDmfUvXCo6zRTQAOBGv/PP0Kc3LNYQsfLs2
-         RSIeAuWVo6W9A==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH] kbuild: get rid of misleading $(AS) from documents
-Date:   Fri, 28 Jun 2019 11:04:33 +0900
-Message-Id: <20190628020433.19156-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Jun 2019 22:09:55 -0400
+Received: from mail-oln040092003077.outbound.protection.outlook.com ([40.92.3.77]:58697
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725770AbfF1CJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 22:09:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mBSRqqR9+xYcdhKqjfZEDzZYFAbQ751VxdMxRtH9eZk=;
+ b=N+xv87vsdxqMWlTq40Ct4AH+BDdJpuSv94kXO+abRIsCoqXR6xYFUe3bm+TMTCkGfyA1apmj88g98+8KjaJEENqoPGT5tmpGhkRsw0nGh1J/sP6mf1M6luxcunupH2PXaPvBEGH5l18QiIVxaHje3bM8IsFw/O6uAs34OutEvyyDQqg7FdVJ1GowFpwYJLS3tT1LBkLUm8efr/bFXZvJ1zdl00GLnsyKSWIBxNsRFUKpUw2mYGbNwMSQZ9I6GSFHui0x9ObbSRIK/cTuBdeGf/i7wMMdvXmoD3VPfPMCgk0g6VF6mnj7o7p9uqoh4T9jP1jY85ERdw3qoXEaLyxL+A==
+Received: from BL2NAM02FT033.eop-nam02.prod.protection.outlook.com
+ (10.152.76.51) by BL2NAM02HT069.eop-nam02.prod.protection.outlook.com
+ (10.152.77.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2032.15; Fri, 28 Jun
+ 2019 02:09:53 +0000
+Received: from BYAPR02MB5704.namprd02.prod.outlook.com (10.152.76.56) by
+ BL2NAM02FT033.mail.protection.outlook.com (10.152.77.163) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2032.15 via Frontend Transport; Fri, 28 Jun 2019 02:09:53 +0000
+Received: from BYAPR02MB5704.namprd02.prod.outlook.com
+ ([fe80::18b:f08e:21ff:fa35]) by BYAPR02MB5704.namprd02.prod.outlook.com
+ ([fe80::18b:f08e:21ff:fa35%5]) with mapi id 15.20.2008.018; Fri, 28 Jun 2019
+ 02:09:53 +0000
+From:   abhja kaanlani <unidef_rogue@live.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Effect of multidimensional arrays on the Linux kernel?
+Thread-Topic: Effect of multidimensional arrays on the Linux kernel?
+Thread-Index: AQHVLVaS54ldAhnrUki2ZSjI26pKcw==
+Date:   Fri, 28 Jun 2019 02:09:53 +0000
+Message-ID: <BYAPR02MB570463AFB1E4D5DDCB6FEA3983FC0@BYAPR02MB5704.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-incomingtopheadermarker: OriginalChecksum:73F462A6098777A76947967EE9FB2E945778A47BEA3AD5592B45FA1E0684B49D;UpperCasedChecksum:83460CAA3B7ABE2E85208B30251F91BE2284C914CAB6F6E62F5887918C2232E1;SizeAsReceived:6793;Count:41
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [OFfuDFYdGsuUSgM9wn3v5GBqwiTJvRxSBnS5IIWGzNBYRAh717PUMkYhSltWOVyt]
+x-ms-publictraffictype: Email
+x-incomingheadercount: 41
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:BL2NAM02HT069;
+x-ms-traffictypediagnostic: BL2NAM02HT069:
+x-microsoft-antispam-message-info: k2Q0IhGN9y2EQsUalw9MbxQNCDfChhhtU1R28Wq9Cqa836Nl/x/lGGuGV0uqzJAtIwY3LubvIA2qwo3WfUMQTOHZR3ZBs3Yv++fm4IShLi5JZZFiNXkOA891SX1qTTiJ8ujjRjXc76FAyVj+TxLK8o5bQtc6XVNYiqUpcsGSTtqWCVH2etSJDoPlXVxEDAEv
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5E5457B36459BB4E9007AD72486E7237@sct-15-20-1580-16-msonline-outlook-d54f3.templateTenant>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: live.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9cee9a1-2b52-4ee2-27e8-08d6fb6db55e
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 02:09:53.1777
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL2NAM02HT069
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The assembler files in the kernel are *.S instead of *.s, so they must
-be preprocessed. Hence, we always use $(CC) as an assembler driver.
-
-$(AS) is almost unused in Kbuild. As of writing, there is just one user.
-
-  $ git grep '$(AS)' -- :^Documentation
-  drivers/net/wan/Makefile:  AS68K = $(AS)
-
-The documentation about *_AFLAGS* sounds like the flags were passed
-to $(AS). This is somewhat misleading since we do not invoke $(AS)
-directly.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- Documentation/kbuild/kbuild.txt    |  5 ++---
- Documentation/kbuild/makefiles.txt | 12 ++++++------
- 2 files changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/kbuild/kbuild.txt b/Documentation/kbuild/kbuild.txt
-index 9c230ea71963..7a7e2aa2fab5 100644
---- a/Documentation/kbuild/kbuild.txt
-+++ b/Documentation/kbuild/kbuild.txt
-@@ -31,12 +31,11 @@ Additional options to the assembler (for built-in and modules).
- 
- AFLAGS_MODULE
- --------------------------------------------------
--Additional module specific options to use for $(AS).
-+Additional module specific options to use for assembler.
- 
- AFLAGS_KERNEL
- --------------------------------------------------
--Additional options for $(AS) when used for assembler
--code for code that is compiled as built-in.
-+Additional options when used for assembling code that is compiled as built-in.
- 
- KCFLAGS
- --------------------------------------------------
-diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-index d65ad5746f94..f0b3a30b985d 100644
---- a/Documentation/kbuild/makefiles.txt
-+++ b/Documentation/kbuild/makefiles.txt
-@@ -306,7 +306,7 @@ more details, with real examples.
- 	variable $(KBUILD_CFLAGS) and uses it for compilation flags for the
- 	entire tree.
- 
--	asflags-y specifies options for assembling with $(AS).
-+	asflags-y specifies options for assembling.
- 
- 	Example:
- 		#arch/sparc/kernel/Makefile
-@@ -441,7 +441,7 @@ more details, with real examples.
- 	as-instr checks if the assembler reports a specific instruction
- 	and then outputs either option1 or option2
- 	C escapes are supported in the test instruction
--	Note: as-instr-option uses KBUILD_AFLAGS for $(AS) options
-+	Note: as-instr-option uses KBUILD_AFLAGS for assembler options
- 
-     cc-option
- 	cc-option is used to check if $(CC) supports a given option, and if
-@@ -814,7 +814,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	In this example, the binary $(obj)/image is a binary version of
- 	vmlinux. The usage of $(call if_changed,xxx) will be described later.
- 
--    KBUILD_AFLAGS		$(AS) assembler flags
-+    KBUILD_AFLAGS		assembler flags
- 
- 	Default value - see top level Makefile
- 	Append or modify as required per architecture.
-@@ -853,15 +853,15 @@ When kbuild executes, the following steps are followed (roughly):
- 	The first example utilises the trick that a config option expands
- 	to 'y' when selected.
- 
--    KBUILD_AFLAGS_KERNEL	$(AS) options specific for built-in
-+    KBUILD_AFLAGS_KERNEL	assembler options specific for built-in
- 
- 	$(KBUILD_AFLAGS_KERNEL) contains extra C compiler flags used to compile
- 	resident kernel code.
- 
--    KBUILD_AFLAGS_MODULE   Options for $(AS) when building modules
-+    KBUILD_AFLAGS_MODULE   Options for assembler when building modules
- 
- 	$(KBUILD_AFLAGS_MODULE) is used to add arch-specific options that
--	are used for $(AS).
-+	are used for assembler.
- 	From commandline AFLAGS_MODULE shall be used (see kbuild.txt).
- 
-     KBUILD_CFLAGS_KERNEL	$(CC) options specific for built-in
--- 
-2.17.1
-
+SW5zdGVhZCBvZiByZWFkaW5nIGJvb2tzIEkgZGVjaWRlZCB0byBzY3JldyBhcm91bmQgb24gdGhl
+IGludGVybmV0IChzYWQgZmFjZSkgLCBJIGRvbuKAmXQga25vdyBtdWNoIGFib3V0IGtlcm5lbCBk
+ZXZlbG9wbWVudCBidXQgSSBoYXZlIGJlZW4gd3JpdGluZyBpbiBDIGZvciBhYm91dCAxNSB5ZWFy
+cw0KDQpCdXQgbGV04oCZcyBzYXkgeW91IGhhdmUgYSBkYXRhIHN0cnVjdHVyZSB0aGF0IGhvbGRz
+IGluZm9ybWF0aW9uIGFib3V0IGEgaW8gc3RydWN0dXJlLCBhbmQgd2UgdGFrZSBpdCB0byAyIGFy
+cmF5cyB0byAyIGRpbWVuc2lvbiwgbWFraW5nIGEgbWF0cmljZSBvciBzb21lIHNvcnQgb2YgZ3Jh
+cGgNCg0KQSBmdW5jdGlvbiBvcmdhbml6ZXMgaXQgYnkgY2hhciAqZGVzY3JpcHRpb24sIGFuZCBh
+biBJRCBzeXN0ZW0sIGxpa2UgUElEUywgSSBrbm93IGl04oCZbGwgY29uc3VtZSBhIGxvdCBvZiBy
+YW0gYnV0IGl0IHByb3ZpZGVzIGEgbGF5ZXIgb2YgcGFyYWxsaXphdGlvbiwgYW5kIGNhbiBiZSB1
+c2VkIGFzIGEgY2FjaGUNCg0KRG9lcyB0aGlzIHNvdW5kIHBsYXVzaWJsZT8NCg0KSSBoYXZlIHRv
+IGdvIHJlYWQgdGhhdCBMaW51eCBrZXJuZWwgYm9vaywgbXkgaW50ZW50IHdhcyB0byByZXdyaXRl
+IHRoZSBzY2hlZHVsZXIgc28gaGVyZSBJIGdvDQoNClRoYW5rIHlvdSBmb3IgcmVhZGluZw0KDQpV
+bmlkZWYNCg0KU2VudCBmcm9tIG15IGlQaG9uZQ==
