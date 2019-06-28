@@ -2,102 +2,74 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C87C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9E1C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E9420665
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B4822064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:51:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfF1Bt7 (ORCPT
+        id S1726513AbfF1Bvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:49:59 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:53594 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfF1Bt7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:49:59 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1029)
-        id 4A66B20B7194; Thu, 27 Jun 2019 18:49:58 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by linux.microsoft.com (Postfix) with ESMTP id 2D89630056D6;
-        Thu, 27 Jun 2019 18:49:58 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 18:49:58 -0700 (PDT)
-From:   Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
-X-X-Sender: jaskarankhurana@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
-To:     Eric Biggers <ebiggers@kernel.org>
-cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
-        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com,
-        mpatocka@redhat.com, gmazyland@gmail.com
-Subject: Re: [RFC PATCH v5 1/1] Add dm verity root hash pkcs7 sig
- validation.
-In-Reply-To: <20190627234149.GA212823@gmail.com>
-Message-ID: <alpine.LRH.2.21.1906271844470.22562@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com> <20190619191048.20365-2-jaskarankhurana@linux.microsoft.com> <20190627234149.GA212823@gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Thu, 27 Jun 2019 21:51:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33574 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725770AbfF1Bvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 21:51:33 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B0B673DDBE;
+        Fri, 28 Jun 2019 01:51:32 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 65439196F6;
+        Fri, 28 Jun 2019 01:51:30 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH v4 0/2] x86: bpf unwinder fixes
+Date:   Thu, 27 Jun 2019 20:50:45 -0500
+Message-Id: <cover.1561685471.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 28 Jun 2019 01:51:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Here's the last fix along with its objtool dependency.
 
+For testing I verified that a WARN() in ___bpf_prog_run() now gives a
+clean stack trace.
 
-On Thu, 27 Jun 2019, Eric Biggers wrote:
+v4: 
+- Redesigned the jump table detection mechanism.  Instead of requiring
+  the jump table to have a magic name, place it in a special section.
 
-> Hi Jaskaran, one comment (I haven't reviewed this in detail):
->
-> On Wed, Jun 19, 2019 at 12:10:48PM -0700, Jaskaran Khurana wrote:
->> diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
->> index db269a348b20..2d658a3512cb 100644
->> --- a/drivers/md/Kconfig
->> +++ b/drivers/md/Kconfig
->> @@ -475,6 +475,7 @@ config DM_VERITY
->>  	select CRYPTO
->>  	select CRYPTO_HASH
->>  	select DM_BUFIO
->> +	select SYSTEM_DATA_VERIFICATION
->>  	---help---
->>  	  This device-mapper target creates a read-only device that
->>  	  transparently validates the data on one underlying device against
->> diff --git a/drivers/md/Makefile b/drivers/md/Makefile
->> index be7a6eb92abc..3b47b256b15e 100644
->> --- a/drivers/md/Makefile
->> +++ b/drivers/md/Makefile
->> @@ -18,7 +18,7 @@ dm-cache-y	+= dm-cache-target.o dm-cache-metadata.o dm-cache-policy.o \
->>  		    dm-cache-background-tracker.o
->>  dm-cache-smq-y   += dm-cache-policy-smq.o
->>  dm-era-y	+= dm-era-target.o
->> -dm-verity-y	+= dm-verity-target.o
->> +dm-verity-y	+= dm-verity-target.o dm-verity-verify-sig.o
->>  md-mod-y	+= md.o md-bitmap.o
->>  raid456-y	+= raid5.o raid5-cache.o raid5-ppl.o
->>  dm-zoned-y	+= dm-zoned-target.o dm-zoned-metadata.o dm-zoned-reclaim.o
->
-> Perhaps this should be made optional and controlled by a kconfig option
-> CONFIG_DM_VERITY_SIGNATURE_VERIFICATION, similar to CONFIG_DM_VERITY_FEC?
->
-> CONFIG_SYSTEM_DATA_VERIFICATION brings in a lot of stuff, which might be
-> unnecessary for some dm-verity users.  Also, you've already separated most of
-> the code out into a separate .c file anyway.
->
-> - Eric
->
-Hello Eric,
+- The other two fixes from v3 have been merged into -tip.
 
-This started with a config (see V4). We didnot want scripts that pass this 
-parameter to suddenly stop working if for some reason the 
-verification is turned off so the optional parameter was just 
-parsed and no validation happened if the CONFIG was turned off. This was 
-changed to a commandline parameter after feedback from the community, so I would prefer 
-to keep it *now* as commandline parameter. Let me know if you are OK with 
-this.
+Josh Poimboeuf (2):
+  objtool: Add support for C jump tables
+  bpf: Fix ORC unwinding in non-JIT BPF code
 
-Regards,
-JK
+ include/linux/compiler.h |  5 +++++
+ kernel/bpf/core.c        |  3 +--
+ tools/objtool/check.c    | 27 ++++++++++++++++++++-------
+ 3 files changed, 26 insertions(+), 9 deletions(-)
+
+-- 
+2.20.1
+
