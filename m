@@ -2,159 +2,188 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19228C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E10C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB47B2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D742133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:34:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="D3W+AoRG"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="NijCFQlk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfF1JeB (ORCPT
+        id S1726605AbfF1JeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:34:01 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49308 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726385AbfF1JeB (ORCPT
+        Fri, 28 Jun 2019 05:34:05 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:17969 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbfF1JeF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:34:01 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5S9Qq7e008084;
-        Fri, 28 Jun 2019 11:32:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=fEIaj8CCVaPM2O+m07pVRSYCCsjvlnlAZEbLDOf6cbQ=;
- b=D3W+AoRG6eifo1fo/61wvqt+035OxomI2XiU03QYmUfGisk4iX+FknrZHCkYJzhA8EDI
- iVEZ2ft07c/ZiCCBuUz/i/mNCIRe9kblNFEziPLaxxli9hqFN/2NODgsSpx3evTmZnZN
- VR5FsEim27X2V8Up3/AQ4tYRnaUNPV9AFniwgR7zhMzuG2+4TqWbCSidsl88VLkOVk5Q
- 4TeA54OccfQujqF/sauA9HkkhLxFcMtVRqjVWB+RZMJDOIXIQalRz+H/uhGARHBF/KrK
- XZscpvyrXmvEq2rT2OdP2vLm+u7m1r6OumuWu6P6mJzxsT3dH9n5NTA1S56t/nTUxekN MA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2t9d2k5b0d-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 28 Jun 2019 11:32:40 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1389864;
-        Fri, 28 Jun 2019 09:31:13 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C1B8F2527;
-        Fri, 28 Jun 2019 09:31:13 +0000 (GMT)
-Received: from localhost (10.75.127.48) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 28 Jun 2019 11:31:12
- +0200
-From:   Christophe Kerello <christophe.kerello@st.com>
-To:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <marek.vasut@gmail.com>, <vigneshr@ti.com>
-CC:     <bbrezillon@kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Christophe Kerello <christophe.kerello@st.com>
-Subject: [PATCH v2] mtd: rawnand: stm32_fmc2: increase DMA completion timeouts
-Date:   Fri, 28 Jun 2019 11:18:06 +0200
-Message-ID: <1561713486-26597-1-git-send-email-christophe.kerello@st.com>
-X-Mailer: git-send-email 1.9.1
+        Fri, 28 Jun 2019 05:34:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1561714444; x=1593250444;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=sSKEUVaTdyL6t5ZO2NW3uKuh1AeVNjk+FHaRRO4KGtI=;
+  b=NijCFQlkyyK7FfvWXmgNHYE0bJIap9oSNNMq9l6hELAx5Xct/iEnSozP
+   WkQW7lzlLaMbI/nG3tC97HAqXxEjfLXGLsM77tWoMtnkewrXJexAWsAzG
+   mBrZeFi0Ti4udYx8FrRDm79mYVNZv1ChSOsk+lbJq2gBn/pUAQ2dcWifl
+   M=;
+X-IronPort-AV: E=Sophos;i="5.62,427,1554768000"; 
+   d="scan'208";a="408520324"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 28 Jun 2019 09:33:56 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id EB7E1A1DFF;
+        Fri, 28 Jun 2019 09:33:52 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 28 Jun 2019 09:33:51 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.161.16) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 28 Jun 2019 09:33:47 +0000
+Subject: Re: [PATCH v4 0/5] x86 instruction emulator fuzzing
+To:     Sam Caccavale <samcacc@amazon.de>
+CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
+        <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
+        <karahmed@amazon.de>, <andrew.cooper3@citrix.com>,
+        <JBeulich@suse.com>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <paullangton4@gmail.com>, <x86@kernel.org>,
+        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190628092621.17823-1-samcacc@amazon.de>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <caaeb546-9aa1-7fd5-496d-a0ec1f759d10@amazon.com>
+Date:   Fri, 28 Jun 2019 11:33:45 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_03:,,
- signatures=0
+In-Reply-To: <20190628092621.17823-1-samcacc@amazon.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.161.16]
+X-ClientProxiedBy: EX13D18UWC004.ant.amazon.com (10.43.162.77) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
 
-When the system is overloaded, DMA data transfer completion occurs after
-100ms. Increase the timeouts to let it the time to complete.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
----
-Changes in v2:
-  - Replace the author of the patch.
-  - Define FMC2_TIMEOUT_MS to 1000.
+On 28.06.19 11:26, Sam Caccavale wrote:
+> Dear all,
+> 
+> This series aims to provide an entrypoint for, and fuzz KVM's x86 instruction
+> emulator from userspace.  It mirrors Xen's application of the AFL fuzzer to
+> it's instruction emulator in the hopes of discovering vulnerabilities.
+> Since this entrypoint also allows arbitrary execution of the emulators code
+> from userspace, it may also be useful for testing.
+> 
+> The current 4 patches build the emulator and 2 harnesses: simple-harness is
+> an example of unit testing; afl-harness is a frontend for the AFL fuzzer.
+> The fifth patch contains useful scripts for development but is not intended
+> for usptream consumption.
+> 
+> Patches
+> =======
+> 
+> - 01: Builds and links afl-harness with the required kernel objects.
+> - 02: Introduces the minimal set of emulator operations and supporting code
+> to emulate simple instructions.
+> - 03: Demonstrates simple-harness as a unit test.
+> - 04: Adds scripts for install and building.
+> - 05: Useful scripts for development
+> 
+> 
+> Issues
+> =======
+> 
+> Currently, fuzzing results in a large amount of FPU related crashes.  Xen's
+> fuzzing efforts had this issue too.  Their (temporary?) solution was to
+> disable FPU exceptions after every instruction iteration?  Some solution
+> is desired for this project.
+> 
+> 
+> Changelog
+> =======
+> 
+> v1 -> v2:
+>   - Moved -O0 to ifdef DEBUG
+>   - Building with ASAN by default
+>   - Removed a number of macros from emulator_ops.c and moved them as
+>     static inline functions in emulator_ops.h
+>   - Accidentally changed the example in simple-harness (reverted in v3)
+>   - Introduced patch 4 for scripts
+> 
+> v2 -> v3:
+>   - Removed a workaround for printf smashing the stack when compiled
+>     with -mcmodel=kernel, and stopped compiling with -mcmodel=kernel
+>   - Added a null check for malloc's return value
+>   - Moved more macros from emulator_ops.c into emulator_ops.h as
+>     static inline functions
+>   - Removed commented out code
+>   - Moved changes to emulator_ops.h into the first patch
+>   - Moved addition of afl-many script to the script patch
+>   - Fixed spelling mistakes in documentation
+>   - Reverted the simple-harness example back to the more useful original one
+>   - Moved non-essential development scripts from patch 4 to new patch 5
+> 
+> v3 -> v4:
+>   - Stubbed out all unimplemented emulator_ops with a unimplemented_op macro
+>   - Setting FAIL_ON_UNIMPLEMENTED_OP on compile decides whether calling these
+>     is treated as a crash or ignored
+>   - Moved setting up core dumps out of the default build/install path and
+>     detailed this change in the README
+>   - Added a .sh extention to afl-many
+>   - Added an optional timeout to afl-many.sh and made deploy_remote.sh use it
+>   - Building no longer creates a new .config each time and does not force any
+>     config options
+>   - Fixed a path bug in afl-many.sh
+> 
+> Any comments/suggestions are greatly appreciated.
+> 
+> Best,
+> Sam Caccavale
+> 
+> Sam Caccavale (5):
+>    Build target for emulate.o as a userspace binary
+>    Emulate simple x86 instructions in userspace
+>    Demonstrating unit testing via simple-harness
+>    Added build and install scripts
+>    Development scripts for crash triage and deploy
+> 
+>   tools/Makefile                                |   9 +
+>   tools/fuzz/x86ie/.gitignore                   |   2 +
+>   tools/fuzz/x86ie/Makefile                     |  54 ++
+>   tools/fuzz/x86ie/README.md                    |  21 +
+>   tools/fuzz/x86ie/afl-harness.c                | 151 +++++
+>   tools/fuzz/x86ie/common.h                     |  87 +++
+>   tools/fuzz/x86ie/emulator_ops.c               | 590 ++++++++++++++++++
+>   tools/fuzz/x86ie/emulator_ops.h               | 134 ++++
+>   tools/fuzz/x86ie/scripts/afl-many.sh          |  31 +
+>   tools/fuzz/x86ie/scripts/bin.sh               |  49 ++
+>   tools/fuzz/x86ie/scripts/build.sh             |  34 +
+>   tools/fuzz/x86ie/scripts/coalesce.sh          |   5 +
+>   tools/fuzz/x86ie/scripts/deploy.sh            |   9 +
+>   tools/fuzz/x86ie/scripts/deploy_remote.sh     |  10 +
+>   tools/fuzz/x86ie/scripts/gen_output.sh        |  11 +
+>   tools/fuzz/x86ie/scripts/install_afl.sh       |  15 +
+>   .../fuzz/x86ie/scripts/install_deps_ubuntu.sh |   5 +
+>   tools/fuzz/x86ie/scripts/rebuild.sh           |   6 +
+>   tools/fuzz/x86ie/scripts/run.sh               |  10 +
+>   tools/fuzz/x86ie/scripts/summarize.sh         |   9 +
+>   tools/fuzz/x86ie/simple-harness.c             |  49 ++
+>   tools/fuzz/x86ie/stubs.c                      |  59 ++
+>   tools/fuzz/x86ie/stubs.h                      |  52 ++
 
- drivers/mtd/nand/raw/stm32_fmc2_nand.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+Sorry I didn't realize it before. Isn't that missing a patch to the 
+MAINTAINERS file?
 
-diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-index 4aabea2..e63acc0 100644
---- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-+++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-@@ -37,6 +37,8 @@
- /* Max ECC buffer length */
- #define FMC2_MAX_ECC_BUF_LEN		(FMC2_BCHDSRS_LEN * FMC2_MAX_SG)
- 
-+#define FMC2_TIMEOUT_MS			1000
-+
- /* Timings */
- #define FMC2_THIZ			1
- #define FMC2_TIO			8000
-@@ -530,7 +532,8 @@ static int stm32_fmc2_ham_calculate(struct nand_chip *chip, const u8 *data,
- 	int ret;
- 
- 	ret = readl_relaxed_poll_timeout(fmc2->io_base + FMC2_SR,
--					 sr, sr & FMC2_SR_NWRF, 10, 1000);
-+					 sr, sr & FMC2_SR_NWRF, 10,
-+					 FMC2_TIMEOUT_MS);
- 	if (ret) {
- 		dev_err(fmc2->dev, "ham timeout\n");
- 		return ret;
-@@ -611,7 +614,7 @@ static int stm32_fmc2_bch_calculate(struct nand_chip *chip, const u8 *data,
- 
- 	/* Wait until the BCH code is ready */
- 	if (!wait_for_completion_timeout(&fmc2->complete,
--					 msecs_to_jiffies(1000))) {
-+					 msecs_to_jiffies(FMC2_TIMEOUT_MS))) {
- 		dev_err(fmc2->dev, "bch timeout\n");
- 		stm32_fmc2_disable_bch_irq(fmc2);
- 		return -ETIMEDOUT;
-@@ -696,7 +699,7 @@ static int stm32_fmc2_bch_correct(struct nand_chip *chip, u8 *dat,
- 
- 	/* Wait until the decoding error is ready */
- 	if (!wait_for_completion_timeout(&fmc2->complete,
--					 msecs_to_jiffies(1000))) {
-+					 msecs_to_jiffies(FMC2_TIMEOUT_MS))) {
- 		dev_err(fmc2->dev, "bch timeout\n");
- 		stm32_fmc2_disable_bch_irq(fmc2);
- 		return -ETIMEDOUT;
-@@ -969,7 +972,7 @@ static int stm32_fmc2_xfer(struct nand_chip *chip, const u8 *buf,
- 
- 	/* Wait end of sequencer transfer */
- 	if (!wait_for_completion_timeout(&fmc2->complete,
--					 msecs_to_jiffies(1000))) {
-+					 msecs_to_jiffies(FMC2_TIMEOUT_MS))) {
- 		dev_err(fmc2->dev, "seq timeout\n");
- 		stm32_fmc2_disable_seq_irq(fmc2);
- 		dmaengine_terminate_all(dma_ch);
-@@ -981,7 +984,7 @@ static int stm32_fmc2_xfer(struct nand_chip *chip, const u8 *buf,
- 
- 	/* Wait DMA data transfer completion */
- 	if (!wait_for_completion_timeout(&fmc2->dma_data_complete,
--					 msecs_to_jiffies(100))) {
-+					 msecs_to_jiffies(FMC2_TIMEOUT_MS))) {
- 		dev_err(fmc2->dev, "data DMA timeout\n");
- 		dmaengine_terminate_all(dma_ch);
- 		ret = -ETIMEDOUT;
-@@ -990,7 +993,7 @@ static int stm32_fmc2_xfer(struct nand_chip *chip, const u8 *buf,
- 	/* Wait DMA ECC transfer completion */
- 	if (!write_data && !raw) {
- 		if (!wait_for_completion_timeout(&fmc2->dma_ecc_complete,
--						 msecs_to_jiffies(100))) {
-+					msecs_to_jiffies(FMC2_TIMEOUT_MS))) {
- 			dev_err(fmc2->dev, "ECC DMA timeout\n");
- 			dmaengine_terminate_all(fmc2->dma_ecc_ch);
- 			ret = -ETIMEDOUT;
--- 
-1.9.1
 
+Alex
