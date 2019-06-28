@@ -2,91 +2,165 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C27C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C849C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B73022064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:31:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561707094;
-	bh=4TPRoDbbvJMuASutOOb9t8E1zisZK/trAdh2WtQAcQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WHmW1NZff75j598LEq9HnXXMzW1TKHIa4j13aVxrPI0rboQMf+dqucW9XXzFXmylx
-	 rtMUIATvkkYmYNm7cn5wDrtfo6lxIXpxj/NTEsoFLybDvc4RHpdCTZ/nOXQS5291jp
-	 BaP2/8wCqI48IzwLGUVYOXRV+6eGhxE7FtP4K+Ig=
+	by mail.kernel.org (Postfix) with ESMTP id 2AB6C2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfF1Hbd (ORCPT
+        id S1726718AbfF1HcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:31:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32908 "EHLO mx1.suse.de"
+        Fri, 28 Jun 2019 03:32:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32996 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726426AbfF1Hbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:31:33 -0400
+        id S1726650AbfF1HcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 03:32:06 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D3DF7B167;
-        Fri, 28 Jun 2019 07:31:30 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 09:31:28 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH 2/2] mm, slab: Extend vm/drop_caches to shrink kmem slabs
-Message-ID: <20190628073128.GC2751@dhcp22.suse.cz>
-References: <20190624174219.25513-1-longman@redhat.com>
- <20190624174219.25513-3-longman@redhat.com>
- <20190627151506.GE5303@dhcp22.suse.cz>
- <5cb05d2c-39a7-f138-b0b9-4b03d6008999@redhat.com>
+        by mx1.suse.de (Postfix) with ESMTP id 74B71B187;
+        Fri, 28 Jun 2019 07:32:04 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 09:32:03 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Petr Mladek <pmladek@suse.com>
+cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
+        torvalds@linux-foundation.org, tglx@linutronix.de
+Subject: Re: [PATCH] ftrace: Remove possible deadlock between register_kprobe()
+ and ftrace_run_update_code()
+In-Reply-To: <20190627081334.12793-1-pmladek@suse.com>
+Message-ID: <alpine.LSU.2.21.1906280928410.17146@pobox.suse.cz>
+References: <20190627081334.12793-1-pmladek@suse.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5cb05d2c-39a7-f138-b0b9-4b03d6008999@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 27-06-19 17:16:04, Waiman Long wrote:
-> On 6/27/19 11:15 AM, Michal Hocko wrote:
-> > On Mon 24-06-19 13:42:19, Waiman Long wrote:
-> >> With the slub memory allocator, the numbers of active slab objects
-> >> reported in /proc/slabinfo are not real because they include objects
-> >> that are held by the per-cpu slab structures whether they are actually
-> >> used or not.  The problem gets worse the more CPUs a system have. For
-> >> instance, looking at the reported number of active task_struct objects,
-> >> one will wonder where all the missing tasks gone.
-> >>
-> >> I know it is hard and costly to get a real count of active objects.
-> > What exactly is expensive? Why cannot slabinfo reduce the number of
-> > active objects by per-cpu cached objects?
-> >
-> The number of cachelines that needs to be accessed in order to get an
-> accurate count will be much higher if we need to iterate through all the
-> per-cpu structures. In addition, accessing the per-cpu partial list will
-> be racy.
+On Thu, 27 Jun 2019, Petr Mladek wrote:
 
-Why is all that a problem for a root only interface that should be used
-quite rarely (it is not something that you should be reading hundreds
-time per second, right)?
--- 
-Michal Hocko
-SUSE Labs
+> The commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text
+> permissions race") causes a possible deadlock between register_kprobe()
+> and ftrace_run_update_code() when ftrace is using stop_machine().
+> 
+> The existing dependency chain (in reverse order) is:
+> 
+> -> #1 (text_mutex){+.+.}:
+>        validate_chain.isra.21+0xb32/0xd70
+>        __lock_acquire+0x4b8/0x928
+>        lock_acquire+0x102/0x230
+>        __mutex_lock+0x88/0x908
+>        mutex_lock_nested+0x32/0x40
+>        register_kprobe+0x254/0x658
+>        init_kprobes+0x11a/0x168
+>        do_one_initcall+0x70/0x318
+>        kernel_init_freeable+0x456/0x508
+>        kernel_init+0x22/0x150
+>        ret_from_fork+0x30/0x34
+>        kernel_thread_starter+0x0/0xc
+> 
+> -> #0 (cpu_hotplug_lock.rw_sem){++++}:
+>        check_prev_add+0x90c/0xde0
+>        validate_chain.isra.21+0xb32/0xd70
+>        __lock_acquire+0x4b8/0x928
+>        lock_acquire+0x102/0x230
+>        cpus_read_lock+0x62/0xd0
+>        stop_machine+0x2e/0x60
+>        arch_ftrace_update_code+0x2e/0x40
+>        ftrace_run_update_code+0x40/0xa0
+>        ftrace_startup+0xb2/0x168
+>        register_ftrace_function+0x64/0x88
+>        klp_patch_object+0x1a2/0x290
+>        klp_enable_patch+0x554/0x980
+>        do_one_initcall+0x70/0x318
+>        do_init_module+0x6e/0x250
+>        load_module+0x1782/0x1990
+>        __s390x_sys_finit_module+0xaa/0xf0
+>        system_call+0xd8/0x2d0
+> 
+>  Possible unsafe locking scenario:
+> 
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(text_mutex);
+>                                lock(cpu_hotplug_lock.rw_sem);
+>                                lock(text_mutex);
+>   lock(cpu_hotplug_lock.rw_sem);
+> 
+> It is similar problem that has been solved by the commit 2d1e38f56622b9b
+> ("kprobes: Cure hotplug lock ordering issues"). Many locks are involved.
+> To be on the safe side, text_mutex must become a low level lock taken
+> after cpu_hotplug_lock.rw_sem.
+> 
+> This can't be achieved easily with the current ftrace design.
+> For example, arm calls set_all_modules_text_rw() already in
+> ftrace_arch_code_modify_prepare(), see arch/arm/kernel/ftrace.c.
+> This functions is called:
+> 
+>   + outside stop_machine() from ftrace_run_update_code()
+>   + without stop_machine() from ftrace_module_enable()
+> 
+> Fortunately, the problematic fix is needed only on x86_64. It is
+> the only architecture that calls set_all_modules_text_rw()
+> in ftrace path and supports livepatching at the same time.
+> 
+> Therefore it is enough to move text_mutex handling from the generic
+> kernel/trace/ftrace.c into arch/x86/kernel/ftrace.c:
+> 
+>    ftrace_arch_code_modify_prepare()
+>    ftrace_arch_code_modify_post_process()
+> 
+> This patch basically reverts the ftrace part of the problematic
+> commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module
+> text permissions race"). And provides x86_64 specific-fix.
+> 
+> Some refactoring of the ftrace code will be needed when livepatching
+> is implemented for arm or nds32. These architectures call
+> set_all_modules_text_rw() and use stop_machine() at the same time.
+> 
+> Fixes: 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text permissions race")
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+
+Reported-by: Miroslav Benes <mbenes@suse.cz>
+
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 38277af44f5c..d3034a4a3fcc 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -34,7 +34,6 @@
+>  #include <linux/hash.h>
+>  #include <linux/rcupdate.h>
+>  #include <linux/kprobes.h>
+> -#include <linux/memory.h>
+>  
+>  #include <trace/events/sched.h>
+>  
+> @@ -2611,12 +2610,10 @@ static void ftrace_run_update_code(int command)
+>  {
+>  	int ret;
+>  
+> -	mutex_lock(&text_mutex);
+> -
+>  	ret = ftrace_arch_code_modify_prepare();
+>  	FTRACE_WARN_ON(ret);
+>  	if (ret)
+> -		goto out_unlock;
+> +		return ret;
+
+Should be just "return;", because the function is "static void".
+
+With that
+
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+
+Miroslav
