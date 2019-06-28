@@ -7,54 +7,59 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB303C5B578
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DC1C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672B3217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462272086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561757005;
-	bh=v5zx7LXFpvYV5tzl6NON/QnpFklnapl+TnOcKp9AwOA=;
+	s=default; t=1561757009;
+	bh=nO59d/pJbiPTEvPZRtzJ0xEzr88E3wz1aCLKzGOHyIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gx9BFxHVXGAuHrALYeXAVOW7aJBcoeY12ClSob30et9i16JoMxM7HLn5JgozL6dQ0
-	 L78bhXjWyNplDr125n5Py8od5+4oQjgThnuWRS7cg6pjBuqVZUG2wVnulrp2UBxXH0
-	 OjFEx/xs2V4i9ZLo6TgTUSgxnc77zFg3FjPBjZfQ=
+	b=vmxX2/OAJNHvpCyxvtHzxLGpjbQzeB/+hJQgt30G6qfdD0I2U5cl6neVlV6Bg/65f
+	 WhipouZJzOFdzoC7YXr2pF8druHCvJIlsDIwX2A+4W3e+ZvxL0W8TGcWIIc+UBLB41
+	 kA2L6GAM2ZYJWd0Nq7u6EmZVJg21Nk20W3tK02ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfF1VXY (ORCPT
+        id S1726813AbfF1VX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 17:23:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50758 "EHLO
+        Fri, 28 Jun 2019 17:23:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50766 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfF1VXW (ORCPT
+        with ESMTP id S1726664AbfF1VXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 17:23:22 -0400
+        Fri, 28 Jun 2019 17:23:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WHzqYSIng/mfw8XPhdz07pQx2JM3W2cTZe6vV3CEVAE=; b=Bpj+0HbWoChh0YinPPocaTNDfS
-        MFY/9Ocpi06Qrta5Brnub8SEY9Q81o4hUVe5flxqoaFaXPbxwpLqiZj2ALsVQ6/Jvl5KJtrL7TugM
-        V/ARg0wABldjQLN8izKU1pYSN56QBSQU/m7FLj73isavFPuuMoppZXU6J5qBl7wSBW7JQBnLJabs8
-        9GGcDXa8t8MfdUFDsKgWP9eEUvsyLaIAUYRF3PuoEr0i/dfFEa+9sMgQ5HiLiBj2xVNC9Eh4pWEon
-        7BtdifUXyeNquzxJgYiU7wkWer2glvKOb1cW+m1zn7no0P59FtoZxeKVbTTDbQHx+y1jc/hteMItT
-        TkxyenUw==;
+        bh=QlsQ1+q1SjKC8lMaCgpafyBcinDt68zhFxuroemk0jo=; b=Ava474VzaHhDGQbDK3FHJx7/bG
+        ORDMh1wgigViphdpWl1V81aqB8Of+6Ct2veLvaqc7VzgJew/toTHyUoEFNwe+pv+OwMj9eN672wpl
+        dwvbYH9d9bnREXqJ+++eSDSK7JXYf/qFH1XlOH4cZJ9PuEnCzRIBs5K0NudT37tZlO7aSu/Rbha/S
+        afUdr0I33hJAQxuGgDzT71l73wpZL+dPTbTr21lBzn51I3AjpkBkDL5Wd81BTt2Xokj3E/7fD2mmf
+        ZM946lLfTDbMCiGLdWLtM/Th/uWb2wvfHxEjndgSzCbU4au9UWrVQdAvv3sQ4ONH3mzIAWI+AnjTk
+        61SzjF0A==;
 Received: from [187.113.3.250] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgyL2-0001VF-Js; Fri, 28 Jun 2019 21:23:21 +0000
+        id 1hgyL2-0001VI-LU; Fri, 28 Jun 2019 21:23:21 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgyL0-0002dy-05; Fri, 28 Jun 2019 18:23:18 -0300
+        id 1hgyL0-0002e2-0x; Fri, 28 Jun 2019 18:23:18 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Evgeniy Polyakov <zbr@ioremap.net>
-Subject: [PATCH 4/5] docs: w1: convert to ReST and add to the kAPI group of docs
-Date:   Fri, 28 Jun 2019 18:23:15 -0300
-Message-Id: <e7de84fce8f6ea6e0a18df7b6bf50ca507a0408e.1561756511.git.mchehab+samsung@kernel.org>
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-spi@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: [PATCH 5/5] docs: spi: convert to ReST and add it to the kABI bookset
+Date:   Fri, 28 Jun 2019 18:23:16 -0300
+Message-Id: <7895cce04cd4d140fb519a02315a8309c4c3ebb5.1561756511.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561756511.git.mchehab+samsung@kernel.org>
 References: <cover.1561756511.git.mchehab+samsung@kernel.org>
@@ -65,131 +70,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 1wire documentation was written with w1 developers in
-mind, so, it makes sense to add it together with the driver-api
-set.
+While there's one file there with briefily describes the uAPI,
+the documentation was written just like most subsystems: focused
+on kernel developers. So, add it together with driver-api books.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/ABI/stable/sysfs-bus-w1         |  2 +-
- .../ABI/stable/sysfs-driver-w1_ds28e04        |  4 +-
- .../ABI/stable/sysfs-driver-w1_ds28ea00       |  2 +-
- Documentation/index.rst                       |  1 +
- Documentation/w1/index.rst                    | 22 +++++
- .../w1/masters/{ds2482 => ds2482.rst}         | 17 +++-
- .../w1/masters/{ds2490 => ds2490.rst}         |  6 +-
- Documentation/w1/masters/index.rst            | 14 +++
- Documentation/w1/masters/mxc-w1               | 12 ---
- Documentation/w1/masters/mxc-w1.rst           | 17 ++++
- .../w1/masters/{omap-hdq => omap-hdq.rst}     | 12 +--
- .../w1/masters/{w1-gpio => w1-gpio.rst}       | 21 +++--
- Documentation/w1/slaves/index.rst             | 16 ++++
- .../w1/slaves/{w1_ds2406 => w1_ds2406.rst}    |  2 +
- .../w1/slaves/{w1_ds2413 => w1_ds2413.rst}    |  9 ++
- Documentation/w1/slaves/w1_ds2423             | 47 ----------
- Documentation/w1/slaves/w1_ds2423.rst         | 54 ++++++++++++
- .../w1/slaves/{w1_ds2438 => w1_ds2438.rst}    | 10 ++-
- .../w1/slaves/{w1_ds28e04 => w1_ds28e04.rst}  |  5 ++
- .../w1/slaves/{w1_ds28e17 => w1_ds28e17.rst}  | 15 ++--
- .../w1/slaves/{w1_therm => w1_therm.rst}      | 11 ++-
- .../w1/{w1.generic => w1-generic.rst}         | 88 +++++++++++--------
- .../w1/{w1.netlink => w1-netlink.rst}         | 83 +++++++++--------
- 23 files changed, 306 insertions(+), 164 deletions(-)
- create mode 100644 Documentation/w1/index.rst
- rename Documentation/w1/masters/{ds2482 => ds2482.rst} (71%)
- rename Documentation/w1/masters/{ds2490 => ds2490.rst} (98%)
- create mode 100644 Documentation/w1/masters/index.rst
- delete mode 100644 Documentation/w1/masters/mxc-w1
- create mode 100644 Documentation/w1/masters/mxc-w1.rst
- rename Documentation/w1/masters/{omap-hdq => omap-hdq.rst} (90%)
- rename Documentation/w1/masters/{w1-gpio => w1-gpio.rst} (75%)
- create mode 100644 Documentation/w1/slaves/index.rst
- rename Documentation/w1/slaves/{w1_ds2406 => w1_ds2406.rst} (97%)
- rename Documentation/w1/slaves/{w1_ds2413 => w1_ds2413.rst} (81%)
- delete mode 100644 Documentation/w1/slaves/w1_ds2423
- create mode 100644 Documentation/w1/slaves/w1_ds2423.rst
- rename Documentation/w1/slaves/{w1_ds2438 => w1_ds2438.rst} (93%)
- rename Documentation/w1/slaves/{w1_ds28e04 => w1_ds28e04.rst} (93%)
- rename Documentation/w1/slaves/{w1_ds28e17 => w1_ds28e17.rst} (88%)
- rename Documentation/w1/slaves/{w1_therm => w1_therm.rst} (95%)
- rename Documentation/w1/{w1.generic => w1-generic.rst} (59%)
- rename Documentation/w1/{w1.netlink => w1-netlink.rst} (79%)
+ Documentation/index.rst                       |   1 +
+ .../spi/{butterfly => butterfly.rst}          |  44 ++++----
+ Documentation/spi/index.rst                   |  23 ++++
+ Documentation/spi/{pxa2xx => pxa2xx.rst}      |  94 ++++++++--------
+ .../spi/{spi-lm70llp => spi-lm70llp.rst}      |  17 ++-
+ .../spi/{spi-sc18is602 => spi-sc18is602.rst}  |   3 +
+ .../spi/{spi-summary => spi-summary.rst}      | 103 ++++++++++--------
+ Documentation/spi/{spidev => spidev.rst}      |  30 +++--
+ drivers/iio/dummy/iio_simple_dummy.c          |   2 +-
+ drivers/spi/Kconfig                           |   2 +-
+ drivers/spi/spi-butterfly.c                   |   2 +-
+ drivers/spi/spi-lm70llp.c                     |   2 +-
+ include/linux/platform_data/sc18is602.h       |   2 +-
+ 13 files changed, 198 insertions(+), 127 deletions(-)
+ rename Documentation/spi/{butterfly => butterfly.rst} (71%)
+ create mode 100644 Documentation/spi/index.rst
+ rename Documentation/spi/{pxa2xx => pxa2xx.rst} (83%)
+ rename Documentation/spi/{spi-lm70llp => spi-lm70llp.rst} (88%)
+ rename Documentation/spi/{spi-sc18is602 => spi-sc18is602.rst} (97%)
+ rename Documentation/spi/{spi-summary => spi-summary.rst} (93%)
+ rename Documentation/spi/{spidev => spidev.rst} (90%)
 
-diff --git a/Documentation/ABI/stable/sysfs-bus-w1 b/Documentation/ABI/stable/sysfs-bus-w1
-index 140d85b4ae92..992dfb183ed0 100644
---- a/Documentation/ABI/stable/sysfs-bus-w1
-+++ b/Documentation/ABI/stable/sysfs-bus-w1
-@@ -6,6 +6,6 @@ Description:	Bus scanning interval, microseconds component.
- 		control systems are attached/generate presence for as short as
- 		100 ms - hence the tens-to-hundreds milliseconds scan intervals
- 		are required.
--		see Documentation/w1/w1.generic for detailed information.
-+		see Documentation/w1/w1-generic.rst for detailed information.
- Users:		any user space application which wants to know bus scanning
- 		interval
-diff --git a/Documentation/ABI/stable/sysfs-driver-w1_ds28e04 b/Documentation/ABI/stable/sysfs-driver-w1_ds28e04
-index 26579ee868c9..3e1c1fa8d54d 100644
---- a/Documentation/ABI/stable/sysfs-driver-w1_ds28e04
-+++ b/Documentation/ABI/stable/sysfs-driver-w1_ds28e04
-@@ -2,7 +2,7 @@ What:		/sys/bus/w1/devices/.../pio
- Date:		May 2012
- Contact:	Markus Franke <franm@hrz.tu-chemnitz.de>
- Description:	read/write the contents of the two PIO's of the DS28E04-100
--		see Documentation/w1/slaves/w1_ds28e04 for detailed information
-+		see Documentation/w1/slaves/w1_ds28e04.rst for detailed information
- Users:		any user space application which wants to communicate with DS28E04-100
- 
- 
-@@ -11,5 +11,5 @@ What:		/sys/bus/w1/devices/.../eeprom
- Date:		May 2012
- Contact:	Markus Franke <franm@hrz.tu-chemnitz.de>
- Description:	read/write the contents of the EEPROM memory of the DS28E04-100
--		see Documentation/w1/slaves/w1_ds28e04 for detailed information
-+		see Documentation/w1/slaves/w1_ds28e04.rst for detailed information
- Users:		any user space application which wants to communicate with DS28E04-100
-diff --git a/Documentation/ABI/stable/sysfs-driver-w1_ds28ea00 b/Documentation/ABI/stable/sysfs-driver-w1_ds28ea00
-index e928def14f28..534e63731a49 100644
---- a/Documentation/ABI/stable/sysfs-driver-w1_ds28ea00
-+++ b/Documentation/ABI/stable/sysfs-driver-w1_ds28ea00
-@@ -2,5 +2,5 @@ What:		/sys/bus/w1/devices/.../w1_seq
- Date:		Apr 2015
- Contact:	Matt Campbell <mattrcampbell@gmail.com>
- Description:	Support for the DS28EA00 chain sequence function
--		see Documentation/w1/slaves/w1_therm for detailed information
-+		see Documentation/w1/slaves/w1_therm.rst for detailed information
- Users:		any user space application which wants to communicate with DS28EA00
 diff --git a/Documentation/index.rst b/Documentation/index.rst
-index ded1081e8d5f..38ece18f5d1e 100644
+index 38ece18f5d1e..bcaddbfa817f 100644
 --- a/Documentation/index.rst
 +++ b/Documentation/index.rst
 @@ -115,6 +115,7 @@ needed).
     power/index
     target/index
     timers/index
-+   w1/index
++   spi/index
+    w1/index
     watchdog/index
     input/index
-    hwmon/index
-diff --git a/Documentation/w1/index.rst b/Documentation/w1/index.rst
+diff --git a/Documentation/spi/butterfly b/Documentation/spi/butterfly.rst
+similarity index 71%
+rename from Documentation/spi/butterfly
+rename to Documentation/spi/butterfly.rst
+index 9927af7a629c..e614a589547c 100644
+--- a/Documentation/spi/butterfly
++++ b/Documentation/spi/butterfly.rst
+@@ -1,3 +1,4 @@
++===================================================
+ spi_butterfly - parport-to-butterfly adapter driver
+ ===================================================
+ 
+@@ -27,25 +28,29 @@ need to reflash the firmware, and the pins are the standard Atmel "ISP"
+ connector pins (used also on non-Butterfly AVR boards).  On the parport
+ side this is like "sp12" programming cables.
+ 
++	======	  =============	  ===================
+ 	Signal	  Butterfly	  Parport (DB-25)
+-	------	  ---------	  ---------------
+-	SCK	= J403.PB1/SCK	= pin 2/D0
+-	RESET	= J403.nRST	= pin 3/D1
+-	VCC	= J403.VCC_EXT	= pin 8/D6
+-	MOSI	= J403.PB2/MOSI	= pin 9/D7
+-	MISO	= J403.PB3/MISO	= pin 11/S7,nBUSY
+-	GND	= J403.GND	= pin 23/GND
++	======	  =============	  ===================
++	SCK	  J403.PB1/SCK	  pin 2/D0
++	RESET	  J403.nRST	  pin 3/D1
++	VCC	  J403.VCC_EXT	  pin 8/D6
++	MOSI	  J403.PB2/MOSI	  pin 9/D7
++	MISO	  J403.PB3/MISO	  pin 11/S7,nBUSY
++	GND	  J403.GND	  pin 23/GND
++	======	  =============	  ===================
+ 
+ Then to let Linux master that bus to talk to the DataFlash chip, you must
+ (a) flash new firmware that disables SPI (set PRR.2, and disable pullups
+ by clearing PORTB.[0-3]); (b) configure the mtd_dataflash driver; and
+ (c) cable in the chipselect.
+ 
++	======	  ============	  ===================
+ 	Signal	  Butterfly	  Parport (DB-25)
+-	------	  ---------	  ---------------
+-	VCC	= J400.VCC_EXT	= pin 7/D5
+-	SELECT	= J400.PB0/nSS	= pin 17/C3,nSELECT
+-	GND	= J400.GND	= pin 24/GND
++	======	  ============	  ===================
++	VCC	  J400.VCC_EXT	  pin 7/D5
++	SELECT	  J400.PB0/nSS	  pin 17/C3,nSELECT
++	GND	  J400.GND	  pin 24/GND
++	======	  ============	  ===================
+ 
+ Or you could flash firmware making the AVR into an SPI slave (keeping the
+ DataFlash in reset) and tweak the spi_butterfly driver to make it bind to
+@@ -56,13 +61,14 @@ That would let you talk to the AVR using custom SPI-with-USI firmware,
+ while letting either Linux or the AVR use the DataFlash.  There are plenty
+ of spare parport pins to wire this one up, such as:
+ 
++	======	  =============	  ===================
+ 	Signal	  Butterfly	  Parport (DB-25)
+-	------	  ---------	  ---------------
+-	SCK	= J403.PE4/USCK	= pin 5/D3
+-	MOSI	= J403.PE5/DI	= pin 6/D4
+-	MISO	= J403.PE6/DO	= pin 12/S5,nPAPEROUT
+-	GND	= J403.GND	= pin 22/GND
+-
+-	IRQ	= J402.PF4	= pin 10/S6,ACK
+-	GND	= J402.GND(P2)	= pin 25/GND
++	======	  =============	  ===================
++	SCK	  J403.PE4/USCK	  pin 5/D3
++	MOSI	  J403.PE5/DI	  pin 6/D4
++	MISO	  J403.PE6/DO	  pin 12/S5,nPAPEROUT
++	GND	  J403.GND	  pin 22/GND
+ 
++	IRQ	  J402.PF4	  pin 10/S6,ACK
++	GND	  J402.GND(P2)	  pin 25/GND
++	======	  =============	  ===================
+diff --git a/Documentation/spi/index.rst b/Documentation/spi/index.rst
 new file mode 100644
-index 000000000000..4ca0698357c4
+index 000000000000..bad6259a7bb6
 --- /dev/null
-+++ b/Documentation/w1/index.rst
-@@ -0,0 +1,22 @@
-+. SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/spi/index.rst
+@@ -0,0 +1,23 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+================
-+1-Wire Subsystem
-+================
++=================================
++Serial Peripheral Interface (SPI)
++=================================
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+
-+   w1-generic.rst
-+   w1-netlink.rst
-+   masters/index
-+   slaves/index
++   spi-summary
++   spidev
++   butterfly
++   pxa2xx
++   spi-lm70llp
++   spi-sc18is602
 +
 +.. only::  subproject and html
 +
@@ -198,888 +215,723 @@ index 000000000000..4ca0698357c4
 +
 +   * :ref:`genindex`
 +
-diff --git a/Documentation/w1/masters/ds2482 b/Documentation/w1/masters/ds2482.rst
-similarity index 71%
-rename from Documentation/w1/masters/ds2482
-rename to Documentation/w1/masters/ds2482.rst
-index 56f8edace6ac..7f1558d39310 100644
---- a/Documentation/w1/masters/ds2482
-+++ b/Documentation/w1/masters/ds2482.rst
-@@ -1,13 +1,19 @@
-+====================
- Kernel driver ds2482
- ====================
+diff --git a/Documentation/spi/pxa2xx b/Documentation/spi/pxa2xx.rst
+similarity index 83%
+rename from Documentation/spi/pxa2xx
+rename to Documentation/spi/pxa2xx.rst
+index 551325b66b23..457faef8be74 100644
+--- a/Documentation/spi/pxa2xx
++++ b/Documentation/spi/pxa2xx.rst
+@@ -1,8 +1,10 @@
++==============================
+ PXA2xx SPI on SSP driver HOWTO
+-===================================================
++==============================
++
+ This a mini howto on the pxa2xx_spi driver.  The driver turns a PXA2xx
+ synchronous serial port into a SPI master controller
+-(see Documentation/spi/spi-summary). The driver has the following features
++(see Documentation/spi/spi-summary.rst). The driver has the following features
  
- Supported chips:
-+
-   * Maxim DS2482-100, Maxim DS2482-800
-+
-     Prefix: 'ds2482'
-+
-     Addresses scanned: None
-+
-     Datasheets:
--        http://datasheets.maxim-ic.com/en/ds/DS2482-100.pdf
--        http://datasheets.maxim-ic.com/en/ds/DS2482-800.pdf
-+
-+        - http://datasheets.maxim-ic.com/en/ds/DS2482-100.pdf
-+        - http://datasheets.maxim-ic.com/en/ds/DS2482-800.pdf
+ - Support for any PXA2xx SSP
+ - SSP PIO and SSP DMA data transfers.
+@@ -19,12 +21,12 @@ Declaring PXA2xx Master Controllers
+ -----------------------------------
+ Typically a SPI master is defined in the arch/.../mach-*/board-*.c as a
+ "platform device".  The master configuration is passed to the driver via a table
+-found in include/linux/spi/pxa2xx_spi.h:
++found in include/linux/spi/pxa2xx_spi.h::
  
- Author: Ben Gardner <bgardner@wabtec.com>
+-struct pxa2xx_spi_controller {
++  struct pxa2xx_spi_controller {
+ 	u16 num_chipselect;
+ 	u8 enable_dma;
+-};
++  };
  
-@@ -23,9 +29,12 @@ General Remarks
- ---------------
+ The "pxa2xx_spi_controller.num_chipselect" field is used to determine the number of
+ slave device (chips) attached to this SPI master.
+@@ -36,9 +38,9 @@ See the "PXA2xx Developer Manual" section "DMA Controller".
  
- Valid addresses are 0x18, 0x19, 0x1a, and 0x1b.
-+
- However, the device cannot be detected without writing to the i2c bus, so no
- detection is done. You should instantiate the device explicitly.
+ NSSP MASTER SAMPLE
+ ------------------
+-Below is a sample configuration using the PXA255 NSSP.
++Below is a sample configuration using the PXA255 NSSP::
  
--$ modprobe ds2482
--$ echo ds2482 0x18 > /sys/bus/i2c/devices/i2c-0/new_device
-+::
-+
-+  $ modprobe ds2482
-+  $ echo ds2482 0x18 > /sys/bus/i2c/devices/i2c-0/new_device
- 
-diff --git a/Documentation/w1/masters/ds2490 b/Documentation/w1/masters/ds2490.rst
-similarity index 98%
-rename from Documentation/w1/masters/ds2490
-rename to Documentation/w1/masters/ds2490.rst
-index 3e091151dd80..7e5b50f9c0f5 100644
---- a/Documentation/w1/masters/ds2490
-+++ b/Documentation/w1/masters/ds2490.rst
-@@ -1,7 +1,9 @@
-+====================
- Kernel driver ds2490
- ====================
- 
- Supported chips:
-+
-   * Maxim DS2490 based
- 
- Author: Evgeniy Polyakov <johnpol@2ka.mipt.ru>
-@@ -18,6 +20,7 @@ which has 0x81 family ID integrated chip and DS2490
- low-level operational chip.
- 
- Notes and limitations.
-+
- - The weak pullup current is a minimum of 0.9mA and maximum of 6.0mA.
- - The 5V strong pullup is supported with a minimum of 5.9mA and a
-   maximum of 30.4 mA.  (From DS2490.pdf)
-@@ -65,4 +68,5 @@ Notes and limitations.
-   reattaching would clear the problem.  usbmon output in the guest and
-   host did not explain the problem.  My guess is a bug in either qemu
-   or the host OS and more likely the host OS.
---- 03-06-2008 David Fries <David@Fries.net>
-+
-+03-06-2008 David Fries <David@Fries.net>
-diff --git a/Documentation/w1/masters/index.rst b/Documentation/w1/masters/index.rst
-new file mode 100644
-index 000000000000..4442a98850ad
---- /dev/null
-+++ b/Documentation/w1/masters/index.rst
-@@ -0,0 +1,14 @@
-+. SPDX-License-Identifier: GPL-2.0
-+
-+=====================
-+1-wire Master Drivers
-+=====================
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   ds2482
-+   ds2490
-+   mxc-w1
-+   omap-hdq
-+   w1-gpio
-diff --git a/Documentation/w1/masters/mxc-w1 b/Documentation/w1/masters/mxc-w1
-deleted file mode 100644
-index 38be1ad65532..000000000000
---- a/Documentation/w1/masters/mxc-w1
-+++ /dev/null
-@@ -1,12 +0,0 @@
--Kernel driver mxc_w1
--====================
--
--Supported chips:
--  * Freescale MX27, MX31 and probably other i.MX SoCs
--    Datasheets:
--        http://www.freescale.com/files/32bit/doc/data_sheet/MCIMX31.pdf?fpsp=1
--	http://cache.freescale.com/files/dsp/doc/archive/MCIMX27.pdf?fsrch=1&WT_TYPE=
--	Data%20Sheets&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation
--
--Author: Originally based on Freescale code, prepared for mainline by
--	Sascha Hauer <s.hauer@pengutronix.de>
-diff --git a/Documentation/w1/masters/mxc-w1.rst b/Documentation/w1/masters/mxc-w1.rst
-new file mode 100644
-index 000000000000..334f9893103f
---- /dev/null
-+++ b/Documentation/w1/masters/mxc-w1.rst
-@@ -0,0 +1,17 @@
-+====================
-+Kernel driver mxc_w1
-+====================
-+
-+Supported chips:
-+
-+  * Freescale MX27, MX31 and probably other i.MX SoCs
-+
-+    Datasheets:
-+
-+        - http://www.freescale.com/files/32bit/doc/data_sheet/MCIMX31.pdf?fpsp=1
-+	- http://cache.freescale.com/files/dsp/doc/archive/MCIMX27.pdf?fsrch=1&WT_TYPE=Data%20Sheets&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation
-+
-+Author:
-+
-+	Originally based on Freescale code, prepared for mainline by
-+	Sascha Hauer <s.hauer@pengutronix.de>
-diff --git a/Documentation/w1/masters/omap-hdq b/Documentation/w1/masters/omap-hdq.rst
-similarity index 90%
-rename from Documentation/w1/masters/omap-hdq
-rename to Documentation/w1/masters/omap-hdq.rst
-index 234522709a5f..345298a59e50 100644
---- a/Documentation/w1/masters/omap-hdq
-+++ b/Documentation/w1/masters/omap-hdq.rst
-@@ -1,9 +1,10 @@
--Kernel driver for omap HDQ/1-wire module.
-+========================================
-+Kernel driver for omap HDQ/1-wire module
- ========================================
- 
- Supported chips:
- ================
--	HDQ/1-wire controller on the TI OMAP 2430/3430 platforms.
-+HDQ/1-wire controller on the TI OMAP 2430/3430 platforms.
- 
- A useful link about HDQ basics:
- ===============================
-@@ -40,9 +41,10 @@ driver(drivers/w1/slaves/w1_bq27000.c) sets the ID to 1.
- Please note to load both the modules with a different ID if required, but note
- that the ID used should be same for both master and slave driver loading.
- 
--e.g:
--insmod omap_hdq.ko W1_ID=2
--inamod w1_bq27000.ko F_ID=2
-+e.g::
-+
-+  insmod omap_hdq.ko W1_ID=2
-+  inamod w1_bq27000.ko F_ID=2
- 
- The driver also supports 1-wire mode. In this mode, there is no need to
- pass slave ID as parameter. The driver will auto-detect slaves connected
-diff --git a/Documentation/w1/masters/w1-gpio b/Documentation/w1/masters/w1-gpio.rst
-similarity index 75%
-rename from Documentation/w1/masters/w1-gpio
-rename to Documentation/w1/masters/w1-gpio.rst
-index 623961d9e83f..18fdb7366372 100644
---- a/Documentation/w1/masters/w1-gpio
-+++ b/Documentation/w1/masters/w1-gpio.rst
-@@ -1,3 +1,4 @@
-+=====================
- Kernel driver w1-gpio
- =====================
- 
-@@ -16,28 +17,30 @@ Documentation/devicetree/bindings/w1/w1-gpio.txt
- Example (mach-at91)
- -------------------
- 
--#include <linux/gpio/machine.h>
--#include <linux/w1-gpio.h>
-+::
- 
--static struct gpiod_lookup_table foo_w1_gpiod_table = {
-+  #include <linux/gpio/machine.h>
-+  #include <linux/w1-gpio.h>
-+
-+  static struct gpiod_lookup_table foo_w1_gpiod_table = {
- 	.dev_id = "w1-gpio",
- 	.table = {
- 		GPIO_LOOKUP_IDX("at91-gpio", AT91_PIN_PB20, NULL, 0,
- 			GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN),
+-static struct resource pxa_spi_nssp_resources[] = {
++  static struct resource pxa_spi_nssp_resources[] = {
+ 	[0] = {
+ 		.start	= __PREG(SSCR0_P(2)), /* Start address of NSSP */
+ 		.end	= __PREG(SSCR0_P(2)) + 0x2c, /* Range of registers */
+@@ -49,14 +51,14 @@ static struct resource pxa_spi_nssp_resources[] = {
+ 		.end	= IRQ_NSSP,
+ 		.flags	= IORESOURCE_IRQ,
  	},
 -};
 +  };
  
--static struct w1_gpio_platform_data foo_w1_gpio_pdata = {
-+  static struct w1_gpio_platform_data foo_w1_gpio_pdata = {
- 	.ext_pullup_enable_pin	= -EINVAL,
+-static struct pxa2xx_spi_controller pxa_nssp_master_info = {
++  static struct pxa2xx_spi_controller pxa_nssp_master_info = {
+ 	.num_chipselect = 1, /* Matches the number of chips attached to NSSP */
+ 	.enable_dma = 1, /* Enables NSSP DMA */
 -};
 +  };
  
--static struct platform_device foo_w1_device = {
-+  static struct platform_device foo_w1_device = {
- 	.name			= "w1-gpio",
- 	.id			= -1,
- 	.dev.platform_data	= &foo_w1_gpio_pdata,
+-static struct platform_device pxa_spi_nssp = {
++  static struct platform_device pxa_spi_nssp = {
+ 	.name = "pxa2xx-spi", /* MUST BE THIS VALUE, so device match driver */
+ 	.id = 2, /* Bus number, MUST MATCH SSP number 1..n */
+ 	.resource = pxa_spi_nssp_resources,
+@@ -64,22 +66,22 @@ static struct platform_device pxa_spi_nssp = {
+ 	.dev = {
+ 		.platform_data = &pxa_nssp_master_info, /* Passed to driver */
+ 	},
 -};
 +  };
  
--...
-+  ...
- 	at91_set_GPIO_periph(foo_w1_gpio_pdata.pin, 1);
- 	at91_set_multi_drive(foo_w1_gpio_pdata.pin, 1);
- 	gpiod_add_lookup_table(&foo_w1_gpiod_table);
-diff --git a/Documentation/w1/slaves/index.rst b/Documentation/w1/slaves/index.rst
-new file mode 100644
-index 000000000000..d0697b202f09
---- /dev/null
-+++ b/Documentation/w1/slaves/index.rst
-@@ -0,0 +1,16 @@
-+. SPDX-License-Identifier: GPL-2.0
-+
-+====================
-+1-wire Slave Drivers
-+====================
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   w1_ds2406
-+   w1_ds2413
-+   w1_ds2423
-+   w1_ds2438
-+   w1_ds28e04
-+   w1_ds28e17
-+   w1_therm
-diff --git a/Documentation/w1/slaves/w1_ds2406 b/Documentation/w1/slaves/w1_ds2406.rst
-similarity index 97%
-rename from Documentation/w1/slaves/w1_ds2406
-rename to Documentation/w1/slaves/w1_ds2406.rst
-index 8137fe6f6c3d..ec82f2614721 100644
---- a/Documentation/w1/slaves/w1_ds2406
-+++ b/Documentation/w1/slaves/w1_ds2406.rst
-@@ -1,7 +1,9 @@
-+=======================
- w1_ds2406 kernel driver
- =======================
+-static struct platform_device *devices[] __initdata = {
++  static struct platform_device *devices[] __initdata = {
+ 	&pxa_spi_nssp,
+-};
++  };
  
- Supported chips:
-+
-   * Maxim DS2406 (and other family 0x12) addressable switches
+-static void __init board_init(void)
+-{
++  static void __init board_init(void)
++  {
+ 	(void)platform_add_device(devices, ARRAY_SIZE(devices));
+-}
++  }
  
- Author: Scott Alfter <scott@alfter.us>
-diff --git a/Documentation/w1/slaves/w1_ds2413 b/Documentation/w1/slaves/w1_ds2413.rst
-similarity index 81%
-rename from Documentation/w1/slaves/w1_ds2413
-rename to Documentation/w1/slaves/w1_ds2413.rst
-index 936263a8ccb4..c15bb5b919b7 100644
---- a/Documentation/w1/slaves/w1_ds2413
-+++ b/Documentation/w1/slaves/w1_ds2413.rst
-@@ -1,11 +1,16 @@
-+=======================
- Kernel driver w1_ds2413
- =======================
+ Declaring Slave Devices
+ -----------------------
+ Typically each SPI slave (chip) is defined in the arch/.../mach-*/board-*.c
+ using the "spi_board_info" structure found in "linux/spi/spi.h". See
+-"Documentation/spi/spi-summary" for additional information.
++"Documentation/spi/spi-summary.rst" for additional information.
  
- Supported chips:
-+
-   * Maxim DS2413 1-Wire Dual Channel Addressable Switch
+ Each slave device attached to the PXA must provide slave specific configuration
+ information via the structure "pxa2xx_spi_chip" found in
+@@ -87,19 +89,21 @@ information via the structure "pxa2xx_spi_chip" found in
+ will uses the configuration whenever the driver communicates with the slave
+ device. All fields are optional.
  
- supported family codes:
+-struct pxa2xx_spi_chip {
++::
 +
-+        ================        ====
-         W1_FAMILY_DS2413        0x3A
-+        ================        ====
++  struct pxa2xx_spi_chip {
+ 	u8 tx_threshold;
+ 	u8 rx_threshold;
+ 	u8 dma_burst_size;
+ 	u32 timeout;
+ 	u8 enable_loopback;
+ 	void (*cs_control)(u32 command);
+-};
++  };
  
- Author: Mariusz Bialonczyk <manio@skyboo.net>
+ The "pxa2xx_spi_chip.tx_threshold" and "pxa2xx_spi_chip.rx_threshold" fields are
+ used to configure the SSP hardware fifo.  These fields are critical to the
+ performance of pxa2xx_spi driver and misconfiguration will result in rx
+-fifo overruns (especially in PIO mode transfers). Good default values are
++fifo overruns (especially in PIO mode transfers). Good default values are::
  
-@@ -20,11 +25,13 @@ Reading state
- The "state" file provides one-byte value which is in the same format as for
- the chip PIO_ACCESS_READ command (refer the datasheet for details):
+ 	.tx_threshold = 8,
+ 	.rx_threshold = 8,
+@@ -141,41 +145,43 @@ The pxa2xx_spi_chip structure is passed to the pxa2xx_spi driver in the
+ "spi_board_info.controller_data" field. Below is a sample configuration using
+ the PXA255 NSSP.
  
-+======== =============================================================
- Bit 0:   PIOA Pin State
- Bit 1:   PIOA Output Latch State
- Bit 2:   PIOB Pin State
- Bit 3:   PIOB Output Latch State
- Bit 4-7: Complement of Bit 3 to Bit 0 (verified by the kernel module)
-+======== =============================================================
+-/* Chip Select control for the CS8415A SPI slave device */
+-static void cs8415a_cs_control(u32 command)
+-{
++::
++
++  /* Chip Select control for the CS8415A SPI slave device */
++  static void cs8415a_cs_control(u32 command)
++  {
+ 	if (command & PXA2XX_CS_ASSERT)
+ 		GPCR(2) = GPIO_bit(2);
+ 	else
+ 		GPSR(2) = GPIO_bit(2);
+-}
++  }
  
- This file is readonly.
+-/* Chip Select control for the CS8405A SPI slave device */
+-static void cs8405a_cs_control(u32 command)
+-{
++  /* Chip Select control for the CS8405A SPI slave device */
++  static void cs8405a_cs_control(u32 command)
++  {
+ 	if (command & PXA2XX_CS_ASSERT)
+ 		GPCR(3) = GPIO_bit(3);
+ 	else
+ 		GPSR(3) = GPIO_bit(3);
+-}
++  }
  
-@@ -34,9 +41,11 @@ You can set the PIO pins using the "output" file.
- It is writable, you can write one-byte value to this sysfs file.
- Similarly the byte format is the same as for the PIO_ACCESS_WRITE command:
+-static struct pxa2xx_spi_chip cs8415a_chip_info = {
++  static struct pxa2xx_spi_chip cs8415a_chip_info = {
+ 	.tx_threshold = 8, /* SSP hardward FIFO threshold */
+ 	.rx_threshold = 8, /* SSP hardward FIFO threshold */
+ 	.dma_burst_size = 8, /* Byte wide transfers used so 8 byte bursts */
+ 	.timeout = 235, /* See Intel documentation */
+ 	.cs_control = cs8415a_cs_control, /* Use external chip select */
+-};
++  };
  
-+======== ======================================
- Bit 0:   PIOA
- Bit 1:   PIOB
- Bit 2-7: No matter (driver will set it to "1"s)
-+======== ======================================
+-static struct pxa2xx_spi_chip cs8405a_chip_info = {
++  static struct pxa2xx_spi_chip cs8405a_chip_info = {
+ 	.tx_threshold = 8, /* SSP hardward FIFO threshold */
+ 	.rx_threshold = 8, /* SSP hardward FIFO threshold */
+ 	.dma_burst_size = 8, /* Byte wide transfers used so 8 byte bursts */
+ 	.timeout = 235, /* See Intel documentation */
+ 	.cs_control = cs8405a_cs_control, /* Use external chip select */
+-};
++  };
+ 
+-static struct spi_board_info streetracer_spi_board_info[] __initdata = {
++  static struct spi_board_info streetracer_spi_board_info[] __initdata = {
+ 	{
+ 		.modalias = "cs8415a", /* Name of spi_driver for this device */
+ 		.max_speed_hz = 3686400, /* Run SSP as fast a possbile */
+@@ -193,13 +199,13 @@ static struct spi_board_info streetracer_spi_board_info[] __initdata = {
+ 		.controller_data = &cs8405a_chip_info, /* Master chip config */
+ 		.irq = STREETRACER_APCI_IRQ, /* Slave device interrupt */
+ 	},
+-};
++  };
+ 
+-static void __init streetracer_init(void)
+-{
++  static void __init streetracer_init(void)
++  {
+ 	spi_register_board_info(streetracer_spi_board_info,
+ 				ARRAY_SIZE(streetracer_spi_board_info));
+-}
++  }
  
  
- The chip has some kind of basic protection against transmission errors.
-diff --git a/Documentation/w1/slaves/w1_ds2423 b/Documentation/w1/slaves/w1_ds2423
-deleted file mode 100644
-index 3f98b505a0ee..000000000000
---- a/Documentation/w1/slaves/w1_ds2423
-+++ /dev/null
-@@ -1,47 +0,0 @@
--Kernel driver w1_ds2423
--=======================
--
--Supported chips:
--  * Maxim DS2423 based counter devices.
--
--supported family codes:
--	W1_THERM_DS2423	0x1D
--
--Author: Mika Laitio <lamikr@pilppa.org>
--
--Description
-------------
--
--Support is provided through the sysfs w1_slave file. Each opening and
--read sequence of w1_slave file initiates the read of counters and ram
--available in DS2423 pages 12 - 15.
--
--Result of each page is provided as an ASCII output where each counter
--value and associated ram buffer is outpputed to own line.
--
--Each lines will contain the values of 42 bytes read from the counter and
--memory page along the crc=YES or NO for indicating whether the read operation
--was successful and CRC matched.
--If the operation was successful, there is also in the end of each line
--a counter value expressed as an integer after c=
--
--Meaning of 42 bytes represented is following:
-- - 1 byte from ram page
-- - 4 bytes for the counter value
-- - 4 zero bytes
-- - 2 bytes for crc16 which was calculated from the data read since the previous crc bytes
-- - 31 remaining bytes from the ram page
-- - crc=YES/NO indicating whether read was ok and crc matched
-- - c=<int> current counter value
--
--example from the successful read:
--00 02 00 00 00 00 00 00 00 6d 38 00 ff ff 00 00 fe ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=YES c=2
--00 02 00 00 00 00 00 00 00 e0 1f 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=YES c=2
--00 29 c6 5d 18 00 00 00 00 04 37 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=YES c=408798761
--00 05 00 00 00 00 00 00 00 8d 39 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff crc=YES c=5
--
--example from the read with crc errors:
--00 02 00 00 00 00 00 00 00 6d 38 00 ff ff 00 00 fe ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=YES c=2
--00 02 00 00 22 00 00 00 00 e0 1f 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=NO
--00 e1 61 5d 19 00 00 00 00 df 0b 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=NO
--00 05 00 00 20 00 00 00 00 8d 39 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff crc=NO
-diff --git a/Documentation/w1/slaves/w1_ds2423.rst b/Documentation/w1/slaves/w1_ds2423.rst
-new file mode 100644
-index 000000000000..755d659ad997
---- /dev/null
-+++ b/Documentation/w1/slaves/w1_ds2423.rst
-@@ -0,0 +1,54 @@
-+Kernel driver w1_ds2423
-+=======================
-+
-+Supported chips:
-+
-+  * Maxim DS2423 based counter devices.
-+
-+supported family codes:
-+
-+        ===============	====
-+	W1_THERM_DS2423	0x1D
-+        ===============	====
-+
-+Author: Mika Laitio <lamikr@pilppa.org>
-+
-+Description
-+-----------
-+
-+Support is provided through the sysfs w1_slave file. Each opening and
-+read sequence of w1_slave file initiates the read of counters and ram
-+available in DS2423 pages 12 - 15.
-+
-+Result of each page is provided as an ASCII output where each counter
-+value and associated ram buffer is outpputed to own line.
-+
-+Each lines will contain the values of 42 bytes read from the counter and
-+memory page along the crc=YES or NO for indicating whether the read operation
-+was successful and CRC matched.
-+If the operation was successful, there is also in the end of each line
-+a counter value expressed as an integer after c=
-+
-+Meaning of 42 bytes represented is following:
-+
-+ - 1 byte from ram page
-+ - 4 bytes for the counter value
-+ - 4 zero bytes
-+ - 2 bytes for crc16 which was calculated from the data read since the previous crc bytes
-+ - 31 remaining bytes from the ram page
-+ - crc=YES/NO indicating whether read was ok and crc matched
-+ - c=<int> current counter value
-+
-+example from the successful read::
-+
-+  00 02 00 00 00 00 00 00 00 6d 38 00 ff ff 00 00 fe ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=YES c=2
-+  00 02 00 00 00 00 00 00 00 e0 1f 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=YES c=2
-+  00 29 c6 5d 18 00 00 00 00 04 37 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=YES c=408798761
-+  00 05 00 00 00 00 00 00 00 8d 39 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff crc=YES c=5
-+
-+example from the read with crc errors::
-+
-+  00 02 00 00 00 00 00 00 00 6d 38 00 ff ff 00 00 fe ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=YES c=2
-+  00 02 00 00 22 00 00 00 00 e0 1f 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=NO
-+  00 e1 61 5d 19 00 00 00 00 df 0b 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff 00 00 ff ff crc=NO
-+  00 05 00 00 20 00 00 00 00 8d 39 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff crc=NO
-diff --git a/Documentation/w1/slaves/w1_ds2438 b/Documentation/w1/slaves/w1_ds2438.rst
-similarity index 93%
-rename from Documentation/w1/slaves/w1_ds2438
-rename to Documentation/w1/slaves/w1_ds2438.rst
-index e64f65a09387..a29309a3f8e5 100644
---- a/Documentation/w1/slaves/w1_ds2438
-+++ b/Documentation/w1/slaves/w1_ds2438.rst
-@@ -2,10 +2,13 @@ Kernel driver w1_ds2438
- =======================
+ DMA and PIO I/O Support
+@@ -210,22 +216,22 @@ by setting the "enable_dma" flag in the "pxa2xx_spi_controller" structure.  The
+ mode supports both coherent and stream based DMA mappings.
  
- Supported chips:
-+
-   * Maxim DS2438 Smart Battery Monitor
+ The following logic is used to determine the type of I/O to be used on
+-a per "spi_transfer" basis:
++a per "spi_transfer" basis::
  
- supported family codes:
-+        ================        ====
-         W1_FAMILY_DS2438        0x26
-+        ================        ====
+-if !enable_dma then
++  if !enable_dma then
+ 	always use PIO transfers
  
- Author: Mariusz Bialonczyk <manio@skyboo.net>
+-if spi_message.len > 8191 then
++  if spi_message.len > 8191 then
+ 	print "rate limited" warning
+ 	use PIO transfers
  
-@@ -56,8 +59,11 @@ Opening and reading this file initiates the CONVERT_V (voltage conversion)
- command of the chip.
+-if spi_message.is_dma_mapped and rx_dma_buf != 0 and tx_dma_buf != 0 then
++  if spi_message.is_dma_mapped and rx_dma_buf != 0 and tx_dma_buf != 0 then
+ 	use coherent DMA mode
  
- Depending on a sysfs filename a different input for the A/D will be selected:
--vad: general purpose A/D input (VAD)
--vdd: battery input (VDD)
-+
-+vad:
-+    general purpose A/D input (VAD)
-+vdd:
-+    battery input (VDD)
+-if rx_buf and tx_buf are aligned on 8 byte boundary then
++  if rx_buf and tx_buf are aligned on 8 byte boundary then
+ 	use streaming DMA mode
  
- After the voltage conversion the value is returned as decimal ASCII.
- Note: To get a volts the value has to be divided by 100.
-diff --git a/Documentation/w1/slaves/w1_ds28e04 b/Documentation/w1/slaves/w1_ds28e04.rst
-similarity index 93%
-rename from Documentation/w1/slaves/w1_ds28e04
-rename to Documentation/w1/slaves/w1_ds28e04.rst
-index 7819b65cfa48..b12b118890d3 100644
---- a/Documentation/w1/slaves/w1_ds28e04
-+++ b/Documentation/w1/slaves/w1_ds28e04.rst
-@@ -1,11 +1,16 @@
-+========================
- Kernel driver w1_ds28e04
- ========================
+-otherwise
++  otherwise
+ 	use PIO transfer
  
- Supported chips:
-+
-   * Maxim DS28E04-100 4096-Bit Addressable 1-Wire EEPROM with PIO
- 
- supported family codes:
-+
-+        =================	====
- 	W1_FAMILY_DS28E04	0x1C
-+        =================	====
- 
- Author: Markus Franke, <franke.m@sebakmt.com> <franm@hrz.tu-chemnitz.de>
- 
-diff --git a/Documentation/w1/slaves/w1_ds28e17 b/Documentation/w1/slaves/w1_ds28e17.rst
+ THANKS TO
+diff --git a/Documentation/spi/spi-lm70llp b/Documentation/spi/spi-lm70llp.rst
 similarity index 88%
-rename from Documentation/w1/slaves/w1_ds28e17
-rename to Documentation/w1/slaves/w1_ds28e17.rst
-index 7fcfad5b4a37..36fd0517ea30 100644
---- a/Documentation/w1/slaves/w1_ds28e17
-+++ b/Documentation/w1/slaves/w1_ds28e17.rst
-@@ -1,11 +1,16 @@
-+========================
- Kernel driver w1_ds28e17
- ========================
+rename from Documentation/spi/spi-lm70llp
+rename to Documentation/spi/spi-lm70llp.rst
+index 463f6d01fa15..07631aef4343 100644
+--- a/Documentation/spi/spi-lm70llp
++++ b/Documentation/spi/spi-lm70llp.rst
+@@ -1,8 +1,11 @@
++==============================================
+ spi_lm70llp :  LM70-LLP parport-to-SPI adapter
+ ==============================================
+ 
+ Supported board/chip:
++
+   * National Semiconductor LM70 LLP evaluation board
++
+     Datasheet: http://www.national.com/pf/LM/LM70.html
+ 
+ Author:
+@@ -29,9 +32,10 @@ available (on page 4) here:
+ 
+ The hardware interfacing on the LM70 LLP eval board is as follows:
+ 
++   ======== == =========   ==========
+    Parallel                 LM70 LLP
+-     Port      Direction   JP2 Header
+-   ----------- --------- ----------------
++     Port   .  Direction   JP2 Header
++   ======== == =========   ==========
+       D0     2      -         -
+       D1     3     -->      V+   5
+       D2     4     -->      V+   5
+@@ -42,7 +46,7 @@ The hardware interfacing on the LM70 LLP eval board is as follows:
+       D7     9     -->      SI/O 5
+      GND    25      -       GND  7
+     Select  13     <--      SI/O 1
+-   ----------- --------- ----------------
++   ======== == =========   ==========
+ 
+ Note that since the LM70 uses a "3-wire" variant of SPI, the SI/SO pin
+ is connected to both pin D7 (as Master Out) and Select (as Master In)
+@@ -74,6 +78,7 @@ inverting the value read at pin 13.
+ 
+ Thanks to
+ ---------
+-o David Brownell for mentoring the SPI-side driver development.
+-o Dr.Craig Hollabaugh for the (early) "manual" bitbanging driver version.
+-o Nadir Billimoria for help interpreting the circuit schematic.
++
++- David Brownell for mentoring the SPI-side driver development.
++- Dr.Craig Hollabaugh for the (early) "manual" bitbanging driver version.
++- Nadir Billimoria for help interpreting the circuit schematic.
+diff --git a/Documentation/spi/spi-sc18is602 b/Documentation/spi/spi-sc18is602.rst
+similarity index 97%
+rename from Documentation/spi/spi-sc18is602
+rename to Documentation/spi/spi-sc18is602.rst
+index 0feffd5af411..2a31dc722321 100644
+--- a/Documentation/spi/spi-sc18is602
++++ b/Documentation/spi/spi-sc18is602.rst
+@@ -1,8 +1,11 @@
++===========================
+ Kernel driver spi-sc18is602
+ ===========================
  
  Supported chips:
 +
-   * Maxim DS28E17 1-Wire-to-I2C Master Bridge
- 
- supported family codes:
+   * NXP SI18IS602/602B/603
 +
-+        =================  ====
- 	W1_FAMILY_DS28E17  0x19
-+        =================  ====
+     Datasheet: http://www.nxp.com/documents/data_sheet/SC18IS602_602B_603.pdf
  
- Author: Jan Kandziora <jjj@gmx.de>
- 
-@@ -20,11 +25,11 @@ a DS28E17 can be accessed by the kernel or userspace tools as if they were
- connected to a "native" I2C bus master.
- 
- 
--An udev rule like the following
---------------------------------------------------------------------------------
--SUBSYSTEM=="i2c-dev", KERNEL=="i2c-[0-9]*", ATTRS{name}=="w1-19-*", \
--        SYMLINK+="i2c-$attr{name}"
---------------------------------------------------------------------------------
-+An udev rule like the following::
-+
-+  SUBSYSTEM=="i2c-dev", KERNEL=="i2c-[0-9]*", ATTRS{name}=="w1-19-*", \
-+          SYMLINK+="i2c-$attr{name}"
-+
- may be used to create stable /dev/i2c- entries based on the unique id of the
- DS28E17 chip.
- 
-diff --git a/Documentation/w1/slaves/w1_therm b/Documentation/w1/slaves/w1_therm.rst
-similarity index 95%
-rename from Documentation/w1/slaves/w1_therm
-rename to Documentation/w1/slaves/w1_therm.rst
-index d1f93af36f38..90531c340a07 100644
---- a/Documentation/w1/slaves/w1_therm
-+++ b/Documentation/w1/slaves/w1_therm.rst
-@@ -1,7 +1,9 @@
-+======================
- Kernel driver w1_therm
--====================
-+======================
- 
- Supported chips:
-+
-   * Maxim ds18*20 based temperature sensors.
-   * Maxim ds1825 based temperature sensors.
- 
-@@ -13,12 +15,16 @@ Description
- 
- w1_therm provides basic temperature conversion for ds18*20 devices, and the
- ds28ea00 device.
--supported family codes:
-+
-+Supported family codes:
-+
-+====================	====
- W1_THERM_DS18S20	0x10
- W1_THERM_DS1822		0x22
- W1_THERM_DS18B20	0x28
- W1_THERM_DS1825		0x3B
- W1_THERM_DS28EA00	0x42
-+====================	====
- 
- Support is provided through the sysfs w1_slave file.  Each open and
- read sequence will initiate a temperature conversion then provide two
-@@ -51,6 +57,7 @@ If so, it will activate the master's strong pullup.
- In case the detection of parasite devices using this command fails
- (seems to be the case with some DS18S20) the strong pullup can
- be force-enabled.
-+
- If the strong pullup is enabled, the master's strong pullup will be
- driven when the conversion is taking place, provided the master driver
- does support the strong pullup (or it falls back to a pullup
-diff --git a/Documentation/w1/w1.generic b/Documentation/w1/w1-generic.rst
-similarity index 59%
-rename from Documentation/w1/w1.generic
-rename to Documentation/w1/w1-generic.rst
-index c51b1ab012d0..da4e8b4e9b01 100644
---- a/Documentation/w1/w1.generic
-+++ b/Documentation/w1/w1-generic.rst
-@@ -1,5 +1,7 @@
--The 1-wire (w1) subsystem
--------------------------------------------------------------------
-+=========================================
-+Introduction to the 1-wire (w1) subsystem
-+=========================================
-+
- The 1-wire bus is a simple master-slave bus that communicates via a single
- signal wire (plus ground, so two wires).
- 
-@@ -12,14 +14,16 @@ communication with slaves.
- All w1 slave devices must be connected to a w1 bus master device.
- 
- Example w1 master devices:
--    DS9490 usb device
--    W1-over-GPIO
--    DS2482 (i2c to w1 bridge)
--    Emulated devices, such as a RS232 converter, parallel port adapter, etc
-+
-+    - DS9490 usb device
-+    - W1-over-GPIO
-+    - DS2482 (i2c to w1 bridge)
-+    - Emulated devices, such as a RS232 converter, parallel port adapter, etc
- 
- 
- What does the w1 subsystem do?
--------------------------------------------------------------------
-+------------------------------
-+
- When a w1 master driver registers with the w1 subsystem, the following occurs:
- 
-  - sysfs entries for that w1 master are created
-@@ -43,24 +47,28 @@ be read, since no device was selected.
- 
- 
- W1 device families
--------------------------------------------------------------------
-+------------------
-+
- Slave devices are handled by a driver written for a family of w1 devices.
- 
- A family driver populates a struct w1_family_ops (see w1_family.h) and
- registers with the w1 subsystem.
- 
- Current family drivers:
--w1_therm - (ds18?20 thermal sensor family driver)
-+
-+w1_therm
-+  - (ds18?20 thermal sensor family driver)
-     provides temperature reading function which is bound to ->rbin() method
-     of the above w1_family_ops structure.
- 
--w1_smem - driver for simple 64bit memory cell provides ID reading method.
-+w1_smem
-+  - driver for simple 64bit memory cell provides ID reading method.
- 
- You can call above methods by reading appropriate sysfs files.
- 
- 
- What does a w1 master driver need to implement?
--------------------------------------------------------------------
-+-----------------------------------------------
- 
- The driver for w1 bus master must provide at minimum two functions.
- 
-@@ -75,25 +83,26 @@ See struct w1_bus_master definition in w1.h for details.
- 
- 
- w1 master sysfs interface
--------------------------------------------------------------------
--<xx-xxxxxxxxxxxx>  - A directory for a found device. The format is family-serial
--bus                - (standard) symlink to the w1 bus
--driver             - (standard) symlink to the w1 driver
--w1_master_add      - (rw) manually register a slave device
--w1_master_attempts - (ro) the number of times a search was attempted
--w1_master_max_slave_count
--                   - (rw) maximum number of slaves to search for at a time
--w1_master_name     - (ro) the name of the device (w1_bus_masterX)
--w1_master_pullup   - (rw) 5V strong pullup 0 enabled, 1 disabled
--w1_master_remove   - (rw) manually remove a slave device
--w1_master_search   - (rw) the number of searches left to do,
--		     -1=continual (default)
--w1_master_slave_count
--                   - (ro) the number of slaves found
--w1_master_slaves   - (ro) the names of the slaves, one per line
--w1_master_timeout  - (ro) the delay in seconds between searches
--w1_master_timeout_us
--                   - (ro) the delay in microseconds beetwen searches
-+-------------------------
-+
-+========================= =====================================================
-+<xx-xxxxxxxxxxxx>         A directory for a found device. The format is
-+                          family-serial
-+bus                       (standard) symlink to the w1 bus
-+driver                    (standard) symlink to the w1 driver
-+w1_master_add             (rw) manually register a slave device
-+w1_master_attempts        (ro) the number of times a search was attempted
-+w1_master_max_slave_count (rw) maximum number of slaves to search for at a time
-+w1_master_name            (ro) the name of the device (w1_bus_masterX)
-+w1_master_pullup          (rw) 5V strong pullup 0 enabled, 1 disabled
-+w1_master_remove          (rw) manually remove a slave device
-+w1_master_search          (rw) the number of searches left to do,
-+                          -1=continual (default)
-+w1_master_slave_count     (ro) the number of slaves found
-+w1_master_slaves          (ro) the names of the slaves, one per line
-+w1_master_timeout         (ro) the delay in seconds between searches
-+w1_master_timeout_us      (ro) the delay in microseconds beetwen searches
-+========================= =====================================================
- 
- If you have a w1 bus that never changes (you don't add or remove devices),
- you can set the module parameter search_count to a small positive number
-@@ -111,11 +120,14 @@ decrements w1_master_search by 1 (down to 0) and increments
- w1_master_attempts by 1.
- 
- w1 slave sysfs interface
--------------------------------------------------------------------
--bus                - (standard) symlink to the w1 bus
--driver             - (standard) symlink to the w1 driver
--name               - the device name, usually the same as the directory name
--w1_slave           - (optional) a binary file whose meaning depends on the
--                     family driver
--rw		   - (optional) created for slave devices which do not have
--		     appropriate family driver. Allows to read/write binary data.
-+------------------------
-+
-+=================== ============================================================
-+bus                 (standard) symlink to the w1 bus
-+driver              (standard) symlink to the w1 driver
-+name                the device name, usually the same as the directory name
-+w1_slave            (optional) a binary file whose meaning depends on the
-+                    family driver
-+rw		    (optional) created for slave devices which do not have
-+		    appropriate family driver. Allows to read/write binary data.
-+=================== ============================================================
-diff --git a/Documentation/w1/w1.netlink b/Documentation/w1/w1-netlink.rst
-similarity index 79%
-rename from Documentation/w1/w1.netlink
-rename to Documentation/w1/w1-netlink.rst
-index 94ad4c420828..138a53c2f950 100644
---- a/Documentation/w1/w1.netlink
-+++ b/Documentation/w1/w1-netlink.rst
-@@ -1,22 +1,26 @@
--Userspace communication protocol over connector [1].
-+===============================================
-+Userspace communication protocol over connector
-+===============================================
- 
--
--Message types.
-+Message types
- =============
- 
- There are three types of messages between w1 core and userspace:
-+
- 1. Events. They are generated each time a new master or slave device
--	is found either due to automatic or requested search.
-+   is found either due to automatic or requested search.
- 2. Userspace commands.
- 3. Replies to userspace commands.
- 
- 
--Protocol.
-+Protocol
- ========
- 
--[struct cn_msg] - connector header.
-+::
-+
-+  [struct cn_msg] - connector header.
- 	Its length field is equal to size of the attached data
--[struct w1_netlink_msg] - w1 netlink header.
-+  [struct w1_netlink_msg] - w1 netlink header.
- 	__u8 type 	- message type.
- 			W1_LIST_MASTERS
- 				list current bus masters
-@@ -40,7 +44,7 @@ Protocol.
- 		} mst;
- 	} id;
- 
--[struct w1_netlink_cmd] - command for given master or slave device.
-+  [struct w1_netlink_cmd] - command for given master or slave device.
- 	__u8 cmd	- command opcode.
- 			W1_CMD_READ 	- read command
- 			W1_CMD_WRITE	- write command
-@@ -71,18 +75,18 @@ when it is added to w1 core.
- Currently replies to userspace commands are only generated for read
- command request. One reply is generated exactly for one w1_netlink_cmd
- read request. Replies are not combined when sent - i.e. typical reply
--messages looks like the following:
-+messages looks like the following::
- 
--[cn_msg][w1_netlink_msg][w1_netlink_cmd]
--cn_msg.len = sizeof(struct w1_netlink_msg) +
-+  [cn_msg][w1_netlink_msg][w1_netlink_cmd]
-+  cn_msg.len = sizeof(struct w1_netlink_msg) +
- 	     sizeof(struct w1_netlink_cmd) +
- 	     cmd->len;
--w1_netlink_msg.len = sizeof(struct w1_netlink_cmd) + cmd->len;
--w1_netlink_cmd.len = cmd->len;
-+  w1_netlink_msg.len = sizeof(struct w1_netlink_cmd) + cmd->len;
-+  w1_netlink_cmd.len = cmd->len;
- 
- Replies to W1_LIST_MASTERS should send a message back to the userspace
- which will contain list of all registered master ids in the following
--format:
-+format::
- 
- 	cn_msg (CN_W1_IDX.CN_W1_VAL as id, len is equal to sizeof(struct
- 	w1_netlink_msg) plus number of masters multiplied by 4)
-@@ -90,39 +94,47 @@ format:
- 		number of masters multiplied by 4 (u32 size))
- 	id0 ... idN
- 
--	Each message is at most 4k in size, so if number of master devices
--	exceeds this, it will be split into several messages.
-+Each message is at most 4k in size, so if number of master devices
-+exceeds this, it will be split into several messages.
- 
- W1 search and alarm search commands.
--request:
--[cn_msg]
--  [w1_netlink_msg type = W1_MASTER_CMD
-+
-+request::
-+
-+  [cn_msg]
-+    [w1_netlink_msg type = W1_MASTER_CMD
-   	id is equal to the bus master id to use for searching]
--  [w1_netlink_cmd cmd = W1_CMD_SEARCH or W1_CMD_ALARM_SEARCH]
-+    [w1_netlink_cmd cmd = W1_CMD_SEARCH or W1_CMD_ALARM_SEARCH]
-+
-+reply::
- 
--reply:
-   [cn_msg, ack = 1 and increasing, 0 means the last message,
-   	seq is equal to the request seq]
-   [w1_netlink_msg type = W1_MASTER_CMD]
-   [w1_netlink_cmd cmd = W1_CMD_SEARCH or W1_CMD_ALARM_SEARCH
- 	len is equal to number of IDs multiplied by 8]
-   [64bit-id0 ... 64bit-idN]
-+
- Length in each header corresponds to the size of the data behind it, so
- w1_netlink_cmd->len = N * 8; where N is number of IDs in this message.
--	Can be zero.
--w1_netlink_msg->len = sizeof(struct w1_netlink_cmd) + N * 8;
--cn_msg->len = sizeof(struct w1_netlink_msg) +
-+Can be zero.
-+
-+::
-+
-+  w1_netlink_msg->len = sizeof(struct w1_netlink_cmd) + N * 8;
-+  cn_msg->len = sizeof(struct w1_netlink_msg) +
- 	      sizeof(struct w1_netlink_cmd) +
- 	      N*8;
- 
--W1 reset command.
--[cn_msg]
--  [w1_netlink_msg type = W1_MASTER_CMD
-+W1 reset command::
-+
-+  [cn_msg]
-+    [w1_netlink_msg type = W1_MASTER_CMD
-   	id is equal to the bus master id to use for searching]
--  [w1_netlink_cmd cmd = W1_CMD_RESET]
-+    [w1_netlink_cmd cmd = W1_CMD_RESET]
- 
- 
--Command status replies.
-+Command status replies
- ======================
- 
- Each command (either root, master or slave with or without w1_netlink_cmd
-@@ -150,7 +162,7 @@ All w1_netlink_cmd command structures are handled in every w1_netlink_msg,
- even if there were errors, only length mismatch interrupts message processing.
- 
- 
--Operation steps in w1 core when new command is received.
-+Operation steps in w1 core when new command is received
- =======================================================
- 
- When new message (w1_netlink_msg) is received w1 core detects if it is
-@@ -167,7 +179,7 @@ When all commands (w1_netlink_cmd) are processed master device is unlocked
- and next w1_netlink_msg header processing started.
- 
- 
--Connector [1] specific documentation.
-+Connector [1] specific documentation
+ Author:
+diff --git a/Documentation/spi/spi-summary b/Documentation/spi/spi-summary.rst
+similarity index 93%
+rename from Documentation/spi/spi-summary
+rename to Documentation/spi/spi-summary.rst
+index 1a63194b74d7..96b3f8b8b3db 100644
+--- a/Documentation/spi/spi-summary
++++ b/Documentation/spi/spi-summary.rst
+@@ -1,3 +1,4 @@
++====================================
+ Overview of Linux kernel SPI support
  ====================================
  
- Each connector message includes two u32 fields as "address".
-@@ -180,10 +192,11 @@ Sequence number for reply is the same as was in request, and
- acknowledge number is set to seq+1.
+@@ -139,12 +140,14 @@ a command and then reading its response.
+ 
+ There are two types of SPI driver, here called:
+ 
+-  Controller drivers ... controllers may be built into System-On-Chip
++  Controller drivers ...
++        controllers may be built into System-On-Chip
+ 	processors, and often support both Master and Slave roles.
+ 	These drivers touch hardware registers and may use DMA.
+ 	Or they can be PIO bitbangers, needing just GPIO pins.
+ 
+-  Protocol drivers ... these pass messages through the controller
++  Protocol drivers ...
++        these pass messages through the controller
+ 	driver to communicate with a Slave or Master device on the
+ 	other side of an SPI link.
+ 
+@@ -160,7 +163,7 @@ those two types of drivers.
+ There is a minimal core of SPI programming interfaces, focussing on
+ using the driver model to connect controller and protocol drivers using
+ device tables provided by board specific initialization code.  SPI
+-shows up in sysfs in several locations:
++shows up in sysfs in several locations::
+ 
+    /sys/devices/.../CTLR ... physical node for a given SPI controller
+ 
+@@ -206,7 +209,8 @@ Linux needs several kinds of information to properly configure SPI devices.
+ That information is normally provided by board-specific code, even for
+ chips that do support some of automated discovery/enumeration.
+ 
+-DECLARE CONTROLLERS
++Declare Controllers
++^^^^^^^^^^^^^^^^^^^
+ 
+ The first kind of information is a list of what SPI controllers exist.
+ For System-on-Chip (SOC) based boards, these will usually be platform
+@@ -221,7 +225,7 @@ same basic controller setup code.  This is because most SOCs have several
+ SPI-capable controllers, and only the ones actually usable on a given
+ board should normally be set up and registered.
+ 
+-So for example arch/.../mach-*/board-*.c files might have code like:
++So for example arch/.../mach-*/board-*.c files might have code like::
+ 
+ 	#include <mach/spi.h>	/* for mysoc_spi_data */
+ 
+@@ -238,7 +242,7 @@ So for example arch/.../mach-*/board-*.c files might have code like:
+ 		...
+ 	}
+ 
+-And SOC-specific utility code might look something like:
++And SOC-specific utility code might look something like::
+ 
+ 	#include <mach/spi.h>
+ 
+@@ -269,8 +273,8 @@ same SOC controller is used.  For example, on one board SPI might use
+ an external clock, where another derives the SPI clock from current
+ settings of some master clock.
+ 
+-
+-DECLARE SLAVE DEVICES
++Declare Slave Devices
++^^^^^^^^^^^^^^^^^^^^^
+ 
+ The second kind of information is a list of what SPI slave devices exist
+ on the target board, often with some board-specific data needed for the
+@@ -278,7 +282,7 @@ driver to work correctly.
+ 
+ Normally your arch/.../mach-*/board-*.c files would provide a small table
+ listing the SPI devices on each board.  (This would typically be only a
+-small handful.)  That might look like:
++small handful.)  That might look like::
+ 
+ 	static struct ads7846_platform_data ads_info = {
+ 		.vref_delay_usecs	= 100,
+@@ -316,7 +320,7 @@ not possible until the infrastructure knows how to deselect it.
+ 
+ Then your board initialization code would register that table with the SPI
+ infrastructure, so that it's available later when the SPI master controller
+-driver is registered:
++driver is registered::
+ 
+ 	spi_register_board_info(spi_board_info, ARRAY_SIZE(spi_board_info));
+ 
+@@ -324,12 +328,13 @@ Like with other static board-specific setup, you won't unregister those.
+ 
+ The widely used "card" style computers bundle memory, cpu, and little else
+ onto a card that's maybe just thirty square centimeters.  On such systems,
+-your arch/.../mach-.../board-*.c file would primarily provide information
++your ``arch/.../mach-.../board-*.c`` file would primarily provide information
+ about the devices on the mainboard into which such a card is plugged.  That
+ certainly includes SPI devices hooked up through the card connectors!
  
  
--Additional documantion, source code examples.
--============================================
-+Additional documentation, source code examples
-+==============================================
+-NON-STATIC CONFIGURATIONS
++Non-static Configurations
++^^^^^^^^^^^^^^^^^^^^^^^^^
  
- 1. Documentation/driver-api/connector.rst
- 2. http://www.ioremap.net/archive/w1
--This archive includes userspace application w1d.c which uses
--read/write/search commands for all master/slave devices found on the bus.
+ Developer boards often play by different rules than product boards, and one
+ example is the potential need to hotplug SPI devices and/or controllers.
+@@ -349,7 +354,7 @@ How do I write an "SPI Protocol Driver"?
+ Most SPI drivers are currently kernel drivers, but there's also support
+ for userspace drivers.  Here we talk only about kernel drivers.
+ 
+-SPI protocol drivers somewhat resemble platform device drivers:
++SPI protocol drivers somewhat resemble platform device drivers::
+ 
+ 	static struct spi_driver CHIP_driver = {
+ 		.driver = {
+@@ -367,6 +372,8 @@ device whose board_info gave a modalias of "CHIP".  Your probe() code
+ might look like this unless you're creating a device which is managing
+ a bus (appearing under /sys/class/spi_master).
+ 
++::
 +
-+   This archive includes userspace application w1d.c which uses
-+   read/write/search commands for all master/slave devices found on the bus.
+ 	static int CHIP_probe(struct spi_device *spi)
+ 	{
+ 		struct CHIP			*chip;
+@@ -479,6 +486,8 @@ The main task of this type of driver is to provide an "spi_master".
+ Use spi_alloc_master() to allocate the master, and spi_master_get_devdata()
+ to get the driver-private data allocated for that device.
+ 
++::
++
+ 	struct spi_master	*master;
+ 	struct CONTROLLER	*c;
+ 
+@@ -503,7 +512,8 @@ If you need to remove your SPI controller driver, spi_unregister_master()
+ will reverse the effect of spi_register_master().
+ 
+ 
+-BUS NUMBERING
++Bus Numbering
++^^^^^^^^^^^^^
+ 
+ Bus numbering is important, since that's how Linux identifies a given
+ SPI bus (shared SCK, MOSI, MISO).  Valid bus numbers start at zero.  On
+@@ -517,9 +527,10 @@ then be replaced by a dynamically assigned number. You'd then need to treat
+ this as a non-static configuration (see above).
+ 
+ 
+-SPI MASTER METHODS
++SPI Master Methods
++^^^^^^^^^^^^^^^^^^
+ 
+-    master->setup(struct spi_device *spi)
++``master->setup(struct spi_device *spi)``
+ 	This sets up the device clock rate, SPI mode, and word sizes.
+ 	Drivers may change the defaults provided by board_info, and then
+ 	call spi_setup(spi) to invoke this routine.  It may sleep.
+@@ -528,37 +539,37 @@ SPI MASTER METHODS
+ 	change them right away ... otherwise drivers could corrupt I/O
+ 	that's in progress for other SPI devices.
+ 
+-		** BUG ALERT:  for some reason the first version of
+-		** many spi_master drivers seems to get this wrong.
+-		** When you code setup(), ASSUME that the controller
+-		** is actively processing transfers for another device.
++	.. note::
+ 
+-    master->cleanup(struct spi_device *spi)
++		BUG ALERT:  for some reason the first version of
++		many spi_master drivers seems to get this wrong.
++		When you code setup(), ASSUME that the controller
++		is actively processing transfers for another device.
++
++``master->cleanup(struct spi_device *spi)``
+ 	Your controller driver may use spi_device.controller_state to hold
+ 	state it dynamically associates with that device.  If you do that,
+ 	be sure to provide the cleanup() method to free that state.
+ 
+-    master->prepare_transfer_hardware(struct spi_master *master)
++``master->prepare_transfer_hardware(struct spi_master *master)``
+ 	This will be called by the queue mechanism to signal to the driver
+ 	that a message is coming in soon, so the subsystem requests the
+ 	driver to prepare the transfer hardware by issuing this call.
+ 	This may sleep.
+ 
+-    master->unprepare_transfer_hardware(struct spi_master *master)
++``master->unprepare_transfer_hardware(struct spi_master *master)``
+ 	This will be called by the queue mechanism to signal to the driver
+ 	that there are no more messages pending in the queue and it may
+ 	relax the hardware (e.g. by power management calls). This may sleep.
+ 
+-    master->transfer_one_message(struct spi_master *master,
+-				 struct spi_message *mesg)
++``master->transfer_one_message(struct spi_master *master, struct spi_message *mesg)``
+ 	The subsystem calls the driver to transfer a single message while
+ 	queuing transfers that arrive in the meantime. When the driver is
+ 	finished with this message, it must call
+ 	spi_finalize_current_message() so the subsystem can issue the next
+ 	message. This may sleep.
+ 
+-    master->transfer_one(struct spi_master *master, struct spi_device *spi,
+-			 struct spi_transfer *transfer)
++``master->transfer_one(struct spi_master *master, struct spi_device *spi, struct spi_transfer *transfer)``
+ 	The subsystem calls the driver to transfer a single transfer while
+ 	queuing transfers that arrive in the meantime. When the driver is
+ 	finished with this transfer, it must call
+@@ -568,19 +579,20 @@ SPI MASTER METHODS
+ 	not call your transfer_one callback.
+ 
+ 	Return values:
+-	negative errno: error
+-	0: transfer is finished
+-	1: transfer is still in progress
+ 
+-    master->set_cs_timing(struct spi_device *spi, u8 setup_clk_cycles,
+-			      u8 hold_clk_cycles, u8 inactive_clk_cycles)
++	* negative errno: error
++	* 0: transfer is finished
++	* 1: transfer is still in progress
++
++``master->set_cs_timing(struct spi_device *spi, u8 setup_clk_cycles, u8 hold_clk_cycles, u8 inactive_clk_cycles)``
+ 	This method allows SPI client drivers to request SPI master controller
+ 	for configuring device specific CS setup, hold and inactive timing
+ 	requirements.
+ 
+-    DEPRECATED METHODS
++Deprecated Methods
++^^^^^^^^^^^^^^^^^^
+ 
+-    master->transfer(struct spi_device *spi, struct spi_message *message)
++``master->transfer(struct spi_device *spi, struct spi_message *message)``
+ 	This must not sleep. Its responsibility is to arrange that the
+ 	transfer happens and its complete() callback is issued. The two
+ 	will normally happen later, after other transfers complete, and
+@@ -590,7 +602,8 @@ SPI MASTER METHODS
+ 	implemented.
+ 
+ 
+-SPI MESSAGE QUEUE
++SPI Message Queue
++^^^^^^^^^^^^^^^^^
+ 
+ If you are happy with the standard queueing mechanism provided by the
+ SPI subsystem, just implement the queued methods specified above. Using
+@@ -619,13 +632,13 @@ THANKS TO
+ Contributors to Linux-SPI discussions include (in alphabetical order,
+ by last name):
+ 
+-Mark Brown
+-David Brownell
+-Russell King
+-Grant Likely
+-Dmitry Pervushin
+-Stephen Street
+-Mark Underwood
+-Andrew Victor
+-Linus Walleij
+-Vitaly Wool
++- Mark Brown
++- David Brownell
++- Russell King
++- Grant Likely
++- Dmitry Pervushin
++- Stephen Street
++- Mark Underwood
++- Andrew Victor
++- Linus Walleij
++- Vitaly Wool
+diff --git a/Documentation/spi/spidev b/Documentation/spi/spidev.rst
+similarity index 90%
+rename from Documentation/spi/spidev
+rename to Documentation/spi/spidev.rst
+index 3d14035b1766..f05dbc5ccdbc 100644
+--- a/Documentation/spi/spidev
++++ b/Documentation/spi/spidev.rst
+@@ -1,7 +1,13 @@
++=================
++SPI userspace API
++=================
++
+ SPI devices have a limited userspace API, supporting basic half-duplex
+ read() and write() access to SPI slave devices.  Using ioctl() requests,
+ full duplex transfers and device I/O configuration are also available.
+ 
++::
++
+ 	#include <fcntl.h>
+ 	#include <unistd.h>
+ 	#include <sys/ioctl.h>
+@@ -39,14 +45,17 @@ device node with a "dev" attribute that will be understood by udev or mdev.
+ busybox; it's less featureful, but often enough.)  For a SPI device with
+ chipselect C on bus B, you should see:
+ 
+-    /dev/spidevB.C ... character special device, major number 153 with
++    /dev/spidevB.C ...
++	character special device, major number 153 with
+ 	a dynamically chosen minor device number.  This is the node
+ 	that userspace programs will open, created by "udev" or "mdev".
+ 
+-    /sys/devices/.../spiB.C ... as usual, the SPI device node will
++    /sys/devices/.../spiB.C ...
++	as usual, the SPI device node will
+ 	be a child of its SPI master controller.
+ 
+-    /sys/class/spidev/spidevB.C ... created when the "spidev" driver
++    /sys/class/spidev/spidevB.C ...
++	created when the "spidev" driver
+ 	binds to that device.  (Directory or symlink, based on whether
+ 	or not you enabled the "deprecated sysfs files" Kconfig option.)
+ 
+@@ -80,7 +89,8 @@ the SPI_IOC_MESSAGE(N) request.
+ Several ioctl() requests let your driver read or override the device's current
+ settings for data transfer parameters:
+ 
+-    SPI_IOC_RD_MODE, SPI_IOC_WR_MODE ... pass a pointer to a byte which will
++    SPI_IOC_RD_MODE, SPI_IOC_WR_MODE ...
++	pass a pointer to a byte which will
+ 	return (RD) or assign (WR) the SPI transfer mode.  Use the constants
+ 	SPI_MODE_0..SPI_MODE_3; or if you prefer you can combine SPI_CPOL
+ 	(clock polarity, idle high iff this is set) or SPI_CPHA (clock phase,
+@@ -88,22 +98,26 @@ settings for data transfer parameters:
+ 	Note that this request is limited to SPI mode flags that fit in a
+ 	single byte.
+ 
+-    SPI_IOC_RD_MODE32, SPI_IOC_WR_MODE32 ... pass a pointer to a uin32_t
++    SPI_IOC_RD_MODE32, SPI_IOC_WR_MODE32 ...
++	pass a pointer to a uin32_t
+ 	which will return (RD) or assign (WR) the full SPI transfer mode,
+ 	not limited to the bits that fit in one byte.
+ 
+-    SPI_IOC_RD_LSB_FIRST, SPI_IOC_WR_LSB_FIRST ... pass a pointer to a byte
++    SPI_IOC_RD_LSB_FIRST, SPI_IOC_WR_LSB_FIRST ...
++	pass a pointer to a byte
+ 	which will return (RD) or assign (WR) the bit justification used to
+ 	transfer SPI words.  Zero indicates MSB-first; other values indicate
+ 	the less common LSB-first encoding.  In both cases the specified value
+ 	is right-justified in each word, so that unused (TX) or undefined (RX)
+ 	bits are in the MSBs.
+ 
+-    SPI_IOC_RD_BITS_PER_WORD, SPI_IOC_WR_BITS_PER_WORD ... pass a pointer to
++    SPI_IOC_RD_BITS_PER_WORD, SPI_IOC_WR_BITS_PER_WORD ...
++	pass a pointer to
+ 	a byte which will return (RD) or assign (WR) the number of bits in
+ 	each SPI transfer word.  The value zero signifies eight bits.
+ 
+-    SPI_IOC_RD_MAX_SPEED_HZ, SPI_IOC_WR_MAX_SPEED_HZ ... pass a pointer to a
++    SPI_IOC_RD_MAX_SPEED_HZ, SPI_IOC_WR_MAX_SPEED_HZ ...
++	pass a pointer to a
+ 	u32 which will return (RD) or assign (WR) the maximum SPI transfer
+ 	speed, in Hz.  The controller can't necessarily assign that specific
+ 	clock speed.
+diff --git a/drivers/iio/dummy/iio_simple_dummy.c b/drivers/iio/dummy/iio_simple_dummy.c
+index d28974ad9e0e..6cb02299a215 100644
+--- a/drivers/iio/dummy/iio_simple_dummy.c
++++ b/drivers/iio/dummy/iio_simple_dummy.c
+@@ -695,7 +695,7 @@ static int iio_dummy_remove(struct iio_sw_device *swd)
+  * i2c:
+  * Documentation/i2c/writing-clients.rst
+  * spi:
+- * Documentation/spi/spi-summary
++ * Documentation/spi/spi-summary.rst
+  */
+ static const struct iio_sw_device_ops iio_dummy_device_ops = {
+ 	.probe = iio_dummy_probe,
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 3a1d8f1170de..d5a24fe983e7 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -543,7 +543,7 @@ config SPI_PXA2XX
+ 	help
+ 	  This enables using a PXA2xx or Sodaville SSP port as a SPI master
+ 	  controller. The driver can be configured to use any SSP port and
+-	  additional documentation can be found a Documentation/spi/pxa2xx.
++	  additional documentation can be found a Documentation/spi/pxa2xx.rst.
+ 
+ config SPI_PXA2XX_PCI
+ 	def_tristate SPI_PXA2XX && PCI && COMMON_CLK
+diff --git a/drivers/spi/spi-butterfly.c b/drivers/spi/spi-butterfly.c
+index 8c77d1114ad3..7e71a351f3b7 100644
+--- a/drivers/spi/spi-butterfly.c
++++ b/drivers/spi/spi-butterfly.c
+@@ -23,7 +23,7 @@
+  * with a battery powered AVR microcontroller and lots of goodies.  You
+  * can use GCC to develop firmware for this.
+  *
+- * See Documentation/spi/butterfly for information about how to build
++ * See Documentation/spi/butterfly.rst for information about how to build
+  * and use this custom parallel port cable.
+  */
+ 
+diff --git a/drivers/spi/spi-lm70llp.c b/drivers/spi/spi-lm70llp.c
+index f18f912c9dea..174dba29b1dd 100644
+--- a/drivers/spi/spi-lm70llp.c
++++ b/drivers/spi/spi-lm70llp.c
+@@ -34,7 +34,7 @@
+  * available (on page 4) here:
+  *  http://www.national.com/appinfo/tempsensors/files/LM70LLPEVALmanual.pdf
+  *
+- * Also see Documentation/spi/spi-lm70llp.  The SPI<->parport code here is
++ * Also see Documentation/spi/spi-lm70llp.rst.  The SPI<->parport code here is
+  * (heavily) based on spi-butterfly by David Brownell.
+  *
+  * The LM70 LLP connects to the PC parallel port in the following manner:
+diff --git a/include/linux/platform_data/sc18is602.h b/include/linux/platform_data/sc18is602.h
+index e066d3b0d6d8..0e91489edfe6 100644
+--- a/include/linux/platform_data/sc18is602.h
++++ b/include/linux/platform_data/sc18is602.h
+@@ -4,7 +4,7 @@
+  *
+  * Copyright (C) 2012 Guenter Roeck <linux@roeck-us.net>
+  *
+- * For further information, see the Documentation/spi/spi-sc18is602 file.
++ * For further information, see the Documentation/spi/spi-sc18is602.rst file.
+  */
+ 
+ /**
 -- 
 2.21.0
 
