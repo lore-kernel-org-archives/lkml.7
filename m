@@ -2,86 +2,146 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CBCC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD62C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B99E2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3062E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="U2/XpaCZ"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GJyI995X";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="fZCnvgTc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfF1H0U (ORCPT
+        id S1726558AbfF1H1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:26:20 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45789 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfF1H0U (ORCPT
+        Fri, 28 Jun 2019 03:27:35 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:53412 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725792AbfF1H1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:26:20 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j19so5223618qtr.12
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 00:26:19 -0700 (PDT)
+        Fri, 28 Jun 2019 03:27:35 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B22BAC0A6E;
+        Fri, 28 Jun 2019 07:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561706854; bh=zYe5/mN81Wu4tL48o2Soq2Ioh9hXQALfNlBRak2re20=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=GJyI995X4UEHFz4nvJ2nZ9JqOn4Gry1IZ4Ux9HnmwLvoM3jx0L7WM7Rz89R2ZHosM
+         wwUHaxPDgPQCsM/h0vBRup7/UQb1vxPTlgyfTeqQPTACG3MQSh5NJ0YhxvMRZNDFQr
+         CG+yFn2DO9hVeEgVAMvWe9XkIx3eUuEFT2PYA9d6GepHEQBnq/IPL5EwvNYcI/5Bea
+         nMpVr+j1heb3SyAUotyduP1OslNs8Kc+Rt5WrW60OV54aIEzyr5hG1+BoDOM+RU+oO
+         9hPqi4lHmMaxd9QmY4FWIhtktwgfzNsB8I716PjkNaMWdZ4jEAYGtZASPfDQU2YBOl
+         CSgF0/cXCKYcQ==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 4A7EEA0093;
+        Fri, 28 Jun 2019 07:27:34 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 28 Jun 2019 00:27:33 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 28 Jun 2019 00:27:33 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D/QdUNDcGRTIn4Mm1UmaweKSH9RuZF0BWTBRT3JrMYA=;
-        b=U2/XpaCZZAGxGXBysk14pwxKFeBZknZSzVbGUajAjQnFulC4yADxymGFGlJrAhAobU
-         Vnt4S4ERl2Hb4S/Hf40jdRkOgvVg5xThytoFkowCyZEtRFFK1J79VVfWdWPiSSi6sUe0
-         mtDZwYbIJP81SfRPSxT/7/ET4VQLa6U2K54eG0TFMU28U/oRd6brXSHybCLk0PE3QCDt
-         3ns5245/0b2D1CUtVjDMu3VFUvxDFofCaQ6S8SIj8gaoWP/br0IgAeO6zVQNYiSU4WhB
-         RbjtLa6xAJyoHTsGBryD9Uj5vV+A27mdYYFoih+XNbo1UEO5uYb3NHLGX9pnOqY97SPH
-         10/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D/QdUNDcGRTIn4Mm1UmaweKSH9RuZF0BWTBRT3JrMYA=;
-        b=e6oqTKuLi4qjo6HmmXPYR3uAyrG8AefJanEGn0DG2EyBLfB0yCqKieqq6l4oIRYnmF
-         gI0Bi7NxoS12yTC86q/WGsnG/qdUcHMgXnsG9X4Qn0llYZt6O2LhxMWUM6ftMpghJsa/
-         7Ugs6lvwp515o1NYrYFP6nSU8RWmMa5Y3qZN9ogKR+KVQqpLBSZdxSQb6bUOsKCWgv1+
-         bc/GFZt1D+YoInXI/rvZUtBh+d6Ga0Bl8SYXDbtmhUOy1jall/LMWOZyeW6Av8LoiXF+
-         cwa/nlnDjGMmSGjU/bTOCqUAHEyvgrKIgTmSG1pgXOCGbnfDNsdNa7ByVdXGRAo0Ks0n
-         mPDQ==
-X-Gm-Message-State: APjAAAXJOQmWCZf9jr3OiSMEOjct/2srNuomYQ7xL/C33N5ESYXoD2Rf
-        S4eM612RJY2tYbIRrycdKxz4NOIA4jrnaLZNOG5bze7e/gdq6g==
-X-Google-Smtp-Source: APXvYqy76jBgXLP94PRu+jSfGP37fpyVr0djqBetr+sqr/L6y14YqWlVTXhs5Lar1aYlHNFKkG78ZzIlsVS4Q8kbips=
-X-Received: by 2002:a0c:895b:: with SMTP id 27mr6622552qvq.94.1561706778916;
- Fri, 28 Jun 2019 00:26:18 -0700 (PDT)
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zYe5/mN81Wu4tL48o2Soq2Ioh9hXQALfNlBRak2re20=;
+ b=fZCnvgTcQpA7PDONJmRCNxklUTotTS1P7j0Z7wueIEC67Rr5hvOgW7IcdKm1r3opZqKk037CJflQQEDkMEqy6CiYpO90b1T1O9DcmHUUM/UajI6Cb4OO01/6JVu/TXNPqneWvMF+dHdyrYtprtvMeKUsMsRu+zCyZUSiL6lPags=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
+ BN8PR12MB3457.namprd12.prod.outlook.com (20.178.212.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Fri, 28 Jun 2019 07:27:32 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c922:4285:22a6:6e]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c922:4285:22a6:6e%5]) with mapi id 15.20.2008.018; Fri, 28 Jun 2019
+ 07:27:31 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <Jose.Abreu@synopsys.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: RE: [PATCH net-next 10/10] net: stmmac: Try to get C45 PHY if
+ everything else fails
+Thread-Topic: [PATCH net-next 10/10] net: stmmac: Try to get C45 PHY if
+ everything else fails
+Thread-Index: AQHVLCXCrx1niaeCs0CBNlrs4Af9k6auOg4AgADniCCAAF0vAIAAAOYggAAKKwCAASOeIA==
+Date:   Fri, 28 Jun 2019 07:27:31 +0000
+Message-ID: <BN8PR12MB32661430AED6693B860EBCC0D3FC0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <cover.1561556555.git.joabreu@synopsys.com>
+ <c7d1dbac1940853c22db8215ed60181b2abe3050.1561556556.git.joabreu@synopsys.com>
+ <20190626200128.GH27733@lunn.ch>
+ <BN8PR12MB3266A8396ACA97484A5E0CE7D3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190627132340.GC31189@lunn.ch>
+ <BN8PR12MB32666DADBD1DD315026E9A2BD3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190627140316.GF31189@lunn.ch>
+In-Reply-To: <20190627140316.GF31189@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3892826d-0cd0-4657-9756-08d6fb9a1514
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN8PR12MB3457;
+x-ms-traffictypediagnostic: BN8PR12MB3457:
+x-microsoft-antispam-prvs: <BN8PR12MB3457B3621BAF20DDC0B6BA65D3FC0@BN8PR12MB3457.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 00826B6158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(396003)(346002)(136003)(39860400002)(366004)(376002)(199004)(189003)(11346002)(25786009)(74316002)(3846002)(5660300002)(66066001)(6116002)(6436002)(55016002)(68736007)(4744005)(26005)(52536014)(9686003)(66946007)(73956011)(76116006)(64756008)(66556008)(4326008)(66476007)(8936002)(86362001)(66446008)(53936002)(256004)(8676002)(54906003)(14454004)(316002)(110136005)(81166006)(186003)(71190400001)(81156014)(478600001)(486006)(446003)(2906002)(76176011)(305945005)(7736002)(476003)(6506007)(229853002)(102836004)(6246003)(33656002)(6636002)(7696005)(99286004)(71200400001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3457;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jZVhHRCGw6F6IAyHCV9n0NIzpgRGxFW5a5aXOmLtFZZA2b+Xtddyq+kD6LePgilRcbr1uUO0f1axBJsFc9kTtX5uS4MQoByYYtzggj3fqbORXizngPtViBuF38wD748nEGpRVm1itPut9gboCHpzXRuHTyONJbrPzsfMv3uWhFekU92its4+IZ9lmtAmosgwv6SXcoOuhlH9TflzTGrDdgzb2JwuGv4hwIL47KgCY5SpikPhKIAYEkReAHP14gXt3bScGyTnpNRpCzEAwzTfdPiGYbzbAl0PjpqABg8f/99S3/s7mQ99/xTOQEfPq4igvqq1SWCPHf7teL9WHce5sunCm2zGYgNoMG/zTN35tuij7B7uiJkjk3Gn1LEAKM4DPS1gLOF4qIrxZdEVTfBCsHqzLiSlaeF4gKNHKtXHKqI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190628072307.24678-1-drake@endlessm.com>
-In-Reply-To: <20190628072307.24678-1-drake@endlessm.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Fri, 28 Jun 2019 15:26:07 +0800
-Message-ID: <CAD8Lp4577Vd109p2ax22WtXUH=bEXYP8o8Ak5Gk9texCw9+x5Q@mail.gmail.com>
-Subject: Re: [PATCH] x86: skip PIT initialization on modern chipsets
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     hpa@zytor.com, x86@kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3892826d-0cd0-4657-9756-08d6fb9a1514
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 07:27:31.4761
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3457
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oops, please also add a reference to the main thread:
+From: Andrew Lunn <andrew@lunn.ch>
 
-On Fri, Jun 28, 2019 at 3:23 PM Daniel Drake <drake@endlessm.com> wrote:
-> Detect modern setups where we have no need for the PIT (e.g. where
-> we already know the TSC and LAPIC timer frequencies, so no need
-> to calibrate them against the PIT), and skip initialization PIT in
-> such cases.
->
-> Skip the IO-APIC timer-checking code when we don't have a PIT
-> to test against (this was causing the panic).
+> On Thu, Jun 27, 2019 at 01:33:59PM +0000, Jose Abreu wrote:
+> > From: Andrew Lunn <andrew@lunn.ch>
+> >=20
+> > > There have been some drivers gaining patches for ACPI. That is
+> > > probably the better long term solution, ask ACPI where is the PHY and
+> > > what MDIO protocol to use to talk to it.
+> >=20
+> > Hmmm, I'm not sure this is going to work that way ...
+> >=20
+> > My setup is a PCI EP which is hot-pluggable and as far as I know ACPI=20
+> > has only static content (????)
+>=20
+> I've wanted to improve the PHY probe code for a while. I was thinking
+> we should add a flag to the MDIO bus driver structure indicating it
+> can do C45. When that flag is present, we should also scan the bus for
+> C45 devices, and register them as well.
+>=20
+> With that in place, i think your problem goes away. Architecturally, i
+> think it is wrong that a MAC driver is registering PHY devices. The
+> MDIO core should do this.
 
-Link: https://lore.kernel.org/lkml/CAD8Lp45fedoPLnK=UmUhhtkjy5u2h04sYKrx3U+m04U6FpVZ4A@mail.gmail.com
-
-> Tested-by: Daniel Drake <drake@endlessm.com>
+Ok, I will drop this patch from the series until we come up with a=20
+better solution.
