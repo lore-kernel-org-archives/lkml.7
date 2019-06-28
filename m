@@ -2,123 +2,133 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3340EC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A462C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1196520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FD021773
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfF1Kpv (ORCPT
+        id S1726876AbfF1KqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:45:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34996 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbfF1Kpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:45:51 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AFB1A308424E;
-        Fri, 28 Jun 2019 10:45:50 +0000 (UTC)
-Received: from xz-x1.redhat.com (ovpn-12-71.pek2.redhat.com [10.72.12.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A09AB5D784;
-        Fri, 28 Jun 2019 10:45:40 +0000 (UTC)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, peterx@redhat.com,
-        Martin Cracauer <cracauer@cons.org>, Shaohua Li <shli@fb.com>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH 5/7] userfaultfd: Don't retake mmap_sem to emulate NOPAGE
-Date:   Fri, 28 Jun 2019 18:44:30 +0800
-Message-Id: <20190628104432.12799-6-peterx@redhat.com>
-In-Reply-To: <20190628104432.12799-1-peterx@redhat.com>
-References: <20190628104432.12799-1-peterx@redhat.com>
+        Fri, 28 Jun 2019 06:46:03 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54492 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726578AbfF1KqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 06:46:03 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2E14F48D31486AA4B2C7;
+        Fri, 28 Jun 2019 18:46:01 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Jun 2019
+ 18:45:51 +0800
+Subject: Re: [PATCH v2 2/5] perf pmu: Support more complex PMU event aliasing
+To:     Jiri Olsa <jolsa@redhat.com>
+References: <1560521283-73314-1-git-send-email-john.garry@huawei.com>
+ <1560521283-73314-3-git-send-email-john.garry@huawei.com>
+ <20190616095844.GC2500@krava>
+ <a27e65b4-b487-9206-6dd0-6f9dcec0f1f5@huawei.com>
+ <20190620182519.GA15239@krava>
+ <6257fc79-b737-e6ca-2fce-f71afa36e9aa@huawei.com>
+ <cafed7d6-13c7-3a92-a826-024698bc6cc8@huawei.com>
+ <20190628104040.GA15960@krava>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
+        <tmricht@linux.ibm.com>, <brueckner@linux.ibm.com>,
+        <kan.liang@linux.intel.com>, <ben@decadent.org.uk>,
+        <mathieu.poirier@linaro.org>, <mark.rutland@arm.com>,
+        <will.deacon@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <zhangshaokun@hisilicon.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <004cb11b-e0ee-5af1-33d4-437fb8be03c0@huawei.com>
+Date:   Fri, 28 Jun 2019 11:45:43 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 28 Jun 2019 10:45:50 +0000 (UTC)
+In-Reply-To: <20190628104040.GA15960@krava>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The idea comes from the upstream discussion between Linus and Andrea:
+On 28/06/2019 11:40, Jiri Olsa wrote:
+> On Thu, Jun 27, 2019 at 05:27:32PM +0100, John Garry wrote:
+>
+> SNIP
+>
+>>>>
+>>>> heya,
+>>>> sry for late reply
+>>>>
+>>>>>
+>>>>>> if tok is NULL in here we crash
+>>>>>>
+>>>>>
+>>>>> As I see, tok could not be NULL. If str contains no delimiters, then
+>>>>> we just
+>>>>> return same as str in tok.
+>>>>>
+>>>>> Can you see tok being NULL?
+>>>>
+>>>> well, if there's no ',' in the str it returns NULL, right?
+>>>
+>>> No, it would return str in tok.
+>
+> ok
+>
+>>>
+>>>> and IIUC this function is still called for standard uncore
+>>>> pmu names
+>>>>
+>>>>>
+>>>>>>> +        res = false;
+>>>>>>> +        goto out;
+>>>>>>> +    }
+>>>>>>> +
+>>>>>>> +    for (; tok; name += strlen(tok), tok = strtok_r(NULL, ",",
+>>>>>>> &tmp)) {
+>>>>>>
+>>>>>> why is name shifted in here?
+>>>>>
+>>>>> I want to ensure that we match the tokens in order and also guard
+>>>>> against
+>>>>> possible repeated token matches in 'name'.
+>>>>
+>>>> i might not understand this correctly.. so
+>>>>
+>>>> str is the alias name that can contain ',' now, like:
+>>>>   hisi_sccl,ddrc
+>>>
+>>> For example of pmu_nmame=hisi_sccl,ddrc and pmu=hisi_sccl1_ddrc0, we
+>>> match in this sequence:
+>>>
+>>> loop 1. tok=hisi_sccl name=hisi_sccl1_ddrc0
+>>> loop 2. tok=ddrc name=ddrc0
+>>> loop 3. tok=NULL -> breakout and return true
+>
 
-https://lkml.org/lkml/2017/10/30/560
+Hi jirka,
 
-A summary to the issue: there was a special path in handle_userfault()
-in the past that we'll return a VM_FAULT_NOPAGE when we detected
-non-fatal signals when waiting for userfault handling.  We did that by
-reacquiring the mmap_sem before returning.  However that brings a risk
-in that the vmas might have changed when we retake the mmap_sem and
-even we could be holding an invalid vma structure.
+> ok, plz put something like above into comment
+>
 
-This patch removes the risk path in handle_userfault() then we will be
-sure that the callers of handle_mm_fault() will know that the VMAs
-might have changed.  Meanwhile with previous patch we don't lose
-responsiveness as well since the core mm code now can handle the
-nonfatal userspace signals quickly even if we return VM_FAULT_RETRY.
+ok, can do.
 
-Suggested-by: Andrea Arcangeli <aarcange@redhat.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reviewed-by: Jerome Glisse <jglisse@redhat.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- fs/userfaultfd.c | 24 ------------------------
- 1 file changed, 24 deletions(-)
+Thanks again,
+John
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 50a21fba25d2..8b051bae97ef 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -512,30 +512,6 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 
- 	__set_current_state(TASK_RUNNING);
- 
--	if (return_to_userland) {
--		if (signal_pending(current) &&
--		    !fatal_signal_pending(current)) {
--			/*
--			 * If we got a SIGSTOP or SIGCONT and this is
--			 * a normal userland page fault, just let
--			 * userland return so the signal will be
--			 * handled and gdb debugging works.  The page
--			 * fault code immediately after we return from
--			 * this function is going to release the
--			 * mmap_sem and it's not depending on it
--			 * (unlike gup would if we were not to return
--			 * VM_FAULT_RETRY).
--			 *
--			 * If a fatal signal is pending we still take
--			 * the streamlined VM_FAULT_RETRY failure path
--			 * and there's no need to retake the mmap_sem
--			 * in such case.
--			 */
--			down_read(&mm->mmap_sem);
--			ret = VM_FAULT_NOPAGE;
--		}
--	}
--
- 	/*
- 	 * Here we race with the list_del; list_add in
- 	 * userfaultfd_ctx_read(), however because we don't ever run
--- 
-2.21.0
+> thanks,
+> jirka
+>
+> .
+>
+
 
