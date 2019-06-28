@@ -2,42 +2,38 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1A3C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B278C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B2E2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D49F208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfF1LwJ (ORCPT
+        id S1726903AbfF1LwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 28 Jun 2019 07:52:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7676 "EHLO huawei.com"
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7673 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726657AbfF1LwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726656AbfF1LwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 07:52:08 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id ED69988005FE13A876D3;
-        Fri, 28 Jun 2019 19:52:05 +0800 (CST)
+        by Forcepoint Email with ESMTP id 078A6C70308820D69ECF;
+        Fri, 28 Jun 2019 19:52:06 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 28 Jun 2019 19:51:59 +0800
+ 14.3.439.0; Fri, 28 Jun 2019 19:51:58 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 04/12] net: hns3: add some error checking in hclge_tm module
-Date:   Fri, 28 Jun 2019 19:50:10 +0800
-Message-ID: <1561722618-12168-5-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 00/12] net: hns3: some code optimizations & cleanups & bugfixes
+Date:   Fri, 28 Jun 2019 19:50:06 +0800
+Message-ID: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
-References: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.132]
@@ -47,50 +43,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+[patch 01/12] fixes a TX timeout issue.
 
-When hdev->tx_sch_mode is HCLGE_FLAG_VNET_BASE_SCH_MODE, the
-hclge_tm_schd_mode_vnet_base_cfg calls hclge_tm_pri_schd_mode_cfg
-with vport->vport_id as pri_id, which is used as index for
-hdev->tm_info.tc_info, it will cause out of bound access issue
-if vport_id is equal to or larger than HNAE3_MAX_TC.
+[patch 02/12 - 04/12] adds some patch related to TM module.
 
-Also hardware only support maximum speed of HCLGE_ETHER_MAX_RATE.
+[patch 05/12] fixes a compile warning.
 
-So this patch adds two checks for above cases.
+[patch 06/12] adds Asym Pause support for autoneg
 
-Fixes: 848440544b41 ("net: hns3: Add support of TX Scheduler & Shaper to HNS3 driver")
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+[patch 07/12] optimizes the error handler for VF reset.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-index cb2fb5a..3f41fa2 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-@@ -58,7 +58,8 @@ static int hclge_shaper_para_calc(u32 ir, u8 shaper_level,
- 	u32 tick;
- 
- 	/* Calc tick */
--	if (shaper_level >= HCLGE_SHAPER_LVL_CNT)
-+	if (shaper_level >= HCLGE_SHAPER_LVL_CNT ||
-+	    ir > HCLGE_ETHER_MAX_RATE)
- 		return -EINVAL;
- 
- 	tick = tick_array[shaper_level];
-@@ -1138,6 +1139,9 @@ static int hclge_tm_schd_mode_vnet_base_cfg(struct hclge_vport *vport)
- 	int ret;
- 	u8 i;
- 
-+	if (vport->vport_id >= HNAE3_MAX_TC)
-+		return -EINVAL;
-+
- 	ret = hclge_tm_pri_schd_mode_cfg(hdev, vport->vport_id);
- 	if (ret)
- 		return ret;
+[patch 08/12] deals with the empty interrupt case.
+
+[patch 09/12 - 12/12] adds some cleanups & optimizations.
+
+Huazhong Tan (3):
+  net: hns3: fix __QUEUE_STATE_STACK_XOFF not cleared issue
+  net: hns3: re-schedule reset task while VF reset fail
+  net: hns3: handle empty unknown interrupt
+
+Jian Shen (1):
+  net: hns3: remove unused linkmode definition
+
+Peng Li (1):
+  net: hns3: optimize the CSQ cmd error handling
+
+Yonglong Liu (2):
+  net: hns3: fix a -Wformat-nonliteral compile warning
+  net: hns3: add Asym Pause support to fix autoneg problem
+
+Yufeng Mo (1):
+  net: hns3: fix a statistics issue about l3l4 checksum error
+
+Yunsheng Lin (4):
+  net: hns3: enable DCB when TC num is one and pfc_en is non-zero
+  net: hns3: change SSU's buffer allocation according to UM
+  net: hns3: add some error checking in hclge_tm module
+  net: hns3: remove RXD_VLD check in hns3_handle_bdinfo
+
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 66 +++++++----------
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    | 20 ------
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  1 -
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c | 15 +++-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  2 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c |  2 +
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 84 +++++++++++++++++++---
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c    |  7 ++
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c  | 25 ++++++-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.h  |  3 +-
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c   | 19 +++--
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 30 +++++---
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |  1 +
+ 13 files changed, 184 insertions(+), 91 deletions(-)
+
 -- 
 2.7.4
 
