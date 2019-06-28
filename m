@@ -2,60 +2,59 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A52C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF1EC5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 295B9204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4A1205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:13:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="urIYMQLw"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eag4mvAB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfF1SIY (ORCPT
+        id S1726586AbfF1SNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:08:24 -0400
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:35648 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfF1SIY (ORCPT
+        Fri, 28 Jun 2019 14:13:11 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46651 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfF1SNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:08:24 -0400
-Received: by mail-pl1-f170.google.com with SMTP id w24so3663875plp.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:08:24 -0700 (PDT)
+        Fri, 28 Jun 2019 14:13:11 -0400
+Received: by mail-pl1-f196.google.com with SMTP id e5so3649441pls.13
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:13:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=G6tQj9JGt5eWV6Usl/0DEM4bXR28Xsa6XudzWBZRees=;
-        b=urIYMQLw7SgSurMotfZfSVmJc67vOh9HFHgSKGv5VupzUseVTLEXmT4xdsJnI7M+T9
-         OYncOZk2MSaN8ehZkyEwnW0GdRndb+7sm1ngQeAfY47Axmo6TSzaIf/nq+y0zynVLrLy
-         d/hK3wpwurXP4dybCFCwbMvYbG6iyoDoOem9/C+obwD/e34nssT8ZZ3OA7s+Zs3MHQFZ
-         zNKOsouJEhQWT5wUUBmyfWd39S7QVEZR1e3BRaQbNsI8/cIRgBUyKA9EmGXPaUwwGfB3
-         sk9Rl/U+Ol/TSHTDqiU7H9KoeYDOoMZc1vsZ+4sdoItr/3X0owjcXhKSfZgcTnEf66qY
-         hhFg==
+        bh=Cn9Q1Wbyl5xIGaCdkoIIaNcFmVQFrY2dwxn3d9BBkHc=;
+        b=eag4mvABTu4bMgSKtKRaxm6hxG1BPnj1CEDFDSDsrF6DOjCGrRewpIXSDm7hcqEmzs
+         mn+E004mWDj4R879Vf9eY87+iP/Wk2xBwki3jO3juI6uyXY8phyqEjB38IK3ihQKMwMc
+         Cd6Llre7Oo/KZXZxjU80RAQo/+53AG/eeK+vmGfTUy39fzItmjufUSdfnyuecNykvLT7
+         ztmI8T5bDDvTG2AqW44V6lcm7kOKJs2HrwEU87a23q26iR7Yfzxpm1YAOtsxOXwa6RUk
+         moDdV4v+CP9qI3+CevCjHpdLRTZsYlBKjIwkb5sHJ19IF4aHoFmNkJLypftqcz4xfj51
+         xVVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=G6tQj9JGt5eWV6Usl/0DEM4bXR28Xsa6XudzWBZRees=;
-        b=AgF6dPcaIz3bM+SMJMB0nwQF/hwM9ARId9N04FgDu1qLvhoZcJXJVGCd3VP+wmVRdK
-         QrukNtbOVaW/TgaBCBJU1ZS+1zkeyZy8F87QTa1TLacvcXne+LqmcTyOHOl9UwDSK8Lq
-         XkOTGFNtjkIfItitfKktKIL/G5y4kBTlFTU0+vc5QWGtJTmUUmd5yB6YaHhJfCaDO/cY
-         9ng87F19KfFrS5AGM+w1ztwM/oMrhY/DygY5iO2W9h+6VfX6/U8eNgEAGLDicGcUjTEZ
-         bKjcV+M4la9X6n8NDKZAXLnPubhGCrKGvkQMFVC4bieDVQH3VJDjlhM2O7GWMbU2IX/1
-         yHEQ==
-X-Gm-Message-State: APjAAAXWc219pHfNHAbnBcBzgK1Z5qXeyUsdgOEWoTzI8WVlFkYTqvT4
-        rXn3tN7xmaq5mtUdMKQALCWnVg==
-X-Google-Smtp-Source: APXvYqwgMrO9KnbOghS1eRTPHzN/QExULWcHo+Axo7AlQFrSWdgK3st/zL/VsoC8WPYxv1TleZVDSg==
-X-Received: by 2002:a17:902:a414:: with SMTP id p20mr12470690plq.187.1561745303607;
-        Fri, 28 Jun 2019 11:08:23 -0700 (PDT)
+        bh=Cn9Q1Wbyl5xIGaCdkoIIaNcFmVQFrY2dwxn3d9BBkHc=;
+        b=ShbwLkNyy9XUtiBwX/eS761qEIc3zg5di/JN0hn5hGgN8Mv2IZjGFtgYuYelGaVo8x
+         0QGF5BxcjAQav4G8ij44dbMmB1TKH6Gfc7nKOrEc9MHZzTgxmFe07OUlKWq0UIcQXJ2A
+         dEIVhoMI/CLUqLO+KPXvQ5+fFJdrvwenNufA2XIofU6Quk3GWPLBzS4IV7JpyCfPwvBv
+         1buc8qMJajWQ1zRFmhK1StCAcOFVJMjN5fp6vJT+yDCq5wSWMlZuBJE3TKGrMCvWs3RH
+         DugrKMEZl5CIvbEwobiuZL/FDRP2U0qYON4ZMOYEWx6k/FmTrCwJ1fvwMGzS5mLELAz/
+         Rt0A==
+X-Gm-Message-State: APjAAAVeuYBvZbPMABYbR4+ZwtQW0/0TX+NZ1anFAK+7otxpy9hOtvWI
+        A24wuHEJoyuAMPAZfZ1lkhlX4Q==
+X-Google-Smtp-Source: APXvYqyO0DxNwIeVEjqqmuJf6WfYaCTaV6owpC43va2Fglh9hukvx/iaKf2dkMByt/m7tQBZXRWWpw==
+X-Received: by 2002:a17:902:da4:: with SMTP id 33mr12037670plv.209.1561745590252;
+        Fri, 28 Jun 2019 11:13:10 -0700 (PDT)
 Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id 196sm4065985pfy.167.2019.06.28.11.08.22
+        by smtp.googlemail.com with ESMTPSA id o14sm2675345pjp.29.2019.06.28.11.13.09
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Jun 2019 11:08:23 -0700 (PDT)
+        Fri, 28 Jun 2019 11:13:09 -0700 (PDT)
 From:   Kevin Hilman <khilman@baylibre.com>
 To:     Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org,
@@ -63,11 +62,11 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
         linux-gpio@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RFC/RFT v2 12/14] arm64: dts: meson-g12a: enable DVFS on G12A boards
-In-Reply-To: <20190626090632.7540-13-narmstrong@baylibre.com>
-References: <20190626090632.7540-1-narmstrong@baylibre.com> <20190626090632.7540-13-narmstrong@baylibre.com>
-Date:   Fri, 28 Jun 2019 11:08:22 -0700
-Message-ID: <7himspr3ah.fsf@baylibre.com>
+Subject: Re: [RFC/RFT v2 00/14] arm64: g12a: add support for DVFS
+In-Reply-To: <20190626090632.7540-1-narmstrong@baylibre.com>
+References: <20190626090632.7540-1-narmstrong@baylibre.com>
+Date:   Fri, 28 Jun 2019 11:13:08 -0700
+Message-ID: <7hblyhr32j.fsf@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,56 +76,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Neil Armstrong <narmstrong@baylibre.com> writes:
 
-> Enable DVFS for the U200, SEI520 and X96-Max Amlogic G12A based board
-> by setting the clock, OPP and supply for each CPU cores.
+> The G12A/G12B Socs embeds a specific clock tree for each CPU cluster :
+> cpu_clk / cpub_clk
+> |   \- cpu_clk_dyn
+> |      |  \- cpu_clk_premux0
+> |      |        |- cpu_clk_postmux0
+> |      |        |    |- cpu_clk_dyn0_div
+> |      |        |    \- xtal/fclk_div2/fclk_div3
+> |      |        \- xtal/fclk_div2/fclk_div3
+> |      \- cpu_clk_premux1
+> |            |- cpu_clk_postmux1
+> |            |    |- cpu_clk_dyn1_div
+> |            |    \- xtal/fclk_div2/fclk_div3
+> |            \- xtal/fclk_div2/fclk_div3
+> \ sys_pll / sys1_pll
 >
-> The CPU cluster power supply can achieve 0.73V to 1.01V using a PWM
-> output clocked at 800KHz with an inverse duty-cycle.
+> This patchset adds notifiers on cpu_clk / cpub_clk, cpu_clk_dyn,
+> cpu_clk_premux0 and sys_pll / sys1_pll to permit change frequency of
+> the CPU clock in a safe way as recommended by the vendor Documentation
+> and reference code.
 >
-> DVFS has been tested by running the arm64 cpuburn at [1] and cycling
-> between all the possible cpufreq translations and checking the final
-> frequency using the clock-measurer, script at [2].
+> This patchset :
+> - introduces needed core and meson clk changes
+> - adds support for the G12B second cluster clock measurer ids
+> - protects clock measurer from cooncurent measures
+> - adds the clock notifiers
+> - moves the G12A DT to a common g12a-common dtsi
+> - adds the G12A and G12B OPPs
+> - enables DVFS on all supported boards
 >
-> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
-> [2] https://gist.github.com/superna9999/d4de964dbc0f84b7d527e1df2ddea25f
+> Dependencies:
+> - PWM AO input order fix at [1]
+> - PWM enhancements from Martin at [2]
 >
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Changes since RFT/RFC v1 at [3]:
+> - Added EXPORT_SYMBOL_GPL() to clk_hw_set_parent
+> - Added missing static to g12b_cpub_clk_mux0_div_ops and g12a_cpu_clk_mux_nb
+> - Simplified g12a_cpu_clk_mux_notifier_cb() without switch/case
+> - Fixed typo in "this the current path" in g12a.c
+> - Fixed G12B dtsi by adding back the sdio quirk
+> - Fixed G12A dtsi unwanted sdio quirk removal
+> - Fixed various checkpatch errors
+>
+> [1] https://patchwork.kernel.org/patch/11006835/
+> [2] https://patchwork.kernel.org/patch/11006835/
+> [3] https://patchwork.kernel.org/cover/11006929/
+>
+> Neil Armstrong (14):
+>   pinctrl: meson-g12a: add pwm_a on GPIOE_2 pinmux
+>   clk: core: introduce clk_hw_set_parent()
+>   clk: meson: regmap: export regmap_div ops functions
+>   clk: meson: eeclk: add setup callback
+>   soc: amlogic: meson-clk-measure: protect measure with a mutex
+>   soc: amlogic: meson-clk-measure: add G12B second cluster cpu clk
+>   clk: meson: g12a: add notifiers to handle cpu clock change
+>   clk: meson: g12a: expose CPUB clock ID for G12B
+>   arm64: dts: move common G12A & G12B modes to meson-g12-common.dtsi
+>   arm64: dts: meson-g12-common: add pwm_a on GPIOE_2 pinmux
+>   arm64: dts: meson-g12a: add cpus OPP table
+>   arm64: dts: meson-g12a: enable DVFS on G12A boards
+>   arm64: dts: meson-g12b: add cpus OPP tables
+>   arm64: dts: meson-g12b-odroid-n2: enable DVFS
 
-[...]
+The DT files don't apply cleanly to my tree (v5.3/dt64 branch).  Could
+you rebase:
 
-> @@ -297,6 +316,34 @@
->  	status = "okay";
->  };
->  
-> +&cpu0 {
-> +	cpu-supply = <&vddcpu>;
-> +	operating-points-v2 = <&cpu_opp_table>;
-> +	clocks = <&clkc CLKID_CPU_CLK>;
-> +	clock-latency = <50000>;
-> +};
-> +
-> +&cpu1 {
-> +	cpu-supply = <&vddcpu>;
-> +	operating-points-v2 = <&cpu_opp_table>;
-> +	clocks = <&clkc CLKID_CPU_CLK>;
-> +	clock-latency = <50000>;
-> +};
-> +
-> +&cpu2 {
-> +	cpu-supply = <&vddcpu>;
-> +	operating-points-v2 = <&cpu_opp_table>;
-> +	clocks = <&clkc CLKID_CPU_CLK>;
-> +	clock-latency = <50000>;
-> +};
-> +
-> +&cpu3 {
-> +	cpu-supply = <&vddcpu>;
-> +	operating-points-v2 = <&cpu_opp_table>;
-> +	clocks = <&clkc CLKID_CPU_CLK>;
-> +	clock-latency = <50000>;
-> +};
-
-Just curious where this max clock transtion (clock-latency) value came
-from.  Were you able to measure that somehow?
+Then I can put into my testing branch, which gets included in 'integ'
+and it will be easier for others to test.
 
 Kevin
+
