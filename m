@@ -2,129 +2,114 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A54C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F675C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32BC5208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127B121743
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:45:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NJhiRaFT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfF1Ios (ORCPT
+        id S1726658AbfF1IpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:44:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54464 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726385AbfF1Ios (ORCPT
+        Fri, 28 Jun 2019 04:45:00 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33971 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfF1IpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:44:48 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5S8gYod012220
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 04:44:47 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tdduxcfpc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 04:44:46 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Fri, 28 Jun 2019 09:44:44 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Jun 2019 09:44:41 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5S8ifEg49938448
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 08:44:41 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EE0C6A4054;
-        Fri, 28 Jun 2019 08:44:40 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D084A4060;
-        Fri, 28 Jun 2019 08:44:39 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 28 Jun 2019 08:44:39 +0000 (GMT)
-Date:   Fri, 28 Jun 2019 08:44:38 +0000
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH RESEND v3] sched/isolation: Prefer housekeeping cpu in
- local node
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <1561682593-12071-1-git-send-email-wanpengli@tencent.com>
- <1561682593-12071-2-git-send-email-wanpengli@tencent.com>
- <20190628065802.GA27699@linux.vnet.ibm.com>
- <CANRm+Cz4R5OOga34DDepCP_yOtXXCqTxD8bs_rvgtQbjS8d1hw@mail.gmail.com>
+        Fri, 28 Jun 2019 04:45:00 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c85so2634334pfc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 01:44:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9cCBNQ/DLgtpUPdtAQUtvcyuKyE7Z8O611WKPmcesJs=;
+        b=NJhiRaFTwbXgWwYMuOKzcTTAPu8tvSUXftkWjd2iiLgQl4WJT7WRsvULRO5tF8PluC
+         Nn+xvF88SuY6E/ZeAT3axrY8RuBSq8aQZRGAiy3DZuNjp2jnGcFdj/vf3GXwc4KU26Zj
+         mspXga43P9yxdB55hXqpNtLBeXU2cevRPgdoY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9cCBNQ/DLgtpUPdtAQUtvcyuKyE7Z8O611WKPmcesJs=;
+        b=FrBda/QLzzIuj4bVXYrXh1RpR0ouSfHHO7RMlPf0Dw33zxZV7q2Ip+YoO4ty6sk8F0
+         xUosfEl2/wdif0u4DFjl4lhfbqNeSdwjk6F0at7jmVe9ADqf88ZiVpRJluqi3HPmzUXF
+         DnN3Pr1Tnkt1KZq6ndpX9gg7n1/iKSWVLwdwpFwPmOZo82oUQ7Dntn/0XAKypap8M/+0
+         0JWVNuTf7pmsfpg+wvwu3iM1qc9KJ3kIZtZCzrH9ZPKveUyze47mv0WxNFgRvK3JVKRr
+         yhj7mADdFLY5oiSgwHQHWdGv3GmOyLYjGygzmWGHJmJO5cztIgOjLTECD5QL6XudYMLV
+         3OHA==
+X-Gm-Message-State: APjAAAVCxm+lpT37g2h0SZUpT9HRG9t9FRFzK/DPtaauTSEu2Tkn+kqJ
+        xYDr1RFaszwCfH/GbdsgeCTHTpIPrB6q
+X-Google-Smtp-Source: APXvYqzcWsGydcd1oia93mChuGAQogjZoToWpbbXL8r2Y5MYqx/PPB/llrSa3dFB1zoTvtb0iZ0Rew==
+X-Received: by 2002:a17:90a:b104:: with SMTP id z4mr11674941pjq.102.1561711499289;
+        Fri, 28 Jun 2019 01:44:59 -0700 (PDT)
+Received: from google.com ([2401:fa00:1:b:d89e:cfa6:3c8:e61b])
+        by smtp.gmail.com with ESMTPSA id s20sm670784pfe.169.2019.06.28.01.44.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 28 Jun 2019 01:44:58 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 16:44:55 +0800
+From:   Vovo Yang <vovoy@chromium.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm: vmscan: fix not scanning anonymous pages when
+ detecting file refaults
+Message-ID: <20190628084455.GA59379@google.com>
+References: <20190619080835.GA68312@google.com>
+ <20190627184123.GA11181@cmpxchg.org>
+ <20190628065138.GA251482@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANRm+Cz4R5OOga34DDepCP_yOtXXCqTxD8bs_rvgtQbjS8d1hw@mail.gmail.com>
+In-Reply-To: <20190628065138.GA251482@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19062808-4275-0000-0000-000003472E69
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062808-4276-0000-0000-0000385739BE
-Message-Id: <20190628084438.GA22550@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906280102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 28, 2019 at 03:51:38PM +0900, Minchan Kim wrote:
+> Hi Johannes,
 > 
-> -#endif /* CONFIG_NUMA */
-> -
->  /*
->   * sched_numa_find_closest() - given the NUMA topology, find the cpu
->   *                             closest to @cpu from @cpumask.
->   * cpumask: cpumask to find a cpu from
->   * cpu: cpu to be close to
->   *
-> - * returns: cpu, or >= nr_cpu_ids when nothing found (or !NUMA).
-> + * returns: cpu, or nr_cpu_ids when nothing found.
->   */
->  int sched_numa_find_closest(const struct cpumask *cpus, int cpu)
->  {
-> -#ifdef CONFIG_NUMA
->      int i, j = cpu_to_node(cpu);
+> On Thu, Jun 27, 2019 at 02:41:23PM -0400, Johannes Weiner wrote:
+> > 
+> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > 
+> > Your change makes sense - we should indeed not force cache trimming
+> > only while the page cache is experiencing refaults.
+> > 
+> > I can't say I fully understand the changelog, though. The problem of
 > 
->      for (i = 0; i < sched_domains_numa_levels; i++) {
-> @@ -1754,10 +1751,11 @@ int sched_numa_find_closest(const struct
-> cpumask *cpus, int cpu)
->          if (cpu < nr_cpu_ids)
->              return cpu;
->      }
-> -#endif
->      return nr_cpu_ids;
->  }
+> I guess the point of the patch is "actual_reclaim" paramter made divergency
+> to balance file vs. anon LRU in get_scan_count. Thus, it ends up scanning
+> file LRU active/inactive list at file thrashing state.
 > 
-> +#endif /* CONFIG_NUMA */
-> +
->  static int __sdt_alloc(const struct cpumask *cpu_map)
->  {
->      struct sched_domain_topology_level *tl;
+> So, Fixes: 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in cache workingset transition")
+> would make sense to me since it introduces the parameter.
 > 
 
-Looks good to me.
+Thanks for the review and explanation, I will update the changelog to
+make it clear.
 
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-
--- 
-Thanks and Regards
-Srikar Dronamraju
-
+> > forcing cache trimming while there is enough page cache is older than
+> > the commit you refer to. It could be argued that this commit is
+> > incomplete - it could have added refault detection not just to
+> > inactive:active file balancing, but also the file:anon balancing; but
+> > it didn't *cause* this problem.
+> > 
+> > Shouldn't this be
+> > 
+> > Fixes: e9868505987a ("mm,vmscan: only evict file pages when we have plenty")
+> > Fixes: 7c5bd705d8f9 ("mm: memcg: only evict file pages when we have plenty")
+> 
+> That would affect, too but it would be trouble to have stable backport
+> since we don't have refault machinery in there.
