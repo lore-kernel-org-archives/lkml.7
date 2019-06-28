@@ -2,168 +2,88 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA678C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60068C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C7A208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:18:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qIXffgO4"
+	by mail.kernel.org (Postfix) with ESMTP id 2D815208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:19:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfF1JSS (ORCPT
+        id S1726589AbfF1JTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:18:18 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41314 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfF1JSS (ORCPT
+        Fri, 28 Jun 2019 05:19:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34712 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbfF1JTX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:18:18 -0400
-Received: by mail-ot1-f65.google.com with SMTP id o101so4985291ota.8;
-        Fri, 28 Jun 2019 02:18:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Wwb05O6HKmp/1+G1ivJzQDQ2IsQa1XZFAR/Po+4k1QA=;
-        b=qIXffgO41fk3qz+GkeefZ8FzlqAD3+QBPcDfUGP/gv7zaLd4Bc6lYr+r8q2swc/p1O
-         tFUMeUXh9ptGtZedwQcTH5gbD4jDsH1Vrkqt3f1p6WF0hPzrIE5VUOB1jDTN7rRiOECP
-         phPkVkzrbtYL2ms0yv8mwz585niK0g2D3ik+RuOetz767alBYAbSJBB3JyBDk9aIiN15
-         3pVJmf62/dQ6i5hGglixp5mlQTNEoHdNy+F7aHAcFmAfxDxEs+HPbjn2WXh0Qp+GJHqS
-         oDTmHPamP4LtiT3RkX+QVbPJrs9Xc4alCiM9Cpx8BPyDpjJDQJGjsN4j+FATnM3PWv9p
-         cAPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Wwb05O6HKmp/1+G1ivJzQDQ2IsQa1XZFAR/Po+4k1QA=;
-        b=GxitmF+AaY1adib4jbPiqHW66HCpXZb3YnVLSwsTtQB+Zt1x27s8hXwRzTmj+eMizt
-         b3ezYmY/W5Wm2nCAaDW7+2Gr2vGPtyqxpn8QtsgnvzpLqv4TL7qAcK0SGvz4bHFegsJ+
-         /05yzVRRLH+FBMBbfzEpdRGHLXanr718ZHub+XS4SZRr4l699FY/81N3Ajedz4SsOBoj
-         flNGpTV90dGMTjrTpBdnycft03vVXN0iAGj1yRoSXlGZjYlhGtRGxZG4ow81GVaPeBOl
-         F2nI01fcj8bVpyoJbEqmDamJUxXln/gDhBrFwH6MIfA84AlheqjRmv3cG//dTm+FOAgd
-         u8sA==
-X-Gm-Message-State: APjAAAVRLaFoqLb7RkoVO1k1JRSmITDDHG4eIu/HOiyZpu1fOOly4/2D
-        RNG1Kq14KqhLjG8GUkb0G7L2fsykgDnJ6Jz//YQ=
-X-Google-Smtp-Source: APXvYqy0OGiXB+dLsI0Yi0340De/J8CNrgd9i+tIQHNw+GNxFznYrfPBXkEyoQroku6QxDaPa2OloPqCZ6rtHzcIWd0=
-X-Received: by 2002:a9d:4590:: with SMTP id x16mr6707074ote.254.1561713497622;
- Fri, 28 Jun 2019 02:18:17 -0700 (PDT)
+        Fri, 28 Jun 2019 05:19:23 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgn2L-0007wp-35; Fri, 28 Jun 2019 11:19:17 +0200
+Date:   Fri, 28 Jun 2019 11:19:08 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Feng Tang <feng.tang@intel.com>
+cc:     "Chen, Rong A" <rong.a.chen@intel.com>,
+        "tipbuild@zytor.com" <tipbuild@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>, "lkp@01.org" <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [LKP] [x86/hotplug] e1056a25da:
+ WARNING:at_arch/x86/kernel/apic/apic.c:#setup_local_APIC
+In-Reply-To: <20190628063231.GA7766@shbuild999.sh.intel.com>
+Message-ID: <alpine.DEB.2.21.1906280929010.32342@nanos.tec.linutronix.de>
+References: <20190620021856.GP7221@shao2-debian> <alpine.DEB.2.21.1906212108150.5503@nanos.tec.linutronix.de> <58ea508f-dc2e-8537-fe96-49cca0a7c799@intel.com> <alpine.DEB.2.21.1906250821220.32342@nanos.tec.linutronix.de> <f5c36f89-61bf-a82e-3d3b-79720b2da2ef@intel.com>
+ <alpine.DEB.2.21.1906251330330.32342@nanos.tec.linutronix.de> <20190628063231.GA7766@shbuild999.sh.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
- <20190610143420.GA6594@flask> <20190611011100.GB24835@linux.intel.com>
- <CANRm+Cwv5jqxBW=Ss5nkX7kZM3_Y-Ucs66yx5+wN09=W4pUdzA@mail.gmail.com>
- <F136E492-5350-49EE-A856-FBAEDB12FF99@gmail.com> <CANRm+CyZcvuT80ixp9f0FNmjN+rTUtw8MshtBG0Uk4L1B1UjDw@mail.gmail.com>
- <153047ED-75E2-4E70-BC33-C5FF27C08638@gmail.com> <CANRm+Cx6Z=jxLaXqwhBDpVTsKH8mgoo4iC=U8GbAAJz-5gk5ZA@mail.gmail.com>
- <28BF5471-57E8-41FE-B401-D49D57D01A63@gmail.com> <CANRm+CwnShNXmDi7yCZNc=oWrmFO7BTQ-MHxd1f5LRV8+YMJEg@mail.gmail.com>
-In-Reply-To: <CANRm+CwnShNXmDi7yCZNc=oWrmFO7BTQ-MHxd1f5LRV8+YMJEg@mail.gmail.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 28 Jun 2019 17:18:06 +0800
-Message-ID: <CANRm+CyKx4uMkAe7maTg8nwBvkA7SCi2CnSwrghDs1nPuWNg5A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
-To:     Nadav Amit <nadav.amit@gmail.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019 at 17:12, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> On Wed, 12 Jun 2019 at 09:37, Nadav Amit <nadav.amit@gmail.com> wrote:
-> >
-> > > On Jun 11, 2019, at 6:18 PM, Wanpeng Li <kernellwp@gmail.com> wrote:
-> > >
-> > > On Wed, 12 Jun 2019 at 00:57, Nadav Amit <nadav.amit@gmail.com> wrote=
-:
-> > >>> On Jun 11, 2019, at 3:02 AM, Wanpeng Li <kernellwp@gmail.com> wrote=
-:
-> > >>>
-> > >>> On Tue, 11 Jun 2019 at 09:48, Nadav Amit <nadav.amit@gmail.com> wro=
-te:
-> > >>>>> On Jun 10, 2019, at 6:45 PM, Wanpeng Li <kernellwp@gmail.com> wro=
-te:
-> > >>>>>
-> > >>>>> On Tue, 11 Jun 2019 at 09:11, Sean Christopherson
-> > >>>>> <sean.j.christopherson@intel.com> wrote:
-> > >>>>>> On Mon, Jun 10, 2019 at 04:34:20PM +0200, Radim Kr=C4=8Dm=C3=A1=
-=C5=99 wrote:
-> > >>>>>>> 2019-05-30 09:05+0800, Wanpeng Li:
-> > >>>>>>>> The idea is from Xen, when sending a call-function IPI-many to=
- vCPUs,
-> > >>>>>>>> yield if any of the IPI target vCPUs was preempted. 17% perfor=
-mance
-> > >>>>>>>> increasement of ebizzy benchmark can be observed in an over-su=
-bscribe
-> > >>>>>>>> environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-f=
-unction
-> > >>>>>>>> IPI-many since call-function is not easy to be trigged by user=
-space
-> > >>>>>>>> workload).
-> > >>>>>>>
-> > >>>>>>> Have you checked if we could gain performance by having the yie=
-ld as an
-> > >>>>>>> extension to our PV IPI call?
-> > >>>>>>>
-> > >>>>>>> It would allow us to skip the VM entry/exit overhead on the cal=
-ler.
-> > >>>>>>> (The benefit of that might be negligible and it also poses a
-> > >>>>>>> complication when splitting the target mask into several PV IPI
-> > >>>>>>> hypercalls.)
-> > >>>>>>
-> > >>>>>> Tangetially related to splitting PV IPI hypercalls, are there an=
-y major
-> > >>>>>> hurdles to supporting shorthand?  Not having to generate the mas=
-k for
-> > >>>>>> ->send_IPI_allbutself and ->kvm_send_ipi_all seems like an easy =
-to way
-> > >>>>>> shave cycles for affected flows.
-> > >>>>>
-> > >>>>> Not sure why shorthand is not used for native x2apic mode.
-> > >>>>
-> > >>>> Why do you say so? native_send_call_func_ipi() checks if allbutsel=
-f
-> > >>>> shorthand should be used and does so (even though the check can be=
- more
-> > >>>> efficient - I=E2=80=99m looking at that code right now=E2=80=A6)
-> > >>>
-> > >>> Please continue to follow the apic/x2apic driver. Just apic_flat se=
-t
-> > >>> APIC_DEST_ALLBUT/APIC_DEST_ALLINC to ICR.
-> > >>
-> > >> Indeed - I was sure by the name that it does it correctly. That=E2=
-=80=99s stupid.
-> > >>
-> > >> I=E2=80=99ll add it to the patch-set I am working on (TLB shootdown =
-improvements),
-> > >> if you don=E2=80=99t mind.
-> > >
-> > > Original for hotplug cpu safe.
-> > > https://lwn.net/Articles/138365/
-> > > https://lwn.net/Articles/138368/
-> > > Not sure shortcut native support is acceptable, I will play my
-> > > kvm_send_ipi_allbutself and kvm_send_ipi_all. :)
-> >
-> > Yes, I saw these threads before. But I think the test in
-> > native_send_call_func_ipi() should take care of it.
->
-> Good news, https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/lo=
-g/?h=3DWIP.x86/ipi
-> Thomas who also is the hotplug state machine author introduces
-> shorthands support to native kernel now, I will add the support to
-> kvm_send_ipi_allbutself() and kvm_send_ipi_all() after his work
-> complete.
+Feng,
 
-Hmm, should fallback to native shorthands when support.
+On Fri, 28 Jun 2019, Feng Tang wrote:
+> On Tue, Jun 25, 2019 at 07:32:03PM +0800, Thomas Gleixner wrote:
+> > the head of that branch is:
+> > 
+> >       4f3f6d6a7f8e ("x86/apic/x2apic: Add conditional IPI shorthands support")
+> > 
+> > This is WIP and force pushed. There are no incremental changes. Could you
+> > please check again?
+> 
+> Since you can't reproduce it yet, we've added some debug hook to get more
+> info, like dmesg below:
+> 
+> [  288.866069] IRR[7]: 0x1000
+> [  289.890274] WARNING: CPU: 0 PID: 0 at arch/x86/kernel/apic/apic.c:1502 setup_local_APIC+0x2d1/0x4f0
 
-Regards,
-Wanpeng Li
+> [  290.182418] queued = 0x1000 acked = 0
+> [  290.189159] IRR[7]: 0x1000
+> 
+> Which shows the IRR[7] was set 0x1000, IIUC, it means vector
+> 0xec, which is for LAPIC timer, and ISRs are all 0 before and
+> after the loop.
+
+Ahhhh. That makes a lot of sense now.
+
+That interrupt is in the IRR, but not in the ISR. So the acknowledge
+attempts are useless because the ack only clears an pending ISR and the IRR
+is not propagated because in the state in which this happens the entry is
+masked.
+
+That function just 'works' by chance not by design. I'll stare into it and
+fix it up for real.
+
+Thank you very much for that information. Your debug was spot on!
+
+      tglx
