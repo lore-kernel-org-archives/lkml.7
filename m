@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7977BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ADEC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373722147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31343208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561724622;
-	bh=NLAW0McjXbgY17edHo/4tBEOt8KTeJjXuR79JIPbhnc=;
+	s=default; t=1561724625;
+	bh=jJsvnuCy+2V27ojHCs0T0h3uEm+ctmq8hVKpB5xPHds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tyE93BXI2QeecWpQQBL7I32ACNUR2uHOoiA1le9csYu3I7blkUVgfYtM98P+bjrG2
-	 M2aC1Af4DtMHKGnsXEnfdVlLKZNe9cI81cPKfOpHHxFpmb/s3xys4g8XOC/jw+4bd5
-	 hT8Kw03z+J+4FNjG2jlfYDC9LEWcU31PKnU0x6FM=
+	b=B9ESGGHUxlVwGJVnPcVcikSzo8sbZLj0SWnyGMi/q2H9mTDT6Iue/IQjKw4ihKNBt
+	 mhBDY7DdQW3djQvzqchE5Xnqkq9woKBrcgvCgYGl8gYchX0wnOr97fzr7ACtS9wCy8
+	 Mj/8Nd8TYm5gWL+XL5kM0YUpnCPqIDjMvKUF0c+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfF1MXl (ORCPT
+        id S1727411AbfF1MXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:23:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58758 "EHLO
+        Fri, 28 Jun 2019 08:23:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58744 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbfF1MUp (ORCPT
+        with ESMTP id S1726770AbfF1MUp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:20:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=21Zv7eTq00CIh0lzgZDFvEV5UnuZ7mj2qLRpatUknN0=; b=rT8net/IS7WMzrfQutjKIeUTQf
-        wqYKVGQkkWkab4Jg57Zqb5IkHKMrF9hDaQBjl7K91Cmd0hDX3l2DjPgXjke604hO/Zt+XD68rNdxd
-        ByxgFpVkQIDsLj7thAP1B47jHQ96h2HTabp/DYmu5v6jlo3oPE8UqodOUpLba8+cEboZhQcAQGT+T
-        O+MrTl9P6PVKtcwE9gt5bYb0sjKUb8WEvIah1EvYp/3q02vTktz7RBE3KiApDBpCDZIBiHHIS2EkX
-        13v9OR+u9dtEmy+k8mFDdV5OU0C9Qt2V3LLSzN6vxOiyOBhvotqByQNRMQTST6M0ek7nLgORgmigQ
-        JaJazcYg==;
+        bh=FPmhq6OXB0RygPdeF4/P0ZK5H7ymzhVGQYICPZhGGng=; b=ZUOlAaQH2RUYbDkP6DUlUtBuJ0
+        7eyUVd8W4y9Bx9TaKXegLUDnr/aBosq+m7JVYKi49lgMsU8yT91rOpRqRyEY7C5FJl9nW2H7kp97d
+        +Z1/2VqUktWrbGH250JMiB4bEdzoPTEZYBjqFf1/244rw8ySr4Batuv/IYtp5aM5Hurq/OZoQsLZQ
+        8bvFmzCxZtt5GYNyE861SHQyJsk9S/yO+OAzPpNU19fBYDmBtYyI6BVM6+A+Bwh6thtjDPGaRveql
+        GG0q1Tivw+kT4iRoIUJN+f8UbPhHXlAyHtzI3EQ+yEpqUp/pdo0bA0vMrva9ZUrDBF3AEYXVJxy4c
+        SGfBaV4w==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgprv-0000AG-Os; Fri, 28 Jun 2019 12:20:44 +0000
+        id 1hgprv-0000A0-8r; Fri, 28 Jun 2019 12:20:43 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgprt-000593-Qf; Fri, 28 Jun 2019 09:20:41 -0300
+        id 1hgprt-00057p-CB; Fri, 28 Jun 2019 09:20:41 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 28/43] docs: md: convert to ReST
-Date:   Fri, 28 Jun 2019 09:20:24 -0300
-Message-Id: <b3e67b5f842f8e362109c2b4f056860f4e97a13c.1561723980.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 13/43] docs: early-userspace: convert docs to ReST and rename to *.rst
+Date:   Fri, 28 Jun 2019 09:20:09 -0300
+Message-Id: <3e9c9dae2512e9808ac2053a2dd55c6077a4ba8a.1561723980.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561723979.git.mchehab+samsung@kernel.org>
 References: <cover.1561723979.git.mchehab+samsung@kernel.org>
@@ -64,541 +64,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the md documentation files to ReST, add an
-index for them and adjust in order to produce a nice html
-output via the Sphinx build system.
+The two files there describes a Kernel API feature, used to
+support early userspace stuff. Prepare for moving them to
+the kernel API book by converting to ReST format.
+
+The conversion itself was quite trivial: just add/mark a few
+titles as such, add a literal block markup, add a table markup
+and a few blank lines, in order to make Sphinx to properly parse it.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/md/index.rst                    |  12 ++
- .../md/{md-cluster.txt => md-cluster.rst}     | 188 ++++++++++++------
- .../md/{raid5-cache.txt => raid5-cache.rst}   |  28 +--
- .../md/{raid5-ppl.txt => raid5-ppl.rst}       |   2 +
- 4 files changed, 153 insertions(+), 77 deletions(-)
- create mode 100644 Documentation/md/index.rst
- rename Documentation/md/{md-cluster.txt => md-cluster.rst} (68%)
- rename Documentation/md/{raid5-cache.txt => raid5-cache.rst} (92%)
- rename Documentation/md/{raid5-ppl.txt => raid5-ppl.rst} (98%)
+ .../{buffer-format.txt => buffer-format.rst}  | 19 +++++++++++++------
+ .../{README => early_userspace_support.rst}   |  3 +++
+ Documentation/early-userspace/index.rst       | 18 ++++++++++++++++++
+ Documentation/filesystems/nfs/nfsroot.txt     |  2 +-
+ .../filesystems/ramfs-rootfs-initramfs.txt    |  4 ++--
+ usr/Kconfig                                   |  2 +-
+ 6 files changed, 38 insertions(+), 10 deletions(-)
+ rename Documentation/early-userspace/{buffer-format.txt => buffer-format.rst} (91%)
+ rename Documentation/early-userspace/{README => early_userspace_support.rst} (99%)
+ create mode 100644 Documentation/early-userspace/index.rst
 
-diff --git a/Documentation/md/index.rst b/Documentation/md/index.rst
-new file mode 100644
-index 000000000000..c4db34ed327d
---- /dev/null
-+++ b/Documentation/md/index.rst
-@@ -0,0 +1,12 @@
-+:orphan:
-+
-+====
-+RAID
-+====
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   md-cluster
-+   raid5-cache
-+   raid5-ppl
-diff --git a/Documentation/md/md-cluster.txt b/Documentation/md/md-cluster.rst
-similarity index 68%
-rename from Documentation/md/md-cluster.txt
-rename to Documentation/md/md-cluster.rst
-index e1055f105cf5..96eb52cec7eb 100644
---- a/Documentation/md/md-cluster.txt
-+++ b/Documentation/md/md-cluster.rst
-@@ -1,19 +1,24 @@
-+==========
-+MD Cluster
-+==========
-+
- The cluster MD is a shared-device RAID for a cluster, it supports
- two levels: raid1 and raid10 (limited support).
- 
- 
- 1. On-disk format
-+=================
- 
- Separate write-intent-bitmaps are used for each cluster node.
- The bitmaps record all writes that may have been started on that node,
--and may not yet have finished. The on-disk layout is:
-+and may not yet have finished. The on-disk layout is::
- 
--0                    4k                     8k                    12k
---------------------------------------------------------------------
--| idle                | md super            | bm super [0] + bits |
--| bm bits[0, contd]   | bm super[1] + bits  | bm bits[1, contd]   |
--| bm super[2] + bits  | bm bits [2, contd]  | bm super[3] + bits  |
--| bm bits [3, contd]  |                     |                     |
-+  0                    4k                     8k                    12k
-+  -------------------------------------------------------------------
-+  | idle                | md super            | bm super [0] + bits |
-+  | bm bits[0, contd]   | bm super[1] + bits  | bm bits[1, contd]   |
-+  | bm super[2] + bits  | bm bits [2, contd]  | bm super[3] + bits  |
-+  | bm bits [3, contd]  |                     |                     |
- 
- During "normal" functioning we assume the filesystem ensures that only
- one node writes to any given block at a time, so a write request will
-@@ -28,10 +33,12 @@ node) is writing.
- 
- 
- 2. DLM Locks for management
-+===========================
- 
- There are three groups of locks for managing the device:
- 
- 2.1 Bitmap lock resource (bm_lockres)
-+-------------------------------------
- 
-  The bm_lockres protects individual node bitmaps. They are named in
-  the form bitmap000 for node 1, bitmap001 for node 2 and so on. When a
-@@ -48,6 +55,7 @@ There are three groups of locks for managing the device:
-  joins the cluster.
- 
- 2.2 Message passing locks
-+-------------------------
- 
-  Each node has to communicate with other nodes when starting or ending
-  resync, and for metadata superblock updates.  This communication is
-@@ -55,116 +63,155 @@ There are three groups of locks for managing the device:
-  with the Lock Value Block (LVB) of one of the "message" lock.
- 
- 2.3 new-device management
-+-------------------------
- 
-  A single lock: "no-new-dev" is used to co-ordinate the addition of
-  new devices - this must be synchronized across the array.
-  Normally all nodes hold a concurrent-read lock on this device.
- 
- 3. Communication
-+================
- 
-  Messages can be broadcast to all nodes, and the sender waits for all
-  other nodes to acknowledge the message before proceeding.  Only one
-  message can be processed at a time.
- 
- 3.1 Message Types
-+-----------------
- 
-  There are six types of messages which are passed:
- 
-- 3.1.1 METADATA_UPDATED: informs other nodes that the metadata has
-+3.1.1 METADATA_UPDATED
-+^^^^^^^^^^^^^^^^^^^^^^
-+
-+   informs other nodes that the metadata has
-    been updated, and the node must re-read the md superblock. This is
-    performed synchronously. It is primarily used to signal device
-    failure.
- 
-- 3.1.2 RESYNCING: informs other nodes that a resync is initiated or
-+3.1.2 RESYNCING
-+^^^^^^^^^^^^^^^
-+   informs other nodes that a resync is initiated or
-    ended so that each node may suspend or resume the region.  Each
-    RESYNCING message identifies a range of the devices that the
-    sending node is about to resync. This overrides any previous
-    notification from that node: only one ranged can be resynced at a
-    time per-node.
- 
-- 3.1.3 NEWDISK: informs other nodes that a device is being added to
-+3.1.3 NEWDISK
-+^^^^^^^^^^^^^
-+
-+   informs other nodes that a device is being added to
-    the array. Message contains an identifier for that device.  See
-    below for further details.
- 
-- 3.1.4 REMOVE: A failed or spare device is being removed from the
-+3.1.4 REMOVE
-+^^^^^^^^^^^^
-+
-+   A failed or spare device is being removed from the
-    array. The slot-number of the device is included in the message.
- 
-- 3.1.5 RE_ADD: A failed device is being re-activated - the assumption
-+ 3.1.5 RE_ADD:
-+
-+   A failed device is being re-activated - the assumption
-    is that it has been determined to be working again.
- 
-- 3.1.6 BITMAP_NEEDS_SYNC: if a node is stopped locally but the bitmap
-+ 3.1.6 BITMAP_NEEDS_SYNC:
-+
-+   If a node is stopped locally but the bitmap
-    isn't clean, then another node is informed to take the ownership of
-    resync.
- 
- 3.2 Communication mechanism
-+---------------------------
- 
-  The DLM LVB is used to communicate within nodes of the cluster. There
-  are three resources used for the purpose:
- 
--  3.2.1 token: The resource which protects the entire communication
-+3.2.1 token
-+^^^^^^^^^^^
-+   The resource which protects the entire communication
-    system. The node having the token resource is allowed to
-    communicate.
- 
--  3.2.2 message: The lock resource which carries the data to
--   communicate.
-+3.2.2 message
-+^^^^^^^^^^^^^
-+   The lock resource which carries the data to communicate.
- 
--  3.2.3 ack: The resource, acquiring which means the message has been
-+3.2.3 ack
-+^^^^^^^^^
-+
-+   The resource, acquiring which means the message has been
-    acknowledged by all nodes in the cluster. The BAST of the resource
-    is used to inform the receiving node that a node wants to
-    communicate.
- 
- The algorithm is:
- 
-- 1. receive status - all nodes have concurrent-reader lock on "ack".
-+ 1. receive status - all nodes have concurrent-reader lock on "ack"::
- 
--   sender                         receiver                 receiver
--   "ack":CR                       "ack":CR                 "ack":CR
-+	sender                         receiver                 receiver
-+	"ack":CR                       "ack":CR                 "ack":CR
- 
-- 2. sender get EX on "token"
--    sender get EX on "message"
--    sender                        receiver                 receiver
--    "token":EX                    "ack":CR                 "ack":CR
--    "message":EX
--    "ack":CR
-+ 2. sender get EX on "token",
-+    sender get EX on "message"::
-+
-+	sender                        receiver                 receiver
-+	"token":EX                    "ack":CR                 "ack":CR
-+	"message":EX
-+	"ack":CR
- 
-     Sender checks that it still needs to send a message. Messages
-     received or other events that happened while waiting for the
-     "token" may have made this message inappropriate or redundant.
- 
-- 3. sender writes LVB.
-+ 3. sender writes LVB
-+
-     sender down-convert "message" from EX to CW
-+
-     sender try to get EX of "ack"
--    [ wait until all receivers have *processed* the "message" ]
--
--                                     [ triggered by bast of "ack" ]
--                                     receiver get CR on "message"
--                                     receiver read LVB
--                                     receiver processes the message
--                                     [ wait finish ]
--                                     receiver releases "ack"
--                                     receiver tries to get PR on "message"
--
--   sender                         receiver                  receiver
--   "token":EX                     "message":CR              "message":CR
--   "message":CW
--   "ack":EX
-+
-+    ::
-+
-+      [ wait until all receivers have *processed* the "message" ]
-+
-+                                       [ triggered by bast of "ack" ]
-+                                       receiver get CR on "message"
-+                                       receiver read LVB
-+                                       receiver processes the message
-+                                       [ wait finish ]
-+                                       receiver releases "ack"
-+                                       receiver tries to get PR on "message"
-+
-+     sender                         receiver                  receiver
-+     "token":EX                     "message":CR              "message":CR
-+     "message":CW
-+     "ack":EX
- 
-  4. triggered by grant of EX on "ack" (indicating all receivers
-     have processed message)
-+
-     sender down-converts "ack" from EX to CR
-+
-     sender releases "message"
-+
-     sender releases "token"
--                               receiver upconvert to PR on "message"
--                               receiver get CR of "ack"
--                               receiver release "message"
- 
--   sender                      receiver                   receiver
--   "ack":CR                    "ack":CR                   "ack":CR
-+    ::
-+
-+                                 receiver upconvert to PR on "message"
-+                                 receiver get CR of "ack"
-+                                 receiver release "message"
-+
-+     sender                      receiver                   receiver
-+     "ack":CR                    "ack":CR                   "ack":CR
- 
- 
- 4. Handling Failures
-+====================
- 
- 4.1 Node Failure
-+----------------
- 
-  When a node fails, the DLM informs the cluster with the slot
-  number. The node starts a cluster recovery thread. The cluster
-@@ -177,11 +224,11 @@ The algorithm is:
- 	- cleans the bitmap of the failed node
- 	- releases bitmap<number> lock of the failed node
- 	- initiates resync of the bitmap on the current node
--		md_check_recovery is invoked within recover_bitmaps,
--		then md_check_recovery -> metadata_update_start/finish,
--		it will lock the communication by lock_comm.
--		Which means when one node is resyncing it blocks all
--		other nodes from writing anywhere on the array.
-+	  md_check_recovery is invoked within recover_bitmaps,
-+	  then md_check_recovery -> metadata_update_start/finish,
-+	  it will lock the communication by lock_comm.
-+	  Which means when one node is resyncing it blocks all
-+	  other nodes from writing anywhere on the array.
- 
-  The resync process is the regular md resync. However, in a clustered
-  environment when a resync is performed, it needs to tell other nodes
-@@ -198,6 +245,7 @@ The algorithm is:
-  particular I/O range should be suspended or not.
- 
- 4.2 Device Failure
-+==================
- 
-  Device failures are handled and communicated with the metadata update
-  routine.  When a node detects a device failure it does not allow
-@@ -205,38 +253,41 @@ The algorithm is:
-  acknowledged by all other nodes.
- 
- 5. Adding a new Device
-+----------------------
- 
-  For adding a new device, it is necessary that all nodes "see" the new
-  device to be added. For this, the following algorithm is used:
- 
--    1. Node 1 issues mdadm --manage /dev/mdX --add /dev/sdYY which issues
-+   1.  Node 1 issues mdadm --manage /dev/mdX --add /dev/sdYY which issues
-        ioctl(ADD_NEW_DISK with disc.state set to MD_DISK_CLUSTER_ADD)
--    2. Node 1 sends a NEWDISK message with uuid and slot number
--    3. Other nodes issue kobject_uevent_env with uuid and slot number
-+   2.  Node 1 sends a NEWDISK message with uuid and slot number
-+   3.  Other nodes issue kobject_uevent_env with uuid and slot number
-        (Steps 4,5 could be a udev rule)
--    4. In userspace, the node searches for the disk, perhaps
-+   4.  In userspace, the node searches for the disk, perhaps
-        using blkid -t SUB_UUID=""
--    5. Other nodes issue either of the following depending on whether
-+   5.  Other nodes issue either of the following depending on whether
-        the disk was found:
-        ioctl(ADD_NEW_DISK with disc.state set to MD_DISK_CANDIDATE and
--             disc.number set to slot number)
-+       disc.number set to slot number)
-        ioctl(CLUSTERED_DISK_NACK)
--    6. Other nodes drop lock on "no-new-devs" (CR) if device is found
--    7. Node 1 attempts EX lock on "no-new-dev"
--    8. If node 1 gets the lock, it sends METADATA_UPDATED after
-+   6.  Other nodes drop lock on "no-new-devs" (CR) if device is found
-+   7.  Node 1 attempts EX lock on "no-new-dev"
-+   8.  If node 1 gets the lock, it sends METADATA_UPDATED after
-        unmarking the disk as SpareLocal
--    9. If not (get "no-new-dev" lock), it fails the operation and sends
-+   9.  If not (get "no-new-dev" lock), it fails the operation and sends
-        METADATA_UPDATED.
-    10. Other nodes get the information whether a disk is added or not
-        by the following METADATA_UPDATED.
- 
--6. Module interface.
-+6. Module interface
-+===================
- 
-  There are 17 call-backs which the md core can make to the cluster
-  module.  Understanding these can give a good overview of the whole
-  process.
- 
- 6.1 join(nodes) and leave()
-+---------------------------
- 
-  These are called when an array is started with a clustered bitmap,
-  and when the array is stopped.  join() ensures the cluster is
-@@ -244,11 +295,13 @@ The algorithm is:
-  Only the first 'nodes' nodes in the cluster can use the array.
- 
- 6.2 slot_number()
-+-----------------
- 
-  Reports the slot number advised by the cluster infrastructure.
-  Range is from 0 to nodes-1.
- 
- 6.3 resync_info_update()
-+------------------------
- 
-  This updates the resync range that is stored in the bitmap lock.
-  The starting point is updated as the resync progresses.  The
-@@ -256,6 +309,7 @@ The algorithm is:
-  It does *not* send a RESYNCING message.
- 
- 6.4 resync_start(), resync_finish()
-+-----------------------------------
- 
-  These are called when resync/recovery/reshape starts or stops.
-  They update the resyncing range in the bitmap lock and also
-@@ -265,8 +319,8 @@ The algorithm is:
-  resync_finish() also sends a BITMAP_NEEDS_SYNC message which
-  allows some other node to take over.
- 
--6.5 metadata_update_start(), metadata_update_finish(),
--    metadata_update_cancel().
-+6.5 metadata_update_start(), metadata_update_finish(), metadata_update_cancel()
-+-------------------------------------------------------------------------------
- 
-  metadata_update_start is used to get exclusive access to
-  the metadata.  If a change is still needed once that access is
-@@ -275,6 +329,7 @@ The algorithm is:
-  can be used to release the lock.
- 
- 6.6 area_resyncing()
-+--------------------
- 
-  This combines two elements of functionality.
- 
-@@ -289,6 +344,7 @@ The algorithm is:
-  a node failure.
- 
- 6.7 add_new_disk_start(), add_new_disk_finish(), new_disk_ack()
-+---------------------------------------------------------------
- 
-  These are used to manage the new-disk protocol described above.
-  When a new device is added, add_new_disk_start() is called before
-@@ -300,17 +356,20 @@ The algorithm is:
-  new_disk_ack() is called.
- 
- 6.8 remove_disk()
-+-----------------
- 
-  This is called when a spare or failed device is removed from
-  the array.  It causes a REMOVE message to be send to other nodes.
- 
- 6.9 gather_bitmaps()
-+--------------------
- 
-  This sends a RE_ADD message to all other nodes and then
-  gathers bitmap information from all bitmaps.  This combined
-  bitmap is then used to recovery the re-added device.
- 
- 6.10 lock_all_bitmaps() and unlock_all_bitmaps()
-+------------------------------------------------
- 
-  These are called when change bitmap to none. If a node plans
-  to clear the cluster raid's bitmap, it need to make sure no other
-@@ -319,6 +378,7 @@ The algorithm is:
-  accordingly.
- 
- 7. Unsupported features
+diff --git a/Documentation/early-userspace/buffer-format.txt b/Documentation/early-userspace/buffer-format.rst
+similarity index 91%
+rename from Documentation/early-userspace/buffer-format.txt
+rename to Documentation/early-userspace/buffer-format.rst
+index e1fd7f9dad16..7f74e301fdf3 100644
+--- a/Documentation/early-userspace/buffer-format.txt
++++ b/Documentation/early-userspace/buffer-format.rst
+@@ -1,8 +1,10 @@
+-		       initramfs buffer format
+-		       -----------------------
++=======================
++initramfs buffer format
 +=======================
  
- There are somethings which are not supported by cluster MD yet.
+-		       Al Viro, H. Peter Anvin
+-		      Last revision: 2002-01-13
++Al Viro, H. Peter Anvin
++
++Last revision: 2002-01-13
  
-diff --git a/Documentation/md/raid5-cache.txt b/Documentation/md/raid5-cache.rst
-similarity index 92%
-rename from Documentation/md/raid5-cache.txt
-rename to Documentation/md/raid5-cache.rst
-index 2b210f295786..d7a15f44a7c3 100644
---- a/Documentation/md/raid5-cache.txt
-+++ b/Documentation/md/raid5-cache.rst
-@@ -1,4 +1,6 @@
--RAID5 cache
-+================
-+RAID 4/5/6 cache
-+================
+ Starting with kernel 2.5.x, the old "initial ramdisk" protocol is
+ getting {replaced/complemented} with the new "initial ramfs"
+@@ -18,7 +20,8 @@ archive can be compressed using gzip(1).  One valid version of an
+ initramfs buffer is thus a single .cpio.gz file.
  
- Raid 4/5/6 could include an extra disk for data cache besides normal RAID
- disks. The role of RAID disks isn't changed with the cache disk. The cache disk
-@@ -6,19 +8,19 @@ caches data to the RAID disks. The cache can be in write-through (supported
- since 4.4) or write-back mode (supported since 4.10). mdadm (supported since
- 3.4) has a new option '--write-journal' to create array with cache. Please
- refer to mdadm manual for details. By default (RAID array starts), the cache is
--in write-through mode. A user can switch it to write-back mode by:
-+in write-through mode. A user can switch it to write-back mode by::
+ The full format of the initramfs buffer is defined by the following
+-grammar, where:
++grammar, where::
++
+ 	*	is used to indicate "0 or more occurrences of"
+ 	(|)	indicates alternatives
+ 	+	indicates concatenation
+@@ -49,7 +52,9 @@ hexadecimal ASCII numbers fully padded with '0' on the left to the
+ full width of the field, for example, the integer 4780 is represented
+ by the ASCII string "000012ac"):
  
--echo "write-back" > /sys/block/md0/md/journal_mode
-+	echo "write-back" > /sys/block/md0/md/journal_mode
++============= ================== ==============================================
+ Field name    Field size	 Meaning
++============= ================== ==============================================
+ c_magic	      6 bytes		 The string "070701" or "070702"
+ c_ino	      8 bytes		 File inode number
+ c_mode	      8 bytes		 File mode and permissions
+@@ -65,6 +70,7 @@ c_rmin	      8 bytes		 Minor part of device node reference
+ c_namesize    8 bytes		 Length of filename, including final \0
+ c_chksum      8 bytes		 Checksum of data field if c_magic is 070702;
+ 				 otherwise zero
++============= ================== ==============================================
  
--And switch it back to write-through mode by:
-+And switch it back to write-through mode by::
+ The c_mode field matches the contents of st_mode returned by stat(2)
+ on Linux, and encodes the file type and file permissions.
+@@ -82,7 +88,8 @@ If the filename is "TRAILER!!!" this is actually an end-of-archive
+ marker; the c_filesize for an end-of-archive marker must be zero.
  
--echo "write-through" > /sys/block/md0/md/journal_mode
-+	echo "write-through" > /sys/block/md0/md/journal_mode
  
- In both modes, all writes to the array will hit cache disk first. This means
- the cache disk must be fast and sustainable.
+-*** Handling of hard links
++Handling of hard links
++======================
  
---------------------------------------
--write-through mode:
-+write-through mode
-+==================
+ When a nondirectory with c_nlink > 1 is seen, the (c_maj,c_min,c_ino)
+ tuple is looked up in a tuple buffer.  If not found, it is entered in
+diff --git a/Documentation/early-userspace/README b/Documentation/early-userspace/early_userspace_support.rst
+similarity index 99%
+rename from Documentation/early-userspace/README
+rename to Documentation/early-userspace/early_userspace_support.rst
+index 955d667dc87e..3deefb34046b 100644
+--- a/Documentation/early-userspace/README
++++ b/Documentation/early-userspace/early_userspace_support.rst
+@@ -1,3 +1,4 @@
++=======================
+ Early userspace support
+ =======================
  
- This mode mainly fixes the 'write hole' issue. For RAID 4/5/6 array, an unclean
- shutdown can cause data in some stripes to not be in consistent state, eg, data
-@@ -42,8 +44,8 @@ exposed to 'write hole' again.
- In write-through mode, the cache disk isn't required to be big. Several
- hundreds megabytes are enough.
+@@ -26,6 +27,7 @@ archive to be used as the image or have the kernel build process build
+ the image from specifications.
  
----------------------------------------
--write-back mode:
-+write-back mode
+ CPIO ARCHIVE method
++-------------------
+ 
+ You can create a cpio archive that contains the early userspace image.
+ Your cpio archive should be specified in CONFIG_INITRAMFS_SOURCE and it
+@@ -34,6 +36,7 @@ CONFIG_INITRAMFS_SOURCE and directory and file names are not allowed in
+ combination with a cpio archive.
+ 
+ IMAGE BUILDING method
++---------------------
+ 
+ The kernel build process can also build an early userspace image from
+ source parts rather than supplying a cpio archive.  This method provides
+diff --git a/Documentation/early-userspace/index.rst b/Documentation/early-userspace/index.rst
+new file mode 100644
+index 000000000000..2b8eb6132058
+--- /dev/null
++++ b/Documentation/early-userspace/index.rst
+@@ -0,0 +1,18 @@
++:orphan:
++
 +===============
++Early Userspace
++===============
++
++.. toctree::
++    :maxdepth: 1
++
++    early_userspace_support
++    buffer-format
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/filesystems/nfs/nfsroot.txt b/Documentation/filesystems/nfs/nfsroot.txt
+index d2963123eb1c..4862d3d77e27 100644
+--- a/Documentation/filesystems/nfs/nfsroot.txt
++++ b/Documentation/filesystems/nfs/nfsroot.txt
+@@ -239,7 +239,7 @@ rdinit=<executable file>
+   A description of the process of mounting the root file system can be
+   found in:
  
- write-back mode fixes the 'write hole' issue too, since all write data is
- cached on cache disk. But the main goal of 'write-back' cache is to speed up
-@@ -64,16 +66,16 @@ data loss.
- In write-back mode, MD also caches data in memory. The memory cache includes
- the same data stored on cache disk, so a power loss doesn't cause data loss.
- The memory cache size has performance impact for the array. It's recommended
--the size is big. A user can configure the size by:
-+the size is big. A user can configure the size by::
+-    Documentation/early-userspace/README
++    Documentation/early-userspace/early_userspace_support.rst
  
--echo "2048" > /sys/block/md0/md/stripe_cache_size
-+	echo "2048" > /sys/block/md0/md/stripe_cache_size
  
- Too small cache disk will make the write aggregation less efficient in this
- mode depending on the workloads. It's recommended to use a cache disk with at
- least several gigabytes size in write-back mode.
  
----------------------------------------
--The implementation:
-+The implementation
-+==================
+diff --git a/Documentation/filesystems/ramfs-rootfs-initramfs.txt b/Documentation/filesystems/ramfs-rootfs-initramfs.txt
+index 79637d227e85..fa985909dbca 100644
+--- a/Documentation/filesystems/ramfs-rootfs-initramfs.txt
++++ b/Documentation/filesystems/ramfs-rootfs-initramfs.txt
+@@ -105,7 +105,7 @@ All this differs from the old initrd in several ways:
+   - The old initrd file was a gzipped filesystem image (in some file format,
+     such as ext2, that needed a driver built into the kernel), while the new
+     initramfs archive is a gzipped cpio archive (like tar only simpler,
+-    see cpio(1) and Documentation/early-userspace/buffer-format.txt).  The
++    see cpio(1) and Documentation/early-userspace/buffer-format.rst).  The
+     kernel's cpio extraction code is not only extremely small, it's also
+     __init text and data that can be discarded during the boot process.
  
- The write-through and write-back cache use the same disk format. The cache disk
- is organized as a simple write log. The log consists of 'meta data' and 'data'
-diff --git a/Documentation/md/raid5-ppl.txt b/Documentation/md/raid5-ppl.rst
-similarity index 98%
-rename from Documentation/md/raid5-ppl.txt
-rename to Documentation/md/raid5-ppl.rst
-index bfa092589e00..357e5515bc55 100644
---- a/Documentation/md/raid5-ppl.txt
-+++ b/Documentation/md/raid5-ppl.rst
-@@ -1,4 +1,6 @@
-+==================
- Partial Parity Log
-+==================
+@@ -159,7 +159,7 @@ One advantage of the configuration file is that root access is not required to
+ set permissions or create device nodes in the new archive.  (Note that those
+ two example "file" entries expect to find files named "init.sh" and "busybox" in
+ a directory called "initramfs", under the linux-2.6.* directory.  See
+-Documentation/early-userspace/README for more details.)
++Documentation/early-userspace/early_userspace_support.rst for more details.)
  
- Partial Parity Log (PPL) is a feature available for RAID5 arrays. The issue
- addressed by PPL is that after a dirty shutdown, parity of a particular stripe
+ The kernel does not depend on external cpio tools.  If you specify a
+ directory instead of a configuration file, the kernel's build infrastructure
+diff --git a/usr/Kconfig b/usr/Kconfig
+index 43658b8a975e..86e37e297278 100644
+--- a/usr/Kconfig
++++ b/usr/Kconfig
+@@ -18,7 +18,7 @@ config INITRAMFS_SOURCE
+ 	  When multiple directories and files are specified then the
+ 	  initramfs image will be the aggregate of all of them.
+ 
+-	  See <file:Documentation/early-userspace/README> for more details.
++	  See <file:Documentation/early-userspace/early_userspace_support.rst> for more details.
+ 
+ 	  If you are not sure, leave it blank.
+ 
 -- 
 2.21.0
 
