@@ -2,506 +2,716 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B314C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3294DC5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00682086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6CCB2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:31:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnLng4gz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfF1Raq (ORCPT
+        id S1726729AbfF1RbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:30:46 -0400
-Received: from mga07.intel.com ([134.134.136.100]:51702 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfF1Raq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:30:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 10:30:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,428,1557212400"; 
-   d="scan'208";a="163034051"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Jun 2019 10:30:44 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [RFC PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
-Date:   Fri, 28 Jun 2019 10:22:03 -0700
-Message-Id: <20190628172203.797-1-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 28 Jun 2019 13:31:12 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42038 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbfF1RbL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 13:31:11 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so3317571pff.9;
+        Fri, 28 Jun 2019 10:31:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=3E5gTFlanKPVlgqdAKkq/DW7KKkYL2PM1djeE662xs8=;
+        b=bnLng4gzrGLU+P6T9oNeHFhKXMrCJgUdghQBYzl9kjiVFJxRkydNEC5/ok4f+jvGcS
+         eQe4e04F81RhQLv3tU6HilQxk7gygBpjOD8YcHPt/6MGqKVm8Gy98pGECFXisci1CeTU
+         atAmI/TrNDTAQcyLhGfTqZMNCxqlzLplq88pg2pMFB9iz4J56Gw1FeRNaE9B3zly32Bn
+         pSGuSmtUngOz1MVvaUuymXMnD7IeKQEH7G6mhbTlbo384GI76eBSVH1c15poaNE4i0Ci
+         2BlW3zFhiqLs2GRz3K9jeGIETZh1YErqGd22V4UzolbtOloguEm66u4/A/I9OmKAAJMW
+         ONng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=3E5gTFlanKPVlgqdAKkq/DW7KKkYL2PM1djeE662xs8=;
+        b=d+yA30GRZyOouaZw2Ckg8m4u+xY5Xmr7Q/zCCz78ND26r+Rk9Cu03tDbZ4PTu/qKef
+         ZR2KqgWiHfAT2/Gi7BKUP0P0l7MKHQ7KEpAlObI9SHnEm/DcuxfDOX1mpqlmnluZEZkV
+         c9LCB8ay7/36ErHsjkRcBNuna69KJpK8scL6Ragx9hzXzooBRPzEznbrAM2Y6VqasMs1
+         KsVF/WiWflgq75lZmlk2uCzSU3cLMo4bdTn/rDhUwwHJx9U1FTmnDjI2Y5grRTErusl5
+         SChkUOKsE2crEaJgYiDryR4ns62vF+/9fc4IOsJyc2CAs4610gFBTxc/9wZT2ugHugp9
+         zH3g==
+X-Gm-Message-State: APjAAAWPwqC0EcOmVN6o9C3jU2E2+up4a5M4E4yOSD/h936veNJnyVYb
+        hmrWFEjT2ejrtFOjYlvu/oA=
+X-Google-Smtp-Source: APXvYqyJOLEhC6b+lfzHveXDiFCimMLykK8sr811d5FQ8zV/4pX9VHXiqmRBK5Dq7KSMRwQiwNSttQ==
+X-Received: by 2002:a63:c006:: with SMTP id h6mr10092866pgg.285.1561743070901;
+        Fri, 28 Jun 2019 10:31:10 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e11sm5110120pfm.35.2019.06.28.10.31.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Jun 2019 10:31:10 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 10:31:09 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Amy.Shih@advantech.com.tw
+Cc:     she90122@gmail.com, oakley.ding@advantech.com.tw,
+        jia.sui@advantech.com.cn, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 3/9] hwmon: (nct7904) Add extra sysfs support for fan,
+ voltage and temperature.
+Message-ID: <20190628173109.GA25817@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch was part of the Intel Control-flow Enforcement (CET) series at:
+On Mon, Jun 17, 2019 at 08:11:07AM +0000, Amy.Shih@advantech.com.tw wrote:
+> From: "amy.shih" <amy.shih@advantech.com.tw>
+> 
+> NCT-7904D also supports reading of channel limitation registers
+> and SMI status registers for fan, voltage and temperature monitoring,
+> and also supports reading of temperature sensor type which is thermal 
+> diode, thermistor, AMD SB-TSI or Intel PECI, thus add below sysfs nodes:
+> 
+> -fan[1-*]_min
+> -fan[1-*]_alarm
+> -in[1-*]_min
+> -in[1-*]_max
+> -in[1-*]_alarm
+> -temp[1-*]_max
+> -temp[1-*]_max_hyst
+> -temp[1-*]_emergency
+> -temp[1-*]_emergency_hyst
+> -temp[1-*]_alarm
+> -temp[1-*]_type
+> 
+> Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
 
-    https://lkml.org/lkml/2019/6/6/1014.
+Please resend from here with subsequent fixes of this patch squashed
+into it.
 
-In the discussion, we decided to look at only an ELF header's
-PT_GNU_PROPERTY, which is a shortcut pointing to the file's
-.note.gnu.property.
+Thanks,
+Guenter
 
-The Linux gABI extension draft is here:
-
-    https://github.com/hjl-tools/linux-abi/wiki/linux-abi-draft.pdf.
-
-A few existing CET-enabled binary files were built without
-PT_GNU_PROPERTY; but those files' .note.gnu.property are checked by
-ld-linux, not Linux.  The compatibility impact from this change is
-therefore managable.
-
-An ELF file's .note.gnu.property indicates features the executable file
-can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
-indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
-GNU_PROPERTY_X86_FEATURE_1_SHSTK.
-
-With this patch, if an arch needs to setup features from ELF properties,
-it needs CONFIG_ARCH_USE_GNU_PROPERTY to be set, and specific
-arch_parse_property() and arch_setup_property().
-
-This work is derived from code provided by H.J. Lu <hjl.tools@gmail.com>.
-
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
----
- fs/Kconfig.binfmt        |   3 +
- fs/Makefile              |   1 +
- fs/binfmt_elf.c          |  20 +++
- fs/gnu_property.c        | 279 +++++++++++++++++++++++++++++++++++++++
- include/linux/elf.h      |  11 ++
- include/uapi/linux/elf.h |  14 ++
- 6 files changed, 328 insertions(+)
- create mode 100644 fs/gnu_property.c
-
-diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-index f87ddd1b6d72..397138ab305b 100644
---- a/fs/Kconfig.binfmt
-+++ b/fs/Kconfig.binfmt
-@@ -36,6 +36,9 @@ config COMPAT_BINFMT_ELF
- config ARCH_BINFMT_ELF_STATE
- 	bool
- 
-+config ARCH_USE_GNU_PROPERTY
-+	bool
-+
- config BINFMT_ELF_FDPIC
- 	bool "Kernel support for FDPIC ELF binaries"
- 	default y if !BINFMT_ELF
-diff --git a/fs/Makefile b/fs/Makefile
-index c9aea23aba56..b69f18c14e09 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_BINFMT_ELF)	+= binfmt_elf.o
- obj-$(CONFIG_COMPAT_BINFMT_ELF)	+= compat_binfmt_elf.o
- obj-$(CONFIG_BINFMT_ELF_FDPIC)	+= binfmt_elf_fdpic.o
- obj-$(CONFIG_BINFMT_FLAT)	+= binfmt_flat.o
-+obj-$(CONFIG_ARCH_USE_GNU_PROPERTY) += gnu_property.o
- 
- obj-$(CONFIG_FS_MBCACHE)	+= mbcache.o
- obj-$(CONFIG_FS_POSIX_ACL)	+= posix_acl.o
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 8264b468f283..cbc6d68f4a18 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -852,6 +852,21 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			}
- 	}
- 
-+	if (interpreter) {
-+		retval = arch_parse_property(&loc->interp_elf_ex,
-+					     interp_elf_phdata,
-+					     interpreter, true,
-+					     &arch_state);
-+	} else {
-+		retval = arch_parse_property(&loc->elf_ex,
-+					     elf_phdata,
-+					     bprm->file, false,
-+					     &arch_state);
-+	}
-+
-+	if (retval)
-+		goto out_free_dentry;
-+
- 	/*
- 	 * Allow arch code to reject the ELF at this point, whilst it's
- 	 * still possible to return an error to the code that invoked
-@@ -1080,6 +1095,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 		goto out_free_dentry;
- 	}
- 
-+	retval = arch_setup_property(&arch_state);
-+
-+	if (retval < 0)
-+		goto out_free_dentry;
-+
- 	if (interpreter) {
- 		unsigned long interp_map_addr = 0;
- 
-diff --git a/fs/gnu_property.c b/fs/gnu_property.c
-new file mode 100644
-index 000000000000..37cd503a0c48
---- /dev/null
-+++ b/fs/gnu_property.c
-@@ -0,0 +1,279 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Extract an ELF file's .note.gnu.property.
-+ *
-+ * The path from the ELF header to the note section is the following:
-+ * elfhdr->elf_phdr->elf_note->property[].
-+ */
-+
-+#include <uapi/linux/elf-em.h>
-+#include <linux/processor.h>
-+#include <linux/binfmts.h>
-+#include <linux/elf.h>
-+#include <linux/slab.h>
-+#include <linux/fs.h>
-+#include <linux/uaccess.h>
-+#include <linux/string.h>
-+#include <linux/compat.h>
-+
-+/*
-+ * The .note.gnu.property layout:
-+ *
-+ *	struct elf_note {
-+ *		u32 n_namesz; --> sizeof(n_name[]); always (4)
-+ *		u32 n_ndescsz;--> sizeof(property[])
-+ *		u32 n_type;   --> always NT_GNU_PROPERTY_TYPE_0 (5)
-+ *	};
-+ *	char n_name[4]; --> always 'GNU\0'
-+ *
-+ *	struct {
-+ *		struct gnu_property {
-+ *			u32 pr_type;
-+ *			u32 pr_datasz;
-+ *		};
-+ *		u8 pr_data[pr_datasz];
-+ *	}[];
-+ */
-+
-+typedef bool (test_item_fn)(void *buf, u32 *arg, u32 type);
-+typedef void *(next_item_fn)(void *buf, u32 *arg, u32 type);
-+
-+static bool test_property(void *buf, u32 *max_type, u32 pr_type)
-+{
-+	struct gnu_property *pr = buf;
-+
-+	/*
-+	 * Property types must be in ascending order.
-+	 * Keep track of the max when testing each.
-+	 */
-+	if (pr->pr_type > *max_type)
-+		*max_type = pr->pr_type;
-+
-+	return (pr->pr_type == pr_type);
-+}
-+
-+static void *next_property(void *buf, u32 *max_type, u32 pr_type)
-+{
-+	struct gnu_property *pr = buf;
-+
-+	if ((buf + sizeof(*pr) + pr->pr_datasz < buf) ||
-+	    (pr->pr_type > pr_type) ||
-+	    (pr->pr_type > *max_type))
-+		return NULL;
-+	else
-+		return (buf + sizeof(*pr) + pr->pr_datasz);
-+}
-+
-+/*
-+ * Scan 'buf' for a pattern; return true if found.
-+ * *pos is the distance from the beginning of buf to where
-+ * the searched item or the next item is located.
-+ */
-+static int scan(u8 *buf, u32 buf_size, int item_size, test_item_fn test_item,
-+		next_item_fn next_item, u32 *arg, u32 type, u32 *pos)
-+{
-+	int found = 0;
-+	u8 *p, *max;
-+
-+	max = buf + buf_size;
-+	if (max < buf)
-+		return 0;
-+
-+	p = buf;
-+
-+	while ((p + item_size < max) && (p + item_size > buf)) {
-+		if (test_item(p, arg, type)) {
-+			found = 1;
-+			break;
-+		}
-+
-+		p = next_item(p, arg, type);
-+	}
-+
-+	*pos = (p + item_size <= buf) ? 0 : (u32)(p - buf);
-+	return found;
-+}
-+
-+/*
-+ * Search an NT_GNU_PROPERTY_TYPE_0 for the property of 'pr_type'.
-+ */
-+static int find_property(u32 pr_type, u32 *property, struct file *file,
-+			 loff_t file_offset, unsigned long desc_size)
-+{
-+	u8 *buf;
-+	int buf_size;
-+
-+	u32 buf_pos;
-+	unsigned long read_size;
-+	unsigned long done;
-+	int found = 0;
-+	int ret = 0;
-+	u32 last_pr = 0;
-+
-+	*property = 0;
-+	buf_pos = 0;
-+
-+	buf_size = (desc_size > PAGE_SIZE) ? PAGE_SIZE : desc_size;
-+	buf = kmalloc(buf_size, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	for (done = 0; done < desc_size; done += buf_pos) {
-+		read_size = desc_size - done;
-+		if (read_size > buf_size)
-+			read_size = buf_size;
-+
-+		ret = kernel_read(file, buf, read_size, &file_offset);
-+
-+		if (ret != read_size)
-+			return (ret < 0) ? ret : -EIO;
-+
-+		ret = 0;
-+		found = scan(buf, read_size, sizeof(struct gnu_property),
-+			     test_property, next_property,
-+			     &last_pr, pr_type, &buf_pos);
-+
-+		if ((!buf_pos) || found)
-+			break;
-+
-+		file_offset += buf_pos - read_size;
-+	}
-+
-+	if (found) {
-+		struct gnu_property *pr =
-+			(struct gnu_property *)(buf + buf_pos);
-+
-+		if (pr->pr_datasz == 4) {
-+			u32 *max =  (u32 *)(buf + read_size);
-+			u32 *data = (u32 *)((u8 *)pr + sizeof(*pr));
-+
-+			if (data + 1 <= max) {
-+				*property = *data;
-+			} else {
-+				file_offset += buf_pos - read_size;
-+				file_offset += sizeof(*pr);
-+				ret = kernel_read(file, property, 4,
-+						  &file_offset);
-+			}
-+		}
-+	}
-+
-+	kfree(buf);
-+	return ret;
-+}
-+
-+/*
-+ * Look at an ELF file's PT_GNU_PROPERTY for the property of pr_type.
-+ *
-+ * Input:
-+ *	file: the file to search;
-+ *	phdr: the file's elf header;
-+ *	phnum: number of entries in phdr;
-+ *	pr_type: the property type.
-+ *
-+ * Output:
-+ *	The property found.
-+ *
-+ * Return:
-+ *	Zero or error.
-+ */
-+
-+static int scan_segments_64(struct file *file, struct elf64_phdr *phdr,
-+			    int phnum, u32 pr_type, u32 *property)
-+{
-+	int i, err;
-+
-+	err = 0;
-+
-+	for (i = 0; i < phnum; i++, phdr++) {
-+		if (phdr->p_align != 8)
-+			continue;
-+
-+		if (phdr->p_type == PT_GNU_PROPERTY) {
-+			struct elf64_note n;
-+			loff_t pos;
-+
-+			/* read note header */
-+			pos = phdr->p_offset;
-+			err = kernel_read(file, &n, sizeof(n), &pos);
-+			if (err < sizeof(n))
-+				return -EIO;
-+
-+			/* find note payload offset */
-+			pos = phdr->p_offset + round_up(sizeof(n) + n.n_namesz,
-+							phdr->p_align);
-+
-+			err = find_property(pr_type, property, file,
-+					    pos, n.n_descsz);
-+			break;
-+		}
-+	}
-+
-+	return err;
-+}
-+
-+static int scan_segments_32(struct file *file, struct elf32_phdr *phdr,
-+			    int phnum, u32 pr_type, u32 *property)
-+{
-+	int i, err;
-+
-+	err = 0;
-+
-+	for (i = 0; i < phnum; i++, phdr++) {
-+		if (phdr->p_align != 4)
-+			continue;
-+
-+		if (phdr->p_type == PT_GNU_PROPERTY) {
-+			struct elf32_note n;
-+			loff_t pos;
-+
-+			/* read note header */
-+			pos = phdr->p_offset;
-+			err = kernel_read(file, &n, sizeof(n), &pos);
-+			if (err < sizeof(n))
-+				return -EIO;
-+
-+			/* find note payload offset */
-+			pos = phdr->p_offset + round_up(sizeof(n) + n.n_namesz,
-+							phdr->p_align);
-+
-+			err = find_property(pr_type, property, file,
-+					    pos, n.n_descsz);
-+			break;
-+		}
-+	}
-+
-+	return err;
-+}
-+
-+int get_gnu_property(void *ehdr_p, void *phdr_p, struct file *f,
-+		     u32 pr_type, u32 *property)
-+{
-+	struct elf64_hdr *ehdr64 = ehdr_p;
-+	int err = 0;
-+
-+	*property = 0;
-+
-+	if (ehdr64->e_ident[EI_CLASS] == ELFCLASS64) {
-+		struct elf64_phdr *phdr64 = phdr_p;
-+
-+		err = scan_segments_64(f, phdr64, ehdr64->e_phnum,
-+				       pr_type, property);
-+		if (err < 0)
-+			goto out;
-+	} else {
-+		struct elf32_hdr *ehdr32 = ehdr_p;
-+
-+		if (ehdr32->e_ident[EI_CLASS] == ELFCLASS32) {
-+			struct elf32_phdr *phdr32 = phdr_p;
-+
-+			err = scan_segments_32(f, phdr32, ehdr32->e_phnum,
-+					       pr_type, property);
-+			if (err < 0)
-+				goto out;
-+		}
-+	}
-+
-+out:
-+	return err;
-+}
-diff --git a/include/linux/elf.h b/include/linux/elf.h
-index e3649b3e970e..c86cbfd17382 100644
---- a/include/linux/elf.h
-+++ b/include/linux/elf.h
-@@ -56,4 +56,15 @@ static inline int elf_coredump_extra_notes_write(struct coredump_params *cprm) {
- extern int elf_coredump_extra_notes_size(void);
- extern int elf_coredump_extra_notes_write(struct coredump_params *cprm);
- #endif
-+
-+#ifdef CONFIG_ARCH_USE_GNU_PROPERTY
-+extern int arch_parse_property(void *ehdr, void *phdr, struct file *f,
-+			       bool inter, struct arch_elf_state *state);
-+extern int arch_setup_property(struct arch_elf_state *state);
-+extern int get_gnu_property(void *ehdr_p, void *phdr_p, struct file *f,
-+			    u32 pr_type, u32 *feature);
-+#else
-+#define arch_parse_property(ehdr, phdr, file, inter, state) (0)
-+#define arch_setup_property(state) (0)
-+#endif
- #endif /* _LINUX_ELF_H */
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 34c02e4290fe..530ce08467c2 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -36,6 +36,7 @@ typedef __s64	Elf64_Sxword;
- #define PT_LOPROC  0x70000000
- #define PT_HIPROC  0x7fffffff
- #define PT_GNU_EH_FRAME		0x6474e550
-+#define PT_GNU_PROPERTY		0x6474e553
- 
- #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
- 
-@@ -443,4 +444,17 @@ typedef struct elf64_note {
-   Elf64_Word n_type;	/* Content type */
- } Elf64_Nhdr;
- 
-+/* NT_GNU_PROPERTY_TYPE_0 header */
-+struct gnu_property {
-+  __u32 pr_type;
-+  __u32 pr_datasz;
-+};
-+
-+/* .note.gnu.property types */
-+#define GNU_PROPERTY_X86_FEATURE_1_AND		0xc0000002
-+
-+/* Bits of GNU_PROPERTY_X86_FEATURE_1_AND */
-+#define GNU_PROPERTY_X86_FEATURE_1_IBT		0x00000001
-+#define GNU_PROPERTY_X86_FEATURE_1_SHSTK	0x00000002
-+
- #endif /* _UAPI_LINUX_ELF_H */
--- 
-2.17.1
-
+> ---
+> Changes in v2:
+> - Fix bad fallthrough in various switch statements.
+> - Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
+> 
+>  drivers/hwmon/nct7904.c | 469 ++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 424 insertions(+), 45 deletions(-)
+> 
+> diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+> index 710c30562fc1..cdd67932938d 100644
+> --- a/drivers/hwmon/nct7904.c
+> +++ b/drivers/hwmon/nct7904.c
+> @@ -46,10 +46,33 @@
+>  #define DTS_T_CTRL1_REG		0x27
+>  #define VT_ADC_MD_REG		0x2E
+>  
+> +#define VSEN1_HV_LL_REG		0x02	/* Bank 1; 2 regs (HV/LV) per sensor */
+> +#define VSEN1_LV_LL_REG		0x03	/* Bank 1; 2 regs (HV/LV) per sensor */
+> +#define VSEN1_HV_HL_REG		0x00	/* Bank 1; 2 regs (HV/LV) per sensor */
+> +#define VSEN1_LV_HL_REG		0x01	/* Bank 1; 2 regs (HV/LV) per sensor */
+> +#define SMI_STS1_REG		0xC1	/* Bank 0; SMI Status Register */
+> +#define SMI_STS5_REG		0xC5	/* Bank 0; SMI Status Register */
+> +#define SMI_STS7_REG		0xC7	/* Bank 0; SMI Status Register */
+> +#define SMI_STS8_REG		0xC8	/* Bank 0; SMI Status Register */
+> +
+>  #define VSEN1_HV_REG		0x40	/* Bank 0; 2 regs (HV/LV) per sensor */
+>  #define TEMP_CH1_HV_REG		0x42	/* Bank 0; same as VSEN2_HV */
+>  #define LTD_HV_REG		0x62	/* Bank 0; 2 regs in VSEN range */
+> +#define LTD_HV_HL_REG		0x44	/* Bank 1; 1 reg for LTD */
+> +#define LTD_LV_HL_REG		0x45	/* Bank 1; 1 reg for LTD */
+> +#define LTD_HV_LL_REG		0x46	/* Bank 1; 1 reg for LTD */
+> +#define LTD_LV_LL_REG		0x47	/* Bank 1; 1 reg for LTD */
+> +#define TEMP_CH1_CH_REG		0x05	/* Bank 1; 1 reg for LTD */
+> +#define TEMP_CH1_W_REG		0x06	/* Bank 1; 1 reg for LTD */
+> +#define TEMP_CH1_WH_REG		0x07	/* Bank 1; 1 reg for LTD */
+> +#define TEMP_CH1_C_REG		0x04	/* Bank 1; 1 reg per sensor */
+> +#define DTS_T_CPU1_C_REG	0x90	/* Bank 1; 1 reg per sensor */
+> +#define DTS_T_CPU1_CH_REG	0x91	/* Bank 1; 1 reg per sensor */
+> +#define DTS_T_CPU1_W_REG	0x92	/* Bank 1; 1 reg per sensor */
+> +#define DTS_T_CPU1_WH_REG	0x93	/* Bank 1; 1 reg per sensor */
+>  #define FANIN1_HV_REG		0x80	/* Bank 0; 2 regs (HV/LV) per sensor */
+> +#define FANIN1_HV_HL_REG	0x60	/* Bank 1; 2 regs (HV/LV) per sensor */
+> +#define FANIN1_LV_HL_REG	0x61	/* Bank 1; 2 regs (HV/LV) per sensor */
+>  #define T_CPU1_HV_REG		0xA0	/* Bank 0; 2 regs (HV/LV) per sensor */
+>  
+>  #define PRTS_REG		0x03	/* Bank 2 */
+> @@ -58,6 +81,8 @@
+>  #define FANCTL1_FMR_REG		0x00	/* Bank 3; 1 reg per channel */
+>  #define FANCTL1_OUT_REG		0x10	/* Bank 3; 1 reg per channel */
+>  
+> +#define ENABLE_TSI	BIT(1)
+> +
+>  static const unsigned short normal_i2c[] = {
+>  	0x2d, 0x2e, I2C_CLIENT_END
+>  };
+> @@ -72,6 +97,7 @@ struct nct7904_data {
+>  	u8 fan_mode[FANCTL_MAX];
+>  	u8 enable_dts;
+>  	u8 has_dts;
+> +	u8 temp_mode; /* 0: TR mode, 1: TD mode */
+>  };
+>  
+>  /* Access functions */
+> @@ -170,6 +196,25 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
+>  			rpm = 1350000 / cnt;
+>  		*val = rpm;
+>  		return 0;
+> +	case hwmon_fan_min:
+> +		ret = nct7904_read_reg16(data, BANK_1,
+> +					 FANIN1_HV_HL_REG + channel * 2);
+> +		if (ret < 0)
+> +			return ret;
+> +		cnt = ((ret & 0xff00) >> 3) | (ret & 0x1f);
+> +		if (cnt == 0x1fff)
+> +			rpm = 0;
+> +		else
+> +			rpm = 1350000 / cnt;
+> +		*val = rpm;
+> +		return 0;
+> +	case hwmon_fan_alarm:
+> +		ret = nct7904_read_reg(data, BANK_0,
+> +				       SMI_STS7_REG + (channel >> 3));
+> +		if (ret < 0)
+> +			return ret;
+> +		*val = (ret >> (channel & 0x07)) & 1;
+> +		return 0;
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+> @@ -179,8 +224,20 @@ static umode_t nct7904_fan_is_visible(const void *_data, u32 attr, int channel)
+>  {
+>  	const struct nct7904_data *data = _data;
+>  
+> -	if (attr == hwmon_fan_input && data->fanin_mask & (1 << channel))
+> -		return 0444;
+> +	switch (attr) {
+> +	case hwmon_fan_input:
+> +	case hwmon_fan_alarm:
+> +		if (data->fanin_mask & (1 << channel))
+> +			return 0444;
+> +		break;
+> +	case hwmon_fan_min:
+> +		if (data->fanin_mask & (1 << channel))
+> +			return 0644;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -211,6 +268,37 @@ static int nct7904_read_in(struct device *dev, u32 attr, int channel,
+>  			volt *= 6; /* 0.006V scale */
+>  		*val = volt;
+>  		return 0;
+> +	case hwmon_in_min:
+> +		ret = nct7904_read_reg16(data, BANK_1,
+> +					 VSEN1_HV_LL_REG + index * 4);
+> +		if (ret < 0)
+> +			return ret;
+> +		volt = ((ret & 0xff00) >> 5) | (ret & 0x7);
+> +		if (index < 14)
+> +			volt *= 2; /* 0.002V scale */
+> +		else
+> +			volt *= 6; /* 0.006V scale */
+> +		*val = volt;
+> +		return 0;
+> +	case hwmon_in_max:
+> +		ret = nct7904_read_reg16(data, BANK_1,
+> +					 VSEN1_HV_HL_REG + index * 4);
+> +		if (ret < 0)
+> +			return ret;
+> +		volt = ((ret & 0xff00) >> 5) | (ret & 0x7);
+> +		if (index < 14)
+> +			volt *= 2; /* 0.002V scale */
+> +		else
+> +			volt *= 6; /* 0.006V scale */
+> +		*val = volt;
+> +		return 0;
+> +	case hwmon_in_alarm:
+> +		ret = nct7904_read_reg(data, BANK_0,
+> +				       SMI_STS1_REG + (index >> 3));
+> +		if (ret < 0)
+> +			return ret;
+> +		*val = (ret >> (index & 0x07)) & 1;
+> +		return 0;
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+> @@ -221,9 +309,20 @@ static umode_t nct7904_in_is_visible(const void *_data, u32 attr, int channel)
+>  	const struct nct7904_data *data = _data;
+>  	int index = nct7904_chan_to_index[channel];
+>  
+> -	if (channel > 0 && attr == hwmon_in_input &&
+> -	    (data->vsen_mask & BIT(index)))
+> -		return 0444;
+> +	switch (attr) {
+> +	case hwmon_in_input:
+> +	case hwmon_in_alarm:
+> +		if (channel > 0 && (data->vsen_mask & BIT(index)))
+> +			return 0444;
+> +		break;
+> +	case hwmon_in_min:
+> +	case hwmon_in_max:
+> +		if (channel > 0 && (data->vsen_mask & BIT(index)))
+> +			return 0644;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -233,6 +332,7 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+>  {
+>  	struct nct7904_data *data = dev_get_drvdata(dev);
+>  	int ret, temp;
+> +	unsigned int reg1, reg2, reg3;
+>  
+>  	switch (attr) {
+>  	case hwmon_temp_input:
+> @@ -250,16 +350,100 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+>  		temp = ((ret & 0xff00) >> 5) | (ret & 0x7);
+>  		*val = sign_extend32(temp, 10) * 125;
+>  		return 0;
+> +	case hwmon_temp_alarm:
+> +		if (channel < 5) {
+> +			ret = nct7904_read_reg(data, BANK_0,
+> +					       SMI_STS1_REG);
+> +			if (ret < 0)
+> +				return ret;
+> +			*val = (ret >> (channel & 0x07)) & 1;
+> +		} else {
+> +			if ((channel - 5) < 4) {
+> +				ret = nct7904_read_reg(data, BANK_0,
+> +						       SMI_STS7_REG +
+> +						       ((channel - 5) >> 3));
+> +				if (ret < 0)
+> +					return ret;
+> +				*val = (ret >> ((channel - 5) & 0x07)) & 1;
+> +			} else {
+> +				ret = nct7904_read_reg(data, BANK_0,
+> +						       SMI_STS8_REG +
+> +						       ((channel - 5) >> 3));
+> +				if (ret < 0)
+> +					return ret;
+> +				*val = (ret >> (((channel - 5) & 0x07) - 4))
+> +							& 1;
+> +			}
+> +		}
+> +		return 0;
+> +	case hwmon_temp_type:
+> +		if (channel < 5) {
+> +			if ((data->tcpu_mask >> channel) & 0x01) {
+> +				if ((data->temp_mode >> channel) & 0x01)
+> +					*val = 3; /* TD */
+> +				else
+> +					*val = 4; /* TR */
+> +			} else {
+> +				*val = 0;
+> +			}
+> +		} else {
+> +			if ((data->has_dts >> (channel - 5)) & 0x01) {
+> +				if (data->enable_dts & ENABLE_TSI)
+> +					*val = 5; /* TSI */
+> +				else
+> +					*val = 6; /* PECI */
+> +			} else {
+> +				*val = 0;
+> +			}
+> +		}
+> +		return 0;
+> +	case hwmon_temp_max:
+> +		reg1 = LTD_HV_HL_REG;
+> +		reg2 = TEMP_CH1_C_REG;
+> +		reg3 = DTS_T_CPU1_C_REG;
+> +		break;
+> +	case hwmon_temp_max_hyst:
+> +		reg1 = LTD_LV_HL_REG;
+> +		reg2 = TEMP_CH1_CH_REG;
+> +		reg3 = DTS_T_CPU1_CH_REG;
+> +		break;
+> +	case hwmon_temp_emergency:
+> +		reg1 = LTD_HV_LL_REG;
+> +		reg2 = TEMP_CH1_W_REG;
+> +		reg3 = DTS_T_CPU1_W_REG;
+> +		break;
+> +	case hwmon_temp_emergency_hyst:
+> +		reg1 = LTD_LV_LL_REG;
+> +		reg2 = TEMP_CH1_WH_REG;
+> +		reg3 = DTS_T_CPU1_WH_REG;
+> +		break;
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+> +
+> +	if (channel == 4)
+> +		ret = nct7904_read_reg(data, BANK_1, reg1);
+> +	else if (channel < 5)
+> +		ret = nct7904_read_reg(data, BANK_1,
+> +				       reg2 + channel * 8);
+> +	else
+> +		ret = nct7904_read_reg(data, BANK_1,
+> +				       reg3 + (channel - 5) * 4);
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +	*val = ret * 1000;
+> +	return 0;
+>  }
+>  
+>  static umode_t nct7904_temp_is_visible(const void *_data, u32 attr, int channel)
+>  {
+>  	const struct nct7904_data *data = _data;
+>  
+> -	if (attr == hwmon_temp_input) {
+> +	switch (attr) {
+> +	case hwmon_temp_input:
+> +	case hwmon_temp_alarm:
+> +	case hwmon_temp_type:
+>  		if (channel < 5) {
+>  			if (data->tcpu_mask & BIT(channel))
+>  				return 0444;
+> @@ -267,6 +451,21 @@ static umode_t nct7904_temp_is_visible(const void *_data, u32 attr, int channel)
+>  			if (data->has_dts & BIT(channel - 5))
+>  				return 0444;
+>  		}
+> +		break;
+> +	case hwmon_temp_max:
+> +	case hwmon_temp_max_hyst:
+> +	case hwmon_temp_emergency:
+> +	case hwmon_temp_emergency_hyst:
+> +		if (channel < 5) {
+> +			if (data->tcpu_mask & BIT(channel))
+> +				return 0644;
+> +		} else {
+> +			if (data->has_dts & BIT(channel - 5))
+> +				return 0644;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+>  	}
+>  
+>  	return 0;
+> @@ -297,6 +496,137 @@ static int nct7904_read_pwm(struct device *dev, u32 attr, int channel,
+>  	}
+>  }
+>  
+> +static int nct7904_write_temp(struct device *dev, u32 attr, int channel,
+> +			      long val)
+> +{
+> +	struct nct7904_data *data = dev_get_drvdata(dev);
+> +	int ret;
+> +	unsigned int reg1, reg2, reg3;
+> +
+> +	val = clamp_val(val / 1000, -128, 127);
+> +
+> +	switch (attr) {
+> +	case hwmon_temp_max:
+> +		reg1 = LTD_HV_HL_REG;
+> +		reg2 = TEMP_CH1_C_REG;
+> +		reg3 = DTS_T_CPU1_C_REG;
+> +		break;
+> +	case hwmon_temp_max_hyst:
+> +		reg1 = LTD_LV_HL_REG;
+> +		reg2 = TEMP_CH1_CH_REG;
+> +		reg3 = DTS_T_CPU1_CH_REG;
+> +		break;
+> +	case hwmon_temp_emergency:
+> +		reg1 = LTD_HV_LL_REG;
+> +		reg2 = TEMP_CH1_W_REG;
+> +		reg3 = DTS_T_CPU1_W_REG;
+> +		break;
+> +	case hwmon_temp_emergency_hyst:
+> +		reg1 = LTD_LV_LL_REG;
+> +		reg2 = TEMP_CH1_WH_REG;
+> +		reg3 = DTS_T_CPU1_WH_REG;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +	if (channel == 4)
+> +		ret = nct7904_write_reg(data, BANK_1, reg1, val);
+> +	else if (channel < 5)
+> +		ret = nct7904_write_reg(data, BANK_1,
+> +					reg2 + channel * 8, val);
+> +	else
+> +		ret = nct7904_write_reg(data, BANK_1,
+> +					reg3 + (channel - 5) * 4, val);
+> +
+> +	return ret;
+> +}
+> +
+> +static int nct7904_write_fan(struct device *dev, u32 attr, int channel,
+> +			     long val)
+> +{
+> +	struct nct7904_data *data = dev_get_drvdata(dev);
+> +	int ret;
+> +	u8 tmp;
+> +
+> +	switch (attr) {
+> +	case hwmon_fan_min:
+> +		if (val <= 0)
+> +			return 0x1fff;
+> +
+> +		val = clamp_val((1350000 + (val >> 1)) / val, 1, 0x1fff);
+> +		tmp = (val >> 5) & 0xff;
+> +		ret = nct7904_write_reg(data, BANK_1,
+> +					FANIN1_HV_HL_REG + channel * 2, tmp);
+> +		if (ret < 0)
+> +			return ret;
+> +		tmp = val & 0x1f;
+> +		ret = nct7904_write_reg(data, BANK_1,
+> +					FANIN1_LV_HL_REG + channel * 2, tmp);
+> +		return ret;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+> +static int nct7904_write_in(struct device *dev, u32 attr, int channel,
+> +			    long val)
+> +{
+> +	struct nct7904_data *data = dev_get_drvdata(dev);
+> +	int ret, index, tmp;
+> +
+> +	index = nct7904_chan_to_index[channel];
+> +
+> +	if (index < 14)
+> +		val = val / 2; /* 0.002V scale */
+> +	else
+> +		val = val / 6; /* 0.006V scale */
+> +
+> +	val = clamp_val(val, 0, 0x7ff); /* Bit 15 is sign bit */
+> +
+> +	switch (attr) {
+> +	case hwmon_in_min:
+> +		tmp = nct7904_read_reg(data, BANK_1,
+> +				       VSEN1_LV_LL_REG + index * 4);
+> +		if (tmp < 0)
+> +			return tmp;
+> +		tmp &= ~0x7;
+> +		tmp |= val & 0x7;
+> +		ret = nct7904_write_reg(data, BANK_1,
+> +					VSEN1_LV_LL_REG + index * 4, tmp);
+> +		if (ret < 0)
+> +			return ret;
+> +		tmp = nct7904_read_reg(data, BANK_1,
+> +				       VSEN1_HV_LL_REG + index * 4);
+> +		if (tmp < 0)
+> +			return tmp;
+> +		tmp = (val >> 3) & 0xff;
+> +		ret = nct7904_write_reg(data, BANK_1,
+> +					VSEN1_HV_LL_REG + index * 4, tmp);
+> +		return ret;
+> +	case hwmon_in_max:
+> +		tmp = nct7904_read_reg(data, BANK_1,
+> +				       VSEN1_LV_HL_REG + index * 4);
+> +		if (tmp < 0)
+> +			return tmp;
+> +		tmp &= ~0x7;
+> +		tmp |= val & 0x7;
+> +		ret = nct7904_write_reg(data, BANK_1,
+> +					VSEN1_LV_HL_REG + index * 4, tmp);
+> +		if (ret < 0)
+> +			return ret;
+> +		tmp = nct7904_read_reg(data, BANK_1,
+> +				       VSEN1_HV_LL_REG + index * 4);
+> +		if (tmp < 0)
+> +			return tmp;
+> +		tmp = (val >> 3) & 0xff;
+> +		ret = nct7904_write_reg(data, BANK_1,
+> +					VSEN1_HV_LL_REG + index * 4, tmp);
+> +		return ret;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+>  static int nct7904_write_pwm(struct device *dev, u32 attr, int channel,
+>  			     long val)
+>  {
+> @@ -354,8 +684,14 @@ static int nct7904_write(struct device *dev, enum hwmon_sensor_types type,
+>  			 u32 attr, int channel, long val)
+>  {
+>  	switch (type) {
+> +	case hwmon_in:
+> +		return nct7904_write_in(dev, attr, channel, val);
+> +	case hwmon_fan:
+> +		return nct7904_write_fan(dev, attr, channel, val);
+>  	case hwmon_pwm:
+>  		return nct7904_write_pwm(dev, attr, channel, val);
+> +	case hwmon_temp:
+> +		return nct7904_write_temp(dev, attr, channel, val);
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+> @@ -404,51 +740,91 @@ static int nct7904_detect(struct i2c_client *client,
+>  
+>  static const struct hwmon_channel_info *nct7904_info[] = {
+>  	HWMON_CHANNEL_INFO(in,
+> -			   HWMON_I_INPUT, /* dummy, skipped in is_visible */
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT,
+> -			   HWMON_I_INPUT),
+> +			   /* dummy, skipped in is_visible */
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM,
+> +			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
+> +			   HWMON_I_ALARM),
+>  	HWMON_CHANNEL_INFO(fan,
+> -			   HWMON_F_INPUT,
+> -			   HWMON_F_INPUT,
+> -			   HWMON_F_INPUT,
+> -			   HWMON_F_INPUT,
+> -			   HWMON_F_INPUT,
+> -			   HWMON_F_INPUT,
+> -			   HWMON_F_INPUT,
+> -			   HWMON_F_INPUT),
+> +			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
+> +			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
+> +			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
+> +			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
+> +			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
+> +			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
+> +			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
+> +			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM),
+>  	HWMON_CHANNEL_INFO(pwm,
+>  			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
+>  			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
+>  			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
+>  			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
+>  	HWMON_CHANNEL_INFO(temp,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT),
+> +			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+> +			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+> +			   HWMON_T_EMERGENCY_HYST,
+> +			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+> +			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+> +			   HWMON_T_EMERGENCY_HYST,
+> +			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+> +			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+> +			   HWMON_T_EMERGENCY_HYST,
+> +			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+> +			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+> +			   HWMON_T_EMERGENCY_HYST,
+> +			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+> +			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+> +			   HWMON_T_EMERGENCY_HYST,
+> +			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+> +			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+> +			   HWMON_T_EMERGENCY_HYST,
+> +			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+> +			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+> +			   HWMON_T_EMERGENCY_HYST,
+> +			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+> +			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+> +			   HWMON_T_EMERGENCY_HYST,
+> +			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+> +			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+> +			   HWMON_T_EMERGENCY_HYST),
+>  	NULL
+>  };
+>  
+> @@ -530,11 +906,14 @@ static int nct7904_probe(struct i2c_client *client,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	data->temp_mode = 0;
+>  	for (i = 0; i < 4; i++) {
+>  		val = (ret & (0x03 << i)) >> (i * 2);
+>  		bit = (1 << i);
+>  		if (val == 0)
+>  			data->tcpu_mask &= ~bit;
+> +		else if (val == 0x1 || val == 0x2)
+> +			data->temp_mode |= bit;
+>  	}
+>  
+>  	/* PECI */
+> @@ -557,7 +936,7 @@ static int nct7904_probe(struct i2c_client *client,
+>  		if (ret < 0)
+>  			return ret;
+>  		data->has_dts = ret & 0xF;
+> -		if (data->enable_dts & 0x2) {
+> +		if (data->enable_dts & ENABLE_TSI) {
+>  			ret = nct7904_read_reg(data, BANK_0, DTS_T_CTRL1_REG);
+>  			if (ret < 0)
+>  				return ret;
