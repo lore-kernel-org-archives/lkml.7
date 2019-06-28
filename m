@@ -2,200 +2,121 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5662DC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9953FC46478
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8CC208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD512133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfF1Kla (ORCPT
+        id S1726896AbfF1Kly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:41:30 -0400
-Received: from lgeamrelo11.lge.com ([156.147.23.51]:45029 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfF1Kla (ORCPT
+        Fri, 28 Jun 2019 06:41:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:36429 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfF1Klx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:41:30 -0400
-Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
-        by 156.147.23.51 with ESMTP; 28 Jun 2019 19:41:26 +0900
-X-Original-SENDERIP: 156.147.1.121
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.121 with ESMTP; 28 Jun 2019 19:41:26 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Fri, 28 Jun 2019 19:40:45 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Scott Wood <swood@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Message-ID: <20190628104045.GA8394@X58A-UD3R>
-References: <20190627103455.01014276@gandalf.local.home>
- <20190627153031.GA249127@google.com>
- <20190627155506.GU26519@linux.ibm.com>
- <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
- <20190627203612.GD26519@linux.ibm.com>
- <20190628073138.GB13650@X58A-UD3R>
+        Fri, 28 Jun 2019 06:41:53 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MUD7D-1i7Nb429UB-00RL08; Fri, 28 Jun 2019 12:41:33 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mfd: davinci_voicecodec: remove pointless #include
+Date:   Fri, 28 Jun 2019 12:41:22 +0200
+Message-Id: <20190628104132.2791616-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628073138.GB13650@X58A-UD3R>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:vhVXoLeqKXMn0+9LfigQM3R2EGN0KWX0jx3S6cH5lheI6R++ykD
+ PGlHix3EwmomFlILJl1suu+nxt1njb9uE8Bm1FKqdx3gu/C0OIvSONUUbKzgaj1iCmCdLAt
+ zlxgrG14J4jwkBDnH8VaKM58btsoMAXr8U+I94w4CLS7iF4dHiLtVOlzrNPvL06ml1qVEED
+ fQpI8lf90Pf2uEboWhMOw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jGbO6oPkDPo=:D2FW8L4GGuL63suwBhrlVl
+ fC6qm38w7oll4AQjjedX15qcIbSQXv5pWArxXNMa+oQa9Qh7Je9nj27mUUwdURIfpWZtItIP+
+ cATJswf5LOZ4+2EdTzuM9wAv+/uVzEpr+9hlBdWAgfFNoSD8q0LXqfbx6/P3+v3anQyZvSINI
+ zWLuSPQcA/5eZdIRjLvLKzTzYHzqTqgUo13mMOE+kZfGLZwloyZ1o7h1WYct6QiLbAfM5NWML
+ EzT4QoGXORU1cNbK8Qm3559aDEsRqv8kDiyg05PjA0JGZ8Dinr0gE+7kW8jhwXxvvlDDR+asO
+ nyRpDUK8ka1VXyoM1nUWEXluEjOT5NVug2SL1M1TZ8zC4mm/y2JYT9jqcIoGjNiSMtrs/Qsq2
+ UA+IM2UOfDMb8hjxZGyJahboalXJvrusfS1rysEvXVCX6MW9d9hC5V/053j+AFYacU9VM38r/
+ Q2rrktc0A2GUPIOQ2DuVhhT9QY5F3MdRDkMYygwCyM8chh5PrpIa8zJgqMyg6TEZksJG5Qf57
+ Qxe1blBHg/AZ+pibJFJswwSuvMw/kx1P1LR8KjZyBt64ClXdFAaAtd2GB4I89Ffo0Eo9zJ447
+ i/Qc72Nef4TWCnTVsE3y2PI7CmKK1kl/n7J4NWCKQsFkCDpekWTgxdMcwYMNECE4lyKWQYN6S
+ wVE3r5daifPTPDQwVkuPxAUGJP/us2/bs6EvJTRskr6TlvpRgJOUR3RKWISbss57BNYWuKCLq
+ +M7YWEJCHURWJqFsrUWq1bDykmpeSuvQUC9jQw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 04:31:38PM +0900, Byungchul Park wrote:
-> On Thu, Jun 27, 2019 at 01:36:12PM -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 27, 2019 at 03:17:27PM -0500, Scott Wood wrote:
-> > > On Thu, 2019-06-27 at 11:41 -0700, Paul E. McKenney wrote:
-> > > > On Thu, Jun 27, 2019 at 02:16:38PM -0400, Joel Fernandes wrote:
-> > > > > 
-> > > > > I think the fix should be to prevent the wake-up not based on whether we
-> > > > > are
-> > > > > in hard/soft-interrupt mode but that we are doing the rcu_read_unlock()
-> > > > > from
-> > > > > a scheduler path (if we can detect that)
-> > > > 
-> > > > Or just don't do the wakeup at all, if it comes to that.  I don't know
-> > > > of any way to determine whether rcu_read_unlock() is being called from
-> > > > the scheduler, but it has been some time since I asked Peter Zijlstra
-> > > > about that.
-> > > > 
-> > > > Of course, unconditionally refusing to do the wakeup might not be happy
-> > > > thing for NO_HZ_FULL kernels that don't implement IRQ work.
-> > > 
-> > > Couldn't smp_send_reschedule() be used instead?
-> > 
-> > Good point.  If current -rcu doesn't fix things for Sebastian's case,
-> > that would be well worth looking at.  But there must be some reason
-> > why Peter Zijlstra didn't suggest it when he instead suggested using
-> > the IRQ work approach.
-> > 
-> > Peter, thoughts?
-> 
-> Hello,
-> 
-> Isn't the following scenario possible?
-> 
-> The original code
-> -----------------
-> rcu_read_lock();
-> ...
-> /* Experdite */
-> WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> ...
-> __rcu_read_unlock();
-> 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> 		rcu_read_unlock_special(t);
-> 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> 		barrier();  /* ->rcu_read_unlock_special load before assign */
-> 		t->rcu_read_lock_nesting = 0;
-> 
-> The reordered code by machine
-> -----------------------------
-> rcu_read_lock();
-> ...
-> /* Experdite */
-> WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> ...
-> __rcu_read_unlock();
-> 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> 		rcu_read_unlock_special(t);
-> 		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
-> 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> 		barrier();  /* ->rcu_read_unlock_special load before assign */
-> 
-> An interrupt happens
-> --------------------
-> rcu_read_lock();
-> ...
-> /* Experdite */
-> WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> ...
-> __rcu_read_unlock();
-> 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> 		rcu_read_unlock_special(t);
-> 		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
-> <--- Handle an (any) irq
-> 	rcu_read_lock();
-> 	/* This call should be skipped */
-> 	rcu_read_unlock_special(t);
+When building davinci as multiplatform, we get a build error
+in this file:
 
-Wait.. I got a little bit confused on recordering.
+drivers/mfd/davinci_voicecodec.c:22:10: fatal error: 'mach/hardware.h' file not found
 
-This 'STORE rcu_read_lock_nesting = 0' can happen before
-'STORE rcu_read_unlock_special.b.exp_hint = false' regardless of the
-order a compiler generated to by the barrier(), because anyway they
-are independent so it's within an arch's right.
+The header is only used to access the io_v2p() macro, but the
+result is already known because that comes from the resource
+a little bit earlier.
 
-Then.. is this scenario possible? Or all archs properly deal with
-interrupts across this kind of reordering?
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/mfd/davinci_voicecodec.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Thanks,
-Byungchul
+diff --git a/drivers/mfd/davinci_voicecodec.c b/drivers/mfd/davinci_voicecodec.c
+index 13ca7203e193..e5c8bc998eb4 100644
+--- a/drivers/mfd/davinci_voicecodec.c
++++ b/drivers/mfd/davinci_voicecodec.c
+@@ -19,7 +19,6 @@
+ #include <sound/pcm.h>
+ 
+ #include <linux/mfd/davinci_voicecodec.h>
+-#include <mach/hardware.h>
+ 
+ static const struct regmap_config davinci_vc_regmap = {
+ 	.reg_bits = 32,
+@@ -31,6 +30,7 @@ static int __init davinci_vc_probe(struct platform_device *pdev)
+ 	struct davinci_vc *davinci_vc;
+ 	struct resource *res;
+ 	struct mfd_cell *cell = NULL;
++	dma_addr_t fifo_base;
+ 	int ret;
+ 
+ 	davinci_vc = devm_kzalloc(&pdev->dev,
+@@ -48,6 +48,7 @@ static int __init davinci_vc_probe(struct platform_device *pdev)
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 
++	fifo_base = (dma_addr_t)res->start;
+ 	davinci_vc->base = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(davinci_vc->base)) {
+ 		ret = PTR_ERR(davinci_vc->base);
+@@ -70,8 +71,7 @@ static int __init davinci_vc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	davinci_vc->davinci_vcif.dma_tx_channel = res->start;
+-	davinci_vc->davinci_vcif.dma_tx_addr =
+-		(dma_addr_t)(io_v2p(davinci_vc->base) + DAVINCI_VC_WFIFO);
++	davinci_vc->davinci_vcif.dma_tx_addr = fifo_base + DAVINCI_VC_WFIFO;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_DMA, 1);
+ 	if (!res) {
+@@ -81,8 +81,7 @@ static int __init davinci_vc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	davinci_vc->davinci_vcif.dma_rx_channel = res->start;
+-	davinci_vc->davinci_vcif.dma_rx_addr =
+-		(dma_addr_t)(io_v2p(davinci_vc->base) + DAVINCI_VC_RFIFO);
++	davinci_vc->davinci_vcif.dma_rx_addr = fifo_base + DAVINCI_VC_RFIFO;
+ 
+ 	davinci_vc->dev = &pdev->dev;
+ 	davinci_vc->pdev = pdev;
+-- 
+2.20.0
 
-> 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> 		barrier();  /* ->rcu_read_unlock_special load before assign */
-> 
-> We don't have to handle the special thing twice like this which is one
-> reason to cause the problem even though another problem is of course to
-> call ttwu w/o being aware it's within a context holding pi lock.
-> 
-> Apart from the discussion about how to avoid ttwu in an improper
-> condition, I think the following is necessary. I may have something
-> missing. It would be appreciated if you let me know in case I'm wrong.
-> 
-> Anyway, logically I think we should prevent reordering between
-> t->rcu_read_lock_nesting and t->rcu_read_unlock_special.b.exp_hint not
-> only by compiler but also by machine like the below.
-> 
-> Do I miss something?
-> 
-> Thanks,
-> Byungchul
-> 
-> ---8<---
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 3c8444e..9b137f1 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -412,7 +412,13 @@ void __rcu_read_unlock(void)
->  		barrier();  /* assign before ->rcu_read_unlock_special load */
->  		if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
->  			rcu_read_unlock_special(t);
-> -		barrier();  /* ->rcu_read_unlock_special load before assign */
-> +		/*
-> +		 * Prevent reordering between clearing
-> +		 * t->rcu_reak_unlock_special in
-> +		 * rcu_read_unlock_special() and the following
-> +		 * assignment to t->rcu_read_lock_nesting.
-> +		 */
-> +		smp_wmb();
->  		t->rcu_read_lock_nesting = 0;
->  	}
->  	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
-> 
-> 
