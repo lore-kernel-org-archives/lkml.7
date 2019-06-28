@@ -2,161 +2,150 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049C8C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3444C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD8EB206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA71206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:17:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kNw1F7jh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LNBWauIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfF1FOk (ORCPT
+        id S1726766AbfF1FRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 01:14:40 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35126 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfF1FOk (ORCPT
+        Fri, 28 Jun 2019 01:17:06 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37590 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfF1FRG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 01:14:40 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5S5EVJW031355;
-        Fri, 28 Jun 2019 00:14:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561698871;
-        bh=iF00KIo+4r+9trT3BCASF5YrDSJ/Qfa6cC6Xz6QeYK8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kNw1F7jhPm2zOvofudfNhNVNKII7XpEJ4jKfjA485+Bb49qqrdy8AFuATdH12qhks
-         Rcf42sD1+0oE4tGLWfN946ZogQ5H5DQn8itlJ8JWFuqGKdIC91inDedvLzpt++WihN
-         I6H7oPk/KAZ9lm0+BeoYYKuvyDlH4IfKeQDGG6Ss=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5S5EVYx039798
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Jun 2019 00:14:31 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 28
- Jun 2019 00:14:30 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 28 Jun 2019 00:14:30 -0500
-Received: from [10.250.133.155] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5S5EQvl015894;
-        Fri, 28 Jun 2019 00:14:27 -0500
-Subject: Re: [RESEND PATCH 00/10] crypto: k3: Add sa2ul driver
-To:     Eric Biggers <ebiggers@kernel.org>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <t-kristo@ti.com>,
-        <linux-crypto@vger.kernel.org>, <nm@ti.com>
-References: <20190628042745.28455-1-j-keerthy@ti.com>
- <20190628045318.GC673@sol.localdomain>
-From:   keerthy <j-keerthy@ti.com>
-Message-ID: <7ca64e49-6e1f-c74e-4d8e-0e08607fe5c5@ti.com>
-Date:   Fri, 28 Jun 2019 10:44:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 28 Jun 2019 01:17:06 -0400
+Received: by mail-pl1-f196.google.com with SMTP id bh12so2550181plb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 22:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JiuWbBYG7AfK/w1wk/7crXpN7tqYeJAjUVndLvw0OqY=;
+        b=LNBWauIRWJdvQQ5iQjrMW10ERFBpdZ3V2k7NsVJ6ur+EyKnBcibhTym3sMLyCs/FTM
+         1udsABeiIwh7E5DcI8gzZu+y4yYL1Vn76SMDlajlLUjDeFJrrkq8ANOcxDHlA/dpHRDG
+         saAQOJgTmFqF39BeigMkfkLwVq6fo78QMT0o7w8wZ7dzPaPmMXp8JfKzzArGZMGUStS2
+         UsBjWlh24gHHdhzAxSKcmP3+nK30vkCEqXZ04/rORYrP3Gi0CaRLn1XckQG3/4xgrWot
+         mq/Tf56IoylsA+2MetV7Nv3B2KS8X7TgPBOTbkFEzdhjVCKu5ZkmDiWbQNv3SnTm/ATd
+         jaUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JiuWbBYG7AfK/w1wk/7crXpN7tqYeJAjUVndLvw0OqY=;
+        b=S7PFcoabvpfvBoCZrPmRRYzOPoI39VKUZkbFIdmm3ogSux1A6dDTx7BWGGwUDnkSRX
+         Y5KpXhgxE6v8aIn5WUdPHpIsTxLsWCDZ6DPTzRVTVZM6GcpBM6Meizy+wwisfBbg6PpC
+         7iz68xYoKPvg3GV/VIaw0v1xpcssqpW7ae+acXI9y9z6JK86dsxNAxPgWplLgwhEBQeN
+         flGTJtg+6wjbrlF0hQt8E8FN2HDHLfP0lTXvgFK0Rzex4m+/WvvQx/2nSb7TJkLyPCmM
+         q65USR2CJC7buweMnb9s4v1wnOW/T5NHkiZLxSZVD6XTen3yRgEio3ss+tJM8q3QVWMn
+         TIww==
+X-Gm-Message-State: APjAAAW624TapOjmwNpcNEeOKg17mijue+YTHdtsXq+7uejSQzXZuNea
+        eG3Yysx0942WhYo8I4Huj2vSRA==
+X-Google-Smtp-Source: APXvYqzdcdiIFMDU4e8+XLfMrmVS+O+aFXYB4G47R1WpL+iOleUF+4H1ST+eAvQx7g1AXvFXl4hGKQ==
+X-Received: by 2002:a17:902:b592:: with SMTP id a18mr9342428pls.278.1561699025319;
+        Thu, 27 Jun 2019 22:17:05 -0700 (PDT)
+Received: from localhost ([122.172.211.128])
+        by smtp.gmail.com with ESMTPSA id 201sm822777pfz.24.2019.06.27.22.17.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 22:17:03 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V3 2/5] cpufreq: Don't skip frequency validation for has_target() drivers
+Date:   Fri, 28 Jun 2019 10:46:55 +0530
+Message-Id: <88da7cfabad5e19a361fe2843e5ef547d50fd221.1561698236.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
+In-Reply-To: <88da7cfabad5e19a361fe2843e5ef547d50fd221.1560999838.git.viresh.kumar@linaro.org>
+References: <88da7cfabad5e19a361fe2843e5ef547d50fd221.1560999838.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190628045318.GC673@sol.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+CPUFREQ_CONST_LOOPS was introduced in a very old commit from pre-2.6
+kernel release by commit 6a4a93f9c0d5 ("[CPUFREQ] Fix 'out of sync'
+issue").
 
+If we you look at that commit, it does two things:
 
-On 6/28/2019 10:23 AM, Eric Biggers wrote:
-> Hi Keerthy,
-> 
-> On Fri, Jun 28, 2019 at 09:57:35AM +0530, Keerthy wrote:
->> The series adds Crypto hardware accelerator support for SA2UL.
->> SA2UL stands for security accelerator ultra lite.
->>
->> The Security Accelerator (SA2_UL) subsystem provides hardware
->> cryptographic acceleration for the following use cases:
->> • Encryption and authentication for secure boot
->> • Encryption and authentication of content in applications
->>    requiring DRM (digital rights management) and
->>    content/asset protection
->> The device includes one instantiation of SA2_UL named SA2_UL0
->>
->> SA2UL needs on tx channel and a pair of rx dma channels.
->>
->> This series has dependency on UDMA series. Hence is based on top of:
->>
->> https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105
->>
->> The above series adds couple of dmaengine APIs that are used
->> by the sa2ul driver. Hence there is a hard dependency on the
->> above series.
->>
->> Resending with linux-crypto list in Cc.
->>
->> Keerthy (10):
->>    dt-bindings: crypto: k3: Add sa2ul bindings documentation
->>    crypto: sa2ul: Add crypto driver
->>    crypto: sa2ul: Add AES ECB Mode support
->>    crypto: sa2ul: Add aead support for hmac(sha1)cbc(aes) algorithm
->>    crypto: sha256_generic: Export the Transform function
->>    crypto: sa2ul: Add hmac(sha256)cbc(aes) AEAD Algo support
->>    crypto: sa2ul: Add hmac(sha1) HMAC algorithm support
->>    crypto: sa2ul: Add hmac(sha256) HMAC algorithm support
->>    sa2ul: Add 3DES ECB & CBC Mode support
->>    arm64: dts: k3-am6: Add crypto accelarator node
->>
->>   .../devicetree/bindings/crypto/sa2ul.txt      |   47 +
->>   arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |   33 +
->>   crypto/sha256_generic.c                       |    3 +-
->>   drivers/crypto/Kconfig                        |   17 +
->>   drivers/crypto/Makefile                       |    1 +
->>   drivers/crypto/sa2ul.c                        | 2232 +++++++++++++++++
->>   drivers/crypto/sa2ul.h                        |  384 +++
->>   include/crypto/sha.h                          |    1 +
->>   8 files changed, 2717 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/crypto/sa2ul.txt
->>   create mode 100644 drivers/crypto/sa2ul.c
->>   create mode 100644 drivers/crypto/sa2ul.h
-> 
-> Did you run the crypto self-tests on this driver?  i.e. boot a kernel with
-> 
-> 	# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
-> 	CONFIG_DEBUG_KERNEL=y
-> 	CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
-> 
-> What are the results?
+- It adds the frequency verification code (which is quite similar to
+  what we have today as well).
 
-Eric,
+- And it sets the CPUFREQ_CONST_LOOPS flag only for setpolicy drivers,
+  rightly so based on the code we had then. The idea was to avoid
+  frequency validation for setpolicy drivers as the cpufreq core doesn't
+  know what frequency the hardware is running at and so no point in
+  doing frequency verification.
 
-Thanks for your response. I did try with that. All test cases
-were passing on 4.19 kernel before the testmgr revamp.
+The problem happened when we started to use the same CPUFREQ_CONST_LOOPS
+flag for constant loops-per-jiffy thing as well and many has_target()
+drivers started using the same flag and unknowingly skipped the
+verification of frequency. There is no logical reason behind skipping
+frequency validation because of the presence of CPUFREQ_CONST_LOOPS
+flag otherwise.
 
-Currently few of the test cases do fail. For ex: Appending
-the last ivlen bytes of cipher text as the IV.
+This patch fixes this issue by skipping frequency validation only for
+setpolicy drivers and always doing it for has_target() drivers
+irrespective of the presence or absence of CPUFREQ_CONST_LOOPS flag.
 
-> 
-> Also, this patchset does not compile for me.
+cpufreq_notify_transition() is only called for has_target() type driver
+and not for set_policy type, and the check is simply redundant. Remove
+it as well.
 
-This has dependency on UDMA series: 
-https://patchwork.kernel.org/cover/10930969/
+Also remove () around freq comparison statement as they aren't required
+and checkpatch also warns for them.
 
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+V2->V3:
+- Updated commit log and $subject.
 
-> 
-> Error: arch/arm64/boot/dts/ti/k3-am65-main.dtsi:103.33-34 syntax error
-> FATAL ERROR: Unable to parse input tree
->    DTC     arch/arm64/boot/dts/nvidia/tegra210-p2571.dtb
-> make[2]: *** [scripts/Makefile.lib:294: arch/arm64/boot/dts/ti/k3-am654-base-board.dtb] Error 1
-> make[1]: *** [scripts/Makefile.build:489: arch/arm64/boot/dts/ti] Error 2
-> make[1]: *** Waiting for unfinished jobs....
-> 
-> - Eric
-> 
+ drivers/cpufreq/cpufreq.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 54befd775bd6..41ac701e324f 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -359,12 +359,10 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+ 		 * which is not equal to what the cpufreq core thinks is
+ 		 * "old frequency".
+ 		 */
+-		if (!(cpufreq_driver->flags & CPUFREQ_CONST_LOOPS)) {
+-			if (policy->cur && (policy->cur != freqs->old)) {
+-				pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
+-					 freqs->old, policy->cur);
+-				freqs->old = policy->cur;
+-			}
++		if (policy->cur && policy->cur != freqs->old) {
++			pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
++				 freqs->old, policy->cur);
++			freqs->old = policy->cur;
+ 		}
+ 
+ 		srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
+@@ -1618,8 +1616,7 @@ static unsigned int __cpufreq_get(struct cpufreq_policy *policy)
+ 	if (policy->fast_switch_enabled)
+ 		return ret_freq;
+ 
+-	if (ret_freq && policy->cur &&
+-		!(cpufreq_driver->flags & CPUFREQ_CONST_LOOPS)) {
++	if (has_target() && ret_freq && policy->cur) {
+ 		/* verify no discrepancy between actual and
+ 					saved value exists */
+ 		if (unlikely(ret_freq != policy->cur)) {
+-- 
+2.21.0.rc0.269.g1a574e7a288b
+
