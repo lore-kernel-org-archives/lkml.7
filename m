@@ -2,111 +2,388 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A30C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE11CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F0520645
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C69B208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561729164;
+	bh=Zz4I2Zc8Y4oVDDkGMpX2kEmE8ymQCXwUHg8ED9aiwhM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fD4dXt8eiO8hLPm+0mT523SRLHo1JL2v6hRxNd4LWtgeKOTPqr9X4o5W+qAsvi1ab
+	 TjwU6TEL4AcyE3czGQ2e3zi1M8uXWEZ9+WbQMnY4GXdYM7cRsOhfj06xMZv0mx15M3
+	 R/0xrS/ooQI6clz2xz0irXKogULPI8ybB5JWJQAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfF1Nim (ORCPT
+        id S1726859AbfF1NjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 09:38:42 -0400
-Received: from verein.lst.de ([213.95.11.211]:38826 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726655AbfF1Nim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:38:42 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8BA79227A81; Fri, 28 Jun 2019 15:38:37 +0200 (CEST)
-Date:   Fri, 28 Jun 2019 15:38:37 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190628133837.GA3801@lst.de>
-References: <20190625170115.GA9746@lst.de> <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com> <20190626065708.GB24531@lst.de> <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com> <20190626202107.GA5850@ziepe.ca> <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com> <20190627090843.GB11548@lst.de> <89889319-e778-7772-ab36-dc55b59826be@deltatee.com> <20190627170027.GE10652@lst.de> <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
+        Fri, 28 Jun 2019 09:39:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56768 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfF1NjW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 09:39:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Hd+4YFDiBJERyhN7PHFcmfikFE7KlUt1avVVgYQ6YVE=; b=h5NtAtFWCjXPJAeBvvp27srXa
+        EIuxp0c4dUINEzOvnIwc/QaboVPbSeLVLS06mhEpJHxAlExcYKswDAgGUxy/NhloX9MMBK/HBGZt+
+        Oz+2VZe8p0roNDDePtEFDwBhFYaFizmf9ERGO6Y1ZArgw4hBh+ixVWf/szAYEFO4w/WQhzowhP8s3
+        x/GJa19+VLErBh3b79Fw2KAy9Eu0UudyQzK0ugsVAmDfWzvgab4s2DsuqM5Ldy1BCBI4sCLCK/rtH
+        vcva1nF3pPkUgx21Dlr/p27r1Pq7mSplHFOctUB/lY+3E+KPcEeWak0yhegSeFQP8/ISSqkZF/7hJ
+        7bkmTul3Q==;
+Received: from [186.213.242.156] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgr5z-0007Xn-Ou; Fri, 28 Jun 2019 13:39:20 +0000
+Date:   Fri, 28 Jun 2019 10:39:15 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Vandana BN <bnvandana@gmail.com>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-sh@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] Documentation:sh:convert register-banks.txt  and
+ new-machine.txt to rst format.
+Message-ID: <20190628103915.3ce83637@coco.lan>
+In-Reply-To: <20190628132459.5409-1-bnvandana@gmail.com>
+References: <20190627063347.11137-1-bnvandana@gmail.com>
+        <20190628132459.5409-1-bnvandana@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 12:00:35PM -0600, Logan Gunthorpe wrote:
-> > It is not.  (c) is fundamentally very different as it is not actually
-> > an operation that ever goes out to the wire at all, and which is why the
-> > actual physical address on the wire does not matter at all.
-> > Some interfaces like NVMe have designed it in a way that it the commands
-> > used to do this internal transfer look like (b2), but that is just their
-> > (IMHO very questionable) interface design choice, that produces a whole
-> > chain of problems.
+Em Fri, 28 Jun 2019 18:54:59 +0530
+Vandana BN <bnvandana@gmail.com> escreveu:
+
+> This patch converts new-machine.txt and register-banks.txt to ReST format, No content
+> change.
+> Added new-machine.rst and register-banks.rst to sh/index.rst
 > 
-> >From the mapping device's driver's perspective yes, but from the
-> perspective of a submitting driver they would be the same.
-
-With your dma_addr_t scheme it won't be the same, as you'd need
-a magic way to generate the internal addressing and stuff it into
-the dma_addr_t.  With a phys_addr_t based scheme they should basically
-be all the same.
-
-> Yes, you did suggest them. But what I'm trying to suggest is we don't
-> *necessarily* need the lookup. For demonstration purposes only, a
-> submitting driver could very roughly potentially do:
+> Signed-off-by: Vandana BN <bnvandana@gmail.com>
+> ---
+>  Documentation/sh/index.rst                    |   6 +
+>  .../sh/{new-machine.txt => new-machine.rst}   | 171 +++++++++---------
+>  ...{register-banks.txt => register-banks.rst} |   8 +-
+>  3 files changed, 100 insertions(+), 85 deletions(-)
+>  rename Documentation/sh/{new-machine.txt => new-machine.rst} (79%)
+>  rename Documentation/sh/{register-banks.txt => register-banks.rst} (90%)
 > 
-> struct bio_vec vec;
-> dist = pci_p2pdma_dist(provider_pdev, mapping_pdev);
-> if (dist < 0) {
->      /* use regular memory */
->      vec.bv_addr = virt_to_phys(kmalloc(...));
->      vec.bv_flags = 0;
-> } else if (dist & PCI_P2PDMA_THRU_HOST_BRIDGE) {
->      vec.bv_addr = pci_p2pmem_alloc_phys(provider_pdev, ...);
->      vec.bv_flags = BVEC_MAP_RESOURCE;
-> } else {
->      vec.bv_addr = pci_p2pmem_alloc_bus_addr(provider_pdev, ...);
->      vec.bv_flags = BVEC_MAP_BUS_ADDR;
-> }
-
-That doesn't look too bad, except..
-
-> -- And a mapping driver would roughly just do:
+> diff --git a/Documentation/sh/index.rst b/Documentation/sh/index.rst
+> index bc8db7ba894a..25471d3fc294 100644
+> --- a/Documentation/sh/index.rst
+> +++ b/Documentation/sh/index.rst
+> @@ -57,3 +57,9 @@ Maple
 > 
-> dma_addr_t dma_addr;
-> if (vec.bv_flags & BVEC_MAP_BUS_ADDR) {
->      if (pci_bus_addr_in_bar(mapping_pdev, vec.bv_addr, &bar, &off))  {
->           /* case (c) */
->           /* program the DMA engine with bar and off */
+>  .. kernel-doc:: drivers/sh/maple/maple.c
+>     :export:
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> +   new-machine
+> +   register-banks
 
-Why bother with that here if we could also let the caller handle
-that? pci_p2pdma_dist() should be able to trivially find that out
-based on provider_dev == mapping_dev.
+Hmm... adding a toctree at the end doesn't seem the best thing to do.
 
-> The real difficulty here is that you'd really want all the above handled
-> by a dma_map_bvec() so it can combine every vector hitting the IOMMU
-> into a single continuous IOVA -- but it's hard to fit case (c) into that
-> equation. So it might be that a dma_map_bvec() handles cases (a), (b1)
-> and (b2) and the mapping driver has to then check each resulting DMA
-> vector for pci_bus_addr_in_bar() while it is programming the DMA engine
-> to deal with case (c).
+Adding it at the beginning (just after the title) would be a little
+better, but IMHO, moving the kernel-doc markups to another file
+would make it to look better.
 
-I'd do it the other way around.  pci_p2pdma_dist is used to find
-the p2p type.  The p2p type is stuff into the bio_vec, and we then:
+The remaining patch looks ok on my eyes.
 
- (1) manually check for case (c) in driver for drivers that want to
-     treat it different from (b)
- (2) we then have a dma mapping wrapper that checks the p2p type
-     and does the right thing for the rest.
+> diff --git a/Documentation/sh/new-machine.txt b/Documentation/sh/new-machine.rst
+> similarity index 79%
+> rename from Documentation/sh/new-machine.txt
+> rename to Documentation/sh/new-machine.rst
+> index e0961a66130b..b16c33342642 100644
+> --- a/Documentation/sh/new-machine.txt
+> +++ b/Documentation/sh/new-machine.rst
+> @@ -1,8 +1,8 @@
+> +================================
+> +Adding a new board to LinuxSH
+> +================================
+> 
+> -                Adding a new board to LinuxSH
+> -               ================================
+> -
+> -               Paul Mundt <lethal@linux-sh.org>
+> +Paul Mundt <lethal@linux-sh.org>
+> 
+>  This document attempts to outline what steps are necessary to add support
+>  for new boards to the LinuxSH port under the new 2.5 and 2.6 kernels. This
+> @@ -19,65 +19,67 @@ include/asm-sh/. For the new kernel, things are broken out by board type,
+>  companion chip type, and CPU type. Looking at a tree view of this directory
+>  hierarchy looks like the following:
+> 
+> -Board-specific code:
+> -
+> -.
+> -|-- arch
+> -|   `-- sh
+> -|       `-- boards
+> -|           |-- adx
+> -|           |   `-- board-specific files
+> -|           |-- bigsur
+> -|           |   `-- board-specific files
+> -|           |
+> -|           ... more boards here ...
+> -|
+> -`-- include
+> -    `-- asm-sh
+> -        |-- adx
+> -        |   `-- board-specific headers
+> -        |-- bigsur
+> -        |   `-- board-specific headers
+> -        |
+> -	.. more boards here ...
+> -
+> -Next, for companion chips:
+> -.
+> -`-- arch
+> -    `-- sh
+> -        `-- cchips
+> -            `-- hd6446x
+> -                `-- hd64461
+> -                    `-- cchip-specific files
+> +Board-specific code::
+> +
+> + .
+> + |-- arch
+> + |   `-- sh
+> + |       `-- boards
+> + |           |-- adx
+> + |           |   `-- board-specific files
+> + |           |-- bigsur
+> + |           |   `-- board-specific files
+> + |           |
+> + |           ... more boards here ...
+> + |
+> + `-- include
+> +     `-- asm-sh
+> +         |-- adx
+> +         |   `-- board-specific headers
+> +         |-- bigsur
+> +         |   `-- board-specific headers
+> +         |
+> +       	 .. more boards here ...
+> +
+> +Next, for companion chips::
+> +
+> + .
+> + `-- arch
+> +     `-- sh
+> +         `-- cchips
+> +             `-- hd6446x
+> +                 `-- hd64461
+> +                     `-- cchip-specific files
+> 
+>  ... and so on. Headers for the companion chips are treated the same way as
+>  board-specific headers. Thus, include/asm-sh/hd64461 is home to all of the
+>  hd64461-specific headers.
+> 
+> -Finally, CPU family support is also abstracted:
+> -.
+> -|-- arch
+> -|   `-- sh
+> -|       |-- kernel
+> -|       |   `-- cpu
+> -|       |       |-- sh2
+> -|       |       |   `-- SH-2 generic files
+> -|       |       |-- sh3
+> -|       |       |   `-- SH-3 generic files
+> -|       |       `-- sh4
+> -|       |           `-- SH-4 generic files
+> -|       `-- mm
+> -|           `-- This is also broken out per CPU family, so each family can
+> -|               have their own set of cache/tlb functions.
+> -|
+> -`-- include
+> -    `-- asm-sh
+> -        |-- cpu-sh2
+> -        |   `-- SH-2 specific headers
+> -        |-- cpu-sh3
+> -        |   `-- SH-3 specific headers
+> -        `-- cpu-sh4
+> -            `-- SH-4 specific headers
+> +Finally, CPU family support is also abstracted::
+> +
+> + .
+> + |-- arch
+> + |   `-- sh
+> + |       |-- kernel
+> + |       |   `-- cpu
+> + |       |       |-- sh2
+> + |       |       |   `-- SH-2 generic files
+> + |       |       |-- sh3
+> + |       |       |   `-- SH-3 generic files
+> + |       |       `-- sh4
+> + |       |           `-- SH-4 generic files
+> + |       `-- mm
+> + |           `-- This is also broken out per CPU family, so each family can
+> + |               have their own set of cache/tlb functions.
+> + |
+> + `-- include
+> +     `-- asm-sh
+> +         |-- cpu-sh2
+> +         |   `-- SH-2 specific headers
+> +         |-- cpu-sh3
+> +         |   `-- SH-3 specific headers
+> +         `-- cpu-sh4
+> +             `-- SH-4 specific headers
+> 
+>  It should be noted that CPU subtypes are _not_ abstracted. Thus, these still
+>  need to be dealt with by the CPU family specific code.
+> @@ -112,18 +114,20 @@ setup code, we're required at the very least to provide definitions for
+>  get_system_type() and platform_setup(). For our imaginary board, this
+>  might look something like:
+> 
+> -/*
+> - * arch/sh/boards/vapor/setup.c - Setup code for imaginary board
+> - */
+> -#include <linux/init.h>
+> +.. code-block:: c
+> +
+> +    /*
+> +     * arch/sh/boards/vapor/setup.c - Setup code for imaginary board
+> +     */
+> +    #include <linux/init.h>
+> 
+> -const char *get_system_type(void)
+> -{
+> -	return "FooTech Vaporboard";
+> -}
+> +    const char *get_system_type(void)
+> +    {
+> +        return "FooTech Vaporboard";
+> +    }
+> 
+> -int __init platform_setup(void)
+> -{
+> +    int __init platform_setup(void)
+> +    {
+>    	/*
+>  	 * If our hardware actually existed, we would do real
+>  	 * setup here. Though it's also sane to leave this empty
+> @@ -136,7 +140,8 @@ int __init platform_setup(void)
+>  	/* And whatever else ... */
+> 
+>  	return 0;
+> -}
+> +    }
+> +
+> 
+>  Our new imaginary board will also have to tie into the machvec in order for it
+>  to be of any use.
+> @@ -172,16 +177,17 @@ sufficient.
+>     vector.
+> 
+>     Note that these prototypes are generated automatically by setting
+> -   __IO_PREFIX to something sensible. A typical example would be:
+> +   __IO_PREFIX to something sensible. A typical example would be::
+> 
+>  	#define __IO_PREFIX vapor
+>     	#include <asm/io_generic.h>
+> 
+> +
+>     somewhere in the board-specific header. Any boards being ported that still
+>     have a legacy io.h should remove it entirely and switch to the new model.
+> 
+>   - Add machine vector definitions to the board's setup.c. At a bare minimum,
+> -   this must be defined as something like:
+> +   this must be defined as something like::
+> 
+>  	struct sh_machine_vector mv_vapor __initmv = {
+>  		.mv_name = "vapor",
+> @@ -202,11 +208,11 @@ Large portions of the build system are now entirely dynamic, and merely
+>  require the proper entry here and there in order to get things done.
+> 
+>  The first thing to do is to add an entry to arch/sh/Kconfig, under the
+> -"System type" menu:
+> +"System type" menu::
+> 
+> -config SH_VAPOR
+> -	bool "Vapor"
+> -	help
+> + config SH_VAPOR
+> +	 bool "Vapor"
+> +	 help
+>  	  select Vapor if configuring for a FooTech Vaporboard.
+> 
+>  next, this has to be added into arch/sh/Makefile. All boards require a
+> @@ -232,6 +238,8 @@ space restating it here. After this is done, you will be able to use
+>  implicit checks for your board if you need this somewhere throughout the
+>  common code, such as:
+> 
+> +::
+> +
+>  	/* Make sure we're on the FooTech Vaporboard */
+>  	if (!mach_is_vapor())
+>  		return -ENODEV;
+> @@ -253,12 +261,13 @@ build target, and it will be implicitly listed as such in the help text.
+>  Looking at the 'make help' output, you should now see something like:
+> 
+>  Architecture specific targets (sh):
+> -  zImage                  - Compressed kernel image (arch/sh/boot/zImage)
+> -  adx_defconfig           - Build for adx
+> -  cqreek_defconfig        - Build for cqreek
+> -  dreamcast_defconfig     - Build for dreamcast
+> -...
+> -  vapor_defconfig         - Build for vapor
+> +
+> + - zImage                  - Compressed kernel image (arch/sh/boot/zImage)
+> + - adx_defconfig           - Build for adx
+> + - cqreek_defconfig        - Build for cqreek
+> + - dreamcast_defconfig     - Build for dreamcast
+> + - ...
+> + - vapor_defconfig         - Build for vapor
+> 
+>  which then allows you to do:
+> 
+> diff --git a/Documentation/sh/register-banks.txt b/Documentation/sh/register-banks.rst
+> similarity index 90%
+> rename from Documentation/sh/register-banks.txt
+> rename to Documentation/sh/register-banks.rst
+> index a6719f2f6594..acccfaf80355 100644
+> --- a/Documentation/sh/register-banks.txt
+> +++ b/Documentation/sh/register-banks.rst
+> @@ -1,8 +1,9 @@
+> -	Notes on register bank usage in the kernel
+> -	==========================================
+> +==========================================
+> +Notes on register bank usage in the kernel
+> +==========================================
+> 
+>  Introduction
+> -------------
+> +============
+> 
+>  The SH-3 and SH-4 CPU families traditionally include a single partial register
+>  bank (selected by SR.RB, only r0 ... r7 are banked), whereas other families
+> @@ -30,4 +31,3 @@ Presently the kernel uses several of these registers.
+>  		- The SR.IMASK interrupt handler makes use of this to set the
+>  		  interrupt priority level (used by local_irq_enable())
+>  	- r7_bank (current)
+> -
+> --
+> 2.17.1
+> 
+
+
+
+Thanks,
+Mauro
