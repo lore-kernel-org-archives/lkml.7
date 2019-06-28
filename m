@@ -2,75 +2,135 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCBCC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DA3C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46CDE20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B887A20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:48:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N9FmcEUf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfF1Gsd convert rfc822-to-8bit (ORCPT
+        id S1727257AbfF1Gss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 02:48:33 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:36596 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfF1Gsc (ORCPT
+        Fri, 28 Jun 2019 02:48:48 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:55720 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbfF1Gss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 02:48:32 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id CEDF46089331;
-        Fri, 28 Jun 2019 08:48:28 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 3lpGg--qV6w5; Fri, 28 Jun 2019 08:48:28 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 817816089332;
-        Fri, 28 Jun 2019 08:48:28 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id vZ0P4sgDZbfv; Fri, 28 Jun 2019 08:48:28 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 46B946089331;
-        Fri, 28 Jun 2019 08:48:28 +0200 (CEST)
-Date:   Fri, 28 Jun 2019 08:48:28 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     chengzhihao1@huawei.com
-Cc:     david oberhollenzer <david.oberhollenzer@sigma-star.at>,
-        david <david@sigma-star.at>,
-        boris brezillon <boris.brezillon@free-electrons.com>,
-        yi zhang <yi.zhang@huawei.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <455367016.19242.1561704508169.JavaMail.zimbra@nod.at>
-In-Reply-To: <1561698143-5027-1-git-send-email-chengzhihao1@huawei.com>
-References: <1561698143-5027-1-git-send-email-chengzhihao1@huawei.com>
-Subject: Re: [PATCH RFC] mtd: ubi: Add fastmap sysfs attribute
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
-Thread-Topic: Add fastmap sysfs attribute
-Thread-Index: LGtMcgAbFQrQ8WTgV4gLe2Q2i5xyZw==
+        Fri, 28 Jun 2019 02:48:48 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190628064845epoutp04ab3f891d2a3bb2bc07b33b3e360f9be5~sSf3YY9EF0801108011epoutp04I
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 06:48:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190628064845epoutp04ab3f891d2a3bb2bc07b33b3e360f9be5~sSf3YY9EF0801108011epoutp04I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561704525;
+        bh=vNzSpyCeiJD8tnYdLvYVnJzOtUmTDCs0azG1DiRFc54=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=N9FmcEUfMCCZUPPme6SNazaV8BEEvOrV7QCJsuY3Jo7oVebnE7hye7EN59A9YLKKQ
+         sGbzsNWE6YhWvXr3+7EtoEP1W2i0xyLwB+k20lCfqnTttR96KzOGjklzX+ivrOqUx1
+         9ZOdpN+5lrhXAHtGaAx2bhXSpeoOONElwiY/PQg8=
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.158]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190628064842epcas1p36f9028705a15def52fd754ed95356758~sSf05fDJ82626126261epcas1p3y;
+        Fri, 28 Jun 2019 06:48:42 +0000 (GMT)
+X-AuditID: b6c32a37-f31ff7000000102f-8f-5d15b84aba39
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E1.4A.04143.A48B51D5; Fri, 28 Jun 2019 15:48:42 +0900 (KST)
+Mime-Version: 1.0
+Subject: RE: [PATCH v3 02/22] PM / devfreq: tegra30: Keep interrupt disabled
+ while governor is stopped
+Reply-To: myungjoo.ham@samsung.com
+From:   MyungJoo Ham <myungjoo.ham@samsung.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+CC:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <20190627211115.21138-3-digetx@gmail.com>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190628064842epcms1p37e66e5fa52885ef7461b439bd336e60f@epcms1p3>
+Date:   Fri, 28 Jun 2019 15:48:42 +0900
+X-CMS-MailID: 20190628064842epcms1p37e66e5fa52885ef7461b439bd336e60f
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+CMS-TYPE: 101P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMJsWRmVeSWpSXmKPExsWy7bCmnq7XDtFYg54GTYuXhzQtrn95zmqx
+        +uNjRouWWYtYLM42vWG3uLxrDpvF594jjBadX2axWfzcNY/Fom/tJTYHLo8dd5cweuycdZfd
+        o7f5HZtH35ZVjB6fN8kFsEZl22SkJqakFimk5iXnp2TmpdsqeQfHO8ebmhkY6hpaWpgrKeQl
+        5qbaKrn4BOi6ZeYAHaWkUJaYUwoUCkgsLlbSt7Mpyi8tSVXIyC8usVVKLUjJKbAs0CtOzC0u
+        zUvXS87PtTI0MDAyBSpMyM748vACe8EPjoqp3++wNDDuZ+9i5OCQEDCRODibrYuRi0NIYAej
+        xKl9TWBxXgFBib87hLsYOTmEBTIk7v+9zAxiCwkoSTTc3McMEdeX6HiwjRHEZhPQldi64S4L
+        yBwRgd+MEnt3PmYFcZgFdjJKvNtynx2kSkKAV2JG+1MWCFtaYvvyrWDdnAJmEnfOXGGCiItK
+        3Fz9lh3Gfn9sPiOELSLReu8sM4QtKPHg525GmDkzpvyHmlktcW36YnaQxRICLYwSvaunQBXp
+        S5yZe5INxOYV8JWYcnY12DIWAVWJC/s2s0HUuEh8bv0GFmcWkJfY/nYOMygkmAU0Jdbv0oco
+        UZTY+XsuI8wvDRt/s6OzmQX4JN597WGFie+Y9wTqLzWJQ7uXQNXLSJyevpB5AqPSLERYz0Ky
+        eBbC4gWMzKsYxVILinPTU4sNC4yRY3cTIziBapnvYNxwzucQowAHoxIPr8JOkVgh1sSy4src
+        Q4wSHMxKIryS54BCvCmJlVWpRfnxRaU5qcWHGE2B/p/ILCWanA9M7nkl8YamRsbGxhYmhmam
+        hoZK4rzx3DdjhATSE0tSs1NTC1KLYPqYODilGhjjY36E6kjyTeL1EnyYxrdaQm8mR31Dyb1j
+        cSeOOIjscVBxYv0yu2HHl1c3dy14bvSXgX1pz53GWWKOvReeumS+muUkl+D+57Cm0Yv4Rx+d
+        +hedd3Yu25i5Kda61eHrtp6aAwnv2NbHaFu3LNitHL/13TfBxdXLlfJ5A69u7/lWsGv38o47
+        fR1KLMUZiYZazEXFiQAgylkstgMAAA==
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190627211230epcas5p2504c225e67a823a586768a2749248b72
+References: <20190627211115.21138-3-digetx@gmail.com>
+        <20190627211115.21138-1-digetx@gmail.com>
+        <CGME20190627211230epcas5p2504c225e67a823a586768a2749248b72@epcms1p3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zhihao Cheng,
+>There is no real need to keep interrupt always-enabled, will be nicer
+>to keep it disabled while governor is inactive.
+>
+>Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+>Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>---
+> drivers/devfreq/tegra30-devfreq.c | 43 ++++++++++++++++---------------
+> 1 file changed, 22 insertions(+), 21 deletions(-)
+>
+>diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+>index a27300f40b0b..5e2b133babdd 100644
+>--- a/drivers/devfreq/tegra30-devfreq.c
+>+++ b/drivers/devfreq/tegra30-devfreq.c
+[]
+>@@ -416,8 +417,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
+> {
+> 	unsigned int i;
+> 
+>-	disable_irq(tegra->irq);
+>-
+> 	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
+> 		      ACTMON_GLB_PERIOD_CTRL);
+> 
 
------ Ursprüngliche Mail -----
-> +	else if (attr == &dev_fastmap)
-> +		ret = sprintf(buf, "%d\n", ubi->fm ? 1 : 0);
-> 	else
+I think this has nothing to do with
+"keep it disabled while governor is inactive."
 
-I fear this is not correct. ubi->fm is an internal data structure
-of UBI.
-UBI sets it to NULL while it updates fastmap, and updates it later.
-So userspace would see false negatives.
+And this looks dangerous because it disables the safety measure
+of disabling interrupt while you touch some looking-critical registers.
+Anyway, as I do not know the internals of Tegra SoC, I cannot sure.
 
-Thanks,
-//richard
+Cheers,
+MyungJoo
+
+
