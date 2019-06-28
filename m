@@ -2,89 +2,101 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81146C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE17C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DCA21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA13421773
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfF1Pqb (ORCPT
+        id S1726941AbfF1PrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:46:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57660 "EHLO mail.kernel.org"
+        Fri, 28 Jun 2019 11:47:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51742 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfF1Pqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:46:30 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726686AbfF1PrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:47:02 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE2DA2063F;
-        Fri, 28 Jun 2019 15:46:28 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 11:46:27 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        mhiramat@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH] ftrace: Remove possible deadlock between
- register_kprobe() and ftrace_run_update_code()
-Message-ID: <20190628114627.411af7c2@gandalf.local.home>
-In-Reply-To: <20190628095424.1be42e21@gandalf.local.home>
-References: <20190627081334.12793-1-pmladek@suse.com>
-        <alpine.LSU.2.21.1906280928410.17146@pobox.suse.cz>
-        <20190628105232.6arwis5u33li6twr@pathway.suse.cz>
-        <20190628095424.1be42e21@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 56FF081F12;
+        Fri, 28 Jun 2019 15:47:02 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5AF025DD6E;
+        Fri, 28 Jun 2019 15:46:59 +0000 (UTC)
+Subject: [PATCH 0/6] fsinfo: Add mount topology query [ver #15]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
+        christian@brauner.io, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 28 Jun 2019 16:46:58 +0100
+Message-ID: <156173681842.14728.9331700785061885270.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 28 Jun 2019 15:47:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019 09:54:24 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Fri, 28 Jun 2019 12:52:32 +0200
-> Petr Mladek <pmladek@suse.com> wrote:
-> 
-> > On Fri 2019-06-28 09:32:03, Miroslav Benes wrote:  
-> > > On Thu, 27 Jun 2019, Petr Mladek wrote:    
-> > > > @@ -2611,12 +2610,10 @@ static void ftrace_run_update_code(int command)
-> > > >  {
-> > > >  	int ret;
-> > > >  
-> > > > -	mutex_lock(&text_mutex);
-> > > > -
-> > > >  	ret = ftrace_arch_code_modify_prepare();
-> > > >  	FTRACE_WARN_ON(ret);
-> > > >  	if (ret)
-> > > > -		goto out_unlock;
-> > > > +		return ret;    
-> > > 
-> > > Should be just "return;", because the function is "static void".    
-> > 
-> > Grr, I usually check compiler warnings but I evidently skipped it
-> > in this case :-(
-> > 
-> > Steven, should I send a fixed/folloup patch or will you just
-> > fix it when pushing?
-> >   
-> 
-> I'll fix it up.
+Here's a set of patches that builds upon the previously posted fsinfo()
+interface to:
 
-Also note, this would have been caught with my test suite, as it checks
-for any new warnings.
+ (a) Make it possible to invoke a query based on a mount ID rather than a
+     path.  This is done by setting AT_FSINFO_MOUNTID_PATH and pointing the
+     pathname argument to the mount ID as a string.
 
--- Steve
+     A pathname is not a unique handle into the mount topology tree.  It's
+     possible for there to be multiple overlying mounts at any particular
+     point in the tree, and only the topmost can be directly accessed (the
+     bottom might be inferrable from the parent).
 
+     Usage of the mount ID permits all mount objects to be queried.  It
+     would be possible to restrict the query based on the method used to
+     address the object, though I haven't done this for now.
+
+ (b) Provide a change ID for each mount object that is incremented each
+     time a change is applied to that mount object.
+
+ (c) Allow the mount topology to be queried.  The mount topology
+     information returned is sprinkled with change IDs to make it easier to
+     check for changes during multiple queries.  A future notification
+     mechanism will also help with this.
+
+ (d) Provide a system-unique superblock identifier that can be used to
+     check to see if a mount object references the same superblock as it
+     used to or as another mount object without relying on device numbers -
+     which might not be seen to change over an unmount-mount combo.
+
+A sample is also provided that allows the mount topology tree at a point to
+be listed.
+
+The patches can be found here also:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+
+on branch:
+
+	fsinfo-mount
+
+[!] Note that this depends on the fsinfo branch.
+
+
+===================
+SIGNIFICANT CHANGES
+===================
+
+ ver #15:
+
+ (*) Split from the fsinfo-core branch.
+
+ (*) Rename notify_counter to change_counter as there's no notification
+     stuff here (that's in separate branches).
