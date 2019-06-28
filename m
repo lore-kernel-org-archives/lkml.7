@@ -2,168 +2,150 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2CDC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2B3C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D67D92070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:25:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="s6xZq0ze"
+	by mail.kernel.org (Postfix) with ESMTP id AF8F0214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561699549;
+	bh=aMZfEfbPOVHaF3ps0biSxY9D0QevPh/SQ9F38VyxOOs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k4anbrYv/sYxkFP2diYbyYeVf1emMUzgT4jsWPzNhjMcgNU7vHx342BSMmI6T3kNt
+	 X8BHttUp8V0UqHjom8c+lZlR4VP3dE3n5LcXQgydnZPkAYUyeOgtQfKMhYUngdmPyT
+	 92QD5XLrtPCeIhIh7xmeDpnT24LNc5Ow2QRizBWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfF1FZf (ORCPT
+        id S1726926AbfF1FZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 01:25:35 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38481 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfF1FZf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 01:25:35 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5S5P5Ei616394
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 27 Jun 2019 22:25:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5S5P5Ei616394
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561699507;
-        bh=dN3aAWE0wvlajftEFy0qc+z/I60HJK0GsN08cShALp8=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=s6xZq0zeH05eyON0Bt7lAVBEau1hR2QL7EIHaXehqlq7LfL5XKtt0lAd9cf03lxML
-         eAMCYn/1j7wFRn0KcmqMOwW3ANYNcsTnNduxr1YJu0lzOu5vRD71q1FTM93dTyzO7+
-         CbrpoEznBDSsZQIj9P37k6WYKTUTSB6zLrF5OSllJ6v51Wwp8s/Szcus38Tpn1ObyO
-         WMIArSoPBvdrhZTLRufZC1wQyBKSdsb2PVaWWLhyFbasw4s8xq8qoICocOqk5W/Sqk
-         thq2Fdyu+Ep444hgNGeFTww3kyOHJyVwba5AccmJZRo9AWltSMT+6JDSuZ3XKUga/u
-         umUfdHHIbluqg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5S5P4qj616385;
-        Thu, 27 Jun 2019 22:25:04 -0700
-Date:   Thu, 27 Jun 2019 22:25:04 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Ricardo Neri <tipbot@zytor.com>
-Message-ID: <tip-1e03bff3600101bd9158d005e4313132e55bdec8@git.kernel.org>
-Cc:     hdegoede@redhat.com, tony.luck@intel.com,
-        andriy.shevchenko@intel.com, andi.kleen@intel.com,
-        alan.cox@intel.com, ricardo.neri-calderon@linux.intel.com,
-        gregkh@linuxfoundation.org, mohammad.etemadi@intel.com,
-        ak@linux.intel.com, mail@jordan-borgner.de, mingo@kernel.org,
-        hpa@zytor.com, andriy.shevchenko@linux.intel.com, bp@suse.de,
-        ravi.v.shankar@intel.com, tglx@linutronix.de,
-        rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org,
-        ricardo.neri@intel.com, pfeiner@google.com
-Reply-To: mail@jordan-borgner.de, ak@linux.intel.com,
-          mohammad.etemadi@intel.com, gregkh@linuxfoundation.org,
-          ricardo.neri-calderon@linux.intel.com, alan.cox@intel.com,
-          andi.kleen@intel.com, andriy.shevchenko@intel.com,
-          tony.luck@intel.com, hdegoede@redhat.com, ricardo.neri@intel.com,
-          pfeiner@google.com, linux-kernel@vger.kernel.org,
-          rafael.j.wysocki@intel.com, tglx@linutronix.de, bp@suse.de,
-          ravi.v.shankar@intel.com, hpa@zytor.com,
-          andriy.shevchenko@linux.intel.com, mingo@kernel.org
-In-Reply-To: <1561689337-19390-2-git-send-email-ricardo.neri-calderon@linux.intel.com>
-References: <1561689337-19390-2-git-send-email-ricardo.neri-calderon@linux.intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cpu] x86/cpu/intel: Clear cache self-snoop capability in
- CPUs with known errata
-Git-Commit-ID: 1e03bff3600101bd9158d005e4313132e55bdec8
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 28 Jun 2019 01:25:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726240AbfF1FZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 01:25:48 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D04F72133F;
+        Fri, 28 Jun 2019 05:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561699546;
+        bh=aMZfEfbPOVHaF3ps0biSxY9D0QevPh/SQ9F38VyxOOs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mHR7MZYSCuKftGCC0a4GEMifx1yqY1mqy6gelDQX21z2J9q+qOUS3XH3w7FJiOQox
+         rFofg1nwy5fMVogvoBfoe5h6fCX6BNIhcOjt+ntd9o7GwXB9pdr3IKKYhDcBprFs8s
+         XZ+4N1B18kQ5aVsT+q9V2tTe/fy2D9I93+AouszQ=
+Date:   Thu, 27 Jun 2019 22:25:44 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     keerthy <j-keerthy@ti.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        t-kristo@ti.com, linux-crypto@vger.kernel.org, nm@ti.com
+Subject: Re: [RESEND PATCH 00/10] crypto: k3: Add sa2ul driver
+Message-ID: <20190628052544.GH673@sol.localdomain>
+References: <20190628042745.28455-1-j-keerthy@ti.com>
+ <20190628045318.GC673@sol.localdomain>
+ <7ca64e49-6e1f-c74e-4d8e-0e08607fe5c5@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7ca64e49-6e1f-c74e-4d8e-0e08607fe5c5@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1e03bff3600101bd9158d005e4313132e55bdec8
-Gitweb:     https://git.kernel.org/tip/1e03bff3600101bd9158d005e4313132e55bdec8
-Author:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-AuthorDate: Thu, 27 Jun 2019 19:35:36 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 28 Jun 2019 07:20:48 +0200
+On Fri, Jun 28, 2019 at 10:44:26AM +0530, keerthy wrote:
+> 
+> 
+> On 6/28/2019 10:23 AM, Eric Biggers wrote:
+> > Hi Keerthy,
+> > 
+> > On Fri, Jun 28, 2019 at 09:57:35AM +0530, Keerthy wrote:
+> > > The series adds Crypto hardware accelerator support for SA2UL.
+> > > SA2UL stands for security accelerator ultra lite.
+> > > 
+> > > The Security Accelerator (SA2_UL) subsystem provides hardware
+> > > cryptographic acceleration for the following use cases:
+> > > • Encryption and authentication for secure boot
+> > > • Encryption and authentication of content in applications
+> > >    requiring DRM (digital rights management) and
+> > >    content/asset protection
+> > > The device includes one instantiation of SA2_UL named SA2_UL0
+> > > 
+> > > SA2UL needs on tx channel and a pair of rx dma channels.
+> > > 
+> > > This series has dependency on UDMA series. Hence is based on top of:
+> > > 
+> > > https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105
+> > > 
+> > > The above series adds couple of dmaengine APIs that are used
+> > > by the sa2ul driver. Hence there is a hard dependency on the
+> > > above series.
+> > > 
+> > > Resending with linux-crypto list in Cc.
+> > > 
+> > > Keerthy (10):
+> > >    dt-bindings: crypto: k3: Add sa2ul bindings documentation
+> > >    crypto: sa2ul: Add crypto driver
+> > >    crypto: sa2ul: Add AES ECB Mode support
+> > >    crypto: sa2ul: Add aead support for hmac(sha1)cbc(aes) algorithm
+> > >    crypto: sha256_generic: Export the Transform function
+> > >    crypto: sa2ul: Add hmac(sha256)cbc(aes) AEAD Algo support
+> > >    crypto: sa2ul: Add hmac(sha1) HMAC algorithm support
+> > >    crypto: sa2ul: Add hmac(sha256) HMAC algorithm support
+> > >    sa2ul: Add 3DES ECB & CBC Mode support
+> > >    arm64: dts: k3-am6: Add crypto accelarator node
+> > > 
+> > >   .../devicetree/bindings/crypto/sa2ul.txt      |   47 +
+> > >   arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |   33 +
+> > >   crypto/sha256_generic.c                       |    3 +-
+> > >   drivers/crypto/Kconfig                        |   17 +
+> > >   drivers/crypto/Makefile                       |    1 +
+> > >   drivers/crypto/sa2ul.c                        | 2232 +++++++++++++++++
+> > >   drivers/crypto/sa2ul.h                        |  384 +++
+> > >   include/crypto/sha.h                          |    1 +
+> > >   8 files changed, 2717 insertions(+), 1 deletion(-)
+> > >   create mode 100644 Documentation/devicetree/bindings/crypto/sa2ul.txt
+> > >   create mode 100644 drivers/crypto/sa2ul.c
+> > >   create mode 100644 drivers/crypto/sa2ul.h
+> > 
+> > Did you run the crypto self-tests on this driver?  i.e. boot a kernel with
+> > 
+> > 	# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+> > 	CONFIG_DEBUG_KERNEL=y
+> > 	CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
+> > 
+> > What are the results?
+> 
+> Eric,
+> 
+> Thanks for your response. I did try with that. All test cases
+> were passing on 4.19 kernel before the testmgr revamp.
+> 
 
-x86/cpu/intel: Clear cache self-snoop capability in CPUs with known errata
+That's surprising, since your driver doesn't implement update() for hashing, so
+it should have been failing at least the HMAC tests.  Are you sure you really
+ran the tests?
 
-Processors which have self-snooping capability can handle conflicting
-memory type across CPUs by snooping its own cache. However, there exists
-CPU models in which having conflicting memory types still leads to
-unpredictable behavior, machine check errors, or hangs.
+> Currently few of the test cases do fail. For ex: Appending
+> the last ivlen bytes of cipher text as the IV.
 
-Clear this feature on affected CPUs to prevent its use.
+Well, these need to be fixed.
 
-Suggested-by: Alan Cox <alan.cox@intel.com>
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andi Kleen <andi.kleen@intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jordan Borgner <mail@jordan-borgner.de>
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Cc: Mohammad Etemadi <mohammad.etemadi@intel.com>
-Cc: Ricardo Neri <ricardo.neri@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Peter Feiner <pfeiner@google.com>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Link: https://lkml.kernel.org/r/1561689337-19390-2-git-send-email-ricardo.neri-calderon@linux.intel.com
+> 
+> > 
+> > Also, this patchset does not compile for me.
+> 
+> This has dependency on UDMA series:
+> https://patchwork.kernel.org/cover/10930969/
 
----
- arch/x86/kernel/cpu/intel.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+I had that applied.
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index f17c1a714779..8d6d92ebeb54 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -66,6 +66,32 @@ void check_mpx_erratum(struct cpuinfo_x86 *c)
- 	}
- }
- 
-+/*
-+ * Processors which have self-snooping capability can handle conflicting
-+ * memory type across CPUs by snooping its own cache. However, there exists
-+ * CPU models in which having conflicting memory types still leads to
-+ * unpredictable behavior, machine check errors, or hangs. Clear this
-+ * feature to prevent its use on machines with known erratas.
-+ */
-+static void check_memory_type_self_snoop_errata(struct cpuinfo_x86 *c)
-+{
-+	switch (c->x86_model) {
-+	case INTEL_FAM6_CORE_YONAH:
-+	case INTEL_FAM6_CORE2_MEROM:
-+	case INTEL_FAM6_CORE2_MEROM_L:
-+	case INTEL_FAM6_CORE2_PENRYN:
-+	case INTEL_FAM6_CORE2_DUNNINGTON:
-+	case INTEL_FAM6_NEHALEM:
-+	case INTEL_FAM6_NEHALEM_G:
-+	case INTEL_FAM6_NEHALEM_EP:
-+	case INTEL_FAM6_NEHALEM_EX:
-+	case INTEL_FAM6_WESTMERE:
-+	case INTEL_FAM6_WESTMERE_EP:
-+	case INTEL_FAM6_SANDYBRIDGE:
-+		setup_clear_cpu_cap(X86_FEATURE_SELFSNOOP);
-+	}
-+}
-+
- static bool ring3mwait_disabled __read_mostly;
- 
- static int __init ring3mwait_disable(char *__unused)
-@@ -304,6 +330,7 @@ static void early_init_intel(struct cpuinfo_x86 *c)
- 	}
- 
- 	check_mpx_erratum(c);
-+	check_memory_type_self_snoop_errata(c);
- 
- 	/*
- 	 * Get the number of SMT siblings early from the extended topology
+- Eric
