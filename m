@@ -2,150 +2,171 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9EEC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FA2C5B576
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFF5920B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0EE2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:46:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="Bf889EkY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfF1Aqy (ORCPT
+        id S1726739AbfF1Aq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 20:46:54 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:50675 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726595AbfF1Aqx (ORCPT
+        Thu, 27 Jun 2019 20:46:56 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:35410 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfF1Aqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 20:46:53 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 8914843CE43;
-        Fri, 28 Jun 2019 10:46:49 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hgf1K-0002iM-3I; Fri, 28 Jun 2019 10:45:42 +1000
-Date:   Fri, 28 Jun 2019 10:45:42 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/12] iomap: move the xfs writeback code to iomap.c
-Message-ID: <20190628004542.GJ7777@dread.disaster.area>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-12-hch@lst.de>
- <20190624234304.GD7777@dread.disaster.area>
- <20190625101020.GI1462@lst.de>
+        Thu, 27 Jun 2019 20:46:54 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id D2A782DC0032;
+        Thu, 27 Jun 2019 20:46:49 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1561682810;
+        bh=UhW8aV9JrdJrV6DY1cn+26607uxAHeKKSDkYSCJIz2M=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Bf889EkYMaeNluUjhKxTar/zrDWtyG6z4MPIgQbMM1hlBS3knrgi5bTM8SXlXknuf
+         V6ubG90eRxu9h07jXXMnZJorUJrKXQjE2E7s5j0FewNgumQlepxJb5NZVPsdPc+AOA
+         9Pj2jJffN6tZ4FlLq1IGlIAvGgktDs1tW84J9ZVKmlur+850hOTKPGNjBgFOa7NpEd
+         lrAoZFoig0zuD0+uai9JHtm00vwzl83aiAWpMyvoYoymkm1IZyq3oZ9lu4z9Xb5lNz
+         inOieRfjfotmRvlxvbPgmQmAPaZX9QNe/uLjKV0MhXwmnAJwy/f217xz6G1vxiPcy/
+         7ItzyL/DSdZJe0gofc6J9n/BFBb18P8NglNk+B55nwdn4KzgHIEA3sHoG3wynJ53KZ
+         94cqC2Ani2ar+hIbnXdcBpKrat9bJUCpkzwdVO8v95czBy26uqFRSa8tISVw+Q934m
+         ac4o6vS2yJTFf9Quc1UYkXXd1bEJ/5yBu+vMghCf1s8RsZQaLL2eXRJudkZWP/mMI1
+         BzQHnbBrxRQivmnKZc03+cxY5jiyTcUwQejTVSo5W2VayozVUy23nsKdIi+XgEgjbn
+         xDx1+ZdkXwzOCfEdJ7Nrd7eAutlmBMC08PlSwG2sS0aEN9fr1wqFnHEUvd6LcQb9m5
+         j7IIohidJfKiyX+lq2oOy0tU=
+Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x5S0kS8t045453
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 28 Jun 2019 10:46:44 +1000 (AEST)
+        (envelope-from alastair@d-silva.org)
+Message-ID: <833b9675bc363342827cb8f7c76ebb911f7f960d.camel@d-silva.org>
+Subject: Re: [PATCH v2 1/3] mm: Trigger bug on if a section is not found in
+ __section_nr
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Date:   Fri, 28 Jun 2019 10:46:28 +1000
+In-Reply-To: <20190627080724.GK17798@dhcp22.suse.cz>
+References: <20190626061124.16013-1-alastair@au1.ibm.com>
+         <20190626061124.16013-2-alastair@au1.ibm.com>
+         <20190626062113.GF17798@dhcp22.suse.cz>
+         <d4af66721ea53ce7df2d45a567d17a30575672b2.camel@d-silva.org>
+         <20190626065751.GK17798@dhcp22.suse.cz>
+         <e66e43b1fdfbff94ab23a23c48aa6cbe210a3131.camel@d-silva.org>
+         <20190627080724.GK17798@dhcp22.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625101020.GI1462@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=c__QhW7x6gYDNGrBcwkA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Fri, 28 Jun 2019 10:46:45 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:10:20PM +0200, Christoph Hellwig wrote:
-> On Tue, Jun 25, 2019 at 09:43:04AM +1000, Dave Chinner wrote:
-> > I'm a little concerned this is going to limit what we can do
-> > with the XFS IO path because now we can't change this code without
-> > considering the direct impact on other filesystems. The QA burden of
-> > changing the XFS writeback code goes through the roof with this
-> > change (i.e. we can break multiple filesystems, not just XFS).
+On Thu, 2019-06-27 at 10:10 +0200, Michal Hocko wrote:
+> On Thu 27-06-19 10:50:57, Alastair D'Silva wrote:
+> > On Wed, 2019-06-26 at 08:57 +0200, Michal Hocko wrote:
+> > > On Wed 26-06-19 16:27:30, Alastair D'Silva wrote:
+> > > > On Wed, 2019-06-26 at 08:21 +0200, Michal Hocko wrote:
+> > > > > On Wed 26-06-19 16:11:21, Alastair D'Silva wrote:
+> > > > > > From: Alastair D'Silva <alastair@d-silva.org>
+> > > > > > 
+> > > > > > If a memory section comes in where the physical address is
+> > > > > > greater
+> > > > > > than
+> > > > > > that which is managed by the kernel, this function would
+> > > > > > not
+> > > > > > trigger the
+> > > > > > bug and instead return a bogus section number.
+> > > > > > 
+> > > > > > This patch tracks whether the section was actually found,
+> > > > > > and
+> > > > > > triggers the
+> > > > > > bug if not.
+> > > > > 
+> > > > > Why do we want/need that? In other words the changelog should
+> > > > > contina
+> > > > > WHY and WHAT. This one contains only the later one.
+> > > > >  
+> > > > 
+> > > > Thanks, I'll update the comment.
+> > > > 
+> > > > During driver development, I tried adding peristent memory at a
+> > > > memory
+> > > > address that exceeded the maximum permissable address for the
+> > > > platform.
+> > > > 
+> > > > This caused __section_nr to silently return bogus section
+> > > > numbers,
+> > > > rather than complaining.
+> > > 
+> > > OK, I see, but is an additional code worth it for the non-
+> > > development
+> > > case? I mean why should we be testing for something that
+> > > shouldn't
+> > > happen normally? Is it too easy to get things wrong or what is
+> > > the
+> > > underlying reason to change it now?
+> > > 
+> > 
+> > It took me a while to identify what the problem was - having the
+> > BUG_ON
+> > would have saved me a few hours.
+> > 
+> > I'm happy to just have the BUG_ON 'nd drop the new error return (I
+> > added that in response to Mike Rapoport's comment that the original
+> > patch would still return a bogus section number).
 > 
-> Going through the roof is a little exaggerated.
-
-You've already mentioned two new users you want to add. I don't even
-have zone capable hardware here to test one of the users you are
-indicating will use this code, and I suspect that very few people
-do.  That's a non-trivial increase in testing requirements for
-filesystem developers and distro QA departments who will want to
-change and/or validate this code path.
-
-> Yes, it will be more
-> testing overhead, but that is life in a world where we try to share
-> code rather than duplicating it, which is pretty much a general
-> kernel policy that has served us well.
-
-Yes, but we also need to acknowledge why we have re-implemented
-everything in fs/iomap.c - we haven't lifted code from XFS to do
-that - we've replaced existing generic code that didn't do what we
-needed and couldn't easily be modified to do what we needed because
-of all it's external dependencies.
-
-Indeed, integrating gfs2 into the existing generic iomap code has
-required quite a bit of munging and adding new code paths and so on.
-That's mostly been straight forward because it's just been adding
-flags and conditional code to the existing paths. The way we
-regularly rewrite sections of the XFS writeback code is a very
-different sort of modification, and one that will be much harder to
-do if we have to make those changes to generic code.
-
-i.e. shared code is good if it's simple and doesn't have a lot of
-external dependencies that restrict the type and scope of
-modifications that can be made easily. Shared code that is complex
-and comes from code that was tightly integrated with a specific
-subsystem architecture is going to carry all those architectural
-foilbles into the new "generic" code. Once it gets sufficient
-users it's going to end up with the same "we can't change this code"
-problems that we had with the existing IO path, and we'll go back to
-implementing our own writeback path....
-
-> > The writepage code is one of the areas that, historically speaking,
-> > has one of the highest rates of modification in XFS - we've
-> > substantially reworked this code from top to bottom 4 or 5 times in
-> > a bit over ten years, and each time it's been removing abstraction
-> > layers and getting the writeback code closer to the internal XFS
-> > extent mapping infrastructure.
+> Well, BUG_ON is about the worst way to handle an incorrect input. You
+> really do not want to put a production environment down just because
+> there is a bug in a driver, right? There are still many {VM_}BUG_ONs
+> in the tree and there is a general trend to get rid of many of them
+> rather than adding new ones.
 > 
-> I don't think we had all that much churn.
+> Now back to your patch. You are adding an error handling where we
+> simply
+> do not expect invalid data. This is often the case for the core
+> kernel
+> functionality because we do expect consumers of the code to do the
+> right
+> thing. E.g. __section_nr already takes a pointer to struct section
+> which
+> assumes that this core data structure is already valid. Adding a
+> check
+> here adds an unnecessary overhead so this doesn't really sound like a
+> good idea to me.
 
-We've had more churn over time to the writeback code than just about
-any other subsystem in XFS.
 
-It also represents a complete 180-degree flip on how we've been
-streamlining the writeback path in XFS over the past few years.
-We've been moving closer and closer to the generic writeback
-infrastructure as well as closer to the XFS inode extent tree.
+Thanks for providing a good explanation.
 
-I've been planning on taking it even closer to the extent tree to
-give us lockless, modification range coherent extent map caching in
-this path (e.g. write() can add new delalloc extents without
-invalidating cached writeback maps).  This patchset re-introduces
-the iomap abstraction over the bmbt - an abstraction we removed some
-time ago - and that makes these sorts of improvements much harder
-and more complex to implement....
+In this situation, since we return a bogus section number, we get
+crashes elsewhere in the kernel if the code rumbles on.
 
-IOWs, I'm not convinced that lifting this code out of XFS is the
-best long term plan for XFS or the iomap code here....
+Given that there is already a VM_BUG_ON in the code, how do you feel
+about broadening the scope from 'VM_BUG_ON(!root)' to 'VM_BUG_ON(!root
+|| (root_nr == NR_SECTION_ROOTS))'?
 
-> Yes, we've improved it a
-> lot, but much of that was in response to core changes, and pretty much
-> all of it benefits other users as well.  And the more users we have
-> for this infrastructure that more clout it has with core VM folks
-> when we have to push back odd design decisions.
-
-If we have to make stuff "generic" to be able to influence how other
-subsystems go about providing infrastructure to filesytsems, then
-our development community and processes are even more broken than I
-think they are. Developer communication and design influence are not
-problems we should be trying to fix with code.
-
-Cheers,
-
-Dave.
--Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva    
+Twitter: @EvilDeece
+blog: http://alastair.d-silva.org
+
+
