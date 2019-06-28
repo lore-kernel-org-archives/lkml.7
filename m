@@ -2,112 +2,102 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CB5C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DC4C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40262064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04182133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XFw2v0vU"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lU3jHS04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfF1HaM (ORCPT
+        id S1726601AbfF1H30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:30:12 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40444 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfF1HaK (ORCPT
+        Fri, 28 Jun 2019 03:29:26 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:47996 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726472AbfF1H3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:30:10 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w196so3572490oie.7;
-        Fri, 28 Jun 2019 00:30:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rPmAc12QB/dObXVaxjhcY1vUDZ7bOEFU41CSHx26tMU=;
-        b=XFw2v0vUl8eRU/wUY4labQGC/L3Xpzfs0JErb+60DwJAFeE71kvau/gD2oXLIvctoJ
-         wLnkCpZ0WoE3jJt2GlComIIxLpzIsjP4ZIBuQMdkwFGB2rj+ETsNSCuH+hYVOByQPSYz
-         Uwr8ogq5xo/jiXPV0GkONlcLvUzzWYxYN68s7Hzu767HeNiNOvBH+KH6lmUm80Q3Gdi8
-         BXtnkifah9yfJAWxdLth5dWVhb9CKWZqhaEMOU+Dc1ApZoSiDsDLmGKVm5igVdxjvQ5Q
-         K82ZuIJMdcI7ek+r64pQ0eYvotbuAV/IS8gexPBJFeAdRv5qcrl6XCJwsqo45OkzNYgL
-         +Qfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rPmAc12QB/dObXVaxjhcY1vUDZ7bOEFU41CSHx26tMU=;
-        b=YUnQITPBEV2RUb2krGGU7zQHevrNxrNe0pFiM7rZ/UhXM0lUXZnvNi5qbU5Po9k69i
-         1M6s2EiUYvRLnCa4xkrmEzB0ouWIUYYQPxJqlwjrJqlmfM5Gv4jinpFGR6PvApQXgTCd
-         +oKv5Z+zQGtKkS/0sPc8sc99AAZcXlSom7EBtP7c8GzinTkJ3jJn4VPnbqMx90INGLTc
-         rLShRcLv9+nBnJs+MGG9yZc0DEosKb6dEQgPUuSSOFQInH4hCscLCH6gV0tI8TfuUNik
-         14/V6Yo9qOuLKLgqZDBiYmuOCwkhcjdgGI3wtoAcfisTa6T/0RdOOCoJp5PPuWXT834Y
-         h3Cw==
-X-Gm-Message-State: APjAAAV8l1sG/itWGnoRDsVdE4J5WkJq+2bnsYBI2H0ux7Fft26peGe7
-        AMROpIWWQuTsc9A3ubDky1mSZHVxT6K46ukeUE5gG3Zx
-X-Google-Smtp-Source: APXvYqxceegnIIzidgYPuyNqFkqwb4errG5wPWapwIBSFWnQsfooB5k7ZDHMtD1YCtRxXhmdT7wAuB4Thjs6r4joL2s=
-X-Received: by 2002:aca:544b:: with SMTP id i72mr909821oib.174.1561707009875;
- Fri, 28 Jun 2019 00:30:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <1560255830-8656-1-git-send-email-wanpengli@tencent.com> <CANRm+CwfXViF34eLma5ZnqjT96Sq=XehpBiTZTj1TfJnkevVMA@mail.gmail.com>
-In-Reply-To: <CANRm+CwfXViF34eLma5ZnqjT96Sq=XehpBiTZTj1TfJnkevVMA@mail.gmail.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 28 Jun 2019 15:29:58 +0800
-Message-ID: <CANRm+Cz6vX587uLV__FheXuiOe7pzfGeUZb++ZJ1y9Cmk6GkoA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] KVM: Yield to IPI target if necessary
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 28 Jun 2019 03:29:25 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 41332C0BF3;
+        Fri, 28 Jun 2019 07:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561706965; bh=JljP4Ux5d1crd/1T+kZ+zYlp3zQcsd4krS3WGWr9nMg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=lU3jHS04bg+SoSklQvlWP3WPvryRWD9+fSvCnmLmtromPI5pQlkwOjF9juvPCrqr0
+         M4FD49+cc8GWNRJ6fwu1DtPbgOxuhKX4kTY/dX2rJDS277stiGtLRzWjYA2FnDc+wB
+         R+v8vcJwVtYDqh58PIKPyLwjOXYKfFRhDOyyRAfah3duXM48Uz3bEmBR1v6FWGDs2S
+         p3q/DWm6DFqARpwO5+yR4uHC/0iII5MDPARiB1TGL2JdR8wV0QGcuQNc0T1UvvOqQ/
+         LRZnPQXeBfdGRz45SwP9LPDJ9chu6oKHTCRF7ng8cDxXa+UBN8U0hlmSGhw9wsuPw+
+         ig7NohV850j6Q==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 03161A023D;
+        Fri, 28 Jun 2019 07:29:24 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id E864C3E96A;
+        Fri, 28 Jun 2019 09:29:23 +0200 (CEST)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH net-next v2 09/10] net: stmmac: Only disable interrupts if NAPI is scheduled
+Date:   Fri, 28 Jun 2019 09:29:20 +0200
+Message-Id: <71814f54df40ef5e1b51536955e06f10bcaf77fe.1561706801.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1561706800.git.joabreu@synopsys.com>
+References: <cover.1561706800.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1561706800.git.joabreu@synopsys.com>
+References: <cover.1561706800.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping again,
-On Tue, 18 Jun 2019 at 17:00, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> ping, :)
-> On Tue, 11 Jun 2019 at 20:23, Wanpeng Li <kernellwp@gmail.com> wrote:
-> >
-> > The idea is from Xen, when sending a call-function IPI-many to vCPUs,
-> > yield if any of the IPI target vCPUs was preempted. 17% performance
-> > increasement of ebizzy benchmark can be observed in an over-subscribe
-> > environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function
-> > IPI-many since call-function is not easy to be trigged by userspace
-> > workload).
-> >
-> > v3 -> v4:
-> >  * check map->phys_map[dest_id]
-> >  * more cleaner kvm_sched_yield()
-> >
-> > v2 -> v3:
-> >  * add bounds-check on dest_id
-> >
-> > v1 -> v2:
-> >  * check map is not NULL
-> >  * check map->phys_map[dest_id] is not NULL
-> >  * make kvm_sched_yield static
-> >  * change dest_id to unsinged long
-> >
-> > Wanpeng Li (3):
-> >   KVM: X86: Yield to IPI target if necessary
-> >   KVM: X86: Implement PV sched yield hypercall
-> >   KVM: X86: Expose PV_SCHED_YIELD CPUID feature bit to guest
-> >
-> >  Documentation/virtual/kvm/cpuid.txt      |  4 ++++
-> >  Documentation/virtual/kvm/hypercalls.txt | 11 +++++++++++
-> >  arch/x86/include/uapi/asm/kvm_para.h     |  1 +
-> >  arch/x86/kernel/kvm.c                    | 21 +++++++++++++++++++++
-> >  arch/x86/kvm/cpuid.c                     |  3 ++-
-> >  arch/x86/kvm/x86.c                       | 21 +++++++++++++++++++++
-> >  include/uapi/linux/kvm_para.h            |  1 +
-> >  7 files changed, 61 insertions(+), 1 deletion(-)
-> >
-> > --
-> > 2.7.4
-> >
+Only disable the interrupts if RX NAPI gets to be scheduled. Also,
+schedule the TX NAPI only when the interrupts are disabled.
+
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index a629b3144a0d..3425d4dda03d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2053,12 +2053,12 @@ static int stmmac_napi_check(struct stmmac_priv *priv, u32 chan)
+ 						 &priv->xstats, chan);
+ 	struct stmmac_channel *ch = &priv->channel[chan];
+ 
+-	if (status)
+-		status |= handle_rx | handle_tx;
+-
+ 	if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
+-		stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
+-		napi_schedule_irqoff(&ch->rx_napi);
++		if (napi_schedule_prep(&ch->rx_napi)) {
++			stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
++			__napi_schedule_irqoff(&ch->rx_napi);
++			status |= handle_tx;
++		}
+ 	}
+ 
+ 	if ((status & handle_tx) && (chan < priv->plat->tx_queues_to_use))
+-- 
+2.7.4
+
