@@ -2,80 +2,64 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47CCC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EFDC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFC6217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85687208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561723961;
-	bh=llM0tADGVIcL9qDQmEDAUPCAvKo2KXMRbip5yLa4sYQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cbZ7TxwBCdj23o0oHPE+/NR1+3a2khpZbF38/RfJcaiZRwhmZxWAuYrsH+YiQdb+V
-	 5eIE0iMzchJxKzj0ExCOsemxHUMLJujned55Cj3T7AtItK9HOzMZVnNhTARhT3/igf
-	 +EvL7cHNiA/w/LDdvLHvrWXAz2D3L/DM6gviFL4o=
+	s=default; t=1561723964;
+	bh=q/M8Upm9qc6OBG49LfQAiXlEEQAqXFsdkW8vTxMpTjw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PxHWy8i2K7fc8lxQCodHAtfi0iIRZ5gLMIOM7H2H1BhTLLgRNfyzXi6YqOsN/oZgh
+	 c4qjonrqDADJSdKZRLQRAEHlzT2Q7j2Lw5gHvoomHXxLvw+QV4Th51WuvHfp+V2ye0
+	 lr0zbW54y+RxaqjMu6/wCbepkKbsWUHsrxhyx2YA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfF1MMk (ORCPT
+        id S1727094AbfF1MMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:12:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58280 "EHLO
+        Fri, 28 Jun 2019 08:12:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58240 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbfF1MMh (ORCPT
+        with ESMTP id S1726706AbfF1MMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:12:37 -0400
+        Fri, 28 Jun 2019 08:12:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ptxuhcj9Nnd93IGVkYIIiqtv0theLtZeYCYEFYFjzcQ=; b=iJ2Q7DMrmIn6Encrs9rppRJsg
-        FeL4mBoGRLfaKCHHXrV206GIZ3P/XJemOOMbKDJ1w3SXWtsq4LYO5EGt6J8qVs2Or4osVQfUxapi/
-        zjd+hS2S4uaEf7v6XI6b4710tSuAp66i3CHlRgr2MfjGGDbZW1DEQ9gmDkjZxESSIYJlH8OZ9HlkK
-        TFdqcGlGS1dlQlgTpXIwtU/CKPSGpMWA5VBUVqYCF/HlnncDfCbol6UXVluUS3GBn4xs2BOZRRdne
-        WnPt1VQf1Pp7XWZUQVTsRumVGa7ZhQipl4HHUoDpeOm5kmiY37Rdd4l5z+9p+ucjFP48Xjx6y80vH
-        qSast0vWA==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=BRhHz3Zw8Cudo+QmQC79lXuaDoT+57RtewzsL6NN1jA=; b=RnhO1Y33qlk3+N8twDif0uUGKV
+        hfM9jNrow1RIXLXTJGSHGwv2o8UT07u1QkJ9ROOanEeYXEC15ayTlvgxNzh2Y4tp3aOWt51EQswyv
+        QJuQZ1ea8GxpR/YDlpX3SIHuzR/i7tIixU2GDIgDqdyHmG3urPlPb9y2GguLjzc7rv1UPbAyYhfVC
+        Zh6WW/DAd6aKzNAZ/1RuZillWWpptj2Vjd6SUE/JPLf0cRGqBJz9/EkeDWTYT6ACiHuzXqWUIxNcI
+        sfW0dmw5aYj73gGrBixatipnQCjuiYJvi1IfOwk1eX5eGEhutDprBwOXsiELSOpB/2eYWBwBq/quu
+        VnaTGczw==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgpk3-0005Bd-Cu; Fri, 28 Jun 2019 12:12:35 +0000
+        id 1hgpk3-0005BX-Am; Fri, 28 Jun 2019 12:12:35 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgpk0-0004zI-5t; Fri, 28 Jun 2019 09:12:32 -0300
+        id 1hgpk0-0004zf-B8; Fri, 28 Jun 2019 09:12:32 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        linux-leds@vger.kernel.org, kvm@vger.kernel.org,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Paul <sean@poorly.run>,
-        Darren Hart <dvhart@infradead.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-i2c@vger.kernel.org, Ajay Gupta <ajayg@nvidia.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Dan Murphy <dmurphy@ti.com>, devicetree@vger.kernel.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH 0/9] Some doc fixes
-Date:   Fri, 28 Jun 2019 09:12:22 -0300
-Message-Id: <cover.1561723736.git.mchehab+samsung@kernel.org>
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org
+Subject: [PATCH 6/9] docs: virtual: there are two orphan docs there
+Date:   Fri, 28 Jun 2019 09:12:28 -0300
+Message-Id: <9cbd8c9704ed264c133dc7bd310ede56d1e9c836.1561723736.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1561723736.git.mchehab+samsung@kernel.org>
+References: <cover.1561723736.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,42 +67,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series is against linux-next (next-20190627). I doubt those
-would apply cleanly against docs next tree.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/virtual/kvm/amd-memory-encryption.rst | 2 ++
+ Documentation/virtual/kvm/vcpu-requests.rst         | 2 ++
+ 2 files changed, 4 insertions(+)
 
-So, please apply it via the subsystem trees. Otherwise, they could
-be pushed by the end of the merge window or for -rc1 via a docs tree.
-
-Most, if not all were I already sent.
-
-
-Mauro Carvalho Chehab (9):
-  hrtimer: Use a bullet for the returns bullet list
-  docs: trace: fix a broken label
-  docs: signal: fix a kernel-doc markup
-  dt: leds-lm36274.txt: fix a broken reference to ti-lmu.txt
-  docs: fix some broken references due to txt->rst renames
-  docs: virtual: there are two orphan docs there
-  docs: gpu: add msm-crash-dump.rst to the index.rst file
-  drm: fix a reference for a renamed file: fb/modedb.rst
-  platform: x86: get rid of a non-existent document
-
- Documentation/devicetree/bindings/arm/idle-states.txt   | 2 +-
- Documentation/devicetree/bindings/leds/leds-lm36274.txt | 2 +-
- Documentation/gpu/drivers.rst                           | 1 +
- Documentation/gpu/msm-crash-dump.rst                    | 2 --
- Documentation/trace/kprobetrace.rst                     | 1 +
- Documentation/virtual/kvm/amd-memory-encryption.rst     | 2 ++
- Documentation/virtual/kvm/vcpu-requests.rst             | 2 ++
- drivers/gpu/drm/drm_modes.c                             | 2 +-
- drivers/gpu/drm/i915/intel_runtime_pm.h                 | 2 +-
- drivers/i2c/busses/i2c-nvidia-gpu.c                     | 2 +-
- drivers/platform/x86/Kconfig                            | 3 ---
- kernel/signal.c                                         | 2 +-
- kernel/time/hrtimer.c                                   | 7 ++++---
- 13 files changed, 16 insertions(+), 14 deletions(-)
-
+diff --git a/Documentation/virtual/kvm/amd-memory-encryption.rst b/Documentation/virtual/kvm/amd-memory-encryption.rst
+index d18c97b4e140..6c37ff9a0a3c 100644
+--- a/Documentation/virtual/kvm/amd-memory-encryption.rst
++++ b/Documentation/virtual/kvm/amd-memory-encryption.rst
+@@ -1,3 +1,5 @@
++:orphan:
++
+ ======================================
+ Secure Encrypted Virtualization (SEV)
+ ======================================
+diff --git a/Documentation/virtual/kvm/vcpu-requests.rst b/Documentation/virtual/kvm/vcpu-requests.rst
+index 5feb3706a7ae..c1807a1b92e6 100644
+--- a/Documentation/virtual/kvm/vcpu-requests.rst
++++ b/Documentation/virtual/kvm/vcpu-requests.rst
+@@ -1,3 +1,5 @@
++:orphan:
++
+ =================
+ KVM VCPU Requests
+ =================
 -- 
 2.21.0
-
 
