@@ -2,144 +2,166 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4B8C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633C9C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB1F20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xlQEkY8F"
+	by mail.kernel.org (Postfix) with ESMTP id 4193320644
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727271AbfF1GtS (ORCPT
+        id S1727284AbfF1GtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 02:49:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46634 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbfF1GtR (ORCPT
+        Fri, 28 Jun 2019 02:49:24 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:44851 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbfF1GtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 02:49:17 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e5so2670301pls.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 23:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vPhgOlnnCB9ywYOBqb6XWPEQoBI2y0wpZimTNVlxq94=;
-        b=xlQEkY8FiSYP5T8Sr+fiSBjHesc/PjqUa14hg77RnJh0y29/YUP67po1FtaWYwrHM6
-         A62F01aq9JawXlETdcaGGw0NdKmU19nBDaw3yEa68LMQMRv+B+4yAq1I90Nio+xQ6sEt
-         o/0d8Rlt+SS0ROHur5wxPvffwvasNpbObHNsnG4dFNCoLygibKECrxmkqhvImDEUDQnp
-         Wc/V4es3nOA9lNVxFB5HEQKA5Y5O0B+LEDIfk2XXHuJG7Pr1KcY7dli+FjHxkNgyHNpE
-         nwLrkUmsr2SKdemi+zTyitOdMnjSCIYLog3E6PFg4vDnDoZTT0btNePuX+fMVzDFvBix
-         P0Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vPhgOlnnCB9ywYOBqb6XWPEQoBI2y0wpZimTNVlxq94=;
-        b=MioQ3lJeZQ1kIsJ4Mz25Urxo+szK69MwlNRZDxVmNRJMRox7TYCenbYNpKDMc/soNr
-         FLOqiz8yq7SOd6zSJmvbpcsNmNcVNwVAJhZDki6+suSYqWxaEWcqte0mFS8NkvhTOj4j
-         rrEP8fVJs1rJkliJTD67sO/SnBw3mCXg7wbzktenamKAlhdewjKJINLCLylZkJkL4Qa+
-         mkvddJBSt/3edQhxP+APL6lZUlHW430d26L88P6nLRZ3ktZn81AhyRW/wDubLyt8Xdfo
-         J3vgBOt54HjTbpaNuI8/BuYVctQ+5l3okdMao6/eBje1Zgkh3zYg94EmzSzSHe4nv2+N
-         pcbw==
-X-Gm-Message-State: APjAAAWdysr4dfJOSUMMdGdICAy+C97hjY1NOH3lE8A42P6Wcul1t69K
-        VleOXsj4RBNxo8fnU2pMpXrJmw==
-X-Google-Smtp-Source: APXvYqyNvvDrhAXq/jq9bYxrggpCt4lHHPhkqneujqN2UIMLKeg9OegNN6US7peiZQLxZLxm2WqDnw==
-X-Received: by 2002:a17:902:6a88:: with SMTP id n8mr9651454plk.70.1561704557101;
-        Thu, 27 Jun 2019 23:49:17 -0700 (PDT)
-Received: from localhost ([122.172.211.128])
-        by smtp.gmail.com with ESMTPSA id j5sm1223710pfi.104.2019.06.27.23.49.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 23:49:16 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 12:19:14 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 0/3] Add required-opps support to devfreq passive gov
-Message-ID: <20190628064914.4nu6ql7f7h7o4iul@vireshk-i7>
-References: <20190622003449.33707-1-saravanak@google.com>
- <20190624094349.rtjb7nuv6g7zmsf2@vireshk-i7>
- <CAGETcx_ggG8oDnAVaSfuHfip1ozjQpFiGs15cz8nLQnzjTiSTg@mail.gmail.com>
- <20190625041054.2ceuvnuuebc6hsr5@vireshk-i7>
- <CAGETcx8MuXkQyD5qZBC948-hOu=kWd4hPk2Qiu-zWOcHBCc=FA@mail.gmail.com>
- <20190625052227.3v74l6xtrkydzx6w@vireshk-i7>
- <CAGETcx_v05PfscMi2qiYwHRMLryyA_494+h+kmJ3mD+GOjjeLA@mail.gmail.com>
- <20190626063240.kgdiy7xsz4mahrdr@vireshk-i7>
- <CAGETcx_KH6pqgqZFKddWmgiUX3n+XBU6BoFXkVvPdA4vMDHWsw@mail.gmail.com>
+        Fri, 28 Jun 2019 02:49:23 -0400
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id x5S6m1Tv035815;
+        Fri, 28 Jun 2019 14:48:01 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id C8B2B7E87EA3F2CAB608;
+        Fri, 28 Jun 2019 14:48:01 +0800 (CST)
+In-Reply-To: <20190627192609.0965f6d5@xps13>
+References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw> <1561443056-13766-3-git-send-email-masonccyang@mxic.com.tw> <20190627192609.0965f6d5@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     anders.roxell@linaro.org, bbrezillon@kernel.org,
+        broonie@kernel.org, christophe.kerello@st.com,
+        computersforpeace@gmail.com, devicetree@vger.kernel.org,
+        dwmw2@infradead.org, jianxin.pan@amlogic.com, juliensu@mxic.com.tw,
+        lee.jones@linaro.org, liang.yang@amlogic.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, paul@crapouillou.net, paul.burton@mips.com,
+        richard@nod.at, stefan@agner.ch, vigneshr@ti.com
+Subject: Re: [PATCH v4 2/2] dt-bindings: mtd: Document Macronix raw NAND controller
+ bindings
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx_KH6pqgqZFKddWmgiUX3n+XBU6BoFXkVvPdA4vMDHWsw@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+X-KeepSent: FBD1710A:54AC467B-48258427:0023FCA3;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFFBD1710A.54AC467B-ON48258427.0023FCA3-48258427.00255B71@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Fri, 28 Jun 2019 14:48:02 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/06/28 PM 02:48:01,
+        Serialize complete at 2019/06/28 PM 02:48:01
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com x5S6m1Tv035815
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-06-19, 11:10, Saravana Kannan wrote:
-> On Tue, Jun 25, 2019 at 11:32 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 
-> > So, when a CPU changes frequency, we must change the performance state
-> > of PM domain and change frequency/bw of the cache synchronously.
+Hi Miquel,
+
+> > Document the bindings used by the Macronix raw NAND controller.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+> >  .../devicetree/bindings/mtd/mxic-nand.txt          | 26 
+++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> >  create mode 100644 
+Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/
+> Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > new file mode 100644
+> > index 0000000..3d198e4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > @@ -0,0 +1,26 @@
+> > +Macronix Raw NAND Controller Device Tree Bindings
+> > +-------------------------------------------------
+> > +
+> > +Required properties:
+> > +- compatible: should be "mxic,raw-nand-ctlr"
 > 
-> I mean, it's going to be changed when we get the CPUfreq transition
-> notifiers. From a correctness point of view, setting it inside the OPP
-> framework is not any better than doing it when we get the notifiers.
+> I would prefer "macronix,nand-controller"
 
-That's what the problem is. All maintainers now a days ask people to
-stay away from notifiers and we are making that base of another new
-thing we are starting.
+okay, will patch it.
 
-Over that, with many cpufreq drivers we have fast switching enabled
-and notifiers disabled. How will they make these things work ? We
-still want to scale L3 in those cases as well.
-
-> I see this as "required for good performance". So I don't see it as
-> redefining required-opps. If someone wants good performance/power
-> balance they follow the "required-opps". Technically even the PM
-> pstates are required for good power. Otherwise, the system could leave
-> the voltage at max and stuff would still work.
 > 
-> Also, the slave device might need to get input from multiple master
-> devices and aggregate the request before setting the slave device
-> frequency. So I don't think OPP  framework would be the right place to
-> deal with those things. For example, L3 might (will) have different
-> mappings for big vs little cores. So that needs to be aggregated and
-> set properly by the slave device driver. Also, GPU might have a
-> mapping for L3 too. In which case the L3 slave driver needs to take
-> input from even more masters before it decides its frequency. But most
-> importantly, we still need the ability to change governors for L3.
-> Again these are just examples with L3 and it can get more complicated
-> based on the situation.
+> > +- reg: should contain 1 entrie for the registers
 > 
-> Most importantly, instead of always going by mapping, one might decide
-> to scale the L3 based on some other governor (that looks at some HW
-> counter). Or just set it to performance governor for a use case for
-> which performance is more important. All of this comes for free with
-> devfreq and if we always set it from OPP framework we don't give this
-> required control to userspace.
+>                            entry
 > 
-> I think going through devfreq is the right approach for this. And we
-> can always rewrite the software if we find problems in the future. But
-> as it stands today, this will help cases like exynos without the need
-> for a lot of changes. Hope I've convinced you.
+> > +- reg-names: should contain "regs"
+> 
+> Not sure you need that?
 
-I understand the aggregation thing and fully support that the
-aggregation can't happen in OPP core and must be done somewhere else.
-But the input can go from OPP core while the frequency is changing,
-isn't it ?
+for a base address of ctlr registers.
 
--- 
-viresh
+> 
+> > +- interrupts: interrupt line connected to this NAND controller
+> > +- clock-names: should contain "ps_clk", "send_clk" and "send_dly_clk"
+> > +- clocks: should contain 3 entries for the "ps_clk", "send_clk" and
+> > +    "send_dly_clk" clocks
+> 
+> s/entries/phandles/ ?
+
+?
+as I know that kernel views the phandle values as device tree structure
+information instead of device tree data and thus does not store them as
+properties.
+
+
+> 
+> > +
+> > +Example:
+> > +
+> > +   nand: mxic-nfc@43c30000 {
+> > +      compatible = "mxic,raw-nand-ctlr";
+> > +      reg = <0x43c30000 0x10000>;
+> > +      reg-names = "regs";
+> > +      clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+> > +      clock-names = "send_clk", "send_dly_clk", "ps_clk";
+> > +
+> > +      nand-ecc-mode = "soft";
+> > +      nand-ecc-algo = "bch";
+> > +      nand-ecc-step-size = <512>;
+> > +      nand-ecc-strength = <8>;
+> 
+> The last 4 lines are probably not needed.
+
+okay, will remove them.
+
+thanks for your review.
+best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
