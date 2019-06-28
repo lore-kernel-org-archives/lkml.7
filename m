@@ -2,185 +2,43 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC4AC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00330C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E382F205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D38205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfF1O0w (ORCPT
+        id S1726766AbfF1O3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 10:26:52 -0400
-Received: from mail.parknet.co.jp ([210.171.160.6]:52996 "EHLO
-        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfF1O0w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 10:26:52 -0400
-X-Greylist: delayed 510 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Jun 2019 10:26:51 EDT
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-        by mail.parknet.co.jp (Postfix) with ESMTPSA id DCD4B1B457C;
-        Fri, 28 Jun 2019 23:18:20 +0900 (JST)
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-12) with ESMTPS id x5SEIJXb030638
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Fri, 28 Jun 2019 23:18:20 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-12) with ESMTPS id x5SEIJNM008995
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Fri, 28 Jun 2019 23:18:19 +0900
-Received: (from hirofumi@localhost)
-        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id x5SEIJDd008994;
-        Fri, 28 Jun 2019 23:18:19 +0900
-From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH] fat: Add nobarrier to workaround the strange behavior of device
-Date:   Fri, 28 Jun 2019 23:18:19 +0900
-Message-ID: <871rzdrdxw.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.50 (gnu/linux)
+        Fri, 28 Jun 2019 10:29:02 -0400
+Received: from verein.lst.de ([213.95.11.211]:39181 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726657AbfF1O3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 10:29:02 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id F307F227A81; Fri, 28 Jun 2019 16:28:59 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 16:28:59 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Philip Li <philip.li@intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: buildbot status?
+Message-ID: <20190628142859.GA4844@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi buildbot maintainers,
 
-There was the report of strange behavior of device with recent
-blkdev_issue_flush() position change.
-
-The following is simplified usbmon trace.
-
- 4203   9.160230         host -> 1.25.1       USBMS 95 SCSI: Synchronize Cache(10) LUN: 0x00 (LBA: 0x00000000, Len: 0)
- 4206   9.164911       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Synchronize Cache(10)) (Good)
- 4207   9.323927         host -> 1.25.1       USBMS 95 SCSI: Read(10) LUN: 0x00 (LBA: 0x00279950, Len: 240)
- 4212   9.327138       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Read(10)) (Good)
-
-[...]
-
- 7323  10.202167         host -> 1.25.1       USBMS 95 SCSI: Synchronize Cache(10) LUN: 0x00 (LBA: 0x00000000, Len: 0)
- 7326  10.432266       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Synchronize Cache(10)) (Good)
- 7327  10.769092         host -> 1.25.1       USBMS 95 SCSI: Test Unit Ready LUN: 0x00 
- 7330  10.769192       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Test Unit Ready) (Good)
- 7335  12.849093         host -> 1.25.1       USBMS 95 SCSI: Test Unit Ready LUN: 0x00 
- 7338  12.849206       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Test Unit Ready) (Check Condition)
- 7339  12.849209         host -> 1.25.1       USBMS 95 SCSI: Request Sense LUN: 0x00
- 
-If "Synchronize Cache" command issued then there is idle time, the
-device stop to process further commands, and behave as like no media.
-(it returns NOT_READY [MEDIUM NOT PRESENT] for SENSE command, and this
-happened on Kindle) [just a guess, the device is trying to detect the
-"safe-unplug" operation of Windows or such?]
-
-To workaround those devices and provide flexibility, this adds
-"barrier"/"nobarrier" mount options to fat driver.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
----
-
- fs/fat/fat.h   |    1 +
- fs/fat/file.c  |    8 ++++++--
- fs/fat/inode.c |   16 ++++++++++++++--
- 3 files changed, 21 insertions(+), 4 deletions(-)
-
-diff -puN fs/fat/fat.h~fat-nobarrier fs/fat/fat.h
---- linux/fs/fat/fat.h~fat-nobarrier	2019-06-28 21:22:18.146191739 +0900
-+++ linux-hirofumi/fs/fat/fat.h	2019-06-28 21:59:11.693934616 +0900
-@@ -51,6 +51,7 @@ struct fat_mount_options {
- 		 tz_set:1,	   /* Filesystem timestamps' offset set */
- 		 rodir:1,	   /* allow ATTR_RO for directory */
- 		 discard:1,	   /* Issue discard requests on deletions */
-+		 barrier:1,	   /* Issue FLUSH command */
- 		 dos1xfloppy:1;	   /* Assume default BPB for DOS 1.x floppies */
- };
- 
-diff -puN fs/fat/file.c~fat-nobarrier fs/fat/file.c
---- linux/fs/fat/file.c~fat-nobarrier	2019-06-28 21:22:18.147191734 +0900
-+++ linux-hirofumi/fs/fat/file.c	2019-06-28 21:59:11.693934616 +0900
-@@ -193,17 +193,21 @@ static int fat_file_release(struct inode
- int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
- {
- 	struct inode *inode = filp->f_mapping->host;
-+	struct msdos_sb_info *sbi = MSDOS_SB(inode->i_sb);
- 	int err;
- 
- 	err = __generic_file_fsync(filp, start, end, datasync);
- 	if (err)
- 		return err;
- 
--	err = sync_mapping_buffers(MSDOS_SB(inode->i_sb)->fat_inode->i_mapping);
-+	err = sync_mapping_buffers(sbi->fat_inode->i_mapping);
- 	if (err)
- 		return err;
- 
--	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
-+	if (sbi->options.barrier)
-+		err = blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
-+
-+	return err;
- }
- 
- 
-diff -puN fs/fat/inode.c~fat-nobarrier fs/fat/inode.c
---- linux/fs/fat/inode.c~fat-nobarrier	2019-06-28 21:22:18.148191730 +0900
-+++ linux-hirofumi/fs/fat/inode.c	2019-06-28 21:59:11.694934611 +0900
-@@ -1016,6 +1016,8 @@ static int fat_show_options(struct seq_f
- 		seq_puts(m, ",nfs=stale_rw");
- 	if (opts->discard)
- 		seq_puts(m, ",discard");
-+	if (!opts->barrier)
-+		seq_puts(m, ",nobarrier");
- 	if (opts->dos1xfloppy)
- 		seq_puts(m, ",dos1xfloppy");
- 
-@@ -1031,8 +1033,9 @@ enum {
- 	Opt_shortname_winnt, Opt_shortname_mixed, Opt_utf8_no, Opt_utf8_yes,
- 	Opt_uni_xl_no, Opt_uni_xl_yes, Opt_nonumtail_no, Opt_nonumtail_yes,
- 	Opt_obsolete, Opt_flush, Opt_tz_utc, Opt_rodir, Opt_err_cont,
--	Opt_err_panic, Opt_err_ro, Opt_discard, Opt_nfs, Opt_time_offset,
--	Opt_nfs_stale_rw, Opt_nfs_nostale_ro, Opt_err, Opt_dos1xfloppy,
-+	Opt_err_panic, Opt_err_ro, Opt_discard, Opt_barrier, Opt_nobarrier,
-+	Opt_nfs, Opt_time_offset, Opt_nfs_stale_rw, Opt_nfs_nostale_ro,
-+	Opt_err, Opt_dos1xfloppy,
- };
- 
- static const match_table_t fat_tokens = {
-@@ -1062,6 +1065,8 @@ static const match_table_t fat_tokens =
- 	{Opt_err_panic, "errors=panic"},
- 	{Opt_err_ro, "errors=remount-ro"},
- 	{Opt_discard, "discard"},
-+	{Opt_barrier, "barrier"},
-+	{Opt_nobarrier, "nobarrier"},
- 	{Opt_nfs_stale_rw, "nfs"},
- 	{Opt_nfs_stale_rw, "nfs=stale_rw"},
- 	{Opt_nfs_nostale_ro, "nfs=nostale_ro"},
-@@ -1146,6 +1151,7 @@ static int parse_options(struct super_bl
- 	opts->numtail = 1;
- 	opts->usefree = opts->nocase = 0;
- 	opts->tz_set = 0;
-+	opts->barrier = 1;
- 	opts->nfs = 0;
- 	opts->errors = FAT_ERRORS_RO;
- 	*debug = 0;
-@@ -1335,6 +1341,12 @@ static int parse_options(struct super_bl
- 		case Opt_discard:
- 			opts->discard = 1;
- 			break;
-+		case Opt_barrier:
-+			opts->barrier = 1;
-+			break;
-+		case Opt_nobarrier:
-+			opts->barrier = 0;
-+			break;
- 
- 		/* obsolete mount options */
- 		case Opt_obsolete:
-_
-
--- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+lately I usually get no, in some case a few very delayed build bot
+results for my repos.  Is this as known issue?
