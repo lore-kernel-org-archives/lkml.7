@@ -6,190 +6,195 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D542C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9376C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312782133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8522133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfF1JDw (ORCPT
+        id S1726954AbfF1JEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:03:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47374 "EHLO mx1.redhat.com"
+        Fri, 28 Jun 2019 05:04:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40998 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726658AbfF1JDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:03:14 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1726633AbfF1JDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 05:03:13 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DB4C9356F1;
-        Fri, 28 Jun 2019 09:03:13 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id A94E4308339A;
+        Fri, 28 Jun 2019 09:03:12 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F33FD5D962;
-        Fri, 28 Jun 2019 09:03:09 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1D6AE1A92E;
+        Fri, 28 Jun 2019 09:03:10 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 71DC317512; Fri, 28 Jun 2019 11:03:05 +0200 (CEST)
+        id 3450217538; Fri, 28 Jun 2019 11:03:06 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     ckoenig.leichtzumerken@gmail.com, thomas@shipmail.org,
         tzimmermann@suse.de, daniel@ffwll.ch, bskeggs@redhat.com,
         Gerd Hoffmann <kraxel@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 05/18] drm/amdgpu: use embedded gem object
-Date:   Fri, 28 Jun 2019 11:02:50 +0200
-Message-Id: <20190628090303.29467-6-kraxel@redhat.com>
+Subject: [PATCH v3 07/18] drm/ttm: use gem reservation object
+Date:   Fri, 28 Jun 2019 11:02:52 +0200
+Message-Id: <20190628090303.29467-8-kraxel@redhat.com>
 In-Reply-To: <20190628090303.29467-1-kraxel@redhat.com>
 References: <20190628090303.29467-1-kraxel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 28 Jun 2019 09:03:14 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 28 Jun 2019 09:03:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop drm_gem_object from amdgpu_bo, use the
-ttm_buffer_object.base instead.
-
-Build tested only.
+Drop ttm_resv from ttm_buffer_object, use the gem reservation object
+(base._resv) instead.
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Reviewed-by: Christian König <christian.koenig@amd.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_gem.h     |  2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_object.h  |  1 -
- drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c |  2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c     |  8 ++++----
- drivers/gpu/drm/amd/amdgpu/amdgpu_object.c  | 10 +++++-----
- drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c     |  2 +-
- 6 files changed, 12 insertions(+), 13 deletions(-)
+ include/drm/ttm/ttm_bo_api.h      |  1 -
+ drivers/gpu/drm/ttm/ttm_bo.c      | 40 ++++++++++++++++++-------------
+ drivers/gpu/drm/ttm/ttm_bo_util.c |  2 +-
+ 3 files changed, 25 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.h
-index b8ba6e27c61f..2f17150e26e1 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.h
-@@ -31,7 +31,7 @@
-  */
+diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
+index 082550cac92c..fa050f0328ab 100644
+--- a/include/drm/ttm/ttm_bo_api.h
++++ b/include/drm/ttm/ttm_bo_api.h
+@@ -235,7 +235,6 @@ struct ttm_buffer_object {
+ 	struct sg_table *sg;
  
- #define AMDGPU_GEM_DOMAIN_MAX		0x3
--#define gem_to_amdgpu_bo(gobj) container_of((gobj), struct amdgpu_bo, gem_base)
-+#define gem_to_amdgpu_bo(gobj) container_of((gobj), struct amdgpu_bo, tbo.base)
+ 	struct reservation_object *resv;
+-	struct reservation_object ttm_resv;
+ 	struct mutex wu_mutex;
+ };
  
- void amdgpu_gem_object_free(struct drm_gem_object *obj);
- int amdgpu_gem_object_open(struct drm_gem_object *obj,
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
-index c430e8259038..a80a9972ad16 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
-@@ -94,7 +94,6 @@ struct amdgpu_bo {
- 	/* per VM structure for page tables and with virtual addresses */
- 	struct amdgpu_vm_bo_base	*vm_bo;
- 	/* Constant after initialization */
--	struct drm_gem_object		gem_base;
- 	struct amdgpu_bo		*parent;
- 	struct amdgpu_bo		*shadow;
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index c7de667d482a..516eef3b76d5 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -160,7 +160,8 @@ static void ttm_bo_release_list(struct kref *list_kref)
+ 	ttm_tt_destroy(bo->ttm);
+ 	atomic_dec(&bo->bdev->glob->bo_count);
+ 	dma_fence_put(bo->moving);
+-	reservation_object_fini(&bo->ttm_resv);
++	if (!ttm_bo_uses_embedded_gem_object(bo))
++		reservation_object_fini(&bo->base._resv);
+ 	mutex_destroy(&bo->wu_mutex);
+ 	bo->destroy(bo);
+ 	ttm_mem_global_free(bdev->glob->mem_glob, acc_size);
+@@ -438,14 +439,14 @@ static int ttm_bo_individualize_resv(struct ttm_buffer_object *bo)
+ {
+ 	int r;
  
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-index 02cd845e77b3..4ee452fe0526 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-@@ -393,7 +393,7 @@ amdgpu_gem_prime_import_sg_table(struct drm_device *dev,
- 		bo->prime_shared_count = 1;
+-	if (bo->resv == &bo->ttm_resv)
++	if (bo->resv == &bo->base._resv)
+ 		return 0;
  
- 	ww_mutex_unlock(&resv->lock);
--	return &bo->gem_base;
-+	return &bo->tbo.base;
+-	BUG_ON(!reservation_object_trylock(&bo->ttm_resv));
++	BUG_ON(!reservation_object_trylock(&bo->base._resv));
+ 
+-	r = reservation_object_copy_fences(&bo->ttm_resv, bo->resv);
++	r = reservation_object_copy_fences(&bo->base._resv, bo->resv);
+ 	if (r)
+-		reservation_object_unlock(&bo->ttm_resv);
++		reservation_object_unlock(&bo->base._resv);
+ 
+ 	return r;
+ }
+@@ -456,8 +457,8 @@ static void ttm_bo_flush_all_fences(struct ttm_buffer_object *bo)
+ 	struct dma_fence *fence;
+ 	int i;
+ 
+-	fobj = reservation_object_get_list(&bo->ttm_resv);
+-	fence = reservation_object_get_excl(&bo->ttm_resv);
++	fobj = reservation_object_get_list(&bo->base._resv);
++	fence = reservation_object_get_excl(&bo->base._resv);
+ 	if (fence && !fence->ops->signaled)
+ 		dma_fence_enable_sw_signaling(fence);
+ 
+@@ -490,11 +491,11 @@ static void ttm_bo_cleanup_refs_or_queue(struct ttm_buffer_object *bo)
+ 	spin_lock(&glob->lru_lock);
+ 	ret = reservation_object_trylock(bo->resv) ? 0 : -EBUSY;
+ 	if (!ret) {
+-		if (reservation_object_test_signaled_rcu(&bo->ttm_resv, true)) {
++		if (reservation_object_test_signaled_rcu(&bo->base._resv, true)) {
+ 			ttm_bo_del_from_lru(bo);
+ 			spin_unlock(&glob->lru_lock);
+-			if (bo->resv != &bo->ttm_resv)
+-				reservation_object_unlock(&bo->ttm_resv);
++			if (bo->resv != &bo->base._resv)
++				reservation_object_unlock(&bo->base._resv);
+ 
+ 			ttm_bo_cleanup_memtype_use(bo);
+ 			reservation_object_unlock(bo->resv);
+@@ -515,8 +516,8 @@ static void ttm_bo_cleanup_refs_or_queue(struct ttm_buffer_object *bo)
+ 
+ 		reservation_object_unlock(bo->resv);
+ 	}
+-	if (bo->resv != &bo->ttm_resv)
+-		reservation_object_unlock(&bo->ttm_resv);
++	if (bo->resv != &bo->base._resv)
++		reservation_object_unlock(&bo->base._resv);
  
  error:
- 	ww_mutex_unlock(&resv->lock);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-index 37b526c6f494..6d991e8df357 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-@@ -85,7 +85,7 @@ int amdgpu_gem_object_create(struct amdgpu_device *adev, unsigned long size,
- 		}
- 		return r;
+ 	kref_get(&bo->list_kref);
+@@ -551,7 +552,7 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo,
+ 	if (unlikely(list_empty(&bo->ddestroy)))
+ 		resv = bo->resv;
+ 	else
+-		resv = &bo->ttm_resv;
++		resv = &bo->base._resv;
+ 
+ 	if (reservation_object_test_signaled_rcu(resv, true))
+ 		ret = 0;
+@@ -631,7 +632,7 @@ static bool ttm_bo_delayed_delete(struct ttm_bo_device *bdev, bool remove_all)
+ 		kref_get(&bo->list_kref);
+ 		list_move_tail(&bo->ddestroy, &removed);
+ 
+-		if (remove_all || bo->resv != &bo->ttm_resv) {
++		if (remove_all || bo->resv != &bo->base._resv) {
+ 			spin_unlock(&glob->lru_lock);
+ 			reservation_object_lock(bo->resv, NULL);
+ 
+@@ -1332,9 +1333,16 @@ int ttm_bo_init_reserved(struct ttm_bo_device *bdev,
+ 		bo->resv = resv;
+ 		reservation_object_assert_held(bo->resv);
+ 	} else {
+-		bo->resv = &bo->ttm_resv;
++		bo->resv = &bo->base._resv;
++	}
++	if (!ttm_bo_uses_embedded_gem_object(bo)) {
++		/*
++		 * bo.gem is not initialized, so we have to setup the
++		 * struct elements we want use regardless.  Should go
++		 * away once all users are switched over.
++		 */
++		reservation_object_init(&bo->base._resv);
  	}
--	*obj = &bo->gem_base;
-+	*obj = &bo->tbo.base;
+-	reservation_object_init(&bo->ttm_resv);
+ 	atomic_inc(&bo->bdev->glob->bo_count);
+ 	drm_vma_node_reset(&bo->vma_node);
  
- 	return 0;
- }
-@@ -690,7 +690,7 @@ int amdgpu_gem_op_ioctl(struct drm_device *dev, void *data,
- 		struct drm_amdgpu_gem_create_in info;
- 		void __user *out = u64_to_user_ptr(args->value);
- 
--		info.bo_size = robj->gem_base.size;
-+		info.bo_size = robj->tbo.base.size;
- 		info.alignment = robj->tbo.mem.page_alignment << PAGE_SHIFT;
- 		info.domains = robj->preferred_domains;
- 		info.domain_flags = robj->flags;
-@@ -820,8 +820,8 @@ static int amdgpu_debugfs_gem_bo_info(int id, void *ptr, void *data)
- 	if (pin_count)
- 		seq_printf(m, " pin count %d", pin_count);
- 
--	dma_buf = READ_ONCE(bo->gem_base.dma_buf);
--	attachment = READ_ONCE(bo->gem_base.import_attach);
-+	dma_buf = READ_ONCE(bo->tbo.base.dma_buf);
-+	attachment = READ_ONCE(bo->tbo.base.import_attach);
- 
- 	if (attachment)
- 		seq_printf(m, " imported from %p", dma_buf);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-index 7b251fd26bd5..ed2e88208a73 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-@@ -85,9 +85,9 @@ static void amdgpu_bo_destroy(struct ttm_buffer_object *tbo)
- 
- 	amdgpu_bo_kunmap(bo);
- 
--	if (bo->gem_base.import_attach)
--		drm_prime_gem_destroy(&bo->gem_base, bo->tbo.sg);
--	drm_gem_object_release(&bo->gem_base);
-+	if (bo->tbo.base.import_attach)
-+		drm_prime_gem_destroy(&bo->tbo.base, bo->tbo.sg);
-+	drm_gem_object_release(&bo->tbo.base);
- 	/* in case amdgpu_device_recover_vram got NULL of bo->parent */
- 	if (!list_empty(&bo->shadow_list)) {
- 		mutex_lock(&adev->shadow_list_lock);
-@@ -454,7 +454,7 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
- 	bo = kzalloc(sizeof(struct amdgpu_bo), GFP_KERNEL);
- 	if (bo == NULL)
- 		return -ENOMEM;
--	drm_gem_private_object_init(adev->ddev, &bo->gem_base, size);
-+	drm_gem_private_object_init(adev->ddev, &bo->tbo.base, size);
- 	INIT_LIST_HEAD(&bo->shadow_list);
- 	bo->vm_bo = NULL;
- 	bo->preferred_domains = bp->preferred_domain ? bp->preferred_domain :
-@@ -505,7 +505,7 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
- 	if (unlikely(r != 0))
- 		return r;
- 
--	bo->gem_base.resv = bo->tbo.resv;
-+	bo->tbo.base.resv = bo->tbo.resv;
- 
- 	if (!amdgpu_gmc_vram_full_visible(&adev->gmc) &&
- 	    bo->tbo.mem.mem_type == TTM_PL_VRAM &&
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-index d81bebf76310..b8ae9a838b6c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-@@ -227,7 +227,7 @@ static int amdgpu_verify_access(struct ttm_buffer_object *bo, struct file *filp)
- 
- 	if (amdgpu_ttm_tt_get_usermm(bo->ttm))
- 		return -EPERM;
--	return drm_vma_node_verify_access(&abo->gem_base.vma_node,
-+	return drm_vma_node_verify_access(&abo->tbo.base.vma_node,
- 					  filp->private_data);
- }
- 
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
+index 9f918b992f7e..05fbcaf6a3f2 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_util.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
+@@ -517,7 +517,7 @@ static int ttm_buffer_object_transfer(struct ttm_buffer_object *bo,
+ 	kref_init(&fbo->base.kref);
+ 	fbo->base.destroy = &ttm_transfered_destroy;
+ 	fbo->base.acc_size = 0;
+-	fbo->base.resv = &fbo->base.ttm_resv;
++	fbo->base.resv = &fbo->base.base._resv;
+ 	reservation_object_init(fbo->base.resv);
+ 	ret = reservation_object_trylock(fbo->base.resv);
+ 	WARN_ON(!ret);
 -- 
 2.18.1
 
