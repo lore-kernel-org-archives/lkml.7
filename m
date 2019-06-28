@@ -6,84 +6,58 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 398F5C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165DBC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1706B2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1B02083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:14:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfF1RNt (ORCPT
+        id S1726694AbfF1ROW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:13:49 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:41700 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfF1RNt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:13:49 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 707238061A;
-        Fri, 28 Jun 2019 19:13:43 +0200 (CEST)
-Date:   Fri, 28 Jun 2019 19:13:42 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Brian Norris <briannorris@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Enric =?iso-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v5 0/7] drm/panel: simple: Add mode support to devicetree
-Message-ID: <20190628171342.GA2238@ravnborg.org>
-References: <20190401171724.215780-1-dianders@chromium.org>
- <20190626130007.GE23428@ravnborg.org>
- <CAD=FV=U4UU8q+CS76uuuGUP=EVnE6+BTUf8U=j7uwfczNgkrZw@mail.gmail.com>
- <CAD=FV=Vi2C7s2oWBDD0n+HK=_SuBYhRM9saMK-y6Qa0+k-g17w@mail.gmail.com>
+        Fri, 28 Jun 2019 13:14:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56446 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725783AbfF1ROW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 13:14:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 38FEDAD94;
+        Fri, 28 Jun 2019 17:14:21 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 10:14:16 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rbtree: avoid generating code twice for the cached
+ versions
+Message-ID: <20190628171416.by5gdizl3rcxk5h5@linux-r8p5>
+References: <20190628045008.39926-1-walken@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=Vi2C7s2oWBDD0n+HK=_SuBYhRM9saMK-y6Qa0+k-g17w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=_iCLzPF4R0rCw2ftHNcA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <20190628045008.39926-1-walken@google.com>
+User-Agent: NeoMutt/20180323
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug.
+On Thu, 27 Jun 2019, Michel Lespinasse wrote:
 
-> Sam: Oh!  I hadn't noticed that you've been added as a panel
-> maintainer in commit ef0db94f94a0 ("MAINTAINERS: Add Sam as reviewer
-> for drm/panel").  Does that mean you are able to provide some advice
-> for how to land this series?
-Reviewer only, not maintainer....
+>As was already noted in rbtree.h, the logic to cache rb_first (or rb_last)
+>can easily be implemented externally to the core rbtree api.
+>
+>Change the implementation to do just that. Previously the update of
+>rb_leftmost was wired deeper into the implemntation, but there were
+>some disadvantages to that - mostly, lib/rbtree.c had separate
+>instantiations for rb_insert_color() vs rb_insert_color_cached(), as well
+>as rb_erase() vs rb_erase_cached(), which were doing exactly the same
+>thing save for the rb_leftmost update at the start of either function.
 
-It is on my TODO list for the weekend to go through the patch set in
-details and provide feedback. I have read them before, but I miss to do
-a more detailed read through.
+Also:
 
-But I cannot apply this unless Thierry or one of the DRM maintainers
-ack it.
-We simply need someone with a better general knowledge of DRM to ack it
-than I have.
-
-	Sam
+   text	   data	    bss	    dec	    hex	filename
+   5405	    120	      0	   5525	   1595	lib/rbtree.o-vanilla
+   3827	     96	      0	   3923	    f53	lib/rbtree.o-patch
