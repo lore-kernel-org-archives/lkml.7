@@ -2,278 +2,184 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85ECAC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012BCC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43DCC2070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:58:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561705105;
-	bh=9EMY6xb+OakgbBhQJSxwQlOLtPH5xuBDmsIZgmVNfg4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Pjb08FzqPrMu74xO9JCSLV4Vgh5w2xOvybB1N5YiB7q/vyK+eIS+yVzDJLP5FFWj9
-	 vVTkbgA/uuQCuqNgLKXfZVeGl+IcusHAkeB5nAuVtc49zqWECxKmcVnFcrUGeAJpHW
-	 AJaAUBV8D9asGOLNwq94yTyKr/M+3Y61diaAqSys=
+	by mail.kernel.org (Postfix) with ESMTP id B1ABA2070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:59:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="F0oCbKl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfF1G6Y (ORCPT
+        id S1727307AbfF1G73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 02:58:24 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35388 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfF1G6Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 02:58:24 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so2706246plp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 23:58:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ESOloCsNcWCvH+ErqVz8d4Y7PTRFELsUnE8Q8N0c9F8=;
-        b=cPfQczMzOGRhzVVdyaDMEZQqANzQXsxUWKM6wKbDjvR9EjM5liVHJj2hXhmMYQ4p2d
-         SxfP7NELbXSMLJgFtdEMdPiNYeCjZkekvRwbdjVkDhniuQWhhdcoKpvbXCLMuTGtT8WA
-         x//uhO4+UKisqdjb9sgik/CWwXq+DixrsErqgiCB7XAFnW6+LBRLwU6iBjZ8QMM9RiIG
-         9uEKx+/0i/p1tiWB1O/tTL/q2ApPnVrgowFcV/8wKnIG40J1/MoDdDLTWkNhib1AoCSl
-         2audka5M3j9V0W1VLln+JGAs/HPCW+VFwfhpjYlmQ6sx0zd97NWhHAeRkGJM14wTRkq6
-         uEAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ESOloCsNcWCvH+ErqVz8d4Y7PTRFELsUnE8Q8N0c9F8=;
-        b=CQ2GI9qilpje3GEFe+Xz3hFLLVx8GTwwokMC1wjS4QygiUzBcbTotrAeejZUqucs2/
-         dTM0f5SxAEoT0g+FyLawj5F4fjPcqKXGmDa52IuuMq/UxQw2tPlCufKIRK7sMu3kP0Z6
-         A9nct1jaT6zwPBG0p6JAwMEW/djrNTG9yEi8GcI+gTILz35/GU0cSe5pchJT+iI5Xsyl
-         7wEf5QCqcL98CjSKfaERkehKAgk+KZla/evJzqPvi0VlTZFR6e6l7d8O8shGhoti71fM
-         WAAjOcxFj5xunOJA6Ggp6sFis0sYTeToGQs3W/UB81J5KciBUdroq12N1GG+bqF6RxVE
-         opuA==
-X-Gm-Message-State: APjAAAUc2uDCfWDQwm/o4CTvZmX6I1yUTOrMfoPkgyTEssRtDJQAVbQ5
-        yYbsaxLkhnGODY6SE4mUSwU=
-X-Google-Smtp-Source: APXvYqwfKUDWg9fQDdZpcFB0UFQ6fNBj8ReG1Mi5PygU/MFko/2H+xa33hSscS56hsUEKpb+vPlYaA==
-X-Received: by 2002:a17:902:2889:: with SMTP id f9mr9162225plb.230.1561705102997;
-        Thu, 27 Jun 2019 23:58:22 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id y8sm1250367pfn.52.2019.06.27.23.58.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 23:58:21 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 15:58:17 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Kuo-Hsin Yang <vovoy@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] mm: vmscan: fix not scanning anonymous pages when
- detecting file refaults
-Message-ID: <20190628065817.GB251482@google.com>
-References: <20190619080835.GA68312@google.com>
+        Fri, 28 Jun 2019 02:59:29 -0400
+Received: from mail-eopbgr150044.outbound.protection.outlook.com ([40.107.15.44]:1265
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726574AbfF1G72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 02:59:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=DPg05ow4Cc4F+wX7Y9WRFgbq8bEVw+GAQdMN4c4mJUku4TNd7TLMToCICjYOSJURPSFywzuQLAknDuKVqSHM2i8R9Dwlz8RRxdUl3KeAu1xbIzQHrOVcGUcjtvx28u72M9iEiCBTHzRlZ1CJUda+iIcuMTiMq2SnjHqUhemqsng=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ng7sYhThv2TVOJv4+Z4iNZX0IpyCAVu3J1Is4KBaFUU=;
+ b=cRACF9qVhDLeBGrSCJjTeJDLB9vb7SPuf2i27aONaiP+9YhazE+t663EjkMqbHQWXjtjgDpoTaZ2TGn2XGwoPjJg3zZg8bUOjNZsy+QgmwbviFmivIRJvIt9WENKQ+mMvB1GYcaCz0AL+pOkIcdKYVGxqS3PB7eXP2bCVoBbg2Y=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ng7sYhThv2TVOJv4+Z4iNZX0IpyCAVu3J1Is4KBaFUU=;
+ b=F0oCbKl5BJV2GA5i48N5I06EeeCeyQByoSuPmtFKqw+cK3wkYFRvPVk9fukT+dNe4+no62WHqNaXVEWj1C8Y3NkwGgYxEDypCkxXMfNdqwgF3F43lca5Xlh11zHrZDfq5qxy8mSpmLUhP4pR4uQoJNW948Ihyi3oEOX/VSeC1EM=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3642.eurprd04.prod.outlook.com (52.134.65.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Fri, 28 Jun 2019 06:59:22 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3945:fcda:5bdd:8191]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3945:fcda:5bdd:8191%4]) with mapi id 15.20.2032.018; Fri, 28 Jun 2019
+ 06:59:22 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/2] arm64: dts: imx8mq: Correct OPP table according to
+ latest datasheet
+Thread-Topic: [PATCH 1/2] arm64: dts: imx8mq: Correct OPP table according to
+ latest datasheet
+Thread-Index: AQHVLWLGC+RlanjcBUWXXhB78aHmNqawoHUw
+Date:   Fri, 28 Jun 2019 06:59:22 +0000
+Message-ID: <DB3PR0402MB39166309D463520DE5C129C8F5FC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190628032800.8428-1-Anson.Huang@nxp.com>
+ <VI1PR04MB50553915C0D978A8019BDC5CEEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39161C60DC780B693933F9EAF5FC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <VI1PR04MB505542FB866BC18A27D22B90EEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB505542FB866BC18A27D22B90EEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6a4362ab-3205-469b-deba-08d6fb962680
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3642;
+x-ms-traffictypediagnostic: DB3PR0402MB3642:
+x-microsoft-antispam-prvs: <DB3PR0402MB3642AD5B60D201655E0CD0AEF5FC0@DB3PR0402MB3642.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00826B6158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(39860400002)(366004)(136003)(189003)(199004)(13464003)(446003)(9686003)(73956011)(110136005)(54906003)(44832011)(66476007)(66446008)(11346002)(64756008)(76116006)(7416002)(53936002)(81156014)(8936002)(4326008)(3846002)(81166006)(25786009)(68736007)(6116002)(86362001)(476003)(486006)(478600001)(66556008)(26005)(8676002)(6436002)(229853002)(55016002)(53546011)(102836004)(6506007)(186003)(33656002)(2906002)(5660300002)(76176011)(71190400001)(71200400001)(52536014)(7696005)(66946007)(74316002)(2501003)(66066001)(256004)(7736002)(14444005)(6246003)(14454004)(316002)(99286004)(305945005)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3642;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: TnuAsgFIFQrnoJs+/442c3OXG5903S+a95/0C04fRs40fNySAOycJr75NkuoPbPwd7TIDcscFtWQh+XO2zkg4svHKZXva9Ff0m2pF05PqomoiNEnHGJ0oXlXu+drbktTce/uW69DxuO7pgUqKQo5Ob9kkDn1z64d3aTdqFoS/BCDO1JAorjd/4KVEF1o0Vvgy4sS65gJAOpO8XtagQ3Jy25B5IVQm1pOQq8lQJgvLaHMYn8GIrAHrIagjEjn018HH+opOMvwiGRZqqats0nV+FYQFg84DlahcDM9UJGRxj0zojcB0Kt7cMUZO1hIjPkgYRN8m3WJ38GjKtV+5aYTn/KJpwfo7T0h3ynShWHotwmZ5i+bzcGtGTnQYmRIVrQjgVGOuOWAfytmW2/sjZ+vsptnxdFSjPEkImvijE70ywQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619080835.GA68312@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a4362ab-3205-469b-deba-08d6fb962680
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 06:59:22.7890
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3642
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kuo-Hsin,
-
-On Wed, Jun 19, 2019 at 04:08:35PM +0800, Kuo-Hsin Yang wrote:
-> When file refaults are detected and there are many inactive file pages,
-> the system never reclaim anonymous pages, the file pages are dropped
-> aggressively when there are still a lot of cold anonymous pages and
-> system thrashes. This issue impacts the performance of applications with
-> large executable, e.g. chrome.
-> 
-> When file refaults are detected. inactive_list_is_low() may return
-> different values depends on the actual_reclaim parameter, the following
-> 2 conditions could be satisfied at the same time.
-> 
-> 1) inactive_list_is_low() returns false in get_scan_count() to trigger
->    scanning file lists only.
-> 2) inactive_list_is_low() returns true in shrink_list() to allow
->    scanning active file list.
-> 
-> In that case vmscan would only scan file lists, and as active file list
-> is also scanned, inactive_list_is_low() may keep returning false in
-> get_scan_count() until file cache is very low.
-> 
-> Before commit 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in
-> cache workingset transition"), inactive_list_is_low() never returns
-> different value in get_scan_count() and shrink_list() in one
-> shrink_node_memcg() run. The original design should be that when
-> inactive_list_is_low() returns false for file lists, vmscan only scan
-> inactive file list. As only inactive file list is scanned,
-> inactive_list_is_low() would soon return true.
-> 
-> This patch makes the return value of inactive_list_is_low() independent
-> of actual_reclaim.
-> 
-> The problem can be reproduced by the following test program.
-> 
-> ---8<---
-> void fallocate_file(const char *filename, off_t size)
-> {
-> 	struct stat st;
-> 	int fd;
-> 
-> 	if (!stat(filename, &st) && st.st_size >= size)
-> 		return;
-> 
-> 	fd = open(filename, O_WRONLY | O_CREAT, 0600);
-> 	if (fd < 0) {
-> 		perror("create file");
-> 		exit(1);
-> 	}
-> 	if (posix_fallocate(fd, 0, size)) {
-> 		perror("fallocate");
-> 		exit(1);
-> 	}
-> 	close(fd);
-> }
-> 
-> long *alloc_anon(long size)
-> {
-> 	long *start = malloc(size);
-> 	memset(start, 1, size);
-> 	return start;
-> }
-> 
-> long access_file(const char *filename, long size, long rounds)
-> {
-> 	int fd, i;
-> 	volatile char *start1, *end1, *start2;
-> 	const int page_size = getpagesize();
-> 	long sum = 0;
-> 
-> 	fd = open(filename, O_RDONLY);
-> 	if (fd == -1) {
-> 		perror("open");
-> 		exit(1);
-> 	}
-> 
-> 	/*
-> 	 * Some applications, e.g. chrome, use a lot of executable file
-> 	 * pages, map some of the pages with PROT_EXEC flag to simulate
-> 	 * the behavior.
-> 	 */
-> 	start1 = mmap(NULL, size / 2, PROT_READ | PROT_EXEC, MAP_SHARED,
-> 		      fd, 0);
-> 	if (start1 == MAP_FAILED) {
-> 		perror("mmap");
-> 		exit(1);
-> 	}
-> 	end1 = start1 + size / 2;
-> 
-> 	start2 = mmap(NULL, size / 2, PROT_READ, MAP_SHARED, fd, size / 2);
-> 	if (start2 == MAP_FAILED) {
-> 		perror("mmap");
-> 		exit(1);
-> 	}
-> 
-> 	for (i = 0; i < rounds; ++i) {
-> 		struct timeval before, after;
-> 		volatile char *ptr1 = start1, *ptr2 = start2;
-> 		gettimeofday(&before, NULL);
-> 		for (; ptr1 < end1; ptr1 += page_size, ptr2 += page_size)
-> 			sum += *ptr1 + *ptr2;
-> 		gettimeofday(&after, NULL);
-> 		printf("File access time, round %d: %f (sec)\n", i,
-> 		       (after.tv_sec - before.tv_sec) +
-> 		       (after.tv_usec - before.tv_usec) / 1000000.0);
-> 	}
-> 	return sum;
-> }
-> 
-> int main(int argc, char *argv[])
-> {
-> 	const long MB = 1024 * 1024;
-> 	long anon_mb, file_mb, file_rounds;
-> 	const char filename[] = "large";
-> 	long *ret1;
-> 	long ret2;
-> 
-> 	if (argc != 4) {
-> 		printf("usage: thrash ANON_MB FILE_MB FILE_ROUNDS\n");
-> 		exit(0);
-> 	}
-> 	anon_mb = atoi(argv[1]);
-> 	file_mb = atoi(argv[2]);
-> 	file_rounds = atoi(argv[3]);
-> 
-> 	fallocate_file(filename, file_mb * MB);
-> 	printf("Allocate %ld MB anonymous pages\n", anon_mb);
-> 	ret1 = alloc_anon(anon_mb * MB);
-> 	printf("Access %ld MB file pages\n", file_mb);
-> 	ret2 = access_file(filename, file_mb * MB, file_rounds);
-> 	printf("Print result to prevent optimization: %ld\n",
-> 	       *ret1 + ret2);
-> 	return 0;
-> }
-> ---8<---
-> 
-> Running the test program on 2GB RAM VM with kernel 5.2.0-rc5, the
-> program fills ram with 2048 MB memory, access a 200 MB file for 10
-> times. Without this patch, the file cache is dropped aggresively and
-> every access to the file is from disk.
-> 
->   $ ./thrash 2048 200 10
->   Allocate 2048 MB anonymous pages
->   Access 200 MB file pages
->   File access time, round 0: 2.489316 (sec)
->   File access time, round 1: 2.581277 (sec)
->   File access time, round 2: 2.487624 (sec)
->   File access time, round 3: 2.449100 (sec)
->   File access time, round 4: 2.420423 (sec)
->   File access time, round 5: 2.343411 (sec)
->   File access time, round 6: 2.454833 (sec)
->   File access time, round 7: 2.483398 (sec)
->   File access time, round 8: 2.572701 (sec)
->   File access time, round 9: 2.493014 (sec)
-> 
-> With this patch, these file pages can be cached.
-> 
->   $ ./thrash 2048 200 10
->   Allocate 2048 MB anonymous pages
->   Access 200 MB file pages
->   File access time, round 0: 2.475189 (sec)
->   File access time, round 1: 2.440777 (sec)
->   File access time, round 2: 2.411671 (sec)
->   File access time, round 3: 1.955267 (sec)
->   File access time, round 4: 0.029924 (sec)
->   File access time, round 5: 0.000808 (sec)
->   File access time, round 6: 0.000771 (sec)
->   File access time, round 7: 0.000746 (sec)
->   File access time, round 8: 0.000738 (sec)
->   File access time, round 9: 0.000747 (sec)
-> 
-> Fixes: 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in cache workingset transition")
-> Signed-off-by: Kuo-Hsin Yang <vovoy@chromium.org>
-> ---
->  mm/vmscan.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 7889f583ced9f..b95d05fe828d1 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2151,7 +2151,7 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
->  	 * rid of the stale workingset quickly.
->  	 */
->  	refaults = lruvec_page_state_local(lruvec, WORKINGSET_ACTIVATE);
-> -	if (file && actual_reclaim && lruvec->refaults != refaults) {
-> +	if (file && lruvec->refaults != refaults) {
-
-Just a nit:
-
-So, now "actual_reclaim" just aims for the tracing purpose. In that case,
-we could rollback the naming to "trace", again.
-
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVvbmFyZCBDcmVzdGV6
+DQo+IFNlbnQ6IEZyaWRheSwgSnVuZSAyOCwgMjAxOSAyOjQ1IFBNDQo+IFRvOiBBbnNvbiBIdWFu
+ZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT47DQo+
+IGwuc3RhY2hAcGVuZ3V0cm9uaXguZGUNCj4gQ2M6IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHJvYmgr
+ZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHMuaGF1ZXJAcGVuZ3V0cm9u
+aXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOw0KPiB2aXJl
+c2gua3VtYXJAbGluYXJvLm9yZzsgRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29t
+PjsgQWJlbA0KPiBWZXNhIDxhYmVsLnZlc2FAbnhwLmNvbT47IGFuZHJldy5zbWlybm92QGdtYWls
+LmNvbTsNCj4gY2NhaW9uZUBiYXlsaWJyZS5jb207IGFuZ3VzQGFra2VhLmNhOyBhZ3hAc2lneGNw
+dS5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1s
+aW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0g
+YXJtNjQ6IGR0czogaW14OG1xOiBDb3JyZWN0IE9QUCB0YWJsZSBhY2NvcmRpbmcgdG8NCj4gbGF0
+ZXN0IGRhdGFzaGVldA0KPiANCj4gT24gNi8yOC8yMDE5IDk6MTYgQU0sIEFuc29uIEh1YW5nIHdy
+b3RlOg0KPiA+PiBGcm9tOiBMZW9uYXJkIENyZXN0ZXoNCj4gPj4+IEZyb206IEFuc29uIEh1YW5n
+IDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+Pj4NCj4gPj4+IEFjY29yZGluZyB0byBsYXRlc3Qg
+ZGF0YXNoZWV0IChSZXYuMSwgMTAvMjAxOCkgZnJvbSBiZWxvdyBsaW5rcywgaW4NCj4gPj4+IHRo
+ZSBjb25zdW1lciBkYXRhc2hlZXQsIDEuNUdIeiBpcyBtZW50aW9uZWQgYXMgaGlnaGVzdCBvcHAg
+YnV0DQo+ID4+PiBkZXBlbmRzIG9uIHNwZWVkIGdyYWRpbmcgZnVzZSwgYW5kIGluIHRoZSBpbmR1
+c3RyaWFsIGRhdGFzaGVldCwNCj4gPj4+IDEuM0dIeiBpcyBtZW50aW9uZWQgYXMgaGlnaGVzdCBv
+cHAgYnV0IGRlcGVuZHMgb24gc3BlZWQgZ3JhZGluZw0KPiA+Pj4gZnVzZS4gMS41R0h6IGFuZCAx
+LjNHSHogb3BwIHVzZSBzYW1lIHZvbHRhZ2UsIHNvIG5vIG5lZWQgZm9yDQo+ID4+PiBjb25zdW1l
+ciBwYXJ0IHRvIHN1cHBvcnQgMS4zR0h6IG9wcCwgd2l0aCBzYW1lIHZvbHRhZ2UsIENQVSBzaG91
+bGQNCj4gPj4+IHJ1biBhdCBoaWdoZXN0IGZyZXF1ZW5jeSBpbiBvcmRlciB0byBnbyBpbnRvIGlk
+bGUgYXMgcXVpY2sgYXMgcG9zc2libGUsIHRoaXMNCj4gY2FuIHNhdmUgcG93ZXIuDQo+ID4+DQo+
+ID4+IEkgbG9va2VkIGF0IHRoZSBzYW1lIGRhdGFzaGVldHMgYW5kIGl0J3Mgbm90IGNsZWFyIHRv
+IG1lIHRoYXQgMS4zIEdoeg0KPiA+PiBzaG91bGQgYmUgZGlzYWxsb3dlZCBmb3IgY29uc3VtZXIg
+cGFydHMuIFBvd2VyIGNvbnN1bXB0aW9uIGluY3JlYXNlcw0KPiA+PiB3aXRoIGJvdGggdm9sdGFn
+ZSBhbmQgZnJlcXVlbmN5IHNvIGhhdmluZyB0d28gT1BQcyB3aXRoIHNhbWUgdm9sdGFnZQ0KPiA+
+PiBkb2VzIG1ha2Ugc2Vuc2UuDQo+ID4NCj4gPiBUaGUgY29uc3VtZXIgcGFydCBkYXRhc2hlZXQg
+ZG9lcyBOT1QgbWVudGlvbiAxLjNHSHogYXQgYWxsLCBzbw0KPiA+IGNvbnN1bWVyIHBhcnQgT05M
+WSBzdXBwb3J0IDFHSHovMS41R0h6LCBhbmQgaW5kdXN0cmlhbCBwYXJ0IE9OTFkNCj4gPiBzdXBw
+b3J0IDgwME1Iei8xLjNHSHosIHRoaXMgaXMgd2hhdCB3ZSBkaWQgaW4gb3VyIGludGVybmFsIHRy
+ZWUgYW5kDQo+ID4gTlBJIHJlbGVhc2UsIHNvIGJldHRlciB0byBtYWtlIHRoZW0gYWxpZ25lZCwg
+b3RoZXJ3aXNlLCB3ZSBoYXZlIHRvIGNoYW5nZQ0KPiBpdCB3aGVuIGtlcm5lbCB1cGdyYWRlLg0K
+PiANCj4gRGF0YXNoZWV0IHNlZW1zIGFtYmlndW91czogaXQgbWVudGlvbnMgIm1heCBmcmVxIGZv
+ciB2b2x0IiBzbyBteQ0KPiB1bmRlcnN0YW5kaW5nIGlzIHRoYXQgYW55IGxvd2VyIGZyZXFzIHNo
+b3VsZCBhbHNvIHdvcmsgYXQgdGhhdCB2b2x0YWdlLg0KPiANCj4gVGhpcyBhbHNvIHNlZW1zIHRv
+IGJlIHRoZSB1bmRlcnN0YW5kaW5nIGJlaGluZCBjb21taXQgOGNmZDgxM2M3MzA3DQo+ICgiYXJt
+NjQ6IGR0czogaW14OG1xOiBmaXggaGlnaGVyIENQVSBvcGVyYXRpbmcgcG9pbnQiKSBieSBMdWNh
+cy4gDQo+IA0KPiBPbiBkYXRhc2hlZXQgcGFnZSA3IGl0IG1lbnRpb25zIHRoYXQgcHJvZHVjdCBj
+b2RlIGNhbiBoYXZlICJKWiIgb3IgIkhaIg0KPiBmb3IgMS4zR2h6IG9yIDEuNUdoei4gQXJlIHlv
+dSBzYXlpbmcgdGhhdCBvbmx5IGluZHVzdHJpYWwgcGFydHMgY2FuIGJlICJKWiI/DQoNCklmIHRh
+a2UgYSBsb29rIGF0IHBhZ2UgNiB0YWJsZTIsIGluZHVzdHJpYWwgZGF0YXNoZWV0IE9OTFkgaGFz
+ICJIWiIsIGFuZCBjb25zdW1lcg0KRGF0YXNoZWV0IE9OTFkgaGFzICJKWiIuIEFuZCB5ZXMsIHRo
+YXQgaXMgbXkgdW5kZXJzdGFuZGluZy4NCg0KQW5kIGNvbnNpZGVyaW5nIG91ciBydWxlLCBJIGRv
+bid0IHRoaW5rIGlzIGJlbmVmaXQgZm9yIGNvbnN1bWVyIHBhcnQgdG8gcnVuIDEuM0dIei4NCg0K
+PiANCj4gPj4+ICAgIAkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8MTUwMDAwMDAwMD47DQo+ID4+PiAg
+ICAJCQlvcHAtbWljcm92b2x0ID0gPDEwMDAwMDA+Ow0KPiA+Pj4gICAgCQkJLyogQ29uc3VtZXIg
+b25seSBidXQgcmVseSBvbiBzcGVlZCBncmFkaW5nICovDQo+ID4+PiAtCQkJb3BwLXN1cHBvcnRl
+ZC1odyA9IDwweDg+LCA8MHg3PjsNCj4gPj4+ICsJCQlvcHAtc3VwcG9ydGVkLWh3ID0gPDB4OD4s
+IDwweDM+Ow0KPiA+Pg0KPiA+PiBJZiB5b3UgZG9uJ3Qgd2FudCB0byByZWx5IG9uIHRoZSBmYWN0
+IHRoYXQgb25seSBjb25zdW1lciBwYXJ0cyBzaG91bGQNCj4gPj4gYmUgZnVzZWQgZm9yIDEuNSBH
+aHogdGhlbiBwbGVhc2UgZGVsZXRlIHRoZSBjb21tZW50Lg0KPiA+DQo+ID4gRG9uJ3QgcXVpdGUg
+dW5kZXJzdGFuZCwgMS41R0h6IGlzIGluZGVlZCBjb25zdW1lciBPTkxZLCBidXQgaWYgdGhlDQo+
+ID4gY29uc3VtZXIgcGFydCBpcyBmdXNlZCB0byAxR0h6LCB0aGVuIDEuNUdIeiBpcyBhbHNvIE5P
+VCBhdmFpbGFibGUsIHNvDQo+ID4gaXQgYWxzbyByZWx5IG9uIHNwZWVkIGdyYWRpbmcuIFNvIGtl
+ZXAgdGhlIGNvbW1lbnQgdGhlcmUgaXMgT0s/DQo+IA0KPiBXaGF0IEkgbWVhbnQgd2l0aCB0aGF0
+IGNvbW1lbnQgaXMgdGhhdCAxLjVHaHogaXMgb25seSBtZW50aW9uZWQgZm9yDQo+IGNvbnN1bWVy
+IHBhcnRzIGJ1dCBpbnN0ZWFkIG9mIGV4cGxpY2l0bHkgYmFubmluZyBpdCBvbiBpbmR1c3RyaWFs
+IHBhcnRzIHdlIHJlbHkNCj4gb24gTUZHIG5ldmVyIGZ1c2luZyBpbmR1c3RyaWFsIHBhcnRzIGZv
+ciAxLjVHaHouDQo+IA0KPiBOb3cgeW91J3JlIGV4cGxpY2l0bHkgYmFubmluZyBpdCBvbiBpbmR1
+c3RyaWFsIHBhcnRzLg0KDQpZZXMsIGluZHVzdHJpYWwgcGFydHMgbmV2ZXIgc3VwcG9ydCB1cCB0
+byAxLjVHSHosIHNvIGV4cGxpY2l0bHkgYmFubmluZyBpdCBpcyBqdXN0IE9LLg0KVGhlIHNwZWVk
+IGdyYWRpbmcgZnVzZSBhbmQgbWFya2V0IHNlZ21lbnQgZnVzZSBhcmUgYWN0dWFsbHkgaGFzIHNv
+bWUgb3ZlcmxhcCwNCndlIGJldHRlciB0byBpbXBsZW1lbnQgYm90aCBvZiB0aGVtLg0KDQo+IA0K
+PiBUaGlzIGNvbW1lbnQgaXMgaW5kZWVkIGNvbmZ1c2luZyBzbyBiZXR0ZXIgdG8ganVzdCByZW1v
+dmUgYWxsIGluc3RhbmNlcy4NCg0KSSBhZ3JlZSB0byByZW1vdmUgdGhvc2UgY29tbWVudHMsIG5v
+IG5lZWQgdG8gbGV0IGl0IGludHJvZHVjZSBhbnkgY29uZnVzaW9uLg0KDQpBbnNvbi4NCg==
