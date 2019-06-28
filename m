@@ -2,100 +2,100 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9854C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36701C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96AB6208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:59:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="w73nxePK"
+	by mail.kernel.org (Postfix) with ESMTP id 1786120828
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfF1S7b (ORCPT
+        id S1726908AbfF1TA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:59:31 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35986 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbfF1S7a (ORCPT
+        Fri, 28 Jun 2019 15:00:26 -0400
+Received: from bmailout2.hostsharing.net ([83.223.90.240]:36543 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbfF1TAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:59:30 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r6so7023476oti.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:59:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xZKi8dPs5bce5TA+lDYDR67LZgo76bXK/epIzKFvivc=;
-        b=w73nxePK59nSfEruxrF1M0kHpQTfXV+T0BR3rvgPNUWzxDsJQPeaM7uFD7eKRrxE9Y
-         9ImwGmBtt6yXJ6nlctHx0FbYi1ua/8g/5ZblEqYZrPEU8IkQx9AAwyacMH73KkUPSZW4
-         2CnxLw8FBn5LZR6QuLzXXkPegk+n9WnVTkvOy7EQwUeDTJ/KqrjyTyioxg0mlKF5l5Fl
-         pBgbtoepm7/tvV+XTP8uNL6F6V5682w/nGp9yu+fmrqAAOl3CXi6A8E63DaUmygnIHBK
-         Lo3TxfO9CsdVEHmVkApvqnki+XHSFnPPV047Ep963nO0SUi6VwELdrivAHXWP8JUXEYH
-         XM8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xZKi8dPs5bce5TA+lDYDR67LZgo76bXK/epIzKFvivc=;
-        b=saY5MWd1MOHhyhesqJEYWQsqNciDo677MVDX7MyfR3gMwJR6nBJaD6Ym7Jhfw58lhf
-         Mj8tlC0G3An6fl7xrbz4N91dWCbV3tQf6FlDiO/vEzRI+tcqjOamvttyrPfKAyj0jt1b
-         RWYSRjq0Q7fH6ZiwXW6JVY8gj0+yVNHLNQ++uyrlbCDwCAuxdw6q9nhXXdDauSkKFYbV
-         Da4BmTLZJG8gPoMdaSgZCthNmvfjZQvJsDGarguysvKVS9oALPkfq8nvZom7OkHPo3bI
-         Na0V8W65lJRUzj2OYSMLqFhn3H9u0F0Utjt1+WfkmAu4Oj8EdQ5zkEWebUT03T3n8hhV
-         9Wcw==
-X-Gm-Message-State: APjAAAV50KDYfcFID2R2hdYIb9ECiwk5P2ZXzwF55Nw9sKvwEWIKULPv
-        jT42HFy0rWCjG8qktPb9aYgrf6xL10UnbHnYoAYPGQ==
-X-Google-Smtp-Source: APXvYqxUAlE0PhQVf+kI2qGh3xwcV/BdcPGn6HCqEnYJmqo0MIx4gI+EfnCAuColBmsblnHh366HyPqaX1Z8NdWYLok=
-X-Received: by 2002:a9d:7a8b:: with SMTP id l11mr8858325otn.247.1561748370285;
- Fri, 28 Jun 2019 11:59:30 -0700 (PDT)
+        Fri, 28 Jun 2019 15:00:25 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 3B9872800BC1C;
+        Fri, 28 Jun 2019 21:00:23 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id D2E9316F24; Fri, 28 Jun 2019 21:00:22 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 21:00:22 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        broonie@kernel.org, eric@anholt.net,
+        Martin Sperl <kernel@martin.sperl.org>, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH] spi: spi-bcm2835.c: Fix 3-wire mode
+Message-ID: <20190628190022.vya4h2lihm6x2xpb@wunner.de>
+References: <20190628123023.4696-1-nuno.sa@analog.com>
+ <1b932c61-982b-aae0-1fef-3c574e7d17eb@gmx.net>
 MIME-Version: 1.0
-References: <20190626122724.13313-1-hch@lst.de> <20190626122724.13313-17-hch@lst.de>
- <20190628153827.GA5373@mellanox.com> <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
- <20190628170219.GA3608@mellanox.com> <CAPcyv4ja9DVL2zuxuSup8x3VOT_dKAOS8uBQweE9R81vnYRNWg@mail.gmail.com>
- <CAPcyv4iWTe=vOXUqkr_CguFrFRqgA7hJSt4J0B3RpuP-Okz0Vw@mail.gmail.com>
- <20190628182922.GA15242@mellanox.com> <CAPcyv4g+zk9pnLcj6Xvwh-svKM+w4hxfYGikcmuoBAFGCr-HAw@mail.gmail.com>
- <20190628185152.GA9117@lst.de>
-In-Reply-To: <20190628185152.GA9117@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 28 Jun 2019 11:59:19 -0700
-Message-ID: <CAPcyv4i+b6bKhSF2+z7Wcw4OUAvb1=m289u9QF8zPwLk402JVg@mail.gmail.com>
-Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1b932c61-982b-aae0-1fef-3c574e7d17eb@gmx.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 11:52 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Fri, Jun 28, 2019 at 11:44:35AM -0700, Dan Williams wrote:
-> > There is a problem with the series in CH's tree. It removes the
-> > ->page_free() callback from the release_pages() path because it goes
-> > too far and removes the put_devmap_managed_page() call.
->
-> release_pages only called put_devmap_managed_page for device public
-> pages.  So I can't see how that is in any way a problem.
+On Fri, Jun 28, 2019 at 05:23:54PM +0200, Stefan Wahren wrote:
+> Am 28.06.19 um 14:30 schrieb Nuno Sá:
+> > As stated in
+> > https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md,
+> > one of rx or tx buffer's must be null. However, if DMA is enabled, the
+> > driver sets the SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX on the
+> > controller flags. Hence, the spi core will provide dummy buffers even if
+> > one of the buffers was set to null by the device driver. Thus, the
+> > communication with the 3-wire device fails.
+> >
+> > This patch uses the prepare_message callback to look for the device mode
+> > and sets/clears the SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX on a
+> > per spi message basis. It also assumes that DMA is not supported on
+> > half-duplex devices.
+> >
+> > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> 
+> i never tested the 3-wire mode. Could you please describe your test setup?
 
-It's a bug that the call to put_devmap_managed_page() was gated by
-MEMORY_DEVICE_PUBLIC in release_pages(). That path is also applicable
-to MEMORY_DEVICE_FSDAX because it needs to trigger the ->page_free()
-callback to wake up wait_on_var() via fsdax_pagefree().
+__spi_validate() returns -EINVAL if 3-wire mode is used and both buffers
+are non-NULL, I guess that's the problem.
 
-So I guess you could argue that the MEMORY_DEVICE_PUBLIC removal patch
-left the original bug in place. In that sense we're no worse off, but
-since we know about the bug, the fix and the patches have not been
-applied yet, why not fix it now?
+
+> @Martin, @Lukas Are you fine with this patch?
+
+I have a patch set in the pipeline to drop SPI_CONTROLLER_MUST_RX
+and SPI_CONTROLLER_MUST_TX from spi-bcm2835.c.
+
+Latest snapshot is available here (top-most 10 commits):
+https://github.com/l1k/linux/commits/revpi_staging
+
+@Nuno, could you give this branch a spin and see if it fixes the
+issue for you?  If so, this might be a better solution.  Your patch
+is fine in principle since it works around the problem, but the
+patch set on the above-linked branch fixes it at the root.
+It also provides a nice welcome speedup and reduces resource
+consumption.
+
+I've been working on this on-and-off for about half a year,
+I think the patch set is in pretty good shape now so I was
+planning to submit it probably in 2 weeks or so.
+
+Thanks,
+
+Lukas
