@@ -2,78 +2,96 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAA0C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B77D7C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BAAD208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:19:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561684741;
-	bh=VuRBdbHTmTYQIc2cT3UM6zcEtz1KIv/xAzv14ySlnZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Db/pi0tWeWsL0k+lBSTd2vTqvTvVgj+LYQ86jLjdGr2OCc7Vx04GF4C67nlz31t8/
-	 tudc7KPSnCYFQTCC6soqgjl1qlPcjqlqZNkbTmmvF2NQQZZf++G3cq+g2fs2qjUuxW
-	 y51XH01z+2UjBFMRwlmkod7t+dLo4O4MMkc/fJzU=
+	by mail.kernel.org (Postfix) with ESMTP id 9744D2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:21:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfF1BTA (ORCPT
+        id S1726710AbfF1BVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:19:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51742 "EHLO mail.kernel.org"
+        Thu, 27 Jun 2019 21:21:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53530 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726606AbfF1BS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:18:59 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726606AbfF1BVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 21:21:19 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D777208CB;
-        Fri, 28 Jun 2019 01:18:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561684738;
-        bh=VuRBdbHTmTYQIc2cT3UM6zcEtz1KIv/xAzv14ySlnZs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iwSvAWcDiuS4sVMsbBqonRBulKOC8yGUFMQBy/bcsZFKnkNdsWdWyqLbuuT6ygCgZ
-         TA6Gmx3zByO237MJF9RJ6t2wanIINvh7wNvsvKix+IW68TzbwYTRdI0/xpEdHo8EIm
-         q4wEgiBLdUnGDEzQpJ1q/XxDLbOE+oRffJ6w9eXY=
-Date:   Fri, 28 Jun 2019 03:18:55 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH RESEND v3] sched/isolation: Prefer housekeeping cpu in
- local node
-Message-ID: <20190628011854.GB19488@lerouge>
-References: <1561682593-12071-1-git-send-email-wanpengli@tencent.com>
- <1561682593-12071-2-git-send-email-wanpengli@tencent.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 88F9A307D91F;
+        Fri, 28 Jun 2019 01:21:18 +0000 (UTC)
+Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 88A9E60BEC;
+        Fri, 28 Jun 2019 01:21:12 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 20:21:09 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Petr Mladek <pmladek@suse.com>,
+        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
+        torvalds@linux-foundation.org
+Subject: Re: [PATCH] ftrace/x86: Add a comment to why we take text_mutex in
+ ftrace_arch_code_modify_prepare()
+Message-ID: <20190628012109.p7a2whpsnad5vjz7@treble>
+References: <20190627211819.5a591f52@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1561682593-12071-2-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190627211819.5a591f52@gandalf.local.home>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 28 Jun 2019 01:21:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 08:43:13AM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
+On Thu, Jun 27, 2019 at 09:18:19PM -0400, Steven Rostedt wrote:
 > 
-> In real product setup, there will be houseeking cpus in each nodes, it 
-> is prefer to do housekeeping from local node, fallback to global online 
-> cpumask if failed to find houseeking cpu from local node.
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 > 
-> Cc: Ingo Molnar <mingo@redhat.com> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Frederic Weisbecker <frederic@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> Taking the text_mutex in ftrace_arch_code_modify_prepare() is to fix a
+> race against module loading and live kernel patching that might try to
+> change the text permissions while ftrace has it as read/write. This
+> really needs to be documented in the code. Add a comment that does such.
+> 
+> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  arch/x86/kernel/ftrace.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 33786044d5ac..d7e93b2783fd 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -36,6 +36,11 @@
+>  
+>  int ftrace_arch_code_modify_prepare(void)
+>  {
+> +	/*
+> +	 * Need to grab text_mutex to prevent a race from module loading
+> +	 * and live kernel patching from changing the text permissions while
+> +	 * ftrace has it set to "read/write".
+> +	 */
+>  	mutex_lock(&text_mutex);
+>  	set_kernel_text_rw();
+>  	set_all_modules_text_rw();
+> -- 
+> 2.20.1
+> 
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Thanks!
+-- 
+Josh
