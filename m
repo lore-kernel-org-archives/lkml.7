@@ -2,319 +2,110 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D728C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B49CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E07BB2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:02:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rd9lRP9z"
+	by mail.kernel.org (Postfix) with ESMTP id 69BF82063F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfF1ICH (ORCPT
+        id S1726658AbfF1IDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:02:07 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34278 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfF1ICG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:02:06 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so2802237plt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 01:02:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WZq6BCzx2oAYKBXZwpH6LRexuDJ0/444+0e0Mc/hDbY=;
-        b=Rd9lRP9zAd/kbl3ZE7qYqE71uAPpqI08y9O8Z8POPjewUXfV5BkcxB5GlkY7Lz2EvR
-         L0vi5OB036U4FKFCgIDZv8F3y6lztLOxmk0kwy/NUBPaZkq+ECaVF1Jt2lfubLgAj49H
-         Uk6C/xmHOoJyYfOl2AD99Cc4Ji0bJcI5iEK/IOzTvY7wn8alGsOUKlv4FIhRP3sRGF55
-         fIMKwrwTaQtuY+hOsydah24wbl/mQVSW6sltZZBybHwghcYUR14MnHCnTHXmgdqPSQtw
-         agAI8RdzSUB0Onytip3sOEuouLaTLd1x4D+UiNdsy+ktLsNeIwWlm9Q+91kPa3V5g02W
-         Z4fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WZq6BCzx2oAYKBXZwpH6LRexuDJ0/444+0e0Mc/hDbY=;
-        b=FqoIf4seZOMeTFuqhjN2s5khvYb4868OAawF8i7mGZnImKx55I1f9wpviQcjx4NPUh
-         8VcPvzB7ONbAh4zubSEx4KMiJN6mBN09NFtTcHtgUGkRbkxjCKWue4mFwW3zfZEAZmqZ
-         0zM5e+461pSjNCUzba1r7gZ8fIzZLDLvilqG9kKfUQniXkQWhgfyXdK1AHF5K4RjYEys
-         jyYZLKrQYG6vAmjOqft+PerEsXN5fBfgTBLjlfXJKewsj14xx9fFw+Gudmqjx8cq5sif
-         R+PqT3WQ7o1ibOHg/yOzZJDuw/H2OkDHjicZaLBsSY52lQdp7aqQrraYC0nZbWre1k0E
-         5V1w==
-X-Gm-Message-State: APjAAAXkZkv9RyxoNmq1gazhmUvlL7nI8fzMEjgYynMqA9xh1mKT/V8W
-        b+5zf1p00AnRnXXJbHHmtivc4UHdpOPZCetuWWuULQ==
-X-Google-Smtp-Source: APXvYqwmEZtlGKAjiLJWvizo9Zwmik6FWTQ62cPvtwGWDViEZL1wVsPAEfk8YLKeNB7mUaMkZVTde4hFd59dR/Vcw90=
-X-Received: by 2002:a17:902:2006:: with SMTP id n6mr10173684pla.232.1561708925220;
- Fri, 28 Jun 2019 01:02:05 -0700 (PDT)
+        Fri, 28 Jun 2019 04:03:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44892 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbfF1IDD (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:03:03 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1BC50308FC20;
+        Fri, 28 Jun 2019 08:02:59 +0000 (UTC)
+Received: from krava (unknown [10.40.205.128])
+        by smtp.corp.redhat.com (Postfix) with SMTP id DBA351A7DB;
+        Fri, 28 Jun 2019 08:02:55 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 10:02:55 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v6 0/7] perf diff: diff cycles at basic block level
+Message-ID: <20190628080255.GA3427@krava>
+References: <1561713784-30533-1-git-send-email-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-18-brendanhiggins@google.com> <20190626021744.GU19023@42.do-not-panic.com>
- <CAAXuY3p+kVhjQ4LYtzormqVcH2vKu1abc_K9Z0XY=JX=bp8NcQ@mail.gmail.com> <20190627061021.GE19023@42.do-not-panic.com>
-In-Reply-To: <20190627061021.GE19023@42.do-not-panic.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 28 Jun 2019 01:01:54 -0700
-Message-ID: <CAFd5g45VJ9yfuESUc=E0ydJyN+mk1b1kyHSCYvO2x9KPC7+3GQ@mail.gmail.com>
-Subject: Re: [PATCH v5 17/18] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Iurii Zaikin <yzaikin@google.com>, linux-api@vger.kernel.org,
-        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561713784-30533-1-git-send-email-yao.jin@linux.intel.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 28 Jun 2019 08:03:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 11:10 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
->
-> On Wed, Jun 26, 2019 at 09:07:43PM -0700, Iurii Zaikin wrote:
-> > On Tue, Jun 25, 2019 at 7:17 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> > > > +static void sysctl_test_dointvec_table_maxlen_unset(struct kunit *test)
-> > > > +{
-> > > > +     struct ctl_table table = {
-> > > > +             .procname = "foo",
-> > > > +             .data           = &test_data.int_0001,
-> > > > +             .maxlen         = 0,
-> > > > +             .mode           = 0644,
-> > > > +             .proc_handler   = proc_dointvec,
-> > > > +             .extra1         = &i_zero,
-> > > > +             .extra2         = &i_one_hundred,
-> > > > +     };
-> > > > +     void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
-> > > > +     size_t len;
-> > > > +     loff_t pos;
-> > > > +
-> > > > +     len = 1234;
-> > > > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
-> > > > +     KUNIT_EXPECT_EQ(test, (size_t)0, len);
-> > > > +     len = 1234;
-> > > > +     KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, buffer, &len, &pos));
-> > > > +     KUNIT_EXPECT_EQ(test, (size_t)0, len);
-> > > > +}
-> > >
-> > > In a way this is also testing for general kernel API changes. This is and the
-> > > last one were good examples. So this is not just testing functionality
-> > > here. There is no wrong or write answer if 0 or -EINVAL was returned
-> > > other than the fact that we have been doing this for years.
-> > >
-> > > Its a perhaps small but important difference for some of these tests.  I
-> > > *do* think its worth clarifying through documentation which ones are
-> > > testing for API consistency Vs proper correctness.
-> >
-> > You make a good point that the test codifies the existing behavior of
-> > the function in lieu of formal documentation.  However, the test cases
-> > were derived from examining the source code of the function under test
-> > and attempting to cover all branches. The assertions were added only
-> > for the values that appeared to be set deliberately in the
-> > implementation. And it makes sense to me to test that the code does
-> > exactly what the implementation author intended.
->
-> I'm not arguing against adding them. I'm suggesting that it is different
-> to test for API than for correctness of intended functionality, and
-> it would be wise to make it clear which test cases are for API and which
-> for correctness.
+On Fri, Jun 28, 2019 at 05:22:57PM +0800, Jin Yao wrote:
+> In some cases small changes in hot loops can show big differences.
+> But it's difficult to identify these differences.
+> 
+> perf diff currently can only diff symbols (functions). We can also expand
+> it to diff cycles of individual programs blocks as reported by timed LBR.
+> This would allow to identify changes in specific code accurately.
+> 
+> With this patch set, for example,
+> 
+>  $ perf record -b ./div
+>  $ perf record -b ./div
+>  $ perf diff -c cycles
+> 
+>  # Event 'cycles'
+>  #
+>  # Baseline                                       [Program Block Range] Cycles Diff  Shared Object     Symbol
+>  # ........  ......................................................................  ................  ..................................
+>  #
+>      48.75%                                             [div.c:42 -> div.c:45]  147  div               [.] main
+>      48.75%                                             [div.c:31 -> div.c:40]    4  div               [.] main
+>      48.75%                                             [div.c:40 -> div.c:40]    0  div               [.] main
+>      48.75%                                             [div.c:42 -> div.c:42]    0  div               [.] main
+>      48.75%                                             [div.c:42 -> div.c:44]    0  div               [.] main
+>      19.02%                                 [random_r.c:357 -> random_r.c:360]    0  libc-2.23.so      [.] __random_r
+>      19.02%                                 [random_r.c:357 -> random_r.c:373]    0  libc-2.23.so      [.] __random_r
+>      19.02%                                 [random_r.c:357 -> random_r.c:376]    0  libc-2.23.so      [.] __random_r
+>      19.02%                                 [random_r.c:357 -> random_r.c:380]    0  libc-2.23.so      [.] __random_r
+>      19.02%                                 [random_r.c:357 -> random_r.c:392]    0  libc-2.23.so      [.] __random_r
+>      16.17%                                     [random.c:288 -> random.c:291]    0  libc-2.23.so      [.] __random
+>      16.17%                                     [random.c:288 -> random.c:291]    0  libc-2.23.so      [.] __random
+>      16.17%                                     [random.c:288 -> random.c:295]    0  libc-2.23.so      [.] __random
+>      16.17%                                     [random.c:288 -> random.c:297]    0  libc-2.23.so      [.] __random
+>      16.17%                                     [random.c:291 -> random.c:291]    0  libc-2.23.so      [.] __random
+>      16.17%                                     [random.c:293 -> random.c:293]    0  libc-2.23.so      [.] __random
+>       8.21%                                             [div.c:22 -> div.c:22]  148  div               [.] compute_flag
+>       8.21%                                             [div.c:22 -> div.c:25]    0  div               [.] compute_flag
+>       8.21%                                             [div.c:27 -> div.c:28]    0  div               [.] compute_flag
+>       5.52%                                           [rand.c:26 -> rand.c:27]    0  libc-2.23.so      [.] rand
+>       5.52%                                           [rand.c:26 -> rand.c:28]    0  libc-2.23.so      [.] rand
+>       2.27%                                         [rand@plt+0 -> rand@plt+0]    0  div               [.] rand@plt
+>       0.01%                                 [entry_64.S:694 -> entry_64.S:694]   16  [kernel.vmlinux]  [k] native_irq_return_iret
+>       0.00%                                       [fair.c:7676 -> fair.c:7665]  162  [kernel.vmlinux]  [k] update_blocked_averages
+> 
+>  '[Program Block Range]' indicates the range of program basic block
+>  (start -> end). If we can find the source line it prints the source
+>  line otherwise it prints the symbol+offset instead.
+> 
+>  v6:
+>  ---
+>  Remove the 'ops' argument in hists__add_entry_block. No functional change.
+> 
+>  Changed patches
+>   perf util: Add block_info in hist_entry 
+>   perf diff: Use hists to manage basic blocks per symbol
 
-I see later on that some of the API stuff you are talking about is
-public APIs from the standpoint of user (outside of LInux) visible. To
-be clear, is that what you mean by public APIs throughout, or would
-you distinguish between correctness tests, internal API tests, and
-external API tests?
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 
-> This will come up later for other kunit tests and it would be great
-> to set precendent so that other kunit tests can follow similar
-> practices to ensure its clear what is API realted Vs correctness of
-> intended functionality.
->
-> In fact, I'm not yet sure if its possible to test public kernel API to
-> userspace with kunit, but if it is possible... well, that could make
-> linux-api folks happy as they could enable us to codify interpreation of
-> what is expected into kunit test cases, and we'd ensure that the
-> codified interpretation is not only documented in man pages but also
-> through formal kunit test cases.
->
-> A regression in linux-api then could be formalized through a proper
-> kunit tests case. And if an API evolves, it would force developers to
-> update the respective kunit which codifies that contract.
-
-Yep, I think that is long term hope. Some of the file system interface
-stuff that requires a filesystem to be mounted somewhere might get a
-little weird/difficult, but I suspect we should be able to do it
-eventually. I mean it's all just C code right? Should mostly boil down
-to someone figuring out how to do it the first time.
-
-> > > > +static void sysctl_test_dointvec_single_less_int_min(struct kunit *test)
-> > > > +{
-> > > > +     struct ctl_table table = {
-> > > > +             .procname = "foo",
-> > > > +             .data           = &test_data.int_0001,
-> > > > +             .maxlen         = sizeof(int),
-> > > > +             .mode           = 0644,
-> > > > +             .proc_handler   = proc_dointvec,
-> > > > +             .extra1         = &i_zero,
-> > > > +             .extra2         = &i_one_hundred,
-> > > > +     };
-> > > > +     char input[32];
-> > > > +     size_t len = sizeof(input) - 1;
-> > > > +     loff_t pos = 0;
-> > > > +     unsigned long abs_of_less_than_min = (unsigned long)INT_MAX
-> > > > +                                          - (INT_MAX + INT_MIN) + 1;
-> > > > +
-> > > > +     KUNIT_EXPECT_LT(test,
-> > > > +                     (size_t)snprintf(input, sizeof(input), "-%lu",
-> > > > +                                      abs_of_less_than_min),
-> > > > +                     sizeof(input));
-> > > > +
-> > > > +     table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
-> > > > +     KUNIT_EXPECT_EQ(test, -EINVAL,
-> > > > +                     proc_dointvec(&table, 1, input, &len, &pos));
-> > > > +     KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
-> > > > +     KUNIT_EXPECT_EQ(test, 0, ((int *)table.data)[0]);
-> > > > +}
-> > >
-> > > API test.
-> > >
-> > Not sure why.
->
-> Because you are codifying that we *definitely* return -EINVAL on
-> overlow. Some parts of the kernel return -ERANGE for overflows for
-> instance.
->
-> It would be a generic test for overflow if it would just test
-> for any error.
->
-> It is a fine and good test to keep. All these tests are good to keep.
->
-> > I believe there has been a real bug with int overflow in
-> > proc_dointvec.
-> > Covering it with test seems like a good idea.
->
-> Oh definitely.
->
-> > > > +static void sysctl_test_dointvec_single_greater_int_max(struct kunit *test)
-> > > > +{
-> > > > +     struct ctl_table table = {
-> > > > +             .procname = "foo",
-> > > > +             .data           = &test_data.int_0001,
-> > > > +             .maxlen         = sizeof(int),
-> > > > +             .mode           = 0644,
-> > > > +             .proc_handler   = proc_dointvec,
-> > > > +             .extra1         = &i_zero,
-> > > > +             .extra2         = &i_one_hundred,
-> > > > +     };
-> > > > +     char input[32];
-> > > > +     size_t len = sizeof(input) - 1;
-> > > > +     loff_t pos = 0;
-> > > > +     unsigned long greater_than_max = (unsigned long)INT_MAX + 1;
-> > > > +
-> > > > +     KUNIT_EXPECT_GT(test, greater_than_max, (unsigned long)INT_MAX);
-> > > > +     KUNIT_EXPECT_LT(test, (size_t)snprintf(input, sizeof(input), "%lu",
-> > > > +                                            greater_than_max),
-> > > > +                     sizeof(input));
-> > > > +     table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
-> > > > +     KUNIT_EXPECT_EQ(test, -EINVAL,
-> > > > +                     proc_dointvec(&table, 1, input, &len, &pos));
-> > > > +     KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
-> > > > +     KUNIT_EXPECT_EQ(test, 0, ((int *)table.data)[0]);
-> > > > +}
-> > > > +
-> > >
-> > > API test.
-> > >
-> > > > +static struct kunit_case sysctl_test_cases[] = {
-> > > > +     KUNIT_CASE(sysctl_test_dointvec_null_tbl_data),
-> > > > +     KUNIT_CASE(sysctl_test_dointvec_table_maxlen_unset),
-> > > > +     KUNIT_CASE(sysctl_test_dointvec_table_len_is_zero),
-> > > > +     KUNIT_CASE(sysctl_test_dointvec_table_read_but_position_set),
-> > > > +     KUNIT_CASE(sysctl_test_dointvec_happy_single_positive),
-> > > > +     KUNIT_CASE(sysctl_test_dointvec_happy_single_negative),
-> > > > +     KUNIT_CASE(sysctl_test_dointvec_single_less_int_min),
-> > > > +     KUNIT_CASE(sysctl_test_dointvec_single_greater_int_max),
-> > > > +     {}
-> > > > +};
-> > >
-> > > Oh all are API tests.. perhaps then just rename then
-> > > sysctl_test_cases to sysctl_api_test_cases.
-> > >
-> > > Would be good to add at least *two* other tests cases for this
-> > > example, one which does a valid read and one which does a valid write.
-> > Added valid reads. There already are 2 valid writes.
->
-> Thanks.
->
-> > > If that is done either we add another kunit test module for correctness
-> > > or just extend the above and use prefix / postfixes on the functions
-> > > to distinguish between API / correctness somehow.
-> > >
-> > > > +
-> > > > +static struct kunit_module sysctl_test_module = {
-> > > > +     .name = "sysctl_test",
-> > > > +     .test_cases = sysctl_test_cases,
-> > > > +};
-> > > > +
-> > > > +module_test(sysctl_test_module);
-> > > > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > > > index cbdfae3798965..389b8986f5b77 100644
-> > > > --- a/lib/Kconfig.debug
-> > > > +++ b/lib/Kconfig.debug
-> > > > @@ -1939,6 +1939,16 @@ config TEST_SYSCTL
-> > > >
-> > > >         If unsure, say N.
-> > > >
-> > > > +config SYSCTL_KUNIT_TEST
-> > > > +     bool "KUnit test for sysctl"
-> > > > +     depends on KUNIT
-> > > > +     help
-> > > > +       This builds the proc sysctl unit test, which runs on boot. For more
-> > > > +       information on KUnit and unit tests in general please refer to the
-> > > > +       KUnit documentation in Documentation/dev-tools/kunit/.
-> > >
-> > > A little more description here would help. It is testing for API and
-> > > hopefully also correctness (if extended with those two examples I
-> > > mentioned).
-> > >
-> > Added "Tests the API contract and implementation correctness of sysctl."
->
-> Yes, much clearer, thanks!
-
-Cheers!
+thanks,
+jirka
