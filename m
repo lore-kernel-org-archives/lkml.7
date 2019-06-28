@@ -2,147 +2,244 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF1EC5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B41C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC4A1205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDFD9205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eag4mvAB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgCshxwK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfF1SNL (ORCPT
+        id S1726664AbfF1SOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:13:11 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46651 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfF1SNL (ORCPT
+        Fri, 28 Jun 2019 14:14:33 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37584 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbfF1SOd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:13:11 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e5so3649441pls.13
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:13:10 -0700 (PDT)
+        Fri, 28 Jun 2019 14:14:33 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d15so5599999qkl.4;
+        Fri, 28 Jun 2019 11:14:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=Cn9Q1Wbyl5xIGaCdkoIIaNcFmVQFrY2dwxn3d9BBkHc=;
-        b=eag4mvABTu4bMgSKtKRaxm6hxG1BPnj1CEDFDSDsrF6DOjCGrRewpIXSDm7hcqEmzs
-         mn+E004mWDj4R879Vf9eY87+iP/Wk2xBwki3jO3juI6uyXY8phyqEjB38IK3ihQKMwMc
-         Cd6Llre7Oo/KZXZxjU80RAQo/+53AG/eeK+vmGfTUy39fzItmjufUSdfnyuecNykvLT7
-         ztmI8T5bDDvTG2AqW44V6lcm7kOKJs2HrwEU87a23q26iR7Yfzxpm1YAOtsxOXwa6RUk
-         moDdV4v+CP9qI3+CevCjHpdLRTZsYlBKjIwkb5sHJ19IF4aHoFmNkJLypftqcz4xfj51
-         xVVg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xQBJt5k5XIEtyxhj7uriI5Uz6ZpfRCSKwrxa7OQkTDA=;
+        b=YgCshxwKygKi2hTeHh0CMZeHkpmgGhFH7vslGDmKMXCuF/ltiPBJo2JCWzgEPXoZ6I
+         c81zdco4HwAxPZhhSTq/ldzj/bfa6OXmfc3RUX8cx381et0O3/XhzmsehjU2Pav3WZWN
+         bx6npzPUf2xkpqzHIsoYGQV2FYLNfV0O3495jfQQewQid5/xVT/alIAgshMZnVUauN9e
+         mBkjqIZ0WzZ9rNO0AHmlqnArnPqs1/9GCM/Dm5oram4YBjKFemSu0t0mUltLXzwq3Xxj
+         GzP1VkJS6B7ELL2tns2UlsJFGYis/ClUFZcVAfYpZbRmppl5sGvS9rKnK16xoT2Q2jAW
+         NeUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Cn9Q1Wbyl5xIGaCdkoIIaNcFmVQFrY2dwxn3d9BBkHc=;
-        b=ShbwLkNyy9XUtiBwX/eS761qEIc3zg5di/JN0hn5hGgN8Mv2IZjGFtgYuYelGaVo8x
-         0QGF5BxcjAQav4G8ij44dbMmB1TKH6Gfc7nKOrEc9MHZzTgxmFe07OUlKWq0UIcQXJ2A
-         dEIVhoMI/CLUqLO+KPXvQ5+fFJdrvwenNufA2XIofU6Quk3GWPLBzS4IV7JpyCfPwvBv
-         1buc8qMJajWQ1zRFmhK1StCAcOFVJMjN5fp6vJT+yDCq5wSWMlZuBJE3TKGrMCvWs3RH
-         DugrKMEZl5CIvbEwobiuZL/FDRP2U0qYON4ZMOYEWx6k/FmTrCwJ1fvwMGzS5mLELAz/
-         Rt0A==
-X-Gm-Message-State: APjAAAVeuYBvZbPMABYbR4+ZwtQW0/0TX+NZ1anFAK+7otxpy9hOtvWI
-        A24wuHEJoyuAMPAZfZ1lkhlX4Q==
-X-Google-Smtp-Source: APXvYqyO0DxNwIeVEjqqmuJf6WfYaCTaV6owpC43va2Fglh9hukvx/iaKf2dkMByt/m7tQBZXRWWpw==
-X-Received: by 2002:a17:902:da4:: with SMTP id 33mr12037670plv.209.1561745590252;
-        Fri, 28 Jun 2019 11:13:10 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id o14sm2675345pjp.29.2019.06.28.11.13.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Jun 2019 11:13:09 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
-        linux-gpio@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RFC/RFT v2 00/14] arm64: g12a: add support for DVFS
-In-Reply-To: <20190626090632.7540-1-narmstrong@baylibre.com>
-References: <20190626090632.7540-1-narmstrong@baylibre.com>
-Date:   Fri, 28 Jun 2019 11:13:08 -0700
-Message-ID: <7hblyhr32j.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xQBJt5k5XIEtyxhj7uriI5Uz6ZpfRCSKwrxa7OQkTDA=;
+        b=C84b57JLAQa1VuVryTIWj8o1HjSjOlLQHmWnK3tGHhOkq09RdUngpJE0F0aG5dA2hO
+         jAmZLtpg97UNce28lBltP4v2vtAOrQCdlvDB5DCmGNodgBPOkt7QLuQ/+zqAgSLbPO+6
+         CHMj6SJlUREyPI4pP5glCi8uOJCIYDdfVSSczWuR0mfBiuoQHkbxTeA3YB+I+JQPWK9P
+         01/UV2ZDAZ7kkin+zM3UF3mxJ2lfuNV2h4iBU+mQ34ckhqkhRc14AK+UOB+An3T57tzw
+         AFlAT7EV/4AxvRHfifGuuCCaz5o3RnDVl4jET4auwMW77LtivymulB8uSw1sv0zZ44sc
+         VbQQ==
+X-Gm-Message-State: APjAAAU0TWadm8a92YIGDYGtIUFBAu+Bvfod3AupxNGNKXdgDnZQvXU0
+        eQw5DyUYyoJ0/Il59jf/gBkQAJa0ZwpziXpST9Q=
+X-Google-Smtp-Source: APXvYqz2UZuV2gA7NnCbl060//e1+uRk9yGpebKzVN90FKyfRF+Gut/J6LLFUm8XWio8c9boAtTF1e5tF8fS+nS/TDw=
+X-Received: by 2002:a37:a095:: with SMTP id j143mr10325047qke.449.1561745671678;
+ Fri, 28 Jun 2019 11:14:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190627090446.GG7221@shao2-debian> <20190627155029.GC4866@mini-arch>
+ <20190627172932.GD4866@mini-arch> <CAEf4Bzbf8OE9TUV2Pq7HZp3PYhoUgMzH-Gs+GMafTPwPc_jYxA@mail.gmail.com>
+ <20190628023810.GF4866@mini-arch>
+In-Reply-To: <20190628023810.GF4866@mini-arch>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 28 Jun 2019 11:14:20 -0700
+Message-ID: <CAEf4BzbKkE0DYc0faaHThqyEbAu6qA1pFpUJ0uhX5xVd7Q7zSg@mail.gmail.com>
+Subject: Re: [bpf/tools] cd17d77705: kernel_selftests.bpf.test_sock_addr.sh.fail
+To:     Stanislav Fomichev <sdf@fomichev.me>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        bpf <bpf@vger.kernel.org>, lkp@01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+On Thu, Jun 27, 2019 at 7:38 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
+>
+> On 06/27, Andrii Nakryiko wrote:
+> > On Thu, Jun 27, 2019 at 10:29 AM Stanislav Fomichev <sdf@fomichev.me> wrote:
+> > >
+> > > On 06/27, Stanislav Fomichev wrote:
+> > > > On 06/27, kernel test robot wrote:
+> > > > > FYI, we noticed the following commit (built with gcc-7):
+> > > > >
+> > > > > commit: cd17d77705780e2270937fb3cbd2b985adab3edc ("bpf/tools: sync bpf.h")
+> > > > > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> > > > >
+> > > > > in testcase: kernel_selftests
+> > > > > with following parameters:
+> > > > >
+> > > > >     group: kselftests-00
+> > > > >
+> > > > > test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
+> > > > > test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+> > > > >
+> > > > >
+> > > > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+> > > > >
+> > > > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> > > > >
+> > > > > # 55: (18) r1 = 0x100000000000000
+> > > > > # ; ctx->user_ip6[2] = bpf_htonl(DST_REWRITE_IP6_2);
+> > > > > # 57: (7b) *(u64 *)(r6 +16) = r1
+> > > > > # invalid bpf_context access off=16 size=8
+> > > > This looks like clang doing single u64 write for user_ip6[2] and
+> > > > user_ip6[3] instead of two u32. I don't think we allow that.
+> > > >
+> > > > I've seen this a couple of times myself while playing with some
+> > > > progs, but not sure what's the right way to 'fix' it.
+> > > >
+> > > Any thoughts about the patch below? Another way to "fix" it
+> >
+> > I'll give it a more thorough look a bit later, but see my comments below.
+> >
+> > > would be to mark context accesses 'volatile' in bpf progs, but that sounds
+> > > a bit gross.
+> > >
+> > > diff --git a/include/linux/filter.h b/include/linux/filter.h
+> > > index 43b45d6db36d..34a14c950e60 100644
+> > > --- a/include/linux/filter.h
+> > > +++ b/include/linux/filter.h
+> > > @@ -746,6 +746,20 @@ bpf_ctx_narrow_access_ok(u32 off, u32 size, u32 size_default)
+> > >         return size <= size_default && (size & (size - 1)) == 0;
+> > >  }
+> > >
+> > > +static inline bool __bpf_ctx_wide_store_ok(u32 off, u32 size)
+> >
+> > It seems like bpf_ctx_wide_store_ok and __bpf_ctx_wide_store_ok are
+> > used only inside net/core/filter.c, why declaring them in header file?
+> I wanted it to be next to bpf_ctx_narrow_access_ok which does the
+> reverse operation for reads.
 
-> The G12A/G12B Socs embeds a specific clock tree for each CPU cluster :
-> cpu_clk / cpub_clk
-> |   \- cpu_clk_dyn
-> |      |  \- cpu_clk_premux0
-> |      |        |- cpu_clk_postmux0
-> |      |        |    |- cpu_clk_dyn0_div
-> |      |        |    \- xtal/fclk_div2/fclk_div3
-> |      |        \- xtal/fclk_div2/fclk_div3
-> |      \- cpu_clk_premux1
-> |            |- cpu_clk_postmux1
-> |            |    |- cpu_clk_dyn1_div
-> |            |    \- xtal/fclk_div2/fclk_div3
-> |            \- xtal/fclk_div2/fclk_div3
-> \ sys_pll / sys1_pll
->
-> This patchset adds notifiers on cpu_clk / cpub_clk, cpu_clk_dyn,
-> cpu_clk_premux0 and sys_pll / sys1_pll to permit change frequency of
-> the CPU clock in a safe way as recommended by the vendor Documentation
-> and reference code.
->
-> This patchset :
-> - introduces needed core and meson clk changes
-> - adds support for the G12B second cluster clock measurer ids
-> - protects clock measurer from cooncurent measures
-> - adds the clock notifiers
-> - moves the G12A DT to a common g12a-common dtsi
-> - adds the G12A and G12B OPPs
-> - enables DVFS on all supported boards
->
-> Dependencies:
-> - PWM AO input order fix at [1]
-> - PWM enhancements from Martin at [2]
->
-> Changes since RFT/RFC v1 at [3]:
-> - Added EXPORT_SYMBOL_GPL() to clk_hw_set_parent
-> - Added missing static to g12b_cpub_clk_mux0_div_ops and g12a_cpu_clk_mux_nb
-> - Simplified g12a_cpu_clk_mux_notifier_cb() without switch/case
-> - Fixed typo in "this the current path" in g12a.c
-> - Fixed G12B dtsi by adding back the sdio quirk
-> - Fixed G12A dtsi unwanted sdio quirk removal
-> - Fixed various checkpatch errors
->
-> [1] https://patchwork.kernel.org/patch/11006835/
-> [2] https://patchwork.kernel.org/patch/11006835/
-> [3] https://patchwork.kernel.org/cover/11006929/
->
-> Neil Armstrong (14):
->   pinctrl: meson-g12a: add pwm_a on GPIOE_2 pinmux
->   clk: core: introduce clk_hw_set_parent()
->   clk: meson: regmap: export regmap_div ops functions
->   clk: meson: eeclk: add setup callback
->   soc: amlogic: meson-clk-measure: protect measure with a mutex
->   soc: amlogic: meson-clk-measure: add G12B second cluster cpu clk
->   clk: meson: g12a: add notifiers to handle cpu clock change
->   clk: meson: g12a: expose CPUB clock ID for G12B
->   arm64: dts: move common G12A & G12B modes to meson-g12-common.dtsi
->   arm64: dts: meson-g12-common: add pwm_a on GPIOE_2 pinmux
->   arm64: dts: meson-g12a: add cpus OPP table
->   arm64: dts: meson-g12a: enable DVFS on G12A boards
->   arm64: dts: meson-g12b: add cpus OPP tables
->   arm64: dts: meson-g12b-odroid-n2: enable DVFS
+Ah, ok, I see that bpf_ctx_narrow_access_ok is used in
+kernel/bpf/cgroup.c as well and bpf_ctx_wide_store_ok might be useful
+in some other contexts as well, let's keep it here.
 
-The DT files don't apply cleanly to my tree (v5.3/dt64 branch).  Could
-you rebase:
+>
+> > > +{
+> > > +       /* u64 access is aligned and fits into the field size */
+> > > +       return off % sizeof(__u64) == 0 && off + sizeof(__u64) <= size;
+> > > +}
+> > > +
+> > > +#define bpf_ctx_wide_store_ok(off, size, type, field) \
+> > > +       (size == sizeof(__u64) && \
+> > > +        off >= offsetof(type, field) && \
+> > > +        off < offsetofend(type, field) ? \
+> > > +       __bpf_ctx_wide_store_ok(off - offsetof(type, field), \
+> > > +                                FIELD_SIZEOF(type, field)) : 0)
 
-Then I can put into my testing branch, which gets included in 'integ'
-and it will be easier for others to test.
+This would be sufficient, right?
 
-Kevin
+#define bpf_ctx_wide_store_ok(off, size, type, field) \
+        size == sizeof(__u64) &&                      \
+        off >= offsetof(type, field) &&               \
+        off + size <= offsetofend(type, field) &&     \
+        off % sizeof(__u64) == 0
 
+> >
+> > Why do you need ternary operator instead of just a chain of &&s?
+> Good point. I didn't spend too much time on the patch tbh :-)
+> If it looks good in general, I can add proper tests and do a
+> proper submition, this patch is just to get the discussion started.
+
+Consider it started. :) Talking with Yonghong about preventing this
+from happening in the first place in Clang, it seems like that would
+be harder and more cumbersome than supporting in BPF verifier. So
+please go ahead and submit a proper patch.
+
+>
+> > It also seems like you can avoid macro and use plain function if
+> > instead of providing (type, field) you provide values of offsetof and
+> > offsetofend (offsetofend - offsetof should equal FIELD_SIZEOF(type,
+> > field), shouldn't it?).
+> But then I'd have to copy-paste the args of offsetof/offsetofend at
+> the caller, right? I wanted the caller to be clean and simple.
+
+Yeah, that's a bit verbose, I agree. I don't mind macro, so no worries.
+
+>
+> > >  #define bpf_classic_proglen(fprog) (fprog->len * sizeof(fprog->filter[0]))
+> > >
+> > >  static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
+> > > diff --git a/net/core/filter.c b/net/core/filter.c
+> > > index 2014d76e0d2a..2d3787a439ae 100644
+> > > --- a/net/core/filter.c
+> > > +++ b/net/core/filter.c
+> > > @@ -6849,6 +6849,16 @@ static bool sock_addr_is_valid_access(int off, int size,
+> > >                         if (!bpf_ctx_narrow_access_ok(off, size, size_default))
+> > >                                 return false;
+> > >                 } else {
+> > > +                       if (bpf_ctx_wide_store_ok(off, size,
+> > > +                                                 struct bpf_sock_addr,
+> > > +                                                 user_ip6))
+> > > +                               return true;
+> > > +
+> > > +                       if (bpf_ctx_wide_store_ok(off, size,
+> > > +                                                 struct bpf_sock_addr,
+> > > +                                                 msg_src_ip6))
+> > > +                               return true;
+> > > +
+> > >                         if (size != size_default)
+> > >                                 return false;
+> > >                 }
+> > > @@ -7689,9 +7699,6 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
+> > >  /* SOCK_ADDR_STORE_NESTED_FIELD_OFF() has semantic similar to
+> > >   * SOCK_ADDR_LOAD_NESTED_FIELD_SIZE_OFF() but for store operation.
+> > >   *
+> > > - * It doesn't support SIZE argument though since narrow stores are not
+> > > - * supported for now.
+> > > - *
+> > >   * In addition it uses Temporary Field TF (member of struct S) as the 3rd
+> > >   * "register" since two registers available in convert_ctx_access are not
+> > >   * enough: we can't override neither SRC, since it contains value to store, nor
+> > > @@ -7699,7 +7706,7 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
+> > >   * instructions. But we need a temporary place to save pointer to nested
+> > >   * structure whose field we want to store to.
+> > >   */
+> > > -#define SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, OFF, TF)                       \
+> > > +#define SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, SIZE, OFF, TF)         \
+> > >         do {                                                                   \
+> > >                 int tmp_reg = BPF_REG_9;                                       \
+> > >                 if (si->src_reg == tmp_reg || si->dst_reg == tmp_reg)          \
+> > > @@ -7710,8 +7717,7 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
+> > >                                       offsetof(S, TF));                        \
+> > >                 *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(S, F), tmp_reg,         \
+> > >                                       si->dst_reg, offsetof(S, F));            \
+> > > -               *insn++ = BPF_STX_MEM(                                         \
+> > > -                       BPF_FIELD_SIZEOF(NS, NF), tmp_reg, si->src_reg,        \
+> > > +               *insn++ = BPF_STX_MEM(SIZE, tmp_reg, si->src_reg,              \
+> > >                         bpf_target_off(NS, NF, FIELD_SIZEOF(NS, NF),           \
+> > >                                        target_size)                            \
+> > >                                 + OFF);                                        \
+> > > @@ -7723,8 +7729,8 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type,
+> > >                                                       TF)                      \
+> > >         do {                                                                   \
+> > >                 if (type == BPF_WRITE) {                                       \
+> > > -                       SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, OFF,    \
+> > > -                                                        TF);                  \
+> > > +                       SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, SIZE,   \
+> > > +                                                        OFF, TF);             \
+> > >                 } else {                                                       \
+> > >                         SOCK_ADDR_LOAD_NESTED_FIELD_SIZE_OFF(                  \
+> > >                                 S, NS, F, NF, SIZE, OFF);  \
