@@ -2,82 +2,121 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2CCC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62538C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551132083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:59:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Hz0aXYf9"
+	by mail.kernel.org (Postfix) with ESMTP id 488CA2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:01:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfF1R7w (ORCPT
+        id S1726897AbfF1SBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:59:52 -0400
-Received: from mail-pf1-f171.google.com ([209.85.210.171]:43445 "EHLO
-        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfF1R7u (ORCPT
+        Fri, 28 Jun 2019 14:01:06 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:45884 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbfF1SBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:59:50 -0400
-Received: by mail-pf1-f171.google.com with SMTP id i189so3354127pfg.10
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 10:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=Of1JaN7sHuZfD0NstaLTd2MzqkoQNU+dB9/U+AM5Bdc=;
-        b=Hz0aXYf9FNAepuCVFV167R3gAlxBZ41oQ5OOcua47PXfGIdizOWCfV7tUZJE3QgyE/
-         rQLoSx180BgnxwlNgVTpQ4Ig+1Xn1VJoIeTgLsNDp2QQxn6WDq1x+YB4YdmWR1WRSEYI
-         fWBIw7gApvr5ABgJvq1W+dx/05+xPrT5pRWc28UcKWjgAkPgDOoeyClRAvTuoAUW72Cf
-         3dQPhidbgh7UAQ/wW9+OU+yw0I4jRXfps1zfC6+2QY+vRwyd5O8DiX8senYHiYvw9jue
-         5l1RCL0un8DiyEfOgErem33EsWOke5gka4sQlT7+fIWwWP3Q/BbUKGSoQb7/N7qJTbea
-         brMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Of1JaN7sHuZfD0NstaLTd2MzqkoQNU+dB9/U+AM5Bdc=;
-        b=LnvNI6GRq0cz4d/3HjP/9OYT2oB9qhitxfV/kx9X3O0oLQ0ul2TOu/k86DDAVrvsZn
-         C2+2o6dj2Nr+Pief0ELYruVfRSA1Jrk52MAF4a4Y/USIA792HkDyoVkPCxRq9FWj0vIy
-         0GzrXvNPved8wYO7TgsFuIxkSLKjtCtCeBDfOkNKh/uvBSqheqXdBcYObfaD4O4gmFfO
-         DZiFxrYu2yld/Op2gquZhVcciMyZnS8qwn8r3AZiXMVBlU8jtkCIIfojIqY71D5rlMGI
-         y6bOQbBUQ/2SRZZlpTBikOUj+4VQshhlDV6Rp4mbiCL20PZVuONjF9R68qmIjMLzlgzv
-         +rqw==
-X-Gm-Message-State: APjAAAWnp8E97HIZwTXFzM+roejCor8RVLnv1Qo6yLOJlHIzKyXDuUL4
-        WJRzan5c9BCj1ghkDB97Pi6yKQ==
-X-Google-Smtp-Source: APXvYqzVm3ctFoObBMm0Kx/+AEZc0kKotlZRvKqXLokKmAqQl+Yz8kBBvBT8Pkq4aB9NKrit17xIEw==
-X-Received: by 2002:a63:3d8d:: with SMTP id k135mr10798175pga.23.1561744789355;
-        Fri, 28 Jun 2019 10:59:49 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id s66sm2933246pgs.39.2019.06.28.10.59.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Jun 2019 10:59:48 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
-        linux-gpio@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RFC/RFT v2 01/14] pinctrl: meson-g12a: add pwm_a on GPIOE_2 pinmux
-In-Reply-To: <20190626090632.7540-2-narmstrong@baylibre.com>
-References: <20190626090632.7540-1-narmstrong@baylibre.com> <20190626090632.7540-2-narmstrong@baylibre.com>
-Date:   Fri, 28 Jun 2019 10:59:48 -0700
-Message-ID: <7hmui1r3or.fsf@baylibre.com>
+        Fri, 28 Jun 2019 14:01:05 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 8DED880348;
+        Fri, 28 Jun 2019 20:00:58 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 20:00:57 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Colin Cross <ccross@android.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kees Cook <keescook@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] kbuild: compile-test kernel headers to ensure
+ they are self-contained
+Message-ID: <20190628180057.GA22758@ravnborg.org>
+References: <20190627163903.28398-1-yamada.masahiro@socionext.com>
+ <20190627163903.28398-5-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627163903.28398-5-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=yXOKcWPwKYVsdpAgASMA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Hi Masahiro.
 
-> Add the missing pinmux for the pwm_a function on the GPIOE_2 pin.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+On Fri, Jun 28, 2019 at 01:39:02AM +0900, Masahiro Yamada wrote:
+> The headers in include/ are globally used in the kernel source tree
+> to provide common APIs. They are included from external modules, too.
+> 
+> It will be useful to make as many headers self-contained as possible
+> so that we do not have to rely on a specific include order.
+> 
+> There are more than 4000 headers in include/. In my rough analysis,
+> 70% of them are already self-contained. With efforts, most of them
+> can be self-contained.
+> 
+> For now, we must exclude more than 1000 headers just because they
+> cannot be compiled as standalone units. I added them to header-test-.
+> The black list was mostly generated by a script, so should be checked
+> later.
+The list is smaller than I had expected.
+And I see why you insisted on avoiding a maze ok Kbuild files.
+It looks good, except there is a few issues..
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+
+The file kernel/kheaders_data.tar.xz includes all the .s files.
+Something needs to be done to exclude the .s files...
+
+When building a full kernel the build fails like this:
+  LD      vmlinux.o
+aarch64-linux-gnu-ld: cannot find include/lib.a: No such file or directory
+make[1]: *** [/home/sam/kernel/linux-kbuild.git/Makefile:1054: vmlinux] Error 1
+make[1]: Leaving directory '/home/sam/kernel/linux-kbuild.git/.build/arm64-allyesconfig'
+make: *** [Makefile:179: sub-make] Error 2
+
+
+include/uapi/linux/mman.h fails when building sparc64 allmodconfig.
+There is likely more header files that will fail when we start to
+throw this after diverse randconfigs.
+I have no good idea how to catch this.
+Unless your scripts could automate this across several architectures.
+
+I did not continue my testing futher.
+
+> +header-test-			+= uapi/drm/vmwgfx_drm.h
+> +header-test-			+= uapi/linux/a.out.h
+> +header-test-			+= uapi/linux/coda.h
+...
+> +header-test-			+= uapi/xen/evtchn.h
+> +header-test-			+= uapi/xen/gntdev.h
+> +header-test-			+= uapi/xen/privcmd.h
+
+I though uapi files were covered by another Makefile?
+If they are added because we pull them in using a pattern, maybe they
+should be removed using a specific filer-out?
+
+	Sam
