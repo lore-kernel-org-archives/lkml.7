@@ -2,107 +2,123 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE09CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47CCC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB906208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BFC6217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561723961;
+	bh=llM0tADGVIcL9qDQmEDAUPCAvKo2KXMRbip5yLa4sYQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cbZ7TxwBCdj23o0oHPE+/NR1+3a2khpZbF38/RfJcaiZRwhmZxWAuYrsH+YiQdb+V
+	 5eIE0iMzchJxKzj0ExCOsemxHUMLJujned55Cj3T7AtItK9HOzMZVnNhTARhT3/igf
+	 +EvL7cHNiA/w/LDdvLHvrWXAz2D3L/DM6gviFL4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfF1MKT (ORCPT
+        id S1727107AbfF1MMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:10:19 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54026 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbfF1MKS (ORCPT
+        Fri, 28 Jun 2019 08:12:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58280 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbfF1MMh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:10:18 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: bbeckett)
-        with ESMTPSA id D1E8C263955
-Message-ID: <ee19affecdd64b1f835d193ae742b4f084335b93.camel@collabora.com>
-Subject: Re: [PATCH v4 1/2] drm/vblank: warn on sending stale event
-From:   Robert Beckett <bob.beckett@collabora.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Sean Paul <sean@poorly.run>
-Date:   Fri, 28 Jun 2019 13:10:14 +0100
-In-Reply-To: <66e100219a2740e493a7b96ebb95d0a2e697f121.1561722822.git.bob.beckett@collabora.com>
-References: <cover.1561722822.git.bob.beckett@collabora.com>
-         <66e100219a2740e493a7b96ebb95d0a2e697f121.1561722822.git.bob.beckett@collabora.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 28 Jun 2019 08:12:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ptxuhcj9Nnd93IGVkYIIiqtv0theLtZeYCYEFYFjzcQ=; b=iJ2Q7DMrmIn6Encrs9rppRJsg
+        FeL4mBoGRLfaKCHHXrV206GIZ3P/XJemOOMbKDJ1w3SXWtsq4LYO5EGt6J8qVs2Or4osVQfUxapi/
+        zjd+hS2S4uaEf7v6XI6b4710tSuAp66i3CHlRgr2MfjGGDbZW1DEQ9gmDkjZxESSIYJlH8OZ9HlkK
+        TFdqcGlGS1dlQlgTpXIwtU/CKPSGpMWA5VBUVqYCF/HlnncDfCbol6UXVluUS3GBn4xs2BOZRRdne
+        WnPt1VQf1Pp7XWZUQVTsRumVGa7ZhQipl4HHUoDpeOm5kmiY37Rdd4l5z+9p+ucjFP48Xjx6y80vH
+        qSast0vWA==;
+Received: from [186.213.242.156] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgpk3-0005Bd-Cu; Fri, 28 Jun 2019 12:12:35 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hgpk0-0004zI-5t; Fri, 28 Jun 2019 09:12:32 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        linux-leds@vger.kernel.org, kvm@vger.kernel.org,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Paul <sean@poorly.run>,
+        Darren Hart <dvhart@infradead.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        linux-i2c@vger.kernel.org, Ajay Gupta <ajayg@nvidia.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Dan Murphy <dmurphy@ti.com>, devicetree@vger.kernel.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH 0/9] Some doc fixes
+Date:   Fri, 28 Jun 2019 09:12:22 -0300
+Message-Id: <cover.1561723736.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nak - I forgot the requested doc changes. Ill re-send
+This patch series is against linux-next (next-20190627). I doubt those
+would apply cleanly against docs next tree.
 
-On Fri, 2019-06-28 at 13:05 +0100, Robert Beckett wrote:
-> Warn when about to send stale vblank info and add advice to
-> documentation on how to avoid.
-> 
-> Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
-> ---
->  drivers/gpu/drm/drm_vblank.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_vblank.c
-> b/drivers/gpu/drm/drm_vblank.c
-> index 603ab105125d..7dabb2bdb733 100644
-> --- a/drivers/gpu/drm/drm_vblank.c
-> +++ b/drivers/gpu/drm/drm_vblank.c
-> @@ -918,6 +918,19 @@ EXPORT_SYMBOL(drm_crtc_arm_vblank_event);
->   *
->   * See drm_crtc_arm_vblank_event() for a helper which can be used in
-> certain
->   * situation, especially to send out events for atomic commit
-> operations.
-> + *
-> + * Care should be taken to avoid stale timestamps. If:
-> + *   - your driver has vblank support (i.e. dev->num_crtcs > 0)
-> + *   - the vblank irq is off (i.e. no one called
-> drm_crtc_vblank_get)
-> + *   - from the vblank code's pov the pipe is still running (i.e.
-> not
-> + *     in-between a drm_crtc_vblank_off()/on() pair)
-> + * If all of these conditions hold then drm_crtc_send_vblank_event
-> is
-> + * going to give you a garbage timestamp and and sequence number
-> (the last
-> + * recorded before the irq was disabled). If you call
-> drm_crtc_vblank_get/put
-> + * around it, or after vblank_off, then either of those will have
-> rolled things
-> + * forward for you.
-> + * So, drivers should call drm_crtc_vblank_off() before this
-> function in their
-> + * crtc atomic_disable handlers.
->   */
->  void drm_crtc_send_vblank_event(struct drm_crtc *crtc,
->  				struct drm_pending_vblank_event *e)
-> @@ -925,8 +938,12 @@ void drm_crtc_send_vblank_event(struct drm_crtc
-> *crtc,
->  	struct drm_device *dev = crtc->dev;
->  	u64 seq;
->  	unsigned int pipe = drm_crtc_index(crtc);
-> +	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
->  	ktime_t now;
->  
-> +	WARN_ONCE(dev->num_crtcs > 0 && !vblank->enabled && !vblank-
-> >inmodeset,
-> +		  "sending stale vblank info\n");
-> +
->  	if (dev->num_crtcs > 0) {
->  		seq = drm_vblank_count_and_time(dev, pipe, &now);
->  	} else {
+So, please apply it via the subsystem trees. Otherwise, they could
+be pushed by the end of the merge window or for -rc1 via a docs tree.
+
+Most, if not all were I already sent.
+
+
+Mauro Carvalho Chehab (9):
+  hrtimer: Use a bullet for the returns bullet list
+  docs: trace: fix a broken label
+  docs: signal: fix a kernel-doc markup
+  dt: leds-lm36274.txt: fix a broken reference to ti-lmu.txt
+  docs: fix some broken references due to txt->rst renames
+  docs: virtual: there are two orphan docs there
+  docs: gpu: add msm-crash-dump.rst to the index.rst file
+  drm: fix a reference for a renamed file: fb/modedb.rst
+  platform: x86: get rid of a non-existent document
+
+ Documentation/devicetree/bindings/arm/idle-states.txt   | 2 +-
+ Documentation/devicetree/bindings/leds/leds-lm36274.txt | 2 +-
+ Documentation/gpu/drivers.rst                           | 1 +
+ Documentation/gpu/msm-crash-dump.rst                    | 2 --
+ Documentation/trace/kprobetrace.rst                     | 1 +
+ Documentation/virtual/kvm/amd-memory-encryption.rst     | 2 ++
+ Documentation/virtual/kvm/vcpu-requests.rst             | 2 ++
+ drivers/gpu/drm/drm_modes.c                             | 2 +-
+ drivers/gpu/drm/i915/intel_runtime_pm.h                 | 2 +-
+ drivers/i2c/busses/i2c-nvidia-gpu.c                     | 2 +-
+ drivers/platform/x86/Kconfig                            | 3 ---
+ kernel/signal.c                                         | 2 +-
+ kernel/time/hrtimer.c                                   | 7 ++++---
+ 13 files changed, 16 insertions(+), 14 deletions(-)
+
+-- 
+2.21.0
+
 
