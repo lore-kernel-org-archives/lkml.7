@@ -2,248 +2,93 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E4BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 160F9C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 433DA216FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561725166;
-	bh=xFYfYekfy7dT1+9limRojneA4QmxEYd68doV2X/PoTU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tY8GaY/qZKLV68jgfVyUIlcmIU2RnUXLjhyabRSFrAaIM1rDdFjXNFYW65gYhnqvF
-	 fINJ5C3Ssa16ZskJlsuyA/2nCObGQM84RbXLcAvsPwZUTQi4bUl1zHKP8D9SSCU0ue
-	 d48t1tohSn6wzocITzeeLe8Gkq7EUlg+0CFW8wrU=
+	by mail.kernel.org (Postfix) with ESMTP id E12902133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfF1Mco (ORCPT
+        id S1727565AbfF1Mcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:32:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39214 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfF1Mak (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:30:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=W01P5QS3uRV3PL5GrkuJuIMkN8UN/CJyWU+iu5QOvQA=; b=ByUoDHNg+0H8Qs/m1RN9jnjl/g
-        PhZlReBVQCQ3ubxdw/1nfki4i9C5SCMEmdI5EK0zLPc/vtAimnvml3RD5uzaSgL1ieLaEcBU5L9hh
-        WqE3AvSTzrPjsXctTwJgmEkewDkOHrMYoRPGlmnopzJnnnsHviXNLdbtpRRXKJpvQdnhsO8l4K9OR
-        zJCA5B68YSVtoweOX3wcUK7mtgCp50FtvkFedNESwqKroYKhsou4+04rIhVM4LpoXDRfFX1bLDYHP
-        3ujCWwkxnzB11zGX5d8rBGrRibdqgaCwlhGsiwHlbiwfAPHihY/JS6TrVuoWqHLc9mn/h1jU8QtS1
-        /T8MUoXA==;
-Received: from [186.213.242.156] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1U-00055o-O0; Fri, 28 Jun 2019 12:30:36 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005TR-PP; Fri, 28 Jun 2019 09:30:34 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Timur Tabi <timur@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org
-Subject: [PATCH 32/39] docs: serial: move it to the driver-api
-Date:   Fri, 28 Jun 2019 09:30:25 -0300
-Message-Id: <98ded3b9747e187413aab3406da2d5e7c89f53cb.1561724493.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
+        Fri, 28 Jun 2019 08:32:47 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50524 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727547AbfF1Mcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 08:32:43 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B7F03154982ED060E283;
+        Fri, 28 Jun 2019 20:32:40 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Jun 2019
+ 20:32:33 +0800
+To:     <jeyu@kernel.org>, <rusty@rustcorp.com.au>, <kay.sievers@vrfy.org>,
+        <clabbe.montjoie@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH] module: add usage links when calling ref_module func
+Message-ID: <8d7aa8b1-73a2-db7a-82c8-06917eddf235@huawei.com>
+Date:   Fri, 28 Jun 2019 20:32:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="gb18030"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.225.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The contents of this directory is mostly driver-api stuff.
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Problem: Users can call ref_module func in their modules to construct
+relationships with other modules. However, the holders
+'/sys/module/<mod-name>/holders' of the target module donot include
+the users` module. So lsmod command misses detailed info of 'Used by'.
+
+When load module, the process is given as follows,
+load_module()
+	-> mod_sysfs_setup()
+		-> add_usage_links
+	-> do_init_module
+		-> mod->init()
+
+add_usage_links func creates holders of target modules linking to
+this module. If ref_module is called in mod->init() func, the usage
+links cannot be added.
+
+Here, we will add usage link of a to b's holder_dir.
+
+Fixes: 9bea7f239 ("module: fix bne2 "gave up waiting for init of module libcrc32c")
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 ---
- Documentation/driver-api/index.rst                       | 1 +
- Documentation/{ => driver-api}/serial/cyclades_z.rst     | 0
- Documentation/{ => driver-api}/serial/driver.rst         | 2 +-
- Documentation/{ => driver-api}/serial/index.rst          | 2 +-
- Documentation/{ => driver-api}/serial/moxa-smartio.rst   | 0
- Documentation/{ => driver-api}/serial/n_gsm.rst          | 0
- Documentation/{ => driver-api}/serial/rocket.rst         | 0
- Documentation/{ => driver-api}/serial/serial-iso7816.rst | 0
- Documentation/{ => driver-api}/serial/serial-rs485.rst   | 0
- Documentation/{ => driver-api}/serial/tty.rst            | 0
- MAINTAINERS                                              | 6 +++---
- drivers/tty/Kconfig                                      | 4 ++--
- drivers/tty/serial/ucc_uart.c                            | 2 +-
- include/linux/serial_core.h                              | 2 +-
- 14 files changed, 10 insertions(+), 9 deletions(-)
- rename Documentation/{ => driver-api}/serial/cyclades_z.rst (100%)
- rename Documentation/{ => driver-api}/serial/driver.rst (99%)
- rename Documentation/{ => driver-api}/serial/index.rst (90%)
- rename Documentation/{ => driver-api}/serial/moxa-smartio.rst (100%)
- rename Documentation/{ => driver-api}/serial/n_gsm.rst (100%)
- rename Documentation/{ => driver-api}/serial/rocket.rst (100%)
- rename Documentation/{ => driver-api}/serial/serial-iso7816.rst (100%)
- rename Documentation/{ => driver-api}/serial/serial-rs485.rst (100%)
- rename Documentation/{ => driver-api}/serial/tty.rst (100%)
+ kernel/module.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index f44a3140f95d..d6f532c8d824 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -88,6 +88,7 @@ available subsections can be seen below.
-    pti_intel_mid
-    pwm
-    rfkill
-+   serial/index
-    sgi-ioc4
-    sm501
-    smsc_ece1099
-diff --git a/Documentation/serial/cyclades_z.rst b/Documentation/driver-api/serial/cyclades_z.rst
-similarity index 100%
-rename from Documentation/serial/cyclades_z.rst
-rename to Documentation/driver-api/serial/cyclades_z.rst
-diff --git a/Documentation/serial/driver.rst b/Documentation/driver-api/serial/driver.rst
-similarity index 99%
-rename from Documentation/serial/driver.rst
-rename to Documentation/driver-api/serial/driver.rst
-index 4537119bf624..31bd4e16fb1f 100644
---- a/Documentation/serial/driver.rst
-+++ b/Documentation/driver-api/serial/driver.rst
-@@ -311,7 +311,7 @@ hardware.
- 	This call must not sleep
- 
-   set_ldisc(port,termios)
--	Notifier for discipline change. See Documentation/serial/tty.rst.
-+	Notifier for discipline change. See Documentation/driver-api/serial/tty.rst.
- 
- 	Locking: caller holds tty_port->mutex
- 
-diff --git a/Documentation/serial/index.rst b/Documentation/driver-api/serial/index.rst
-similarity index 90%
-rename from Documentation/serial/index.rst
-rename to Documentation/driver-api/serial/index.rst
-index d0ba22ea23bf..33ad10d05b26 100644
---- a/Documentation/serial/index.rst
-+++ b/Documentation/driver-api/serial/index.rst
-@@ -1,4 +1,4 @@
--:orphan:
-+.. SPDX-License-Identifier: GPL-2.0
- 
- ==========================
- Support for Serial devices
-diff --git a/Documentation/serial/moxa-smartio.rst b/Documentation/driver-api/serial/moxa-smartio.rst
-similarity index 100%
-rename from Documentation/serial/moxa-smartio.rst
-rename to Documentation/driver-api/serial/moxa-smartio.rst
-diff --git a/Documentation/serial/n_gsm.rst b/Documentation/driver-api/serial/n_gsm.rst
-similarity index 100%
-rename from Documentation/serial/n_gsm.rst
-rename to Documentation/driver-api/serial/n_gsm.rst
-diff --git a/Documentation/serial/rocket.rst b/Documentation/driver-api/serial/rocket.rst
-similarity index 100%
-rename from Documentation/serial/rocket.rst
-rename to Documentation/driver-api/serial/rocket.rst
-diff --git a/Documentation/serial/serial-iso7816.rst b/Documentation/driver-api/serial/serial-iso7816.rst
-similarity index 100%
-rename from Documentation/serial/serial-iso7816.rst
-rename to Documentation/driver-api/serial/serial-iso7816.rst
-diff --git a/Documentation/serial/serial-rs485.rst b/Documentation/driver-api/serial/serial-rs485.rst
-similarity index 100%
-rename from Documentation/serial/serial-rs485.rst
-rename to Documentation/driver-api/serial/serial-rs485.rst
-diff --git a/Documentation/serial/tty.rst b/Documentation/driver-api/serial/tty.rst
-similarity index 100%
-rename from Documentation/serial/tty.rst
-rename to Documentation/driver-api/serial/tty.rst
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 055db86fdd77..856db8015edd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10723,7 +10723,7 @@ F:	include/uapi/linux/meye.h
- MOXA SMARTIO/INDUSTIO/INTELLIO SERIAL CARD
- M:	Jiri Slaby <jirislaby@gmail.com>
- S:	Maintained
--F:	Documentation/serial/moxa-smartio.rst
-+F:	Documentation/driver-api/serial/moxa-smartio.rst
- F:	drivers/tty/mxser.*
- 
- MR800 AVERMEDIA USB FM RADIO DRIVER
-@@ -13637,7 +13637,7 @@ ROCKETPORT DRIVER
- P:	Comtrol Corp.
- W:	http://www.comtrol.com
- S:	Maintained
--F:	Documentation/serial/rocket.rst
-+F:	Documentation/driver-api/serial/rocket.rst
- F:	drivers/tty/rocket*
- 
- ROCKETPORT EXPRESS/INFINITY DRIVER
-@@ -16170,7 +16170,7 @@ M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
- M:	Jiri Slaby <jslaby@suse.com>
- S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git
--F:	Documentation/serial/
-+F:	Documentation/driver-api/serial/
- F:	drivers/tty/
- F:	drivers/tty/serial/serial_core.c
- F:	include/linux/serial_core.h
-diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
-index ee51b9514225..c7623f99ac0f 100644
---- a/drivers/tty/Kconfig
-+++ b/drivers/tty/Kconfig
-@@ -175,7 +175,7 @@ config ROCKETPORT
- 	  This driver supports Comtrol RocketPort and RocketModem PCI boards.   
-           These boards provide 2, 4, 8, 16, or 32 high-speed serial ports or
-           modems.  For information about the RocketPort/RocketModem  boards
--          and this driver read <file:Documentation/serial/rocket.rst>.
-+          and this driver read <file:Documentation/driver-api/serial/rocket.rst>.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called rocket.
-@@ -193,7 +193,7 @@ config CYCLADES
- 	  your Linux box, for instance in order to become a dial-in server.
- 
- 	  For information about the Cyclades-Z card, read
--	  <file:Documentation/serial/cyclades_z.rst>.
-+	  <file:Documentation/driver-api/serial/cyclades_z.rst>.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cyclades.
-diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
-index 6e3c66ab0e62..a0555ae2b1ef 100644
---- a/drivers/tty/serial/ucc_uart.c
-+++ b/drivers/tty/serial/ucc_uart.c
-@@ -1081,7 +1081,7 @@ static int qe_uart_verify_port(struct uart_port *port,
+diff --git a/kernel/module.c b/kernel/module.c
+index 80c7c09584cf..11c6aff37b1f 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -871,6 +871,11 @@ int ref_module(struct module *a, struct module *b)
+ 		module_put(b);
+ 		return err;
+ 	}
++
++	err = sysfs_create_link(b->holders_dir, &a->mkobj.kobj, a->name);
++	if (err)
++		return err;
++
+ 	return 0;
  }
- /* UART operations
-  *
-- * Details on these functions can be found in Documentation/serial/driver.rst
-+ * Details on these functions can be found in Documentation/driver-api/serial/driver.rst
-  */
- static const struct uart_ops qe_uart_pops = {
- 	.tx_empty       = qe_uart_tx_empty,
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 05b179015d6c..2b78cc734719 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -32,7 +32,7 @@ struct device;
- 
- /*
-  * This structure describes all the operations that can be done on the
-- * physical hardware.  See Documentation/serial/driver.rst for details.
-+ * physical hardware.  See Documentation/driver-api/serial/driver.rst for details.
-  */
- struct uart_ops {
- 	unsigned int	(*tx_empty)(struct uart_port *);
+ EXPORT_SYMBOL_GPL(ref_module);
 -- 
-2.21.0
+2.19.1
 
