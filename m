@@ -2,86 +2,86 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD55C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60753C5B576
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29C9214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3921A2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfF1DTP (ORCPT
+        id S1727011AbfF1DTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 27 Jun 2019 23:19:15 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:37136 "EHLO mxct.zte.com.cn"
+Received: from out1.zte.com.cn ([202.103.147.172]:37142 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726542AbfF1DTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726565AbfF1DTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Jun 2019 23:19:14 -0400
-X-Greylist: delayed 936 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Jun 2019 23:19:13 EDT
 Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 095FE8AAAF48D3D3EE33;
-        Fri, 28 Jun 2019 11:03:36 +0800 (CST)
+        by Forcepoint Email with ESMTPS id 09FD3A5B0E6363CF63DF;
+        Fri, 28 Jun 2019 11:03:35 +0800 (CST)
 Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x5S32eAx063726;
+        by mse-fl1.zte.com.cn with ESMTP id x5S32eB2063726;
         Fri, 28 Jun 2019 11:02:40 +0800 (GMT-8)
         (envelope-from wen.yang99@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019062811031002-1800716 ;
-          Fri, 28 Jun 2019 11:03:10 +0800 
+          with ESMTP id 2019062811031183-1800720 ;
+          Fri, 28 Jun 2019 11:03:11 +0800 
 From:   Wen Yang <wen.yang99@zte.com.cn>
 To:     linux-kernel@vger.kernel.org
 Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Benoit Parrot <bparrot@ti.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
         linux-media@vger.kernel.org
-Subject: [PATCH 0/3] fix leaked of_node references in drivers/media
-Date:   Fri, 28 Jun 2019 11:01:13 +0800
-Message-Id: <1561690876-20977-1-git-send-email-wen.yang99@zte.com.cn>
+Subject: [PATCH 3/3] media: ti-vpe: fix leaked of_node references
+Date:   Fri, 28 Jun 2019 11:01:16 +0800
+Message-Id: <1561690876-20977-4-git-send-email-wen.yang99@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1561690876-20977-1-git-send-email-wen.yang99@zte.com.cn>
+References: <1561690876-20977-1-git-send-email-wen.yang99@zte.com.cn>
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-06-28 11:03:10,
+ 21, 2013) at 2019-06-28 11:03:11,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
  2019-06-28 11:02:45,
         Serialize complete at 2019-06-28 11:02:45
-X-MAIL: mse-fl1.zte.com.cn x5S32eAx063726
+X-MAIL: mse-fl1.zte.com.cn x5S32eB2063726
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The call to of_get_cpu_node/of_find_compatible_node/of_parse_phandle...
-returns a node pointer with refcount incremented thus it must be
-explicitly decremented after the last usage.
+The call to of_get_parent returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-We developed a coccinelle SmPL to detect  drivers/media/ code and
-found some issues.
-This patch series fixes those issues.
+Detected by coccinelle with the following warnings:
+drivers/media/platform/ti-vpe/cal.c:1621:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1607, but without a corresponding object release within this function.
 
-Wen Yang (3):
-  media: xilinx: fix leaked of_node references
-  media: exynos4-is: fix leaked of_node references
-  media: ti-vpe: fix leaked of_node references
-
- drivers/media/platform/exynos4-is/fimc-is.c   |  1 +
- drivers/media/platform/exynos4-is/media-dev.c |  2 ++
- drivers/media/platform/ti-vpe/cal.c           |  1 +
- drivers/media/platform/xilinx/xilinx-tpg.c    | 18 +++++++++++++-----
- drivers/media/platform/xilinx/xilinx-vipp.c   |  8 +++++---
- 5 files changed, 22 insertions(+), 8 deletions(-)
-
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Benoit Parrot <bparrot@ti.com>
 Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 Cc: linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/media/platform/ti-vpe/cal.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+index 9e86d761..8e19974 100644
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -1613,6 +1613,7 @@ of_get_next_port(const struct device_node *parent,
+ 			}
+ 			prev = port;
+ 		} while (!of_node_name_eq(port, "port"));
++		of_node_put(ports);
+ 	}
+ 
+ 	return port;
 -- 
 2.9.5
 
