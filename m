@@ -4,885 +4,908 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB2BC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F327C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45B062064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BE22133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561724549;
-	bh=/y7lyrJFb10+idDTeEtgKvG5uLw5P5FuwvBrfOQeqK8=;
+	s=default; t=1561724553;
+	bh=PsHTU8Erd+vtKNKmSlyXDC3LQk8ZNGmFsW4B4wWBAAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HhBDUJlJu3OAUFPxNreezgA9NEHh1Qjxf9tXdco3vFfDBvjG6hTk6aTBSLluyHQAb
-	 dkgs0Y0QRP4967fQ8aTtY5hOpjafFoIXglhhwFRlsF46CE44FDC8PXViUZjtfLctcR
-	 R4WQnf03hisWnpwrTQcppUH/XdDqS7ZrtSNfC0qI=
+	b=QKilHgqJBo1k4kOXvwmgPhDvAR1leLDd2Gvny4dGAn3yk6Ds/kW1mAqQd808vW+6/
+	 ZFZZMzOoxdeWsOBXGR/tRA4jdYWHd6n/DtcEL1u/Ti21WgVas3B4K9CJQyJRKluKu4
+	 zLEAimXgfxhBeA0/xRP69f80ZwH0lVDZzxZojBxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfF1MW2 (ORCPT
+        id S1727272AbfF1MWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:22:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58908 "EHLO
+        Fri, 28 Jun 2019 08:22:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58878 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfF1MUs (ORCPT
+        with ESMTP id S1726842AbfF1MUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:20:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=qkhet7OJPhqYTXJia+FfbMRM/fFZ50idnQmiBZJ6gC0=; b=Wu2XSgm+FeYIqTDaHxUvHCJ2JM
-        Ota7M9Ny5X7u3sTgHp0GZF692hfin/5HEjSiLxkz5dz68IofCNbSbYAnC9jfOrtwPYHJ9bQzBOPDw
-        HlHRLLeEn76cJBIrhvnsqwUZ0bgAAaHxnFVUY5Uq6riQEg6mLInDa/xMksQLpO14AuuQeGusZUJhR
-        tJ8sG0usx00aID9jDZyUxYUAg63Q7x2aLq89DKETw8pkn1aGEDerx/XCr7b8Lsin66xjnk6da39+n
-        lfeIHfoqjVXXqtIs5jksMl2d5sQQLwf28ROq41HkucMZh49hH1k+ci0JvwaCioDbNy0nOQj0naD+x
-        RAHj/ZMQ==;
+        bh=ia8axAJLdhpvWbY463d2N4OqOe3tarfo78y8xKsRdDk=; b=B2fpstdn1UvbAfGJVdcTE41xhU
+        99HTplGpN7rJe3XgCXifWu5DP1KIxzA7NEQv9SZjCa004uZFfxe3d8OcDauxVQysyjfZmHGJRXgwZ
+        YBfutqKRtIEq8Yn2fgInEZSHOhAEuBTCSo+sSVcXVZbzzWoNPuJa05vh30SofDYCcy6u6NUzPq/hu
+        6zaqTR8w2MBu+5erb+pl4niI+ZIoM7UoqyWDoEyZbeC3ehXam+c/MwNOGUvXVvQVxOeqNGf0zdYQ6
+        SbewJ3ghvbWQYxsIKIlpefx5jYT9nivuF/F0b8v8RgynDr2RVCwvxNKXKtA+umgGuLsJiSrvHSPLG
+        xzzgFYCg==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgprv-0000AL-UQ; Fri, 28 Jun 2019 12:20:45 +0000
+        id 1hgprv-0000AH-Q4; Fri, 28 Jun 2019 12:20:44 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgprt-00059S-VC; Fri, 28 Jun 2019 09:20:41 -0300
+        id 1hgprt-000598-Rd; Fri, 28 Jun 2019 09:20:41 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
-Subject: [PATCH 33/43] docs: ioctl-number.txt: convert it to ReST format
-Date:   Fri, 28 Jun 2019 09:20:29 -0300
-Message-Id: <16818d580fcb1efcefeb5752433768aed7b2d772.1561723980.git.mchehab+samsung@kernel.org>
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org
+Subject: [PATCH 29/43] docs: mtd: convert to ReST
+Date:   Fri, 28 Jun 2019 09:20:25 -0300
+Message-Id: <6d8d1e7e5f4e390bb1eafea2468c67389c95a7e3.1561723980.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561723979.git.mchehab+samsung@kernel.org>
 References: <cover.1561723979.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The conversion itself is simple: add a markup for the
-title of this file and add markups for both tables.
+Rename the mtd documentation files to ReST, add an
+index for them and adjust in order to produce a nice html
+output via the Sphinx build system.
 
-Yet, the big table here with IOCTL numbers is badly formatted:
-on several lines, the "Include File" column has some values that
-are bigger than the reserved space there.
+It should be noticed that Sphinx doesn't handle very well
+URLs with dots in the middle. Thankfully, internally, the '.'
+char is translated to %2E, so we can jus use %2E instead of
+dots, and this will work fine on both text and processed files.
 
-Also, on several places, a comment was misplaced at the "Include
-File" space.
-
-So, most of the work here is to actually ensure that each field
-will be properly fixed.
-
-Also worth to mention that some URLs have the asterisk character
-on it. Well, Sphinx has an issue with asterisks in the middle
-of an string. As this is URL, use the alternate format: %2A.
-
-As a side effect of this patch, it is now a lot easier to see that
-some reserved ioctl numbers are missing the include files
-where it is supposed to be used.
-
-PS.: While this is part of a subdir, I opted to convert this
-single file alone, as this file has a potential of conflicts,
-as most subsystem maintainers touch it.
+At its new index.rst, let's add a :orphan: while this is not linked to
+the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/ioctl/ioctl-number.rst          | 362 ++++++++++++++++++
- Documentation/ioctl/ioctl-number.txt          | 350 -----------------
- Documentation/process/submit-checklist.rst    |   2 +-
- .../it_IT/process/submit-checklist.rst        |   2 +-
- .../zh_CN/process/submit-checklist.rst        |   2 +-
- include/uapi/rdma/rdma_user_ioctl_cmds.h      |   2 +-
- 6 files changed, 366 insertions(+), 354 deletions(-)
- create mode 100644 Documentation/ioctl/ioctl-number.rst
- delete mode 100644 Documentation/ioctl/ioctl-number.txt
+ Documentation/mtd/index.rst                   |  12 +
+ .../mtd/{intel-spi.txt => intel-spi.rst}      |  46 +-
+ .../mtd/{nand_ecc.txt => nand_ecc.rst}        | 481 ++++++++++--------
+ .../mtd/{spi-nor.txt => spi-nor.rst}          |   7 +-
+ drivers/mtd/nand/raw/nand_ecc.c               |   2 +-
+ 5 files changed, 306 insertions(+), 242 deletions(-)
+ create mode 100644 Documentation/mtd/index.rst
+ rename Documentation/mtd/{intel-spi.txt => intel-spi.rst} (71%)
+ rename Documentation/mtd/{nand_ecc.txt => nand_ecc.rst} (67%)
+ rename Documentation/mtd/{spi-nor.txt => spi-nor.rst} (94%)
 
-diff --git a/Documentation/ioctl/ioctl-number.rst b/Documentation/ioctl/ioctl-number.rst
+diff --git a/Documentation/mtd/index.rst b/Documentation/mtd/index.rst
 new file mode 100644
-index 000000000000..e6d07badafb1
+index 000000000000..4fdae418ac97
 --- /dev/null
-+++ b/Documentation/ioctl/ioctl-number.rst
-@@ -0,0 +1,362 @@
++++ b/Documentation/mtd/index.rst
+@@ -0,0 +1,12 @@
 +:orphan:
 +
-+=============
-+Ioctl Numbers
-+=============
++==============================
++Memory Technology Device (MTD)
++==============================
 +
-+19 October 1999
++.. toctree::
++   :maxdepth: 1
 +
-+Michael Elizabeth Chastain
-+<mec@shout.net>
-+
-+If you are adding new ioctl's to the kernel, you should use the _IO
-+macros defined in <linux/ioctl.h>:
-+
-+    ====== == ============================================
-+    _IO    an ioctl with no parameters
-+    _IOW   an ioctl with write parameters (copy_from_user)
-+    _IOR   an ioctl with read parameters  (copy_to_user)
-+    _IOWR  an ioctl with both write and read parameters.
-+    ====== == ============================================
-+
-+'Write' and 'read' are from the user's point of view, just like the
-+system calls 'write' and 'read'.  For example, a SET_FOO ioctl would
-+be _IOW, although the kernel would actually read data from user space;
-+a GET_FOO ioctl would be _IOR, although the kernel would actually write
-+data to user space.
-+
-+The first argument to _IO, _IOW, _IOR, or _IOWR is an identifying letter
-+or number from the table below.  Because of the large number of drivers,
-+many drivers share a partial letter with other drivers.
-+
-+If you are writing a driver for a new device and need a letter, pick an
-+unused block with enough room for expansion: 32 to 256 ioctl commands.
-+You can register the block by patching this file and submitting the
-+patch to Linus Torvalds.  Or you can e-mail me at <mec@shout.net> and
-+I'll register one for you.
-+
-+The second argument to _IO, _IOW, _IOR, or _IOWR is a sequence number
-+to distinguish ioctls from each other.  The third argument to _IOW,
-+_IOR, or _IOWR is the type of the data going into the kernel or coming
-+out of the kernel (e.g.  'int' or 'struct foo').  NOTE!  Do NOT use
-+sizeof(arg) as the third argument as this results in your ioctl thinking
-+it passes an argument of type size_t.
-+
-+Some devices use their major number as the identifier; this is OK, as
-+long as it is unique.  Some devices are irregular and don't follow any
-+convention at all.
-+
-+Following this convention is good because:
-+
-+(1) Keeping the ioctl's globally unique helps error checking:
-+    if a program calls an ioctl on the wrong device, it will get an
-+    error rather than some unexpected behaviour.
-+
-+(2) The 'strace' build procedure automatically finds ioctl numbers
-+    defined with _IO, _IOW, _IOR, or _IOWR.
-+
-+(3) 'strace' can decode numbers back into useful names when the
-+    numbers are unique.
-+
-+(4) People looking for ioctls can grep for them more easily when
-+    this convention is used to define the ioctl numbers.
-+
-+(5) When following the convention, the driver code can use generic
-+    code to copy the parameters between user and kernel space.
-+
-+This table lists ioctls visible from user land for Linux/x86.  It contains
-+most drivers up to 2.6.31, but I know I am missing some.  There has been
-+no attempt to list non-X86 architectures or ioctls from drivers/staging/.
-+
-+====  =====  ======================================================= ================================================================
-+Code  Seq#    Include File                                           Comments
-+      (hex)
-+====  =====  ======================================================= ================================================================
-+0x00  00-1F  linux/fs.h                                              conflict!
-+0x00  00-1F  scsi/scsi_ioctl.h                                       conflict!
-+0x00  00-1F  linux/fb.h                                              conflict!
-+0x00  00-1F  linux/wavefront.h                                       conflict!
-+0x02  all    linux/fd.h
-+0x03  all    linux/hdreg.h
-+0x04  D2-DC  linux/umsdos_fs.h                                       Dead since 2.6.11, but don't reuse these.
-+0x06  all    linux/lp.h
-+0x09  all    linux/raid/md_u.h
-+0x10  00-0F  drivers/char/s390/vmcp.h
-+0x10  10-1F  arch/s390/include/uapi/sclp_ctl.h
-+0x10  20-2F  arch/s390/include/uapi/asm/hypfs.h
-+0x12  all    linux/fs.h
-+             linux/blkpg.h
-+0x1b  all                                                            InfiniBand Subsystem
-+                                                                     <http://infiniband.sourceforge.net/>
-+0x20  all    drivers/cdrom/cm206.h
-+0x22  all    scsi/sg.h
-+'!'   00-1F  uapi/linux/seccomp.h
-+'#'   00-3F                                                          IEEE 1394 Subsystem
-+                                                                     Block for the entire subsystem
-+'$'   00-0F  linux/perf_counter.h, linux/perf_event.h
-+'%'   00-0F  include/uapi/linux/stm.h                                System Trace Module subsystem
-+                                                                     <mailto:alexander.shishkin@linux.intel.com>
-+'&'   00-07  drivers/firewire/nosy-user.h
-+'1'   00-1F  linux/timepps.h                                         PPS kit from Ulrich Windl
-+                                                                     <ftp://ftp.de.kernel.org/pub/linux/daemons/ntp/PPS/>
-+'2'   01-04  linux/i2o.h
-+'3'   00-0F  drivers/s390/char/raw3270.h                             conflict!
-+'3'   00-1F  linux/suspend_ioctls.h,                                 conflict!
-+             kernel/power/user.c
-+'8'   all                                                            SNP8023 advanced NIC card
-+                                                                     <mailto:mcr@solidum.com>
-+';'   64-7F  linux/vfio.h
-+'@'   00-0F  linux/radeonfb.h                                        conflict!
-+'@'   00-0F  drivers/video/aty/aty128fb.c                            conflict!
-+'A'   00-1F  linux/apm_bios.h                                        conflict!
-+'A'   00-0F  linux/agpgart.h,                                        conflict!
-+             drivers/char/agp/compat_ioctl.h
-+'A'   00-7F  sound/asound.h                                          conflict!
-+'B'   00-1F  linux/cciss_ioctl.h                                     conflict!
-+'B'   00-0F  include/linux/pmu.h                                     conflict!
-+'B'   C0-FF  advanced bbus                                           <mailto:maassen@uni-freiburg.de>
-+'C'   all    linux/soundcard.h                                       conflict!
-+'C'   01-2F  linux/capi.h                                            conflict!
-+'C'   F0-FF  drivers/net/wan/cosa.h                                  conflict!
-+'D'   all    arch/s390/include/asm/dasd.h
-+'D'   40-5F  drivers/scsi/dpt/dtpi_ioctl.h
-+'D'   05     drivers/scsi/pmcraid.h
-+'E'   all    linux/input.h                                           conflict!
-+'E'   00-0F  xen/evtchn.h                                            conflict!
-+'F'   all    linux/fb.h                                              conflict!
-+'F'   01-02  drivers/scsi/pmcraid.h                                  conflict!
-+'F'   20     drivers/video/fsl-diu-fb.h                              conflict!
-+'F'   20     drivers/video/intelfb/intelfb.h                         conflict!
-+'F'   20     linux/ivtvfb.h                                          conflict!
-+'F'   20     linux/matroxfb.h                                        conflict!
-+'F'   20     drivers/video/aty/atyfb_base.c                          conflict!
-+'F'   00-0F  video/da8xx-fb.h                                        conflict!
-+'F'   80-8F  linux/arcfb.h                                           conflict!
-+'F'   DD     video/sstfb.h                                           conflict!
-+'G'   00-3F  drivers/misc/sgi-gru/grulib.h                           conflict!
-+'G'   00-0F  linux/gigaset_dev.h                                     conflict!
-+'H'   00-7F  linux/hiddev.h                                          conflict!
-+'H'   00-0F  linux/hidraw.h                                          conflict!
-+'H'   01     linux/mei.h                                             conflict!
-+'H'   02     linux/mei.h                                             conflict!
-+'H'   03     linux/mei.h                                             conflict!
-+'H'   00-0F  sound/asound.h                                          conflict!
-+'H'   20-40  sound/asound_fm.h                                       conflict!
-+'H'   80-8F  sound/sfnt_info.h                                       conflict!
-+'H'   10-8F  sound/emu10k1.h                                         conflict!
-+'H'   10-1F  sound/sb16_csp.h                                        conflict!
-+'H'   10-1F  sound/hda_hwdep.h                                       conflict!
-+'H'   40-4F  sound/hdspm.h                                           conflict!
-+'H'   40-4F  sound/hdsp.h                                            conflict!
-+'H'   90     sound/usb/usx2y/usb_stream.h
-+'H'   A0     uapi/linux/usb/cdc-wdm.h
-+'H'   C0-F0  net/bluetooth/hci.h                                     conflict!
-+'H'   C0-DF  net/bluetooth/hidp/hidp.h                               conflict!
-+'H'   C0-DF  net/bluetooth/cmtp/cmtp.h                               conflict!
-+'H'   C0-DF  net/bluetooth/bnep/bnep.h                               conflict!
-+'H'   F1     linux/hid-roccat.h                                      <mailto:erazor_de@users.sourceforge.net>
-+'H'   F8-FA  sound/firewire.h
-+'I'   all    linux/isdn.h                                            conflict!
-+'I'   00-0F  drivers/isdn/divert/isdn_divert.h                       conflict!
-+'I'   40-4F  linux/mISDNif.h                                         conflict!
-+'J'   00-1F  drivers/scsi/gdth_ioctl.h
-+'K'   all    linux/kd.h
-+'L'   00-1F  linux/loop.h                                            conflict!
-+'L'   10-1F  drivers/scsi/mpt3sas/mpt3sas_ctl.h                      conflict!
-+'L'   20-2F  linux/lightnvm.h
-+'L'   E0-FF  linux/ppdd.h                                            encrypted disk device driver
-+                                                                     <http://linux01.gwdg.de/~alatham/ppdd.html>
-+'M'   all    linux/soundcard.h                                       conflict!
-+'M'   01-16  mtd/mtd-abi.h                                           conflict!
-+      and    drivers/mtd/mtdchar.c
-+'M'   01-03  drivers/scsi/megaraid/megaraid_sas.h
-+'M'   00-0F  drivers/video/fsl-diu-fb.h                              conflict!
-+'N'   00-1F  drivers/usb/scanner.h
-+'N'   40-7F  drivers/block/nvme.c
-+'O'   00-06  mtd/ubi-user.h                                          UBI
-+'P'   all    linux/soundcard.h                                       conflict!
-+'P'   60-6F  sound/sscape_ioctl.h                                    conflict!
-+'P'   00-0F  drivers/usb/class/usblp.c                               conflict!
-+'P'   01-09  drivers/misc/pci_endpoint_test.c                        conflict!
-+'Q'   all    linux/soundcard.h
-+'R'   00-1F  linux/random.h                                          conflict!
-+'R'   01     linux/rfkill.h                                          conflict!
-+'R'   C0-DF  net/bluetooth/rfcomm.h
-+'S'   all    linux/cdrom.h                                           conflict!
-+'S'   80-81  scsi/scsi_ioctl.h                                       conflict!
-+'S'   82-FF  scsi/scsi.h                                             conflict!
-+'S'   00-7F  sound/asequencer.h                                      conflict!
-+'T'   all    linux/soundcard.h                                       conflict!
-+'T'   00-AF  sound/asound.h                                          conflict!
-+'T'   all    arch/x86/include/asm/ioctls.h                           conflict!
-+'T'   C0-DF  linux/if_tun.h                                          conflict!
-+'U'   all    sound/asound.h                                          conflict!
-+'U'   00-CF  linux/uinput.h                                          conflict!
-+'U'   00-EF  linux/usbdevice_fs.h
-+'U'   C0-CF  drivers/bluetooth/hci_uart.h
-+'V'   all    linux/vt.h                                              conflict!
-+'V'   all    linux/videodev2.h                                       conflict!
-+'V'   C0     linux/ivtvfb.h                                          conflict!
-+'V'   C0     linux/ivtv.h                                            conflict!
-+'V'   C0     media/davinci/vpfe_capture.h                            conflict!
-+'V'   C0     media/si4713.h                                          conflict!
-+'W'   00-1F  linux/watchdog.h                                        conflict!
-+'W'   00-1F  linux/wanrouter.h                                       conflict! (pre 3.9)
-+'W'   00-3F  sound/asound.h                                          conflict!
-+'W'   40-5F  drivers/pci/switch/switchtec.c
-+'X'   all    fs/xfs/xfs_fs.h,                                        conflict!
-+             fs/xfs/linux-2.6/xfs_ioctl32.h,
-+             include/linux/falloc.h,
-+             linux/fs.h,
-+'X'   all    fs/ocfs2/ocfs_fs.h                                      conflict!
-+'X'   01     linux/pktcdvd.h                                         conflict!
-+'Y'   all    linux/cyclades.h
-+'Z'   14-15  drivers/message/fusion/mptctl.h
-+'['   00-3F  linux/usb/tmc.h                                         USB Test and Measurement Devices
-+                                                                     <mailto:gregkh@linuxfoundation.org>
-+'a'   all    linux/atm*.h, linux/sonet.h                             ATM on linux
-+                                                                     <http://lrcwww.epfl.ch/>
-+'a'   00-0F  drivers/crypto/qat/qat_common/adf_cfg_common.h          conflict! qat driver
-+'b'   00-FF                                                          conflict! bit3 vme host bridge
-+                                                                     <mailto:natalia@nikhefk.nikhef.nl>
-+'c'   all    linux/cm4000_cs.h                                       conflict!
-+'c'   00-7F  linux/comstats.h                                        conflict!
-+'c'   00-7F  linux/coda.h                                            conflict!
-+'c'   00-1F  linux/chio.h                                            conflict!
-+'c'   80-9F  arch/s390/include/asm/chsc.h                            conflict!
-+'c'   A0-AF  arch/x86/include/asm/msr.h conflict!
-+'d'   00-FF  linux/char/drm/drm.h                                    conflict!
-+'d'   02-40  pcmcia/ds.h                                             conflict!
-+'d'   F0-FF  linux/digi1.h
-+'e'   all    linux/digi1.h                                           conflict!
-+'f'   00-1F  linux/ext2_fs.h                                         conflict!
-+'f'   00-1F  linux/ext3_fs.h                                         conflict!
-+'f'   00-0F  fs/jfs/jfs_dinode.h                                     conflict!
-+'f'   00-0F  fs/ext4/ext4.h                                          conflict!
-+'f'   00-0F  linux/fs.h                                              conflict!
-+'f'   00-0F  fs/ocfs2/ocfs2_fs.h                                     conflict!
-+'g'   00-0F  linux/usb/gadgetfs.h
-+'g'   20-2F  linux/usb/g_printer.h
-+'h'   00-7F                                                          conflict! Charon filesystem
-+                                                                     <mailto:zapman@interlan.net>
-+'h'   00-1F  linux/hpet.h                                            conflict!
-+'h'   80-8F  fs/hfsplus/ioctl.c
-+'i'   00-3F  linux/i2o-dev.h                                         conflict!
-+'i'   0B-1F  linux/ipmi.h                                            conflict!
-+'i'   80-8F  linux/i8k.h
-+'j'   00-3F  linux/joystick.h
-+'k'   00-0F  linux/spi/spidev.h                                      conflict!
-+'k'   00-05  video/kyro.h                                            conflict!
-+'k'   10-17  linux/hsi/hsi_char.h                                    HSI character device
-+'l'   00-3F  linux/tcfs_fs.h                                         transparent cryptographic file system
-+                                                                     <http://web.archive.org/web/%2A/http://mikonos.dia.unisa.it/tcfs>
-+'l'   40-7F  linux/udf_fs_i.h                                        in development:
-+                                                                     <http://sourceforge.net/projects/linux-udf/>
-+'m'   00-09  linux/mmtimer.h                                         conflict!
-+'m'   all    linux/mtio.h                                            conflict!
-+'m'   all    linux/soundcard.h                                       conflict!
-+'m'   all    linux/synclink.h                                        conflict!
-+'m'   00-19  drivers/message/fusion/mptctl.h                         conflict!
-+'m'   00     drivers/scsi/megaraid/megaraid_ioctl.h                  conflict!
-+'n'   00-7F  linux/ncp_fs.h and fs/ncpfs/ioctl.c
-+'n'   80-8F  uapi/linux/nilfs2_api.h                                 NILFS2
-+'n'   E0-FF  linux/matroxfb.h                                        matroxfb
-+'o'   00-1F  fs/ocfs2/ocfs2_fs.h                                     OCFS2
-+'o'   00-03  mtd/ubi-user.h                                          conflict! (OCFS2 and UBI overlaps)
-+'o'   40-41  mtd/ubi-user.h                                          UBI
-+'o'   01-A1  `linux/dvb/*.h`                                         DVB
-+'p'   00-0F  linux/phantom.h                                         conflict! (OpenHaptics needs this)
-+'p'   00-1F  linux/rtc.h                                             conflict!
-+'p'   00-3F  linux/mc146818rtc.h                                     conflict!
-+'p'   40-7F  linux/nvram.h
-+'p'   80-9F  linux/ppdev.h                                           user-space parport
-+                                                                     <mailto:tim@cyberelk.net>
-+'p'   A1-A5  linux/pps.h                                             LinuxPPS
-+                                                                     <mailto:giometti@linux.it>
-+'q'   00-1F  linux/serio.h
-+'q'   80-FF  linux/telephony.h                                       Internet PhoneJACK, Internet LineJACK
-+             linux/ixjuser.h                                         <http://web.archive.org/web/%2A/http://www.quicknet.net>
-+'r'   00-1F  linux/msdos_fs.h and fs/fat/dir.c
-+'s'   all    linux/cdk.h
-+'t'   00-7F  linux/ppp-ioctl.h
-+'t'   80-8F  linux/isdn_ppp.h
-+'t'   90-91  linux/toshiba.h                                         toshiba and toshiba_acpi SMM
-+'u'   00-1F  linux/smb_fs.h                                          gone
-+'u'   20-3F  linux/uvcvideo.h                                        USB video class host driver
-+'u'   40-4f  linux/udmabuf.h                                         userspace dma-buf misc device
-+'v'   00-1F  linux/ext2_fs.h                                         conflict!
-+'v'   00-1F  linux/fs.h                                              conflict!
-+'v'   00-0F  linux/sonypi.h                                          conflict!
-+'v'   00-0F  media/v4l2-subdev.h                                     conflict!
-+'v'   C0-FF  linux/meye.h                                            conflict!
-+'w'   all                                                            CERN SCI driver
-+'y'   00-1F                                                          packet based user level communications
-+                                                                     <mailto:zapman@interlan.net>
-+'z'   00-3F                                                          CAN bus card conflict!
-+                                                                     <mailto:hdstich@connectu.ulm.circular.de>
-+'z'   40-7F                                                          CAN bus card conflict!
-+                                                                     <mailto:oe@port.de>
-+'z'   10-4F  drivers/s390/crypto/zcrypt_api.h                        conflict!
-+'|'   00-7F  linux/media.h
-+0x80  00-1F  linux/fb.h
-+0x89  00-06  arch/x86/include/asm/sockios.h
-+0x89  0B-DF  linux/sockios.h
-+0x89  E0-EF  linux/sockios.h                                         SIOCPROTOPRIVATE range
-+0x89  E0-EF  linux/dn.h                                              PROTOPRIVATE range
-+0x89  F0-FF  linux/sockios.h                                         SIOCDEVPRIVATE range
-+0x8B  all    linux/wireless.h
-+0x8C  00-3F                                                          WiNRADiO driver
-+                                                                     <http://www.winradio.com.au/>
-+0x90  00     drivers/cdrom/sbpcd.h
-+0x92  00-0F  drivers/usb/mon/mon_bin.c
-+0x93  60-7F  linux/auto_fs.h
-+0x94  all    fs/btrfs/ioctl.h                                        Btrfs filesystem
-+             and linux/fs.h                                          some lifted to vfs/generic
-+0x97  00-7F  fs/ceph/ioctl.h                                         Ceph file system
-+0x99  00-0F                                                          537-Addinboard driver
-+                                                                     <mailto:buk@buks.ipn.de>
-+0xA0  all    linux/sdp/sdp.h                                         Industrial Device Project
-+                                                                     <mailto:kenji@bitgate.com>
-+0xA1  0      linux/vtpm_proxy.h                                      TPM Emulator Proxy Driver
-+0xA3  80-8F                                                          Port ACL  in development:
-+                                                                     <mailto:tlewis@mindspring.com>
-+0xA3  90-9F  linux/dtlk.h
-+0xA4  00-1F  uapi/linux/tee.h                                        Generic TEE subsystem
-+0xAA  00-3F  linux/uapi/linux/userfaultfd.h
-+0xAB  00-1F  linux/nbd.h
-+0xAC  00-1F  linux/raw.h
-+0xAD  00                                                             Netfilter device in development:
-+                                                                     <mailto:rusty@rustcorp.com.au>
-+0xAE  all    linux/kvm.h                                             Kernel-based Virtual Machine
-+                                                                     <mailto:kvm@vger.kernel.org>
-+0xAF  00-1F  linux/fsl_hypervisor.h                                  Freescale hypervisor
-+0xB0  all                                                            RATIO devices in development:
-+                                                                     <mailto:vgo@ratio.de>
-+0xB1  00-1F                                                          PPPoX
-+                                                                     <mailto:mostrows@styx.uwaterloo.ca>
-+0xB3  00     linux/mmc/ioctl.h
-+0xB4  00-0F  linux/gpio.h                                            <mailto:linux-gpio@vger.kernel.org>
-+0xB5  00-0F  uapi/linux/rpmsg.h                                      <mailto:linux-remoteproc@vger.kernel.org>
-+0xB6  all    linux/fpga-dfl.h
-+0xC0  00-0F  linux/usb/iowarrior.h
-+0xCA  00-0F  uapi/misc/cxl.h
-+0xCA  10-2F  uapi/misc/ocxl.h
-+0xCA  80-BF  uapi/scsi/cxlflash_ioctl.h
-+0xCB  00-1F                                                          CBM serial IEC bus in development:
-+                                                                     <mailto:michael.klein@puffin.lb.shuttle.de>
-+0xCC  00-0F  drivers/misc/ibmvmc.h                                   pseries VMC driver
-+0xCD  01     linux/reiserfs_fs.h
-+0xCF  02     fs/cifs/ioctl.c
-+0xDB  00-0F  drivers/char/mwave/mwavepub.h
-+0xDD  00-3F                                                          ZFCP device driver see drivers/s390/scsi/
-+                                                                     <mailto:aherrman@de.ibm.com>
-+0xE5  00-3F  linux/fuse.h
-+0xEC  00-01  drivers/platform/chrome/cros_ec_dev.h                   ChromeOS EC driver
-+0xF3  00-3F  drivers/usb/misc/sisusbvga/sisusb.h                     sisfb (in development)
-+                                                                     <mailto:thomas@winischhofer.net>
-+0xF4  00-1F  video/mbxfb.h                                           mbxfb
-+                                                                     <mailto:raph@8d.com>
-+0xF6  all                                                            LTTng Linux Trace Toolkit Next Generation
-+                                                                     <mailto:mathieu.desnoyers@efficios.com>
-+0xFD  all    linux/dm-ioctl.h
-+====  =====  ======================================================= ================================================================
-diff --git a/Documentation/ioctl/ioctl-number.txt b/Documentation/ioctl/ioctl-number.txt
-deleted file mode 100644
-index c9558146ac58..000000000000
---- a/Documentation/ioctl/ioctl-number.txt
-+++ /dev/null
-@@ -1,350 +0,0 @@
--Ioctl Numbers
--19 October 1999
--Michael Elizabeth Chastain
--<mec@shout.net>
--
--If you are adding new ioctl's to the kernel, you should use the _IO
--macros defined in <linux/ioctl.h>:
--
--    _IO    an ioctl with no parameters
--    _IOW   an ioctl with write parameters (copy_from_user)
--    _IOR   an ioctl with read parameters  (copy_to_user)
--    _IOWR  an ioctl with both write and read parameters.
--
--'Write' and 'read' are from the user's point of view, just like the
--system calls 'write' and 'read'.  For example, a SET_FOO ioctl would
--be _IOW, although the kernel would actually read data from user space;
--a GET_FOO ioctl would be _IOR, although the kernel would actually write
--data to user space.
--
--The first argument to _IO, _IOW, _IOR, or _IOWR is an identifying letter
--or number from the table below.  Because of the large number of drivers,
--many drivers share a partial letter with other drivers.
--
--If you are writing a driver for a new device and need a letter, pick an
--unused block with enough room for expansion: 32 to 256 ioctl commands.
--You can register the block by patching this file and submitting the
--patch to Linus Torvalds.  Or you can e-mail me at <mec@shout.net> and
--I'll register one for you.
--
--The second argument to _IO, _IOW, _IOR, or _IOWR is a sequence number
--to distinguish ioctls from each other.  The third argument to _IOW,
--_IOR, or _IOWR is the type of the data going into the kernel or coming
--out of the kernel (e.g.  'int' or 'struct foo').  NOTE!  Do NOT use
--sizeof(arg) as the third argument as this results in your ioctl thinking
--it passes an argument of type size_t.
--
--Some devices use their major number as the identifier; this is OK, as
--long as it is unique.  Some devices are irregular and don't follow any
--convention at all.
--
--Following this convention is good because:
--
--(1) Keeping the ioctl's globally unique helps error checking:
--    if a program calls an ioctl on the wrong device, it will get an
--    error rather than some unexpected behaviour.
--
--(2) The 'strace' build procedure automatically finds ioctl numbers
--    defined with _IO, _IOW, _IOR, or _IOWR.
--
--(3) 'strace' can decode numbers back into useful names when the
--    numbers are unique.
--
--(4) People looking for ioctls can grep for them more easily when
--    this convention is used to define the ioctl numbers.
--
--(5) When following the convention, the driver code can use generic
--    code to copy the parameters between user and kernel space.
--
--This table lists ioctls visible from user land for Linux/x86.  It contains
--most drivers up to 2.6.31, but I know I am missing some.  There has been
--no attempt to list non-X86 architectures or ioctls from drivers/staging/.
--
--Code  Seq#(hex)	Include File		Comments
--========================================================
--0x00	00-1F	linux/fs.h		conflict!
--0x00	00-1F	scsi/scsi_ioctl.h	conflict!
--0x00	00-1F	linux/fb.h		conflict!
--0x00	00-1F	linux/wavefront.h	conflict!
--0x02	all	linux/fd.h
--0x03	all	linux/hdreg.h
--0x04	D2-DC	linux/umsdos_fs.h	Dead since 2.6.11, but don't reuse these.
--0x06	all	linux/lp.h
--0x09	all	linux/raid/md_u.h
--0x10	00-0F	drivers/char/s390/vmcp.h
--0x10	10-1F	arch/s390/include/uapi/sclp_ctl.h
--0x10	20-2F	arch/s390/include/uapi/asm/hypfs.h
--0x12	all	linux/fs.h
--		linux/blkpg.h
--0x1b	all	InfiniBand Subsystem	<http://infiniband.sourceforge.net/>
--0x20	all	drivers/cdrom/cm206.h
--0x22	all	scsi/sg.h
--'!'	00-1F	uapi/linux/seccomp.h
--'#'	00-3F	IEEE 1394 Subsystem	Block for the entire subsystem
--'$'	00-0F	linux/perf_counter.h, linux/perf_event.h
--'%'	00-0F	include/uapi/linux/stm.h
--					System Trace Module subsystem
--					<mailto:alexander.shishkin@linux.intel.com>
--'&'	00-07	drivers/firewire/nosy-user.h
--'1'	00-1F	<linux/timepps.h>	PPS kit from Ulrich Windl
--					<ftp://ftp.de.kernel.org/pub/linux/daemons/ntp/PPS/>
--'2'	01-04	linux/i2o.h
--'3'	00-0F	drivers/s390/char/raw3270.h	conflict!
--'3'	00-1F	linux/suspend_ioctls.h	conflict!
--		and kernel/power/user.c
--'8'	all				SNP8023 advanced NIC card
--					<mailto:mcr@solidum.com>
--';'	64-7F	linux/vfio.h
--'@'	00-0F	linux/radeonfb.h	conflict!
--'@'	00-0F	drivers/video/aty/aty128fb.c	conflict!
--'A'	00-1F	linux/apm_bios.h	conflict!
--'A'	00-0F	linux/agpgart.h		conflict!
--		and drivers/char/agp/compat_ioctl.h
--'A'	00-7F	sound/asound.h		conflict!
--'B'	00-1F	linux/cciss_ioctl.h	conflict!
--'B'	00-0F	include/linux/pmu.h	conflict!
--'B'	C0-FF				advanced bbus
--					<mailto:maassen@uni-freiburg.de>
--'C'	all	linux/soundcard.h	conflict!
--'C'	01-2F	linux/capi.h		conflict!
--'C'	F0-FF	drivers/net/wan/cosa.h	conflict!
--'D'	all	arch/s390/include/asm/dasd.h
--'D'	40-5F	drivers/scsi/dpt/dtpi_ioctl.h
--'D'	05	drivers/scsi/pmcraid.h
--'E'	all	linux/input.h		conflict!
--'E'	00-0F	xen/evtchn.h		conflict!
--'F'	all	linux/fb.h		conflict!
--'F'	01-02	drivers/scsi/pmcraid.h	conflict!
--'F'	20	drivers/video/fsl-diu-fb.h	conflict!
--'F'	20	drivers/video/intelfb/intelfb.h	conflict!
--'F'	20	linux/ivtvfb.h		conflict!
--'F'	20	linux/matroxfb.h	conflict!
--'F'	20	drivers/video/aty/atyfb_base.c	conflict!
--'F'	00-0F	video/da8xx-fb.h	conflict!
--'F'	80-8F	linux/arcfb.h		conflict!
--'F'	DD	video/sstfb.h		conflict!
--'G'	00-3F	drivers/misc/sgi-gru/grulib.h	conflict!
--'G'	00-0F	linux/gigaset_dev.h	conflict!
--'H'	00-7F	linux/hiddev.h		conflict!
--'H'	00-0F	linux/hidraw.h		conflict!
--'H'	01	linux/mei.h		conflict!
--'H'	02	linux/mei.h		conflict!
--'H'	03	linux/mei.h		conflict!
--'H'	00-0F	sound/asound.h		conflict!
--'H'	20-40	sound/asound_fm.h	conflict!
--'H'	80-8F	sound/sfnt_info.h	conflict!
--'H'	10-8F	sound/emu10k1.h		conflict!
--'H'	10-1F	sound/sb16_csp.h	conflict!
--'H'	10-1F	sound/hda_hwdep.h	conflict!
--'H'	40-4F	sound/hdspm.h		conflict!
--'H'	40-4F	sound/hdsp.h		conflict!
--'H'	90	sound/usb/usx2y/usb_stream.h
--'H'	A0	uapi/linux/usb/cdc-wdm.h
--'H'	C0-F0	net/bluetooth/hci.h	conflict!
--'H'	C0-DF	net/bluetooth/hidp/hidp.h	conflict!
--'H'	C0-DF	net/bluetooth/cmtp/cmtp.h	conflict!
--'H'	C0-DF	net/bluetooth/bnep/bnep.h	conflict!
--'H'	F1	linux/hid-roccat.h	<mailto:erazor_de@users.sourceforge.net>
--'H'	F8-FA	sound/firewire.h
--'I'	all	linux/isdn.h		conflict!
--'I'	00-0F	drivers/isdn/divert/isdn_divert.h	conflict!
--'I'	40-4F	linux/mISDNif.h		conflict!
--'J'	00-1F	drivers/scsi/gdth_ioctl.h
--'K'	all	linux/kd.h
--'L'	00-1F	linux/loop.h		conflict!
--'L'	10-1F	drivers/scsi/mpt3sas/mpt3sas_ctl.h	conflict!
--'L'	20-2F	linux/lightnvm.h
--'L'	E0-FF	linux/ppdd.h		encrypted disk device driver
--					<http://linux01.gwdg.de/~alatham/ppdd.html>
--'M'	all	linux/soundcard.h	conflict!
--'M'	01-16	mtd/mtd-abi.h		conflict!
--		and drivers/mtd/mtdchar.c
--'M'	01-03	drivers/scsi/megaraid/megaraid_sas.h
--'M'	00-0F	drivers/video/fsl-diu-fb.h	conflict!
--'N'	00-1F	drivers/usb/scanner.h
--'N'	40-7F	drivers/block/nvme.c
--'O'     00-06   mtd/ubi-user.h		UBI
--'P'	all	linux/soundcard.h	conflict!
--'P'	60-6F	sound/sscape_ioctl.h	conflict!
--'P'	00-0F	drivers/usb/class/usblp.c	conflict!
--'P'	01-09	drivers/misc/pci_endpoint_test.c	conflict!
--'Q'	all	linux/soundcard.h
--'R'	00-1F	linux/random.h		conflict!
--'R'	01	linux/rfkill.h		conflict!
--'R'	C0-DF	net/bluetooth/rfcomm.h
--'S'	all	linux/cdrom.h		conflict!
--'S'	80-81	scsi/scsi_ioctl.h	conflict!
--'S'	82-FF	scsi/scsi.h		conflict!
--'S'	00-7F	sound/asequencer.h	conflict!
--'T'	all	linux/soundcard.h	conflict!
--'T'	00-AF	sound/asound.h		conflict!
--'T'	all	arch/x86/include/asm/ioctls.h	conflict!
--'T'	C0-DF	linux/if_tun.h		conflict!
--'U'	all	sound/asound.h		conflict!
--'U'	00-CF	linux/uinput.h		conflict!
--'U'	00-EF	linux/usbdevice_fs.h
--'U'	C0-CF	drivers/bluetooth/hci_uart.h
--'V'	all	linux/vt.h		conflict!
--'V'	all	linux/videodev2.h	conflict!
--'V'	C0	linux/ivtvfb.h		conflict!
--'V'	C0	linux/ivtv.h		conflict!
--'V'	C0	media/davinci/vpfe_capture.h	conflict!
--'V'	C0	media/si4713.h		conflict!
--'W'	00-1F	linux/watchdog.h	conflict!
--'W'	00-1F	linux/wanrouter.h	conflict!		(pre 3.9)
--'W'	00-3F	sound/asound.h		conflict!
--'W'	40-5F   drivers/pci/switch/switchtec.c
--'X'	all	fs/xfs/xfs_fs.h		conflict!
--		and fs/xfs/linux-2.6/xfs_ioctl32.h
--		and include/linux/falloc.h
--		and linux/fs.h
--'X'	all	fs/ocfs2/ocfs_fs.h	conflict!
--'X'	01	linux/pktcdvd.h		conflict!
--'Y'	all	linux/cyclades.h
--'Z'	14-15	drivers/message/fusion/mptctl.h
--'['	00-3F	linux/usb/tmc.h		USB Test and Measurement Devices
--					<mailto:gregkh@linuxfoundation.org>
--'a'	all	linux/atm*.h, linux/sonet.h	ATM on linux
--					<http://lrcwww.epfl.ch/>
--'a'	00-0F	drivers/crypto/qat/qat_common/adf_cfg_common.h	conflict! qat driver
--'b'	00-FF				conflict! bit3 vme host bridge
--					<mailto:natalia@nikhefk.nikhef.nl>
--'c'	all	linux/cm4000_cs.h	conflict!
--'c'	00-7F	linux/comstats.h	conflict!
--'c'	00-7F	linux/coda.h		conflict!
--'c'	00-1F	linux/chio.h		conflict!
--'c'	80-9F	arch/s390/include/asm/chsc.h	conflict!
--'c'	A0-AF   arch/x86/include/asm/msr.h	conflict!
--'d'	00-FF	linux/char/drm/drm.h	conflict!
--'d'	02-40	pcmcia/ds.h		conflict!
--'d'	F0-FF	linux/digi1.h
--'e'	all	linux/digi1.h		conflict!
--'f'	00-1F	linux/ext2_fs.h		conflict!
--'f'	00-1F	linux/ext3_fs.h		conflict!
--'f'	00-0F	fs/jfs/jfs_dinode.h	conflict!
--'f'	00-0F	fs/ext4/ext4.h		conflict!
--'f'	00-0F	linux/fs.h		conflict!
--'f'	00-0F	fs/ocfs2/ocfs2_fs.h	conflict!
--'g'	00-0F	linux/usb/gadgetfs.h
--'g'	20-2F	linux/usb/g_printer.h
--'h'	00-7F				conflict! Charon filesystem
--					<mailto:zapman@interlan.net>
--'h'	00-1F	linux/hpet.h		conflict!
--'h'	80-8F	fs/hfsplus/ioctl.c
--'i'	00-3F	linux/i2o-dev.h		conflict!
--'i'	0B-1F	linux/ipmi.h		conflict!
--'i'	80-8F	linux/i8k.h
--'j'	00-3F	linux/joystick.h
--'k'	00-0F	linux/spi/spidev.h	conflict!
--'k'	00-05	video/kyro.h		conflict!
--'k'	10-17	linux/hsi/hsi_char.h	HSI character device
--'l'	00-3F	linux/tcfs_fs.h		transparent cryptographic file system
--					<http://web.archive.org/web/*/http://mikonos.dia.unisa.it/tcfs>
--'l'	40-7F	linux/udf_fs_i.h	in development:
--					<http://sourceforge.net/projects/linux-udf/>
--'m'	00-09	linux/mmtimer.h		conflict!
--'m'	all	linux/mtio.h		conflict!
--'m'	all	linux/soundcard.h	conflict!
--'m'	all	linux/synclink.h	conflict!
--'m'	00-19	drivers/message/fusion/mptctl.h	conflict!
--'m'	00	drivers/scsi/megaraid/megaraid_ioctl.h	conflict!
--'n'	00-7F	linux/ncp_fs.h and fs/ncpfs/ioctl.c
--'n'	80-8F	uapi/linux/nilfs2_api.h	NILFS2
--'n'	E0-FF	linux/matroxfb.h	matroxfb
--'o'	00-1F	fs/ocfs2/ocfs2_fs.h	OCFS2
--'o'     00-03   mtd/ubi-user.h		conflict! (OCFS2 and UBI overlaps)
--'o'     40-41   mtd/ubi-user.h		UBI
--'o'     01-A1   linux/dvb/*.h		DVB
--'p'	00-0F	linux/phantom.h		conflict! (OpenHaptics needs this)
--'p'	00-1F	linux/rtc.h		conflict!
--'p'	00-3F	linux/mc146818rtc.h	conflict!
--'p'	40-7F	linux/nvram.h
--'p'	80-9F	linux/ppdev.h		user-space parport
--					<mailto:tim@cyberelk.net>
--'p'	A1-A5	linux/pps.h		LinuxPPS
--					<mailto:giometti@linux.it>
--'q'	00-1F	linux/serio.h
--'q'	80-FF	linux/telephony.h	Internet PhoneJACK, Internet LineJACK
--		linux/ixjuser.h		<http://web.archive.org/web/*/http://www.quicknet.net>
--'r'	00-1F	linux/msdos_fs.h and fs/fat/dir.c
--'s'	all	linux/cdk.h
--'t'	00-7F	linux/ppp-ioctl.h
--'t'	80-8F	linux/isdn_ppp.h
--'t'	90-91	linux/toshiba.h		toshiba and toshiba_acpi SMM
--'u'	00-1F	linux/smb_fs.h		gone
--'u'	20-3F	linux/uvcvideo.h	USB video class host driver
--'u'	40-4f	linux/udmabuf.h		userspace dma-buf misc device
--'v'	00-1F	linux/ext2_fs.h		conflict!
--'v'	00-1F	linux/fs.h		conflict!
--'v'	00-0F	linux/sonypi.h		conflict!
--'v'	00-0F	media/v4l2-subdev.h	conflict!
--'v'	C0-FF	linux/meye.h		conflict!
--'w'	all				CERN SCI driver
--'y'	00-1F				packet based user level communications
--					<mailto:zapman@interlan.net>
--'z'	00-3F				CAN bus card	conflict!
--					<mailto:hdstich@connectu.ulm.circular.de>
--'z'	40-7F				CAN bus card	conflict!
--					<mailto:oe@port.de>
--'z'	10-4F	drivers/s390/crypto/zcrypt_api.h	conflict!
--'|'	00-7F	linux/media.h
--0x80	00-1F	linux/fb.h
--0x89	00-06	arch/x86/include/asm/sockios.h
--0x89	0B-DF	linux/sockios.h
--0x89	E0-EF	linux/sockios.h		SIOCPROTOPRIVATE range
--0x89	E0-EF	linux/dn.h		PROTOPRIVATE range
--0x89	F0-FF	linux/sockios.h		SIOCDEVPRIVATE range
--0x8B	all	linux/wireless.h
--0x8C	00-3F				WiNRADiO driver
--					<http://www.winradio.com.au/>
--0x90	00	drivers/cdrom/sbpcd.h
--0x92	00-0F	drivers/usb/mon/mon_bin.c
--0x93	60-7F	linux/auto_fs.h
--0x94	all	fs/btrfs/ioctl.h	Btrfs filesystem
--		and linux/fs.h		some lifted to vfs/generic
--0x97	00-7F	fs/ceph/ioctl.h		Ceph file system
--0x99	00-0F				537-Addinboard driver
--					<mailto:buk@buks.ipn.de>
--0xA0	all	linux/sdp/sdp.h		Industrial Device Project
--					<mailto:kenji@bitgate.com>
--0xA1	0	linux/vtpm_proxy.h	TPM Emulator Proxy Driver
--0xA3	80-8F	Port ACL		in development:
--					<mailto:tlewis@mindspring.com>
--0xA3	90-9F	linux/dtlk.h
--0xA4	00-1F	uapi/linux/tee.h	Generic TEE subsystem
--0xAA	00-3F	linux/uapi/linux/userfaultfd.h
--0xAB	00-1F	linux/nbd.h
--0xAC	00-1F	linux/raw.h
--0xAD	00	Netfilter device	in development:
--					<mailto:rusty@rustcorp.com.au>
--0xAE	all	linux/kvm.h		Kernel-based Virtual Machine
--					<mailto:kvm@vger.kernel.org>
--0xAF	00-1F	linux/fsl_hypervisor.h	Freescale hypervisor
--0xB0	all	RATIO devices		in development:
--					<mailto:vgo@ratio.de>
--0xB1	00-1F	PPPoX			<mailto:mostrows@styx.uwaterloo.ca>
--0xB3	00	linux/mmc/ioctl.h
--0xB4	00-0F	linux/gpio.h		<mailto:linux-gpio@vger.kernel.org>
--0xB5	00-0F	uapi/linux/rpmsg.h	<mailto:linux-remoteproc@vger.kernel.org>
--0xB6	all	linux/fpga-dfl.h
--0xC0	00-0F	linux/usb/iowarrior.h
--0xCA	00-0F	uapi/misc/cxl.h
--0xCA	10-2F	uapi/misc/ocxl.h
--0xCA	80-BF	uapi/scsi/cxlflash_ioctl.h
--0xCB	00-1F	CBM serial IEC bus	in development:
--					<mailto:michael.klein@puffin.lb.shuttle.de>
--0xCC	00-0F	drivers/misc/ibmvmc.h    pseries VMC driver
--0xCD	01	linux/reiserfs_fs.h
--0xCF	02	fs/cifs/ioctl.c
--0xDB	00-0F	drivers/char/mwave/mwavepub.h
--0xDD	00-3F	ZFCP device driver	see drivers/s390/scsi/
--					<mailto:aherrman@de.ibm.com>
--0xE5	00-3F	linux/fuse.h
--0xEC	00-01	drivers/platform/chrome/cros_ec_dev.h	ChromeOS EC driver
--0xF3	00-3F	drivers/usb/misc/sisusbvga/sisusb.h	sisfb (in development)
--					<mailto:thomas@winischhofer.net>
--0xF4	00-1F	video/mbxfb.h		mbxfb
--					<mailto:raph@8d.com>
--0xF6	all	LTTng			Linux Trace Toolkit Next Generation
--					<mailto:mathieu.desnoyers@efficios.com>
--0xFD	all	linux/dm-ioctl.h
-diff --git a/Documentation/process/submit-checklist.rst b/Documentation/process/submit-checklist.rst
-index 365efc9e4aa8..8e56337d422d 100644
---- a/Documentation/process/submit-checklist.rst
-+++ b/Documentation/process/submit-checklist.rst
-@@ -107,7 +107,7 @@ and elsewhere regarding submitting Linux kernel patches.
-     and why.
++   intel-spi
++   nand_ecc
++   spi-nor
+diff --git a/Documentation/mtd/intel-spi.txt b/Documentation/mtd/intel-spi.rst
+similarity index 71%
+rename from Documentation/mtd/intel-spi.txt
+rename to Documentation/mtd/intel-spi.rst
+index bc357729c2cb..0e6d9cd5388d 100644
+--- a/Documentation/mtd/intel-spi.txt
++++ b/Documentation/mtd/intel-spi.rst
+@@ -1,5 +1,6 @@
++==============================
+ Upgrading BIOS using intel-spi
+-------------------------------
++==============================
  
- 26) If any ioctl's are added by the patch, then also update
--    ``Documentation/ioctl/ioctl-number.txt``.
-+    ``Documentation/ioctl/ioctl-number.rst``.
+ Many Intel CPUs like Baytrail and Braswell include SPI serial flash host
+ controller which is used to hold BIOS and other platform specific data.
+@@ -36,45 +37,45 @@ Linux.
+     module parameter to modprobe).
  
- 27) If your modified source code depends on or uses any of the kernel
-     APIs or features that are related to the following ``Kconfig`` symbols,
-diff --git a/Documentation/translations/it_IT/process/submit-checklist.rst b/Documentation/translations/it_IT/process/submit-checklist.rst
-index ea74cae958d7..995ee69fab11 100644
---- a/Documentation/translations/it_IT/process/submit-checklist.rst
-+++ b/Documentation/translations/it_IT/process/submit-checklist.rst
-@@ -117,7 +117,7 @@ sottomissione delle patch, in particolare
-     sorgenti che ne spieghi la logica: cosa fanno e perché.
+  4) Once the board is up and running again, find the right MTD partition
+-    (it is named as "BIOS"):
++    (it is named as "BIOS")::
  
- 25) Se la patch aggiunge nuove chiamate ioctl, allora aggiornate
--    ``Documentation/ioctl/ioctl-number.txt``.
-+    ``Documentation/ioctl/ioctl-number.rst``.
+-    # cat /proc/mtd
+-    dev:    size   erasesize  name
+-    mtd0: 00800000 00001000 "BIOS"
++	# cat /proc/mtd
++	dev:    size   erasesize  name
++	mtd0: 00800000 00001000 "BIOS"
  
- 26) Se il codice che avete modificato dipende o usa una qualsiasi interfaccia o
-     funzionalità del kernel che è associata a uno dei seguenti simboli
-diff --git a/Documentation/translations/zh_CN/process/submit-checklist.rst b/Documentation/translations/zh_CN/process/submit-checklist.rst
-index f4785d2b0491..8738c55e42a2 100644
---- a/Documentation/translations/zh_CN/process/submit-checklist.rst
-+++ b/Documentation/translations/zh_CN/process/submit-checklist.rst
-@@ -97,7 +97,7 @@ Linux内核补丁提交清单
- 24) 所有内存屏障例如 ``barrier()``, ``rmb()``, ``wmb()`` 都需要源代码中的注
-     释来解释它们正在执行的操作及其原因的逻辑。
+     So here it will be /dev/mtd0 but it may vary.
  
--25) 如果补丁添加了任何ioctl，那么也要更新 ``Documentation/ioctl/ioctl-number.txt``
-+25) 如果补丁添加了任何ioctl，那么也要更新 ``Documentation/ioctl/ioctl-number.rst``
+- 5) Make backup of the existing image first:
++ 5) Make backup of the existing image first::
  
- 26) 如果修改后的源代码依赖或使用与以下 ``Kconfig`` 符号相关的任何内核API或
-     功能，则在禁用相关 ``Kconfig`` 符号和/或 ``=m`` （如果该选项可用）的情况
-diff --git a/include/uapi/rdma/rdma_user_ioctl_cmds.h b/include/uapi/rdma/rdma_user_ioctl_cmds.h
-index 26213f49f5c8..54e16a589472 100644
---- a/include/uapi/rdma/rdma_user_ioctl_cmds.h
-+++ b/include/uapi/rdma/rdma_user_ioctl_cmds.h
-@@ -36,7 +36,7 @@
+-    # dd if=/dev/mtd0ro of=bios.bak
+-    16384+0 records in
+-    16384+0 records out
+-    8388608 bytes (8.4 MB) copied, 10.0269 s, 837 kB/s
++	# dd if=/dev/mtd0ro of=bios.bak
++	16384+0 records in
++	16384+0 records out
++	8388608 bytes (8.4 MB) copied, 10.0269 s, 837 kB/s
+ 
+- 6) Verify the backup
++ 6) Verify the backup:
+ 
+-    # sha1sum /dev/mtd0ro bios.bak
+-    fdbb011920572ca6c991377c4b418a0502668b73  /dev/mtd0ro
+-    fdbb011920572ca6c991377c4b418a0502668b73  bios.bak
++	# sha1sum /dev/mtd0ro bios.bak
++	fdbb011920572ca6c991377c4b418a0502668b73  /dev/mtd0ro
++	fdbb011920572ca6c991377c4b418a0502668b73  bios.bak
+ 
+     The SHA1 sums must match. Otherwise do not continue any further!
+ 
+  7) Erase the SPI serial flash. After this step, do not reboot the
+-    board! Otherwise it will not start anymore.
++    board! Otherwise it will not start anymore::
+ 
+-    # flash_erase /dev/mtd0 0 0
+-    Erasing 4 Kibyte @ 7ff000 -- 100 % complete
++	# flash_erase /dev/mtd0 0 0
++	Erasing 4 Kibyte @ 7ff000 -- 100 % complete
+ 
+  8) Once completed without errors you can write the new BIOS image:
+ 
+     # dd if=MNW2MAX1.X64.0092.R01.1605221712.bin of=/dev/mtd0
+ 
+  9) Verify that the new content of the SPI serial flash matches the new
+-    BIOS image:
++    BIOS image::
+ 
+-    # sha1sum /dev/mtd0ro MNW2MAX1.X64.0092.R01.1605221712.bin
+-    9b4df9e4be2057fceec3a5529ec3d950836c87a2  /dev/mtd0ro
+-    9b4df9e4be2057fceec3a5529ec3d950836c87a2 MNW2MAX1.X64.0092.R01.1605221712.bin
++	# sha1sum /dev/mtd0ro MNW2MAX1.X64.0092.R01.1605221712.bin
++	9b4df9e4be2057fceec3a5529ec3d950836c87a2  /dev/mtd0ro
++	9b4df9e4be2057fceec3a5529ec3d950836c87a2 MNW2MAX1.X64.0092.R01.1605221712.bin
+ 
+     The SHA1 sums should match.
+ 
+@@ -84,5 +85,6 @@ Linux.
+ References
+ ----------
+ 
+-[1] https://firmware.intel.com/sites/default/files/MinnowBoard.MAX_.X64.92.R01.zip
++[1] https://firmware.intel.com/sites/default/files/MinnowBoard%2EMAX_%2EX64%2E92%2ER01%2Ezip
++
+ [2] http://www.linux-mtd.infradead.org/
+diff --git a/Documentation/mtd/nand_ecc.txt b/Documentation/mtd/nand_ecc.rst
+similarity index 67%
+rename from Documentation/mtd/nand_ecc.txt
+rename to Documentation/mtd/nand_ecc.rst
+index f8c3284bf6a7..e8d3c53a5056 100644
+--- a/Documentation/mtd/nand_ecc.txt
++++ b/Documentation/mtd/nand_ecc.rst
+@@ -1,3 +1,7 @@
++==========================
++NAND Error-correction Code
++==========================
++
+ Introduction
+ ============
+ 
+@@ -37,63 +41,79 @@ sometimes also referred to as xor. In C the operator for xor is ^
+ Back to ecc.
+ Let's give a small figure:
+ 
++=========  ==== ==== ==== ==== ==== ==== ==== ====   === === === === ====
+ byte   0:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp2 rp4 ... rp14
+ byte   1:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp2 rp4 ... rp14
+ byte   2:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp3 rp4 ... rp14
+ byte   3:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp3 rp4 ... rp14
+ byte   4:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp2 rp5 ... rp14
+-....
++...
+ byte 254:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp3 rp5 ... rp15
+ byte 255:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp3 rp5 ... rp15
+            cp1  cp0  cp1  cp0  cp1  cp0  cp1  cp0
+            cp3  cp3  cp2  cp2  cp3  cp3  cp2  cp2
+            cp5  cp5  cp5  cp5  cp4  cp4  cp4  cp4
++=========  ==== ==== ==== ==== ==== ==== ==== ====   === === === === ====
+ 
+ This figure represents a sector of 256 bytes.
+ cp is my abbreviation for column parity, rp for row parity.
+ 
+ Let's start to explain column parity.
+-cp0 is the parity that belongs to all bit0, bit2, bit4, bit6.
+-so the sum of all bit0, bit2, bit4 and bit6 values + cp0 itself is even.
++
++- cp0 is the parity that belongs to all bit0, bit2, bit4, bit6.
++
++  so the sum of all bit0, bit2, bit4 and bit6 values + cp0 itself is even.
++
+ Similarly cp1 is the sum of all bit1, bit3, bit5 and bit7.
+-cp2 is the parity over bit0, bit1, bit4 and bit5
+-cp3 is the parity over bit2, bit3, bit6 and bit7.
+-cp4 is the parity over bit0, bit1, bit2 and bit3.
+-cp5 is the parity over bit4, bit5, bit6 and bit7.
++
++- cp2 is the parity over bit0, bit1, bit4 and bit5
++- cp3 is the parity over bit2, bit3, bit6 and bit7.
++- cp4 is the parity over bit0, bit1, bit2 and bit3.
++- cp5 is the parity over bit4, bit5, bit6 and bit7.
++
+ Note that each of cp0 .. cp5 is exactly one bit.
+ 
+ Row parity actually works almost the same.
+-rp0 is the parity of all even bytes (0, 2, 4, 6, ... 252, 254)
+-rp1 is the parity of all odd bytes (1, 3, 5, 7, ..., 253, 255)
+-rp2 is the parity of all bytes 0, 1, 4, 5, 8, 9, ...
+-(so handle two bytes, then skip 2 bytes).
+-rp3 is covers the half rp2 does not cover (bytes 2, 3, 6, 7, 10, 11, ...)
+-for rp4 the rule is cover 4 bytes, skip 4 bytes, cover 4 bytes, skip 4 etc.
+-so rp4 calculates parity over bytes 0, 1, 2, 3, 8, 9, 10, 11, 16, ...)
+-and rp5 covers the other half, so bytes 4, 5, 6, 7, 12, 13, 14, 15, 20, ..
++
++- rp0 is the parity of all even bytes (0, 2, 4, 6, ... 252, 254)
++- rp1 is the parity of all odd bytes (1, 3, 5, 7, ..., 253, 255)
++- rp2 is the parity of all bytes 0, 1, 4, 5, 8, 9, ...
++  (so handle two bytes, then skip 2 bytes).
++- rp3 is covers the half rp2 does not cover (bytes 2, 3, 6, 7, 10, 11, ...)
++- for rp4 the rule is cover 4 bytes, skip 4 bytes, cover 4 bytes, skip 4 etc.
++
++  so rp4 calculates parity over bytes 0, 1, 2, 3, 8, 9, 10, 11, 16, ...)
++- and rp5 covers the other half, so bytes 4, 5, 6, 7, 12, 13, 14, 15, 20, ..
++
+ The story now becomes quite boring. I guess you get the idea.
+-rp6 covers 8 bytes then skips 8 etc
+-rp7 skips 8 bytes then covers 8 etc
+-rp8 covers 16 bytes then skips 16 etc
+-rp9 skips 16 bytes then covers 16 etc
+-rp10 covers 32 bytes then skips 32 etc
+-rp11 skips 32 bytes then covers 32 etc
+-rp12 covers 64 bytes then skips 64 etc
+-rp13 skips 64 bytes then covers 64 etc
+-rp14 covers 128 bytes then skips 128
+-rp15 skips 128 bytes then covers 128
++
++- rp6 covers 8 bytes then skips 8 etc
++- rp7 skips 8 bytes then covers 8 etc
++- rp8 covers 16 bytes then skips 16 etc
++- rp9 skips 16 bytes then covers 16 etc
++- rp10 covers 32 bytes then skips 32 etc
++- rp11 skips 32 bytes then covers 32 etc
++- rp12 covers 64 bytes then skips 64 etc
++- rp13 skips 64 bytes then covers 64 etc
++- rp14 covers 128 bytes then skips 128
++- rp15 skips 128 bytes then covers 128
+ 
+ In the end the parity bits are grouped together in three bytes as
+ follows:
++
++=====  ===== ===== ===== ===== ===== ===== ===== =====
+ ECC    Bit 7 Bit 6 Bit 5 Bit 4 Bit 3 Bit 2 Bit 1 Bit 0
++=====  ===== ===== ===== ===== ===== ===== ===== =====
+ ECC 0   rp07  rp06  rp05  rp04  rp03  rp02  rp01  rp00
+ ECC 1   rp15  rp14  rp13  rp12  rp11  rp10  rp09  rp08
+ ECC 2   cp5   cp4   cp3   cp2   cp1   cp0      1     1
++=====  ===== ===== ===== ===== ===== ===== ===== =====
+ 
+ I detected after writing this that ST application note AN1823
+ (http://www.st.com/stonline/) gives a much
+ nicer picture.(but they use line parity as term where I use row parity)
+ Oh well, I'm graphically challenged, so suffer with me for a moment :-)
++
+ And I could not reuse the ST picture anyway for copyright reasons.
+ 
+ 
+@@ -101,9 +121,10 @@ Attempt 0
+ =========
+ 
+ Implementing the parity calculation is pretty simple.
+-In C pseudocode:
+-for (i = 0; i < 256; i++)
+-{
++In C pseudocode::
++
++  for (i = 0; i < 256; i++)
++  {
+     if (i & 0x01)
+        rp1 = bit7 ^ bit6 ^ bit5 ^ bit4 ^ bit3 ^ bit2 ^ bit1 ^ bit0 ^ rp1;
+     else
+@@ -142,7 +163,7 @@ for (i = 0; i < 256; i++)
+     cp3 = bit7 ^ bit6 ^ bit3 ^ bit2 ^ cp3
+     cp4 = bit3 ^ bit2 ^ bit1 ^ bit0 ^ cp4
+     cp5 = bit7 ^ bit6 ^ bit5 ^ bit4 ^ cp5
+-}
++  }
+ 
+ 
+ Analysis 0
+@@ -167,82 +188,84 @@ This leads to:
+ Attempt 1
+ =========
+ 
+-const char parity[256] = {
+-    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+-    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+-    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+-    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+-    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+-    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+-    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+-    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+-    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+-    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+-    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+-    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+-    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+-    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+-    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+-    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0
+-};
++::
+ 
+-void ecc1(const unsigned char *buf, unsigned char *code)
+-{
+-    int i;
+-    const unsigned char *bp = buf;
+-    unsigned char cur;
+-    unsigned char rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
+-    unsigned char rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
+-    unsigned char par;
++  const char parity[256] = {
++      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
++      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
++      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
++      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
++      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
++      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
++      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
++      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
++      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
++      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
++      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
++      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
++      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
++      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
++      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
++      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0
++  };
+ 
+-    par = 0;
+-    rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
+-    rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
+-    rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
+-    rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
++  void ecc1(const unsigned char *buf, unsigned char *code)
++  {
++      int i;
++      const unsigned char *bp = buf;
++      unsigned char cur;
++      unsigned char rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
++      unsigned char rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
++      unsigned char par;
+ 
+-    for (i = 0; i < 256; i++)
+-    {
+-        cur = *bp++;
+-        par ^= cur;
+-        if (i & 0x01) rp1 ^= cur; else rp0 ^= cur;
+-        if (i & 0x02) rp3 ^= cur; else rp2 ^= cur;
+-        if (i & 0x04) rp5 ^= cur; else rp4 ^= cur;
+-        if (i & 0x08) rp7 ^= cur; else rp6 ^= cur;
+-        if (i & 0x10) rp9 ^= cur; else rp8 ^= cur;
+-        if (i & 0x20) rp11 ^= cur; else rp10 ^= cur;
+-        if (i & 0x40) rp13 ^= cur; else rp12 ^= cur;
+-        if (i & 0x80) rp15 ^= cur; else rp14 ^= cur;
+-    }
+-    code[0] =
+-        (parity[rp7] << 7) |
+-        (parity[rp6] << 6) |
+-        (parity[rp5] << 5) |
+-        (parity[rp4] << 4) |
+-        (parity[rp3] << 3) |
+-        (parity[rp2] << 2) |
+-        (parity[rp1] << 1) |
+-        (parity[rp0]);
+-    code[1] =
+-        (parity[rp15] << 7) |
+-        (parity[rp14] << 6) |
+-        (parity[rp13] << 5) |
+-        (parity[rp12] << 4) |
+-        (parity[rp11] << 3) |
+-        (parity[rp10] << 2) |
+-        (parity[rp9]  << 1) |
+-        (parity[rp8]);
+-    code[2] =
+-        (parity[par & 0xf0] << 7) |
+-        (parity[par & 0x0f] << 6) |
+-        (parity[par & 0xcc] << 5) |
+-        (parity[par & 0x33] << 4) |
+-        (parity[par & 0xaa] << 3) |
+-        (parity[par & 0x55] << 2);
+-    code[0] = ~code[0];
+-    code[1] = ~code[1];
+-    code[2] = ~code[2];
+-}
++      par = 0;
++      rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
++      rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
++      rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
++      rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
++
++      for (i = 0; i < 256; i++)
++      {
++          cur = *bp++;
++          par ^= cur;
++          if (i & 0x01) rp1 ^= cur; else rp0 ^= cur;
++          if (i & 0x02) rp3 ^= cur; else rp2 ^= cur;
++          if (i & 0x04) rp5 ^= cur; else rp4 ^= cur;
++          if (i & 0x08) rp7 ^= cur; else rp6 ^= cur;
++          if (i & 0x10) rp9 ^= cur; else rp8 ^= cur;
++          if (i & 0x20) rp11 ^= cur; else rp10 ^= cur;
++          if (i & 0x40) rp13 ^= cur; else rp12 ^= cur;
++          if (i & 0x80) rp15 ^= cur; else rp14 ^= cur;
++      }
++      code[0] =
++          (parity[rp7] << 7) |
++          (parity[rp6] << 6) |
++          (parity[rp5] << 5) |
++          (parity[rp4] << 4) |
++          (parity[rp3] << 3) |
++          (parity[rp2] << 2) |
++          (parity[rp1] << 1) |
++          (parity[rp0]);
++      code[1] =
++          (parity[rp15] << 7) |
++          (parity[rp14] << 6) |
++          (parity[rp13] << 5) |
++          (parity[rp12] << 4) |
++          (parity[rp11] << 3) |
++          (parity[rp10] << 2) |
++          (parity[rp9]  << 1) |
++          (parity[rp8]);
++      code[2] =
++          (parity[par & 0xf0] << 7) |
++          (parity[par & 0x0f] << 6) |
++          (parity[par & 0xcc] << 5) |
++          (parity[par & 0x33] << 4) |
++          (parity[par & 0xaa] << 3) |
++          (parity[par & 0x55] << 2);
++      code[0] = ~code[0];
++      code[1] = ~code[1];
++      code[2] = ~code[2];
++  }
+ 
+ Still pretty straightforward. The last three invert statements are there to
+ give a checksum of 0xff 0xff 0xff for an empty flash. In an empty flash
+@@ -293,88 +316,90 @@ Let's give it a try...
+ Attempt 2
+ =========
+ 
+-extern const char parity[256];
++::
+ 
+-void ecc2(const unsigned char *buf, unsigned char *code)
+-{
+-    int i;
+-    const unsigned long *bp = (unsigned long *)buf;
+-    unsigned long cur;
+-    unsigned long rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
+-    unsigned long rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
+-    unsigned long par;
++  extern const char parity[256];
+ 
+-    par = 0;
+-    rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
+-    rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
+-    rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
+-    rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
++  void ecc2(const unsigned char *buf, unsigned char *code)
++  {
++      int i;
++      const unsigned long *bp = (unsigned long *)buf;
++      unsigned long cur;
++      unsigned long rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
++      unsigned long rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
++      unsigned long par;
+ 
+-    for (i = 0; i < 64; i++)
+-    {
+-        cur = *bp++;
+-        par ^= cur;
+-        if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
+-        if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
+-        if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
+-        if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
+-        if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
+-        if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
+-    }
+-    /*
+-       we need to adapt the code generation for the fact that rp vars are now
+-       long; also the column parity calculation needs to be changed.
+-       we'll bring rp4 to 15 back to single byte entities by shifting and
+-       xoring
+-    */
+-    rp4 ^= (rp4 >> 16); rp4 ^= (rp4 >> 8); rp4 &= 0xff;
+-    rp5 ^= (rp5 >> 16); rp5 ^= (rp5 >> 8); rp5 &= 0xff;
+-    rp6 ^= (rp6 >> 16); rp6 ^= (rp6 >> 8); rp6 &= 0xff;
+-    rp7 ^= (rp7 >> 16); rp7 ^= (rp7 >> 8); rp7 &= 0xff;
+-    rp8 ^= (rp8 >> 16); rp8 ^= (rp8 >> 8); rp8 &= 0xff;
+-    rp9 ^= (rp9 >> 16); rp9 ^= (rp9 >> 8); rp9 &= 0xff;
+-    rp10 ^= (rp10 >> 16); rp10 ^= (rp10 >> 8); rp10 &= 0xff;
+-    rp11 ^= (rp11 >> 16); rp11 ^= (rp11 >> 8); rp11 &= 0xff;
+-    rp12 ^= (rp12 >> 16); rp12 ^= (rp12 >> 8); rp12 &= 0xff;
+-    rp13 ^= (rp13 >> 16); rp13 ^= (rp13 >> 8); rp13 &= 0xff;
+-    rp14 ^= (rp14 >> 16); rp14 ^= (rp14 >> 8); rp14 &= 0xff;
+-    rp15 ^= (rp15 >> 16); rp15 ^= (rp15 >> 8); rp15 &= 0xff;
+-    rp3 = (par >> 16); rp3 ^= (rp3 >> 8); rp3 &= 0xff;
+-    rp2 = par & 0xffff; rp2 ^= (rp2 >> 8); rp2 &= 0xff;
+-    par ^= (par >> 16);
+-    rp1 = (par >> 8); rp1 &= 0xff;
+-    rp0 = (par & 0xff);
+-    par ^= (par >> 8); par &= 0xff;
++      par = 0;
++      rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
++      rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
++      rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
++      rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
+ 
+-    code[0] =
+-        (parity[rp7] << 7) |
+-        (parity[rp6] << 6) |
+-        (parity[rp5] << 5) |
+-        (parity[rp4] << 4) |
+-        (parity[rp3] << 3) |
+-        (parity[rp2] << 2) |
+-        (parity[rp1] << 1) |
+-        (parity[rp0]);
+-    code[1] =
+-        (parity[rp15] << 7) |
+-        (parity[rp14] << 6) |
+-        (parity[rp13] << 5) |
+-        (parity[rp12] << 4) |
+-        (parity[rp11] << 3) |
+-        (parity[rp10] << 2) |
+-        (parity[rp9]  << 1) |
+-        (parity[rp8]);
+-    code[2] =
+-        (parity[par & 0xf0] << 7) |
+-        (parity[par & 0x0f] << 6) |
+-        (parity[par & 0xcc] << 5) |
+-        (parity[par & 0x33] << 4) |
+-        (parity[par & 0xaa] << 3) |
+-        (parity[par & 0x55] << 2);
+-    code[0] = ~code[0];
+-    code[1] = ~code[1];
+-    code[2] = ~code[2];
+-}
++      for (i = 0; i < 64; i++)
++      {
++          cur = *bp++;
++          par ^= cur;
++          if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
++          if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
++          if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
++          if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
++          if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
++          if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
++      }
++      /*
++         we need to adapt the code generation for the fact that rp vars are now
++         long; also the column parity calculation needs to be changed.
++         we'll bring rp4 to 15 back to single byte entities by shifting and
++         xoring
++      */
++      rp4 ^= (rp4 >> 16); rp4 ^= (rp4 >> 8); rp4 &= 0xff;
++      rp5 ^= (rp5 >> 16); rp5 ^= (rp5 >> 8); rp5 &= 0xff;
++      rp6 ^= (rp6 >> 16); rp6 ^= (rp6 >> 8); rp6 &= 0xff;
++      rp7 ^= (rp7 >> 16); rp7 ^= (rp7 >> 8); rp7 &= 0xff;
++      rp8 ^= (rp8 >> 16); rp8 ^= (rp8 >> 8); rp8 &= 0xff;
++      rp9 ^= (rp9 >> 16); rp9 ^= (rp9 >> 8); rp9 &= 0xff;
++      rp10 ^= (rp10 >> 16); rp10 ^= (rp10 >> 8); rp10 &= 0xff;
++      rp11 ^= (rp11 >> 16); rp11 ^= (rp11 >> 8); rp11 &= 0xff;
++      rp12 ^= (rp12 >> 16); rp12 ^= (rp12 >> 8); rp12 &= 0xff;
++      rp13 ^= (rp13 >> 16); rp13 ^= (rp13 >> 8); rp13 &= 0xff;
++      rp14 ^= (rp14 >> 16); rp14 ^= (rp14 >> 8); rp14 &= 0xff;
++      rp15 ^= (rp15 >> 16); rp15 ^= (rp15 >> 8); rp15 &= 0xff;
++      rp3 = (par >> 16); rp3 ^= (rp3 >> 8); rp3 &= 0xff;
++      rp2 = par & 0xffff; rp2 ^= (rp2 >> 8); rp2 &= 0xff;
++      par ^= (par >> 16);
++      rp1 = (par >> 8); rp1 &= 0xff;
++      rp0 = (par & 0xff);
++      par ^= (par >> 8); par &= 0xff;
++
++      code[0] =
++          (parity[rp7] << 7) |
++          (parity[rp6] << 6) |
++          (parity[rp5] << 5) |
++          (parity[rp4] << 4) |
++          (parity[rp3] << 3) |
++          (parity[rp2] << 2) |
++          (parity[rp1] << 1) |
++          (parity[rp0]);
++      code[1] =
++          (parity[rp15] << 7) |
++          (parity[rp14] << 6) |
++          (parity[rp13] << 5) |
++          (parity[rp12] << 4) |
++          (parity[rp11] << 3) |
++          (parity[rp10] << 2) |
++          (parity[rp9]  << 1) |
++          (parity[rp8]);
++      code[2] =
++          (parity[par & 0xf0] << 7) |
++          (parity[par & 0x0f] << 6) |
++          (parity[par & 0xcc] << 5) |
++          (parity[par & 0x33] << 4) |
++          (parity[par & 0xaa] << 3) |
++          (parity[par & 0x55] << 2);
++      code[0] = ~code[0];
++      code[1] = ~code[1];
++      code[2] = ~code[2];
++  }
+ 
+ The parity array is not shown any more. Note also that for these
+ examples I kinda deviated from my regular programming style by allowing
+@@ -403,28 +428,32 @@ lookups
+ Attempt 3
+ =========
+ 
+-Odd replaced:
+-        if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
+-        if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
+-        if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
+-        if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
+-        if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
+-        if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
+-with
+-        if (i & 0x01) rp5 ^= cur;
+-        if (i & 0x02) rp7 ^= cur;
+-        if (i & 0x04) rp9 ^= cur;
+-        if (i & 0x08) rp11 ^= cur;
+-        if (i & 0x10) rp13 ^= cur;
+-        if (i & 0x20) rp15 ^= cur;
++Odd replaced::
+ 
+-        and outside the loop added:
+-        rp4  = par ^ rp5;
+-        rp6  = par ^ rp7;
+-        rp8  = par ^ rp9;
+-        rp10  = par ^ rp11;
+-        rp12  = par ^ rp13;
+-        rp14  = par ^ rp15;
++          if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
++          if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
++          if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
++          if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
++          if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
++          if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
++
++with::
++
++          if (i & 0x01) rp5 ^= cur;
++          if (i & 0x02) rp7 ^= cur;
++          if (i & 0x04) rp9 ^= cur;
++          if (i & 0x08) rp11 ^= cur;
++          if (i & 0x10) rp13 ^= cur;
++          if (i & 0x20) rp15 ^= cur;
++
++and outside the loop added::
++
++          rp4  = par ^ rp5;
++          rp6  = par ^ rp7;
++          rp8  = par ^ rp9;
++          rp10  = par ^ rp11;
++          rp12  = par ^ rp13;
++          rp14  = par ^ rp15;
+ 
+ And after that the code takes about 30% more time, although the number of
+ statements is reduced. This is also reflected in the assembly code.
+@@ -448,7 +477,7 @@ Attempt 4
+ =========
+ 
+ Unrolled the loop 1, 2, 3 and 4 times.
+-For 4 the code starts with:
++For 4 the code starts with::
+ 
+     for (i = 0; i < 4; i++)
+     {
+@@ -471,8 +500,11 @@ Analysis 4
+ ==========
+ 
+ Unrolling once gains about 15%
++
+ Unrolling twice keeps the gain at about 15%
++
+ Unrolling three times gives a gain of 30% compared to attempt 2.
++
+ Unrolling four times gives a marginal improvement compared to unrolling
+ three times.
+ 
+@@ -492,8 +524,10 @@ Attempt 5
+ 
+ Effectively so all odd digit rp assignments in the loop were removed.
+ This included the else clause of the if statements.
+-Of course after the loop we need to correct things by adding code like:
++Of course after the loop we need to correct things by adding code like::
++
+     rp5 = par ^ rp4;
++
+ Also the initial assignments (rp5 = 0; etc) could be removed.
+ Along the line I also removed the initialisation of rp0/1/2/3.
+ 
+@@ -513,7 +547,7 @@ statement. Time for yet another version!
+ Attempt 6
+ =========
+ 
+-THe code within the for loop was changed to:
++THe code within the for loop was changed to::
+ 
+     for (i = 0; i < 4; i++)
+     {
+@@ -564,13 +598,17 @@ million iterations in order not to lose too much accuracy. This one
+ definitely seemed to be the jackpot!
+ 
+ There is a little bit more room for improvement though. There are three
+-places with statements:
+-rp4 ^= cur; rp6 ^= cur;
++places with statements::
++
++	rp4 ^= cur; rp6 ^= cur;
++
+ It seems more efficient to also maintain a variable rp4_6 in the while
+ loop; This eliminates 3 statements per loop. Of course after the loop we
+-need to correct by adding:
+-    rp4 ^= rp4_6;
+-    rp6 ^= rp4_6
++need to correct by adding::
++
++	rp4 ^= rp4_6;
++	rp6 ^= rp4_6
++
+ Furthermore there are 4 sequential assignments to rp8. This can be
+ encoded slightly more efficiently by saving tmppar before those 4 lines
+ and later do rp8 = rp8 ^ tmppar ^ notrp8;
+@@ -582,7 +620,7 @@ Time for a new test!
+ Attempt 7
+ =========
+ 
+-The new code now looks like:
++The new code now looks like::
+ 
+     for (i = 0; i < 4; i++)
+     {
+@@ -644,9 +682,12 @@ Although it seems that the code within the loop cannot be optimised
+ further there is still room to optimize the generation of the ecc codes.
+ We can simply calculate the total parity. If this is 0 then rp4 = rp5
+ etc. If the parity is 1, then rp4 = !rp5;
++
+ But if rp4 = rp5 we do not need rp5 etc. We can just write the even bits
+-in the result byte and then do something like
++in the result byte and then do something like::
++
+     code[0] |= (code[0] << 1);
++
+ Lets test this.
+ 
+ 
+@@ -657,11 +698,13 @@ Changed the code but again this slightly degrades performance. Tried all
+ kind of other things, like having dedicated parity arrays to avoid the
+ shift after parity[rp7] << 7; No gain.
+ Change the lookup using the parity array by using shift operators (e.g.
+-replace parity[rp7] << 7 with:
+-rp7 ^= (rp7 << 4);
+-rp7 ^= (rp7 << 2);
+-rp7 ^= (rp7 << 1);
+-rp7 &= 0x80;
++replace parity[rp7] << 7 with::
++
++	rp7 ^= (rp7 << 4);
++	rp7 ^= (rp7 << 2);
++	rp7 ^= (rp7 << 1);
++	rp7 &= 0x80;
++
+ No gain.
+ 
+ The only marginal change was inverting the parity bits, so we can remove
+@@ -683,13 +726,16 @@ Correcting errors
+ 
+ For correcting errors I again used the ST application note as a starter,
+ but I also peeked at the existing code.
++
+ The algorithm itself is pretty straightforward. Just xor the given and
+ the calculated ecc. If all bytes are 0 there is no problem. If 11 bits
+ are 1 we have one correctable bit error. If there is 1 bit 1, we have an
+ error in the given ecc code.
++
+ It proved to be fastest to do some table lookups. Performance gain
+ introduced by this is about a factor 2 on my system when a repair had to
+ be done, and 1% or so if no repair had to be done.
++
+ Code size increased from 330 bytes to 686 bytes for this function.
+ (gcc 4.2, -O3)
+ 
+@@ -700,8 +746,10 @@ Conclusion
+ The gain when calculating the ecc is tremendous. Om my development hardware
+ a speedup of a factor of 18 for ecc calculation was achieved. On a test on an
+ embedded system with a MIPS core a factor 7 was obtained.
++
+ On a test with a Linksys NSLU2 (ARMv5TE processor) the speedup was a factor
+ 5 (big endian mode, gcc 4.1.2, -O3)
++
+ For correction not much gain could be obtained (as bitflips are rare). Then
+ again there are also much less cycles spent there.
+ 
+@@ -711,4 +759,5 @@ out of it with an assembler program, but due to pipeline behaviour etc
+ this is very tricky (at least for intel hw).
+ 
+ Author: Frans Meulenbroeks
++
+ Copyright (C) 2008 Koninklijke Philips Electronics NV.
+diff --git a/Documentation/mtd/spi-nor.txt b/Documentation/mtd/spi-nor.rst
+similarity index 94%
+rename from Documentation/mtd/spi-nor.txt
+rename to Documentation/mtd/spi-nor.rst
+index da1fbff5a24c..f5333e3bf486 100644
+--- a/Documentation/mtd/spi-nor.txt
++++ b/Documentation/mtd/spi-nor.rst
+@@ -1,5 +1,6 @@
+-                          SPI NOR framework
+-               ============================================
++=================
++SPI NOR framework
++=================
+ 
+ Part I - Why do we need this framework?
+ ---------------------------------------
+@@ -23,7 +24,7 @@ This framework just adds a new layer between the MTD and the SPI bus driver.
+ With this new layer, the SPI NOR controller driver does not depend on the
+ m25p80 code anymore.
+ 
+-   Before this framework, the layer is like:
++Before this framework, the layer is like::
+ 
+                    MTD
+          ------------------------
+diff --git a/drivers/mtd/nand/raw/nand_ecc.c b/drivers/mtd/nand/raw/nand_ecc.c
+index 223fbd8052b3..f6a7808db818 100644
+--- a/drivers/mtd/nand/raw/nand_ecc.c
++++ b/drivers/mtd/nand/raw/nand_ecc.c
+@@ -11,7 +11,7 @@
+  *   Thomas Gleixner (tglx@linutronix.de)
+  *
+  * Information on how this algorithm works and how it was developed
+- * can be found in Documentation/mtd/nand_ecc.txt
++ * can be found in Documentation/mtd/nand_ecc.rst
+  */
+ 
  #include <linux/types.h>
- #include <linux/ioctl.h>
- 
--/* Documentation/ioctl/ioctl-number.txt */
-+/* Documentation/ioctl/ioctl-number.rst */
- #define RDMA_IOCTL_MAGIC	0x1b
- #define RDMA_VERBS_IOCTL \
- 	_IOWR(RDMA_IOCTL_MAGIC, 1, struct ib_uverbs_ioctl_hdr)
 -- 
 2.21.0
 
