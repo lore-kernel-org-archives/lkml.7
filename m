@@ -2,103 +2,76 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B682C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E58CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBEB2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE362064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="V+3oItKN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zer0a/jP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfF1HZV (ORCPT
+        id S1727370AbfF1HZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:25:21 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:53324 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726574AbfF1HZV (ORCPT
+        Fri, 28 Jun 2019 03:25:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49804 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfF1HZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 03:25:21 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 06725C0ABB;
-        Fri, 28 Jun 2019 07:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561706720; bh=T6VhbxQBn60YsJz3rj2qAY6BMbwV1q6YS9QLKjZns24=;
-        h=From:To:Cc:Subject:Date:From;
-        b=V+3oItKN7bvJJL6IK2kctD29BSa5RKNiDetNrvhsCcbzyLwcvdQ00LHRGT1MIDeTf
-         Au3H5fgdNavHLoHCvXf6hKB8Q/Z4qb/CjjUrlnyZQNfC8oS6MXBSIBpGBAwkznEdup
-         NHEhhy4D9AkJp062OERaED6iHLWzaemz1qLQWR2jrhbQ4pwH5t4PFOc26K/ibSXYNF
-         6PSBVxc34l5cME0ansRX8S7HubxKjzkPiTHr6qgHvu6rEx79HrNBE5TgwUd0/QIYpj
-         qv78zDwYa1lNR2UtSsrnD6M3rxp1vsYr7cc4bvUmIZBEwW1CaEnsJKlpDzNFgo2E+r
-         mOD/kNtcLG6TQ==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 07A1BA0233;
-        Fri, 28 Jun 2019 07:25:17 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 7FAC23E8CB;
-        Fri, 28 Jun 2019 09:25:10 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH net-next v2] net: stmmac: Fix case when PHY handle is not present
-Date:   Fri, 28 Jun 2019 09:25:07 +0200
-Message-Id: <654cfe790807c6dfcc69c610c9692efb8c9a6179.1561706654.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=L59glztjBFdzd0vpM/vAEVkumpBm6raQTV6rgoEfnoA=; b=Zer0a/jPvQOc99VEP2rbwm2/r
+        584J1SYdkxFucp5cUWZZtRfM2ngZMJlyoVBRF7VAcuc9sdLj4zpuDbbeDkVeZ7SE2NFhttNNXosU4
+        vVv5+fJP/Yfs975tI2b2X3ophH2KxjRVMrFHOUsdEsHpaPWhmD8RtnDj6skxrqp6ERc7mGcKHBWHC
+        3xG9cHW7TpLICuZD6pgbV07Wi6izh7qeZmTFqyTl6lkqlBv9GQnZMm3F0S2sQ9khVB1bBCAkN+4Se
+        BpfeStB3nggiwQp3CYx98ofVBk9bQxwWNPyq7Izwiad12RzO1bJ/LVqYNjVgfidNRGBtM7eGj65dx
+        4/jZ5dS9g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hglG2-0001az-TF; Fri, 28 Jun 2019 07:25:18 +0000
+Date:   Fri, 28 Jun 2019 00:25:18 -0700
+From:   'Christoph Hellwig' <hch@infradead.org>
+To:     kanchan <joshi.k@samsung.com>
+Cc:     'Christoph Hellwig' <hch@infradead.org>, 'Jan Kara' <jack@suse.cz>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, anshul@samsung.com,
+        linux-fsdevel@vger.kernel.org, prakash.v@samsung.com,
+        linux-ext4@vger.kernel.org
+Subject: Re: [PATCH v5 0/7] Extend write-hint framework, and add write-hint
+ for Ext4 journal
+Message-ID: <20190628072518.GA25577@infradead.org>
+References: <CGME20190425112347epcas2p1f7be48b8f0d2203252b8c9dd510c1b61@epcas2p1.samsung.com>
+ <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
+ <20190510170249.GA26907@infradead.org>
+ <00fb01d50c71$dd358e50$97a0aaf0$@samsung.com>
+ <20190520142719.GA15705@infradead.org>
+ <20190521082528.GA17709@quack2.suse.cz>
+ <20190521082846.GA11024@infradead.org>
+ <20190522102530.GK17019@quack2.suse.cz>
+ <00f301d52c1d$58f1e820$0ad5b860$@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00f301d52c1d$58f1e820$0ad5b860$@samsung.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some DT bindings do not have the PHY handle. Let's fallback to manually
-discovery in case phylink_of_phy_connect() fails.
+On Wed, Jun 26, 2019 at 06:17:29PM +0530, kanchan wrote:
+> Christoph, 
+> May I know if you have thoughts about what Jan mentioned below? 
 
-Changes from v1:
-	- Fixup comment style (Sergei)
-
-Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
-Reported-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Tested-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 8f5ebd51859e..91f24b63ea16 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -953,9 +953,13 @@ static int stmmac_init_phy(struct net_device *dev)
- 
- 	node = priv->plat->phylink_node;
- 
--	if (node) {
-+	if (node)
- 		ret = phylink_of_phy_connect(priv->phylink, node, 0);
--	} else {
-+
-+	/* Some DT bindings do not set-up the PHY handle. Let's try to
-+	 * manually parse it
-+	 */
-+	if (!node || ret) {
- 		int addr = priv->plat->phy_addr;
- 		struct phy_device *phydev;
- 
--- 
-2.7.4
-
+As said I fundamentally disagree with exposting the streams mess at
+the block layer.  I have no problem with setting a hint on the journal,
+but I do object to exposting the streams mess even more.
