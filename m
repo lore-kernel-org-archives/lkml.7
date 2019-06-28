@@ -2,165 +2,186 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C849C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C9AC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB6C2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9625E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfF1HcG (ORCPT
+        id S1726710AbfF1HcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:32:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32996 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726650AbfF1HcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:32:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 74B71B187;
-        Fri, 28 Jun 2019 07:32:04 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 09:32:03 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
-        torvalds@linux-foundation.org, tglx@linutronix.de
-Subject: Re: [PATCH] ftrace: Remove possible deadlock between register_kprobe()
- and ftrace_run_update_code()
-In-Reply-To: <20190627081334.12793-1-pmladek@suse.com>
-Message-ID: <alpine.LSU.2.21.1906280928410.17146@pobox.suse.cz>
-References: <20190627081334.12793-1-pmladek@suse.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 28 Jun 2019 03:32:22 -0400
+Received: from lgeamrelo12.lge.com ([156.147.23.52]:41197 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726408AbfF1HcW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 03:32:22 -0400
+Received: from unknown (HELO lgeamrelo04.lge.com) (156.147.1.127)
+        by 156.147.23.52 with ESMTP; 28 Jun 2019 16:32:19 +0900
+X-Original-SENDERIP: 156.147.1.127
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.127 with ESMTP; 28 Jun 2019 16:32:19 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Fri, 28 Jun 2019 16:31:38 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Scott Wood <swood@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Message-ID: <20190628073138.GB13650@X58A-UD3R>
+References: <20190627142436.GD215968@google.com>
+ <20190627103455.01014276@gandalf.local.home>
+ <20190627153031.GA249127@google.com>
+ <20190627155506.GU26519@linux.ibm.com>
+ <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
+ <20190627173831.GW26519@linux.ibm.com>
+ <20190627181638.GA209455@google.com>
+ <20190627184107.GA26519@linux.ibm.com>
+ <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
+ <20190627203612.GD26519@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627203612.GD26519@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019, Petr Mladek wrote:
+On Thu, Jun 27, 2019 at 01:36:12PM -0700, Paul E. McKenney wrote:
+> On Thu, Jun 27, 2019 at 03:17:27PM -0500, Scott Wood wrote:
+> > On Thu, 2019-06-27 at 11:41 -0700, Paul E. McKenney wrote:
+> > > On Thu, Jun 27, 2019 at 02:16:38PM -0400, Joel Fernandes wrote:
+> > > > 
+> > > > I think the fix should be to prevent the wake-up not based on whether we
+> > > > are
+> > > > in hard/soft-interrupt mode but that we are doing the rcu_read_unlock()
+> > > > from
+> > > > a scheduler path (if we can detect that)
+> > > 
+> > > Or just don't do the wakeup at all, if it comes to that.  I don't know
+> > > of any way to determine whether rcu_read_unlock() is being called from
+> > > the scheduler, but it has been some time since I asked Peter Zijlstra
+> > > about that.
+> > > 
+> > > Of course, unconditionally refusing to do the wakeup might not be happy
+> > > thing for NO_HZ_FULL kernels that don't implement IRQ work.
+> > 
+> > Couldn't smp_send_reschedule() be used instead?
+> 
+> Good point.  If current -rcu doesn't fix things for Sebastian's case,
+> that would be well worth looking at.  But there must be some reason
+> why Peter Zijlstra didn't suggest it when he instead suggested using
+> the IRQ work approach.
+> 
+> Peter, thoughts?
 
-> The commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text
-> permissions race") causes a possible deadlock between register_kprobe()
-> and ftrace_run_update_code() when ftrace is using stop_machine().
-> 
-> The existing dependency chain (in reverse order) is:
-> 
-> -> #1 (text_mutex){+.+.}:
->        validate_chain.isra.21+0xb32/0xd70
->        __lock_acquire+0x4b8/0x928
->        lock_acquire+0x102/0x230
->        __mutex_lock+0x88/0x908
->        mutex_lock_nested+0x32/0x40
->        register_kprobe+0x254/0x658
->        init_kprobes+0x11a/0x168
->        do_one_initcall+0x70/0x318
->        kernel_init_freeable+0x456/0x508
->        kernel_init+0x22/0x150
->        ret_from_fork+0x30/0x34
->        kernel_thread_starter+0x0/0xc
-> 
-> -> #0 (cpu_hotplug_lock.rw_sem){++++}:
->        check_prev_add+0x90c/0xde0
->        validate_chain.isra.21+0xb32/0xd70
->        __lock_acquire+0x4b8/0x928
->        lock_acquire+0x102/0x230
->        cpus_read_lock+0x62/0xd0
->        stop_machine+0x2e/0x60
->        arch_ftrace_update_code+0x2e/0x40
->        ftrace_run_update_code+0x40/0xa0
->        ftrace_startup+0xb2/0x168
->        register_ftrace_function+0x64/0x88
->        klp_patch_object+0x1a2/0x290
->        klp_enable_patch+0x554/0x980
->        do_one_initcall+0x70/0x318
->        do_init_module+0x6e/0x250
->        load_module+0x1782/0x1990
->        __s390x_sys_finit_module+0xaa/0xf0
->        system_call+0xd8/0x2d0
-> 
->  Possible unsafe locking scenario:
-> 
->        CPU0                    CPU1
->        ----                    ----
->   lock(text_mutex);
->                                lock(cpu_hotplug_lock.rw_sem);
->                                lock(text_mutex);
->   lock(cpu_hotplug_lock.rw_sem);
-> 
-> It is similar problem that has been solved by the commit 2d1e38f56622b9b
-> ("kprobes: Cure hotplug lock ordering issues"). Many locks are involved.
-> To be on the safe side, text_mutex must become a low level lock taken
-> after cpu_hotplug_lock.rw_sem.
-> 
-> This can't be achieved easily with the current ftrace design.
-> For example, arm calls set_all_modules_text_rw() already in
-> ftrace_arch_code_modify_prepare(), see arch/arm/kernel/ftrace.c.
-> This functions is called:
-> 
->   + outside stop_machine() from ftrace_run_update_code()
->   + without stop_machine() from ftrace_module_enable()
-> 
-> Fortunately, the problematic fix is needed only on x86_64. It is
-> the only architecture that calls set_all_modules_text_rw()
-> in ftrace path and supports livepatching at the same time.
-> 
-> Therefore it is enough to move text_mutex handling from the generic
-> kernel/trace/ftrace.c into arch/x86/kernel/ftrace.c:
-> 
->    ftrace_arch_code_modify_prepare()
->    ftrace_arch_code_modify_post_process()
-> 
-> This patch basically reverts the ftrace part of the problematic
-> commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module
-> text permissions race"). And provides x86_64 specific-fix.
-> 
-> Some refactoring of the ftrace code will be needed when livepatching
-> is implemented for arm or nds32. These architectures call
-> set_all_modules_text_rw() and use stop_machine() at the same time.
-> 
-> Fixes: 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text permissions race")
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+Hello,
 
-Reported-by: Miroslav Benes <mbenes@suse.cz>
+Isn't the following scenario possible?
 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 38277af44f5c..d3034a4a3fcc 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -34,7 +34,6 @@
->  #include <linux/hash.h>
->  #include <linux/rcupdate.h>
->  #include <linux/kprobes.h>
-> -#include <linux/memory.h>
->  
->  #include <trace/events/sched.h>
->  
-> @@ -2611,12 +2610,10 @@ static void ftrace_run_update_code(int command)
->  {
->  	int ret;
->  
-> -	mutex_lock(&text_mutex);
-> -
->  	ret = ftrace_arch_code_modify_prepare();
->  	FTRACE_WARN_ON(ret);
->  	if (ret)
-> -		goto out_unlock;
-> +		return ret;
+The original code
+-----------------
+rcu_read_lock();
+...
+/* Experdite */
+WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
+...
+__rcu_read_unlock();
+	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
+		rcu_read_unlock_special(t);
+			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
+			rcu_preempt_deferred_qs_irqrestore(t, flags);
+		barrier();  /* ->rcu_read_unlock_special load before assign */
+		t->rcu_read_lock_nesting = 0;
 
-Should be just "return;", because the function is "static void".
+The reordered code by machine
+-----------------------------
+rcu_read_lock();
+...
+/* Experdite */
+WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
+...
+__rcu_read_unlock();
+	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
+		rcu_read_unlock_special(t);
+		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
+			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
+			rcu_preempt_deferred_qs_irqrestore(t, flags);
+		barrier();  /* ->rcu_read_unlock_special load before assign */
 
-With that
+An interrupt happens
+--------------------
+rcu_read_lock();
+...
+/* Experdite */
+WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
+...
+__rcu_read_unlock();
+	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
+		rcu_read_unlock_special(t);
+		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
+<--- Handle an (any) irq
+	rcu_read_lock();
+	/* This call should be skipped */
+	rcu_read_unlock_special(t);
+			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
+			rcu_preempt_deferred_qs_irqrestore(t, flags);
+		barrier();  /* ->rcu_read_unlock_special load before assign */
 
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+We don't have to handle the special thing twice like this which is one
+reason to cause the problem even though another problem is of course to
+call ttwu w/o being aware it's within a context holding pi lock.
 
-Miroslav
+Apart from the discussion about how to avoid ttwu in an improper
+condition, I think the following is necessary. I may have something
+missing. It would be appreciated if you let me know in case I'm wrong.
+
+Anyway, logically I think we should prevent reordering between
+t->rcu_read_lock_nesting and t->rcu_read_unlock_special.b.exp_hint not
+only by compiler but also by machine like the below.
+
+Do I miss something?
+
+Thanks,
+Byungchul
+
+---8<---
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 3c8444e..9b137f1 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -412,7 +412,13 @@ void __rcu_read_unlock(void)
+ 		barrier();  /* assign before ->rcu_read_unlock_special load */
+ 		if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
+ 			rcu_read_unlock_special(t);
+-		barrier();  /* ->rcu_read_unlock_special load before assign */
++		/*
++		 * Prevent reordering between clearing
++		 * t->rcu_reak_unlock_special in
++		 * rcu_read_unlock_special() and the following
++		 * assignment to t->rcu_read_lock_nesting.
++		 */
++		smp_wmb();
+ 		t->rcu_read_lock_nesting = 0;
+ 	}
+ 	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
+
+
+
