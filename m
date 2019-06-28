@@ -2,127 +2,112 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AB2C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92F8C4646D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFBAF208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4042147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PmTFMMrF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DnAq9wWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbfF1DiL (ORCPT
+        id S1727203AbfF1DiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:38:11 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52860 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbfF1DiL (ORCPT
+        Thu, 27 Jun 2019 23:38:15 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43280 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbfF1DiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:38:11 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5S3c3sP008526;
-        Thu, 27 Jun 2019 22:38:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561693083;
-        bh=dzmOZZff9xHTE8ZakTRvyW2vPBFPMXEZjI/07/tzJdY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=PmTFMMrFC0XpLwzqjUEL99pdWFb5xuITGQNnRtjaNWfs6PkLQk5p4AInIwbgfDvQO
-         qEK44L9+NeiThBMQ/KTdxbg3pMdQGxzLkCOz2w1K4RYZL78Jn0JuUH4TU/PGNhMXtj
-         wYQl7Y+mlO72LTLWVNITvQtr+MGIG6VdR1bNrjR8=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5S3c3bh058049
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Jun 2019 22:38:03 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 27
- Jun 2019 22:38:03 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 27 Jun 2019 22:38:03 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5S3c0s2064279;
-        Thu, 27 Jun 2019 22:38:01 -0500
-Subject: Re: [PATCH v2] arm64: Kconfig.platforms: Enable GPIO_DAVINCI for
- ARCH_K3
-To:     Nishanth Menon <nm@ti.com>
-CC:     <t-kristo@ti.com>, <will.deacon@arm.com>,
-        <catalin.marinas@arm.com>, <shawnguo@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <lokeshvutla@ti.com>
-References: <20190627110920.15099-1-j-keerthy@ti.com>
- <20190627143208.eeca4xyygml7s4n3@kahuna>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <39f5e726-8542-b650-3bdb-7542e8fab8ac@ti.com>
-Date:   Fri, 28 Jun 2019 09:08:37 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 27 Jun 2019 23:38:13 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j29so2947409lfk.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 20:38:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PFAR1VyfRz8u+8JtXBWHxsN9qbzCO9vgXJys4jNPevE=;
+        b=DnAq9wWeUF4/tJ3xd3/E9iDEp59E1DKVpfYYqcNoRE5ld6ONQQVSXKRfVv8MwTIztr
+         pPKNz/8t16wutRg1tu9CGKqaTYhkfLeZbJQ3bd79Z32xN8k+MblNR37mKCk4OutG7fRr
+         23GdKdtowzQcjVaKAHLqU3KZ2UrpmnLSAtCH7ubUagYI1/yuOcw6IjNQAjb+ksr1tMrT
+         SmvrYAemTbPAKMKM3x3S9NFI//CpXPF6AnmQybzEoLJmFdOEyKR1K9kQepsLBUNc/DJN
+         weCD9AuNxwE9DoKFa9ZVOt/s8+oeDOdkMlQjZAdy6nkwsSf7EEvSQFbkCQb1XaOOmhEb
+         Sdtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PFAR1VyfRz8u+8JtXBWHxsN9qbzCO9vgXJys4jNPevE=;
+        b=apfRcuXev9e/6pLSqlIBj3verQMJaypaJJitFnMVfKweZ8QKnO0PBMdQe5iNy9dpF6
+         dCfF+lqsfwa4GhtK/XpLPQMJ7uy6K7MOxhNuSPhGTvq1mvxdxfjOAE7tuZmuwWNGEhOO
+         JybEaX1u8JudonNExlny/Mkl7H1Aycd6hOpalGpHcnqFk6wBE+dWebrP6k38OQshCh85
+         2G1AgaclPqL9nZnqdMRSCrosLUBGEeXZ7C8pXEXJ41eA4FNqz2fwngZZPkDb3tYJa03T
+         1LOPJ76hHYXbip9qU5I0g+iWd1o1sM42+Cyfk+Bn62qW6mbyZMTGlh5/0DihAywKzjsH
+         uWoA==
+X-Gm-Message-State: APjAAAUIq2f2w4syujrlGmL1Hcxg4C8AYEG+0CVwBpDNmnagoMt34wiA
+        nKwrEOdyyR0y1fFKr0i9GcqrJJCDQinDan87i1tKyQ==
+X-Google-Smtp-Source: APXvYqzx4zeAdw9gJozkJfqZ8idmtP4uO628k0/UGSICcNueyN6ahlH9h046vJEG/h4JYKM/NJ/Oulviun3B640f9P0=
+X-Received: by 2002:a19:ed07:: with SMTP id y7mr3996030lfy.56.1561693089958;
+ Thu, 27 Jun 2019 20:38:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190627143208.eeca4xyygml7s4n3@kahuna>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190508173403.6088d0db@canb.auug.org.au> <fa0e68b2-b839-b187-150c-13391c197b99@infradead.org>
+ <CAHp75Veq2=XA124rG8urt3eVE3pcaUm0VdsV7Mxr9zjMpa7mjg@mail.gmail.com>
+ <CACK8Z6F2v8nyUYcnOrkp81WfK2D2NEmK=pcWybn1annrtqRwew@mail.gmail.com> <CAHp75Ver=TNKxh8rdJs1xQYSLNsRLfEoFtcGG6hViug=cF6s_g@mail.gmail.com>
+In-Reply-To: <CAHp75Ver=TNKxh8rdJs1xQYSLNsRLfEoFtcGG6hViug=cF6s_g@mail.gmail.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Thu, 27 Jun 2019 20:37:33 -0700
+Message-ID: <CACK8Z6FN62e041-dwri6S+-34wSOxSsTAPjRmSw44uVJhtRz-A@mail.gmail.com>
+Subject: Re: linux-next: Tree for May 8 (drivers/platform/x86/intel_pmc_core_plat_drv.c)
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andy,
 
+On Tue, Jun 11, 2019 at 12:06 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, May 9, 2019 at 2:15 AM Rajat Jain <rajatja@google.com> wrote:
+>
+> > OK, NP. Just to be sure I understand,
+> >
+> > 1) Please let me know if I should send in a fix (it would be
+> > #include/linux/module.h and also add MODULE_LICENSE() I believe)?
+> > 2) Would this be lined up for next version though?
+>
+> Resend a complete series based on the latest stuff we have in our
+> for-next branch.
 
-On 27/06/19 8:02 PM, Nishanth Menon wrote:
-> On 16:39-20190627, Keerthy wrote:
->> Enable GPIO_DAVINCI and related configs for TI K3 AM6 platforms.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>
->> Changes in v2:
->>
->>    * Enabling configs in Kconfig.platforms file instead of defconfig.
->>    * Removed GPIO_DEBUG config.
->>
->>   arch/arm64/Kconfig.platforms | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->> index 4778c775de1b..6e43a0995ed4 100644
->> --- a/arch/arm64/Kconfig.platforms
->> +++ b/arch/arm64/Kconfig.platforms
->> @@ -97,6 +97,8 @@ config ARCH_K3
->>   	select TI_SCI_PROTOCOL
->>   	select TI_SCI_INTR_IRQCHIP
->>   	select TI_SCI_INTA_IRQCHIP
->> +	select GPIO_SYSFS
->> +	select GPIO_DAVINCI
-> 
-> 
-> Could you help explain the logic of doing this? commit message is
-> basically the diff in English. To me, this does NOT make sense.
-> 
-> I understand GPIO_DAVINCI is the driver compatible, but we cant do this for
-> every single SoC driver that is NOT absolutely mandatory for basic
-> functionality.
+My apologies for the delay in resending. I just sent a v7 of the patch
+that was dropped:
+https://lkml.org/lkml/2019/6/27/1264
 
-In case of ARM64 could you help me find the right place to enable
-such SoC specific configs?
+Only 2 changes from the v6:
 
-> 
-> Also keep in mind the impact to arm64/configs/defconfig -> every single
-> SoC in the arm64 world will be now rebuild with GPIO_SYSFS.. why force
-> that?
+#include <linux/module.h>
 
-This was the practice in arm32 soc specific configs like 
-omap2plus_defconfig. GPIO_SYSFS was he only way to validate. Now i 
-totally understand your concern about every single SoC rebuilding but 
-now where do we need to enable the bare minimal GPIO_DAVINCI config?
+and
 
-v1 i received feedback from Tero to enable in Kconfig.platforms. Hence i 
-shifted to this approach.
+MODULE_LICENSE()
 
-> 
+Thanks & Best Regards,
+
+Rajat
+
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
