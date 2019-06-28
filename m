@@ -2,181 +2,251 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BDBC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD35C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78BED2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A57D2147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 06:40:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="mRCXT8DI";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="AIguh8n4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfF1GiZ (ORCPT
+        id S1727234AbfF1GkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 02:38:25 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:10751 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726648AbfF1GiZ (ORCPT
+        Fri, 28 Jun 2019 02:40:02 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:54928 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbfF1GkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 02:38:25 -0400
-X-UUID: da96804691c5402e872980591e3bd802-20190628
-X-UUID: da96804691c5402e872980591e3bd802-20190628
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 937936099; Fri, 28 Jun 2019 14:38:10 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 28 Jun
- 2019 14:38:06 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 28 Jun 2019 14:38:06 +0800
-Message-ID: <1561703886.21133.14.camel@mhfsdcap03>
-Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Ryder Lee =?UTF-8?Q?=28=E6=9D=8E=E5=BA=9A=E8=AB=BA=29?= 
-        <Ryder.Lee@mediatek.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Youlin Pei =?UTF-8?Q?=28=E8=A3=B4=E5=8F=8B=E6=9E=97=29?= 
-        <youlin.pei@mediatek.com>,
+        Fri, 28 Jun 2019 02:40:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1561704041; x=1593240041;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=nRhFlmYNp3gYbeF9Q2/oebTs2rJTDTVmhBdRoRfZNS4=;
+  b=mRCXT8DINQZIUAx0VcTyOtrMFCIfvyNHu2ChVWNB0X4VvFIO5CLOij9C
+   5a9jnm0zStUj4KozTskEGSComjGLVXN92tX4W5T/7GjL/mDAoMKLwAHf+
+   wW1ofD7CKIkv1oBGWezkJCGS0jDMU2ixIrOmWFIASD7u3v2U8Q/+Githm
+   F4NFu7NmYY5qsqaeM+O7eLKP65PfsjuDXO7stwyj75EeS1DLMvcMplDak
+   3yTs4QdtvWnAbn8LAHzNZ2G4/X0s8XAHES7gjcCH4F3ffxdxG1uSIm84V
+   liukavy+hK1njIuRWfuiIdWu3HYhk5AxcuRqOvapM7/gbq15HgWanrLiU
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.63,426,1557158400"; 
+   d="scan'208";a="211577689"
+Received: from mail-by2nam05lp2051.outbound.protection.outlook.com (HELO NAM05-BY2-obe.outbound.protection.outlook.com) ([104.47.50.51])
+  by ob1.hgst.iphmx.com with ESMTP; 28 Jun 2019 14:40:39 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=qUCyTptd8IoiY3Fy/WEjj56WaEN5e8Ca7/MbiaJu9xfN9HLY5V5iueXZuY789+bNL77J5vEcUGOAkwfhjxWozYMmBOBVPMm+vgVwmJVNOUqgEhwGPbfLQ9o60JaKLVni7x29KaR0chBlJLUF0L8mvZkYwu17NW0LWzsndAj/d7o=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ESmkexQp6xMXPePZbCqOfeCVTYm7TK103WeA/yyskxM=;
+ b=d4dvgo3DfHmsH7qypiDeE/mY9vS9Xh2Y7Vs1sAxtBnk3+wOXlmzLoIJR8FAeNg5Bi3gxgqJR+stf/cjB0DsIhjmg6CDtm1qIR0ALrx3IcFDrZp4808ajDfa6r84lI0ea/aMq/BtZNVzau+rbsGfClSCr/nteq0KCz3PZ0SGMtrI=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ESmkexQp6xMXPePZbCqOfeCVTYm7TK103WeA/yyskxM=;
+ b=AIguh8n4uwl8WOwr8+aN8x8J8n+hPCF7pIgSku6MRj8I8ruJibLafVd02rSBUe+Wk0G6IAdk9wSiOxypUVLrfd6jK7OLORPZRKCc+8dXtBPXMcmEMcCgU9tmx43A5Xlk/Fpw6URzGNR9S5tKi17V7yaE+gWwZjzYtPHd3IddVyE=
+Received: from SN6PR04MB5231.namprd04.prod.outlook.com (20.177.254.85) by
+ SN6PR04MB5119.namprd04.prod.outlook.com (52.135.116.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.18; Fri, 28 Jun 2019 06:39:59 +0000
+Received: from SN6PR04MB5231.namprd04.prod.outlook.com
+ ([fe80::5005:99a1:65aa:f088]) by SN6PR04MB5231.namprd04.prod.outlook.com
+ ([fe80::5005:99a1:65aa:f088%6]) with mapi id 15.20.2008.014; Fri, 28 Jun 2019
+ 06:39:59 +0000
+From:   Naohiro Aota <Naohiro.Aota@wdc.com>
+To:     Anand Jain <anand.jain@oracle.com>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>
+CC:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Honghui Zhang =?UTF-8?Q?=28=E5=BC=A0=E6=B4=AA=E8=BE=89=29?= 
-        <Honghui.Zhang@mediatek.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, <jianjun.wang@mediatek.com>
-Date:   Fri, 28 Jun 2019 14:38:06 +0800
-In-Reply-To: <20190219150352.GA21833@e107981-ln.cambridge.arm.com>
-References: <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
-         <20181213145517.GB4701@google.com> <1545034779.8528.8.camel@mhfsdcap03>
-         <20181217143247.GK20725@google.com>
-         <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
-         <1545124764.25199.3.camel@mhfsdcap03> <20181220182043.GC183878@google.com>
-         <1545651628.5634.57.camel@mhfsdcap03>
-         <20190123154023.GA1157@e107981-ln.cambridge.arm.com>
-         <1550559699.29794.2.camel@mhfsdcap03>
-         <20190219150352.GA21833@e107981-ln.cambridge.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Hannes Reinecke <hare@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        =?iso-8859-1?Q?Matias_Bj=F8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 09/19] btrfs: limit super block locations in HMZONED mode
+Thread-Topic: [PATCH 09/19] btrfs: limit super block locations in HMZONED mode
+Thread-Index: AQHVHTKI41mlZbldhUiKC20uoMUKKg==
+Date:   Fri, 28 Jun 2019 06:39:54 +0000
+Message-ID: <SN6PR04MB52315AB9E229D0BAAB930D5B8CFC0@SN6PR04MB5231.namprd04.prod.outlook.com>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-10-naohiro.aota@wdc.com>
+ <0ca3c475-fe10-4135-ddc9-7a82cc966d9a@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Naohiro.Aota@wdc.com; 
+x-originating-ip: [199.255.47.8]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ea6f06c6-7936-476d-7c3d-08d6fb937130
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB5119;
+x-ms-traffictypediagnostic: SN6PR04MB5119:
+x-microsoft-antispam-prvs: <SN6PR04MB5119A80413B27896960723708CFC0@SN6PR04MB5119.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00826B6158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(366004)(39860400002)(136003)(396003)(199004)(189003)(8676002)(6116002)(74316002)(66556008)(7696005)(66946007)(71200400001)(25786009)(305945005)(3846002)(4326008)(99286004)(81156014)(81166006)(66446008)(8936002)(7416002)(71190400001)(5660300002)(66476007)(73956011)(229853002)(446003)(486006)(64756008)(68736007)(66066001)(91956017)(14454004)(76116006)(7736002)(476003)(6246003)(9686003)(54906003)(14444005)(316002)(72206003)(110136005)(53936002)(55016002)(6436002)(6666004)(256004)(76176011)(186003)(478600001)(2906002)(52536014)(86362001)(53546011)(2501003)(26005)(6506007)(102836004)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5119;H:SN6PR04MB5231.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: uI3ajd+JN2RD30EasG4Zco/e28nG10i1vdiqunRoVQo0AK8sGSzY3MlYam7+SMsglVJ00eCHOld2vICSjy4v2DQXsTZB0Mu4GGutT//GFQ4JNQtm/ztapJiMD0izvqXJ7zm5uiKVTsh69VmQypnlmDVGRDbCdJk41Dk2WZsP0AE6FQtOK6r4lYxvFS3BpAV41leJHBYyZeujqeQ3YOjrap3Ppooaz6vYO27xvlrRm9SzB8DtKfYs3u/lps3fUa5ID+e0pqzjAHHWplsJO9iq8jLM4gtZ52qjKa3PzUJWAz6C0OfJx/8b/hIsLBPLdNGI3RErmVjlE0CgNpVLToaU7mo/tiLEgFAX+kbqpzsQ/gqA5C6V2io/sQQoxk4Hli+4hWqreLJsMgeDGN8JDEUrOKw8FLo5LzQfKHXw6amBX0A=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 226F04D099627E20AD2AD93D5DC115D1142A2FAD96C8240667F1D37A93E3DA682000:8
-X-MTK:  N
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea6f06c6-7936-476d-7c3d-08d6fb937130
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 06:39:54.8658
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Naohiro.Aota1@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-02-19 at 23:03 +0800, Lorenzo Pieralisi wrote:
-> On Tue, Feb 19, 2019 at 03:01:39PM +0800, Jianjun Wang wrote:
-> > On Wed, 2019-01-23 at 15:40 +0000, Lorenzo Pieralisi wrote:
-> > > On Mon, Dec 24, 2018 at 07:40:28PM +0800, Jianjun Wang wrote:
-> > > > On Thu, 2018-12-20 at 12:20 -0600, Bjorn Helgaas wrote:
-> > > > > On Tue, Dec 18, 2018 at 05:19:24PM +0800, Jianjun Wang wrote:
-> > > > > > On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
-> > > > > > > On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
-> > > > > > > > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
-> > > > > > > > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
-> > > > > > > > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
-> > > > > > > > > > > The read value of BAR0 is 0xffff_ffff, it's size will be
-> > > > > > > > > > > calculated as 4GB in arm64 but bogus alignment values at
-> > > > > > > > > > > arm32, the pcie device and devices behind this bridge will
-> > > > > > > > > > > not be enabled. Fix it's BAR0 resource size to guarantee
-> > > > > > > > > > > the pcie devices will be enabled correctly.
-> > > > > > > > > > 
-> > > > > > > > > > So this is a hardware erratum?  Per spec, a memory BAR has
-> > > > > > > > > > bit 0 hardwired to 0, and an IO BAR has bit 1 hardwired to
-> > > > > > > > > > 0.
-> > > > > > > > > 
-> > > > > > > > > Yes, it only works properly on 64bit platform.
-> > > > > > > > 
-> > > > > > > > I don't understand.  BARs are supposed to work the same
-> > > > > > > > regardless of whether it's a 32- or 64-bit platform.  If this is
-> > > > > > > > a workaround for a hardware defect, please just say that
-> > > > > > > > explicitly.
-> > > > > > > 
-> > > > > > > I do not understand this either. First thing to do is to describe
-> > > > > > > the problem properly so that we can actually find a solution to
-> > > > > > > it.
-> > > > > > 
-> > > > > > This BAR0 is a 64-bit memory BAR, the HW default values for this BAR
-> > > > > > is 0xffff_ffff_0000_0000 and it could not be changed except by
-> > > > > > config write operation.
-> > > > > 
-> > > > > If you literally get 0xffff_ffff_0000_0000 when reading the BAR, that
-> > > > > is out of spec because the low-order 4 bits of a 64-bit memory BAR
-> > > > > cannot all be zero.
-> > > > > 
-> > > > > A 64-bit BAR consumes two DWORDS in config space.  For a 64-bit BAR0,
-> > > > > the DWORD at 0x10 contains the low-order bits, and the DWORD at 0x14
-> > > > > contains the upper 32 bits.  Bits 0-3 of the low-order DWORD (the
-> > > > > one at 0x10) are read-only, and in this case should contain the value
-> > > > > 0b1100 (0xc).  That means the range is prefetchable (bit 3 == 1) and
-> > > > > the BAR is 64 bits (bits 2:1 == 10).
-> > > > 
-> > > > Sorry, I have confused the HW default value and the read value of BAR
-> > > > size. The hardware default value is 0xffff_ffff_0000_000c, it's a 64-bit
-> > > > BAR with prefetchable range.
-> > > > 
-> > > > When we start to decoding the BAR, the read value of BAR0 at 0x10 is
-> > > > 0x0c, and the value at 0x14 is 0xffff_ffff, so the read value of BAR
-> > > > size is 0xffff_ffff_0000_0000, which will be decoded to 0xffff_ffff, and
-> > > > it will be set to the end value of BAR0 resource in the pci_dev.
-> > > > > 
-> > > > > > The calculated BAR size will be 0 in 32-bit platform since the
-> > > > > > phys_addr_t is a 32bit value in 32-bit platform.
-> > > > > 
-> > > > > Either (1) this is a hardware defect that feeds incorrect data to the
-> > > > > BAR size calculation, or (2) there's a problem in the BAR size
-> > > > > calculation code.  We need to figure out which one and work around or
-> > > > > fix it correctly.
-> > > > 
-> > > > The BAR size is calculated by the code (res->end - res->start + 1) is
-> > > > fine, I think it's a hardware defect because that we can not change the
-> > > > hardware default value or just disable it since we don't using it.
-> > > 
-> > > Apologies for the delay in getting back to this.
-> > > 
-> > > This looks like a kernel defect, not a HW defect.
-> > > 
-> > > I need some time to make up my mind on what the right fix for this
-> > > but it is most certainly not this patch.
-> > > 
-> > > Lorenzo
-> > 
-> > Hi Lorenzo,
-> > 
-> > Is there any better idea about this patch?
-> 
-> Hi,
-> 
-> I did not have time to investigate the issue in core code that triggers
-> this defect but this patch is not the solution to the problem it is a
-> plaster that papers over it, I won't merge it.
-> 
-> I would appreciate some help. If you could have a look at core code that
-> triggers the failure we can analyze what should be done to make it work,
-> I do not think it is a defect in your IP.
-> 
-> Lorenzo
-
-Hi Lorenzo,
-
-This BAR size issue has been fixed by commit
-"01b37f851ca150554496fd6e79c6d9a67992a2c0
-PCI: Make pci_size() return real BAR size"
-
-So there is no need to add the fixup method, I will remove it in next
-version.
-
-Thanks.
-
-
+On 2019/06/28 12:56, Anand Jain wrote:=0A=
+> On 7/6/19 9:10 PM, Naohiro Aota wrote:=0A=
+>> When in HMZONED mode, make sure that device super blocks are located in=
+=0A=
+>> randomly writable zones of zoned block devices. That is, do not write su=
+per=0A=
+>> blocks in sequential write required zones of host-managed zoned block=0A=
+>> devices as update would not be possible.=0A=
+> =0A=
+>    By design all copies of SB must be updated at each transaction,=0A=
+>    as they are redundant copies they must match at the end of=0A=
+>    each transaction.=0A=
+> =0A=
+>    Instead of skipping the sb updates, why not alter number of=0A=
+>    copies at the time of mkfs.btrfs?=0A=
+> =0A=
+> Thanks, Anand=0A=
+=0A=
+That is exactly what the patched code does. It updates all the SB=0A=
+copies, but it just avoids writing a copy to sequential writing=0A=
+required zones. Mkfs.btrfs do the same. So, all the available SB=0A=
+copies always match after a transaction. At the SB location in a=0A=
+sequential write required zone, you will see zeroed region (in the=0A=
+next version of the patch series), but that is easy to ignore: it=0A=
+lacks even BTRFS_MAGIC.=0A=
+=0A=
+The number of SB copy available on HMZONED device will vary=0A=
+by its zone size and its zone layout.=0A=
+=0A=
+Thanks,=0A=
+=0A=
+> =0A=
+>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
+>> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>=0A=
+>> ---=0A=
+>>    fs/btrfs/disk-io.c     | 11 +++++++++++=0A=
+>>    fs/btrfs/disk-io.h     |  1 +=0A=
+>>    fs/btrfs/extent-tree.c |  4 ++++=0A=
+>>    fs/btrfs/scrub.c       |  2 ++=0A=
+>>    4 files changed, 18 insertions(+)=0A=
+>>=0A=
+>> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c=0A=
+>> index 7c1404c76768..ddbb02906042 100644=0A=
+>> --- a/fs/btrfs/disk-io.c=0A=
+>> +++ b/fs/btrfs/disk-io.c=0A=
+>> @@ -3466,6 +3466,13 @@ struct buffer_head *btrfs_read_dev_super(struct b=
+lock_device *bdev)=0A=
+>>    	return latest;=0A=
+>>    }=0A=
+>>    =0A=
+>> +int btrfs_check_super_location(struct btrfs_device *device, u64 pos)=0A=
+>> +{=0A=
+>> +	/* any address is good on a regular (zone_size =3D=3D 0) device */=0A=
+>> +	/* non-SEQUENTIAL WRITE REQUIRED zones are capable on a zoned device *=
+/=0A=
+>> +	return device->zone_size =3D=3D 0 || !btrfs_dev_is_sequential(device, =
+pos);=0A=
+>> +}=0A=
+>> +=0A=
+>>    /*=0A=
+>>     * Write superblock @sb to the @device. Do not wait for completion, a=
+ll the=0A=
+>>     * buffer heads we write are pinned.=0A=
+>> @@ -3495,6 +3502,8 @@ static int write_dev_supers(struct btrfs_device *d=
+evice,=0A=
+>>    		if (bytenr + BTRFS_SUPER_INFO_SIZE >=3D=0A=
+>>    		    device->commit_total_bytes)=0A=
+>>    			break;=0A=
+>> +		if (!btrfs_check_super_location(device, bytenr))=0A=
+>> +			continue;=0A=
+>>    =0A=
+>>    		btrfs_set_super_bytenr(sb, bytenr);=0A=
+>>    =0A=
+>> @@ -3561,6 +3570,8 @@ static int wait_dev_supers(struct btrfs_device *de=
+vice, int max_mirrors)=0A=
+>>    		if (bytenr + BTRFS_SUPER_INFO_SIZE >=3D=0A=
+>>    		    device->commit_total_bytes)=0A=
+>>    			break;=0A=
+>> +		if (!btrfs_check_super_location(device, bytenr))=0A=
+>> +			continue;=0A=
+>>    =0A=
+>>    		bh =3D __find_get_block(device->bdev,=0A=
+>>    				      bytenr / BTRFS_BDEV_BLOCKSIZE,=0A=
+>> diff --git a/fs/btrfs/disk-io.h b/fs/btrfs/disk-io.h=0A=
+>> index a0161aa1ea0b..70e97cd6fa76 100644=0A=
+>> --- a/fs/btrfs/disk-io.h=0A=
+>> +++ b/fs/btrfs/disk-io.h=0A=
+>> @@ -141,6 +141,7 @@ struct extent_map *btree_get_extent(struct btrfs_ino=
+de *inode,=0A=
+>>    		struct page *page, size_t pg_offset, u64 start, u64 len,=0A=
+>>    		int create);=0A=
+>>    int btrfs_get_num_tolerated_disk_barrier_failures(u64 flags);=0A=
+>> +int btrfs_check_super_location(struct btrfs_device *device, u64 pos);=
+=0A=
+>>    int __init btrfs_end_io_wq_init(void);=0A=
+>>    void __cold btrfs_end_io_wq_exit(void);=0A=
+>>    =0A=
+>> diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c=0A=
+>> index 3d41d840fe5c..ae2c895d08c4 100644=0A=
+>> --- a/fs/btrfs/extent-tree.c=0A=
+>> +++ b/fs/btrfs/extent-tree.c=0A=
+>> @@ -267,6 +267,10 @@ static int exclude_super_stripes(struct btrfs_block=
+_group_cache *cache)=0A=
+>>    			return ret;=0A=
+>>    	}=0A=
+>>    =0A=
+>> +	/* we won't have super stripes in sequential zones */=0A=
+>> +	if (cache->alloc_type =3D=3D BTRFS_ALLOC_SEQ)=0A=
+>> +		return 0;=0A=
+>> +=0A=
+>>    	for (i =3D 0; i < BTRFS_SUPER_MIRROR_MAX; i++) {=0A=
+>>    		bytenr =3D btrfs_sb_offset(i);=0A=
+>>    		ret =3D btrfs_rmap_block(fs_info, cache->key.objectid,=0A=
+>> diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c=0A=
+>> index f7b29f9db5e2..36ad4fad7eaf 100644=0A=
+>> --- a/fs/btrfs/scrub.c=0A=
+>> +++ b/fs/btrfs/scrub.c=0A=
+>> @@ -3720,6 +3720,8 @@ static noinline_for_stack int scrub_supers(struct =
+scrub_ctx *sctx,=0A=
+>>    		if (bytenr + BTRFS_SUPER_INFO_SIZE >=0A=
+>>    		    scrub_dev->commit_total_bytes)=0A=
+>>    			break;=0A=
+>> +		if (!btrfs_check_super_location(scrub_dev, bytenr))=0A=
+>> +			continue;=0A=
+>>    =0A=
+>>    		ret =3D scrub_pages(sctx, bytenr, BTRFS_SUPER_INFO_SIZE, bytenr,=0A=
+>>    				  scrub_dev, BTRFS_EXTENT_FLAG_SUPER, gen, i,=0A=
+>>=0A=
+> =0A=
+> =0A=
+=0A=
