@@ -2,96 +2,83 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D93DBC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6D5C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A320A208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561684380;
-	bh=n7OdbiFTe/rbLVIPUexdguFvlxCVvwMY3JE5uvkalSA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z9UT/wJmbjBhA4woKqCepuOPd8PPgwGSZCCKw9XSETyE7YUZ1wFoT29hTNOVS1GOf
-	 17m6FfQPyjksZZxACM9M3y8DqzX7xAXj30FZ8Txp/vEqagLUTHDfZnbbptiysMZd5Y
-	 osy42paLNnLhD9anHYzY7KConxYok2oUrpdTQLmk=
+	by mail.kernel.org (Postfix) with ESMTP id 3B7C6208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfF1BM7 (ORCPT
+        id S1726752AbfF1BNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:12:59 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34400 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfF1BM6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:12:58 -0400
-Received: by mail-pl1-f196.google.com with SMTP id i2so2242781plt.1;
-        Thu, 27 Jun 2019 18:12:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HTJPCjJAItenhyrt1rJvs3Mf5h+tB5nesrSZAXXGrQg=;
-        b=TNZl1l9Nt+3OH+yuAWLQQ3PsDWKZMoEn4c/jRy8vgeI283SPFbNs0b1NX/w4cdDn3x
-         jDwGk+ZWNZrP1YI5NPqyEkejOKqcipTi39/3lJOkxinpTPPhSRoweZ6QVPQWBlI9dbZZ
-         OfMFoZnnsE/7E5WPJbAuu9qJHLA4H7YUQXCl7rOwggceqkaO/HKqi2cT8nXdLGOLtjfX
-         fIA0l3uHihbQz3zrGYCRtpPE8Y1JksT1iGQFr2r8dkXd4qi6XO3+0h/z+XwUwF9bfbaX
-         5eRrtyo5Vj6khsw5J6aGBIfu+1hMvf9O7xCrQXVEzbkmEwK/6KBNswfv//NSi/goaGS6
-         wrOw==
-X-Gm-Message-State: APjAAAVi9srphceUpJYLo89NYstsTYeiI5hQXLOSShxsU2Mo6Z1oQV3L
-        MrKM5ASWcy0PNp7N7uB2YrGOsxdP1kc=
-X-Google-Smtp-Source: APXvYqzF/LekOqHPf/FQ8SrJHjWxLUa8soZjO3WTgObBFHexIsDWDzdVBHHT922JpGd4/odXVgeRJw==
-X-Received: by 2002:a17:902:ff11:: with SMTP id f17mr8318752plj.121.1561684377754;
-        Thu, 27 Jun 2019 18:12:57 -0700 (PDT)
-Received: from localhost (c-76-21-109-208.hsd1.ca.comcast.net. [76.21.109.208])
-        by smtp.gmail.com with ESMTPSA id c26sm290047pfr.172.2019.06.27.18.12.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 18:12:57 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 18:12:56 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        yilun.xu@intel.com, gregkh@linuxfoundation.org, atull@kernel.org
-Subject: Re: [PATCH v4 05/15] Documentation: fpga: dfl: add descriptions for
- virtualization and new interfaces.
-Message-ID: <20190628011256.GB5671@archbook>
-References: <1561610695-5414-1-git-send-email-hao.wu@intel.com>
- <1561610695-5414-6-git-send-email-hao.wu@intel.com>
+        Thu, 27 Jun 2019 21:13:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbfF1BNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 21:13:08 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CA6206A2;
+        Fri, 28 Jun 2019 01:13:06 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 21:13:04 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Petr Mladek <pmladek@suse.com>,
+        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
+        torvalds@linux-foundation.org
+Subject: Re: [PATCH] ftrace: Remove possible deadlock between
+ register_kprobe() and ftrace_run_update_code()
+Message-ID: <20190627211304.7e21fd77@gandalf.local.home>
+In-Reply-To: <20190627231952.nqkbtcculvo2ddif@treble>
+References: <20190627081334.12793-1-pmladek@suse.com>
+        <20190627224729.tshtq4bhzhneq24w@treble>
+        <20190627190457.703a486e@gandalf.local.home>
+        <alpine.DEB.2.21.1906280106360.32342@nanos.tec.linutronix.de>
+        <20190627231952.nqkbtcculvo2ddif@treble>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561610695-5414-6-git-send-email-hao.wu@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wu,
+On Thu, 27 Jun 2019 18:19:52 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 
-On Thu, Jun 27, 2019 at 12:44:45PM +0800, Wu Hao wrote:
-> This patch adds virtualization support description for DFL based
-> FPGA devices (based on PCIe SRIOV), and introductions to new
-> interfaces added by new dfl private feature drivers.
+
+> Maybe a comment or two would help though.
 > 
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Acked-by: Alan Tull <atull@kernel.org>
-> ---
->  Documentation/fpga/dfl.txt | 101 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 101 insertions(+)
-> 
-> diff --git a/Documentation/fpga/dfl.txt b/Documentation/fpga/dfl.txt
-> index 6df4621..a22631f 100644
-> --- a/Documentation/fpga/dfl.txt
-> +++ b/Documentation/fpga/dfl.txt
 
-This got re{named,formatted} in linux-next. I've tried to fix it before sending it
-to Greg.
+I'm adding the following change.  Care to add a "reviewed-by" for this
+one?
 
-Thanks,
-Moritz
+-- Steve
+
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 33786044d5ac..d7e93b2783fd 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -36,6 +36,11 @@
+ 
+ int ftrace_arch_code_modify_prepare(void)
+ {
++	/*
++	 * Need to grab text_mutex to prevent a race from module loading
++	 * and live kernel patching from changing the text permissions while
++	 * ftrace has it set to "read/write".
++	 */
+ 	mutex_lock(&text_mutex);
+ 	set_kernel_text_rw();
+ 	set_all_modules_text_rw();
