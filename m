@@ -2,111 +2,98 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBDFC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9699CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F462064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6141A20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eMmKxTeB"
+	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="rukbDA3C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfF1ChY (ORCPT
+        id S1726838AbfF1Chq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:37:24 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44125 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfF1ChX (ORCPT
+        Thu, 27 Jun 2019 22:37:46 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35766 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfF1Chp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:37:23 -0400
-Received: by mail-ot1-f67.google.com with SMTP id b7so4435931otl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:37:23 -0700 (PDT)
+        Thu, 27 Jun 2019 22:37:45 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so2349053plp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:37:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ROfllzNv1k9NDF/hlSsi9MTdRbiwcSwhYFfnNLljdsA=;
-        b=eMmKxTeBkxf4BXVCFIwfX+lNGeR04Lq1XpCjpcH+o/qKSalxUKW9BfMhkLEkZywfiL
-         US9yhcrXMpz01dnHrw9CNVD8I7T857D1vSYs4Wv37NbJrzOJCX85SKv9hhXPfV1HtLRD
-         8Mlb22+BWpESlHekijJgdUmIso/IdWLbkohKERjj1kboVd09ypBQqvGSczXuZKi40rhY
-         TgoqVN3geRzcv3wXLisHXklaKTNYSO/AENX6TjS5eNc1L2bQDl+TG/vgn6iVmhScIqj8
-         dejoUq78veURkqAc1iDQgIOSPdWsvASLr+Ty5LfYnsozMkgjlobYlisyffHZqBwCMXNF
-         fL4A==
+        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=roaztKtTkRu8pn3yWaNhfvLdHNSmDj0YJDhL6E5EN+0=;
+        b=rukbDA3CpnhMC7Q3iFXSeQ2HtDS7nCRUjmzI73bUUVB22U1aRiyRjlQ9Zh9EDbi/V6
+         U4nUJWUK3Xh6Y54+Rkfas3b5KPNZvIxPiAhdgV2OIj+WJMHyXoPqJSU83OaUclWn90Zi
+         PZjEXxHlwrWFKhfq0Qk49+IaZcw6ssGei44MrIbwlLKRPkOwkzkv0jM9rEnCw+vOeIMs
+         EITDkhfRKI28nKKknobZm+0zSIMv9Y0taN+4zXHhKeq4bxbPJ5A1d+mGh3ZDq75As6oV
+         1TeJtBZJKbzU+16ItZURdexunhMxEY1sMlyuc5o8w5rmUK/A6mh1iNBSsYsz0dh8QW0J
+         TRkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ROfllzNv1k9NDF/hlSsi9MTdRbiwcSwhYFfnNLljdsA=;
-        b=a6Q+AWZEcT7zjSm5Aqu1qGI5phxjGlKEF6grAshph/k/YuclbQjC+tp2Jd9SAKttQa
-         GYwFiQNJL+SpjjrFjlL0wk2u4TlQ1PgYntr8ANYjkyXZXsGLRoOznAgIAEaarNOSPV/6
-         h+NrPX2cf07Vf4eSN+wKBTvz/jN8rStSxMsFVcwhn9wZf16KGnnbcR0CbOExwwIO6VVb
-         smN97YQiafwaqV99FprRwyCyRd+FbBHJc4/LzpO9PdXdOae6enMzpgYL7JX5WSE1gpv7
-         wr07BRwIAVaOBZJewNvKGHSt6j05sYzC9YXcsxzxwO1XUfzrNmikrnZFlDtmuzrReaz+
-         9/MA==
-X-Gm-Message-State: APjAAAXmG7zJrNXFbkTOY/UtSseNoodqPFE2hQIUhOXF+WFakVw/Ux0w
-        OTU7O4y9FM86fN2TzjUAincgLvQFwtVzS8oOCaO63A==
-X-Google-Smtp-Source: APXvYqyie0y5w2KOZY+Btvx6QWtUDpapjyXxLTFHGIRTIv6FpF1+JIFZ/2WWuWimM0DC1TIfEqXHny3uVLLJrXYwp4A=
-X-Received: by 2002:a05:6830:160c:: with SMTP id g12mr6507861otr.231.1561689443012;
- Thu, 27 Jun 2019 19:37:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=roaztKtTkRu8pn3yWaNhfvLdHNSmDj0YJDhL6E5EN+0=;
+        b=D2Bbo5tOpgi5pvSqkU8Z7EMi/+7k+IOXjLOmdIKTxrhYE1mquCyGY9qGIVONTaDm3W
+         brx+uIXlUD0yp4CXQIhkz+OefPU3wx93izm+29t2y/LKUCmiO6x4klSByiCfn6r6BZ4n
+         YBhHumRN/yJ3W83S46jPWmiT9rdaZKbc0r/SRPnGLvVP2a4WQbepIJC9HSuxyXjpjyVq
+         rEMPOmlkg7qMaux5DTx9gLHAJq31imR6nBcfuuZWHmMX04yghuRXxNl+UfRweJfseziv
+         BbYkUkkN8TlUhYXNKJa5a7FrUtnW6hwG7cXsKORceBa2jx7RIZFZ2Wm685lWr65/h93M
+         TwcQ==
+X-Gm-Message-State: APjAAAXyX69XGdQwZcGmty+j5pbWtJi55HV8pWu0cquOddVFdY3dKu7M
+        SZTCadJV7IrOY///kYq/wailghFiMDY=
+X-Google-Smtp-Source: APXvYqzYqfCBc3iTV+51i6xo/8yVdkZVszMsUp8lcRHzgFH+naQmZdFlCFa4RWgCh79DR5QAEdb9+g==
+X-Received: by 2002:a17:902:8f93:: with SMTP id z19mr8245017plo.97.1561689465143;
+        Thu, 27 Jun 2019 19:37:45 -0700 (PDT)
+Received: from localhost.localdomain (p2517222-ipngn21701marunouchi.tokyo.ocn.ne.jp. [118.7.246.222])
+        by smtp.gmail.com with ESMTPSA id i3sm368206pgq.40.2019.06.27.19.37.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 19:37:44 -0700 (PDT)
+From:   Eiichi Tsukata <devel@etsukata.com>
+To:     davem@davemloft.net, edumazet@google.com, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Eiichi Tsukata <devel@etsukata.com>
+Subject: [PATCH net-next] net/ipv6: Fix misuse of proc_dointvec "flowlabel_reflect"
+Date:   Fri, 28 Jun 2019 11:37:14 +0900
+Message-Id: <20190628023714.1923-1-devel@etsukata.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190604003218.241354-1-saravanak@google.com> <20190624223707.GH203031@google.com>
- <20190625035313.GA13239@kroah.com> <CAL_JsqJyO9Fpq+Lzrc9NdiFBZ_9M31_mjfRyKM=ENtW-zVa8VA@mail.gmail.com>
-In-Reply-To: <CAL_JsqJyO9Fpq+Lzrc9NdiFBZ_9M31_mjfRyKM=ENtW-zVa8VA@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 27 Jun 2019 19:36:46 -0700
-Message-ID: <CAGETcx-OmbNYJB_1wEX5c=tVC+yPLhgiEXqq3EZnM6JAZxLPdA@mail.gmail.com>
-Subject: Re: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and
- optimize probe ordering
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sandeep Patil <sspatil@android.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        David Collins <collinsd@codeaurora.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 2:31 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Jun 24, 2019 at 9:54 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Jun 24, 2019 at 03:37:07PM -0700, Sandeep Patil wrote:
-> > > We are trying to make sure that all (most) drivers in an Aarch64 system can
-> > > be kernel modules for Android, like any other desktop system for
-> > > example. There are a number of problems we need to fix before that happens
-> > > ofcourse.
-> >
-> > I will argue that this is NOT an android-specific issue.  If the goal of
-> > creating an arm64 kernel that will "just work" for a wide range of
-> > hardware configurations without rebuilding is going to happen, we need
-> > to solve this problem with DT.  This goal was one of the original wishes
-> > of the arm64 development effort, let's not loose sight of it as
-> > obviously, this is not working properly just yet.
->
-> I fail to see how the different Linux behavior between drivers
-> built-in and as modules has anything whatsoever to do with DT.
+/proc/sys/net/ipv6/flowlabel_reflect assumes written value to be in the
+range of 0 to 3. Use proc_dointvec_minmax instead of proc_dointvec.
 
-You are right, built-in vs module problem is not a DT issue. But this
-is not so much a built-in vs module issue. It's just that built-in has
-a hack available that works sometimes. But really, both are broken.
+Fixes: 323a53c41292 ("ipv6: tcp: enable flowlabel reflection in some RST packets")
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+---
+ net/ipv6/sysctl_net_ipv6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Fix the
-> problems in Linux and use the dependencies that are already expressed
-> in DT and *then* we can talk about using DT to provide *hints* for
-> solving any remaining problems.
+diff --git a/net/ipv6/sysctl_net_ipv6.c b/net/ipv6/sysctl_net_ipv6.c
+index 6d86fac472e7..831573461e19 100644
+--- a/net/ipv6/sysctl_net_ipv6.c
++++ b/net/ipv6/sysctl_net_ipv6.c
+@@ -114,7 +114,7 @@ static struct ctl_table ipv6_table_template[] = {
+ 		.data		= &init_net.ipv6.sysctl.flowlabel_reflect,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
+ 		.extra1		= &zero,
+ 		.extra2		= &three,
+ 	},
+-- 
+2.21.0
 
-Done. Sent v2 patch series that uses existing bindings.
-
--Saravana
