@@ -2,214 +2,117 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C1AC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E5CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720222147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4BA20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:26:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="Z6ZR2ehm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T7nBZsHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfF1J0p (ORCPT
+        id S1726775AbfF1J0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:26:45 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:28000 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfF1J0n (ORCPT
+        Fri, 28 Jun 2019 05:26:53 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40899 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbfF1J0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:26:43 -0400
+        Fri, 28 Jun 2019 05:26:49 -0400
+Received: by mail-lf1-f67.google.com with SMTP id a9so3518909lff.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 02:26:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1561714003; x=1593250003;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=J2ajxUE4jXGVCtZSDbaR4rrIINZuPje5eD3Z8F3Mr+M=;
-  b=Z6ZR2ehm4h1tvI9TApOVi3EIZMyWTU74K/68T820emj4dF3tSyHnR06T
-   q3IFkPZuJMDcGX8YSnJusgrfkkwejFhKAZ15G+R+sUHkP0cYvHEEc7Yth
-   OySLh3PzUL/mj0UCmoR55ZglKo73sprA2tNaN+g9aHrNkdLXzH8CBGLv9
-   w=;
-X-IronPort-AV: E=Sophos;i="5.62,427,1554768000"; 
-   d="scan'208";a="813262319"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 28 Jun 2019 09:26:34 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id 1710FA1E9E;
-        Fri, 28 Jun 2019 09:26:29 +0000 (UTC)
-Received: from EX13D08UEE004.ant.amazon.com (10.43.62.182) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 28 Jun 2019 09:26:29 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D08UEE004.ant.amazon.com (10.43.62.182) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 28 Jun 2019 09:26:29 +0000
-Received: from u6cf1b7119fa15b.ant.amazon.com (10.28.85.98) by
- mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Fri, 28 Jun 2019 09:26:24 +0000
-From:   Sam Caccavale <samcacc@amazon.de>
-CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
-        <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
-        <graf@amazon.de>, <karahmed@amazon.de>,
-        <andrew.cooper3@citrix.com>, <JBeulich@suse.com>,
-        <pbonzini@redhat.com>, <rkrcmar@redhat.com>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <paullangton4@gmail.com>, <x86@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sam Caccavale <samcacc@amazon.de>
-Subject: [PATCH v4 0/5] x86 instruction emulator fuzzing
-Date:   Fri, 28 Jun 2019 11:26:16 +0200
-Message-ID: <20190628092621.17823-1-samcacc@amazon.de>
-X-Mailer: git-send-email 2.17.1
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=wq4uV6TuyH2wgrXO6dLo0IFjBcNz+4TUFVVmynqQmqA=;
+        b=T7nBZsHZw/8UcjeYFRks7+Eva2K/3e1j/QIWRpChWFd+dTtuHZWRuEcXs11S5mYn8e
+         Dd7FOfioX2ifWa2RmYXPNgdL/eqFHZqZWmU6somvzxCLtxUcAo+QVbkfcI+B8nbkjXM8
+         xJsHXeV9Bg5176S1omOvyVoveyhBcnzLKAKVPnDZBTXCHeq5w+3ohntbyyxJ5zanrsRT
+         6YEOrzTKleaMpv0j2Uvgb4NMXyqBhJKmBD/6dZMVFhbYRB0BTstXeHUB06Pgg/g/jVNR
+         8jJ834GpUUrM05TY2aJxTSDjuUP+QqFpQv8/cWR+BR3eKBln2zW+tU6DtO0jGCONJyuc
+         Eg/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wq4uV6TuyH2wgrXO6dLo0IFjBcNz+4TUFVVmynqQmqA=;
+        b=C77owOpebyS81q/BCE2FqTygALqn8TeWXmVHa14+nJCzUSqvfv5KjqqmweEXq56o1V
+         p6fN3rvJlaWSkbe2i/jPNfz19L+so/msmXgNzsI0hAUT7WR7OiFyX8whCKiG23jH8T8p
+         Br4arSBBs6VrUfgzbbT3fKW5lzO+eg++E8eQT8rqbu76vXEQmJCr4/iolMPjeS4gYBCo
+         6djnNhvF06VnoRBt8LZC0lZzlbOQDGH304VQTSKm6vxpFxRB8ntpEbBf4ORyDRrWPBzN
+         og5BsQVzrWCZHjQvcajifmleXqp7g1B0aZQygjwqpGVaKR7Py7Je1/pUwBDPDHVtVMTK
+         EP7Q==
+X-Gm-Message-State: APjAAAW1lrtzCWvgJYeU5LnFqAnCwe0ONRwWvLc/6fH+8aOEqaPfz9TU
+        eUn7kFHFkTlJSHisv7zIENQUsZJ75PAlz7JdDmX39w==
+X-Google-Smtp-Source: APXvYqxZow6JTfEigRwpH8n/PtdL/0nTxAip4vmcDqLYc1cX/YUDxITdfUsmFNehMEuUFoW/17Gqvjs/oZenFRcn7MY=
+X-Received: by 2002:ac2:48a5:: with SMTP id u5mr4624411lfg.62.1561714007021;
+ Fri, 28 Jun 2019 02:26:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+References: <201906261343.5F26328@keescook> <20190627080207.sdpwjoi4wnc664gp@mbp>
+ <201906270856.8CF50064@keescook> <20190627162505.GD9894@arrakis.emea.arm.com>
+In-Reply-To: <20190627162505.GD9894@arrakis.emea.arm.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Fri, 28 Jun 2019 11:26:34 +0200
+Message-ID: <CAG_fn=UhdoyWjFPxdFOJ7XFRHb62RErxFjOKnFeHtMJWTib7pg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: Move jump_label_init() before parse_early_param()
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>, Qian Cai <cai@lca.pw>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear all,
-
-This series aims to provide an entrypoint for, and fuzz KVM's x86 instruction
-emulator from userspace.  It mirrors Xen's application of the AFL fuzzer to
-it's instruction emulator in the hopes of discovering vulnerabilities.
-Since this entrypoint also allows arbitrary execution of the emulators code
-from userspace, it may also be useful for testing.
-
-The current 4 patches build the emulator and 2 harnesses: simple-harness is
-an example of unit testing; afl-harness is a frontend for the AFL fuzzer.
-The fifth patch contains useful scripts for development but is not intended
-for usptream consumption.
-
-Patches
-=======
-
-- 01: Builds and links afl-harness with the required kernel objects.
-- 02: Introduces the minimal set of emulator operations and supporting code
-to emulate simple instructions.
-- 03: Demonstrates simple-harness as a unit test.
-- 04: Adds scripts for install and building.
-- 05: Useful scripts for development
-
-
-Issues
-=======
-
-Currently, fuzzing results in a large amount of FPU related crashes.  Xen's
-fuzzing efforts had this issue too.  Their (temporary?) solution was to
-disable FPU exceptions after every instruction iteration?  Some solution
-is desired for this project.
-
-
-Changelog
-=======
-
-v1 -> v2:
- - Moved -O0 to ifdef DEBUG
- - Building with ASAN by default
- - Removed a number of macros from emulator_ops.c and moved them as
-   static inline functions in emulator_ops.h
- - Accidentally changed the example in simple-harness (reverted in v3)
- - Introduced patch 4 for scripts
-
-v2 -> v3:
- - Removed a workaround for printf smashing the stack when compiled
-   with -mcmodel=kernel, and stopped compiling with -mcmodel=kernel
- - Added a null check for malloc's return value
- - Moved more macros from emulator_ops.c into emulator_ops.h as
-   static inline functions
- - Removed commented out code
- - Moved changes to emulator_ops.h into the first patch
- - Moved addition of afl-many script to the script patch
- - Fixed spelling mistakes in documentation
- - Reverted the simple-harness example back to the more useful original one
- - Moved non-essential development scripts from patch 4 to new patch 5
-
-v3 -> v4:
- - Stubbed out all unimplemented emulator_ops with a unimplemented_op macro
- - Setting FAIL_ON_UNIMPLEMENTED_OP on compile decides whether calling these
-   is treated as a crash or ignored
- - Moved setting up core dumps out of the default build/install path and
-   detailed this change in the README
- - Added a .sh extention to afl-many
- - Added an optional timeout to afl-many.sh and made deploy_remote.sh use it
- - Building no longer creates a new .config each time and does not force any
-   config options
- - Fixed a path bug in afl-many.sh
-
-Any comments/suggestions are greatly appreciated.
-
-Best,
-Sam Caccavale
-
-Sam Caccavale (5):
-  Build target for emulate.o as a userspace binary
-  Emulate simple x86 instructions in userspace
-  Demonstrating unit testing via simple-harness
-  Added build and install scripts
-  Development scripts for crash triage and deploy
-
- tools/Makefile                                |   9 +
- tools/fuzz/x86ie/.gitignore                   |   2 +
- tools/fuzz/x86ie/Makefile                     |  54 ++
- tools/fuzz/x86ie/README.md                    |  21 +
- tools/fuzz/x86ie/afl-harness.c                | 151 +++++
- tools/fuzz/x86ie/common.h                     |  87 +++
- tools/fuzz/x86ie/emulator_ops.c               | 590 ++++++++++++++++++
- tools/fuzz/x86ie/emulator_ops.h               | 134 ++++
- tools/fuzz/x86ie/scripts/afl-many.sh          |  31 +
- tools/fuzz/x86ie/scripts/bin.sh               |  49 ++
- tools/fuzz/x86ie/scripts/build.sh             |  34 +
- tools/fuzz/x86ie/scripts/coalesce.sh          |   5 +
- tools/fuzz/x86ie/scripts/deploy.sh            |   9 +
- tools/fuzz/x86ie/scripts/deploy_remote.sh     |  10 +
- tools/fuzz/x86ie/scripts/gen_output.sh        |  11 +
- tools/fuzz/x86ie/scripts/install_afl.sh       |  15 +
- .../fuzz/x86ie/scripts/install_deps_ubuntu.sh |   5 +
- tools/fuzz/x86ie/scripts/rebuild.sh           |   6 +
- tools/fuzz/x86ie/scripts/run.sh               |  10 +
- tools/fuzz/x86ie/scripts/summarize.sh         |   9 +
- tools/fuzz/x86ie/simple-harness.c             |  49 ++
- tools/fuzz/x86ie/stubs.c                      |  59 ++
- tools/fuzz/x86ie/stubs.h                      |  52 ++
- 23 files changed, 1402 insertions(+)
- create mode 100644 tools/fuzz/x86ie/.gitignore
- create mode 100644 tools/fuzz/x86ie/Makefile
- create mode 100644 tools/fuzz/x86ie/README.md
- create mode 100644 tools/fuzz/x86ie/afl-harness.c
- create mode 100644 tools/fuzz/x86ie/common.h
- create mode 100644 tools/fuzz/x86ie/emulator_ops.c
- create mode 100644 tools/fuzz/x86ie/emulator_ops.h
- create mode 100755 tools/fuzz/x86ie/scripts/afl-many.sh
- create mode 100755 tools/fuzz/x86ie/scripts/bin.sh
- create mode 100755 tools/fuzz/x86ie/scripts/build.sh
- create mode 100755 tools/fuzz/x86ie/scripts/coalesce.sh
- create mode 100644 tools/fuzz/x86ie/scripts/deploy.sh
- create mode 100755 tools/fuzz/x86ie/scripts/deploy_remote.sh
- create mode 100755 tools/fuzz/x86ie/scripts/gen_output.sh
- create mode 100755 tools/fuzz/x86ie/scripts/install_afl.sh
- create mode 100755 tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
- create mode 100755 tools/fuzz/x86ie/scripts/rebuild.sh
- create mode 100755 tools/fuzz/x86ie/scripts/run.sh
- create mode 100755 tools/fuzz/x86ie/scripts/summarize.sh
- create mode 100644 tools/fuzz/x86ie/simple-harness.c
- create mode 100644 tools/fuzz/x86ie/stubs.c
- create mode 100644 tools/fuzz/x86ie/stubs.h
-
---
-2.17.1
+On Thu, Jun 27, 2019 at 6:25 PM Catalin Marinas <catalin.marinas@arm.com> w=
+rote:
+>
+> On Thu, Jun 27, 2019 at 08:58:03AM -0700, Kees Cook wrote:
+> > On Thu, Jun 27, 2019 at 09:02:08AM +0100, Catalin Marinas wrote:
+> > > On Wed, Jun 26, 2019 at 01:51:15PM -0700, Kees Cook wrote:
+> > > > This moves arm64 jump_label_init() from smp_prepare_boot_cpu() to
+> > > > setup_arch(), as done already on x86, in preparation from early par=
+am
+> > > > usage in the init_on_alloc/free() series:
+> > > > https://lkml.kernel.org/r/1561572949.5154.81.camel@lca.pw
+> > >
+> > > This looks fine to me. Is there any other series to be merged soon th=
+at
+> > > depends on this patch (the init_on_alloc/fail one)? If not, I can que=
+ue
+> > > it for 5.3.
+> >
+> > Yes, but that series will be in 5.3 also, so there's rush for 5.2. Do
+> > you want Alexander (via akpm) to include it in his series instead of it=
+ going
+> > through the arm64 tree?
+>
+> It's pretty late for 5.2, especially since it hasn't had extensive
+> testing (though I'm fairly sure it won't break). Anyway, it's better if
+> it goes together with Alexander's series.
+Am I understanding right this is already covered by Kees having sent
+his patch to -mm tree and I don't need to explicitly include it into
+my series?
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 
 
 
+--=20
+Alexander Potapenko
+Software Engineer
 
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
 
-
-
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
