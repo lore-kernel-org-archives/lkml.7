@@ -6,35 +6,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD7AC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660ADC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862082086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4769E2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfF1LxF (ORCPT
+        id S1726837AbfF1LwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:53:05 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7677 "EHLO huawei.com"
+        Fri, 28 Jun 2019 07:52:08 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7675 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726587AbfF1LwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:52:09 -0400
+        id S1726640AbfF1LwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 07:52:08 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id F1ECDB8DA3BAFCC954CE;
-        Fri, 28 Jun 2019 19:52:05 +0800 (CST)
+        by Forcepoint Email with ESMTP id 02B9D2ED33F544117C4B;
+        Fri, 28 Jun 2019 19:52:06 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 28 Jun 2019 19:51:59 +0800
+ 14.3.439.0; Fri, 28 Jun 2019 19:51:58 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 03/12] net: hns3: change SSU's buffer allocation according to UM
-Date:   Fri, 28 Jun 2019 19:50:09 +0800
-Message-ID: <1561722618-12168-4-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 01/12] net: hns3: fix __QUEUE_STATE_STACK_XOFF not cleared issue
+Date:   Fri, 28 Jun 2019 19:50:07 +0800
+Message-ID: <1561722618-12168-2-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
 References: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,157 +45,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+When change MTU or other operations, which just calling .reset_notify
+to do HNAE3_DOWN_CLIENT and HNAE3_UP_CLIENT, then
+the netdev_tx_reset_queue() in the hns3_clear_all_ring() will be
+ignored. So the dev_watchdog() may misdiagnose a TX timeout.
 
-Currently when there is share buffer in the SSU(storage
-switching unit), the low waterline for RX private buffer is
-too low to keep the hardware running. Hardware may have
-processed all the packet stored in the private buffer of the
-low waterline before the new packet comes, because hardware
-only tell the peer send packet again when the private buffer
-is under the low waterline.
+This patch separates netdev_tx_reset_queue() from
+hns3_clear_all_ring(), and unifies hns3_clear_all_ring() and
+hns3_force_clear_all_ring into one, since they are doing
+similar things.
 
-So this patch only allocate RX private buffer if there is
-enough buffer according to hardware user manual.
-
-This patch also reserve some buffer for reusing when TC num
-is less than or equal to 2, and change PAUSE_TRANS_GAP &
-HCLGE_NON_DCB_ADDITIONAL_BUF according to hardware user
-manual.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+Fixes: 3a30964a2eef ("net: hns3: delay ring buffer clearing during reset")
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  2 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 65 +++++++++++++++++++++-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.h  |  2 +-
- 3 files changed, 64 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 54 ++++++++++++-------------
+ 1 file changed, 26 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index cf52cdf..d23ab2b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -884,7 +884,7 @@ struct hclge_serdes_lb_cmd {
- #define HCLGE_TOTAL_PKT_BUF		0x108000 /* 1.03125M bytes */
- #define HCLGE_DEFAULT_DV		0xA000	 /* 40k byte */
- #define HCLGE_DEFAULT_NON_DCB_DV	0x7800	/* 30K byte */
--#define HCLGE_NON_DCB_ADDITIONAL_BUF	0x200	/* 512 byte */
-+#define HCLGE_NON_DCB_ADDITIONAL_BUF	0x1400	/* 5120 byte */
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index b23652c..a5d46f0 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -28,8 +28,7 @@
+ #define hns3_set_field(origin, shift, val)	((origin) |= ((val) << (shift)))
+ #define hns3_tx_bd_count(S)	DIV_ROUND_UP(S, HNS3_MAX_BD_SIZE)
  
- #define HCLGE_TYPE_CRQ			0
- #define HCLGE_TYPE_CSQ			1
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index b25365c..a2401c3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -30,6 +30,9 @@
- #define HCLGE_BUF_SIZE_UNIT	256U
- #define HCLGE_BUF_MUL_BY	2
- #define HCLGE_BUF_DIV_BY	2
-+#define NEED_RESERVE_TC_NUM	2
-+#define BUF_MAX_PERCENT		100
-+#define BUF_RESERVE_PERCENT	90
+-static void hns3_clear_all_ring(struct hnae3_handle *h);
+-static void hns3_force_clear_all_ring(struct hnae3_handle *h);
++static void hns3_clear_all_ring(struct hnae3_handle *h, bool force);
+ static void hns3_remove_hw_addr(struct net_device *netdev);
  
- #define HCLGE_RESET_MAX_FAIL_CNT	5
- 
-@@ -1694,10 +1697,14 @@ static bool  hclge_is_rx_buf_ok(struct hclge_dev *hdev,
- 	}
- 
- 	if (hnae3_dev_dcb_supported(hdev)) {
-+		hi_thrd = shared_buf - hdev->dv_buf_size;
-+
-+		if (tc_num <= NEED_RESERVE_TC_NUM)
-+			hi_thrd = hi_thrd * BUF_RESERVE_PERCENT
-+					/ BUF_MAX_PERCENT;
-+
- 		if (tc_num)
--			hi_thrd = (shared_buf - hdev->dv_buf_size) / tc_num;
--		else
--			hi_thrd = shared_buf - hdev->dv_buf_size;
-+			hi_thrd = hi_thrd / tc_num;
- 
- 		hi_thrd = max_t(u32, hi_thrd, HCLGE_BUF_MUL_BY * aligned_mps);
- 		hi_thrd = rounddown(hi_thrd, HCLGE_BUF_SIZE_UNIT);
-@@ -1837,6 +1844,55 @@ static bool hclge_drop_pfc_buf_till_fit(struct hclge_dev *hdev,
- 	return hclge_is_rx_buf_ok(hdev, buf_alloc, rx_all);
+ static const char hns3_driver_name[] = "hns3";
+@@ -463,6 +462,20 @@ static int hns3_nic_net_open(struct net_device *netdev)
+ 	return 0;
  }
  
-+static int hclge_only_alloc_priv_buff(struct hclge_dev *hdev,
-+				      struct hclge_pkt_buf_alloc *buf_alloc)
++static void hns3_reset_tx_queue(struct hnae3_handle *h)
 +{
-+#define COMPENSATE_BUFFER	0x3C00
-+#define COMPENSATE_HALF_MPS_NUM	5
-+#define PRIV_WL_GAP		0x1800
++	struct net_device *ndev = h->kinfo.netdev;
++	struct hns3_nic_priv *priv = netdev_priv(ndev);
++	struct netdev_queue *dev_queue;
++	u32 i;
 +
-+	u32 rx_priv = hdev->pkt_buf_size - hclge_get_tx_buff_alloced(buf_alloc);
-+	u32 tc_num = hclge_get_tc_num(hdev);
-+	u32 half_mps = hdev->mps >> 1;
-+	u32 min_rx_priv;
-+	unsigned int i;
-+
-+	if (tc_num)
-+		rx_priv = rx_priv / tc_num;
-+
-+	if (tc_num <= NEED_RESERVE_TC_NUM)
-+		rx_priv = rx_priv * BUF_RESERVE_PERCENT / BUF_MAX_PERCENT;
-+
-+	min_rx_priv = hdev->dv_buf_size + COMPENSATE_BUFFER +
-+			COMPENSATE_HALF_MPS_NUM * half_mps;
-+	min_rx_priv = round_up(min_rx_priv, HCLGE_BUF_SIZE_UNIT);
-+	rx_priv = round_down(rx_priv, HCLGE_BUF_SIZE_UNIT);
-+
-+	if (rx_priv < min_rx_priv)
-+		return false;
-+
-+	for (i = 0; i < HCLGE_MAX_TC_NUM; i++) {
-+		struct hclge_priv_buf *priv = &buf_alloc->priv_buf[i];
-+
-+		priv->enable = 0;
-+		priv->wl.low = 0;
-+		priv->wl.high = 0;
-+		priv->buf_size = 0;
-+
-+		if (!(hdev->hw_tc_map & BIT(i)))
-+			continue;
-+
-+		priv->enable = 1;
-+		priv->buf_size = rx_priv;
-+		priv->wl.high = rx_priv - hdev->dv_buf_size;
-+		priv->wl.low = priv->wl.high - PRIV_WL_GAP;
++	for (i = 0; i < h->kinfo.num_tqps; i++) {
++		dev_queue = netdev_get_tx_queue(ndev,
++						priv->ring_data[i].queue_index);
++		netdev_tx_reset_queue(dev_queue);
 +	}
-+
-+	buf_alloc->s_buf.buf_size = 0;
-+
-+	return true;
 +}
 +
- /* hclge_rx_buffer_calc: calculate the rx private buffer size for all TCs
-  * @hdev: pointer to struct hclge_dev
-  * @buf_alloc: pointer to buffer calculation data
-@@ -1856,6 +1912,9 @@ static int hclge_rx_buffer_calc(struct hclge_dev *hdev,
+ static void hns3_nic_net_down(struct net_device *netdev)
+ {
+ 	struct hns3_nic_priv *priv = netdev_priv(netdev);
+@@ -493,7 +506,9 @@ static void hns3_nic_net_down(struct net_device *netdev)
+ 	 * to disable the ring through firmware when downing the netdev.
+ 	 */
+ 	if (!hns3_nic_resetting(netdev))
+-		hns3_clear_all_ring(priv->ae_handle);
++		hns3_clear_all_ring(priv->ae_handle, false);
++
++	hns3_reset_tx_queue(priv->ae_handle);
+ }
+ 
+ static int hns3_nic_net_stop(struct net_device *netdev)
+@@ -3921,7 +3936,7 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
+ 
+ 	hns3_del_all_fd_rules(netdev, true);
+ 
+-	hns3_force_clear_all_ring(handle);
++	hns3_clear_all_ring(handle, true);
+ 
+ 	hns3_nic_uninit_vector_data(priv);
+ 
+@@ -4090,43 +4105,26 @@ static void hns3_force_clear_rx_ring(struct hns3_enet_ring *ring)
+ 	}
+ }
+ 
+-static void hns3_force_clear_all_ring(struct hnae3_handle *h)
+-{
+-	struct net_device *ndev = h->kinfo.netdev;
+-	struct hns3_nic_priv *priv = netdev_priv(ndev);
+-	struct hns3_enet_ring *ring;
+-	u32 i;
+-
+-	for (i = 0; i < h->kinfo.num_tqps; i++) {
+-		ring = priv->ring_data[i].ring;
+-		hns3_clear_tx_ring(ring);
+-
+-		ring = priv->ring_data[i + h->kinfo.num_tqps].ring;
+-		hns3_force_clear_rx_ring(ring);
+-	}
+-}
+-
+-static void hns3_clear_all_ring(struct hnae3_handle *h)
++static void hns3_clear_all_ring(struct hnae3_handle *h, bool force)
+ {
+ 	struct net_device *ndev = h->kinfo.netdev;
+ 	struct hns3_nic_priv *priv = netdev_priv(ndev);
+ 	u32 i;
+ 
+ 	for (i = 0; i < h->kinfo.num_tqps; i++) {
+-		struct netdev_queue *dev_queue;
+ 		struct hns3_enet_ring *ring;
+ 
+ 		ring = priv->ring_data[i].ring;
+ 		hns3_clear_tx_ring(ring);
+-		dev_queue = netdev_get_tx_queue(ndev,
+-						priv->ring_data[i].queue_index);
+-		netdev_tx_reset_queue(dev_queue);
+ 
+ 		ring = priv->ring_data[i + h->kinfo.num_tqps].ring;
+ 		/* Continue to clear other rings even if clearing some
+ 		 * rings failed.
+ 		 */
+-		hns3_clear_rx_ring(ring);
++		if (force)
++			hns3_force_clear_rx_ring(ring);
++		else
++			hns3_clear_rx_ring(ring);
+ 	}
+ }
+ 
+@@ -4331,8 +4329,8 @@ static int hns3_reset_notify_uninit_enet(struct hnae3_handle *handle)
  		return 0;
  	}
  
-+	if (hclge_only_alloc_priv_buff(hdev, buf_alloc))
-+		return 0;
-+
- 	if (hclge_rx_buf_calc_all(hdev, true, buf_alloc))
- 		return 0;
+-	hns3_clear_all_ring(handle);
+-	hns3_force_clear_all_ring(handle);
++	hns3_clear_all_ring(handle, true);
++	hns3_reset_tx_queue(priv->ae_handle);
  
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.h
-index 5150daa..8186109 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.h
-@@ -12,7 +12,7 @@
+ 	hns3_nic_uninit_vector_data(priv);
  
- #define HCLGE_TM_PORT_BASE_MODE_MSK	BIT(0)
- 
--#define HCLGE_DEFAULT_PAUSE_TRANS_GAP	0xFF
-+#define HCLGE_DEFAULT_PAUSE_TRANS_GAP	0x7F
- #define HCLGE_DEFAULT_PAUSE_TRANS_TIME	0xFFFF
- 
- /* SP or DWRR */
 -- 
 2.7.4
 
