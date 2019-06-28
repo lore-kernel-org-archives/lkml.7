@@ -4,132 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB1AC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A4CC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E85205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A384208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:32:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfF1KcW (ORCPT
+        id S1726789AbfF1Kcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:32:22 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:57693 "EHLO
+        Fri, 28 Jun 2019 06:32:41 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:40313 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfF1KcV (ORCPT
+        with ESMTP id S1726484AbfF1Kck (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:32:21 -0400
+        Fri, 28 Jun 2019 06:32:40 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M6ltQ-1he45c1Zlu-008HB7; Fri, 28 Jun 2019 12:32:02 +0200
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N1g3U-1iiM2L2LVY-0122IQ; Fri, 28 Jun 2019 12:32:33 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Aviad Krawczyk <aviad.krawczyk@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Xue Chaojing <xuechaojing@huawei.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Zhao Chen <zhaochen6@huawei.com>,
-        Eric Dumazet <edumazet@google.com>,
-        dann frazier <dann.frazier@canonical.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] hinic: reduce rss_init stack usage
-Date:   Fri, 28 Jun 2019 12:31:44 +0200
-Message-Id: <20190628103158.2446356-1-arnd@arndb.de>
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] devfreq: tegra20: add COMMON_CLK dependency
+Date:   Fri, 28 Jun 2019 12:32:20 +0200
+Message-Id: <20190628103232.2467959-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:QYqTtvUivST2IBpYNwbYUeyahFSQ0lBwtIbf+kVFvKJocTNobD3
- 6oZnmk2BXjTOixp0JMhOYp5ecOqypzq2WAcggP2YyxYJ4gHZ+MT4EQM1++vHGj2/KQ5+oyn
- SI7TwHlzuPyA2DXGEAhyFDj3op66U9AI3PoPKSpxIZQNa5G7pmFPfX/AqplBNEs+94s6dVQ
- 5ZrbusWR4PJB7Msx7reMQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vAu+k/1Jipc=:/rgUdU+92MUy0Czi/8OOPu
- jzWuggmU0hfDPFjrql2B5uc4F+INBBT8E2TRB1fksflWdlRQyJRl6sitiElZmKCpViSAOXcX3
- URC7WkRgP2PvaN7etopF27r35pyIXb1OVP9AdyrXMHvJRe6OT7dWN1TE5scXiEmWaQNhjEhSz
- awEHcf+UIaeyw9MOz5oC0PGlIXuvO5F3EPj40CNT1A4PdHjx+d20z2JeXSu6r7nSorWpJTtbR
- xqo6h5tiuVeaXX+H99SOgn8UaPfjh4W7QUVY3AbWl/1JhBHA9IqYuMxbUyF/hBPs0WQgR2Yse
- qmQsa/f97SamCv0kQd+bezG/OmavEadLt1Q21hOf52Y+RESnK89MC3pghP7eon+iT4vMnI1c/
- u9tP7chOcrOTG2D0zdMJydgHgoVVDyucPaNu0GmHl0fVQ88HR8K3CpQBAWejAgzyZI/eOAWaZ
- 9DkIBf6akZ8m5fzT7Z4WSYqUdA+wWS0gX71P6RQEiz+vgb5CzEmm7LKlBsENWUAEHVAIaU4no
- 6pIA6NQ3EYT9t77av15TU/ZjiavLwoVDQXPXsP7aIZo4XHR+LYLZ1VvTzKLUt+BlV6j2+OW3u
- PXJ8zfCb09ALH1hQDj2k39PcEKDKaj6EHEMVwrnNHuzmqsI2OfIpIQCRb6ggoIPIf45dEYENj
- IdmytUJN8Du2MtJu9wLjrKsNlzA9+uC1hCRrKuG1jQxGLOK1DhKhKWDWjOEMFW4wluoBCG3zi
- DeEjPwBPphsOLL/EUMMa83I1jO4S4J5JGUI2CA==
+X-Provags-ID: V03:K1:xhFrlLf9WRsFZysgRMvpYZSAo7T4pW2ZaZmYc/wRs8vpFy7E5xr
+ 7S6L2CV+f/6B7ifuk+MUFRIU2zmgkCGWtDzIk/q+RgA7IPl4Ap38X0eSLPjfCNpQ82srMRg
+ zdVBYAgJItSmqT4CIRsnDCakn7wW9YUMYTX8RNn3zS6BCLn4mNBj2vnk4WvzzwJqI2qi0kw
+ C+0O7XnNbUwrnjnp26opw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xWmgNnRSzZw=:QqmRafXxr6ylAwu1Ap+5OY
+ P12lZ4lA9RESodDWEaBL0WU3oJlpyVGCL1b1ZXYaUbvI5q6eJPGTrs9HBJ0A+T29cvtMNSG3Q
+ dph3QEsfhgXnlmLgYy8GweuZkEjvPM9a3piyIP9t7A+6MvxDpZEg7pzg1pK6pxWK049Czp0Xc
+ yw5LCD5Mlp7M8dXI7jY8651fxBkfvfAtuuRG6Jul3NqfjwJqsH5IatDgOof2Pt41pB0UzAdy0
+ wf9Nx6OzFqrHCcZMam50WME1TalCWo+SsgqnMVhIUIHApmd5ka69qwHJJCBUmgoNvlgGZ7g0S
+ a6UR25e9yiHiRcPourvTxU9oS9zjqGIKdVgvtWwmsmWcbYIvHft9Pb5spQFCGbUyczjLWEPJY
+ jbzOhhkb7zeoY9EiQtU18hhxYaUQj1ekorObFi2RwFam6vXVq/ZNa1uvQAC8C2NBVZb4DEu2i
+ Lw3+rra7W698ApYCMgLCzlcPzfgY6ktakra1XOTREG1zjV9yWFHrCdTJQja5jOhnEHfFFYdwQ
+ YLQxZIWRO6uSd4y/R8x6jS7GLK4lJUuJP+wYS0BrjULlbJC6qI1H99XrOHP9gfpG9BAqDtZT0
+ XS/T1L4He9T7w8ZxESPId+BUCJ2SLaK5XplHAIoRGkuo/TeiscYovgZz1v+QR7z15niA6YlX0
+ qzjcKDxlCQrmQbcJGemD2T1el4RrvZ9SkCMKfBwAPcGV1olIvV5q6DF8KFyf86J0y4Uq77MR0
+ 5lkFHeg3MSj3W1QTgnlAZpkY7H5WLVBjXgZr2w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 32-bit architectures, putting an array of 256 u32 values on the
-stack uses more space than the warning limit:
+Compile-testing the new driver on platforms without CONFIG_COMMON_CLK
+leads to a link error:
 
-drivers/net/ethernet/huawei/hinic/hinic_main.c: In function 'hinic_rss_init':
-drivers/net/ethernet/huawei/hinic/hinic_main.c:286:1: error: the frame size of 1068 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+drivers/devfreq/tegra20-devfreq.o: In function `tegra_devfreq_target':
+tegra20-devfreq.c:(.text+0x288): undefined reference to `clk_set_min_rate'
 
-I considered changing the code to use u8 values here, since that's
-all the hardware supports, but dynamically allocating the array is
-a more isolated fix here.
+Add a dependency on COMMON_CLK to avoid this.
 
+Fixes: 1d39ee8dad6d ("PM / devfreq: Introduce driver for NVIDIA Tegra20")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../net/ethernet/huawei/hinic/hinic_main.c    | 20 ++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ drivers/devfreq/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index 1b917543feac..ceb0e247f52d 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -256,37 +256,43 @@ static int hinic_configure_max_qnum(struct hinic_dev *nic_dev)
- 
- static int hinic_rss_init(struct hinic_dev *nic_dev)
- {
--	u32 indir_tbl[HINIC_RSS_INDIR_SIZE] = { 0 };
- 	u8 default_rss_key[HINIC_RSS_KEY_SIZE];
- 	u8 tmpl_idx = nic_dev->rss_tmpl_idx;
-+	u32 *indir_tbl;
- 	int err, i;
- 
-+	indir_tbl = kcalloc(HINIC_RSS_INDIR_SIZE, sizeof(u32), GFP_KERNEL);
-+	if (!indir_tbl)
-+		return -ENOMEM;
-+
- 	netdev_rss_key_fill(default_rss_key, sizeof(default_rss_key));
- 	for (i = 0; i < HINIC_RSS_INDIR_SIZE; i++)
- 		indir_tbl[i] = ethtool_rxfh_indir_default(i, nic_dev->num_rss);
- 
- 	err = hinic_rss_set_template_tbl(nic_dev, tmpl_idx, default_rss_key);
- 	if (err)
--		return err;
-+		goto out;
- 
- 	err = hinic_rss_set_indir_tbl(nic_dev, tmpl_idx, indir_tbl);
- 	if (err)
--		return err;
-+		goto out;
- 
- 	err = hinic_set_rss_type(nic_dev, tmpl_idx, nic_dev->rss_type);
- 	if (err)
--		return err;
-+		goto out;
- 
- 	err = hinic_rss_set_hash_engine(nic_dev, tmpl_idx,
- 					nic_dev->rss_hash_engine);
- 	if (err)
--		return err;
-+		goto out;
- 
- 	err = hinic_rss_cfg(nic_dev, 1, tmpl_idx);
- 	if (err)
--		return err;
-+		goto out;
- 
--	return 0;
-+out:
-+	kfree(indir_tbl);
-+	return err;
- }
- 
- static void hinic_rss_deinit(struct hinic_dev *nic_dev)
+diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+index f3b242987fd9..defe1d438710 100644
+--- a/drivers/devfreq/Kconfig
++++ b/drivers/devfreq/Kconfig
+@@ -107,6 +107,7 @@ config ARM_TEGRA_DEVFREQ
+ config ARM_TEGRA20_DEVFREQ
+ 	tristate "NVIDIA Tegra20 DEVFREQ Driver"
+ 	depends on (TEGRA_MC && TEGRA20_EMC) || COMPILE_TEST
++	depends on COMMON_CLK
+ 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
+ 	select PM_OPP
+ 	help
 -- 
 2.20.0
 
