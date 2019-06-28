@@ -2,84 +2,121 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03267C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A30AC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72902086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778232086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfF1OpW (ORCPT
+        id S1726832AbfF1Oqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 10:45:22 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59767 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfF1OpW (ORCPT
+        Fri, 28 Jun 2019 10:46:36 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37015 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfF1Oqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 10:45:22 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hgs7p-0000jp-HK; Fri, 28 Jun 2019 14:45:17 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kevin Wang <kevin1.wang@amd.com>, Rex Zhu <rex.zhu@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd/powerplay: fix incorrect assignments to mclk_mask and soc_mask
-Date:   Fri, 28 Jun 2019 15:45:17 +0100
-Message-Id: <20190628144517.7747-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 28 Jun 2019 10:46:35 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y57so6571788qtk.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 07:46:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ukm6QwjiR6v3c/fXg6msKYDD+XPWCXV7vWmtJTq9N64=;
+        b=Kvzcd1sCuB2BOPjHnJeI4uvJhjNOD9fjXX5sDar/h9R/pytEhwW3UUaLzL6GII6yor
+         J6H8j3kTH6CIrVZe6+fvbuzoGp0ipIT12tVcGk1V90aXax6zB0ZzXCf6Vxxty+rJm86/
+         QyQvEfWD87rBDoVpSGoH9XC+MRSZ9vV720hcwHg6BdlvaWvjpvyTR9YBi46Iy+FSqxGl
+         9FNhc0GEjSGF/tGwjSi8V7ZOXbU6sBVTt/qNqY5Kyl/SE6odIkPt4V8JqdnNx/2scChp
+         ctg/6LhwsObCODus4P2ot+ulbYrUbI/XORnWg4IxWzGjDkcETg48uPfqK4NU/UDQGjgc
+         V7mw==
+X-Gm-Message-State: APjAAAU7xRF02AjReAWz1Rfhv4aFcrGBpqRaY87eJDBU44M4jAyk0qAm
+        5ik3ekkFOW5Va7HWKrwIDUxecLtk1KD3kaXflN4=
+X-Google-Smtp-Source: APXvYqxiaUSAuPM+A2aREImpYskXzz89M9yJIOi+OtsVZitkSsQckIsCjhrF38dp9elJ5g7LFRpNW3aVZW8X6qRP1qw=
+X-Received: by 2002:a0c:b758:: with SMTP id q24mr8545628qve.45.1561733194702;
+ Fri, 28 Jun 2019 07:46:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190628104007.2721479-1-arnd@arndb.de> <20190628124422.GA9888@infradead.org>
+ <CAK8P3a1jwPQvX6f+eMZLdnF2ZawDB9obF3hjk2P9RJxDr6HUQA@mail.gmail.com> <20190628131738.GA994@infradead.org>
+In-Reply-To: <20190628131738.GA994@infradead.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 28 Jun 2019 16:46:14 +0200
+Message-ID: <CAK8P3a0t+vGge8uDOuwex6j+ddaUqovxCXoJOO8Ec3z6_brvsg@mail.gmail.com>
+Subject: Re: [PATCH] f2fs: fix 32-bit linking
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Qiuyang Sun <sunqiuyang@huawei.com>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Wang Shilong <wangshilong1991@gmail.com>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, Jun 28, 2019 at 3:17 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Fri, Jun 28, 2019 at 03:09:47PM +0200, Arnd Bergmann wrote:
+> > I came across this on arm-nommu (which disables
+> > CONFIG_CPU_SPECTRE) during randconfig testing.
+> >
+> > I don't see an easy way to add this in there, short of rewriting the
+> > whole __get_user_err() function. Any suggestions?
+>
+> Can't we just fall back to using copy_from_user with a little wrapper
+> that switches based on sizeof()?
 
-There are null pointer checks on mlck_mask and soc_mask however the
-sclk_mask is being used in assignments in what looks to be a cut-n-paste
-coding error. Fix this by using the correct pointers in the assignments.
+I came up with something now. It's not pretty, but seems to satisfy the
+compiler. Not a proper patch yet, but let me know if you find a bug.
 
-Addresses-Coverity: ("Dereference after null check")
-Fixes: 2d9fb9b06643 ("drm/amd/powerplay: add function get_profiling_clk_mask for navi10")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/amd/powerplay/navi10_ppt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This might contain a double uaccess_save_and_enable/uaccess_restore,
+not sure how much we care about that.
 
-diff --git a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-index 27e5c80..ac151da 100644
---- a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-@@ -1134,14 +1134,14 @@ static int navi10_get_profiling_clk_mask(struct smu_context *smu,
- 			ret = smu_get_dpm_level_count(smu, SMU_MCLK, &level_count);
- 			if (ret)
- 				return ret;
--			*sclk_mask = level_count - 1;
-+			*mclk_mask = level_count - 1;
- 		}
- 
- 		if(soc_mask) {
- 			ret = smu_get_dpm_level_count(smu, SMU_SOCCLK, &level_count);
- 			if (ret)
- 				return ret;
--			*sclk_mask = level_count - 1;
-+			*soc_mask = level_count - 1;
- 		}
- 	}
- 
--- 
-2.7.4
+     Arnd
 
+index 7e0d2727c6b5..c21cdecadf26 100644
+--- a/arch/arm/include/asm/uaccess.h
++++ b/arch/arm/include/asm/uaccess.h
+@@ -307,6 +307,7 @@ static inline void set_fs(mm_segment_t fs)
+ do {                                                                   \
+        unsigned long __gu_addr = (unsigned long)(ptr);                 \
+        unsigned long __gu_val;                                         \
++       unsigned long long __gu_val8;                                   \
+        unsigned int __ua_flags;                                        \
+        __chk_user_ptr(ptr);                                            \
+        might_fault();                                                  \
+@@ -315,10 +316,13 @@ do {
+                         \
+        case 1: __get_user_asm_byte(__gu_val, __gu_addr, err);  break;  \
+        case 2: __get_user_asm_half(__gu_val, __gu_addr, err);  break;  \
+        case 4: __get_user_asm_word(__gu_val, __gu_addr, err);  break;  \
++       case 8: __get_user_asm_dword(__gu_val8, __gu_addr, err);break;  \
+        default: (__gu_val) = __get_user_bad();                         \
+        }                                                               \
+        uaccess_restore(__ua_flags);                                    \
+-       (x) = (__typeof__(*(ptr)))__gu_val;                             \
++       (x) = __builtin_choose_expr(sizeof(*(ptr)) == 8,                \
++               (__typeof__(*(ptr)))__gu_val8,                          \
++               (__typeof__(*(ptr)))__gu_val);                          \
+ } while (0)
+
+ #define __get_user_asm(x, addr, err, instr)                    \
+@@ -373,6 +377,8 @@ do {
+                         \
+        __get_user_asm(x, addr, err, ldr)
+ #endif
+
++#define __get_user_asm_dword(x, addr, err)                     \
++       do { err = raw_copy_from_user(&x, (void __user *)addr, 8) ?
+-EFAULT : 0; } while (0)
+
+ #define __put_user_switch(x, ptr, __err, __fn)                         \
+        do {                                                            \
