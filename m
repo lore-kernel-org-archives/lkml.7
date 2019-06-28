@@ -2,157 +2,103 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1F2C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B682C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF6F2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CBEB2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:25:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="V+3oItKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfF1HXS (ORCPT
+        id S1727333AbfF1HZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:23:18 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:34275 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727220AbfF1HXP (ORCPT
+        Fri, 28 Jun 2019 03:25:21 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:53324 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726574AbfF1HZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:23:15 -0400
-X-UUID: c38864b4810846c69f48c68396d2c7d4-20190628
-X-UUID: c38864b4810846c69f48c68396d2c7d4-20190628
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 416449884; Fri, 28 Jun 2019 15:22:52 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 28 Jun 2019 15:22:50 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 28 Jun 2019 15:22:50 +0800
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>, <stable@vger.kernel.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Dehui Sun <dehui.sun@mediatek.com>
-Subject: [PATCH v3] clk: mediatek: mt8183: Register 13MHz clock earlier for clocksource
-Date:   Fri, 28 Jun 2019 15:22:34 +0800
-Message-ID: <1561706554-27770-1-git-send-email-weiyi.lu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Fri, 28 Jun 2019 03:25:21 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 06725C0ABB;
+        Fri, 28 Jun 2019 07:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561706720; bh=T6VhbxQBn60YsJz3rj2qAY6BMbwV1q6YS9QLKjZns24=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V+3oItKN7bvJJL6IK2kctD29BSa5RKNiDetNrvhsCcbzyLwcvdQ00LHRGT1MIDeTf
+         Au3H5fgdNavHLoHCvXf6hKB8Q/Z4qb/CjjUrlnyZQNfC8oS6MXBSIBpGBAwkznEdup
+         NHEhhy4D9AkJp062OERaED6iHLWzaemz1qLQWR2jrhbQ4pwH5t4PFOc26K/ibSXYNF
+         6PSBVxc34l5cME0ansRX8S7HubxKjzkPiTHr6qgHvu6rEx79HrNBE5TgwUd0/QIYpj
+         qv78zDwYa1lNR2UtSsrnD6M3rxp1vsYr7cc4bvUmIZBEwW1CaEnsJKlpDzNFgo2E+r
+         mOD/kNtcLG6TQ==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 07A1BA0233;
+        Fri, 28 Jun 2019 07:25:17 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 7FAC23E8CB;
+        Fri, 28 Jun 2019 09:25:10 +0200 (CEST)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH net-next v2] net: stmmac: Fix case when PHY handle is not present
+Date:   Fri, 28 Jun 2019 09:25:07 +0200
+Message-Id: <654cfe790807c6dfcc69c610c9692efb8c9a6179.1561706654.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 13MHz clock should be registered before clocksource driver is
-initialized. Use CLK_OF_DECLARE_DRIVER() to guarantee.
+Some DT bindings do not have the PHY handle. Let's fallback to manually
+discovery in case phylink_of_phy_connect() fails.
 
-Fixes: acddfc2c261b ("clk: mediatek: Add MT8183 clock support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+Changes from v1:
+	- Fixup comment style (Sergei)
+
+Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
+Reported-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Tested-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 ---
- drivers/clk/mediatek/clk-mt8183.c | 46 +++++++++++++++++++++++++++++----------
- 1 file changed, 34 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
-index 9d86510..bc01611 100644
---- a/drivers/clk/mediatek/clk-mt8183.c
-+++ b/drivers/clk/mediatek/clk-mt8183.c
-@@ -25,9 +25,11 @@
- 	FIXED_CLK(CLK_TOP_UNIVP_192M, "univpll_192m", "univpll", 192000000),
- };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 8f5ebd51859e..91f24b63ea16 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -953,9 +953,13 @@ static int stmmac_init_phy(struct net_device *dev)
  
-+static const struct mtk_fixed_factor top_early_divs[] = {
-+	FACTOR(CLK_TOP_CLK13M, "clk13m", "clk26m", 1, 2),
-+};
+ 	node = priv->plat->phylink_node;
+ 
+-	if (node) {
++	if (node)
+ 		ret = phylink_of_phy_connect(priv->phylink, node, 0);
+-	} else {
 +
- static const struct mtk_fixed_factor top_divs[] = {
--	FACTOR(CLK_TOP_CLK13M, "clk13m", "clk26m", 1,
--		2),
- 	FACTOR(CLK_TOP_F26M_CK_D2, "csw_f26m_ck_d2", "clk26m", 1,
- 		2),
- 	FACTOR(CLK_TOP_SYSPLL_CK, "syspll_ck", "mainpll", 1,
-@@ -1167,37 +1169,57 @@ static int clk_mt8183_apmixed_probe(struct platform_device *pdev)
- 	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
- }
++	/* Some DT bindings do not set-up the PHY handle. Let's try to
++	 * manually parse it
++	 */
++	if (!node || ret) {
+ 		int addr = priv->plat->phy_addr;
+ 		struct phy_device *phydev;
  
-+static struct clk_onecell_data *top_clk_data;
-+
-+static void clk_mt8183_top_init_early(struct device_node *node)
-+{
-+	int i;
-+
-+	top_clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
-+
-+	for (i = 0; i < CLK_TOP_NR_CLK; i++)
-+		top_clk_data->clks[i] = ERR_PTR(-EPROBE_DEFER);
-+
-+	mtk_clk_register_factors(top_early_divs, ARRAY_SIZE(top_early_divs),
-+			top_clk_data);
-+
-+	of_clk_add_provider(node, of_clk_src_onecell_get, top_clk_data);
-+}
-+
-+CLK_OF_DECLARE_DRIVER(mt8183_topckgen, "mediatek,mt8183-topckgen",
-+			clk_mt8183_top_init_early);
-+
- static int clk_mt8183_top_probe(struct platform_device *pdev)
- {
- 	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	void __iomem *base;
--	struct clk_onecell_data *clk_data;
- 	struct device_node *node = pdev->dev.of_node;
- 
- 	base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
--	clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
--
- 	mtk_clk_register_fixed_clks(top_fixed_clks, ARRAY_SIZE(top_fixed_clks),
--		clk_data);
-+		top_clk_data);
-+
-+	mtk_clk_register_factors(top_early_divs, ARRAY_SIZE(top_early_divs),
-+		top_clk_data);
- 
--	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
-+	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), top_clk_data);
- 
- 	mtk_clk_register_muxes(top_muxes, ARRAY_SIZE(top_muxes),
--		node, &mt8183_clk_lock, clk_data);
-+		node, &mt8183_clk_lock, top_clk_data);
- 
- 	mtk_clk_register_composites(top_aud_muxes, ARRAY_SIZE(top_aud_muxes),
--		base, &mt8183_clk_lock, clk_data);
-+		base, &mt8183_clk_lock, top_clk_data);
- 
- 	mtk_clk_register_composites(top_aud_divs, ARRAY_SIZE(top_aud_divs),
--		base, &mt8183_clk_lock, clk_data);
-+		base, &mt8183_clk_lock, top_clk_data);
- 
- 	mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks),
--		clk_data);
-+		top_clk_data);
- 
--	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	return of_clk_add_provider(node, of_clk_src_onecell_get, top_clk_data);
- }
- 
- static int clk_mt8183_infra_probe(struct platform_device *pdev)
 -- 
-1.8.1.1.dirty
+2.7.4
 
