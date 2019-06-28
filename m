@@ -2,137 +2,107 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51886C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53832C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C0A20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:02:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="EEFB2bfz"
+	by mail.kernel.org (Postfix) with ESMTP id 3700F20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:03:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfF1RCb (ORCPT
+        id S1726576AbfF1RDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:02:31 -0400
-Received: from mail-eopbgr60044.outbound.protection.outlook.com ([40.107.6.44]:14050
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726682AbfF1RCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:02:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=IxczjIUX47SlEfJYKoaREQQKFOfyym85joRLApmCR72W4WGLYtBNjfYt1kxQyub6qzLLShmH72FrtV23LqP3o8iX6ar3HpsJuMEiNoUowvo0XYBkV5LGx5T5w13p54XHvsXlDZPBmGU58fljMIHP63QztpW/l4QS5EeffMnUX9U=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4jwEvvXUPY88v4ZIhjZnxTRkKIFmTLxalBf1YgUdmjQ=;
- b=IL2dXY4OhYgLg4sz80I+UjCUNx0tbxM2db9p8Rj4GEi73Vbn2LoNrBd/QesM81z5Ewvi3FE100nrUYiPwNTMPiHPmekoSRVEviuvM7KW0NlnEllbySczlJfJn83hESXfDbtCK79uD9CqMfHEZwdIQ7KNOs6MSDDDZJEMfkTi0jo=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4jwEvvXUPY88v4ZIhjZnxTRkKIFmTLxalBf1YgUdmjQ=;
- b=EEFB2bfzg7R35ekPU9Is2C89hjDR2HVzz4USps+O4m1NTKt+eYNlqIRj3E2ge6F/POzMOyUDha3b1hEf+LsigHTYKKrxng13GVQrHo6GM6Ax0e6+cdYdlpzyfuAMTKZ8Mfl0hly1OH3BuZGrWaCybS6QbzW/MMtLrT/8xaiY6rc=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6255.eurprd05.prod.outlook.com (20.178.205.93) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Fri, 28 Jun 2019 17:02:26 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Fri, 28 Jun 2019
- 17:02:25 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
-Thread-Topic: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
-Thread-Index: AQHVLBqgvimki3zmIk2l4xtSxGbkyKaxNtmAgAANxQCAAAmqgA==
-Date:   Fri, 28 Jun 2019 17:02:25 +0000
-Message-ID: <20190628170219.GA3608@mellanox.com>
-References: <20190626122724.13313-1-hch@lst.de>
- <20190626122724.13313-17-hch@lst.de> <20190628153827.GA5373@mellanox.com>
- <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
-In-Reply-To: <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR21CA0002.namprd21.prod.outlook.com
- (2603:10b6:a03:114::12) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [76.14.1.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dca8a338-cacd-4cc5-0d77-08d6fbea6507
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6255;
-x-ms-traffictypediagnostic: VI1PR05MB6255:
-x-microsoft-antispam-prvs: <VI1PR05MB62553740A223896F85BB96E0CFFC0@VI1PR05MB6255.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00826B6158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(346002)(396003)(136003)(39860400002)(189003)(199004)(66446008)(8936002)(6916009)(6436002)(66556008)(33656002)(476003)(53546011)(305945005)(186003)(66066001)(64756008)(3846002)(54906003)(11346002)(26005)(6486002)(6116002)(2906002)(36756003)(68736007)(478600001)(7736002)(14454004)(316002)(486006)(2616005)(86362001)(53936002)(4326008)(5660300002)(71200400001)(52116002)(73956011)(6246003)(446003)(66476007)(1076003)(81156014)(99286004)(6512007)(81166006)(6506007)(76176011)(8676002)(25786009)(256004)(71190400001)(386003)(7416002)(66946007)(102836004)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6255;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1/O3iWmC49vqkfTuIb6GxfWPtwbqlTXEwu/cBsHqgZFr2n42TM+T/WLayFGiGhm+ClF7k7H7WUE5ScOm5f7mNwpOaJ2m6+C/qIgtmbduzmKBWANaB4Y6zJk2MXtcp/2cDewi2NNgVZMcdqG+shOFEZviCpMTl8VgoJwlcdSKhcbH3SB44zT3BumCqIU+JKIVw/udzgLHzpk/eZIEwaRxWtsKiG4ZAXBrn/TKiIsN/R2nelXN904cX8vuCjLBox1h4WQpnKa9WZYuy0Mo3i5a1DTUxZ9YeAVXwwoc99ba/G4FOOLxcYGnK1rN22ApkFcP+1qbQMRlchBa3NqffF8YBZvd9af8O0rVEqn6WhFeIyMn2zFyJFtulrLXO6EmInoYzncEs54QmipsPRyLPFYFYGOGNuqU9O92ImK00scWKAY=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <F315CA51D2C30A40AD4C5447E0263858@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 28 Jun 2019 13:03:16 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:60832 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbfF1RDQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 13:03:16 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1029)
+        id DA9F320BE446; Fri, 28 Jun 2019 10:03:15 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by linux.microsoft.com (Postfix) with ESMTP id 856A53010329;
+        Fri, 28 Jun 2019 10:03:15 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 10:03:15 -0700 (PDT)
+From:   Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
+X-X-Sender: jaskarankhurana@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
+To:     Milan Broz <gmazyland@gmail.com>
+cc:     Eric Biggers <ebiggers@kernel.org>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com,
+        mpatocka@redhat.com
+Subject: Re: [RFC PATCH v5 1/1] Add dm verity root hash pkcs7 sig
+ validation.
+In-Reply-To: <264565b3-ff3c-29c0-7df0-d8ff061087d3@gmail.com>
+Message-ID: <alpine.LRH.2.21.1906281001020.119795@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com> <20190619191048.20365-2-jaskarankhurana@linux.microsoft.com> <20190627234149.GA212823@gmail.com> <alpine.LRH.2.21.1906271844470.22562@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+ <20190628030017.GA673@sol.localdomain> <264565b3-ff3c-29c0-7df0-d8ff061087d3@gmail.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dca8a338-cacd-4cc5-0d77-08d6fbea6507
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 17:02:25.8791
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6255
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 09:27:44AM -0700, Dan Williams wrote:
-> On Fri, Jun 28, 2019 at 8:39 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
-> >
-> > On Wed, Jun 26, 2019 at 02:27:15PM +0200, Christoph Hellwig wrote:
-> > > The functionality is identical to the one currently open coded in
-> > > device-dax.
-> > >
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> > >  drivers/dax/dax-private.h |  4 ----
-> > >  drivers/dax/device.c      | 43 -------------------------------------=
---
-> > >  2 files changed, 47 deletions(-)
-> >
-> > DanW: I think this series has reached enough review, did you want
-> > to ack/test any further?
-> >
-> > This needs to land in hmm.git soon to make the merge window.
->=20
-> I was awaiting a decision about resolving the collision with Ira's
-> patch before testing the final result again [1]. You can go ahead and
-> add my reviewed-by for the series, but my tested-by should be on the
-> final state of the series.
 
-The conflict looks OK to me, I think we can let Andrew and Linus
-resolve it.
+Hello Eric/Milan,
 
-Thanks,
-Jason
+On Fri, 28 Jun 2019, Milan Broz wrote:
+
+> On 28/06/2019 05:00, Eric Biggers wrote:
+>>> Hello Eric,
+>>>
+>>> This started with a config (see V4). We didnot want scripts that pass this
+>>> parameter to suddenly stop working if for some reason the verification is
+>>> turned off so the optional parameter was just parsed and no validation
+>>> happened if the CONFIG was turned off. This was changed to a commandline
+>>> parameter after feedback from the community, so I would prefer to keep it
+>>> *now* as commandline parameter. Let me know if you are OK with this.
+>>>
+>>> Regards,
+>>> JK
+>>
+>> Sorry, I haven't been following the whole discussion.  (BTW, you sent out
+>> multiple versions both called "v4", and using a cover letter for a single patch
+>> makes it unnecessarily difficult to review.)  However, it appears Milan were
+>> complaining about the DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE option which set the
+>> policy for signature verification, *not* the DM_VERITY_VERIFY_ROOTHASH_SIG
+>> option which enabled support for signature verification.  Am I missing
+>> something?  You can have a module parameter which controls the "signatures
+>> required" setting, while also allowing people to compile out kernel support for
+>> the signature verification feature.
+>
+> Yes, this was exactly my point.
+>
+> I think I even mention in some reply to use exactly the same config Makefile logic
+> as for FEC - to allow completely compile it out of the source:
+>
+> ifeq ($(CONFIG_DM_VERITY_FEC),y)
+> dm-verity-objs                  += dm-verity-fec.o
+> endif
+>
+>> Sure, it means that the signature verification support won't be guaranteed to be
+>> present when dm-verity is.  But the same is true of the hash algorithm (e.g.
+>> sha512), and of the forward error correction feature.  Since the signature
+>> verification is nontrivial and pulls in a lot of other kernel code which might
+>> not be otherwise needed (via SYSTEM_DATA_VERIFICATION), it seems a natural
+>> candidate for putting the support behind a Kconfig option.
+>
+> On the other side, dm-verity is meant for a system verification, so if it depends
+> on SYSTEM_DATA_VERIFICATION is ... not so surprising :)
+>
+> But the change above is quite easy and while we already have FEC as config option,
+> perhaps let's do it the same here.
+>
+> Milan
+>
+Yes, I will make this change. Please consider this discussion as resolved. 
+Thanks.
+
+Regards,
+Jaskaran.
