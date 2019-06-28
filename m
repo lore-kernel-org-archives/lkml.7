@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03D6C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4B7C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7206B2133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 102342084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561683306;
-	bh=AeykGisETI19pMTMY7Y0ctoaJTVvUm9DspONR5Tte4Y=;
+	s=default; t=1561683310;
+	bh=o13rGM6vMulkP8kdptU6Ib8+Sz0AFNP2C5JcJSAx74k=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=bquh80ghyTWlUGcOH1CS0Ae3djqX/VQ1Pq8VKrE5N8Kui5WnWhlxsaxPrtd+Qp93z
-	 BoGkcOMiGX37ObIfhsx2CCw6lfXxsknfaquZjKx7B6bCjH20Qog56X57ZHwqqVSikO
-	 FjCqJWDw/8Jr94I2Yy5+vP+Q29mx0k/lYjIPugU4=
+	b=FXMrULFdrSsU+0imkNyXSGI0qeyAvqP86TFz53372vjbYNJtKSqP3mJoAmEas473B
+	 5edxrvdDEuowvmGJK2sFKcecv3Kl03m3/COTEZoJf4iSQZG2LoyBAa4ENNj1lQxo40
+	 kKVQzGNn5GfJQIzuRFuHDJ7F0Z6DL8NkGe0nQU+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfF1AzF (ORCPT
+        id S1726857AbfF1AzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 20:55:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40412 "EHLO mail.kernel.org"
+        Thu, 27 Jun 2019 20:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbfF1AzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726681AbfF1AzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Jun 2019 20:55:04 -0400
-Subject: Re: [GIT PULL] fixes for v5.2-rc7
+Subject: Re: [GIT PULL] clk fixes for v5.2-rc6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561683303;
-        bh=AeykGisETI19pMTMY7Y0ctoaJTVvUm9DspONR5Tte4Y=;
+        s=default; t=1561683304;
+        bh=o13rGM6vMulkP8kdptU6Ib8+Sz0AFNP2C5JcJSAx74k=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=DwUktA+HC2hC4FnxRIDud/FykKoMb8mMajyc+rQuc5DsE4+ClRVLEyoRu56sxZZz/
-         AgacqhE8+3QGyH9FHZLEWfJ7nxfPUU3QzoI7OtHadShdLAlusmb8wpjN4QvHgosSOK
-         QA4bjLLvNTnawBcTi4MZt5O5wCXXzWkNqJPKgIoE=
+        b=MjYoVMLt6cZxv1Aw4RUNt0fES5yaD0W1sLgr3Z+2hU89dZ067vH/VuyHG6fXRCQ05
+         VsaDcH3faw8SBfR63eJIVDtCDf5AK1AaIyHjhI2zgRmM9kDhfuXIVTtnsrcobO2yMR
+         dF0YjkhvfkhbKOOaHF+LYGQFVl1ifgYNLBifpL94=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190627112430.6590-1-christian@brauner.io>
-References: <20190627112430.6590-1-christian@brauner.io>
+In-Reply-To: <20190627202549.45667-1-sboyd@kernel.org>
+References: <20190627202549.45667-1-sboyd@kernel.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190627112430.6590-1-christian@brauner.io>
-X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux
- tags/for-linus-20190627
-X-PR-Tracked-Commit-Id: 30d158b143b6575261ab610ae7b1b4f7fe3830b3
+X-PR-Tracked-Message-Id: <20190627202549.45667-1-sboyd@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
+ tags/clk-fixes-for-linus
+X-PR-Tracked-Commit-Id: 74684cce5ebd567b01e9bc0e9a1945c70a32f32f
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7a702b4e82d8730d6964bfd98b3b024c126e9846
-Message-Id: <156168330366.8716.3052438043309398771.pr-tracker-bot@kernel.org>
-Date:   Fri, 28 Jun 2019 00:55:03 +0000
-To:     Christian Brauner <christian@brauner.io>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        ldv@altlinux.org, viro@zeniv.linux.org.uk, jannh@google.com
+X-PR-Merge-Commit-Id: 556e2f6020bf90f63c5dd65e9a2254be6db3185b
+Message-Id: <156168330422.8716.170645861291830293.pr-tracker-bot@kernel.org>
+Date:   Fri, 28 Jun 2019 00:55:04 +0000
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 27 Jun 2019 13:24:30 +0200:
+The pull request you sent on Thu, 27 Jun 2019 13:25:49 -0700:
 
-> git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-20190627
+> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7a702b4e82d8730d6964bfd98b3b024c126e9846
+https://git.kernel.org/torvalds/c/556e2f6020bf90f63c5dd65e9a2254be6db3185b
 
 Thank you!
 
