@@ -2,131 +2,288 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516C5C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DEDC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D8D208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:01:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Tngsqlhb"
+	by mail.kernel.org (Postfix) with ESMTP id B3BE82086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfF1XBd (ORCPT
+        id S1726866AbfF1XEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 19:01:33 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:6500 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfF1XBd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 19:01:33 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d169c4e0002>; Fri, 28 Jun 2019 16:01:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 28 Jun 2019 16:01:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 28 Jun 2019 16:01:32 -0700
-Received: from [10.2.170.163] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Jun
- 2019 23:01:28 +0000
-Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
- <0409f478-e425-4e7f-5fff-8c3a94f47ee8@gmail.com>
- <ca8199af-43db-c878-a93f-66c275acf864@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <99403cb1-aaef-4dd4-68a0-67864ca7ce6c@nvidia.com>
-Date:   Fri, 28 Jun 2019 16:00:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 28 Jun 2019 19:04:11 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51667 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726643AbfF1XEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 19:04:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 16:04:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,429,1557212400"; 
+   d="scan'208";a="164797063"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Jun 2019 16:04:09 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 811E03015ED; Fri, 28 Jun 2019 16:04:09 -0700 (PDT)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: [PATCH v1] perf/x86: Consider pinned events for group validation
+Date:   Fri, 28 Jun 2019 16:03:57 -0700
+Message-Id: <20190628230357.10042-1-andi@firstfloor.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <ca8199af-43db-c878-a93f-66c275acf864@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561762895; bh=aZPjidkvt159Y1MlR25AZKLnSpkr1g2vQ76FONNdB1Q=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=TngsqlhbXI3lxjG0tIi7SiikP3nxfWP/IXevXHZU1hy4iGjkbLN9oHiHb9MRjlCi0
-         u6U5nmerqTk5xHMj1PrOJfpyJi/nT9Oto8lvPQknQG3LiDc8audlyubqw9fv+PrayF
-         JjZmAPKr7Rm7GtJsyqsad+nkhthHl7ahX1jPRJw57v6Hi4/3QtAQ0liR/zQs5ST7QZ
-         yevuS/YS57bBnQ0/ubmFTaLxBe39ziLd3TVUK0y/L8AqSHOszp76x+1aZ/qSmFt+Ni
-         VdoXyxwQlh3BNZijdmZucTKHRabf7WM52MZw9xMpYhEelcNDjFYrdTSfCYPyrxzcTY
-         FF4tFxdRwy/hA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Andi Kleen <ak@linux.intel.com>
 
-On 6/28/19 5:05 AM, Dmitry Osipenko wrote:
-> 28.06.2019 14:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 28.06.2019 5:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> This patch adds support for Tegra pinctrl driver suspend and resume.
->>>
->>> During suspend, context of all pinctrl registers are stored and
->>> on resume they are all restored to have all the pinmux and pad
->>> configuration for normal operation.
->>>
->>> Acked-by: Thierry Reding <treding@nvidia.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   int tegra_pinctrl_probe(struct platform_device *pdev,
->>>   			const struct tegra_pinctrl_soc_data *soc_data);
->>>   #endif
->>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl=
-/tegra/pinctrl-tegra210.c
->>> index 0b56ad5c9c1c..edd3f4606cdb 100644
->>> --- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
->>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
->>> @@ -1571,6 +1571,7 @@ static struct platform_driver tegra210_pinctrl_dr=
-iver =3D {
->>>   	.driver =3D {
->>>   		.name =3D "tegra210-pinctrl",
->>>   		.of_match_table =3D tegra210_pinctrl_of_match,
->>> +		.pm =3D &tegra_pinctrl_pm,
->>>   	},
->>>   	.probe =3D tegra210_pinctrl_probe,
->>>   };
->>>
->> Could you please address my comments in the next revision if there will =
-be one?
->>
-> Also, what about adding ".pm' for other Tegras? I'm sure Jon could test t=
-hem for you.
+perf stat -M metrics relies on weak groups to reject unschedulable groups
+and run them as non-groups.
 
-This series is for Tegra210 SC7 entry/exit along with clocks and pinctrl=20
-suspend resume needed for Tegra210 basic sc7 entry and exit.
+This uses the group validation code in the kernel. Unfortunately
+that code doesn't take pinned events, such as the NMI watchdog, into
+account. So some groups can pass validation, but then later still
+never schedule.
 
-This includes pinctrl, pmc changes, clock-tegra210 driver changes all=20
-w.r.t Tegra210 platforms specific.
+This patch is an attempt to track pinned events in the group
+validation too. We track a pinned mask, and use the mask from
+either the CPU the event is pinned or, or the current CPU
+if floating.
 
-Suspend/resume support for other Tegras will be in separate patch series.
+Then use this mask as a starting point for the scheduler.
 
+I *think* it is mostly conservative, as in rejecting nothing
+that would schedule, except locking is a bit weaker than a real
+schedule, so it might be slightly behind
 
-thanks
+It won't catch all possible cases that cannot schedule, such
+as events pinned differently on different CPUs, or complicated
+constraints. For the case of the NMI watchdog interacting
+with the current perf metrics it is strong enough.
 
-Sowjanya
+Reported-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ arch/x86/events/core.c         | 44 +++++++++++++++++++++++++++-------
+ arch/x86/events/intel/p4.c     |  3 ++-
+ arch/x86/events/intel/uncore.c |  2 +-
+ arch/x86/events/perf_event.h   | 10 +++++---
+ 4 files changed, 45 insertions(+), 14 deletions(-)
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index f0e4804515d8..9459b1f83aa4 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -713,7 +713,7 @@ struct perf_sched {
+  * Initialize interator that runs through all events and counters.
+  */
+ static void perf_sched_init(struct perf_sched *sched, struct event_constraint **constraints,
+-			    int num, int wmin, int wmax, int gpmax)
++			    int num, int wmin, int wmax, int gpmax, unsigned long *pinned)
+ {
+ 	int idx;
+ 
+@@ -731,6 +731,8 @@ static void perf_sched_init(struct perf_sched *sched, struct event_constraint **
+ 	sched->state.event	= idx;		/* start with min weight */
+ 	sched->state.weight	= wmin;
+ 	sched->state.unassigned	= num;
++	if (pinned)
++		bitmap_copy(sched->state.used, pinned, X86_PMC_IDX_MAX);
+ }
+ 
+ static void perf_sched_save_state(struct perf_sched *sched)
+@@ -846,11 +848,12 @@ static bool perf_sched_next_event(struct perf_sched *sched)
+  * Assign a counter for each event.
+  */
+ int perf_assign_events(struct event_constraint **constraints, int n,
+-			int wmin, int wmax, int gpmax, int *assign)
++		       int wmin, int wmax, int gpmax, int *assign,
++		       unsigned long *pinned)
+ {
+ 	struct perf_sched sched;
+ 
+-	perf_sched_init(&sched, constraints, n, wmin, wmax, gpmax);
++	perf_sched_init(&sched, constraints, n, wmin, wmax, gpmax, pinned);
+ 
+ 	do {
+ 		if (!perf_sched_find_counter(&sched))
+@@ -863,7 +866,8 @@ int perf_assign_events(struct event_constraint **constraints, int n,
+ }
+ EXPORT_SYMBOL_GPL(perf_assign_events);
+ 
+-int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
++int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign,
++			unsigned long *pinned)
+ {
+ 	struct event_constraint *c;
+ 	unsigned long used_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
+@@ -871,7 +875,10 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 	int n0, i, wmin, wmax, unsched = 0;
+ 	struct hw_perf_event *hwc;
+ 
+-	bitmap_zero(used_mask, X86_PMC_IDX_MAX);
++	if (pinned)
++		bitmap_copy(used_mask, pinned, X86_PMC_IDX_MAX);
++	else
++		bitmap_zero(used_mask, X86_PMC_IDX_MAX);
+ 
+ 	/*
+ 	 * Compute the number of events already present; see x86_pmu_add(),
+@@ -953,7 +960,7 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 			gpmax /= 2;
+ 
+ 		unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
+-					     wmax, gpmax, assign);
++					     wmax, gpmax, assign, pinned);
+ 	}
+ 
+ 	/*
+@@ -1267,7 +1274,7 @@ static int x86_pmu_add(struct perf_event *event, int flags)
+ 	if (cpuc->txn_flags & PERF_PMU_TXN_ADD)
+ 		goto done_collect;
+ 
+-	ret = x86_pmu.schedule_events(cpuc, n, assign);
++	ret = x86_pmu.schedule_events(cpuc, n, assign, NULL);
+ 	if (ret)
+ 		goto out;
+ 	/*
+@@ -1321,6 +1328,8 @@ static void x86_pmu_start(struct perf_event *event, int flags)
+ 	__set_bit(idx, cpuc->running);
+ 	x86_pmu.enable(event);
+ 	perf_event_update_userpage(event);
++	if (event->attr.pinned)
++		__set_bit(idx, cpuc->pinned);
+ }
+ 
+ void perf_event_print_debug(void)
+@@ -1388,12 +1397,16 @@ void x86_pmu_stop(struct perf_event *event, int flags)
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
++
++
+ 	if (test_bit(hwc->idx, cpuc->active_mask)) {
+ 		x86_pmu.disable(event);
+ 		__clear_bit(hwc->idx, cpuc->active_mask);
+ 		cpuc->events[hwc->idx] = NULL;
+ 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
+ 		hwc->state |= PERF_HES_STOPPED;
++		if (event->attr.pinned)
++			__clear_bit(event->hw.idx, cpuc->pinned);
+ 	}
+ 
+ 	if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE)) {
+@@ -1925,7 +1938,7 @@ static int x86_pmu_commit_txn(struct pmu *pmu)
+ 	if (!x86_pmu_initialized())
+ 		return -EAGAIN;
+ 
+-	ret = x86_pmu.schedule_events(cpuc, n, assign);
++	ret = x86_pmu.schedule_events(cpuc, n, assign, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -2013,6 +2026,7 @@ static int validate_group(struct perf_event *event)
+ {
+ 	struct perf_event *leader = event->group_leader;
+ 	struct cpu_hw_events *fake_cpuc;
++	unsigned long pinned[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
+ 	int ret = -EINVAL, n;
+ 
+ 	fake_cpuc = allocate_fake_cpuc();
+@@ -2033,8 +2047,20 @@ static int validate_group(struct perf_event *event)
+ 	if (n < 0)
+ 		goto out;
+ 
++	/*
++	 * Get the pinned mask from the real CPU so that we don't
++	 * allow anything that conflicts with pinned events.
++	 *
++	 * This is not fully accurate with complicated constraints,
++	 * but good enough to handle common cases like the global NMI watchdog.
++	 */
++	bitmap_copy(pinned,
++		    per_cpu_ptr(&cpu_hw_events,
++				event->cpu >= 0 ? event->cpu : raw_smp_processor_id())->pinned,
++		    X86_PMC_IDX_MAX);
++
+ 	fake_cpuc->n_events = 0;
+-	ret = x86_pmu.schedule_events(fake_cpuc, n, NULL);
++	ret = x86_pmu.schedule_events(fake_cpuc, n, NULL, pinned);
+ 
+ out:
+ 	free_fake_cpuc(fake_cpuc);
+diff --git a/arch/x86/events/intel/p4.c b/arch/x86/events/intel/p4.c
+index dee579efb2b2..c6eef326b23f 100644
+--- a/arch/x86/events/intel/p4.c
++++ b/arch/x86/events/intel/p4.c
+@@ -1203,7 +1203,8 @@ static int p4_next_cntr(int thread, unsigned long *used_mask,
+ 	return -1;
+ }
+ 
+-static int p4_pmu_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
++static int p4_pmu_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign,
++				  unsigned long *pinned)
+ {
+ 	unsigned long used_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
+ 	unsigned long escr_mask[BITS_TO_LONGS(P4_ESCR_MSR_TABLE_SIZE)];
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 3694a5d0703d..d44518a6c0e2 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -459,7 +459,7 @@ static int uncore_assign_events(struct intel_uncore_box *box, int assign[], int
+ 	/* slow path */
+ 	if (i != n)
+ 		ret = perf_assign_events(box->event_constraint, n,
+-					 wmin, wmax, n, assign);
++					 wmin, wmax, n, assign, NULL);
+ 
+ 	if (!assign || ret) {
+ 		for (i = 0; i < n; i++)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 9bcec3f99e4a..34f264633e9f 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -202,6 +202,7 @@ struct cpu_hw_events {
+ 	struct perf_event	*events[X86_PMC_IDX_MAX]; /* in counter order */
+ 	unsigned long		active_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
+ 	unsigned long		running[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
++	unsigned long		pinned[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
+ 	int			enabled;
+ 
+ 	int			n_events; /* the # of events in the below arrays */
+@@ -585,7 +586,8 @@ struct x86_pmu {
+ 	void		(*del)(struct perf_event *);
+ 	void		(*read)(struct perf_event *event);
+ 	int		(*hw_config)(struct perf_event *event);
+-	int		(*schedule_events)(struct cpu_hw_events *cpuc, int n, int *assign);
++	int		(*schedule_events)(struct cpu_hw_events *cpuc, int n, int *assign,
++					   unsigned long *pinned);
+ 	unsigned	eventsel;
+ 	unsigned	perfctr;
+ 	int		(*addr_offset)(int index, bool eventsel);
+@@ -850,8 +852,10 @@ static inline void __x86_pmu_enable_event(struct hw_perf_event *hwc,
+ void x86_pmu_enable_all(int added);
+ 
+ int perf_assign_events(struct event_constraint **constraints, int n,
+-			int wmin, int wmax, int gpmax, int *assign);
+-int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign);
++		       int wmin, int wmax, int gpmax, int *assign,
++		       unsigned long *pinned);
++int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign,
++			unsigned long *pinned);
+ 
+ void x86_pmu_stop(struct perf_event *event, int flags);
+ 
+-- 
+2.20.1
 
