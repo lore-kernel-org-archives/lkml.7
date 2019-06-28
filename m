@@ -2,93 +2,118 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160F9C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF76C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E12902133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A24217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561725172;
+	bh=rbufucT9BtMIX9piUmefgp1kA2+6fvAipUNCV+nG63c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AqikD3ugBxxrSFrc+3LGYGVMcN8E1Ky2T76KR9PwhY+RWPQ7jEXeyYiToDgk9QoWt
+	 ITFN6KJkx1ZbarZ0poB3uSXngknQCFd8KwlAVh0KovYwj98lNDAF13Ohq8JsMqYWq8
+	 Kg4ulNVkBydy1XQ7gj4RefkEdffQu4tpUCFEwBxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfF1Mcr (ORCPT
+        id S1727534AbfF1Mck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:32:47 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50524 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727547AbfF1Mcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:32:43 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B7F03154982ED060E283;
-        Fri, 28 Jun 2019 20:32:40 +0800 (CST)
-Received: from [127.0.0.1] (10.184.225.177) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Jun 2019
- 20:32:33 +0800
-To:     <jeyu@kernel.org>, <rusty@rustcorp.com.au>, <kay.sievers@vrfy.org>,
-        <clabbe.montjoie@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
-        "Zhoukang (A)" <zhoukang7@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH] module: add usage links when calling ref_module func
-Message-ID: <8d7aa8b1-73a2-db7a-82c8-06917eddf235@huawei.com>
-Date:   Fri, 28 Jun 2019 20:32:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Fri, 28 Jun 2019 08:32:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39194 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbfF1Mak (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 08:30:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=CO9hXctq/ZOSyldt4xxMM8uAqt3nLCI2Mj5L48QrNiA=; b=G24BOgrNeg+XoxgblfomyGovQ3
+        zcoKSDggvpJiEsMuTf8jqFh6ppqhx+xbRLHwdojbNx6N258LdXTBU4Hyuzn4tO3Lvp3NrHbhRBzJp
+        KiOH1CBXRQoQ1EccK4pfT2zuGLSHw/kQayUvrdCtx5MbTwzQXo5N7LDlA/H5FKeYGIZOckO0FSkky
+        946oACOW1TazI4dnFw/GR4IuSrguC26WcxnlqZikWM1TVhzoKFCU3H7qdfaZ81BIj8hhzxxcQceLi
+        qj07axHEFTIsM5b6zJjlHsXnevCW96cq6CYlqrSolRj05uNzw9/vF6eWMC+mzDR61794goqvGqdSg
+        DC2XqxKA==;
+Received: from [186.213.242.156] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgq1U-00055W-Gz; Fri, 28 Jun 2019 12:30:36 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hgq1S-0005Sl-Hh; Fri, 28 Jun 2019 09:30:34 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Milo Kim <milo.kim@ti.com>
+Subject: [PATCH 23/39] docs: lp855x-driver.rst: add it to the driver-api book
+Date:   Fri, 28 Jun 2019 09:30:16 -0300
+Message-Id: <91977c04fb55ebbb7e31bb4fb59de82ca1dd3109.1561724493.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
+References: <cover.1561724493.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="gb18030"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.225.177]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+The content of this file is intended for backlight Kernel
+developers.
 
-Problem: Users can call ref_module func in their modules to construct
-relationships with other modules. However, the holders
-'/sys/module/<mod-name>/holders' of the target module donot include
-the users` module. So lsmod command misses detailed info of 'Used by'.
-
-When load module, the process is given as follows,
-load_module()
-	-> mod_sysfs_setup()
-		-> add_usage_links
-	-> do_init_module
-		-> mod->init()
-
-add_usage_links func creates holders of target modules linking to
-this module. If ref_module is called in mod->init() func, the usage
-links cannot be added.
-
-Here, we will add usage link of a to b's holder_dir.
-
-Fixes: 9bea7f239 ("module: fix bne2 "gave up waiting for init of module libcrc32c")
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- kernel/module.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/{ => driver-api}/backlight/lp855x-driver.rst | 2 --
+ Documentation/driver-api/index.rst                         | 1 +
+ MAINTAINERS                                                | 2 +-
+ 3 files changed, 2 insertions(+), 3 deletions(-)
+ rename Documentation/{ => driver-api}/backlight/lp855x-driver.rst (99%)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 80c7c09584cf..11c6aff37b1f 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -871,6 +871,11 @@ int ref_module(struct module *a, struct module *b)
- 		module_put(b);
- 		return err;
- 	}
-+
-+	err = sysfs_create_link(b->holders_dir, &a->mkobj.kobj, a->name);
-+	if (err)
-+		return err;
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(ref_module);
+diff --git a/Documentation/backlight/lp855x-driver.rst b/Documentation/driver-api/backlight/lp855x-driver.rst
+similarity index 99%
+rename from Documentation/backlight/lp855x-driver.rst
+rename to Documentation/driver-api/backlight/lp855x-driver.rst
+index 62b7ed847a77..1e0b224fc397 100644
+--- a/Documentation/backlight/lp855x-driver.rst
++++ b/Documentation/driver-api/backlight/lp855x-driver.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ ====================
+ Kernel driver lp855x
+ ====================
+diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
+index d41d1c561f01..fea0034afa56 100644
+--- a/Documentation/driver-api/index.rst
++++ b/Documentation/driver-api/index.rst
+@@ -66,6 +66,7 @@ available subsections can be seen below.
+    thermal/index
+    fpga/index
+    acpi/index
++   backlight/lp855x-driver.rst
+    generic-counter
+ 
+ .. only::  subproject and html
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f723371dccd0..664e2a827544 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15906,7 +15906,7 @@ F:	sound/soc/codecs/isabelle*
+ TI LP855x BACKLIGHT DRIVER
+ M:	Milo Kim <milo.kim@ti.com>
+ S:	Maintained
+-F:	Documentation/backlight/lp855x-driver.rst
++F:	Documentation/driver-api/backlight/lp855x-driver.rst
+ F:	drivers/video/backlight/lp855x_bl.c
+ F:	include/linux/platform_data/lp855x.h
+ 
 -- 
-2.19.1
+2.21.0
 
