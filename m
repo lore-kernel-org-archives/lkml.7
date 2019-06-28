@@ -2,58 +2,68 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451E5C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABF6C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA012083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6228208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561725107;
-	bh=zZkZzGRJTI052u3XTmNwGyu65cIWIOk5cn8MeOk0yx0=;
+	s=default; t=1561725113;
+	bh=RlCRR8/FGyL9fyHTy52nSy3AX9emvDcBrsSnFpE4dEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FLs2j9Pave93rxms6Hden9sTeTUvzznv558Vki3nOx6fARv2PRy/DSi+1Hu8kkJ45
-	 Q1YxXF3wc9YzOkmsl8lhrUXMjj0HBVLB9weTKlXCYsbOdlYmisXmhLrrykziCv+SGl
-	 3Tshx4/PPu2i4gyr9L9PqoxJlolaUZsordPzksMs=
+	b=cWUssw1XIxx0G4g5iT29I4PBIWz60dAjlTR2GKrBE3a2o50tuSqTUghSZGtd82Yxz
+	 skDgORaw0PexDNxrnHJ9BBXlSkHMNIknK2ybVl5d8KO+y+FHZMtxdKjDe8+49SCozu
+	 xlOUtCMecffXh5jZCvTT54VDxS3XrH8n1F6k69Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfF1Map (ORCPT
+        id S1727456AbfF1Mbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:30:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39130 "EHLO
+        Fri, 28 Jun 2019 08:31:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39572 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbfF1Mai (ORCPT
+        with ESMTP id S1727095AbfF1Map (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:30:38 -0400
+        Fri, 28 Jun 2019 08:30:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=U92CTD6tuDy7j9b5xakGk2DqteV5CM69tWu7ZN/5THI=; b=X+SWOhGHuzja47Cp1iC4SSXUZz
-        rClep8gUlq8pmON+93xpROdl8GUw0/uwgmRKnViYIZniZEU1/iYF5WsLy7WkUydtDqiTee31r8ZUw
-        jXHEYjPfYDHD4cMIfvthheKeA4LoYUQNrt6lffvx7n4bkFTuvgtaXT8BfF/NQT7VCmcyd9TQyqQii
-        n4Rjwg6bxcwRkezXN7PLCLD9AqWAU4g7Cixh41AUOhoXmVL1Dq4ZHoeZS/RyEUAS7QUYZkvQ3+vKA
-        2bMRswQs0pdNztFiA8NgYl5Bh40zXXwuA7Q32m4mjvcz9tmZNnK0wfnzmVvFD+NJ2xB2Nt/mQAXcx
-        XLYsqQcg==;
+        bh=NQrLAHec6ZFSeCAw7w8J5S1GYNaZWnqjTjdv38X/dqo=; b=FBHE1tLP1XqPvu9XV1YZSBv0AA
+        1BX6NruIUfDALUsI/yFKXfeP23MtTtA1djhx1azVtguWE/hrRQNMTyDcq+VRq2pqHjCE/MZz+zxOH
+        /YNqiZixsQv5Th8/cuG62h0I61yKT0XvieG+UtWaO4/GsmxXey4EfOio3XWFR42puI3Q6w7Gtrkjy
+        ch0KPxpgSi+t9C6H3CVZjw2nlTZSDW4Tcv/R1nPvOESMHqHZ7TftSgL1TrITKfr1mQcY7Jpc6SW5r
+        o7hKUcrIG23NP1u2J9+q/dmWs2RXZ0T6qTlX2IfzYSwmKtdigkkprhR5C+yccbqrMEB7oeDPcV1S4
+        rvrauXCw==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1U-00055D-AE; Fri, 28 Jun 2019 12:30:36 +0000
+        id 1hgq1U-00055P-Fc; Fri, 28 Jun 2019 12:30:36 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005S6-Ag; Fri, 28 Jun 2019 09:30:34 -0300
+        id 1hgq1S-0005SR-EJ; Fri, 28 Jun 2019 09:30:34 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 15/39] docs: early-userspace: move to driver-api guide
-Date:   Fri, 28 Jun 2019 09:30:08 -0300
-Message-Id: <e5889b2b00604491c6dc32c2f2a1d5afb9200ed8.1561724493.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Tim Waugh <tim@cyberelk.net>, Jens Axboe <axboe@kernel.dk>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH 19/39] docs: blockdev: add it to the admin-guide
+Date:   Fri, 28 Jun 2019 09:30:12 -0300
+Message-Id: <a4437f5438f2ce9e220d0910a4d98a832810479b.1561724493.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
 References: <cover.1561724493.git.mchehab+samsung@kernel.org>
@@ -64,104 +74,358 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Those documents describe a kAPI. So, add to the driver-api
-book.
+The blockdev book basically contains user-faced documentation.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../{ => driver-api}/early-userspace/buffer-format.rst        | 0
- .../early-userspace/early_userspace_support.rst               | 0
- Documentation/{ => driver-api}/early-userspace/index.rst      | 2 --
- Documentation/driver-api/index.rst                            | 1 +
- Documentation/filesystems/nfs/nfsroot.txt                     | 2 +-
- Documentation/filesystems/ramfs-rootfs-initramfs.txt          | 4 ++--
- usr/Kconfig                                                   | 2 +-
- 7 files changed, 5 insertions(+), 6 deletions(-)
- rename Documentation/{ => driver-api}/early-userspace/buffer-format.rst (100%)
- rename Documentation/{ => driver-api}/early-userspace/early_userspace_support.rst (100%)
- rename Documentation/{ => driver-api}/early-userspace/index.rst (95%)
+ .../blockdev/drbd/DRBD-8.3-data-packets.svg    |  0
+ .../blockdev/drbd/DRBD-data-packets.svg        |  0
+ .../blockdev/drbd/conn-states-8.dot            |  0
+ .../blockdev/drbd/data-structure-v9.rst        |  0
+ .../blockdev/drbd/disk-states-8.dot            |  0
+ .../drbd/drbd-connection-state-overview.dot    |  0
+ .../blockdev/drbd/figures.rst                  |  0
+ .../{ => admin-guide}/blockdev/drbd/index.rst  |  0
+ .../blockdev/drbd/node-states-8.dot            |  1 -
+ .../{ => admin-guide}/blockdev/floppy.rst      |  0
+ .../{ => admin-guide}/blockdev/index.rst       |  2 --
+ .../{ => admin-guide}/blockdev/nbd.rst         |  0
+ .../{ => admin-guide}/blockdev/paride.rst      |  0
+ .../{ => admin-guide}/blockdev/ramdisk.rst     |  0
+ .../{ => admin-guide}/blockdev/zram.rst        |  0
+ Documentation/admin-guide/index.rst            |  1 +
+ .../admin-guide/kernel-parameters.txt          | 18 +++++++++---------
+ MAINTAINERS                                    | 10 +++++-----
+ drivers/block/Kconfig                          |  8 ++++----
+ drivers/block/floppy.c                         |  2 +-
+ drivers/block/zram/Kconfig                     |  6 +++---
+ tools/testing/selftests/zram/README            |  2 +-
+ 22 files changed, 24 insertions(+), 26 deletions(-)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/DRBD-8.3-data-packets.svg (100%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/DRBD-data-packets.svg (100%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/conn-states-8.dot (100%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/data-structure-v9.rst (100%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/disk-states-8.dot (100%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/drbd-connection-state-overview.dot (100%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/figures.rst (100%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/index.rst (100%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/node-states-8.dot (99%)
+ rename Documentation/{ => admin-guide}/blockdev/floppy.rst (100%)
+ rename Documentation/{ => admin-guide}/blockdev/index.rst (94%)
+ rename Documentation/{ => admin-guide}/blockdev/nbd.rst (100%)
+ rename Documentation/{ => admin-guide}/blockdev/paride.rst (100%)
+ rename Documentation/{ => admin-guide}/blockdev/ramdisk.rst (100%)
+ rename Documentation/{ => admin-guide}/blockdev/zram.rst (100%)
 
-diff --git a/Documentation/early-userspace/buffer-format.rst b/Documentation/driver-api/early-userspace/buffer-format.rst
+diff --git a/Documentation/blockdev/drbd/DRBD-8.3-data-packets.svg b/Documentation/admin-guide/blockdev/drbd/DRBD-8.3-data-packets.svg
 similarity index 100%
-rename from Documentation/early-userspace/buffer-format.rst
-rename to Documentation/driver-api/early-userspace/buffer-format.rst
-diff --git a/Documentation/early-userspace/early_userspace_support.rst b/Documentation/driver-api/early-userspace/early_userspace_support.rst
+rename from Documentation/blockdev/drbd/DRBD-8.3-data-packets.svg
+rename to Documentation/admin-guide/blockdev/drbd/DRBD-8.3-data-packets.svg
+diff --git a/Documentation/blockdev/drbd/DRBD-data-packets.svg b/Documentation/admin-guide/blockdev/drbd/DRBD-data-packets.svg
 similarity index 100%
-rename from Documentation/early-userspace/early_userspace_support.rst
-rename to Documentation/driver-api/early-userspace/early_userspace_support.rst
-diff --git a/Documentation/early-userspace/index.rst b/Documentation/driver-api/early-userspace/index.rst
-similarity index 95%
-rename from Documentation/early-userspace/index.rst
-rename to Documentation/driver-api/early-userspace/index.rst
-index 2b8eb6132058..6f20c3c560d8 100644
---- a/Documentation/early-userspace/index.rst
-+++ b/Documentation/driver-api/early-userspace/index.rst
+rename from Documentation/blockdev/drbd/DRBD-data-packets.svg
+rename to Documentation/admin-guide/blockdev/drbd/DRBD-data-packets.svg
+diff --git a/Documentation/blockdev/drbd/conn-states-8.dot b/Documentation/admin-guide/blockdev/drbd/conn-states-8.dot
+similarity index 100%
+rename from Documentation/blockdev/drbd/conn-states-8.dot
+rename to Documentation/admin-guide/blockdev/drbd/conn-states-8.dot
+diff --git a/Documentation/blockdev/drbd/data-structure-v9.rst b/Documentation/admin-guide/blockdev/drbd/data-structure-v9.rst
+similarity index 100%
+rename from Documentation/blockdev/drbd/data-structure-v9.rst
+rename to Documentation/admin-guide/blockdev/drbd/data-structure-v9.rst
+diff --git a/Documentation/blockdev/drbd/disk-states-8.dot b/Documentation/admin-guide/blockdev/drbd/disk-states-8.dot
+similarity index 100%
+rename from Documentation/blockdev/drbd/disk-states-8.dot
+rename to Documentation/admin-guide/blockdev/drbd/disk-states-8.dot
+diff --git a/Documentation/blockdev/drbd/drbd-connection-state-overview.dot b/Documentation/admin-guide/blockdev/drbd/drbd-connection-state-overview.dot
+similarity index 100%
+rename from Documentation/blockdev/drbd/drbd-connection-state-overview.dot
+rename to Documentation/admin-guide/blockdev/drbd/drbd-connection-state-overview.dot
+diff --git a/Documentation/blockdev/drbd/figures.rst b/Documentation/admin-guide/blockdev/drbd/figures.rst
+similarity index 100%
+rename from Documentation/blockdev/drbd/figures.rst
+rename to Documentation/admin-guide/blockdev/drbd/figures.rst
+diff --git a/Documentation/blockdev/drbd/index.rst b/Documentation/admin-guide/blockdev/drbd/index.rst
+similarity index 100%
+rename from Documentation/blockdev/drbd/index.rst
+rename to Documentation/admin-guide/blockdev/drbd/index.rst
+diff --git a/Documentation/blockdev/drbd/node-states-8.dot b/Documentation/admin-guide/blockdev/drbd/node-states-8.dot
+similarity index 99%
+rename from Documentation/blockdev/drbd/node-states-8.dot
+rename to Documentation/admin-guide/blockdev/drbd/node-states-8.dot
+index 4a2b00c23547..bfa54e1f8016 100644
+--- a/Documentation/blockdev/drbd/node-states-8.dot
++++ b/Documentation/admin-guide/blockdev/drbd/node-states-8.dot
+@@ -11,4 +11,3 @@ digraph peer_states {
+ 	Unknown   -> Primary           [ label = "connected" ]
+ 	Unknown   -> Secondary         [ label = "connected" ]
+ }
+-
+diff --git a/Documentation/blockdev/floppy.rst b/Documentation/admin-guide/blockdev/floppy.rst
+similarity index 100%
+rename from Documentation/blockdev/floppy.rst
+rename to Documentation/admin-guide/blockdev/floppy.rst
+diff --git a/Documentation/blockdev/index.rst b/Documentation/admin-guide/blockdev/index.rst
+similarity index 94%
+rename from Documentation/blockdev/index.rst
+rename to Documentation/admin-guide/blockdev/index.rst
+index a9af6ed8b4aa..20a738d9d047 100644
+--- a/Documentation/blockdev/index.rst
++++ b/Documentation/admin-guide/blockdev/index.rst
 @@ -1,5 +1,3 @@
 -:orphan:
 -
- ===============
- Early Userspace
- ===============
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index 97bab578ea72..d41d1c561f01 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -16,6 +16,7 @@ available subsections can be seen below.
- 
-    basics
-    infrastructure
-+   early-userspace/index
+ ===========================
+ The Linux RapidIO Subsystem
+ ===========================
+diff --git a/Documentation/blockdev/nbd.rst b/Documentation/admin-guide/blockdev/nbd.rst
+similarity index 100%
+rename from Documentation/blockdev/nbd.rst
+rename to Documentation/admin-guide/blockdev/nbd.rst
+diff --git a/Documentation/blockdev/paride.rst b/Documentation/admin-guide/blockdev/paride.rst
+similarity index 100%
+rename from Documentation/blockdev/paride.rst
+rename to Documentation/admin-guide/blockdev/paride.rst
+diff --git a/Documentation/blockdev/ramdisk.rst b/Documentation/admin-guide/blockdev/ramdisk.rst
+similarity index 100%
+rename from Documentation/blockdev/ramdisk.rst
+rename to Documentation/admin-guide/blockdev/ramdisk.rst
+diff --git a/Documentation/blockdev/zram.rst b/Documentation/admin-guide/blockdev/zram.rst
+similarity index 100%
+rename from Documentation/blockdev/zram.rst
+rename to Documentation/admin-guide/blockdev/zram.rst
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index 65e821a03aca..c073af461cdf 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -73,6 +73,7 @@ configure specific aspects of kernel behavior to your liking.
+    java
+    ras
+    bcache
++   blockdev/index
+    ext4
     pm/index
-    clk
-    device-io
-diff --git a/Documentation/filesystems/nfs/nfsroot.txt b/Documentation/filesystems/nfs/nfsroot.txt
-index 4862d3d77e27..ae4332464560 100644
---- a/Documentation/filesystems/nfs/nfsroot.txt
-+++ b/Documentation/filesystems/nfs/nfsroot.txt
-@@ -239,7 +239,7 @@ rdinit=<executable file>
-   A description of the process of mounting the root file system can be
-   found in:
+    thunderbolt
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 9b535c0e22f3..49ad034c4675 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1249,7 +1249,7 @@
+ 			See also Documentation/fault-injection/.
  
--    Documentation/early-userspace/early_userspace_support.rst
-+    Documentation/driver-api/early-userspace/early_userspace_support.rst
+ 	floppy=		[HW]
+-			See Documentation/blockdev/floppy.rst.
++			See Documentation/admin-guide/blockdev/floppy.rst.
  
+ 	force_pal_cache_flush
+ 			[IA-64] Avoid check_sal_cache_flush which may hang on
+@@ -2247,7 +2247,7 @@
+ 	memblock=debug	[KNL] Enable memblock debug messages.
  
+ 	load_ramdisk=	[RAM] List of ramdisks to load from floppy
+-			See Documentation/blockdev/ramdisk.rst.
++			See Documentation/admin-guide/blockdev/ramdisk.rst.
  
-diff --git a/Documentation/filesystems/ramfs-rootfs-initramfs.txt b/Documentation/filesystems/ramfs-rootfs-initramfs.txt
-index fa985909dbca..97d42ccaa92d 100644
---- a/Documentation/filesystems/ramfs-rootfs-initramfs.txt
-+++ b/Documentation/filesystems/ramfs-rootfs-initramfs.txt
-@@ -105,7 +105,7 @@ All this differs from the old initrd in several ways:
-   - The old initrd file was a gzipped filesystem image (in some file format,
-     such as ext2, that needed a driver built into the kernel), while the new
-     initramfs archive is a gzipped cpio archive (like tar only simpler,
--    see cpio(1) and Documentation/early-userspace/buffer-format.rst).  The
-+    see cpio(1) and Documentation/driver-api/early-userspace/buffer-format.rst).  The
-     kernel's cpio extraction code is not only extremely small, it's also
-     __init text and data that can be discarded during the boot process.
+ 	lockd.nlm_grace_period=P  [NFS] Assign grace period.
+ 			Format: <integer>
+@@ -3294,7 +3294,7 @@
  
-@@ -159,7 +159,7 @@ One advantage of the configuration file is that root access is not required to
- set permissions or create device nodes in the new archive.  (Note that those
- two example "file" entries expect to find files named "init.sh" and "busybox" in
- a directory called "initramfs", under the linux-2.6.* directory.  See
--Documentation/early-userspace/early_userspace_support.rst for more details.)
-+Documentation/driver-api/early-userspace/early_userspace_support.rst for more details.)
+ 	pcd.		[PARIDE]
+ 			See header of drivers/block/paride/pcd.c.
+-			See also Documentation/blockdev/paride.rst.
++			See also Documentation/admin-guide/blockdev/paride.rst.
  
- The kernel does not depend on external cpio tools.  If you specify a
- directory instead of a configuration file, the kernel's build infrastructure
-diff --git a/usr/Kconfig b/usr/Kconfig
-index 86e37e297278..a6b68503d177 100644
---- a/usr/Kconfig
-+++ b/usr/Kconfig
-@@ -18,7 +18,7 @@ config INITRAMFS_SOURCE
- 	  When multiple directories and files are specified then the
- 	  initramfs image will be the aggregate of all of them.
+ 	pci=option[,option...]	[PCI] various PCI subsystem options.
  
--	  See <file:Documentation/early-userspace/early_userspace_support.rst> for more details.
-+	  See <file:Documentation/driver-api/early-userspace/early_userspace_support.rst> for more details.
+@@ -3538,7 +3538,7 @@
+ 			needed on a platform with proper driver support.
  
- 	  If you are not sure, leave it blank.
+ 	pd.		[PARIDE]
+-			See Documentation/blockdev/paride.rst.
++			See Documentation/admin-guide/blockdev/paride.rst.
  
+ 	pdcchassis=	[PARISC,HW] Disable/Enable PDC Chassis Status codes at
+ 			boot time.
+@@ -3553,10 +3553,10 @@
+ 			and performance comparison.
+ 
+ 	pf.		[PARIDE]
+-			See Documentation/blockdev/paride.rst.
++			See Documentation/admin-guide/blockdev/paride.rst.
+ 
+ 	pg.		[PARIDE]
+-			See Documentation/blockdev/paride.rst.
++			See Documentation/admin-guide/blockdev/paride.rst.
+ 
+ 	pirq=		[SMP,APIC] Manual mp-table setup
+ 			See Documentation/x86/i386/IO-APIC.rst.
+@@ -3668,7 +3668,7 @@
+ 
+ 	prompt_ramdisk=	[RAM] List of RAM disks to prompt for floppy disk
+ 			before loading.
+-			See Documentation/blockdev/ramdisk.rst.
++			See Documentation/admin-guide/blockdev/ramdisk.rst.
+ 
+ 	psi=		[KNL] Enable or disable pressure stall information
+ 			tracking.
+@@ -3690,7 +3690,7 @@
+ 	pstore.backend=	Specify the name of the pstore backend to use
+ 
+ 	pt.		[PARIDE]
+-			See Documentation/blockdev/paride.rst.
++			See Documentation/admin-guide/blockdev/paride.rst.
+ 
+ 	pti=		[X86_64] Control Page Table Isolation of user and
+ 			kernel address spaces.  Disabling this feature
+@@ -3719,7 +3719,7 @@
+ 			See Documentation/admin-guide/md.rst.
+ 
+ 	ramdisk_size=	[RAM] Sizes of RAM disks in kilobytes
+-			See Documentation/blockdev/ramdisk.rst.
++			See Documentation/admin-guide/blockdev/ramdisk.rst.
+ 
+ 	random.trust_cpu={on,off}
+ 			[KNL] Enable or disable trusting the use of the
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4c622a19ab7d..3f0f654d1166 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4974,7 +4974,7 @@ T:	git git://git.linbit.com/drbd-8.4.git
+ S:	Supported
+ F:	drivers/block/drbd/
+ F:	lib/lru_cache.c
+-F:	Documentation/blockdev/drbd/
++F:	Documentation/admin-guide/blockdev/
+ 
+ DRIVER CORE, KOBJECTS, DEBUGFS AND SYSFS
+ M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+@@ -11024,7 +11024,7 @@ M:	Josef Bacik <josef@toxicpanda.com>
+ S:	Maintained
+ L:	linux-block@vger.kernel.org
+ L:	nbd@other.debian.org
+-F:	Documentation/blockdev/nbd.rst
++F:	Documentation/admin-guide/blockdev/nbd.rst
+ F:	drivers/block/nbd.c
+ F:	include/trace/events/nbd.h
+ F:	include/uapi/linux/nbd.h
+@@ -12028,7 +12028,7 @@ PARIDE DRIVERS FOR PARALLEL PORT IDE DEVICES
+ M:	Tim Waugh <tim@cyberelk.net>
+ L:	linux-parport@lists.infradead.org (subscribers-only)
+ S:	Maintained
+-F:	Documentation/blockdev/paride.rst
++F:	Documentation/admin-guide/blockdev/paride.rst
+ F:	drivers/block/paride/
+ 
+ PARISC ARCHITECTURE
+@@ -13310,7 +13310,7 @@ F:	drivers/net/wireless/ralink/rt2x00/
+ RAMDISK RAM BLOCK DEVICE DRIVER
+ M:	Jens Axboe <axboe@kernel.dk>
+ S:	Maintained
+-F:	Documentation/blockdev/ramdisk.rst
++F:	Documentation/admin-guide/blockdev/ramdisk.rst
+ F:	drivers/block/brd.c
+ 
+ RANCHU VIRTUAL BOARD FOR MIPS
+@@ -17672,7 +17672,7 @@ R:	Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+ F:	drivers/block/zram/
+-F:	Documentation/blockdev/zram.rst
++F:	Documentation/admin-guide/blockdev/zram.rst
+ 
+ ZS DECSTATION Z85C30 SERIAL DRIVER
+ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
+diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+index c43690b973d8..1bb8ec575352 100644
+--- a/drivers/block/Kconfig
++++ b/drivers/block/Kconfig
+@@ -31,7 +31,7 @@ config BLK_DEV_FD
+ 	  If you want to use the floppy disk drive(s) of your PC under Linux,
+ 	  say Y. Information about this driver, especially important for IBM
+ 	  Thinkpad users, is contained in
+-	  <file:Documentation/blockdev/floppy.rst>.
++	  <file:Documentation/admin-guide/blockdev/floppy.rst>.
+ 	  That file also contains the location of the Floppy driver FAQ as
+ 	  well as location of the fdutils package used to configure additional
+ 	  parameters of the driver at run time.
+@@ -96,7 +96,7 @@ config PARIDE
+ 	  your computer's parallel port. Most of them are actually IDE devices
+ 	  using a parallel port IDE adapter. This option enables the PARIDE
+ 	  subsystem which contains drivers for many of these external drives.
+-	  Read <file:Documentation/blockdev/paride.rst> for more information.
++	  Read <file:Documentation/admin-guide/blockdev/paride.rst> for more information.
+ 
+ 	  If you have said Y to the "Parallel-port support" configuration
+ 	  option, you may share a single port between your printer and other
+@@ -261,7 +261,7 @@ config BLK_DEV_NBD
+ 	  userland (making server and client physically the same computer,
+ 	  communicating using the loopback network device).
+ 
+-	  Read <file:Documentation/blockdev/nbd.rst> for more information,
++	  Read <file:Documentation/admin-guide/blockdev/nbd.rst> for more information,
+ 	  especially about where to find the server code, which runs in user
+ 	  space and does not need special kernel support.
+ 
+@@ -303,7 +303,7 @@ config BLK_DEV_RAM
+ 	  during the initial install of Linux.
+ 
+ 	  Note that the kernel command line option "ramdisk=XX" is now obsolete.
+-	  For details, read <file:Documentation/blockdev/ramdisk.rst>.
++	  For details, read <file:Documentation/admin-guide/blockdev/ramdisk.rst>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called brd. An alias "rd" has been defined
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 5c99e52f9dc1..f652c1ac3ae9 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -4424,7 +4424,7 @@ static int __init floppy_setup(char *str)
+ 		pr_cont("\n");
+ 	} else
+ 		DPRINT("botched floppy option\n");
+-	DPRINT("Read Documentation/blockdev/floppy.rst\n");
++	DPRINT("Read Documentation/admin-guide/blockdev/floppy.rst\n");
+ 	return 0;
+ }
+ 
+diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
+index e06b99d54816..fe7a4b7d30cf 100644
+--- a/drivers/block/zram/Kconfig
++++ b/drivers/block/zram/Kconfig
+@@ -12,7 +12,7 @@ config ZRAM
+ 	  It has several use cases, for example: /tmp storage, use as swap
+ 	  disks and maybe many more.
+ 
+-	  See Documentation/blockdev/zram.rst for more information.
++	  See Documentation/admin-guide/blockdev/zram.rst for more information.
+ 
+ config ZRAM_WRITEBACK
+        bool "Write back incompressible or idle page to backing device"
+@@ -26,7 +26,7 @@ config ZRAM_WRITEBACK
+ 	 With /sys/block/zramX/{idle,writeback}, application could ask
+ 	 idle page's writeback to the backing device to save in memory.
+ 
+-	 See Documentation/blockdev/zram.rst for more information.
++	 See Documentation/admin-guide/blockdev/zram.rst for more information.
+ 
+ config ZRAM_MEMORY_TRACKING
+ 	bool "Track zRam block status"
+@@ -36,4 +36,4 @@ config ZRAM_MEMORY_TRACKING
+ 	  of zRAM. Admin could see the information via
+ 	  /sys/kernel/debug/zram/zramX/block_state.
+ 
+-	  See Documentation/blockdev/zram.rst for more information.
++	  See Documentation/admin-guide/blockdev/zram.rst for more information.
+diff --git a/tools/testing/selftests/zram/README b/tools/testing/selftests/zram/README
+index 5fa378391d3b..110b34834a6f 100644
+--- a/tools/testing/selftests/zram/README
++++ b/tools/testing/selftests/zram/README
+@@ -37,4 +37,4 @@ Commands required for testing:
+  - mkfs/ mkfs.ext4
+ 
+ For more information please refer:
+-kernel-source-tree/Documentation/blockdev/zram.rst
++kernel-source-tree/Documentation/admin-guide/blockdev/zram.rst
 -- 
 2.21.0
 
