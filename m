@@ -2,102 +2,74 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D558C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE8BC46478
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E16BF20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:15:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6dSQpzy"
+	by mail.kernel.org (Postfix) with ESMTP id E4BE220665
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfF1KPY (ORCPT
+        id S1726659AbfF1KQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:15:24 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33497 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbfF1KPY (ORCPT
+        Fri, 28 Jun 2019 06:16:39 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:50117 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfF1KQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:15:24 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h10so5445505ljg.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 03:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kuj/HA5ST1YfjCjqjIBhZNTXDUSb6xW7P1aCaiPqrgA=;
-        b=r6dSQpzyJ15l8/BZOerGnIC0wmlXFFxfmCNPswk98awd0aKKD/xz4DYIkFnrcpARwc
-         9sdvqCgd+viVCqOoqV5DsJAzOBUhUf/9nizOab/W05hGnZ+aRPgxYSIvNp/etvsf0Bd5
-         7F4BrgRgXu1c9aYrUgEPX1eF/7LB/YoDreIZpGZnd2Ti3SaiRfgp05yGFCfRpyUWgepa
-         oLODrZ7ssyKN4rbX8g59LuC3JvntLy+gjzULgxNHEHNn3QTm6v/wkO5hDsKGyWISADOz
-         7bVhqeEKt5MJ2n98pVYGCrxjEj6/99R06YIrx9A8E2D83Zm2PoCJRlDWEY6NInkGexOX
-         pB2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kuj/HA5ST1YfjCjqjIBhZNTXDUSb6xW7P1aCaiPqrgA=;
-        b=DMhOrekWFDhxkxzSgh55cwCuAfEJqU7ksETc8laCD1kqIWJWw+OibGzzOH/WdZ8WkB
-         rZnoJH29AMUG+CITaHJhg0mY77p8a8irgaYYBxkvSvllis+lm+3A1C+7oNsMcG8bC7lN
-         pH9Ymu7pheGPTStbpW3bX6T5J7oY9hFTCUU5DV2cSlEYyb6HKSOcGRq7xWEUSwcEj2Kk
-         0ojrqUEPIpIP+BJvNzlVnW4+XxydxWJwC+P9AB2HiKpUOLLo+gFpNnxdO4uavQBT06kr
-         at6aVEJ/OD6mQhOZpqdEHxucOLUCkOzQPlThcuT67xOlnBCwDnMxCY0EbUDGtE0z1El6
-         bMFA==
-X-Gm-Message-State: APjAAAVMciqNTPb5Qw6SYxJ3fCunPFSa6hqZqDyRddLGJUIfmnjji2Hy
-        34iScqn4LN4vOk9rWcBJd/62WRgm/tLgj99C89N2Pg==
-X-Google-Smtp-Source: APXvYqwYZ2VwFJZSHzxzSaLF/aTvHeHNBwJGW3yg8YND+7cFBk+h9mUEiXw+n8bOv+ARb6mtvZlpXB0Ri+mSjhURIAs=
-X-Received: by 2002:a2e:8756:: with SMTP id q22mr5837692ljj.108.1561716922174;
- Fri, 28 Jun 2019 03:15:22 -0700 (PDT)
+        Fri, 28 Jun 2019 06:16:39 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id cb4a160a3ff2ad5a; Fri, 28 Jun 2019 12:16:37 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 25/27] kernel: power: use kzalloc rather than kmalloc followed with memset
+Date:   Fri, 28 Jun 2019 12:16:36 +0200
+Message-ID: <1609978.ayZxNtafmO@kreacher>
+In-Reply-To: <20190628025036.16135-1-huangfq.daxian@gmail.com>
+References: <20190628025036.16135-1-huangfq.daxian@gmail.com>
 MIME-Version: 1.0
-References: <20190628100253.8385-1-brgl@bgdev.pl>
-In-Reply-To: <20190628100253.8385-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Jun 2019 11:15:10 +0100
-Message-ID: <CACRpkdZqsgXoZcHv9z+7oVrf=i9WPSHG=93qhfA=0SkR0Mdfxg@mail.gmail.com>
-Subject: Re: [PATCH RFT 0/4] backlight: gpio: simplify the driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-sh@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 11:03 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Friday, June 28, 2019 4:50:35 AM CEST Fuqian Huang wrote:
+> Use zeroing allocator instead of using allocator
+> followed with memset with 0
+> 
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> ---
+>  kernel/power/swap.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/kernel/power/swap.c b/kernel/power/swap.c
+> index e1912ad13bdc..ca0fcb5ced71 100644
+> --- a/kernel/power/swap.c
+> +++ b/kernel/power/swap.c
+> @@ -974,12 +974,11 @@ static int get_swap_reader(struct swap_map_handle *handle,
+>  	last = handle->maps = NULL;
+>  	offset = swsusp_header->image;
+>  	while (offset) {
+> -		tmp = kmalloc(sizeof(*handle->maps), GFP_KERNEL);
+> +		tmp = kzalloc(sizeof(*handle->maps), GFP_KERNEL);
+>  		if (!tmp) {
+>  			release_swap_reader(handle);
+>  			return -ENOMEM;
+>  		}
+> -		memset(tmp, 0, sizeof(*tmp));
+>  		if (!handle->maps)
+>  			handle->maps = tmp;
+>  		if (last)
+> 
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> While working on my other series related to gpio-backlight[1] I noticed
-> that we could simplify the driver if we made the only user of platform
-> data use GPIO lookups and device properties. This series tries to do
-> that.
->
-> The first patch sets up all the required structures in the board file,
-> the second modifies the backlight driver, the third and fourth remove
-> the leftovers.
->
-> This series depends on the three first patches from [1].
->
-> I don't have access to this HW but hopefully this works. Only compile
-> tested.
+Queued up for 5.3 with minor subject changes.  Thanks!
 
-This series:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Excellent work!
 
-Yours,
-Linus Walleij
