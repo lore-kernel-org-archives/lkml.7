@@ -2,83 +2,106 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91814C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32F0C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C771208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F5B520645
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:55:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z8w/Lg4I"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WiYmuPB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfF1QyU (ORCPT
+        id S1726851AbfF1Qz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:54:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38532 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfF1QyT (ORCPT
+        Fri, 28 Jun 2019 12:55:57 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33051 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfF1Qz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:54:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4aCzK6AWV7v8l05GIE3EDguMtt1Ba9XnxuuiQ3Rlk3Q=; b=Z8w/Lg4IyFUwGyPbT6LlhpKWU
-        wUw/qfThpPpDK1EVkDTJ1UJiw38r1aWCtwbytMCtGAED4QvCWUMKs5Oh/6QO0Wybph75WFSCNiE4z
-        SSCY5E2KKmjqFf4YfC/RXkZbftMs0PDsnBkPp83MsdPmHC1whEcp4+szoDy/HcGbBBak06He3xVFX
-        Dv2t+nDoKM8qsnEYpPu09UUtlaDwdS+RkH8iyE0U10HWCA+u5ZYlH/WcMlbenvCowHplBHyZKDmM9
-        2YOpnvA7s/rZiLu/O8vCEzzqGKQwJz/jt4166JDneHDGirGpfGEMfS4Uo/xcZIJl7ErIdb9zvCDZq
-        /5Yxuz+9w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgu8f-0002TR-BH; Fri, 28 Jun 2019 16:54:17 +0000
-Date:   Fri, 28 Jun 2019 09:54:17 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] filesystem-dax: Disable PMD support
-Message-ID: <20190628165417.GD4286@bombadil.infradead.org>
-References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190627123415.GA4286@bombadil.infradead.org>
- <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
- <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
- <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
- <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
- <20190627195948.GB4286@bombadil.infradead.org>
- <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
- <20190628163721.GC4286@bombadil.infradead.org>
- <CAPcyv4jeRwhYWnGw9RrfDA54RRa9LK4JPuF3zQ-av=HdRqCTJw@mail.gmail.com>
+        Fri, 28 Jun 2019 12:55:57 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h10so6686370ljg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 09:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E1s9SHdejCcLhI9v5CB85EdGtkVPS8wN9741lqH2J5U=;
+        b=WiYmuPB4PHzJzEMi+NJ0Wmoh8XdcD/3l5z9Les3Q2QX9RSp7PR2A80PLUcprJVIf1D
+         NNhv+ISL/4Sv4sJBG9lx9fIyzNABC//kk3odCEG59D/9NWoXeQcTi/Mwl3rRi1X3H+0s
+         yiN2GuHOaVs1ftEWtBeFJlSCdEt+2fQSWO3I4h7kVF1qUt/WX7yyOPBvE6KQFATwRz50
+         79ng+DKldaBoKKxTEeai9arj/hGvu+ucq/d35SL8Rdd9MIBfSD7icWi2RCQpeyk/zpT5
+         1lDS6uVcsPkkR7uqUwPLkBTWuIm48tX5cjFBRjfyzKePgIK3nR55pnk2Ru+q2Qcp3PpZ
+         m61g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E1s9SHdejCcLhI9v5CB85EdGtkVPS8wN9741lqH2J5U=;
+        b=KPlkk0bPHgBiYFXLkJgVVv5CrJ+F15QfOtStMU7ZgdHQdQuQeV+GdpFGNVYkVqtKfB
+         G3eZd26LfkvJYC5fKLwPNOR2LKF+F/3SudJKxuYY2d8B6q94s4dAomN9lUiY7nsXQuas
+         hn1WpnxF16Jp2SqK4YUQX+il4to+grmlf+Ks7qaYDVMBeBB7ceIgQd0/xGSJG8ii+ozz
+         04DDT/stqm80TRO6+eQyPvwQwpVizbcsQLG3Yi4d5WazNM+675kT42EbKGkQIW6wUyla
+         +dXB/LyrZQTPAgRwpTrr+DPGA+HtwLmifRH3fRcIFj2Su3bNdvOOLOld+ygIOjZ9tWR8
+         IiHQ==
+X-Gm-Message-State: APjAAAXfxW4jW3FNwfjhpVLqRPVVth0RZIyELfArIqkp9PM+TA2TG2Lf
+        SNTodbiFXweVSjPDuBNxhRS+bUEjgETj0B3879z1YA==
+X-Google-Smtp-Source: APXvYqz2M85/GYPs1z6CkDilf7Lb1A6Oty+PzwB3F4eQBe9UBJa9DbMbwOrjU7l4kfroJCG64CsVRE+AX1kR3xl5Ltk=
+X-Received: by 2002:a2e:970d:: with SMTP id r13mr6755114lji.126.1561740954178;
+ Fri, 28 Jun 2019 09:55:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jeRwhYWnGw9RrfDA54RRa9LK4JPuF3zQ-av=HdRqCTJw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <000000000000b6b25b058b96d5c3@google.com> <20190618121756.GL28859@kadam>
+ <CAHRSSExL1fUNpV4jBON5qh47M8A+na0twVNEqpvkBoYVnbJSHA@mail.gmail.com>
+In-Reply-To: <CAHRSSExL1fUNpV4jBON5qh47M8A+na0twVNEqpvkBoYVnbJSHA@mail.gmail.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Fri, 28 Jun 2019 09:55:42 -0700
+Message-ID: <CAHRSSEzAv_jVBsP9U6Nb3uDnXEwH1Q6ef0fTrxLNTjAV0HeHng@mail.gmail.com>
+Subject: Re: kernel BUG at drivers/android/binder_alloc.c:LINE! (4)
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     syzbot <syzbot+3ae18325f96190606754@syzkaller.appspotmail.com>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@android.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Todd Kjos <tkjos@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 09:39:01AM -0700, Dan Williams wrote:
-> On Fri, Jun 28, 2019 at 9:37 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > That was the conclusion I came to; that one thread holding the mmap sem
-> > for read isn't being woken up when it should be.  Just need to find it ...
-> > obviously it's something to do with the PMD entries.
-> 
-> Can you explain to me one more time, yes I'm slow on the uptake on
-> this, the difference between xas_load() and xas_find_conflict() and
-> why it's ok for dax_lock_page() to use xas_load() while
-> grab_mapping_entry() uses xas_find_conflict()?
+On Tue, Jun 18, 2019 at 10:37 AM Todd Kjos <tkjos@google.com> wrote:
+>
+> On Tue, Jun 18, 2019 at 5:18 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > It's weird that that binder_alloc_copy_from_buffer() is a void function.
+> > It would be easier to do the error handling at that point, instead of in
+> > the callers.  It feels like we keep hitting similar bugs to this.
 
-When used with a non-zero 'order', xas_find_conflict() will return
-an entry whereas xas_load() might return a pointer to a node.
-dax_lock_page() always uses a zero order, so they would always do the
-same thing (xas_find_conflict() would be less efficient).
+I took your advice. Fix posted: https://lkml.org/lkml/2019/6/28/857
+
+-Todd
+
+>
+> The idea is that if it is an error that the user can cause, it is
+> checked by the caller of binder_alloc_copy_from_buffer(). Most uses
+> are kernel cases where the expected alignments should be fine and it's
+> a BUG if they are not.
+>
+> Admittedly, a few cases (like this one) have slipped through since
+> they cannot happen in Android (syzkaller has been very useful to find
+> our bad assumptions).
+>
+> -Todd
+>
+> >
+> > regards,
+> > dan carpenter
+> >
