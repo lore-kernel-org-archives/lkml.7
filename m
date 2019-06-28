@@ -2,163 +2,77 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FC3C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83F4C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B66208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B91208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfF1PNl (ORCPT
+        id S1726875AbfF1PN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:13:41 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55136 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfF1PNl (ORCPT
+        Fri, 28 Jun 2019 11:13:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:32903 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfF1PN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:13:41 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 1B1C026091A
-Subject: Re: [PATCH v2 1/1] iio: common: cros_ec_sensors: determine protocol
- version
-To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Cc:     gwendal@chromium.org, egranata@chromium.org, kernel@collabora.com,
-        Nick Vaccaro <nvaccaro@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1561731659.git.fabien.lahoudere@collabora.com>
- <f5e824de2c423b310c4981b723bba4945a6512d4.1561731659.git.fabien.lahoudere@collabora.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <4f79e029-b708-11f5-d4c6-2760e0b694d5@collabora.com>
-Date:   Fri, 28 Jun 2019 17:13:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 28 Jun 2019 11:13:59 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hgsZW-00039M-Qd; Fri, 28 Jun 2019 15:13:54 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Kevin Wang <kevin1.wang@amd.com>, Rex Zhu <rex.zhu@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amd/powerplay: fix out of memory check on od8_settings
+Date:   Fri, 28 Jun 2019 16:13:54 +0100
+Message-Id: <20190628151354.14107-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <f5e824de2c423b310c4981b723bba4945a6512d4.1561731659.git.fabien.lahoudere@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Colin Ian King <colin.king@canonical.com>
 
-Thanks for the quick respin, two few comments below
+The null pointer check on od8_settings is currently the opposite of what
+it is intended to do. Fix this by adding in the missing ! operator.
 
-On 28/6/19 16:41, Fabien Lahoudere wrote:
-> This patch adds a function to determine which version of the
-> protocol is used to communicate with EC.
-> 
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
+Addressed-Coverity: ("Resource leak")
+Fixes: 0c83d32c565c ("drm/amd/powerplay: simplified od_settings for each asic")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/powerplay/vega20_ppt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-The order must be the opposite, first Nick and then you.
+diff --git a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+index 0f14fe14ecd8..eb9e6b3a5265 100644
+--- a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+@@ -1501,8 +1501,7 @@ static int vega20_set_default_od8_setttings(struct smu_context *smu)
+ 		return -EINVAL;
+ 
+ 	od8_settings = kzalloc(sizeof(struct vega20_od8_settings), GFP_KERNEL);
+-
+-	if (od8_settings)
++	if (!od8_settings)
+ 		return -ENOMEM;
+ 
+ 	smu->od_settings = (void *)od8_settings;
+-- 
+2.20.1
 
-> ---
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 40 ++++++++++++++++++-
->  1 file changed, 39 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 130362ca421b..75d9b617f6c8 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -25,6 +25,35 @@ static char *cros_ec_loc[] = {
->  	[MOTIONSENSE_LOC_MAX] = "unknown",
->  };
->  
-> +static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
-> +					     u16 cmd_offset, u16 cmd, u32 *mask)
-> +{
-> +	int ret;
-> +	struct {
-> +		struct cros_ec_command msg;
-> +		union {
-> +			struct ec_params_get_cmd_versions params;
-> +			struct ec_response_get_cmd_versions resp;
-> +		};
-> +	} __packed buf = {
-> +		.msg = {
-> +			.version = 0,
-> +			.command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
-> +			.insize = sizeof(struct ec_response_get_cmd_versions),
-> +			.outsize = sizeof(struct ec_params_get_cmd_versions)
-> +			},
-> +		.params = {.cmd = cmd}
-> +	};
-> +
-> +	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*mask = buf.resp.version_mask;
-> +
-> +	return 0;
-> +}
-> +
->  int cros_ec_sensors_core_init(struct platform_device *pdev,
->  			      struct iio_dev *indio_dev,
->  			      bool physical_device)
-> @@ -33,6 +62,8 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
->  	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
->  	struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
-> +	u32 ver_mask;
-
-If you follow the error path in the cros_ec_get_host_cmd_version_mask there is a
-possible use of an uninitialized variable.
-
-	u32 ver_mask = 0;
-
-> +	int ret;
->  
->  	platform_set_drvdata(pdev, indio_dev);
->  
-> @@ -47,8 +78,15 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  
->  	mutex_init(&state->cmd_lock);
->  
-
-What about adding a comment to explain the ver_mask thing for the record?
-
-	/*
-	 * If the EC is very old or misbehaving is it possible that the
-	 * communication succeed and have the version mask set to an invalid
-	 * value. So check that version mask is valid (!= 0), otherwise return
-	 * an error.
-	 */
-
-At least this is what I understood from the previous discussion.
-
-> +	ret = cros_ec_get_host_cmd_version_mask(state->ec,
-> +						ec->cmd_offset,
-> +						EC_CMD_MOTION_SENSE_CMD,
-> +						&ver_mask);
-> +	if (ret < 0 || ver_mask == 0)
-> +		return -ENODEV;
-> +
->  	/* Set up the host command structure. */
-> -	state->msg->version = 2;
-> +	state->msg->version = fls(ver_mask) - 1;;
->  	state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
->  	state->msg->outsize = sizeof(struct ec_params_motion_sense);
->  
-> 
-
-Thanks,
-~ Enric
