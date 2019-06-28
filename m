@@ -2,154 +2,168 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156F0C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D42C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8AB4208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:16:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="h9MlfGsw"
+	by mail.kernel.org (Postfix) with ESMTP id 1F8362133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfF1OQh (ORCPT
+        id S1726866AbfF1OQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 10:16:37 -0400
-Received: from mout.web.de ([212.227.17.12]:56307 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbfF1OQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 10:16:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1561731374;
-        bh=EhlgD4OxUpSkqoFWG7/7Dq7I5UiCGhuvGXHoYj+a1Gg=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=h9MlfGsw2Xyi+Mh4ElJxdCkyyNjn+CwrNaAJGNi39ludy5CJNUOhqhsdNJfRf67ct
-         jCmLgSObBxWBc+AbkOup+ygKy6EUXmF40NKeAstdE0c78EB38CT8VyLl40rMAQ4wMB
-         ZDs8XqPvO+AlwQsbbJcPbGKIWxR9Q4TocB1huo6k=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.53.73]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lopa3-1iDkiT0El1-00gtGZ; Fri, 28
- Jun 2019 16:16:14 +0200
-Subject: Re: [v2] coccinelle: semantic code search for missing of_node_put
-To:     Julia Lawall <julia.lawall@lip6.fr>, cocci@systeme.lip6.fr
-Cc:     Wen Yang <wen.yang99@zte.com.cn>, linux-kernel@vger.kernel.org,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-References: <1561690732-20694-1-git-send-email-wen.yang99@zte.com.cn>
- <904b9362-cd01-ffc9-600b-0c48848617a0@web.de>
- <alpine.DEB.2.21.1906281304470.2538@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <36196c4e-a09f-3d0d-5a08-68fa53ee740a@web.de>
-Date:   Fri, 28 Jun 2019 16:16:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 28 Jun 2019 10:16:59 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:37675 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfF1OQ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 10:16:58 -0400
+X-Originating-IP: 86.250.200.211
+Received: from mc-bl-xps13.lan (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 56A001BF205;
+        Fri, 28 Jun 2019 14:16:48 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        David Miller <davem@davemloft.net>, brian.brooks@linaro.org,
+        linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        nadavh@marvell.com, stefanc@marvell.com,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH] driver core: platform: Allow using a dedicated dma_mask for platform_device
+Date:   Fri, 28 Jun 2019 16:15:50 +0200
+Message-Id: <20190628141550.22938-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906281304470.2538@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6TJzD2OmbcEscAXcpelpi6muhWm2XruDunxrw6Hn4QD7cbKMWEv
- jaUb9yB/oshUFhslLAKq1uMMBk3agHq8+KruUQlYg3/reQo1ZTDEL5Ou/QfklU18ulO4TAQ
- B5AycFN2RAFswnpfg3aBMi5MYHdOAprJFGFRp5sM9ItrFLuH+ToDmBRTC6VxQmY0k3dAJYd
- qAFHTRSziJ7GSBU4nG2sA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0GExo9EVfMo=:gzCcthGy6SzAXhBtSASr76
- tcAq5wkIF0hMe0eylDzNtkQteMtc9o00i+MCE3nwuRzNQMqTY4vB9LxR0mcEA+OqWYHxagaGl
- 5bgrv5tiFDxV13R/9pQ43evQtDTEIZ/qIsjPjQ7v8vjbyrzrHwwUdu156kuss6YveKHp8+USw
- EZUKtb5mem1iTP+Ivote0y0JMpXcnDlQ415qxs5C2OBxY3NeU4yN2OZPpowPsr0lcOUOnp+l1
- tBTloFYVLy91CkNaKrVEwjSDG3eIVD3yox93iTOeQLl3qhoAFzIy3FAqeMGyK1H05Alsf4wKq
- YoBrhaWm9IECPOd0y1tpkrm1HwgJzl4hgf4WFlqGpen9VfnsuK1QFSvZ5bmAPXr5lDREzsADs
- sLtm/+JfrRBRR/gse3TrCSANC1J3lA5IGSSWstnwv9pGJ5hOAQbZi0ocurqnhIItqyOSxmeFR
- 9AeWqU+etMBahneA6AmJjdVEtk/WWtsm4v5KIW3iDd8ZQWRVk8DE13e2SCLA9PMSglLzOB5ch
- 84pKdILbxbspVqDPiMvFss5kMi9lqFFIqU8iYzubme4r49Ly4/+I4sDtBgNc1Vn8d1Xx0bBDP
- Qywg92eOkUvX7ok4+Gmp7xP1Z4oHUird9l5aYd6KEW/0RsxEFZZMQBSs1k3XdgAWF+DH96HFr
- 6T/XVykTJJugk38WY3HFFQA1UmjtJek2Z1E0H4LVKnkFS9sFpIb7PmK/nozwShOFtjXjwivzV
- WbF3cJ1+TauUnSNjtvm93okuJTRQN4DyfC7q29lEhZtUkiPc8jzmUycRhGpyINCBXz7riNMhi
- EuYxUEvZpXeE77DnIfNiOJlrQeITRaSU6qguLQn2qMrowW1ajVQGYCrBVFjNKV7IXturhBTs8
- KkhzhluqboTz/y6DF4St40mETBIji5/MGWYwdvZVE0jM4mlHAsEAdul9Zn0j62o5BVx2U2Sm7
- gU/KCI3uOXZ8QxVcNyA7RJk9NxzABaLz41mLGrWJebxB3iYYRBcATENPftJbY5SLBoNSyWgL8
- iNxIGPd+LfP+1IID54KP/aIP7AP6MDqFGw7FTuz9sYFlYk9aNKVFQn1hVaUE0F11x3c4bGWyb
- XPQmQdhw1BoBzu4u6Ocg1tn2cgotmRh3H18
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> +x =3D
->> +(of_=E2=80=A6
->> +|of_=E2=80=A6
->> +)@p1(...);
->
-> Did you actually test this?  I doubt that a position metavariable can be
-> put on a ) of a disjunction.
+This patch attempts to solve a long standing situation where
+dev->dma_mask is a pointer to dev->dma_coherent_mask, meaning that any
+change to the coherent mask will affect the streaming mask.
 
-Would you ever like to support this possibility?
+The API allows to use different values for both masks, but for now
+platform_device built from DT will simply make the dma_mask point to the
+coherent mask.
 
+This is a problem on a least one driver, the PPv2 network driver, which
+needs different streaming and coherent masks to overcome a HW
+limitation. In this case, the issue is a performance degradation since
+the streaming mask isn't as big as it ought to be, causing a lot of
+buffer bounces.
 
->> +|return
->> +(x
->> +|of_fwnode_handle(x)
->> +);
->
-> The original code is much more readable.
+There were previous attempts to fix this issue. One of them by Brian
+Brooks, where the dma_mask is reallocated in the driver itself,
+which wasn't considered to be the best approach :
 
-We have got different views around such specification variants.
+https://lore.kernel.org/netdev/20180820024730.9147-1-brian.brooks@linaro.org/
 
+This lead to a discussion pointing to another attempt to solve the issue,
+by Christoph Hellwig :
 
-> The internal representation will be the same.
+https://lore.kernel.org/lkml/20180829062401.8701-2-hch@lst.de/
 
-I imagine that the Coccinelle software might evolve into additional direct=
-ions.
+This more generic approach ended-up causing regressions on some mfd
+drivers (the sm501 was one of the reports).
 
+The current patch tries to be a bit less generic, and allows setting-up
+the dma_mask for platform devices using a dedicated helper. In this case,
+the dma_mask is allocated in struct platform_object, as suggested by
+Russell King.
 
-Regards,
-Markus
+This helper is then used in platform_device creation code from the DT.
+
+Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+Hi everyone,
+
+This patch, if suitable, would require a lot of testing to detect
+drivers that rely on the streaming mask being the same as the coherent
+mask.
+
+Thanks,
+
+Maxime
+
+ drivers/base/platform.c         | 17 +++++++++++++++++
+ drivers/of/platform.c           |  7 +++++--
+ include/linux/platform_device.h |  1 +
+ 3 files changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 4d1729853d1a..35e7bdb8576c 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -256,9 +256,26 @@ EXPORT_SYMBOL_GPL(platform_add_devices);
+ 
+ struct platform_object {
+ 	struct platform_device pdev;
++	u64 dma_mask;
+ 	char name[];
+ };
+ 
++/**
++ * platform_device_setup_dma_mask - Sets the dma_mask pointer
++ * @pdev: platform device to configure the device's mask
++ *
++ * Sets the dma_mask of the underlying device to point to a dedicated region,
++ * that belongs to the platform_device.
++ */
++void platform_device_setup_dma_mask(struct platform_device *pdev)
++{
++	struct platform_object *pa = container_of(pdev, struct platform_object,
++						  pdev);
++
++	pa->pdev.dev.dma_mask = &pa->dma_mask;
++}
++EXPORT_SYMBOL_GPL(platform_device_setup_dma_mask);
++
+ /**
+  * platform_device_put - destroy a platform device
+  * @pdev: platform device to free
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 04ad312fd85b..4a6980e3356c 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -186,8 +186,11 @@ static struct platform_device *of_platform_device_create_pdata(
+ 		goto err_clear_flag;
+ 
+ 	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+-	if (!dev->dev.dma_mask)
+-		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
++	if (!dev->dev.dma_mask) {
++		platform_device_setup_dma_mask(dev);
++		*dev->dev.dma_mask = dev->dev.coherent_dma_mask;
++	}
++
+ 	dev->dev.bus = &platform_bus_type;
+ 	dev->dev.platform_data = platform_data;
+ 	of_msi_configure(&dev->dev, dev->dev.of_node);
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index cc464850b71e..a95c2d224de9 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -181,6 +181,7 @@ extern int platform_device_add_properties(struct platform_device *pdev,
+ extern int platform_device_add(struct platform_device *pdev);
+ extern void platform_device_del(struct platform_device *pdev);
+ extern void platform_device_put(struct platform_device *pdev);
++extern void platform_device_setup_dma_mask(struct platform_device *pdev);
+ 
+ struct platform_driver {
+ 	int (*probe)(struct platform_device *);
+-- 
+2.20.1
+
