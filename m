@@ -2,39 +2,43 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D23C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA7AC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A292083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CED9204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfF1IrA (ORCPT
+        id S1726583AbfF1Is2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:47:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47316 "EHLO mx1.suse.de"
+        Fri, 28 Jun 2019 04:48:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47472 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725873AbfF1IrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:47:00 -0400
+        id S1725873AbfF1Is2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:48:28 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 13555B123;
-        Fri, 28 Jun 2019 08:46:59 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 10:46:59 +0200
-Message-ID: <s5hv9wq6qrg.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id B99DEAE2D;
+        Fri, 28 Jun 2019 08:48:26 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 10:48:26 +0200
+Message-ID: <s5htvca6qp1.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     "Colin King" <colin.king@canonical.com>
+To:     "Fuqian Huang" <huangfq.daxian@gmail.com>
 Cc:     <alsa-devel@alsa-project.org>,
-        "Oleksandr Andrushchenko" <oleksandr_andrushchenko@epam.com>,
-        <xen-devel@lists.xenproject.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        "Rob Herring" <robh@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <linuxppc-dev@lists.ozlabs.org>,
         "Jaroslav Kysela" <perex@perex.cz>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ALSA: xen-front: fix unintention integer overflow on left shifts
-In-Reply-To: <20190627165853.21864-1-colin.king@canonical.com>
-References: <20190627165853.21864-1-colin.king@canonical.com>
+        "Paul Mackerras" <paulus@samba.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 41/87] sound: ppc: remove memset after dma_alloc_coherent
+In-Reply-To: <20190627174018.4015-1-huangfq.daxian@gmail.com>
+References: <20190627174018.4015-1-huangfq.daxian@gmail.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -45,54 +49,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019 18:58:53 +0200,
-Colin King wrote:
+On Thu, 27 Jun 2019 19:40:17 +0200,
+Fuqian Huang wrote:
 > 
-> From: Colin Ian King <colin.king@canonical.com>
+> In commit af7ddd8a627c
+> ("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
+> dma_alloc_coherent has already zeroed the memory.
+> So memset is not needed.
 > 
-> Shifting the integer value 1 is evaluated using 32-bit
-> arithmetic and then used in an expression that expects a 64-bit
-> value, so there is potentially an integer overflow. Fix this
-> by using the BIT_ULL macro to perform the shift.
-> 
-> Addresses-Coverity: ("Unintentional integer overflow")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 
-The fix is correct, but luckily we didn't hit the integer overflow, as
-all passed values are less than 32bit.
-
-In anyway, applied now.  Thanks.
+Applied, thanks.
 
 
 Takashi
-
-> ---
->  sound/xen/xen_snd_front_alsa.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/xen/xen_snd_front_alsa.c b/sound/xen/xen_snd_front_alsa.c
-> index b14ab512c2ce..e01631959ed8 100644
-> --- a/sound/xen/xen_snd_front_alsa.c
-> +++ b/sound/xen/xen_snd_front_alsa.c
-> @@ -196,7 +196,7 @@ static u64 to_sndif_formats_mask(u64 alsa_formats)
->  	mask = 0;
->  	for (i = 0; i < ARRAY_SIZE(ALSA_SNDIF_FORMATS); i++)
->  		if (pcm_format_to_bits(ALSA_SNDIF_FORMATS[i].alsa) & alsa_formats)
-> -			mask |= 1 << ALSA_SNDIF_FORMATS[i].sndif;
-> +			mask |= BIT_ULL(ALSA_SNDIF_FORMATS[i].sndif);
->  
->  	return mask;
->  }
-> @@ -208,7 +208,7 @@ static u64 to_alsa_formats_mask(u64 sndif_formats)
->  
->  	mask = 0;
->  	for (i = 0; i < ARRAY_SIZE(ALSA_SNDIF_FORMATS); i++)
-> -		if (1 << ALSA_SNDIF_FORMATS[i].sndif & sndif_formats)
-> +		if (BIT_ULL(ALSA_SNDIF_FORMATS[i].sndif) & sndif_formats)
->  			mask |= pcm_format_to_bits(ALSA_SNDIF_FORMATS[i].alsa);
->  
->  	return mask;
-> -- 
-> 2.20.1
-> 
-> 
