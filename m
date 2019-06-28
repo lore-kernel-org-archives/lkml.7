@@ -2,62 +2,117 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165DBC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B7BC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1B02083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C13208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 17:16:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahnblySt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfF1ROW (ORCPT
+        id S1726696AbfF1RQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 13:14:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56446 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725783AbfF1ROW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 13:14:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 38FEDAD94;
-        Fri, 28 Jun 2019 17:14:21 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 10:14:16 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rbtree: avoid generating code twice for the cached
- versions
-Message-ID: <20190628171416.by5gdizl3rcxk5h5@linux-r8p5>
-References: <20190628045008.39926-1-walken@google.com>
+        Fri, 28 Jun 2019 13:16:28 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46554 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfF1RQ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 13:16:27 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h21so7068575qtn.13;
+        Fri, 28 Jun 2019 10:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X/aiZ9J+dd4UJLcrpdr3hoLcNRw4Si2ePjPQfQ4q8YM=;
+        b=ahnblyStPij2rtGufd7uEL9kTluJbQDHGS1iKvW73t2ebo3vRNn8FTuQKgazM07J6O
+         +wXSCQjEJyVN+Z3gV5TMXtCb4Y0BIUZC4KxjAK9eozvCWn7wRcEL7pPsnDG3O9sFCOtj
+         7mtNmpZC6VCXYGNzMz40aPZe0km5xgpLwl3cJ2tu5+2EK3h7m9alVYStSrdTVHqHMtp8
+         JjPRmJwPCsm/WT2+xKeeXM+QzweX3GmM5GeVUw98UEEx+NBdcny3Wqp02cGUnsp03S2w
+         3znGOn57MuwAlyVtWFo05byzrDA0uYw0CMUTrbFQ7ORqxyJYHci8YsBH/OSm/emVhCjd
+         KvHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X/aiZ9J+dd4UJLcrpdr3hoLcNRw4Si2ePjPQfQ4q8YM=;
+        b=A67boiHsH77haAJxP85NCS/+oeF3zPs6EK8GlFkwMxDYtI1xLLaXPaL0HwfcM5c/ec
+         mrFIOf0GEiTirdNQTvkykMBoMRIJ77HkcDTaaqO2lmFAOxwi75sTft0lVSgJrE5InXAE
+         vXIEIZRqX6CQG1K2guSgeApaCBllgy8hT7yb9krXV1fH8XvluLtTGUizwu/TRi5gwNir
+         C7Fk59MIifYf7QUZ4YAIPA8vo5ngaKwqDyt1Re/lkfoIpwn/lMLmDm/3bOeNaAWW4VER
+         EsTV3jYhil70N67MXSQvL5xHejhZ1vr5M0Hh5Y5lZiyogdQY5UhoxQvR04WEoAOzz4hX
+         O6oA==
+X-Gm-Message-State: APjAAAUa6ifSla2KplYVzm3HdNYHBAGaU2RWLK08ttpCXV7tsrj8aTd1
+        GsEOOm7bqpNffRj3m6lpQjVxJzE6z1tbuMgaFbg=
+X-Google-Smtp-Source: APXvYqzeD7ol/qvSpnvEU83iiMeuVww8kn8c1trrLyIBjpx7kD3KA1jNvtOoaae97XqoObXYba1r6IpVH1Cd2BuViC4=
+X-Received: by 2002:aed:36c5:: with SMTP id f63mr9236038qtb.239.1561742186465;
+ Fri, 28 Jun 2019 10:16:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190628045008.39926-1-walken@google.com>
-User-Agent: NeoMutt/20180323
+References: <20190624174219.25513-1-longman@redhat.com> <20190624174219.25513-3-longman@redhat.com>
+ <20190626201900.GC24698@tower.DHCP.thefacebook.com> <063752b2-4f1a-d198-36e7-3e642d4fcf19@redhat.com>
+ <20190627212419.GA25233@tower.DHCP.thefacebook.com> <0100016b9eb7685e-0a5ab625-abb4-4e79-ab86-07744b1e4c3a-000000@email.amazonses.com>
+In-Reply-To: <0100016b9eb7685e-0a5ab625-abb4-4e79-ab86-07744b1e4c3a-000000@email.amazonses.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Fri, 28 Jun 2019 10:16:13 -0700
+Message-ID: <CAHbLzkr+EJWgAQ9VhAdeTtMx+11=AX=mVVEvC-0UihROf2J+PA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mm, slab: Extend vm/drop_caches to shrink kmem slabs
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Roman Gushchin <guro@fb.com>, Waiman Long <longman@redhat.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019, Michel Lespinasse wrote:
-
->As was already noted in rbtree.h, the logic to cache rb_first (or rb_last)
->can easily be implemented externally to the core rbtree api.
+On Fri, Jun 28, 2019 at 8:32 AM Christopher Lameter <cl@linux.com> wrote:
 >
->Change the implementation to do just that. Previously the update of
->rb_leftmost was wired deeper into the implemntation, but there were
->some disadvantages to that - mostly, lib/rbtree.c had separate
->instantiations for rb_insert_color() vs rb_insert_color_cached(), as well
->as rb_erase() vs rb_erase_cached(), which were doing exactly the same
->thing save for the rb_leftmost update at the start of either function.
+> On Thu, 27 Jun 2019, Roman Gushchin wrote:
+>
+> > so that objects belonging to different memory cgroups can share the same page
+> > and kmem_caches.
+> >
+> > It's a fairly big change though.
+>
+> Could this be done at another level? Put a cgoup pointer into the
+> corresponding structures and then go back to just a single kmen_cache for
+> the system as a whole? You can still account them per cgroup and there
+> will be no cleanup problem anymore. You could scan through a slab cache
+> to remove the objects of a certain cgroup and then the fragmentation
+> problem that cgroups create here will be handled by the slab allocators in
+> the traditional way. The duplication of the kmem_cache was not designed
+> into the allocators but bolted on later.
 
-Also:
+I'm afraid this may bring in another problem for memcg page reclaim.
+When shrinking the slabs, the shrinker may end up scanning a very long
+list to find out the slabs for a specific memcg. Particularly for the
+count operation, it may have to scan the list from the beginning all
+the way down to the end. It may take unbounded time.
 
-   text	   data	    bss	    dec	    hex	filename
-   5405	    120	      0	   5525	   1595	lib/rbtree.o-vanilla
-   3827	     96	      0	   3923	    f53	lib/rbtree.o-patch
+When I worked on THP deferred split shrinker problem, I used to do
+like this, but it turns out it may take milliseconds to count the
+objects on the list, but it may just need reclaim a few of them.
+
+>
