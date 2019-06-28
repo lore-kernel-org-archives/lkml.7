@@ -2,85 +2,129 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C22C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8963C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FC22070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB2D92133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfF1DVr convert rfc822-to-8bit (ORCPT
+        id S1727059AbfF1DYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:21:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:62098 "EHLO mga04.intel.com"
+        Thu, 27 Jun 2019 23:24:17 -0400
+Received: from mga11.intel.com ([192.55.52.93]:39351 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbfF1DVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:21:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1726565AbfF1DYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 23:24:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 20:21:46 -0700
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 20:24:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,426,1557212400"; 
-   d="scan'208";a="153250013"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by orsmga007.jf.intel.com with ESMTP; 27 Jun 2019 20:21:46 -0700
-Received: from orsmsx103.amr.corp.intel.com ([169.254.5.135]) by
- ORSMSX101.amr.corp.intel.com ([169.254.8.95]) with mapi id 14.03.0439.000;
- Thu, 27 Jun 2019 20:21:46 -0700
-From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
-To:     Detlev Casanova <detlev.casanova@gmail.com>,
-        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] e1000e: Make watchdog use delayed work
-Thread-Topic: [PATCH v3] e1000e: Make watchdog use delayed work
-Thread-Index: AQHVKXHl35anXlANxkOwN6YqevaOE6awbigw
-Date:   Fri, 28 Jun 2019 03:21:45 +0000
-Message-ID: <309B89C4C689E141A5FF6A0C5FB2118B970B54AA@ORSMSX103.amr.corp.intel.com>
-References: <20190623031437.19716-1-detlev.casanova@gmail.com>
-In-Reply-To: <20190623031437.19716-1-detlev.casanova@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDg0MDBiZWItMGZiNS00OTE4LTgyNzItMzZkOTdmMWNhYmIxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoidjBKRWVabGUyRzh2NzBnY0MrM284YnRvMHZQOGlNbWRlbFo3WkJlKzhRa3JSN0JrUjBrcHJxK0FrbmJvV3IxbiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+   d="asc'?scan'208";a="185498337"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Jun 2019 20:24:14 -0700
+Date:   Fri, 28 Jun 2019 11:21:49 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     "Zhang, Tina" <tina.zhang@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+Subject: Re: [RFC PATCH v3 0/4] Deliver vGPU display vblank event to userspace
+Message-ID: <20190628032149.GD9684@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20190627033802.1663-1-tina.zhang@intel.com>
+ <20190627062231.57tywityo6uyhmyd@sirius.home.kraxel.org>
+ <237F54289DF84E4997F34151298ABEBC876835E5@SHSMSX101.ccr.corp.intel.com>
+ <20190627103133.6ekdwazggi5j5lcl@sirius.home.kraxel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="g++0NlQhRgFs6nMu"
+Content-Disposition: inline
+In-Reply-To: <20190627103133.6ekdwazggi5j5lcl@sirius.home.kraxel.org>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: netdev-owner@vger.kernel.org [mailto:netdev-owner@vger.kernel.org]
-> On Behalf Of Detlev Casanova
-> Sent: Saturday, June 22, 2019 8:15 PM
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S. Miller
-> <davem@davemloft.net>; intel-wired-lan@lists.osuosl.org;
-> netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> Cc: Detlev Casanova <detlev.casanova@gmail.com>
-> Subject: [PATCH v3] e1000e: Make watchdog use delayed work
-> 
-> Use delayed work instead of timers to run the watchdog of the e1000e
-> driver.
-> 
-> Simplify the code with one less middle function.
-> 
-> Signed-off-by: Detlev Casanova <detlev.casanova@gmail.com>
-> ---
->  drivers/net/ethernet/intel/e1000e/e1000.h  |  5 +-
->  drivers/net/ethernet/intel/e1000e/netdev.c | 54 ++++++++++++----------
->  2 files changed, 32 insertions(+), 27 deletions(-)
 
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+--g++0NlQhRgFs6nMu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2019.06.27 12:31:33 +0200, Gerd Hoffmann wrote:
+> > >   Hi,
+> > >=20
+> > > > Instead of delivering page flip events, we choose to post display
+> > > > vblank event. Handling page flip events for both primary plane and
+> > > > cursor plane may make user space quite busy, although we have the
+> > > > mask/unmask mechansim for mitigation. Besides, there are some cases
+> > > > that guest app only uses one framebuffer for both drawing and displ=
+ay.
+> > > > In such case, guest OS won't do the plane page flip when the
+> > > > framebuffer is updated, thus the user land won't be notified about =
+the
+> > > updated framebuffer.
+> > >=20
+> > > What happens when the guest is idle and doesn't draw anything to the
+> > > framebuffer?
+> > The vblank event will be delivered to userspace as well, unless guest O=
+S disable the pipe.
+> > Does it make sense to vfio/display?
+>=20
+> Getting notified only in case there are actual display updates would be
+> a nice optimization, assuming the hardware is able to do that.  If the
+> guest pageflips this is obviously trivial.  Not sure this is possible in
+> case the guest renders directly to the frontbuffer.
+>=20
+> What exactly happens when the guest OS disables the pipe?  Is a vblank
+> event delivered at least once?  That would be very useful because it
+> will be possible for userspace to stop polling altogether without
+> missing the "guest disabled pipe" event.
+>=20
+
+It looks like purpose to use vblank here is to replace user space
+polling totally by kernel event? Which just act as display update
+event to replace user space timer to make it query and update
+planes? Although in theory vblank is not appropriate for this which
+doesn't align with plane update or possible front buffer rendering at
+all, but looks it's just a compromise e.g not sending event for every
+cursor position change, etc.
+
+I think we need to define semantics for this event properly, e.g user
+space purely depends on this event for display update, the opportunity
+for issuing this event is controlled by driver when it's necessary for
+update, etc. Definitely not named as vblank event or only issue at vblank,
+that need to happen for other plane change too.
+
+--=20
+Open Source Technology Center, Intel ltd.
+
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--g++0NlQhRgFs6nMu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXRWHzQAKCRCxBBozTXgY
+J//gAKCL699dZmXJ8voP2zTIzkbKlkEaoACfREQYSfPIUcqIAJ8iRylTd7kOOY0=
+=hNje
+-----END PGP SIGNATURE-----
+
+--g++0NlQhRgFs6nMu--
