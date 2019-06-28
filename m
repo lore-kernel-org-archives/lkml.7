@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F31C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18DCC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99CE2147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5982147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 13:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZAzZ4lAo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ahTFGj2k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfF1NBC (ORCPT
+        id S1726686AbfF1NBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 09:01:02 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:32979 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbfF1NAj (ORCPT
+        Fri, 28 Jun 2019 09:01:10 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38015 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727140AbfF1NAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:00:39 -0400
-Received: by mail-wm1-f67.google.com with SMTP id h19so9322320wme.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 06:00:37 -0700 (PDT)
+        Fri, 28 Jun 2019 09:00:37 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d18so6213663wrs.5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 06:00:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FBLKO27dHaQrao2r2KD0kPHzW+2HdrGXpaJBaZnrR7A=;
-        b=ZAzZ4lAoYkAvxfaNWBiUuUnyQCQbbNKsMpfDtAC8redcT2OJnWdYZ5zLYRV7OxhU0M
-         cTvnN9rKm0edBhzNW9YvVCIQfxKH1oCMLpqOI9D0kamX1Q+OxtfE/rRgXdoOfqDORyb2
-         vo271veLtKQtd02Alrb9H2WZE3BF+ts+V99Qc9+pjEAoC5QzJqRgx5ykA6hd81UQ75dB
-         BQF+FFDizh+8du1kybPRkxbff3Znk4xJz/0hhnoODYbwrd9hvmfJ/A1ommLfNWXLsbtA
-         cEV4z2oRMm33vpwCmMFwuicwduGxtF7d03NUcgpzs+7xA/eeTwYATtYAaZI8gbHrVCrO
-         Y9yA==
+        bh=iIPMb9M330BFTKiYEMbJPjGasEIFSJBAqHuplkfgTXU=;
+        b=ahTFGj2kh3K11SbQbt7t2A+bOhVM9w7V1NcNq7xDZlfsEqailhNG8GwipjuTM9zFZo
+         Ab9hlm4ctVySSs3wPGHrFFYLROgYEshCp0EbdilgEcVO00YkcM5bt8SpLK63K62z/5FZ
+         KCndSQxmExgpFcmUsxIODF3yN8T7zQjTApuNnIh0ON++b0vdXhjtM6ICR4Hc6hajNYtb
+         7vtbOVqqydLF6SFYhKZXf6uBazVsYQwAedP7Go1lUnE0cTqUhWayJADTI8SYdt7ZnYbq
+         lUmxhYWzooWpLiAoAHU9y4+VDoOb8A/kzkU4Z+Ch9dKVgZlYVrX0Vfzrbe0pn4lvn8du
+         q2xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FBLKO27dHaQrao2r2KD0kPHzW+2HdrGXpaJBaZnrR7A=;
-        b=CKfp7uF63y5gHyRg0juHpMUUHm8CGcRWtUCFhy6p00gH7jGNuKoc/5EqcPN8tg/kRc
-         inQpPahiSgr53FzNzxjM/PqjaQ5AorYhbHqIwqPNpZy2np2TCCAb+fArAImwo2NFsG3m
-         jqMEYIWGsuhIgEcJL1zvT6ZCEvGaWv1vFaLMR4+WuTQ8HOUZu+jwoOXvCIACkhOZa7YZ
-         7iPWqDZ4UjfXjbp82UpF0RqwU1tK7U0/ASci543Z/G/2hDFj8+LpszZnCohgutmjr1f9
-         9q2gh9cMalQKUC1/5g8P9tO56zQ4Jf7p1XyDLXwQNELgeWU70YUgp+vlw+Of0mDmy8Da
-         FR9w==
-X-Gm-Message-State: APjAAAXQAteLJExZA24W2EnLO238Pm0/W8sWa9x376yLbng1Ozwit2EP
-        J1S5b9BoV1EtY0nWlccIYZJiQg==
-X-Google-Smtp-Source: APXvYqwqflrL3YrHtECcS2DZIVdWIdGzjH/ag05XABo4jCqYYqZOkm2MrVFedP1fWcXviFy1AABI6w==
-X-Received: by 2002:a1c:9a03:: with SMTP id c3mr7324818wme.101.1561726837254;
-        Fri, 28 Jun 2019 06:00:37 -0700 (PDT)
+        bh=iIPMb9M330BFTKiYEMbJPjGasEIFSJBAqHuplkfgTXU=;
+        b=iIk3DO9xASNXUpx66edI7ZP8aP4H0TPdUIx6VX1EymXPrunT8siBsT9flzbuyUGLZt
+         BlCU3Zsih9qVtnw0cIfD82XGlyUB53FstkZ4idI/v0qMvBheu922gJlnBwghZWeP6q9+
+         SGkL6GBl2lUVlWxPE259N8haBPXUlyayxCcIO3nleQRydbAJnlXoMFx5cxXdG3QXFqcm
+         t0gMQVIlvN1F3mpfcdULHlm7EPWN4e5a8SUhRnxvePgxQqw9K04fM7O6gW0JdEoCyvQW
+         6awetAMYm5cDXsjYSKvPD5qYKBwUgspvH0wOp07D7X4wchWsj5JCoHXdTIiKtgSfA5dZ
+         zvow==
+X-Gm-Message-State: APjAAAXdXWToHdBn23CyjJsE2mr6A2JNamHCT7TGJHhq9CXMLWQi9vi3
+        u+nCqkh8v2D6g1dPMBCSCjkhPg==
+X-Google-Smtp-Source: APXvYqwROanUwgqc+3i5q1ibO6XDuauO0I2FYtxjjciJOruumU2A636loDJTHBEJlQI/To8dJDhTYg==
+X-Received: by 2002:a5d:4950:: with SMTP id r16mr7982736wrs.136.1561726834250;
+        Fri, 28 Jun 2019 06:00:34 -0700 (PDT)
 Received: from localhost.localdomain ([37.157.136.206])
-        by smtp.gmail.com with ESMTPSA id w20sm3717174wra.96.2019.06.28.06.00.36
+        by smtp.gmail.com with ESMTPSA id w20sm3717174wra.96.2019.06.28.06.00.33
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 06:00:36 -0700 (PDT)
+        Fri, 28 Jun 2019 06:00:33 -0700 (PDT)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-media@vger.kernel.org
 Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -64,9 +64,9 @@ Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Tomasz Figa <tfiga@chromium.org>,
         Alexandre Courbot <acourbot@chromium.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 08/11] venus: vdec: allow bigger sizeimage set by clients
-Date:   Fri, 28 Jun 2019 15:59:59 +0300
-Message-Id: <20190628130002.24293-9-stanimir.varbanov@linaro.org>
+Subject: [PATCH v2 06/11] venus: helpers: add three more helper functions
+Date:   Fri, 28 Jun 2019 15:59:57 +0300
+Message-Id: <20190628130002.24293-7-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190628130002.24293-1-stanimir.varbanov@linaro.org>
 References: <20190628130002.24293-1-stanimir.varbanov@linaro.org>
@@ -75,67 +75,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In most of the cases the client will know better what could be
-the maximum size for compressed data buffers. Change the driver
-to permit the user to set bigger size for the compressed buffer
-but make reasonable sanitation.
+This adds three more helper functions:
+ * for internal buffers reallocation, applicable when we are doing
+dynamic resolution change
+ * for initial buffer processing of capture and output queue buffer
+types
+
+All of them will be needed for stateful Codec API support.
 
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- drivers/media/platform/qcom/venus/vdec.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/media/platform/qcom/venus/helpers.c | 82 +++++++++++++++++++++
+ drivers/media/platform/qcom/venus/helpers.h |  3 +
+ 2 files changed, 85 insertions(+)
 
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index e1f998656c07..fb9afee76793 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -133,6 +133,7 @@ vdec_try_fmt_common(struct venus_inst *inst, struct v4l2_format *f)
- 	struct v4l2_pix_format_mplane *pixmp = &f->fmt.pix_mp;
- 	struct v4l2_plane_pix_format *pfmt = pixmp->plane_fmt;
- 	const struct venus_format *fmt;
-+	u32 szimage;
- 
- 	memset(pfmt[0].reserved, 0, sizeof(pfmt[0].reserved));
- 	memset(pixmp->reserved, 0, sizeof(pixmp->reserved));
-@@ -161,14 +162,17 @@ vdec_try_fmt_common(struct venus_inst *inst, struct v4l2_format *f)
- 	pixmp->num_planes = fmt->num_planes;
- 	pixmp->flags = 0;
- 
--	pfmt[0].sizeimage = venus_helper_get_framesz(pixmp->pixelformat,
--						     pixmp->width,
--						     pixmp->height);
-+	szimage = venus_helper_get_framesz(pixmp->pixelformat, pixmp->width,
-+					   pixmp->height);
- 
--	if (f->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
-+	if (f->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
-+		pfmt[0].sizeimage = szimage;
- 		pfmt[0].bytesperline = ALIGN(pixmp->width, 128);
--	else
-+	} else {
-+		pfmt[0].sizeimage = clamp_t(u32, pfmt[0].sizeimage, 0, SZ_8M);
-+		pfmt[0].sizeimage = max(pfmt[0].sizeimage, szimage);
- 		pfmt[0].bytesperline = 0;
-+	}
- 
- 	return fmt;
+diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+index 63af69acc068..ab20fd3b36d9 100644
+--- a/drivers/media/platform/qcom/venus/helpers.c
++++ b/drivers/media/platform/qcom/venus/helpers.c
+@@ -313,6 +313,52 @@ int venus_helper_intbufs_free(struct venus_inst *inst)
  }
-@@ -266,6 +270,7 @@ static int vdec_s_fmt(struct file *file, void *fh, struct v4l2_format *f)
- 		inst->ycbcr_enc = pixmp->ycbcr_enc;
- 		inst->quantization = pixmp->quantization;
- 		inst->xfer_func = pixmp->xfer_func;
-+		inst->input_buf_size = pixmp->plane_fmt[0].sizeimage;
- 	}
+ EXPORT_SYMBOL_GPL(venus_helper_intbufs_free);
  
- 	memset(&format, 0, sizeof(format));
-@@ -728,6 +733,7 @@ static int vdec_queue_setup(struct vb2_queue *q,
- 		sizes[0] = venus_helper_get_framesz(inst->fmt_out->pixfmt,
- 						    inst->out_width,
- 						    inst->out_height);
-+		sizes[0] = max(sizes[0], inst->input_buf_size);
- 		inst->input_buf_size = sizes[0];
- 		*num_buffers = max(*num_buffers, in_num);
- 		inst->num_input_bufs = *num_buffers;
++int venus_helper_intbufs_realloc(struct venus_inst *inst)
++{
++	enum hfi_version ver = inst->core->res->hfi_version;
++	struct hfi_buffer_desc bd;
++	struct intbuf *buf, *n;
++	int ret;
++
++	list_for_each_entry_safe(buf, n, &inst->internalbufs, list) {
++		if (buf->type == HFI_BUFFER_INTERNAL_PERSIST ||
++		    buf->type == HFI_BUFFER_INTERNAL_PERSIST_1)
++			continue;
++
++		memset(&bd, 0, sizeof(bd));
++		bd.buffer_size = buf->size;
++		bd.buffer_type = buf->type;
++		bd.num_buffers = 1;
++		bd.device_addr = buf->da;
++		bd.response_required = true;
++
++		ret = hfi_session_unset_buffers(inst, &bd);
++
++		dma_free_attrs(inst->core->dev, buf->size, buf->va, buf->da,
++			       buf->attrs);
++
++		list_del_init(&buf->list);
++		kfree(buf);
++	}
++
++	ret = intbufs_set_buffer(inst, HFI_BUFFER_INTERNAL_SCRATCH(ver));
++	if (ret)
++		goto err;
++
++	ret = intbufs_set_buffer(inst, HFI_BUFFER_INTERNAL_SCRATCH_1(ver));
++	if (ret)
++		goto err;
++
++	ret = intbufs_set_buffer(inst, HFI_BUFFER_INTERNAL_SCRATCH_2(ver));
++	if (ret)
++		goto err;
++
++	return 0;
++err:
++	return ret;
++}
++EXPORT_SYMBOL_GPL(venus_helper_intbufs_realloc);
++
+ static u32 load_per_instance(struct venus_inst *inst)
+ {
+ 	u32 mbs;
+@@ -1041,6 +1087,42 @@ void venus_helper_vb2_stop_streaming(struct vb2_queue *q)
+ }
+ EXPORT_SYMBOL_GPL(venus_helper_vb2_stop_streaming);
+ 
++int venus_helper_process_initial_cap_bufs(struct venus_inst *inst)
++{
++	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
++	struct v4l2_m2m_buffer *buf, *n;
++	int ret;
++
++	v4l2_m2m_for_each_dst_buf_safe(m2m_ctx, buf, n) {
++		ret = session_process_buf(inst, &buf->vb);
++		if (ret) {
++			return_buf_error(inst, &buf->vb);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(venus_helper_process_initial_cap_bufs);
++
++int venus_helper_process_initial_out_bufs(struct venus_inst *inst)
++{
++	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
++	struct v4l2_m2m_buffer *buf, *n;
++	int ret;
++
++	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
++		ret = session_process_buf(inst, &buf->vb);
++		if (ret) {
++			return_buf_error(inst, &buf->vb);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(venus_helper_process_initial_out_bufs);
++
+ int venus_helper_vb2_start_streaming(struct venus_inst *inst)
+ {
+ 	struct venus_core *core = inst->core;
+diff --git a/drivers/media/platform/qcom/venus/helpers.h b/drivers/media/platform/qcom/venus/helpers.h
+index 70288dc860ff..486598d52811 100644
+--- a/drivers/media/platform/qcom/venus/helpers.h
++++ b/drivers/media/platform/qcom/venus/helpers.h
+@@ -56,7 +56,10 @@ int venus_helper_power_enable(struct venus_core *core, u32 session_type,
+ 			      bool enable);
+ int venus_helper_intbufs_alloc(struct venus_inst *inst);
+ int venus_helper_intbufs_free(struct venus_inst *inst);
++int venus_helper_intbufs_realloc(struct venus_inst *inst);
+ int venus_helper_queue_dpb_bufs(struct venus_inst *inst);
+ int venus_helper_unregister_bufs(struct venus_inst *inst);
+ int venus_helper_load_scale_clocks(struct venus_core *core);
++int venus_helper_process_initial_cap_bufs(struct venus_inst *inst);
++int venus_helper_process_initial_out_bufs(struct venus_inst *inst);
+ #endif
 -- 
 2.17.1
 
