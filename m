@@ -2,127 +2,93 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1D6C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB98C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D3A20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:05:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbR0sg/r"
+	by mail.kernel.org (Postfix) with ESMTP id 97560205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfF1LFw (ORCPT
+        id S1726752AbfF1LHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:05:52 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44706 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfF1LFw (ORCPT
+        Fri, 28 Jun 2019 07:07:54 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:39257
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbfF1LHx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:05:52 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x47so5729690qtk.11;
-        Fri, 28 Jun 2019 04:05:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TQD3Jo1dHRA0U9Z4yvwoDM+Y9nWZex8/mcRO751hgME=;
-        b=YbR0sg/rKOaL03h+DiWSU4ysk+NT9PL05a9fYsci+cy5FuCTxEGXRSPg6Ob8+B1zVt
-         tAukj1brmVUfLw3n3mSbZmLPxUi6wC58oph5iHZnzM4iu1IkKQvEmHb9JmKRnMdsWRPs
-         yNpG4gVrlMsxUE/NyoolJK/TyeGIX65K4GpPpB2aaT02l1yKwDLpq4k6QU7PoHXHPRdN
-         rH8od9VPAaSOn8OIO52k0BAUeGtN+TsvTnak8pAX0R/mhM8q36pr6muDCxkivLN4ju1N
-         EMkCIWeZgh9r/h/1cAatBOaDo2s0DuDCR0vHr+Cb8XL5ubkigSb+ttAhexG/z2X29/2S
-         a3RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TQD3Jo1dHRA0U9Z4yvwoDM+Y9nWZex8/mcRO751hgME=;
-        b=r2UU7Nk0ORDq6suMa6fLb7BMa/BtJ/2LHl2sD3kkxXWx4rY6Ctw9jmhiB5VzE3lJe4
-         kZg9imze8gbxICZB6kEFsMFiy/DK0lbs4YC3GcWYQNSB9jXzBvpnBmNApdOa0nb/zL8p
-         ZY0v09BQDhXGX9NZCKe4znAMYnW3J8dKkGaRdGMQxUViUklH/oGwfujEGp8wF5Bmnr3y
-         WoA7w25eziUjP4253vdUvCvSjMNXZdxIVoMsqN5VwYl+7TkR6PzggAnr+Ig6M6lN5Xf4
-         rPUbsMjTgW+ZCVa/gO1qCznKU2cHN18FAlMTUxoYs6EexXDq+JOmcGESeLqZwnAlK7RD
-         +MoA==
-X-Gm-Message-State: APjAAAUMkBLtDalrHuy9bHCJkIsMXV1ygX8coOYlm2XY+4PVuXj0t6xf
-        dxZoCLzAmt0epLSmPTBIVO3BfXHM
-X-Google-Smtp-Source: APXvYqz9LySnjsdwQIaft4JM8+Lb467eu+Ucee2kMKLVnLBEwkvbZf9YsKomfFNthGEB3eEYjOdvgg==
-X-Received: by 2002:a0c:bd9a:: with SMTP id n26mr7481819qvg.25.1561719951477;
-        Fri, 28 Jun 2019 04:05:51 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id n3sm806816qkk.54.2019.06.28.04.05.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 04:05:51 -0700 (PDT)
-Subject: Re: [PATCH] devfreq: tegra20: add COMMON_CLK dependency
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190628103232.2467959-1-arnd@arndb.de>
- <c2701295-0fd6-c5ec-59d4-6e6b3b3bdb8e@gmail.com>
-Message-ID: <cbf6cff3-f5f5-66ea-9cca-86eb93f23c50@gmail.com>
-Date:   Fri, 28 Jun 2019 14:05:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 28 Jun 2019 07:07:53 -0400
+X-IronPort-AV: E=Sophos;i="5.63,427,1557180000"; 
+   d="scan'208";a="311767956"
+Received: from wifi-eduroam-85-160.paris.inria.fr ([128.93.85.160])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 13:07:51 +0200
+Date:   Fri, 28 Jun 2019 13:07:51 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Wen Yang <wen.yang99@zte.com.cn>, linux-kernel@vger.kernel.org,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        cocci@systeme.lip6.fr
+Subject: Re: [PATCH v2] coccinelle: semantic code search for missing
+ of_node_put
+In-Reply-To: <904b9362-cd01-ffc9-600b-0c48848617a0@web.de>
+Message-ID: <alpine.DEB.2.21.1906281304470.2538@hadrien>
+References: <1561690732-20694-1-git-send-email-wen.yang99@zte.com.cn> <904b9362-cd01-ffc9-600b-0c48848617a0@web.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <c2701295-0fd6-c5ec-59d4-6e6b3b3bdb8e@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323329-202224278-1561720071=:2538"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.06.2019 14:00, Dmitry Osipenko пишет:
-> 28.06.2019 13:32, Arnd Bergmann пишет:
->> Compile-testing the new driver on platforms without CONFIG_COMMON_CLK
->> leads to a link error:
->>
->> drivers/devfreq/tegra20-devfreq.o: In function `tegra_devfreq_target':
->> tegra20-devfreq.c:(.text+0x288): undefined reference to `clk_set_min_rate'
->>
->> Add a dependency on COMMON_CLK to avoid this.
->>
->> Fixes: 1d39ee8dad6d ("PM / devfreq: Introduce driver for NVIDIA Tegra20")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->>  drivers/devfreq/Kconfig | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
->> index f3b242987fd9..defe1d438710 100644
->> --- a/drivers/devfreq/Kconfig
->> +++ b/drivers/devfreq/Kconfig
->> @@ -107,6 +107,7 @@ config ARM_TEGRA_DEVFREQ
->>  config ARM_TEGRA20_DEVFREQ
->>  	tristate "NVIDIA Tegra20 DEVFREQ Driver"
->>  	depends on (TEGRA_MC && TEGRA20_EMC) || COMPILE_TEST
->> +	depends on COMMON_CLK
->>  	select DEVFREQ_GOV_SIMPLE_ONDEMAND
->>  	select PM_OPP
->>  	help
->>
-> 
-> How is it possible to happen? There is a stub for clk_set_min_rate() when COMMON_CLK
-> is disabled .. Could you please show the kernel's config that causes the problem?
-> 
-> Moreover that was me who added the missing stub for clk_set_min_rate() in [1] to fix [2].
-> 
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/include/linux/clk.h?id=b88c9f4129dcec941e5a26508e991c08051ed1ac
-> 
-> [2] https://lists.01.org/pipermail/kbuild-all/2019-April/060292.html
-> 
-> So this patch looks wrong to me because apparently it fixes a non-existent problem.
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Oh, wait. That was "implicit declaration" and this one is "undefined reference"!
-Still looks like something else need to be fixed..
+--8323329-202224278-1561720071=:2538
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+> > +x = @p1\(of_find_all_nodes\|
+>
+> I would find this SmPL disjunction easier to read without the usage
+> of extra backslashes.
+>
+> +x =
+> +(of_…
+> +|of_…
+> +)@p1(...);
+
+Did you actually test this?  I doubt that a position metavariable can be
+put on a ) of a disjunction.
+
+> > +|
+> > +return x;
+> > +|
+> > +return of_fwnode_handle(x);
+>
+> Can a nested SmPL disjunction be helpful at such places?
+>
+> +|return
+> +(x
+> +|of_fwnode_handle(x)
+> +);
+
+The original code is much more readable.  The internal representation will
+be the same.
+
+> > +    when != v4l2_async_notifier_add_fwnode_subdev(<...x...>)
+>
+> Would the specification variant “<+... x ...+>” be relevant
+> for the parameter selection?
+
+I'm indeed quite surprised that <...x...> would be accepted by the parser.
+
+julia
+--8323329-202224278-1561720071=:2538--
