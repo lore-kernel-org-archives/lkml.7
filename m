@@ -2,105 +2,178 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEB5C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62129C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F382083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDD12083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:34:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="d2kzLdC1";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="jTwDqfJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfF1Qd7 (ORCPT
+        id S1726935AbfF1Qe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:33:59 -0400
-Received: from fieldses.org ([173.255.197.46]:37464 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbfF1Qd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:33:59 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id A1FCA1CE6; Fri, 28 Jun 2019 12:33:58 -0400 (EDT)
-Date:   Fri, 28 Jun 2019 12:33:58 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
-Message-ID: <20190628163358.GA31800@fieldses.org>
-References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
- <1561042275-12723-9-git-send-email-bfields@redhat.com>
- <20190621174544.GC25590@fieldses.org>
- <201906211431.E6552108@keescook>
- <20190622190058.GD5343@fieldses.org>
- <201906221320.5BFC134713@keescook>
- <20190624210512.GA20331@fieldses.org>
- <20190626162149.GB4144@fieldses.org>
- <20190627202124.GC16388@fieldses.org>
- <201906272054.6954C08FA@keescook>
+        Fri, 28 Jun 2019 12:34:28 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50642 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726667AbfF1Qe1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 12:34:27 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x5SGWfYS015761;
+        Fri, 28 Jun 2019 09:33:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=EmhpIaJshMDOvbE5U+8uSwIg98rUZbLjquMoASS+As4=;
+ b=d2kzLdC1eeaHJHOoWr+scUpxldlFk6WltbQ2tfkRhX/uSvm9Ex55kZlOo87pGpZUDIDz
+ TVnLNJPHPCbNIsXqZMBPn5fcT2yJW6v+hJ1u6H8jbGe502vDWbsD4oXnPI2Sixu5yjoj
+ G7S3jR6b3/M+LDagStuXIPBAADgl8YoRiL0= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0089730.ppops.net with ESMTP id 2td859jp5r-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jun 2019 09:33:44 -0700
+Received: from prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) by
+ prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 28 Jun 2019 09:33:43 -0700
+Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
+ prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 28 Jun 2019 09:33:43 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 28 Jun 2019 09:33:43 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=cM+e7mu+RQZWeNRM6R1O0otX3emchldp70j7avonOxd7yZq/ADNfcUPU0fpju5NNdnKY5Nb0rwTkl439g9ys2SY/+msRPTRZioI6gGovm33ANMQjcALSCMT7M+oo3l1UkvMrzfSbDV7nobpeyTjsVSb5MX5dwRnSDDLSlWSfVZk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EmhpIaJshMDOvbE5U+8uSwIg98rUZbLjquMoASS+As4=;
+ b=FJarfY0cGMZ6z+BR6rx6zUjLqlgQjbfbKcEP6a4X2i/i92bqDraybPnh20sc+zI78b9ulpcsnZpkNw8DY+w2ygLZlXGxRFzZW/dJT898F8g98yv+YJd+4XivsifXAC9+JI66BepbcUSWV+meL8RGKXiOrrVJYjhHiq3UTarXiWU=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EmhpIaJshMDOvbE5U+8uSwIg98rUZbLjquMoASS+As4=;
+ b=jTwDqfJLEUqryXxoR+eLFrAl2/zXVVFbnAKJNltP6rZISWjW2x88Bb+QgoVhW0foCnSUZ9I0/AhrsTxXMB6JutPWDAUW5LOeyO0RGaJFfM8caU6la9HeTFDZ2VXYs61WbMANebYb/EhCm3e1XL/YAaAXZFNWPU7yJlXYykgeGaM=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB2563.namprd15.prod.outlook.com (20.179.137.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Fri, 28 Jun 2019 16:33:41 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::e594:155f:a43:92ad]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::e594:155f:a43:92ad%6]) with mapi id 15.20.2008.018; Fri, 28 Jun 2019
+ 16:33:41 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Christopher Lameter <cl@linux.com>
+CC:     Waiman Long <longman@redhat.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH 2/2] mm, slab: Extend vm/drop_caches to shrink kmem slabs
+Thread-Topic: [PATCH 2/2] mm, slab: Extend vm/drop_caches to shrink kmem slabs
+Thread-Index: AQHVKrRnjGLXeWaE8kq5EhXDbrxOt6auY3OAgAGdGgCAAAdmgIABMAYAgAAREwA=
+Date:   Fri, 28 Jun 2019 16:33:41 +0000
+Message-ID: <20190628163334.GA3118@tower.DHCP.thefacebook.com>
+References: <20190624174219.25513-1-longman@redhat.com>
+ <20190624174219.25513-3-longman@redhat.com>
+ <20190626201900.GC24698@tower.DHCP.thefacebook.com>
+ <063752b2-4f1a-d198-36e7-3e642d4fcf19@redhat.com>
+ <20190627212419.GA25233@tower.DHCP.thefacebook.com>
+ <0100016b9eb7685e-0a5ab625-abb4-4e79-ab86-07744b1e4c3a-000000@email.amazonses.com>
+In-Reply-To: <0100016b9eb7685e-0a5ab625-abb4-4e79-ab86-07744b1e4c3a-000000@email.amazonses.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR12CA0068.namprd12.prod.outlook.com
+ (2603:10b6:300:103::30) To BN8PR15MB2626.namprd15.prod.outlook.com
+ (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::3:2d3d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 67b08d95-c34e-4225-a222-08d6fbe660fa
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB2563;
+x-ms-traffictypediagnostic: BN8PR15MB2563:
+x-microsoft-antispam-prvs: <BN8PR15MB25634C931DAEF8627FF4E059BEFC0@BN8PR15MB2563.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00826B6158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(366004)(396003)(376002)(346002)(189003)(199004)(8676002)(81156014)(478600001)(81166006)(99286004)(6512007)(6486002)(9686003)(71200400001)(6436002)(486006)(86362001)(102836004)(186003)(11346002)(316002)(7736002)(386003)(76176011)(476003)(4326008)(71190400001)(305945005)(229853002)(2906002)(52116002)(446003)(6506007)(53936002)(1076003)(46003)(6246003)(256004)(6116002)(25786009)(33656002)(14454004)(5660300002)(7416002)(6916009)(73956011)(66946007)(66446008)(66476007)(68736007)(64756008)(14444005)(54906003)(66556008)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2563;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: U6M9W8ycwznHcAf9DXWAcE1cemfxWD7Ji6rzNwd9ui+oXvV1kj77IgrRHH2mgnrheSzPI9i4CQqZ2Oso2dzyDkmHUqGIDggSx4ZNWAS0+QCas+saHjalERQu3fwtwJSFgiuFag0ry+7TIyfhSrR0iquyB1ieLGrY78bgeL8wPSSYDPwxsNOB7N+37OgX7E51biPB2DIuFBEVHXmJGzmRT8/rTA7v0yMizx8LLDUfziSLoX6gXvOKc2eKKWkBV+8bBZ3Z0TvjbBzoE0QnHq0+4LBYTddM7dBGkSzyPfRWhswgpawhN3IPOEfFKTzN/I7tZYFZ+SO2xZvGAJhZxo/7SbLOjn+g9IGi86RUOim1DPTo6PLSMEB0aMP3hbPSKTV0vCibrDuSkBDNPo5WA85exWQfGHAEkxsHb+OAlOCTCPc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7763BC919F3B554094D311CA81F5E330@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201906272054.6954C08FA@keescook>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67b08d95-c34e-4225-a222-08d6fbe660fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 16:33:41.1449
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2563
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=687 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906280188
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 08:58:22PM -0700, Kees Cook wrote:
-> On Thu, Jun 27, 2019 at 04:21:24PM -0400, J. Bruce Fields wrote:
-> > No, I was confused: "\n" is non-printable according to isprint(), so
-> > ESCAPE_ANY_NP *will* escape it.  So this isn't quite so bad.  SSIDs are
-> > usually printed as '%*pE', so arguably we should be escaping the single
-> > quote character too, but at least we're not allowing line breaks
-> > through.  I don't know about non-ascii.
-> 
-> Okay, cool. Given that most things are just trying to log, it seems like
-> it should be safe to have %pE escape non-ascii, non-printable, \, ', and "?
-> 
-> And if we changing that, we're likely changing
-> string_escape_mem(). Looking at callers of string_escape_mem() makes my
-> head spin...
+On Fri, Jun 28, 2019 at 03:32:28PM +0000, Christopher Lameter wrote:
+> On Thu, 27 Jun 2019, Roman Gushchin wrote:
+>=20
+> > so that objects belonging to different memory cgroups can share the sam=
+e page
+> > and kmem_caches.
+> >
+> > It's a fairly big change though.
+>=20
+> Could this be done at another level? Put a cgoup pointer into the
+> corresponding structures and then go back to just a single kmen_cache for
+> the system as a whole?
+> You can still account them per cgroup and there
+> will be no cleanup problem anymore. You could scan through a slab cache
+> to remove the objects of a certain cgroup and then the fragmentation
+> problem that cgroups create here will be handled by the slab allocators i=
+n
+> the traditional way. The duplication of the kmem_cache was not designed
+> into the allocators but bolted on later.
+>=20
 
-kstrdup_quotable:
-	- only a few callers, mostly just logging, but
-	  msm_gpu_crashstate_capture uses it to generate some data that
-	  looks like it goes in a crashdump.  Dunno if there might be
-	  some utility depending on the current escaping. On the other
-	  hand, kstrdup_quotable uses ESCAPE_HEX, "\f\n\r\t\v\a\e\\\""
-	  so those characters are all escaped as \xNN, so I'd hope
-	  any parser would be prepared to unescape any hex character,
-	  they'd have to go out of their way to do anything else.
-string_escape_str:
-	- proc_task_name: ESCAPE_SPACE|ESCAPE_SPECIAL, "\n\\", used for
-	  command name in /proc/<pid>/stat{us}.  No way do I want to
-	  change the format of those files at all.
-	- seq_escape: ESCAPE_OCTAL, esc: haven't surveyed callers
-	  carefully, but this probably shouldn't be changed.
-	- qword_add: ESCAPE_OCTAL, "\\ \n\t", some nfsd upcalls.  Fine
-	  as they are, but the other side will happily accept any octal
-	  or hex escaping.
-string_escape_mem_any_np, string_escape_str_any_np:
-	- totally unused.
-escaped_string: this is the vsnprintf logic.  Tons of users, haven't had
-	a chance to look at them all.  Almost all %*pE, the exceptions
-	don't look important.
+Yeah, this is exactly what I'm talking about. Idk how big the performance
+penalty will be for small and short-living objects, it should be measured.
+But for long-living objects it will be much better for sure...
 
-So the only flag values we care about are ESCAPE_HEX, ESCAPE_OCTAL,
-ESCAPE_SPACE|ESCAPE_SPECIAL, and ESCAPE_ANY_NP.
-
-So this could be cleaned up some if we wanted.
-
-> Anyway, I don't want to block you needlessly. What would like to have
-> be next steps here?
-
-I might still be interested in some cleanup, I find the current logic
-unnecessarily confusing.
-
-But I may just give up and go with my existing patch and put
-off that project indefinitely, especially if there's no real need to fix
-the existing callers.
-
-I don't know....
-
---b.
+Thanks!
