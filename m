@@ -2,137 +2,106 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA69FC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C97C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F336214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401B6215EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:47:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ULWQJchS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfF1SrU (ORCPT
+        id S1726895AbfF1Sr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:47:20 -0400
-Received: from 7.mo6.mail-out.ovh.net ([46.105.59.196]:56781 "EHLO
-        7.mo6.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfF1SrU (ORCPT
+        Fri, 28 Jun 2019 14:47:26 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34024 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfF1SrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:47:20 -0400
-X-Greylist: delayed 512 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Jun 2019 14:47:19 EDT
-Received: from player772.ha.ovh.net (unknown [10.109.146.5])
-        by mo6.mail-out.ovh.net (Postfix) with ESMTP id 6ECB21D1D2B
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 20:38:46 +0200 (CEST)
-Received: from sk2.org (gw.sk2.org [88.186.243.14])
-        (Authenticated sender: steve@sk2.org)
-        by player772.ha.ovh.net (Postfix) with ESMTPSA id D8A3A759C830;
-        Fri, 28 Jun 2019 18:38:42 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 20:38:41 +0200
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: format kernel-parameters -- as code
-Message-ID: <20190628203841.723ccd9c@heffalump.sk2.org>
-In-Reply-To: <20190628091021.457d0301@lwn.net>
-References: <20190627135938.3722-1-steve@sk2.org>
-        <20190628091021.457d0301@lwn.net>
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Fri, 28 Jun 2019 14:47:25 -0400
+Received: by mail-io1-f66.google.com with SMTP id k8so14694608iot.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:47:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TS6M/Nxme28NPi028YG4VL6UkJsnX87eP23dRyQxlL8=;
+        b=ULWQJchSSBGqlKXWeas4g7WIZ8OlQF02e/2fni6ZOZONXYEs3ZCH+r4cic8fiYxfD0
+         eHnbXowAwuPBZ89DrfUkpwTDs9b+1pqQrg7eDqxc7WPuE1R1HXMpIVW8H3p/u/Nljjwe
+         nGgIWQLRB86Fr5HVwK/7FifYn8quFD54pQ1rcG7vEyBMJiIh++rAIfHCNZoFUDN6/r6F
+         e0JJ7ljcCosjh6XyxVdTwFEg+Ryd3//WBaWWOHqgiiJ8CleZ6HuUNXCtKg9lh4/OuQKJ
+         R8YskmnppDVe4ergbv2NJAVXObMYFdGbjt93mjBFWt/coimuZTorjdy0ZETQWq8/UYw6
+         doXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TS6M/Nxme28NPi028YG4VL6UkJsnX87eP23dRyQxlL8=;
+        b=ViMkpBTjlK+GJH1l8Br7xnJxpz2v5wVQrNmMTZt9N0tjbUnWhN++mPeaR0IJf65YqE
+         9PRYfYC7TUbvEByD3WaoNCnCos8P8US469zqYpkZRwWPoRxZiQBr6dKP8Ws7HggKYX2E
+         Lp2Daeqjgnmi5aUdqlyEUJfzLkHROx7xVLkNhuHQXviTXBCcXQTkXr+VHg53xU6EIV0R
+         xe0DODH7YEqCmB+0ltjto/HSwhxTFdHtaZPrKkl29oDAqdfNxCoAv3soG0HMhnGOkA8X
+         4OcO7dHNYa9zQw+I8gd9JSkwbfakHT1c0c+oJK0trGPGkY4ug06PaHR5hUTOofLPoHiz
+         DVdg==
+X-Gm-Message-State: APjAAAX+7xe0o/qm9VqfTpfOCGaF80dywATZ2YHrhJ2O4ebP5+UihE6m
+        5cu0pU6M/Xo4nJgQhRCxH93gDtUYozaRd3uB27VJMpFGzBw=
+X-Google-Smtp-Source: APXvYqyRJ1W1SO0XpPNJiChAzXB+Zx58pCxRD8I5LkVFmL9E/Q77a50+QGKt5gr4PNYscmP2X/zdh9LHxXJb3l9RHn8=
+X-Received: by 2002:a6b:8dcf:: with SMTP id p198mr13241371iod.46.1561747644150;
+ Fri, 28 Jun 2019 11:47:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/+Q2ZDCvK8guFHmIkhT+Ru1w"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 6824642289615850885
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrvddtgdduvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
+References: <20190621011941.186255-1-matthewgarrett@google.com>
+ <20190621011941.186255-25-matthewgarrett@google.com> <CALCETrVUwQP7roLnW6kFG80Cc5U6X_T6AW+BTAftLccYGp8+Ow@mail.gmail.com>
+ <alpine.LRH.2.21.1906270621080.28132@namei.org> <6E53376F-01BB-4795-BC02-24F9CAE00001@amacapital.net>
+ <bce70c8b-9efd-6362-d536-cfbbcf70b0b7@tycho.nsa.gov> <CALCETrXwt43w6rQY6zt0J_3HOaad=+E5PushJNdSOZDBuaYV+Q@mail.gmail.com>
+In-Reply-To: <CALCETrXwt43w6rQY6zt0J_3HOaad=+E5PushJNdSOZDBuaYV+Q@mail.gmail.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Fri, 28 Jun 2019 11:47:12 -0700
+Message-ID: <CACdnJuuy7-tkj86njAqtdJ3dUMu-2T8a2y8DC3fMKBK0z9J6ag@mail.gmail.com>
+Subject: Re: [PATCH V33 24/30] bpf: Restrict bpf when kernel lockdown is in
+ confidentiality mode
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        linux-security@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Chun-Yi Lee <jlee@suse.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        LSM List <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+Q2ZDCvK8guFHmIkhT+Ru1w
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 27, 2019 at 4:27 PM Andy Lutomirski <luto@kernel.org> wrote:
+> They're really quite similar in my mind.  Certainly some things in the
+> "integrity" category give absolutely trivial control over the kernel
+> (e.g. modules) while others make it quite challenging (ioperm), but
+> the end result is very similar.  And quite a few "confidentiality"
+> things genuinely do allow all kernel memory to be read.
+>
+> I agree that finer-grained distinctions could be useful. My concern is
+> that it's a tradeoff, and the other end of the tradeoff is an ABI
+> stability issue.  If someone decides down the road that some feature
+> that is currently "integrity" can be split into a narrow "integrity"
+> feature and a "confidentiality" feature then, if the user policy knows
+> about the individual features, there's a risk of breaking people's
+> systems.  If we keep the fine-grained control, do we have a clear
+> compatibility story?
 
-On Fri, 28 Jun 2019 09:10:21 -0600, Jonathan Corbet <corbet@lwn.net> wrote:
-> On Thu, 27 Jun 2019 15:59:38 +0200
-> > The current ReStructuredText formatting results in "--", used to
-> > indicate the end of the kernel command-line parameters, appearing as
-> > an en-dash instead of two hyphens; this patch formats them as code,
-> > "``--``", as done elsewhere in the documentation.
-> >=20
-> > Signed-off-by: Stephen Kitt <steve@sk2.org> =20
->=20
-> A worthy fix, I've applied it.  This seems like the sort of annoyance that
-> will bite us over and over, though.  We might want to find a more
-> comprehensive way to turn this behavior off.
-
-Right, looking further shows a large number of places where -- is handled
-incorrectly. The following patch disables this =E2=80=9Csmart=E2=80=9D hand=
-ling wholesale;
-I=E2=80=99ll follow up (in the next few days) with patches to use real em- =
-and
-en-dashes where appropriate.
-
-Regards,
-
-Stephen
-
-=46rom 3b10d01decfec38a124be75739b398a3dcd9d5ce Mon Sep 17 00:00:00 2001
-From: Stephen Kitt <steve@sk2.org>
-Date: Fri, 28 Jun 2019 20:34:31 +0200
-Subject: [PATCH] Disable Sphinx SmartyPants in HTML output
-
-The handling of dashes in particular results in confusing
-documentation in a number of instances, since "--" becomes an
-en-dash. This disables SmartyPants wholesale, losing smart quotes
-along with smart dashes.
-
-With Sphinx 1.6 we could fine-tune the conversion, using the new
-smartquotes and smartquotes_action settings.
-
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- Documentation/conf.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 7ace3f8852bd..966dbdfafcd1 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -200,7 +200,7 @@ html_context =3D {
-=20
- # If true, SmartyPants will be used to convert quotes and dashes to
- # typographically correct entities.
--#html_use_smartypants =3D True
-+html_use_smartypants =3D False
-=20
- # Custom sidebar templates, maps document names to template names.
- #html_sidebars =3D {}
---=20
-2.11.0
-
-
---Sig_/+Q2ZDCvK8guFHmIkhT+Ru1w
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl0WXrEACgkQgNMC9Yht
-g5zEiA//UWxO0D8Gj4guz7JvI59f1scnIIvc/bjVR5KM2wr1nDuL32FbRP4KjU0n
-x5vWte2gM2GR5txA7SQAcuOmWd9+lLH25iKJVFug+0l0EcS8rtclH4B8YaPLU07H
-D4dDsaN1sl4+w6aUlU7vEmD2ly+Xu3NlARutOhaIhHIyOpUVASkt2G+Rfb0bpNQs
-YntKIwWPrnAUFYaFd5PXY3okqlLc4RNVT1TrKubS9pqgFMT6jPBMEYcbhbogH3ok
-zta4ZdUHJfIMA7mPzVXHD0haoXFitn7CuvPqP7buOrjbke6Kw7YiR7ciidUZkxdp
-1xqGzqzcF45K2j1lIyOOAr2e1Lmp8r2mNuZWZ+cJGT/zdR0tn9+VNGo0ZDUw8CGu
-yNF3ho/tGaZ58cOmtfhLjoI2Ln0wOhObh9fiDy6TXKfjyBsDikc6JOcg9flwPhcU
-c+GGxoNGj+Cw41drldqgM0I6Dm8Ir7osUbdz0/Pv5JjRu3aWWcrH684noM1NX28p
-yazGhrtVDAHSEjePneKtya2NPjFyc8x1oAEFO62lRSuvtgILGIEionrKeRmaqfP6
-KnRUa1BEUqRzV1fXnV5HTgDfq94Z6pqMdtmWZ4lAkq0xd2MvsAXiNKUTXNnUh1cI
-7Cv2Z9PoehoZZRfgL9weSorwV1cFvZSCXpqHNxTeSmgqsaQWDn0=
-=BYN7
------END PGP SIGNATURE-----
-
---Sig_/+Q2ZDCvK8guFHmIkhT+Ru1w--
+My preference right now is to retain the fine-grained aspect of things
+in the internal API, simply because it'll be more annoying to add it
+back later if we want to. I don't want to expose it via the Lockdown
+user facing API for the reasons you've described, but it's not
+impossible that another LSM would find a way to do this reasonably.
+Does it seem reasonable to punt this discussion out to the point where
+another LSM tries to do something with this information, based on the
+implementation they're attempting?
