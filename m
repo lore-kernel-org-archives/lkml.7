@@ -2,110 +2,150 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B49CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF40C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69BF82063F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E402063F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:04:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Pddsr2r8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfF1IDE (ORCPT
+        id S1726687AbfF1IER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:03:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44892 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbfF1IDD (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:03:03 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1BC50308FC20;
-        Fri, 28 Jun 2019 08:02:59 +0000 (UTC)
-Received: from krava (unknown [10.40.205.128])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DBA351A7DB;
-        Fri, 28 Jun 2019 08:02:55 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 10:02:55 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v6 0/7] perf diff: diff cycles at basic block level
-Message-ID: <20190628080255.GA3427@krava>
-References: <1561713784-30533-1-git-send-email-yao.jin@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561713784-30533-1-git-send-email-yao.jin@linux.intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 28 Jun 2019 08:03:03 +0000 (UTC)
+        Fri, 28 Jun 2019 04:04:17 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:46164 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfF1IEQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:04:16 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190628080415euoutp02e601e44e129257f3d2076fc44310d6bb~sThyTx1_81372213722euoutp02b
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 08:04:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190628080415euoutp02e601e44e129257f3d2076fc44310d6bb~sThyTx1_81372213722euoutp02b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561709055;
+        bh=htDwnlFffhxBEvi8+xBRx4sQ66noavvKHXBdcxpj0oE=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Pddsr2r8tzeZLDWy3mzk9x4ogEV9SU4EjXIA6fr7ZU8tdmrgqmbRofKitW9kt/Lwn
+         tdzAoazMO5PeykB++U9fkOPbndsCveDwcqo5dD6ED0/yu+4d8+sYmIRbtlQIfviIy/
+         qoLSLWEr+oofbsg6K9eohjiAoaOt9HLa4wxBp0Ss=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190628080414eucas1p177132201f2e18478fa8c7eee5cad0236~sThxmNMqC1746317463eucas1p1p;
+        Fri, 28 Jun 2019 08:04:14 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 61.8E.04298.EF9C51D5; Fri, 28
+        Jun 2019 09:04:14 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190628080413eucas1p13f3400f657b4827414737af42f02a57b~sThwqRHhx0956609566eucas1p1u;
+        Fri, 28 Jun 2019 08:04:13 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190628080413eusmtrp1e13deb5ff2bc58387fa51528ec2cfce4~sThwcK1Pb2367323673eusmtrp1U;
+        Fri, 28 Jun 2019 08:04:13 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-e9-5d15c9fe74f1
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 87.10.04140.DF9C51D5; Fri, 28
+        Jun 2019 09:04:13 +0100 (BST)
+Received: from imaximets.rnd.samsung.ru (unknown [106.109.129.180]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190628080412eusmtip189a4ddd4e3bb6ce2297a10e4e641928c~sThvrvVfh2337623376eusmtip1h;
+        Fri, 28 Jun 2019 08:04:12 +0000 (GMT)
+From:   Ilya Maximets <i.maximets@samsung.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ilya Maximets <i.maximets@samsung.com>
+Subject: [PATCH bpf v6 0/2] xdp: fix hang while unregistering device bound
+ to xdp socket
+Date:   Fri, 28 Jun 2019 11:04:05 +0300
+Message-Id: <20190628080407.30354-1-i.maximets@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0hTYRjG+3a2neNldZy31yVqQ/8oygtEHSjMIOxQQSqYoFmtPKikU3a8
+        FyQhpitT1FgTE8tK3eYlGV5WSA5vKSzUIA28VEJeULOVzhRpx6P03+99nue98PERmLRYJCOS
+        lRmMSqlIkYsdhe39G5Zj2x/c44MnityprcJWRFl7B8RU3fM1jKr+WCCkPj3YwKn+uQIxZWrW
+        YtSYqVpMNZgH7VqtB9VR2o3CnGhj44SA7qqaxOm6d/MCWj0+itGah18x+rFRh2hrm08EHut4
+        OoFJSc5iVEGhNxyTbBubePoLPKfZWCbIR0aRGjkQQB6HZaterEaOhJRsQLAwMyfii98IGk0j
+        SI0Ie2FF0JKw19C7uiXgWErWI7AYcvm8DUGFYQ1xhpg8CkP63h12I2Ww2tmBcyGM1GJg/F4p
+        5AxXMhYma76JORaSAVC52IZzLCFPwTNLJc5v8wV963uMawZyUwwzr7U4dxGQ58Bgy+YzrrAw
+        YNzNe8NwxSMhz/dgumAe8b1FCDTmbQFvnAHjomVnDkYehhZTEC+fBU1TP+LH74fxJRdOxuxY
+        3q7BeFkCRYVSPu0Pmz31GM8ymFi27l5Aw9TgU8S/TzwMroxgZcin6v+uWoR0yJPJZFMTGTZE
+        yWQHsopUNlOZGHgrLbUN2T/I8PbAr070Z/SmGZEEkjtL/Lrc4qUiRRabm2pGQGByN4mXxS5J
+        EhS5eYwq7boqM4VhzeggIZR7Su7sm4mTkomKDOY2w6Qzqj1XQDjI8lFAiZqJ9jWs+4QG5QXY
+        Vq5crdXV5ZT/9Scivqi8ZVvOAv2hrrUDnRnUbOnnawanFo+wkQsOS1MZyjH9qv5S3zJ5gr0c
+        Fbw+NnQxSiRr08S81HpNN/dF+6jDIbJm8OcPXfLJmNqS++eLw13i/LqfuDYZ9O6RZW/uvp3v
+        YV7N0r5yIZukCDmCqVjFPx0kJL8cAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsVy+t/xu7p/T4rGGhxZKWrxp20Do8XnI8fZ
+        LBYv/MZsMed8C4vFlfaf7BbHXrSwWexaN5PZ4vKuOWwWKw6dAIotELPY3r+P0YHbY8vKm0we
+        O2fdZfdYvOclk0fXjUvMHtO7HzJ79G1ZxejxeZNcAHuUnk1RfmlJqkJGfnGJrVK0oYWRnqGl
+        hZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsaPn7/ZCxaxV6zbMoGpgXELaxcjJ4eEgInE
+        kY9/mLoYuTiEBJYySrxYvp4ZIiEl8ePXBagiYYk/17rYIIq+MUpManrHApJgE9CROLX6CCOI
+        LQLU8HHHdnYQm1lgIbPEl0kmILawQITEgkltYDUsAqoSU15vAqvhFbCWmHtuCjvEAnmJ1RsO
+        ME9g5FnAyLCKUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMjMHy3Hfu5ZQdj17vgQ4wCHIxKPLwK
+        O0VihVgTy4orcw8xSnAwK4nwSp4DCvGmJFZWpRblxxeV5qQWH2I0BVo+kVlKNDkfGFt5JfGG
+        pobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYte43N7g1PM6LjTmu9qrL
+        /uBuhwm/bhvFbfV596CKo6X7X/Zj/ZpXGVVCmuHhISVuCd1rf3rzrpb3uXOs1Xr/6zvmwW6X
+        dugaMTJu6hVUatfIknq/q35ZzuRVjSuXNN+5POPL/DsTw47f3+I+Na1u4sf9O4LYtbY437vw
+        I6bLPD1WUEPH201SiaU4I9FQi7moOBEAMN6RiHUCAAA=
+X-CMS-MailID: 20190628080413eucas1p13f3400f657b4827414737af42f02a57b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190628080413eucas1p13f3400f657b4827414737af42f02a57b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190628080413eucas1p13f3400f657b4827414737af42f02a57b
+References: <CGME20190628080413eucas1p13f3400f657b4827414737af42f02a57b@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 05:22:57PM +0800, Jin Yao wrote:
-> In some cases small changes in hot loops can show big differences.
-> But it's difficult to identify these differences.
-> 
-> perf diff currently can only diff symbols (functions). We can also expand
-> it to diff cycles of individual programs blocks as reported by timed LBR.
-> This would allow to identify changes in specific code accurately.
-> 
-> With this patch set, for example,
-> 
->  $ perf record -b ./div
->  $ perf record -b ./div
->  $ perf diff -c cycles
-> 
->  # Event 'cycles'
->  #
->  # Baseline                                       [Program Block Range] Cycles Diff  Shared Object     Symbol
->  # ........  ......................................................................  ................  ..................................
->  #
->      48.75%                                             [div.c:42 -> div.c:45]  147  div               [.] main
->      48.75%                                             [div.c:31 -> div.c:40]    4  div               [.] main
->      48.75%                                             [div.c:40 -> div.c:40]    0  div               [.] main
->      48.75%                                             [div.c:42 -> div.c:42]    0  div               [.] main
->      48.75%                                             [div.c:42 -> div.c:44]    0  div               [.] main
->      19.02%                                 [random_r.c:357 -> random_r.c:360]    0  libc-2.23.so      [.] __random_r
->      19.02%                                 [random_r.c:357 -> random_r.c:373]    0  libc-2.23.so      [.] __random_r
->      19.02%                                 [random_r.c:357 -> random_r.c:376]    0  libc-2.23.so      [.] __random_r
->      19.02%                                 [random_r.c:357 -> random_r.c:380]    0  libc-2.23.so      [.] __random_r
->      19.02%                                 [random_r.c:357 -> random_r.c:392]    0  libc-2.23.so      [.] __random_r
->      16.17%                                     [random.c:288 -> random.c:291]    0  libc-2.23.so      [.] __random
->      16.17%                                     [random.c:288 -> random.c:291]    0  libc-2.23.so      [.] __random
->      16.17%                                     [random.c:288 -> random.c:295]    0  libc-2.23.so      [.] __random
->      16.17%                                     [random.c:288 -> random.c:297]    0  libc-2.23.so      [.] __random
->      16.17%                                     [random.c:291 -> random.c:291]    0  libc-2.23.so      [.] __random
->      16.17%                                     [random.c:293 -> random.c:293]    0  libc-2.23.so      [.] __random
->       8.21%                                             [div.c:22 -> div.c:22]  148  div               [.] compute_flag
->       8.21%                                             [div.c:22 -> div.c:25]    0  div               [.] compute_flag
->       8.21%                                             [div.c:27 -> div.c:28]    0  div               [.] compute_flag
->       5.52%                                           [rand.c:26 -> rand.c:27]    0  libc-2.23.so      [.] rand
->       5.52%                                           [rand.c:26 -> rand.c:28]    0  libc-2.23.so      [.] rand
->       2.27%                                         [rand@plt+0 -> rand@plt+0]    0  div               [.] rand@plt
->       0.01%                                 [entry_64.S:694 -> entry_64.S:694]   16  [kernel.vmlinux]  [k] native_irq_return_iret
->       0.00%                                       [fair.c:7676 -> fair.c:7665]  162  [kernel.vmlinux]  [k] update_blocked_averages
-> 
->  '[Program Block Range]' indicates the range of program basic block
->  (start -> end). If we can find the source line it prints the source
->  line otherwise it prints the symbol+offset instead.
-> 
->  v6:
->  ---
->  Remove the 'ops' argument in hists__add_entry_block. No functional change.
-> 
->  Changed patches
->   perf util: Add block_info in hist_entry 
->   perf diff: Use hists to manage basic blocks per symbol
+Version 6:
 
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+    * Better names for socket state.
 
-thanks,
-jirka
+Version 5:
+
+    * Fixed incorrect handling of rtnl_lock.
+
+Version 4:
+
+    * 'xdp_umem_clear_dev' exposed to be used while unregistering.
+    * Added XDP socket state to track if resources already unbinded.
+    * Splitted in two fixes.
+
+Version 3:
+
+    * Declaration lines ordered from longest to shortest.
+    * Checking of event type moved to the top to avoid unnecessary
+      locking.
+
+Version 2:
+
+    * Completely re-implemented using netdev event handler.
+
+Ilya Maximets (2):
+  xdp: hold device for umem regardless of zero-copy mode
+  xdp: fix hang while unregistering device bound to xdp socket
+
+ include/net/xdp_sock.h |  5 +++
+ net/xdp/xdp_umem.c     | 21 +++++-----
+ net/xdp/xdp_umem.h     |  1 +
+ net/xdp/xsk.c          | 87 ++++++++++++++++++++++++++++++++++++------
+ 4 files changed, 93 insertions(+), 21 deletions(-)
+
+-- 
+2.17.1
+
