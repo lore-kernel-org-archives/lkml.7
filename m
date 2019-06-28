@@ -2,373 +2,252 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA3BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136EBC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060192086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB42F2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 02:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4PVPG1V"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VqQwvT2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfF1CWT (ORCPT
+        id S1726935AbfF1CWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 22:22:19 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43367 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbfF1CWR (ORCPT
+        Thu, 27 Jun 2019 22:22:23 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:39702 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbfF1CWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:22:17 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m14so3543719qka.10;
-        Thu, 27 Jun 2019 19:22:16 -0700 (PDT)
+        Thu, 27 Jun 2019 22:22:19 -0400
+Received: by mail-pf1-f201.google.com with SMTP id 6so2843729pfi.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:22:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vjNWGiccp2JQ2DtMTO4a0fFhfzg0q9Bf38aKAWXJbiw=;
-        b=K4PVPG1VFRXu47fpUE79VtOOTyoPypgrnf/6/MbDMjqA2moLRbgVJfPyvc0nZocmx+
-         04xPR5Suy6hkf8fgN3sF9aKjzR/Xr8t0ZQYzse0yFz2+pcjj/Wo6een36zQdsdgvOWOC
-         Q9u5J3WDgEEg4HmrjGwrZiTwKQIKR6DB5ZDWFByiH0FUvaUnsr6zpduffmDalNLfPP6S
-         6WBGY141WdzhKPW8T/bRqpE6FZfhVaIX9rFhvE+ORGAtuUyQNjSyXsrZWlhbT0SsLeVT
-         pRQ/Q2PfG2repiCamFi5O1xK3M0KwWNjIf34c3ixLGWb/oW3ZL8Cv9hvrPQAWddi+/91
-         Ml2g==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=89YgFJIrqXM8qRSG+E6N6dSW7Vv7nFUkhehxmQ5rx7A=;
+        b=VqQwvT2lRkCQZFzdzcch9SsmHUIQdkdMiPm5ueyyq+Ajja/aq0V6lt1z8vPNJYwkkn
+         d+WsVWWSvr+ekZlXGYTOg2kagGwKNEDrEskeh3W3v0P0qI9wpR7LLSeyHGDqFBFlUkIF
+         IT3TfBx+OsW/9ARlplhWmX+QHieakhLEBJNgKLBkWRgiVub9RLBslw9dC7Q1G8rZfQ/i
+         JO8A+2V4uM50uV+QkNKrp+ntsRKOA1cGaA8u7nUmAWVIfyP17gJtn7CYi91QBHjANONX
+         nwcfbydsLoD/cpfkjgDVftHdl60bvph2981csOScTWrgqNscgpr1ca+1DEoNiSDMMlUH
+         MD2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vjNWGiccp2JQ2DtMTO4a0fFhfzg0q9Bf38aKAWXJbiw=;
-        b=Nr9zAYx/RStfpBU2op8D+lJ4KJM/140+gprqGaS/aRoqr0OOnOdPGia/ie4Lrqgjq+
-         89G7kZOVqdXVEAAorSYEEcFMLJGokQ+1XQsUuis438AY5U4IiJuNQkXYpCat8lPfbigu
-         Uu2NXcyDg/lRL9uEXgjdBYOZ/U+PAj/eoFg5xF4HMnyJh45hT/3dj+BoXOVu7kbB3L9N
-         l6rs4yfREzc9TkYVtK2IpG71MqcHfAJ4SBhKoYg+ylxjKG/P6XEGp8WH70RhFVfUhyJx
-         mVmQpAwsAAyTtLqUOnCoiHi4X2MRCrIZoYuf9AhhRxR37i2/4c7ttOCQ0wOIK9HUJ5vC
-         Xbaw==
-X-Gm-Message-State: APjAAAX/ATUbyAi9N4JcQZfVHy89xsPXtEVydHZ+iVUHKhxESn1aKnlm
-        npeGxEDxo6eqEqzHfxFHwE6RpLjBfWoxaeO7eCjcbIq/a22p/Q==
-X-Google-Smtp-Source: APXvYqxmv+/yQNpyvbazEjP/MXPf949MYaS9chXluWkU8/Zw4em0CHNuUriQj2781bEw8TUV6ctzrn/K4qtbTQ5/BE0=
-X-Received: by 2002:ae9:d803:: with SMTP id u3mr6639812qkf.437.1561688535946;
- Thu, 27 Jun 2019 19:22:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190627090446.GG7221@shao2-debian> <20190627155029.GC4866@mini-arch>
- <20190627172932.GD4866@mini-arch>
-In-Reply-To: <20190627172932.GD4866@mini-arch>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 27 Jun 2019 19:22:04 -0700
-Message-ID: <CAEf4Bzbf8OE9TUV2Pq7HZp3PYhoUgMzH-Gs+GMafTPwPc_jYxA@mail.gmail.com>
-Subject: Re: [bpf/tools] cd17d77705: kernel_selftests.bpf.test_sock_addr.sh.fail
-To:     Stanislav Fomichev <sdf@fomichev.me>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        bpf <bpf@vger.kernel.org>, lkp@01.org
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=89YgFJIrqXM8qRSG+E6N6dSW7Vv7nFUkhehxmQ5rx7A=;
+        b=j4c8u99cQGlpkDzcPco+yCLX9CNFQJO54P4mkpcfFe+tF4rk/n5gwsbim7rdy4EN2j
+         xqk6AhDg1RtUNSQkfvpVoCtP1257V0A0ElCgb6Og8nVOA2tubsCQHpKZ3LWt5YUTAwAw
+         tl20nCpfB8/IxQnU6Kc2u9VG+eAobByDYOKCXto8lX8EHNhrKdh0oXEysEFqNBtFpp7h
+         X8kzZ7K8VBUOpi+uzC6ow4fQTGF/E1z+AOQ3dVILyRsJZs4zLGXk4ju9NUYYlSX+HLWE
+         y4MKvDmhpceMwUfkDRnszziqjnFPV4pTUYBs6L3DA1TxK49YxzS0A5wR68G3R5G45mfN
+         NOCA==
+X-Gm-Message-State: APjAAAVZkrMLLjgUumi+5yLDgqzGCRyHWR+cabIrcv0cPFtKsn57Qnmp
+        b1A8Xe/vrqnBnwzHMPu5po037nJ00PenYq0=
+X-Google-Smtp-Source: APXvYqw1ot1372jbeNDKajTYOcXMwh+DJBJdaGwbvvTb3kHabkFfK75iBoCDk9swduxWOmhTuInaVwVZqT9UH2E=
+X-Received: by 2002:a63:ea0a:: with SMTP id c10mr7098204pgi.426.1561688538188;
+ Thu, 27 Jun 2019 19:22:18 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 19:22:02 -0700
+In-Reply-To: <20190628022202.118166-1-saravanak@google.com>
+Message-Id: <20190628022202.118166-4-saravanak@google.com>
+Mime-Version: 1.0
+References: <20190628022202.118166-1-saravanak@google.com>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v2 3/3] driver core: Add sync_state driver/bus callback
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 10:29 AM Stanislav Fomichev <sdf@fomichev.me> wrote=
-:
->
-> On 06/27, Stanislav Fomichev wrote:
-> > On 06/27, kernel test robot wrote:
-> > > FYI, we noticed the following commit (built with gcc-7):
-> > >
-> > > commit: cd17d77705780e2270937fb3cbd2b985adab3edc ("bpf/tools: sync bp=
-f.h")
-> > > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git mast=
-er
-> > >
-> > > in testcase: kernel_selftests
-> > > with following parameters:
-> > >
-> > >     group: kselftests-00
-> > >
-> > > test-description: The kernel contains a set of "self tests" under the=
- tools/testing/selftests/ directory. These are intended to be small unit te=
-sts to exercise individual code paths in the kernel.
-> > > test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> > >
-> > >
-> > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp=
- 2 -m 8G
-> > >
-> > > caused below changes (please refer to attached dmesg/kmsg for entire =
-log/backtrace):
-> > >
-> > > # ; int connect_v6_prog(struct bpf_sock_addr *ctx)
-> > > # 0: (bf) r6 =3D r1
-> > > # 1: (18) r1 =3D 0x100000000000000
-> > > # ; tuple.ipv6.daddr[0] =3D bpf_htonl(DST_REWRITE_IP6_0);
-> > > # 3: (7b) *(u64 *)(r10 -16) =3D r1
-> > > # 4: (b7) r1 =3D 169476096
-> > > # ; memset(&tuple.ipv6.sport, 0, sizeof(tuple.ipv6.sport));
-> > > # 5: (63) *(u32 *)(r10 -8) =3D r1
-> > > # 6: (b7) r7 =3D 0
-> > > # ; tuple.ipv6.daddr[0] =3D bpf_htonl(DST_REWRITE_IP6_0);
-> > > # 7: (7b) *(u64 *)(r10 -24) =3D r7
-> > > # 8: (7b) *(u64 *)(r10 -32) =3D r7
-> > > # 9: (7b) *(u64 *)(r10 -40) =3D r7
-> > > # ; if (ctx->type !=3D SOCK_STREAM && ctx->type !=3D SOCK_DGRAM)
-> > > # 10: (61) r1 =3D *(u32 *)(r6 +32)
-> > > # ; if (ctx->type !=3D SOCK_STREAM && ctx->type !=3D SOCK_DGRAM)
-> > > # 11: (bf) r2 =3D r1
-> > > # 12: (07) r2 +=3D -1
-> > > # 13: (67) r2 <<=3D 32
-> > > # 14: (77) r2 >>=3D 32
-> > > # 15: (25) if r2 > 0x1 goto pc+33
-> > > #  R1=3Dinv(id=3D0,umax_value=3D4294967295,var_off=3D(0x0; 0xffffffff=
-)) R2=3Dinv(id=3D0,umax_value=3D1,var_off=3D(0x0; 0x1)) R6=3Dctx(id=3D0,off=
-=3D0,imm=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm =
-fp-24=3D00000000 fp-32=3D00000000 fp-40=3D00000000
-> > > # ; else if (ctx->type =3D=3D SOCK_STREAM)
-> > > # 16: (55) if r1 !=3D 0x1 goto pc+8
-> > > #  R1=3Dinv1 R2=3Dinv(id=3D0,umax_value=3D1,var_off=3D(0x0; 0x1)) R6=
-=3Dctx(id=3D0,off=3D0,imm=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm =
-fp-16=3Dmmmmmmmm fp-24=3D00000000 fp-32=3D00000000 fp-40=3D00000000
-> > > # 17: (bf) r2 =3D r10
-> > > # ; sk =3D bpf_sk_lookup_tcp(ctx, &tuple, sizeof(tuple.ipv6),
-> > > # 18: (07) r2 +=3D -40
-> > > # 19: (bf) r1 =3D r6
-> > > # 20: (b7) r3 =3D 36
-> > > # 21: (b7) r4 =3D -1
-> > > # 22: (b7) r5 =3D 0
-> > > # 23: (85) call bpf_sk_lookup_tcp#84
-> > > # 24: (05) goto pc+7
-> > > # ; if (!sk)
-> > > # 32: (15) if r0 =3D=3D 0x0 goto pc+16
-> > > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R6=3Dctx(id=3D0,o=
-ff=3D0,imm=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmm=
-m fp-24=3Dmmmmmmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > > # ; if (sk->src_ip6[0] !=3D tuple.ipv6.daddr[0] ||
-> > > # 33: (61) r1 =3D *(u32 *)(r0 +28)
-> > > # ; if (sk->src_ip6[0] !=3D tuple.ipv6.daddr[0] ||
-> > > # 34: (61) r2 =3D *(u32 *)(r10 -24)
-> > > # ; if (sk->src_ip6[0] !=3D tuple.ipv6.daddr[0] ||
-> > > # 35: (5d) if r1 !=3D r2 goto pc+11
-> > > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=3Dinv(id=3D0,u=
-max_value=3D4294967295,var_off=3D(0x0; 0xffffffff)) R2=3Dinv(id=3D0,umax_va=
-lue=3D4294967295,var_off=3D(0x0; 0xffffffff)) R6=3Dctx(id=3D0,off=3D0,imm=
-=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm fp-24=3D=
-mmmmmmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > > # ; sk->src_ip6[1] !=3D tuple.ipv6.daddr[1] ||
-> > > # 36: (61) r1 =3D *(u32 *)(r0 +32)
-> > > # ; sk->src_ip6[1] !=3D tuple.ipv6.daddr[1] ||
-> > > # 37: (61) r2 =3D *(u32 *)(r10 -20)
-> > > # ; sk->src_ip6[1] !=3D tuple.ipv6.daddr[1] ||
-> > > # 38: (5d) if r1 !=3D r2 goto pc+8
-> > > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=3Dinv(id=3D0,u=
-max_value=3D4294967295,var_off=3D(0x0; 0xffffffff)) R2=3Dinv(id=3D0,umax_va=
-lue=3D4294967295,var_off=3D(0x0; 0xffffffff)) R6=3Dctx(id=3D0,off=3D0,imm=
-=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm fp-24=3D=
-mmmmmmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > > # ; sk->src_ip6[2] !=3D tuple.ipv6.daddr[2] ||
-> > > # 39: (61) r1 =3D *(u32 *)(r0 +36)
-> > > # ; sk->src_ip6[2] !=3D tuple.ipv6.daddr[2] ||
-> > > # 40: (61) r2 =3D *(u32 *)(r10 -16)
-> > > # ; sk->src_ip6[2] !=3D tuple.ipv6.daddr[2] ||
-> > > # 41: (5d) if r1 !=3D r2 goto pc+5
-> > > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=3Dinv(id=3D0,u=
-max_value=3D4294967295,var_off=3D(0x0; 0xffffffff)) R2=3Dinv(id=3D0,umax_va=
-lue=3D4294967295,var_off=3D(0x0; 0xffffffff)) R6=3Dctx(id=3D0,off=3D0,imm=
-=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm fp-24=3D=
-mmmmmmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > > # ; sk->src_ip6[3] !=3D tuple.ipv6.daddr[3] ||
-> > > # 42: (61) r1 =3D *(u32 *)(r0 +40)
-> > > # ; sk->src_ip6[3] !=3D tuple.ipv6.daddr[3] ||
-> > > # 43: (61) r2 =3D *(u32 *)(r10 -12)
-> > > # ; sk->src_ip6[3] !=3D tuple.ipv6.daddr[3] ||
-> > > # 44: (5d) if r1 !=3D r2 goto pc+2
-> > > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=3Dinv(id=3D0,u=
-max_value=3D4294967295,var_off=3D(0x0; 0xffffffff)) R2=3Dinv(id=3D0,umax_va=
-lue=3D4294967295,var_off=3D(0x0; 0xffffffff)) R6=3Dctx(id=3D0,off=3D0,imm=
-=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm fp-24=3D=
-mmmmmmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > > # ; sk->src_port !=3D DST_REWRITE_PORT6) {
-> > > # 45: (61) r1 =3D *(u32 *)(r0 +44)
-> > > # ; if (sk->src_ip6[0] !=3D tuple.ipv6.daddr[0] ||
-> > > # 46: (15) if r1 =3D=3D 0x1a0a goto pc+4
-> > > #  R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=3Dinv(id=3D0,u=
-max_value=3D4294967295,var_off=3D(0x0; 0xffffffff)) R2=3Dinv(id=3D0,umax_va=
-lue=3D4294967295,var_off=3D(0x0; 0xffffffff)) R6=3Dctx(id=3D0,off=3D0,imm=
-=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D????mmmm fp-16=3Dmmmmmmmm fp-24=3D=
-mmmmmmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm refs=3D2
-> > > # ; bpf_sk_release(sk);
-> > > # 47: (bf) r1 =3D r0
-> > > # 48: (85) call bpf_sk_release#86
-> > > # ; }
-> > > # 49: (bf) r0 =3D r7
-> > > # 50: (95) exit
-> > > #
-> > > # from 46 to 51: R0=3Dsock(id=3D0,ref_obj_id=3D2,off=3D0,imm=3D0) R1=
-=3Dinv6666 R2=3Dinv(id=3D0,umax_value=3D4294967295,var_off=3D(0x0; 0xffffff=
-ff)) R6=3Dctx(id=3D0,off=3D0,imm=3D0) R7=3Dinv0 R10=3Dfp0,call_-1 fp-8=3D??=
-??mmmm fp-16=3Dmmmmmmmm fp-24=3Dmmmmmmmm fp-32=3Dmmmmmmmm fp-40=3Dmmmmmmmm =
-refs=3D2
-> > > # ; bpf_sk_release(sk);
-> > > # 51: (bf) r1 =3D r0
-> > > # 52: (85) call bpf_sk_release#86
-> > > # 53: (b7) r1 =3D 2586
-> > > # ; ctx->user_port =3D bpf_htons(DST_REWRITE_PORT6);
-> > > # 54: (63) *(u32 *)(r6 +24) =3D r1
-> > > # 55: (18) r1 =3D 0x100000000000000
-> > > # ; ctx->user_ip6[2] =3D bpf_htonl(DST_REWRITE_IP6_2);
-> > > # 57: (7b) *(u64 *)(r6 +16) =3D r1
-> > > # invalid bpf_context access off=3D16 size=3D8
-> > This looks like clang doing single u64 write for user_ip6[2] and
-> > user_ip6[3] instead of two u32. I don't think we allow that.
-> >
-> > I've seen this a couple of times myself while playing with some
-> > progs, but not sure what's the right way to 'fix' it.
-> >
-> Any thoughts about the patch below? Another way to "fix" it
+This sync_state driver/bus callback is called once all the consumers
+of a supplier have probed successfully.
 
-I'll give it a more thorough look a bit later, but see my comments below.
+This allows the supplier device's driver/bus to sync the supplier
+device's state to the software state with the guarantee that all the
+consumers are actively managing the resources provided by the supplier
+device.
 
-> would be to mark context accesses 'volatile' in bpf progs, but that sound=
-s
-> a bit gross.
->
-> diff --git a/include/linux/filter.h b/include/linux/filter.h
-> index 43b45d6db36d..34a14c950e60 100644
-> --- a/include/linux/filter.h
-> +++ b/include/linux/filter.h
-> @@ -746,6 +746,20 @@ bpf_ctx_narrow_access_ok(u32 off, u32 size, u32 size=
-_default)
->         return size <=3D size_default && (size & (size - 1)) =3D=3D 0;
->  }
->
-> +static inline bool __bpf_ctx_wide_store_ok(u32 off, u32 size)
+To maintain backwards compatibility and ease transition from existing
+frameworks and resource cleanup schemes, late_initcall_sync is the
+earliest when the sync_state callback might be called.
 
-It seems like bpf_ctx_wide_store_ok and __bpf_ctx_wide_store_ok are
-used only inside net/core/filter.c, why declaring them in header file?
+There is no upper bound on the time by which the sync_state callback
+has to be called. This is because if a consumer device never probes,
+the supplier has to maintain its resources in the state left by the
+bootloader. For example, if the bootloader leaves the display
+backlight at a fixed voltage and the backlight driver is never probed,
+you don't want the backlight to ever be turned off after boot up.
 
-> +{
-> +       /* u64 access is aligned and fits into the field size */
-> +       return off % sizeof(__u64) =3D=3D 0 && off + sizeof(__u64) <=3D s=
-ize;
-> +}
-> +
-> +#define bpf_ctx_wide_store_ok(off, size, type, field) \
-> +       (size =3D=3D sizeof(__u64) && \
-> +        off >=3D offsetof(type, field) && \
-> +        off < offsetofend(type, field) ? \
-> +       __bpf_ctx_wide_store_ok(off - offsetof(type, field), \
-> +                                FIELD_SIZEOF(type, field)) : 0)
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/base/core.c    | 39 +++++++++++++++++++++++++++++++++++++++
+ drivers/of/platform.c  |  9 +++++++++
+ include/linux/device.h | 19 +++++++++++++++++++
+ 3 files changed, 67 insertions(+)
 
-Why do you need ternary operator instead of just a chain of &&s?
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 9ab6782dda1c..7a8777a33e8c 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -46,6 +46,7 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
+ /* Device links support. */
+ static LIST_HEAD(wait_for_suppliers);
+ static DEFINE_MUTEX(wfs_lock);
++static bool supplier_sync_state_enabled;
+ 
+ #ifdef CONFIG_SRCU
+ static DEFINE_MUTEX(device_links_lock);
+@@ -616,6 +617,41 @@ int device_links_check_suppliers(struct device *dev)
+ 	return ret;
+ }
+ 
++static void __device_links_supplier_sync_state(struct device *dev)
++{
++	struct device_link *link;
++
++	if (dev->state_synced)
++		return;
++
++	list_for_each_entry(link, &dev->links.consumers, s_node) {
++		if (link->flags & DL_FLAG_STATELESS)
++			continue;
++		if (link->status != DL_STATE_ACTIVE)
++			return;
++	}
++
++	if (dev->bus->sync_state)
++		dev->bus->sync_state(dev);
++	else if (dev->driver && dev->driver->sync_state)
++		dev->driver->sync_state(dev);
++
++	dev->state_synced = true;
++}
++
++int device_links_supplier_sync_state(struct device *dev, void *data)
++{
++	device_links_write_lock();
++	__device_links_supplier_sync_state(dev);
++	device_links_write_unlock();
++	return 0;
++}
++
++void device_links_supplier_sync_state_enable(void)
++{
++	supplier_sync_state_enabled = true;
++}
++
+ /**
+  * device_links_driver_bound - Update device links after probing its driver.
+  * @dev: Device to update the links for.
+@@ -660,6 +696,9 @@ void device_links_driver_bound(struct device *dev)
+ 
+ 		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
+ 		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
++
++		if (supplier_sync_state_enabled)
++			__device_links_supplier_sync_state(link->supplier);
+ 	}
+ 
+ 	dev->links.status = DL_DEV_DRIVER_BOUND;
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 8d690fa0f47c..24851dcdab55 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -617,6 +617,15 @@ static int __init of_platform_default_populate_init(void)
+ 	return 0;
+ }
+ arch_initcall_sync(of_platform_default_populate_init);
++
++static int __init of_platform_sync_state_init(void)
++{
++	device_links_supplier_sync_state_enable();
++	bus_for_each_dev(&platform_bus_type, NULL, NULL,
++			 device_links_supplier_sync_state);
++	return 0;
++}
++late_initcall_sync(of_platform_sync_state_init);
+ #endif
+ 
+ int of_platform_device_destroy(struct device *dev, void *data)
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 026dd842e511..60255f10dffa 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -79,6 +79,13 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
+  *		that generate uevents to add the environment variables.
+  * @probe:	Called when a new device or driver add to this bus, and callback
+  *		the specific driver's probe to initial the matched device.
++ * @sync_state:	Called to sync device state to software state after all the
++ *		state tracking consumers linked to this device (present at
++ *		the time of late_initcall) have successfully bound to a
++ *		driver. If the device has no consumers, this function will
++ *		be called at late_initcall_sync level. If the device has
++ *		consumers that are never bound to a driver, this function
++ *		will never get called until they do.
+  * @remove:	Called when a device removed from this bus.
+  * @shutdown:	Called at shut-down time to quiesce the device.
+  *
+@@ -122,6 +129,7 @@ struct bus_type {
+ 	int (*match)(struct device *dev, struct device_driver *drv);
+ 	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
+ 	int (*probe)(struct device *dev);
++	void (*sync_state)(struct device *dev);
+ 	int (*remove)(struct device *dev);
+ 	void (*shutdown)(struct device *dev);
+ 
+@@ -251,6 +259,13 @@ enum probe_type {
+  * @probe:	Called to query the existence of a specific device,
+  *		whether this driver can work with it, and bind the driver
+  *		to a specific device.
++ * @sync_state:	Called to sync device state to software state after all the
++ *		state tracking consumers linked to this device (present at
++ *		the time of late_initcall) have successfully bound to a
++ *		driver. If the device has no consumers, this function will
++ *		be called at late_initcall_sync level. If the device has
++ *		consumers that are never bound to a driver, this function
++ *		will never get called until they do.
+  * @remove:	Called when the device is removed from the system to
+  *		unbind a device from this driver.
+  * @shutdown:	Called at shut-down time to quiesce the device.
+@@ -288,6 +303,7 @@ struct device_driver {
+ 	const struct acpi_device_id	*acpi_match_table;
+ 
+ 	int (*probe) (struct device *dev);
++	void (*sync_state)(struct device *dev);
+ 	int (*remove) (struct device *dev);
+ 	void (*shutdown) (struct device *dev);
+ 	int (*suspend) (struct device *dev, pm_message_t state);
+@@ -1059,6 +1075,7 @@ struct device {
+ 	bool			offline_disabled:1;
+ 	bool			offline:1;
+ 	bool			of_node_reused:1;
++	bool			state_synced:1;
+ #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
+     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
+     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
+@@ -1401,6 +1418,8 @@ void device_link_remove(void *consumer, struct device *supplier);
+ void device_link_wait_for_supplier(struct device *consumer);
+ void device_link_check_waiting_consumers(
+ 		int (*add_suppliers)(struct device *consumer));
++int device_links_supplier_sync_state(struct device *dev, void *data);
++void device_links_supplier_sync_state_enable(void);
+ 
+ #ifndef dev_fmt
+ #define dev_fmt(fmt) fmt
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
-It also seems like you can avoid macro and use plain function if
-instead of providing (type, field) you provide values of offsetof and
-offsetofend (offsetofend - offsetof should equal FIELD_SIZEOF(type,
-field), shouldn't it?).
-
-> +
-> +
-
-
->  #define bpf_classic_proglen(fprog) (fprog->len * sizeof(fprog->filter[0]=
-))
->
->  static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index 2014d76e0d2a..2d3787a439ae 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -6849,6 +6849,16 @@ static bool sock_addr_is_valid_access(int off, int=
- size,
->                         if (!bpf_ctx_narrow_access_ok(off, size, size_def=
-ault))
->                                 return false;
->                 } else {
-> +                       if (bpf_ctx_wide_store_ok(off, size,
-> +                                                 struct bpf_sock_addr,
-> +                                                 user_ip6))
-> +                               return true;
-> +
-> +                       if (bpf_ctx_wide_store_ok(off, size,
-> +                                                 struct bpf_sock_addr,
-> +                                                 msg_src_ip6))
-> +                               return true;
-> +
->                         if (size !=3D size_default)
->                                 return false;
->                 }
-> @@ -7689,9 +7699,6 @@ static u32 xdp_convert_ctx_access(enum bpf_access_t=
-ype type,
->  /* SOCK_ADDR_STORE_NESTED_FIELD_OFF() has semantic similar to
->   * SOCK_ADDR_LOAD_NESTED_FIELD_SIZE_OFF() but for store operation.
->   *
-> - * It doesn't support SIZE argument though since narrow stores are not
-> - * supported for now.
-> - *
->   * In addition it uses Temporary Field TF (member of struct S) as the 3r=
-d
->   * "register" since two registers available in convert_ctx_access are no=
-t
->   * enough: we can't override neither SRC, since it contains value to sto=
-re, nor
-> @@ -7699,7 +7706,7 @@ static u32 xdp_convert_ctx_access(enum bpf_access_t=
-ype type,
->   * instructions. But we need a temporary place to save pointer to nested
->   * structure whose field we want to store to.
->   */
-> -#define SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, OFF, TF)         =
-              \
-> +#define SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, SIZE, OFF, TF)   =
-      \
->         do {                                                             =
-      \
->                 int tmp_reg =3D BPF_REG_9;                               =
-        \
->                 if (si->src_reg =3D=3D tmp_reg || si->dst_reg =3D=3D tmp_=
-reg)          \
-> @@ -7710,8 +7717,7 @@ static u32 xdp_convert_ctx_access(enum bpf_access_t=
-ype type,
->                                       offsetof(S, TF));                  =
-      \
->                 *insn++ =3D BPF_LDX_MEM(BPF_FIELD_SIZEOF(S, F), tmp_reg, =
-        \
->                                       si->dst_reg, offsetof(S, F));      =
-      \
-> -               *insn++ =3D BPF_STX_MEM(                                 =
-        \
-> -                       BPF_FIELD_SIZEOF(NS, NF), tmp_reg, si->src_reg,  =
-      \
-> +               *insn++ =3D BPF_STX_MEM(SIZE, tmp_reg, si->src_reg,      =
-        \
->                         bpf_target_off(NS, NF, FIELD_SIZEOF(NS, NF),     =
-      \
->                                        target_size)                      =
-      \
->                                 + OFF);                                  =
-      \
-> @@ -7723,8 +7729,8 @@ static u32 xdp_convert_ctx_access(enum bpf_access_t=
-ype type,
->                                                       TF)                =
-      \
->         do {                                                             =
-      \
->                 if (type =3D=3D BPF_WRITE) {                             =
-          \
-> -                       SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, OF=
-F,    \
-> -                                                        TF);            =
-      \
-> +                       SOCK_ADDR_STORE_NESTED_FIELD_OFF(S, NS, F, NF, SI=
-ZE,   \
-> +                                                        OFF, TF);       =
-      \
->                 } else {                                                 =
-      \
->                         SOCK_ADDR_LOAD_NESTED_FIELD_SIZE_OFF(            =
-      \
->                                 S, NS, F, NF, SIZE, OFF);  \
