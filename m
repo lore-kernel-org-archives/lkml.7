@@ -2,224 +2,211 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F05AC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5BBC5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39711206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06546206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:26:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I9HndQ+/";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JGxRWFCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfF1IZV (ORCPT
+        id S1726646AbfF1I0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:25:21 -0400
-Received: from lgeamrelo12.lge.com ([156.147.23.52]:50301 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726385AbfF1IZV (ORCPT
+        Fri, 28 Jun 2019 04:26:00 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39446 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbfF1I0A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:25:21 -0400
-Received: from unknown (HELO lgeamrelo04.lge.com) (156.147.1.127)
-        by 156.147.23.52 with ESMTP; 28 Jun 2019 17:25:19 +0900
-X-Original-SENDERIP: 156.147.1.127
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.127 with ESMTP; 28 Jun 2019 17:25:19 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Fri, 28 Jun 2019 17:24:38 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Scott Wood <swood@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, kernel-team@lge.com
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Message-ID: <20190628082438.GB22890@X58A-UD3R>
-References: <20190627155506.GU26519@linux.ibm.com>
- <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
- <20190627203612.GD26519@linux.ibm.com>
- <20190628073138.GB13650@X58A-UD3R>
- <20190628074350.GA11214@X58A-UD3R>
- <20190628081432.GA22890@X58A-UD3R>
+        Fri, 28 Jun 2019 04:26:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A085560ACA; Fri, 28 Jun 2019 08:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561710358;
+        bh=K0puubr6KjSd/U2wC8/D1AvaBvSGxwauajMJtt24LxU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=I9HndQ+/CmYCm+NMCV44KlTBpKX3EYSenyqWHB/avflg/VFHeRooX41CHzGF5gpUh
+         nLoe0Z4V6QIzJ8klXSykG6wwz8m5S0jB6JkO7Eakn9dMXYoTAXHz2HtI3bNu6rND8v
+         p8vUPRl6c1ae7Ha3NMdjdfKaqeIyrihawbA6xOqY=
+Received: from [192.168.0.105] (unknown [106.51.23.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 792FA607C3;
+        Fri, 28 Jun 2019 08:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561710357;
+        bh=K0puubr6KjSd/U2wC8/D1AvaBvSGxwauajMJtt24LxU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=JGxRWFCQWdjd7mVig7t1+xz/bVfp0sgKWQjqqacTY5+NdQUXPjSF/rJ5mzqPISWD1
+         VZA47Vrmok12DfKLHvQ2xhfWD748/0+cf0lhkU2Ka5dluyFHwrMGI1gv99c02pT9QN
+         M79gfAczgIityx3ErojTBjgZ9Dc9yhp5cyLORhZc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 792FA607C3
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH RFC 3/4] cpufreq: qcom: Update the bandwidth levels on
+ frequency change
+To:     Sibi Sankar <sibis@codeaurora.org>, viresh.kumar@linaro.org,
+        nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org
+Cc:     agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, rjw@rjwysocki.net,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        saravanak@google.com
+References: <20190627133424.4980-1-sibis@codeaurora.org>
+ <20190627133424.4980-4-sibis@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <aaf49cd8-bc0c-672f-2a20-67382e06461c@codeaurora.org>
+Date:   Fri, 28 Jun 2019 13:55:49 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628081432.GA22890@X58A-UD3R>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190627133424.4980-4-sibis@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 05:14:32PM +0900, Byungchul Park wrote:
-> On Fri, Jun 28, 2019 at 04:43:50PM +0900, Byungchul Park wrote:
-> > On Fri, Jun 28, 2019 at 04:31:38PM +0900, Byungchul Park wrote:
-> > > On Thu, Jun 27, 2019 at 01:36:12PM -0700, Paul E. McKenney wrote:
-> > > > On Thu, Jun 27, 2019 at 03:17:27PM -0500, Scott Wood wrote:
-> > > > > On Thu, 2019-06-27 at 11:41 -0700, Paul E. McKenney wrote:
-> > > > > > On Thu, Jun 27, 2019 at 02:16:38PM -0400, Joel Fernandes wrote:
-> > > > > > > 
-> > > > > > > I think the fix should be to prevent the wake-up not based on whether we
-> > > > > > > are
-> > > > > > > in hard/soft-interrupt mode but that we are doing the rcu_read_unlock()
-> > > > > > > from
-> > > > > > > a scheduler path (if we can detect that)
-> > > > > > 
-> > > > > > Or just don't do the wakeup at all, if it comes to that.  I don't know
-> > > > > > of any way to determine whether rcu_read_unlock() is being called from
-> > > > > > the scheduler, but it has been some time since I asked Peter Zijlstra
-> > > > > > about that.
-> > > > > > 
-> > > > > > Of course, unconditionally refusing to do the wakeup might not be happy
-> > > > > > thing for NO_HZ_FULL kernels that don't implement IRQ work.
-> > > > > 
-> > > > > Couldn't smp_send_reschedule() be used instead?
-> > > > 
-> > > > Good point.  If current -rcu doesn't fix things for Sebastian's case,
-> > > > that would be well worth looking at.  But there must be some reason
-> > > > why Peter Zijlstra didn't suggest it when he instead suggested using
-> > > > the IRQ work approach.
-> > > > 
-> > > > Peter, thoughts?
-> > > 
-> > 
-> > +cc kernel-team@lge.com
-> > (I'm sorry for more noise on the thread.)
-> > 
-> > > Hello,
-> > > 
-> > > Isn't the following scenario possible?
-> > > 
-> > > The original code
-> > > -----------------
-> > > rcu_read_lock();
-> > > ...
-> > > /* Experdite */
-> > > WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> > > ...
-> > > __rcu_read_unlock();
-> > > 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> > > 		rcu_read_unlock_special(t);
-> > > 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> > > 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> > > 		barrier();  /* ->rcu_read_unlock_special load before assign */
-> > > 		t->rcu_read_lock_nesting = 0;
-> > > 
-> > > The reordered code by machine
-> > > -----------------------------
-> > > rcu_read_lock();
-> > > ...
-> > > /* Experdite */
-> > > WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> > > ...
-> > > __rcu_read_unlock();
-> > > 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> > > 		rcu_read_unlock_special(t);
-> > > 		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
-> > > 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> > > 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> > > 		barrier();  /* ->rcu_read_unlock_special load before assign */
-> > > 
-> > > An interrupt happens
-> > > --------------------
-> > > rcu_read_lock();
-> > > ...
-> > > /* Experdite */
-> > > WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
-> > > ...
-> > > __rcu_read_unlock();
-> > > 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> > > 		rcu_read_unlock_special(t);
-> > > 		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
-> > > <--- Handle an (any) irq
-> > > 	rcu_read_lock();
-> > > 	/* This call should be skipped */
-> > > 	rcu_read_unlock_special(t);
-> > > 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-> > > 			rcu_preempt_deferred_qs_irqrestore(t, flags);
-> > > 		barrier();  /* ->rcu_read_unlock_special load before assign */
-> > > 
-> > > We don't have to handle the special thing twice like this which is one
-> > > reason to cause the problem even though another problem is of course to
-> > > call ttwu w/o being aware it's within a context holding pi lock.
-> > > 
-> > > Apart from the discussion about how to avoid ttwu in an improper
-> > > condition, I think the following is necessary. I may have something
-> > > missing. It would be appreciated if you let me know in case I'm wrong.
-> > > 
-> > > Anyway, logically I think we should prevent reordering between
-> > > t->rcu_read_lock_nesting and t->rcu_read_unlock_special.b.exp_hint not
-> > > only by compiler but also by machine like the below.
-> > > 
-> > > Do I miss something?
-> > > 
-> > > Thanks,
-> > > Byungchul
-> > > 
-> > > ---8<---
-> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > > index 3c8444e..9b137f1 100644
-> > > --- a/kernel/rcu/tree_plugin.h
-> > > +++ b/kernel/rcu/tree_plugin.h
-> > > @@ -412,7 +412,13 @@ void __rcu_read_unlock(void)
-> > >  		barrier();  /* assign before ->rcu_read_unlock_special load */
-> > >  		if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
-> > >  			rcu_read_unlock_special(t);
-> > > -		barrier();  /* ->rcu_read_unlock_special load before assign */
-> > > +		/*
-> > > +		 * Prevent reordering between clearing
-> > > +		 * t->rcu_reak_unlock_special in
-> > > +		 * rcu_read_unlock_special() and the following
-> > > +		 * assignment to t->rcu_read_lock_nesting.
-> > > +		 */
-> > > +		smp_wmb();
+
+On 6/27/2019 7:04 PM, Sibi Sankar wrote:
+> Add support to parse and update optional OPP tables attached to the
+> cpu nodes when the OPP bandwidth values are populated to enable
+> scaling of DDR/L3 bandwidth levels with frequency change.
 > 
-> Ah. But the problem is this makes rcu_read_unlock() heavier, which is
-> too bad. Need to consider something else. But I'm still curious about
-> if the scenario I told you is correct?
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+[]...
 
-Instead, this patch should be replaced with the following:
+>   
+> @@ -79,13 +108,29 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+>   {
+>   	u32 data, src, lval, i, core_count, prev_cc = 0, prev_freq = 0, freq;
+>   	u32 volt;
+> +	u64 rate;
+>   	unsigned int max_cores = cpumask_weight(policy->cpus);
+>   	struct cpufreq_frequency_table	*table;
+> +	struct device_node *opp_table_np, *np;
+> +	int ret;
+>   
+>   	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
+>   	if (!table)
+>   		return -ENOMEM;
+>   
+> +	ret = dev_pm_opp_of_add_table(cpu_dev);
+> +	if (!ret) {
+> +		/* Disable all opps and cross-validate against LUT */
+> +		opp_table_np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
+> +		for_each_available_child_of_node(opp_table_np, np) {
+> +			ret = of_property_read_u64(np, "opp-hz", &rate);
+> +			dev_pm_opp_disable(cpu_dev, rate);
+> +		}
+> +		of_node_put(opp_table_np);
+> +	} else {
+> +		dev_err(cpu_dev, "Couldn't add OPP table from dt\n");
 
----8<---
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 3c8444e..f103e98 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -624,8 +624,15 @@ static void rcu_read_unlock_special(struct task_struct *t)
- 
- 	local_irq_save(flags);
- 	irqs_were_disabled = irqs_disabled_flags(flags);
-+
-+	WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
-+	/*
-+	 * Prevent reordering between rcu_read_unlock_special.b.exp_hint
-+	 * above and rcu_read_lock_nesting outside of this function.
-+	 */
-+	smp_wmb();
-+
- 	if (preempt_bh_were_disabled || irqs_were_disabled) {
--		WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
- 		/* Need to defer quiescent state until everything is enabled. */
- 		if (irqs_were_disabled) {
- 			/* Enabling irqs does not reschedule, so... */
-@@ -638,7 +645,6 @@ static void rcu_read_unlock_special(struct task_struct *t)
- 		local_irq_restore(flags);
- 		return;
- 	}
--	WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
- 	rcu_preempt_deferred_qs_irqrestore(t, flags);
- }
- 
+The changelog seems to suggest specifying OPP tables in DT is optional,
+but here we seem to error out if the tables are missing.
+
+> +	}
+> +
+>   	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+>   		data = readl_relaxed(base + REG_FREQ_LUT +
+>   				      i * LUT_ROW_SIZE);
+> @@ -104,7 +149,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+>   
+>   		if (freq != prev_freq && core_count == max_cores) {
+>   			table[i].frequency = freq;
+> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
+> +			qcom_cpufreq_update_opp(cpu_dev, freq, volt);
+>   			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
+>   				freq, core_count);
+>   		} else {
+> @@ -125,7 +170,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+>   			if (prev_cc != max_cores) {
+>   				prev->frequency = prev_freq;
+>   				prev->flags = CPUFREQ_BOOST_FREQ;
+> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
+> +				qcom_cpufreq_update_opp(cpu_dev, prev_freq,
+> +							volt);
+>   			}
+>   
+>   			break;
+> @@ -168,6 +214,7 @@ static void qcom_get_related_cpus(int index, struct cpumask *m)
+>   static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+>   {
+>   	struct device *dev = &global_pdev->dev;
+> +	struct opp_table *opp_table = NULL;
+>   	struct of_phandle_args args;
+>   	struct device_node *cpu_np;
+>   	struct device *cpu_dev;
+> @@ -202,6 +249,8 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+>   	if (!base)
+>   		return -ENOMEM;
+>   
+> +	opp_table = dev_pm_opp_set_paths(cpu_dev);
+> +
+>   	/* HW should be in enabled state to proceed */
+>   	if (!(readl_relaxed(base + REG_ENABLE) & 0x1)) {
+>   		dev_err(dev, "Domain-%d cpufreq hardware not enabled\n", index);
+> @@ -237,6 +286,8 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+>   
+>   	return 0;
+>   error:
+> +	if (opp_table)
+> +		dev_pm_opp_put_paths(opp_table);
+>   	devm_iounmap(dev, base);
+>   	return ret;
+>   }
+> @@ -275,6 +326,8 @@ static struct cpufreq_driver cpufreq_qcom_hw_driver = {
+>   
+>   static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
+>   {
+> +	struct opp_table *opp_table = NULL;
+> +	struct device *cpu_dev;
+>   	struct clk *clk;
+>   	int ret;
+>   
+> @@ -294,6 +347,26 @@ static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
+>   
+>   	global_pdev = pdev;
+>   
+> +	/* Check for optional interconnect paths on CPU0 */
+> +	cpu_dev = get_cpu_device(0);
+> +	if (!cpu_dev) {
+> +		dev_err(&pdev->dev, "failed to get cpu0 device\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	opp_table = dev_pm_opp_set_paths(cpu_dev);
+> +	if (IS_ERR(opp_table)) {
+> +		ret = PTR_ERR(opp_table);
+> +		if (ret == -EPROBE_DEFER) {
+> +			dev_dbg(&pdev->dev, "defer icc set paths: %d\n", ret);
+> +			return ret;
+> +		}
+> +		dev_err(&pdev->dev, "set paths failed ddr/l3 scaling off: %d\n",
+> +			ret);
+
+Here again, the interconnect paths don't seem to be optional as the comment
+above suggests.
+
+> +	} else {
+> +		dev_pm_opp_put_paths(opp_table);
+> +	}
+> +
+>   	ret = cpufreq_register_driver(&cpufreq_qcom_hw_driver);
+>   	if (ret)
+>   		dev_err(&pdev->dev, "CPUFreq HW driver failed to register\n");
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
