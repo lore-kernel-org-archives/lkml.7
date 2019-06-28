@@ -2,105 +2,85 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F63DC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766DCC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71093208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 496D4208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfF1MNu (ORCPT
+        id S1726987AbfF1MPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:13:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41888 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727185AbfF1MNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:13:48 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5449481E0C;
-        Fri, 28 Jun 2019 12:13:43 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 88F1E5D704;
-        Fri, 28 Jun 2019 12:13:39 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id D905A17473; Fri, 28 Jun 2019 14:13:38 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Chia-I Wu <olvaffe@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 02/12] drm/virtio: switch virtio_gpu_wait_ioctl() to gem helper.
-Date:   Fri, 28 Jun 2019 14:13:28 +0200
-Message-Id: <20190628121338.24398-3-kraxel@redhat.com>
-In-Reply-To: <20190628121338.24398-1-kraxel@redhat.com>
-References: <20190628121338.24398-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 28 Jun 2019 12:13:48 +0000 (UTC)
+        Fri, 28 Jun 2019 08:15:03 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33211 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726542AbfF1MPC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 08:15:02 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r6so4587553qkc.0;
+        Fri, 28 Jun 2019 05:15:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1TAwC61JS4eXqZ82OujM9dlobazLqVa1FIeOqHjXlt0=;
+        b=Yhs8q16ww190EQsZo2yQwQr8JXW0IK8KDmoshG9U73ABjiE+FENH8UCQH4MKnQnRzp
+         vUGK55+3w5xZMPiHlwxnIXWzYEsnLspqvchDdXAoQxk91klCmy+3peLowrsE3iqzrj3A
+         dgnBp/WuyJNTYIcv9PuEX9IcrKGhmvpj6pB/tT7SU6hBwRWfJQC/Qa//y5ZjCqCp82/f
+         9tjQ2pnBU8zJkhkP3DwIRYYB9rw9BL1ANvcoAZj/1uSSqlcigg28PufETdzUkVpFKLYf
+         0OMODFSWoj6w6ifhDW62rdNjjB1NoZ/ubZOuefC/3lVcGTAWcONuNEAA6qrLSvPMT6BJ
+         pWGg==
+X-Gm-Message-State: APjAAAU0qa7x1iyRAUMBISbgF33ea5/UCXbjgKeEYRV9pF04boZ6/cPQ
+        yDruNcCdlGNcnK1o41/ywn81Xaj7K9Mmpln6AjzZUr+N
+X-Google-Smtp-Source: APXvYqwNxgHRzw4z0Rr9Q4yX5hm7cI8WvoLsLEbd5pABPHANQdawqiZmtxqhSSYgYnw4qgfGuspgeXqzbjHf70WenTY=
+X-Received: by 2002:a37:ad12:: with SMTP id f18mr8197153qkm.3.1561724101537;
+ Fri, 28 Jun 2019 05:15:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190313211709.486583-1-arnd@arndb.de> <20190403163444.2psjymq5kb3c6ok6@gofer.mess.org>
+In-Reply-To: <20190403163444.2psjymq5kb3c6ok6@gofer.mess.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 28 Jun 2019 14:14:42 +0200
+Message-ID: <CAK8P3a0w0AWCotSSDpLORgOPHq-Cmy7u+AWzs1thU7V_bqNRNw@mail.gmail.com>
+Subject: Re: [PATCH] media: dib0700: fix link error for dibx000_i2c_set_speed
+To:     Sean Young <sean@mess.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use drm_gem_reservation_object_wait() in virtio_gpu_wait_ioctl().
-This also makes the ioctl run lockless.
+On Wed, Apr 3, 2019 at 6:34 PM Sean Young <sean@mess.org> wrote:
+>
+> On Wed, Mar 13, 2019 at 10:16:53PM +0100, Arnd Bergmann wrote:
+> > When CONFIG_DVB_DIB9000 is disabled, we can still compile code that
+> > now fails to link against dibx000_i2c_set_speed:
+> >
+> > drivers/media/usb/dvb-usb/dib0700_devices.o: In function `dib01x0_pmu_update.constprop.7':
+> > dib0700_devices.c:(.text.unlikely+0x1c9c): undefined reference to `dibx000_i2c_set_speed'
+> >
+> > The call sites are both through dib01x0_pmu_update(), which gets
+> > passed an 'i2c' pointer from dib9000_get_i2c_master(), which has
+> > returned NULL. Checking this pointer seems to be a good idea
+> > anyway, and it avoids the link failure.
+>
+> So I reproduced the link failure with attached config, and your patch
+> does not fix it.
 
-v5: handle lookup failure.
-v2: use reservation_object_test_signaled_rcu for VIRTGPU_WAIT_NOWAIT.
+I ran into the old problem I reported once more, and checked my
+original patch, as well as your configuration file, which indeed shows
+the same symptom.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
----
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 28 ++++++++++++--------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+Interestingly, the link error after my patch appears to be the result
+of a compiler bug, as the function reference is from dead code that
+should have been eliminated. Sending a replacement patch now.
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index 1b50c34a29dc..c06dde541491 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -464,23 +464,21 @@ static int virtio_gpu_wait_ioctl(struct drm_device *dev, void *data,
- 			    struct drm_file *file)
- {
- 	struct drm_virtgpu_3d_wait *args = data;
--	struct drm_gem_object *gobj = NULL;
--	struct virtio_gpu_object *qobj = NULL;
-+	struct drm_gem_object *obj;
-+	long timeout = 15 * HZ;
- 	int ret;
--	bool nowait = false;
- 
--	gobj = drm_gem_object_lookup(file, args->handle);
--	if (gobj == NULL)
--		return -ENOENT;
--
--	qobj = gem_to_virtio_gpu_obj(gobj);
--
--	if (args->flags & VIRTGPU_WAIT_NOWAIT)
--		nowait = true;
--	ret = virtio_gpu_object_wait(qobj, nowait);
--
--	drm_gem_object_put_unlocked(gobj);
--	return ret;
-+	if (args->flags & VIRTGPU_WAIT_NOWAIT) {
-+		obj = drm_gem_object_lookup(file, args->handle);
-+		if (obj == NULL)
-+			return -ENOENT;
-+		ret = reservation_object_test_signaled_rcu(obj->resv, true);
-+		drm_gem_object_put_unlocked(obj);
-+		return ret ? 0 : -EBUSY;
-+	}
-+
-+	return drm_gem_reservation_object_wait(file, args->handle,
-+					       true, timeout);
- }
- 
- static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
--- 
-2.18.1
-
+        Arnd
