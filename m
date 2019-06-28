@@ -2,143 +2,137 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149B8C5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA69FC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB308214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:44:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="zI1Rfkj7"
+	by mail.kernel.org (Postfix) with ESMTP id 9F336214DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 18:47:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfF1Sor (ORCPT
+        id S1726846AbfF1SrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 14:44:47 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45144 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfF1Sor (ORCPT
+        Fri, 28 Jun 2019 14:47:20 -0400
+Received: from 7.mo6.mail-out.ovh.net ([46.105.59.196]:56781 "EHLO
+        7.mo6.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfF1SrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:44:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id x21so6948504otq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 11:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BNY+UkoJVrKxCjM2c24Xgrzfzfk/Z55i3p1E82IfUT4=;
-        b=zI1Rfkj72TaacEJj7GZa9aQH2dQpodMnoVTwnXEaBlMSZNhY5OVVCjVG5znvL8YDvw
-         /w4yi2CZ3bmDcg8+jo0W3xW8odrHcZ2aCHGJ87xs+2ltcljxDeJN66gvtxIzrVxNLxkg
-         pL7hur4fQE0hdbPpJ33d47KRUWZSM8qnBIPWODQs6LDS5RSktDpzI29k0ILuZRejss34
-         xnFlTPIYvocsrjjzZCQI/0Yj+GNH//C0I7LZJ/r3XYMiRT+Tq5iZQhNf2bG7bpRfCfUN
-         VI7eLoWpW+vIxkXl125Fq7E2Z95KiI815ewg7Kq0wfihaAtAnAzS1E/XQAxSbE8m8Iyo
-         kZOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BNY+UkoJVrKxCjM2c24Xgrzfzfk/Z55i3p1E82IfUT4=;
-        b=Bynt2akl1B0ztVoEFqgz6BxbQfUVuIl0ekKGGFyCggyC/MGPLnUJUMD/Vf1npsIQvz
-         1+2DETGCLA/62W7fIiTt9hNkQjdiRdCZ5MBDaZys90j1sftBRAJ6XOth7HK6VhtHAI9o
-         O5l/l/PPMumMdouQE5mHFfu90mI3fYHaoeBmMy9eeyKe3opJlufAg33RO+wnW5/C8RI1
-         4askOIqElun7E+aN0gODNoBR+kkZumDRx1Sd65JLNYCmhalh/ZD+pleO7N9+AwMy8IXL
-         NwX3NmCxOPP+3BmQw/ZHe8xyM2rc9vupNpPo6UL/Vyrv7yOCPwRXrKGIRqi8uQF5yOdl
-         IB0w==
-X-Gm-Message-State: APjAAAVikQFMmnIPDHVV9hpWRehTrnGtx8+FIukJPSjJCyGIPqN5zQtd
-        TSBtAWmDDkqXknlnMsQQ0bMGae+/ZE62ZlhHhGDqPQ==
-X-Google-Smtp-Source: APXvYqy1WcVZusxQT3gsMqR8FxlPuXMWtxZvhAO+zU3jLT7QJNrvbdWUjpng3sXAK8TgdSWU7HjEXIzdeabvXlDD8go=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr9063478oto.207.1561747486699;
- Fri, 28 Jun 2019 11:44:46 -0700 (PDT)
+        Fri, 28 Jun 2019 14:47:20 -0400
+X-Greylist: delayed 512 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Jun 2019 14:47:19 EDT
+Received: from player772.ha.ovh.net (unknown [10.109.146.5])
+        by mo6.mail-out.ovh.net (Postfix) with ESMTP id 6ECB21D1D2B
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 20:38:46 +0200 (CEST)
+Received: from sk2.org (gw.sk2.org [88.186.243.14])
+        (Authenticated sender: steve@sk2.org)
+        by player772.ha.ovh.net (Postfix) with ESMTPSA id D8A3A759C830;
+        Fri, 28 Jun 2019 18:38:42 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 20:38:41 +0200
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: format kernel-parameters -- as code
+Message-ID: <20190628203841.723ccd9c@heffalump.sk2.org>
+In-Reply-To: <20190628091021.457d0301@lwn.net>
+References: <20190627135938.3722-1-steve@sk2.org>
+        <20190628091021.457d0301@lwn.net>
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190626122724.13313-1-hch@lst.de> <20190626122724.13313-17-hch@lst.de>
- <20190628153827.GA5373@mellanox.com> <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
- <20190628170219.GA3608@mellanox.com> <CAPcyv4ja9DVL2zuxuSup8x3VOT_dKAOS8uBQweE9R81vnYRNWg@mail.gmail.com>
- <CAPcyv4iWTe=vOXUqkr_CguFrFRqgA7hJSt4J0B3RpuP-Okz0Vw@mail.gmail.com> <20190628182922.GA15242@mellanox.com>
-In-Reply-To: <20190628182922.GA15242@mellanox.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 28 Jun 2019 11:44:35 -0700
-Message-ID: <CAPcyv4g+zk9pnLcj6Xvwh-svKM+w4hxfYGikcmuoBAFGCr-HAw@mail.gmail.com>
-Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/+Q2ZDCvK8guFHmIkhT+Ru1w"; protocol="application/pgp-signature"
+X-Ovh-Tracer-Id: 6824642289615850885
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrvddtgdduvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 11:29 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
->
-> On Fri, Jun 28, 2019 at 10:10:12AM -0700, Dan Williams wrote:
-> > On Fri, Jun 28, 2019 at 10:08 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > On Fri, Jun 28, 2019 at 10:02 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
-> > > >
-> > > > On Fri, Jun 28, 2019 at 09:27:44AM -0700, Dan Williams wrote:
-> > > > > On Fri, Jun 28, 2019 at 8:39 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
-> > > > > >
-> > > > > > On Wed, Jun 26, 2019 at 02:27:15PM +0200, Christoph Hellwig wrote:
-> > > > > > > The functionality is identical to the one currently open coded in
-> > > > > > > device-dax.
-> > > > > > >
-> > > > > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > > > > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> > > > > > >  drivers/dax/dax-private.h |  4 ----
-> > > > > > >  drivers/dax/device.c      | 43 ---------------------------------------
-> > > > > > >  2 files changed, 47 deletions(-)
-> > > > > >
-> > > > > > DanW: I think this series has reached enough review, did you want
-> > > > > > to ack/test any further?
-> > > > > >
-> > > > > > This needs to land in hmm.git soon to make the merge window.
-> > > > >
-> > > > > I was awaiting a decision about resolving the collision with Ira's
-> > > > > patch before testing the final result again [1]. You can go ahead and
-> > > > > add my reviewed-by for the series, but my tested-by should be on the
-> > > > > final state of the series.
-> > > >
-> > > > The conflict looks OK to me, I think we can let Andrew and Linus
-> > > > resolve it.
-> > >
-> > > Andrew's tree effectively always rebases since it's a quilt series.
-> > > I'd recommend pulling Ira's patch out of -mm and applying it with the
-> > > rest of hmm reworks. Any other git tree I'd agree with just doing the
-> > > late conflict resolution, but I'm not clear on what's the best
-> > > practice when conflicting with -mm.
->
-> What happens depends on timing as things arrive to Linus. I promised
-> to send hmm.git early, so I understand that Andrew will quilt rebase
-> his tree to Linus's and fix the conflict in Ira's patch before he
-> sends it.
->
-> > Regardless the patch is buggy. If you want to do the conflict
-> > resolution it should be because the DEVICE_PUBLIC removal effectively
-> > does the same fix otherwise we're knowingly leaving a broken point in
-> > the history.
->
-> I'm not sure I understand your concern, is there something wrong with
-> CH's series as it stands? hmm is a non-rebasing git tree, so as long
-> as the series is correct *when I apply it* there is no broken history.
->
-> I assumed the conflict resolution for Ira's patch was to simply take
-> the deletion of the if block from CH's series - right?
->
-> If we do need to take Ira's patch into hmm.git it will go after CH's
-> series (and Ira will have to rebase/repost it), so I think there is
-> nothing to do at this moment - unless you are saying there is a
-> problem with the series in CH's git tree?
+--Sig_/+Q2ZDCvK8guFHmIkhT+Ru1w
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-There is a problem with the series in CH's tree. It removes the
-->page_free() callback from the release_pages() path because it goes
-too far and removes the put_devmap_managed_page() call.
+On Fri, 28 Jun 2019 09:10:21 -0600, Jonathan Corbet <corbet@lwn.net> wrote:
+> On Thu, 27 Jun 2019 15:59:38 +0200
+> > The current ReStructuredText formatting results in "--", used to
+> > indicate the end of the kernel command-line parameters, appearing as
+> > an en-dash instead of two hyphens; this patch formats them as code,
+> > "``--``", as done elsewhere in the documentation.
+> >=20
+> > Signed-off-by: Stephen Kitt <steve@sk2.org> =20
+>=20
+> A worthy fix, I've applied it.  This seems like the sort of annoyance that
+> will bite us over and over, though.  We might want to find a more
+> comprehensive way to turn this behavior off.
+
+Right, looking further shows a large number of places where -- is handled
+incorrectly. The following patch disables this =E2=80=9Csmart=E2=80=9D hand=
+ling wholesale;
+I=E2=80=99ll follow up (in the next few days) with patches to use real em- =
+and
+en-dashes where appropriate.
+
+Regards,
+
+Stephen
+
+=46rom 3b10d01decfec38a124be75739b398a3dcd9d5ce Mon Sep 17 00:00:00 2001
+From: Stephen Kitt <steve@sk2.org>
+Date: Fri, 28 Jun 2019 20:34:31 +0200
+Subject: [PATCH] Disable Sphinx SmartyPants in HTML output
+
+The handling of dashes in particular results in confusing
+documentation in a number of instances, since "--" becomes an
+en-dash. This disables SmartyPants wholesale, losing smart quotes
+along with smart dashes.
+
+With Sphinx 1.6 we could fine-tune the conversion, using the new
+smartquotes and smartquotes_action settings.
+
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ Documentation/conf.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index 7ace3f8852bd..966dbdfafcd1 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -200,7 +200,7 @@ html_context =3D {
+=20
+ # If true, SmartyPants will be used to convert quotes and dashes to
+ # typographically correct entities.
+-#html_use_smartypants =3D True
++html_use_smartypants =3D False
+=20
+ # Custom sidebar templates, maps document names to template names.
+ #html_sidebars =3D {}
+--=20
+2.11.0
+
+
+--Sig_/+Q2ZDCvK8guFHmIkhT+Ru1w
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl0WXrEACgkQgNMC9Yht
+g5zEiA//UWxO0D8Gj4guz7JvI59f1scnIIvc/bjVR5KM2wr1nDuL32FbRP4KjU0n
+x5vWte2gM2GR5txA7SQAcuOmWd9+lLH25iKJVFug+0l0EcS8rtclH4B8YaPLU07H
+D4dDsaN1sl4+w6aUlU7vEmD2ly+Xu3NlARutOhaIhHIyOpUVASkt2G+Rfb0bpNQs
+YntKIwWPrnAUFYaFd5PXY3okqlLc4RNVT1TrKubS9pqgFMT6jPBMEYcbhbogH3ok
+zta4ZdUHJfIMA7mPzVXHD0haoXFitn7CuvPqP7buOrjbke6Kw7YiR7ciidUZkxdp
+1xqGzqzcF45K2j1lIyOOAr2e1Lmp8r2mNuZWZ+cJGT/zdR0tn9+VNGo0ZDUw8CGu
+yNF3ho/tGaZ58cOmtfhLjoI2Ln0wOhObh9fiDy6TXKfjyBsDikc6JOcg9flwPhcU
+c+GGxoNGj+Cw41drldqgM0I6Dm8Ir7osUbdz0/Pv5JjRu3aWWcrH684noM1NX28p
+yazGhrtVDAHSEjePneKtya2NPjFyc8x1oAEFO62lRSuvtgILGIEionrKeRmaqfP6
+KnRUa1BEUqRzV1fXnV5HTgDfq94Z6pqMdtmWZ4lAkq0xd2MvsAXiNKUTXNnUh1cI
+7Cv2Z9PoehoZZRfgL9weSorwV1cFvZSCXpqHNxTeSmgqsaQWDn0=
+=BYN7
+-----END PGP SIGNATURE-----
+
+--Sig_/+Q2ZDCvK8guFHmIkhT+Ru1w--
