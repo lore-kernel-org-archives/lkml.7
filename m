@@ -2,380 +2,635 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167E3C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF98C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98B8208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68302147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561725070;
-	bh=4alVynFVFJaOnycz3AlWUbGn1zTWyr39R9PO4jIKBGE=;
+	s=default; t=1561725073;
+	bh=Sa/qTDZj/xRoiaZCg+mRibNrKJhgXoExCZJ0DKFmcqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uky5O/0JH/3SoD2hbxEyrvuWSS5aADijx17NQIr1N0UQFr6D9aUK3f//PZvYozpru
-	 uLd5fHBZKhNIt3/3obX8IHAha/o8UFmOLe7kpYXH9SPn1hQwg9ZGH8D1F83lcVGfVC
-	 sNfnb3lhW7gqYO+cH9goN2qafwyW7/c42F5tA91c=
+	b=ZHzrOIuRSF/BJpCUQs7jqQue/GtYHG7FSdrkV3BMuaskxocFYuL2YNYkk6RcxZV4d
+	 GdGpfzwG0buuaj3TA2Ou4YfJ5heff7j0GZ+dOGaK6F5I5yp3LTl0uMjAsJklsO4Vgx
+	 kZ/bk3GO31te+VT8sZ+AUbEXzoUKD8mEfxO9PQ5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfF1MbJ (ORCPT
+        id S1727376AbfF1MbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:31:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39872 "EHLO
+        Fri, 28 Jun 2019 08:31:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39816 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727190AbfF1Mas (ORCPT
+        with ESMTP id S1727180AbfF1Mas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:30:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nBpd8Fk+s8d+aaTmt6oIoDeIRX/XWEtS+DQSzNWScpE=; b=N0KdyA00b5X6Q9uq0E7P8iEVj0
-        jmtzOc60PXzPDbTpOiHwPGFSerA7yVyIsHiuoV9FKQWBUg3EVKU+nx7FGUkOaW9IqUjqn7qmlqaN3
-        fQ/SLtDQbhu1afpCxlO2B4FGpywbna5rirN+7t/10MOszesghvpHy3FIsb11K20hXFO6nMzMd5VrX
-        HcHOkC/7j7VGDOT4lIyRkw12U2ZKMy1i3Na41PVYyyYNotO9+mknrUKGK71dVEhVjDo00BtNxlpz9
-        RYQpgLrvrP7BY7noSrWtrpRKzCzImQmGTL+phwQ1enhJrgm6YKedXnZsQNedOVzcJPR3JxG225beu
-        HuixlYTA==;
+        bh=t2SlvlYO6vN68ooBWcFQh21aLIzOtka8Klr/M76soBU=; b=GPcFupf5dzfyT165XdM5l7atm7
+        NpunVR4RVyW430xRFKelq2/bs7dtPeXB4qL/NAe4wUu90z3hkDS/UIfIGdcLRgNR2UNHiStAIHDWk
+        b5ipZ/rh5zP1MANqlxnbENYD/fVy7fINuTz8hI/7Xxd5uRjSAc/v12+G6v77fOA6pvH51AXLu2qLr
+        m1H6iZl3askKHReK+jify63bqpxZ2aZmSjKnEi33cR7epWYwKUNyxM6iw0XhbwlMf1Q1R8eIlnGAY
+        g2vrko1I5YdrDNVcbwUdqvarlbeC++auL6Ldh/LGX2VSxCdN+UgvNr4MOiHvRW17Y0Xbs+VJlMxkY
+        FFszEwYQ==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1U-00055Y-Jg; Fri, 28 Jun 2019 12:30:37 +0000
+        id 1hgq1U-00055h-OB; Fri, 28 Jun 2019 12:30:37 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005Sq-IY; Fri, 28 Jun 2019 09:30:34 -0300
+        id 1hgq1S-0005TB-Lz; Fri, 28 Jun 2019 09:30:34 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Willy Tarreau <willy@haproxy.com>,
+        Ksenija Stanojevic <ksenija.stanojevic@gmail.com>,
+        "Richard Russon (FlatCap)" <ldm@flatcap.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Martin Mares <mj@ucw.cz>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
         "David S. Miller" <davem@davemloft.net>,
-        David Kershner <david.kershner@unisys.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        sparmaintainer@unisys.com, devel@driverdev.osuosl.org,
-        cocci@systeme.lip6.fr
-Subject: [PATCH 24/39] docs: driver-model: move it to the driver-api book
-Date:   Fri, 28 Jun 2019 09:30:17 -0300
-Message-Id: <920ff36c66233113b1825ab504fe675ed5a5bd7b.1561724493.git.mchehab+samsung@kernel.org>
+        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-efi@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, linux-rtc@vger.kernel.org,
+        linux-video@atrey.karlin.mff.cuni.cz,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH 28/39] docs: admin-guide: add a series of orphaned documents
+Date:   Fri, 28 Jun 2019 09:30:21 -0300
+Message-Id: <7ee0e33575633f689203f582259c2cbdce477176.1561724493.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
 References: <cover.1561724493.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The audience for the Kernel driver-model is clearly Kernel hackers.
+There are lots of documents that belong to the admin-guide but
+are on random places (most under Documentation root dir).
+
+Move them to the admin guide.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/{ => driver-api}/driver-model/binding.rst       | 0
- Documentation/{ => driver-api}/driver-model/bus.rst           | 0
- Documentation/{ => driver-api}/driver-model/class.rst         | 0
- .../{ => driver-api}/driver-model/design-patterns.rst         | 0
- Documentation/{ => driver-api}/driver-model/device.rst        | 0
- Documentation/{ => driver-api}/driver-model/devres.rst        | 0
- Documentation/{ => driver-api}/driver-model/driver.rst        | 0
- Documentation/{ => driver-api}/driver-model/index.rst         | 2 --
- Documentation/{ => driver-api}/driver-model/overview.rst      | 0
- Documentation/{ => driver-api}/driver-model/platform.rst      | 0
- Documentation/{ => driver-api}/driver-model/porting.rst       | 2 +-
- Documentation/driver-api/gpio/driver.rst                      | 2 +-
- Documentation/driver-api/index.rst                            | 1 +
- Documentation/eisa.txt                                        | 4 ++--
- Documentation/filesystems/sysfs.txt                           | 2 +-
- Documentation/hwmon/submitting-patches.rst                    | 2 +-
- Documentation/translations/zh_CN/filesystems/sysfs.txt        | 2 +-
- drivers/base/platform.c                                       | 2 +-
- drivers/gpio/gpio-cs5535.c                                    | 2 +-
- drivers/net/ethernet/intel/ice/ice_main.c                     | 2 +-
- drivers/staging/unisys/Documentation/overview.txt             | 4 ++--
- include/linux/device.h                                        | 2 +-
- include/linux/platform_device.h                               | 2 +-
- scripts/coccinelle/free/devm_free.cocci                       | 2 +-
- 24 files changed, 16 insertions(+), 17 deletions(-)
- rename Documentation/{ => driver-api}/driver-model/binding.rst (100%)
- rename Documentation/{ => driver-api}/driver-model/bus.rst (100%)
- rename Documentation/{ => driver-api}/driver-model/class.rst (100%)
- rename Documentation/{ => driver-api}/driver-model/design-patterns.rst (100%)
- rename Documentation/{ => driver-api}/driver-model/device.rst (100%)
- rename Documentation/{ => driver-api}/driver-model/devres.rst (100%)
- rename Documentation/{ => driver-api}/driver-model/driver.rst (100%)
- rename Documentation/{ => driver-api}/driver-model/index.rst (96%)
- rename Documentation/{ => driver-api}/driver-model/overview.rst (100%)
- rename Documentation/{ => driver-api}/driver-model/platform.rst (100%)
- rename Documentation/{ => driver-api}/driver-model/porting.rst (99%)
+ Documentation/ABI/stable/sysfs-devices-node     |  2 +-
+ Documentation/ABI/testing/procfs-diskstats      |  2 +-
+ Documentation/ABI/testing/sysfs-block           |  2 +-
+ .../ABI/testing/sysfs-devices-system-cpu        |  4 ++--
+ .../{btmrvl.txt => admin-guide/btmrvl.rst}      |  0
+ .../clearing-warn-once.rst}                     |  0
+ .../{cpu-load.txt => admin-guide/cpu-load.rst}  |  0
+ .../cputopology.rst}                            |  0
+ .../admin-guide/device-mapper/statistics.rst    |  4 ++--
+ .../{efi-stub.txt => admin-guide/efi-stub.rst}  |  0
+ .../{highuid.txt => admin-guide/highuid.rst}    |  0
+ Documentation/admin-guide/hw-vuln/l1tf.rst      |  2 +-
+ .../hw_random.rst}                              |  0
+ Documentation/admin-guide/index.rst             | 17 +++++++++++++++++
+ .../{iostats.txt => admin-guide/iostats.rst}    |  0
+ Documentation/admin-guide/kernel-parameters.txt |  2 +-
+ .../kernel-per-CPU-kthreads.rst}                |  0
+ .../lcd-panel-cgram.rst                         |  2 --
+ Documentation/{ldm.txt => admin-guide/ldm.rst}  |  0
+ .../lockup-watchdogs.rst}                       |  0
+ .../mm/cma_debugfs.rst}                         |  2 --
+ Documentation/admin-guide/mm/index.rst          |  1 +
+ .../{numastat.txt => admin-guide/numastat.rst}  |  0
+ Documentation/{pnp.txt => admin-guide/pnp.rst}  |  0
+ Documentation/{rtc.txt => admin-guide/rtc.rst}  |  0
+ .../{svga.txt => admin-guide/svga.rst}          |  0
+ Documentation/admin-guide/sysctl/kernel.rst     |  2 +-
+ .../video-output.rst}                           |  0
+ Documentation/fb/vesafb.rst                     |  2 +-
+ Documentation/x86/topology.rst                  |  2 +-
+ MAINTAINERS                                     | 12 ++++++------
+ arch/arm/Kconfig                                |  2 +-
+ arch/parisc/Kconfig                             |  2 +-
+ arch/sh/Kconfig                                 |  2 +-
+ arch/sparc/Kconfig                              |  2 +-
+ arch/x86/Kconfig                                |  4 ++--
+ block/partitions/Kconfig                        |  2 +-
+ drivers/char/Kconfig                            |  4 ++--
+ drivers/char/hw_random/core.c                   |  2 +-
+ include/linux/hw_random.h                       |  2 +-
+ 40 files changed, 47 insertions(+), 33 deletions(-)
+ rename Documentation/{btmrvl.txt => admin-guide/btmrvl.rst} (100%)
+ rename Documentation/{clearing-warn-once.txt => admin-guide/clearing-warn-once.rst} (100%)
+ rename Documentation/{cpu-load.txt => admin-guide/cpu-load.rst} (100%)
+ rename Documentation/{cputopology.txt => admin-guide/cputopology.rst} (100%)
+ rename Documentation/{efi-stub.txt => admin-guide/efi-stub.rst} (100%)
+ rename Documentation/{highuid.txt => admin-guide/highuid.rst} (100%)
+ rename Documentation/{hw_random.txt => admin-guide/hw_random.rst} (100%)
+ rename Documentation/{iostats.txt => admin-guide/iostats.rst} (100%)
+ rename Documentation/{kernel-per-CPU-kthreads.txt => admin-guide/kernel-per-CPU-kthreads.rst} (100%)
+ rename Documentation/{auxdisplay => admin-guide}/lcd-panel-cgram.rst (99%)
+ rename Documentation/{ldm.txt => admin-guide/ldm.rst} (100%)
+ rename Documentation/{lockup-watchdogs.txt => admin-guide/lockup-watchdogs.rst} (100%)
+ rename Documentation/{cma/debugfs.rst => admin-guide/mm/cma_debugfs.rst} (98%)
+ rename Documentation/{numastat.txt => admin-guide/numastat.rst} (100%)
+ rename Documentation/{pnp.txt => admin-guide/pnp.rst} (100%)
+ rename Documentation/{rtc.txt => admin-guide/rtc.rst} (100%)
+ rename Documentation/{svga.txt => admin-guide/svga.rst} (100%)
+ rename Documentation/{video-output.txt => admin-guide/video-output.rst} (100%)
 
-diff --git a/Documentation/driver-model/binding.rst b/Documentation/driver-api/driver-model/binding.rst
+diff --git a/Documentation/ABI/stable/sysfs-devices-node b/Documentation/ABI/stable/sysfs-devices-node
+index f7ce68fbd4b9..df8413cf1468 100644
+--- a/Documentation/ABI/stable/sysfs-devices-node
++++ b/Documentation/ABI/stable/sysfs-devices-node
+@@ -61,7 +61,7 @@ Date:		October 2002
+ Contact:	Linux Memory Management list <linux-mm@kvack.org>
+ Description:
+ 		The node's hit/miss statistics, in units of pages.
+-		See Documentation/numastat.txt
++		See Documentation/admin-guide/numastat.rst
+ 
+ What:		/sys/devices/system/node/nodeX/distance
+ Date:		October 2002
+diff --git a/Documentation/ABI/testing/procfs-diskstats b/Documentation/ABI/testing/procfs-diskstats
+index abac31d216de..2c44b4f1b060 100644
+--- a/Documentation/ABI/testing/procfs-diskstats
++++ b/Documentation/ABI/testing/procfs-diskstats
+@@ -29,4 +29,4 @@ Description:
+ 		17 - sectors discarded
+ 		18 - time spent discarding
+ 
+-		For more details refer to Documentation/iostats.txt
++		For more details refer to Documentation/admin-guide/iostats.rst
+diff --git a/Documentation/ABI/testing/sysfs-block b/Documentation/ABI/testing/sysfs-block
+index dfad7427817c..f8c7c7126bb1 100644
+--- a/Documentation/ABI/testing/sysfs-block
++++ b/Documentation/ABI/testing/sysfs-block
+@@ -15,7 +15,7 @@ Description:
+ 		 9 - I/Os currently in progress
+ 		10 - time spent doing I/Os (ms)
+ 		11 - weighted time spent doing I/Os (ms)
+-		For more details refer Documentation/iostats.txt
++		For more details refer Documentation/admin-guide/iostats.rst
+ 
+ 
+ What:		/sys/block/<disk>/<part>/stat
+diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+index d404603c6b52..5f7d7b14fa44 100644
+--- a/Documentation/ABI/testing/sysfs-devices-system-cpu
++++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+@@ -34,7 +34,7 @@ Description:	CPU topology files that describe kernel limits related to
+ 		present: cpus that have been identified as being present in
+ 		the system.
+ 
+-		See Documentation/cputopology.txt for more information.
++		See Documentation/admin-guide/cputopology.rst for more information.
+ 
+ 
+ What:		/sys/devices/system/cpu/probe
+@@ -103,7 +103,7 @@ Description:	CPU topology files that describe a logical CPU's relationship
+ 		thread_siblings_list: human-readable list of cpu#'s hardware
+ 		threads within the same core as cpu#
+ 
+-		See Documentation/cputopology.txt for more information.
++		See Documentation/admin-guide/cputopology.rst for more information.
+ 
+ 
+ What:		/sys/devices/system/cpu/cpuidle/current_driver
+diff --git a/Documentation/btmrvl.txt b/Documentation/admin-guide/btmrvl.rst
 similarity index 100%
-rename from Documentation/driver-model/binding.rst
-rename to Documentation/driver-api/driver-model/binding.rst
-diff --git a/Documentation/driver-model/bus.rst b/Documentation/driver-api/driver-model/bus.rst
+rename from Documentation/btmrvl.txt
+rename to Documentation/admin-guide/btmrvl.rst
+diff --git a/Documentation/clearing-warn-once.txt b/Documentation/admin-guide/clearing-warn-once.rst
 similarity index 100%
-rename from Documentation/driver-model/bus.rst
-rename to Documentation/driver-api/driver-model/bus.rst
-diff --git a/Documentation/driver-model/class.rst b/Documentation/driver-api/driver-model/class.rst
+rename from Documentation/clearing-warn-once.txt
+rename to Documentation/admin-guide/clearing-warn-once.rst
+diff --git a/Documentation/cpu-load.txt b/Documentation/admin-guide/cpu-load.rst
 similarity index 100%
-rename from Documentation/driver-model/class.rst
-rename to Documentation/driver-api/driver-model/class.rst
-diff --git a/Documentation/driver-model/design-patterns.rst b/Documentation/driver-api/driver-model/design-patterns.rst
+rename from Documentation/cpu-load.txt
+rename to Documentation/admin-guide/cpu-load.rst
+diff --git a/Documentation/cputopology.txt b/Documentation/admin-guide/cputopology.rst
 similarity index 100%
-rename from Documentation/driver-model/design-patterns.rst
-rename to Documentation/driver-api/driver-model/design-patterns.rst
-diff --git a/Documentation/driver-model/device.rst b/Documentation/driver-api/driver-model/device.rst
+rename from Documentation/cputopology.txt
+rename to Documentation/admin-guide/cputopology.rst
+diff --git a/Documentation/admin-guide/device-mapper/statistics.rst b/Documentation/admin-guide/device-mapper/statistics.rst
+index 3d80a9f850cc..41ded0bc5933 100644
+--- a/Documentation/admin-guide/device-mapper/statistics.rst
++++ b/Documentation/admin-guide/device-mapper/statistics.rst
+@@ -13,7 +13,7 @@ the range specified.
+ 
+ The I/O statistics counters for each step-sized area of a region are
+ in the same format as `/sys/block/*/stat` or `/proc/diskstats` (see:
+-Documentation/iostats.txt).  But two extra counters (12 and 13) are
++Documentation/admin-guide/iostats.rst).  But two extra counters (12 and 13) are
+ provided: total time spent reading and writing.  When the histogram
+ argument is used, the 14th parameter is reported that represents the
+ histogram of latencies.  All these counters may be accessed by sending
+@@ -151,7 +151,7 @@ Messages
+ 	  The first 11 counters have the same meaning as
+ 	  `/sys/block/*/stat or /proc/diskstats`.
+ 
+-	  Please refer to Documentation/iostats.txt for details.
++	  Please refer to Documentation/admin-guide/iostats.rst for details.
+ 
+ 	  1. the number of reads completed
+ 	  2. the number of reads merged
+diff --git a/Documentation/efi-stub.txt b/Documentation/admin-guide/efi-stub.rst
 similarity index 100%
-rename from Documentation/driver-model/device.rst
-rename to Documentation/driver-api/driver-model/device.rst
-diff --git a/Documentation/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+rename from Documentation/efi-stub.txt
+rename to Documentation/admin-guide/efi-stub.rst
+diff --git a/Documentation/highuid.txt b/Documentation/admin-guide/highuid.rst
 similarity index 100%
-rename from Documentation/driver-model/devres.rst
-rename to Documentation/driver-api/driver-model/devres.rst
-diff --git a/Documentation/driver-model/driver.rst b/Documentation/driver-api/driver-model/driver.rst
+rename from Documentation/highuid.txt
+rename to Documentation/admin-guide/highuid.rst
+diff --git a/Documentation/admin-guide/hw-vuln/l1tf.rst b/Documentation/admin-guide/hw-vuln/l1tf.rst
+index 656aee262e23..f83212fae4d5 100644
+--- a/Documentation/admin-guide/hw-vuln/l1tf.rst
++++ b/Documentation/admin-guide/hw-vuln/l1tf.rst
+@@ -241,7 +241,7 @@ Guest mitigation mechanisms
+    For further information about confining guests to a single or to a group
+    of cores consult the cpusets documentation:
+ 
+-   https://www.kernel.org/doc/Documentation/cgroup-v1/cpusets.rst
++   https://www.kernel.org/doc/Documentation/admin-guide/cgroup-v1/cpusets.rst
+ 
+ .. _interrupt_isolation:
+ 
+diff --git a/Documentation/hw_random.txt b/Documentation/admin-guide/hw_random.rst
 similarity index 100%
-rename from Documentation/driver-model/driver.rst
-rename to Documentation/driver-api/driver-model/driver.rst
-diff --git a/Documentation/driver-model/index.rst b/Documentation/driver-api/driver-model/index.rst
-similarity index 96%
-rename from Documentation/driver-model/index.rst
-rename to Documentation/driver-api/driver-model/index.rst
-index 9f85d579ce56..755016422269 100644
---- a/Documentation/driver-model/index.rst
-+++ b/Documentation/driver-api/driver-model/index.rst
+rename from Documentation/hw_random.txt
+rename to Documentation/admin-guide/hw_random.rst
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index d5064f1802c1..2c20607e90cd 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -84,8 +84,25 @@ configure specific aspects of kernel behavior to your liking.
+    perf-security
+    acpi/index
+    aoe/index
++   btmrvl
++   clearing-warn-once
++   cpu-load
++   cputopology
+    device-mapper/index
++   efi-stub
++   highuid
++   hw_random
++   iostats
++   kernel-per-CPU-kthreads
+    laptops/index
++   lcd-panel-cgram
++   ldm
++   lockup-watchdogs
++   numastat
++   pnp
++   rtc
++   svga
++   video-output
+ 
+ .. only::  subproject and html
+ 
+diff --git a/Documentation/iostats.txt b/Documentation/admin-guide/iostats.rst
+similarity index 100%
+rename from Documentation/iostats.txt
+rename to Documentation/admin-guide/iostats.rst
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index e833133c8897..713d6f378fbe 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5092,7 +5092,7 @@
+ 
+ 	vga=		[BOOT,X86-32] Select a particular video mode
+ 			See Documentation/x86/boot.rst and
+-			Documentation/svga.txt.
++			Documentation/admin-guide/svga.rst.
+ 			Use vga=ask for menu.
+ 			This is actually a boot loader parameter; the value is
+ 			passed to the kernel using a special protocol.
+diff --git a/Documentation/kernel-per-CPU-kthreads.txt b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
+similarity index 100%
+rename from Documentation/kernel-per-CPU-kthreads.txt
+rename to Documentation/admin-guide/kernel-per-CPU-kthreads.rst
+diff --git a/Documentation/auxdisplay/lcd-panel-cgram.rst b/Documentation/admin-guide/lcd-panel-cgram.rst
+similarity index 99%
+rename from Documentation/auxdisplay/lcd-panel-cgram.rst
+rename to Documentation/admin-guide/lcd-panel-cgram.rst
+index dfef50286018..a3eb00c62f53 100644
+--- a/Documentation/auxdisplay/lcd-panel-cgram.rst
++++ b/Documentation/admin-guide/lcd-panel-cgram.rst
 @@ -1,5 +1,3 @@
 -:orphan:
 -
- ============
- Driver Model
- ============
-diff --git a/Documentation/driver-model/overview.rst b/Documentation/driver-api/driver-model/overview.rst
+ ======================================
+ Parallel port LCD/Keypad Panel support
+ ======================================
+diff --git a/Documentation/ldm.txt b/Documentation/admin-guide/ldm.rst
 similarity index 100%
-rename from Documentation/driver-model/overview.rst
-rename to Documentation/driver-api/driver-model/overview.rst
-diff --git a/Documentation/driver-model/platform.rst b/Documentation/driver-api/driver-model/platform.rst
+rename from Documentation/ldm.txt
+rename to Documentation/admin-guide/ldm.rst
+diff --git a/Documentation/lockup-watchdogs.txt b/Documentation/admin-guide/lockup-watchdogs.rst
 similarity index 100%
-rename from Documentation/driver-model/platform.rst
-rename to Documentation/driver-api/driver-model/platform.rst
-diff --git a/Documentation/driver-model/porting.rst b/Documentation/driver-api/driver-model/porting.rst
-similarity index 99%
-rename from Documentation/driver-model/porting.rst
-rename to Documentation/driver-api/driver-model/porting.rst
-index ae4bf843c1d6..931ea879af3f 100644
---- a/Documentation/driver-model/porting.rst
-+++ b/Documentation/driver-api/driver-model/porting.rst
-@@ -9,7 +9,7 @@ Patrick Mochel
+rename from Documentation/lockup-watchdogs.txt
+rename to Documentation/admin-guide/lockup-watchdogs.rst
+diff --git a/Documentation/cma/debugfs.rst b/Documentation/admin-guide/mm/cma_debugfs.rst
+similarity index 98%
+rename from Documentation/cma/debugfs.rst
+rename to Documentation/admin-guide/mm/cma_debugfs.rst
+index 518fe401b5ee..4e06ffabd78a 100644
+--- a/Documentation/cma/debugfs.rst
++++ b/Documentation/admin-guide/mm/cma_debugfs.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ =====================
+ CMA Debugfs Interface
+ =====================
+diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
+index 5f61a6c429e0..11db46448354 100644
+--- a/Documentation/admin-guide/mm/index.rst
++++ b/Documentation/admin-guide/mm/index.rst
+@@ -26,6 +26,7 @@ the Linux memory management.
+    :maxdepth: 1
  
- Overview
+    concepts
++   cma_debugfs
+    hugetlbpage
+    idle_page_tracking
+    ksm
+diff --git a/Documentation/numastat.txt b/Documentation/admin-guide/numastat.rst
+similarity index 100%
+rename from Documentation/numastat.txt
+rename to Documentation/admin-guide/numastat.rst
+diff --git a/Documentation/pnp.txt b/Documentation/admin-guide/pnp.rst
+similarity index 100%
+rename from Documentation/pnp.txt
+rename to Documentation/admin-guide/pnp.rst
+diff --git a/Documentation/rtc.txt b/Documentation/admin-guide/rtc.rst
+similarity index 100%
+rename from Documentation/rtc.txt
+rename to Documentation/admin-guide/rtc.rst
+diff --git a/Documentation/svga.txt b/Documentation/admin-guide/svga.rst
+similarity index 100%
+rename from Documentation/svga.txt
+rename to Documentation/admin-guide/svga.rst
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index a0c1d4ce403a..032c7cd3cede 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -327,7 +327,7 @@ when a hard lockup is detected.
+    0 - don't panic on hard lockup
+    1 - panic on hard lockup
  
--Please refer to `Documentation/driver-model/*.rst` for definitions of
-+Please refer to `Documentation/driver-api/driver-model/*.rst` for definitions of
- various driver types and concepts.
- 
- Most of the work of porting devices drivers to the new model happens
-diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
-index 349f2dc33029..921c71a3d683 100644
---- a/Documentation/driver-api/gpio/driver.rst
-+++ b/Documentation/driver-api/gpio/driver.rst
-@@ -399,7 +399,7 @@ symbol:
-   will pass the struct gpio_chip* for the chip to all IRQ callbacks, so the
-   callbacks need to embed the gpio_chip in its state container and obtain a
-   pointer to the container using container_of().
--  (See Documentation/driver-model/design-patterns.rst)
-+  (See Documentation/driver-api/driver-model/design-patterns.rst)
- 
- - gpiochip_irqchip_add_nested(): adds a nested cascaded irqchip to a gpiochip,
-   as discussed above regarding different types of cascaded irqchips. The
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index fea0034afa56..93d187bf4853 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -14,6 +14,7 @@ available subsections can be seen below.
- .. toctree::
-    :maxdepth: 2
- 
-+   driver-model/index
-    basics
-    infrastructure
-    early-userspace/index
-diff --git a/Documentation/eisa.txt b/Documentation/eisa.txt
-index f388545a85a7..c07565ba57da 100644
---- a/Documentation/eisa.txt
-+++ b/Documentation/eisa.txt
-@@ -103,7 +103,7 @@ id_table	an array of NULL terminated EISA id strings,
- 		(driver_data).
- 
- driver		a generic driver, such as described in
--		Documentation/driver-model/driver.rst. Only .name,
-+		Documentation/driver-api/driver-model/driver.rst. Only .name,
- 		.probe and .remove members are mandatory.
- =============== ====================================================
- 
-@@ -152,7 +152,7 @@ state    set of flags indicating the state of the device. Current
- 	 flags are EISA_CONFIG_ENABLED and EISA_CONFIG_FORCED.
- res	 set of four 256 bytes I/O regions allocated to this device
- dma_mask DMA mask set from the parent device.
--dev	 generic device (see Documentation/driver-model/device.rst)
-+dev	 generic device (see Documentation/driver-api/driver-model/device.rst)
- ======== ============================================================
- 
- You can get the 'struct eisa_device' from 'struct device' using the
-diff --git a/Documentation/filesystems/sysfs.txt b/Documentation/filesystems/sysfs.txt
-index 5b5311f9358d..ddf15b1b0d5a 100644
---- a/Documentation/filesystems/sysfs.txt
-+++ b/Documentation/filesystems/sysfs.txt
-@@ -319,7 +319,7 @@ quick way to lookup the sysfs interface for a device from the result of
- a stat(2) operation.
- 
- More information can driver-model specific features can be found in
--Documentation/driver-model/. 
-+Documentation/driver-api/driver-model/.
+-See Documentation/lockup-watchdogs.txt for more information.  This can
++See Documentation/admin-guide/lockup-watchdogs.rst for more information.  This can
+ also be set using the nmi_watchdog kernel parameter.
  
  
- TODO: Finish this section.
-diff --git a/Documentation/hwmon/submitting-patches.rst b/Documentation/hwmon/submitting-patches.rst
-index d5b05d3e54ba..452fc28d8e0b 100644
---- a/Documentation/hwmon/submitting-patches.rst
-+++ b/Documentation/hwmon/submitting-patches.rst
-@@ -89,7 +89,7 @@ increase the chances of your change being accepted.
-   console. Excessive logging can seriously affect system performance.
+diff --git a/Documentation/video-output.txt b/Documentation/admin-guide/video-output.rst
+similarity index 100%
+rename from Documentation/video-output.txt
+rename to Documentation/admin-guide/video-output.rst
+diff --git a/Documentation/fb/vesafb.rst b/Documentation/fb/vesafb.rst
+index 2ed0dfb661cf..6821c87b7893 100644
+--- a/Documentation/fb/vesafb.rst
++++ b/Documentation/fb/vesafb.rst
+@@ -30,7 +30,7 @@ How to use it?
+ ==============
  
- * Use devres functions whenever possible to allocate resources. For rationale
--  and supported functions, please see Documentation/driver-model/devres.rst.
-+  and supported functions, please see Documentation/driver-api/driver-model/devres.rst.
-   If a function is not supported by devres, consider using devm_add_action().
+ Switching modes is done using the vga=... boot parameter.  Read
+-Documentation/svga.txt for details.
++Documentation/admin-guide/svga.rst for details.
  
- * If the driver has a detect function, make sure it is silent. Debug messages
-diff --git a/Documentation/translations/zh_CN/filesystems/sysfs.txt b/Documentation/translations/zh_CN/filesystems/sysfs.txt
-index 452271dda141..ee1f37da5b23 100644
---- a/Documentation/translations/zh_CN/filesystems/sysfs.txt
-+++ b/Documentation/translations/zh_CN/filesystems/sysfs.txt
-@@ -288,7 +288,7 @@ dev/ 包含两个子目录： char/ 和 block/。在这两个子目录中，有
- 中相应的设备。/sys/dev 提供一个通过一个 stat(2) 操作结果，查找
- 设备 sysfs 接口快捷的方法。
+ You should compile in both vgacon (for text mode) and vesafb (for
+ graphics mode). Which of them takes over the console depends on
+diff --git a/Documentation/x86/topology.rst b/Documentation/x86/topology.rst
+index 8e9704f61017..e29739904e37 100644
+--- a/Documentation/x86/topology.rst
++++ b/Documentation/x86/topology.rst
+@@ -9,7 +9,7 @@ representation in the kernel. Update/change when doing changes to the
+ respective code.
  
--更多有关 driver-model 的特性信息可以在 Documentation/driver-model/
-+更多有关 driver-model 的特性信息可以在 Documentation/driver-api/driver-model/
- 中找到。
+ The architecture-agnostic topology definitions are in
+-Documentation/cputopology.txt. This file holds x86-specific
++Documentation/admin-guide/cputopology.rst. This file holds x86-specific
+ differences/specialities which must not necessarily apply to the generic
+ definitions. Thus, the way to read up on Linux topology on x86 is to start
+ with the generic one and look at this one in parallel for the x86 specifics.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 82222aa618c5..76b52a20663e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6054,7 +6054,7 @@ M:	Ard Biesheuvel <ard.biesheuvel@linaro.org>
+ L:	linux-efi@vger.kernel.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
+ S:	Maintained
+-F:	Documentation/efi-stub.txt
++F:	Documentation/admin-guide/efi-stub.rst
+ F:	arch/*/kernel/efi.c
+ F:	arch/x86/boot/compressed/eboot.[ch]
+ F:	arch/*/include/asm/efi.h
+@@ -7033,7 +7033,7 @@ M:	Herbert Xu <herbert@gondor.apana.org.au>
+ L:	linux-crypto@vger.kernel.org
+ S:	Odd fixes
+ F:	Documentation/devicetree/bindings/rng/
+-F:	Documentation/hw_random.txt
++F:	Documentation/admin-guide/hw_random.rst
+ F:	drivers/char/hw_random/
+ F:	include/linux/hw_random.h
  
+@@ -9347,7 +9347,7 @@ M:	"Richard Russon (FlatCap)" <ldm@flatcap.org>
+ L:	linux-ntfs-dev@lists.sourceforge.net
+ W:	http://www.linux-ntfs.org/content/view/19/37/
+ S:	Maintained
+-F:	Documentation/ldm.txt
++F:	Documentation/admin-guide/ldm.rst
+ F:	block/partitions/ldm.*
  
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 713903290385..506a0175a5a7 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -5,7 +5,7 @@
-  * Copyright (c) 2002-3 Patrick Mochel
-  * Copyright (c) 2002-3 Open Source Development Labs
-  *
-- * Please see Documentation/driver-model/platform.rst for more
-+ * Please see Documentation/driver-api/driver-model/platform.rst for more
-  * information.
-  */
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+@@ -12000,7 +12000,7 @@ PARALLEL LCD/KEYPAD PANEL DRIVER
+ M:	Willy Tarreau <willy@haproxy.com>
+ M:	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
+ S:	Odd Fixes
+-F:	Documentation/auxdisplay/lcd-panel-cgram.rst
++F:	Documentation/admin-guide/lcd-panel-cgram.rst
+ F:	drivers/auxdisplay/panel.c
  
-diff --git a/drivers/gpio/gpio-cs5535.c b/drivers/gpio/gpio-cs5535.c
-index 3611a0571667..53b24e3ae7de 100644
---- a/drivers/gpio/gpio-cs5535.c
-+++ b/drivers/gpio/gpio-cs5535.c
-@@ -41,7 +41,7 @@ MODULE_PARM_DESC(mask, "GPIO channel mask.");
+ PARALLEL PORT SUBSYSTEM
+@@ -13419,7 +13419,7 @@ Q:	http://patchwork.ozlabs.org/project/rtc-linux/list/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/rtc/
+-F:	Documentation/rtc.txt
++F:	Documentation/admin-guide/rtc.rst
+ F:	drivers/rtc/
+ F:	include/linux/rtc.h
+ F:	include/uapi/linux/rtc.h
+@@ -15248,7 +15248,7 @@ SVGA HANDLING
+ M:	Martin Mares <mj@ucw.cz>
+ L:	linux-video@atrey.karlin.mff.cuni.cz
+ S:	Maintained
+-F:	Documentation/svga.txt
++F:	Documentation/admin-guide/svga.rst
+ F:	arch/x86/boot/video*
  
- /*
-  * FIXME: convert this singleton driver to use the state container
-- * design pattern, see Documentation/driver-model/design-patterns.rst
-+ * design pattern, see Documentation/driver-api/driver-model/design-patterns.rst
-  */
- static struct cs5535_gpio_chip {
- 	struct gpio_chip chip;
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 41c90f2ddb31..63db08d9bafa 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -2286,7 +2286,7 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
- 	struct ice_hw *hw;
- 	int err;
+ SWIOTLB SUBSYSTEM
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index d5bd4350fcbd..b1ab350b9d60 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1286,7 +1286,7 @@ config SMP
+ 	  will run faster if you say N here.
  
--	/* this driver uses devres, see Documentation/driver-model/devres.rst */
-+	/* this driver uses devres, see Documentation/driver-api/driver-model/devres.rst */
- 	err = pcim_enable_device(pdev);
- 	if (err)
- 		return err;
-diff --git a/drivers/staging/unisys/Documentation/overview.txt b/drivers/staging/unisys/Documentation/overview.txt
-index 9ab30af265a5..f8a4144b239c 100644
---- a/drivers/staging/unisys/Documentation/overview.txt
-+++ b/drivers/staging/unisys/Documentation/overview.txt
-@@ -15,7 +15,7 @@ normally be unsharable, specifically:
- * visorinput - keyboard and mouse
+ 	  See also <file:Documentation/x86/i386/IO-APIC.rst>,
+-	  <file:Documentation/lockup-watchdogs.txt> and the SMP-HOWTO available at
++	  <file:Documentation/admin-guide/lockup-watchdogs.rst> and the SMP-HOWTO available at
+ 	  <http://tldp.org/HOWTO/SMP-HOWTO.html>.
  
- These drivers conform to the standard Linux bus/device model described
--within Documentation/driver-model/, and utilize a driver named visorbus to
-+within Documentation/driver-api/driver-model/, and utilize a driver named visorbus to
- present the virtual busses involved. Drivers in the 'visor*' driver set are
- commonly referred to as "guest drivers" or "client drivers".  All drivers
- except visorbus expose a device of a specific usable class to the Linux guest
-@@ -141,7 +141,7 @@ called automatically by the visorbus driver at appropriate times:
- -----------------------------------
+ 	  If you don't know what to do here, say N.
+diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
+index 42875ff15671..6d732e451071 100644
+--- a/arch/parisc/Kconfig
++++ b/arch/parisc/Kconfig
+@@ -277,7 +277,7 @@ config SMP
+ 	  machines, but will use only one CPU of a multiprocessor machine.
+ 	  On a uniprocessor machine, the kernel will run faster if you say N.
  
- Because visorbus is a standard Linux bus driver in the model described in
--Documentation/driver-model/, the hierarchy of s-Par virtual devices is
-+Documentation/driver-api/driver-model/, the hierarchy of s-Par virtual devices is
- published in the sysfs tree beneath /bus/visorbus/, e.g.,
- /sys/bus/visorbus/devices/ might look like:
+-	  See also <file:Documentation/lockup-watchdogs.txt> and the SMP-HOWTO
++	  See also <file:Documentation/admin-guide/lockup-watchdogs.rst> and the SMP-HOWTO
+ 	  available at <http://www.tldp.org/docs.html#howto>.
  
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 4f65c424e5fd..93b12aec9bff 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -6,7 +6,7 @@
-  * Copyright (c) 2004-2009 Greg Kroah-Hartman <gregkh@suse.de>
-  * Copyright (c) 2008-2009 Novell Inc.
-  *
-- * See Documentation/driver-model/ for more information.
-+ * See Documentation/driver-api/driver-model/ for more information.
-  */
+ 	  If you don't know what to do here, say N.
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index c2858ac6a46a..6b1b5941b618 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -679,7 +679,7 @@ config SMP
+ 	  People using multiprocessor machines who say Y here should also say
+ 	  Y to "Enhanced Real Time Clock Support", below.
  
- #ifndef _DEVICE_H_
-diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-index beb25f277889..9bc36b589827 100644
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
+-	  See also <file:Documentation/lockup-watchdogs.txt> and the SMP-HOWTO
++	  See also <file:Documentation/admin-guide/lockup-watchdogs.rst> and the SMP-HOWTO
+ 	  available at <http://www.tldp.org/docs.html#howto>.
+ 
+ 	  If you don't know what to do here, say N.
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index e9f5d62e9817..7926a2e11bdc 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -180,7 +180,7 @@ config SMP
+ 	  Y to "Enhanced Real Time Clock Support", below. The "Advanced Power
+ 	  Management" code will be disabled if you say Y here.
+ 
+-	  See also <file:Documentation/lockup-watchdogs.txt> and the SMP-HOWTO
++	  See also <file:Documentation/admin-guide/lockup-watchdogs.rst> and the SMP-HOWTO
+ 	  available at <http://www.tldp.org/docs.html#howto>.
+ 
+ 	  If you don't know what to do here, say N.
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 489fd833b980..2ca471ae6756 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -402,7 +402,7 @@ config SMP
+ 	  Management" code will be disabled if you say Y here.
+ 
+ 	  See also <file:Documentation/x86/i386/IO-APIC.rst>,
+-	  <file:Documentation/lockup-watchdogs.txt> and the SMP-HOWTO available at
++	  <file:Documentation/admin-guide/lockup-watchdogs.rst> and the SMP-HOWTO available at
+ 	  <http://www.tldp.org/docs.html#howto>.
+ 
+ 	  If you don't know what to do here, say N.
+@@ -1959,7 +1959,7 @@ config EFI_STUB
+           This kernel feature allows a bzImage to be loaded directly
+ 	  by EFI firmware without the use of a bootloader.
+ 
+-	  See Documentation/efi-stub.txt for more information.
++	  See Documentation/admin-guide/efi-stub.rst for more information.
+ 
+ config EFI_MIXED
+ 	bool "EFI mixed-mode support"
+diff --git a/block/partitions/Kconfig b/block/partitions/Kconfig
+index 37b9710cc80a..702689a628f0 100644
+--- a/block/partitions/Kconfig
++++ b/block/partitions/Kconfig
+@@ -194,7 +194,7 @@ config LDM_PARTITION
+ 	  Normal partitions are now called Basic Disks under Windows 2000, XP,
+ 	  and Vista.
+ 
+-	  For a fuller description read <file:Documentation/ldm.txt>.
++	  For a fuller description read <file:Documentation/admin-guide/ldm.rst>.
+ 
+ 	  If unsure, say N.
+ 
+diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+index 442403abd73a..3e866885a405 100644
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -291,7 +291,7 @@ config RTC
+ 	  and set the RTC in an SMP compatible fashion.
+ 
+ 	  If you think you have a use for such a device (such as periodic data
+-	  sampling), then say Y here, and read <file:Documentation/rtc.txt>
++	  sampling), then say Y here, and read <file:Documentation/admin-guide/rtc.rst>
+ 	  for details.
+ 
+ 	  To compile this driver as a module, choose M here: the
+@@ -313,7 +313,7 @@ config JS_RTC
+ 	  /dev/rtc.
+ 
+ 	  If you think you have a use for such a device (such as periodic data
+-	  sampling), then say Y here, and read <file:Documentation/rtc.txt>
++	  sampling), then say Y here, and read <file:Documentation/admin-guide/rtc.rst>
+ 	  for details.
+ 
+ 	  To compile this driver as a module, choose M here: the
+diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
+index 95be7228f327..9044d31ab1a1 100644
+--- a/drivers/char/hw_random/core.c
++++ b/drivers/char/hw_random/core.c
 @@ -4,7 +4,7 @@
+  * Copyright 2006 Michael Buesch <m@bues.ch>
+  * Copyright 2005 (c) MontaVista Software, Inc.
   *
-  * Copyright (c) 2001-2003 Patrick Mochel <mochel@osdl.org>
+- * Please read Documentation/hw_random.txt for details on use.
++ * Please read Documentation/admin-guide/hw_random.rst for details on use.
   *
-- * See Documentation/driver-model/ for more information.
-+ * See Documentation/driver-api/driver-model/ for more information.
-  */
+  * This software may be used and distributed according to the terms
+  * of the GNU General Public License, incorporated herein by reference.
+diff --git a/include/linux/hw_random.h b/include/linux/hw_random.h
+index c0b93e0ff0c0..8e6dd908da21 100644
+--- a/include/linux/hw_random.h
++++ b/include/linux/hw_random.h
+@@ -1,7 +1,7 @@
+ /*
+ 	Hardware Random Number Generator
  
- #ifndef _PLATFORM_DEVICE_H_
-diff --git a/scripts/coccinelle/free/devm_free.cocci b/scripts/coccinelle/free/devm_free.cocci
-index fefd0331a2de..441799b5359b 100644
---- a/scripts/coccinelle/free/devm_free.cocci
-+++ b/scripts/coccinelle/free/devm_free.cocci
-@@ -3,7 +3,7 @@
- /// functions.  Values allocated using the devm_functions are freed when
- /// the device is detached, and thus the use of the standard freeing
- /// function would cause a double free.
--/// See Documentation/driver-model/devres.rst for more information.
-+/// See Documentation/driver-api/driver-model/devres.rst for more information.
- ///
- /// A difficulty of detecting this problem is that the standard freeing
- /// function might be called from a different function than the one
+-	Please read Documentation/hw_random.txt for details on use.
++	Please read Documentation/admin-guide/hw_random.rst for details on use.
+ 
+ 	----------------------------------------------------------
+ 	This software may be used and distributed according to the terms
 -- 
 2.21.0
 
