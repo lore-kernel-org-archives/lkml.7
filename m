@@ -2,145 +2,111 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF72C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F91C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7769421726
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ABA2208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:10:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HASIAZx3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfF1JKb (ORCPT
+        id S1726687AbfF1JKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:10:31 -0400
-Received: from twhmllg3.macronix.com ([211.75.127.131]:11578 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfF1JKa (ORCPT
+        Fri, 28 Jun 2019 05:10:41 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34476 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfF1JKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:10:30 -0400
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id x5S99G0c007723;
-        Fri, 28 Jun 2019 17:09:16 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 5F2865BB3BC9A59DC514;
-        Fri, 28 Jun 2019 17:09:16 +0800 (CST)
-In-Reply-To: <20190628094250.1fd84505@xps13>
-References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw> <1561443056-13766-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190627192609.0965f6d5@xps13> <OFFBD1710A.54AC467B-ON48258427.0023FCA3-48258427.00255B71@mxic.com.tw> <20190628094250.1fd84505@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     anders.roxell@linaro.org, bbrezillon@kernel.org,
-        broonie@kernel.org, christophe.kerello@st.com,
-        computersforpeace@gmail.com, devicetree@vger.kernel.org,
-        dwmw2@infradead.org, jianxin.pan@amlogic.com, juliensu@mxic.com.tw,
-        lee.jones@linaro.org, liang.yang@amlogic.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, paul@crapouillou.net, paul.burton@mips.com,
-        richard@nod.at, robh+dt@kernel.org, stefan@agner.ch,
-        vigneshr@ti.com
-Subject: Re: [PATCH v4 2/2] dt-bindings: mtd: Document Macronix raw NAND controller
- bindings
+        Fri, 28 Jun 2019 05:10:40 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5S9APlg043287;
+        Fri, 28 Jun 2019 04:10:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561713025;
+        bh=PyzXqhCWhSAbLB5+/1FsHp/HhykuAK3VDCsltKyHkjM=;
+        h=From:To:CC:Subject:Date;
+        b=HASIAZx39UXcn/CCT75M4FcplifCc6kQNhPFDRY72paGex9EZw+fcaRTcMHFW5ws6
+         0MfzJ6lWWK6kddiR6GZs9+w9C2isfJVSxbwIbFAoatd+5KdJYW+WMAe34zzyaXDr4x
+         HONLRwllUmzL73C9dL73ZJe8tj7TeeIYvghx8w8U=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5S9APnv115253
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Jun 2019 04:10:25 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 28
+ Jun 2019 04:10:25 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 28 Jun 2019 04:10:25 -0500
+Received: from pratyush-laptop.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5S9ALY9077598;
+        Fri, 28 Jun 2019 04:10:22 -0500
+From:   Pratyush Yadav <p-yadav1@ti.com>
+To:     <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <wmills@ti.com>, <nsekhar@ti.com>, <lokeshvutla@ti.com>,
+        Pratyush Yadav <p-yadav1@ti.com>
+Subject: [PATCH] iommu/arm-smmu-v3: Fix incorrect fields being passed to prefetch command
+Date:   Fri, 28 Jun 2019 14:39:53 +0530
+Message-ID: <20190628090953.23606-1-p-yadav1@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-KeepSent: F895B48A:00F391C1-48258427:002F8256;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFF895B48A.00F391C1-ON48258427.002F8256-48258427.003249E0@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Fri, 28 Jun 2019 17:09:16 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/06/28 PM 05:09:16,
-        Serialize complete at 2019/06/28 PM 05:09:16
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com x5S99G0c007723
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+According to the SMMUv3 spec [0] section 4.2.1, command 0x1
+(CMD_PREFETCH_CONFIG) does not take address and size as parameters. It
+only takes  StreamID, SSec, SubstreamID, and SSV. Address and Size are
+parameters for command 0x2 (CMD_PREFETCH_ADDR).
 
-Hi Miquel,
+Tested on kernel 4.19 on TI J721E SOC.
 
-> 
-> Please always Cc: Rob (robh+dt@kernel.org) when you send bindings
-> related patches.
+[0] https://static.docs.arm.com/ihi0070/a/IHI_0070A_SMMUv3.pdf
 
-Understood. thanks for your remind.
+Signed-off-by: Pratyush Yadav <p-yadav1@ti.com>
+---
+ drivers/iommu/arm-smmu-v3.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-
-> > 
-> > > 
-> > > > +- reg: should contain 1 entrie for the registers 
-> > > 
-> > >                            entry
-> > > 
-> > > > +- reg-names: should contain "regs" 
-> > > 
-> > > Not sure you need that? 
-> > 
-> > for a base address of ctlr registers.
-> 
-> Yes I know, I mean: you don't necessarily need the 'reg-names' property
-> as it is supposed that the only entry will be the IP registers (unless
-> there are more). I don't know what's Rob preference here but I would
-> either drop the reg-names property or enhance the name, "regs" is
-> terribly not descriptive.
-
-Got it, any comment is appreciated for either drop the reg-names property 
-or enhance the name.
-
-> 
-> > > > +- interrupts: interrupt line connected to this NAND controller
-> > > > +- clock-names: should contain "ps_clk", "send_clk" and 
-"send_dly_clk"
-> > > > +- clocks: should contain 3 entries for the "ps_clk", "send_clk" 
-and
-> > > > +    "send_dly_clk" clocks 
-> > > 
-> > > s/entries/phandles/ ? 
-> > 
-> > ?
-> > as I know that kernel views the phandle values as device tree 
-structure
-> > information instead of device tree data and thus does not store them 
-as
-> > properties.
-> 
-> The bindings have nothing to do with the kernel views. They might
-> actually be merged in a different project, out of the kernel.
-> 
-
-if patch to phandle, should we also patch driver to of_xxx_phandle()?
-
-thanks & best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 4d5a694f02c2..2d4dfd909436 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -413,6 +413,7 @@ struct arm_smmu_cmdq_ent {
+ 	/* Command-specific fields */
+ 	union {
+ 		#define CMDQ_OP_PREFETCH_CFG	0x1
++		#define CMDQ_OP_PREFETCH_ADDR	0x2
+ 		struct {
+ 			u32			sid;
+ 			u8			size;
+@@ -805,10 +806,12 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
+ 	case CMDQ_OP_TLBI_EL2_ALL:
+ 	case CMDQ_OP_TLBI_NSNH_ALL:
+ 		break;
+-	case CMDQ_OP_PREFETCH_CFG:
+-		cmd[0] |= FIELD_PREP(CMDQ_PREFETCH_0_SID, ent->prefetch.sid);
++	case CMDQ_OP_PREFETCH_ADDR:
+ 		cmd[1] |= FIELD_PREP(CMDQ_PREFETCH_1_SIZE, ent->prefetch.size);
+ 		cmd[1] |= ent->prefetch.addr & CMDQ_PREFETCH_1_ADDR_MASK;
++		/* Fallthrough */
++	case CMDQ_OP_PREFETCH_CFG:
++		cmd[0] |= FIELD_PREP(CMDQ_PREFETCH_0_SID, ent->prefetch.sid);
+ 		break;
+ 	case CMDQ_OP_CFGI_STE:
+ 		cmd[0] |= FIELD_PREP(CMDQ_CFGI_0_SID, ent->cfgi.sid);
+-- 
+2.17.1
 
