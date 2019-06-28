@@ -2,195 +2,175 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E8AC5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BF6C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41DA20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E7E208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfF1LhO (ORCPT
+        id S1726856AbfF1LhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:37:14 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53744 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfF1LhO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:37:14 -0400
-Received: from laptop (unknown [IPv6:2a01:e34:ee7d:73d0:5796:7015:7f6:aeeb])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 28 Jun 2019 07:37:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45788 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbfF1LhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 07:37:17 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: aragua)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 02577285642;
-        Fri, 28 Jun 2019 12:37:10 +0100 (BST)
-Message-ID: <0af8a4bc994b4e90cb0d079d1c7f105dd2a60e32.camel@collabora.com>
-Subject: Re: [PATCH 1/2] iio: common: cros_ec_sensors: determine protocol
- version
-From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
-To:     Gwendal Grignou <gwendal@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 4C1C687620;
+        Fri, 28 Jun 2019 11:37:11 +0000 (UTC)
+Received: from [10.36.116.156] (ovpn-116-156.ams2.redhat.com [10.36.116.156])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B82C7608CA;
+        Fri, 28 Jun 2019 11:37:08 +0000 (UTC)
+Subject: Re: [PATCH v2 1/3] mm: Trigger bug on if a section is not found in
+ __section_nr
+To:     Michal Hocko <mhocko@kernel.org>,
+        Alastair D'Silva <alastair@d-silva.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20190626061124.16013-1-alastair@au1.ibm.com>
+ <20190626061124.16013-2-alastair@au1.ibm.com>
+ <20190626062113.GF17798@dhcp22.suse.cz>
+ <d4af66721ea53ce7df2d45a567d17a30575672b2.camel@d-silva.org>
+ <20190626065751.GK17798@dhcp22.suse.cz>
+ <e66e43b1fdfbff94ab23a23c48aa6cbe210a3131.camel@d-silva.org>
+ <20190627080724.GK17798@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <634a6b8e-3113-f0af-f8d3-9b766f8cd376@redhat.com>
 Date:   Fri, 28 Jun 2019 13:37:07 +0200
-In-Reply-To: <CAPUE2ut=imx=mhV_iyMwaYmfkFJ0zw3Jvsbxf+TbfqV1Sa_WJw@mail.gmail.com>
-References: <cover.1561642224.git.fabien.lahoudere@collabora.com>
-         <4724b46665d919cae0ea3b60e334053b0b17d686.1561642224.git.fabien.lahoudere@collabora.com>
-         <f8df78b4-8ae9-f292-cf70-ef682a4a47f4@collabora.com>
-         <CAPUE2ut=imx=mhV_iyMwaYmfkFJ0zw3Jvsbxf+TbfqV1Sa_WJw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.2 (3.30.2-2.fc29) 
-Mime-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190627080724.GK17798@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 28 Jun 2019 11:37:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le jeudi 27 juin 2019 à 14:59 -0700, Gwendal Grignou a écrit :
-> On Thu, Jun 27, 2019 at 8:59 AM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
-> > Hi,
-> > 
-> > cc'ing Doug, Gwendal and Enrico that might be interested to give a
-> > review.
-> > 
-> > This patch can be picked alone without 2/2, an is needed to have
-> > cros-ec-sensors
-> > legacy support on ARM (see [1] and [2])
-> > 
-> > Jonathan, as [1] and [2] will go through the chrome-platform tree
-> > if you don't
-> > mind I'd also like to carry with this patch once you're fine with
-> > it.
-> > 
-> > Thanks,
-> > ~ Enric
-> > 
-> > [1] https://patchwork.kernel.org/patch/11014329/
-> > [2] https://patchwork.kernel.org/patch/11014327/
-> > 
-> > On 27/6/19 16:04, Fabien Lahoudere wrote:
-> > > This patch adds a function to determine which version of the
-> > > protocol is used to communicate with EC.
-> > > 
-> > > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> > > Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
-> > 
-> > Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > 
-> > > ---
-> > >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 36
-> > > ++++++++++++++++++-
-> > >  1 file changed, 35 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git
-> > > a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > > index 130362ca421b..2e0f97448e64 100644
-> > > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > > @@ -25,6 +25,31 @@ static char *cros_ec_loc[] = {
-> > >       [MOTIONSENSE_LOC_MAX] = "unknown",
-> > >  };
-> > > 
-> > > +static int cros_ec_get_host_cmd_version_mask(struct
-> > > cros_ec_device *ec_dev,
-> > > +                                          u16 cmd_offset, u16
-> > > cmd, u32 *mask)
-> > > +{
-> > > +     int ret;
-> > > +     struct {
-> > > +             struct cros_ec_command msg;
-> > > +             union {
-> > > +                     struct ec_params_get_cmd_versions params;
-> > > +                     struct ec_response_get_cmd_versions resp;
-> > > +             };
-> > > +     } __packed buf = {
-> > > +             .msg = {
-> add
-> .version = 0,
-> As the variable is coming from the stack, the version should be set.
-> > > +                     .command = EC_CMD_GET_CMD_VERSIONS +
-> > > cmd_offset,
-> > > +                     .insize = sizeof(struct
-> > > ec_response_get_cmd_versions),
-> > > +                     .outsize = sizeof(struct
-> > > ec_params_get_cmd_versions)
-> > > +                     },
-> > > +             .params = {.cmd = cmd}
-> > > +     };
-> > > +
-> > > +     ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-> > > +     if (ret >= 0)
-> It should be > 0: when the command is a success, it returns the
-> number
-> of byte in the response buffer. When don't expect == 0  here, because
-> when successful, EC_CMD_GET_CMD_VERSIONS will return a mask.
-> > > +             *mask = buf.resp.version_mask;
-> > > +     return ret;
-> > > +}
-> > > +
-> > >  int cros_ec_sensors_core_init(struct platform_device *pdev,
-> > >                             struct iio_dev *indio_dev,
-> > >                             bool physical_device)
-> > > @@ -33,6 +58,8 @@ int cros_ec_sensors_core_init(struct
-> > > platform_device *pdev,
-> > >       struct cros_ec_sensors_core_state *state =
-> > > iio_priv(indio_dev);
-> > >       struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
-> > >       struct cros_ec_sensor_platform *sensor_platform =
-> > > dev_get_platdata(dev);
-> > > +     u32 ver_mask;
-> > > +     int ret;
-> > > 
-> > >       platform_set_drvdata(pdev, indio_dev);
-> > > 
-> > > @@ -47,8 +74,15 @@ int cros_ec_sensors_core_init(struct
-> > > platform_device *pdev,
-> > > 
-> > >       mutex_init(&state->cmd_lock);
-> > > 
-> > > +     ret = cros_ec_get_host_cmd_version_mask(state->ec,
-> > > +                                             ec->cmd_offset,
-> > > +                                             EC_CMD_MOTION_SENSE
-> > > _CMD,
-> > > +                                             &ver_mask);
-> > > +     if (ret < 0)
-> Use:
-> if (ret <= 0 || ver_mask == 0) {
-> In case the EC is really old or misbehaving, we don't want to set an
-> invalid version later.
+On 27.06.19 10:10, Michal Hocko wrote:
+> On Thu 27-06-19 10:50:57, Alastair D'Silva wrote:
+>> On Wed, 2019-06-26 at 08:57 +0200, Michal Hocko wrote:
+>>> On Wed 26-06-19 16:27:30, Alastair D'Silva wrote:
+>>>> On Wed, 2019-06-26 at 08:21 +0200, Michal Hocko wrote:
+>>>>> On Wed 26-06-19 16:11:21, Alastair D'Silva wrote:
+>>>>>> From: Alastair D'Silva <alastair@d-silva.org>
+>>>>>>
+>>>>>> If a memory section comes in where the physical address is
+>>>>>> greater
+>>>>>> than
+>>>>>> that which is managed by the kernel, this function would not
+>>>>>> trigger the
+>>>>>> bug and instead return a bogus section number.
+>>>>>>
+>>>>>> This patch tracks whether the section was actually found, and
+>>>>>> triggers the
+>>>>>> bug if not.
+>>>>>
+>>>>> Why do we want/need that? In other words the changelog should
+>>>>> contina
+>>>>> WHY and WHAT. This one contains only the later one.
+>>>>>  
+>>>>
+>>>> Thanks, I'll update the comment.
+>>>>
+>>>> During driver development, I tried adding peristent memory at a
+>>>> memory
+>>>> address that exceeded the maximum permissable address for the
+>>>> platform.
+>>>>
+>>>> This caused __section_nr to silently return bogus section numbers,
+>>>> rather than complaining.
+>>>
+>>> OK, I see, but is an additional code worth it for the non-development
+>>> case? I mean why should we be testing for something that shouldn't
+>>> happen normally? Is it too easy to get things wrong or what is the
+>>> underlying reason to change it now?
+>>>
+>>
+>> It took me a while to identify what the problem was - having the BUG_ON
+>> would have saved me a few hours.
+>>
+>> I'm happy to just have the BUG_ON 'nd drop the new error return (I
+>> added that in response to Mike Rapoport's comment that the original
+>> patch would still return a bogus section number).
+> 
+> Well, BUG_ON is about the worst way to handle an incorrect input. You
+> really do not want to put a production environment down just because
+> there is a bug in a driver, right? There are still many {VM_}BUG_ONs
+> in the tree and there is a general trend to get rid of many of them
+> rather than adding new ones.
 
-To not return a positive value on error if ret >= 0 and ver_mask = 0  
-I would prefer this:
+VM_BUG_ON is only really active with CONFIG_DEBUG_VM. On
+!CONFIG_DEBUG_VM it translated to BUILD_BUG_ON_INVALID(), which is a
+compile-time only check.
 
-	if (ret <= 0)
-		return ret;
+Or am I missing something?
 
-	if (ver_mask == 0)
-		return -EIO;
+-- 
 
-Let me know if I am wrong
+Thanks,
 
-> > > +             return ret;
-> > > +
-> > >       /* Set up the host command structure. */
-> > > -     state->msg->version = 2;
-> > > +     state->msg->version = fls(ver_mask) - 1;;
-> > >       state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec-
-> > > >cmd_offset;
-> > >       state->msg->outsize = sizeof(struct
-> > > ec_params_motion_sense);
-> > > 
-> > > 
-
+David / dhildenb
