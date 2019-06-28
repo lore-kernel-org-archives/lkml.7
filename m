@@ -2,126 +2,66 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C78DC5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4548C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44FD02086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:12:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RrGS2HZm"
+	by mail.kernel.org (Postfix) with ESMTP id B54E52086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfF1HMe (ORCPT
+        id S1727335AbfF1HNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:12:34 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43656 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfF1HMd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:12:33 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 16so4887475ljv.10;
-        Fri, 28 Jun 2019 00:12:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/Cnt58VZhnbwSwijmz21auc9Yvj4p4PpT3m36ds3sv8=;
-        b=RrGS2HZmYNW9Ve83uiayxQophGE2uHC1aW4PDfa9c5x47p2qEWlqVH6UxPRCJpS/ne
-         6KcEizG2I2gHxL7QqRM6H9yvQF2/blA0KZ5aO70FtU27Zun5S3ilMHk70QMpqbLpI/ly
-         uUbq54hToRVCcgo6vY1P4Ubv6J5n5pUhsAC1R9AIMTReADwYhf7nWMqLuTtV5JIxEz1K
-         QdCfKSggPQoB135iMe/d2DPhvVMm7rH6U17BQndqPplv9grygtm11YYftN/0P0JARFSs
-         hMbKFPHQ3woMemiMs6cM958UNgTR2VsgnxM7R6jd58aQOpxEqx2X3rC8jNgVy6898kEl
-         uN+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/Cnt58VZhnbwSwijmz21auc9Yvj4p4PpT3m36ds3sv8=;
-        b=TPccTSZOavxue/ShZ5Y/DOjYu3cQlLCD1TcP32KW1l/Z/rDNIsYFQZK6WJk9X7GHHK
-         1tG6bbg9vhz6SGqtuOO9pVAO8AxyYr1E8jUF5tAIgypUxxmQSanvqneGKCN6yj3JfWjI
-         6BTWps0Q6Gzf++NWsW+fPC5G36yzvrGKzrdJchmQpNk0SHDGT018jvVAgZ8QFePmny3C
-         rnAsDgvEs6RBZDNE4SlYQf6D/0xyzHvHtdiGcVRYzMdozRVI1MNwjUAlyV/Yz1ECMWsz
-         h01dgfvMMH2bLEefwd31pWH8J+wEv6/DPzLSqjYR2t5b8uNakVDnrUdHgbu/48hnvejK
-         Mxug==
-X-Gm-Message-State: APjAAAWXCTmJhKhtmtevKzbbCZ9Cht0NDOR+nWC2NSk6EjDs+c58zJaN
-        b94F5u3tEVp+maaZsVPbac7TAwuh
-X-Google-Smtp-Source: APXvYqx1jBOeBmJ+grvlgQb5D6Tzkz3PENoKFpwqzfzsIWiNEJlLF/GnRT+yY6B8gpiIAqVHv+OQ8w==
-X-Received: by 2002:a2e:2c07:: with SMTP id s7mr5210551ljs.44.1561705951312;
-        Fri, 28 Jun 2019 00:12:31 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id v7sm459505ljj.3.2019.06.28.00.12.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 00:12:30 -0700 (PDT)
-Subject: Re: [PATCH v3 02/22] PM / devfreq: tegra30: Keep interrupt disabled
- while governor is stopped
-To:     myungjoo.ham@samsung.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190627211115.21138-3-digetx@gmail.com>
- <20190627211115.21138-1-digetx@gmail.com>
- <CGME20190627211230epcas5p2504c225e67a823a586768a2749248b72@epcms1p3>
- <20190628064842epcms1p37e66e5fa52885ef7461b439bd336e60f@epcms1p3>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <17fe0599-b36e-31bc-4964-4b7cb77e1d64@gmail.com>
-Date:   Fri, 28 Jun 2019 10:12:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 28 Jun 2019 03:13:00 -0400
+Received: from verein.lst.de ([213.95.11.210]:45777 "EHLO newverein.lst.de"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726574AbfF1HNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 03:13:00 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 71D4B68D04; Fri, 28 Jun 2019 09:12:57 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 09:12:57 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] sh: clkfwk: don't pass void pointers to ioread*
+Message-ID: <20190628071257.GA28615@lst.de>
+References: <20190628062524.5436-1-hch@lst.de> <CAMuHMdVpvu+xzfh3Qee-Yz2H3YDc6CVUocKTwLTUG8gUOQPeGA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190628064842epcms1p37e66e5fa52885ef7461b439bd336e60f@epcms1p3>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVpvu+xzfh3Qee-Yz2H3YDc6CVUocKTwLTUG8gUOQPeGA@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.06.2019 9:48, MyungJoo Ham пишет:
->> There is no real need to keep interrupt always-enabled, will be nicer
->> to keep it disabled while governor is inactive.
->>
->> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->> drivers/devfreq/tegra30-devfreq.c | 43 ++++++++++++++++---------------
->> 1 file changed, 22 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
->> index a27300f40b0b..5e2b133babdd 100644
->> --- a/drivers/devfreq/tegra30-devfreq.c
->> +++ b/drivers/devfreq/tegra30-devfreq.c
-> []
->> @@ -416,8 +417,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
->> {
->> 	unsigned int i;
->>
->> -	disable_irq(tegra->irq);
->> -
->> 	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
->> 		      ACTMON_GLB_PERIOD_CTRL);
->>
+On Fri, Jun 28, 2019 at 09:01:40AM +0200, Geert Uytterhoeven wrote:
+> This is due to include/asm-generic/io.h and include/asm-generic/iomap.h
+> using different prototypes, right?
 > 
-> I think this has nothing to do with
-> "keep it disabled while governor is inactive."
+> include/asm-generic/io.h:static inline u8 ioread8(const volatile void
+> __iomem *addr)
+> include/asm-generic/io.h:static inline u16 ioread16(const volatile
+> void __iomem *addr)
+> include/asm-generic/io.h:static inline u32 ioread32(const volatile
+> void __iomem *addr)
+> include/asm-generic/io.h:static inline u64 ioread64(const volatile
+> void __iomem *addr)
 > 
-> And this looks dangerous because it disables the safety measure
-> of disabling interrupt while you touch some looking-critical registers.
-> Anyway, as I do not know the internals of Tegra SoC, I cannot sure.
+> include/asm-generic/iomap.h:extern unsigned int ioread8(void __iomem *);
+> include/asm-generic/iomap.h:extern unsigned int ioread16(void __iomem *);
+> include/asm-generic/iomap.h:extern unsigned int ioread32(void __iomem *);
+> include/asm-generic/iomap.h:extern u64 ioread64(void __iomem *);
+> 
+> Wouldn't it be better to fix include/asm-generic/iomap.h and lib/iomap.c
+> instead?
 
-Sorry, I'm not sure what do you mean .. Before this patch we were disabling the
-interrupt on a start of programming hardware configuration, now we don't needed to
-disable the interrupt because it is already in the disabled state at that moment
-since we're now requesting interrupt in the *disabled* state during of the driver's
-probe using IRQ_NOAUTOEN flag.
+Oh, I didn't even notice we had this declared by different files..
