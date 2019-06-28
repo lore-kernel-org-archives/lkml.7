@@ -2,133 +2,155 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6963C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1B3C5B578
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE42620656
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1CFC20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 04:57:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="knQXOlDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfF1E45 (ORCPT
+        id S1726898AbfF1E5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 00:56:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:19089 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725783AbfF1E45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 00:56:57 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 295CAA1E14ACAA62F426;
-        Fri, 28 Jun 2019 12:56:54 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Jun 2019
- 12:56:44 +0800
-From:   Zhihao@vger.kernel.org, Cheng@vger.kernel.org
-To:     <david.oberhollenzer@sigma-star.at>, <richard@nod.at>,
-        <david@sigma-star.at>, <boris.brezillon@free-electrons.com>,
-        <yi.zhang@huawei.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <chengzhihao1@huawei.com>
-Subject: [PATCH RFC] mtd: ubi: Add fastmap sysfs attribute
-Date:   Fri, 28 Jun 2019 13:02:23 +0800
-Message-ID: <1561698143-5027-1-git-send-email-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 28 Jun 2019 00:57:08 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35301 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfF1E5H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 00:57:07 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d126so2337788pfd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 21:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=40otFp6F7wYNIWaw/L8cC57SBD2LZP+aE8/JoUmprMs=;
+        b=knQXOlDKBpBtHrf+czhnvWYdz1+B5psqY/9VBnD5Bll42lCBz4ch413YItZFEx3az1
+         ISaGOSH+9ewkyDPJmxpQbLOsHIo4j45b3b+bHlKbx3IC6VXuuHxvXwxYYjK6i+1yY3WO
+         tnVerVdRLkJu1JQfvf1X89e6/XyVnX5bpxBuBnWwezmVJFldo6pt/YPKJkfMX2mhqiO7
+         a1XAbS3B4mVVfwpLReE0DlrQwGmstqPTi1PaquRmBP8Mw+ZJqDqT5JecqvmSHEpolzBb
+         zfsyGOWbgiu8k3yofhq3zpKynkFNg+JuHq+anDOUA3PRiTHXg4T0v5euRw4sm2s0YxMe
+         Sf1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=40otFp6F7wYNIWaw/L8cC57SBD2LZP+aE8/JoUmprMs=;
+        b=JCcEr/++tJm+Vvq6OwZXQl5AIvTyfsRpvyVMqNHv1sBXXU9fj+z5a8R3D1VkHXLst7
+         oBl+PF8VTYY1QfYCSa0j9nCKk2HCThO9KMWUrQIdN0pr+OsrkSY0LhNnh0E5UAI6dQxZ
+         EpvtlVu84AyvG0yk1JyQxgVxk2o2qkbr31B5PHRoh1QdbvLLnh4n7qSf4+e5df/G42VW
+         LnW7FYQ5aRz5v3u2IZXbDlmEK5+7dLmMx8C3JkKeZNYp40sI4DmoqdXcNRRcdnfUP1so
+         2/2CdxUbZ0y66kEm98wsjT3Cl4u0fYN7pS2b1nVInvunkHwuOw4L/V55Os9QHGL2HPQ6
+         EJgQ==
+X-Gm-Message-State: APjAAAWTvW6H/4+/uoobev8Ffp42reRDx2mD8ng5egcSChzkF3Ylfn8Y
+        ODsMn8f8+5nxZDigG1FeQ/y8VA==
+X-Google-Smtp-Source: APXvYqxTBH0nvx29YJYThIHjGxJ954k/GtXrMkQAHpN5aViwJe/lSkpGTzLn6t61soW4ouOasFHRtg==
+X-Received: by 2002:a17:90a:3ac2:: with SMTP id b60mr10815350pjc.74.1561697827207;
+        Thu, 27 Jun 2019 21:57:07 -0700 (PDT)
+Received: from ziepe.ca ([38.88.19.130])
+        by smtp.gmail.com with ESMTPSA id t24sm721884pfh.113.2019.06.27.21.57.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Jun 2019 21:57:06 -0700 (PDT)
+Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hgiwb-000123-Lo; Fri, 28 Jun 2019 01:57:05 -0300
+Date:   Fri, 28 Jun 2019 01:57:05 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190628045705.GD3705@ziepe.ca>
+References: <20190626065708.GB24531@lst.de>
+ <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+ <20190626202107.GA5850@ziepe.ca>
+ <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+ <20190626210018.GB6392@ziepe.ca>
+ <c25d3333-dcd5-3313-089b-7fbbd6fbd876@deltatee.com>
+ <20190627063223.GA7736@ziepe.ca>
+ <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
+ <20190627163504.GB9568@ziepe.ca>
+ <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+On Thu, Jun 27, 2019 at 10:49:43AM -0600, Logan Gunthorpe wrote:
 
-The UBI device can be attached to a MTD device via fastmap by set
-CONFIG_MTD_UBI_FASTMAP to 'y' (If there already exists a fastmap on the
-UBI device). To support some debugging scenarios, attaching process by
-fastmap can be confirmed in dmesg. If the UBI device is attached by
-fastmap, logs like following will appear in dmesg:
+> > I don't think a GPU/FPGA driver will be involved, this would enter the
+> > block layer through the O_DIRECT path or something generic.. This the
+> > general flow I was suggesting to Dan earlier
+> 
+> I would say the O_DIRECT path has to somehow call into the driver
+> backing the VMA to get an address to appropriate memory (in some way
+> vaguely similar to how we were discussing at LSF/MM)
 
-  ubi0: attached by fastmap
+Maybe, maybe no. For something like VFIO the PTE already has the
+correct phys_addr_t and we don't need to do anything..
 
-If multiple UBI devices are attached to multiple MTD devices at the same
-time, how to distinguish which UBI devices are successfully attached by
-fastmap? Extracting attaching information for each UBI device one by one
-from dmesg is a way. A better method is to record fastmap existence in
-sysfs, so it can be obtained by userspace tools.
+For DEVICE_PRIVATE we need to get the phys_addr_t out - presumably
+through a new pagemap op?
 
-This patch exposes fastmap on sysfs. Suppose you attach an UBI device to a
-MTD device by fastmap: if fastmap equals to '1', that is, the fastmap
-generated before last detaching operation is confirmed valid. Else, there
-may be some problems with old fastmap. Besides, userspace tool can also
-check whether the fastmap updating triggered by other operations (such as
-resize volume) is successful by reading this sysfs attribute.
+> If P2P can't be done at that point, then the provider driver would
+> do the copy to system memory, in the most appropriate way, and
+> return regular pages for O_DIRECT to submit to the block device.
 
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
----
- Documentation/ABI/stable/sysfs-class-ubi | 15 +++++++++++++++
- drivers/mtd/ubi/build.c                  |  5 +++++
- 2 files changed, 20 insertions(+)
+That only makes sense for the migratable DEVICE_PRIVATE case, it
+doesn't help the VFIO-like case, there you'd need to bounce buffer.
 
-diff --git a/Documentation/ABI/stable/sysfs-class-ubi b/Documentation/ABI/stable/sysfs-class-ubi
-index a6b3240..1d96cf0 100644
---- a/Documentation/ABI/stable/sysfs-class-ubi
-+++ b/Documentation/ABI/stable/sysfs-class-ubi
-@@ -116,6 +116,21 @@ Description:
- 		device, and "0\n" if it is cleared. UBI devices mark themselves
- 		as read-only when they detect an unrecoverable error.
- 
-+What:		/sys/class/ubi/ubiX/fastmap
-+Date:		June 2019
-+KernelVersion:	5.2
-+Contact:	linux-mtd@lists.infradead.org
-+Description:
-+		Contains ASCII "1\n" if there exists a fastmap on UBI device,
-+		and "0\n" if there not exists a fastmap on UBI device. After
-+		attaching the UBI device to a MTD device via fastmap, userspace
-+		tool can sense that there is a fastmap on UBI device  by
-+		checking sysfs attribute 'fastmap', that is, the fastmap
-+		generated before last detaching operation is valid. In addition,
-+		userspace tool can also check whether the fastmap updating
-+		triggered by volume operation is successful by reading this
-+		sysfs attribute.
-+
- What:		/sys/class/ubi/ubiX/total_eraseblocks
- Date:		July 2006
- KernelVersion:	2.6.22
-diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
-index d636bbe..7cce44f 100644
---- a/drivers/mtd/ubi/build.c
-+++ b/drivers/mtd/ubi/build.c
-@@ -140,6 +140,8 @@ static struct device_attribute dev_mtd_num =
- 	__ATTR(mtd_num, S_IRUGO, dev_attribute_show, NULL);
- static struct device_attribute dev_ro_mode =
- 	__ATTR(ro_mode, S_IRUGO, dev_attribute_show, NULL);
-+static struct device_attribute dev_fastmap =
-+	__ATTR(fastmap, S_IRUGO, dev_attribute_show, NULL);
- 
- /**
-  * ubi_volume_notify - send a volume change notification.
-@@ -378,6 +380,8 @@ static ssize_t dev_attribute_show(struct device *dev,
- 		ret = sprintf(buf, "%d\n", ubi->mtd->index);
- 	else if (attr == &dev_ro_mode)
- 		ret = sprintf(buf, "%d\n", ubi->ro_mode);
-+	else if (attr == &dev_fastmap)
-+		ret = sprintf(buf, "%d\n", ubi->fm ? 1 : 0);
- 	else
- 		ret = -EINVAL;
- 
-@@ -398,6 +402,7 @@ static struct attribute *ubi_dev_attrs[] = {
- 	&dev_bgt_enabled.attr,
- 	&dev_mtd_num.attr,
- 	&dev_ro_mode.attr,
-+	&dev_fastmap.attr,
- 	NULL
- };
- ATTRIBUTE_GROUPS(ubi_dev);
--- 
-2.7.4
+> >> I think it would be a larger layering violation to have the NVMe driver
+> >> (for example) memcpy data off a GPU's bar during a dma_map step to
+> >> support this bouncing. And it's even crazier to expect a DMA transfer to
+> >> be setup in the map step.
+> > 
+> > Why? Don't we already expect the DMA mapper to handle bouncing for
+> > lots of cases, how is this case different? This is the best place to
+> > place it to make it shared.
+> 
+> This is different because it's special memory where the DMA mapper
+> can't possibly know the best way to transfer the data.
 
+Why not?  If we have a 'bar info' structure that could have data
+transfer op callbacks, infact, I think we might already have similar
+callbacks for migrating to/from DEVICE_PRIVATE memory with DMA..
+
+> One could argue that the hook to the GPU/FPGA driver could be in the
+> mapping step but then we'd have to do lookups based on an address --
+> where as the VMA could more easily have a hook back to whatever driver
+> exported it.
+
+The trouble with a VMA hook is that it is only really avaiable when
+working with the VA, and it is not actually available during GUP, you
+have to have a GUP-like thing such as hmm_range_snapshot that is
+specifically VMA based. And it is certainly not available during dma_map.
+
+When working with VMA's/etc it seems there are some good reasons to
+drive things off of the PTE content (either via struct page & pgmap or
+via phys_addr_t & barmap)
+
+I think the best reason to prefer a uniform phys_addr_t is that it
+does give us the option to copy the data to/from CPU memory. That
+option goes away as soon as the bio sometimes provides a dma_addr_t.
+
+At least for RDMA, we do have some cases (like siw/rxe, hfi) where
+they sometimes need to do that copy. I suspect the block stack is
+similar, in the general case.
+
+Jason
