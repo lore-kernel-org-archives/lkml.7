@@ -2,187 +2,91 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5A3C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C27C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8092133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B73022064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:31:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561707094;
+	bh=4TPRoDbbvJMuASutOOb9t8E1zisZK/trAdh2WtQAcQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WHmW1NZff75j598LEq9HnXXMzW1TKHIa4j13aVxrPI0rboQMf+dqucW9XXzFXmylx
+	 rtMUIATvkkYmYNm7cn5wDrtfo6lxIXpxj/NTEsoFLybDvc4RHpdCTZ/nOXQS5291jp
+	 BaP2/8wCqI48IzwLGUVYOXRV+6eGhxE7FtP4K+Ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfF1Hal (ORCPT
+        id S1726706AbfF1Hbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:30:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60936 "EHLO mx1.suse.de"
+        Fri, 28 Jun 2019 03:31:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32908 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726484AbfF1Hak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:30:40 -0400
+        id S1726426AbfF1Hbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 03:31:33 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 27D27B609;
-        Fri, 28 Jun 2019 07:30:39 +0000 (UTC)
-Subject: Re: [PATCH v2 09/18] drm/vram: drop
- drm_gem_vram_driver_gem_prime_mmap
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        ckoenig.leichtzumerken@gmail.com,
-        open list <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
-References: <20190621115755.8481-1-kraxel@redhat.com>
- <20190621115755.8481-10-kraxel@redhat.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <d3610263-421b-4c4f-faaa-0b8a8d905f07@suse.de>
-Date:   Fri, 28 Jun 2019 09:30:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        by mx1.suse.de (Postfix) with ESMTP id D3DF7B167;
+        Fri, 28 Jun 2019 07:31:30 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 09:31:28 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH 2/2] mm, slab: Extend vm/drop_caches to shrink kmem slabs
+Message-ID: <20190628073128.GC2751@dhcp22.suse.cz>
+References: <20190624174219.25513-1-longman@redhat.com>
+ <20190624174219.25513-3-longman@redhat.com>
+ <20190627151506.GE5303@dhcp22.suse.cz>
+ <5cb05d2c-39a7-f138-b0b9-4b03d6008999@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190621115755.8481-10-kraxel@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="SjuG3ISsctN3WUhn3ZUuTIOWBXlLTl6ww"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5cb05d2c-39a7-f138-b0b9-4b03d6008999@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---SjuG3ISsctN3WUhn3ZUuTIOWBXlLTl6ww
-Content-Type: multipart/mixed; boundary="ICaAVP5Xc9uWp5y40PIWZuKzwVKaFAzz8";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>,
- ckoenig.leichtzumerken@gmail.com, open list <linux-kernel@vger.kernel.org>,
- David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
-Message-ID: <d3610263-421b-4c4f-faaa-0b8a8d905f07@suse.de>
-Subject: Re: [PATCH v2 09/18] drm/vram: drop
- drm_gem_vram_driver_gem_prime_mmap
-References: <20190621115755.8481-1-kraxel@redhat.com>
- <20190621115755.8481-10-kraxel@redhat.com>
-In-Reply-To: <20190621115755.8481-10-kraxel@redhat.com>
+On Thu 27-06-19 17:16:04, Waiman Long wrote:
+> On 6/27/19 11:15 AM, Michal Hocko wrote:
+> > On Mon 24-06-19 13:42:19, Waiman Long wrote:
+> >> With the slub memory allocator, the numbers of active slab objects
+> >> reported in /proc/slabinfo are not real because they include objects
+> >> that are held by the per-cpu slab structures whether they are actually
+> >> used or not.  The problem gets worse the more CPUs a system have. For
+> >> instance, looking at the reported number of active task_struct objects,
+> >> one will wonder where all the missing tasks gone.
+> >>
+> >> I know it is hard and costly to get a real count of active objects.
+> > What exactly is expensive? Why cannot slabinfo reduce the number of
+> > active objects by per-cpu cached objects?
+> >
+> The number of cachelines that needs to be accessed in order to get an
+> accurate count will be much higher if we need to iterate through all the
+> per-cpu structures. In addition, accessing the per-cpu partial list will
+> be racy.
 
---ICaAVP5Xc9uWp5y40PIWZuKzwVKaFAzz8
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-Am 21.06.19 um 13:57 schrieb Gerd Hoffmann:
-> The wrapper doesn't do anything any more, drop it.
->=20
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  include/drm/drm_gem_vram_helper.h     |  4 +---
->  drivers/gpu/drm/drm_gem_vram_helper.c | 17 -----------------
->  2 files changed, 1 insertion(+), 20 deletions(-)
->=20
-> diff --git a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vr=
-am_helper.h
-> index 7b9f50ba3fce..2ada671a2a6b 100644
-> --- a/include/drm/drm_gem_vram_helper.h
-> +++ b/include/drm/drm_gem_vram_helper.h
-> @@ -137,8 +137,6 @@ void drm_gem_vram_driver_gem_prime_unpin(struct drm=
-_gem_object *obj);
->  void *drm_gem_vram_driver_gem_prime_vmap(struct drm_gem_object *obj);
->  void drm_gem_vram_driver_gem_prime_vunmap(struct drm_gem_object *obj,
->  					  void *vaddr);
-> -int drm_gem_vram_driver_gem_prime_mmap(struct drm_gem_object *obj,
-> -				       struct vm_area_struct *vma);
-> =20
->  #define DRM_GEM_VRAM_DRIVER_PRIME \
->  	.gem_prime_export =3D drm_gem_prime_export, \
-> @@ -147,6 +145,6 @@ int drm_gem_vram_driver_gem_prime_mmap(struct drm_g=
-em_object *obj,
->  	.gem_prime_unpin  =3D drm_gem_vram_driver_gem_prime_unpin, \
->  	.gem_prime_vmap	  =3D drm_gem_vram_driver_gem_prime_vmap, \
->  	.gem_prime_vunmap =3D drm_gem_vram_driver_gem_prime_vunmap, \
-> -	.gem_prime_mmap	  =3D drm_gem_vram_driver_gem_prime_mmap
-> +	.gem_prime_mmap	  =3D drm_gem_prime_mmap
-> =20
->  #endif
-> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/dr=
-m_gem_vram_helper.c
-> index 2e474dee30df..d78761802374 100644
-> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-> @@ -619,20 +619,3 @@ void drm_gem_vram_driver_gem_prime_vunmap(struct d=
-rm_gem_object *gem,
->  	drm_gem_vram_unpin(gbo);
->  }
->  EXPORT_SYMBOL(drm_gem_vram_driver_gem_prime_vunmap);
-> -
-> -/**
-> - * drm_gem_vram_driver_gem_prime_mmap() - \
-> -	Implements &struct drm_driver.gem_prime_mmap
-> - * @gem:	The GEM object to map
-> - * @vma:	The VMA describing the mapping
-> - *
-> - * Returns:
-> - * 0 on success, or
-> - * a negative errno code otherwise.
-> - */
-> -int drm_gem_vram_driver_gem_prime_mmap(struct drm_gem_object *gem,
-> -				       struct vm_area_struct *vma)
-> -{
-> -	return drm_gem_prime_mmap(gem, vma);
-> -}
-> -EXPORT_SYMBOL(drm_gem_vram_driver_gem_prime_mmap);
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
-
-
---ICaAVP5Xc9uWp5y40PIWZuKzwVKaFAzz8--
-
---SjuG3ISsctN3WUhn3ZUuTIOWBXlLTl6ww
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl0Vwh4ACgkQaA3BHVML
-eiOMUQf+PZ8j9q4zK3Eq6XY9xecI/H6s1jGpv8Dlt7GOlTitpIYDEca5p0rtecHV
-hwGkLB7me8EsfPyt1tWlEuizxBbZFuaKSzViPfvy75ug/Xzc0rugUv2zW4Uv44v7
-cAfswUkI42HBGXDscxcwYO3cyIGnVrK50yWzbJfvS4XfD13oE+lRBs0OvZ4ltDps
-Pb+sH0X5vGE1HunXO0w+HcpbjfHXEokKsSRuSN4HpbxwV+qE5MMfJXfEH+YzNFpo
-K4/XL5PydjkbHn48Hh2S3Vs0OVy3xySC6MDtwYaxJdPOdQej9SrjHUb8bN5n5Wyj
-37b8Lz3kqSlpLfcxChTpZpkqHo3l6g==
-=u0ug
------END PGP SIGNATURE-----
-
---SjuG3ISsctN3WUhn3ZUuTIOWBXlLTl6ww--
+Why is all that a problem for a root only interface that should be used
+quite rarely (it is not something that you should be reading hundreds
+time per second, right)?
+-- 
+Michal Hocko
+SUSE Labs
