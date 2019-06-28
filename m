@@ -2,78 +2,93 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2976EC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4387BC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F592083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C8B208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 23:32:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0VbzT+pP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfF1X1a (ORCPT
+        id S1726916AbfF1XcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 19:27:30 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:53018 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfF1X13 (ORCPT
+        Fri, 28 Jun 2019 19:32:24 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46767 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfF1XcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 19:27:29 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1029)
-        id 07D5F2007697; Fri, 28 Jun 2019 16:27:28 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by linux.microsoft.com (Postfix) with ESMTP id DD9873007AB2;
-        Fri, 28 Jun 2019 16:27:28 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 16:27:28 -0700 (PDT)
-From:   Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
-X-X-Sender: jaskarankhurana@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
-To:     Eric Biggers <ebiggers@kernel.org>
-cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
-        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com,
-        mpatocka@redhat.com, gmazyland@gmail.com
-Subject: Re: [RFC PATCH v5 0/1] Add dm verity root hash pkcs7 sig
- validation.
-In-Reply-To: <20190628203450.GD103946@gmail.com>
-Message-ID: <alpine.LRH.2.21.1906281552350.26685@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com> <20190628040041.GB673@sol.localdomain> <alpine.LRH.2.21.1906281242110.2789@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter> <20190628203450.GD103946@gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Fri, 28 Jun 2019 19:32:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i8so36811pgm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 16:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=pCnZsFeXtEhsGu5hcikExC62+4Wo/EuuXi1fmzeilKA=;
+        b=0VbzT+pPAZ5Cw+l50LsV6VxWXKVmzUDbFzYuh8RNn9jDhvwYrGLpdd2Zox3h+s5z3d
+         NsHcNsx8UNYIl/Tvfb7cXa/FuLVj1zcEON3iB5PUkGIp07Nt8sBjGk1VhpQX63mE5GrQ
+         v50tAcJD87eCeRoV0wkDeOzOz3jCuLO00fUJ3whOaPkolh4Bk6/8PU8zR+cwJsZAHMz/
+         ScenEHfkRqLUKlPcxdU4QjR3X/mOrXFzVippr4fAnNlaDmVhjqINrruhID6v634TKkd/
+         y9tKRsD6McBdP4RBm7SdgnNQYnubc97zKWxXjwt3g8AgXpwKyyd43Oguezk1zdCnyWPI
+         r/Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=pCnZsFeXtEhsGu5hcikExC62+4Wo/EuuXi1fmzeilKA=;
+        b=XJXM0WSoI417dEczoNm0U8kkLHalH1eTqUAsm1GoKXzOgoYX7F5r64sHh8W5vUCKtc
+         qdh7yZhwNi1SjDPhruS3390xZvatWY8NZI4W+AZhLKLuXh6EAkyrjGK+WobVvV7x+7RA
+         vHsbQRl7D/fvXnMC/gV+Pt5s3qb2GinKWvbjWxqT370MYXWghS2LIxvPLjsL3NeGhNLZ
+         XSLDTexCOAbwCfZPh+70hd31gXDtbP/hrDXC5xcgPpHT2ZvaIes7I0QyRK+RsUWIbVsx
+         wJr7TJdiKpemOCyPlQgfNn5nqIoM+30hXktq72EGmTLgRWubTYVxRd8dH2v4nKq55ppG
+         DvaA==
+X-Gm-Message-State: APjAAAV7zTmZccargV/TE+oUXj3RC3cz2GK+ylhs87ZAz/rYCBm0bk0I
+        IwKTXK6fT2nnls+Je6qbk/DGBQ==
+X-Google-Smtp-Source: APXvYqzJ2MLMBi8iA3yNVUvYroDxbXL+variJXnbCGCuqZ3XKDF6o6+6MYhexAh/V2sqsNQR1LhPNg==
+X-Received: by 2002:a17:90a:3210:: with SMTP id k16mr15622156pjb.13.1561764742710;
+        Fri, 28 Jun 2019 16:32:22 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id s22sm3569018pfh.107.2019.06.28.16.32.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Jun 2019 16:32:21 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     ryder.lee@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Weijie Gao <weijie.gao@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Steven Liu <steven.liu@mediatek.com>
+Subject: Re: [PATCH v1] arm: dts: mediatek: add basic support for MT7629 SoC
+In-Reply-To: <a8ca0018ac8a4c5f61a7a1efc9dc5dccd768628b.1552449524.git.ryder.lee@mediatek.com>
+References: <a8ca0018ac8a4c5f61a7a1efc9dc5dccd768628b.1552449524.git.ryder.lee@mediatek.com>
+Date:   Fri, 28 Jun 2019 16:32:18 -0700
+Message-ID: <7hy31lp9q5.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+<ryder.lee@kernel.org> writes:
 
-Hello Eric,
+> From: Ryder Lee <ryder.lee@mediatek.com>
+>
+> This adds basic support for MT7629 reference board.
+>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 
-On Fri, 28 Jun 2019, Eric Biggers wrote:
+Just noticing this is not upstream yet.
 
->> In a datacenter like environment, this will protect the system from below
->> attacks:
->>
->> 1.Prevents attacker from deploying scripts that run arbitrary executables on the system.
->> 2.Prevents physically present malicious admin to run arbitrary code on the
->>   machine.
->>
->> Regards,
->> Jaskaran
->
-> So you are trying to protect against people who already have a root shell?
->
-> Can't they just e.g. run /usr/bin/python and type in some Python code?
->
-> Or run /usr/bin/curl and upload all your secret data to their server.
->
-> - Eric
->
+I did a basic boot test to ramdisk on the mt7629-rfb board donated for
+kernelCI (thanks MediaTek!) and it boots just fine.
 
-You are correct, it would not be feasible for a general purpose distro, 
-but for embedded systems and other cases where there is a more tightly 
-locked-down system.
+Tested-by: Kevin Hilman <khilman@baylibre.com>
 
-Regards,
-Jaskaran.
+Kevin
