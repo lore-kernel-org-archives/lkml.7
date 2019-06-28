@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D12C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90345C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C5C2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F41B2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561725190;
-	bh=MAkVtQ6KAiuAqiUPmPnM2G2oThXYbzASkll4xmdcnaA=;
+	s=default; t=1561725196;
+	bh=ICUPRPlkJK4k356wu/ISkiC0yQOaRcjV5WhXkZu7zdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uw4gXhrRqsuVgduGRqSwNW5KP1d2cHqSUvV8NvLq5UknopCjjd+KvL/W04j98478T
-	 q/C7zu3m9TsCPX7yd1Il7d7VqaE2YfRDOHv2oZmkUTbLXHPXTvOcI8UQpVUoXMq0Ft
-	 TDyp11xwFK6y3EM0x7D/ypUIxOFfM8xH1LS2Ofng=
+	b=dcRn2vNrJ5O2iPGbZgTPVsIH5F0XsGJMHpkUT5KMJg2Ki/50V905zxVThgCkxaxVC
+	 DcpZynJylFxKN+ibO68yFXToOTD6xGG3NizXfXAhvdGBru2fgJDWIrd4XN9kr4OEOj
+	 jb+z5QRwYq8Cpcvu6/mPfFXcH7s59K/KP0IfIhiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfF1MdJ (ORCPT
+        id S1727593AbfF1MdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:33:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39198 "EHLO
+        Fri, 28 Jun 2019 08:33:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39142 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfF1Maj (ORCPT
+        with ESMTP id S1726891AbfF1Maj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 08:30:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,32 +34,30 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=JKCqIHV1YuF0BSogkUbroVBUzOT9ZPq/zkchQ58FrUY=; b=ZXy2eKnc4pRwloaqI3XC2oyCnO
-        mSruPT4ToVz+viuoujlGR2Nb1bfe941rUUWhmbOJOSL2I6yy9IcrT1ncrEeUx4KxMP6My68U2RV/Y
-        ulN/2Blm3ld+wtnPIi8+YdAaNZa0wIVp6OgB6R8DUlfcWmNTia2ZDUZG34pKk+bO+I30zP+XvXdTQ
-        NhKas929i2SepX4p+LXsfa5bT0miQgebVn9zOrhK5tNR/TxxO7qUS0jwm9oXBMtfpcwcA0mdsPS23
-        ZsBNOhQg2iNaIb3vgV1LPUtVBGc57PznVsqkBOUbSjq2k0QCv6euM1BGOzzF/2ohcn0UA6h/nNjt9
-        MIc8A0PQ==;
+        bh=3ry7BGeUhbdGjpQJZXLesZqx/UmqvudYXOpe/+NOUR4=; b=NQYhsg72RkwnggkwR1TJkacwmw
+        xL+F2DTw1S1ZaEUesrflgBBusDSY2hNSMu2Bjwhqw4GOsJl7MHoAlVvHOQxN+VbtZWQjpeNYDiqyc
+        P3IC/j057OcK3cYdLODD3Qgmqx0gFr2UXBTuCWUiRgtx0NpAJFXeUVF0xWuRAoA9e7D5wzYp8JE69
+        C4vJM6AclxjshJQM19T80O4eTKO9jEAMQTsB4aamOwyKIjTg+tGEmu+gFEJ97hWepoYH14IsUKih1
+        LF5ds28zkemmgARkGfHpZ3y3XV9vhLj3tlRD30jnIeQp55lc0WJJQboo0Cu6+aLop7p5GdZGHJNc7
+        NgXEUVPg==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1T-00054t-US; Fri, 28 Jun 2019 12:30:36 +0000
+        id 1hgq1U-00055F-9X; Fri, 28 Jun 2019 12:30:36 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005R9-0z; Fri, 28 Jun 2019 09:30:34 -0300
+        id 1hgq1S-0005SC-Bj; Fri, 28 Jun 2019 09:30:34 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH 03/39] docs: perf: move to the admin-guide
-Date:   Fri, 28 Jun 2019 09:29:56 -0300
-Message-Id: <cf054e7044bbba8d73ad032a0a1c9790afbfd510.1561724493.git.mchehab+samsung@kernel.org>
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [PATCH 16/39] docs: admin-guide: move sysctl directory to it
+Date:   Fri, 28 Jun 2019 09:30:09 -0300
+Message-Id: <22023257e9679c18eb6a25052e4c233a12e687da.1561724493.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
 References: <cover.1561724493.git.mchehab+samsung@kernel.org>
@@ -70,123 +68,238 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The perf infrastructure is used for userspace to track issues.
-At least a good part of what's described here is related to
-it.
-
-So, add it to the admin-guide.
+The stuff under sysctl describes /sys interface from userspace
+point of view. So, add it to the admin-guide and remove the
+:orphan: from its index file.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/admin-guide/index.rst                    | 1 +
- Documentation/{ => admin-guide}/perf/arm-ccn.rst       | 0
- Documentation/{ => admin-guide}/perf/arm_dsu_pmu.rst   | 0
- Documentation/{ => admin-guide}/perf/hisi-pmu.rst      | 0
- Documentation/{ => admin-guide}/perf/index.rst         | 2 --
- Documentation/{ => admin-guide}/perf/qcom_l2_pmu.rst   | 0
- Documentation/{ => admin-guide}/perf/qcom_l3_pmu.rst   | 0
- Documentation/{ => admin-guide}/perf/thunderx2-pmu.rst | 0
- Documentation/{ => admin-guide}/perf/xgene-pmu.rst     | 0
- MAINTAINERS                                            | 4 ++--
- drivers/perf/qcom_l3_pmu.c                             | 2 +-
- 11 files changed, 4 insertions(+), 5 deletions(-)
- rename Documentation/{ => admin-guide}/perf/arm-ccn.rst (100%)
- rename Documentation/{ => admin-guide}/perf/arm_dsu_pmu.rst (100%)
- rename Documentation/{ => admin-guide}/perf/hisi-pmu.rst (100%)
- rename Documentation/{ => admin-guide}/perf/index.rst (95%)
- rename Documentation/{ => admin-guide}/perf/qcom_l2_pmu.rst (100%)
- rename Documentation/{ => admin-guide}/perf/qcom_l3_pmu.rst (100%)
- rename Documentation/{ => admin-guide}/perf/thunderx2-pmu.rst (100%)
- rename Documentation/{ => admin-guide}/perf/xgene-pmu.rst (100%)
+ CREDITS                                           | 2 +-
+ Documentation/admin-guide/index.rst               | 1 +
+ Documentation/admin-guide/kernel-parameters.txt   | 2 +-
+ Documentation/admin-guide/mm/index.rst            | 2 +-
+ Documentation/admin-guide/mm/ksm.rst              | 2 +-
+ Documentation/{ => admin-guide}/sysctl/abi.rst    | 0
+ Documentation/{ => admin-guide}/sysctl/fs.rst     | 0
+ Documentation/{ => admin-guide}/sysctl/index.rst  | 2 --
+ Documentation/{ => admin-guide}/sysctl/kernel.rst | 0
+ Documentation/{ => admin-guide}/sysctl/net.rst    | 0
+ Documentation/{ => admin-guide}/sysctl/sunrpc.rst | 0
+ Documentation/{ => admin-guide}/sysctl/user.rst   | 0
+ Documentation/{ => admin-guide}/sysctl/vm.rst     | 0
+ Documentation/core-api/printk-formats.rst         | 2 +-
+ Documentation/filesystems/proc.txt                | 2 +-
+ Documentation/networking/ip-sysctl.txt            | 2 +-
+ Documentation/vm/unevictable-lru.rst              | 2 +-
+ fs/proc/Kconfig                                   | 2 +-
+ kernel/panic.c                                    | 2 +-
+ mm/swap.c                                         | 2 +-
+ 20 files changed, 12 insertions(+), 13 deletions(-)
+ rename Documentation/{ => admin-guide}/sysctl/abi.rst (100%)
+ rename Documentation/{ => admin-guide}/sysctl/fs.rst (100%)
+ rename Documentation/{ => admin-guide}/sysctl/index.rst (99%)
+ rename Documentation/{ => admin-guide}/sysctl/kernel.rst (100%)
+ rename Documentation/{ => admin-guide}/sysctl/net.rst (100%)
+ rename Documentation/{ => admin-guide}/sysctl/sunrpc.rst (100%)
+ rename Documentation/{ => admin-guide}/sysctl/user.rst (100%)
+ rename Documentation/{ => admin-guide}/sysctl/vm.rst (100%)
 
+diff --git a/CREDITS b/CREDITS
+index beac0c81d081..401c5092bbf9 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -3120,7 +3120,7 @@ S: France
+ N: Rik van Riel
+ E: riel@redhat.com
+ W: http://www.surriel.com/
+-D: Linux-MM site, Documentation/sysctl/*, swap/mm readaround
++D: Linux-MM site, Documentation/admin-guide/sysctl/*, swap/mm readaround
+ D: kswapd fixes, random kernel hacker, rmap VM,
+ D: nl.linux.org administrator, minor scheduler additions
+ S: Red Hat Boston
 diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 0066b198cad4..b7e6d18f80ca 100644
+index e0763c51b024..acd0efa46e9d 100644
 --- a/Documentation/admin-guide/index.rst
 +++ b/Documentation/admin-guide/index.rst
-@@ -38,6 +38,7 @@ problems and bugs in particular.
-    ramoops
-    dynamic-debug-howto
-    init
-+   perf/index
+@@ -16,6 +16,7 @@ etc.
+    README
+    kernel-parameters
+    devices
++   sysctl/index
  
- This is the beginning of a section with information of interest to
- application developers.  Documents covering various aspects of the kernel
-diff --git a/Documentation/perf/arm-ccn.rst b/Documentation/admin-guide/perf/arm-ccn.rst
+ This section describes CPU vulnerabilities and their mitigations.
+ 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index b2007fb4daf0..a3d3da5baacb 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3170,7 +3170,7 @@
+ 	numa_zonelist_order= [KNL, BOOT] Select zonelist order for NUMA.
+ 			'node', 'default' can be specified
+ 			This can be set from sysctl after boot.
+-			See Documentation/sysctl/vm.rst for details.
++			See Documentation/admin-guide/sysctl/vm.rst for details.
+ 
+ 	ohci1394_dma=early	[HW] enable debugging via the ohci1394 driver.
+ 			See Documentation/debugging-via-ohci1394.txt for more
+diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
+index f5e92f33f96e..5f61a6c429e0 100644
+--- a/Documentation/admin-guide/mm/index.rst
++++ b/Documentation/admin-guide/mm/index.rst
+@@ -11,7 +11,7 @@ processes address space and many other cool things.
+ Linux memory management is a complex system with many configurable
+ settings. Most of these settings are available via ``/proc``
+ filesystem and can be quired and adjusted using ``sysctl``. These APIs
+-are described in Documentation/sysctl/vm.rst and in `man 5 proc`_.
++are described in Documentation/admin-guide/sysctl/vm.rst and in `man 5 proc`_.
+ 
+ .. _man 5 proc: http://man7.org/linux/man-pages/man5/proc.5.html
+ 
+diff --git a/Documentation/admin-guide/mm/ksm.rst b/Documentation/admin-guide/mm/ksm.rst
+index 7b2b8767c0b4..874eb0c77d34 100644
+--- a/Documentation/admin-guide/mm/ksm.rst
++++ b/Documentation/admin-guide/mm/ksm.rst
+@@ -59,7 +59,7 @@ MADV_UNMERGEABLE is applied to a range which was never MADV_MERGEABLE.
+ 
+ If a region of memory must be split into at least one new MADV_MERGEABLE
+ or MADV_UNMERGEABLE region, the madvise may return ENOMEM if the process
+-will exceed ``vm.max_map_count`` (see Documentation/sysctl/vm.rst).
++will exceed ``vm.max_map_count`` (see Documentation/admin-guide/sysctl/vm.rst).
+ 
+ Like other madvise calls, they are intended for use on mapped areas of
+ the user address space: they will report ENOMEM if the specified range
+diff --git a/Documentation/sysctl/abi.rst b/Documentation/admin-guide/sysctl/abi.rst
 similarity index 100%
-rename from Documentation/perf/arm-ccn.rst
-rename to Documentation/admin-guide/perf/arm-ccn.rst
-diff --git a/Documentation/perf/arm_dsu_pmu.rst b/Documentation/admin-guide/perf/arm_dsu_pmu.rst
+rename from Documentation/sysctl/abi.rst
+rename to Documentation/admin-guide/sysctl/abi.rst
+diff --git a/Documentation/sysctl/fs.rst b/Documentation/admin-guide/sysctl/fs.rst
 similarity index 100%
-rename from Documentation/perf/arm_dsu_pmu.rst
-rename to Documentation/admin-guide/perf/arm_dsu_pmu.rst
-diff --git a/Documentation/perf/hisi-pmu.rst b/Documentation/admin-guide/perf/hisi-pmu.rst
-similarity index 100%
-rename from Documentation/perf/hisi-pmu.rst
-rename to Documentation/admin-guide/perf/hisi-pmu.rst
-diff --git a/Documentation/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-similarity index 95%
-rename from Documentation/perf/index.rst
-rename to Documentation/admin-guide/perf/index.rst
-index 4bf848e27f26..9d445451ea18 100644
---- a/Documentation/perf/index.rst
-+++ b/Documentation/admin-guide/perf/index.rst
+rename from Documentation/sysctl/fs.rst
+rename to Documentation/admin-guide/sysctl/fs.rst
+diff --git a/Documentation/sysctl/index.rst b/Documentation/admin-guide/sysctl/index.rst
+similarity index 99%
+rename from Documentation/sysctl/index.rst
+rename to Documentation/admin-guide/sysctl/index.rst
+index efbcde8c1c9c..03346f98c7b9 100644
+--- a/Documentation/sysctl/index.rst
++++ b/Documentation/admin-guide/sysctl/index.rst
 @@ -1,5 +1,3 @@
 -:orphan:
 -
  ===========================
- Performance monitor support
+ Documentation for /proc/sys
  ===========================
-diff --git a/Documentation/perf/qcom_l2_pmu.rst b/Documentation/admin-guide/perf/qcom_l2_pmu.rst
+diff --git a/Documentation/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
 similarity index 100%
-rename from Documentation/perf/qcom_l2_pmu.rst
-rename to Documentation/admin-guide/perf/qcom_l2_pmu.rst
-diff --git a/Documentation/perf/qcom_l3_pmu.rst b/Documentation/admin-guide/perf/qcom_l3_pmu.rst
+rename from Documentation/sysctl/kernel.rst
+rename to Documentation/admin-guide/sysctl/kernel.rst
+diff --git a/Documentation/sysctl/net.rst b/Documentation/admin-guide/sysctl/net.rst
 similarity index 100%
-rename from Documentation/perf/qcom_l3_pmu.rst
-rename to Documentation/admin-guide/perf/qcom_l3_pmu.rst
-diff --git a/Documentation/perf/thunderx2-pmu.rst b/Documentation/admin-guide/perf/thunderx2-pmu.rst
+rename from Documentation/sysctl/net.rst
+rename to Documentation/admin-guide/sysctl/net.rst
+diff --git a/Documentation/sysctl/sunrpc.rst b/Documentation/admin-guide/sysctl/sunrpc.rst
 similarity index 100%
-rename from Documentation/perf/thunderx2-pmu.rst
-rename to Documentation/admin-guide/perf/thunderx2-pmu.rst
-diff --git a/Documentation/perf/xgene-pmu.rst b/Documentation/admin-guide/perf/xgene-pmu.rst
+rename from Documentation/sysctl/sunrpc.rst
+rename to Documentation/admin-guide/sysctl/sunrpc.rst
+diff --git a/Documentation/sysctl/user.rst b/Documentation/admin-guide/sysctl/user.rst
 similarity index 100%
-rename from Documentation/perf/xgene-pmu.rst
-rename to Documentation/admin-guide/perf/xgene-pmu.rst
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9d3a408f5ce1..55996c9f2e0a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1139,7 +1139,7 @@ APPLIED MICRO (APM) X-GENE SOC PMU
- M:	Khuong Dinh <khuong@os.amperecomputing.com>
- S:	Supported
- F:	drivers/perf/xgene_pmu.c
--F:	Documentation/perf/xgene-pmu.rst
-+F:	Documentation/admin-guide/perf/xgene-pmu.rst
- F:	Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+rename from Documentation/sysctl/user.rst
+rename to Documentation/admin-guide/sysctl/user.rst
+diff --git a/Documentation/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
+similarity index 100%
+rename from Documentation/sysctl/vm.rst
+rename to Documentation/admin-guide/sysctl/vm.rst
+diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+index 1d8e748f909f..c6224d039bcb 100644
+--- a/Documentation/core-api/printk-formats.rst
++++ b/Documentation/core-api/printk-formats.rst
+@@ -119,7 +119,7 @@ Kernel Pointers
  
- APTINA CAMERA SENSOR PLL
-@@ -7207,7 +7207,7 @@ M:	Shaokun Zhang <zhangshaokun@hisilicon.com>
- W:	http://www.hisilicon.com
- S:	Supported
- F:	drivers/perf/hisilicon
--F:	Documentation/perf/hisi-pmu.rst
-+F:	Documentation/admin-guide/perf/hisi-pmu.rst
+ For printing kernel pointers which should be hidden from unprivileged
+ users. The behaviour of %pK depends on the kptr_restrict sysctl - see
+-Documentation/sysctl/kernel.rst for more details.
++Documentation/admin-guide/sysctl/kernel.rst for more details.
  
- HISILICON ROCE DRIVER
- M:	Lijun Ou <oulijun@huawei.com>
-diff --git a/drivers/perf/qcom_l3_pmu.c b/drivers/perf/qcom_l3_pmu.c
-index 90f88ce5192b..656e830798d9 100644
---- a/drivers/perf/qcom_l3_pmu.c
-+++ b/drivers/perf/qcom_l3_pmu.c
+ Unmodified Addresses
+ --------------------
+diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+index 52ec004a4a8b..be56af8dbb88 100644
+--- a/Documentation/filesystems/proc.txt
++++ b/Documentation/filesystems/proc.txt
+@@ -1479,7 +1479,7 @@ review the kernel documentation in the directory /usr/src/linux/Documentation.
+ This chapter  is  heavily  based  on the documentation included in the pre 2.2
+ kernels, and became part of it in version 2.2.1 of the Linux kernel.
+ 
+-Please see: Documentation/sysctl/ directory for descriptions of these
++Please see: Documentation/admin-guide/sysctl/ directory for descriptions of these
+ entries.
+ 
+ ------------------------------------------------------------------------------
+diff --git a/Documentation/networking/ip-sysctl.txt b/Documentation/networking/ip-sysctl.txt
+index 0f8e1c544e1e..864a5921e9d7 100644
+--- a/Documentation/networking/ip-sysctl.txt
++++ b/Documentation/networking/ip-sysctl.txt
+@@ -2284,7 +2284,7 @@ addr_scope_policy - INTEGER
+ 
+ 
+ /proc/sys/net/core/*
+-	Please see: Documentation/sysctl/net.rst for descriptions of these entries.
++	Please see: Documentation/admin-guide/sysctl/net.rst for descriptions of these entries.
+ 
+ 
+ /proc/sys/net/unix/*
+diff --git a/Documentation/vm/unevictable-lru.rst b/Documentation/vm/unevictable-lru.rst
+index 8ba656f37cd8..109052215bce 100644
+--- a/Documentation/vm/unevictable-lru.rst
++++ b/Documentation/vm/unevictable-lru.rst
+@@ -439,7 +439,7 @@ Compacting MLOCKED Pages
+ 
+ The unevictable LRU can be scanned for compactable regions and the default
+ behavior is to do so.  /proc/sys/vm/compact_unevictable_allowed controls
+-this behavior (see Documentation/sysctl/vm.rst).  Once scanning of the
++this behavior (see Documentation/admin-guide/sysctl/vm.rst).  Once scanning of the
+ unevictable LRU is enabled, the work of compaction is mostly handled by
+ the page migration code and the same work flow as described in MIGRATING
+ MLOCKED PAGES will apply.
+diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+index cba429db95d9..cb5629bd5fff 100644
+--- a/fs/proc/Kconfig
++++ b/fs/proc/Kconfig
+@@ -73,7 +73,7 @@ config PROC_SYSCTL
+ 	  interface is through /proc/sys.  If you say Y here a tree of
+ 	  modifiable sysctl entries will be generated beneath the
+           /proc/sys directory. They are explained in the files
+-	  in <file:Documentation/sysctl/>.  Note that enabling this
++	  in <file:Documentation/admin-guide/sysctl/>.  Note that enabling this
+ 	  option will enlarge the kernel by at least 8 KB.
+ 
+ 	  As it is generally a good thing, you should say Y here unless
+diff --git a/kernel/panic.c b/kernel/panic.c
+index e0ea74bbb41d..057540b6eee9 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -372,7 +372,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
+ /**
+  * print_tainted - return a string to represent the kernel taint state.
+  *
+- * For individual taint flag meanings, see Documentation/sysctl/kernel.rst
++ * For individual taint flag meanings, see Documentation/admin-guide/sysctl/kernel.rst
+  *
+  * The string is overwritten by the next call to print_tainted(),
+  * but is always NULL terminated.
+diff --git a/mm/swap.c b/mm/swap.c
+index 83a2a15f4836..ae300397dfda 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
 @@ -8,7 +8,7 @@
-  * the slices. User space needs to aggregate to individual counts to provide
-  * a global picture.
-  *
-- * See Documentation/perf/qcom_l3_pmu.rst for more details.
-+ * See Documentation/admin-guide/perf/qcom_l3_pmu.rst for more details.
-  *
-  * Copyright (c) 2015-2017, The Linux Foundation. All rights reserved.
-  */
+ /*
+  * This file contains the default values for the operation of the
+  * Linux VM subsystem. Fine-tuning documentation can be found in
+- * Documentation/sysctl/vm.rst.
++ * Documentation/admin-guide/sysctl/vm.rst.
+  * Started 18.12.91
+  * Swap aging added 23.2.95, Stephen Tweedie.
+  * Buffermem limits added 12.3.98, Rik van Riel.
 -- 
 2.21.0
 
