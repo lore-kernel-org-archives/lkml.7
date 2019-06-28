@@ -7,53 +7,66 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85949C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA74DC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A16A2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997942083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561725098;
-	bh=+eh6RTd6kEqVJ74MmLO/RbE8CFjDxt0EOMgbEbZSX2M=;
+	s=default; t=1561725102;
+	bh=t6KXPx9TiLltdM4N2pImByRyPUW6oOs38VC2hEClX8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uRqSE424r++/9s4zS8F1MMcMycAC55Grx8NnOQdTs8xSoUrtdcCMB/nk6n/zyJ832
-	 4uyw7a35Lsm+yIsc3uv7Tv2Cotx67986s2G+SYz/Ez69LhgrmnaGScpDAlWfMy0xqX
-	 G7ouu+wC0Nn5bhYun2nV74+ZS5qrIx4DWQ08rzfQ=
+	b=LpANpmcYvaMWCSek3QlwyY9I+JYaze1KTfu1fZCekfOzZVOB9eQtjoXNo7yZNryf5
+	 Pkcp1SMenFrqaO1ldyJZ+EkgjI2nzJMe9xyMD2Yue2UJ5zbElljxIX78Bx3lUxlfMa
+	 MO0APQvB9Wuc1T/R07i5J3uUaBUWgU8WBq0x0ykc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfF1Maq (ORCPT
+        id S1727438AbfF1Mbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:30:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39122 "EHLO
+        Fri, 28 Jun 2019 08:31:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39644 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbfF1Maj (ORCPT
+        with ESMTP id S1727127AbfF1Map (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:30:39 -0400
+        Fri, 28 Jun 2019 08:30:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
         To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6/pTZ+xERXtFalv97S9fZEJCCvRhVs0ep0dXd/fG1lc=; b=QPogSYMFgbSZSO2Zlg7G3YFpkQ
-        XLUpZtGMd1xag/OzgrdhOY1DGCqk8BpigXSKJkt0f+pV6JRaVlGA/jQqRfJJ/YRFnmbk338wyTDiY
-        gL6MYRkyCO3fJX+cz19fAwZjjv4oZoZZPqIMs3BmYb5djNaD1GrQiT/boy55cLgWFJ0xSRh6r8znm
-        Gxov7pQibh5IZY+vZq/gH/YrV8PBAp+jNRTzPgCjrmLRtwYrZi1pmXvLAtM6rtm9XMPw1tfKS8uaQ
-        p6bAq/r8N8pOy17n70Kdnr2NOjTsg8qcia008CZ+ce8U/2+xANCbNDcfbkiSnJN/KAoWhbxO8kcjl
-        hH3gHUYA==;
+        bh=/ACtFTJ8t0rgRWDNSeADECk30Wwk28wX2Poo52xAGI8=; b=e+2o4PfTUqmLAP9+yVgRTSMqCY
+        Tnf5U0x2uPJDPkns5j2lSPUa//SkDRojN/zK7V3DPohSOh24J2v2XKdQVQPgWUQRkknLsIsR2a8sw
+        vIAtdmC4K3NnPyXm2z2HalcpZEHRSrjqde3msUjYzWYE60G4cwtqKGBoAYWj4cxEpZ9n8vkk4NQTY
+        1+enRTu9Mq7VFZJn9umR7TD5TBCMyx72vxi0UDfoSYRsI6HfJ0L9lPadMMeWB5FaFlAffVzHajfi7
+        eN3oY5WswA3cPdrB9qfCaBwvbmkCjuN4BFIdR7nw0X6L23eBpFfBVPgLZAKHqt7pbT7NyOgMG4Gb8
+        qPMmGZ4w==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1U-00055Q-EQ; Fri, 28 Jun 2019 12:30:36 +0000
+        id 1hgq1U-00055C-Fo; Fri, 28 Jun 2019 12:30:36 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005SV-F7; Fri, 28 Jun 2019 09:30:34 -0300
+        id 1hgq1S-0005Rx-94; Fri, 28 Jun 2019 09:30:34 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 20/39] docs: security: move some books to it and update
-Date:   Fri, 28 Jun 2019 09:30:13 -0300
-Message-Id: <1c99f6df1c199577eb5423045b19663290dcac1d.1561724493.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 13/39] docs: add arch doc directories to the index
+Date:   Fri, 28 Jun 2019 09:30:06 -0300
+Message-Id: <df4b7dbf72f2ca0695adc6e5997ad852be2332a7.1561724493.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
 References: <cover.1561724493.git.mchehab+samsung@kernel.org>
@@ -65,79 +78,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following files belong to security:
-
-  Documentation/security/LSM.rst -> Documentation/security/lsm-development.rst
-  Documentation/lsm.txt -> Documentation/security/lsm.rst
-  Documentation/SAK.txt -> Documentation/security/sak.rst
-  Documentation/siphash.txt -> Documentation/security/siphash.rst
+Now that several arch documents were converted to ReST,
+add their indexes to Documentation/index.rst and remove the
+:orphan:  from them.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/security/index.rst                        | 5 ++++-
- Documentation/security/{LSM.rst => lsm-development.rst} | 0
- Documentation/{lsm.txt => security/lsm.rst}             | 0
- Documentation/{SAK.txt => security/sak.rst}             | 0
- Documentation/{siphash.txt => security/siphash.rst}     | 0
- Documentation/security/tpm/index.rst                    | 1 +
- Documentation/security/tpm/xen-tpmfront.rst             | 2 --
- 7 files changed, 5 insertions(+), 3 deletions(-)
- rename Documentation/security/{LSM.rst => lsm-development.rst} (100%)
- rename Documentation/{lsm.txt => security/lsm.rst} (100%)
- rename Documentation/{SAK.txt => security/sak.rst} (100%)
- rename Documentation/{siphash.txt => security/siphash.rst} (100%)
+ Documentation/arm/index.rst     |  2 --
+ Documentation/arm64/index.rst   |  2 --
+ Documentation/ia64/index.rst    |  2 --
+ Documentation/index.rst         | 10 ++++++++++
+ Documentation/m68k/index.rst    |  2 +-
+ Documentation/powerpc/index.rst |  2 +-
+ Documentation/riscv/index.rst   |  2 --
+ Documentation/s390/index.rst    |  2 --
+ Documentation/sparc/index.rst   |  2 --
+ Documentation/xtensa/index.rst  |  2 +-
+ 10 files changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/security/index.rst b/Documentation/security/index.rst
-index aad6d92ffe31..fc503dd689a7 100644
---- a/Documentation/security/index.rst
-+++ b/Documentation/security/index.rst
-@@ -8,7 +8,10 @@ Security Documentation
-    credentials
-    IMA-templates
-    keys/index
--   LSM
-+   lsm
-+   lsm-development
-+   sak
-    SCTP
-    self-protection
-+   siphash
-    tpm/index
-diff --git a/Documentation/security/LSM.rst b/Documentation/security/lsm-development.rst
-similarity index 100%
-rename from Documentation/security/LSM.rst
-rename to Documentation/security/lsm-development.rst
-diff --git a/Documentation/lsm.txt b/Documentation/security/lsm.rst
-similarity index 100%
-rename from Documentation/lsm.txt
-rename to Documentation/security/lsm.rst
-diff --git a/Documentation/SAK.txt b/Documentation/security/sak.rst
-similarity index 100%
-rename from Documentation/SAK.txt
-rename to Documentation/security/sak.rst
-diff --git a/Documentation/siphash.txt b/Documentation/security/siphash.rst
-similarity index 100%
-rename from Documentation/siphash.txt
-rename to Documentation/security/siphash.rst
-diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
-index af77a7bbb070..3296533e54cf 100644
---- a/Documentation/security/tpm/index.rst
-+++ b/Documentation/security/tpm/index.rst
-@@ -5,3 +5,4 @@ Trusted Platform Module documentation
- .. toctree::
- 
-    tpm_vtpm_proxy
-+   xen-tpmfront
-diff --git a/Documentation/security/tpm/xen-tpmfront.rst b/Documentation/security/tpm/xen-tpmfront.rst
-index 98a16ab87360..00d5b1db227d 100644
---- a/Documentation/security/tpm/xen-tpmfront.rst
-+++ b/Documentation/security/tpm/xen-tpmfront.rst
+diff --git a/Documentation/arm/index.rst b/Documentation/arm/index.rst
+index bd316d1a1802..9c2f781f4685 100644
+--- a/Documentation/arm/index.rst
++++ b/Documentation/arm/index.rst
+@@ -1,5 +1,3 @@
+-﻿:orphan:
+-
+ ================
+ ARM Architecture
+ ================
+diff --git a/Documentation/arm64/index.rst b/Documentation/arm64/index.rst
+index 018b7836ecb7..96b696ba4e6c 100644
+--- a/Documentation/arm64/index.rst
++++ b/Documentation/arm64/index.rst
 @@ -1,5 +1,3 @@
 -:orphan:
 -
- ﻿=============================
- Virtual TPM interface for Xen
- =============================
+ ==================
+ ARM64 Architecture
+ ==================
+diff --git a/Documentation/ia64/index.rst b/Documentation/ia64/index.rst
+index a3e3052ad6e2..ef99475f672b 100644
+--- a/Documentation/ia64/index.rst
++++ b/Documentation/ia64/index.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ ==================
+ IA-64 Architecture
+ ==================
+diff --git a/Documentation/index.rst b/Documentation/index.rst
+index 95db26bf2899..f898def833f4 100644
+--- a/Documentation/index.rst
++++ b/Documentation/index.rst
+@@ -118,7 +118,17 @@ implementation.
+    :maxdepth: 2
+ 
+    sh/index
++   arm/index
++   arm64/index
++   ia64/index
++   m68k/index
++   powerpc/index
++   riscv/index
++   s390/index
++   sh/index
++   sparc/index
+    x86/index
++   xtensa/index
+ 
+ Filesystem Documentation
+ ------------------------
+diff --git a/Documentation/m68k/index.rst b/Documentation/m68k/index.rst
+index f3273ec075c3..3a5ba7fe1703 100644
+--- a/Documentation/m68k/index.rst
++++ b/Documentation/m68k/index.rst
+@@ -1,4 +1,4 @@
+-:orphan:
++.. SPDX-License-Identifier: GPL-2.0
+ 
+ =================
+ m68k Architecture
+diff --git a/Documentation/powerpc/index.rst b/Documentation/powerpc/index.rst
+index 1ff17268db46..549b1cdd77ae 100644
+--- a/Documentation/powerpc/index.rst
++++ b/Documentation/powerpc/index.rst
+@@ -1,4 +1,4 @@
+-:orphan:
++.. SPDX-License-Identifier: GPL-2.0
+ 
+ =======
+ powerpc
+diff --git a/Documentation/riscv/index.rst b/Documentation/riscv/index.rst
+index c4b906d9b5a7..e3ca0922a8c2 100644
+--- a/Documentation/riscv/index.rst
++++ b/Documentation/riscv/index.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ ===================
+ RISC-V architecture
+ ===================
+diff --git a/Documentation/s390/index.rst b/Documentation/s390/index.rst
+index 1a914da2a07b..4602312909d3 100644
+--- a/Documentation/s390/index.rst
++++ b/Documentation/s390/index.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ =================
+ s390 Architecture
+ =================
+diff --git a/Documentation/sparc/index.rst b/Documentation/sparc/index.rst
+index 91f7d6643dd5..71cff621f243 100644
+--- a/Documentation/sparc/index.rst
++++ b/Documentation/sparc/index.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ ==================
+ Sparc Architecture
+ ==================
+diff --git a/Documentation/xtensa/index.rst b/Documentation/xtensa/index.rst
+index 5a24e365e35f..52fa04eb39a3 100644
+--- a/Documentation/xtensa/index.rst
++++ b/Documentation/xtensa/index.rst
+@@ -1,4 +1,4 @@
+-:orphan:
++.. SPDX-License-Identifier: GPL-2.0
+ 
+ ===================
+ Xtensa Architecture
 -- 
 2.21.0
 
