@@ -2,361 +2,94 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F221C5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A0DC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E222063F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3F9205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 15:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561736831;
+	bh=IvQrseI2FT7GlH+2IVTYalj+9dZqPkQ+umge7Io8BYs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=10pmjG4mZmkgtQDzQuBnbutaUBcr1SzvUvM8M29RHYThSxrCpYtLje/JuycgmkbrX
+	 BO5euXtwPu7bZ9DrgSNFESgZ4v5tYBvoBilflltwTpsgBD1filor3+0N/kP4IVXuWI
+	 5U94jM5GkxJQP5qNZE53RnVk6wxNcj4n0/PRRh20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfF1PrN (ORCPT
+        id S1727078AbfF1PrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 11:47:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40616 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbfF1PrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Jun 2019 11:47:10 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from mail.kernel.org ([198.145.29.99]:58494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726707AbfF1PrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 11:47:09 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0A8E88CB51;
-        Fri, 28 Jun 2019 15:47:10 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5FC0A60BE0;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B2692133F;
         Fri, 28 Jun 2019 15:47:08 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 1/6] vfs: Allow fsinfo() to look up a mount object by ID
- [ver #15]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
-        christian@brauner.io, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 28 Jun 2019 16:47:07 +0100
-Message-ID: <156173682756.14728.4150013552549151751.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156173681842.14728.9331700785061885270.stgit@warthog.procyon.org.uk>
-References: <156173681842.14728.9331700785061885270.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561736828;
+        bh=IvQrseI2FT7GlH+2IVTYalj+9dZqPkQ+umge7Io8BYs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qiBPRUh2Rl/4JkSewXW0u5fTbCvxhNAiAvyoKPvWUekoyPQH5NWCaeHqoHo8wrx/z
+         +F+dnsHWd+I11+gyHYSrt7TBj0HOf3gNZZL6EP0gSEQayXinWtxuzoeLJlLC3Nqneu
+         JmWm7oUz6pJSL2mRKcrxq7zpVd4D504DPYgODGcs=
+Received: by mail-qt1-f182.google.com with SMTP id h21so6754833qtn.13;
+        Fri, 28 Jun 2019 08:47:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAVm769vb6eCqE84DT2Z2CnllTQdbZLG/vJ5dBUMAkJ7crySoC/b
+        phL8pUeNGz9wUrZhhh/urajHJ/jDG3244mntIg==
+X-Google-Smtp-Source: APXvYqzI7nz1Eud6yl97g4IKf/vW5/y3ZQY7AiYHNAFU5cp6XG9kpOIjyOkxG/G+hIZCgCZpbktv/2gOhf4y7pIKPB0=
+X-Received: by 2002:aed:3f10:: with SMTP id p16mr8736951qtf.110.1561736827529;
+ Fri, 28 Jun 2019 08:47:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 28 Jun 2019 15:47:10 +0000 (UTC)
+References: <20190628023838.15426-1-andrew@aj.id.au> <20190628023838.15426-3-andrew@aj.id.au>
+In-Reply-To: <20190628023838.15426-3-andrew@aj.id.au>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 28 Jun 2019 09:46:56 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKjDyuDjeBBqhF=2ceG2h0WiJC6QKtHJ-=yL3XqxXF0Hw@mail.gmail.com>
+Message-ID: <CAL_JsqKjDyuDjeBBqhF=2ceG2h0WiJC6QKtHJ-=yL3XqxXF0Hw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/8] dt-bindings: pinctrl: aspeed: Convert AST2400
+ bindings to json-schema
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Johnny Huang <johnny_huang@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow the fsinfo() syscall to look up a mount object by ID rather than by
-pathname.  This is necessary as there can be multiple mounts stacked up at
-the same pathname and there's no way to look through them otherwise.
+On Thu, Jun 27, 2019 at 8:39 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> Convert ASPEED pinctrl bindings to DT schema format using json-schema
+>
+> Cc: Johnny Huang <johnny_huang@aspeedtech.com>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+> In v2:
+>
+> * Enforce function/group names in bindings
+> * Move description above properties
+> * Simplify specification of compatible
+> * Cleanup license specification
+>
+>  .../pinctrl/aspeed,ast2400-pinctrl.txt        | 80 ------------------
+>  .../pinctrl/aspeed,ast2400-pinctrl.yaml       | 81 +++++++++++++++++++
+>  2 files changed, 81 insertions(+), 80 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
 
-This is done by passing AT_FSINFO_MOUNTID_PATH to fsinfo() in the
-parameters and then passing the mount ID as a string to fsinfo() in place
-of the filename:
-
-	struct fsinfo_params params = {
-		.at_flags = AT_FSINFO_MOUNTID_PATH,
-		.request = FSINFO_ATTR_IDS,
-	};
-
-	ret = fsinfo(AT_FDCWD, "21", &params, buffer, sizeof(buffer));
-
-The caller is only permitted to query a mount object if the root directory
-of that mount connects directly to the current chroot if dfd == AT_FDCWD[*]
-or the directory specified by dfd otherwise.  Note that this is not
-available to the pathwalk of any other syscall.
-
-[*] This needs to be something other than AT_FDCWD, perhaps AT_FDROOT.
-
-[!] This probably needs an LSM hook.
-
-[!] This might want to check the permissions on all the intervening dirs -
-    but it would have to do that under RCU conditions.
-
-[!] This might want to check a CAP_* flag.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/fsinfo.c                |   56 +++++++++++++++++++++
- fs/internal.h              |    2 +
- fs/namespace.c             |  117 +++++++++++++++++++++++++++++++++++++++++++-
- include/uapi/linux/fcntl.h |    1 
- 4 files changed, 173 insertions(+), 3 deletions(-)
-
-diff --git a/fs/fsinfo.c b/fs/fsinfo.c
-index b3f605c39eb5..4eaa33b2188b 100644
---- a/fs/fsinfo.c
-+++ b/fs/fsinfo.c
-@@ -522,6 +522,57 @@ static int vfs_fsinfo_fscontext(int fd, struct fsinfo_kparams *params)
- 	return ret;
- }
- 
-+/*
-+ * Look up the root of a mount object.  This allows access to mount objects
-+ * (and their attached superblocks) that can't be retrieved by path because
-+ * they're entirely covered.
-+ *
-+ * We only permit access to a mount that has a direct path between either the
-+ * dentry pointed to by dfd or to our chroot (if dfd is AT_FDCWD).
-+ */
-+static int vfs_fsinfo_mount(int dfd, const char __user *filename,
-+			    struct fsinfo_kparams *params)
-+{
-+	struct path path;
-+	struct fd f = {};
-+	char *name;
-+	long mnt_id;
-+	int ret;
-+
-+	if ((params->at_flags & ~AT_FSINFO_MOUNTID_PATH) ||
-+	    !filename)
-+		return -EINVAL;
-+
-+	name = strndup_user(filename, 32);
-+	if (IS_ERR(name))
-+		return PTR_ERR(name);
-+	ret = kstrtoul(name, 0, &mnt_id);
-+	if (ret < 0)
-+		goto out_name;
-+	if (mnt_id > INT_MAX)
-+		goto out_name;
-+
-+	if (dfd != AT_FDCWD) {
-+		ret = -EBADF;
-+		f = fdget_raw(dfd);
-+		if (!f.file)
-+			goto out_name;
-+	}
-+
-+	ret = lookup_mount_object(f.file ? &f.file->f_path : NULL,
-+				  mnt_id, &path);
-+	if (ret < 0)
-+		goto out_fd;
-+
-+	ret = vfs_fsinfo(&path, params);
-+	path_put(&path);
-+out_fd:
-+	fdput(f);
-+out_name:
-+	kfree(name);
-+	return ret;
-+}
-+
- /*
-  * Return buffer information by requestable attribute.
-  *
-@@ -638,6 +689,9 @@ SYSCALL_DEFINE5(fsinfo,
- 
- 		if ((kparams.at_flags & AT_FSINFO_FROM_FSOPEN) && pathname)
- 			return -EINVAL;
-+		if ((kparams.at_flags & (AT_FSINFO_FROM_FSOPEN | AT_FSINFO_MOUNTID_PATH)) ==
-+		    (AT_FSINFO_FROM_FSOPEN | AT_FSINFO_MOUNTID_PATH))
-+			return -EINVAL;
- 	} else {
- 		kparams.request = FSINFO_ATTR_STATFS;
- 	}
-@@ -696,6 +750,8 @@ SYSCALL_DEFINE5(fsinfo,
- 
- 	if (kparams.at_flags & AT_FSINFO_FROM_FSOPEN)
- 		ret = vfs_fsinfo_fscontext(dfd, &kparams);
-+	else if (kparams.at_flags & AT_FSINFO_MOUNTID_PATH)
-+		ret = vfs_fsinfo_mount(dfd, pathname, &kparams);
- 	else if (pathname)
- 		ret = vfs_fsinfo_path(dfd, pathname, &kparams);
- 	else
-diff --git a/fs/internal.h b/fs/internal.h
-index 0010889f2e85..d5283a55b25d 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -96,6 +96,8 @@ extern int __mnt_want_write_file(struct file *);
- extern void __mnt_drop_write_file(struct file *);
- 
- extern void dissolve_on_fput(struct vfsmount *);
-+extern int lookup_mount_object(struct path *, int, struct path *);
-+
- /*
-  * fs_struct.c
-  */
-diff --git a/fs/namespace.c b/fs/namespace.c
-index ffb13f0562b0..d96bc1dfab03 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -62,7 +62,7 @@ static int __init set_mphash_entries(char *str)
- __setup("mphash_entries=", set_mphash_entries);
- 
- static u64 event;
--static DEFINE_IDA(mnt_id_ida);
-+static DEFINE_IDR(mnt_id_ida);
- static DEFINE_IDA(mnt_group_ida);
- 
- static struct hlist_head *mount_hashtable __read_mostly;
-@@ -101,17 +101,27 @@ static inline struct hlist_head *mp_hash(struct dentry *dentry)
- 
- static int mnt_alloc_id(struct mount *mnt)
- {
--	int res = ida_alloc(&mnt_id_ida, GFP_KERNEL);
-+	int res;
- 
-+	/* Allocate an ID, but don't set the pointer back to the mount until
-+	 * later, as once we do that, we have to follow RCU protocols to get
-+	 * rid of the mount struct.
-+	 */
-+	res = idr_alloc(&mnt_id_ida, NULL, 0, INT_MAX, GFP_KERNEL);
- 	if (res < 0)
- 		return res;
- 	mnt->mnt_id = res;
- 	return 0;
- }
- 
-+static void mnt_publish_id(struct mount *mnt)
-+{
-+	idr_replace(&mnt_id_ida, mnt, mnt->mnt_id);
-+}
-+
- static void mnt_free_id(struct mount *mnt)
- {
--	ida_free(&mnt_id_ida, mnt->mnt_id);
-+	idr_remove(&mnt_id_ida, mnt->mnt_id);
- }
- 
- /*
-@@ -974,6 +984,7 @@ struct vfsmount *vfs_create_mount(struct fs_context *fc)
- 	lock_mount_hash();
- 	list_add_tail(&mnt->mnt_instance, &mnt->mnt.mnt_sb->s_mounts);
- 	unlock_mount_hash();
-+	mnt_publish_id(mnt);
- 	return &mnt->mnt;
- }
- EXPORT_SYMBOL(vfs_create_mount);
-@@ -1067,6 +1078,7 @@ static struct mount *clone_mnt(struct mount *old, struct dentry *root,
- 	lock_mount_hash();
- 	list_add_tail(&mnt->mnt_instance, &sb->s_mounts);
- 	unlock_mount_hash();
-+	mnt_publish_id(mnt);
- 
- 	if ((flag & CL_SLAVE) ||
- 	    ((flag & CL_SHARED_TO_SLAVE) && IS_MNT_SHARED(old))) {
-@@ -3986,3 +3998,102 @@ const struct proc_ns_operations mntns_operations = {
- 	.install	= mntns_install,
- 	.owner		= mntns_owner,
- };
-+
-+/*
-+ * See if one path point connects directly to another by ancestral relationship
-+ * across mountpoints.  Must call with the RCU read lock held.
-+ */
-+static bool are_paths_connected(struct path *ancestor, struct path *to_check)
-+{
-+	struct mount *mnt, *parent;
-+	struct path cursor;
-+	unsigned seq;
-+	bool connected;
-+
-+	seq = 0;
-+restart:
-+	cursor = *to_check;
-+
-+	read_seqbegin_or_lock(&rename_lock, &seq);
-+	while (cursor.mnt != ancestor->mnt) {
-+		mnt = real_mount(cursor.mnt);
-+		parent = READ_ONCE(mnt->mnt_parent);
-+		if (mnt == parent)
-+			goto failed;
-+		cursor.dentry = READ_ONCE(mnt->mnt_mountpoint);
-+		cursor.mnt = &parent->mnt;
-+	}
-+
-+	while (cursor.dentry != ancestor->dentry) {
-+		if (cursor.dentry == cursor.mnt->mnt_root ||
-+		    IS_ROOT(cursor.dentry))
-+			goto failed;
-+		cursor.dentry = READ_ONCE(cursor.dentry->d_parent);
-+	}
-+
-+	connected = true;
-+out:
-+	done_seqretry(&rename_lock, seq);
-+	return connected;
-+
-+failed:
-+	if (need_seqretry(&rename_lock, seq)) {
-+		seq = 1;
-+		goto restart;
-+	}
-+	connected = false;
-+	goto out;
-+}
-+
-+/**
-+ * lookup_mount_object - Look up a vfsmount object by ID
-+ * @root: The mount root must connect backwards to this point (or chroot if NULL).
-+ * @id: The ID of the mountpoint.
-+ * @_mntpt: Where to return the resulting mountpoint path.
-+ *
-+ * Look up the root of the mount with the corresponding ID.  This is only
-+ * permitted if that mount connects directly to the specified root/chroot.
-+ */
-+int lookup_mount_object(struct path *root, int mnt_id, struct path *_mntpt)
-+{
-+	struct mount *mnt;
-+	struct path stop, mntpt = {};
-+	int ret = -EPERM;
-+
-+	if (!root)
-+		get_fs_root(current->fs, &stop);
-+	else
-+		stop = *root;
-+
-+	rcu_read_lock();
-+	lock_mount_hash();
-+	mnt = idr_find(&mnt_id_ida, mnt_id);
-+	if (!mnt)
-+		goto out_unlock_mh;
-+	if (mnt->mnt.mnt_flags & (MNT_SYNC_UMOUNT | MNT_UMOUNT | MNT_DOOMED))
-+		goto out_unlock_mh;
-+	if (mnt_get_count(mnt) == 0)
-+		goto out_unlock_mh;
-+	mnt_add_count(mnt, 1);
-+	mntpt.mnt = &mnt->mnt;
-+	mntpt.dentry = dget(mnt->mnt.mnt_root);
-+	unlock_mount_hash();
-+
-+	if (are_paths_connected(&stop, &mntpt)) {
-+		*_mntpt = mntpt;
-+		mntpt.mnt = NULL;
-+		mntpt.dentry = NULL;
-+		ret = 0;
-+	}
-+
-+out_unlock:
-+	rcu_read_unlock();
-+	if (!root)
-+		path_put(&stop);
-+	path_put(&mntpt);
-+	return ret;
-+
-+out_unlock_mh:
-+	unlock_mount_hash();
-+	goto out_unlock;
-+}
-diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-index 6a2402a8fa30..5fda91cfca8a 100644
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-@@ -92,6 +92,7 @@
- #define AT_STATX_DONT_SYNC	0x4000	/* - Don't sync attributes with the server */
- 
- #define AT_FSINFO_FROM_FSOPEN	0x2000	/* Examine the fs_context attached to dfd by fsopen() */
-+#define AT_FSINFO_MOUNTID_PATH	0x4000	/* The path is a mount object ID, not an actual path */
- 
- #define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
- 
-
+Reviewed-by: Rob Herring <robh@kernel.org>
