@@ -2,152 +2,193 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD7CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6354C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7F42086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B302133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 05:24:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TVsneAi4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dDcHXyNc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfF1FVI (ORCPT
+        id S1726749AbfF1FYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 01:21:08 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:45477 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbfF1FVH (ORCPT
+        Fri, 28 Jun 2019 01:24:10 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36334 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfF1FYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 01:21:07 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5S5KYY9614701
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 27 Jun 2019 22:20:34 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5S5KYY9614701
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561699235;
-        bh=f3/e2qVro/uDu+DipMcO/vFVf9VuacxNZspNTim3nIo=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=TVsneAi4dwyWSiMUlmrn33zDxk7CfF/D9PxFSSfvB6wbkF1D1JoLQLAOwjRfXugwu
-         VEQMFMyDnDw0l/FuBi01vrK788cPf8j4s8srHYm4ab6dk0+ClMQ0JVjIDMVOPUSgXp
-         xcUipZXBu+YY4pa5qZYB6JEmRup3UlLIuMJcNp2IXaVW4KrfmizmfuqT88oQpcEFqS
-         jl81JzmzaZghDPeXQTihVSzoi0drt9wAvyvY8hvSqF8RG4NRTdYok00OFYjt/HFn5d
-         kXQfhXN74VNXnePXbzZkxNkCt36K2ZnOtgGfZn/xtWhfC1/HPXhRcYupl/+d8anCxP
-         dk4xyMmmFHfnw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5S5KYQA614696;
-        Thu, 27 Jun 2019 22:20:34 -0700
-Date:   Thu, 27 Jun 2019 22:20:34 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Baoquan He <tipbot@zytor.com>
-Message-ID: <tip-8ff80fbe7e9870078b1cc3c2cdd8f3f223b333a9@git.kernel.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, dyoung@redhat.com,
-        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, bhe@redhat.com
-Reply-To: kirill.shutemov@linux.intel.com, dyoung@redhat.com,
-          tglx@linutronix.de, mingo@kernel.org, bhe@redhat.com,
-          linux-kernel@vger.kernel.org, hpa@zytor.com
-In-Reply-To: <20190524073810.24298-4-bhe@redhat.com>
-References: <20190524073810.24298-4-bhe@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/boot] x86/kdump/64: Restrict kdump kernel reservation to
- <64TB
-Git-Commit-ID: 8ff80fbe7e9870078b1cc3c2cdd8f3f223b333a9
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 28 Jun 2019 01:24:10 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5S5O2IZ033667;
+        Fri, 28 Jun 2019 00:24:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561699442;
+        bh=mpYlm12k50Y2IG6Z0/YvEbMsQANay4iaP7Ic4q1ygZ4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dDcHXyNc1WQcEbS9lRFb0KSH/YJxf8Lb4OuAfR1+QS5V/TvYMhMnmmg+NoWiLQA+Y
+         JqSgRsZ1ebzOMwOJrcxg3kvsKM0O1pvc8thh+lAYLDUcrI0toeqKuj2c0cWWMvpMry
+         axprcIPUkMqnONDnm7p0bILfPk8cEwSde6PlaPc0=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5S5O2S1050156
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Jun 2019 00:24:02 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 28
+ Jun 2019 00:24:02 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 28 Jun 2019 00:24:02 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5S5NwZA082212;
+        Fri, 28 Jun 2019 00:23:59 -0500
+Subject: Re: [RESEND PATCH 02/10] crypto: sa2ul: Add crypto driver
+To:     Eric Biggers <ebiggers@kernel.org>
+CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <t-kristo@ti.com>,
+        <linux-crypto@vger.kernel.org>, <nm@ti.com>
+References: <20190628042745.28455-1-j-keerthy@ti.com>
+ <20190628042745.28455-3-j-keerthy@ti.com>
+ <20190628050756.GD673@sol.localdomain>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <e86c6c6b-116d-f065-52a4-9b4d2951d100@ti.com>
+Date:   Fri, 28 Jun 2019 10:54:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <20190628050756.GD673@sol.localdomain>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8ff80fbe7e9870078b1cc3c2cdd8f3f223b333a9
-Gitweb:     https://git.kernel.org/tip/8ff80fbe7e9870078b1cc3c2cdd8f3f223b333a9
-Author:     Baoquan He <bhe@redhat.com>
-AuthorDate: Fri, 24 May 2019 15:38:10 +0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 28 Jun 2019 07:14:59 +0200
 
-x86/kdump/64: Restrict kdump kernel reservation to <64TB
 
-Restrict kdump to only reserve crashkernel below 64TB.
+On 28/06/19 10:37 AM, Eric Biggers wrote:
+> On Fri, Jun 28, 2019 at 09:57:37AM +0530, Keerthy wrote:
+>> The Security Accelerator (SA2_UL) subsystem provides hardware
+>> cryptographic acceleration for the following use cases:
+>> • Encryption and authentication for secure boot
+>> • Encryption and authentication of content in applications
+>>    requiring DRM (digital rights management) and
+>>    content/asset protection
+>> The device includes one instantiation of SA2_UL named SA2_UL0
+>>
+>> SA2_UL supports the following cryptographic industry standards to enable data authentication, data
+>> integrity and data confidentiality.
+>>
+>> Crypto function library for software acceleration
+>> o AES operation
+>> o 3DES operation
+>> o SHA1 operation
+>> o MD5 operation
+>> o SHA2 – 224, 256, 384, 512 operation
+>>
+>> Authentication supported via following hardware cores
+>> o SHA1
+>> o MD5
+>> o SHA2 -224
+>> o SHA2-256
+>> o SHA2-384
+>> o SHA2-512
+> 
+> What about HMAC?
+> 
+> Your actual driver only exposes HMAC-SHA*, not SHA* anything.
+> 
+> What does the hardware actually support?
 
-The reaons is that the kdump may jump from a 5-level paging mode to a
-4-level paging mode kernel. If a 4-level paging mode kdump kernel is put
-above 64TB, then the kdump kernel cannot start.
+Hardware supports both SHA and HMAC-SHA
 
-The 1st kernel reserves the kdump kernel region during bootup. At that
-point it is not known whether the kdump kernel has 5-level or 4-level
-paging support.
+> 
+>> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+>> index 603413f28fa3..b9a3fa026c74 100644
+>> --- a/drivers/crypto/Kconfig
+>> +++ b/drivers/crypto/Kconfig
+>> @@ -785,4 +785,21 @@ config CRYPTO_DEV_CCREE
+>>   
+>>   source "drivers/crypto/hisilicon/Kconfig"
+>>   
+>> +config CRYPTO_DEV_SA2UL
+>> +	tristate "Support for TI security accelerator"
+>> +	depends on ARCH_K3 || COMPILE_TEST
+>> +	select ARM64_CRYPTO
+>> +	select CRYPTO_AES
+>> +	select CRYPTO_AES_ARM64
+>> +	select CRYPTO_SHA1
+>> +	select CRYPTO_MD5
+>> +	select CRYPTO_ALGAPI
+>> +	select CRYPTO_AUTHENC
+>> +	select HW_RANDOM
+>> +	default m if ARCH_K3
+>> +	help
+>> +	  Keystone devices include a security accelerator engine that may be
+>> +	  used for crypto offload.  Select this if you want to use hardware
+>> +	  acceleration for cryptographic algorithms on these devices.
+> 
+> This shouldn't be enabled by default.  Note that arm64 defconfig sets ARCH_K3 as
+> well as lots of other ARCH_* options, so clearly just because ARCH_K3 is set
+> doesn't mean the kernel is being built specifically for your platform.
 
-To support both restrict the kdump kernel reservation to the lower 64TB
-address space to ensure that a 4-level paging mode kdump kernel can be
-loaded and successfully started.
+okay. I will remove that.
 
-[ tglx: Massaged changelog ]
+> 
+>> +/*
+>> + * Mode Control Instructions for various Key lengths 128, 192, 256
+>> + * For CBC (Cipher Block Chaining) mode for encryption
+>> + */
+>> +static u8 mci_cbc_enc_array[3][MODE_CONTROL_BYTES] = {
+>> +	{	0x21, 0x00, 0x00, 0x18, 0x88, 0x0a, 0xaa, 0x4b, 0x7e, 0x00,
+>> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+>> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
+>> +	{	0x21, 0x00, 0x00, 0x18, 0x88, 0x4a, 0xaa, 0x4b, 0x7e, 0x00,
+>> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+>> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
+>> +	{	0x21, 0x00, 0x00, 0x18, 0x88, 0x8a, 0xaa, 0x4b, 0x7e, 0x00,
+>> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+>> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
+>> +};
+> 
+> Use 'const' for static constants.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Acked-by: Dave Young <dyoung@redhat.com>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Link: https://lkml.kernel.org/r/20190524073810.24298-4-bhe@redhat.com
+Okay
 
----
- arch/x86/kernel/setup.c | 15 ++++++++++++---
- include/linux/sizes.h   |  1 +
- 2 files changed, 13 insertions(+), 3 deletions(-)
+> 
+>> +static int sa_aes_cbc_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
+>> +			     unsigned int keylen)
+>> +{
+>> +	struct algo_data *ad = kzalloc(sizeof(*ad), GFP_KERNEL);
+> 
+> Need to check from error for all memory allocations.
+> 
+>> +static struct sa_alg_tmpl sa_algs[] = {
+>> +	{.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
+> 
+> ablkcipher API is deprecated.  Use skcipher instead.
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 08a5f4a131f5..dcbdf54fb5c1 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -453,15 +453,24 @@ static void __init memblock_x86_reserve_range_setup_data(void)
- #define CRASH_ALIGN		SZ_16M
- 
- /*
-- * Keep the crash kernel below this limit.  On 32 bits earlier kernels
-- * would limit the kernel to the low 512 MiB due to mapping restrictions.
-+ * Keep the crash kernel below this limit.
-+ *
-+ * On 32 bits earlier kernels would limit the kernel to the low 512 MiB
-+ * due to mapping restrictions.
-+ *
-+ * On 64bit, kdump kernel need be restricted to be under 64TB, which is
-+ * the upper limit of system RAM in 4-level paing mode. Since the kdump
-+ * jumping could be from 5-level to 4-level, the jumping will fail if
-+ * kernel is put above 64TB, and there's no way to detect the paging mode
-+ * of the kernel which will be loaded for dumping during the 1st kernel
-+ * bootup.
-  */
- #ifdef CONFIG_X86_32
- # define CRASH_ADDR_LOW_MAX	SZ_512M
- # define CRASH_ADDR_HIGH_MAX	SZ_512M
- #else
- # define CRASH_ADDR_LOW_MAX	SZ_4G
--# define CRASH_ADDR_HIGH_MAX	MAXMEM
-+# define CRASH_ADDR_HIGH_MAX	SZ_64T
- #endif
- 
- static int __init reserve_crashkernel_low(void)
-diff --git a/include/linux/sizes.h b/include/linux/sizes.h
-index fbde0bc7e882..8651269cb46c 100644
---- a/include/linux/sizes.h
-+++ b/include/linux/sizes.h
-@@ -47,5 +47,6 @@
- #define SZ_2G				0x80000000
- 
- #define SZ_4G				_AC(0x100000000, ULL)
-+#define SZ_64T				_AC(0x400000000000, ULL)
- 
- #endif /* __LINUX_SIZES_H__ */
+Okay
+
+> 
+> (To be clear, these are just a few things I happened to notice from very quickly
+> skimming through this patch.  I don't have time to do a proper review of random
+> drivers.)
+
+I will incorporate the comments in v2.
+
+Thanks for your quick review.
+
+> 
+> - Eric
+> 
