@@ -6,36 +6,40 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395FBC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B755C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE9A2147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBEA2147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfF1Der (ORCPT
+        id S1727055AbfF1DhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:34:47 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55882 "EHLO inva021.nxp.com"
+        Thu, 27 Jun 2019 23:37:13 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49728 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfF1Der (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:34:47 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2A463200304;
-        Fri, 28 Jun 2019 05:34:45 +0200 (CEST)
+        id S1726565AbfF1DhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 23:37:13 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 71D601A1046;
+        Fri, 28 Jun 2019 05:37:11 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 567642002F0;
-        Fri, 28 Jun 2019 05:34:40 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F1CA1A0F05;
+        Fri, 28 Jun 2019 05:37:01 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 308CE402B3;
-        Fri, 28 Jun 2019 11:34:34 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A6B1D402FB;
+        Fri, 28 Jun 2019 11:36:49 +0800 (SGT)
 From:   Anson.Huang@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, aisheng.dong@nxp.com, abel.vesa@nxp.com,
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        leonard.crestez@nxp.com, viresh.kumar@linaro.org, ping.bai@nxp.com,
+        daniel.baluta@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com,
+        andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca,
+        agx@sigxcpu.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] soc: imx-scu: Add SoC UID(unique identifier) support
-Date:   Fri, 28 Jun 2019 11:25:44 +0800
-Message-Id: <20190628032544.8317-1-Anson.Huang@nxp.com>
+Subject: [PATCH 1/2] arm64: dts: imx8mq: Correct OPP table according to latest datasheet
+Date:   Fri, 28 Jun 2019 11:27:59 +0800
+Message-Id: <20190628032800.8428-1-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.14.1
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,77 +49,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Add i.MX SCU SoC's UID(unique identifier) support, user
-can read it from sysfs:
+According to latest datasheet (Rev.1, 10/2018) from below links,
+in the consumer datasheet, 1.5GHz is mentioned as highest opp but
+depends on speed grading fuse, and in the industrial datasheet,
+1.3GHz is mentioned as highest opp but depends on speed grading
+fuse. 1.5GHz and 1.3GHz opp use same voltage, so no need for
+consumer part to support 1.3GHz opp, with same voltage, CPU should
+run at highest frequency in order to go into idle as quick as
+possible, this can save power.
 
-root@imx8qxpmek:~# cat /sys/devices/soc0/soc_uid
-7B64280B57AC1898
+That means for consumer part, 1GHz/1.5GHz are supported, for
+industrial part, 800MHz/1.3GHz are supported, and then check the
+speed grading fuse to limit the highest CPU frequency further.
+Correct the market segment bits in opp table to make them work
+according to datasheets.
 
+https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQIEC.pdf
+https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQCEC.pdf
+
+Fixes: 12629c5c3749 ("arm64: dts: imx8mq: Add cpu speed grading and all OPPs")
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since V1:
-	- Improve the comment of skipping SCFW API return value check for getting UID.
----
- drivers/soc/imx/soc-imx-scu.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/soc/imx/soc-imx-scu.c b/drivers/soc/imx/soc-imx-scu.c
-index 676f612..3eacb54 100644
---- a/drivers/soc/imx/soc-imx-scu.c
-+++ b/drivers/soc/imx/soc-imx-scu.c
-@@ -27,6 +27,40 @@ struct imx_sc_msg_misc_get_soc_id {
- 	} data;
- } __packed;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 9d99191..bea53bc 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -169,7 +169,8 @@
+ 		opp-1300000000 {
+ 			opp-hz = /bits/ 64 <1300000000>;
+ 			opp-microvolt = <1000000>;
+-			opp-supported-hw = <0xc>, <0x7>;
++			/* Industrial only but rely on speed grading */
++			opp-supported-hw = <0xc>, <0x4>;
+ 			clock-latency-ns = <150000>;
+ 		};
  
-+struct imx_sc_msg_misc_get_soc_uid {
-+	struct imx_sc_rpc_msg hdr;
-+	u32 uid_low;
-+	u32 uid_high;
-+} __packed;
-+
-+static ssize_t soc_uid_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	struct imx_sc_msg_misc_get_soc_uid msg;
-+	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-+	u64 soc_uid;
-+
-+	hdr->ver = IMX_SC_RPC_VERSION;
-+	hdr->svc = IMX_SC_RPC_SVC_MISC;
-+	hdr->func = IMX_SC_MISC_FUNC_UNIQUE_ID;
-+	hdr->size = 1;
-+
-+	/*
-+	 * SCU FW API always returns an error even the
-+	 * function is successfully executed, so skip
-+	 * returned value check.
-+	 */
-+	imx_scu_call_rpc(soc_ipc_handle, &msg, true);
-+
-+	soc_uid = msg.uid_high;
-+	soc_uid <<= 32;
-+	soc_uid |= msg.uid_low;
-+
-+	return sprintf(buf, "%016llX\n", soc_uid);
-+}
-+
-+static DEVICE_ATTR_RO(soc_uid);
-+
- static int imx_scu_soc_id(void)
- {
- 	struct imx_sc_msg_misc_get_soc_id msg;
-@@ -102,6 +136,11 @@ static int imx_scu_soc_probe(struct platform_device *pdev)
- 		goto free_revision;
- 	}
- 
-+	ret = device_create_file(soc_device_to_device(soc_dev),
-+				 &dev_attr_soc_uid);
-+	if (ret)
-+		goto free_revision;
-+
- 	return 0;
- 
- free_revision:
+@@ -177,7 +178,7 @@
+ 			opp-hz = /bits/ 64 <1500000000>;
+ 			opp-microvolt = <1000000>;
+ 			/* Consumer only but rely on speed grading */
+-			opp-supported-hw = <0x8>, <0x7>;
++			opp-supported-hw = <0x8>, <0x3>;
+ 			clock-latency-ns = <150000>;
+ 		};
+ 	};
 -- 
 2.7.4
 
