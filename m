@@ -2,224 +2,124 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BC4C5B577
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3C7C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB8A2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:48:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="BAelTGQd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VAghNPWM"
+	by mail.kernel.org (Postfix) with ESMTP id BA7A0214DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 00:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561683016;
+	bh=YoIDG1dTvCB14b302XP/vNEBGjMdQh1wzbBccBY39PQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=aKiqtxhJJGf4WALVC7IRlNwo8yjqQqPE4EuQeWlwc9z0m65JMx+Nw6LcXu7NqUhIh
+	 H+sjnNWWlgteZCwFf3TOykoXfmO+oh6hY9XoHrquT4dvkM6Kjd1qdLJ5YcDTrSIY/3
+	 1KKNP4gobVn/7bLIE5IurvOrBTTl6uMEjZ3EeYSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfF1AsZ (ORCPT
+        id S1726760AbfF1AuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 20:48:25 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60369 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726601AbfF1AsZ (ORCPT
+        Thu, 27 Jun 2019 20:50:15 -0400
+Received: from mail-pg1-f176.google.com ([209.85.215.176]:46471 "EHLO
+        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfF1AuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 20:48:25 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6B66A1A78;
-        Thu, 27 Jun 2019 20:48:21 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 27 Jun 2019 20:48:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=M2zdMuVXrO3RS7mphjNsozbVtL93heO
-        H6wA/NOHeb+0=; b=BAelTGQdCOAoWnKgT4nPGmV09/oxDSrIMYG0yGTKzPDLRdS
-        A1kF29+nQO+5Bht8vmcJseivJ5+K5NcDr34J6KEjOKASvwWZ3HA8bYKC4J+YtFBj
-        m5FeOGOFRnH5lJuOEOgaCe/lLG9Tj+HSmWrFB8w0HrgQ9y+TtoCmTtybNXL6GiGs
-        2sGHl8u5r26oweibUscllP04sLPqo3Tap/iTrdnLojETEj1wd0b4NKNcFC/8tjrP
-        SUnjrRS3lGPYs/EMzxpKI46V/hagG6eMJCu1433IMiUj4RV4r0zesKg/1VIsEnkn
-        7w0g+cPJ5Pfzj0ewIqfUMM+6UoxssWuYC4t7vXg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=M2zdMu
-        VXrO3RS7mphjNsozbVtL93heOH6wA/NOHeb+0=; b=VAghNPWMpfYQAih/+t1B7h
-        TM5h0Cmp8xF2l6IqUzaLabOyXKQVDwa1nMKBDsm40TdCJ17oYOn26qWAeM0Zmn4b
-        mIpgoD8dzm3+/2O/5R/THItQC1+T4Ohw3MaAYpx32znHpCAsEituY8MuC8GmMA++
-        +BhtO0/vYfgRgvXqQrBB8M2Bg19OoYstd87+4qB8m+k4BLi+1gup1urE/2KlQHEC
-        8ER4CaNxbxDIhrBhYQnqf+FMhfp4FZjwg/90rArk+1UMKRa5tUyiMkgMkedykTmX
-        xlpSmhRCvC647fo4tsN/psw7GQadIyvQTBG1t+qUhtx+grivSwAXQr60zzRslnuA
-        ==
-X-ME-Sender: <xms:02MVXWNEEvUvgCmT9Rp_U7WUCE_s-OHhIqirMRNhk4vacMdYbvuOJw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudelgdeflecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:02MVXb5tX7wtiQ9Nn8tlbvYa4tHLKwcSlmUFTTMN-utY_5oDvGhNmw>
-    <xmx:02MVXSXAUZLXEP5_EeyTtNY0fzpaWNMTsXy6QK2Y21TeqAKNwbbmsw>
-    <xmx:02MVXd1FQhyP2jlBRPc9TZQc8LupomSHtV1nM2mtOTJJo_FTD4Wdxw>
-    <xmx:1WMVXe3pXluupymUHxOiZzcWvVaASLutrERE5TF2c17qhyUFV12FSw>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id BA943E00A2; Thu, 27 Jun 2019 20:48:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-731-g19d3b16-fmstable-20190627v1
-Mime-Version: 1.0
-Message-Id: <d3291d9d-241b-40dc-b645-21f49f98da28@www.fastmail.com>
-In-Reply-To: <CAL_JsqLiZzkJZ+CeaMDer=Arm9vFdG1Y_6F0M=AZV=82EqORFg@mail.gmail.com>
-References: <20190626071430.28556-1-andrew@aj.id.au>
- <20190626071430.28556-3-andrew@aj.id.au>
- <CAL_JsqKXPzFYTHos-uvCUtBj-bcsNfrzt5GjxQ=PmgeXpp5J-A@mail.gmail.com>
- <ee0cac9e-4b39-4900-87a8-3dabb58ed883@www.fastmail.com>
- <CAL_JsqLiZzkJZ+CeaMDer=Arm9vFdG1Y_6F0M=AZV=82EqORFg@mail.gmail.com>
-Date:   Fri, 28 Jun 2019 10:17:39 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Rob Herring" <robh+dt@kernel.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Ryan Chen" <ryan_chen@aspeedtech.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
-        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?Re:_[PATCH_2/8]_dt-bindings:_pinctrl:_aspeed:_Convert_AST2400_?=
- =?UTF-8?Q?bindings_to_json-schema?=
-Content-Type: text/plain
+        Thu, 27 Jun 2019 20:50:15 -0400
+Received: by mail-pg1-f176.google.com with SMTP id v9so1760104pgr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 17:50:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/2sb9hYyfsw8WeSVT5nzjFqwXBw7n6CAVVqtEtqe5yo=;
+        b=lRvyXSQsS2U/HHANHUkIFKkmeGd6aFPfOTTAFeWHsMWnUOQOW/dp/M9J7cb5xcNZG1
+         gNpL8dUJCCvQjCiiWT7R8f2WxzLfHBTgowMfraYUinDytjw6jELgg8QxyVDuMoE4aGTn
+         fh0Od2jvO3KHQj5Sl37WuwFb9oDthueH5M3sFHnL+c5JlGZ39fr3f2kKERMEKN7gLufn
+         9TVFHVDABdFsnBAtc4C8gylQ2rC3n/IvaSdbfJJ39/PlRVsMTmZyjyWvJH/L3RT32K4y
+         NGepclZT+dsGm7nThkQVEwP3UqgE70meJdNUt1vPrUwttfgiS6nN5Xn79Epz7TnFkkqj
+         QQEg==
+X-Gm-Message-State: APjAAAVa3MyUoJ5vJ7l0wEQg0zuf31XOT1cE86ZHhULqC0obcH8awhSB
+        xXIP13aLzrakqP9FlQyiQVG6Bw==
+X-Google-Smtp-Source: APXvYqxgwYFE0x/C7FEGII/7g2GTw0w2jtCjz9Dt3boSx0JghIsMGG6LzP+pgOPkeurX1/r+fwbtKg==
+X-Received: by 2002:a63:593:: with SMTP id 141mr5704119pgf.78.1561683014046;
+        Thu, 27 Jun 2019 17:50:14 -0700 (PDT)
+Received: from localhost (c-76-21-109-208.hsd1.ca.comcast.net. [76.21.109.208])
+        by smtp.gmail.com with ESMTPSA id n7sm280544pff.59.2019.06.27.17.50.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 17:50:12 -0700 (PDT)
+From:   Moritz Fischer <mdf@kernel.org>
+To:     linux-fpga@vger.kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Moritz Fischer <mdf@kernel.org>
+Subject: [PATCH 00/15] FPGA DFL updates
+Date:   Thu, 27 Jun 2019 17:49:36 -0700
+Message-Id: <20190628004951.6202-1-mdf@kernel.org>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
 
+can you please take the following patches. They're mostly new features
+and some cleanup of the DFL internals.
 
-On Thu, 27 Jun 2019, at 23:40, Rob Herring wrote:
-> On Wed, Jun 26, 2019 at 6:44 PM Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> >
-> >
-> > On Wed, 26 Jun 2019, at 23:17, Rob Herring wrote:
-> > > On Wed, Jun 26, 2019 at 1:21 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> > > >
-> > > > Convert ASPEED pinctrl bindings to DT schema format using json-schema
-> > >
-> > > BTW, ASPEED is one of the remaining platforms needing the top-level
-> > > board bindings converted.
-> >
-> > Okay, I'll put together patches to fix that.
-> >
-> > >
-> > > >
-> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > > > ---
-> > > >  .../pinctrl/aspeed,ast2400-pinctrl.txt        | 80 -------------------
-> > > >  .../pinctrl/aspeed,ast2400-pinctrl.yaml       | 73 +++++++++++++++++
-> > > >  2 files changed, 73 insertions(+), 80 deletions(-)
-> > > >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-> > >
-> > > > diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..3b8cf3e51506
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-> > > > @@ -0,0 +1,73 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0+
-> > >
-> > > Do you have rights to change the license?
-> >
-> > Where are you coming from with this question? The bindings previously didn't list a
-> > license, is there some implicit license for them? I would have thought it was GPL-2.0?
-> 
-> Yes, it is implicitly GPL-2.0 since it is in the kernel tree and has
-> no other license text.
-> 
-> > IBM's (my employer's) preferred contribution license is GPL 2.0-or-later, so I was just
-> > adding the SPDX marker to clarify.
-> 
-> Adding 'or-later' is a licensing change. If IBM is the copyright
-> holder on all this file, then that is fine.
+They've been on the mailing list and have been reviewed.
 
-I authored the file for IBM and they hold the copyright, so the change is permitted.
+Note: I've seen that Mauro touched Documentation/fpga/dfl.rst in linux-next
+      commit c220a1fae6c5d ("docs: fpga: convert docs to ReST and rename to *.rst")
+      and fixed up PATCH 05/15 to apply on top of that.
 
-> 
-> > > If so, the preference is to
-> > > dual license with (GPL-2.0 OR BSD-2-Clause).
-> >
-> > You're asking if I have the power to relicense so I can dual license it this way?
-> 
-> It would probably be up to your company. If that's an issue, then not
-> dual licensing is fine. I don't want to hold things up on that.
+If you prefer the original series against char-misc-next let me know,
+and I'll resubmit.
 
-Okay. I've asked and the query is being resolved internally. I'm not sure when
-that will occur though, so I'll relicense it in a future patch if the request gets
-the go ahead. Just for the record, what's the motivation for the dual license?
-Understanding why will likely help resolve the request.
+Thanks,
 
-> 
-> [...]
-> 
-> > > > +required:
-> > > > +  - compatible
-> > > > +
-> > > > +description: |+
-> > >
-> > > description goes before properties.
-> >
-> > Okay. I wouldn't have thought the ordering mattered. Is this just a preference?
-> 
-> Yes, just a preference.
-> 
-> > The tools seemed to run fine as is.
-> >
-> > I'll re-order it regardless.
-> >
-> > >
-> > > > +  The pin controller node should be the child of a syscon node with the
-> > > > +  required property:
-> > > > +
-> > > > +  - compatible:     Should be one of the following:
-> > > > +                    "aspeed,ast2400-scu", "syscon", "simple-mfd"
-> > > > +                    "aspeed,g4-scu", "syscon", "simple-mfd"
-> > > > +
-> > > > +  Refer to the the bindings described in
-> > > > +  Documentation/devicetree/bindings/mfd/syscon.txt
-> > > > +
-> > > > +  For the AST2400 pinmux, each mux function has only one associated pin group.
-> > > > +  Each group is named by its function. The following values for the function
-> > > > +  and groups properties are supported:
-> > > > +
-> > > > +  ACPI ADC0 ADC1 ADC10 ADC11 ADC12 ADC13 ADC14 ADC15 ADC2 ADC3 ADC4 ADC5 ADC6
-> > > > +  ADC7 ADC8 ADC9 BMCINT DDCCLK DDCDAT EXTRST FLACK FLBUSY FLWP GPID GPID0 GPID2
-> > > > +  GPID4 GPID6 GPIE0 GPIE2 GPIE4 GPIE6 I2C10 I2C11 I2C12 I2C13 I2C14 I2C3 I2C4
-> > > > +  I2C5 I2C6 I2C7 I2C8 I2C9 LPCPD LPCPME LPCRST LPCSMI MAC1LINK MAC2LINK MDIO1
-> > > > +  MDIO2 NCTS1 NCTS2 NCTS3 NCTS4 NDCD1 NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4
-> > > > +  NDTR1 NDTR2 NDTR3 NDTR4 NDTS4 NRI1 NRI2 NRI3 NRI4 NRTS1 NRTS2 NRTS3 OSCCLK
-> > > > +  PWM0 PWM1 PWM2 PWM3 PWM4 PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 ROM16 ROM8
-> > > > +  ROMCS1 ROMCS2 ROMCS3 ROMCS4 RXD1 RXD2 RXD3 RXD4 SALT1 SALT2 SALT3 SALT4 SD1
-> > > > +  SD2 SGPMCK SGPMI SGPMLD SGPMO SGPSCK SGPSI0 SGPSI1 SGPSLD SIOONCTRL SIOPBI
-> > > > +  SIOPBO SIOPWREQ SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1DEBUG SPI1PASSTHRU
-> > > > +  SPICS1 TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2 TXD3 TXD4 UART6
-> > > > +  USB11D1 USB11H2 USB2D1 USB2H1 USBCKI VGABIOS_ROM VGAHS VGAVS VPI18 VPI24
-> > > > +  VPI30 VPO12 VPO24 WDTRST1 WDTRST2
-> > >
-> > > This should be a schema.
-> >
-> > Yeah, I covered this in my cover letter. I was hoping to get away without
-> > that for the moment as this seems like the first pinctrl binding to be
-> > converted, however if you insist...
-> 
-> That generally doesn't matter. You can assume common properties will
-> have a schema and you don't need to define common constraints (like
-> 'function' is a string array). You only need what is specific to this
-> binding which is possible values.
+Moritz
 
-Right, it just wasn't clear to me how much effort was involved. Having
-hacked around a bit now I've found it's not so much.
+Wu Hao (15):
+  fpga: dfl-fme-mgr: fix FME_PR_INTFC_ID register address.
+  fpga: dfl: fme: remove copy_to_user() in ioctl for PR
+  fpga: dfl: fme: align PR buffer size per PR datawidth
+  fpga: dfl: fme: support 512bit data width PR
+  Documentation: fpga: dfl: add descriptions for virtualization and new
+    interfaces.
+  fpga: dfl: fme: add DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
+  fpga: dfl: pci: enable SRIOV support.
+  fpga: dfl: afu: add AFU state related sysfs interfaces
+  fpga: dfl: afu: add userclock sysfs interfaces.
+  fpga: dfl: add id_table for dfl private feature driver
+  fpga: dfl: afu: export __port_enable/disable function.
+  fpga: dfl: afu: add error reporting support.
+  fpga: dfl: afu: add STP (SignalTap) support
+  fpga: dfl: fme: add capability sysfs interfaces
+  fpga: dfl: fme: add global error reporting support
 
-Thanks for your feedback.
+ .../ABI/testing/sysfs-platform-dfl-fme        |  98 +++++
+ .../ABI/testing/sysfs-platform-dfl-port       | 104 +++++
+ Documentation/fpga/dfl.rst                    | 100 +++++
+ drivers/fpga/Makefile                         |   3 +-
+ drivers/fpga/dfl-afu-error.c                  | 225 ++++++++++
+ drivers/fpga/dfl-afu-main.c                   | 330 ++++++++++++++-
+ drivers/fpga/dfl-afu.h                        |   7 +
+ drivers/fpga/dfl-fme-error.c                  | 385 ++++++++++++++++++
+ drivers/fpga/dfl-fme-main.c                   | 120 +++++-
+ drivers/fpga/dfl-fme-mgr.c                    | 117 +++++-
+ drivers/fpga/dfl-fme-pr.c                     |  65 +--
+ drivers/fpga/dfl-fme.h                        |   7 +-
+ drivers/fpga/dfl-pci.c                        |  40 ++
+ drivers/fpga/dfl.c                            | 169 +++++++-
+ drivers/fpga/dfl.h                            |  54 ++-
+ include/uapi/linux/fpga-dfl.h                 |  32 ++
+ 16 files changed, 1776 insertions(+), 80 deletions(-)
+ create mode 100644 drivers/fpga/dfl-afu-error.c
+ create mode 100644 drivers/fpga/dfl-fme-error.c
 
-Andrew
+-- 
+2.22.0
+
