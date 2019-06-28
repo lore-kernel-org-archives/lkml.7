@@ -2,103 +2,87 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5190BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17DBC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC1A2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:17:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="pqUrZZrH"
+	by mail.kernel.org (Postfix) with ESMTP id A1907214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfF1IRO (ORCPT
+        id S1726619AbfF1IRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:17:14 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39329 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfF1IRO (ORCPT
+        Fri, 28 Jun 2019 04:17:35 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53320 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfF1IRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:17:14 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so5283183wrt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 01:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0iX4GoXUMjYo0yWAqnak7nWNu9SahWjJ+qIlyX2DjnA=;
-        b=pqUrZZrHnpMwYQiyu/1jCW1Vn1dbIBUApoVZMhyhBwvnhvhfumKMpGn/HD06hkyLKV
-         mAr70tgH1UWNF40M5i4Iu7TZyBCOF9E4DVrgXNhfgFoe68UERxt7W4BtnpD/aXQbHgrr
-         KSKRFDsze0oQlGIrrEesEJEXxvjGoX7ByoMNidbjknRj4Bylt+bqRjjgIIVO6eX4pKnN
-         1AmfDbD/NeC/4Z9WHyrLlNhDEE1EW62NsHUnaW1L+cOpLHwoL1tVmmD214BJEgmzEGJp
-         UBCPbzQkK8BSlSG9gz7fGNCBlajjvLjh/2C21gkCh6AjXCuIST7i+hrq6mn684QyGZ60
-         KhUQ==
+        Fri, 28 Jun 2019 04:17:35 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x15so8156966wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 01:17:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=0iX4GoXUMjYo0yWAqnak7nWNu9SahWjJ+qIlyX2DjnA=;
-        b=Xa2pOpmCol6x5WBX52jwFPKnn8v9+vtaIMr3/r4PoniY1SZsCeksb9YiD+9Y5F3lBt
-         ixvkuSCF93H8PZtaZRRpfk106Lb2RGqryx7DVx+tOKYpsv2XIwTtUec2Ua4MicMaRE2/
-         4ozCQBprbKdI9aSGly/gm2eRahl3Xr3yqVOUJF4M5yU+R38sjatUYnOtU2BDk51+7iLd
-         vzwPwnN1222n6p8bN0PEdVfZrrKNxU0jpQgMTbE9DtcxX36SBw3ricxUKTDJe2Ffdas6
-         ++L7nnLTD0948R7PSP0CVjff7vWQVOCIDRJWexBPcFxJST+7U/pTmLvDmXEvPhe0McsB
-         X8kQ==
-X-Gm-Message-State: APjAAAVUzmwV4i9NnriNxUaURKoLFEuv3NJwpAGH29PAQKy5XhbP453W
-        ypLIHDFcCF5fK/dnS1YSkdOA0w==
-X-Google-Smtp-Source: APXvYqw+rkcyh3PTU9URJjuIKiu4kZ97NgtKOX3PAukWMiU12hf7kxkJIrnT5wyWxV6LyDzzRWcw8A==
-X-Received: by 2002:a05:6000:124a:: with SMTP id j10mr6749454wrx.191.1561709832291;
-        Fri, 28 Jun 2019 01:17:12 -0700 (PDT)
-Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id r5sm2819216wrg.10.2019.06.28.01.17.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 01:17:11 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH] ASoC: meson: axg-card: remove useless check on codec
-Date:   Fri, 28 Jun 2019 10:17:08 +0200
-Message-Id: <20190628081708.22039-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.21.0
+        bh=jT2kRINveHvJwFXNM/R+VqTRF8bwTgG9CgHFi5dSiyg=;
+        b=GFGjypZSEYzOOiaNNWN0wi/5QiIH4VShg+Ts+VnEaeZjCvkAiYZwh+aKS86kt3Ffxa
+         HLc3zn+q57DQHMcG3dpJkZbPCLV5ORY8bDrvVDdG+QgraxOYGEUgnGqhZL/9+BZQf9T2
+         Bqr0LSHrFuiwNqFMWLj/0BxbDHMcFG5XJwL4N9Sckv6Y44/ze9P1ELsJhVQkMcg/z7Dd
+         nQ9s8Z8THlZSpDBH2eoEF2Hx2s13Hpaa9lCuSq8wSqse6o+Waa6jLXBRm+TON2EkZPnM
+         SlzUOfJfvw29vwLMmQtXO8tulnKFDLCtDWGr8nlVd0gR8At7h6iv2fBZ2C5t6fDuDf/c
+         wt1g==
+X-Gm-Message-State: APjAAAXKjHYVeysnHRL3lFxT+F/cgqDnfM/kh522rSapRM+Pw27w/bCP
+        zmgOGp8Hmk7kuehEGH8QiKoh7gDTedg=
+X-Google-Smtp-Source: APXvYqw59G5uN7cW7umBoHRBzrVy3zRiztgqyJ+OtIc5pkdubtFVLy2FJKEDgpWAzk61v+TSzJlOUg==
+X-Received: by 2002:a7b:ce95:: with SMTP id q21mr6317819wmj.65.1561709853044;
+        Fri, 28 Jun 2019 01:17:33 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:702d:1924:42db:99ec? ([2001:b07:6468:f312:702d:1924:42db:99ec])
+        by smtp.gmail.com with ESMTPSA id u1sm1364461wml.14.2019.06.28.01.17.31
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Jun 2019 01:17:32 -0700 (PDT)
+Subject: Re: [PATCH v3 4/5] Added build and install scripts
+To:     samcacc@amazon.com, Alexander Graf <graf@amazon.com>,
+        Sam Caccavale <samcacc@amazon.de>
+Cc:     samcaccavale@gmail.com, nmanthey@amazon.de, wipawel@amazon.de,
+        dwmw@amazon.co.uk, mpohlack@amazon.de, karahmed@amazon.de,
+        andrew.cooper3@citrix.com, JBeulich@suse.com, rkrcmar@redhat.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        paullangton4@gmail.com, anirudhkaushik@google.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190624142414.22096-1-samcacc@amazon.de>
+ <20190624142414.22096-5-samcacc@amazon.de>
+ <e0b29f4d-7471-c5d8-c9d4-2a352831a4bd@amazon.com>
+ <6fa5e9de-7b66-76ba-0b98-e11f890e076a@amazon.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <4438c94e-a0ed-0e5c-0a74-02aed8949b24@redhat.com>
+Date:   Fri, 28 Jun 2019 10:17:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <6fa5e9de-7b66-76ba-0b98-e11f890e076a@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While checking cpus before dereferencing the pointer is required, it is
-not necessary for codecs. 'codec' can't possibly be NULL in the loop
+On 28/06/19 09:59, samcacc@amazon.com wrote:
+>> Surely if it's important to generate core dumps, it's not only important
+>> during installation, no?
+> Yep... missed this.  I'll move it to run.sh right before alf-many is
+> invoked.  It would be nice to not have to sudo but it seems the only
+> alternative is an envvar AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES which
+> just ignores AFL's warning if your system isn't going to produce core
+> dumps (which will cause AFL to miss some crashes, as the name suggests).
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/meson/axg-card.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Can you do this only if /proc/sys/kernel/core_pattern starts with a pipe
+sign?
 
-diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
-index 70bb0cbad233..14a8321744da 100644
---- a/sound/soc/meson/axg-card.c
-+++ b/sound/soc/meson/axg-card.c
-@@ -118,8 +118,7 @@ static void axg_card_clean_references(struct axg_card *priv)
- 			if (link->cpus)
- 				of_node_put(link->cpus->of_node);
- 			for_each_link_codecs(link, j, codec)
--				if (codec)
--					of_node_put(codec->of_node);
-+				of_node_put(codec->of_node);
- 		}
- 	}
- 
--- 
-2.21.0
+Thanks,
 
+Paolo
