@@ -2,237 +2,199 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63813C5B578
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1C6C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42551208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86918208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 21:40:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yKqjPVkr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfF1VkH (ORCPT
+        id S1727038AbfF1VkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 17:40:07 -0400
-Received: from mga09.intel.com ([134.134.136.24]:59480 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726941AbfF1VkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 17:40:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 14:40:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,429,1557212400"; 
-   d="scan'208";a="153489529"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.164]) ([10.237.72.164])
-  by orsmga007.jf.intel.com with ESMTP; 28 Jun 2019 14:40:00 -0700
-Subject: Re: [PATCH v4 2/4] usb: xhci: Use register defined and field names
-To:     Vinod Koul <vkoul@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>
-References: <20190626075509.20445-1-vkoul@kernel.org>
- <20190626075509.20445-3-vkoul@kernel.org>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <39d63d20-0fa9-9e66-a7b6-37a0f16f5925@linux.intel.com>
-Date:   Sat, 29 Jun 2019 00:42:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 28 Jun 2019 17:40:24 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41790 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbfF1VkV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 17:40:21 -0400
+Received: by mail-pf1-f194.google.com with SMTP id m30so3611633pff.8
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 14:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jCvsK07ThrOtm2mRIw4Un4YwGsJ6vhB4AB5ORa0vWlA=;
+        b=yKqjPVkrhteNdaJFFV0U8q0RPi2SdXcKjQBfSnERCv5I82XNoHDvuVoU4+4lrpuzVW
+         xBiNdLXdFnjYXsnraBWekglpLudT+Y0+2SbJBJJEpq/JpTHKQqHDFAPmKhLjMtI38DrQ
+         Dd7WliyG25HBEeMzndnad9A5ee3SjSi9uKtUg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jCvsK07ThrOtm2mRIw4Un4YwGsJ6vhB4AB5ORa0vWlA=;
+        b=BZULJnSGITEWg3mIt0GUod/yG/I3uqR5qpNguanJhbnwsVfguyujdI6huOkHyngrCq
+         cY2gOP0rco6nVDEnZiuJesHP1R30NdAjcRGZDjJxFsgrp+3duzDE8fZvG7boY0S5RjVm
+         mKRm4fi4DRrXkiHQsO6+eZKNDgZQZMzy29unUVWOCjTzbwdFgBXB0ucIbES0MjTAWypj
+         FSMlzL/CrYWS0Po3Gaps0lj0nmsQ84SMA6zbUodRfT1PFrWnoxEiYwv12QB6R4G1aaQS
+         OKXxF2ZkIGRBwUoLfXC5BGdwcoMWkrGLuEy5ssfhGvIZ00DBk34HRVJmWkrFG4B4JGB2
+         ouBw==
+X-Gm-Message-State: APjAAAXAmbeM0lMXDazeU3Wl+MJkvzfWiH0ezmvd7NOufTn2tmvcJliP
+        go+hWUTACsEL50wFhXPmN5OyiQ==
+X-Google-Smtp-Source: APXvYqxBx5u0xr36Tcf97zl0hZo7eVtkw7YHeeMp2wx3eeAqCz8qRWMLu7NjD/ppqvtv9qtx6AEhCg==
+X-Received: by 2002:a17:90a:bb8b:: with SMTP id v11mr15505765pjr.64.1561758021129;
+        Fri, 28 Jun 2019 14:40:21 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id e11sm5472318pfm.35.2019.06.28.14.40.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 28 Jun 2019 14:40:20 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 17:40:18 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Message-ID: <20190628214018.GB249127@google.com>
+References: <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
+ <20190627173831.GW26519@linux.ibm.com>
+ <20190627181638.GA209455@google.com>
+ <20190627184107.GA26519@linux.ibm.com>
+ <20190628135433.GE3402@hirez.programming.kicks-ass.net>
+ <20190628153050.GU26519@linux.ibm.com>
+ <20190628184026.fds6scgi2pnjnc5p@linutronix.de>
+ <20190628185219.GA26519@linux.ibm.com>
+ <20190628192407.GA89956@google.com>
+ <20190628200423.GB26519@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190626075509.20445-3-vkoul@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628200423.GB26519@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.6.2019 10.55, Vinod Koul wrote:
-> Instead of using register values and fields lets define them and
-> use in the driver.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: Christian Lamparter <chunkeey@googlemail.com>
-> Tested-by: Christian Lamparter <chunkeey@gmail.com>
-> ---
->   drivers/usb/host/xhci-pci.c | 60 ++++++++++++++++++++++++++-----------
->   1 file changed, 43 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index 237df5c47fca..0f2574b42cb1 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -57,6 +57,27 @@
->   #define PCI_DEVICE_ID_AMD_PROMONTORYA_1			0x43bc
->   #define PCI_DEVICE_ID_ASMEDIA_1042A_XHCI		0x1142
->   
-> +#define RENESAS_FW_VERSION				0x6C
-> +#define RENESAS_ROM_CONFIG				0xF0
-> +#define RENESAS_FW_STATUS				0xF4
-> +#define RENESAS_FW_STATUS_MSB				0xF5
-> +#define RENESAS_ROM_STATUS				0xF6
-> +#define RENESAS_ROM_STATUS_MSB				0xF7
-> +#define RENESAS_DATA0					0xF8
-> +#define RENESAS_DATA1					0xFC
-> +
-> +#define RENESAS_FW_VERSION_FIELD			GENMASK(23, 7)
-> +#define RENESAS_FW_VERSION_OFFSET			8
-> +
-> +#define RENESAS_FW_STATUS_DOWNLOAD_ENABLE		BIT(0)
-> +#define RENESAS_FW_STATUS_LOCK				BIT(1)
-> +#define RENESAS_FW_STATUS_RESULT			GENMASK(6, 4)
-> +  #define RENESAS_FW_STATUS_INVALID			0
-> +  #define RENESAS_FW_STATUS_SUCCESS			BIT(4)
-> +  #define RENESAS_FW_STATUS_ERROR			BIT(5)
-> +#define RENESAS_FW_STATUS_SET_DATA0			BIT(8)
-> +#define RENESAS_FW_STATUS_SET_DATA1			BIT(9)
-> +
->   #define RENESAS_RETRY	10000
->   #define RENESAS_DELAY	10
->   
-> @@ -347,7 +368,8 @@ static int renesas_fw_download_image(struct pci_dev *dev,
->   
->   	/* step+1. Read "Set DATAX" and confirm it is cleared. */
->   	for (i = 0; i < RENESAS_RETRY; i++) {
-> -		err = pci_read_config_byte(dev, 0xF5, &fw_status);
-> +		err = pci_read_config_byte(dev, RENESAS_FW_STATUS_MSB,
-> +					   &fw_status);
->   		if (err)
->   			return pcibios_err_to_errno(err);
->   		if (!(fw_status & BIT(data0_or_data1)))
-> @@ -362,7 +384,8 @@ static int renesas_fw_download_image(struct pci_dev *dev,
->   	 * step+2. Write FW data to "DATAX".
->   	 * "LSB is left" => force little endian
->   	 */
-> -	err = pci_write_config_dword(dev, data0_or_data1 ? 0xFC : 0xF8,
-> +	err = pci_write_config_dword(dev, data0_or_data1 ?
-> +				     RENESAS_DATA1 : RENESAS_DATA0,
->   				     (__force u32)cpu_to_le32(fw[step]));
->   	if (err)
->   		return pcibios_err_to_errno(err);
-> @@ -370,7 +393,8 @@ static int renesas_fw_download_image(struct pci_dev *dev,
->   	udelay(100);
->   
->   	/* step+3. Set "Set DATAX". */
-> -	err = pci_write_config_byte(dev, 0xF5, BIT(data0_or_data1));
-> +	err = pci_write_config_byte(dev, RENESAS_FW_STATUS_MSB,
-> +				    BIT(data0_or_data1));
->   	if (err)
->   		return pcibios_err_to_errno(err);
->   
-> @@ -440,7 +464,7 @@ static int renesas_fw_check_running(struct pci_dev *pdev)
->   	 * BIOSes will initialize the device for us. If the device is
->   	 * initialized.
->   	 */
-> -	err = pci_read_config_byte(pdev, 0xF4, &fw_state);
-> +	err = pci_read_config_byte(pdev, RENESAS_FW_STATUS, &fw_state);
->   	if (err)
->   		return pcibios_err_to_errno(err);
->   
-> @@ -449,10 +473,10 @@ static int renesas_fw_check_running(struct pci_dev *pdev)
->   	 * ready we can simply continue. If the FW is not ready, we have
->   	 * to give up.
->   	 */
-> -	if (fw_state & BIT(1)) {
-> +	if (fw_state & RENESAS_FW_STATUS_LOCK) {
->   		dev_dbg(&pdev->dev, "FW Download Lock is engaged.");
->   
-> -		if (fw_state & BIT(4))
-> +		if (fw_state & RENESAS_FW_STATUS_SUCCESS)
->   			return 0;
->   
->   		dev_err(&pdev->dev,
-> @@ -465,33 +489,33 @@ static int renesas_fw_check_running(struct pci_dev *pdev)
->   	 * with it and it can't be resetted, we have to give up too... and
->   	 * ask for a forgiveness and a reboot.
->   	 */
-> -	if (fw_state & BIT(0)) {
-> +	if (fw_state & RENESAS_FW_STATUS_DOWNLOAD_ENABLE) {
->   		dev_err(&pdev->dev,
->   			"FW Download Enable is stale. Giving Up (poweroff/reboot needed).");
->   		return -EIO;
->   	}
->   
->   	/* Otherwise, Check the "Result Code" Bits (6:4) and act accordingly */
-> -	switch ((fw_state & 0x70)) {
-> +	switch (fw_state & RENESAS_FW_STATUS_RESULT) {
->   	case 0: /* No result yet */
->   		dev_dbg(&pdev->dev, "FW is not ready/loaded yet.");
->   
->   		/* tell the caller, that this device needs the firmware. */
->   		return 1;
->   
-> -	case BIT(4): /* Success, device should be working. */
-> +	case RENESAS_FW_STATUS_SUCCESS: /* Success, device should be working. */
->   		dev_dbg(&pdev->dev, "FW is ready.");
->   		return 0;
->   
-> -	case BIT(5): /* Error State */
-> +	case RENESAS_FW_STATUS_ERROR: /* Error State */
->   		dev_err(&pdev->dev,
->   			"hardware is in an error state. Giving up (poweroff/reboot needed).");
->   		return -ENODEV;
->   
->   	default: /* All other states are marked as "Reserved states" */
->   		dev_err(&pdev->dev,
-> -			"hardware is in an invalid state %x. Giving up (poweroff/reboot needed).",
-> -			(fw_state & 0x70) >> 4);
-> +			"hardware is in an invalid state %lx. Giving up (poweroff/reboot needed).",
-> +			(fw_state & RENESAS_FW_STATUS_RESULT) >> 4);
->   		return -EINVAL;
->   	}
->   }
-> @@ -514,7 +538,8 @@ static int renesas_fw_download(struct pci_dev *pdev,
->   	 * 0. Set "FW Download Enable" bit in the
->   	 * "FW Download Control & Status Register" at 0xF4
->   	 */
-> -	err = pci_write_config_byte(pdev, 0xF4, BIT(0));
-> +	err = pci_write_config_byte(pdev, RENESAS_FW_STATUS,
-> +				    RENESAS_FW_STATUS_DOWNLOAD_ENABLE);
->   	if (err)
->   		return pcibios_err_to_errno(err);
->   
-> @@ -535,7 +560,8 @@ static int renesas_fw_download(struct pci_dev *pdev,
->   	 * is cleared by the hardware beforehand.
->   	 */
->   	for (i = 0; i < RENESAS_RETRY; i++) {
-> -		err = pci_read_config_byte(pdev, 0xF5, &fw_status);
-> +		err = pci_read_config_byte(pdev, RENESAS_FW_STATUS_MSB,
-> +					   &fw_status);
->   		if (err)
->   			return pcibios_err_to_errno(err);
->   		if (!(fw_status & (BIT(0) | BIT(1))))
-> @@ -550,16 +576,16 @@ static int renesas_fw_download(struct pci_dev *pdev,
->   	 * 11. After finishing writing the last data of FW, the
->   	 * System Software must clear "FW Download Enable"
->   	 */
-> -	err = pci_write_config_byte(pdev, 0xF4, 0);
-> +	err = pci_write_config_byte(pdev, RENESAS_FW_STATUS, 0);
->   	if (err)
->   		return pcibios_err_to_errno(err);
->   
->   	/* 12. Read "Result Code" and confirm it is good. */
->   	for (i = 0; i < RENESAS_RETRY; i++) {
-> -		err = pci_read_config_byte(pdev, 0xF4, &fw_status);
-> +		err = pci_read_config_byte(pdev, RENESAS_FW_STATUS, &fw_status);
->   		if (err)
->   			return pcibios_err_to_errno(err);
-> -		if (fw_status & BIT(4))
-> +		if (fw_status & RENESAS_FW_STATUS_SUCCESS)
->   			break;
->   
->   		udelay(RENESAS_DELAY);
-> 
+Hi Paul,
 
-Most of this patch should probably be squashed together with the previous patch
+On Fri, Jun 28, 2019 at 01:04:23PM -0700, Paul E. McKenney wrote:
+[snip]
+> > > > Commit
+> > > > - 23634ebc1d946 ("rcu: Check for wakeup-safe conditions in
+> > > >    rcu_read_unlock_special()") does not trigger the bug within 94
+> > > >    attempts.
+> > > > 
+> > > > - 48d07c04b4cc1 ("rcu: Enable elimination of Tree-RCU softirq
+> > > >   processing") needed 12 attempts to trigger the bug.
+> > > 
+> > > That matches my belief that 23634ebc1d946 ("rcu: Check for wakeup-safe
+> > > conditions in rcu_read_unlock_special()") will at least greatly decrease
+> > > the probability of this bug occurring.
+> > 
+> > I was just typing a reply that I can't reproduce it with:
+> >   rcu: Check for wakeup-safe conditions in rcu_read_unlock_special()
+> > 
+> > I am trying to revert enough of this patch to see what would break things,
+> > however I think a better exercise might be to understand more what the patch
+> > does why it fixes things in the first place ;-) It is probably the
+> > deferred_qs thing.
+> 
+> The deferred_qs flag is part of it!  Looking forward to hearing what
+> you come up with as being the critical piece of this commit.
 
--Mathias
+The new deferred_qs flag indeed saves the machine from the dead-lock.
+
+If we don't want the deferred_qs, then the below patch also fixes the issue.
+However, I am more sure than not that it does not handle all cases (such as
+what if we previously had an expedited grace period IPI in a previous reader
+section and had to to defer processing. Then it seems a similar deadlock
+would present. But anyway, the below patch does fix it for me! It is based on
+your -rcu tree commit 23634ebc1d946f19eb112d4455c1d84948875e31 (rcu: Check
+for wakeup-safe conditions in rcu_read_unlock_special()).
+
+---8<-----------------------
+
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH] Fix RCU recursive deadlock
+
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ include/linux/sched.h    |  2 +-
+ kernel/rcu/tree_plugin.h | 17 +++++++++++++----
+ 2 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 942a44c1b8eb..347e6dfcc91b 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -565,7 +565,7 @@ union rcu_special {
+ 		u8			blocked;
+ 		u8			need_qs;
+ 		u8			exp_hint; /* Hint for performance. */
+-		u8			deferred_qs;
++		u8			pad;
+ 	} b; /* Bits. */
+ 	u32 s; /* Set of bits. */
+ };
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 75110ea75d01..5b9b12c1ba5c 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -455,7 +455,6 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+ 		local_irq_restore(flags);
+ 		return;
+ 	}
+-	t->rcu_read_unlock_special.b.deferred_qs = false;
+ 	if (special.b.need_qs) {
+ 		rcu_qs();
+ 		t->rcu_read_unlock_special.b.need_qs = false;
+@@ -608,13 +607,24 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 	if (preempt_bh_were_disabled || irqs_were_disabled) {
+ 		t->rcu_read_unlock_special.b.exp_hint = false;
+ 		// Need to defer quiescent state until everything is enabled.
++
++		/* If unlock_special was called in the current reader section
++		 * just because we were blocked in a previous reader section,
++		 * then raising softirqs can deadlock. This is because the
++		 * scheduler executes RCU sections with preemption disabled,
++		 * however it may have previously blocked in a previous
++		 * non-scheduler reader section and .blocked got set.  It is
++		 * never safe to call unlock_special from the scheduler path
++		 * due to recursive wake ups (unless we are in_irq(), so
++		 * prevent this by checking if we were previously blocked.
++		 */
+ 		if (irqs_were_disabled && use_softirq &&
+-		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
++		    (!t->rcu_read_unlock_special.b.blocked || in_irq())) {
+ 			// Using softirq, safe to awaken, and we get
+ 			// no help from enabling irqs, unlike bh/preempt.
+ 			raise_softirq_irqoff(RCU_SOFTIRQ);
+ 		} else if (irqs_were_disabled && !use_softirq &&
+-			   !t->rcu_read_unlock_special.b.deferred_qs) {
++			   !t->rcu_read_unlock_special.b.blocked) {
+ 			// Safe to awaken and we get no help from enabling
+ 			// irqs, unlike bh/preempt.
+ 			invoke_rcu_core();
+@@ -623,7 +633,6 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 			set_tsk_need_resched(current);
+ 			set_preempt_need_resched();
+ 		}
+-		t->rcu_read_unlock_special.b.deferred_qs = true;
+ 		local_irq_restore(flags);
+ 		return;
+ 	}
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
