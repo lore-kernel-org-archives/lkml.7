@@ -2,154 +2,131 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	URIBL_SBL,URIBL_SBL_A autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1EEC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938A8C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5924B206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBC5206E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:51:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="K2ssyNit"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="T5j70Eo4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfF1Hsc (ORCPT
+        id S1726518AbfF1HvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:48:32 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:46317 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfF1Hsb (ORCPT
+        Fri, 28 Jun 2019 03:51:02 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40083 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfF1HvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:48:31 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,426,1557212400"; 
-   d="scan'208";a="38691445"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jun 2019 00:48:23 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 28 Jun 2019 00:48:22 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
- Transport; Fri, 28 Jun 2019 00:48:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=etz58AQuh/mcXoM4nd68Vm4JLqzugP3DwDOhDCftJ6xj/k/8xokoRmd0J91Iu8JgTJ3dis5EkSRLYP01ZdN3G2VNaRdkbX+DcAPizRL7jFsYLI+tK2sdQ9UNp8I3c5lSb6rtUY+Nd93cQrWZ9ij7rR0YPzhzpeiWMyOG4CbB2so=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GgiMdyIeQW4yFsmqMo4R261fF/haD72pVxxUrDjsFyQ=;
- b=Kpjheco0bnHjX5YGCHc0FzuO9HUWLOgooBSxbweFXNiYMYAwkdk2kjFSMJ+mtZNWmu2bEWfoxKFX/8sPfohwAybiIntzey4x688oyzT2htNKFSAF48k0GeYuKX2Hi0SHmMj2olCJxjaTwiINEDeuaeiMNnhd0MnDpUXSjKkz/1U=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
+        Fri, 28 Jun 2019 03:51:02 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w196so3610117oie.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 00:51:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GgiMdyIeQW4yFsmqMo4R261fF/haD72pVxxUrDjsFyQ=;
- b=K2ssyNitm/NpFOgKVRlMbrgZd+SjJJJE4nbaqq80eDp3y7P+c2GIm0vGa3e6d38z3jO3hFwlVJEfg3eXNUaLWplXkD25MwfRQgnWA2gntz8YAGfCkx3y8ukzU7osyOYux0xoI5Pc/hO2+rw0wBN/YT/AKQnK24MFGquM4e0kHrk=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1838.namprd11.prod.outlook.com (10.175.52.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Fri, 28 Jun 2019 07:48:22 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::7534:63dc:8504:c2b3]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::7534:63dc:8504:c2b3%6]) with mapi id 15.20.2008.019; Fri, 28 Jun 2019
- 07:48:22 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <boris.brezillon@collabora.com>, <sam@ravnborg.org>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <bbrezillon@kernel.org>, <alexandre.belloni@bootlin.com>,
-        <Claudiu.Beznea@microchip.com>, <peda@axentia.se>
-Subject: Re: [PATCH] MAINTAINERS: add Sam Ravnborg for drm/atmel_hlcdc
-Thread-Topic: [PATCH] MAINTAINERS: add Sam Ravnborg for drm/atmel_hlcdc
-Thread-Index: AQHVLS234T2mTAnbKkOZSPCGA5TOq6awlrIAgAAaoAA=
-Date:   Fri, 28 Jun 2019 07:48:22 +0000
-Message-ID: <f879b0eb-9559-7615-a044-5808b714a234@microchip.com>
-References: <20190627211643.GA19853@ravnborg.org>
- <20190628081256.230165ae@collabora.com>
-In-Reply-To: <20190628081256.230165ae@collabora.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0281.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a1::29) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5b932627-fb2b-4883-97e2-08d6fb9cfe2f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB1838;
-x-ms-traffictypediagnostic: MWHPR11MB1838:
-x-microsoft-antispam-prvs: <MWHPR11MB18386E29970D95820A34F7CDE0FC0@MWHPR11MB1838.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 00826B6158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(346002)(366004)(396003)(136003)(199004)(189003)(72206003)(31696002)(229853002)(86362001)(2906002)(66066001)(73956011)(66946007)(66476007)(64756008)(66446008)(66556008)(8676002)(53936002)(6436002)(476003)(2616005)(6486002)(6512007)(81156014)(81166006)(14454004)(486006)(102836004)(71200400001)(256004)(4326008)(446003)(36756003)(25786009)(26005)(11346002)(68736007)(76176011)(305945005)(5660300002)(6116002)(3846002)(52116002)(386003)(6506007)(53546011)(7736002)(54906003)(110136005)(99286004)(186003)(316002)(6246003)(478600001)(8936002)(31686004)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1838;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wJ+zQYpPWPc1/tDEJoG0JIoe8cS6jlb6iTRNDW2QmoMNeE5z6mSS6P9SK1rV8RIi0rqx5SDtu/8Z4q5UcrHapQfX/0gdaTOzCtwjLFX+qjoypnz9ah7eIXSABoBhcVKZTDThc9P3nw1f598f0ldEU7gh511L9DGUVFVmDfLx47q1Czbfmn7zyT9UAPapSzDNigUyCL/LgbiiTXddWJTgqDeaJ8tXJzu1DVZcHnDtAKdbsl1YuP64O5ZAUgLSUTuRH8hCmvtfMp6uuKUmISQ41KjDwDtfZQAj6xSkKibmcXswGF4Mo4wUwjmeM5xdD1mRb/k/29S0Tln2vSTtN2s5EPr8QzHC7JApjssFv7eMV+A4lSJCamrVdBDbuRH5QooZBuj8DNF2Wle+JM+V5lnctll8TMENQ0aXb/LlfrEZLMo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <23B5457F24C75E4097BB8A779EFBBC14@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dtEeeslQGtSEA9L6niIK/BiiKT9ny7fWORJgUMeGMeM=;
+        b=T5j70Eo4vp8nN+Svf88JQpEcxGjOkbz23tiEnT7qrDiszCiSqmelKH+f6fBQ/MAf9j
+         gt56mV6PN6Bcg/epHs4JZymlfn8piiQStw/8xsAIP6Gi2J2KMkllwj78FWKCrfYgJzPA
+         31XI50kNydlAEA0qL64xKa6CIRwQAAhvgLAJY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dtEeeslQGtSEA9L6niIK/BiiKT9ny7fWORJgUMeGMeM=;
+        b=QBTTq9MNVbU05K9yrJmLzySorlzAZ/hnd2tLJ/aq5BtS1WONjbitynA8QVLbpbQ0Ok
+         JyqqNFkHy85V1/pSxIV+eStfDgUxx7XpBA9lIu+LW9wXuIzN5SiikEUbon2CzACg/845
+         qiMCwwohQA5++Mu52O9F/Hz7yuSDOo4IB4ehGxDbu5XfEKlEgkk01GPllL385b6nEPFX
+         ZC3OehVVlPOUW9mRuGvsJCYpG8cqvVEUvGC6+kFQayEwFcJTamiNACx9l2NLU3CwnbqJ
+         D346HFE9hr82IyaK+QZdnQiLXw5n/ZGhrY4kj6HSIXyJ408Yq5wHqqZXjXSatLryYjio
+         +pNA==
+X-Gm-Message-State: APjAAAXXi24b9NzcxQdb3UQYt3Z5JrraABRuSScoOassWq6yH1P7n2R8
+        QuzPw4jQuve65K00YepcKsBZghyXKWjv4B/cf+31TA==
+X-Google-Smtp-Source: APXvYqyk8bRZ5DrMcNPTQLIz0eecXfgskTMeKRlhIPO1v1UMKP/TvAGHP8JcOmbE44QLXsNbe1bQh8L6hk5XcGONS5o=
+X-Received: by 2002:aca:5403:: with SMTP id i3mr910923oib.132.1561708261619;
+ Fri, 28 Jun 2019 00:51:01 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b932627-fb2b-4883-97e2-08d6fb9cfe2f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 07:48:22.1779
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nicolas.ferre@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1838
+References: <20190621115755.8481-1-kraxel@redhat.com> <20190621115755.8481-3-kraxel@redhat.com>
+ <e3d8d1ee-c033-0402-6058-7c2410cc250b@suse.de>
+In-Reply-To: <e3d8d1ee-c033-0402-6058-7c2410cc250b@suse.de>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 28 Jun 2019 09:50:49 +0200
+Message-ID: <CAKMK7uFwsQ4pVpAtsP4RBCY2RNkvcnc+QqTkEX5VT+pkJ-kLVA@mail.gmail.com>
+Subject: Re: [PATCH v2 02/18] drm/vram: use embedded gem object
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjgvMDYvMjAxOSBhdCAwODoxMiwgQm9yaXMgQnJlemlsbG9uIHdyb3RlOg0KPiBPbiBUaHUs
-IDI3IEp1biAyMDE5IDIzOjE2OjQzICswMjAwDQo+IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3Jn
-Lm9yZz4gd3JvdGU6DQo+IA0KPj4gSSBoYXZlIGFncmVlZCB3aXRoIEJvcmlzIEJyZXppbGxvbiB0
-aGF0IHdlIHdpbGwgc2hhcmUgdGhlDQo+PiBtYWludGFpbmVyIHJvbGUgZm9yIHRoZSBkcm0vYXRt
-ZWxfaGxjZGMgZHJpdmVyLg0KPj4gTmljb2xhcyBGZXJyZSBmcm9tIE1pY3JvY2hpcCBoYXMgZG9u
-YXRlZCBhIGZldyBib2FyZHMgdGhhdA0KPj4gYWxsb3dzIG1lIHRvIHRlc3QgdGhpbmdzIC0gdGhh
-bmtzIQ0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9y
-Zz4NCj4+IENjOiBCb3JpcyBCcmV6aWxsb24gPGJicmV6aWxsb25Aa2VybmVsLm9yZz4NCj4gDQo+
-IEFja2VkLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBjb2xsYWJvcmEuY29t
-Pg0KDQpPZiBjb3Vyc2U6DQpBY2tlZC1ieTogTmljb2xhcyBGZXJyZSA8bmljb2xhcy5mZXJyZUBt
-aWNyb2NoaXAuY29tPg0KDQpUaGFua3MgYSBsb3QgU2FtIGZvciB0YWtpbmcgdGhpcyBtYWludGFp
-bmVyIHJvbGUhDQoNCkJlc3QgcmVnYXJkcywNCiAgIE5pY29sYXMNCg0KPj4gQ2M6IE5pY29sYXMg
-RmVycmUgPG5pY29sYXMuZmVycmVAbWljcm9jaGlwLmNvbT4NCj4+IENjOiBBbGV4YW5kcmUgQmVs
-bG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5jb20+DQo+PiBDYzogQ2xhdWRpdSBCZXpu
-ZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+PiBDYzogUGV0ZXIgUm9zaW4gPHBl
-ZGFAYXhlbnRpYS5zZT4NCj4+IC0tLQ0KPj4gICBNQUlOVEFJTkVSUyB8IDEgKw0KPj4gICAxIGZp
-bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5F
-UlMgYi9NQUlOVEFJTkVSUw0KPj4gaW5kZXggNTE1YTgxZmRiN2Q2Li4wYTc2NzE2ODc0YmQgMTAw
-NjQ0DQo+PiAtLS0gYS9NQUlOVEFJTkVSUw0KPj4gKysrIGIvTUFJTlRBSU5FUlMNCj4+IEBAIC01
-MjUxLDYgKzUyNTEsNyBAQCBGOglEb2N1bWVudGF0aW9uL2dwdS9tZXNvbi5yc3QNCj4+ICAgVDoJ
-Z2l0IGdpdDovL2Fub25naXQuZnJlZWRlc2t0b3Aub3JnL2RybS9kcm0tbWlzYw0KPj4gICANCj4+
-ICAgRFJNIERSSVZFUlMgRk9SIEFUTUVMIEhMQ0RDDQo+PiArTToJU2FtIFJhdm5ib3JnIDxzYW1A
-cmF2bmJvcmcub3JnPg0KPj4gICBNOglCb3JpcyBCcmV6aWxsb24gPGJicmV6aWxsb25Aa2VybmVs
-Lm9yZz4NCj4+ICAgTDoJZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0KPj4gICBTOglT
-dXBwb3J0ZWQNCj4gDQo+IA0KPiANCg0KDQotLSANCk5pY29sYXMgRmVycmUNCg==
+On Fri, Jun 28, 2019 at 9:30 AM Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>
+> Hi
+>
+> Am 21.06.19 um 13:57 schrieb Gerd Hoffmann:
+> > Drop drm_gem_object from drm_gem_vram_object, use the
+> > ttm_buffer_object.base instead.
+> >
+> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> > ---
+> >  include/drm/drm_gem_vram_helper.h           |  3 +--
+> >  drivers/gpu/drm/ast/ast_main.c              |  2 +-
+> >  drivers/gpu/drm/drm_gem_vram_helper.c       | 16 ++++++++--------
+> >  drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c |  2 +-
+> >  drivers/gpu/drm/mgag200/mgag200_main.c      |  2 +-
+> >  drivers/gpu/drm/vboxvideo/vbox_main.c       |  2 +-
+> >  6 files changed, 13 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vram_helper.h
+> > index 9581ea0a4f7e..7b9f50ba3fce 100644
+> > --- a/include/drm/drm_gem_vram_helper.h
+> > +++ b/include/drm/drm_gem_vram_helper.h
+> > @@ -36,7 +36,6 @@ struct vm_area_struct;
+> >   * video memory becomes scarce.
+> >   */
+> >  struct drm_gem_vram_object {
+> > -     struct drm_gem_object gem;
+> >       struct ttm_buffer_object bo;
+> >       struct ttm_bo_kmap_obj kmap;
+> >
+> > @@ -68,7 +67,7 @@ static inline struct drm_gem_vram_object *drm_gem_vram_of_bo(
+> >  static inline struct drm_gem_vram_object *drm_gem_vram_of_gem(
+> >       struct drm_gem_object *gem)
+>
+> To avoid ambiguities, I used the form <destination type name>_of_<field
+> name>() to name these cast functions. The canonical name here would now
+> be drm_gem_vram_of_bo_base(). But that's just nitpicking. If you don't
+> want to change the name (and all its callers), maybe leave a FIXME comment.
+
+Bikeshed: I think generally we call these
+<source_type>_to_<destination_type>, with the source type left out if
+you cast from the most generic version. E.g. this one here would just
+be
+
+static inline struct drm_gem_vram_object *drm_gem_to_vram_bo(struct
+drm_gem_object *gem)
+
+or something like that. I don't remember having seen the *_of_*
+pattern anywhere.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
