@@ -6,195 +6,108 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9376C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D9EC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8522133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6E02133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfF1JEQ (ORCPT
+        id S1726965AbfF1JES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:04:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40998 "EHLO mx1.redhat.com"
+        Fri, 28 Jun 2019 05:04:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35466 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726633AbfF1JDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:03:13 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1726431AbfF1JDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 05:03:11 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A94E4308339A;
-        Fri, 28 Jun 2019 09:03:12 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 56078128B5;
+        Fri, 28 Jun 2019 09:03:11 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1D6AE1A92E;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E2D011001B16;
         Fri, 28 Jun 2019 09:03:10 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 3450217538; Fri, 28 Jun 2019 11:03:06 +0200 (CEST)
+        id 4939B9D71; Fri, 28 Jun 2019 11:03:07 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     ckoenig.leichtzumerken@gmail.com, thomas@shipmail.org,
         tzimmermann@suse.de, daniel@ffwll.ch, bskeggs@redhat.com,
         Gerd Hoffmann <kraxel@redhat.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 07/18] drm/ttm: use gem reservation object
-Date:   Fri, 28 Jun 2019 11:02:52 +0200
-Message-Id: <20190628090303.29467-8-kraxel@redhat.com>
+Subject: [PATCH v3 09/18] drm/vram: drop drm_gem_vram_driver_gem_prime_mmap
+Date:   Fri, 28 Jun 2019 11:02:54 +0200
+Message-Id: <20190628090303.29467-10-kraxel@redhat.com>
 In-Reply-To: <20190628090303.29467-1-kraxel@redhat.com>
 References: <20190628090303.29467-1-kraxel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 28 Jun 2019 09:03:12 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 28 Jun 2019 09:03:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop ttm_resv from ttm_buffer_object, use the gem reservation object
-(base._resv) instead.
+The wrapper doesn't do anything any more, drop it.
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Reviewed-by: Christian König <christian.koenig@amd.com>
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
 ---
- include/drm/ttm/ttm_bo_api.h      |  1 -
- drivers/gpu/drm/ttm/ttm_bo.c      | 40 ++++++++++++++++++-------------
- drivers/gpu/drm/ttm/ttm_bo_util.c |  2 +-
- 3 files changed, 25 insertions(+), 18 deletions(-)
+ include/drm/drm_gem_vram_helper.h     |  4 +---
+ drivers/gpu/drm/drm_gem_vram_helper.c | 17 -----------------
+ 2 files changed, 1 insertion(+), 20 deletions(-)
 
-diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
-index 082550cac92c..fa050f0328ab 100644
---- a/include/drm/ttm/ttm_bo_api.h
-+++ b/include/drm/ttm/ttm_bo_api.h
-@@ -235,7 +235,6 @@ struct ttm_buffer_object {
- 	struct sg_table *sg;
+diff --git a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vram_helper.h
+index 2627bb618979..7dec1bcfd6f7 100644
+--- a/include/drm/drm_gem_vram_helper.h
++++ b/include/drm/drm_gem_vram_helper.h
+@@ -137,14 +137,12 @@ void drm_gem_vram_driver_gem_prime_unpin(struct drm_gem_object *obj);
+ void *drm_gem_vram_driver_gem_prime_vmap(struct drm_gem_object *obj);
+ void drm_gem_vram_driver_gem_prime_vunmap(struct drm_gem_object *obj,
+ 					  void *vaddr);
+-int drm_gem_vram_driver_gem_prime_mmap(struct drm_gem_object *obj,
+-				       struct vm_area_struct *vma);
  
- 	struct reservation_object *resv;
--	struct reservation_object ttm_resv;
- 	struct mutex wu_mutex;
- };
+ #define DRM_GEM_VRAM_DRIVER_PRIME \
+ 	.gem_prime_pin	  = drm_gem_vram_driver_gem_prime_pin, \
+ 	.gem_prime_unpin  = drm_gem_vram_driver_gem_prime_unpin, \
+ 	.gem_prime_vmap	  = drm_gem_vram_driver_gem_prime_vmap, \
+ 	.gem_prime_vunmap = drm_gem_vram_driver_gem_prime_vunmap, \
+-	.gem_prime_mmap	  = drm_gem_vram_driver_gem_prime_mmap
++	.gem_prime_mmap	  = drm_gem_prime_mmap
  
-diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
-index c7de667d482a..516eef3b76d5 100644
---- a/drivers/gpu/drm/ttm/ttm_bo.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo.c
-@@ -160,7 +160,8 @@ static void ttm_bo_release_list(struct kref *list_kref)
- 	ttm_tt_destroy(bo->ttm);
- 	atomic_dec(&bo->bdev->glob->bo_count);
- 	dma_fence_put(bo->moving);
--	reservation_object_fini(&bo->ttm_resv);
-+	if (!ttm_bo_uses_embedded_gem_object(bo))
-+		reservation_object_fini(&bo->base._resv);
- 	mutex_destroy(&bo->wu_mutex);
- 	bo->destroy(bo);
- 	ttm_mem_global_free(bdev->glob->mem_glob, acc_size);
-@@ -438,14 +439,14 @@ static int ttm_bo_individualize_resv(struct ttm_buffer_object *bo)
- {
- 	int r;
- 
--	if (bo->resv == &bo->ttm_resv)
-+	if (bo->resv == &bo->base._resv)
- 		return 0;
- 
--	BUG_ON(!reservation_object_trylock(&bo->ttm_resv));
-+	BUG_ON(!reservation_object_trylock(&bo->base._resv));
- 
--	r = reservation_object_copy_fences(&bo->ttm_resv, bo->resv);
-+	r = reservation_object_copy_fences(&bo->base._resv, bo->resv);
- 	if (r)
--		reservation_object_unlock(&bo->ttm_resv);
-+		reservation_object_unlock(&bo->base._resv);
- 
- 	return r;
+ #endif
+diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
+index 2e474dee30df..d78761802374 100644
+--- a/drivers/gpu/drm/drm_gem_vram_helper.c
++++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+@@ -619,20 +619,3 @@ void drm_gem_vram_driver_gem_prime_vunmap(struct drm_gem_object *gem,
+ 	drm_gem_vram_unpin(gbo);
  }
-@@ -456,8 +457,8 @@ static void ttm_bo_flush_all_fences(struct ttm_buffer_object *bo)
- 	struct dma_fence *fence;
- 	int i;
- 
--	fobj = reservation_object_get_list(&bo->ttm_resv);
--	fence = reservation_object_get_excl(&bo->ttm_resv);
-+	fobj = reservation_object_get_list(&bo->base._resv);
-+	fence = reservation_object_get_excl(&bo->base._resv);
- 	if (fence && !fence->ops->signaled)
- 		dma_fence_enable_sw_signaling(fence);
- 
-@@ -490,11 +491,11 @@ static void ttm_bo_cleanup_refs_or_queue(struct ttm_buffer_object *bo)
- 	spin_lock(&glob->lru_lock);
- 	ret = reservation_object_trylock(bo->resv) ? 0 : -EBUSY;
- 	if (!ret) {
--		if (reservation_object_test_signaled_rcu(&bo->ttm_resv, true)) {
-+		if (reservation_object_test_signaled_rcu(&bo->base._resv, true)) {
- 			ttm_bo_del_from_lru(bo);
- 			spin_unlock(&glob->lru_lock);
--			if (bo->resv != &bo->ttm_resv)
--				reservation_object_unlock(&bo->ttm_resv);
-+			if (bo->resv != &bo->base._resv)
-+				reservation_object_unlock(&bo->base._resv);
- 
- 			ttm_bo_cleanup_memtype_use(bo);
- 			reservation_object_unlock(bo->resv);
-@@ -515,8 +516,8 @@ static void ttm_bo_cleanup_refs_or_queue(struct ttm_buffer_object *bo)
- 
- 		reservation_object_unlock(bo->resv);
- 	}
--	if (bo->resv != &bo->ttm_resv)
--		reservation_object_unlock(&bo->ttm_resv);
-+	if (bo->resv != &bo->base._resv)
-+		reservation_object_unlock(&bo->base._resv);
- 
- error:
- 	kref_get(&bo->list_kref);
-@@ -551,7 +552,7 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo,
- 	if (unlikely(list_empty(&bo->ddestroy)))
- 		resv = bo->resv;
- 	else
--		resv = &bo->ttm_resv;
-+		resv = &bo->base._resv;
- 
- 	if (reservation_object_test_signaled_rcu(resv, true))
- 		ret = 0;
-@@ -631,7 +632,7 @@ static bool ttm_bo_delayed_delete(struct ttm_bo_device *bdev, bool remove_all)
- 		kref_get(&bo->list_kref);
- 		list_move_tail(&bo->ddestroy, &removed);
- 
--		if (remove_all || bo->resv != &bo->ttm_resv) {
-+		if (remove_all || bo->resv != &bo->base._resv) {
- 			spin_unlock(&glob->lru_lock);
- 			reservation_object_lock(bo->resv, NULL);
- 
-@@ -1332,9 +1333,16 @@ int ttm_bo_init_reserved(struct ttm_bo_device *bdev,
- 		bo->resv = resv;
- 		reservation_object_assert_held(bo->resv);
- 	} else {
--		bo->resv = &bo->ttm_resv;
-+		bo->resv = &bo->base._resv;
-+	}
-+	if (!ttm_bo_uses_embedded_gem_object(bo)) {
-+		/*
-+		 * bo.gem is not initialized, so we have to setup the
-+		 * struct elements we want use regardless.  Should go
-+		 * away once all users are switched over.
-+		 */
-+		reservation_object_init(&bo->base._resv);
- 	}
--	reservation_object_init(&bo->ttm_resv);
- 	atomic_inc(&bo->bdev->glob->bo_count);
- 	drm_vma_node_reset(&bo->vma_node);
- 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
-index 9f918b992f7e..05fbcaf6a3f2 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_util.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
-@@ -517,7 +517,7 @@ static int ttm_buffer_object_transfer(struct ttm_buffer_object *bo,
- 	kref_init(&fbo->base.kref);
- 	fbo->base.destroy = &ttm_transfered_destroy;
- 	fbo->base.acc_size = 0;
--	fbo->base.resv = &fbo->base.ttm_resv;
-+	fbo->base.resv = &fbo->base.base._resv;
- 	reservation_object_init(fbo->base.resv);
- 	ret = reservation_object_trylock(fbo->base.resv);
- 	WARN_ON(!ret);
+ EXPORT_SYMBOL(drm_gem_vram_driver_gem_prime_vunmap);
+-
+-/**
+- * drm_gem_vram_driver_gem_prime_mmap() - \
+-	Implements &struct drm_driver.gem_prime_mmap
+- * @gem:	The GEM object to map
+- * @vma:	The VMA describing the mapping
+- *
+- * Returns:
+- * 0 on success, or
+- * a negative errno code otherwise.
+- */
+-int drm_gem_vram_driver_gem_prime_mmap(struct drm_gem_object *gem,
+-				       struct vm_area_struct *vma)
+-{
+-	return drm_gem_prime_mmap(gem, vma);
+-}
+-EXPORT_SYMBOL(drm_gem_vram_driver_gem_prime_mmap);
 -- 
 2.18.1
 
