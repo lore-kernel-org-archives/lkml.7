@@ -2,130 +2,212 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4891C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2B3C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FDD21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:11:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StQri7Ff"
+	by mail.kernel.org (Postfix) with ESMTP id 5B58E208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 09:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfF1JLV (ORCPT
+        id S1726729AbfF1JL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 05:11:21 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:34125 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfF1JLU (ORCPT
+        Fri, 28 Jun 2019 05:11:27 -0400
+Received: from lgeamrelo12.lge.com ([156.147.23.52]:57385 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726702AbfF1JL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 05:11:20 -0400
-Received: by mail-yw1-f66.google.com with SMTP id q128so3185383ywc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 02:11:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NYW6PlEeaH367Jvr1ZMSoo3Aj5m51ktezngndfggtvY=;
-        b=StQri7FfBnbBGEumveJwe5nkZAxrnsl671ui5e4oGfnTsl6m3afqK8KoJktb7l92/5
-         npAV5CxaY7ELNtmAqoi55qQvXqnPFo4n9uX1BUNUb4t/dwYtyeQ/M7EXSrB/v0zRegJE
-         P8e0j9feRAtEl3LJ8zHZ7pplU8UWCoy5zEZKLE3lZFonv0QcEwAQCmBlTUpcPzCpORaU
-         KWr3K/480ZFGenmaWVLmNgEVOZh9JAXlLCQJS/VVNfNlmf9I31Ygk4UJv7rV/7N3txa1
-         fb3GUv4xRMJn7E6lc58vZ0lrTIQBrPETcl9F7RauB7UNsjwvdYHz6nVtH4zpR7o3zpzr
-         JYQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NYW6PlEeaH367Jvr1ZMSoo3Aj5m51ktezngndfggtvY=;
-        b=YjkJK3PtQ2v3lIuDuFW35AeTvdmLA01uJATrxRAu5GAf5qLjfNpyAIrlxMDkOW5BA+
-         3luybe0cUKMUxpbXESOsJdBDNR8pj/oPdgWjK465XibjjNnzAWdn9KAu/D5pt4LMzyph
-         YgkQR6qCet1HUwCn24qSPiepf93nGDRKPVDptnsuMod/tB3cwXVJW4cLmNjtFKZNFzP9
-         jqEa/YBBG0DLrtIRYyI5MINf2ptONveSGJ0YFzCVeuudaeAq+jnPGhb5fIvd8DDscKgL
-         0l3JtfP3sRPRev2LQRFpRn+gqJvqNJPix7NqmSZy9pP4aj0IIAT1iqR/Hzc8/Z+G0VvO
-         7Zxg==
-X-Gm-Message-State: APjAAAVCTTQlvGO6QT7ESTDCJCdefLQLvz6ePjRxMWF3DQI4uc93C/Hd
-        jl7Kl2kXEWXxADqBL3r99udAa7Np0VMQxQMBz/E=
-X-Google-Smtp-Source: APXvYqwdZqvPFf/v+xf0c8m2QQzjwkm9pBnQirbxjOXTyW1AetvGjdJMH0+2ZUJRnpOn1unVXGCt7KHq84C5BQbqQa4=
-X-Received: by 2002:a0d:e1d7:: with SMTP id k206mr5230972ywe.229.1561713079518;
- Fri, 28 Jun 2019 02:11:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190628025055.16242-1-huangfq.daxian@gmail.com> <83108dee-72f7-e56f-95f6-26162c9a0ccc@c-s.fr>
-In-Reply-To: <83108dee-72f7-e56f-95f6-26162c9a0ccc@c-s.fr>
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Date:   Fri, 28 Jun 2019 17:11:08 +0800
-Message-ID: <CABXRUiT6jSP2xL9JyqngS9KBx_=fZ13x0UGGFPnQPrfh-_N5xQ@mail.gmail.com>
-Subject: Re: [PATCH v2 27/27] sound: ppc: remove unneeded memset after dma_alloc_coherent
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
+        Fri, 28 Jun 2019 05:11:26 -0400
+Received: from unknown (HELO lgemrelse7q.lge.com) (156.147.1.151)
+        by 156.147.23.52 with ESMTP; 28 Jun 2019 18:11:23 +0900
+X-Original-SENDERIP: 156.147.1.151
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.151 with ESMTP; 28 Jun 2019 18:11:23 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Fri, 28 Jun 2019 18:10:42 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Scott Wood <swood@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, Allison Randal <allison@lohutok.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, kernel-team@lge.com
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Message-ID: <20190628091042.GA11339@X58A-UD3R>
+References: <20190627153031.GA249127@google.com>
+ <20190627155506.GU26519@linux.ibm.com>
+ <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
+ <20190627173831.GW26519@linux.ibm.com>
+ <20190627181638.GA209455@google.com>
+ <20190627184107.GA26519@linux.ibm.com>
+ <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
+ <20190627203612.GD26519@linux.ibm.com>
+ <20190628073138.GB13650@X58A-UD3R>
+ <20190628074350.GA11214@X58A-UD3R>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628074350.GA11214@X58A-UD3R>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The merge commit log tells (dma-mapping: zero memory returned from
-dma_alloc_* and deprecating the dma_zalloc_coherent).
-I used this commit just want to say that dma_alloc_coherent  has
-zeroed the allocated memory.
-Sorry for this mistake.
+On Fri, Jun 28, 2019 at 04:43:50PM +0900, Byungchul Park wrote:
+> On Fri, Jun 28, 2019 at 04:31:38PM +0900, Byungchul Park wrote:
+> > On Thu, Jun 27, 2019 at 01:36:12PM -0700, Paul E. McKenney wrote:
+> > > On Thu, Jun 27, 2019 at 03:17:27PM -0500, Scott Wood wrote:
+> > > > On Thu, 2019-06-27 at 11:41 -0700, Paul E. McKenney wrote:
+> > > > > On Thu, Jun 27, 2019 at 02:16:38PM -0400, Joel Fernandes wrote:
+> > > > > > 
+> > > > > > I think the fix should be to prevent the wake-up not based on whether we
+> > > > > > are
+> > > > > > in hard/soft-interrupt mode but that we are doing the rcu_read_unlock()
+> > > > > > from
+> > > > > > a scheduler path (if we can detect that)
+> > > > > 
+> > > > > Or just don't do the wakeup at all, if it comes to that.  I don't know
+> > > > > of any way to determine whether rcu_read_unlock() is being called from
+> > > > > the scheduler, but it has been some time since I asked Peter Zijlstra
+> > > > > about that.
+> > > > > 
+> > > > > Of course, unconditionally refusing to do the wakeup might not be happy
+> > > > > thing for NO_HZ_FULL kernels that don't implement IRQ work.
+> > > > 
+> > > > Couldn't smp_send_reschedule() be used instead?
+> > > 
+> > > Good point.  If current -rcu doesn't fix things for Sebastian's case,
+> > > that would be well worth looking at.  But there must be some reason
+> > > why Peter Zijlstra didn't suggest it when he instead suggested using
+> > > the IRQ work approach.
+> > > 
+> > > Peter, thoughts?
+> > 
+> 
+> +cc kernel-team@lge.com
+> (I'm sorry for more noise on the thread.)
+> 
+> > Hello,
+> > 
+> > Isn't the following scenario possible?
+> > 
+> > The original code
+> > -----------------
+> > rcu_read_lock();
+> > ...
+> > /* Experdite */
+> > WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
+> > ...
+> > __rcu_read_unlock();
+> > 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
+> > 		rcu_read_unlock_special(t);
+> > 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
+> > 			rcu_preempt_deferred_qs_irqrestore(t, flags);
+> > 		barrier();  /* ->rcu_read_unlock_special load before assign */
+> > 		t->rcu_read_lock_nesting = 0;
+> > 
+> > The reordered code by machine
+> > -----------------------------
+> > rcu_read_lock();
+> > ...
+> > /* Experdite */
+> > WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
+> > ...
+> > __rcu_read_unlock();
+> > 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
+> > 		rcu_read_unlock_special(t);
+> > 		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
+> > 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
+> > 			rcu_preempt_deferred_qs_irqrestore(t, flags);
+> > 		barrier();  /* ->rcu_read_unlock_special load before assign */
+> > 
+> > An interrupt happens
+> > --------------------
+> > rcu_read_lock();
+> > ...
+> > /* Experdite */
+> > WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
+> > ...
+> > __rcu_read_unlock();
+> > 	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
+> > 		rcu_read_unlock_special(t);
+> > 		t->rcu_read_lock_nesting = 0; <--- LOOK AT THIS!!!
+> > <--- Handle an (any) irq
+> > 	rcu_read_lock();
+> > 	/* This call should be skipped */
+> > 	rcu_read_unlock_special(t);
+> > 			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
+> > 			rcu_preempt_deferred_qs_irqrestore(t, flags);
+> > 		barrier();  /* ->rcu_read_unlock_special load before assign */
 
-Maybe this commit 518a2f1925c3("dma-mapping: zero memory returned from
-dma_alloc_*") is correct.
+I was confused it was a LOAD access. The example should be changed a bit.
 
-Christophe Leroy <christophe.leroy@c-s.fr> =E6=96=BC 2019=E5=B9=B46=E6=9C=
-=8828=E6=97=A5=E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:59=E5=AF=AB=E9=81=93=
-=EF=BC=9A
 
->
->
->
-> Le 28/06/2019 =C3=A0 04:50, Fuqian Huang a =C3=A9crit :
-> > In commit af7ddd8a627c
-> > ("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma=
--mapping"),
-> > dma_alloc_coherent has already zeroed the memory.
-> > So memset is not needed.
->
-> You are refering to a merge commit, is that correct ?
->
-> I can't see anything related in that commit, can you please pinpoint it ?
->
-> As far as I can see, on powerpc the memory has always been zeroized
-> (since 2005 at least).
->
-> Christophe
->
-> >
-> > Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> > ---
-> >   sound/ppc/pmac.c | 1 -
-> >   1 file changed, 1 deletion(-)
-> >
-> > diff --git a/sound/ppc/pmac.c b/sound/ppc/pmac.c
-> > index 1b11e53f6a62..1ab12f4f8631 100644
-> > --- a/sound/ppc/pmac.c
-> > +++ b/sound/ppc/pmac.c
-> > @@ -56,7 +56,6 @@ static int snd_pmac_dbdma_alloc(struct snd_pmac *chip=
-, struct pmac_dbdma *rec, i
-> >       if (rec->space =3D=3D NULL)
-> >               return -ENOMEM;
-> >       rec->size =3D size;
-> > -     memset(rec->space, 0, rsize);
-> >       rec->cmds =3D (void __iomem *)DBDMA_ALIGN(rec->space);
-> >       rec->addr =3D rec->dma_base + (unsigned long)((char *)rec->cmds -=
- (char *)rec->space);
-> >
-> >
+
+The original code
+-----------------
+rcu_read_lock();
+...
+/* Experdite */
+WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
+...
+__rcu_read_unlock();
+	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
+		rcu_read_unlock_special(t);
+			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
+			rcu_preempt_deferred_qs_irqrestore(t, flags);
+		barrier();  /* ->rcu_read_unlock_special load before assign */
+		t->rcu_read_lock_nesting = 0;
+
+The reordered code by machine
+-----------------------------
+rcu_read_lock();
+...
+/* Experdite */
+WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
+...
+__rcu_read_unlock();
+	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
+		rcu_read_unlock_special(t);
+			rcu_preempt_deferred_qs_irqrestore(t, flags);
+		barrier();  /* ->rcu_read_unlock_special load before assign */
+		t->rcu_read_lock_nesting = 0;
+			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
+
+An interrupt happens
+--------------------
+rcu_read_lock();
+...
+/* Experdite */
+WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
+...
+__rcu_read_unlock();
+	if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
+		rcu_read_unlock_special(t);
+			rcu_preempt_deferred_qs_irqrestore(t, flags);
+		barrier();  /* ->rcu_read_unlock_special load before assign */
+		t->rcu_read_lock_nesting = 0;
+<--- Handle an (any) irq
+rcu_read_lock();
+/* This call should be skipped */
+rcu_read_unlock_special(t);
+			WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
+
+
+
+Now that I re-made the example, I'm afraid it'd be no problem because
+anyway it'd be within a cpu so it can see inside of the store-buffer of
+the cpu.
+
+I'm sorry. Please ignore my suggestion here.
