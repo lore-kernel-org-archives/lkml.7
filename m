@@ -2,151 +2,137 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B59CC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7F2C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D563208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC523208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 19:27:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="R1bIEps/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vt7AoMwr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfF1TYK (ORCPT
+        id S1726865AbfF1T10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 15:24:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42925 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfF1TYK (ORCPT
+        Fri, 28 Jun 2019 15:27:26 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:36155 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfF1T1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 15:24:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so3466210pff.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:24:10 -0700 (PDT)
+        Fri, 28 Jun 2019 15:27:25 -0400
+Received: by mail-yw1-f65.google.com with SMTP id t126so4562075ywf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 12:27:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k5MirY9PvjvoYy2JYPX/EykDAkKOFRQV3e8B1ez3nZY=;
-        b=R1bIEps/kzzezmtJeA2smWl1IIsg/enV00IthiN0CW8o+juhmIZoBy0ETt0JXHc5rs
-         g0L7kxMEn3MZH+jByHm/zYo5Xr5kgImfp+O6PGhSdHcKUT62g0MPFdNrka5u4JiStby/
-         zSSDgYBQheykD8GSSPPuo1JQJxur+bG2q71XM=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TvUXywiG0f7bCL3wZmKqPPbl6x6Ilq7Dj7JuFch+QdI=;
+        b=vt7AoMwrNcWqMkfexaU6xlBIiiJMEym5gtlszE1wfAtxsaHc1nUkstrKx+VfeTOdW4
+         jQapxfMfdVK3Kha0PgKtzyz67iZqe3RpRtmY8sqR0qFSYnjgzcmPDH0oBxumTHL7rpPw
+         nYmM/KbsDPwQWESafxthWv+EoEX8OBpvv+0JkYtwBtgXKpikXgGKVH8FznIk7SA7Qijn
+         OH47owMfMltuYy1/N6QD/WhAOZGseF75WthtolK2ck54xcf0GFpr4l1YJiVcBYg29F13
+         8MZF9RT5I9torHdvXAJeC8N9iKGeudMzvl8gW8wkxVdskrvnbXbAqjxQfWdKBQ0SzIm+
+         27KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k5MirY9PvjvoYy2JYPX/EykDAkKOFRQV3e8B1ez3nZY=;
-        b=BIu4M88pk10zeQ+PWKjh5e9WFr+yWIHRMiafCPMUYHP6pjJWti/Gt8DJSI3LlYu555
-         /mYoKHH30M+SmEzurqAfqX9BWlorRDoGb0YcXhrxTJNf+Wp5aEtuviPEOGMKm6nucpKE
-         kELZlJZn+q01sGVR9UMFWfA5gzz9TKZluKEUOXnl/fY6EdQsNtlNpzOZnmtxUwpIQ2G1
-         4aGM44tf+BZHa9j69IEVFfSSs94O4kWHW6kqFQSDuF2NSfI2Zc6IlIyYCfEdBBzy+ol1
-         s6FnWGxoHLDk1SNfW78Aam8Ft44itgbjIYHK3IqCIGfZecyqv5sCndF3bccnK76/Itow
-         uMMg==
-X-Gm-Message-State: APjAAAXgwI9IiUZfsAyWg/8w72TYZ18WuDpPi6aC8QZ5C4ZUmkbm8EuE
-        dJ2LIhu6Y4gXWc7nf4tNgi2scA==
-X-Google-Smtp-Source: APXvYqwbcx+n1QhZAl2iZBUwcoQ/Pe6rfSKhIiYqrxobO8zyJAmPU/2VRyvZpr78itBF3XyCcpvqJA==
-X-Received: by 2002:a63:ec13:: with SMTP id j19mr10509941pgh.174.1561749849525;
-        Fri, 28 Jun 2019 12:24:09 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id c83sm3872829pfb.111.2019.06.28.12.24.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 12:24:08 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 15:24:07 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Message-ID: <20190628192407.GA89956@google.com>
-References: <20190627153031.GA249127@google.com>
- <20190627155506.GU26519@linux.ibm.com>
- <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <20190628135433.GE3402@hirez.programming.kicks-ass.net>
- <20190628153050.GU26519@linux.ibm.com>
- <20190628184026.fds6scgi2pnjnc5p@linutronix.de>
- <20190628185219.GA26519@linux.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TvUXywiG0f7bCL3wZmKqPPbl6x6Ilq7Dj7JuFch+QdI=;
+        b=jh58fhG3lXAipFPyQgTcJCTRP1+swDbxcd6LPHyfmbr+NmfuOXe6qon9Npx30NM4Hw
+         AUrezJ3j/fbwVs5nOCkh3h/KtCcwgAh4aKmL2haVbAUGdzUzmF7B4zMEmILo4UtTyfBX
+         CNpZc/kbEFL2Qwy+A9S57G35tVjyP8uyS9HmDgT9zSYkcv499YililPsHOZ/2iIgaSey
+         8a3cneI0AfBrFI2t0CnrRK74FJ20kFieTUmz9YXoEYSiEumn/VobEOrMmi5kYrtYUo9e
+         Q4NhoxMrBXmbbrUHDab8E8xzXFNUuMABVILWmG0EFE7CPjU3qIC4UiAeRzMLJdd5qTBA
+         nkyQ==
+X-Gm-Message-State: APjAAAXTFDOLOSUzfWlIf2xVxuKoDKNaAkNUIIrZbaHyhlAwBkOdOazl
+        +WhoRA+p8IqY++cpqCmvTrqdoFz6eDBQnA4SlyaVLw==
+X-Google-Smtp-Source: APXvYqyeNqvAsUAnD2/zSmW+uHs3PMxd0RthI9aXZomvVE0l90UkfP/cn8j691rqydeWakodWOrph9gJGKwfB7MrDG0=
+X-Received: by 2002:a81:ae0e:: with SMTP id m14mr7609987ywh.308.1561750044891;
+ Fri, 28 Jun 2019 12:27:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628185219.GA26519@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190628015520.13357-1-shakeelb@google.com> <6e28c8ce-96e1-5a1e-bd06-d1df5856094e@linux.alibaba.com>
+In-Reply-To: <6e28c8ce-96e1-5a1e-bd06-d1df5856094e@linux.alibaba.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 28 Jun 2019 12:27:13 -0700
+Message-ID: <CALvZod6sDHNwTbUPSnBdj4bEG1gT1BDgwD=f=MrDOAx4yVuRiQ@mail.gmail.com>
+Subject: Re: [PATCH] mm, vmscan: prevent useless kswapd loops
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Hillf Danton <hdanton@sina.com>, Roman Gushchin <guro@fb.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 11:52:19AM -0700, Paul E. McKenney wrote:
-> On Fri, Jun 28, 2019 at 08:40:26PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2019-06-28 08:30:50 [-0700], Paul E. McKenney wrote:
-> > > On Fri, Jun 28, 2019 at 03:54:33PM +0200, Peter Zijlstra wrote:
-> > > > On Thu, Jun 27, 2019 at 11:41:07AM -0700, Paul E. McKenney wrote:
-> > > > > Or just don't do the wakeup at all, if it comes to that.  I don't know
-> > > > > of any way to determine whether rcu_read_unlock() is being called from
-> > > > > the scheduler, but it has been some time since I asked Peter Zijlstra
-> > > > > about that.
-> > > > 
-> > > > There (still) is no 'in-scheduler' state.
-> > > 
-> > > Well, my TREE03 + threadirqs rcutorture test ran for ten hours last
-> > > night with no problems, so we just might be OK.
-> > > 
-> > > The apparent fix is below, though my approach would be to do backports
-> > > for the full set of related changes.
-> > > 
-> > > Joel, Sebastian, how goes any testing from your end?  Any reason
-> > > to believe that this does not represent a fix?  (Me, I am still
-> > > concerned about doing raise_softirq() from within a threaded
-> > > interrupt, but am not seeing failures.)
+On Fri, Jun 28, 2019 at 11:53 AM Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>
+>
+>
+> On 6/27/19 6:55 PM, Shakeel Butt wrote:
+> > On production we have noticed hard lockups on large machines running
+> > large jobs due to kswaps hoarding lru lock within isolate_lru_pages when
+> > sc->reclaim_idx is 0 which is a small zone. The lru was couple hundred
+> > GiBs and the condition (page_zonenum(page) > sc->reclaim_idx) in
+> > isolate_lru_pages was basically skipping GiBs of pages while holding the
+> > LRU spinlock with interrupt disabled.
+> >
+> > On further inspection, it seems like there are two issues:
+> >
+> > 1) If the kswapd on the return from balance_pgdat() could not sleep
+> > (maybe all zones are still unbalanced), the classzone_idx is set to 0,
+> > unintentionally, and the whole reclaim cycle of kswapd will try to reclaim
+> > only the lowest and smallest zone while traversing the whole memory.
+> >
+> > 2) Fundamentally isolate_lru_pages() is really bad when the allocation
+> > has woken kswapd for a smaller zone on a very large machine running very
+> > large jobs. It can hoard the LRU spinlock while skipping over 100s of
+> > GiBs of pages.
+> >
+> > This patch only fixes the (1). The (2) needs a more fundamental solution.
+> >
+> > Fixes: e716f2eb24de ("mm, vmscan: prevent kswapd sleeping prematurely
+> > due to mismatched classzone_idx")
+> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> > ---
+> >   mm/vmscan.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index 9e3292ee5c7c..786dacfdfe29 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -3908,7 +3908,7 @@ static int kswapd(void *p)
+> >
+> >               /* Read the new order and classzone_idx */
+> >               alloc_order = reclaim_order = pgdat->kswapd_order;
+> > -             classzone_idx = kswapd_classzone_idx(pgdat, 0);
+> > +             classzone_idx = kswapd_classzone_idx(pgdat, classzone_idx);
+>
+> I'm a little bit confused by the fix. What happen if kswapd is waken for
+> a lower zone? It looks kswapd may just reclaim the higher zone instead
+> of the lower zone?
+>
+> For example, after bootup, classzone_idx should be (MAX_NR_ZONES - 1),
+> if GFP_DMA is used for allocation and kswapd is waken up for ZONE_DMA,
+> kswapd_classzone_idx would still return (MAX_NR_ZONES - 1) since
+> kswapd_classzone_idx(pgdat, classzone_idx) returns the max classzone_idx.
+>
 
-Are you concerned also about a regular process context executing in the
-scheduler and using RCU, having this issue?
-(not anything with threaded or not threaded IRQs, but just a path in the
-scheduler that uses RCU).
+Indeed you are right. I think kswapd_classzone_idx() is too much
+convoluted. It has different semantics when called from the wakers
+than when called from kswapd(). Let me see if we can decouple the
+logic in this function based on the context (or have two separate
+functions for both contexts).
 
-I don't think Sebastian's lock up has to do with the fact that an interrupt
-is threaded or not, except that ksoftirqd is awakened in the case where
-threadirqs is passed.
-
-> > For some reason it does not trigger as good as it did yesterday.
-> 
-> I swear that I wasn't watching!!!  ;-)
-> 
-> But I do know that feeling.
-
-:-)
-
-> > Commit
-> > - 23634ebc1d946 ("rcu: Check for wakeup-safe conditions in
-> >    rcu_read_unlock_special()") does not trigger the bug within 94
-> >    attempts.
-> > 
-> > - 48d07c04b4cc1 ("rcu: Enable elimination of Tree-RCU softirq
-> >   processing") needed 12 attempts to trigger the bug.
-> 
-> That matches my belief that 23634ebc1d946 ("rcu: Check for wakeup-safe
-> conditions in rcu_read_unlock_special()") will at least greatly decrease
-> the probability of this bug occurring.
-
-I was just typing a reply that I can't reproduce it with:
-  rcu: Check for wakeup-safe conditions in rcu_read_unlock_special()
-
-I am trying to revert enough of this patch to see what would break things,
-however I think a better exercise might be to understand more what the patch
-does why it fixes things in the first place ;-) It is probably the
-deferred_qs thing.
-
-thanks!
-
-
-
+thanks,
+Shakeel
