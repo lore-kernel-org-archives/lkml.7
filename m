@@ -2,63 +2,65 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,
+	URIBL_SBL_A,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7FFC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4951C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 575E3214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFF52147A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561724558;
-	bh=2WYjySjaVZvvfoBblbUO4SASwV0in+D1IbVXd+CPFsA=;
+	s=default; t=1561724565;
+	bh=TCit5q1A+kwhtO8UF5XHOAE48OpBlhwDqqeJozM6UTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CSSydYQFxDF/hfbEw3s3Qt2p4WxR0DHNFHLt8DzQjNSJRnRYd50kF3ph0zs4mbtgu
-	 PSzxiqaergh8c8M5sQVY3kgubtQbiYIp5K+yGfHWvnFep1KCcH7gZNeWaKTpngQ8iH
-	 G+VdS1aOE244u5hFEhaqmvrSTrwp3I1JKwJiPp5Y=
+	b=n4fp9XS0KHI/K1oSg5PGOs4bW1rdNU+hrZR8uoz3/dzLlVVie6v2OgPkALUGPk5Bu
+	 Km2cV1COdkg9enweX7Qq7yHoD4ssqi/ddfpULTDgg2A+mNOeHcXrfqB2f5CnWtj2b0
+	 tQqgO79FrgY1pe6e1b8smBHWgJ5mMlW18X5zb9V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfF1MWg (ORCPT
+        id S1727310AbfF1MWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:22:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58824 "EHLO
+        Fri, 28 Jun 2019 08:22:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58794 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbfF1MUs (ORCPT
+        with ESMTP id S1726809AbfF1MUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:20:48 -0400
+        Fri, 28 Jun 2019 08:20:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
         To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2OXw+2e9N9IZkp5AtNSvCVduVumnKQnNMmbaCr4HMQ4=; b=d4PDV2lQFFooWikplRtME6DbFK
-        skYi7OObpjwmp+eJGnSZ31g+1s6TaOC1glifrdb5z6CvSidFzZXsJH9lhjmcZFKgvKgvoozt9D3U4
-        KcTRiWHLblFhYj8/WnxT2L3fqQ3aNoilvfjkksjQFRwopGmNcQEASs1g0qtD0Z7hGPMvQZTPku+lp
-        9yWjQx7WR1FzE6vdh13USu8eJBoHSIIg3hzE/YzmYGI9kCmnxl/8VoPMCOj2jdHBKvjA5vAdLrB61
-        kN4aKNqPXIsvcvJQ06v5IEGgBsOce7nK1vbkAOtEFcLni0336e9BIrEspdmZa+cvItlAX5CerV617
-        Bn76StuQ==;
+        bh=TYXavV4uV+2PkrssmO4e1C10Nnd6/hTtqn1eNk3HPB8=; b=mlHgSiuVphsmfRAXxiwX8/MGSj
+        6tjWIomFNDK182dr2srjO5iQe6jGrl1qqs87VH+R9cp9DfEsQHYPohQwc6Q3lAvH4HU1HiK30x3XM
+        gwdtotIr41lwf1wC4ljl6mfpUMA/RGpVLEUqRs5TSdXPRKLMD/ZJL3RqRR54hVZ7OeDfoNUM/vZ2v
+        vC4sNrnm/qvR1g5G9iFnQ/gHOTTQNzWWrSpDwSa8PGU45YZ0lylwNgZUo6sxyd+t6hj+nBWUSBqE8
+        q+lbMxm1Plffz72mkpocKaPjWr4fT3V0LO/kCJO0+2b9RFeRa58cIkk29ob4Na5clEBFXY302lzP6
+        L8HHQV9g==;
 Received: from [186.213.242.156] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgprv-0000AI-Q6; Fri, 28 Jun 2019 12:20:44 +0000
+        id 1hgprv-00009q-0R; Fri, 28 Jun 2019 12:20:44 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgprt-00059D-SV; Fri, 28 Jun 2019 09:20:41 -0300
+        id 1hgprt-000572-2G; Fri, 28 Jun 2019 09:20:41 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org
-Subject: [PATCH 30/43] docs: nvdimm: convert to ReST
-Date:   Fri, 28 Jun 2019 09:20:26 -0300
-Message-Id: <951fdc9197ffd04cf77168d47685e1299f7d9d73.1561723980.git.mchehab+samsung@kernel.org>
+        Jiri Kosina <jikos@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH 03/43] docs: hid: convert to ReST
+Date:   Fri, 28 Jun 2019 09:19:59 -0300
+Message-Id: <3ab0197cc24088ef25b627f14571936f62287452.1561723980.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561723979.git.mchehab+samsung@kernel.org>
 References: <cover.1561723979.git.mchehab+samsung@kernel.org>
@@ -70,1165 +72,2278 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the nvdimm documentation files to ReST, add an
+Rename the HID documentation files to ReST, add an
 index for them and adjust in order to produce a nice html
 output via the Sphinx build system.
+
+While here, fix the sysfs example from hid-sensor.txt, that
+has a lot of "?" instead of the proper UTF-8 characters that
+are produced by the tree command.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 ---
- Documentation/nvdimm/{btt.txt => btt.rst}     | 140 ++---
- Documentation/nvdimm/index.rst                |  12 +
- .../nvdimm/{nvdimm.txt => nvdimm.rst}         | 518 ++++++++++--------
- .../nvdimm/{security.txt => security.rst}     |   4 +-
- drivers/nvdimm/Kconfig                        |   2 +-
- 5 files changed, 387 insertions(+), 289 deletions(-)
- rename Documentation/nvdimm/{btt.txt => btt.rst} (71%)
- create mode 100644 Documentation/nvdimm/index.rst
- rename Documentation/nvdimm/{nvdimm.txt => nvdimm.rst} (60%)
- rename Documentation/nvdimm/{security.txt => security.rst} (99%)
+ .../hid/{hid-alps.txt => hid-alps.rst}        |  85 ++-
+ .../hid/{hid-sensor.txt => hid-sensor.rst}    | 192 +++----
+ .../{hid-transport.txt => hid-transport.rst}  |  82 ++-
+ Documentation/hid/{hiddev.txt => hiddev.rst}  | 154 ++++--
+ Documentation/hid/{hidraw.txt => hidraw.rst}  |  53 +-
+ Documentation/hid/index.rst                   |  18 +
+ Documentation/hid/intel-ish-hid.rst           | 485 ++++++++++++++++++
+ Documentation/hid/intel-ish-hid.txt           | 454 ----------------
+ Documentation/hid/{uhid.txt => uhid.rst}      |  46 +-
+ Documentation/input/input.rst                 |   2 +-
+ MAINTAINERS                                   |   2 +-
+ 11 files changed, 897 insertions(+), 676 deletions(-)
+ rename Documentation/hid/{hid-alps.txt => hid-alps.rst} (64%)
+ rename Documentation/hid/{hid-sensor.txt => hid-sensor.rst} (61%)
+ rename Documentation/hid/{hid-transport.txt => hid-transport.rst} (93%)
+ rename Documentation/hid/{hiddev.txt => hiddev.rst} (77%)
+ rename Documentation/hid/{hidraw.txt => hidraw.rst} (89%)
+ create mode 100644 Documentation/hid/index.rst
+ create mode 100644 Documentation/hid/intel-ish-hid.rst
+ delete mode 100644 Documentation/hid/intel-ish-hid.txt
+ rename Documentation/hid/{uhid.txt => uhid.rst} (94%)
 
-diff --git a/Documentation/nvdimm/btt.txt b/Documentation/nvdimm/btt.rst
-similarity index 71%
-rename from Documentation/nvdimm/btt.txt
-rename to Documentation/nvdimm/btt.rst
-index e293fb664924..2d8269f834bd 100644
---- a/Documentation/nvdimm/btt.txt
-+++ b/Documentation/nvdimm/btt.rst
-@@ -1,9 +1,10 @@
-+=============================
- BTT - Block Translation Table
- =============================
- 
- 
- 1. Introduction
-----------------
-+===============
- 
- Persistent memory based storage is able to perform IO at byte (or more
- accurately, cache line) granularity. However, we often want to expose such
-@@ -25,7 +26,7 @@ provides atomic sector updates.
- 
- 
- 2. Static Layout
------------------
-+================
- 
- The underlying storage on which a BTT can be laid out is not limited in any way.
- The BTT, however, splits the available space into chunks of up to 512 GiB,
-@@ -33,43 +34,43 @@ called "Arenas".
- 
- Each arena follows the same layout for its metadata, and all references in an
- arena are internal to it (with the exception of one field that points to the
--next arena). The following depicts the "On-disk" metadata layout:
-+next arena). The following depicts the "On-disk" metadata layout::
- 
- 
--  Backing Store     +------->  Arena
--+---------------+   |   +------------------+
--|               |   |   | Arena info block |
--|    Arena 0    +---+   |       4K         |
--|     512G      |       +------------------+
--|               |       |                  |
--+---------------+       |                  |
--|               |       |                  |
--|    Arena 1    |       |   Data Blocks    |
--|     512G      |       |                  |
--|               |       |                  |
--+---------------+       |                  |
--|       .       |       |                  |
--|       .       |       |                  |
--|       .       |       |                  |
--|               |       |                  |
--|               |       |                  |
--+---------------+       +------------------+
--                        |                  |
--                        |     BTT Map      |
--                        |                  |
--                        |                  |
--                        +------------------+
--                        |                  |
--                        |     BTT Flog     |
--                        |                  |
--                        +------------------+
--                        | Info block copy  |
--                        |       4K         |
--                        +------------------+
-+    Backing Store     +------->  Arena
-+  +---------------+   |   +------------------+
-+  |               |   |   | Arena info block |
-+  |    Arena 0    +---+   |       4K         |
-+  |     512G      |       +------------------+
-+  |               |       |                  |
-+  +---------------+       |                  |
-+  |               |       |                  |
-+  |    Arena 1    |       |   Data Blocks    |
-+  |     512G      |       |                  |
-+  |               |       |                  |
-+  +---------------+       |                  |
-+  |       .       |       |                  |
-+  |       .       |       |                  |
-+  |       .       |       |                  |
-+  |               |       |                  |
-+  |               |       |                  |
-+  +---------------+       +------------------+
-+                          |                  |
-+                          |     BTT Map      |
-+                          |                  |
-+                          |                  |
-+                          +------------------+
-+                          |                  |
-+                          |     BTT Flog     |
-+                          |                  |
-+                          +------------------+
-+                          | Info block copy  |
-+                          |       4K         |
-+                          +------------------+
- 
- 
- 3. Theory of Operation
+diff --git a/Documentation/hid/hid-alps.txt b/Documentation/hid/hid-alps.rst
+similarity index 64%
+rename from Documentation/hid/hid-alps.txt
+rename to Documentation/hid/hid-alps.rst
+index 6b02a2447c77..e2f4c4c11e3f 100644
+--- a/Documentation/hid/hid-alps.txt
++++ b/Documentation/hid/hid-alps.rst
+@@ -1,19 +1,26 @@
++==========================
+ ALPS HID Touchpad Protocol
 -----------------------
-+======================
++==========================
  
+ Introduction
+ ------------
+ Currently ALPS HID driver supports U1 Touchpad device.
  
- a. The BTT Map
-@@ -79,31 +80,37 @@ The map is a simple lookup/indirection table that maps an LBA to an internal
- block. Each map entry is 32 bits. The two most significant bits are special
- flags, and the remaining form the internal block number.
- 
-+======== =============================================================
- Bit      Description
--31 - 30	: Error and Zero flags - Used in the following way:
--	 Bit		      Description
--	31 30
--	-----------------------------------------------------------------------
--	 00	Initial state. Reads return zeroes; Premap = Postmap
--	 01	Zero state: Reads return zeroes
--	 10	Error state: Reads fail; Writes clear 'E' bit
--	 11	Normal Block – has valid postmap
-+======== =============================================================
-+31 - 30	 Error and Zero flags - Used in the following way:
- 
-+	   == ==  ====================================================
-+	   31 30  Description
-+	   == ==  ====================================================
-+	   0  0	  Initial state. Reads return zeroes; Premap = Postmap
-+	   0  1	  Zero state: Reads return zeroes
-+	   1  0	  Error state: Reads fail; Writes clear 'E' bit
-+	   1  1	  Normal Block – has valid postmap
-+	   == ==  ====================================================
- 
--29 - 0	: Mappings to internal 'postmap' blocks
-+29 - 0	 Mappings to internal 'postmap' blocks
-+======== =============================================================
- 
- 
- Some of the terminology that will be subsequently used:
- 
--External LBA  : LBA as made visible to upper layers.
--ABA           : Arena Block Address - Block offset/number within an arena
--Premap ABA    : The block offset into an arena, which was decided upon by range
-+============	================================================================
-+External LBA	LBA as made visible to upper layers.
-+ABA		Arena Block Address - Block offset/number within an arena
-+Premap ABA	The block offset into an arena, which was decided upon by range
- 		checking the External LBA
--Postmap ABA   : The block number in the "Data Blocks" area obtained after
-+Postmap ABA	The block number in the "Data Blocks" area obtained after
- 		indirection from the map
--nfree	      : The number of free blocks that are maintained at any given time.
-+nfree		The number of free blocks that are maintained at any given time.
- 		This is the number of concurrent writes that can happen to the
- 		arena.
-+============	================================================================
- 
- 
- For example, after adding a BTT, we surface a disk of 1024G. We get a read for
-@@ -121,19 +128,21 @@ i.e. Every write goes to a "free" block. A running list of free blocks is
- maintained in the form of the BTT flog. 'Flog' is a combination of the words
- "free list" and "log". The flog contains 'nfree' entries, and an entry contains:
- 
--lba     : The premap ABA that is being written to
--old_map : The old postmap ABA - after 'this' write completes, this will be a
-+========  =====================================================================
-+lba       The premap ABA that is being written to
-+old_map   The old postmap ABA - after 'this' write completes, this will be a
- 	  free block.
--new_map : The new postmap ABA. The map will up updated to reflect this
-+new_map   The new postmap ABA. The map will up updated to reflect this
- 	  lba->postmap_aba mapping, but we log it here in case we have to
- 	  recover.
--seq	: Sequence number to mark which of the 2 sections of this flog entry is
-+seq	  Sequence number to mark which of the 2 sections of this flog entry is
- 	  valid/newest. It cycles between 01->10->11->01 (binary) under normal
- 	  operation, with 00 indicating an uninitialized state.
--lba'	: alternate lba entry
--old_map': alternate old postmap entry
--new_map': alternate new postmap entry
--seq'	: alternate sequence number.
-+lba'	  alternate lba entry
-+old_map'  alternate old postmap entry
-+new_map'  alternate new postmap entry
-+seq'	  alternate sequence number.
-+========  =====================================================================
- 
- Each of the above fields is 32-bit, making one entry 32 bytes. Entries are also
- padded to 64 bytes to avoid cache line sharing or aliasing. Flog updates are
-@@ -147,8 +156,10 @@ c. The concept of lanes
- 
- While 'nfree' describes the number of concurrent IOs an arena can process
- concurrently, 'nlanes' is the number of IOs the BTT device as a whole can
--process.
-- nlanes = min(nfree, num_cpus)
-+process::
+-U1 devuce basic information.
++U1 device basic information.
 +
-+	nlanes = min(nfree, num_cpus)
++==========	======
+ Vender ID	0x044E
+ Product ID	0x120B
+ Version ID	0x0121
++==========	======
+ 
+ 
+ HID Descriptor
+-------------
++--------------
 +
- A lane number is obtained at the start of any IO, and is used for indexing into
- all the on-disk and in-memory data structures for the duration of the IO. If
- there are more CPUs than the max number of available lanes, than lanes are
-@@ -180,10 +191,10 @@ e. In-memory data structure: map locks
- --------------------------------------
++=======	====================	=====	=======================================
+ Byte	Field			Value	Notes
++=======	====================	=====	=======================================
+ 0	wHIDDescLength		001E	Length of HID Descriptor : 30 bytes
+ 2	bcdVersion		0100	Compliant with Version 1.00
+ 4	wReportDescLength	00B2	Report Descriptor is 178 Bytes (0x00B2)
+@@ -28,32 +35,42 @@ Byte	Field			Value	Notes
+ 22	wProductID		120B	Product ID 0x120B
+ 24	wVersionID		0121	Version 01.21
+ 26	RESERVED		0000	RESERVED
++=======	====================	=====	=======================================
  
- Consider a case where two writer threads are writing to the same LBA. There can
--be a race in the following sequence of steps:
-+be a race in the following sequence of steps::
  
--free[lane] = map[premap_aba]
--map[premap_aba] = postmap_aba
-+	free[lane] = map[premap_aba]
-+	map[premap_aba] = postmap_aba
- 
- Both threads can update their respective free[lane] with the same old, freed
- postmap_aba. This has made the layout inconsistent by losing a free entry, and
-@@ -202,6 +213,7 @@ On startup, we analyze the BTT flog to create our list of free blocks. We walk
- through all the entries, and for each lane, of the set of two possible
- 'sections', we always look at the most recent one only (based on the sequence
- number). The reconstruction rules/steps are simple:
+ Report ID
+-------------
+-ReportID-1	(Input Reports)	(HIDUsage-Mouse) for TP&SP
+-ReportID-2	(Input Reports)	(HIDUsage-keyboard) for TP
+-ReportID-3	(Input Reports)	(Vendor Usage: Max 10 finger data) for TP
+-ReportID-4	(Input Reports)	(Vendor Usage: ON bit data) for GP
+-ReportID-5	(Feature Reports)	Feature Reports
+-ReportID-6	(Input Reports)	(Vendor Usage: StickPointer data) for SP
+-ReportID-7	(Feature Reports)	Flash update (Bootloader)
++---------
 +
- - Read map[log_entry.lba].
- - If log_entry.new matches the map entry, then log_entry.old is free.
- - If log_entry.new does not match the map entry, then log_entry.new is free.
-@@ -228,7 +240,7 @@ Write:
- 1.  Convert external LBA to Arena number + pre-map ABA
- 2.  Get a lane (and take lane_lock)
- 3.  Use lane to index into in-memory free list and obtain a new block, next flog
--        index, next sequence number
-+    index, next sequence number
- 4.  Scan the RTT to check if free block is present, and spin/wait if it is.
- 5.  Write data to this free block
- 6.  Read map to get the existing post-map ABA entry for this pre-map ABA
-@@ -245,6 +257,7 @@ Write:
- An arena would be in an error state if any of the metadata is corrupted
- irrecoverably, either due to a bug or a media error. The following conditions
- indicate an error:
++==========	=================  =========================================
++ReportID-1	(Input Reports)	   (HIDUsage-Mouse) for TP&SP
++ReportID-2	(Input Reports)	   (HIDUsage-keyboard) for TP
++ReportID-3	(Input Reports)	   (Vendor Usage: Max 10 finger data) for TP
++ReportID-4	(Input Reports)	   (Vendor Usage: ON bit data) for GP
++ReportID-5	(Feature Reports)  Feature Reports
++ReportID-6	(Input Reports)	   (Vendor Usage: StickPointer data) for SP
++ReportID-7	(Feature Reports)  Flash update (Bootloader)
++==========	=================  =========================================
+ 
+ 
+ Data pattern
+ ------------
 +
- - Info block checksum does not match (and recovering from the copy also fails)
- - All internal available blocks are not uniquely and entirely addressed by the
-   sum of mapped blocks and free blocks (from the BTT flog).
-@@ -263,11 +276,10 @@ The BTT can be set up on any disk (namespace) exposed by the libnvdimm subsystem
- (pmem, or blk mode). The easiest way to set up such a namespace is using the
- 'ndctl' utility [1]:
++=====	==========	=====	=================
+ Case1	ReportID_1	TP/SP	Relative/Relative
+ Case2	ReportID_3	TP	Absolute
+ 	ReportID_6	SP	Absolute
++=====	==========	=====	=================
  
--For example, the ndctl command line to setup a btt with a 4k sector size is:
-+For example, the ndctl command line to setup a btt with a 4k sector size is::
  
-     ndctl create-namespace -f -e namespace0.0 -m sector -l 4k
+ Command Read/Write
+ ------------------
+ To read/write to RAM, need to send a commands to the device.
++
+ The command format is as below.
  
- See ndctl create-namespace --help for more options.
+ DataByte(SET_REPORT)
++
++=====	======================
+ Byte1	Command Byte
+ Byte2	Address - Byte 0 (LSB)
+ Byte3	Address - Byte 1
+@@ -61,13 +78,19 @@ Byte4	Address - Byte 2
+ Byte5	Address - Byte 3 (MSB)
+ Byte6	Value Byte
+ Byte7	Checksum
++=====	======================
  
- [1]: https://github.com/pmem/ndctl
+ Command Byte is read=0xD1/write=0xD2 .
++
+ Address is read/write RAM address.
++
+ Value Byte is writing data when you send the write commands.
++
+ When you read RAM, there is no meaning.
+ 
+ DataByte(GET_REPORT)
++
++=====	======================
+ Byte1	Response Byte
+ Byte2	Address - Byte 0 (LSB)
+ Byte3	Address - Byte 1
+@@ -75,6 +98,7 @@ Byte4	Address - Byte 2
+ Byte5	Address - Byte 3 (MSB)
+ Byte6	Value Byte
+ Byte7	Checksum
++=====	======================
+ 
+ Read value is stored in Value Byte.
+ 
+@@ -82,7 +106,11 @@ Read value is stored in Value Byte.
+ Packet Format
+ Touchpad data byte
+ ------------------
+-	b7	b6	b5	b4	b3	b2	b1	b0
++
++
++======= ======= ======= ======= ======= ======= ======= ======= =====
++-	b7	b6	b5	b4	b3	b2	b1	b0
++======= ======= ======= ======= ======= ======= ======= ======= =====
+ 1	0	0	SW6	SW5	SW4	SW3	SW2	SW1
+ 2	0	0	0	Fcv	Fn3	Fn2	Fn1	Fn0
+ 3	Xa0_7	Xa0_6	Xa0_5	Xa0_4	Xa0_3	Xa0_2	Xa0_1	Xa0_0
+@@ -114,17 +142,25 @@ Touchpad data byte
+ 25	Ya4_7	Ya4_6	Ya4_5	Ya4_4	Ya4_3	Ya4_2	Ya4_1	Ya4_0
+ 26	Ya4_15	Ya4_14	Ya4_13	Ya4_12	Ya4_11	Ya4_10	Ya4_9	Ya4_8
+ 27	LFB4	Zs4_6	Zs4_5	Zs4_4	Zs4_3	Zs4_2	Zs4_1	Zs4_0
++======= ======= ======= ======= ======= ======= ======= ======= =====
+ 
+ 
+-SW1-SW6:	SW ON/OFF status
+-Xan_15-0(16bit):X Absolute data of the "n"th finger
+-Yan_15-0(16bit):Y Absolute data of the "n"th finger
+-Zsn_6-0(7bit):	Operation area of the "n"th finger
++SW1-SW6:
++	SW ON/OFF status
++Xan_15-0(16bit):
++	X Absolute data of the "n"th finger
++Yan_15-0(16bit):
++	Y Absolute data of the "n"th finger
++Zsn_6-0(7bit):
++	Operation area of the "n"th finger
+ 
+ 
+ StickPointer data byte
+-------------------
+-	b7	b6	b5	b4	b3	b2	b1	b0
++----------------------
++
++======= ======= ======= ======= ======= ======= ======= ======= =====
++-	b7	b6	b5	b4	b3	b2	b1	b0
++======= ======= ======= ======= ======= ======= ======= ======= =====
+ Byte1	1	1	1	0	1	SW3	SW2	SW1
+ Byte2	X7	X6	X5	X4	X3	X2	X1	X0
+ Byte3	X15	X14	X13	X12	X11	X10	X9	X8
+@@ -132,8 +168,13 @@ Byte4	Y7	Y6	Y5	Y4	Y3	Y2	Y1	Y0
+ Byte5	Y15	Y14	Y13	Y12	Y11	Y10	Y9	Y8
+ Byte6	Z7	Z6	Z5	Z4	Z3	Z2	Z1	Z0
+ Byte7	T&P	Z14	Z13	Z12	Z11	Z10	Z9	Z8
++======= ======= ======= ======= ======= ======= ======= ======= =====
+ 
+-SW1-SW3:	SW ON/OFF status
+-Xn_15-0(16bit):X Absolute data
+-Yn_15-0(16bit):Y Absolute data
+-Zn_14-0(15bit):Z
++SW1-SW3:
++	SW ON/OFF status
++Xn_15-0(16bit):
++	X Absolute data
++Yn_15-0(16bit):
++	Y Absolute data
++Zn_14-0(15bit):
++	Z
+diff --git a/Documentation/hid/hid-sensor.txt b/Documentation/hid/hid-sensor.rst
+similarity index 61%
+rename from Documentation/hid/hid-sensor.txt
+rename to Documentation/hid/hid-sensor.rst
+index b287752a31cd..758972e34971 100644
+--- a/Documentation/hid/hid-sensor.txt
++++ b/Documentation/hid/hid-sensor.rst
+@@ -1,6 +1,6 @@
 -
-diff --git a/Documentation/nvdimm/index.rst b/Documentation/nvdimm/index.rst
++=====================
+ HID Sensors Framework
+-======================
++=====================
+ HID sensor framework provides necessary interfaces to implement sensor drivers,
+ which are connected to a sensor hub. The sensor hub is a HID device and it provides
+ a report descriptor conforming to HID 1.12 sensor usage tables.
+@@ -15,22 +15,22 @@ the drivers themselves."
+ This specification describes many usage IDs, which describe the type of sensor
+ and also the individual data fields. Each sensor can have variable number of
+ data fields. The length and order is specified in the report descriptor. For
+-example a part of report descriptor can look like:
++example a part of report descriptor can look like::
+ 
+-   INPUT(1)[INPUT]
+- ..
+-    Field(2)
+-      Physical(0020.0073)
+-      Usage(1)
+-        0020.045f
+-      Logical Minimum(-32767)
+-      Logical Maximum(32767)
+-      Report Size(8)
+-      Report Count(1)
+-      Report Offset(16)
+-      Flags(Variable Absolute)
+-..
+-..
++     INPUT(1)[INPUT]
++   ..
++      Field(2)
++        Physical(0020.0073)
++        Usage(1)
++          0020.045f
++        Logical Minimum(-32767)
++        Logical Maximum(32767)
++        Report Size(8)
++        Report Count(1)
++        Report Offset(16)
++        Flags(Variable Absolute)
++  ..
++  ..
+ 
+ The report is indicating "sensor page (0x20)" contains an accelerometer-3D (0x73).
+ This accelerometer-3D has some fields. Here for example field 2 is motion intensity
+@@ -40,13 +40,14 @@ data will use this format.
+ 
+ 
+ Implementation
+-=================
++==============
+ 
+ This specification defines many different types of sensors with different sets of
+ data fields. It is difficult to have a common input event to user space applications,
+ for different sensors. For example an accelerometer can send X,Y and Z data, whereas
+ an ambient light sensor can send illumination data.
+ So the implementation has two parts:
++
+ - Core hid driver
+ - Individual sensor processing part (sensor drivers)
+ 
+@@ -55,8 +56,11 @@ Core driver
+ The core driver registers (hid-sensor-hub) registers as a HID driver. It parses
+ report descriptors and identifies all the sensors present. It adds an MFD device
+ with name HID-SENSOR-xxxx (where xxxx is usage id from the specification).
+-For example
++
++For example:
++
+ HID-SENSOR-200073 is registered for an Accelerometer 3D driver.
++
+ So if any driver with this name is inserted, then the probe routine for that
+ function will be called. So an accelerometer processing driver can register
+ with this name and will be probed if there is an accelerometer-3D detected.
+@@ -66,7 +70,8 @@ drivers to register and get events for that usage id. Also it provides parsing
+ functions, which get and set each input/feature/output report.
+ 
+ Individual sensor processing part (sensor drivers)
+------------
++--------------------------------------------------
++
+ The processing driver will use an interface provided by the core driver to parse
+ the report and get the indexes of the fields and also can get events. This driver
+ can use IIO interface to use the standard ABI defined for a type of sensor.
+@@ -75,31 +80,34 @@ can use IIO interface to use the standard ABI defined for a type of sensor.
+ Core driver Interface
+ =====================
+ 
+-Callback structure:
+-Each processing driver can use this structure to set some callbacks.
++Callback structure::
++
++  Each processing driver can use this structure to set some callbacks.
+ 	int (*suspend)(..): Callback when HID suspend is received
+ 	int (*resume)(..): Callback when HID resume is received
+ 	int (*capture_sample)(..): Capture a sample for one of its data fields
+ 	int (*send_event)(..): One complete event is received which can have
+                                multiple data fields.
+ 
+-Registration functions:
+-int sensor_hub_register_callback(struct hid_sensor_hub_device *hsdev,
++Registration functions::
++
++  int sensor_hub_register_callback(struct hid_sensor_hub_device *hsdev,
+ 			u32 usage_id,
+ 			struct hid_sensor_hub_callbacks *usage_callback):
+ 
+ Registers callbacks for an usage id. The callback functions are not allowed
+-to sleep.
++to sleep::
+ 
+ 
+-int sensor_hub_remove_callback(struct hid_sensor_hub_device *hsdev,
++  int sensor_hub_remove_callback(struct hid_sensor_hub_device *hsdev,
+ 			u32 usage_id):
+ 
+ Removes callbacks for an usage id.
+ 
+ 
+-Parsing function:
+-int sensor_hub_input_get_attribute_info(struct hid_sensor_hub_device *hsdev,
++Parsing function::
++
++  int sensor_hub_input_get_attribute_info(struct hid_sensor_hub_device *hsdev,
+ 			u8 type,
+ 			u32 usage_id, u32 attr_usage_id,
+ 			struct hid_sensor_hub_attribute_info *info);
+@@ -110,26 +118,27 @@ so that fields can be set or get individually.
+ These indexes avoid searching every time and getting field index to get or set.
+ 
+ 
+-Set Feature report
+-int sensor_hub_set_feature(struct hid_sensor_hub_device *hsdev, u32 report_id,
++Set Feature report::
++
++  int sensor_hub_set_feature(struct hid_sensor_hub_device *hsdev, u32 report_id,
+ 			u32 field_index, s32 value);
+ 
+ This interface is used to set a value for a field in feature report. For example
+ if there is a field report_interval, which is parsed by a call to
+-sensor_hub_input_get_attribute_info before, then it can directly set that individual
+-field.
++sensor_hub_input_get_attribute_info before, then it can directly set that
++individual field::
+ 
+ 
+-int sensor_hub_get_feature(struct hid_sensor_hub_device *hsdev, u32 report_id,
++  int sensor_hub_get_feature(struct hid_sensor_hub_device *hsdev, u32 report_id,
+ 			u32 field_index, s32 *value);
+ 
+ This interface is used to get a value for a field in input report. For example
+ if there is a field report_interval, which is parsed by a call to
+-sensor_hub_input_get_attribute_info before, then it can directly get that individual
+-field value.
++sensor_hub_input_get_attribute_info before, then it can directly get that
++individual field value::
+ 
+ 
+-int sensor_hub_input_attr_get_raw_value(struct hid_sensor_hub_device *hsdev,
++  int sensor_hub_input_attr_get_raw_value(struct hid_sensor_hub_device *hsdev,
+ 			u32 usage_id,
+ 			u32 attr_usage_id, u32 report_id);
+ 
+@@ -143,6 +152,8 @@ registered callback function to process the sample.
+ ----------
+ 
+ HID Custom and generic Sensors
++------------------------------
++
+ 
+ HID Sensor specification defines two special sensor usage types. Since they
+ don't represent a standard sensor, it is not possible to define using Linux IIO
+@@ -158,66 +169,73 @@ keyboard attached/detached or lid open/close.
+ To allow application to utilize these sensors, here they are exported uses sysfs
+ attribute groups, attributes and misc device interface.
+ 
+-An example of this representation on sysfs:
+-/sys/devices/pci0000:00/INT33C2:00/i2c-0/i2c-INT33D1:00/0018:8086:09FA.0001/HID-SENSOR-2000e1.6.auto$ tree -R
+-.
+-????????? enable_sensor
+-????????? feature-0-200316
+-??????? ????????? feature-0-200316-maximum
+-??????? ????????? feature-0-200316-minimum
+-??????? ????????? feature-0-200316-name
+-??????? ????????? feature-0-200316-size
+-??????? ????????? feature-0-200316-unit-expo
+-??????? ????????? feature-0-200316-units
+-??????? ????????? feature-0-200316-value
+-????????? feature-1-200201
+-??????? ????????? feature-1-200201-maximum
+-??????? ????????? feature-1-200201-minimum
+-??????? ????????? feature-1-200201-name
+-??????? ????????? feature-1-200201-size
+-??????? ????????? feature-1-200201-unit-expo
+-??????? ????????? feature-1-200201-units
+-??????? ????????? feature-1-200201-value
+-????????? input-0-200201
+-??????? ????????? input-0-200201-maximum
+-??????? ????????? input-0-200201-minimum
+-??????? ????????? input-0-200201-name
+-??????? ????????? input-0-200201-size
+-??????? ????????? input-0-200201-unit-expo
+-??????? ????????? input-0-200201-units
+-??????? ????????? input-0-200201-value
+-????????? input-1-200202
+-??????? ????????? input-1-200202-maximum
+-??????? ????????? input-1-200202-minimum
+-??????? ????????? input-1-200202-name
+-??????? ????????? input-1-200202-size
+-??????? ????????? input-1-200202-unit-expo
+-??????? ????????? input-1-200202-units
+-??????? ????????? input-1-200202-value
++An example of this representation on sysfs::
++
++  /sys/devices/pci0000:00/INT33C2:00/i2c-0/i2c-INT33D1:00/0018:8086:09FA.0001/HID-SENSOR-2000e1.6.auto$ tree -R
++  .
++  │   ├──  enable_sensor
++  │   │   ├── feature-0-200316
++  │   │   │   ├── feature-0-200316-maximum
++  │   │   │   ├── feature-0-200316-minimum
++  │   │   │   ├── feature-0-200316-name
++  │   │   │   ├── feature-0-200316-size
++  │   │   │   ├── feature-0-200316-unit-expo
++  │   │   │   ├── feature-0-200316-units
++  │   │   │   ├── feature-0-200316-value
++  │   │   ├── feature-1-200201
++  │   │   │   ├── feature-1-200201-maximum
++  │   │   │   ├── feature-1-200201-minimum
++  │   │   │   ├── feature-1-200201-name
++  │   │   │   ├── feature-1-200201-size
++  │   │   │   ├── feature-1-200201-unit-expo
++  │   │   │   ├── feature-1-200201-units
++  │   │   │   ├── feature-1-200201-value
++  │   │   ├── input-0-200201
++  │   │   │   ├── input-0-200201-maximum
++  │   │   │   ├── input-0-200201-minimum
++  │   │   │   ├── input-0-200201-name
++  │   │   │   ├── input-0-200201-size
++  │   │   │   ├── input-0-200201-unit-expo
++  │   │   │   ├── input-0-200201-units
++  │   │   │   ├── input-0-200201-value
++  │   │   ├── input-1-200202
++  │   │   │   ├── input-1-200202-maximum
++  │   │   │   ├── input-1-200202-minimum
++  │   │   │   ├── input-1-200202-name
++  │   │   │   ├── input-1-200202-size
++  │   │   │   ├── input-1-200202-unit-expo
++  │   │   │   ├── input-1-200202-units
++  │   │   │   ├── input-1-200202-value
+ 
+ Here there is a custom sensors with four fields, two feature and two inputs.
+ Each field is represented by a set of attributes. All fields except the "value"
+ are read only. The value field is a RW field.
+-Example
+-/sys/bus/platform/devices/HID-SENSOR-2000e1.6.auto/feature-0-200316$ grep -r . *
+-feature-0-200316-maximum:6
+-feature-0-200316-minimum:0
+-feature-0-200316-name:property-reporting-state
+-feature-0-200316-size:1
+-feature-0-200316-unit-expo:0
+-feature-0-200316-units:25
+-feature-0-200316-value:1
++
++Example::
++
++  /sys/bus/platform/devices/HID-SENSOR-2000e1.6.auto/feature-0-200316$ grep -r . *
++  feature-0-200316-maximum:6
++  feature-0-200316-minimum:0
++  feature-0-200316-name:property-reporting-state
++  feature-0-200316-size:1
++  feature-0-200316-unit-expo:0
++  feature-0-200316-units:25
++  feature-0-200316-value:1
+ 
+ How to enable such sensor?
++^^^^^^^^^^^^^^^^^^^^^^^^^^
++
+ By default sensor can be power gated. To enable sysfs attribute "enable" can be
+-used.
+-$ echo 1 > enable_sensor
++used::
++
++	$ echo 1 > enable_sensor
+ 
+ Once enabled and powered on, sensor can report value using HID reports.
+-These reports are pushed using misc device interface in a FIFO order.
+-/dev$ tree | grep HID-SENSOR-2000e1.6.auto
+-??????? ????????? 10:53 -> ../HID-SENSOR-2000e1.6.auto
+-????????? HID-SENSOR-2000e1.6.auto
++These reports are pushed using misc device interface in a FIFO order::
++
++	/dev$ tree | grep HID-SENSOR-2000e1.6.auto
++	│   │   │   ├── 10:53 -> ../HID-SENSOR-2000e1.6.auto
++	│   ├──  HID-SENSOR-2000e1.6.auto
+ 
+ Each reports can be of variable length preceded by a header. This header
+ consist of a 32 bit usage id, 64 bit time stamp and 32 bit length field of raw
+diff --git a/Documentation/hid/hid-transport.txt b/Documentation/hid/hid-transport.rst
+similarity index 93%
+rename from Documentation/hid/hid-transport.txt
+rename to Documentation/hid/hid-transport.rst
+index 4f41d67f1b4b..0fe526f36db6 100644
+--- a/Documentation/hid/hid-transport.txt
++++ b/Documentation/hid/hid-transport.rst
+@@ -1,5 +1,6 @@
+-                          HID I/O Transport Drivers
+-                         ===========================
++=========================
++HID I/O Transport Drivers
++=========================
+ 
+ The HID subsystem is independent of the underlying transport driver. Initially,
+ only USB was supported, but other specifications adopted the HID design and
+@@ -16,6 +17,8 @@ transport and device setup/management. HID core is responsible of
+ report-parsing, report interpretation and the user-space API. Device specifics
+ and quirks are handled by all layers depending on the quirk.
+ 
++::
++
+  +-----------+  +-----------+            +-----------+  +-----------+
+  | Device #1 |  | Device #i |            | Device #j |  | Device #k |
+  +-----------+  +-----------+            +-----------+  +-----------+
+@@ -42,8 +45,9 @@ and quirks are handled by all layers depending on the quirk.
+  +----------------+  +-----------+  +------------------+  +------------------+
+ 
+ Example Drivers:
+-  I/O: USB, I2C, Bluetooth-l2cap
+-  Transport: USB-HID, I2C-HID, BT-HIDP
++
++  - I/O: USB, I2C, Bluetooth-l2cap
++  - Transport: USB-HID, I2C-HID, BT-HIDP
+ 
+ Everything below "HID Core" is simplified in this graph as it is only of
+ interest to HID device drivers. Transport drivers do not need to know the
+@@ -183,7 +187,7 @@ Other ctrl-channel requests are supported by USB-HID but are not available
+ -------------------
+ 
+ Transport drivers normally use the following procedure to register a new device
+-with HID core:
++with HID core::
+ 
+ 	struct hid_device *hid;
+ 	int ret;
+@@ -215,7 +219,7 @@ Once hid_add_device() is entered, HID core might use the callbacks provided in
+ "custom_ll_driver". Note that fields like "country" can be ignored by underlying
+ transport-drivers if not supported.
+ 
+-To unregister a device, use:
++To unregister a device, use::
+ 
+ 	hid_destroy_device(hid);
+ 
+@@ -226,73 +230,110 @@ driver callbacks.
+ -----------------------------
+ 
+ The available HID callbacks are:
+- - int (*start) (struct hid_device *hdev)
++
++   ::
++
++      int (*start) (struct hid_device *hdev)
++
+    Called from HID device drivers once they want to use the device. Transport
+    drivers can choose to setup their device in this callback. However, normally
+    devices are already set up before transport drivers register them to HID core
+    so this is mostly only used by USB-HID.
+ 
+- - void (*stop) (struct hid_device *hdev)
++   ::
++
++      void (*stop) (struct hid_device *hdev)
++
+    Called from HID device drivers once they are done with a device. Transport
+    drivers can free any buffers and deinitialize the device. But note that
+    ->start() might be called again if another HID device driver is loaded on the
+    device.
++
+    Transport drivers are free to ignore it and deinitialize devices after they
+    destroyed them via hid_destroy_device().
+ 
+- - int (*open) (struct hid_device *hdev)
++   ::
++
++      int (*open) (struct hid_device *hdev)
++
+    Called from HID device drivers once they are interested in data reports.
+    Usually, while user-space didn't open any input API/etc., device drivers are
+    not interested in device data and transport drivers can put devices asleep.
+    However, once ->open() is called, transport drivers must be ready for I/O.
+    ->open() calls are nested for each client that opens the HID device.
+ 
+- - void (*close) (struct hid_device *hdev)
++   ::
++
++      void (*close) (struct hid_device *hdev)
++
+    Called from HID device drivers after ->open() was called but they are no
+    longer interested in device reports. (Usually if user-space closed any input
+    devices of the driver).
++
+    Transport drivers can put devices asleep and terminate any I/O of all
+    ->open() calls have been followed by a ->close() call. However, ->start() may
+    be called again if the device driver is interested in input reports again.
+ 
+- - int (*parse) (struct hid_device *hdev)
++   ::
++
++      int (*parse) (struct hid_device *hdev)
++
+    Called once during device setup after ->start() has been called. Transport
+    drivers must read the HID report-descriptor from the device and tell HID core
+    about it via hid_parse_report().
+ 
+- - int (*power) (struct hid_device *hdev, int level)
++   ::
++
++      int (*power) (struct hid_device *hdev, int level)
++
+    Called by HID core to give PM hints to transport drivers. Usually this is
+    analogical to the ->open() and ->close() hints and redundant.
+ 
+- - void (*request) (struct hid_device *hdev, struct hid_report *report,
+-                    int reqtype)
++   ::
++
++      void (*request) (struct hid_device *hdev, struct hid_report *report,
++		       int reqtype)
++
+    Send an HID request on the ctrl channel. "report" contains the report that
+    should be sent and "reqtype" the request type. Request-type can be
+    HID_REQ_SET_REPORT or HID_REQ_GET_REPORT.
++
+    This callback is optional. If not provided, HID core will assemble a raw
+    report following the HID specs and send it via the ->raw_request() callback.
+    The transport driver is free to implement this asynchronously.
+ 
+- - int (*wait) (struct hid_device *hdev)
++   ::
++
++      int (*wait) (struct hid_device *hdev)
++
+    Used by HID core before calling ->request() again. A transport driver can use
+    it to wait for any pending requests to complete if only one request is
+    allowed at a time.
+ 
+- - int (*raw_request) (struct hid_device *hdev, unsigned char reportnum,
+-                       __u8 *buf, size_t count, unsigned char rtype,
+-                       int reqtype)
++   ::
++
++      int (*raw_request) (struct hid_device *hdev, unsigned char reportnum,
++                          __u8 *buf, size_t count, unsigned char rtype,
++                          int reqtype)
++
+    Same as ->request() but provides the report as raw buffer. This request shall
+    be synchronous. A transport driver must not use ->wait() to complete such
+    requests. This request is mandatory and hid core will reject the device if
+    it is missing.
+ 
+- - int (*output_report) (struct hid_device *hdev, __u8 *buf, size_t len)
++   ::
++
++      int (*output_report) (struct hid_device *hdev, __u8 *buf, size_t len)
++
+    Send raw output report via intr channel. Used by some HID device drivers
+    which require high throughput for outgoing requests on the intr channel. This
+    must not cause SET_REPORT calls! This must be implemented as asynchronous
+    output report on the intr channel!
+ 
+- - int (*idle) (struct hid_device *hdev, int report, int idle, int reqtype)
++   ::
++
++      int (*idle) (struct hid_device *hdev, int report, int idle, int reqtype)
++
+    Perform SET/GET_IDLE request. Only used by USB-HID, do not implement!
+ 
+ 2.3) Data Path
+@@ -314,4 +355,5 @@ transport driver and not passed to hid_input_report().
+ Acknowledgements to SET_REPORT requests are not of interest to HID core.
+ 
+ ----------------------------------------------------
++
+ Written 2013, David Herrmann <dh.herrmann@gmail.com>
+diff --git a/Documentation/hid/hiddev.txt b/Documentation/hid/hiddev.rst
+similarity index 77%
+rename from Documentation/hid/hiddev.txt
+rename to Documentation/hid/hiddev.rst
+index 638448707aa2..209e6ba4e019 100644
+--- a/Documentation/hid/hiddev.txt
++++ b/Documentation/hid/hiddev.rst
+@@ -1,6 +1,9 @@
++================================================
+ Care and feeding of your Human Interface Devices
++================================================
+ 
+-INTRODUCTION
++Introduction
++============
+ 
+ In addition to the normal input type HID devices, USB also uses the
+ human interface device protocols for things that are not really human
+@@ -16,38 +19,40 @@ normalised event interface - see Documentation/input/input.rst
+ * the hiddev interface, which provides fairly raw HID events
+ 
+ The data flow for a HID event produced by a device is something like
+-the following :
++the following::
+ 
+  usb.c ---> hid-core.c  ----> hid-input.c ----> [keyboard/mouse/joystick/event]
+                          |
+                          |
+-                          --> hiddev.c ----> POWER / MONITOR CONTROL 
++                          --> hiddev.c ----> POWER / MONITOR CONTROL
+ 
+ In addition, other subsystems (apart from USB) can potentially feed
+ events into the input subsystem, but these have no effect on the hid
+ device interface.
+ 
+-USING THE HID DEVICE INTERFACE
++Using the HID Device Interface
++==============================
+ 
+ The hiddev interface is a char interface using the normal USB major,
+ with the minor numbers starting at 96 and finishing at 111. Therefore,
+-you need the following commands:
+-mknod /dev/usb/hiddev0 c 180 96
+-mknod /dev/usb/hiddev1 c 180 97
+-mknod /dev/usb/hiddev2 c 180 98
+-mknod /dev/usb/hiddev3 c 180 99
+-mknod /dev/usb/hiddev4 c 180 100
+-mknod /dev/usb/hiddev5 c 180 101
+-mknod /dev/usb/hiddev6 c 180 102
+-mknod /dev/usb/hiddev7 c 180 103
+-mknod /dev/usb/hiddev8 c 180 104
+-mknod /dev/usb/hiddev9 c 180 105
+-mknod /dev/usb/hiddev10 c 180 106
+-mknod /dev/usb/hiddev11 c 180 107
+-mknod /dev/usb/hiddev12 c 180 108
+-mknod /dev/usb/hiddev13 c 180 109
+-mknod /dev/usb/hiddev14 c 180 110
+-mknod /dev/usb/hiddev15 c 180 111
++you need the following commands::
++
++	mknod /dev/usb/hiddev0 c 180 96
++	mknod /dev/usb/hiddev1 c 180 97
++	mknod /dev/usb/hiddev2 c 180 98
++	mknod /dev/usb/hiddev3 c 180 99
++	mknod /dev/usb/hiddev4 c 180 100
++	mknod /dev/usb/hiddev5 c 180 101
++	mknod /dev/usb/hiddev6 c 180 102
++	mknod /dev/usb/hiddev7 c 180 103
++	mknod /dev/usb/hiddev8 c 180 104
++	mknod /dev/usb/hiddev9 c 180 105
++	mknod /dev/usb/hiddev10 c 180 106
++	mknod /dev/usb/hiddev11 c 180 107
++	mknod /dev/usb/hiddev12 c 180 108
++	mknod /dev/usb/hiddev13 c 180 109
++	mknod /dev/usb/hiddev14 c 180 110
++	mknod /dev/usb/hiddev15 c 180 111
+ 
+ So you point your hiddev compliant user-space program at the correct
+ interface for your device, and it all just works.
+@@ -56,7 +61,9 @@ Assuming that you have a hiddev compliant user-space program, of
+ course. If you need to write one, read on.
+ 
+ 
+-THE HIDDEV API
++The HIDDEV API
++==============
++
+ This description should be read in conjunction with the HID
+ specification, freely available from http://www.usb.org, and
+ conveniently linked of http://www.linux-usb.org.
+@@ -69,12 +76,14 @@ each of which can have one or more "usages".  In the hid-core,
+ each one of these usages has a single signed 32 bit value.
+ 
+ read():
++-------
++
+ This is the event interface.  When the HID device's state changes,
+ it performs an interrupt transfer containing a report which contains
+ the changed value.  The hid-core.c module parses the report, and
+ returns to hiddev.c the individual usages that have changed within
+ the report.  In its basic mode, the hiddev will make these individual
+-usage changes available to the reader using a struct hiddev_event:
++usage changes available to the reader using a struct hiddev_event::
+ 
+        struct hiddev_event {
+            unsigned hid;
+@@ -90,13 +99,19 @@ behavior of the read() function can be modified using the HIDIOCSFLAG
+ ioctl() described below.
+ 
+ 
+-ioctl(): 
+-This is the control interface. There are a number of controls: 
++ioctl():
++--------
+ 
+-HIDIOCGVERSION - int (read)
+-Gets the version code out of the hiddev driver.
++This is the control interface. There are a number of controls:
++
++HIDIOCGVERSION
++  - int (read)
++
++ Gets the version code out of the hiddev driver.
++
++HIDIOCAPPLICATION
++  - (none)
+ 
+-HIDIOCAPPLICATION - (none)
+ This ioctl call returns the HID application usage associated with the
+ hid device. The third argument to ioctl() specifies which application
+ index to get. This is useful when the device has more than one
+@@ -104,25 +119,33 @@ application collection. If the index is invalid (greater or equal to
+ the number of application collections this device has) the ioctl
+ returns -1. You can find out beforehand how many application
+ collections the device has from the num_applications field from the
+-hiddev_devinfo structure. 
++hiddev_devinfo structure.
++
++HIDIOCGCOLLECTIONINFO
++  - struct hiddev_collection_info (read/write)
+ 
+-HIDIOCGCOLLECTIONINFO - struct hiddev_collection_info (read/write)
+ This returns a superset of the information above, providing not only
+ application collections, but all the collections the device has.  It
+ also returns the level the collection lives in the hierarchy.
+-The user passes in a hiddev_collection_info struct with the index 
+-field set to the index that should be returned.  The ioctl fills in 
+-the other fields.  If the index is larger than the last collection 
++The user passes in a hiddev_collection_info struct with the index
++field set to the index that should be returned.  The ioctl fills in
++the other fields.  If the index is larger than the last collection
+ index, the ioctl returns -1 and sets errno to -EINVAL.
+ 
+-HIDIOCGDEVINFO - struct hiddev_devinfo (read)
++HIDIOCGDEVINFO
++  - struct hiddev_devinfo (read)
++
+ Gets a hiddev_devinfo structure which describes the device.
+ 
+-HIDIOCGSTRING - struct hiddev_string_descriptor (read/write)
++HIDIOCGSTRING
++  - struct hiddev_string_descriptor (read/write)
++
+ Gets a string descriptor from the device. The caller must fill in the
+ "index" field to indicate which descriptor should be returned.
+ 
+-HIDIOCINITREPORT - (none)
++HIDIOCINITREPORT
++  - (none)
++
+ Instructs the kernel to retrieve all input and feature report values
+ from the device. At this point, all the usage structures will contain
+ current values for the device, and will maintain it as the device
+@@ -130,21 +153,29 @@ changes.  Note that the use of this ioctl is unnecessary in general,
+ since later kernels automatically initialize the reports from the
+ device at attach time.
+ 
+-HIDIOCGNAME - string (variable length)
++HIDIOCGNAME
++  - string (variable length)
++
+ Gets the device name
+ 
+-HIDIOCGREPORT - struct hiddev_report_info (write)
++HIDIOCGREPORT
++  - struct hiddev_report_info (write)
++
+ Instructs the kernel to get a feature or input report from the device,
+ in order to selectively update the usage structures (in contrast to
+ INITREPORT).
+ 
+-HIDIOCSREPORT - struct hiddev_report_info (write)
++HIDIOCSREPORT
++  - struct hiddev_report_info (write)
++
+ Instructs the kernel to send a report to the device. This report can
+ be filled in by the user through HIDIOCSUSAGE calls (below) to fill in
+ individual usage values in the report before sending the report in full
+-to the device. 
++to the device.
++
++HIDIOCGREPORTINFO
++  - struct hiddev_report_info (read/write)
+ 
+-HIDIOCGREPORTINFO - struct hiddev_report_info (read/write)
+ Fills in a hiddev_report_info structure for the user. The report is
+ looked up by type (input, output or feature) and id, so these fields
+ must be filled in by the user. The ID can be absolute -- the actual
+@@ -154,52 +185,67 @@ report_id) for the next report after report_id. Without a-priori
+ information about report ids, the right way to use this ioctl is to
+ use the relative IDs above to enumerate the valid IDs. The ioctl
+ returns non-zero when there is no more next ID. The real report ID is
+-filled into the returned hiddev_report_info structure. 
++filled into the returned hiddev_report_info structure.
++
++HIDIOCGFIELDINFO
++  - struct hiddev_field_info (read/write)
+ 
+-HIDIOCGFIELDINFO - struct hiddev_field_info (read/write)
+ Returns the field information associated with a report in a
+ hiddev_field_info structure. The user must fill in report_id and
+ report_type in this structure, as above. The field_index should also
+ be filled in, which should be a number from 0 and maxfield-1, as
+-returned from a previous HIDIOCGREPORTINFO call. 
++returned from a previous HIDIOCGREPORTINFO call.
++
++HIDIOCGUCODE
++  - struct hiddev_usage_ref (read/write)
+ 
+-HIDIOCGUCODE - struct hiddev_usage_ref (read/write)
+ Returns the usage_code in a hiddev_usage_ref structure, given that
+ given its report type, report id, field index, and index within the
+ field have already been filled into the structure.
+ 
+-HIDIOCGUSAGE - struct hiddev_usage_ref (read/write)
++HIDIOCGUSAGE
++  - struct hiddev_usage_ref (read/write)
++
+ Returns the value of a usage in a hiddev_usage_ref structure. The
+ usage to be retrieved can be specified as above, or the user can
+ choose to fill in the report_type field and specify the report_id as
+ HID_REPORT_ID_UNKNOWN. In this case, the hiddev_usage_ref will be
+ filled in with the report and field information associated with this
+-usage if it is found. 
++usage if it is found.
++
++HIDIOCSUSAGE
++  - struct hiddev_usage_ref (write)
+ 
+-HIDIOCSUSAGE - struct hiddev_usage_ref (write)
+ Sets the value of a usage in an output report.  The user fills in
+ the hiddev_usage_ref structure as above, but additionally fills in
+ the value field.
+ 
+-HIDIOGCOLLECTIONINDEX - struct hiddev_usage_ref (write)
++HIDIOGCOLLECTIONINDEX
++  - struct hiddev_usage_ref (write)
++
+ Returns the collection index associated with this usage.  This
+ indicates where in the collection hierarchy this usage sits.
+ 
+-HIDIOCGFLAG - int (read)
+-HIDIOCSFLAG - int (write)
++HIDIOCGFLAG
++  - int (read)
++HIDIOCSFLAG
++  - int (write)
++
+ These operations respectively inspect and replace the mode flags
+ that influence the read() call above.  The flags are as follows:
+ 
+-    HIDDEV_FLAG_UREF - read() calls will now return 
++    HIDDEV_FLAG_UREF
++      - read() calls will now return
+         struct hiddev_usage_ref instead of struct hiddev_event.
+         This is a larger structure, but in situations where the
+         device has more than one usage in its reports with the
+         same usage code, this mode serves to resolve such
+         ambiguity.
+ 
+-    HIDDEV_FLAG_REPORT - This flag can only be used in conjunction
++    HIDDEV_FLAG_REPORT
++      - This flag can only be used in conjunction
+         with HIDDEV_FLAG_UREF.  With this flag set, when the device
+         sends a report, a struct hiddev_usage_ref will be returned
+-        to read() filled in with the report_type and report_id, but 
++        to read() filled in with the report_type and report_id, but
+         with field_index set to FIELD_INDEX_NONE.  This serves as
+         additional notification when the device has sent a report.
+diff --git a/Documentation/hid/hidraw.txt b/Documentation/hid/hidraw.rst
+similarity index 89%
+rename from Documentation/hid/hidraw.txt
+rename to Documentation/hid/hidraw.rst
+index c8436e354f44..4a4a0ba1f362 100644
+--- a/Documentation/hid/hidraw.txt
++++ b/Documentation/hid/hidraw.rst
+@@ -1,5 +1,6 @@
+-      HIDRAW - Raw Access to USB and Bluetooth Human Interface Devices
+-     ==================================================================
++================================================================
++HIDRAW - Raw Access to USB and Bluetooth Human Interface Devices
++================================================================
+ 
+ The hidraw driver provides a raw interface to USB and Bluetooth Human
+ Interface Devices (HIDs).  It differs from hiddev in that reports sent and
+@@ -31,6 +32,7 @@ directly under /dev (eg: /dev/hidraw0).  As this location is distribution-
+ and udev rule-dependent, applications should use libudev to locate hidraw
+ devices attached to the system.  There is a tutorial on libudev with a
+ working example at:
++
+ 	http://www.signal11.us/oss/udev/
+ 
+ The HIDRAW API
+@@ -51,7 +53,7 @@ byte.  For devices which do not use numbered reports, the report data
+ will begin at the first byte.
+ 
+ write()
+---------
++-------
+ The write() function will write a report to the device. For USB devices, if
+ the device has an INTERRUPT OUT endpoint, the report will be sent on that
+ endpoint. If it does not, the report will be sent over the control endpoint,
+@@ -62,38 +64,52 @@ number.  If the device does not use numbered reports, the first byte should
+ be set to 0. The report data itself should begin at the second byte.
+ 
+ ioctl()
+---------
++-------
+ Hidraw supports the following ioctls:
+ 
+-HIDIOCGRDESCSIZE: Get Report Descriptor Size
++HIDIOCGRDESCSIZE:
++	Get Report Descriptor Size
++
+ This ioctl will get the size of the device's report descriptor.
+ 
+-HIDIOCGRDESC: Get Report Descriptor
++HIDIOCGRDESC:
++	Get Report Descriptor
++
+ This ioctl returns the device's report descriptor using a
+ hidraw_report_descriptor struct.  Make sure to set the size field of the
+ hidraw_report_descriptor struct to the size returned from HIDIOCGRDESCSIZE.
+ 
+-HIDIOCGRAWINFO: Get Raw Info
++HIDIOCGRAWINFO:
++	Get Raw Info
++
+ This ioctl will return a hidraw_devinfo struct containing the bus type, the
+ vendor ID (VID), and product ID (PID) of the device. The bus type can be one
+-of:
+-	BUS_USB
+-	BUS_HIL
+-	BUS_BLUETOOTH
+-	BUS_VIRTUAL
++of::
++
++	- BUS_USB
++	- BUS_HIL
++	- BUS_BLUETOOTH
++	- BUS_VIRTUAL
++
+ which are defined in uapi/linux/input.h.
+ 
+-HIDIOCGRAWNAME(len): Get Raw Name
++HIDIOCGRAWNAME(len):
++	Get Raw Name
++
+ This ioctl returns a string containing the vendor and product strings of
+ the device.  The returned string is Unicode, UTF-8 encoded.
+ 
+-HIDIOCGRAWPHYS(len): Get Physical Address
++HIDIOCGRAWPHYS(len):
++	Get Physical Address
++
+ This ioctl returns a string representing the physical address of the device.
+ For USB devices, the string contains the physical path to the device (the
+ USB controller, hubs, ports, etc).  For Bluetooth devices, the string
+ contains the hardware (MAC) address of the device.
+ 
+-HIDIOCSFEATURE(len): Send a Feature Report
++HIDIOCSFEATURE(len):
++	Send a Feature Report
++
+ This ioctl will send a feature report to the device.  Per the HID
+ specification, feature reports are always sent using the control endpoint.
+ Set the first byte of the supplied buffer to the report number.  For devices
+@@ -101,7 +117,9 @@ which do not use numbered reports, set the first byte to 0. The report data
+ begins in the second byte. Make sure to set len accordingly, to one more
+ than the length of the report (to account for the report number).
+ 
+-HIDIOCGFEATURE(len): Get a Feature Report
++HIDIOCGFEATURE(len):
++	Get a Feature Report
++
+ This ioctl will request a feature report from the device using the control
+ endpoint.  The first byte of the supplied buffer should be set to the report
+ number of the requested report.  For devices which do not use numbered
+@@ -109,11 +127,12 @@ reports, set the first byte to 0.  The report will be returned starting at
+ the first byte of the buffer (ie: the report number is not returned).
+ 
+ Example
+----------
++-------
+ In samples/, find hid-example.c, which shows examples of read(), write(),
+ and all the ioctls for hidraw.  The code may be used by anyone for any
+ purpose, and can serve as a starting point for developing applications using
+ hidraw.
+ 
+ Document by:
++
+ 	Alan Ott <alan@signal11.us>, Signal 11 Software
+diff --git a/Documentation/hid/index.rst b/Documentation/hid/index.rst
 new file mode 100644
-index 000000000000..1a3402d3775e
+index 000000000000..af4324902622
 --- /dev/null
-+++ b/Documentation/nvdimm/index.rst
-@@ -0,0 +1,12 @@
++++ b/Documentation/hid/index.rst
+@@ -0,0 +1,18 @@
 +:orphan:
 +
-+===================================
-+Non-Volatile Memory Device (NVDIMM)
-+===================================
++=============================
++Human Interface Devices (HID)
++=============================
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+   nvdimm
-+   btt
-+   security
-diff --git a/Documentation/nvdimm/nvdimm.txt b/Documentation/nvdimm/nvdimm.rst
-similarity index 60%
-rename from Documentation/nvdimm/nvdimm.txt
-rename to Documentation/nvdimm/nvdimm.rst
-index 1669f626b037..08f855cbb4e6 100644
---- a/Documentation/nvdimm/nvdimm.txt
-+++ b/Documentation/nvdimm/nvdimm.rst
-@@ -1,8 +1,14 @@
--			  LIBNVDIMM: Non-Volatile Devices
--	      libnvdimm - kernel / libndctl - userspace helper library
--			   linux-nvdimm@lists.01.org
--				      v13
-+===============================
-+LIBNVDIMM: Non-Volatile Devices
-+===============================
- 
-+libnvdimm - kernel / libndctl - userspace helper library
++   hiddev
++   hidraw
++   hid-sensor
++   hid-transport
 +
-+linux-nvdimm@lists.01.org
++   uhid
 +
-+Version 13
++   hid-alps
++   intel-ish-hid
+diff --git a/Documentation/hid/intel-ish-hid.rst b/Documentation/hid/intel-ish-hid.rst
+new file mode 100644
+index 000000000000..cccbf4be17d7
+--- /dev/null
++++ b/Documentation/hid/intel-ish-hid.rst
+@@ -0,0 +1,485 @@
++=================================
++Intel Integrated Sensor Hub (ISH)
++=================================
 +
-+.. contents:
- 
- 	Glossary
- 	Overview
-@@ -40,49 +46,57 @@
- 
- 
- Glossary
----------
--
--PMEM: A system-physical-address range where writes are persistent.  A
--block device composed of PMEM is capable of DAX.  A PMEM address range
--may span an interleave of several DIMMs.
--
--BLK: A set of one or more programmable memory mapped apertures provided
--by a DIMM to access its media.  This indirection precludes the
--performance benefit of interleaving, but enables DIMM-bounded failure
--modes.
--
--DPA: DIMM Physical Address, is a DIMM-relative offset.  With one DIMM in
--the system there would be a 1:1 system-physical-address:DPA association.
--Once more DIMMs are added a memory controller interleave must be
--decoded to determine the DPA associated with a given
--system-physical-address.  BLK capacity always has a 1:1 relationship
--with a single-DIMM's DPA range.
--
--DAX: File system extensions to bypass the page cache and block layer to
--mmap persistent memory, from a PMEM block device, directly into a
--process address space.
--
--DSM: Device Specific Method: ACPI method to to control specific
--device - in this case the firmware.
--
--DCR: NVDIMM Control Region Structure defined in ACPI 6 Section 5.2.25.5.
--It defines a vendor-id, device-id, and interface format for a given DIMM.
--
--BTT: Block Translation Table: Persistent memory is byte addressable.
--Existing software may have an expectation that the power-fail-atomicity
--of writes is at least one sector, 512 bytes.  The BTT is an indirection
--table with atomic update semantics to front a PMEM/BLK block device
--driver and present arbitrary atomic sector sizes.
--
--LABEL: Metadata stored on a DIMM device that partitions and identifies
--(persistently names) storage between PMEM and BLK.  It also partitions
--BLK storage to host BTTs with different parameters per BLK-partition.
--Note that traditional partition tables, GPT/MBR, are layered on top of a
--BLK or PMEM device.
-+========
++A sensor hub enables the ability to offload sensor polling and algorithm
++processing to a dedicated low power co-processor. This allows the core
++processor to go into low power modes more often, resulting in the increased
++battery life.
 +
-+PMEM:
-+  A system-physical-address range where writes are persistent.  A
-+  block device composed of PMEM is capable of DAX.  A PMEM address range
-+  may span an interleave of several DIMMs.
++There are many vendors providing external sensor hubs confirming to HID
++Sensor usage tables, and used in several tablets, 2 in 1 convertible laptops
++and embedded products. Linux had this support since Linux 3.9.
 +
-+BLK:
-+  A set of one or more programmable memory mapped apertures provided
-+  by a DIMM to access its media.  This indirection precludes the
-+  performance benefit of interleaving, but enables DIMM-bounded failure
-+  modes.
++Intel® introduced integrated sensor hubs as a part of the SoC starting from
++Cherry Trail and now supported on multiple generations of CPU packages. There
++are many commercial devices already shipped with Integrated Sensor Hubs (ISH).
++These ISH also comply to HID sensor specification, but the  difference is the
++transport protocol used for communication. The current external sensor hubs
++mainly use HID over i2C or USB. But ISH doesn't use either i2c or USB.
 +
-+DPA:
-+  DIMM Physical Address, is a DIMM-relative offset.  With one DIMM in
-+  the system there would be a 1:1 system-physical-address:DPA association.
-+  Once more DIMMs are added a memory controller interleave must be
-+  decoded to determine the DPA associated with a given
-+  system-physical-address.  BLK capacity always has a 1:1 relationship
-+  with a single-DIMM's DPA range.
++1. Overview
++===========
 +
-+DAX:
-+  File system extensions to bypass the page cache and block layer to
-+  mmap persistent memory, from a PMEM block device, directly into a
-+  process address space.
++Using a analogy with a usbhid implementation, the ISH follows a similar model
++for a very high speed communication::
 +
-+DSM:
-+  Device Specific Method: ACPI method to to control specific
-+  device - in this case the firmware.
++	-----------------		----------------------
++	|    USB HID	|	-->	|    ISH HID	     |
++	-----------------		----------------------
++	-----------------		----------------------
++	|  USB protocol	|	-->	|    ISH Transport   |
++	-----------------		----------------------
++	-----------------		----------------------
++	|  EHCI/XHCI	|	-->	|    ISH IPC	     |
++	-----------------		----------------------
++	      PCI				 PCI
++	-----------------		----------------------
++        |Host controller|	-->	|    ISH processor   |
++	-----------------		----------------------
++	     USB Link
++	-----------------		----------------------
++	| USB End points|	-->	|    ISH Clients     |
++	-----------------		----------------------
 +
-+DCR:
-+  NVDIMM Control Region Structure defined in ACPI 6 Section 5.2.25.5.
-+  It defines a vendor-id, device-id, and interface format for a given DIMM.
++Like USB protocol provides a method for device enumeration, link management
++and user data encapsulation, the ISH also provides similar services. But it is
++very light weight tailored to manage and communicate with ISH client
++applications implemented in the firmware.
 +
-+BTT:
-+  Block Translation Table: Persistent memory is byte addressable.
-+  Existing software may have an expectation that the power-fail-atomicity
-+  of writes is at least one sector, 512 bytes.  The BTT is an indirection
-+  table with atomic update semantics to front a PMEM/BLK block device
-+  driver and present arbitrary atomic sector sizes.
++The ISH allows multiple sensor management applications executing in the
++firmware. Like USB endpoints the messaging can be to/from a client. As part of
++enumeration process, these clients are identified. These clients can be simple
++HID sensor applications, sensor calibration application or senor firmware
++update application.
 +
-+LABEL:
-+  Metadata stored on a DIMM device that partitions and identifies
-+  (persistently names) storage between PMEM and BLK.  It also partitions
-+  BLK storage to host BTTs with different parameters per BLK-partition.
-+  Note that traditional partition tables, GPT/MBR, are layered on top of a
-+  BLK or PMEM device.
- 
- 
- Overview
----------
-+========
- 
- The LIBNVDIMM subsystem provides support for three types of NVDIMMs, namely,
- PMEM, BLK, and NVDIMM devices that can simultaneously support both PMEM
-@@ -96,19 +110,30 @@ accessible via BLK.  When that occurs a LABEL is needed to reserve DPA
- for exclusive access via one mode a time.
- 
- Supporting Documents
--ACPI 6: http://www.uefi.org/sites/default/files/resources/ACPI_6.0.pdf
--NVDIMM Namespace: http://pmem.io/documents/NVDIMM_Namespace_Spec.pdf
--DSM Interface Example: http://pmem.io/documents/NVDIMM_DSM_Interface_Example.pdf
--Driver Writer's Guide: http://pmem.io/documents/NVDIMM_Driver_Writers_Guide.pdf
-+--------------------
++The implementation model is similar, like USB bus, ISH transport is also
++implemented as a bus. Each client application executing in the ISH processor
++is registered as a device on this bus. The driver, which binds each device
++(ISH HID driver) identifies the device type and registers with the hid core.
 +
-+ACPI 6:
-+	http://www.uefi.org/sites/default/files/resources/ACPI_6.0.pdf
-+NVDIMM Namespace:
-+	http://pmem.io/documents/NVDIMM_Namespace_Spec.pdf
-+DSM Interface Example:
-+	http://pmem.io/documents/NVDIMM_DSM_Interface_Example.pdf
-+Driver Writer's Guide:
-+	http://pmem.io/documents/NVDIMM_Driver_Writers_Guide.pdf
- 
- Git Trees
--LIBNVDIMM: https://git.kernel.org/cgit/linux/kernel/git/djbw/nvdimm.git
--LIBNDCTL: https://github.com/pmem/ndctl.git
--PMEM: https://github.com/01org/prd
-+---------
++2. ISH Implementation: Block Diagram
++====================================
 +
-+LIBNVDIMM:
-+	https://git.kernel.org/cgit/linux/kernel/git/djbw/nvdimm.git
-+LIBNDCTL:
-+	https://github.com/pmem/ndctl.git
-+PMEM:
-+	https://github.com/01org/prd
- 
- 
- LIBNVDIMM PMEM and BLK
--------------------
-+======================
- 
- Prior to the arrival of the NFIT, non-volatile memory was described to a
- system in various ad-hoc ways.  Usually only the bare minimum was
-@@ -122,38 +147,39 @@ For each NVDIMM access method (PMEM, BLK), LIBNVDIMM provides a block
- device driver:
- 
-     1. PMEM (nd_pmem.ko): Drives a system-physical-address range.  This
--    range is contiguous in system memory and may be interleaved (hardware
--    memory controller striped) across multiple DIMMs.  When interleaved the
--    platform may optionally provide details of which DIMMs are participating
--    in the interleave.
-+       range is contiguous in system memory and may be interleaved (hardware
-+       memory controller striped) across multiple DIMMs.  When interleaved the
-+       platform may optionally provide details of which DIMMs are participating
-+       in the interleave.
- 
--    Note that while LIBNVDIMM describes system-physical-address ranges that may
--    alias with BLK access as ND_NAMESPACE_PMEM ranges and those without
--    alias as ND_NAMESPACE_IO ranges, to the nd_pmem driver there is no
--    distinction.  The different device-types are an implementation detail
--    that userspace can exploit to implement policies like "only interface
--    with address ranges from certain DIMMs".  It is worth noting that when
--    aliasing is present and a DIMM lacks a label, then no block device can
--    be created by default as userspace needs to do at least one allocation
--    of DPA to the PMEM range.  In contrast ND_NAMESPACE_IO ranges, once
--    registered, can be immediately attached to nd_pmem.
-+       Note that while LIBNVDIMM describes system-physical-address ranges that may
-+       alias with BLK access as ND_NAMESPACE_PMEM ranges and those without
-+       alias as ND_NAMESPACE_IO ranges, to the nd_pmem driver there is no
-+       distinction.  The different device-types are an implementation detail
-+       that userspace can exploit to implement policies like "only interface
-+       with address ranges from certain DIMMs".  It is worth noting that when
-+       aliasing is present and a DIMM lacks a label, then no block device can
-+       be created by default as userspace needs to do at least one allocation
-+       of DPA to the PMEM range.  In contrast ND_NAMESPACE_IO ranges, once
-+       registered, can be immediately attached to nd_pmem.
- 
-     2. BLK (nd_blk.ko): This driver performs I/O using a set of platform
--    defined apertures.  A set of apertures will access just one DIMM.
--    Multiple windows (apertures) allow multiple concurrent accesses, much like
--    tagged-command-queuing, and would likely be used by different threads or
--    different CPUs.
-+       defined apertures.  A set of apertures will access just one DIMM.
-+       Multiple windows (apertures) allow multiple concurrent accesses, much like
-+       tagged-command-queuing, and would likely be used by different threads or
-+       different CPUs.
- 
--    The NFIT specification defines a standard format for a BLK-aperture, but
--    the spec also allows for vendor specific layouts, and non-NFIT BLK
--    implementations may have other designs for BLK I/O.  For this reason
--    "nd_blk" calls back into platform-specific code to perform the I/O.
--    One such implementation is defined in the "Driver Writer's Guide" and "DSM
--    Interface Example".
-+       The NFIT specification defines a standard format for a BLK-aperture, but
-+       the spec also allows for vendor specific layouts, and non-NFIT BLK
-+       implementations may have other designs for BLK I/O.  For this reason
-+       "nd_blk" calls back into platform-specific code to perform the I/O.
++::
 +
-+       One such implementation is defined in the "Driver Writer's Guide" and "DSM
-+       Interface Example".
- 
- 
- Why BLK?
----------
-+========
- 
- While PMEM provides direct byte-addressable CPU-load/store access to
- NVDIMM storage, it does not provide the best system RAS (recovery,
-@@ -162,12 +188,15 @@ system-physical-address address causes a CPU exception while an access
- to a corrupted address through an BLK-aperture causes that block window
- to raise an error status in a register.  The latter is more aligned with
- the standard error model that host-bus-adapter attached disks present.
++	 ---------------------------
++	|  User Space Applications  |
++	 ---------------------------
 +
- Also, if an administrator ever wants to replace a memory it is easier to
- service a system at DIMM module boundaries.  Compare this to PMEM where
- data could be interleaved in an opaque hardware specific manner across
- several DIMMs.
- 
- PMEM vs BLK
-+-----------
++  ----------------IIO ABI----------------
++	 --------------------------
++	|  IIO Sensor Drivers	  |
++	 --------------------------
++	 --------------------------
++	|	 IIO core	  |
++	 --------------------------
++	 --------------------------
++	|   HID Sensor Hub MFD	  |
++	 --------------------------
++	 --------------------------
++	|       HID Core	  |
++	 --------------------------
++	 --------------------------
++	|   HID over ISH Client   |
++	 --------------------------
++	 --------------------------
++	|   ISH Transport (ISHTP) |
++	 --------------------------
++	 --------------------------
++	|      IPC Drivers	  |
++	 --------------------------
++  OS
++  ---------------- PCI -----------------
++  Hardware + Firmware
++	 ----------------------------
++	| ISH Hardware/Firmware(FW) |
++	 ----------------------------
 +
- BLK-apertures solve these RAS problems, but their presence is also the
- major contributing factor to the complexity of the ND subsystem.  They
- complicate the implementation because PMEM and BLK alias in DPA space.
-@@ -185,13 +214,14 @@ carved into an arbitrary number of BLK devices with discontiguous
- extents.
- 
- BLK-REGIONs, PMEM-REGIONs, Atomic Sectors, and DAX
----------------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- One of the few
- reasons to allow multiple BLK namespaces per REGION is so that each
- BLK-namespace can be configured with a BTT with unique atomic sector
- sizes.  While a PMEM device can host a BTT the LABEL specification does
- not provide for a sector size to be specified for a PMEM namespace.
++3. High level processing in above blocks
++========================================
 +
- This is due to the expectation that the primary usage model for PMEM is
- via DAX, and the BTT is incompatible with DAX.  However, for the cases
- where an application or filesystem still needs atomic sector update
-@@ -200,52 +230,52 @@ LIBNVDIMM/NDCTL: Block Translation Table "btt"
- 
- 
- Example NVDIMM Platform
-------------------------
-+=======================
- 
- For the remainder of this document the following diagram will be
--referenced for any example sysfs layouts.
-+referenced for any example sysfs layouts::
- 
- 
--                             (a)               (b)           DIMM   BLK-REGION
--          +-------------------+--------+--------+--------+
--+------+  |       pm0.0       | blk2.0 | pm1.0  | blk2.1 |    0      region2
--| imc0 +--+- - - region0- - - +--------+        +--------+
--+--+---+  |       pm0.0       | blk3.0 | pm1.0  | blk3.1 |    1      region3
--   |      +-------------------+--------v        v--------+
--+--+---+                               |                 |
--| cpu0 |                                     region1
--+--+---+                               |                 |
--   |      +----------------------------^        ^--------+
--+--+---+  |           blk4.0           | pm1.0  | blk4.0 |    2      region4
--| imc1 +--+----------------------------|        +--------+
--+------+  |           blk5.0           | pm1.0  | blk5.0 |    3      region5
--          +----------------------------+--------+--------+
-+                               (a)               (b)           DIMM   BLK-REGION
-+            +-------------------+--------+--------+--------+
-+  +------+  |       pm0.0       | blk2.0 | pm1.0  | blk2.1 |    0      region2
-+  | imc0 +--+- - - region0- - - +--------+        +--------+
-+  +--+---+  |       pm0.0       | blk3.0 | pm1.0  | blk3.1 |    1      region3
-+     |      +-------------------+--------v        v--------+
-+  +--+---+                               |                 |
-+  | cpu0 |                                     region1
-+  +--+---+                               |                 |
-+     |      +----------------------------^        ^--------+
-+  +--+---+  |           blk4.0           | pm1.0  | blk4.0 |    2      region4
-+  | imc1 +--+----------------------------|        +--------+
-+  +------+  |           blk5.0           | pm1.0  | blk5.0 |    3      region5
-+            +----------------------------+--------+--------+
- 
- In this platform we have four DIMMs and two memory controllers in one
- socket.  Each unique interface (BLK or PMEM) to DPA space is identified
- by a region device with a dynamically assigned id (REGION0 - REGION5).
- 
-     1. The first portion of DIMM0 and DIMM1 are interleaved as REGION0. A
--    single PMEM namespace is created in the REGION0-SPA-range that spans most
--    of DIMM0 and DIMM1 with a user-specified name of "pm0.0". Some of that
--    interleaved system-physical-address range is reclaimed as BLK-aperture
--    accessed space starting at DPA-offset (a) into each DIMM.  In that
--    reclaimed space we create two BLK-aperture "namespaces" from REGION2 and
--    REGION3 where "blk2.0" and "blk3.0" are just human readable names that
--    could be set to any user-desired name in the LABEL.
-+       single PMEM namespace is created in the REGION0-SPA-range that spans most
-+       of DIMM0 and DIMM1 with a user-specified name of "pm0.0". Some of that
-+       interleaved system-physical-address range is reclaimed as BLK-aperture
-+       accessed space starting at DPA-offset (a) into each DIMM.  In that
-+       reclaimed space we create two BLK-aperture "namespaces" from REGION2 and
-+       REGION3 where "blk2.0" and "blk3.0" are just human readable names that
-+       could be set to any user-desired name in the LABEL.
- 
-     2. In the last portion of DIMM0 and DIMM1 we have an interleaved
--    system-physical-address range, REGION1, that spans those two DIMMs as
--    well as DIMM2 and DIMM3.  Some of REGION1 is allocated to a PMEM namespace
--    named "pm1.0", the rest is reclaimed in 4 BLK-aperture namespaces (for
--    each DIMM in the interleave set), "blk2.1", "blk3.1", "blk4.0", and
--    "blk5.0".
-+       system-physical-address range, REGION1, that spans those two DIMMs as
-+       well as DIMM2 and DIMM3.  Some of REGION1 is allocated to a PMEM namespace
-+       named "pm1.0", the rest is reclaimed in 4 BLK-aperture namespaces (for
-+       each DIMM in the interleave set), "blk2.1", "blk3.1", "blk4.0", and
-+       "blk5.0".
- 
-     3. The portion of DIMM2 and DIMM3 that do not participate in the REGION1
--    interleaved system-physical-address range (i.e. the DPA address past
--    offset (b) are also included in the "blk4.0" and "blk5.0" namespaces.
--    Note, that this example shows that BLK-aperture namespaces don't need to
--    be contiguous in DPA-space.
-+       interleaved system-physical-address range (i.e. the DPA address past
-+       offset (b) are also included in the "blk4.0" and "blk5.0" namespaces.
-+       Note, that this example shows that BLK-aperture namespaces don't need to
-+       be contiguous in DPA-space.
- 
-     This bus is provided by the kernel under the device
-     /sys/devices/platform/nfit_test.0 when CONFIG_NFIT_TEST is enabled and
-@@ -254,7 +284,7 @@ by a region device with a dynamically assigned id (REGION0 - REGION5).
- 
- 
- LIBNVDIMM Kernel Device Model and LIBNDCTL Userspace API
------------------------------------------------------
-+========================================================
- 
- What follows is a description of the LIBNVDIMM sysfs layout and a
- corresponding object hierarchy diagram as viewed through the LIBNDCTL
-@@ -263,12 +293,18 @@ NVDIMM Platform which is also the LIBNVDIMM bus used in the LIBNDCTL unit
- test.
- 
- LIBNDCTL: Context
++3.1 Hardware Interface
++----------------------
++
++The ISH is exposed as "Non-VGA unclassified PCI device" to the host. The PCI
++product and vendor IDs are changed from different generations of processors. So
++the source code which enumerate drivers needs to update from generation to
++generation.
++
++3.2 Inter Processor Communication (IPC) driver
++----------------------------------------------
++
++Location: drivers/hid/intel-ish-hid/ipc
++
++The IPC message used memory mapped I/O. The registers are defined in
++hw-ish-regs.h.
++
++3.2.1 IPC/FW message types
++^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++There are two types of messages, one for management of link and other messages
++are to and from transport layers.
++
++TX and RX of Transport messages
++...............................
++
++A set of memory mapped register offers support of multi byte messages TX and
++RX (E.g.IPC_REG_ISH2HOST_MSG, IPC_REG_HOST2ISH_MSG). The IPC layer maintains
++internal queues to sequence messages and send them in order to the FW.
++Optionally the caller can register handler to get notification of completion.
++A door bell mechanism is used in messaging to trigger processing in host and
++client firmware side. When ISH interrupt handler is called, the ISH2HOST
++doorbell register is used by host drivers to determine that the interrupt
++is for ISH.
++
++Each side has 32 32-bit message registers and a 32-bit doorbell. Doorbell
++register has the following format:
++Bits 0..6: fragment length (7 bits are used)
++Bits 10..13: encapsulated protocol
++Bits 16..19: management command (for IPC management protocol)
++Bit 31: doorbell trigger (signal H/W interrupt to the other side)
++Other bits are reserved, should be 0.
++
++3.2.2 Transport layer interface
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++To abstract HW level IPC communication, a set of callbacks are registered.
++The transport layer uses them to send and receive messages.
++Refer to  struct ishtp_hw_ops for callbacks.
++
++3.3 ISH Transport layer
++-----------------------
++
++Location: drivers/hid/intel-ish-hid/ishtp/
++
++3.3.1 A Generic Transport Layer
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++The transport layer is a bi-directional protocol, which defines:
++- Set of commands to start, stop, connect, disconnect and flow control
++(ishtp/hbm.h) for details
++- A flow control mechanism to avoid buffer overflows
++
++This protocol resembles bus messages described in the following document:
++http://www.intel.com/content/dam/www/public/us/en/documents/technical-\
++specifications/dcmi-hi-1-0-spec.pdf "Chapter 7: Bus Message Layer"
++
++3.3.2 Connection and Flow Control Mechanism
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++Each FW client and a protocol is identified by an UUID. In order to communicate
++to a FW client, a connection must be established using connect request and
++response bus messages. If successful, a pair (host_client_id and fw_client_id)
++will identify the connection.
++
++Once connection is established, peers send each other flow control bus messages
++independently. Every peer may send a message only if it has received a
++flow-control credit before. Once it sent a message, it may not send another one
++before receiving the next flow control credit.
++Either side can send disconnect request bus message to end communication. Also
++the link will be dropped if major FW reset occurs.
++
++3.3.3 Peer to Peer data transfer
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++Peer to Peer data transfer can happen with or without using DMA. Depending on
++the sensor bandwidth requirement DMA can be enabled by using module parameter
++ishtp_use_dma under intel_ishtp.
++
++Each side (host and FW) manages its DMA transfer memory independently. When an
++ISHTP client from either host or FW side wants to send something, it decides
++whether to send over IPC or over DMA; for each transfer the decision is
++independent. The sending side sends DMA_XFER message when the message is in
++the respective host buffer (TX when host client sends, RX when FW client
++sends). The recipient of DMA message responds with DMA_XFER_ACK, indicating
++the sender that the memory region for that message may be reused.
++
++DMA initialization is started with host sending DMA_ALLOC_NOTIFY bus message
++(that includes RX buffer) and FW responds with DMA_ALLOC_NOTIFY_ACK.
++Additionally to DMA address communication, this sequence checks capabilities:
++if thw host doesn't support DMA, then it won't send DMA allocation, so FW can't
++send DMA; if FW doesn't support DMA then it won't respond with
++DMA_ALLOC_NOTIFY_ACK, in which case host will not use DMA transfers.
++Here ISH acts as busmaster DMA controller. Hence when host sends DMA_XFER,
++it's request to do host->ISH DMA transfer; when FW sends DMA_XFER, it means
++that it already did DMA and the message resides at host. Thus, DMA_XFER
++and DMA_XFER_ACK act as ownership indicators.
++
++At initial state all outgoing memory belongs to the sender (TX to host, RX to
++FW), DMA_XFER transfers ownership on the region that contains ISHTP message to
++the receiving side, DMA_XFER_ACK returns ownership to the sender. A sender
++needs not wait for previous DMA_XFER to be ack'ed, and may send another message
++as long as remaining continuous memory in its ownership is enough.
++In principle, multiple DMA_XFER and DMA_XFER_ACK messages may be sent at once
++(up to IPC MTU), thus allowing for interrupt throttling.
++Currently, ISH FW decides to send over DMA if ISHTP message is more than 3 IPC
++fragments and via IPC otherwise.
++
++3.3.4 Ring Buffers
++^^^^^^^^^^^^^^^^^^
++
++When a client initiate a connection, a ring or RX and TX buffers are allocated.
++The size of ring can be specified by the client. HID client set 16 and 32 for
++TX and RX buffers respectively. On send request from client, the data to be
++sent is copied to one of the send ring buffer and scheduled to be sent using
++bus message protocol. These buffers are required because the FW may have not
++have processed the last message and may not have enough flow control credits
++to send. Same thing holds true on receive side and flow control is required.
++
++3.3.5 Host Enumeration
++^^^^^^^^^^^^^^^^^^^^^^
++
++The host enumeration bus command allow discovery of clients present in the FW.
++There can be multiple sensor clients and clients for calibration function.
++
++To ease in implantation and allow independent driver handle each client
++this transport layer takes advantage of Linux Bus driver model. Each
++client is registered as device on the the transport bus (ishtp bus).
++
++Enumeration sequence of messages:
++
++- Host sends HOST_START_REQ_CMD, indicating that host ISHTP layer is up.
++- FW responds with HOST_START_RES_CMD
++- Host sends HOST_ENUM_REQ_CMD (enumerate FW clients)
++- FW responds with HOST_ENUM_RES_CMD that includes bitmap of available FW
++  client IDs
++- For each FW ID found in that bitmap host sends
++  HOST_CLIENT_PROPERTIES_REQ_CMD
++- FW responds with HOST_CLIENT_PROPERTIES_RES_CMD. Properties include UUID,
++  max ISHTP message size, etc.
++- Once host received properties for that last discovered client, it considers
++  ISHTP device fully functional (and allocates DMA buffers)
++
++3.4 HID over ISH Client
++-----------------------
++
++Location: drivers/hid/intel-ish-hid
++
++The ISHTP client driver is responsible for:
++
++- enumerate HID devices under FW ISH client
++- Get Report descriptor
++- Register with HID core as a LL driver
++- Process Get/Set feature request
++- Get input reports
++
++3.5 HID Sensor Hub MFD and IIO sensor drivers
++---------------------------------------------
++
++The functionality in these drivers is the same as an external sensor hub.
++Refer to
++Documentation/hid/hid-sensor.rst for HID sensor
++Documentation/ABI/testing/sysfs-bus-iio for IIO ABIs to user space
++
++3.6 End to End HID transport Sequence Diagram
++---------------------------------------------
++
++::
++
++  HID-ISH-CLN                    ISHTP                    IPC                             HW
++          |                        |                       |                               |
++          |                        |                       |-----WAKE UP------------------>|
++          |                        |                       |                               |
++          |                        |                       |-----HOST READY--------------->|
++          |                        |                       |                               |
++          |                        |                       |<----MNG_RESET_NOTIFY_ACK----- |
++          |                        |                       |                               |
++          |                        |<----ISHTP_START------ |                               |
++          |                        |                       |                               |
++          |                        |<-----------------HOST_START_RES_CMD-------------------|
++          |                        |                       |                               |
++          |                        |------------------QUERY_SUBSCRIBER-------------------->|
++          |                        |                       |                               |
++          |                        |------------------HOST_ENUM_REQ_CMD------------------->|
++          |                        |                       |                               |
++          |                        |<-----------------HOST_ENUM_RES_CMD--------------------|
++          |                        |                       |                               |
++          |                        |------------------HOST_CLIENT_PROPERTIES_REQ_CMD------>|
++          |                        |                       |                               |
++          |                        |<-----------------HOST_CLIENT_PROPERTIES_RES_CMD-------|
++          |       Create new device on in ishtp bus        |                               |
++          |                        |                       |                               |
++          |                        |------------------HOST_CLIENT_PROPERTIES_REQ_CMD------>|
++          |                        |                       |                               |
++          |                        |<-----------------HOST_CLIENT_PROPERTIES_RES_CMD-------|
++          |       Create new device on in ishtp bus        |                               |
++          |                        |                       |                               |
++          |                        |--Repeat HOST_CLIENT_PROPERTIES_REQ_CMD-till last one--|
++          |                        |                       |                               |
++       probed()
++          |----ishtp_cl_connect--->|----------------- CLIENT_CONNECT_REQ_CMD-------------->|
++          |                        |                       |                               |
++          |                        |<----------------CLIENT_CONNECT_RES_CMD----------------|
++          |                        |                       |                               |
++          |register event callback |                       |                               |
++          |                        |                       |                               |
++          |ishtp_cl_send(
++          HOSTIF_DM_ENUM_DEVICES)  |----------fill ishtp_msg_hdr struct write to HW-----  >|
++          |                        |                       |                               |
++          |                        |                       |<-----IRQ(IPC_PROTOCOL_ISHTP---|
++          |                        |                       |                               |
++          |<--ENUM_DEVICE RSP------|                       |                               |
++          |                        |                       |                               |
++  for each enumerated device
++          |ishtp_cl_send(
++          HOSTIF_GET_HID_DESCRIPTOR|----------fill ishtp_msg_hdr struct write to HW-----  >|
++          |                        |                       |                               |
++          ...Response
++          |                        |                       |                               |
++  for each enumerated device
++          |ishtp_cl_send(
++       HOSTIF_GET_REPORT_DESCRIPTOR|--------------fill ishtp_msg_hdr struct write to HW-- >|
++          |                        |                       |                               |
++          |                        |                       |                               |
++   hid_allocate_device
++          |                        |                       |                               |
++   hid_add_device                  |                       |                               |
++          |                        |                       |                               |
++
++
++3.7 ISH Debugging
 +-----------------
 +
- Every API call in the LIBNDCTL library requires a context that holds the
- logging parameters and other library instance state.  The library is
- based on the libabc template:
--https://git.kernel.org/cgit/linux/kernel/git/kay/libabc.git
++To debug ISH, event tracing mechanism is used. To enable debug logs
++echo 1 > /sys/kernel/debug/tracing/events/intel_ish/enable
++cat sys/kernel/debug/tracing/trace
 +
-+	https://git.kernel.org/cgit/linux/kernel/git/kay/libabc.git
- 
- LIBNDCTL: instantiate a new library context example
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++3.8 ISH IIO sysfs Example on Lenovo thinkpad Yoga 260
++-----------------------------------------------------
 +
 +::
- 
- 	struct ndctl_ctx *ctx;
- 
-@@ -278,7 +314,7 @@ LIBNDCTL: instantiate a new library context example
- 		return NULL;
- 
- LIBNVDIMM/LIBNDCTL: Bus
---------------------
-+-----------------------
- 
- A bus has a 1:1 relationship with an NFIT.  The current expectation for
- ACPI based systems is that there is only ever one platform-global NFIT.
-@@ -288,9 +324,10 @@ we use this capability to test multiple NFIT configurations in the unit
- test.
- 
- LIBNVDIMM: control class device in /sys/class
-+---------------------------------------------
- 
- This character device accepts DSM messages to be passed to DIMM
--identified by its NFIT handle.
-+identified by its NFIT handle::
- 
- 	/sys/class/nd/ndctl0
- 	|-- dev
-@@ -300,10 +337,15 @@ identified by its NFIT handle.
- 
- 
- LIBNVDIMM: bus
-+--------------
 +
-+::
- 
- 	struct nvdimm_bus *nvdimm_bus_register(struct device *parent,
- 	       struct nvdimm_bus_descriptor *nfit_desc);
- 
-+::
-+
- 	/sys/devices/platform/nfit_test.0/ndbus0
- 	|-- commands
- 	|-- nd
-@@ -324,7 +366,9 @@ LIBNVDIMM: bus
- 	`-- wait_probe
- 
- LIBNDCTL: bus enumeration example
--Find the bus handle that describes the bus from Example NVDIMM Platform
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Find the bus handle that describes the bus from Example NVDIMM Platform::
- 
- 	static struct ndctl_bus *get_bus_by_provider(struct ndctl_ctx *ctx,
- 			const char *provider)
-@@ -342,7 +386,7 @@ Find the bus handle that describes the bus from Example NVDIMM Platform
- 
- 
- LIBNVDIMM/LIBNDCTL: DIMM (NMEM)
-----------------------------
-+-------------------------------
- 
- The DIMM device provides a character device for sending commands to
- hardware, and it is a container for LABELs.  If the DIMM is defined by
-@@ -355,11 +399,16 @@ Range Mapping Structure", and there is no requirement that they actually
- be physical DIMMs, so we use a more generic name.
- 
- LIBNVDIMM: DIMM (NMEM)
-+^^^^^^^^^^^^^^^^^^^^^^
-+
-+::
- 
- 	struct nvdimm *nvdimm_create(struct nvdimm_bus *nvdimm_bus, void *provider_data,
- 			const struct attribute_group **groups, unsigned long flags,
- 			unsigned long *dsm_mask);
- 
-+::
-+
- 	/sys/devices/platform/nfit_test.0/ndbus0
- 	|-- nmem0
- 	|   |-- available_slots
-@@ -384,15 +433,20 @@ LIBNVDIMM: DIMM (NMEM)
- 
- 
- LIBNDCTL: DIMM enumeration example
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- Note, in this example we are assuming NFIT-defined DIMMs which are
- identified by an "nfit_handle" a 32-bit value where:
--Bit 3:0 DIMM number within the memory channel
--Bit 7:4 memory channel number
--Bit 11:8 memory controller ID
--Bit 15:12 socket ID (within scope of a Node controller if node controller is present)
--Bit 27:16 Node Controller ID
--Bit 31:28 Reserved
-+
-+   - Bit 3:0 DIMM number within the memory channel
-+   - Bit 7:4 memory channel number
-+   - Bit 11:8 memory controller ID
-+   - Bit 15:12 socket ID (within scope of a Node controller if node
-+     controller is present)
-+   - Bit 27:16 Node Controller ID
-+   - Bit 31:28 Reserved
-+
-+::
- 
- 	static struct ndctl_dimm *get_dimm_by_handle(struct ndctl_bus *bus,
- 	       unsigned int handle)
-@@ -413,7 +467,7 @@ Bit 31:28 Reserved
- 	dimm = get_dimm_by_handle(bus, DIMM_HANDLE(0, 0, 0, 0, 0));
- 
- LIBNVDIMM/LIBNDCTL: Region
------------------------
-+--------------------------
- 
- A generic REGION device is registered for each PMEM range or BLK-aperture
- set.  Per the example there are 6 regions: 2 PMEM and 4 BLK-aperture
-@@ -435,13 +489,15 @@ emits, "devtype" duplicates the DEVTYPE variable stored by udev at the
- at the 'add' event, and finally, the optional "spa_index" is provided in
- the case where the region is defined by a SPA.
- 
--LIBNVDIMM: region
-+LIBNVDIMM: region::
- 
- 	struct nd_region *nvdimm_pmem_region_create(struct nvdimm_bus *nvdimm_bus,
- 			struct nd_region_desc *ndr_desc);
- 	struct nd_region *nvdimm_blk_region_create(struct nvdimm_bus *nvdimm_bus,
- 			struct nd_region_desc *ndr_desc);
- 
-+::
-+
- 	/sys/devices/platform/nfit_test.0/ndbus0
- 	|-- region0
- 	|   |-- available_size
-@@ -468,10 +524,11 @@ LIBNVDIMM: region
- 	[..]
- 
- LIBNDCTL: region enumeration example
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- Sample region retrieval routines based on NFIT-unique data like
- "spa_index" (interleave set id) for PMEM and "nfit_handle" (dimm id) for
--BLK.
-+BLK::
- 
- 	static struct ndctl_region *get_pmem_region_by_spa_index(struct ndctl_bus *bus,
- 			unsigned int spa_index)
-@@ -518,33 +575,33 @@ REGION name generic and expects userspace to always consider the
- region-attributes for four reasons:
- 
-     1. There are already more than two REGION and "namespace" types.  For
--    PMEM there are two subtypes.  As mentioned previously we have PMEM where
--    the constituent DIMM devices are known and anonymous PMEM.  For BLK
--    regions the NFIT specification already anticipates vendor specific
--    implementations.  The exact distinction of what a region contains is in
--    the region-attributes not the region-name or the region-devtype.
-+       PMEM there are two subtypes.  As mentioned previously we have PMEM where
-+       the constituent DIMM devices are known and anonymous PMEM.  For BLK
-+       regions the NFIT specification already anticipates vendor specific
-+       implementations.  The exact distinction of what a region contains is in
-+       the region-attributes not the region-name or the region-devtype.
- 
-     2. A region with zero child-namespaces is a possible configuration.  For
--    example, the NFIT allows for a DCR to be published without a
--    corresponding BLK-aperture.  This equates to a DIMM that can only accept
--    control/configuration messages, but no i/o through a descendant block
--    device.  Again, this "type" is advertised in the attributes ('mappings'
--    == 0) and the name does not tell you much.
-+       example, the NFIT allows for a DCR to be published without a
-+       corresponding BLK-aperture.  This equates to a DIMM that can only accept
-+       control/configuration messages, but no i/o through a descendant block
-+       device.  Again, this "type" is advertised in the attributes ('mappings'
-+       == 0) and the name does not tell you much.
- 
-     3. What if a third major interface type arises in the future?  Outside
--    of vendor specific implementations, it's not difficult to envision a
--    third class of interface type beyond BLK and PMEM.  With a generic name
--    for the REGION level of the device-hierarchy old userspace
--    implementations can still make sense of new kernel advertised
--    region-types.  Userspace can always rely on the generic region
--    attributes like "mappings", "size", etc and the expected child devices
--    named "namespace".  This generic format of the device-model hierarchy
--    allows the LIBNVDIMM and LIBNDCTL implementations to be more uniform and
--    future-proof.
-+       of vendor specific implementations, it's not difficult to envision a
-+       third class of interface type beyond BLK and PMEM.  With a generic name
-+       for the REGION level of the device-hierarchy old userspace
-+       implementations can still make sense of new kernel advertised
-+       region-types.  Userspace can always rely on the generic region
-+       attributes like "mappings", "size", etc and the expected child devices
-+       named "namespace".  This generic format of the device-model hierarchy
-+       allows the LIBNVDIMM and LIBNDCTL implementations to be more uniform and
-+       future-proof.
- 
-     4. There are more robust mechanisms for determining the major type of a
--    region than a device name.  See the next section, How Do I Determine the
--    Major Type of a Region?
-+       region than a device name.  See the next section, How Do I Determine the
-+       Major Type of a Region?
- 
- How Do I Determine the Major Type of a Region?
- ----------------------------------------------
-@@ -553,7 +610,8 @@ Outside of the blanket recommendation of "use libndctl", or simply
- looking at the kernel header (/usr/include/linux/ndctl.h) to decode the
- "nstype" integer attribute, here are some other options.
- 
--    1. module alias lookup:
-+1. module alias lookup
-+^^^^^^^^^^^^^^^^^^^^^^
- 
-     The whole point of region/namespace device type differentiation is to
-     decide which block-device driver will attach to a given LIBNVDIMM namespace.
-@@ -569,28 +627,31 @@ looking at the kernel header (/usr/include/linux/ndctl.h) to decode the
-     the resulting namespaces.  The output from module resolution is more
-     accurate than a region-name or region-devtype.
- 
--    2. udev:
-+2. udev
-+^^^^^^^
- 
--    The kernel "devtype" is registered in the udev database
--    # udevadm info --path=/devices/platform/nfit_test.0/ndbus0/region0
--    P: /devices/platform/nfit_test.0/ndbus0/region0
--    E: DEVPATH=/devices/platform/nfit_test.0/ndbus0/region0
--    E: DEVTYPE=nd_pmem
--    E: MODALIAS=nd:t2
--    E: SUBSYSTEM=nd
-+    The kernel "devtype" is registered in the udev database::
- 
--    # udevadm info --path=/devices/platform/nfit_test.0/ndbus0/region4
--    P: /devices/platform/nfit_test.0/ndbus0/region4
--    E: DEVPATH=/devices/platform/nfit_test.0/ndbus0/region4
--    E: DEVTYPE=nd_blk
--    E: MODALIAS=nd:t3
--    E: SUBSYSTEM=nd
-+	# udevadm info --path=/devices/platform/nfit_test.0/ndbus0/region0
-+	P: /devices/platform/nfit_test.0/ndbus0/region0
-+	E: DEVPATH=/devices/platform/nfit_test.0/ndbus0/region0
-+	E: DEVTYPE=nd_pmem
-+	E: MODALIAS=nd:t2
-+	E: SUBSYSTEM=nd
-+
-+	# udevadm info --path=/devices/platform/nfit_test.0/ndbus0/region4
-+	P: /devices/platform/nfit_test.0/ndbus0/region4
-+	E: DEVPATH=/devices/platform/nfit_test.0/ndbus0/region4
-+	E: DEVTYPE=nd_blk
-+	E: MODALIAS=nd:t3
-+	E: SUBSYSTEM=nd
- 
-     ...and is available as a region attribute, but keep in mind that the
-     "devtype" does not indicate sub-type variations and scripts should
-     really be understanding the other attributes.
- 
--    3. type specific attributes:
-+3. type specific attributes
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
-     As it currently stands a BLK-aperture region will never have a
-     "nfit/spa_index" attribute, but neither will a non-NFIT PMEM region.  A
-@@ -600,7 +661,7 @@ looking at the kernel header (/usr/include/linux/ndctl.h) to decode the
- 
- 
- LIBNVDIMM/LIBNDCTL: Namespace
---------------------------
-+-----------------------------
- 
- A REGION, after resolving DPA aliasing and LABEL specified boundaries,
- surfaces one or more "namespace" devices.  The arrival of a "namespace"
-@@ -608,12 +669,14 @@ device currently triggers either the nd_blk or nd_pmem driver to load
- and register a disk/block device.
- 
- LIBNVDIMM: namespace
-+^^^^^^^^^^^^^^^^^^^^
-+
- Here is a sample layout from the three major types of NAMESPACE where
- namespace0.0 represents DIMM-info-backed PMEM (note that it has a 'uuid'
- attribute), namespace2.0 represents a BLK namespace (note it has a
- 'sector_size' attribute) that, and namespace6.0 represents an anonymous
- PMEM namespace (note that has no 'uuid' attribute due to not support a
--LABEL).
-+LABEL)::
- 
- 	/sys/devices/platform/nfit_test.0/ndbus0/region0/namespace0.0
- 	|-- alt_name
-@@ -656,76 +719,84 @@ LABEL).
- 	`-- uevent
- 
- LIBNDCTL: namespace enumeration example
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- Namespaces are indexed relative to their parent region, example below.
- These indexes are mostly static from boot to boot, but subsystem makes
- no guarantees in this regard.  For a static namespace identifier use its
- 'uuid' attribute.
- 
--static struct ndctl_namespace *get_namespace_by_id(struct ndctl_region *region,
--                unsigned int id)
--{
--        struct ndctl_namespace *ndns;
-+::
- 
--        ndctl_namespace_foreach(region, ndns)
--                if (ndctl_namespace_get_id(ndns) == id)
--                        return ndns;
-+  static struct ndctl_namespace
-+  *get_namespace_by_id(struct ndctl_region *region, unsigned int id)
-+  {
-+          struct ndctl_namespace *ndns;
- 
--        return NULL;
--}
-+          ndctl_namespace_foreach(region, ndns)
-+                  if (ndctl_namespace_get_id(ndns) == id)
-+                          return ndns;
-+
-+          return NULL;
-+  }
- 
- LIBNDCTL: namespace creation example
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
- Idle namespaces are automatically created by the kernel if a given
- region has enough available capacity to create a new namespace.
- Namespace instantiation involves finding an idle namespace and
- configuring it.  For the most part the setting of namespace attributes
- can occur in any order, the only constraint is that 'uuid' must be set
- before 'size'.  This enables the kernel to track DPA allocations
--internally with a static identifier.
-+internally with a static identifier::
- 
--static int configure_namespace(struct ndctl_region *region,
--                struct ndctl_namespace *ndns,
--                struct namespace_parameters *parameters)
--{
--        char devname[50];
-+  static int configure_namespace(struct ndctl_region *region,
-+                  struct ndctl_namespace *ndns,
-+                  struct namespace_parameters *parameters)
-+  {
-+          char devname[50];
- 
--        snprintf(devname, sizeof(devname), "namespace%d.%d",
--                        ndctl_region_get_id(region), paramaters->id);
-+          snprintf(devname, sizeof(devname), "namespace%d.%d",
-+                          ndctl_region_get_id(region), paramaters->id);
- 
--        ndctl_namespace_set_alt_name(ndns, devname);
--        /* 'uuid' must be set prior to setting size! */
--        ndctl_namespace_set_uuid(ndns, paramaters->uuid);
--        ndctl_namespace_set_size(ndns, paramaters->size);
--        /* unlike pmem namespaces, blk namespaces have a sector size */
--        if (parameters->lbasize)
--                ndctl_namespace_set_sector_size(ndns, parameters->lbasize);
--        ndctl_namespace_enable(ndns);
--}
-+          ndctl_namespace_set_alt_name(ndns, devname);
-+          /* 'uuid' must be set prior to setting size! */
-+          ndctl_namespace_set_uuid(ndns, paramaters->uuid);
-+          ndctl_namespace_set_size(ndns, paramaters->size);
-+          /* unlike pmem namespaces, blk namespaces have a sector size */
-+          if (parameters->lbasize)
-+                  ndctl_namespace_set_sector_size(ndns, parameters->lbasize);
-+          ndctl_namespace_enable(ndns);
-+  }
- 
- 
- Why the Term "namespace"?
-+^^^^^^^^^^^^^^^^^^^^^^^^^
- 
-     1. Why not "volume" for instance?  "volume" ran the risk of confusing
--    ND (libnvdimm subsystem) to a volume manager like device-mapper.
-+       ND (libnvdimm subsystem) to a volume manager like device-mapper.
- 
-     2. The term originated to describe the sub-devices that can be created
--    within a NVME controller (see the nvme specification:
--    http://www.nvmexpress.org/specifications/), and NFIT namespaces are
--    meant to parallel the capabilities and configurability of
--    NVME-namespaces.
-+       within a NVME controller (see the nvme specification:
-+       http://www.nvmexpress.org/specifications/), and NFIT namespaces are
-+       meant to parallel the capabilities and configurability of
-+       NVME-namespaces.
- 
- 
- LIBNVDIMM/LIBNDCTL: Block Translation Table "btt"
-----------------------------------------------
-+-------------------------------------------------
- 
- A BTT (design document: http://pmem.io/2014/09/23/btt.html) is a stacked
- block device driver that fronts either the whole block device or a
- partition of a block device emitted by either a PMEM or BLK NAMESPACE.
- 
- LIBNVDIMM: btt layout
-+^^^^^^^^^^^^^^^^^^^^^
-+
- Every region will start out with at least one BTT device which is the
- seed device.  To activate it set the "namespace", "uuid", and
- "sector_size" attributes and then bind the device to the nd_pmem or
--nd_blk driver depending on the region type.
-+nd_blk driver depending on the region type::
- 
- 	/sys/devices/platform/nfit_test.1/ndbus0/region0/btt0/
- 	|-- namespace
-@@ -739,10 +810,12 @@ nd_blk driver depending on the region type.
- 	`-- uuid
- 
- LIBNDCTL: btt creation example
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
- Similar to namespaces an idle BTT device is automatically created per
- region.  Each time this "seed" btt device is configured and enabled a new
- seed is created.  Creating a BTT configuration involves two steps of
--finding and idle BTT and assigning it to consume a PMEM or BLK namespace.
-+finding and idle BTT and assigning it to consume a PMEM or BLK namespace::
- 
- 	static struct ndctl_btt *get_idle_btt(struct ndctl_region *region)
- 	{
-@@ -787,29 +860,28 @@ Summary LIBNDCTL Diagram
- ------------------------
- 
- For the given example above, here is the view of the objects as seen by the
--LIBNDCTL API:
--            +---+
--            |CTX|    +---------+   +--------------+  +---------------+
--            +-+-+  +-> REGION0 +---> NAMESPACE0.0 +--> PMEM8 "pm0.0" |
--              |    | +---------+   +--------------+  +---------------+
--+-------+     |    | +---------+   +--------------+  +---------------+
--| DIMM0 <-+   |    +-> REGION1 +---> NAMESPACE1.0 +--> PMEM6 "pm1.0" |
--+-------+ |   |    | +---------+   +--------------+  +---------------+
--| DIMM1 <-+ +-v--+ | +---------+   +--------------+  +---------------+
--+-------+ +-+BUS0+---> REGION2 +-+-> NAMESPACE2.0 +--> ND6  "blk2.0" |
--| DIMM2 <-+ +----+ | +---------+ | +--------------+  +----------------------+
--+-------+ |        |             +-> NAMESPACE2.1 +--> ND5  "blk2.1" | BTT2 |
--| DIMM3 <-+        |               +--------------+  +----------------------+
--+-------+          | +---------+   +--------------+  +---------------+
--                   +-> REGION3 +-+-> NAMESPACE3.0 +--> ND4  "blk3.0" |
--                   | +---------+ | +--------------+  +----------------------+
--                   |             +-> NAMESPACE3.1 +--> ND3  "blk3.1" | BTT1 |
--                   |               +--------------+  +----------------------+
--                   | +---------+   +--------------+  +---------------+
--                   +-> REGION4 +---> NAMESPACE4.0 +--> ND2  "blk4.0" |
--                   | +---------+   +--------------+  +---------------+
--                   | +---------+   +--------------+  +----------------------+
--                   +-> REGION5 +---> NAMESPACE5.0 +--> ND1  "blk5.0" | BTT0 |
--                     +---------+   +--------------+  +---------------+------+
++  root@otcpl-ThinkPad-Yoga-260:~# tree -l /sys/bus/iio/devices/
++  /sys/bus/iio/devices/
++  ├── iio:device0 -> ../../../devices/0044:8086:22D8.0001/HID-SENSOR-200073.9.auto/iio:device0
++  │   ├── buffer
++  │   │   ├── enable
++  │   │   ├── length
++  │   │   └── watermark
++  ...
++  │   ├── in_accel_hysteresis
++  │   ├── in_accel_offset
++  │   ├── in_accel_sampling_frequency
++  │   ├── in_accel_scale
++  │   ├── in_accel_x_raw
++  │   ├── in_accel_y_raw
++  │   ├── in_accel_z_raw
++  │   ├── name
++  │   ├── scan_elements
++  │   │   ├── in_accel_x_en
++  │   │   ├── in_accel_x_index
++  │   │   ├── in_accel_x_type
++  │   │   ├── in_accel_y_en
++  │   │   ├── in_accel_y_index
++  │   │   ├── in_accel_y_type
++  │   │   ├── in_accel_z_en
++  │   │   ├── in_accel_z_index
++  │   │   └── in_accel_z_type
++  ...
++  │   │   ├── devices
++  │   │   │   │   ├── buffer
++  │   │   │   │   │   ├── enable
++  │   │   │   │   │   ├── length
++  │   │   │   │   │   └── watermark
++  │   │   │   │   ├── dev
++  │   │   │   │   ├── in_intensity_both_raw
++  │   │   │   │   ├── in_intensity_hysteresis
++  │   │   │   │   ├── in_intensity_offset
++  │   │   │   │   ├── in_intensity_sampling_frequency
++  │   │   │   │   ├── in_intensity_scale
++  │   │   │   │   ├── name
++  │   │   │   │   ├── scan_elements
++  │   │   │   │   │   ├── in_intensity_both_en
++  │   │   │   │   │   ├── in_intensity_both_index
++  │   │   │   │   │   └── in_intensity_both_type
++  │   │   │   │   ├── trigger
++  │   │   │   │   │   └── current_trigger
++  ...
++  │   │   │   │   ├── buffer
++  │   │   │   │   │   ├── enable
++  │   │   │   │   │   ├── length
++  │   │   │   │   │   └── watermark
++  │   │   │   │   ├── dev
++  │   │   │   │   ├── in_magn_hysteresis
++  │   │   │   │   ├── in_magn_offset
++  │   │   │   │   ├── in_magn_sampling_frequency
++  │   │   │   │   ├── in_magn_scale
++  │   │   │   │   ├── in_magn_x_raw
++  │   │   │   │   ├── in_magn_y_raw
++  │   │   │   │   ├── in_magn_z_raw
++  │   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_raw
++  │   │   │   │   ├── in_rot_hysteresis
++  │   │   │   │   ├── in_rot_offset
++  │   │   │   │   ├── in_rot_sampling_frequency
++  │   │   │   │   ├── in_rot_scale
++  │   │   │   │   ├── name
++  ...
++  │   │   │   │   ├── scan_elements
++  │   │   │   │   │   ├── in_magn_x_en
++  │   │   │   │   │   ├── in_magn_x_index
++  │   │   │   │   │   ├── in_magn_x_type
++  │   │   │   │   │   ├── in_magn_y_en
++  │   │   │   │   │   ├── in_magn_y_index
++  │   │   │   │   │   ├── in_magn_y_type
++  │   │   │   │   │   ├── in_magn_z_en
++  │   │   │   │   │   ├── in_magn_z_index
++  │   │   │   │   │   ├── in_magn_z_type
++  │   │   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_en
++  │   │   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_index
++  │   │   │   │   │   └── in_rot_from_north_magnetic_tilt_comp_type
++  │   │   │   │   ├── trigger
++  │   │   │   │   │   └── current_trigger
++  ...
++  │   │   │   │   ├── buffer
++  │   │   │   │   │   ├── enable
++  │   │   │   │   │   ├── length
++  │   │   │   │   │   └── watermark
++  │   │   │   │   ├── dev
++  │   │   │   │   ├── in_anglvel_hysteresis
++  │   │   │   │   ├── in_anglvel_offset
++  │   │   │   │   ├── in_anglvel_sampling_frequency
++  │   │   │   │   ├── in_anglvel_scale
++  │   │   │   │   ├── in_anglvel_x_raw
++  │   │   │   │   ├── in_anglvel_y_raw
++  │   │   │   │   ├── in_anglvel_z_raw
++  │   │   │   │   ├── name
++  │   │   │   │   ├── scan_elements
++  │   │   │   │   │   ├── in_anglvel_x_en
++  │   │   │   │   │   ├── in_anglvel_x_index
++  │   │   │   │   │   ├── in_anglvel_x_type
++  │   │   │   │   │   ├── in_anglvel_y_en
++  │   │   │   │   │   ├── in_anglvel_y_index
++  │   │   │   │   │   ├── in_anglvel_y_type
++  │   │   │   │   │   ├── in_anglvel_z_en
++  │   │   │   │   │   ├── in_anglvel_z_index
++  │   │   │   │   │   └── in_anglvel_z_type
++  │   │   │   │   ├── trigger
++  │   │   │   │   │   └── current_trigger
++  ...
++  │   │   │   │   ├── buffer
++  │   │   │   │   │   ├── enable
++  │   │   │   │   │   ├── length
++  │   │   │   │   │   └── watermark
++  │   │   │   │   ├── dev
++  │   │   │   │   ├── in_anglvel_hysteresis
++  │   │   │   │   ├── in_anglvel_offset
++  │   │   │   │   ├── in_anglvel_sampling_frequency
++  │   │   │   │   ├── in_anglvel_scale
++  │   │   │   │   ├── in_anglvel_x_raw
++  │   │   │   │   ├── in_anglvel_y_raw
++  │   │   │   │   ├── in_anglvel_z_raw
++  │   │   │   │   ├── name
++  │   │   │   │   ├── scan_elements
++  │   │   │   │   │   ├── in_anglvel_x_en
++  │   │   │   │   │   ├── in_anglvel_x_index
++  │   │   │   │   │   ├── in_anglvel_x_type
++  │   │   │   │   │   ├── in_anglvel_y_en
++  │   │   │   │   │   ├── in_anglvel_y_index
++  │   │   │   │   │   ├── in_anglvel_y_type
++  │   │   │   │   │   ├── in_anglvel_z_en
++  │   │   │   │   │   ├── in_anglvel_z_index
++  │   │   │   │   │   └── in_anglvel_z_type
++  │   │   │   │   ├── trigger
++  │   │   │   │   │   └── current_trigger
++  ...
+diff --git a/Documentation/hid/intel-ish-hid.txt b/Documentation/hid/intel-ish-hid.txt
+deleted file mode 100644
+index d48b21c71ddd..000000000000
+--- a/Documentation/hid/intel-ish-hid.txt
++++ /dev/null
+@@ -1,454 +0,0 @@
+-Intel Integrated Sensor Hub (ISH)
+-===============================
 -
-+LIBNDCTL API::
+-A sensor hub enables the ability to offload sensor polling and algorithm
+-processing to a dedicated low power co-processor. This allows the core
+-processor to go into low power modes more often, resulting in the increased
+-battery life.
+-
+-There are many vendors providing external sensor hubs confirming to HID
+-Sensor usage tables, and used in several tablets, 2 in 1 convertible laptops
+-and embedded products. Linux had this support since Linux 3.9.
+-
+-Intel® introduced integrated sensor hubs as a part of the SoC starting from
+-Cherry Trail and now supported on multiple generations of CPU packages. There
+-are many commercial devices already shipped with Integrated Sensor Hubs (ISH).
+-These ISH also comply to HID sensor specification, but the  difference is the
+-transport protocol used for communication. The current external sensor hubs
+-mainly use HID over i2C or USB. But ISH doesn't use either i2c or USB.
+-
+-1. Overview
+-
+-Using a analogy with a usbhid implementation, the ISH follows a similar model
+-for a very high speed communication:
+-
+-	-----------------		----------------------
+-	|    USB HID	|	-->	|    ISH HID	     |
+-	-----------------		----------------------
+-	-----------------		----------------------
+-	|  USB protocol	|	-->	|    ISH Transport   |
+-	-----------------		----------------------
+-	-----------------		----------------------
+-	|  EHCI/XHCI	|	-->	|    ISH IPC	     |
+-	-----------------		----------------------
+-	      PCI				 PCI
+-	-----------------		----------------------
+-        |Host controller|	-->	|    ISH processor   |
+-	-----------------		----------------------
+-	     USB Link
+-	-----------------		----------------------
+-	| USB End points|	-->	|    ISH Clients     |
+-	-----------------		----------------------
+-
+-Like USB protocol provides a method for device enumeration, link management
+-and user data encapsulation, the ISH also provides similar services. But it is
+-very light weight tailored to manage and communicate with ISH client
+-applications implemented in the firmware.
+-
+-The ISH allows multiple sensor management applications executing in the
+-firmware. Like USB endpoints the messaging can be to/from a client. As part of
+-enumeration process, these clients are identified. These clients can be simple
+-HID sensor applications, sensor calibration application or senor firmware
+-update application.
+-
+-The implementation model is similar, like USB bus, ISH transport is also
+-implemented as a bus. Each client application executing in the ISH processor
+-is registered as a device on this bus. The driver, which binds each device
+-(ISH HID driver) identifies the device type and registers with the hid core.
+-
+-2. ISH Implementation: Block Diagram
+-
+-	 ---------------------------
+-	|  User Space Applications  |
+-	 ---------------------------
+-
+-----------------IIO ABI----------------
+-	 --------------------------
+-	|  IIO Sensor Drivers	  |
+-	 --------------------------
+-	 --------------------------
+-	|	 IIO core	  |
+-	 --------------------------
+-	 --------------------------
+-	|   HID Sensor Hub MFD	  |
+-	 --------------------------
+-	 --------------------------
+-	|       HID Core	  |
+-	 --------------------------
+-	 --------------------------
+-	|   HID over ISH Client   |
+-	 --------------------------
+-	 --------------------------
+-	|   ISH Transport (ISHTP) |
+-	 --------------------------
+-	 --------------------------
+-	|      IPC Drivers	  |
+-	 --------------------------
+-OS
+-----------------   PCI -----------------
+-Hardware + Firmware
+-	 ----------------------------
+-	| ISH Hardware/Firmware(FW) |
+-	 ----------------------------
+-
+-3. High level processing in above blocks
+-
+-3.1 Hardware Interface
+-
+-The ISH is exposed as "Non-VGA unclassified PCI device" to the host. The PCI
+-product and vendor IDs are changed from different generations of processors. So
+-the source code which enumerate drivers needs to update from generation to
+-generation.
+-
+-3.2 Inter Processor Communication (IPC) driver
+-Location: drivers/hid/intel-ish-hid/ipc
+-
+-The IPC message used memory mapped I/O. The registers are defined in
+-hw-ish-regs.h.
+-
+-3.2.1 IPC/FW message types
+-
+-There are two types of messages, one for management of link and other messages
+-are to and from transport layers.
+-
+-TX and RX of Transport messages
+-
+-A set of memory mapped register offers support of multi byte messages TX and
+-RX (E.g.IPC_REG_ISH2HOST_MSG, IPC_REG_HOST2ISH_MSG). The IPC layer maintains
+-internal queues to sequence messages and send them in order to the FW.
+-Optionally the caller can register handler to get notification of completion.
+-A door bell mechanism is used in messaging to trigger processing in host and
+-client firmware side. When ISH interrupt handler is called, the ISH2HOST
+-doorbell register is used by host drivers to determine that the interrupt
+-is for ISH.
+-
+-Each side has 32 32-bit message registers and a 32-bit doorbell. Doorbell
+-register has the following format:
+-Bits 0..6: fragment length (7 bits are used)
+-Bits 10..13: encapsulated protocol
+-Bits 16..19: management command (for IPC management protocol)
+-Bit 31: doorbell trigger (signal H/W interrupt to the other side)
+-Other bits are reserved, should be 0.
+-
+-3.2.2 Transport layer interface
+-
+-To abstract HW level IPC communication, a set of callbacks are registered.
+-The transport layer uses them to send and receive messages.
+-Refer to  struct ishtp_hw_ops for callbacks.
+-
+-3.3 ISH Transport layer
+-Location: drivers/hid/intel-ish-hid/ishtp/
+-
+-3.3.1 A Generic Transport Layer
+-
+-The transport layer is a bi-directional protocol, which defines:
+-- Set of commands to start, stop, connect, disconnect and flow control
+-(ishtp/hbm.h) for details
+-- A flow control mechanism to avoid buffer overflows
+-
+-This protocol resembles bus messages described in the following document:
+-http://www.intel.com/content/dam/www/public/us/en/documents/technical-\
+-specifications/dcmi-hi-1-0-spec.pdf "Chapter 7: Bus Message Layer"
+-
+-3.3.2 Connection and Flow Control Mechanism
+-
+-Each FW client and a protocol is identified by an UUID. In order to communicate
+-to a FW client, a connection must be established using connect request and
+-response bus messages. If successful, a pair (host_client_id and fw_client_id)
+-will identify the connection.
+-
+-Once connection is established, peers send each other flow control bus messages
+-independently. Every peer may send a message only if it has received a
+-flow-control credit before. Once it sent a message, it may not send another one
+-before receiving the next flow control credit.
+-Either side can send disconnect request bus message to end communication. Also
+-the link will be dropped if major FW reset occurs.
+-
+-3.3.3 Peer to Peer data transfer
+-
+-Peer to Peer data transfer can happen with or without using DMA. Depending on
+-the sensor bandwidth requirement DMA can be enabled by using module parameter
+-ishtp_use_dma under intel_ishtp.
+-
+-Each side (host and FW) manages its DMA transfer memory independently. When an
+-ISHTP client from either host or FW side wants to send something, it decides
+-whether to send over IPC or over DMA; for each transfer the decision is
+-independent. The sending side sends DMA_XFER message when the message is in
+-the respective host buffer (TX when host client sends, RX when FW client
+-sends). The recipient of DMA message responds with DMA_XFER_ACK, indicating
+-the sender that the memory region for that message may be reused.
+-
+-DMA initialization is started with host sending DMA_ALLOC_NOTIFY bus message
+-(that includes RX buffer) and FW responds with DMA_ALLOC_NOTIFY_ACK.
+-Additionally to DMA address communication, this sequence checks capabilities:
+-if thw host doesn't support DMA, then it won't send DMA allocation, so FW can't
+-send DMA; if FW doesn't support DMA then it won't respond with
+-DMA_ALLOC_NOTIFY_ACK, in which case host will not use DMA transfers.
+-Here ISH acts as busmaster DMA controller. Hence when host sends DMA_XFER,
+-it's request to do host->ISH DMA transfer; when FW sends DMA_XFER, it means
+-that it already did DMA and the message resides at host. Thus, DMA_XFER
+-and DMA_XFER_ACK act as ownership indicators.
+-
+-At initial state all outgoing memory belongs to the sender (TX to host, RX to
+-FW), DMA_XFER transfers ownership on the region that contains ISHTP message to
+-the receiving side, DMA_XFER_ACK returns ownership to the sender. A sender
+-needs not wait for previous DMA_XFER to be ack'ed, and may send another message
+-as long as remaining continuous memory in its ownership is enough.
+-In principle, multiple DMA_XFER and DMA_XFER_ACK messages may be sent at once
+-(up to IPC MTU), thus allowing for interrupt throttling.
+-Currently, ISH FW decides to send over DMA if ISHTP message is more than 3 IPC
+-fragments and via IPC otherwise.
+-
+-3.3.4 Ring Buffers
+-
+-When a client initiate a connection, a ring or RX and TX buffers are allocated.
+-The size of ring can be specified by the client. HID client set 16 and 32 for
+-TX and RX buffers respectively. On send request from client, the data to be
+-sent is copied to one of the send ring buffer and scheduled to be sent using
+-bus message protocol. These buffers are required because the FW may have not
+-have processed the last message and may not have enough flow control credits
+-to send. Same thing holds true on receive side and flow control is required.
+-
+-3.3.5 Host Enumeration
+-
+-The host enumeration bus command allow discovery of clients present in the FW.
+-There can be multiple sensor clients and clients for calibration function.
+-
+-To ease in implantation and allow independent driver handle each client
+-this transport layer takes advantage of Linux Bus driver model. Each
+-client is registered as device on the the transport bus (ishtp bus).
+-
+-Enumeration sequence of messages:
+-- Host sends HOST_START_REQ_CMD, indicating that host ISHTP layer is up.
+-- FW responds with HOST_START_RES_CMD
+-- Host sends HOST_ENUM_REQ_CMD (enumerate FW clients)
+-- FW responds with HOST_ENUM_RES_CMD that includes bitmap of available FW
+-client IDs
+-- For each FW ID found in that bitmap host sends
+-HOST_CLIENT_PROPERTIES_REQ_CMD
+-- FW responds with HOST_CLIENT_PROPERTIES_RES_CMD. Properties include UUID,
+-max ISHTP message size, etc.
+-- Once host received properties for that last discovered client, it considers
+-ISHTP device fully functional (and allocates DMA buffers)
+-
+-3.4 HID over ISH Client
+-Location: drivers/hid/intel-ish-hid
+-
+-The ISHTP client driver is responsible for:
+-- enumerate HID devices under FW ISH client
+-- Get Report descriptor
+-- Register with HID core as a LL driver
+-- Process Get/Set feature request
+-- Get input reports
+-
+-3.5 HID Sensor Hub MFD and IIO sensor drivers
+-
+-The functionality in these drivers is the same as an external sensor hub.
+-Refer to
+-Documentation/hid/hid-sensor.txt for HID sensor
+-Documentation/ABI/testing/sysfs-bus-iio for IIO ABIs to user space
+-
+-3.6 End to End HID transport Sequence Diagram
+-
+-HID-ISH-CLN			ISHTP			IPC				HW
+-	|			|			|				|
+-	|			|			|-----WAKE UP------------------>|
+-	|			|			|				|
+-	|			|			|-----HOST READY--------------->|
+-	|			|			|				|
+-	|			|			|<----MNG_RESET_NOTIFY_ACK----- |
+-	|			|			|				|
+-	|			|<----ISHTP_START------ |				|
+-	|			|			|				|
+-	|			|<-----------------HOST_START_RES_CMD-------------------|
+-	|			|			|				|
+-	|			|------------------QUERY_SUBSCRIBER-------------------->|
+-	|			|			|				|
+-	|			|------------------HOST_ENUM_REQ_CMD------------------->|
+-	|			|			|				|
+-	|			|<-----------------HOST_ENUM_RES_CMD--------------------|
+-	|			|			|				|
+-	|			|------------------HOST_CLIENT_PROPERTIES_REQ_CMD------>|
+-	|			|			|				|
+-	|			|<-----------------HOST_CLIENT_PROPERTIES_RES_CMD-------|
+-	|	Create new device on in ishtp bus	|				|
+-	|			|			|				|
+-	|			|------------------HOST_CLIENT_PROPERTIES_REQ_CMD------>|
+-	|			|			|				|
+-	|			|<-----------------HOST_CLIENT_PROPERTIES_RES_CMD-------|
+-	|	Create new device on in ishtp bus	|				|
+-	|			|			|				|
+-	|			|--Repeat HOST_CLIENT_PROPERTIES_REQ_CMD-till last one--|
+-	|			|			|				|
+-     probed()
+-	|----ishtp_cl_connect-->|----------------- CLIENT_CONNECT_REQ_CMD-------------->|
+-	|			|			|				|
+-	|			|<----------------CLIENT_CONNECT_RES_CMD----------------|
+-	|			|			|				|
+-	|register event callback|			|				|
+-	|			|			|				|
+-	|ishtp_cl_send(
+-	HOSTIF_DM_ENUM_DEVICES) |----------fill ishtp_msg_hdr struct write to HW-----  >|
+-	|			|			|				|
+-	|			|			|<-----IRQ(IPC_PROTOCOL_ISHTP---|
+-	|			|			|				|
+-	|<--ENUM_DEVICE RSP-----|			|				|
+-	|			|			|				|
+-for each enumerated device
+-	|ishtp_cl_send(
+-	HOSTIF_GET_HID_DESCRIPTOR |----------fill ishtp_msg_hdr struct write to HW---  >|
+-	|			|			|				|
+-	...Response
+-	|			|			|				|
+-for each enumerated device
+-	|ishtp_cl_send(
+-	HOSTIF_GET_REPORT_DESCRIPTOR |----------fill ishtp_msg_hdr struct write to HW- >|
+-	|			|			|				|
+-	|			|			|				|
+- hid_allocate_device
+-	|			|			|				|
+- hid_add_device			|			|				|
+-	|			|			|				|
+-
+-
+-3.7 ISH Debugging
+-
+-To debug ISH, event tracing mechanism is used. To enable debug logs
+-echo 1 > /sys/kernel/debug/tracing/events/intel_ish/enable
+-cat sys/kernel/debug/tracing/trace
+-
+-3.8 ISH IIO sysfs Example on Lenovo thinkpad Yoga 260
+-
+-root@otcpl-ThinkPad-Yoga-260:~# tree -l /sys/bus/iio/devices/
+-/sys/bus/iio/devices/
+-├── iio:device0 -> ../../../devices/0044:8086:22D8.0001/HID-SENSOR-200073.9.auto/iio:device0
+-│   ├── buffer
+-│   │   ├── enable
+-│   │   ├── length
+-│   │   └── watermark
+-...
+-│   ├── in_accel_hysteresis
+-│   ├── in_accel_offset
+-│   ├── in_accel_sampling_frequency
+-│   ├── in_accel_scale
+-│   ├── in_accel_x_raw
+-│   ├── in_accel_y_raw
+-│   ├── in_accel_z_raw
+-│   ├── name
+-│   ├── scan_elements
+-│   │   ├── in_accel_x_en
+-│   │   ├── in_accel_x_index
+-│   │   ├── in_accel_x_type
+-│   │   ├── in_accel_y_en
+-│   │   ├── in_accel_y_index
+-│   │   ├── in_accel_y_type
+-│   │   ├── in_accel_z_en
+-│   │   ├── in_accel_z_index
+-│   │   └── in_accel_z_type
+-...
+-│   │   ├── devices
+-│   │   │   │   ├── buffer
+-│   │   │   │   │   ├── enable
+-│   │   │   │   │   ├── length
+-│   │   │   │   │   └── watermark
+-│   │   │   │   ├── dev
+-│   │   │   │   ├── in_intensity_both_raw
+-│   │   │   │   ├── in_intensity_hysteresis
+-│   │   │   │   ├── in_intensity_offset
+-│   │   │   │   ├── in_intensity_sampling_frequency
+-│   │   │   │   ├── in_intensity_scale
+-│   │   │   │   ├── name
+-│   │   │   │   ├── scan_elements
+-│   │   │   │   │   ├── in_intensity_both_en
+-│   │   │   │   │   ├── in_intensity_both_index
+-│   │   │   │   │   └── in_intensity_both_type
+-│   │   │   │   ├── trigger
+-│   │   │   │   │   └── current_trigger
+-...
+-│   │   │   │   ├── buffer
+-│   │   │   │   │   ├── enable
+-│   │   │   │   │   ├── length
+-│   │   │   │   │   └── watermark
+-│   │   │   │   ├── dev
+-│   │   │   │   ├── in_magn_hysteresis
+-│   │   │   │   ├── in_magn_offset
+-│   │   │   │   ├── in_magn_sampling_frequency
+-│   │   │   │   ├── in_magn_scale
+-│   │   │   │   ├── in_magn_x_raw
+-│   │   │   │   ├── in_magn_y_raw
+-│   │   │   │   ├── in_magn_z_raw
+-│   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_raw
+-│   │   │   │   ├── in_rot_hysteresis
+-│   │   │   │   ├── in_rot_offset
+-│   │   │   │   ├── in_rot_sampling_frequency
+-│   │   │   │   ├── in_rot_scale
+-│   │   │   │   ├── name
+-...
+-│   │   │   │   ├── scan_elements
+-│   │   │   │   │   ├── in_magn_x_en
+-│   │   │   │   │   ├── in_magn_x_index
+-│   │   │   │   │   ├── in_magn_x_type
+-│   │   │   │   │   ├── in_magn_y_en
+-│   │   │   │   │   ├── in_magn_y_index
+-│   │   │   │   │   ├── in_magn_y_type
+-│   │   │   │   │   ├── in_magn_z_en
+-│   │   │   │   │   ├── in_magn_z_index
+-│   │   │   │   │   ├── in_magn_z_type
+-│   │   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_en
+-│   │   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_index
+-│   │   │   │   │   └── in_rot_from_north_magnetic_tilt_comp_type
+-│   │   │   │   ├── trigger
+-│   │   │   │   │   └── current_trigger
+-...
+-│   │   │   │   ├── buffer
+-│   │   │   │   │   ├── enable
+-│   │   │   │   │   ├── length
+-│   │   │   │   │   └── watermark
+-│   │   │   │   ├── dev
+-│   │   │   │   ├── in_anglvel_hysteresis
+-│   │   │   │   ├── in_anglvel_offset
+-│   │   │   │   ├── in_anglvel_sampling_frequency
+-│   │   │   │   ├── in_anglvel_scale
+-│   │   │   │   ├── in_anglvel_x_raw
+-│   │   │   │   ├── in_anglvel_y_raw
+-│   │   │   │   ├── in_anglvel_z_raw
+-│   │   │   │   ├── name
+-│   │   │   │   ├── scan_elements
+-│   │   │   │   │   ├── in_anglvel_x_en
+-│   │   │   │   │   ├── in_anglvel_x_index
+-│   │   │   │   │   ├── in_anglvel_x_type
+-│   │   │   │   │   ├── in_anglvel_y_en
+-│   │   │   │   │   ├── in_anglvel_y_index
+-│   │   │   │   │   ├── in_anglvel_y_type
+-│   │   │   │   │   ├── in_anglvel_z_en
+-│   │   │   │   │   ├── in_anglvel_z_index
+-│   │   │   │   │   └── in_anglvel_z_type
+-│   │   │   │   ├── trigger
+-│   │   │   │   │   └── current_trigger
+-...
+-│   │   │   │   ├── buffer
+-│   │   │   │   │   ├── enable
+-│   │   │   │   │   ├── length
+-│   │   │   │   │   └── watermark
+-│   │   │   │   ├── dev
+-│   │   │   │   ├── in_anglvel_hysteresis
+-│   │   │   │   ├── in_anglvel_offset
+-│   │   │   │   ├── in_anglvel_sampling_frequency
+-│   │   │   │   ├── in_anglvel_scale
+-│   │   │   │   ├── in_anglvel_x_raw
+-│   │   │   │   ├── in_anglvel_y_raw
+-│   │   │   │   ├── in_anglvel_z_raw
+-│   │   │   │   ├── name
+-│   │   │   │   ├── scan_elements
+-│   │   │   │   │   ├── in_anglvel_x_en
+-│   │   │   │   │   ├── in_anglvel_x_index
+-│   │   │   │   │   ├── in_anglvel_x_type
+-│   │   │   │   │   ├── in_anglvel_y_en
+-│   │   │   │   │   ├── in_anglvel_y_index
+-│   │   │   │   │   ├── in_anglvel_y_type
+-│   │   │   │   │   ├── in_anglvel_z_en
+-│   │   │   │   │   ├── in_anglvel_z_index
+-│   │   │   │   │   └── in_anglvel_z_type
+-│   │   │   │   ├── trigger
+-│   │   │   │   │   └── current_trigger
+-...
+diff --git a/Documentation/hid/uhid.txt b/Documentation/hid/uhid.rst
+similarity index 94%
+rename from Documentation/hid/uhid.txt
+rename to Documentation/hid/uhid.rst
+index 958fff945304..b18cb96c885f 100644
+--- a/Documentation/hid/uhid.txt
++++ b/Documentation/hid/uhid.rst
+@@ -1,5 +1,6 @@
+-      UHID - User-space I/O driver support for HID subsystem
+-     ========================================================
++======================================================
++UHID - User-space I/O driver support for HID subsystem
++======================================================
  
-+              +---+
-+              |CTX|    +---------+   +--------------+  +---------------+
-+              +-+-+  +-> REGION0 +---> NAMESPACE0.0 +--> PMEM8 "pm0.0" |
-+                |    | +---------+   +--------------+  +---------------+
-+  +-------+     |    | +---------+   +--------------+  +---------------+
-+  | DIMM0 <-+   |    +-> REGION1 +---> NAMESPACE1.0 +--> PMEM6 "pm1.0" |
-+  +-------+ |   |    | +---------+   +--------------+  +---------------+
-+  | DIMM1 <-+ +-v--+ | +---------+   +--------------+  +---------------+
-+  +-------+ +-+BUS0+---> REGION2 +-+-> NAMESPACE2.0 +--> ND6  "blk2.0" |
-+  | DIMM2 <-+ +----+ | +---------+ | +--------------+  +----------------------+
-+  +-------+ |        |             +-> NAMESPACE2.1 +--> ND5  "blk2.1" | BTT2 |
-+  | DIMM3 <-+        |               +--------------+  +----------------------+
-+  +-------+          | +---------+   +--------------+  +---------------+
-+                     +-> REGION3 +-+-> NAMESPACE3.0 +--> ND4  "blk3.0" |
-+                     | +---------+ | +--------------+  +----------------------+
-+                     |             +-> NAMESPACE3.1 +--> ND3  "blk3.1" | BTT1 |
-+                     |               +--------------+  +----------------------+
-+                     | +---------+   +--------------+  +---------------+
-+                     +-> REGION4 +---> NAMESPACE4.0 +--> ND2  "blk4.0" |
-+                     | +---------+   +--------------+  +---------------+
-+                     | +---------+   +--------------+  +----------------------+
-+                     +-> REGION5 +---> NAMESPACE5.0 +--> ND1  "blk5.0" | BTT0 |
-+                       +---------+   +--------------+  +---------------+------+
-diff --git a/Documentation/nvdimm/security.txt b/Documentation/nvdimm/security.rst
-similarity index 99%
-rename from Documentation/nvdimm/security.txt
-rename to Documentation/nvdimm/security.rst
-index 4c36c05ca98e..ad9dea099b34 100644
---- a/Documentation/nvdimm/security.txt
-+++ b/Documentation/nvdimm/security.rst
-@@ -1,4 +1,5 @@
--NVDIMM SECURITY
-+===============
-+NVDIMM Security
- ===============
+ UHID allows user-space to implement HID transport drivers. Please see
+ hid-transport.txt for an introduction into HID transport drivers. This document
+@@ -22,9 +23,9 @@ If a new device is detected by your HID I/O Driver and you want to register this
+ device with the HID subsystem, then you need to open /dev/uhid once for each
+ device you want to register. All further communication is done by read()'ing or
+ write()'ing "struct uhid_event" objects. Non-blocking operations are supported
+-by setting O_NONBLOCK.
++by setting O_NONBLOCK::
  
- 1. Introduction
-@@ -138,4 +139,5 @@ This command is only available when the master security is enabled, indicated
- by the extended security status.
+-struct uhid_event {
++  struct uhid_event {
+         __u32 type;
+         union {
+                 struct uhid_create2_req create2;
+@@ -32,7 +33,7 @@ struct uhid_event {
+                 struct uhid_input2_req input2;
+                 ...
+         } u;
+-};
++  };
  
- [1]: http://pmem.io/documents/NVDIMM_DSM_Interface-V1.8.pdf
+ The "type" field contains the ID of the event. Depending on the ID different
+ payloads are sent. You must not split a single event across multiple read()'s or
+@@ -86,31 +87,31 @@ the request was handled successfully. O_NONBLOCK does not affect write() as
+ writes are always handled immediately in a non-blocking fashion. Future requests
+ might make use of O_NONBLOCK, though.
+ 
+-  UHID_CREATE2:
++UHID_CREATE2:
+   This creates the internal HID device. No I/O is possible until you send this
+   event to the kernel. The payload is of type struct uhid_create2_req and
+   contains information about your device. You can start I/O now.
+ 
+-  UHID_DESTROY:
++UHID_DESTROY:
+   This destroys the internal HID device. No further I/O will be accepted. There
+   may still be pending messages that you can receive with read() but no further
+   UHID_INPUT events can be sent to the kernel.
+   You can create a new device by sending UHID_CREATE2 again. There is no need to
+   reopen the character device.
+ 
+-  UHID_INPUT2:
++UHID_INPUT2:
+   You must send UHID_CREATE2 before sending input to the kernel! This event
+   contains a data-payload. This is the raw data that you read from your device
+   on the interrupt channel. The kernel will parse the HID reports.
+ 
+-  UHID_GET_REPORT_REPLY:
++UHID_GET_REPORT_REPLY:
+   If you receive a UHID_GET_REPORT request you must answer with this request.
+   You  must copy the "id" field from the request into the answer. Set the "err"
+   field to 0 if no error occurred or to EIO if an I/O error occurred.
+   If "err" is 0 then you should fill the buffer of the answer with the results
+   of the GET_REPORT request and set "size" correspondingly.
+ 
+-  UHID_SET_REPORT_REPLY:
++UHID_SET_REPORT_REPLY:
+   This is the SET_REPORT equivalent of UHID_GET_REPORT_REPLY. Unlike GET_REPORT,
+   SET_REPORT never returns a data buffer, therefore, it's sufficient to set the
+   "id" and "err" fields correctly.
+@@ -120,16 +121,18 @@ read()
+ read() will return a queued output report. No reaction is required to any of
+ them but you should handle them according to your needs.
+ 
+-  UHID_START:
++UHID_START:
+   This is sent when the HID device is started. Consider this as an answer to
+   UHID_CREATE2. This is always the first event that is sent. Note that this
+   event might not be available immediately after write(UHID_CREATE2) returns.
+   Device drivers might required delayed setups.
+   This event contains a payload of type uhid_start_req. The "dev_flags" field
+   describes special behaviors of a device. The following flags are defined:
+-      UHID_DEV_NUMBERED_FEATURE_REPORTS:
+-      UHID_DEV_NUMBERED_OUTPUT_REPORTS:
+-      UHID_DEV_NUMBERED_INPUT_REPORTS:
 +
- [2]: http://www.t13.org/documents/UploadedDocuments/docs2006/e05179r4-ACS-SecurityClarifications.pdf
-diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
-index 54500798f23a..e89c1c332407 100644
---- a/drivers/nvdimm/Kconfig
-+++ b/drivers/nvdimm/Kconfig
-@@ -33,7 +33,7 @@ config BLK_DEV_PMEM
- 	  Documentation/admin-guide/kernel-parameters.rst).  This driver converts
- 	  these persistent memory ranges into block devices that are
- 	  capable of DAX (direct-access) file system mappings.  See
--	  Documentation/nvdimm/nvdimm.txt for more details.
-+	  Documentation/nvdimm/nvdimm.rst for more details.
++      - UHID_DEV_NUMBERED_FEATURE_REPORTS
++      - UHID_DEV_NUMBERED_OUTPUT_REPORTS
++      - UHID_DEV_NUMBERED_INPUT_REPORTS
++
+           Each of these flags defines whether a given report-type uses numbered
+           reports. If numbered reports are used for a type, all messages from
+           the kernel already have the report-number as prefix. Otherwise, no
+@@ -137,33 +140,35 @@ them but you should handle them according to your needs.
+           For messages sent by user-space to the kernel, you must adjust the
+           prefixes according to these flags.
  
- 	  Say Y if you want to use an NVDIMM
+-  UHID_STOP:
++UHID_STOP:
+   This is sent when the HID device is stopped. Consider this as an answer to
+   UHID_DESTROY.
++
+   If you didn't destroy your device via UHID_DESTROY, but the kernel sends an
+   UHID_STOP event, this should usually be ignored. It means that the kernel
+   reloaded/changed the device driver loaded on your HID device (or some other
+   maintenance actions happened).
++
+   You can usually ignored any UHID_STOP events safely.
  
+-  UHID_OPEN:
++UHID_OPEN:
+   This is sent when the HID device is opened. That is, the data that the HID
+   device provides is read by some other process. You may ignore this event but
+   it is useful for power-management. As long as you haven't received this event
+   there is actually no other process that reads your data so there is no need to
+   send UHID_INPUT2 events to the kernel.
+ 
+-  UHID_CLOSE:
++UHID_CLOSE:
+   This is sent when there are no more processes which read the HID data. It is
+   the counterpart of UHID_OPEN and you may as well ignore this event.
+ 
+-  UHID_OUTPUT:
++UHID_OUTPUT:
+   This is sent if the HID device driver wants to send raw data to the I/O
+   device on the interrupt channel. You should read the payload and forward it to
+   the device. The payload is of type "struct uhid_output_req".
+   This may be received even though you haven't received UHID_OPEN, yet.
+ 
+-  UHID_GET_REPORT:
++UHID_GET_REPORT:
+   This event is sent if the kernel driver wants to perform a GET_REPORT request
+   on the control channeld as described in the HID specs. The report-type and
+   report-number are available in the payload.
+@@ -177,11 +182,12 @@ them but you should handle them according to your needs.
+   timed out, the kernel will ignore the response silently. The "id" field is
+   never re-used, so conflicts cannot happen.
+ 
+-  UHID_SET_REPORT:
++UHID_SET_REPORT:
+   This is the SET_REPORT equivalent of UHID_GET_REPORT. On receipt, you shall
+   send a SET_REPORT request to your hid device. Once it replies, you must tell
+   the kernel about it via UHID_SET_REPORT_REPLY.
+   The same restrictions as for UHID_GET_REPORT apply.
+ 
+ ----------------------------------------------------
++
+ Written 2012, David Herrmann <dh.herrmann@gmail.com>
+diff --git a/Documentation/input/input.rst b/Documentation/input/input.rst
+index 47f86a4bf16c..0eb61e67a7b7 100644
+--- a/Documentation/input/input.rst
++++ b/Documentation/input/input.rst
+@@ -188,7 +188,7 @@ LCDs and many other purposes.
+ 
+ The monitor and speaker controls should be easy to add to the hid/input
+ interface, but for the UPSs and LCDs it doesn't make much sense. For this,
+-the hiddev interface was designed. See Documentation/hid/hiddev.txt
++the hiddev interface was designed. See Documentation/hid/hiddev.rst
+ for more information about it.
+ 
+ The usage of the usbhid module is very simple, it takes no parameters,
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3e3b9738f2e6..9458cdaa5b4b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16461,7 +16461,7 @@ M:	Benjamin Tissoires <benjamin.tissoires@redhat.com>
+ L:	linux-usb@vger.kernel.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git
+ S:	Maintained
+-F:	Documentation/hid/hiddev.txt
++F:	Documentation/hid/hiddev.rst
+ F:	drivers/hid/usbhid/
+ 
+ USB INTEL XHCI ROLE MUX DRIVER
 -- 
 2.21.0
 
