@@ -5,44 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB79C5B57B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EE1C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425392064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968A22064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 07:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="VvxLEriO"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KrVTx0Jx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfF1H33 (ORCPT
+        id S1726658AbfF1H32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 03:29:29 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:48038 "EHLO
+        Fri, 28 Jun 2019 03:29:28 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:48000 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726514AbfF1H30 (ORCPT
+        by vger.kernel.org with ESMTP id S1726431AbfF1H3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 03:29:26 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        Fri, 28 Jun 2019 03:29:25 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 90B9FC0BE0;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3A7E4C0BF0;
         Fri, 28 Jun 2019 07:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561706965; bh=Iki79zGofNdgZ8gydLcTATbmq5GAswHgqaJEbRwJaXY=;
+        t=1561706965; bh=ptQEW1jmnkkvegLJJmwgR/EscioN5Yjj07IrJklrYQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=VvxLEriOS+YLUJGdGQYQxKTVFpwb5qHIxlF9TXMRxBxD3H4pREpPX3vzNNqYg7/j1
-         13HYwGJjIK2v5SiawgKvyJ7m4sO9wjwBTkQtAn0MZP6nODT94boYlJi0Ha1ianN9PE
-         lTRcHchPsfqRWgPyRypPul+DSFC0MO2Wvor3fu1EhXT44LBSh4NKD7l6OCBmUtfuFw
-         xqHmy/NAAzEVuH9deap0ui45gJvlseHcyNz4J5HK63V1foC8nUK/TYSIMQxRNVyQPq
-         leOGeczw+9jHlkVdSA8wdQTCmrWw16QpJ8VU2CtFGDEXlz+j8PIZ122jQ6fjFifSxr
-         Qbt+IadQdiMRA==
+        b=KrVTx0JxLo03xrOlh7dC4tKUPwyplOybiGVzBwbpAQvCo3yFCjrqPnZp9JW0Bw4QR
+         0lbZFSL63P6AYJt9zkfQbn9hFUGENaTd639gV7Bjow703AbTALMcL02aDz2sxYBgu1
+         9tceTOzRIDBWrVMFYYUMamlnQ4766aQ8QjuQRe/DAcB4UVDacNnYaDD2+uhCbFc8aV
+         4GZRcvhKbS1ZMMbbZH3cCY6C5buYqcLcRuNHIDdcKPmlDN93/oTBeezRsZiBdmiMg7
+         qdBDASZ2ZSgmdwT+cRdUKVs4fyagx65P0lQl+TiocZprilUgSaL4Vz1Hinewsol27+
+         mXmQPt8RY6mRQ==
 Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id B8EC3A0062;
+        by mailhost.synopsys.com (Postfix) with ESMTP id EDFC8A0241;
         Fri, 28 Jun 2019 07:29:23 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 75AC23E94F;
+        by de02.synopsys.com (Postfix) with ESMTP id D73AA3E967;
         Fri, 28 Jun 2019 09:29:23 +0200 (CEST)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         "David S . Miller" <davem@davemloft.net>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next v2 03/10] net: stmmac: Decrease default RX Watchdog value
-Date:   Fri, 28 Jun 2019 09:29:14 +0200
-Message-Id: <b03961032062c8d04001ded5e1eb8da52c6ab6f1.1561706801.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v2 08/10] net: stmmac: Update RX Tail Pointer to last free entry
+Date:   Fri, 28 Jun 2019 09:29:19 +0200
+Message-Id: <7d3d1779d41980394ad8d153e0137eae783f979c.1561706801.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1561706800.git.joabreu@synopsys.com>
 References: <cover.1561706800.git.joabreu@synopsys.com>
@@ -64,8 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For performance reasons decrease the default RX Watchdog value for the
-minimum allowed.
+Update the RX Tail Pointer to the last available SKB entry.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
@@ -73,39 +72,22 @@ Cc: David S. Miller <davem@davemloft.net>
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Alexandre Torgue <alexandre.torgue@st.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h      | 2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index ad9e9368535d..14d8f6d7cb9a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -246,7 +246,7 @@ struct stmmac_safety_stats {
- 
- /* Max/Min RI Watchdog Timer count value */
- #define MAX_DMA_RIWT		0xff
--#define MIN_DMA_RIWT		0x20
-+#define MIN_DMA_RIWT		0x10
- /* Tx coalesce parameters */
- #define STMMAC_COAL_TX_TIMER	1000
- #define STMMAC_MAX_COAL_TX_TICK	100000
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 0b1900bf4e9e..40408a067400 100644
+index 620dd387e3b1..a629b3144a0d 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2516,9 +2516,9 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
- 	priv->tx_lpi_timer = STMMAC_DEFAULT_TWT_LS;
- 
- 	if (priv->use_riwt) {
--		ret = stmmac_rx_watchdog(priv, priv->ioaddr, MAX_DMA_RIWT, rx_cnt);
-+		ret = stmmac_rx_watchdog(priv, priv->ioaddr, MIN_DMA_RIWT, rx_cnt);
- 		if (!ret)
--			priv->rx_riwt = MAX_DMA_RIWT;
-+			priv->rx_riwt = MIN_DMA_RIWT;
+@@ -3347,6 +3347,8 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
+ 		entry = STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
  	}
+ 	rx_q->dirty_rx = entry;
++	rx_q->rx_tail_addr = rx_q->dma_rx_phy +
++			    (rx_q->dirty_rx * sizeof(struct dma_desc));
+ 	stmmac_set_rx_tail_ptr(priv, priv->ioaddr, rx_q->rx_tail_addr, queue);
+ }
  
- 	if (priv->hw->pcs)
 -- 
 2.7.4
 
