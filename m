@@ -6,64 +6,76 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE97BC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB882C5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A035220828
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A085A208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 16:04:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sJFGMpBO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xXfwBtzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfF1QCc (ORCPT
+        id S1726807AbfF1QEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 12:02:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37522 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbfF1QCc (ORCPT
+        Fri, 28 Jun 2019 12:04:43 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:44642 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726542AbfF1QEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 12:02:32 -0400
+        Fri, 28 Jun 2019 12:04:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GyhiC5rh5R/SA3JdFPBdp/fqKIvCDnAaiwOHr5+37xI=; b=sJFGMpBOwecab1Pbl4HEXHNu2
-        /wBUXjIy6p22D3vgPvvlNhozFXM+KVKACnPL2NbJPVrAZFuKp+3HDfOYnL1Mc7LHP8DLAzdTCKL/M
-        jtQ4Y3JO+eMQlOMEbamh/I0lbFBEmJ/iyZ9EL953YZEt+lcnut1AuQAOJt6eyq3Y4XJvw/K/hS0f2
-        6B7ffZYBcXBu2DeKaHMcFjnO0S5AVIUHx5MiNwuUgl2xWqOhrvhifabag26uh6oHjTBDee+1w7g9a
-        70GpxMVxu0L9Q8NCfgXV5BtLdzrFawxxAHWGZdac3NONSLG0sPJ4Y1oZWTuR2A96BAs07erkqYY/P
-        oibYd4g9w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgtKY-0006oo-Om; Fri, 28 Jun 2019 16:02:30 +0000
-Date:   Fri, 28 Jun 2019 09:02:30 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] fat: Add nobarrier to workaround the strange behavior of
- device
-Message-ID: <20190628160230.GA24232@infradead.org>
-References: <871rzdrdxw.fsf@mail.parknet.co.jp>
- <20190628143216.GA538@infradead.org>
- <87pnmxpx9p.fsf@mail.parknet.co.jp>
+         bh=afW446socrCTj7b00xQ9nuN6qxk9wXvs1a9518imP1M=; b=xXfwBtzVHV3OzDxxlaOAd+2up
+        0b4fUklmXhVyeDeWZ4T4SRovDVQaXhkNThCaManBZ6/gVcr72u7zTKyuJTpUVgQoKHinX1ms9hekl
+        xlpxXc6i3aoxb+c+8V6hm7AqTefoLF08RRUwQRbbtZeVPFQpdYi8oCOYHfsdMwkAuFo7PwR7rmplM
+        Xuy/o6qESXUY8cwDF1sjB65rt71S1bPckGzI99IicBSIeqUjMOplYvQuh2gKcLULi9GOv25WB9V7F
+        Ihgfh8o84JOJri0fhV4Njmz8yXWK2+QukK1+9u1wJQbjz7puU0LCX/koOLb0YLphvHTTGi5KBoljt
+        LzV6sH16Q==;
+Received: from [31.161.200.126] (helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgtME-0001dw-9L; Fri, 28 Jun 2019 16:04:14 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6909D9802C5; Fri, 28 Jun 2019 18:04:08 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 18:04:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Scott Wood <swood@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Message-ID: <20190628160408.GH32547@worktop.programming.kicks-ass.net>
+References: <20190627153031.GA249127@google.com>
+ <20190627155506.GU26519@linux.ibm.com>
+ <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
+ <20190627173831.GW26519@linux.ibm.com>
+ <20190627181638.GA209455@google.com>
+ <20190627184107.GA26519@linux.ibm.com>
+ <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
+ <20190627203612.GD26519@linux.ibm.com>
+ <20190628141522.GF3402@hirez.programming.kicks-ass.net>
+ <20190628155404.GV26519@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87pnmxpx9p.fsf@mail.parknet.co.jp>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190628155404.GV26519@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 12:03:46AM +0900, OGAWA Hirofumi wrote:
-> I see, sounds like good though. Does it work for all stable versions?
-> Can it disable only flush command without other effect? And it would be
-> better to be normal user controllable easily.
+On Fri, Jun 28, 2019 at 08:54:04AM -0700, Paul E. McKenney wrote:
+> Thank you!  Plus it looks like scheduler_ipi() takes an early exit if
+> ->wake_list is empty, regardless of TIF_NEED_RESCHED, right?
 
-The option was added in 2.6.17, so it's been around forever.  But
-no, it obviously is not user exposed as using it on a normal drive
-can lead to data loss.
+Yes, TIF_NEED_RESCHED is checked in the interrupt return path.
