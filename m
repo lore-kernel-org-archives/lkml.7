@@ -2,310 +2,424 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA3EC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFFBC5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734632064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC542064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Evisap28"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yHyY0Y8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfF1Ovo (ORCPT
+        id S1726907AbfF1OwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 10:51:44 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37756 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfF1Ovo (ORCPT
+        Fri, 28 Jun 2019 10:52:01 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42976 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfF1OwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 10:51:44 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g15so797210pgi.4;
-        Fri, 28 Jun 2019 07:51:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vrM3FvmBCbPYQ2NinJ38ellKrJziDThKo2p7l1cubIc=;
-        b=Evisap28no3DoZp+1blRLNe/MsMHoJrcwrgHTfdfp8oS5fsRkJ+KCBzFA7qBqE0Vc2
-         rVf1InKKJ6mTno89RnaySGqORWzBsExbN9/5+xxNgPnxdchEtV+hmVTHqnbC2H0odcrS
-         +8RdOGBo2M99nXQA19y3EbKotHiIm8swiSpulOqAQvUOo62V3qhRBPgydoVsFAOdybJd
-         osWRDmY1U65BlvffsjIuQGkWYAaKwenpQv+SMrp/VVseg/aZMBXeT6dji5hgNQzuF4hU
-         mxNnPJsiHvs+D3DTs6J8cJrmKQ8GpMOkA2AzaJfDsSRDjYDIL8lAI4PDIa+HplkEqJ2A
-         lV6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vrM3FvmBCbPYQ2NinJ38ellKrJziDThKo2p7l1cubIc=;
-        b=uKpV4XLickvpSocqv9YbQBU3xnSn9I4vU5EAGRfoEn0m5zLyIizzlfC6yQcIwcBaSH
-         6ygu9nD5mQQg5GnuR56wp6NHLOLkUf+E+supAfLl0G24/i1m4UwwODB5cvQD6fieBpRg
-         HkLrfB7hBQZl/ajtWvBCSydZAlARdKM/R4UgBZkGK+VJBG9Hj8YMpbBjyiqhYPa2cMG8
-         cAYuJ2CvAU3/90z94WX12Nj4Uk3HpIM68F/xYDsf3uPAC5lIrE47r0cfa/vvax+dSq2M
-         CxOf0SnB5totGnLExohmDYjJvHIHnf9eRf7ExlCt+uCfDEGVXZaSb8fKsg7Gw4nmRAs1
-         BF2g==
-X-Gm-Message-State: APjAAAWPvRNyFFf6ImFLREiTKQVL45Dr6+TPsvtPpzv7XrC9KD9yH7x2
-        raUAvsEFDvYz4DMm0lmx844eaKBNHkf4DYlIy/k=
-X-Google-Smtp-Source: APXvYqzHLJIE8Yt/TpTlK9owcdKJsXTjlr5IAE1/te81nDAdbtjpqFSCX9d6vfvsxsCEpaRj3456gIxXkyusfGx9XwI=
-X-Received: by 2002:a63:f346:: with SMTP id t6mr10077691pgj.203.1561733503232;
- Fri, 28 Jun 2019 07:51:43 -0700 (PDT)
+        Fri, 28 Jun 2019 10:52:01 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5SEoh35124011;
+        Fri, 28 Jun 2019 09:50:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561733443;
+        bh=xTs4w2DViA8p2pJNSIGBC3IeWH6KyBB24wAIbdMUV5E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=yHyY0Y8+gpqQzpSlqU6z2zcjFYtiqdITQFQfntBs8W9KnhBHYJ54lBWG2Wc2PdwQJ
+         KiPdGxlcWUyqEQfXZTID3hfAl7QIpUEUo06VpHxRnfTps7DuF6nOro+RSMftel9fnq
+         Jg1N44pLX9k2XcsmtKJTbCN8REyVfQL2DElQHYYM=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5SEohRL128145
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Jun 2019 09:50:43 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 28
+ Jun 2019 09:50:43 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 28 Jun 2019 09:50:43 -0500
+Received: from [10.250.68.219] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5SEogLt114103;
+        Fri, 28 Jun 2019 09:50:42 -0500
+Subject: Re: [PATCH] sound/soc/codecs/tas5720.c: add ACPI support
+To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <nv@vosn.de>
+References: <20190628123416.16298-1-nikolaus.voss@loewensteinmedical.de>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <ec84d05f-af14-33dd-5f04-6e5525baf138@ti.com>
+Date:   Fri, 28 Jun 2019 10:50:42 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <cover.1561724493.git.mchehab+samsung@kernel.org> <f5c35189e421a5fa02075d611f58506bffe77028.1561724493.git.mchehab+samsung@kernel.org>
-In-Reply-To: <f5c35189e421a5fa02075d611f58506bffe77028.1561724493.git.mchehab+samsung@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 28 Jun 2019 17:51:32 +0300
-Message-ID: <CAHp75VeJy2qEakb5Eag0MV7zuao0aHQCVu6ZMMZpy1JnZDJjYw@mail.gmail.com>
-Subject: Re: [PATCH 17/39] docs: admin-guide: add laptops documentation
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Matan Ziv-Av <matan@svgalib.org>,
-        Mattia Dongili <malattia@linux.it>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190628123416.16298-1-nikolaus.voss@loewensteinmedical.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 3:30 PM Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
->
-> The docs under Documentation/laptops contain users specific
-> information.
->
-
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+On 6/28/19 8:34 AM, Nikolaus Voss wrote:
+> Add support for ACPI enumeration for tas5720 and tas5722.
+> Use device_match API to unify access to driver data for DT and ACPI.
+> Aggregate variant stuff into its own struct and directly reference
+> it in variant data for i2c/of/acpi_device_id.
+> 
+> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
 > ---
->  Documentation/ABI/testing/sysfs-block-device                  | 2 +-
->  Documentation/ABI/testing/sysfs-platform-asus-laptop          | 2 +-
->  Documentation/admin-guide/index.rst                           | 1 +
->  Documentation/admin-guide/kernel-parameters.txt               | 2 +-
->  Documentation/{ => admin-guide}/laptops/asus-laptop.rst       | 0
->  .../{ => admin-guide}/laptops/disk-shock-protection.rst       | 0
->  Documentation/{ => admin-guide}/laptops/index.rst             | 1 -
->  Documentation/{ => admin-guide}/laptops/laptop-mode.rst       | 0
->  Documentation/{ => admin-guide}/laptops/lg-laptop.rst         | 1 -
->  Documentation/{ => admin-guide}/laptops/sony-laptop.rst       | 0
->  Documentation/{ => admin-guide}/laptops/sonypi.rst            | 0
->  Documentation/{ => admin-guide}/laptops/thinkpad-acpi.rst     | 0
->  Documentation/{ => admin-guide}/laptops/toshiba_haps.rst      | 0
->  Documentation/admin-guide/sysctl/vm.rst                       | 4 ++--
->  MAINTAINERS                                                   | 4 ++--
->  drivers/char/Kconfig                                          | 2 +-
->  drivers/platform/x86/Kconfig                                  | 4 ++--
->  17 files changed, 11 insertions(+), 12 deletions(-)
->  rename Documentation/{ => admin-guide}/laptops/asus-laptop.rst (100%)
->  rename Documentation/{ => admin-guide}/laptops/disk-shock-protection.rst (100%)
->  rename Documentation/{ => admin-guide}/laptops/index.rst (95%)
->  rename Documentation/{ => admin-guide}/laptops/laptop-mode.rst (100%)
->  rename Documentation/{ => admin-guide}/laptops/lg-laptop.rst (99%)
->  rename Documentation/{ => admin-guide}/laptops/sony-laptop.rst (100%)
->  rename Documentation/{ => admin-guide}/laptops/sonypi.rst (100%)
->  rename Documentation/{ => admin-guide}/laptops/thinkpad-acpi.rst (100%)
->  rename Documentation/{ => admin-guide}/laptops/toshiba_haps.rst (100%)
->
-> diff --git a/Documentation/ABI/testing/sysfs-block-device b/Documentation/ABI/testing/sysfs-block-device
-> index 0d57bbb4fddc..17f2bc7dd261 100644
-> --- a/Documentation/ABI/testing/sysfs-block-device
-> +++ b/Documentation/ABI/testing/sysfs-block-device
-> @@ -45,7 +45,7 @@ Description:
->                 - Values below -2 are rejected with -EINVAL
->
->                 For more information, see
-> -               Documentation/laptops/disk-shock-protection.rst
-> +               Documentation/admin-guide/laptops/disk-shock-protection.rst
->
->
->  What:          /sys/block/*/device/ncq_prio_enable
-> diff --git a/Documentation/ABI/testing/sysfs-platform-asus-laptop b/Documentation/ABI/testing/sysfs-platform-asus-laptop
-> index d67fa4bafa70..8b0e8205a6a2 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-asus-laptop
-> +++ b/Documentation/ABI/testing/sysfs-platform-asus-laptop
-> @@ -31,7 +31,7 @@ Description:
->                 To control the LED display, use the following :
->                     echo 0x0T000DDD > /sys/devices/platform/asus_laptop/
->                 where T control the 3 letters display, and DDD the 3 digits display.
-> -               The DDD table can be found in Documentation/laptops/asus-laptop.rst
-> +               The DDD table can be found in Documentation/admin-guide/laptops/asus-laptop.rst
->
->  What:          /sys/devices/platform/asus_laptop/bluetooth
->  Date:          January 2007
-> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-> index acd0efa46e9d..9899b78dbe50 100644
-> --- a/Documentation/admin-guide/index.rst
-> +++ b/Documentation/admin-guide/index.rst
-> @@ -81,6 +81,7 @@ configure specific aspects of kernel behavior to your liking.
->     perf-security
->     acpi/index
->     device-mapper/index
-> +   laptops/index
->
->  .. only::  subproject and html
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index a3d3da5baacb..e38b96d061f4 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4373,7 +4373,7 @@
->                         Format: <integer>
->
->         sonypi.*=       [HW] Sony Programmable I/O Control Device driver
-> -                       See Documentation/laptops/sonypi.rst
-> +                       See Documentation/admin-guide/laptops/sonypi.rst
->
->         spectre_v2=     [X86] Control mitigation of Spectre variant 2
->                         (indirect branch speculation) vulnerability.
-> diff --git a/Documentation/laptops/asus-laptop.rst b/Documentation/admin-guide/laptops/asus-laptop.rst
-> similarity index 100%
-> rename from Documentation/laptops/asus-laptop.rst
-> rename to Documentation/admin-guide/laptops/asus-laptop.rst
-> diff --git a/Documentation/laptops/disk-shock-protection.rst b/Documentation/admin-guide/laptops/disk-shock-protection.rst
-> similarity index 100%
-> rename from Documentation/laptops/disk-shock-protection.rst
-> rename to Documentation/admin-guide/laptops/disk-shock-protection.rst
-> diff --git a/Documentation/laptops/index.rst b/Documentation/admin-guide/laptops/index.rst
-> similarity index 95%
-> rename from Documentation/laptops/index.rst
-> rename to Documentation/admin-guide/laptops/index.rst
-> index 001a30910d09..6b554e39863b 100644
-> --- a/Documentation/laptops/index.rst
-> +++ b/Documentation/admin-guide/laptops/index.rst
-> @@ -1,4 +1,3 @@
-> -:orphan:
->
->  ==============
->  Laptop Drivers
-> diff --git a/Documentation/laptops/laptop-mode.rst b/Documentation/admin-guide/laptops/laptop-mode.rst
-> similarity index 100%
-> rename from Documentation/laptops/laptop-mode.rst
-> rename to Documentation/admin-guide/laptops/laptop-mode.rst
-> diff --git a/Documentation/laptops/lg-laptop.rst b/Documentation/admin-guide/laptops/lg-laptop.rst
-> similarity index 99%
-> rename from Documentation/laptops/lg-laptop.rst
-> rename to Documentation/admin-guide/laptops/lg-laptop.rst
-> index f2c2ffe31101..ce9b14671cb9 100644
-> --- a/Documentation/laptops/lg-laptop.rst
-> +++ b/Documentation/admin-guide/laptops/lg-laptop.rst
-> @@ -1,6 +1,5 @@
->  .. SPDX-License-Identifier: GPL-2.0+
->
-> -:orphan:
->
->  LG Gram laptop extra features
->  =============================
-> diff --git a/Documentation/laptops/sony-laptop.rst b/Documentation/admin-guide/laptops/sony-laptop.rst
-> similarity index 100%
-> rename from Documentation/laptops/sony-laptop.rst
-> rename to Documentation/admin-guide/laptops/sony-laptop.rst
-> diff --git a/Documentation/laptops/sonypi.rst b/Documentation/admin-guide/laptops/sonypi.rst
-> similarity index 100%
-> rename from Documentation/laptops/sonypi.rst
-> rename to Documentation/admin-guide/laptops/sonypi.rst
-> diff --git a/Documentation/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> similarity index 100%
-> rename from Documentation/laptops/thinkpad-acpi.rst
-> rename to Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> diff --git a/Documentation/laptops/toshiba_haps.rst b/Documentation/admin-guide/laptops/toshiba_haps.rst
-> similarity index 100%
-> rename from Documentation/laptops/toshiba_haps.rst
-> rename to Documentation/admin-guide/laptops/toshiba_haps.rst
-> diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
-> index 5aceb5cd5ce7..64aeee1009ca 100644
-> --- a/Documentation/admin-guide/sysctl/vm.rst
-> +++ b/Documentation/admin-guide/sysctl/vm.rst
-> @@ -108,7 +108,7 @@ block_dump
->  ==========
->
->  block_dump enables block I/O debugging when set to a nonzero value. More
-> -information on block I/O debugging is in Documentation/laptops/laptop-mode.rst.
-> +information on block I/O debugging is in Documentation/admin-guide/laptops/laptop-mode.rst.
->
->
->  compact_memory
-> @@ -298,7 +298,7 @@ laptop_mode
->  ===========
->
->  laptop_mode is a knob that controls "laptop mode". All the things that are
-> -controlled by this knob are discussed in Documentation/laptops/laptop-mode.rst.
-> +controlled by this knob are discussed in Documentation/admin-guide/laptops/laptop-mode.rst.
->
->
->  legacy_va_layout
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 40d057631004..d35ff73f718a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8978,7 +8978,7 @@ M:        Matan Ziv-Av <matan@svgalib.org>
->  L:     platform-driver-x86@vger.kernel.org
->  S:     Maintained
->  F:     Documentation/ABI/testing/sysfs-platform-lg-laptop
-> -F:     Documentation/laptops/lg-laptop.rst
-> +F:     Documentation/admin-guide/laptops/lg-laptop.rst
->  F:     drivers/platform/x86/lg-laptop.c
->
->  LG2160 MEDIA DRIVER
-> @@ -14830,7 +14830,7 @@ M:      Mattia Dongili <malattia@linux.it>
->  L:     platform-driver-x86@vger.kernel.org
->  W:     http://www.linux.it/~malattia/wiki/index.php/Sony_drivers
->  S:     Maintained
-> -F:     Documentation/laptops/sony-laptop.rst
-> +F:     Documentation/admin-guide/laptops/sony-laptop.rst
->  F:     drivers/char/sonypi.c
->  F:     drivers/platform/x86/sony-laptop.c
->  F:     include/linux/sony-laptop.h
-> diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-> index bb734066075f..442403abd73a 100644
-> --- a/drivers/char/Kconfig
-> +++ b/drivers/char/Kconfig
-> @@ -382,7 +382,7 @@ config SONYPI
->           Device which can be found in many (all ?) Sony Vaio laptops.
->
->           If you have one of those laptops, read
-> -         <file:Documentation/laptops/sonypi.rst>, and say Y or M here.
-> +         <file:Documentation/admin-guide/laptops/sonypi.rst>, and say Y or M here.
->
->           To compile this driver as a module, choose M here: the
->           module will be called sonypi.
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 1f616844fb87..85101c678693 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -448,7 +448,7 @@ config SONY_LAPTOP
->           screen brightness control, Fn keys and allows powering on/off some
->           devices.
->
-> -         Read <file:Documentation/laptops/sony-laptop.rst> for more information.
-> +         Read <file:Documentation/admin-guide/laptops/sony-laptop.rst> for more information.
->
->  config SONYPI_COMPAT
->         bool "Sonypi compatibility"
-> @@ -500,7 +500,7 @@ config THINKPAD_ACPI
->           support for Fn-Fx key combinations, Bluetooth control, video
->           output switching, ThinkLight control, UltraBay eject and more.
->           For more information about this driver see
-> -         <file:Documentation/laptops/thinkpad-acpi.rst> and
-> +         <file:Documentation/admin-guide/laptops/thinkpad-acpi.rst> and
->           <http://ibm-acpi.sf.net/> .
->
->           This driver was formerly known as ibm-acpi.
-> --
-> 2.21.0
->
+>  sound/soc/codecs/tas5720.c | 215 +++++++++++++++++--------------------
+>  1 file changed, 99 insertions(+), 116 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/tas5720.c b/sound/soc/codecs/tas5720.c
+> index 37fab8f22800..ea973764c745 100644
+> --- a/sound/soc/codecs/tas5720.c
+> +++ b/sound/soc/codecs/tas5720.c
+> @@ -7,6 +7,7 @@
+>   * Author: Andreas Dannenberg <dannenberg@ti.com>
+>   */
+>  
+> +#include <linux/acpi.h>
+>  #include <linux/module.h>
+>  #include <linux/errno.h>
+>  #include <linux/device.h>
+> @@ -28,9 +29,10 @@
+>  /* Define how often to check (and clear) the fault status register (in ms) */
+>  #define TAS5720_FAULT_CHECK_INTERVAL		200
+>  
+> -enum tas572x_type {
+> -	TAS5720,
+> -	TAS5722,
+> +struct tas5720_variant {
+> +	const int device_id;
+> +	const struct regmap_config reg_config;
+> +	const struct snd_soc_component_driver comp_drv;
+>  };
+>  
+>  static const char * const tas5720_supply_names[] = {
+> @@ -44,7 +46,7 @@ struct tas5720_data {
+>  	struct snd_soc_component *component;
+>  	struct regmap *regmap;
+>  	struct i2c_client *tas5720_client;
+> -	enum tas572x_type devtype;
+> +	const struct tas5720_variant *variant;
+>  	struct regulator_bulk_data supplies[TAS5720_NUM_SUPPLIES];
+>  	struct delayed_work fault_check_work;
+>  	unsigned int last_fault;
+> @@ -179,17 +181,13 @@ static int tas5720_set_dai_tdm_slot(struct snd_soc_dai *dai,
+>  		goto error_snd_soc_component_update_bits;
+>  
+>  	/* Configure TDM slot width. This is only applicable to TAS5722. */
+> -	switch (tas5720->devtype) {
+> -	case TAS5722:
+> +	if (tas5720->variant->device_id == TAS5722_DEVICE_ID) {
+>  		ret = snd_soc_component_update_bits(component, TAS5722_DIGITAL_CTRL2_REG,
+>  						    TAS5722_TDM_SLOT_16B,
+>  						    slot_width == 16 ?
+>  						    TAS5722_TDM_SLOT_16B : 0);
+>  		if (ret < 0)
+>  			goto error_snd_soc_component_update_bits;
+> -		break;
+> -	default:
+> -		break;
+>  	}
+>  
+>  	return 0;
+> @@ -277,7 +275,7 @@ static void tas5720_fault_check_work(struct work_struct *work)
+>  static int tas5720_codec_probe(struct snd_soc_component *component)
+>  {
+>  	struct tas5720_data *tas5720 = snd_soc_component_get_drvdata(component);
+> -	unsigned int device_id, expected_device_id;
+> +	unsigned int device_id;
+>  	int ret;
+>  
+>  	tas5720->component = component;
+> @@ -301,21 +299,9 @@ static int tas5720_codec_probe(struct snd_soc_component *component)
+>  		goto probe_fail;
+>  	}
+>  
+> -	switch (tas5720->devtype) {
+> -	case TAS5720:
+> -		expected_device_id = TAS5720_DEVICE_ID;
+> -		break;
+> -	case TAS5722:
+> -		expected_device_id = TAS5722_DEVICE_ID;
+> -		break;
+> -	default:
+> -		dev_err(component->dev, "unexpected private driver data\n");
+> -		return -EINVAL;
+> -	}
+> -
+> -	if (device_id != expected_device_id)
+> +	if (device_id != tas5720->variant->device_id)
+>  		dev_warn(component->dev, "wrong device ID. expected: %u read: %u\n",
+> -			 expected_device_id, device_id);
+> +			 tas5720->variant->device_id, device_id);
+>  
+>  	/* Set device to mute */
+>  	ret = snd_soc_component_update_bits(component, TAS5720_DIGITAL_CTRL2_REG,
+> @@ -462,24 +448,6 @@ static bool tas5720_is_volatile_reg(struct device *dev, unsigned int reg)
+>  	}
+>  }
+>  
+> -static const struct regmap_config tas5720_regmap_config = {
+> -	.reg_bits = 8,
+> -	.val_bits = 8,
+> -
+> -	.max_register = TAS5720_MAX_REG,
+> -	.cache_type = REGCACHE_RBTREE,
+> -	.volatile_reg = tas5720_is_volatile_reg,
+> -};
+> -
+> -static const struct regmap_config tas5722_regmap_config = {
+> -	.reg_bits = 8,
+> -	.val_bits = 8,
+> -
+> -	.max_register = TAS5722_MAX_REG,
+> -	.cache_type = REGCACHE_RBTREE,
+> -	.volatile_reg = tas5720_is_volatile_reg,
+> -};
+> -
+>  /*
+>   * DAC analog gain. There are four discrete values to select from, ranging
+>   * from 19.2 dB to 26.3dB.
+> @@ -558,40 +526,6 @@ static const struct snd_soc_dapm_route tas5720_audio_map[] = {
+>  	{ "OUT", NULL, "DAC" },
+>  };
+>  
+> -static const struct snd_soc_component_driver soc_component_dev_tas5720 = {
+> -	.probe			= tas5720_codec_probe,
+> -	.remove			= tas5720_codec_remove,
+> -	.suspend		= tas5720_suspend,
+> -	.resume			= tas5720_resume,
+> -	.controls		= tas5720_snd_controls,
+> -	.num_controls		= ARRAY_SIZE(tas5720_snd_controls),
+> -	.dapm_widgets		= tas5720_dapm_widgets,
+> -	.num_dapm_widgets	= ARRAY_SIZE(tas5720_dapm_widgets),
+> -	.dapm_routes		= tas5720_audio_map,
+> -	.num_dapm_routes	= ARRAY_SIZE(tas5720_audio_map),
+> -	.idle_bias_on		= 1,
+> -	.use_pmdown_time	= 1,
+> -	.endianness		= 1,
+> -	.non_legacy_dai_naming	= 1,
+> -};
+> -
+> -static const struct snd_soc_component_driver soc_component_dev_tas5722 = {
+> -	.probe = tas5720_codec_probe,
+> -	.remove = tas5720_codec_remove,
+> -	.suspend = tas5720_suspend,
+> -	.resume = tas5720_resume,
+> -	.controls = tas5722_snd_controls,
+> -	.num_controls = ARRAY_SIZE(tas5722_snd_controls),
+> -	.dapm_widgets = tas5720_dapm_widgets,
+> -	.num_dapm_widgets = ARRAY_SIZE(tas5720_dapm_widgets),
+> -	.dapm_routes = tas5720_audio_map,
+> -	.num_dapm_routes = ARRAY_SIZE(tas5720_audio_map),
+> -	.idle_bias_on		= 1,
+> -	.use_pmdown_time	= 1,
+> -	.endianness		= 1,
+> -	.non_legacy_dai_naming	= 1,
+> -};
+> -
+>  /* PCM rates supported by the TAS5720 driver */
+>  #define TAS5720_RATES	(SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000 |\
+>  			 SNDRV_PCM_RATE_88200 | SNDRV_PCM_RATE_96000)
+> @@ -637,29 +571,25 @@ static int tas5720_probe(struct i2c_client *client,
+>  {
+>  	struct device *dev = &client->dev;
+>  	struct tas5720_data *data;
+> -	const struct regmap_config *regmap_config;
+> +	const struct tas5720_variant *type;
+>  	int ret;
+>  	int i;
+>  
+> +	type = device_get_match_data(&client->dev);
+> +	if (!type && id)
+> +		type = (const struct tas5720_variant *)id->driver_data;
+> +
+> +	if (!type)
+> +		return -EINVAL;
+> +
+>  	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>  	if (!data)
+>  		return -ENOMEM;
+>  
+>  	data->tas5720_client = client;
+> -	data->devtype = id->driver_data;
+> +	data->variant = type;
+>  
+> -	switch (id->driver_data) {
+> -	case TAS5720:
+> -		regmap_config = &tas5720_regmap_config;
+> -		break;
+> -	case TAS5722:
+> -		regmap_config = &tas5722_regmap_config;
+> -		break;
+> -	default:
+> -		dev_err(dev, "unexpected private driver data\n");
+> -		return -EINVAL;
+> -	}
+> -	data->regmap = devm_regmap_init_i2c(client, regmap_config);
+> +	data->regmap = devm_regmap_init_i2c(client, &type->reg_config);
+>  	if (IS_ERR(data->regmap)) {
+>  		ret = PTR_ERR(data->regmap);
+>  		dev_err(dev, "failed to allocate register map: %d\n", ret);
+> @@ -678,51 +608,104 @@ static int tas5720_probe(struct i2c_client *client,
+>  
+>  	dev_set_drvdata(dev, data);
+>  
+> -	switch (id->driver_data) {
+> -	case TAS5720:
+> -		ret = devm_snd_soc_register_component(&client->dev,
+> -					&soc_component_dev_tas5720,
+> -					tas5720_dai,
+> -					ARRAY_SIZE(tas5720_dai));
+> -		break;
+> -	case TAS5722:
+> -		ret = devm_snd_soc_register_component(&client->dev,
+> -					&soc_component_dev_tas5722,
+> -					tas5720_dai,
+> -					ARRAY_SIZE(tas5720_dai));
+> -		break;
+> -	default:
+> -		dev_err(dev, "unexpected private driver data\n");
+> -		return -EINVAL;
+> -	}
+> -	if (ret < 0) {
+> -		dev_err(dev, "failed to register component: %d\n", ret);
+> -		return ret;
+> -	}
+> +	ret = devm_snd_soc_register_component(&client->dev,
+> +					      &type->comp_drv,
+> +					      tas5720_dai,
+> +					      ARRAY_SIZE(tas5720_dai));
+>  
+> -	return 0;
+> +	if (ret < 0)
+> +		dev_err(dev, "failed to register component: %d\n", ret);
+> +
+> +	return ret;
+>  }
+>  
+> +static const struct tas5720_variant variant[] = {
+> +	{
+> +		.device_id = TAS5720_DEVICE_ID,
+> +		.reg_config = {
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+This patch would be a lot more simple if you leave the regmap_config and
+snd_soc_component_driver definitions where they are above and just store
+a pointer to them down here in this new struct. That also would allow
+for new devices to use them in this list should they ever match.
+
+If you really want to move the data down here for some reason, do it in
+a separate patch at least, this isn't needed as part of adding ACPI support.
+
+Andrew
+
+> +			.reg_bits = 8,
+> +			.val_bits = 8,
+> +
+> +			.max_register = TAS5720_MAX_REG,
+> +			.cache_type = REGCACHE_RBTREE,
+> +			.volatile_reg = tas5720_is_volatile_reg,
+> +		},
+> +		.comp_drv = {
+> +			.probe = tas5720_codec_probe,
+> +			.remove = tas5720_codec_remove,
+> +			.suspend = tas5720_suspend,
+> +			.resume = tas5720_resume,
+> +			.controls = tas5720_snd_controls,
+> +			.num_controls = ARRAY_SIZE(tas5720_snd_controls),
+> +			.dapm_widgets = tas5720_dapm_widgets,
+> +			.num_dapm_widgets = ARRAY_SIZE(tas5720_dapm_widgets),
+> +			.dapm_routes = tas5720_audio_map,
+> +			.num_dapm_routes = ARRAY_SIZE(tas5720_audio_map),
+> +			.idle_bias_on = 1,
+> +			.use_pmdown_time = 1,
+> +			.endianness = 1,
+> +			.non_legacy_dai_naming = 1
+> +		},
+> +	},
+> +	{
+> +		.device_id = TAS5722_DEVICE_ID,
+> +		.reg_config = {
+> +			.reg_bits = 8,
+> +			.val_bits = 8,
+> +
+> +			.max_register = TAS5722_MAX_REG,
+> +			.cache_type = REGCACHE_RBTREE,
+> +			.volatile_reg = tas5720_is_volatile_reg,
+> +		},
+> +		.comp_drv = {
+> +			.probe = tas5720_codec_probe,
+> +			.remove = tas5720_codec_remove,
+> +			.suspend = tas5720_suspend,
+> +			.resume = tas5720_resume,
+> +			.controls = tas5722_snd_controls,
+> +			.num_controls = ARRAY_SIZE(tas5722_snd_controls),
+> +			.dapm_widgets = tas5720_dapm_widgets,
+> +			.num_dapm_widgets = ARRAY_SIZE(tas5720_dapm_widgets),
+> +			.dapm_routes = tas5720_audio_map,
+> +			.num_dapm_routes = ARRAY_SIZE(tas5720_audio_map),
+> +			.idle_bias_on = 1,
+> +			.use_pmdown_time = 1,
+> +			.endianness = 1,
+> +			.non_legacy_dai_naming = 1,
+> +		},
+> +	},
+> +};
+> +
+>  static const struct i2c_device_id tas5720_id[] = {
+> -	{ "tas5720", TAS5720 },
+> -	{ "tas5722", TAS5722 },
+> +	{ "tas5720", (kernel_ulong_t)&variant[0] },
+> +	{ "tas5722", (kernel_ulong_t)&variant[1] },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, tas5720_id);
+>  
+>  #if IS_ENABLED(CONFIG_OF)
+>  static const struct of_device_id tas5720_of_match[] = {
+> -	{ .compatible = "ti,tas5720", },
+> -	{ .compatible = "ti,tas5722", },
+> +	{ .compatible = "ti,tas5720", .data = &variant[0], },
+> +	{ .compatible = "ti,tas5722", .data = &variant[1], },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, tas5720_of_match);
+>  #endif
+>  
+> +#if IS_ENABLED(CONFIG_ACPI)
+> +static const struct acpi_device_id tas5720_acpi_match[] = {
+> +	{ "10TI5720", (kernel_ulong_t)&variant[0] },
+> +	{ "10TI5722", (kernel_ulong_t)&variant[1] },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, tas5720_acpi_match);
+> +#endif
+> +
+>  static struct i2c_driver tas5720_i2c_driver = {
+>  	.driver = {
+>  		.name = "tas5720",
+>  		.of_match_table = of_match_ptr(tas5720_of_match),
+> +		.acpi_match_table = ACPI_PTR(tas5720_acpi_match),
+>  	},
+>  	.probe = tas5720_probe,
+>  	.id_table = tas5720_id,
+> 
