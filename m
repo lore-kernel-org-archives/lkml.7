@@ -2,290 +2,228 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4570C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D45C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9102133F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:29:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXtYX3NP"
+	by mail.kernel.org (Postfix) with ESMTP id 7459C2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:31:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfF1I3x (ORCPT
+        id S1726614AbfF1Iba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:29:53 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39341 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfF1I3x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:29:53 -0400
-Received: by mail-oi1-f193.google.com with SMTP id m202so3682572oig.6;
-        Fri, 28 Jun 2019 01:29:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wADbkeS5LOJ359oEpLhuimSDvyJeB2/U0OY5Pbs0voA=;
-        b=hXtYX3NPzcM+s4NZiFOFgWHXsIYsNpdBINTUvhoXtj9xuH+OGHOVz2717tDAYzlE8Z
-         /AbAyITy431ADWLl7hmVFRHfx0fBS9NW47ikKmVMtFthJ7DaWsPNCF6GQivYjYZVSjBm
-         /JV829erab0fJgEdUXqa2AsktX1smuEWRFf8jQrfXrz4mNuj5/zxjSII88kW3UvSTHr0
-         GeQYSFKKOA3or70muOdu2IsrW0AKmjmSyQQJM4KhvfvElvIGdbbWhALPC16ZdfL7u+7i
-         EPzcQwZdpM3nsbqgptRpBA4ggMnfMLA5APLZHbA5vom2M10iRWw0ReIcuVEkSEIH8mOd
-         A7Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wADbkeS5LOJ359oEpLhuimSDvyJeB2/U0OY5Pbs0voA=;
-        b=J/R3xZYsbIplwfsk846QQ0/k4u0C5Azsi7/qnMEtb5jBZnhQwDOtsICHU0gf9AEyZd
-         qtZi7B4zOJ3/TiOsoLqSiDSrYcvNSKJlTzfieFNVzZ7G+lVHYhnMFSJfNS/86Ry0H5DT
-         gpK5NSONyQcxy8BfInT4E3JRyh1oihzOLi1hYk94qB3lLM+KVHIRs824ZJWpp5La4NqW
-         XJqY7wyqBxwBBD3nYulKnMtRtlvi70/JMyOLVZTalZNSMRDyMKx4+pgflLU2E48GBF6j
-         d75dY6PD0M8q1WZnAQGR0p/gBfEWGENwn2UuV2vlCIeQ3mp5aklyvHR9U7KGS9XZnZbD
-         oRmg==
-X-Gm-Message-State: APjAAAWYmfEHouqfRCy6GYwJjOkUAQHyp0cf3dVWdad1ex59uZsRj9ow
-        mKiWJV9+7rte6kxIAp1PAEWkEvocFI8lD/4qBf1OUlgC
-X-Google-Smtp-Source: APXvYqxqP5OfgNHukxcCChlw05MhhRCfhShAZWORJ3OmQs13yBzT++xGueqBM/yd/XC9oLA7IPQOXEceLccaJpBHmr4=
-X-Received: by 2002:aca:3dd7:: with SMTP id k206mr895423oia.47.1561710591982;
- Fri, 28 Jun 2019 01:29:51 -0700 (PDT)
+        Fri, 28 Jun 2019 04:31:30 -0400
+Received: from mga06.intel.com ([134.134.136.31]:34029 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbfF1Ib3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:31:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 01:31:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,427,1557212400"; 
+   d="scan'208";a="156507439"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
+  by orsmga008.jf.intel.com with ESMTP; 28 Jun 2019 01:31:27 -0700
+Subject: Re: [LKP] fcc784be83 [ 150.952780] WARNING: held lock freed!
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        kernel test robot <lkp@intel.com>
+Cc:     LKP <lkp@01.org>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20190619024114.GI7221@shao2-debian>
+ <20190627103202.2680e4e0@gandalf.local.home>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <515d36cc-343d-e686-9e96-a29166039f7f@intel.com>
+Date:   Fri, 28 Jun 2019 16:31:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1560474949-20497-1-git-send-email-wanpengli@tencent.com>
- <1560474949-20497-2-git-send-email-wanpengli@tencent.com> <CANRm+CzUvTTOuYhsGErSDxdNSmxVr7o8d66DF0KOk4v3Meajmg@mail.gmail.com>
-In-Reply-To: <CANRm+CzUvTTOuYhsGErSDxdNSmxVr7o8d66DF0KOk4v3Meajmg@mail.gmail.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 28 Jun 2019 16:29:40 +0800
-Message-ID: <CANRm+Cw0vmqi4s4HhnMqs=hZZixHmU87CGO_ujTGoN_Osjx76g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] KVM: LAPIC: Optimize timer latency consider world
- switch time
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190627103202.2680e4e0@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping again,
-On Fri, 21 Jun 2019 at 17:44, Wanpeng Li <kernellwp@gmail.com> wrote:
+On 6/27/19 10:32 PM, Steven Rostedt wrote:
+> On Wed, 19 Jun 2019 10:41:14 +0800
+> kernel test robot <lkp@intel.com> wrote:
 >
-> ping,
-> On Fri, 14 Jun 2019 at 09:15, Wanpeng Li <kernellwp@gmail.com> wrote:
-> >
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Advance lapic timer tries to hidden the hypervisor overhead between the
-> > host emulated timer fires and the guest awares the timer is fired. Howe=
-ver,
-> > even though after more sustaining optimizations, kvm-unit-tests/tscdead=
-line_latency
-> > still awares ~1000 cycles latency since we lost the time between the en=
-d of
-> > wait_lapic_expire and the guest awares the timer is fired. There are
-> > codes between the end of wait_lapic_expire and the world switch, furthe=
-rmore,
-> > the world switch itself also has overhead. Actually the guest_tsc is eq=
-ual
-> > to the target deadline time in wait_lapic_expire is too late, guest wil=
-l
-> > aware the latency between the end of wait_lapic_expire() and after vmen=
-try
-> > to the guest. This patch takes this time into consideration.
-> >
-> > The vmentry_advance_ns module parameter is conservative 25ns by default=
-(thanks
-> > to Radim's kvm-unit-tests/vmentry_latency.flat), it can be tuned/rework=
-ed in
-> > the future.
-> >
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > v3 -> v4:
-> >  * default value is 25ns
-> >  * compute vmentry_advance_cycles in kvm_set_tsc_khz() path
-> > v2 -> v3:
-> >  * read-only module parameter
-> >  * get_vmentry_advance_cycles() not inline
-> > v1 -> v2:
-> >  * rename get_vmentry_advance_delta to get_vmentry_advance_cycles
-> >  * cache vmentry_advance_cycles by setting param bit 0
-> >  * add param max limit
-> >
-> >  arch/x86/kvm/lapic.c   | 21 ++++++++++++++++++---
-> >  arch/x86/kvm/lapic.h   |  2 ++
-> >  arch/x86/kvm/vmx/vmx.c |  3 ++-
-> >  arch/x86/kvm/x86.c     | 12 ++++++++++--
-> >  arch/x86/kvm/x86.h     |  2 ++
-> >  5 files changed, 34 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > index e82a18c..e92e4e5 100644
-> > --- a/arch/x86/kvm/lapic.c
-> > +++ b/arch/x86/kvm/lapic.c
-> > @@ -1528,6 +1528,19 @@ static inline void adjust_lapic_timer_advance(st=
-ruct kvm_vcpu *vcpu,
-> >         apic->lapic_timer.timer_advance_ns =3D timer_advance_ns;
-> >  }
-> >
-> > +u64 compute_vmentry_advance_cycles(struct kvm_vcpu *vcpu)
-> > +{
-> > +       u64 cycles;
-> > +       struct kvm_lapic *apic =3D vcpu->arch.apic;
-> > +
-> > +       cycles =3D vmentry_advance_ns * vcpu->arch.virtual_tsc_khz;
-> > +       do_div(cycles, 1000000);
-> > +
-> > +       apic->lapic_timer.vmentry_advance_cycles =3D cycles;
-> > +
-> > +       return cycles;
-> > +}
-> > +
-> >  void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
-> >  {
-> >         struct kvm_lapic *apic =3D vcpu->arch.apic;
-> > @@ -1541,7 +1554,8 @@ void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
-> >
-> >         tsc_deadline =3D apic->lapic_timer.expired_tscdeadline;
-> >         apic->lapic_timer.expired_tscdeadline =3D 0;
-> > -       guest_tsc =3D kvm_read_l1_tsc(vcpu, rdtsc());
-> > +       guest_tsc =3D kvm_read_l1_tsc(vcpu, rdtsc()) +
-> > +               apic->lapic_timer.vmentry_advance_cycles;
-> >         apic->lapic_timer.advance_expire_delta =3D guest_tsc - tsc_dead=
-line;
-> >
-> >         if (guest_tsc < tsc_deadline)
-> > @@ -1569,7 +1583,8 @@ static void start_sw_tscdeadline(struct kvm_lapic=
- *apic)
-> >         local_irq_save(flags);
-> >
-> >         now =3D ktime_get();
-> > -       guest_tsc =3D kvm_read_l1_tsc(vcpu, rdtsc());
-> > +       guest_tsc =3D kvm_read_l1_tsc(vcpu, rdtsc()) +
-> > +               apic->lapic_timer.vmentry_advance_cycles;
-> >
-> >         ns =3D (tscdeadline - guest_tsc) * 1000000ULL;
-> >         do_div(ns, this_tsc_khz);
-> > @@ -2326,7 +2341,7 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int t=
-imer_advance_ns)
-> >                 apic->lapic_timer.timer_advance_ns =3D timer_advance_ns=
-;
-> >                 apic->lapic_timer.timer_advance_adjust_done =3D true;
-> >         }
-> > -
-> > +       apic->lapic_timer.vmentry_advance_cycles =3D 0;
-> >
-> >         /*
-> >          * APIC is created enabled. This will prevent kvm_lapic_set_bas=
-e from
-> > diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> > index 3674717..7c38950 100644
-> > --- a/arch/x86/kvm/lapic.h
-> > +++ b/arch/x86/kvm/lapic.h
-> > @@ -33,6 +33,7 @@ struct kvm_timer {
-> >         u64 expired_tscdeadline;
-> >         u32 timer_advance_ns;
-> >         s64 advance_expire_delta;
-> > +       u64 vmentry_advance_cycles;
-> >         atomic_t pending;                       /* accumulated triggere=
-d timers */
-> >         bool hv_timer_in_use;
-> >         bool timer_advance_adjust_done;
-> > @@ -226,6 +227,7 @@ static inline int kvm_lapic_latched_init(struct kvm=
-_vcpu *vcpu)
-> >  bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
-> >
-> >  void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
-> > +u64 compute_vmentry_advance_cycles(struct kvm_vcpu *vcpu);
-> >
-> >  bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_ir=
-q *irq,
-> >                         struct kvm_vcpu **dest_vcpu);
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 8fbea03..dc81c78 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -7064,7 +7064,8 @@ static int vmx_set_hv_timer(struct kvm_vcpu *vcpu=
-, u64 guest_deadline_tsc,
-> >
-> >         vmx =3D to_vmx(vcpu);
-> >         tscl =3D rdtsc();
-> > -       guest_tscl =3D kvm_read_l1_tsc(vcpu, tscl);
-> > +       guest_tscl =3D kvm_read_l1_tsc(vcpu, tscl) +
-> > +               vcpu->arch.apic->lapic_timer.vmentry_advance_cycles;
-> >         delta_tsc =3D max(guest_deadline_tsc, guest_tscl) - guest_tscl;
-> >         lapic_timer_advance_cycles =3D nsec_to_cycles(vcpu,
-> >                                                     ktimer->timer_advan=
-ce_ns);
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 0a05a4e..5e79b6c 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -145,6 +145,12 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_=
-IWUSR);
-> >  static int __read_mostly lapic_timer_advance_ns =3D -1;
-> >  module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
-> >
-> > +/*
-> > + * lapic timer vmentry advance (tscdeadline mode only) in nanoseconds.
-> > + */
-> > +u32 __read_mostly vmentry_advance_ns =3D 25;
-> > +module_param(vmentry_advance_ns, uint, S_IRUGO);
-> > +
-> >  static bool __read_mostly vector_hashing =3D true;
-> >  module_param(vector_hashing, bool, S_IRUGO);
-> >
-> > @@ -1592,6 +1598,8 @@ static int kvm_set_tsc_khz(struct kvm_vcpu *vcpu,=
- u32 user_tsc_khz)
-> >         kvm_get_time_scale(user_tsc_khz * 1000LL, NSEC_PER_SEC,
-> >                            &vcpu->arch.virtual_tsc_shift,
-> >                            &vcpu->arch.virtual_tsc_mult);
-> > +       if (user_tsc_khz !=3D vcpu->arch.virtual_tsc_khz)
-> > +               compute_vmentry_advance_cycles(vcpu);
-> >         vcpu->arch.virtual_tsc_khz =3D user_tsc_khz;
-> >
-> >         /*
-> > @@ -9134,8 +9142,6 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
-> >         }
-> >         vcpu->arch.pio_data =3D page_address(page);
-> >
-> > -       kvm_set_tsc_khz(vcpu, max_tsc_khz);
-> > -
-> >         r =3D kvm_mmu_create(vcpu);
-> >         if (r < 0)
-> >                 goto fail_free_pio_data;
-> > @@ -9148,6 +9154,8 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
-> >         } else
-> >                 static_key_slow_inc(&kvm_no_apic_vcpu);
-> >
-> > +       kvm_set_tsc_khz(vcpu, max_tsc_khz);
-> > +
-> >         vcpu->arch.mce_banks =3D kzalloc(KVM_MAX_MCE_BANKS * sizeof(u64=
-) * 4,
-> >                                        GFP_KERNEL_ACCOUNT);
-> >         if (!vcpu->arch.mce_banks) {
-> > diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> > index e08a128..9998989 100644
-> > --- a/arch/x86/kvm/x86.h
-> > +++ b/arch/x86/kvm/x86.h
-> > @@ -299,6 +299,8 @@ extern u64 kvm_supported_xcr0(void);
-> >
-> >  extern unsigned int min_timer_period_us;
-> >
-> > +extern unsigned int vmentry_advance_ns;
-> > +
-> >  extern bool enable_vmware_backdoor;
-> >
-> >  extern struct static_key kvm_no_apic_vcpu;
-> > --
-> > 2.7.4
-> >
+>> Greetings,
+>>
+>> 0day kernel testing robot got the below dmesg and the first bad commit is
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>>
+>> commit fcc784be837714a9173b372ff9fb9b514590dad9
+>> Author:     Steven Rostedt (VMware) <rostedt@goodmis.org>
+>> AuthorDate: Wed Apr 4 14:06:30 2018 -0400
+>> Commit:     Ingo Molnar <mingo@kernel.org>
+>> CommitDate: Thu Jun 21 18:19:01 2018 +0200
+>>
+>>      locking/lockdep: Do not record IRQ state within lockdep code
+>>      
+>>      While debugging where things were going wrong with mapping
+>>      enabling/disabling interrupts with the lockdep state and actual real
+>>      enabling and disabling interrupts, I had to silent the IRQ
+>>      disabling/enabling in debug_check_no_locks_freed() because it was
+>>      always showing up as it was called before the splat was.
+>>      
+>>      Use raw_local_irq_save/restore() for not only debug_check_no_locks_freed()
+>>      but for all internal lockdep functions, as they hide useful information
+>>      about where interrupts were used incorrectly last.
+>>      
+>>      Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>>      Cc: Andrew Morton <akpm@linux-foundation.org>
+>>      Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>>      Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+>>      Cc: Peter Zijlstra <peterz@infradead.org>
+>>      Cc: Thomas Gleixner <tglx@linutronix.de>
+>>      Cc: Will Deacon <will.deacon@arm.com>
+>>      Link: https://lkml.kernel.org/lkml/20180404140630.3f4f4c7a@gandalf.local.home
+>>      Signed-off-by: Ingo Molnar <mingo@kernel.org>
+>>
+> I can crash with this config with and without this commit.
+>
+> Are you sure the bug is with this commit? Can you consistently
+> reproduce the problem with the commit applied, and consistently not see
+> the problem with the commit removed? If not, then you should definitely
+> add that procedure before sending these reports, otherwise they will
+> start to be ignored.
+
+Hi Steve,
+
+Sorry for the inconvenience, the robot noticed that the error "WARNING: 
+held lock freed!" first appears with commit fcc784be83
+and didn't find the error in parent commit. then it sent it out 
+automatically. We'll improve the robot to sent reports more carefully.
+
+Best Regards,
+Rong Chen
+
+
+>
+> -- Steve
+>
+>
+>> 03eeafdd9a  locking/rwsem: Fix up_read_non_owner() warning with DEBUG_RWSEMS
+>> fcc784be83  locking/lockdep: Do not record IRQ state within lockdep code
+>> bed3c0d84e  Merge tag 'for-5.2-rc5-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+>> 1c6b40509d  Add linux-next specific files for 20190618
+>> +----------------------------------------------------------------------------------+------------+------------+------------+---------------+
+>> |                                                                                  | 03eeafdd9a | fcc784be83 | bed3c0d84e | next-20190618 |
+>> +----------------------------------------------------------------------------------+------------+------------+------------+---------------+
+>> | boot_successes                                                                   | 874        | 277        | 276        | 21            |
+>> | boot_failures                                                                    | 14         | 19         | 64         | 7             |
+>> | BUG:soft_lockup-CPU##stuck_for#s                                                 | 11         | 2          | 4          |               |
+>> | EIP:smp_call_function_single                                                     | 1          | 1          |            |               |
+>> | Kernel_panic-not_syncing:softlockup:hung_tasks                                   | 11         | 2          | 4          |               |
+>> | EIP:_raw_spin_unlock_irqrestore                                                  | 3          | 0          | 1          |               |
+>> | EIP:__copy_user_ll                                                               | 2          | 0          | 1          |               |
+>> | invoked_oom-killer:gfp_mask=0x                                                   | 1          | 2          | 1          |               |
+>> | Mem-Info                                                                         | 1          | 2          | 2          |               |
+>> | EIP:wp_page_copy                                                                 | 3          |            |            |               |
+>> | BUG:kernel_hang_in_early-boot_stage                                              | 1          |            |            |               |
+>> | EIP:shmem_getpage_gfp                                                            | 2          | 0          | 1          |               |
+>> | BUG:workqueue_lockup-pool                                                        | 1          | 0          | 1          |               |
+>> | BUG:kernel_hang_in_boot-around-mounting-root_stage                               | 0          | 1          |            |               |
+>> | Out_of_memory:Kill_process                                                       | 0          | 1          |            |               |
+>> | WARNING:held_lock_freed                                                          | 0          | 13         | 58         | 7             |
+>> | is_freeing_memory#-#,with_a_lock_still_held_there                                | 0          | 13         | 58         | 7             |
+>> | BUG:kernel_hang_in_early-boot_stage,last_printk:early_console_in_setup_code      | 0          | 1          |            |               |
+>> | EIP:rcu_is_watching                                                              | 0          | 1          |            |               |
+>> | EIP:ring_buffer_consume                                                          | 0          | 0          | 1          |               |
+>> | page_allocation_failure:order:#,mode:#(GFP_KERNEL|__GFP_NORETRY),nodemask=(null) | 0          | 0          | 1          |               |
+>> | BUG:unable_to_handle_page_fault_for_address                                      | 0          | 0          | 1          |               |
+>> | Oops:#[##]                                                                       | 0          | 0          | 1          |               |
+>> | EIP:debug_check_no_locks_freed                                                   | 0          | 0          | 1          |               |
+>> | Kernel_panic-not_syncing:Fatal_exception                                         | 0          | 0          | 1          |               |
+>> +----------------------------------------------------------------------------------+------------+------------+------------+---------------+
+>>
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kernel test robot <lkp@intel.com>
+>>
+>> [  147.470176] init: tty3 main process (364) terminated with status 1
+>> [  147.497211] init: tty3 main process ended, respawning
+>> [  147.612415] init: tty6 main process (365) terminated with status 1
+>> [  147.687364] init: tty6 main process ended, respawning
+>> [  150.937355]
+>> [  150.941927] =========================
+>> [  150.952780] WARNING: held lock freed!
+>> [  150.963993] 4.17.0-09747-gfcc784b #1 Tainted: G                T
+>> [  150.989489] -------------------------
+>> [  151.005112] trinity-main/356 is freeing memory ce93de20-ce93de47, with a lock still held there!
+>> [  151.040984] (ptrval) (&wq#3){....}, at: __wake_up_common_lock+0x5a/0x140
+>> [  151.069147] 1 lock held by trinity-main/356:
+>> [  151.087139]  #0: (ptrval) (&sb->s_type->i_mutex_key){....}, at: iterate_dir+0x42/0x2a0
+>> [  151.117861]
+>> [  151.117861] stack backtrace:
+>> [  151.132116] CPU: 1 PID: 356 Comm: trinity-main Tainted: G                T 4.17.0-09747-gfcc784b #1
+>> [  151.162025] Call Trace:
+>> [  151.170423]  dump_stack+0x2bc/0x41a
+>> [  151.182441]  debug_check_no_locks_freed+0x354/0x370
+>> [  151.199065]  __raw_spin_lock_init+0x29/0x80
+>> [  151.214099]  __init_waitqueue_head+0x2e/0x70
+>> [  151.228615]  ? proc_tgid_base_lookup+0x40/0x40
+>> [  151.243819]  proc_fill_cache+0x118/0x360
+>> [  151.256974]  ? format_decode+0x1a6/0x890
+>> [  151.270037]  ? format_decode+0x308/0x890
+>> [  151.283679]  ? vsnprintf+0x622/0x860
+>> [  151.293724]  proc_map_files_readdir+0x648/0x6a0
+>> [  151.306619]  ? proc_tgid_base_lookup+0x40/0x40
+>> [  151.320722]  iterate_dir+0x225/0x2a0
+>> [  151.331637]  ? __fget_light+0x7f/0x100
+>> [  151.342010]  ksys_getdents64+0x1ac/0x2f0
+>> [  151.353610]  ? sys_old_readdir+0x160/0x160
+>> [  151.366017]  sys_getdents64+0x24/0x40
+>> [  151.377653]  do_fast_syscall_32+0x14b/0x780
+>> [  151.392209]  entry_SYSENTER_32+0x53/0x86
+>> [  151.404786] EIP: 0xa7fc4cd9
+>> [  151.423581] Code: 08 8b 80 5c cd ff ff 85 d2 74 02 89 02 5d c3 8b 04 24 c3 8b 0c 24 c3 8b 1c 24 c3 8b 3c 24 c3 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
+>> [  151.547420] EAX: ffffffda EBX: 0000002b ECX: 08aefedc EDX: 00008000
+>> [  151.586666] ESI: 08aefedc EDI: ffffffd0 EBP: 00000026 ESP: af88aac4
+>> [  151.605753] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
+>> [main] Added 10680 filenames from /proc
+>> [main] Added 13148 filenames from /proc
+>> [main] Added 13151 filenames from /proc
+>> [  156.784347] init: tty4 main process (366) terminated with status 1
+>> [  156.849880] init: tty4 main process ended, respawning
+>>
+>>                                                            # HH:MM RESULT GOOD BAD GOOD_BUT_DIRTY DIRTY_NOT_BAD
+>> git bisect start v4.18 v4.17 --
+>> git bisect  bad c81b995f00c7a1c2ca9ad67f5bb4a50d02f98f84  # 23:06  B      6     1    0   0  Merge branch 'perf-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>> git bisect good 2a70ea5cda00214a1d573acf19fa0cd06d947e38  # 23:43  G    205     0    9   9  Merge tag 'hsi-for-4.18' of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-hsi
+>> git bisect good e7655d2b25466c534ed1f539367dae595bb0bd20  # 00:13  G    209     0   15  15  Merge tag 'for-4.18-part2-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+>> git bisect good 6d90eb7ba341b3eb035121eff0b69d370cbc251e  # 00:44  G    206     0   18  18  Merge tag 'dma-rename-4.18' of git://git.infradead.org/users/hch/dma-mapping
+>> git bisect good 5e2204832b20ef9db859dd6a2e955ac3e33eef27  # 01:07  G    212     0    9   9  Merge tag 'powerpc-4.18-2' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
+>> git bisect good 6242258b6b472f8fdd8ed9b735cc1190c185d16d  # 01:37  G    206     0   24  24  Merge branch 'timers-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>> git bisect  bad d4e860eaf0584dfcc1375e06eeb34f85f43c8d34  # 02:10  B     36     1    4   4  Merge branch 'x86-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>> git bisect  bad 2da2ca24a38f0200111e3b8823c08d02cb59d362  # 03:07  B     90     1    7   7  Merge branch 'locking-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>> git bisect good a43de489934cadcbc4cc08a6590fdcc833768461  # 04:05  G    302     0   21  21  Merge branch 'ras-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>> git bisect good 7ea959c45769612aa92557fb6464679f5fec7d9e  # 04:37  G    306     0   18  18  locking/refcounts: Implement refcount_dec_and_lock_irqsave()
+>> git bisect  bad fcc784be837714a9173b372ff9fb9b514590dad9  # 06:19  B     19     1    3   3  locking/lockdep: Do not record IRQ state within lockdep code
+>> git bisect good 03eeafdd9ab06a770d42c2b264d50dff7e2f4eee  # 06:47  G    305     0   18  18  locking/rwsem: Fix up_read_non_owner() warning with DEBUG_RWSEMS
+>> # first bad commit: [fcc784be837714a9173b372ff9fb9b514590dad9] locking/lockdep: Do not record IRQ state within lockdep code
+>> git bisect good 03eeafdd9ab06a770d42c2b264d50dff7e2f4eee  # 07:23  G    904     0   40  58  locking/rwsem: Fix up_read_non_owner() warning with DEBUG_RWSEMS
+>> # extra tests on HEAD of internal-eywa/master
+>> git bisect  bad b4c6b079156ebc029114a45812d5e5298f51fa01  # 07:23  B      8     3    0   2  Intel Next: Add release files for v5.2-rc5 2019-06-17
+>> # extra tests on tree/branch linus/master
+>> git bisect  bad bed3c0d84e7e25c8e0964d297794f4c215b01f33  # 08:52  B      5     2    0   0  Merge tag 'for-5.2-rc5-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+>> # extra tests with first bad commit reverted
+>> git bisect  bad b0f031ad2fd0758b5bb7c58afe7f8bbaab65c265  # 09:42  B    126     2   10  10  Revert "locking/lockdep: Do not record IRQ state within lockdep code"
+>> # extra tests on tree/branch linux-next/master
+>> git bisect  bad 1c6b40509daf5190b1fd2c758649f7df1da4827b  # 10:20  B      9     2    0   0  Add linux-next specific files for 20190618
+>>
+>> ---
+>> 0-DAY kernel test infrastructure                Open Source Technology Center
+>> https://lists.01.org/pipermail/lkp                          Intel Corporation
+> _______________________________________________
+> LKP mailing list
+> LKP@lists.01.org
+> https://lists.01.org/mailman/listinfo/lkp
