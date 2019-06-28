@@ -2,104 +2,120 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E99EC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9563AC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B69B208CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:02:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=russell.cc header.i=@russell.cc header.b="yBmL4jvp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VWqN69+v"
+	by mail.kernel.org (Postfix) with ESMTP id 70BDB208CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 03:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfF1DCV (ORCPT
+        id S1727028AbfF1DDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 23:02:21 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:40623 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726542AbfF1DCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 23:02:21 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id F20F13BD;
-        Thu, 27 Jun 2019 23:02:19 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 27 Jun 2019 23:02:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        0nIuPza9JXPm3s5p5IiEosU7RutHY/f00ebuDHdt7wE=; b=yBmL4jvp7rsPCcLb
-        IFhKyImO+XZO73g5TJWxS8NOeQ5IbHCf7weaSg5c4SRoAy7LhC5Tnu4REDcKdS16
-        GDTwQMxvlucc2qIRQ2+5u5cryC5vZhqMQNCYsk6Lopy2CyveX3N0g35P99xUK+32
-        QSei7TgwqhnavXquPrZhUTG+NPimxeOKCaRMlXRv1ljVJQSZymj6u+aoMvBSLli8
-        QO1qzdatYoyqNHPAADcsxX7W9bY6lod/m7z72c0r5clLVeIIpFXzx75nFUAM3m+x
-        ag6smrGFXtHT/GL8CXwi3ZF7BIbm4ULFiS0vLO6qtOGP3T61M78/Oj2ESKJL9Eat
-        R47dIw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=0nIuPza9JXPm3s5p5IiEosU7RutHY/f00ebuDHdt7
-        wE=; b=VWqN69+vW80b8fJeaUpDr3ZtpRa5initaPO3nllJh1y8C09Ny2bps/qtv
-        Am5Lm85JkJW5fPAJUAYQBqzxTnXYfhjxp2b5iN+bs8bVhSmb0vApwpklxozJz8nN
-        9pGguPWYeG+A9XHKJYvqyWnErNWAGdFOp4xB9MeIuRL7ZcONCKBVQJtLdCkJlFur
-        QTpGEicvP3gNnMYCjjdH0b4dzzeJGm7k8e97SKNQ+bGdeJCdhoiXb7SV211QEJ/B
-        yW/ELRvOLIXOCKNKuGcczLyjBRYx3sf/bf71uHkF2GPW2puBlAN4EA5RCsQrqc4l
-        0b8n5UF0WkfJsGArK+pjpgpHSxo+g==
-X-ME-Sender: <xms:OYMVXdWSnAhGXFUij_cwVzqcpyRXb60ehByjbd6TZe9afTgioDttCw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudelgdeiiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdeftddmnecujfgurhepkffuhf
-    fvffgjfhgtfggggfesthejredttderjeenucfhrhhomheptfhushhsvghllhcuvehurhhr
-    vgihuceorhhushgtuhhrsehruhhsshgvlhhlrdgttgeqnecukfhppeduvdegrddujedurd
-    ejvddrudegfeenucfrrghrrghmpehmrghilhhfrhhomheprhhushgtuhhrsehruhhsshgv
-    lhhlrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:OYMVXRgqHDdtoR6Hjpq70ACrAlC9WqVYKFF3C0Pspeen7-kJZgmOFQ>
-    <xmx:OYMVXR68rKtKTSmx-QPU2ES6WC5DvklTpYGDzFYDsutFxxMnYThzKA>
-    <xmx:OYMVXZ4dEytgzHDjJXuQ7kSI5Az4q9MRwIRzQPt5OUShJNAULBiNQQ>
-    <xmx:O4MVXTt8JfGAHUz5QQQXn31QqxAwrUUWv21HndsriD6gcJ40BiobZQ>
-Received: from crackle.ozlabs.ibm.com (124-171-72-143.dyn.iinet.net.au [124.171.72.143])
-        by mail.messagingengine.com (Postfix) with ESMTPA id EA70C380076;
-        Thu, 27 Jun 2019 23:02:14 -0400 (EDT)
-Message-ID: <b21dc7e6aa44f984fe64a2bd6c9a3158c6a10bf8.camel@russell.cc>
-Subject: Re: [PATCH] powerpc/eeh_cache: fix a W=1 kernel-doc warning
-From:   Russell Currey <ruscur@russell.cc>
-To:     Qian Cai <cai@lca.pw>, mpe@ellerman.id.au
-Cc:     sbobroff@linux.ibm.com, oohall@gmail.com, benh@kernel.crashing.org,
-        paulus@samba.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 28 Jun 2019 13:02:11 +1000
-In-Reply-To: <1559767579-7151-1-git-send-email-cai@lca.pw>
-References: <1559767579-7151-1-git-send-email-cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.3 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 27 Jun 2019 23:03:40 -0400
+Received: from mx7.zte.com.cn ([202.103.147.169]:54190 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726542AbfF1DDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 23:03:39 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id BBF1EA339E319CD62CE4;
+        Fri, 28 Jun 2019 11:03:37 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x5S32eB1063726;
+        Fri, 28 Jun 2019 11:02:40 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019062811031122-1800719 ;
+          Fri, 28 Jun 2019 11:03:11 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH 2/3] media: exynos4-is: fix leaked of_node references
+Date:   Fri, 28 Jun 2019 11:01:15 +0800
+Message-Id: <1561690876-20977-3-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1561690876-20977-1-git-send-email-wen.yang99@zte.com.cn>
+References: <1561690876-20977-1-git-send-email-wen.yang99@zte.com.cn>
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-06-28 11:03:11,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-06-28 11:02:45,
+        Serialize complete at 2019-06-28 11:02:45
+X-MAIL: mse-fl1.zte.com.cn x5S32eB1063726
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-05 at 16:46 -0400, Qian Cai wrote:
-> The opening comment mark "/**" is reserved for kernel-doc comments,
-> so
-> it will generate a warning with "make W=1".
-> 
-> arch/powerpc/kernel/eeh_cache.c:37: warning: cannot understand
-> function
-> prototype: 'struct pci_io_addr_range
-> 
-> Since this is not a kernel-doc for the struct below, but rather an
-> overview of this source eeh_cache.c, just use the free-form comments
-> kernel-doc syntax instead.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+The call to of_get_child_by_name returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Looks good to me.
+Detected by coccinelle with the following warnings:
+drivers/media/platform/exynos4-is/fimc-is.c:813:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/fimc-is.c:870:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/fimc-is.c:885:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:545:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 541, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:528:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:534:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
 
-Acked-by: Russell Currey <ruscur@russell.cc>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-media@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/media/platform/exynos4-is/fimc-is.c   | 1 +
+ drivers/media/platform/exynos4-is/media-dev.c | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
+index e043d55..b7cc8e6 100644
+--- a/drivers/media/platform/exynos4-is/fimc-is.c
++++ b/drivers/media/platform/exynos4-is/fimc-is.c
+@@ -806,6 +806,7 @@ static int fimc_is_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 
+ 	is->pmu_regs = of_iomap(node, 0);
++	of_node_put(node);
+ 	if (!is->pmu_regs)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index d53427a..a838189 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -501,6 +501,7 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
+ 			continue;
+ 
+ 		ret = fimc_md_parse_port_node(fmd, port, index);
++		of_node_put(port);
+ 		if (ret < 0) {
+ 			of_node_put(node);
+ 			goto cleanup;
+@@ -542,6 +543,7 @@ static int __of_get_csis_id(struct device_node *np)
+ 	if (!np)
+ 		return -EINVAL;
+ 	of_property_read_u32(np, "reg", &reg);
++	of_node_put(np);
+ 	return reg - FIMC_INPUT_MIPI_CSI2_0;
+ }
+ 
+-- 
+2.9.5
 
