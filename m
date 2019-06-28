@@ -2,94 +2,270 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8552AC5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70DCC5B57A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF6F205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE430205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 10:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfF1KaG (ORCPT
+        id S1726605AbfF1KcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 06:30:06 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:55213 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfF1KaG (ORCPT
+        Fri, 28 Jun 2019 06:32:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53148 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfF1KcL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 06:30:06 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N7zW7-1ic3kn1u4Z-0155ao; Fri, 28 Jun 2019 12:29:54 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pci: tegra: use correct gpio/consumer.h header
-Date:   Fri, 28 Jun 2019 12:29:45 +0200
-Message-Id: <20190628102953.2369879-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 28 Jun 2019 06:32:11 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 0687A27EA8A
+Subject: Re: [PATCH 1/2] iio: common: cros_ec_sensors: determine protocol
+ version
+To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Gwendal Grignou <gwendal@chromium.org>
+Cc:     kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>
+References: <cover.1561642224.git.fabien.lahoudere@collabora.com>
+ <4724b46665d919cae0ea3b60e334053b0b17d686.1561642224.git.fabien.lahoudere@collabora.com>
+ <f8df78b4-8ae9-f292-cf70-ef682a4a47f4@collabora.com>
+ <CAPUE2ut=imx=mhV_iyMwaYmfkFJ0zw3Jvsbxf+TbfqV1Sa_WJw@mail.gmail.com>
+ <d1c6e0c7ec81b3cb780feecb919c068415b96000.camel@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <82115f5d-3fcc-6358-6eb3-a8955671a063@collabora.com>
+Date:   Fri, 28 Jun 2019 12:32:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <d1c6e0c7ec81b3cb780feecb919c068415b96000.camel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:zzUOH1RM+MdToDOSOYUpqwuJhko3ET3hxBn0kGPsim+JIxZYxG1
- XL97K10O0FLtJdhcC8TvvrZ+HcsVaob78pOqwoRHayQtkPzyUnXYmeRdZiooYnSWvlgaDLJ
- UX1HF8WDmnop1ec+ErULmE0rOEZyKM9nbU1B5YxhZUgpe/PXfZSN184ruVBbzJmE9JY+IqL
- 1bg1JEOXFUbYd0uZnb7tg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uOgGL06hKEA=:hS06+fwf1oiScunEXCJ/Q9
- FPwbQ2nNg3RcBK2Z9OxHw/n6hxX2YWAfAAjYU7fMzaedv9Y426SIChlRpgYSQ+5t+eUhN8oSz
- aaw315oUK2DmZfIALtX85tDBJM+OoAGBWE50jGYGYdnmTvobIpZFJUqEl0uVJ5Qoq+WJ0F62O
- 2hX5thowapEb41Jc2InElhRBOz8qRdnLXZ4bSldmCez5V+/wxUakjVTnRUQGDJHW74vufTVMT
- WsXmutUVJyujUC3x2gmo35hOjKY6wnekr8ldjGC/KVYXIBxMtdDPLYuDv3pfOgSF1TTHiH7an
- eIrvajVlLiZhCD6rNogHzfZarweSFnJMmqm569guG0m/111LCUqrYSj2X3Qs7m1Ots2MZQ+Vg
- klsnxXrX2LR8NWpc7GCIh4JnKdpyoWtRUssI8pa/zhtNwF51/rgpELL57qCf3kTOyXWwt6r6U
- jMev3IoHVG9fBcjSenEVIfDLoxLo/hIbHvAc/rIP6EvIJQ+w26caYlYXB/A2sBu48oexCAhNQ
- md1cRiV8C6nvA6qekQ142FAUBnJoxm46ZbIGa4VtDxzQ86TvT9FYY4UyriUWcT/j1+axePGRX
- mPclptMg0uriMqyRMZWrVOT/Lv1QwUlRgavwu3iPKYG40LqwsaxvBPWKSpmrmweCYz9uxETKg
- zl66Dzbhcab4Xoq2Azb7Hlkd4Nx71qBL/isG7n3a6Hc/VXc90NuYFE+CeKXGZ49ZHrfb7UTfP
- RmamvsxPm1j3TdFlCE1Ls3psNS/Anqx2Zf/P0w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-linux/gpio.h is not the correct header for modern interfaces and
-causes a build failure without CONFIG_GPIOLIB:
+Hi Fabien, Gwendal
 
-drivers/pci/controller/pci-tegra.c: In function 'tegra_pcie_port_reset':
-drivers/pci/controller/pci-tegra.c:551:3: error: implicit declaration of function 'gpiod_set_value'; did you mean 'gpio_set_value'? [-Werror=implicit-function-declaration]
-   gpiod_set_value(port->reset_gpio, 1);
-   ^~~~~~~~~~~~~~~
+On 28/6/19 11:36, Fabien Lahoudere wrote:
+> Thanks Gwendal for reviewing.
+> 
+> Le jeudi 27 juin 2019 à 14:59 -0700, Gwendal Grignou a écrit :
+>> On Thu, Jun 27, 2019 at 8:59 AM Enric Balletbo i Serra
+>> <enric.balletbo@collabora.com> wrote:
+>>> Hi,
+>>>
+>>> cc'ing Doug, Gwendal and Enrico that might be interested to give a
+>>> review.
+>>>
+>>> This patch can be picked alone without 2/2, an is needed to have
+>>> cros-ec-sensors
+>>> legacy support on ARM (see [1] and [2])
+>>>
+>>> Jonathan, as [1] and [2] will go through the chrome-platform tree
+>>> if you don't
+>>> mind I'd also like to carry with this patch once you're fine with
+>>> it.
+>>>
+>>> Thanks,
+>>> ~ Enric
+>>>
+>>> [1] https://patchwork.kernel.org/patch/11014329/
+>>> [2] https://patchwork.kernel.org/patch/11014327/
+>>>
+>>> On 27/6/19 16:04, Fabien Lahoudere wrote:
+>>>> This patch adds a function to determine which version of the
+>>>> protocol is used to communicate with EC.
+>>>>
+>>>> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+>>>> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
+>>>
+>>> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>>
+>>>> ---
+>>>>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 36
+>>>> ++++++++++++++++++-
+>>>>  1 file changed, 35 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git
+>>>> a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>>>> b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>>>> index 130362ca421b..2e0f97448e64 100644
+>>>> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>>>> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>>>> @@ -25,6 +25,31 @@ static char *cros_ec_loc[] = {
+>>>>       [MOTIONSENSE_LOC_MAX] = "unknown",
+>>>>  };
+>>>>
+>>>> +static int cros_ec_get_host_cmd_version_mask(struct
+>>>> cros_ec_device *ec_dev,
+>>>> +                                          u16 cmd_offset, u16
+>>>> cmd, u32 *mask)
+>>>> +{
+>>>> +     int ret;
+>>>> +     struct {
+>>>> +             struct cros_ec_command msg;
+>>>> +             union {
+>>>> +                     struct ec_params_get_cmd_versions params;
+>>>> +                     struct ec_response_get_cmd_versions resp;
+>>>> +             };
+>>>> +     } __packed buf = {
+>>>> +             .msg = {
+>> add
+>> .version = 0,
+>> As the variable is coming from the stack, the version should be set.
+> 
 
-Use linux/gpio/consumer.h instead.
+I think that from the C standard when using struct partial initialization in c
+it follows the same rules as static so shouldn't be really needed. Anyway this
+is always confusing me is for that I tend to use buf = { }; or memset the struct
+and then assign the required values so it's clear that all the memebers of the
+struct are initialized.
 
-Fixes: 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/pci/controller/pci-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 9cc03a2549c0..1775b88c0aec 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -17,7 +17,7 @@
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/export.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/iopoll.h>
- #include <linux/irq.h>
--- 
-2.20.0
+> Ack
+> 
+>>>> +                     .command = EC_CMD_GET_CMD_VERSIONS +
+>>>> cmd_offset,
+>>>> +                     .insize = sizeof(struct
+>>>> ec_response_get_cmd_versions),
+>>>> +                     .outsize = sizeof(struct
+>>>> ec_params_get_cmd_versions)
+>>>> +                     },
+>>>> +             .params = {.cmd = cmd}
+>>>> +     };
+>>>> +
+>>>> +     ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+>>>> +     if (ret >= 0)
+>> It should be > 0: when the command is a success, it returns the
+>> number
+>> of byte in the response buffer. When don't expect == 0  here, because
+>> when successful, EC_CMD_GET_CMD_VERSIONS will return a mask.
+> 
 
+Gwendal, from the downstream commit I see:
+
+        ret = cros_ec_cmd_xfer_status(ec_dev, msg);
+        if (ret >= 0) {
+                if (msg->result == EC_RES_SUCCESS)
+                        *mask = resp->version_mask;
+                else
+                        *mask = 0;
+        }
+        return ret;
+
+I think we're confusing cros_ec_cmd_xfer_status() vs cros_ec_cmd_xfer()?
+
+cros_ec_cmd_xfer_status() will return _only_ a value >= 0 value _if result is
+EC_RES_SUCCESS_ otherwise will return a negative value (see
+cros_ec_cmd_xfer_status() implementation). So the second check is not really
+needed and the same can be implemented as:
+
+        ret = cros_ec_cmd_xfer_status(ec_dev, msg);
+        if (ret < 0)
+                *mask = 0;
+        else
+                *mask = resp->version_mask;
+
+        return ret;
+
+But then I don't see the point to set the mask to 0 and even can be simplified as:
+
+        ret = cros_ec_cmd_xfer_status(ec_dev, msg);
+        if (ret < 0)
+                return ret;
+
+        *mask = msg.resp.version_mask;
+
+        return 0;
+
+So
+
+cros_ec_get_host_cmd_version_mask() returns 0 on success or negative value on
+error (protocol error || result != EC_RES_SUCCESS)
+
+
+> Ack, so we assume that on success, 0 is not possible.
+> 
+>>>> +             *mask = buf.resp.version_mask;
+>>>> +     return ret;
+>>>> +}
+>>>> +
+>>>>  int cros_ec_sensors_core_init(struct platform_device *pdev,
+>>>>                             struct iio_dev *indio_dev,
+>>>>                             bool physical_device)
+>>>> @@ -33,6 +58,8 @@ int cros_ec_sensors_core_init(struct
+>>>> platform_device *pdev,
+>>>>       struct cros_ec_sensors_core_state *state =
+>>>> iio_priv(indio_dev);
+>>>>       struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
+>>>>       struct cros_ec_sensor_platform *sensor_platform =
+>>>> dev_get_platdata(dev);
+>>>> +     u32 ver_mask;
+>>>> +     int ret;
+>>>>
+>>>>       platform_set_drvdata(pdev, indio_dev);
+>>>>
+>>>> @@ -47,8 +74,15 @@ int cros_ec_sensors_core_init(struct
+>>>> platform_device *pdev,
+>>>>
+>>>>       mutex_init(&state->cmd_lock);
+>>>>
+>>>> +     ret = cros_ec_get_host_cmd_version_mask(state->ec,
+>>>> +                                             ec->cmd_offset,
+>>>> +                                             EC_CMD_MOTION_SENSE
+>>>> _CMD,
+>>>> +                                             &ver_mask);
+>>>> +     if (ret < 0)
+>> Use:
+>> if (ret <= 0 || ver_mask == 0) {
+>> In case the EC is really old or misbehaving, we don't want to set an
+>> invalid version later.
+> Ack, indeed the communication can work but with invalid data.
+
+
+From the downstream commit:
+
+        if (ret < 0 || ver_mask == 0) {
+                dev_warn(dev, "Motionsense cmd version too old, aborting...\n");
+                return -ENODEV;
+        }
+
+But with the above implementation is the same as
+
+        if (ret < 0) {
+                dev_warn(dev, "Motionsense cmd version too old, aborting...\n");
+                return -ENODEV;
+        }
+
+Or I'm missing something and what we really want is to cover a corner case? I
+such case I think we should use cros_ec_cmd_xfer() instead of
+cros_ec_cmd_xfer_status()
+
+Thanks,
+~ Enric
+
+>>>> +             return ret;
+>>>> +
+>>>>       /* Set up the host command structure. */
+>>>> -     state->msg->version = 2;
+>>>> +     state->msg->version = fls(ver_mask) - 1;;
+>>>>       state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec-
+>>>>> cmd_offset;
+>>>>       state->msg->outsize = sizeof(struct
+>>>> ec_params_motion_sense);
+>>>>
+>>>>
+> 
