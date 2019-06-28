@@ -2,211 +2,260 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5BBC5B579
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7EBC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06546206E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003092133F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I9HndQ+/";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JGxRWFCQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/GoLEao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfF1I0A (ORCPT
+        id S1726664AbfF1I0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:26:00 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39446 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfF1I0A (ORCPT
+        Fri, 28 Jun 2019 04:26:33 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41617 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbfF1I0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:26:00 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A085560ACA; Fri, 28 Jun 2019 08:25:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561710358;
-        bh=K0puubr6KjSd/U2wC8/D1AvaBvSGxwauajMJtt24LxU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=I9HndQ+/CmYCm+NMCV44KlTBpKX3EYSenyqWHB/avflg/VFHeRooX41CHzGF5gpUh
-         nLoe0Z4V6QIzJ8klXSykG6wwz8m5S0jB6JkO7Eakn9dMXYoTAXHz2HtI3bNu6rND8v
-         p8vUPRl6c1ae7Ha3NMdjdfKaqeIyrihawbA6xOqY=
-Received: from [192.168.0.105] (unknown [106.51.23.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 792FA607C3;
-        Fri, 28 Jun 2019 08:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561710357;
-        bh=K0puubr6KjSd/U2wC8/D1AvaBvSGxwauajMJtt24LxU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JGxRWFCQWdjd7mVig7t1+xz/bVfp0sgKWQjqqacTY5+NdQUXPjSF/rJ5mzqPISWD1
-         VZA47Vrmok12DfKLHvQ2xhfWD748/0+cf0lhkU2Ka5dluyFHwrMGI1gv99c02pT9QN
-         M79gfAczgIityx3ErojTBjgZ9Dc9yhp5cyLORhZc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 792FA607C3
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH RFC 3/4] cpufreq: qcom: Update the bandwidth levels on
- frequency change
-To:     Sibi Sankar <sibis@codeaurora.org>, viresh.kumar@linaro.org,
-        nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org
-Cc:     agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        saravanak@google.com
-References: <20190627133424.4980-1-sibis@codeaurora.org>
- <20190627133424.4980-4-sibis@codeaurora.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <aaf49cd8-bc0c-672f-2a20-67382e06461c@codeaurora.org>
-Date:   Fri, 28 Jun 2019 13:55:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 28 Jun 2019 04:26:33 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o101so4858887ota.8;
+        Fri, 28 Jun 2019 01:26:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yv6CgnWPC6xWm8QD/szBDMm8993i38/ihT9u27h0IHg=;
+        b=H/GoLEaonyeEZGb/WdSNNwT0RKBkwJ+epaDaWfsOguW1ydhvWbSbwKtl33NMN9i2m8
+         4YgucQRpRpAj11NGAPXL1N6Upj0r4fa4YR6t0s5wOFoljLN+EmakXd1tfahz1hCskGtv
+         d7xiJM8RVgBagmJlykCsk+u67mBH37AiwXILVK83OKJGYlFGuyQ+1DkSGU/2cGs9S5FK
+         KxxmtUL5bRKoGEoaz8tSikz12ZSqU84znM7sD62zx2lL3V+VqRCP232O1crpiURARA9r
+         l1BuLi3QAgDiuXPbyUpZcCqFVO/FhwNpXYyD1DSxHzknKJSGlebq6X4RuPzP0nzmNkDZ
+         04Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yv6CgnWPC6xWm8QD/szBDMm8993i38/ihT9u27h0IHg=;
+        b=TWj+2af4txb6fz1QktR4XaQE11ffW9bVY0n5kdV12hXjyaBwSZATPGeChqHeajAvea
+         Pe/O9hpbe0di7WWLwqS1UHcEIeFt/kPrcW89xkekAWm7mSWgZ32Ze53cKnAxHedmzFqQ
+         VjlEl+QsaSgyulErDqKmQLomCvVHF78wSVYNwkmgOXiwUDAkkTqFYF8ud5nXjNrXm5V3
+         wP5BmNVKL3AW+EcTcj++rD+2roKghjEOFONvT9mDJnnIlm4S4cHP7fTRttyd9+r7exmM
+         2fri1uDrpo4qJdWRJG7K9LzL3vnlusjLkoX3R0Q8eCHvKSBObrxQD+YLcSi6GmekouyD
+         xPag==
+X-Gm-Message-State: APjAAAUO9RXaXr+wjUkMFeGSGcihYBeqUbFsaKKiDYnXo4PRcUQ5dc0g
+        M05deLYsskoTq2f3V0vovxFS9S81OMplydWeiHisKsU7q2I=
+X-Google-Smtp-Source: APXvYqz/O75u9syzUZvnyk6BcL7Q+bOdMy3y6p5OqPd/UERUb8K0K03+LcpR7BORZfLKctoLiq90hrg13YbDW4N5BoM=
+X-Received: by 2002:a9d:62c4:: with SMTP id z4mr6806096otk.56.1561710392254;
+ Fri, 28 Jun 2019 01:26:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190627133424.4980-4-sibis@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+ <1560770687-23227-3-git-send-email-wanpengli@tencent.com> <20190618133541.GA3932@amt.cnet>
+ <CANRm+Cz0v1VfDaCCWX+5RzCusTV7g9Hwr+OLGDRijeyqFx=Kzw@mail.gmail.com>
+ <20190619210346.GA13033@amt.cnet> <CANRm+Cwxz7rR3o2m1HKg0-0z30B8-O-i4RrVC6EMG1jgBRxWPg@mail.gmail.com>
+ <20190621214205.GA4751@amt.cnet> <CANRm+CxUgkF7zRmHC_MD2s00waj6qztWdPAm_u9Rhk34_bevfQ@mail.gmail.com>
+ <20190625190010.GA3377@amt.cnet> <CANRm+CzmraRUNQfTWNZ3Bu5dJhjvL1eE9+=c2i_vwtYYT9ao2w@mail.gmail.com>
+ <20190626164401.GA2211@amt.cnet>
+In-Reply-To: <20190626164401.GA2211@amt.cnet>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 28 Jun 2019 16:26:20 +0800
+Message-ID: <CANRm+Cy0FFqoUuFsLGxGFN04wYaX_1y2t--EXacdwj7Q3wbOLQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] KVM: LAPIC: inject lapic timer interrupt by posted interrupt
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 27 Jun 2019 at 00:44, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+>
+> On Wed, Jun 26, 2019 at 07:02:13PM +0800, Wanpeng Li wrote:
+> > On Wed, 26 Jun 2019 at 03:03, Marcelo Tosatti <mtosatti@redhat.com> wro=
+te:
+> > >
+> > > On Mon, Jun 24, 2019 at 04:53:53PM +0800, Wanpeng Li wrote:
+> > > > On Sat, 22 Jun 2019 at 06:11, Marcelo Tosatti <mtosatti@redhat.com>=
+ wrote:
+> > > > >
+> > > > > On Fri, Jun 21, 2019 at 09:42:39AM +0800, Wanpeng Li wrote:
+> > > > > > On Thu, 20 Jun 2019 at 05:04, Marcelo Tosatti <mtosatti@redhat.=
+com> wrote:
+> > > > > > >
+> > > > > > > Hi Li,
+> > > > > > >
+> > > > > > > On Wed, Jun 19, 2019 at 08:36:06AM +0800, Wanpeng Li wrote:
+> > > > > > > > On Tue, 18 Jun 2019 at 21:36, Marcelo Tosatti <mtosatti@red=
+hat.com> wrote:
+> > > > > > > > >
+> > > > > > > > > On Mon, Jun 17, 2019 at 07:24:44PM +0800, Wanpeng Li wrot=
+e:
+> > > > > > > > > > From: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > > > > >
+> > > > > > > > > > Dedicated instances are currently disturbed by unnecess=
+ary jitter due
+> > > > > > > > > > to the emulated lapic timers fire on the same pCPUs whi=
+ch vCPUs resident.
+> > > > > > > > > > There is no hardware virtual timer on Intel for guest l=
+ike ARM. Both
+> > > > > > > > > > programming timer in guest and the emulated timer fires=
+ incur vmexits.
+> > > > > > > > > > This patch tries to avoid vmexit which is incurred by t=
+he emulated
+> > > > > > > > > > timer fires in dedicated instance scenario.
+> > > > > > > > > >
+> > > > > > > > > > When nohz_full is enabled in dedicated instances scenar=
+io, the emulated
+> > > > > > > > > > timers can be offload to the nearest busy housekeeping =
+cpus since APICv
+> > > > > > > > > > is really common in recent years. The guest timer inter=
+rupt is injected
+> > > > > > > > > > by posted-interrupt which is delivered by housekeeping =
+cpu once the emulated
+> > > > > > > > > > timer fires.
+> > > > > > > > > >
+> > > > > > > > > > The host admin should fine tuned, e.g. dedicated instan=
+ces scenario w/
+> > > > > > > > > > nohz_full cover the pCPUs which vCPUs resident, several=
+ pCPUs surplus
+> > > > > > > > > > for busy housekeeping, disable mwait/hlt/pause vmexits =
+to keep in non-root
+> > > > > > > > > > mode, ~3% redis performance benefit can be observed on =
+Skylake server.
+> > > > > > > > > >
+> > > > > > > > > > w/o patch:
+> > > > > > > > > >
+> > > > > > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Tim=
+e  Max Time   Avg time
+> > > > > > > > > >
+> > > > > > > > > > EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us=
+   106.09us   0.71us ( +-   1.09% )
+> > > > > > > > > >
+> > > > > > > > > > w/ patch:
+> > > > > > > > > >
+> > > > > > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Tim=
+e  Max Time         Avg time
+> > > > > > > > > >
+> > > > > > > > > > EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us=
+    57.88us   0.72us ( +-   4.02% )
+> > > > > > > > > >
+> > > > > > > > > > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > > > > > > > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > > > > > > > > > Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > > > > > > > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > > > > > ---
+> > > > > > > > > >  arch/x86/kvm/lapic.c            | 33 +++++++++++++++++=
++++++++++-------
+> > > > > > > > > >  arch/x86/kvm/lapic.h            |  1 +
+> > > > > > > > > >  arch/x86/kvm/vmx/vmx.c          |  3 ++-
+> > > > > > > > > >  arch/x86/kvm/x86.c              |  5 +++++
+> > > > > > > > > >  arch/x86/kvm/x86.h              |  2 ++
+> > > > > > > > > >  include/linux/sched/isolation.h |  2 ++
+> > > > > > > > > >  kernel/sched/isolation.c        |  6 ++++++
+> > > > > > > > > >  7 files changed, 44 insertions(+), 8 deletions(-)
+> > > > > > > > > >
+> > > > > > > > > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.=
+c
+> > > > > > > > > > index 87ecb56..9ceeee5 100644
+> > > > > > > > > > --- a/arch/x86/kvm/lapic.c
+> > > > > > > > > > +++ b/arch/x86/kvm/lapic.c
+> > > > > > > > > > @@ -122,6 +122,13 @@ static inline u32 kvm_x2apic_id(st=
+ruct kvm_lapic *apic)
+> > > > > > > > > >       return apic->vcpu->vcpu_id;
+> > > > > > > > > >  }
+> > > > > > > > > >
+> > > > > > > > > > +bool posted_interrupt_inject_timer(struct kvm_vcpu *vc=
+pu)
+> > > > > > > > > > +{
+> > > > > > > > > > +     return pi_inject_timer && kvm_vcpu_apicv_active(v=
+cpu) &&
+> > > > > > > > > > +             kvm_hlt_in_guest(vcpu->kvm);
+> > > > > > > > > > +}
+> > > > > > > > > > +EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
+> > > > > > > > >
+> > > > > > > > > Paolo, can you explain the reasoning behind this?
+> > > > > > > > >
+> > > > > > > > > Should not be necessary...
+> > > > > >
+> > > > > > https://lkml.org/lkml/2019/6/5/436  "Here you need to check
+> > > > > > kvm_halt_in_guest, not kvm_mwait_in_guest, because you need to =
+go
+> > > > > > through kvm_apic_expired if the guest needs to be woken up from
+> > > > > > kvm_vcpu_block."
+> > > > >
+> > > > > Ah, i think he means that a sleeping vcpu (in kvm_vcpu_block) mus=
+t
+> > > > > be woken up, if it receives a timer interrupt.
+> > > > >
+> > > > > But your patch will go through:
+> > > > >
+> > > > > kvm_apic_inject_pending_timer_irqs
+> > > > > __apic_accept_irq ->
+> > > > > vmx_deliver_posted_interrupt ->
+> > > > > kvm_vcpu_trigger_posted_interrupt returns false
+> > > > > (because vcpu->mode !=3D IN_GUEST_MODE) ->
+> > > > > kvm_vcpu_kick
+> > > > >
+> > > > > Which will wakeup the vcpu.
+> > > >
+> > > > Hi Marcelo,
+> > > >
+> > > > >
+> > > > > Apart from this oops, which triggers when running:
+> > > > > taskset -c 1 ./cyclictest -D 3600 -p 99 -t 1 -h 30 -m -n  -i 5000=
+0 -b 40
+> > > >
+> > > > I try both host and guest use latest kvm/queue  w/ CONFIG_PREEMPT
+> > > > enabled, and expose mwait as your config, however, there is no oops=
+.
+> > > > Can you reproduce steadily or encounter casually? Can you reproduce
+> > > > w/o the patchset?
+> > >
+> > > Hi Li,
+> >
+> > Hi Marcelo,
+> >
+> > >
+> > > Steadily.
+> > >
+> > > Do you have this as well:
+> >
+> > w/ or w/o below diff, testing on both SKX and HSW servers on hand, I
+> > didn't see any oops. Could you observe the oops disappear when w/o
+> > below diff? If the answer is yes, then the oops will not block to
+> > merge the patchset since Paolo prefers to add the kvm_hlt_in_guest()
+> > condition to guarantee be woken up from kvm_vcpu_block().
+>
+> He agreed that its not necessary. Removing the HLT in guest widens
+> the scope of the patch greatly.
+>
+> > For the
+> > exitless injection if the guest is running(DPDK style workloads that
+> > busy-spin on network card) scenarios, we can find a solution later.
+>
+> What is the use-case for HLT in guest again?
 
-On 6/27/2019 7:04 PM, Sibi Sankar wrote:
-> Add support to parse and update optional OPP tables attached to the
-> cpu nodes when the OPP bandwidth values are populated to enable
-> scaling of DDR/L3 bandwidth levels with frequency change.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
-[]...
+Together w/ mwait/hlt/pause no vmexits for dedicated instances. In
+addition, hlt in guest will disable pv qspinlock which is not optimal
+for dedicated instance. Refer to commit
+b2798ba0b876 (KVM: X86: Choose qspinlock when dedicated physical CPUs
+are available) and commit caa057a2cad64 (KVM: X86: Provide a
+capability to disable HLT intercepts).
 
->   
-> @@ -79,13 +108,29 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->   {
->   	u32 data, src, lval, i, core_count, prev_cc = 0, prev_freq = 0, freq;
->   	u32 volt;
-> +	u64 rate;
->   	unsigned int max_cores = cpumask_weight(policy->cpus);
->   	struct cpufreq_frequency_table	*table;
-> +	struct device_node *opp_table_np, *np;
-> +	int ret;
->   
->   	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
->   	if (!table)
->   		return -ENOMEM;
->   
-> +	ret = dev_pm_opp_of_add_table(cpu_dev);
-> +	if (!ret) {
-> +		/* Disable all opps and cross-validate against LUT */
-> +		opp_table_np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
-> +		for_each_available_child_of_node(opp_table_np, np) {
-> +			ret = of_property_read_u64(np, "opp-hz", &rate);
-> +			dev_pm_opp_disable(cpu_dev, rate);
-> +		}
-> +		of_node_put(opp_table_np);
-> +	} else {
-> +		dev_err(cpu_dev, "Couldn't add OPP table from dt\n");
+>
+> I'll find the source for the oops (or confirm can't reproduce with
+> kvm/queue RSN).
 
-The changelog seems to suggest specifying OPP tables in DT is optional,
-but here we seem to error out if the tables are missing.
+Looking forward to it, thanks Marcelo, hope we can catch the upcoming
+merge window. :)
 
-> +	}
-> +
->   	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
->   		data = readl_relaxed(base + REG_FREQ_LUT +
->   				      i * LUT_ROW_SIZE);
-> @@ -104,7 +149,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->   
->   		if (freq != prev_freq && core_count == max_cores) {
->   			table[i].frequency = freq;
-> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
-> +			qcom_cpufreq_update_opp(cpu_dev, freq, volt);
->   			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
->   				freq, core_count);
->   		} else {
-> @@ -125,7 +170,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->   			if (prev_cc != max_cores) {
->   				prev->frequency = prev_freq;
->   				prev->flags = CPUFREQ_BOOST_FREQ;
-> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
-> +				qcom_cpufreq_update_opp(cpu_dev, prev_freq,
-> +							volt);
->   			}
->   
->   			break;
-> @@ -168,6 +214,7 @@ static void qcom_get_related_cpus(int index, struct cpumask *m)
->   static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->   {
->   	struct device *dev = &global_pdev->dev;
-> +	struct opp_table *opp_table = NULL;
->   	struct of_phandle_args args;
->   	struct device_node *cpu_np;
->   	struct device *cpu_dev;
-> @@ -202,6 +249,8 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->   	if (!base)
->   		return -ENOMEM;
->   
-> +	opp_table = dev_pm_opp_set_paths(cpu_dev);
-> +
->   	/* HW should be in enabled state to proceed */
->   	if (!(readl_relaxed(base + REG_ENABLE) & 0x1)) {
->   		dev_err(dev, "Domain-%d cpufreq hardware not enabled\n", index);
-> @@ -237,6 +286,8 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->   
->   	return 0;
->   error:
-> +	if (opp_table)
-> +		dev_pm_opp_put_paths(opp_table);
->   	devm_iounmap(dev, base);
->   	return ret;
->   }
-> @@ -275,6 +326,8 @@ static struct cpufreq_driver cpufreq_qcom_hw_driver = {
->   
->   static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
->   {
-> +	struct opp_table *opp_table = NULL;
-> +	struct device *cpu_dev;
->   	struct clk *clk;
->   	int ret;
->   
-> @@ -294,6 +347,26 @@ static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
->   
->   	global_pdev = pdev;
->   
-> +	/* Check for optional interconnect paths on CPU0 */
-> +	cpu_dev = get_cpu_device(0);
-> +	if (!cpu_dev) {
-> +		dev_err(&pdev->dev, "failed to get cpu0 device\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	opp_table = dev_pm_opp_set_paths(cpu_dev);
-> +	if (IS_ERR(opp_table)) {
-> +		ret = PTR_ERR(opp_table);
-> +		if (ret == -EPROBE_DEFER) {
-> +			dev_dbg(&pdev->dev, "defer icc set paths: %d\n", ret);
-> +			return ret;
-> +		}
-> +		dev_err(&pdev->dev, "set paths failed ddr/l3 scaling off: %d\n",
-> +			ret);
-
-Here again, the interconnect paths don't seem to be optional as the comment
-above suggests.
-
-> +	} else {
-> +		dev_pm_opp_put_paths(opp_table);
-> +	}
-> +
->   	ret = cpufreq_register_driver(&cpufreq_qcom_hw_driver);
->   	if (ret)
->   		dev_err(&pdev->dev, "CPUFreq HW driver failed to register\n");
-> 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Regards,
+Wanpeng Li
