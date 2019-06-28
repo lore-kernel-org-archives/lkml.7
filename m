@@ -2,144 +2,75 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6F8C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7ADC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E47BC205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AkLnTHTt"
+	by mail.kernel.org (Postfix) with ESMTP id F08B32064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 14:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfF1OdC (ORCPT
+        id S1726952AbfF1OdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 10:33:02 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40686 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfF1OdC (ORCPT
+        Fri, 28 Jun 2019 10:33:25 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59140 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfF1OdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 10:33:02 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5SEWOEs119507;
-        Fri, 28 Jun 2019 09:32:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561732344;
-        bh=gbEQ2MAf5BreXjP6+h+dDk7mJOuxFlU+NRxCOXS9m7w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=AkLnTHTtRg4KS+kVRvkLRmV+VhAQcDI3zp86HBbQpW8UjJ590rtHGC7jKKzjTaal7
-         DRF9ndtHsDrV5uUNvWTUBE62BsKGq2H8oRPgO718IlsMcxkFKF/ZVU1CPkLIJEb5Mu
-         Su9sVgyCRYrHgWUHWiKtx28wJIgDlBx9wojdY310=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5SEWOKn109975
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Jun 2019 09:32:24 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 28
- Jun 2019 09:32:23 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 28 Jun 2019 09:32:23 -0500
-Received: from [10.250.132.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5SEWK5h014844;
-        Fri, 28 Jun 2019 09:32:21 -0500
-Subject: Re: [PATCH] mtd: cfi_cmdset_0002: dynamically determine the max
- sectors
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>
-CC:     <sr@denx.de>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190522000628.13073-1-chris.packham@alliedtelesis.co.nz>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <b4a2970f-40ff-3c6c-d408-4c19d5d502ad@ti.com>
-Date:   Fri, 28 Jun 2019 20:02:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 28 Jun 2019 10:33:25 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hgrwH-000836-12; Fri, 28 Jun 2019 14:33:21 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Hawking Zhang <Hawking.Zhang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amdgpu: fix a missing break in a switch statement
+Date:   Fri, 28 Jun 2019 15:33:20 +0100
+Message-Id: <20190628143320.5182-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190522000628.13073-1-chris.packham@alliedtelesis.co.nz>
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Colin Ian King <colin.king@canonical.com>
 
-On 22-May-19 5:36 AM, Chris Packham wrote:
-> Because PPB unlocking unlocks the whole chip cfi_ppb_unlock() needs to
-> remember the locked status for each sector so it can re-lock the
-> unaddressed sectors. Dynamically calculate the maximum number of sectors
-> rather than using a hardcoded value that is too small for larger chips.
-> 
-> Tested with Spansion S29GL01GS11TFI flash device.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
+Currently for the AMDGPU_IRQ_STATE_DISABLE there is a missing break
+causing the code to fall through to the AMDGPU_IRQ_STATE_ENABLE case.
+Fix this by adding in the missing break statement.
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
-branch mtd/next.
+Addresses-Coverity: ("Missing break in switch")
+Fixes: a644d85a5cd4 ("drm/amdgpu: add gfx v10 implementation (v10)")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards
-Vignesh
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+index 2932ade7dbd0..c165200361b2 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+@@ -4608,6 +4608,7 @@ gfx_v10_0_set_gfx_eop_interrupt_state(struct amdgpu_device *adev,
+ 		cp_int_cntl = REG_SET_FIELD(cp_int_cntl, CP_INT_CNTL_RING0,
+ 					    TIME_STAMP_INT_ENABLE, 0);
+ 		WREG32(cp_int_cntl_reg, cp_int_cntl);
++		break;
+ 	case AMDGPU_IRQ_STATE_ENABLE:
+ 		cp_int_cntl = RREG32(cp_int_cntl_reg);
+ 		cp_int_cntl = REG_SET_FIELD(cp_int_cntl, CP_INT_CNTL_RING0,
+-- 
+2.20.1
 
->  drivers/mtd/chips/cfi_cmdset_0002.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
-> index c8fa5906bdf9..a1a7d334aa82 100644
-> --- a/drivers/mtd/chips/cfi_cmdset_0002.c
-> +++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-> @@ -2533,8 +2533,6 @@ struct ppb_lock {
->  	int locked;
->  };
->  
-> -#define MAX_SECTORS			512
-> -
->  #define DO_XXLOCK_ONEBLOCK_LOCK		((void *)1)
->  #define DO_XXLOCK_ONEBLOCK_UNLOCK	((void *)2)
->  #define DO_XXLOCK_ONEBLOCK_GETLOCK	((void *)3)
-> @@ -2633,6 +2631,7 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd_info *mtd, loff_t ofs,
->  	int i;
->  	int sectors;
->  	int ret;
-> +	int max_sectors;
->  
->  	/*
->  	 * PPB unlocking always unlocks all sectors of the flash chip.
-> @@ -2640,7 +2639,11 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd_info *mtd, loff_t ofs,
->  	 * first check the locking status of all sectors and save
->  	 * it for future use.
->  	 */
-> -	sect = kcalloc(MAX_SECTORS, sizeof(struct ppb_lock), GFP_KERNEL);
-> +	max_sectors = 0;
-> +	for (i = 0; i < mtd->numeraseregions; i++)
-> +		max_sectors += regions[i].numblocks;
-> +
-> +	sect = kcalloc(max_sectors, sizeof(struct ppb_lock), GFP_KERNEL);
->  	if (!sect)
->  		return -ENOMEM;
->  
-> @@ -2689,9 +2692,9 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd_info *mtd, loff_t ofs,
->  		}
->  
->  		sectors++;
-> -		if (sectors >= MAX_SECTORS) {
-> +		if (sectors >= max_sectors) {
->  			printk(KERN_ERR "Only %d sectors for PPB locking supported!\n",
-> -			       MAX_SECTORS);
-> +			       max_sectors);
->  			kfree(sect);
->  			return -EINVAL;
->  		}
-> 
