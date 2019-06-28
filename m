@@ -2,118 +2,102 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD548C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C87C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABC3205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E9420665
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 01:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfF1Brv (ORCPT
+        id S1726520AbfF1Bt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 21:47:51 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:59812 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbfF1Brt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 21:47:49 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0074A1A1052;
-        Fri, 28 Jun 2019 03:47:46 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 138801A104C;
-        Fri, 28 Jun 2019 03:47:31 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8D10A4030E;
-        Fri, 28 Jun 2019 09:47:18 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
-        pombredanne@nexb.com, shawn.lin@rock-chips.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCHv3 2/2] PCI: layerscape: Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
-Date:   Fri, 28 Jun 2019 09:38:26 +0800
-Message-Id: <20190628013826.4705-2-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20190628013826.4705-1-xiaowei.bao@nxp.com>
-References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 27 Jun 2019 21:49:59 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:53594 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfF1Bt7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 21:49:59 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1029)
+        id 4A66B20B7194; Thu, 27 Jun 2019 18:49:58 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by linux.microsoft.com (Postfix) with ESMTP id 2D89630056D6;
+        Thu, 27 Jun 2019 18:49:58 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 18:49:58 -0700 (PDT)
+From:   Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
+X-X-Sender: jaskarankhurana@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
+To:     Eric Biggers <ebiggers@kernel.org>
+cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com,
+        mpatocka@redhat.com, gmazyland@gmail.com
+Subject: Re: [RFC PATCH v5 1/1] Add dm verity root hash pkcs7 sig
+ validation.
+In-Reply-To: <20190627234149.GA212823@gmail.com>
+Message-ID: <alpine.LRH.2.21.1906271844470.22562@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com> <20190619191048.20365-2-jaskarankhurana@linux.microsoft.com> <20190627234149.GA212823@gmail.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately.
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
----
-v2:
- - No change.
-v3:
- - modify the commit message.
 
- drivers/pci/controller/dwc/Kconfig  |   20 ++++++++++++++++++--
- drivers/pci/controller/dwc/Makefile |    3 ++-
- 2 files changed, 20 insertions(+), 3 deletions(-)
+On Thu, 27 Jun 2019, Eric Biggers wrote:
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index a6ce1ee..a41ccf5 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
- 	  DesignWare core functions to implement the driver.
- 
- config PCI_LAYERSCAPE
--	bool "Freescale Layerscape PCIe controller"
-+	bool "Freescale Layerscape PCIe controller - Host mode"
- 	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select MFD_SYSCON
- 	select PCIE_DW_HOST
- 	help
--	  Say Y here if you want PCIe controller support on Layerscape SoCs.
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Host mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
-+
-+config PCI_LAYERSCAPE_EP
-+	bool "Freescale Layerscape PCIe controller - Endpoint mode"
-+	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-+	depends on PCI_ENDPOINT
-+	select PCIE_DW_EP
-+	help
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Endpoint mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
- 
- config PCI_HISI
- 	depends on OF && (ARM64 || COMPILE_TEST)
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index b085dfd..824fde7 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
- obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
- obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
- obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
--obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
-+obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-+obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
--- 
-1.7.1
+> Hi Jaskaran, one comment (I haven't reviewed this in detail):
+>
+> On Wed, Jun 19, 2019 at 12:10:48PM -0700, Jaskaran Khurana wrote:
+>> diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
+>> index db269a348b20..2d658a3512cb 100644
+>> --- a/drivers/md/Kconfig
+>> +++ b/drivers/md/Kconfig
+>> @@ -475,6 +475,7 @@ config DM_VERITY
+>>  	select CRYPTO
+>>  	select CRYPTO_HASH
+>>  	select DM_BUFIO
+>> +	select SYSTEM_DATA_VERIFICATION
+>>  	---help---
+>>  	  This device-mapper target creates a read-only device that
+>>  	  transparently validates the data on one underlying device against
+>> diff --git a/drivers/md/Makefile b/drivers/md/Makefile
+>> index be7a6eb92abc..3b47b256b15e 100644
+>> --- a/drivers/md/Makefile
+>> +++ b/drivers/md/Makefile
+>> @@ -18,7 +18,7 @@ dm-cache-y	+= dm-cache-target.o dm-cache-metadata.o dm-cache-policy.o \
+>>  		    dm-cache-background-tracker.o
+>>  dm-cache-smq-y   += dm-cache-policy-smq.o
+>>  dm-era-y	+= dm-era-target.o
+>> -dm-verity-y	+= dm-verity-target.o
+>> +dm-verity-y	+= dm-verity-target.o dm-verity-verify-sig.o
+>>  md-mod-y	+= md.o md-bitmap.o
+>>  raid456-y	+= raid5.o raid5-cache.o raid5-ppl.o
+>>  dm-zoned-y	+= dm-zoned-target.o dm-zoned-metadata.o dm-zoned-reclaim.o
+>
+> Perhaps this should be made optional and controlled by a kconfig option
+> CONFIG_DM_VERITY_SIGNATURE_VERIFICATION, similar to CONFIG_DM_VERITY_FEC?
+>
+> CONFIG_SYSTEM_DATA_VERIFICATION brings in a lot of stuff, which might be
+> unnecessary for some dm-verity users.  Also, you've already separated most of
+> the code out into a separate .c file anyway.
+>
+> - Eric
+>
+Hello Eric,
 
+This started with a config (see V4). We didnot want scripts that pass this 
+parameter to suddenly stop working if for some reason the 
+verification is turned off so the optional parameter was just 
+parsed and no validation happened if the CONFIG was turned off. This was 
+changed to a commandline parameter after feedback from the community, so I would prefer 
+to keep it *now* as commandline parameter. Let me know if you are OK with 
+this.
+
+Regards,
+JK
