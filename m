@@ -2,114 +2,165 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F675C4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 941E5C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127B121743
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:45:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NJhiRaFT"
+	by mail.kernel.org (Postfix) with ESMTP id 6C2F22083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 08:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfF1IpA (ORCPT
+        id S1726687AbfF1IpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 04:45:00 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33971 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfF1IpA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:45:00 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c85so2634334pfc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 01:44:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9cCBNQ/DLgtpUPdtAQUtvcyuKyE7Z8O611WKPmcesJs=;
-        b=NJhiRaFTwbXgWwYMuOKzcTTAPu8tvSUXftkWjd2iiLgQl4WJT7WRsvULRO5tF8PluC
-         Nn+xvF88SuY6E/ZeAT3axrY8RuBSq8aQZRGAiy3DZuNjp2jnGcFdj/vf3GXwc4KU26Zj
-         mspXga43P9yxdB55hXqpNtLBeXU2cevRPgdoY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9cCBNQ/DLgtpUPdtAQUtvcyuKyE7Z8O611WKPmcesJs=;
-        b=FrBda/QLzzIuj4bVXYrXh1RpR0ouSfHHO7RMlPf0Dw33zxZV7q2Ip+YoO4ty6sk8F0
-         xUosfEl2/wdif0u4DFjl4lhfbqNeSdwjk6F0at7jmVe9ADqf88ZiVpRJluqi3HPmzUXF
-         DnN3Pr1Tnkt1KZq6ndpX9gg7n1/iKSWVLwdwpFwPmOZo82oUQ7Dntn/0XAKypap8M/+0
-         0JWVNuTf7pmsfpg+wvwu3iM1qc9KJ3kIZtZCzrH9ZPKveUyze47mv0WxNFgRvK3JVKRr
-         yhj7mADdFLY5oiSgwHQHWdGv3GmOyLYjGygzmWGHJmJO5cztIgOjLTECD5QL6XudYMLV
-         3OHA==
-X-Gm-Message-State: APjAAAVCxm+lpT37g2h0SZUpT9HRG9t9FRFzK/DPtaauTSEu2Tkn+kqJ
-        xYDr1RFaszwCfH/GbdsgeCTHTpIPrB6q
-X-Google-Smtp-Source: APXvYqzcWsGydcd1oia93mChuGAQogjZoToWpbbXL8r2Y5MYqx/PPB/llrSa3dFB1zoTvtb0iZ0Rew==
-X-Received: by 2002:a17:90a:b104:: with SMTP id z4mr11674941pjq.102.1561711499289;
-        Fri, 28 Jun 2019 01:44:59 -0700 (PDT)
-Received: from google.com ([2401:fa00:1:b:d89e:cfa6:3c8:e61b])
-        by smtp.gmail.com with ESMTPSA id s20sm670784pfe.169.2019.06.28.01.44.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 01:44:58 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 16:44:55 +0800
-From:   Vovo Yang <vovoy@chromium.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] mm: vmscan: fix not scanning anonymous pages when
- detecting file refaults
-Message-ID: <20190628084455.GA59379@google.com>
-References: <20190619080835.GA68312@google.com>
- <20190627184123.GA11181@cmpxchg.org>
- <20190628065138.GA251482@google.com>
+        Fri, 28 Jun 2019 04:45:04 -0400
+Received: from mga06.intel.com ([134.134.136.31]:34722 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726385AbfF1IpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:45:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 01:45:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,427,1557212400"; 
+   d="scan'208";a="314072069"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga004.jf.intel.com with ESMTP; 28 Jun 2019 01:45:02 -0700
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 28 Jun 2019 01:45:02 -0700
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 28 Jun 2019 01:45:01 -0700
+Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 28 Jun 2019 01:45:01 -0700
+Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.87]) by
+ shsmsx102.ccr.corp.intel.com ([169.254.2.33]) with mapi id 14.03.0439.000;
+ Fri, 28 Jun 2019 16:44:59 +0800
+From:   "Zhang, Tina" <tina.zhang@intel.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>
+Subject: RE: [RFC PATCH v3 0/4] Deliver vGPU display vblank event to
+ userspace
+Thread-Topic: [RFC PATCH v3 0/4] Deliver vGPU display vblank event to
+ userspace
+Thread-Index: AQHVLJqUUSM/9sKZ/UyimYY5z7yeLaaughWAgACsmuD//5j6gIABGkSAgAAnqQCAALSSsA==
+Date:   Fri, 28 Jun 2019 08:44:59 +0000
+Message-ID: <237F54289DF84E4997F34151298ABEBC8768544F@SHSMSX101.ccr.corp.intel.com>
+References: <20190627033802.1663-1-tina.zhang@intel.com>
+ <20190627062231.57tywityo6uyhmyd@sirius.home.kraxel.org>
+ <237F54289DF84E4997F34151298ABEBC876835E5@SHSMSX101.ccr.corp.intel.com>
+ <20190627103133.6ekdwazggi5j5lcl@sirius.home.kraxel.org>
+ <20190628032149.GD9684@zhen-hp.sh.intel.com>
+ <20190628054346.3uc3k4c4cffrqcy3@sirius.home.kraxel.org>
+In-Reply-To: <20190628054346.3uc3k4c4cffrqcy3@sirius.home.kraxel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZDM1MmJmNzYtNDAzNy00ZjdhLWJkZjgtM2RjZGZjZDI4YjExIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiODQrZjRmeVNpSUdJUTlPTFVNdDFCWGt1SUl3Y3k2OHRSdHgyOHZSMVlPQ3Y2aSsyOENSVExmVk43S3MxakZHVCJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628065138.GA251482@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 03:51:38PM +0900, Minchan Kim wrote:
-> Hi Johannes,
-> 
-> On Thu, Jun 27, 2019 at 02:41:23PM -0400, Johannes Weiner wrote:
-> > 
-> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> > 
-> > Your change makes sense - we should indeed not force cache trimming
-> > only while the page cache is experiencing refaults.
-> > 
-> > I can't say I fully understand the changelog, though. The problem of
-> 
-> I guess the point of the patch is "actual_reclaim" paramter made divergency
-> to balance file vs. anon LRU in get_scan_count. Thus, it ends up scanning
-> file LRU active/inactive list at file thrashing state.
-> 
-> So, Fixes: 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in cache workingset transition")
-> would make sense to me since it introduces the parameter.
-> 
-
-Thanks for the review and explanation, I will update the changelog to
-make it clear.
-
-> > forcing cache trimming while there is enough page cache is older than
-> > the commit you refer to. It could be argued that this commit is
-> > incomplete - it could have added refault detection not just to
-> > inactive:active file balancing, but also the file:anon balancing; but
-> > it didn't *cause* this problem.
-> > 
-> > Shouldn't this be
-> > 
-> > Fixes: e9868505987a ("mm,vmscan: only evict file pages when we have plenty")
-> > Fixes: 7c5bd705d8f9 ("mm: memcg: only evict file pages when we have plenty")
-> 
-> That would affect, too but it would be trouble to have stable backport
-> since we don't have refault machinery in there.
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogaW50ZWwtZ3Z0LWRldiBb
+bWFpbHRvOmludGVsLWd2dC1kZXYtYm91bmNlc0BsaXN0cy5mcmVlZGVza3RvcC5vcmddIE9uDQo+
+IEJlaGFsZiBPZiBHZXJkIEhvZmZtYW5uDQo+IFNlbnQ6IEZyaWRheSwgSnVuZSAyOCwgMjAxOSAx
+OjQ0IFBNDQo+IFRvOiBaaGVueXUgV2FuZyA8emhlbnl1d0BsaW51eC5pbnRlbC5jb20+DQo+IENj
+OiBUaWFuLCBLZXZpbiA8a2V2aW4udGlhbkBpbnRlbC5jb20+OyBrdm1Admdlci5rZXJuZWwub3Jn
+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgWmhhbmcsIFRpbmEgPHRpbmEuemhh
+bmdAaW50ZWwuY29tPjsNCj4gYWxleC53aWxsaWFtc29uQHJlZGhhdC5jb207IEx2LCBaaGl5dWFu
+IDx6aGl5dWFuLmx2QGludGVsLmNvbT47IFl1YW4sDQo+IEhhbmcgPGhhbmcueXVhbkBpbnRlbC5j
+b20+OyBpbnRlbC1ndnQtZGV2QGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsgV2FuZywNCj4gWmhpIEEg
+PHpoaS5hLndhbmdAaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1JGQyBQQVRDSCB2MyAwLzRd
+IERlbGl2ZXIgdkdQVSBkaXNwbGF5IHZibGFuayBldmVudCB0bw0KPiB1c2Vyc3BhY2UNCj4gDQo+
+IE9uIEZyaSwgSnVuIDI4LCAyMDE5IGF0IDExOjIxOjQ5QU0gKzA4MDAsIFpoZW55dSBXYW5nIHdy
+b3RlOg0KPiA+IE9uIDIwMTkuMDYuMjcgMTI6MzE6MzMgKzAyMDAsIEdlcmQgSG9mZm1hbm4gd3Jv
+dGU6DQo+ID4gPiA+ID4gICBIaSwNCj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gSW5zdGVhZCBvZiBk
+ZWxpdmVyaW5nIHBhZ2UgZmxpcCBldmVudHMsIHdlIGNob29zZSB0byBwb3N0DQo+ID4gPiA+ID4g
+PiBkaXNwbGF5IHZibGFuayBldmVudC4gSGFuZGxpbmcgcGFnZSBmbGlwIGV2ZW50cyBmb3IgYm90
+aA0KPiA+ID4gPiA+ID4gcHJpbWFyeSBwbGFuZSBhbmQgY3Vyc29yIHBsYW5lIG1heSBtYWtlIHVz
+ZXIgc3BhY2UgcXVpdGUgYnVzeSwNCj4gPiA+ID4gPiA+IGFsdGhvdWdoIHdlIGhhdmUgdGhlIG1h
+c2svdW5tYXNrIG1lY2hhbnNpbSBmb3IgbWl0aWdhdGlvbi4NCj4gPiA+ID4gPiA+IEJlc2lkZXMs
+IHRoZXJlIGFyZSBzb21lIGNhc2VzIHRoYXQgZ3Vlc3QgYXBwIG9ubHkgdXNlcyBvbmUNCj4gZnJh
+bWVidWZmZXIgZm9yIGJvdGggZHJhd2luZyBhbmQgZGlzcGxheS4NCj4gPiA+ID4gPiA+IEluIHN1
+Y2ggY2FzZSwgZ3Vlc3QgT1Mgd29uJ3QgZG8gdGhlIHBsYW5lIHBhZ2UgZmxpcCB3aGVuIHRoZQ0K
+PiA+ID4gPiA+ID4gZnJhbWVidWZmZXIgaXMgdXBkYXRlZCwgdGh1cyB0aGUgdXNlciBsYW5kIHdv
+bid0IGJlIG5vdGlmaWVkDQo+ID4gPiA+ID4gPiBhYm91dCB0aGUNCj4gPiA+ID4gPiB1cGRhdGVk
+IGZyYW1lYnVmZmVyLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gV2hhdCBoYXBwZW5zIHdoZW4gdGhl
+IGd1ZXN0IGlzIGlkbGUgYW5kIGRvZXNuJ3QgZHJhdyBhbnl0aGluZyB0bw0KPiA+ID4gPiA+IHRo
+ZSBmcmFtZWJ1ZmZlcj8NCj4gPiA+ID4gVGhlIHZibGFuayBldmVudCB3aWxsIGJlIGRlbGl2ZXJl
+ZCB0byB1c2Vyc3BhY2UgYXMgd2VsbCwgdW5sZXNzIGd1ZXN0IE9TDQo+IGRpc2FibGUgdGhlIHBp
+cGUuDQo+ID4gPiA+IERvZXMgaXQgbWFrZSBzZW5zZSB0byB2ZmlvL2Rpc3BsYXk/DQo+ID4gPg0K
+PiA+ID4gR2V0dGluZyBub3RpZmllZCBvbmx5IGluIGNhc2UgdGhlcmUgYXJlIGFjdHVhbCBkaXNw
+bGF5IHVwZGF0ZXMgd291bGQNCj4gPiA+IGJlIGEgbmljZSBvcHRpbWl6YXRpb24sIGFzc3VtaW5n
+IHRoZSBoYXJkd2FyZSBpcyBhYmxlIHRvIGRvIHRoYXQuDQo+ID4gPiBJZiB0aGUgZ3Vlc3QgcGFn
+ZWZsaXBzIHRoaXMgaXMgb2J2aW91c2x5IHRyaXZpYWwuICBOb3Qgc3VyZSB0aGlzIGlzDQo+ID4g
+PiBwb3NzaWJsZSBpbiBjYXNlIHRoZSBndWVzdCByZW5kZXJzIGRpcmVjdGx5IHRvIHRoZSBmcm9u
+dGJ1ZmZlci4NCj4gPiA+DQo+ID4gPiBXaGF0IGV4YWN0bHkgaGFwcGVucyB3aGVuIHRoZSBndWVz
+dCBPUyBkaXNhYmxlcyB0aGUgcGlwZT8gIElzIGENCj4gPiA+IHZibGFuayBldmVudCBkZWxpdmVy
+ZWQgYXQgbGVhc3Qgb25jZT8gIFRoYXQgd291bGQgYmUgdmVyeSB1c2VmdWwNCj4gPiA+IGJlY2F1
+c2UgaXQgd2lsbCBiZSBwb3NzaWJsZSBmb3IgdXNlcnNwYWNlIHRvIHN0b3AgcG9sbGluZyBhbHRv
+Z2V0aGVyDQo+ID4gPiB3aXRob3V0IG1pc3NpbmcgdGhlICJndWVzdCBkaXNhYmxlZCBwaXBlIiBl
+dmVudC4NCj4gPiA+DQo+ID4NCj4gPiBJdCBsb29rcyBsaWtlIHB1cnBvc2UgdG8gdXNlIHZibGFu
+ayBoZXJlIGlzIHRvIHJlcGxhY2UgdXNlciBzcGFjZQ0KPiA+IHBvbGxpbmcgdG90YWxseSBieSBr
+ZXJuZWwgZXZlbnQ/IFdoaWNoIGp1c3QgYWN0IGFzIGRpc3BsYXkgdXBkYXRlDQo+ID4gZXZlbnQg
+dG8gcmVwbGFjZSB1c2VyIHNwYWNlIHRpbWVyIHRvIG1ha2UgaXQgcXVlcnkgYW5kIHVwZGF0ZSBw
+bGFuZXM/DQo+IA0KPiBJIHRoaW5rIGl0IG1ha2VzIHNlbnNlIHRvIGRlc2lnbiBpdCB0aGF0IHdh
+eSwgc28gdXNlcnNwYWNlIHdpbGwgZWl0aGVyIHVzZSB0aGUNCj4gZXZlbnRzICh3aGVuIHN1cHBv
+cnRlZCBieSB0aGUgZHJpdmVyKSBvciBhIHRpbWVyIChmYWxsYmFjayBpZg0KPiBub3QpIGJ1dCBu
+b3QgYm90aC4NCj4gDQo+ID4gQWx0aG91Z2ggaW4gdGhlb3J5IHZibGFuayBpcyBub3QgYXBwcm9w
+cmlhdGUgZm9yIHRoaXMgd2hpY2ggZG9lc24ndA0KPiA+IGFsaWduIHdpdGggcGxhbmUgdXBkYXRl
+IG9yIHBvc3NpYmxlIGZyb250IGJ1ZmZlciByZW5kZXJpbmcgYXQgYWxsLCBidXQNCj4gPiBsb29r
+cyBpdCdzIGp1c3QgYSBjb21wcm9taXNlIGUuZyBub3Qgc2VuZGluZyBldmVudCBmb3IgZXZlcnkg
+Y3Vyc29yDQo+ID4gcG9zaXRpb24gY2hhbmdlLCBldGMuDQo+ID4NCj4gPiBJIHRoaW5rIHdlIG5l
+ZWQgdG8gZGVmaW5lIHNlbWFudGljcyBmb3IgdGhpcyBldmVudCBwcm9wZXJseSwgZS5nIHVzZXIN
+Cj4gPiBzcGFjZSBwdXJlbHkgZGVwZW5kcyBvbiB0aGlzIGV2ZW50IGZvciBkaXNwbGF5IHVwZGF0
+ZSwgdGhlIG9wcG9ydHVuaXR5DQo+ID4gZm9yIGlzc3VpbmcgdGhpcyBldmVudCBpcyBjb250cm9s
+bGVkIGJ5IGRyaXZlciB3aGVuIGl0J3MgbmVjZXNzYXJ5IGZvcg0KPiA+IHVwZGF0ZSwgZXRjLiBE
+ZWZpbml0ZWx5IG5vdCBuYW1lZCBhcyB2YmxhbmsgZXZlbnQgb3Igb25seSBpc3N1ZSBhdA0KPiA+
+IHZibGFuaywgdGhhdCBuZWVkIHRvIGhhcHBlbiBmb3Igb3RoZXIgcGxhbmUgY2hhbmdlIHRvby4N
+Cj4gDQo+IEkgdGhpbmsgaXQgc2hvdWxkIGJlICJkaXNwbGF5IHVwZGF0ZSBub3RpZmljYXRpb24i
+LCBpLmUuIHVzZXJzcGFjZSBzaG91bGQgY2hlY2sNCj4gZm9yIHBsYW5lIGNoYW5nZXMgYW5kIHVw
+ZGF0ZSB0aGUgZGlzcGxheS4NCj4gDQo+IE1vc3QgZXZlbnRzIHdpbGwgcHJvYmFibHkgY29tZSBm
+cm9tIHZibGFuayAodHlwaWNhbGx5IHBsYW5lIHVwZGF0ZSBhcmUNCj4gYWN0dWFsbHkgY29tbWl0
+dGVkIGF0IHZibGFuayB0aW1lIHRvIGF2b2lkIHRlYXJpbmcsIHJpZ2h0PykuICBUaGF0IGlzIGFu
+DQpZZXMuDQo+IGltcGxlbWVudGF0aW9uIGRldGFpbCB0aG91Z2guDQoNCldlIGhhdmUgdHdvIFdJ
+UCBicmFuY2hlczogb25lIGlzIGZvciB2YmxhbmsgZXZlbnQgZGVsaXZlcnkgYW5kIHRoZSBvdGhl
+ciBvbmUgaXMgZm9yIHBhZ2UgZmxpcCBldmVudCBkZWxpdmVyeS4gDQpSZXBvOg0KLSBRRU1VOiBo
+dHRwczovL2dpdGh1Yi5jb20vaW50ZWwvSWd2dGctcWVtdS5naXQNCi0gS2VybmVsOiBodHRwczov
+L2dpdGh1Yi5jb20vaW50ZWwvZ3Z0LWxpbnV4LmdpdA0KVHdvIGJyYW5jaGVzOiB0b3BpYy91c2Vy
+c3BhY2VfZGlyZWN0X2ZsaXBfcGFnZV9ldmVudCBhbmQgdG9waWMvdXNlcnNwYWNlX2RpcmVjdF9m
+bGlwX3ZibGFua19ldmVudA0KDQpXaXRoIEdUSyBVSSwgdGhlIHVzZXIgZXhwZXJpZW5jZSBpcyBi
+YWQgb24gYnJhbmNoIHRvcGljL3VzZXJzcGFjZV9kaXJlY3RfZmxpcF9wYWdlX2V2ZW50LCBhcyBt
+b3N0IG9mIHRoZSBDUFUgZWZmb3J0cyBhcmUgc3BlbnQgb24gZXZlbnQgaGFuZGxpbmcgaW4gdXNl
+ciBzcGFjZS4NCkhvd2V2ZXIsIHdpdGggdGhlIERSTSBVSSBib3RoIG9mIHRoZSB0d28gYnJhbmNo
+ZXMgaGF2ZSBnb29kIHVzZXIgZXhwZXJpZW5jZSwgYXMgdGhlIGV2ZW50IGhhbmRsaW5nIGluIERS
+TSBVSSBpcyBwcmV0dHkgc2ltcGxlLg0KDQpUaGFua3MuDQoNCkJSLA0KVGluYQ0KDQo+IA0KPiBj
+aGVlcnMsDQo+ICAgR2VyZA0KPiANCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18NCj4gaW50ZWwtZ3Z0LWRldiBtYWlsaW5nIGxpc3QNCj4gaW50ZWwtZ3Z0
+LWRldkBsaXN0cy5mcmVlZGVza3RvcC5vcmcNCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9pbnRlbC1ndnQtZGV2DQo=
