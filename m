@@ -2,131 +2,259 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4101EC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EED2C5B579
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB7D2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB8D2086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 11:56:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9F3lclH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfF1Lyz (ORCPT
+        id S1726807AbfF1L4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 07:54:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16674 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726564AbfF1Lyy (ORCPT
+        Fri, 28 Jun 2019 07:56:39 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44138 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfF1L4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:54:54 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SBqcYR048949
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 07:54:53 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tdgnvm8nj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2019 07:54:52 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Fri, 28 Jun 2019 12:54:51 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Jun 2019 12:54:45 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SBsiUv41812068
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jun 2019 11:54:44 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 994BFAE053;
-        Fri, 28 Jun 2019 11:54:44 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60B62AE045;
-        Fri, 28 Jun 2019 11:54:42 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 28 Jun 2019 11:54:42 +0000 (GMT)
-Date:   Fri, 28 Jun 2019 11:54:41 +0000
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     subhra mazumdar <subhra.mazumdar@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, tglx@linutronix.de, steven.sistare@oracle.com,
-        dhaval.giani@oracle.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
-        tim.c.chen@linux.intel.com, mgorman@techsingularity.net
-Subject: Re: [PATCH v3 3/7] sched: rotate the cpu search window for better
- spread
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
- <20190627012919.4341-4-subhra.mazumdar@oracle.com>
+        Fri, 28 Jun 2019 07:56:39 -0400
+Received: by mail-qk1-f196.google.com with SMTP id p144so4494162qke.11;
+        Fri, 28 Jun 2019 04:56:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2jERR1htLsj0259opQP6iZqdbvhKo7IE5BZi1R4vL58=;
+        b=a9F3lclHUqf2w2vrqdAORV4XYJ3g9/cLzsfgk/JstGgHK33pSf9iEtBhoSDAILnNCb
+         lHMMWX5duZyOPY6YhTDMXXvfhUBM+xTLgIPxOvcGD74VpCCjlw1yZbAPAqdTUxKw/SHG
+         Zob6rus59DDu59lTgDDC4oDSpLYqDAb1hU2L3U6aEwH7QaF2kK2CfbrDT/uIsPjxl7To
+         TNVDN0lZNbTjufWiehayKvTMnVFzdgclcLA1uJWthvXNASSOAP9jRa44GEVLMLB3NegT
+         WWM9ms1qNXvQsjA+a3EymFZHzL3XtdD0BDfEY6tE+PQBq87v1Su3Ezmn+iL9P4puDpVt
+         iTbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2jERR1htLsj0259opQP6iZqdbvhKo7IE5BZi1R4vL58=;
+        b=l4f1EkJFJpszWHFnRe/baTHIM8DafS0oo+4p895t2YJrKbgNtxc83z8Cokgc9fG7l+
+         nchnKMAZc84g5LG9sa0bX75i7ANZbErVYTG8//WPJryRgQmsQvrCezNMi/rxuoHMqcLW
+         aEb07HhqQkIJ9C/1OoU+4oWDsV5KCwzQnGr7us6nKOW22UyFYUFkmiDPO6FpSA9Njlm0
+         pu1btAudGvUhAZICKOm36RZQNiUwEWBX7Qs9qQ6cT+mp63AjLbmpADw8CSoaeJ89gI81
+         O7IcdegMrtMGJbNTMLnaF285KITyoJvsaO5/3lsTylpp2R9U4WcxLBSHykG0Bc6bGGYe
+         tvEA==
+X-Gm-Message-State: APjAAAVUDVCmCn+5Ry1L7zz7HYJI0yWVBhuBxjGgOQjVqORW7SOKRunN
+        ObmQuvErPxUpUXmVQZcmnKlgKz/V
+X-Google-Smtp-Source: APXvYqzvuGSTQ6WiXnxDL1MTM1M3vj+OfNZ3xa6fZad2jOaM1HFKAVDMZ7x2HY050fVRVmMFO9sGYQ==
+X-Received: by 2002:a37:9c46:: with SMTP id f67mr8290537qke.455.1561722997649;
+        Fri, 28 Jun 2019 04:56:37 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id i48sm989609qte.93.2019.06.28.04.56.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Jun 2019 04:56:36 -0700 (PDT)
+Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+ <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0409f478-e425-4e7f-5fff-8c3a94f47ee8@gmail.com>
+Date:   Fri, 28 Jun 2019 14:56:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20190627012919.4341-4-subhra.mazumdar@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19062811-0016-0000-0000-0000028D5718
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062811-0017-0000-0000-000032EADA7F
-Message-Id: <20190628115441.GA30685@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906280143
+In-Reply-To: <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* subhra mazumdar <subhra.mazumdar@oracle.com> [2019-06-26 18:29:15]:
-
-> Rotate the cpu search window for better spread of threads. This will ensure
-> an idle cpu will quickly be found if one exists.
-
-While rotating the cpu search window is good, not sure if this can find a
-idle cpu quickly. The probability of finding an idle cpu still should remain
-the same. No?
-
+28.06.2019 5:12, Sowjanya Komatineni пишет:
+> This patch adds support for Tegra pinctrl driver suspend and resume.
 > 
-> Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
+> During suspend, context of all pinctrl registers are stored and
+> on resume they are all restored to have all the pinmux and pad
+> configuration for normal operation.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  kernel/sched/fair.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  drivers/pinctrl/tegra/pinctrl-tegra.c    | 52 ++++++++++++++++++++++++++++++++
+>  drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
+>  drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
+>  3 files changed, 56 insertions(+)
 > 
-> @@ -6219,9 +6219,15 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->  		}
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> index 34596b246578..e7c0a1011cba 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> @@ -621,6 +621,43 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>  	}
+>  }
+>  
+> +static int tegra_pinctrl_suspend(struct device *dev)
+> +{
+> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
+> +	u32 *backup_regs = pmx->backup_regs;
+> +	u32 *regs;
+> +	unsigned int i, j;
+
+In general it's better not to use "j" in conjunction with "i" because they look
+similar and I seen quite a lot of bugs caused by unnoticed typos like that. So I'm
+suggesting to use "i, k" for clarity.
+
+> +
+> +	for (i = 0; i < pmx->nbanks; i++) {
+> +		regs = pmx->regs[i];
+> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+> +			*backup_regs++ = readl(regs++);
+
+Please use readl_relaxed(), we don't need memory barriers here.
+
+> +	}
+> +
+> +	return pinctrl_force_sleep(pmx->pctl);
+> +}
+> +
+> +static int tegra_pinctrl_resume(struct device *dev)
+> +{
+> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
+> +	u32 *backup_regs = pmx->backup_regs;
+> +	u32 *regs;
+> +	unsigned int i, j;
+> +
+> +	for (i = 0; i < pmx->nbanks; i++) {
+> +		regs = pmx->regs[i];> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+> +			writel(*backup_regs++, regs++);
+
+Same for writel_relaxed(), memory barrier is inserted *before* the write to ensure
+that all previous memory stores are completed. IOREMAP'ed memory is strongly-ordered,
+memory barriers are not needed here.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +const struct dev_pm_ops tegra_pinctrl_pm = {
+> +	.suspend = &tegra_pinctrl_suspend,
+> +	.resume = &tegra_pinctrl_resume
+> +};
+> +
+>  static bool gpio_node_has_range(const char *compatible)
+>  {
+>  	struct device_node *np;
+> @@ -645,6 +682,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+>  	int i;
+>  	const char **group_pins;
+>  	int fn, gn, gfn;
+> +	unsigned long backup_regs_size = 0;
+>  
+>  	pmx = devm_kzalloc(&pdev->dev, sizeof(*pmx), GFP_KERNEL);
+>  	if (!pmx)
+> @@ -697,6 +735,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+>  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+>  		if (!res)
+>  			break;
+> +		backup_regs_size += resource_size(res);
+>  	}
+>  	pmx->nbanks = i;
+>  
+> @@ -705,11 +744,24 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+>  	if (!pmx->regs)
+>  		return -ENOMEM;
+>  
+> +	pmx->reg_bank_size = devm_kcalloc(&pdev->dev, pmx->nbanks,
+> +					  sizeof(*pmx->reg_bank_size),
+> +					  GFP_KERNEL);
+> +	if (!pmx->reg_bank_size)
+> +		return -ENOMEM;
+
+It looks to me that we don't really need to churn with this allocation because the
+bank sizes are already a part of the platform driver's description.
+
+We could add a simple helper function that retrieves the bank sizes, like this:
+
+static unsigned int tegra_pinctrl_bank_size(struct device *dev,
+					    unsigned int bank_id)
+{
+	struct platform_device *pdev;
+	struct resource *res;
+
+	pdev = to_platform_device(dev);
+	res = platform_get_resource(pdev, IORESOURCE_MEM, bank_id);
+
+	return resource_size(res) / 4;
+}
+
+> +	pmx->backup_regs = devm_kzalloc(&pdev->dev, backup_regs_size,
+> +					GFP_KERNEL);
+> +	if (!pmx->backup_regs)
+> +		return -ENOMEM;
+> +
+>  	for (i = 0; i < pmx->nbanks; i++) {
+>  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+>  		pmx->regs[i] = devm_ioremap_resource(&pdev->dev, res);
+>  		if (IS_ERR(pmx->regs[i]))
+>  			return PTR_ERR(pmx->regs[i]);
+> +
+> +		pmx->reg_bank_size[i] = resource_size(res);
 >  	}
 >  
-> +	if (per_cpu(next_cpu, target) != -1)
-> +		target_tmp = per_cpu(next_cpu, target);
-> +	else
-> +		target_tmp = target;
-> +
->  	time = local_clock();
+>  	pmx->pctl = devm_pinctrl_register(&pdev->dev, &tegra_pinctrl_desc, pmx);
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
+> index 287702660783..55456f8d44cf 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra.h
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
+> @@ -17,6 +17,8 @@ struct tegra_pmx {
 >  
-> -	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
-> +	for_each_cpu_wrap(cpu, sched_domain_span(sd), target_tmp) {
-> +		per_cpu(next_cpu, target) = cpu;
+>  	int nbanks;
+>  	void __iomem **regs;
+> +	size_t *reg_bank_size;
+> +	u32 *backup_regs;
+>  };
+>  
+>  enum tegra_pinconf_param {
+> @@ -193,6 +195,7 @@ struct tegra_pinctrl_soc_data {
+>  	bool drvtype_in_mux;
+>  };
+>  
+> +extern const struct dev_pm_ops tegra_pinctrl_pm;
 
-Shouldn't this assignment be outside the for loop.
-With the current code,
-1. We keep reassigning multiple times.
-2. The last assignment happes for idle_cpu and sometimes the
-assignment is for non-idle cpu.
+Please add a newline here.
 
->  		if (!--nr)
->  			return -1;
->  		if (!cpumask_test_cpu(cpu, &p->cpus_allowed))
-> -- 
-> 2.9.3
+>  int tegra_pinctrl_probe(struct platform_device *pdev,
+>  			const struct tegra_pinctrl_soc_data *soc_data);
+>  #endif
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+> index 0b56ad5c9c1c..edd3f4606cdb 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+> @@ -1571,6 +1571,7 @@ static struct platform_driver tegra210_pinctrl_driver = {
+>  	.driver = {
+>  		.name = "tegra210-pinctrl",
+>  		.of_match_table = tegra210_pinctrl_of_match,
+> +		.pm = &tegra_pinctrl_pm,
+>  	},
+>  	.probe = tegra210_pinctrl_probe,
+>  };
 > 
 
--- 
-Thanks and Regards
-Srikar Dronamraju
-
+Could you please address my comments in the next revision if there will be one?
