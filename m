@@ -2,382 +2,221 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB6DC5B57A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0263CC4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66FD2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1ADD208E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfF1Mei (ORCPT
+        id S1726849AbfF1MhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:34:38 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:43384 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbfF1Mei (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:34:38 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: from pc-niv.weinmann.com (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id 7C1514D3ED;
-        Fri, 28 Jun 2019 14:34:35 +0200 (CEST)
-From:   Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Cc:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, nv@vosn.de
-Subject: [PATCH] sound/soc/codecs/tas5720.c: add ACPI support
-Date:   Fri, 28 Jun 2019 14:34:16 +0200
-Message-Id: <20190628123416.16298-1-nikolaus.voss@loewensteinmedical.de>
-X-Mailer: git-send-email 2.17.1
+        Fri, 28 Jun 2019 08:37:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54362 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726578AbfF1MhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 08:37:14 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B96B82F8BF0;
+        Fri, 28 Jun 2019 12:37:13 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-117-102.ams2.redhat.com [10.36.117.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E2FAF5D9CA;
+        Fri, 28 Jun 2019 12:37:10 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] vsock/virtio: use RCU to avoid use-after-free on the_virtio_vsock
+Date:   Fri, 28 Jun 2019 14:36:57 +0200
+Message-Id: <20190628123659.139576-2-sgarzare@redhat.com>
+In-Reply-To: <20190628123659.139576-1-sgarzare@redhat.com>
+References: <20190628123659.139576-1-sgarzare@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 28 Jun 2019 12:37:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for ACPI enumeration for tas5720 and tas5722.
-Use device_match API to unify access to driver data for DT and ACPI.
-Aggregate variant stuff into its own struct and directly reference
-it in variant data for i2c/of/acpi_device_id.
+Some callbacks used by the upper layers can run while we are in the
+.remove(). A potential use-after-free can happen, because we free
+the_virtio_vsock without knowing if the callbacks are over or not.
 
-Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+To solve this issue we move the assignment of the_virtio_vsock at the
+end of .probe(), when we finished all the initialization, and at the
+beginning of .remove(), before to release resources.
+For the same reason, we do the same also for the vdev->priv.
+
+We use RCU to be sure that all callbacks that use the_virtio_vsock
+ended before freeing it. This is not required for callbacks that
+use vdev->priv, because after the vdev->config->del_vqs() we are sure
+that they are ended and will no longer be invoked.
+
+We also take the mutex during the .remove() to avoid that .probe() can
+run while we are resetting the device.
+
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- sound/soc/codecs/tas5720.c | 215 +++++++++++++++++--------------------
- 1 file changed, 99 insertions(+), 116 deletions(-)
+ net/vmw_vsock/virtio_transport.c | 67 +++++++++++++++++++++-----------
+ 1 file changed, 44 insertions(+), 23 deletions(-)
 
-diff --git a/sound/soc/codecs/tas5720.c b/sound/soc/codecs/tas5720.c
-index 37fab8f22800..ea973764c745 100644
---- a/sound/soc/codecs/tas5720.c
-+++ b/sound/soc/codecs/tas5720.c
-@@ -7,6 +7,7 @@
-  * Author: Andreas Dannenberg <dannenberg@ti.com>
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/module.h>
- #include <linux/errno.h>
- #include <linux/device.h>
-@@ -28,9 +29,10 @@
- /* Define how often to check (and clear) the fault status register (in ms) */
- #define TAS5720_FAULT_CHECK_INTERVAL		200
- 
--enum tas572x_type {
--	TAS5720,
--	TAS5722,
-+struct tas5720_variant {
-+	const int device_id;
-+	const struct regmap_config reg_config;
-+	const struct snd_soc_component_driver comp_drv;
+diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+index 9c287e3e393c..7ad510ec12e0 100644
+--- a/net/vmw_vsock/virtio_transport.c
++++ b/net/vmw_vsock/virtio_transport.c
+@@ -65,19 +65,22 @@ struct virtio_vsock {
+ 	u32 guest_cid;
  };
  
- static const char * const tas5720_supply_names[] = {
-@@ -44,7 +46,7 @@ struct tas5720_data {
- 	struct snd_soc_component *component;
- 	struct regmap *regmap;
- 	struct i2c_client *tas5720_client;
--	enum tas572x_type devtype;
-+	const struct tas5720_variant *variant;
- 	struct regulator_bulk_data supplies[TAS5720_NUM_SUPPLIES];
- 	struct delayed_work fault_check_work;
- 	unsigned int last_fault;
-@@ -179,17 +181,13 @@ static int tas5720_set_dai_tdm_slot(struct snd_soc_dai *dai,
- 		goto error_snd_soc_component_update_bits;
- 
- 	/* Configure TDM slot width. This is only applicable to TAS5722. */
--	switch (tas5720->devtype) {
--	case TAS5722:
-+	if (tas5720->variant->device_id == TAS5722_DEVICE_ID) {
- 		ret = snd_soc_component_update_bits(component, TAS5722_DIGITAL_CTRL2_REG,
- 						    TAS5722_TDM_SLOT_16B,
- 						    slot_width == 16 ?
- 						    TAS5722_TDM_SLOT_16B : 0);
- 		if (ret < 0)
- 			goto error_snd_soc_component_update_bits;
--		break;
--	default:
--		break;
- 	}
- 
- 	return 0;
-@@ -277,7 +275,7 @@ static void tas5720_fault_check_work(struct work_struct *work)
- static int tas5720_codec_probe(struct snd_soc_component *component)
+-static struct virtio_vsock *virtio_vsock_get(void)
+-{
+-	return the_virtio_vsock;
+-}
+-
+ static u32 virtio_transport_get_local_cid(void)
  {
- 	struct tas5720_data *tas5720 = snd_soc_component_get_drvdata(component);
--	unsigned int device_id, expected_device_id;
-+	unsigned int device_id;
- 	int ret;
+-	struct virtio_vsock *vsock = virtio_vsock_get();
++	struct virtio_vsock *vsock;
++	u32 ret;
  
- 	tas5720->component = component;
-@@ -301,21 +299,9 @@ static int tas5720_codec_probe(struct snd_soc_component *component)
- 		goto probe_fail;
- 	}
+-	if (!vsock)
+-		return VMADDR_CID_ANY;
++	rcu_read_lock();
++	vsock = rcu_dereference(the_virtio_vsock);
++	if (!vsock) {
++		ret = VMADDR_CID_ANY;
++		goto out_rcu;
++	}
  
--	switch (tas5720->devtype) {
--	case TAS5720:
--		expected_device_id = TAS5720_DEVICE_ID;
--		break;
--	case TAS5722:
--		expected_device_id = TAS5722_DEVICE_ID;
--		break;
--	default:
--		dev_err(component->dev, "unexpected private driver data\n");
--		return -EINVAL;
--	}
--
--	if (device_id != expected_device_id)
-+	if (device_id != tas5720->variant->device_id)
- 		dev_warn(component->dev, "wrong device ID. expected: %u read: %u\n",
--			 expected_device_id, device_id);
-+			 tas5720->variant->device_id, device_id);
- 
- 	/* Set device to mute */
- 	ret = snd_soc_component_update_bits(component, TAS5720_DIGITAL_CTRL2_REG,
-@@ -462,24 +448,6 @@ static bool tas5720_is_volatile_reg(struct device *dev, unsigned int reg)
- 	}
- }
- 
--static const struct regmap_config tas5720_regmap_config = {
--	.reg_bits = 8,
--	.val_bits = 8,
--
--	.max_register = TAS5720_MAX_REG,
--	.cache_type = REGCACHE_RBTREE,
--	.volatile_reg = tas5720_is_volatile_reg,
--};
--
--static const struct regmap_config tas5722_regmap_config = {
--	.reg_bits = 8,
--	.val_bits = 8,
--
--	.max_register = TAS5722_MAX_REG,
--	.cache_type = REGCACHE_RBTREE,
--	.volatile_reg = tas5720_is_volatile_reg,
--};
--
- /*
-  * DAC analog gain. There are four discrete values to select from, ranging
-  * from 19.2 dB to 26.3dB.
-@@ -558,40 +526,6 @@ static const struct snd_soc_dapm_route tas5720_audio_map[] = {
- 	{ "OUT", NULL, "DAC" },
- };
- 
--static const struct snd_soc_component_driver soc_component_dev_tas5720 = {
--	.probe			= tas5720_codec_probe,
--	.remove			= tas5720_codec_remove,
--	.suspend		= tas5720_suspend,
--	.resume			= tas5720_resume,
--	.controls		= tas5720_snd_controls,
--	.num_controls		= ARRAY_SIZE(tas5720_snd_controls),
--	.dapm_widgets		= tas5720_dapm_widgets,
--	.num_dapm_widgets	= ARRAY_SIZE(tas5720_dapm_widgets),
--	.dapm_routes		= tas5720_audio_map,
--	.num_dapm_routes	= ARRAY_SIZE(tas5720_audio_map),
--	.idle_bias_on		= 1,
--	.use_pmdown_time	= 1,
--	.endianness		= 1,
--	.non_legacy_dai_naming	= 1,
--};
--
--static const struct snd_soc_component_driver soc_component_dev_tas5722 = {
--	.probe = tas5720_codec_probe,
--	.remove = tas5720_codec_remove,
--	.suspend = tas5720_suspend,
--	.resume = tas5720_resume,
--	.controls = tas5722_snd_controls,
--	.num_controls = ARRAY_SIZE(tas5722_snd_controls),
--	.dapm_widgets = tas5720_dapm_widgets,
--	.num_dapm_widgets = ARRAY_SIZE(tas5720_dapm_widgets),
--	.dapm_routes = tas5720_audio_map,
--	.num_dapm_routes = ARRAY_SIZE(tas5720_audio_map),
--	.idle_bias_on		= 1,
--	.use_pmdown_time	= 1,
--	.endianness		= 1,
--	.non_legacy_dai_naming	= 1,
--};
--
- /* PCM rates supported by the TAS5720 driver */
- #define TAS5720_RATES	(SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000 |\
- 			 SNDRV_PCM_RATE_88200 | SNDRV_PCM_RATE_96000)
-@@ -637,29 +571,25 @@ static int tas5720_probe(struct i2c_client *client,
- {
- 	struct device *dev = &client->dev;
- 	struct tas5720_data *data;
--	const struct regmap_config *regmap_config;
-+	const struct tas5720_variant *type;
- 	int ret;
- 	int i;
- 
-+	type = device_get_match_data(&client->dev);
-+	if (!type && id)
-+		type = (const struct tas5720_variant *)id->driver_data;
-+
-+	if (!type)
-+		return -EINVAL;
-+
- 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
- 
- 	data->tas5720_client = client;
--	data->devtype = id->driver_data;
-+	data->variant = type;
- 
--	switch (id->driver_data) {
--	case TAS5720:
--		regmap_config = &tas5720_regmap_config;
--		break;
--	case TAS5722:
--		regmap_config = &tas5722_regmap_config;
--		break;
--	default:
--		dev_err(dev, "unexpected private driver data\n");
--		return -EINVAL;
--	}
--	data->regmap = devm_regmap_init_i2c(client, regmap_config);
-+	data->regmap = devm_regmap_init_i2c(client, &type->reg_config);
- 	if (IS_ERR(data->regmap)) {
- 		ret = PTR_ERR(data->regmap);
- 		dev_err(dev, "failed to allocate register map: %d\n", ret);
-@@ -678,51 +608,104 @@ static int tas5720_probe(struct i2c_client *client,
- 
- 	dev_set_drvdata(dev, data);
- 
--	switch (id->driver_data) {
--	case TAS5720:
--		ret = devm_snd_soc_register_component(&client->dev,
--					&soc_component_dev_tas5720,
--					tas5720_dai,
--					ARRAY_SIZE(tas5720_dai));
--		break;
--	case TAS5722:
--		ret = devm_snd_soc_register_component(&client->dev,
--					&soc_component_dev_tas5722,
--					tas5720_dai,
--					ARRAY_SIZE(tas5720_dai));
--		break;
--	default:
--		dev_err(dev, "unexpected private driver data\n");
--		return -EINVAL;
--	}
--	if (ret < 0) {
--		dev_err(dev, "failed to register component: %d\n", ret);
--		return ret;
--	}
-+	ret = devm_snd_soc_register_component(&client->dev,
-+					      &type->comp_drv,
-+					      tas5720_dai,
-+					      ARRAY_SIZE(tas5720_dai));
- 
--	return 0;
-+	if (ret < 0)
-+		dev_err(dev, "failed to register component: %d\n", ret);
-+
+-	return vsock->guest_cid;
++	ret = vsock->guest_cid;
++out_rcu:
++	rcu_read_unlock();
 +	return ret;
  }
  
-+static const struct tas5720_variant variant[] = {
-+	{
-+		.device_id = TAS5720_DEVICE_ID,
-+		.reg_config = {
-+			.reg_bits = 8,
-+			.val_bits = 8,
-+
-+			.max_register = TAS5720_MAX_REG,
-+			.cache_type = REGCACHE_RBTREE,
-+			.volatile_reg = tas5720_is_volatile_reg,
-+		},
-+		.comp_drv = {
-+			.probe = tas5720_codec_probe,
-+			.remove = tas5720_codec_remove,
-+			.suspend = tas5720_suspend,
-+			.resume = tas5720_resume,
-+			.controls = tas5720_snd_controls,
-+			.num_controls = ARRAY_SIZE(tas5720_snd_controls),
-+			.dapm_widgets = tas5720_dapm_widgets,
-+			.num_dapm_widgets = ARRAY_SIZE(tas5720_dapm_widgets),
-+			.dapm_routes = tas5720_audio_map,
-+			.num_dapm_routes = ARRAY_SIZE(tas5720_audio_map),
-+			.idle_bias_on = 1,
-+			.use_pmdown_time = 1,
-+			.endianness = 1,
-+			.non_legacy_dai_naming = 1
-+		},
-+	},
-+	{
-+		.device_id = TAS5722_DEVICE_ID,
-+		.reg_config = {
-+			.reg_bits = 8,
-+			.val_bits = 8,
-+
-+			.max_register = TAS5722_MAX_REG,
-+			.cache_type = REGCACHE_RBTREE,
-+			.volatile_reg = tas5720_is_volatile_reg,
-+		},
-+		.comp_drv = {
-+			.probe = tas5720_codec_probe,
-+			.remove = tas5720_codec_remove,
-+			.suspend = tas5720_suspend,
-+			.resume = tas5720_resume,
-+			.controls = tas5722_snd_controls,
-+			.num_controls = ARRAY_SIZE(tas5722_snd_controls),
-+			.dapm_widgets = tas5720_dapm_widgets,
-+			.num_dapm_widgets = ARRAY_SIZE(tas5720_dapm_widgets),
-+			.dapm_routes = tas5720_audio_map,
-+			.num_dapm_routes = ARRAY_SIZE(tas5720_audio_map),
-+			.idle_bias_on = 1,
-+			.use_pmdown_time = 1,
-+			.endianness = 1,
-+			.non_legacy_dai_naming = 1,
-+		},
-+	},
-+};
-+
- static const struct i2c_device_id tas5720_id[] = {
--	{ "tas5720", TAS5720 },
--	{ "tas5722", TAS5722 },
-+	{ "tas5720", (kernel_ulong_t)&variant[0] },
-+	{ "tas5722", (kernel_ulong_t)&variant[1] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, tas5720_id);
+ static void virtio_transport_loopback_work(struct work_struct *work)
+@@ -197,14 +200,18 @@ virtio_transport_send_pkt(struct virtio_vsock_pkt *pkt)
+ 	struct virtio_vsock *vsock;
+ 	int len = pkt->len;
  
- #if IS_ENABLED(CONFIG_OF)
- static const struct of_device_id tas5720_of_match[] = {
--	{ .compatible = "ti,tas5720", },
--	{ .compatible = "ti,tas5722", },
-+	{ .compatible = "ti,tas5720", .data = &variant[0], },
-+	{ .compatible = "ti,tas5722", .data = &variant[1], },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, tas5720_of_match);
- #endif
+-	vsock = virtio_vsock_get();
++	rcu_read_lock();
++	vsock = rcu_dereference(the_virtio_vsock);
+ 	if (!vsock) {
+ 		virtio_transport_free_pkt(pkt);
+-		return -ENODEV;
++		len = -ENODEV;
++		goto out_rcu;
+ 	}
  
-+#if IS_ENABLED(CONFIG_ACPI)
-+static const struct acpi_device_id tas5720_acpi_match[] = {
-+	{ "10TI5720", (kernel_ulong_t)&variant[0] },
-+	{ "10TI5722", (kernel_ulong_t)&variant[1] },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, tas5720_acpi_match);
-+#endif
+-	if (le64_to_cpu(pkt->hdr.dst_cid) == vsock->guest_cid)
+-		return virtio_transport_send_pkt_loopback(vsock, pkt);
++	if (le64_to_cpu(pkt->hdr.dst_cid) == vsock->guest_cid) {
++		len = virtio_transport_send_pkt_loopback(vsock, pkt);
++		goto out_rcu;
++	}
+ 
+ 	if (pkt->reply)
+ 		atomic_inc(&vsock->queued_replies);
+@@ -214,6 +221,9 @@ virtio_transport_send_pkt(struct virtio_vsock_pkt *pkt)
+ 	spin_unlock_bh(&vsock->send_pkt_list_lock);
+ 
+ 	queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
 +
- static struct i2c_driver tas5720_i2c_driver = {
- 	.driver = {
- 		.name = "tas5720",
- 		.of_match_table = of_match_ptr(tas5720_of_match),
-+		.acpi_match_table = ACPI_PTR(tas5720_acpi_match),
- 	},
- 	.probe = tas5720_probe,
- 	.id_table = tas5720_id,
++out_rcu:
++	rcu_read_unlock();
+ 	return len;
+ }
+ 
+@@ -222,12 +232,14 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+ {
+ 	struct virtio_vsock *vsock;
+ 	struct virtio_vsock_pkt *pkt, *n;
+-	int cnt = 0;
++	int cnt = 0, ret;
+ 	LIST_HEAD(freeme);
+ 
+-	vsock = virtio_vsock_get();
++	rcu_read_lock();
++	vsock = rcu_dereference(the_virtio_vsock);
+ 	if (!vsock) {
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto out_rcu;
+ 	}
+ 
+ 	spin_lock_bh(&vsock->send_pkt_list_lock);
+@@ -255,7 +267,11 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+ 			queue_work(virtio_vsock_workqueue, &vsock->rx_work);
+ 	}
+ 
+-	return 0;
++	ret = 0;
++
++out_rcu:
++	rcu_read_unlock();
++	return ret;
+ }
+ 
+ static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+@@ -590,8 +606,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+ 	vsock->rx_buf_max_nr = 0;
+ 	atomic_set(&vsock->queued_replies, 0);
+ 
+-	vdev->priv = vsock;
+-	the_virtio_vsock = vsock;
+ 	mutex_init(&vsock->tx_lock);
+ 	mutex_init(&vsock->rx_lock);
+ 	mutex_init(&vsock->event_lock);
+@@ -613,6 +627,9 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+ 	virtio_vsock_event_fill(vsock);
+ 	mutex_unlock(&vsock->event_lock);
+ 
++	vdev->priv = vsock;
++	rcu_assign_pointer(the_virtio_vsock, vsock);
++
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+ 	return 0;
+ 
+@@ -627,6 +644,12 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+ 	struct virtio_vsock *vsock = vdev->priv;
+ 	struct virtio_vsock_pkt *pkt;
+ 
++	mutex_lock(&the_virtio_vsock_mutex);
++
++	vdev->priv = NULL;
++	rcu_assign_pointer(the_virtio_vsock, NULL);
++	synchronize_rcu();
++
+ 	flush_work(&vsock->loopback_work);
+ 	flush_work(&vsock->rx_work);
+ 	flush_work(&vsock->tx_work);
+@@ -666,12 +689,10 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+ 	}
+ 	spin_unlock_bh(&vsock->loopback_list_lock);
+ 
+-	mutex_lock(&the_virtio_vsock_mutex);
+-	the_virtio_vsock = NULL;
+-	mutex_unlock(&the_virtio_vsock_mutex);
+-
+ 	vdev->config->del_vqs(vdev);
+ 
++	mutex_unlock(&the_virtio_vsock_mutex);
++
+ 	kfree(vsock);
+ }
+ 
 -- 
-2.17.1
+2.20.1
 
