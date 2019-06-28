@@ -2,104 +2,100 @@ Return-Path: <SRS0=E/6H=U3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ABCC4321A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A38C4321A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9428208E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:48:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vny6Hmz+"
+	by mail.kernel.org (Postfix) with ESMTP id E8A2020644
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Jun 2019 12:51:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfF1Msn (ORCPT
+        id S1726809AbfF1MvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 08:48:43 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:46832 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbfF1Msn (ORCPT
+        Fri, 28 Jun 2019 08:51:22 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:58069 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfF1MvW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 08:48:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FmEpqg75x9unomlBsmRDCIgN/BXip3W5+lKSjz4bVP4=; b=vny6Hmz++O86J7C/jOObNx8wv
-        gT8hGXMkuDdfOhOxiQq+6p5nb2tr+8x3N+IfnhHkl+G8cmU9Oc00lLtxYe5hW6gfnMr5joV+ld0ui
-        HHLz/FZN8TS3ZiJt4VIZfotY/RKDdvxtVW9Rn1Q07bKsyO1LoI3udIcViapcoNXL5oWnepVE0HdGr
-        +IRMb3d3hDwKokzPYyahmHJPZuqWAzQXeB0awpFb7+2ne33dEH0CDNohugDnFX9ERMX4bDRZoQ2Qb
-        e3ncggQxDTkCgmfd1VHTELBJKWkV0I82iPmgj3hGM4Fq4Sc67EoMNu1wKqfhcM/maFKfrLbTAbPjr
-        M9O9U6OdA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59200)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hgqIu-0000oG-LM; Fri, 28 Jun 2019 13:48:36 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hgqIq-0001WC-7c; Fri, 28 Jun 2019 13:48:32 +0100
-Date:   Fri, 28 Jun 2019 13:48:32 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/armada: fix debugfs link error
-Message-ID: <20190628124832.cedpoabfiqgjhtkq@shell.armlinux.org.uk>
-References: <20190628103359.2516007-1-arnd@arndb.de>
+        Fri, 28 Jun 2019 08:51:22 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id B13E38067C; Fri, 28 Jun 2019 14:51:09 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 14:51:20 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
+        linux-rt-users@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>, mwhitehe@redhat.com
+Subject: Re: PREEMPT_RT_FULL on x86-32 machine
+Message-ID: <20190628125120.GB21311@amd>
+References: <20190622081954.GA10751@amd>
+ <2804bc5b-18c1-2793-171c-045c0725a6a7@siemens.com>
+ <20190624105340.GA21414@amd>
+ <20190624132748.n4lgg4swj4nzirdb@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="/WwmFnJnmDyWGHa4"
 Content-Disposition: inline
-In-Reply-To: <20190628103359.2516007-1-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190624132748.n4lgg4swj4nzirdb@linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 12:33:40PM +0200, Arnd Bergmann wrote:
-> Debugfs can be disabled at compile time, causing a link error
-> with the newly restructured code:
-> 
-> drivers/gpu/drm/armada/armada_crtc.o: In function `armada_drm_crtc_late_register':
-> armada_crtc.c:(.text+0x974): undefined reference to `armada_drm_crtc_debugfs_init'
-> 
-> Make the code into the debugfs init function conditional.
 
-Thanks Arnd, mind if I roll this into the original commit?
+--/WwmFnJnmDyWGHa4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Fixes: 05ec8bd524ba ("drm/armada: redo CRTC debugfs files")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/gpu/drm/armada/armada_crtc.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/armada/armada_crtc.c b/drivers/gpu/drm/armada/armada_crtc.c
-> index e3a5964d8a65..03d3fd00fe00 100644
-> --- a/drivers/gpu/drm/armada/armada_crtc.c
-> +++ b/drivers/gpu/drm/armada/armada_crtc.c
-> @@ -773,7 +773,9 @@ static void armada_drm_crtc_destroy(struct drm_crtc *crtc)
->  
->  static int armada_drm_crtc_late_register(struct drm_crtc *crtc)
->  {
-> -	armada_drm_crtc_debugfs_init(drm_to_armada_crtc(crtc));
-> +	if (IS_ENABLED(CONFIG_DEBUG_FS))
-> +		armada_drm_crtc_debugfs_init(drm_to_armada_crtc(crtc));
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.20.0
-> 
-> 
+Hi!
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> > > >Is full preemption supposed to work on x86-32 machines?
+> > > >
+> > > >Because it does not work for me. It crashes early in boot, no messag=
+es
+> > > >make it to console. Similar configuration for x86-64 boots ok.
+> > > >
+> > >=20
+> > > Maybe you can also tell which version(s) you tried, and in which
+> > > configuration(s), and how the crash looked like.
+> >=20
+> > I wanted to know if the configuration is supposed to work at all
+> > before starting heavy debugging. From your reply I assume that it
+> > should work.
+> >=20
+> > I tried 4.19.13-rt1-cip1 among others. Crash is early in boot, I can
+> > try some early printing...
+>=20
+> The latest is v4.19.50-rt22 I would suggest that one. There was a bug
+> which was fixed either in 4.19.23-rt14 or in the following version.
+>=20
+> If the latest one does not work please let me know and I will have a
+> look.
+
+Ok, let me try again. It seems the kernel based on the latest one
+works ok. Even suspend/resume works.
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--/WwmFnJnmDyWGHa4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0WDUcACgkQMOfwapXb+vK5yQCeNKjG3rGjgsx9KqLkf32RYiJ9
+6QMAnjOqSXA6Nqzzcac6pveqLSi0VimQ
+=luiT
+-----END PGP SIGNATURE-----
+
+--/WwmFnJnmDyWGHa4--
