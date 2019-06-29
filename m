@@ -2,234 +2,126 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA369C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA5EC5B579
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D3DB2133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685412133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfF2Cmh (ORCPT
+        id S1726819AbfF2Cox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 22:42:37 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:56936 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726752AbfF2Cmg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 22:42:36 -0400
-X-UUID: 90c30f7188674106a6c026551003f697-20190629
-X-UUID: 90c30f7188674106a6c026551003f697-20190629
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1406132325; Sat, 29 Jun 2019 10:42:32 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 29 Jun 2019 10:42:30 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 29 Jun 2019 10:42:29 +0800
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
-        <yong.wu@mediatek.com>, <youlin.pei@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v8 21/21] iommu/mediatek: Switch to SPDX license identifier
-Date:   Sat, 29 Jun 2019 10:39:55 +0800
-Message-ID: <1561775995-24963-22-git-send-email-yong.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1561775995-24963-11-git-send-email-yong.wu@mediatek.com>
-References: <1561775995-24963-11-git-send-email-yong.wu@mediatek.com>
+        Fri, 28 Jun 2019 22:44:53 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8241 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726708AbfF2Cox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 22:44:53 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 24138748E1AEC8CEF4C4;
+        Sat, 29 Jun 2019 10:44:51 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 29 Jun 2019 10:44:43 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>,
+        <james.morse@arm.com>
+CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <guohanjun@huawei.com>,
+        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
+        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>,
+        <wangxiongfeng2@huawei.com>
+Subject: [RFC PATCH v2 3/3] arm64: Add CPU hotplug support
+Date:   Sat, 29 Jun 2019 10:42:35 +0800
+Message-ID: <1561776155-38975-4-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
+In-Reply-To: <1561776155-38975-1-git-send-email-wangxiongfeng2@huawei.com>
+References: <1561776155-38975-1-git-send-email-wangxiongfeng2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MTK:  N
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to SPDX license identifier for MediaTek iommu/smi and their
-header files.
+To support CPU hotplug, we need to implement 'acpi_(un)map_cpu()' and
+'arch_(un)register_cpu()' for ARM64. These functions are called in
+'acpi_processor_hotadd_init()/acpi_processor_remove()' when the CPU is hot
+added into or hot removed from the system.
 
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 ---
- drivers/iommu/mtk_iommu.c                     | 10 +---------
- drivers/iommu/mtk_iommu.h                     | 10 +---------
- drivers/iommu/mtk_iommu_v1.c                  | 10 +---------
- drivers/memory/mtk-smi.c                      | 10 +---------
- include/dt-bindings/memory/mt2701-larb-port.h | 10 +---------
- include/dt-bindings/memory/mt8173-larb-port.h | 10 +---------
- include/soc/mediatek/smi.h                    | 10 +---------
- 7 files changed, 7 insertions(+), 63 deletions(-)
+ arch/arm64/kernel/acpi.c  | 22 ++++++++++++++++++++++
+ arch/arm64/kernel/setup.c | 17 +++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 4212221..f013b55 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -1,15 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include <linux/memblock.h>
- #include <linux/bug.h>
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index dda74f1..d5dd07f 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Honghui Zhang <honghui.zhang@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
+diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+index 2804330..57835fa 100644
+--- a/arch/arm64/kernel/acpi.c
++++ b/arch/arm64/kernel/acpi.c
+@@ -25,6 +25,7 @@
+ #include <linux/serial_core.h>
  
- #ifndef _MTK_IOMMU_H_
-diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
-index ba0408b..55013ba 100644
---- a/drivers/iommu/mtk_iommu_v1.c
-+++ b/drivers/iommu/mtk_iommu_v1.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * IOMMU API for MTK architected m4u v1 implementations
-  *
-@@ -5,15 +6,6 @@
-  * Author: Honghui Zhang <honghui.zhang@mediatek.com>
-  *
-  * Based on driver/iommu/mtk_iommu.c
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include <linux/memblock.h>
- #include <linux/bug.h>
-diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-index 0e310d5..b754460 100644
---- a/drivers/memory/mtk-smi.c
-+++ b/drivers/memory/mtk-smi.c
-@@ -1,15 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include <linux/clk.h>
- #include <linux/component.h>
-diff --git a/include/dt-bindings/memory/mt2701-larb-port.h b/include/dt-bindings/memory/mt2701-larb-port.h
-index 6764d74..c511f0f 100644
---- a/include/dt-bindings/memory/mt2701-larb-port.h
-+++ b/include/dt-bindings/memory/mt2701-larb-port.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015 MediaTek Inc.
-  * Author: Honghui Zhang <honghui.zhang@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
+ #include <acpi/ghes.h>
++#include <acpi/processor.h>
+ #include <asm/cputype.h>
+ #include <asm/cpu_ops.h>
+ #include <asm/daifflags.h>
+@@ -284,3 +285,24 @@ int apei_claim_sea(struct pt_regs *regs)
  
- #ifndef _MT2701_LARB_PORT_H_
-diff --git a/include/dt-bindings/memory/mt8173-larb-port.h b/include/dt-bindings/memory/mt8173-larb-port.h
-index 111b4b0..a62bfeb 100644
---- a/include/dt-bindings/memory/mt8173-larb-port.h
-+++ b/include/dt-bindings/memory/mt8173-larb-port.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #ifndef __DTS_IOMMU_PORT_MT8173_H
- #define __DTS_IOMMU_PORT_MT8173_H
-diff --git a/include/soc/mediatek/smi.h b/include/soc/mediatek/smi.h
-index baad22f..11074c6 100644
---- a/include/soc/mediatek/smi.h
-+++ b/include/soc/mediatek/smi.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #ifndef MTK_IOMMU_SMI_H
- #define MTK_IOMMU_SMI_H
+ 	return err;
+ }
++
++int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id,
++		 int *pcpu)
++{
++	int cpu;
++
++	cpu = acpi_map_cpuid(physid, acpi_id);
++	*pcpu = cpu;
++	set_cpu_present(cpu, true);
++
++	return 0;
++}
++EXPORT_SYMBOL(acpi_map_cpu);
++
++int acpi_unmap_cpu(int cpu)
++{
++	set_cpu_present(cpu, false);
++
++	return 0;
++}
++EXPORT_SYMBOL(acpi_unmap_cpu);
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 7f4d12a..f2a881e 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -398,3 +398,20 @@ static int __init register_kernel_offset_dumper(void)
+ 	return 0;
+ }
+ __initcall(register_kernel_offset_dumper);
++
++int arch_register_cpu(int num)
++{
++	struct cpu *cpu = &per_cpu(cpu_data.cpu, num);
++
++	cpu->hotpluggable = 1;
++	return register_cpu(cpu, num);
++}
++EXPORT_SYMBOL(arch_register_cpu);
++
++void arch_unregister_cpu(int num)
++{
++	struct cpu *cpu = &per_cpu(cpu_data.cpu, num);
++
++	unregister_cpu(cpu);
++}
++EXPORT_SYMBOL(arch_unregister_cpu);
 -- 
-1.9.1
+1.7.12.4
 
