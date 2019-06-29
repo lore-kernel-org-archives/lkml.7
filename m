@@ -2,115 +2,168 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D27CC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 06:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E7AC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 06:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E8BC2086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 06:51:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1HZ2pZU"
+	by mail.kernel.org (Postfix) with ESMTP id 69CF5214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 06:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfF2Guu (ORCPT
+        id S1726832AbfF2G5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 02:50:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38215 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbfF2Gut (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 02:50:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id 9so3696001ple.5;
-        Fri, 28 Jun 2019 23:50:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aT8yS1f8zu7gIaeWTUIp6sbTg4VXV0oDXYNI0tw7bjo=;
-        b=a1HZ2pZUdPntMMwkXLl5kH4fKhJesWaeKJq2HaL3jWfMgZz5exlYIKLDi4L/2uO1AL
-         lRe58iBwOM75v5dERnCZKBDyeUSf3LLh4CD2JFosrPJoClIff4+0zxZZCuF5TW77bzg+
-         312oQ9fVg6jgV6FU9RCGbFLa1AdrZy20BhwgWINDFX5mQuI0Mfarw6FPcJk7/nUN3v48
-         jE6uM68sKF9KOBdDPYS/GlZZ5GMkYzq5tyHZ23eMmwvvZztmE8ngb7I0QJNV29+rV4xF
-         3X+6Mh4sm7V6zVWVYID+nQpB0qVnKuJNCs/Fh79vbrFEYVQEoIkCriXIQYQ/ewK+Ni8e
-         fPlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aT8yS1f8zu7gIaeWTUIp6sbTg4VXV0oDXYNI0tw7bjo=;
-        b=Eg7OAPcXiCPIZt61JtyJ2LW3JkjaexkCD+kZyn0lYT98KncIFWaGJqcSc9xm23eGsW
-         jq21EjWUd1Tr3DC7bOKSHf7TzudNv3tocuo6hdr9hs5knIXPchUHVg2QO7LMhjD5PCiy
-         PTQxcpH+0yI0LevsQXFIHrM2yjsco8kt/QtJ9p7Pxb90dNfQzLlf6+PFnti1LJGz8/Eq
-         p4IiTsxA/5lGE6KF74s/LUJRMenYXD7i8kxkcgs/IRdjfz1swG7HXs49hGYQIxWeFaBX
-         4DDvcxKye/GN6kh7qulo1Omoimpa80VH14OpDTFaYms0U9rLo4K4QmJArzMtyTKVe49s
-         TTUA==
-X-Gm-Message-State: APjAAAVcoeO/tsDfpxHbJP48E8Q21U8Bz+UWJ2N1/jCaEIU72YqSQh6t
-        PLSxKqF86CIPw38KWSpY+Hzvsv3M9nU=
-X-Google-Smtp-Source: APXvYqxcQWrbKx1bfH2VeHwhwp1sEAA+Sg368l4EWApXd2geM3Xtog+YRICICXqCf3MVvMLWbJ21Pg==
-X-Received: by 2002:a17:902:9307:: with SMTP id bc7mr15684481plb.183.1561791048825;
-        Fri, 28 Jun 2019 23:50:48 -0700 (PDT)
-Received: from maya190131 ([13.66.160.195])
-        by smtp.gmail.com with ESMTPSA id h21sm3225675pgg.75.2019.06.28.23.50.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 28 Jun 2019 23:50:48 -0700 (PDT)
-Date:   Sat, 29 Jun 2019 06:50:47 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] x86: hv: hv_init.c: Add functions to
- allocate/deallocate page for Hyper-V
-Message-ID: <20190629065046.GA20171@maya190131.isni1t2eisqetojrdim5hhf1se.xx.internal.cloudapp.net>
-References: <cover.1560837096.git.m.maya.nakamura@gmail.com>
- <d19c28cda88bf1706baff883380dfd321da30a68.1560837096.git.m.maya.nakamura@gmail.com>
- <alpine.DEB.2.21.1906272334560.32342@nanos.tec.linutronix.de>
+        Sat, 29 Jun 2019 02:57:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:60628 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726156AbfF2G5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 02:57:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D3C928;
+        Fri, 28 Jun 2019 23:57:34 -0700 (PDT)
+Received: from [192.168.1.18] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2026F3F246;
+        Fri, 28 Jun 2019 23:59:20 -0700 (PDT)
+Subject: Re: [PATCH v7 04/25] arm64: Substitute gettimeofday with C
+ implementation
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Huw Davies <huw@codeweavers.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Peter Collingbourne <pcc@google.com>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-5-vincenzo.frascino@arm.com>
+ <CGME20190628130921eucas1p239935b0771032c331911eacc1a69dd2e@eucas1p2.samsung.com>
+ <1fd47b0d-f77f-8d07-c039-6ac9072834fc@samsung.com>
+ <27386d82-2906-b541-f71d-3c61f5099bdf@arm.com>
+ <530cd07e-0da7-1d83-be4e-b14813029424@samsung.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <06c264a8-8778-18b1-1094-4281a4a2abc9@arm.com>
+Date:   Sat, 29 Jun 2019 07:58:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906272334560.32342@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <530cd07e-0da7-1d83-be4e-b14813029424@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 11:38:14PM +0200, Thomas Gleixner wrote:
-> Maya,
+Hi Sylwester,
+
+thank you for the quick turn around to my email.
+
+On 6/28/19 5:50 PM, Sylwester Nawrocki wrote:
+> Hi Vincenzo,
 > 
-> On Tue, 18 Jun 2019, Maya Nakamura wrote:
+> On 6/28/19 16:32, Vincenzo Frascino wrote:
+>> On 6/28/19 2:09 PM, Marek Szyprowski wrote:
+>>> On 2019-06-21 11:52, Vincenzo Frascino wrote:
+>>>> To take advantage of the commonly defined vdso interface for
+>>>> gettimeofday the architectural code requires an adaptation.
+>>>>
+>>>> Re-implement the gettimeofday vdso in C in order to use lib/vdso.
+>>>>
+>>>> With the new implementation arm64 gains support for CLOCK_BOOTTIME
+>>>> and CLOCK_TAI.
+>>>>
+>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>> Cc: Will Deacon <will.deacon@arm.com>
+>>>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+>>>> Tested-by: Shijith Thotton <sthotton@marvell.com>
+>>>> Tested-by: Andre Przywara <andre.przywara@arm.com>
+>>>> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+>>>
+>>> This patch causes serious regression on Samsung Exynos5433 SoC based 
+>>> TM2(e) boards. The time in userspace is always set to begin of the epoch:
+>>>
+>>> # date 062813152019
+>>> Fri Jun 28 13:15:00 UTC 2019
+>>> # date
+>>> Thu Jan  1 00:00:00 UTC 1970
+>>> # date
+>>> Thu Jan  1 00:00:00 UTC 1970
+>>>
+>>> I've noticed that since the patch landed in Linux next-20190625 and 
+>>> bisect indeed pointed to this patch.
+>>>
+>> Thank you for reporting this, seems that the next that you posted is missing
+>> some fixes for arm64.
+>>
+>> Could you please try the tree below?
+>>
+>> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/vdso
+>>
+>> Let us know if the functionality is restored. Otherwise the issue will require
+>> further investigation.
+>  
+> Marek is already out for holidays, I gave your tree a try but kernel from 
+> that branch was failing to boot on TM2(e).  
 > 
-> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> > index 0e033ef11a9f..e8960a83add7 100644
-> > --- a/arch/x86/hyperv/hv_init.c
-> > +++ b/arch/x86/hyperv/hv_init.c
-> > @@ -37,6 +37,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
-> >  u32 hv_max_vp_index;
-> >  EXPORT_SYMBOL_GPL(hv_max_vp_index);
-> >  
-> > +void *hv_alloc_hyperv_page(void)
-> > +{
-> > +	BUILD_BUG_ON(PAGE_SIZE != HV_HYP_PAGE_SIZE);
-> > +
-> > +	return (void *)__get_free_page(GFP_KERNEL);
-> > +}
-> > +EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
-> > +
-> > +void hv_free_hyperv_page(unsigned long addr)
-> > +{
-> > +	free_page(addr);
-> > +}
-> > +EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
+> Then I have cherry-picked 5 patches from the branch that seemed to 
+> be missing in next-20190628:
 > 
-> These functions need to be declared in a header file.
+> 28028f3174cf1 (HEAD) MAINTAINERS: Fix Andy's surname and the directory entries of VDSO
+> ec8f8e4bf2206 arm64: vdso: Fix compilation with clang older than 8
+> 721882ebb5729 arm64: compat: Fix __arch_get_hw_counter() implementation
+> 7027fea977a3d arm64: Fix __arch_get_hw_counter() implementation
+> 10b305853fe22 lib/vdso: Make delta calculation work correctly
+> 48568d8c7f479 (tag: next-20190628, linux-next/master) Add linux-next specific files for 20190628
 > 
-> Thanks,
+> With those 5 additional patches on top of next-20190628 the problem
+> is not observed any more. date, ping, etc. seems to be working well.
 > 
-> 	tglx
+> # date
+> Fri Jun 28 16:39:22 UTC 2019
+> #
+> # systemctl stop systemd-timesyncd
+> #  
+> # date 062818392019
+> Fri Jun 28 18:39:00 UTC 2019
+> # date
+> Fri Jun 28 18:39:01 UTC 2019
+> # 
+> # date 062818432019; date
+> Fri Jun 28 18:43:00 UTC 2019
+> Fri Jun 28 18:43:00 UTC 2019
+> # date
+> Fri Jun 28 18:43:04 UTC 2019
+>
+
+This seems ok, thanks for spending some time to test our patches against your board.
+
+If I may, I would like to ask to you one favor, could you please keep an eye on
+next and once those patches are merged repeat the test?
+
+I want just to make sure that the regression does not reappear.
+
+Have a nice weekend.
+
+> --
+> Regards,
+> Sylwester
 > 
-Thank you for pointing that out, Thomas. I will resubmit my patch set to
-include a header file with the function prototypes.
+
+-- 
+Regards,
+Vincenzo
