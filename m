@@ -2,82 +2,161 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D0DC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27824C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E478320645
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 002CF20656
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:58:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p8ry45Te"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfF2P6X (ORCPT
+        id S1726937AbfF2P6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 11:58:23 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:61038 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726837AbfF2P6X (ORCPT
+        Sat, 29 Jun 2019 11:58:48 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37522 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbfF2P6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 11:58:23 -0400
-X-UUID: cb4d007beed24b438c80b8f6513dc84b-20190629
-X-UUID: cb4d007beed24b438c80b8f6513dc84b-20190629
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 750830825; Sat, 29 Jun 2019 23:58:17 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 29 Jun 2019 23:58:16 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 29 Jun 2019 23:58:16 +0800
-Message-ID: <1561823896.29227.0.camel@mtkswgap22>
-Subject: Re: [PATCH v1] arm: dts: mediatek: add basic support for MT7629 SoC
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-CC:     <ryder.lee@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Weijie Gao <weijie.gao@mediatek.com>,
-        "Sean Wang" <sean.wang@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Steven Liu <steven.liu@mediatek.com>
-Date:   Sat, 29 Jun 2019 23:58:16 +0800
-In-Reply-To: <7hy31lp9q5.fsf@baylibre.com>
-References: <a8ca0018ac8a4c5f61a7a1efc9dc5dccd768628b.1552449524.git.ryder.lee@mediatek.com>
-         <7hy31lp9q5.fsf@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Sat, 29 Jun 2019 11:58:48 -0400
+Received: by mail-lf1-f67.google.com with SMTP id d11so5973863lfb.4;
+        Sat, 29 Jun 2019 08:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cyDlqS8O+ETStaI7Z/NPe+oie16h8/OkCmdUka/nvu0=;
+        b=p8ry45TeGG8F9VzwBLbwfGSW040vUOhn5vmH22YzaUFsPChv/AgOVp3iB4Xd0xhZBj
+         WVH4KX9LssEOhpbcIe0whzEhuPHP7f5qRbmzUvgZjdm077xSPS32+f6NzJd6HErfFat3
+         w3Y8sN2RTrlPStohugC2xxivCbRFihAomNgVKuv7Vo+6P+4BqFoAYHi2DmkdX4CwDi44
+         fPzAjhktJ5bj7FVsK974xTXwd5RJH1G/+L7RsY9LVWXd+kBIdlaHf1qQMejaHsQ0daYM
+         yUQu15FSpuHlmUbLcHRJQELcqDKmLPI/+7A2it0ZHobW8EZ5i007u6kdegClVBg86pgH
+         OLGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cyDlqS8O+ETStaI7Z/NPe+oie16h8/OkCmdUka/nvu0=;
+        b=F6i8cQm6PN78WwVb36g1mJFE4Vycp+7eD6ERbp1eirf8XS1a87mSz2ycfwi9gjic9s
+         U+HxDYfbr/A1e1nlPtw2ynu5NBKnnCb5AtrJ12IxePF46nDjHjRNJm3EeqyCBvNEI6u+
+         7AO9EAg/PV0CEl4OCJqMoBPsefDe/sT2rxWuqCsIK8bXVaw61HXk/kIS6mFpCb75F01n
+         bSjdSoiCMCnbbaWUGUXf0IU8g1pg0XHVWmV9NmvVzMUIYPO17qHHgvxULf+5TQVSGb8X
+         pezLkkdY6MRcMhEW8EoDj4wNmyO+bxdmYH428fOiTPvxcxhWwen7n37gcTjCSLDwUhkx
+         lwNA==
+X-Gm-Message-State: APjAAAUYdoj41MzM3Kd5nr9Cz1IIsRspzdvI9Wx1uFX/iH/qjieUaj2D
+        m9Lq9O3msu4qP39LvEIqZvKgWm0k
+X-Google-Smtp-Source: APXvYqw20rfKMoupFkFVytjknQYQZFmTnNun5nhtOvBf4v4LReYpOwSRUeXZcvERgqAIh9IQkOhrhA==
+X-Received: by 2002:ac2:5310:: with SMTP id c16mr1552415lfh.119.1561823925054;
+        Sat, 29 Jun 2019 08:58:45 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id v17sm2006940ljg.36.2019.06.29.08.58.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Jun 2019 08:58:44 -0700 (PDT)
+Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+ <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
+ <a262cbb3-845c-3ad1-16cc-375a24b9f7e9@gmail.com>
+Message-ID: <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
+Date:   Sat, 29 Jun 2019 18:58:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <a262cbb3-845c-3ad1-16cc-375a24b9f7e9@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-28 at 16:32 -0700, Kevin Hilman wrote:
-> <ryder.lee@kernel.org> writes:
+29.06.2019 18:46, Dmitry Osipenko пишет:
+> 28.06.2019 5:12, Sowjanya Komatineni пишет:
+>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>
+>> During suspend, context of all pinctrl registers are stored and
+>> on resume they are all restored to have all the pinmux and pad
+>> configuration for normal operation.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>  drivers/pinctrl/tegra/pinctrl-tegra.c    | 52 ++++++++++++++++++++++++++++++++
+>>  drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
+>>  drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
+>>  3 files changed, 56 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> index 34596b246578..e7c0a1011cba 100644
+>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> @@ -621,6 +621,43 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>  	}
+>>  }
+>>  
+>> +static int tegra_pinctrl_suspend(struct device *dev)
+>> +{
+>> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
+>> +	u32 *backup_regs = pmx->backup_regs;
+>> +	u32 *regs;
+>> +	unsigned int i, j;
+>> +
+>> +	for (i = 0; i < pmx->nbanks; i++) {
+>> +		regs = pmx->regs[i];
+>> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+>> +			*backup_regs++ = readl(regs++);
+>> +	}
+>> +
+>> +	return pinctrl_force_sleep(pmx->pctl);
+>> +}
+>> +
+>> +static int tegra_pinctrl_resume(struct device *dev)
+>> +{
+>> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
+>> +	u32 *backup_regs = pmx->backup_regs;
+>> +	u32 *regs;
+>> +	unsigned int i, j;
+>> +
+>> +	for (i = 0; i < pmx->nbanks; i++) {
+>> +		regs = pmx->regs[i];
+>> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+>> +			writel(*backup_regs++, regs++);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +const struct dev_pm_ops tegra_pinctrl_pm = {
+>> +	.suspend = &tegra_pinctrl_suspend,
+>> +	.resume = &tegra_pinctrl_resume
+>> +};
 > 
-> > From: Ryder Lee <ryder.lee@mediatek.com>
-> >
-> > This adds basic support for MT7629 reference board.
-> >
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Hm, so this are the generic platform-driver suspend-resume OPS here, which is very
+> nice! But.. shouldn't pinctrl be resumed before the CLK driver (which is syscore_ops
+> in this version of the series)? .. Given that "clock" function may need to be
+> selected for some of the pins.
 > 
-> Just noticing this is not upstream yet.
-> 
-> I did a basic boot test to ramdisk on the mt7629-rfb board donated for
-> kernelCI (thanks MediaTek!) and it boots just fine.
-> 
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-> 
-> Kevin
 
-Thanks. I'll post v3 with some fixups soon.
+Oh, also what about GPIO-pinctrl suspend resume ordering .. is it okay that pinctrl
+will be resumed after GPIO? Shouldn't a proper pin-muxing be selected at first?
 
-Ryder
-
-
+This also looks to me very unsafe in a context of older Tegras which are initializing
+the static muxing very early during of the boot, otherwise things won't work well for
+the drivers.
