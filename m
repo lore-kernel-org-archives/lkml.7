@@ -2,93 +2,292 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D665C5B57B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 22:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B49DC5B57B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 22:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305BD205C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 22:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E8C214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 22:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfF2WRD (ORCPT
+        id S1726982AbfF2WaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 18:17:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:19062 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726923AbfF2WRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 18:17:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jun 2019 15:17:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,433,1557212400"; 
-   d="scan'208";a="168093690"
-Received: from spandruv-mobl3.jf.intel.com ([10.254.24.202])
-  by orsmga006.jf.intel.com with ESMTP; 29 Jun 2019 15:17:00 -0700
-Message-ID: <41765249d4384d48437eba9c8640ecf167e629d2.camel@linux.intel.com>
-Subject: Re: [PATCH 10/10] tools/power/x86: A tool to validate Intel Speed
- Select commands
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Alan Cox <alan@linux.intel.com>, Len Brown <lenb@kernel.org>,
-        prarit@redhat.com, darcari@redhat.com,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Date:   Sat, 29 Jun 2019 15:17:00 -0700
-In-Reply-To: <CAHp75VduxgJ6k4J2bB83Xbif0D0AGkxyDAdwvN64ybxdxXHXcw@mail.gmail.com>
-References: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
-         <20190626223851.19138-11-srinivas.pandruvada@linux.intel.com>
-         <CAHp75VfMDpKyYnZkZw51dwcEt5neQwGuZUaB7yEFQW6fjRYCqg@mail.gmail.com>
-         <1c4238f7d18d316df82d3ba1618fecdcf014f98a.camel@linux.intel.com>
-         <CAHp75VduxgJ6k4J2bB83Xbif0D0AGkxyDAdwvN64ybxdxXHXcw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 29 Jun 2019 18:30:17 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:33166 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfF2WaQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 18:30:16 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hhLqr-0002yp-RA; Sat, 29 Jun 2019 22:29:45 +0000
+Date:   Sat, 29 Jun 2019 23:29:45 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Alexander Viro <viro@ftp.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Christopher Lameter <cl@linux.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
+        Andi Kleen <ak@linux.intel.com>,
+        David Chinner <david@fromorbit.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Rik van Riel <riel@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: shrink_dentry_list() logics change (was Re: [RFC PATCH v3 14/15]
+ dcache: Implement partial shrink via Slab Movable Objects)
+Message-ID: <20190629222945.GW17978@ZenIV.linux.org.uk>
+References: <20190411013441.5415-1-tobin@kernel.org>
+ <20190411013441.5415-15-tobin@kernel.org>
+ <20190411023322.GD2217@ZenIV.linux.org.uk>
+ <20190411024821.GB6941@eros.localdomain>
+ <20190411044746.GE2217@ZenIV.linux.org.uk>
+ <20190411210200.GH2217@ZenIV.linux.org.uk>
+ <20190629040844.GS17978@ZenIV.linux.org.uk>
+ <20190629043803.GT17978@ZenIV.linux.org.uk>
+ <20190629190624.GU17978@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190629190624.GU17978@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-06-29 at 19:03 +0300, Andy Shevchenko wrote:
-> On Sat, Jun 29, 2019 at 5:53 PM Srinivas Pandruvada
-> <srinivas.pandruvada@linux.intel.com> wrote:
-> > On Sat, 2019-06-29 at 17:31 +0300, Andy Shevchenko wrote:
-> > > On Thu, Jun 27, 2019 at 1:39 AM Srinivas Pandruvada
-> > > <srinivas.pandruvada@linux.intel.com> wrote:
-> > > I need an Ack from tools/power maintainer(s) for this.
-> > > Also see below.
-> > 
-> > MAINTAINER file doesn't call for any special name in this folder.
-> 
-> And this tells me perhaps this driver needs a MAINTAINER record?
-I will submit a MAINTAINER file update. I was waiting for reviews.
+On Sat, Jun 29, 2019 at 08:06:24PM +0100, Al Viro wrote:
+> I wonder if after the "no evictable candidates, but something
+> on other's shrink lists" we ought to do something along the
+> lines of
+> 	rcu_read_lock
+> 	walk it, doing
+> 		if dentry has zero refcount
+> 			if it's not on a shrink list,
+> 				move it to ours
+> 			else
+> 				store its address in 'victim'
+> 				end the walk
+> 	if no victim found
+> 		rcu_read_unlock
+> 	else
+> 		lock victim for __dentry_kill
+> 		rcu_read_unlock
+> 		if it's still alive
+> 			if it's not IS_ROOT
+> 				if parent is not on shrink list
+> 					decrement parent's refcount
+> 					put it on our list
+> 				else
+> 					decrement parent's refcount
+> 			__dentry_kill(victim)
+> 		else
+> 			unlock
+> 	if our list is non-empty
+> 		shrink_dentry_list on it
+> in there...
 
-Thanks,
-Srinivas
+Like this (again, only build-tested):
 
-> 
-> > $./scripts/get_maintainer.pl 0010-tools-power-x86-A-tool-to-
-> > validate-
-> > Intel-Speed-Selec.patch
-> > Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> > (commit_signer:1/1=100%,authored:1/1=100%,added_lines:31/31=100%,ad
-> > ded_
-> > lines:231/231=100%,added_lines:1607/1607=100%,added_lines:721/721=1
-> > 00%,
-> > added_lines:479/479=100%)
-> > linux-kernel@vger.kernel.org (open list)
-> > 
-> > Len and Rafael can you ACK this tool patch?
-> 
-> 
+Teach shrink_dcache_parent() to cope with mixed-filesystem shrink lists
 
+Currently, running into a shrink list that contains dentries from different
+filesystems can cause several unpleasant things for shrink_dcache_parent()
+and for umount(2).
+
+The first problem is that there's a window during shrink_dentry_list() between
+__dentry_kill() takes a victim out and dropping reference to its parent.  During
+that window the parent looks like a genuine busy dentry.  shrink_dcache_parent()
+(or, worse yet, shrink_dcache_for_umount()) coming at that time will see no
+eviction candidates and no indication that it needs to wait for some
+shrink_dentry_list() to proceed further.
+
+That applies for any shrink list that might intersect with the subtree we are
+trying to shrink; the only reason it does not blow on umount(2) in the mainline
+is that we unregister the memory shrinker before hitting shrink_dcache_for_umount().
+
+Another problem happens if something in a mixed-filesystem shrink list gets
+be stuck in e.g. iput(), getting umount of unrelated fs to spin waiting for
+the stuck shrinker to get around to our dentries.
+
+Solution:
+	1) have shrink_dentry_list() decrement the parent's refcount and
+make sure it's on a shrink list (ours unless it already had been on some
+other) before calling __dentry_kill().  That eliminates the window when
+shrink_dcache_parent() would've blown past the entire subtree without
+noticing anything with zero refcount not on shrink lists.
+	2) when shrink_dcache_parent() has found no eviction candidates,
+but some dentries are still sitting on shrink lists, rather than
+repeating the scan in hope that shrinkers have progressed, scan looking
+for something on shrink lists with zero refcount.  If such a thing is
+found, grab rcu_read_lock() and stop the scan, with caller locking
+it for eviction, dropping out of RCU and doing __dentry_kill(), with
+the same treatment for parent as shrink_dentry_list() would do.
+
+Note that right now mixed-filesystem shrink lists do not occur, so this
+is not a mainline bug.  Howevere, there's a bunch of uses for such
+beasts (e.g. the "try and evict everything we can out of given page"
+patches; there are potential uses in mount-related code, considerably
+simplifying the life in fs/namespace.c, etc.)
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+
+diff --git a/fs/dcache.c b/fs/dcache.c
+index 8136bda27a1f..43480f516329 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -860,6 +860,32 @@ void dput(struct dentry *dentry)
+ }
+ EXPORT_SYMBOL(dput);
+ 
++static void __dput_to_list(struct dentry *dentry, struct list_head *list)
++__must_hold(&dentry->d_lock)
++{
++	if (dentry->d_flags & DCACHE_SHRINK_LIST) {
++		/* let the owner of the list it's on deal with it */
++		--dentry->d_lockref.count;
++	} else {
++		if (dentry->d_flags & DCACHE_LRU_LIST)
++			d_lru_del(dentry);
++		if (!--dentry->d_lockref.count)
++			d_shrink_add(dentry, list);
++	}
++}
++
++void dput_to_list(struct dentry *dentry, struct list_head *list)
++{
++	rcu_read_lock();
++	if (likely(fast_dput(dentry))) {
++		rcu_read_unlock();
++		return;
++	}
++	rcu_read_unlock();
++	if (!retain_dentry(dentry))
++		__dput_to_list(dentry, list);
++	spin_unlock(&dentry->d_lock);
++}
+ 
+ /* This must be called with d_lock held */
+ static inline void __dget_dlock(struct dentry *dentry)
+@@ -1088,18 +1114,9 @@ static void shrink_dentry_list(struct list_head *list)
+ 		rcu_read_unlock();
+ 		d_shrink_del(dentry);
+ 		parent = dentry->d_parent;
++		if (parent != dentry)
++			__dput_to_list(parent, list);
+ 		__dentry_kill(dentry);
+-		if (parent == dentry)
+-			continue;
+-		/*
+-		 * We need to prune ancestors too. This is necessary to prevent
+-		 * quadratic behavior of shrink_dcache_parent(), but is also
+-		 * expected to be beneficial in reducing dentry cache
+-		 * fragmentation.
+-		 */
+-		dentry = parent;
+-		while (dentry && !lockref_put_or_lock(&dentry->d_lockref))
+-			dentry = dentry_kill(dentry);
+ 	}
+ }
+ 
+@@ -1444,8 +1461,11 @@ int d_set_mounted(struct dentry *dentry)
+ 
+ struct select_data {
+ 	struct dentry *start;
++	union {
++		long found;
++		struct dentry *victim;
++	};
+ 	struct list_head dispose;
+-	int found;
+ };
+ 
+ static enum d_walk_ret select_collect(void *_data, struct dentry *dentry)
+@@ -1477,6 +1497,37 @@ static enum d_walk_ret select_collect(void *_data, struct dentry *dentry)
+ 	return ret;
+ }
+ 
++static enum d_walk_ret select_collect2(void *_data, struct dentry *dentry)
++{
++	struct select_data *data = _data;
++	enum d_walk_ret ret = D_WALK_CONTINUE;
++
++	if (data->start == dentry)
++		goto out;
++
++	if (dentry->d_flags & DCACHE_SHRINK_LIST) {
++		if (!dentry->d_lockref.count) {
++			rcu_read_lock();
++			data->victim = dentry;
++			return D_WALK_QUIT;
++		}
++	} else {
++		if (dentry->d_flags & DCACHE_LRU_LIST)
++			d_lru_del(dentry);
++		if (!dentry->d_lockref.count)
++			d_shrink_add(dentry, &data->dispose);
++	}
++	/*
++	 * We can return to the caller if we have found some (this
++	 * ensures forward progress). We'll be coming back to find
++	 * the rest.
++	 */
++	if (!list_empty(&data->dispose))
++		ret = need_resched() ? D_WALK_QUIT : D_WALK_NORETRY;
++out:
++	return ret;
++}
++
+ /**
+  * shrink_dcache_parent - prune dcache
+  * @parent: parent of entries to prune
+@@ -1486,12 +1537,9 @@ static enum d_walk_ret select_collect(void *_data, struct dentry *dentry)
+ void shrink_dcache_parent(struct dentry *parent)
+ {
+ 	for (;;) {
+-		struct select_data data;
++		struct select_data data = {.start = parent};
+ 
+ 		INIT_LIST_HEAD(&data.dispose);
+-		data.start = parent;
+-		data.found = 0;
+-
+ 		d_walk(parent, &data, select_collect);
+ 
+ 		if (!list_empty(&data.dispose)) {
+@@ -1502,6 +1550,21 @@ void shrink_dcache_parent(struct dentry *parent)
+ 		cond_resched();
+ 		if (!data.found)
+ 			break;
++		d_walk(parent, &data, select_collect2);
++		if (data.victim) {
++			struct dentry *parent;
++			if (!shrink_lock_dentry(data.victim)) {
++				rcu_read_unlock();
++			} else {
++				rcu_read_unlock();
++				parent = data.victim->d_parent;
++				if (parent != data.victim)
++					__dput_to_list(parent, &data.dispose);
++				__dentry_kill(data.victim);
++			}
++		}
++		if (!list_empty(&data.dispose))
++			shrink_dentry_list(&data.dispose);
+ 	}
+ }
+ EXPORT_SYMBOL(shrink_dcache_parent);
