@@ -8,63 +8,65 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1B6C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEC9C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0051214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F193C214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSiTJ0VH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aEwDpIdt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfF2KTP (ORCPT
+        id S1726980AbfF2KUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 06:19:15 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39364 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfF2KTO (ORCPT
+        Sat, 29 Jun 2019 06:20:44 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41888 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfF2KUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 06:19:14 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so4646565pls.6
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 03:19:14 -0700 (PDT)
+        Sat, 29 Jun 2019 06:20:44 -0400
+Received: by mail-pg1-f196.google.com with SMTP id q4so2234757pgj.8
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 03:20:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=66nQjAJxmJvEqdK76xbS0v4Awl8Ld4jHNoG2MYlrSPc=;
-        b=hSiTJ0VH2LR8cD4eJvD9GFiE8771rr/Wd0rwQVye9hTyXBYynhUsJK21v3cZ5R4HbD
-         cQAgS3qiSbsEu5XjEtG47z6H0i2gfSO914VH4Us4NOFg8x9yQudP+BHtgVnNt7rBJXFU
-         ZUZB+0hWO3/OwM6iOax3YNg6AZBp1su1VZ7AJsI8EMSUK61be8ney6l2xXtpKg86PnCR
-         m+U0Xzexx3snRiAwQRrQX/JUqBQ8Eg8FBrj2IhZQu0gRO94f2yIkbehUlA0DShHmLWxz
-         +pcUsvJw0GZIu+63MRRMc1twS/hJ6sOBL7ap2QLqQP2uxQ3egf0YfvmzdQBiVRjs8PDC
-         sKvA==
+        bh=JuxDh70JECXFKJRKv7MNIrxvDmNJyfZDTwgCL5FZyeM=;
+        b=aEwDpIdt+k+hiRpgeN6ohD2zXTHZx5iwFL3RNV1eipQg50RjEtiHs9RN5YtjYGI+ln
+         y2xuAzbrUCQ3ffKdbcMPq0dX05zdM/Ui9p4n+HQOm2mBaZqWKPxpYhufJZ5Pv2Ik7NPZ
+         SuDS5nj6ENM6IaIg1/bHrRMdb2scNzC3DsvYnEqnbqUG5a4OEr608MM/ZsrQ5D1xh2nF
+         xby554va50gchEf/wqEykFmL4o1hclRfeIii0DKymI9V/hx+hh8WZxrVQMX5lTCuzDCC
+         xuL11tMFG+qu1+bnzgmsr2j55x+6Z+ZBDjqiVTrleIs1lgGP4aCI1gGmCOSjSLN3jbx+
+         EAmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=66nQjAJxmJvEqdK76xbS0v4Awl8Ld4jHNoG2MYlrSPc=;
-        b=CKkM+P3ZFM6xf2HvHD9a+8E6JZr1hMbxAsXoRBPZ6uJWD4IsyTxqGBwbbN5+OrOYoR
-         U1HPVjIWOk/8mQo5/92SiGWghP58hRjGUxFzetdhsolruutPFnZtDNpnCc/vAaaTLwFg
-         j1+dPsegeCV+WmSkQYfSELvtFYGL8I7sD9x36obLwmNrzoyxDt5fd+WNEszcjPDifSS/
-         sx32FovQOdnKkELUBG4SoXRXGF5x2MDfePJDiECk8V029mdclNtoI3s1Is+xm9eu8KXX
-         SN1HuW9iqjg8drmQH5U5SspiS/NN0UegX22bvNzVCYYSxEpVLCUVDrxzUmd01cfGXSBe
-         /6vA==
-X-Gm-Message-State: APjAAAXJ0XNyYv042FU+9jf5uOWEcX+r9vu6GzqiX4ZWfSx1bdTQFpDJ
-        8ngAdAadKhicBgQ/SgTf06Q=
-X-Google-Smtp-Source: APXvYqwfqiCBofp4EV/LyHS60DAP50fcMYoXiAq34ZMr1M4xaFUUCRyg0J/wRkSIB7P3M0mv4xA4uw==
-X-Received: by 2002:a17:902:290b:: with SMTP id g11mr16690707plb.26.1561803554032;
-        Sat, 29 Jun 2019 03:19:14 -0700 (PDT)
+        bh=JuxDh70JECXFKJRKv7MNIrxvDmNJyfZDTwgCL5FZyeM=;
+        b=BYP4efj68px8LfyiwlBazifCiOg+A0GGBZgD2Dyeub1i2FPA3t78vCL9zOo3Z1CQL2
+         E5CKzihMQSeLeiF/f3uVkz60FKM5bbimEQDZlVLm4Y/h81Ah1pnmKhGLQkw1dqDi4bgx
+         tjzJLAHKGya/OvzZzFEfdpACvrgL0YfYHQxr5gyJV3WQh+AoCJLUu1iF/8g5+qBaIB8F
+         IqaWaeMTsCOvXi4p5hGY0MvBC2nYwZQqZkMIunyYfPBv6B9+s2FFrlOjc8hQ+c6gD+nT
+         9d5wmEMR4jT3EU7I78JqJ+UVxYrGJU+olEWICbyu6hgT2hFaDxP3GzE3XdFGTM0dZBR7
+         JHMg==
+X-Gm-Message-State: APjAAAWh9RspHTrvNgDjW1R919YyMysoIu1R41YFK5jDzk1pNDLByt+C
+        KpuZdLEc11qqPoKn/GKlEZw=
+X-Google-Smtp-Source: APXvYqygsTI5Cw3FhDha3cPCG/16M/SP8PufHyL4kq3Fz6XUvcLOeNgLi8IOIlzk4QJYbyzsZ9gV9A==
+X-Received: by 2002:a17:90a:9bc5:: with SMTP id b5mr18790987pjw.109.1561803643676;
+        Sat, 29 Jun 2019 03:20:43 -0700 (PDT)
 Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id x26sm5907869pfq.69.2019.06.29.03.19.12
+        by smtp.gmail.com with ESMTPSA id u20sm4969600pfm.145.2019.06.29.03.20.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 03:19:13 -0700 (PDT)
-Date:   Sat, 29 Jun 2019 15:49:09 +0530
+        Sat, 29 Jun 2019 03:20:43 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 15:50:39 +0530
 From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bhanusree Pola <bhanusreemahesh@gmail.com>,
+        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
         Hariprasad Kelam <hariprasad.kelam@gmail.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 01/10] staging/rtl8723bs/hal: fix comparison to true/false is
+Subject: [PATCH 02/10] staging/rtl8723bs/hal: fix comparison to true/false is
  error prone
-Message-ID: <20190629101909.GA14880@hari-Inspiron-1545>
+Message-ID: <20190629102039.GA14936@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -81,40 +83,40 @@ CHECK: Using comparison to true is error prone
 
 Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- drivers/staging/rtl8723bs/hal/hal_intf.c | 6 +++---
+ drivers/staging/rtl8723bs/hal/odm.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/hal/hal_intf.c b/drivers/staging/rtl8723bs/hal/hal_intf.c
-index 4a4d17b..b9d13e3 100644
---- a/drivers/staging/rtl8723bs/hal/hal_intf.c
-+++ b/drivers/staging/rtl8723bs/hal/hal_intf.c
-@@ -230,7 +230,7 @@ s32	rtw_hal_mgnt_xmit(struct adapter *padapter, struct xmit_frame *pmgntframe)
- 	/* pwlanhdr = (struct rtw_ieee80211_hdr *)pframe; */
- 	/* memcpy(pmgntframe->attrib.ra, pwlanhdr->addr1, ETH_ALEN); */
+diff --git a/drivers/staging/rtl8723bs/hal/odm.c b/drivers/staging/rtl8723bs/hal/odm.c
+index e3f4307..dd97a6a 100644
+--- a/drivers/staging/rtl8723bs/hal/odm.c
++++ b/drivers/staging/rtl8723bs/hal/odm.c
+@@ -1238,7 +1238,7 @@ static void FindMinimumRSSI(struct adapter *padapter)
+ 	/* 1 1.Determine the minimum RSSI */
  
--	if (padapter->securitypriv.binstallBIPkey == true) {
-+	if (padapter->securitypriv.binstallBIPkey) {
- 		if (IS_MCAST(pmgntframe->attrib.ra)) {
- 			pmgntframe->attrib.encrypt = _BIP_;
- 			/* pmgntframe->attrib.bswenc = true; */
-@@ -430,7 +430,7 @@ s32 rtw_hal_macid_sleep(struct adapter *padapter, u32 macid)
+ 	if (
+-		(pDM_Odm->bLinked != true) &&
++		(!pDM_Odm->bLinked) &&
+ 		(pdmpriv->EntryMinUndecoratedSmoothedPWDB == 0)
+ 	) {
+ 		pdmpriv->MinUndecoratedPWDBForDM = 0;
+@@ -1262,7 +1262,7 @@ void odm_RSSIMonitorCheckCE(PDM_ODM_T pDM_Odm)
+ 	bool FirstConnect = false;
+ 	pRA_T pRA_Table = &pDM_Odm->DM_RA_Table;
  
- 	support = false;
- 	rtw_hal_get_def_var(padapter, HAL_DEF_MACID_SLEEP, &support);
--	if (false == support)
-+	if (!support)
- 		return _FAIL;
+-	if (pDM_Odm->bLinked != true)
++	if (!pDM_Odm->bLinked)
+ 		return;
  
- 	rtw_hal_set_hwreg(padapter, HW_VAR_MACID_SLEEP, (u8 *)&macid);
-@@ -445,7 +445,7 @@ s32 rtw_hal_macid_wakeup(struct adapter *padapter, u32 macid)
+ 	FirstConnect = (pDM_Odm->bLinked) && (pRA_Table->firstconnect == false);
+@@ -1296,7 +1296,7 @@ void odm_RSSIMonitorCheckCE(PDM_ODM_T pDM_Odm)
  
- 	support = false;
- 	rtw_hal_get_def_var(padapter, HAL_DEF_MACID_SLEEP, &support);
--	if (false == support)
-+	if (!support)
- 		return _FAIL;
- 
- 	rtw_hal_set_hwreg(padapter, HW_VAR_MACID_WAKEUP, (u8 *)&macid);
+ 		for (i = 0; i < sta_cnt; i++) {
+ 			if (PWDB_rssi[i] != (0)) {
+-				if (pHalData->fw_ractrl == true)/*  Report every sta's RSSI to FW */
++				if (pHalData->fw_ractrl)/*  Report every sta's RSSI to FW */
+ 					rtl8723b_set_rssi_cmd(Adapter, (u8 *)(&PWDB_rssi[i]));
+ 			}
+ 		}
 -- 
 2.7.4
 
