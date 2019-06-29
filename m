@@ -2,137 +2,106 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228A4C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722DEC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A692086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4640A2086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+sD4Tg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfF2IIg (ORCPT
+        id S1726863AbfF2IVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 04:08:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38390 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbfF2IIg (ORCPT
+        Sat, 29 Jun 2019 04:21:45 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37776 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbfF2IVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 04:08:36 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hh8PQ-0002GX-QA; Sat, 29 Jun 2019 10:08:32 +0200
-Date:   Sat, 29 Jun 2019 10:08:31 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Megha Dey <megha.dey@linux.intel.com>
-cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
-        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
-        megha.dey@intel.com
-Subject: Re: [RFC V1 RESEND 5/6] PCI/MSI: Free MSI-X resources by group
-In-Reply-To: <1561162778-12669-6-git-send-email-megha.dey@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1906291002190.1802@nanos.tec.linutronix.de>
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com> <1561162778-12669-6-git-send-email-megha.dey@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sat, 29 Jun 2019 04:21:44 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 19so4132966pfa.4;
+        Sat, 29 Jun 2019 01:21:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HB5G4BCyKAU7NWh04NXHQUYQWJo7mRMg3f1DS79X9is=;
+        b=U+sD4Tg2i5EmnQ+E96oYuHmFfjRIZFhu+ImSjldFv+pp7bnarxQt4kZTlckg4DVX+M
+         5BwiyO9vyxW50aW05AoE/XIReZ9UkFMhsaXqrral2F+wzcVqDlYG9Mvy5WHbXw3EVJDh
+         O+MEOuUIm8CeKDhIpzNb9pUSquazzH3bdV8LKIxTfBVuq8knnPvwv2H4AHzKPX2lgP4s
+         trkpZ1ybjg/Y1kuSq/ywv3KuZTsKx+BT4RNyIxMJxKYktCp2UZVQyYwlHdkJpOF55bVO
+         qgTm4y/L71e3PxcXX0+KKUtPt/aEITyjaj+U13dkDaAkNQB52CqYfAurITZQgPSEwS/+
+         iYYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HB5G4BCyKAU7NWh04NXHQUYQWJo7mRMg3f1DS79X9is=;
+        b=GvsMbNdKXv/hGaCFh45x2DeiIZnhv2PDkV7YHMYejqqkTNRIO43fmufrSVx/p10P53
+         FiREzKoZj7HgDFVShF0+e6Wws8v0ElPcP+a7yRr+QeeYTSkrO7iSS+3rvhLNTof4YiTw
+         0fhwF7Poazp/HUnmU4+4U3Ul072Z1hOdEhTRcAxP4jgpnCI6wPVBC5C8SLltcgVRvbAw
+         BuNxxj3EVlkY7Wf1OKOwJKdcc4xYKfN0VaSjwRfut2aiYpFgZABhLvIPl1XupMIdBnYt
+         1e6Sx8zUCPxYAglPPT86rRJMVnuMOLmx2FRWZ99ZtOzjXczk7bUUh/eUaMsxSMZ9wxCS
+         33ag==
+X-Gm-Message-State: APjAAAVPlu3TTwLg1uysEYc4/0JOYuUiYDvoPvCAFwke20yt3ai8QChK
+        rDZRRF+e376RsKmBBRzt0XvvJKYacYU=
+X-Google-Smtp-Source: APXvYqxe+pfvA2fNml3PD0CjRgo9z23VagyA/eh1M1nZFUM5QLw9+cWEf3nEyzTfGxa1nZKlTrc+TA==
+X-Received: by 2002:a17:90a:228b:: with SMTP id s11mr17710124pjc.23.1561796503508;
+        Sat, 29 Jun 2019 01:21:43 -0700 (PDT)
+Received: from localhost.localdomain ([219.91.196.157])
+        by smtp.googlemail.com with ESMTPSA id 27sm3834610pgt.6.2019.06.29.01.21.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 29 Jun 2019 01:21:42 -0700 (PDT)
+From:   Raag Jadav <raagjadav@gmail.com>
+To:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Raag Jadav <raagjadav@gmail.com>
+Subject: [PATCH] dmaengine: at_xdmac: check for non-empty xfers_list before invoking callback
+Date:   Sat, 29 Jun 2019 13:50:48 +0530
+Message-Id: <1561796448-3321-1-git-send-email-raagjadav@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Megha,
+tx descriptor retrieved from an empty xfers_list may not have valid
+pointers to the callback functions.
+Avoid calling dmaengine_desc_get_callback_invoke if xfers_list is empty.
 
-On Fri, 21 Jun 2019, Megha Dey wrote:
-> +static int free_msi_irqs_grp(struct pci_dev *dev, int group_id)
-> +{
+Signed-off-by: Raag Jadav <raagjadav@gmail.com>
+---
+ drivers/dma/at_xdmac.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-> +
-> +	for_each_pci_msi_entry(entry, dev) {
-> +		if (entry->group_id == group_id && entry->irq)
-> +			for (i = 0; i < entry->nvec_used; i++)
-> +				BUG_ON(irq_has_action(entry->irq + i));
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index 627ef3e..b58ac72 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -1568,11 +1568,14 @@ static void at_xdmac_handle_cyclic(struct at_xdmac_chan *atchan)
+ 	struct at_xdmac_desc		*desc;
+ 	struct dma_async_tx_descriptor	*txd;
+ 
+-	desc = list_first_entry(&atchan->xfers_list, struct at_xdmac_desc, xfer_node);
+-	txd = &desc->tx_dma_desc;
++	if (!list_empty(&atchan->xfers_list)) {
++		desc = list_first_entry(&atchan->xfers_list,
++					struct at_xdmac_desc, xfer_node);
++		txd = &desc->tx_dma_desc;
+ 
+-	if (txd->flags & DMA_PREP_INTERRUPT)
+-		dmaengine_desc_get_callback_invoke(txd, NULL);
++		if (txd->flags & DMA_PREP_INTERRUPT)
++			dmaengine_desc_get_callback_invoke(txd, NULL);
++	}
+ }
+ 
+ static void at_xdmac_handle_error(struct at_xdmac_chan *atchan)
+-- 
+2.7.4
 
-BUG_ON is wrong here. This can and must be handled gracefully.
-
-> +	}
-> +
-> +	pci_msi_teardown_msi_irqs_grp(dev, group_id);
-> +
-> +	list_for_each_entry_safe(entry, tmp, msi_list, list) {
-> +		if (entry->group_id == group_id) {
-> +			clear_bit(entry->msi_attrib.entry_nr, dev->entry);
-> +			list_del(&entry->list);
-> +			free_msi_entry(entry);
-> +		}
-> +	}
-> +
-> +	list_for_each_entry_safe(msix_sysfs_entry, tmp_msix, pci_msix, list) {
-> +		if (msix_sysfs_entry->group_id == group_id) {
-
-Again. Proper group management makes all of that just straight forward and
-not yet another special case.
-
-> +			msi_attrs = msix_sysfs_entry->msi_irq_group->attrs;
->  
-> +static void pci_msix_shutdown_grp(struct pci_dev *dev, int group_id)
-> +{
-> +	struct msi_desc *entry;
-> +	int grp_present = 0;
-> +
-> +	if (pci_dev_is_disconnected(dev)) {
-> +		dev->msix_enabled = 0;
-
-Huch? What's that? I can't figure out why this is needed and of course it
-completely lacks a comment explaining this. 
-
-> +		return;
-> +	}
-> +
-> +	/* Return the device with MSI-X masked as initial states */
-> +	for_each_pci_msi_entry(entry, dev) {
-> +		if (entry->group_id == group_id) {
-> +			/* Keep cached states to be restored */
-> +			__pci_msix_desc_mask_irq(entry, 1);
-> +			grp_present = 1;
-> +		}
-> +	}
-> +
-> +	if (!grp_present) {
-> +		pci_err(dev, "Group to be disabled not present\n");
-> +		return;
-
-So you print an error and silently return
-
-> +	}
-> +}
-> +
-> +int pci_disable_msix_grp(struct pci_dev *dev, int group_id)
-> +{
-> +	int num_vecs;
-> +
-> +	if (!pci_msi_enable || !dev)
-> +		return -EINVAL;
-> +
-> +	pci_msix_shutdown_grp(dev, group_id);
-> +	num_vecs = free_msi_irqs_grp(dev, group_id);
-
-just to call in another function which has to do the same group_id lookup
-muck again.
-
-> +
-> +	return num_vecs;
-> +}
-> +EXPORT_SYMBOL(pci_disable_msix_grp);
-
-Why is this exposed ?
-
-Thanks,
-
-	tglx
