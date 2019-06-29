@@ -2,135 +2,73 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135C2C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 03:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82196C5B579
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 04:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45EF2075B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 03:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609D52083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 04:01:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfF2Dsi (ORCPT
+        id S1726752AbfF2EBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 23:48:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8242 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726708AbfF2Dsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 23:48:38 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DDC885BA60F4CD73D81A;
-        Sat, 29 Jun 2019 11:48:35 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sat, 29 Jun 2019
- 11:48:33 +0800
-Subject: Re: [PATCH v8 3/7] cpu-topology: Move cpu topology code to common
- code.
-To:     Atish Patra <atish.patra@wdc.com>, <linux-kernel@vger.kernel.org>
-CC:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        <devicetree@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Johan Hovold <johan@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-riscv@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>
-References: <20190627195302.28300-1-atish.patra@wdc.com>
- <20190627195302.28300-4-atish.patra@wdc.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <5bcd9594-b2c1-7706-aabb-154198019b29@huawei.com>
-Date:   Sat, 29 Jun 2019 11:48:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Sat, 29 Jun 2019 00:01:37 -0400
+Received: from namei.org ([65.99.196.166]:49794 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725710AbfF2EBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 00:01:37 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x5T41PhZ017591;
+        Sat, 29 Jun 2019 04:01:25 GMT
+Date:   Fri, 28 Jun 2019 21:01:25 -0700 (PDT)
+From:   James Morris <jmorris@namei.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+cc:     Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, scottsh@microsoft.com, mpatocka@redhat.com,
+        gmazyland@gmail.com
+Subject: Re: [RFC PATCH v5 0/1] Add dm verity root hash pkcs7 sig
+ validation.
+In-Reply-To: <20190628040041.GB673@sol.localdomain>
+Message-ID: <alpine.LRH.2.21.1906282040490.15624@namei.org>
+References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com> <20190628040041.GB673@sol.localdomain>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190627195302.28300-4-atish.patra@wdc.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/28 3:52, Atish Patra wrote:
-> Both RISC-V & ARM64 are using cpu-map device tree to describe
-> their cpu topology. It's better to move the relevant code to
-> a common place instead of duplicate code.
+On Thu, 27 Jun 2019, Eric Biggers wrote:
+
+> I don't understand your justification for this feature.
 > 
-> To: Will Deacon <will.deacon@arm.com>
-> To: Catalin Marinas <catalin.marinas@arm.com>
+> If userspace has already been pwned severely enough for the attacker to be
+> executing arbitrary code with CAP_SYS_ADMIN (which is what the device mapper
+> ioctls need), what good are restrictions on loading more binaries from disk?
+> 
+> Please explain your security model.
 
-Using Cc: is better.
+Let's say the system has a policy where all code must be signed with a 
+valid key, and that one mechanism for enforcing this is via signed 
+dm-verity volumes. Validating the signature within the kernel provides 
+stronger assurance than userspace validation. The kernel validates and 
+executes the code, using kernel-resident keys, and does not need to rely 
+on validation which has occurred across a trust boundary.
 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> [Tested on QDF2400]
-> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> [Tested on Juno and other embedded platforms.]
-> Tested-by: Sudeep Holla <sudeep.holla@arm.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> Acked-by: Will Deacon <will.deacon@arm.com>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  arch/arm64/include/asm/topology.h |  23 ---
->  arch/arm64/kernel/topology.c      | 303 +-----------------------------
->  drivers/base/arch_topology.c      | 296 +++++++++++++++++++++++++++++
->  include/linux/arch_topology.h     |  28 +++
->  include/linux/topology.h          |   1 +
->  5 files changed, 329 insertions(+), 322 deletions(-)
+You don't need arbitrary CAP_SYS_ADMIN code execution, you just need a 
+flaw in the app (or its dependent libraries, or configuration) which 
+allows signature validation to be bypassed.
 
-Tested on Kunpeng920 ARM64 server, works good,
+The attacker now needs a kernel rather than a userspace vulnerability to 
+bypass the signed code policy.
 
-# lscpu
-Architecture:        aarch64
-Byte Order:          Little Endian
-CPU(s):              96
-On-line CPU(s) list: 0-95
-Thread(s) per core:  1
-Core(s) per socket:  48
-Socket(s):           2
-NUMA node(s):        4
-Vendor ID:           0x48
-Model:               0
-Stepping:            0x1
-CPU max MHz:         2600.0000
-CPU min MHz:         260.0000
-BogoMIPS:            200.00
-L1d cache:           64K
-L1i cache:           64K
-L2 cache:            512K
-L3 cache:            32768K
-NUMA node0 CPU(s):   0-23
-NUMA node1 CPU(s):   24-47
-NUMA node2 CPU(s):   48-71
-NUMA node3 CPU(s):   72-95
-Flags:               fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
-
-Tested-by: Hanjun Guo <guohanjun@huawei.com>
-
-For the ACPI code,
-
-Acked-by: Hanjun Guo <guohanjun@huawei.com>
-
-Thanks
-Hanjun
+-- 
+James Morris
+<jmorris@namei.org>
 
