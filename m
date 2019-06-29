@@ -2,126 +2,105 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF48DC5B57A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0800EC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8873B20665
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB0C20665
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:03:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qHF1K8SU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAxJBw+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfF2QDj (ORCPT
+        id S1726982AbfF2QDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 12:03:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46874 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfF2QDj (ORCPT
+        Sat, 29 Jun 2019 12:03:52 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34639 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbfF2QDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 12:03:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qtT2pRYm5g6b3fRjkDJ4o2YrzEnuahVF7qIr55Bxvvg=; b=qHF1K8SUIw7JPjQ9WiiBa8liX
-        mKUdBsz1XW8hLrwqPD4mZ9s4UWYJ5NeDu+ZeK6Clz/m3Jf+L8ynyV93qurpvGRTJ42XBPI5c1bAiM
-        T5ZXLYR5p8EwoTj0GHatz0hbG7v8PLgIHlJZkomH666xAjKwjUi3eHJPG8kPIxcsceqWTrt3f6lc5
-        YvCnrzINRvDDQoco3QmrBv42WN0hIaYLR4D04yvKMAG43/Bq1hkBdDTZvkCrECMqyY4p33v8Wsqzy
-        TK0/XGMDJzQ0rYlyrYwDyU02D1DC0+bH08d4vfCMSzspEOS2q5GmKmz55NVxy5lTyIFmU6enSAIsm
-        bVFNyJBZA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhFpA-0005dg-VR; Sat, 29 Jun 2019 16:03:36 +0000
-Date:   Sat, 29 Jun 2019 09:03:36 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] filesystem-dax: Disable PMD support
-Message-ID: <20190629160336.GB1180@bombadil.infradead.org>
-References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190627123415.GA4286@bombadil.infradead.org>
- <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
- <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
- <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
- <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
- <20190627195948.GB4286@bombadil.infradead.org>
- <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
+        Sat, 29 Jun 2019 12:03:51 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p10so3962443pgn.1;
+        Sat, 29 Jun 2019 09:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mj6lLd3HbTUYn9486O6rCQ2CRQYR6mH4Csh8zTZf/iE=;
+        b=NAxJBw+GPJ89GAiLqt7tefebjE2vl497CvTA9eTrw0ju+e1xAxCPh+YfMu0tZ/FQZ2
+         xfallAY41jj/rGG913KI1emmqu6KVmr/Wblg08YQLZ0LqfikuLfMYnhHAOxhrQLCcwfi
+         o+6jib2tK8uUihsefni9tLQ2KPSWjjGRjW3FN8wQORJxXR8Mr6+4zhnfVkV5H4yYXGeX
+         rBi4uzwFuIPgBBbuLL+lbt8mSSFRcZTG+UQynxe7gEPOb/QLirR5UDo+0YyEFuDmHfWP
+         n2ZBhrxTA18ofqX9ns7sPVVyiBtezg/6sujczsgU+GuBIcWV4ElhlXOtlFWB9Cek9W25
+         e7iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mj6lLd3HbTUYn9486O6rCQ2CRQYR6mH4Csh8zTZf/iE=;
+        b=DLoUM62AYoy4ZSC98cRJv+sKPygp0xwmhp+R4MycGtY0fVF40Iys6kJFfFoRBczCrp
+         /NIa4sgr3+MlyiN0fn5BHYm/1sgk1liSnX0wGMIMJ7Z9anAqCcLKPztqM7B/PpXsbNj/
+         wiOMT1du0PFtcu8h+saFaOYH8/pUbBKjqX28JynwjQn4GoPNENuE2ERn2GoQSwjMXiW/
+         otsl1EE1rqVDAxX2v2sgi8b2Yrzp7Ualy2KKambsYn7gnJ1cCaH3e2nOmeeLZYQtH8z4
+         sYMdqwbSbWnElRJfMICL5ek8Pffj0TVoEp2iWfaesC/g/HKgQtzWQGqqKnSnlNDPIZkE
+         +ldg==
+X-Gm-Message-State: APjAAAWAswlrFtEcsHgF+S47pZ4aabn2RMlcMZwjJ15iWojIkmMZm3VF
+        cL9xcAVPj5Ra/e41lawEdXv6OHH5oZZyCCe9IWE=
+X-Google-Smtp-Source: APXvYqzP56qr3bwmYr9BiWj9eeabXtSVwEP/BWnrFi9ZHy72ma17v5rmlQizU5Q4o2afeX2pLDekWDTOuveWm8TSn3o=
+X-Received: by 2002:a63:f346:: with SMTP id t6mr15761391pgj.203.1561824231122;
+ Sat, 29 Jun 2019 09:03:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
+ <20190626223851.19138-11-srinivas.pandruvada@linux.intel.com>
+ <CAHp75VfMDpKyYnZkZw51dwcEt5neQwGuZUaB7yEFQW6fjRYCqg@mail.gmail.com> <1c4238f7d18d316df82d3ba1618fecdcf014f98a.camel@linux.intel.com>
+In-Reply-To: <1c4238f7d18d316df82d3ba1618fecdcf014f98a.camel@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 29 Jun 2019 19:03:40 +0300
+Message-ID: <CAHp75VduxgJ6k4J2bB83Xbif0D0AGkxyDAdwvN64ybxdxXHXcw@mail.gmail.com>
+Subject: Re: [PATCH 10/10] tools/power/x86: A tool to validate Intel Speed
+ Select commands
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Alan Cox <alan@linux.intel.com>, Len Brown <lenb@kernel.org>,
+        prarit@redhat.com, darcari@redhat.com,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 07:39:37PM -0700, Dan Williams wrote:
-> On Thu, Jun 27, 2019 at 12:59 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Thu, Jun 27, 2019 at 12:09:29PM -0700, Dan Williams wrote:
-> > > > This bug feels like we failed to unlock, or unlocked the wrong entry
-> > > > and this hunk in the bisected commit looks suspect to me. Why do we
-> > > > still need to drop the lock now that the radix_tree_preload() calls
-> > > > are gone?
-> > >
-> > > Nevermind, unmapp_mapping_pages() takes a sleeping lock, but then I
-> > > wonder why we don't restart the lookup like the old implementation.
-> >
-> > We have the entry locked:
-> >
-> >                 /*
-> >                  * Make sure 'entry' remains valid while we drop
-> >                  * the i_pages lock.
-> >                  */
-> >                 dax_lock_entry(xas, entry);
-> >
-> >                 /*
-> >                  * Besides huge zero pages the only other thing that gets
-> >                  * downgraded are empty entries which don't need to be
-> >                  * unmapped.
-> >                  */
-> >                 if (dax_is_zero_entry(entry)) {
-> >                         xas_unlock_irq(xas);
-> >                         unmap_mapping_pages(mapping,
-> >                                         xas->xa_index & ~PG_PMD_COLOUR,
-> >                                         PG_PMD_NR, false);
-> >                         xas_reset(xas);
-> >                         xas_lock_irq(xas);
-> >                 }
-> >
-> > If something can remove a locked entry, then that would seem like the
-> > real bug.  Might be worth inserting a lookup there to make sure that it
-> > hasn't happened, I suppose?
-> 
-> Nope, added a check, we do in fact get the same locked entry back
-> after dropping the lock.
-> 
-> The deadlock revolves around the mmap_sem. One thread holds it for
-> read and then gets stuck indefinitely in get_unlocked_entry(). Once
-> that happens another rocksdb thread tries to mmap and gets stuck
-> trying to take the mmap_sem for write. Then all new readers, including
-> ps and top that try to access a remote vma, then get queued behind
-> that write.
-> 
-> It could also be the case that we're missing a wake up.
+On Sat, Jun 29, 2019 at 5:53 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+> On Sat, 2019-06-29 at 17:31 +0300, Andy Shevchenko wrote:
+> > On Thu, Jun 27, 2019 at 1:39 AM Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com> wrote:
 
-OK, I have a Theory.
+> > I need an Ack from tools/power maintainer(s) for this.
+> > Also see below.
+> MAINTAINER file doesn't call for any special name in this folder.
 
-get_unlocked_entry() doesn't check the size of the entry being waited for.
-So dax_iomap_pmd_fault() can end up sleeping waiting for a PTE entry,
-which is (a) foolish, because we know it's going to fall back, and (b)
-can lead to a missed wakeup because it's going to sleep waiting for
-the PMD entry to come unlocked.  Which it won't, unless there's a happy
-accident that happens to map to the same hash bucket.
+And this tells me perhaps this driver needs a MAINTAINER record?
 
-Let's see if I can steal some time this weekend to whip up a patch.
+> $./scripts/get_maintainer.pl 0010-tools-power-x86-A-tool-to-validate-
+> Intel-Speed-Selec.patch
+> Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> (commit_signer:1/1=100%,authored:1/1=100%,added_lines:31/31=100%,added_
+> lines:231/231=100%,added_lines:1607/1607=100%,added_lines:721/721=100%,
+> added_lines:479/479=100%)
+> linux-kernel@vger.kernel.org (open list)
+>
+> Len and Rafael can you ACK this tool patch?
+
+-- 
+With Best Regards,
+Andy Shevchenko
