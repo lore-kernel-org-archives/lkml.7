@@ -2,146 +2,135 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F64C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A608FC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62A0C21726
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7EC21726
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:51:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1qfeaiV2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfF2PrI (ORCPT
+        id S1726891AbfF2Pva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 11:47:08 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:49472 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfF2PrH (ORCPT
+        Sat, 29 Jun 2019 11:51:30 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45690 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbfF2Pv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 11:47:07 -0400
-Received: by mail-io1-f69.google.com with SMTP id x24so10184960ioh.16
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 08:47:07 -0700 (PDT)
+        Sat, 29 Jun 2019 11:51:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id e3so19011384ioc.12
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 08:51:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=v1hPMrirNj50WFcu2yNA0rhlTWKwDCN2QyhsEdO4T0c=;
+        b=1qfeaiV2FSL/ImqJBbwH2WFUjfqG0NZi4HXsmU68CBvCV4X8ULuGsyA7M8nOKanOGx
+         msbYZ+s3xWCkUirVUjbxRmdstwefmPLfRfkSLQEVhEMkdZ93/rCiU4BIuR8ButQyI5lh
+         I4jKofnmZ+w9xPQ8Q14+VeIRGwW3L8Zr5iLQE1xc4SbW0uScxEszwFpVie5Itk0rYR50
+         YzijMJTLuPEkYSH7tzpMJRj+Gf0FCawsa39bSFUSx/IRUXNT7dkJ3J1kuxW774BC8YDG
+         2bsNQheHr5rxbU/gfAP2geE/T77HBfd+kvIE+ZT8MKZBtNjTPeOJIEDgVcefyMkl32hT
+         C7Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jbJ2eKqYbg+CIxP4+lpCkdTZvmlLbaCmh2v1g2hcHF8=;
-        b=D4/gFZifQxQ1nAAghVuiAJgDDyqXDEhEzaVFkoAnPbqBdqeoQoVZe5zJlI0zi5EOvG
-         BxGeBDy3YU2ACZ7w8aBsFuGVyFlDKjUI8zjdQ14GqhfwZApJ6FXme911wSvZ/CCPGXCx
-         tnVBj4hMoNhea1A1RK4BloBEMhBhvBf+5iPboIGriVUIMxQICRoA17Zk1OQXptB5xmle
-         5oaONKm5HFto/jW5mG46H3XNo/E7IrmldcKhLCom4LjoKWQo0LbJLfFE98St1lTOMYo2
-         CaIy4BX8lmuqYv6pMmvsiK3lyDLjn0ecq7ED/rHw1V/vMK6zc+nX2AHxu0p5T+/lA06U
-         aGIQ==
-X-Gm-Message-State: APjAAAXRd5EA6Oa5Es64adtqY9bj3TcopHz2/ZrkoEWxtoeDYn0Umvvj
-        owAzN6H8+EpYxNA/mW7N6qA1FufJRkHutcbYC+3UkMBDqOKg
-X-Google-Smtp-Source: APXvYqxNRLTQeEwFkg5Ty+r0QiSHT6Pb6DAK60VfYIJUCqbJeILzjqq4R8zPoKo+l5lzugoCL4DGtkwklNMTekBeqokyjZaKvAp7
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=v1hPMrirNj50WFcu2yNA0rhlTWKwDCN2QyhsEdO4T0c=;
+        b=EIrDjzqMFagDWjqEQhI/XEBlIxrZyp3iCwVF2DFhwZYEK24Ps8w+fNyoPQjn5T+Kn3
+         M/P7yG5joO/9hvXlTgoCrdMu3X3DOBogpYlJv4FTCx7vibGGl3SzKIh1ufjYacxjSUcw
+         TN85PbEp/Ke1BDh/MoMBW1XpyAdA1qU6uzfZiU48KvydVszPnTrt1W3kpx/uNwJEtaun
+         lOdSsogbR6QW81frJ53VDv+KPLV9LXYPK+DRXcDxcm45Ev86wO5nrg0Z5C6a/tl0CqfJ
+         6I++ZhTlBi0tkRxEI+KXKn90LOdMhDkcfKokCehOtBXmMQ1ozZfn0gYAKLHmbtCFyjx0
+         n8lw==
+X-Gm-Message-State: APjAAAX5ShPdA3N4tzsib9c+vH91tMImqgWcC4XxcQa0pjkL+Qk19KAz
+        G6WWmiqVH53ZYLvLkKNUbPaKeClioO7Ezg==
+X-Google-Smtp-Source: APXvYqxVBrEY1Brkzk46lt1VEYoAtcrJHTKSQERb7slLmRtrnrkcatyl4zvQAD9hehB9LU1judTrBg==
+X-Received: by 2002:a6b:7208:: with SMTP id n8mr16929470ioc.151.1561823488537;
+        Sat, 29 Jun 2019 08:51:28 -0700 (PDT)
+Received: from [192.168.1.158] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id m4sm9132641iok.68.2019.06.29.08.51.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Jun 2019 08:51:27 -0700 (PDT)
+Subject: Re: [PATCH 1/1] sbitmap: Replace cmpxchg with xchg
+To:     Pavel Begunkov <asml.silence@gmail.com>, osandov@fb.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <722e1d561f0a49dc464d3a2b1be4c077f7502726.1558625912.git.asml.silence@gmail.com>
+ <0979d23f-bc31-b653-51d0-867dd52bf7ee@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <7da51f2b-fda4-0aa4-717e-c13c80cced3e@kernel.dk>
+Date:   Sat, 29 Jun 2019 09:51:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:7642:: with SMTP id z63mr6340791jab.36.1561823226887;
- Sat, 29 Jun 2019 08:47:06 -0700 (PDT)
-Date:   Sat, 29 Jun 2019 08:47:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a40746058c784ef3@google.com>
-Subject: BUG: using smp_processor_id() in preemptible [ADDR] code: syz-executor
-From:   syzbot <syzbot+1a68504d96cd17b33a05@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, davem@davemloft.net,
-        gregkh@linuxfoundation.org, jon.maloy@ericsson.com,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, tipc-discussion@lists.sourceforge.net,
-        ying.xue@windriver.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <0979d23f-bc31-b653-51d0-867dd52bf7ee@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    ee7dd773 sis900: remove TxIDLE
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17ceb9a9a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7ac9edef4d37e5fb
-dashboard link: https://syzkaller.appspot.com/bug?extid=1a68504d96cd17b33a05
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119b2a13a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13127bada00000
-
-The bug was bisected to:
-
-commit 52dfae5c85a4c1078e9f1d5e8947d4a25f73dd81
-Author: Jon Maloy <jon.maloy@ericsson.com>
-Date:   Thu Mar 22 19:42:52 2018 +0000
-
-     tipc: obtain node identity from interface by default
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=160ad903a00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=150ad903a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=110ad903a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1a68504d96cd17b33a05@syzkaller.appspotmail.com
-Fixes: 52dfae5c85a4 ("tipc: obtain node identity from interface by default")
-
-Started in network mode
-Own node identity 7f000001, cluster identity 4711
-New replicast peer: 172.20.20.22
-check_preemption_disabled: 3 callbacks suppressed
-BUG: using smp_processor_id() in preemptible [00000000] code:  
-syz-executor834/8612
-caller is dst_cache_get+0x3d/0xb0 net/core/dst_cache.c:68
-CPU: 0 PID: 8612 Comm: syz-executor834 Not tainted 5.2.0-rc6+ #48
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  check_preemption_disabled lib/smp_processor_id.c:47 [inline]
-  debug_smp_processor_id+0x251/0x280 lib/smp_processor_id.c:57
-  dst_cache_get+0x3d/0xb0 net/core/dst_cache.c:68
-  tipc_udp_xmit.isra.0+0xc4/0xb80 net/tipc/udp_media.c:164
-  tipc_udp_send_msg+0x29a/0x4b0 net/tipc/udp_media.c:254
-  tipc_bearer_xmit_skb+0x16c/0x360 net/tipc/bearer.c:503
-  tipc_enable_bearer+0xabe/0xd20 net/tipc/bearer.c:328
-  __tipc_nl_bearer_enable+0x2de/0x3a0 net/tipc/bearer.c:899
-  tipc_nl_bearer_enable+0x23/0x40 net/tipc/bearer.c:907
-  genl_family_rcv_msg+0x74b/0xf90 net/netlink/genetlink.c:629
-  genl_rcv_msg+0xca/0x16c net/netlink/genetlink.c:654
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:646 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:665
-  ___sys_sendmsg+0x803/0x920 net/socket.c:2286
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2324
-  __do_sys_sendmsg net/socket.c:2333 [inline]
-  __se_sys_sendmsg net/socket.c:2331 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2331
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x444679
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 1b d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff0201a8b8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000444679
-RDX: 0000000000000000 RSI: 0000000020000580 RDI: 0000000000000003
-RBP: 00000000006cf018 R08: 0000000000000001 R09: 00000000004002e0
-R10: 0000000000000008 R11: 0000000000000246 R12: 0000000000402320
-R13: 00000000004023b0 R14: 0000000000000000 R15: 0000000000
+Omar?
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 6/29/19 9:42 AM, Pavel Begunkov wrote:
+> Ping?
+> 
+> On 23/05/2019 08:39, Pavel Begunkov (Silence) wrote:
+>> From: Pavel Begunkov <asml.silence@gmail.com>
+>>
+>> cmpxchg() with an immediate value could be replaced with less expensive
+>> xchg(). The same true if new value don't _depend_ on the old one.
+>>
+>> In the second block, atomic_cmpxchg() return value isn't checked, so
+>> after atomic_cmpxchg() ->  atomic_xchg() conversion it could be replaced
+>> with atomic_set(). Comparison with atomic_read() in the second chunk was
+>> left as an optimisation (if that was the initial intention).
+>>
+>> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+>> ---
+>>   lib/sbitmap.c | 10 +++-------
+>>   1 file changed, 3 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+>> index 155fe38756ec..7d7e0e278523 100644
+>> --- a/lib/sbitmap.c
+>> +++ b/lib/sbitmap.c
+>> @@ -37,9 +37,7 @@ static inline bool sbitmap_deferred_clear(struct sbitmap *sb, int index)
+>>   	/*
+>>   	 * First get a stable cleared mask, setting the old mask to 0.
+>>   	 */
+>> -	do {
+>> -		mask = sb->map[index].cleared;
+>> -	} while (cmpxchg(&sb->map[index].cleared, mask, 0) != mask);
+>> +	mask = xchg(&sb->map[index].cleared, 0);
+>>   
+>>   	/*
+>>   	 * Now clear the masked bits in our free word
+>> @@ -527,10 +525,8 @@ static struct sbq_wait_state *sbq_wake_ptr(struct sbitmap_queue *sbq)
+>>   		struct sbq_wait_state *ws = &sbq->ws[wake_index];
+>>   
+>>   		if (waitqueue_active(&ws->wait)) {
+>> -			int o = atomic_read(&sbq->wake_index);
+>> -
+>> -			if (wake_index != o)
+>> -				atomic_cmpxchg(&sbq->wake_index, o, wake_index);
+>> +			if (wake_index != atomic_read(&sbq->wake_index))
+>> +				atomic_set(&sbq->wake_index, wake_index);
+>>   			return ws;
+>>   		}
+>>   
+>>
+> 
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+
+-- 
+Jens Axboe
+
