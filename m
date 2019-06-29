@@ -7,110 +7,277 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B038CC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443F1C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857742086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15C4214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFWhNzQx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbG688uv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfF2OS4 (ORCPT
+        id S1726865AbfF2OXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 10:18:56 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37803 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfF2OSz (ORCPT
+        Sat, 29 Jun 2019 10:23:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42393 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfF2OXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 10:18:55 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so4383231pfa.4;
-        Sat, 29 Jun 2019 07:18:55 -0700 (PDT)
+        Sat, 29 Jun 2019 10:23:09 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so4373087pff.9;
+        Sat, 29 Jun 2019 07:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9l1i0e9E3KExb1TZXbw5YKfu9Vo+bOWox+DaR8ptz/0=;
-        b=MFWhNzQxVYHJePcbGzneqQOlwYaOUDSOOWNzLj0OIebF2gKLAxr74MnTynIPwCSGgf
-         a0tkEIKhIvIUv0QJTEsufCFsZYdRjCu7rDSSaZWACmh3jh2UFLQGMh2INzwd8KzR7vmA
-         EEOe4Pjw2CLV2+eFlhZXWzyibhLi/MCP9nHsqJeeJOvrh2sz/Zi5TIcMHKQCwc2lgzkP
-         U1a3qMDMgRC1uSKs/GmywAK8GukM2Z9KBeyk8cml0jENtk7SZRRonAuxxOUZ25B/ewXL
-         jSNvJAsJRgI9rd6hBKt/a+Mw+cQKrXGxyXcjPUA1XI/rU6Rk2nUbl8BCLpTvd++X+mHk
-         sLtw==
+        bh=xEfydo9paW2HOZ6S6JAAyYluhxKfXdLEGV4giLdU65Y=;
+        b=LbG688uvp08V1ieUOUUu1suFh/S/fF5YR1oLZ0BaKje0euoA7e3Jn2GwxrQiBOi/3N
+         ixCEYlGzvWNCFkuvvzu5TaGwqYG0nk/QE66XfeK2GATcwO8AJMPqGG1XvHzGp9UbIWlo
+         4JvldJm16y7eyKBGbyZmexPvQnOv+JhFW7XntbtuyaUEwQ5s/gKpC0DnCvxp051308co
+         ucDbppJWlA+3WFa6Vyk/hAkmwQdevXUv5nxVHlGAP28Fj58ivlzXSJ03LqFjdVRoh8lh
+         Ma4j+r2JM2ElLtIpCvMeSL6d570oAGQGAIgBC8rFcdwvKfeR0b9H5ePN4+oBEeH72JIe
+         KJpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9l1i0e9E3KExb1TZXbw5YKfu9Vo+bOWox+DaR8ptz/0=;
-        b=aRHiHzzRfhloICoqE1okxmH+d0YtQRFucuHqrJQa+LKnFwAzHGRbIGO0ajHCmrYu3d
-         2yjcMRwvRjft8GZqM5jF5IleFeMEO871EPWS3F3Kjv/beP1JtDlais1OgaoHRlKUj3r4
-         1gAhKJwwv5YjR5cEwdp3tZdueRlF6ThYjwN3OdUHlpSaYXJhHGHeRO1e7AltKfIFNMQs
-         xejAWoXVTQPj2FlHjcL4/i+zYdwCDwLs/dUo4Os4/B+GIUtZ1PE3GhpccvnRgNRy2B/s
-         lf/rcvW52ltOBDBqO8vcXzVmLh60XtfzV2hqwp8AwGSdYBTvrZ569Z6lsgTe9Zerx2A+
-         d5Fg==
-X-Gm-Message-State: APjAAAXORiNF8L40ld9x7sAQfwLVcQk02Scux4iVhRLP9zAt1f6FVwnw
-        po2oinCGJH5ZzE/5pM3InCd2eJbbBYPeh7d/Vf9dPWcVuEQzHQ==
-X-Google-Smtp-Source: APXvYqwsCXcJ0hqEdIMKkeabIEy3Bxzvp2QttSiZmMQtiFYgn6O5pn8dSB3wSQo7408fFYb5C7N0u7Kcgn0i/qFvX9I=
-X-Received: by 2002:a65:448b:: with SMTP id l11mr14456233pgq.74.1561817935162;
- Sat, 29 Jun 2019 07:18:55 -0700 (PDT)
+        bh=xEfydo9paW2HOZ6S6JAAyYluhxKfXdLEGV4giLdU65Y=;
+        b=tC4222AdvVelqscNSaB3o4stUL/tcsgMo6xjr12qEAWJ+TnbPqfY3kwKle/GHtH/fU
+         u9KWm4c19vNkkE/mktLkpYZMTTMIYCqedsC8Qa76q415WCiXOLP+8Tpj9Ad2p56u0+rY
+         YmJ+p+hzpJeiQN//xj0HnbEgVe9QViCZ3lkF9gC5KzhOXWFZj1R5Q+YRFAMyg+fwoi8l
+         LtDOzcPa9jbTMuzZtC8nHOrVi9lcq94Lvyv5IgU8EfaJf2wK6EUVaj6h1CLd8uR1mRAU
+         SR3ljjqTVKTsaIgyBTV9ye2s3zh+oSZYTv5AyqIPf3lVYL0FpVgz48ynxSJi7nco4/vy
+         tbcQ==
+X-Gm-Message-State: APjAAAUSYQkSJm9V016IbsPNthaoCEB/5M/9CrNlXq8jTyD9nzt1NrfI
+        mQYxyLwzpkOtkDB9KxbI2YkR01ebrhGLGOHVrCRr+yhwkow=
+X-Google-Smtp-Source: APXvYqzOM0xYT5XJGtDetSi9vKDR+vWF8wlwetD1OrYidHol6Jc0TtoZTcmRgBmaUIisuCE/lf5eP6K70R9B3cZoIzM=
+X-Received: by 2002:a17:90b:8d2:: with SMTP id ds18mr20059967pjb.132.1561818188126;
+ Sat, 29 Jun 2019 07:23:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190618133102.8083-1-linux-kernel-dev@beckhoff.com>
-In-Reply-To: <20190618133102.8083-1-linux-kernel-dev@beckhoff.com>
+References: <20190620115056.4169-1-luzmaximilian@gmail.com> <20190620115056.4169-3-luzmaximilian@gmail.com>
+In-Reply-To: <20190620115056.4169-3-luzmaximilian@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 29 Jun 2019 17:18:44 +0300
-Message-ID: <CAHp75VfT6NvAv8C-bNKu36_9R=H1f05QRQppNA19R7O=1qhzRQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: pmc_atom: Add CB4063 Beckhoff Automation
- board to critclk_systems DMI table
-To:     linux-kernel-dev@beckhoff.com
-Cc:     Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>,
+Date:   Sat, 29 Jun 2019 17:22:57 +0300
+Message-ID: <CAHp75VfoVO+QqTnGadfc4eNxTYL2pNkH446aPmOwOVEpqQ1RTg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] input: soc_button_array for newer surface devices
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 4:34 PM <linux-kernel-dev@beckhoff.com> wrote:
+On Thu, Jun 20, 2019 at 2:51 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
 >
-> From: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+> Power and volume button support for 5th and 6th genration Microsoft
+> Surface devices via soc_button_array.
 >
-> The CB4063 board uses pmc_plt_clk* clocks for ethernet controllers. This
-> adds it to the critclk_systems DMI table so the clocks are marked as
-> CLK_CRITICAL and not turned off.
+> Note that these devices use the same MSHW0040 device as on the Surface
+> Pro 4, however the implementation is different (GPIOs vs. ACPI
+> notifications). Thus some checking is required to ensure we only load
+> this driver on the correct devices.
 >
 
-Pushed to my review and testing queue, thanks!
+Either I need an Ack from Dmitry, or it should go via his tree.
 
-> Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-> Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 > ---
->  drivers/platform/x86/pmc_atom.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  drivers/input/misc/soc_button_array.c | 134 +++++++++++++++++++++++---
+>  1 file changed, 122 insertions(+), 12 deletions(-)
 >
-> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-> index be802fd2182d..551ed44dd361 100644
-> --- a/drivers/platform/x86/pmc_atom.c
-> +++ b/drivers/platform/x86/pmc_atom.c
-> @@ -412,6 +412,14 @@ static const struct dmi_system_id critclk_systems[] = {
->                         DMI_MATCH(DMI_BOARD_NAME, "CB3163"),
->                 },
->         },
-> +       {
-> +               /* pmc_plt_clk* - are used for ethernet controllers */
-> +               .ident = "Beckhoff CB4063",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-> +                       DMI_MATCH(DMI_BOARD_NAME, "CB4063"),
-> +               },
-> +       },
->         {
->                 /* pmc_plt_clk* - are used for ethernet controllers */
->                 .ident = "Beckhoff CB6263",
+> diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+> index 5e59f8e57f8e..157f53a2bd51 100644
+> --- a/drivers/input/misc/soc_button_array.c
+> +++ b/drivers/input/misc/soc_button_array.c
+> @@ -25,6 +25,17 @@ struct soc_button_info {
+>         bool wakeup;
+>  };
+>
+> +/**
+> + * struct soc_device_data - driver data for different device types
+> + * @button_info: specifications of buttons, if NULL specification is assumed to
+> + *               be present in _DSD
+> + * @check: device-specific check (NULL means all will be accepted)
+> + */
+> +struct soc_device_data {
+> +       struct soc_button_info *button_info;
+> +       int (*check)(struct device *dev);
+> +};
+> +
+>  /*
+>   * Some of the buttons like volume up/down are auto repeat, while others
+>   * are not. To support both, we register two platform devices, and put
+> @@ -310,6 +321,7 @@ static int soc_button_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+>         const struct acpi_device_id *id;
+> +       struct soc_device_data *device_data;
+>         struct soc_button_info *button_info;
+>         struct soc_button_data *priv;
+>         struct platform_device *pd;
+> @@ -320,18 +332,20 @@ static int soc_button_probe(struct platform_device *pdev)
+>         if (!id)
+>                 return -ENODEV;
+>
+> -       if (!id->driver_data) {
+> +       device_data = (struct soc_device_data *)id->driver_data;
+> +       if (device_data && device_data->check) {
+> +               error = device_data->check(dev);
+> +               if (error)
+> +                       return error;
+> +       }
+> +
+> +       if (device_data && device_data->button_info) {
+> +               button_info = (struct soc_button_info *)
+> +                               device_data->button_info;
+> +       } else {
+>                 button_info = soc_button_get_button_info(dev);
+>                 if (IS_ERR(button_info))
+>                         return PTR_ERR(button_info);
+> -       } else {
+> -               button_info = (struct soc_button_info *)id->driver_data;
+> -       }
+> -
+> -       error = gpiod_count(dev, NULL);
+> -       if (error < 0) {
+> -               dev_dbg(dev, "no GPIO attached, ignoring...\n");
+> -               return -ENODEV;
+>         }
+>
+>         priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> @@ -357,12 +371,32 @@ static int soc_button_probe(struct platform_device *pdev)
+>         if (!priv->children[0] && !priv->children[1])
+>                 return -ENODEV;
+>
+> -       if (!id->driver_data)
+> +       if (!device_data || !device_data->button_info)
+>                 devm_kfree(dev, button_info);
+>
+>         return 0;
+>  }
+>
+> +
+> +static int soc_device_check_generic(struct device *dev)
+> +{
+> +       int gpios;
+> +
+> +       gpios = gpiod_count(dev, NULL);
+> +       if (gpios < 0) {
+> +               dev_dbg(dev, "no GPIO attached, ignoring...\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static struct soc_device_data soc_device_ACPI0011 = {
+> +       .button_info = NULL,
+> +       .check = soc_device_check_generic,
+> +};
+> +
+> +
+>  /*
+>   * Definition of buttons on the tablet. The ACPI index of each button
+>   * is defined in section 2.8.7.2 of "Windows ACPI Design Guide for SoC
+> @@ -377,9 +411,85 @@ static struct soc_button_info soc_button_PNP0C40[] = {
+>         { }
+>  };
+>
+> +static struct soc_device_data soc_device_PNP0C40 = {
+> +       .button_info = soc_button_PNP0C40,
+> +       .check = soc_device_check_generic,
+> +};
+> +
+> +
+> +/*
+> + * Special device check for Surface Book 2 and Surface Pro (2017).
+> + * Both, the Surface Pro 4 (surfacepro3_button.c) and the above mentioned
+> + * devices use MSHW0040 for power and volume buttons, however the way they
+> + * have to be addressed differs. Make sure that we only load this drivers
+> + * for the correct devices by checking the OEM Platform Revision provided by
+> + * the _DSM method.
+> + */
+> +#define MSHW0040_DSM_REVISION          0x01
+> +#define MSHW0040_DSM_GET_OMPR          0x02    // get OEM Platform Revision
+> +static const guid_t MSHW0040_DSM_UUID =
+> +       GUID_INIT(0x6fd05c69, 0xcde3, 0x49f4, 0x95, 0xed, 0xab, 0x16, 0x65,
+> +                 0x49, 0x80, 0x35);
+> +
+> +static int soc_device_check_MSHW0040(struct device *dev)
+> +{
+> +       acpi_handle handle = ACPI_HANDLE(dev);
+> +       union acpi_object *result;
+> +       u64 oem_platform_rev = 0;
+> +       int gpios;
+> +
+> +       // get OEM platform revision
+> +       result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
+> +                                        MSHW0040_DSM_REVISION,
+> +                                        MSHW0040_DSM_GET_OMPR, NULL,
+> +                                        ACPI_TYPE_INTEGER);
+> +
+> +       if (result) {
+> +               oem_platform_rev = result->integer.value;
+> +               ACPI_FREE(result);
+> +       }
+> +
+> +       if (oem_platform_rev == 0)
+> +               return -ENODEV;
+> +
+> +       dev_dbg(dev, "OEM Platform Revision %llu\n", oem_platform_rev);
+> +
+> +       /*
+> +        * We are _really_ expecting GPIOs here. If we do not get any, this
+> +        * means the GPIO driver has not been loaded yet (which can happen).
+> +        * Try again later.
+> +        */
+> +       gpios = gpiod_count(dev, NULL);
+> +       if (gpios < 0)
+> +               return -EAGAIN;
+> +
+> +       return 0;
+> +}
+> +
+> +/*
+> + * Button infos for Microsoft Surface Book 2 and Surface Pro (2017).
+> + * Obtained from DSDT/testing.
+> + */
+> +static struct soc_button_info soc_button_MSHW0040[] = {
+> +       { "power", 0, EV_KEY, KEY_POWER, false, true },
+> +       { "volume_up", 2, EV_KEY, KEY_VOLUMEUP, true, false },
+> +       { "volume_down", 4, EV_KEY, KEY_VOLUMEDOWN, true, false },
+> +       { }
+> +};
+> +
+> +static struct soc_device_data soc_device_MSHW0040 = {
+> +       .button_info = soc_button_MSHW0040,
+> +       .check = soc_device_check_MSHW0040,
+> +};
+> +
+> +
+>  static const struct acpi_device_id soc_button_acpi_match[] = {
+> -       { "PNP0C40", (unsigned long)soc_button_PNP0C40 },
+> -       { "ACPI0011", 0 },
+> +       { "PNP0C40", (unsigned long)&soc_device_PNP0C40 },
+> +       { "ACPI0011", (unsigned long)&soc_device_ACPI0011 },
+> +
+> +       /* Microsoft Surface Devices (5th and 6th generation) */
+> +       { "MSHW0040", (unsigned long)&soc_device_MSHW0040 },
+> +
+>         { }
+>  };
+>
 > --
 > 2.22.0
-
+>
 
 
 -- 
