@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA63C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1DDC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE07E2086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27CB2086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfF2ClB (ORCPT
+        id S1726836AbfF2ClT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 22:41:01 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:62239 "EHLO
+        Fri, 28 Jun 2019 22:41:19 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:13930 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726694AbfF2ClB (ORCPT
+        with ESMTP id S1726702AbfF2ClT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 22:41:01 -0400
-X-UUID: d6985d809fff4701bb6ed9b0506cb2c5-20190629
-X-UUID: d6985d809fff4701bb6ed9b0506cb2c5-20190629
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        Fri, 28 Jun 2019 22:41:19 -0400
+X-UUID: 9cee493895d14b65b986362767d1c31c-20190629
+X-UUID: 9cee493895d14b65b986362767d1c31c-20190629
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
         (envelope-from <yong.wu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 800062253; Sat, 29 Jun 2019 10:40:54 +0800
+        with ESMTP id 262559601; Sat, 29 Jun 2019 10:41:12 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 29 Jun 2019 10:40:54 +0800
+ 15.0.1395.4; Sat, 29 Jun 2019 10:41:11 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 29 Jun 2019 10:40:53 +0800
+ Transport; Sat, 29 Jun 2019 10:41:10 +0800
 From:   Yong Wu <yong.wu@mediatek.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -48,10 +48,12 @@ CC:     Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>,
         <yong.wu@mediatek.com>, <youlin.pei@mediatek.com>,
         Nicolas Boichat <drinkcat@chromium.org>,
         <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v8 10/21] iommu/mediatek: Refine protect memory definition
-Date:   Sat, 29 Jun 2019 10:39:44 +0800
-Message-ID: <1561775995-24963-11-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v8 11/21] iommu/mediatek: Move reset_axi into plat_data
+Date:   Sat, 29 Jun 2019 10:39:45 +0800
+Message-ID: <1561775995-24963-12-git-send-email-yong.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1561775995-24963-11-git-send-email-yong.wu@mediatek.com>
+References: <1561775995-24963-11-git-send-email-yong.wu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK:  N
@@ -60,52 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The protect memory setting is a little different in the different SoCs.
-In the register REG_MMU_CTRL_REG(0x110), the TF_PROT(translation fault
-protect) shift bit is normally 4 while it shift 5 bits only in the
-mt8173. This patch delete the complex MACRO and use a common if-else
-instead.
+In mt8173 and mt8183, 0x48 is REG_MMU_STANDARD_AXI_MODE while it is
+REG_MMU_CTRL in the other SoCs, and the bits meaning is completely
+different with the REG_MMU_STANDARD_AXI_MODE.
+
+This patch moves this property to plat_data, it's also a preparing
+patch for mt8183.
 
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
 Reviewed-by: Evan Green <evgreen@chromium.org>
 Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- drivers/iommu/mtk_iommu.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/iommu/mtk_iommu.c | 4 ++--
+ drivers/iommu/mtk_iommu.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index a915c25..4f8a2cb 100644
+index 4f8a2cb..1f9f307 100644
 --- a/drivers/iommu/mtk_iommu.c
 +++ b/drivers/iommu/mtk_iommu.c
-@@ -52,12 +52,9 @@
- #define REG_MMU_DCM_DIS				0x050
- 
- #define REG_MMU_CTRL_REG			0x110
-+#define F_MMU_TF_PROT_TO_PROGRAM_ADDR		(2 << 4)
- #define F_MMU_PREFETCH_RT_REPLACE_MOD		BIT(4)
--#define F_MMU_TF_PROTECT_SEL_SHIFT(data) \
--	((data)->plat_data->m4u_plat == M4U_MT2712 ? 4 : 5)
--/* It's named by F_MMU_TF_PROT_SEL in mt2712. */
--#define F_MMU_TF_PROTECT_SEL(prot, data) \
--	(((prot) & 0x3) << F_MMU_TF_PROTECT_SEL_SHIFT(data))
-+#define F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173	(2 << 5)
- 
- #define REG_MMU_IVRP_PADDR			0x114
- 
-@@ -537,9 +534,11 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
- 		return ret;
+@@ -575,8 +575,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
  	}
+ 	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
  
--	regval = F_MMU_TF_PROTECT_SEL(2, data);
- 	if (data->plat_data->m4u_plat == M4U_MT8173)
--		regval |= F_MMU_PREFETCH_RT_REPLACE_MOD;
-+		regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
-+			 F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173;
-+	else
-+		regval = F_MMU_TF_PROT_TO_PROGRAM_ADDR;
- 	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
+-	/* It's MISC control register whose default value is ok except mt8173.*/
+-	if (data->plat_data->m4u_plat == M4U_MT8173)
++	if (data->plat_data->reset_axi)
+ 		writel_relaxed(0, data->base + REG_MMU_STANDARD_AXI_MODE);
  
- 	regval = F_L2_MULIT_HIT_EN |
+ 	if (devm_request_irq(data->dev, data->irq, mtk_iommu_isr, 0,
+@@ -772,6 +771,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+ 	.m4u_plat     = M4U_MT8173,
+ 	.has_4gb_mode = true,
+ 	.has_bclk     = true,
++	.reset_axi    = true,
+ 	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
+ };
+ 
+diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+index 61fd5d6..55d73c1 100644
+--- a/drivers/iommu/mtk_iommu.h
++++ b/drivers/iommu/mtk_iommu.h
+@@ -46,7 +46,7 @@ struct mtk_iommu_plat_data {
+ 
+ 	/* HW will use the EMI clock if there isn't the "bclk". */
+ 	bool                has_bclk;
+-
++	bool                reset_axi;
+ 	unsigned char       larbid_remap[MTK_LARB_NR_MAX];
+ };
+ 
 -- 
 1.9.1
 
