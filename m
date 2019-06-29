@@ -2,230 +2,474 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D32BC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 00:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62896C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 00:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5463208E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 00:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D248208E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 00:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfF2Aih (ORCPT
+        id S1726865AbfF2Atv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 20:38:37 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59558 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfF2Aih (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 20:38:37 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 93515285639
-Message-ID: <f8f3565c18cc0c1ede107311dbe41df1a07da07b.camel@collabora.com>
-Subject: Re: [PATCH v2] phy: rockchip-inno-usb2: allow to force the B-Device
- Session Valid bit.
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        kernel@collabora.com,
-        =?ISO-8859-1?Q?Ga=EBl?= PORTAY <gael.portay@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Date:   Fri, 28 Jun 2019 21:38:26 -0300
-In-Reply-To: <7a205885f0599f04da067a7f41a14ee0b0d759f5.camel@collabora.com>
-References: <20190515222050.15075-1-gael.portay@collabora.com>
-         <7a205885f0599f04da067a7f41a14ee0b0d759f5.camel@collabora.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 28 Jun 2019 20:49:51 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61408 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726643AbfF2Atv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 20:49:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jun 2019 17:49:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,429,1557212400"; 
+   d="scan'208";a="189628961"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Jun 2019 17:49:47 -0700
+Date:   Sat, 29 Jun 2019 08:33:08 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, jdelvare@suse.com, atull@kernel.org,
+        gregkh@linuxfoundation.org, Luwei Kang <luwei.kang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH v4 3/3] fpga: dfl: fme: add power management support
+Message-ID: <20190629003308.GA15139@hao-dev>
+References: <1561611218-5800-1-git-send-email-hao.wu@intel.com>
+ <1561611218-5800-4-git-send-email-hao.wu@intel.com>
+ <20190628175514.GB25890@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628175514.GB25890@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko, Kishon,
-
-I'll try to pick up this patch.
-Some comments below, just for self-reference.
-
-On Wed, 2019-06-26 at 12:32 -0300, Ezequiel Garcia wrote:
-> On Wed, 2019-05-15 at 18:20 -0400, Gaël PORTAY wrote:
-> > From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+On Fri, Jun 28, 2019 at 10:55:14AM -0700, Guenter Roeck wrote:
+> On Thu, Jun 27, 2019 at 12:53:38PM +0800, Wu Hao wrote:
+> > This patch adds support for power management private feature under
+> > FPGA Management Engine (FME). This private feature driver registers
+> > a hwmon for power (power1_input), thresholds information, e.g.
+> > (power1_max / crit / max_alarm / crit_alarm) and also read-only sysfs
+> > interfaces for other power management information. For configuration,
+> > user could write threshold values via above power1_max / crit sysfs
+> > interface under hwmon too.
 > > 
-> > The OTG disconnection event is generated after the presence/absence of
-> > an ID connection, but some platforms don't have the ID pin connected, so
-> > the event is not generated. In such case, for detecting the
-> > disconnection event, we can get the cable state from an extcon driver.
-> > We need, though, to force to set the B-Device Session Valid bit on the
-> > PHY to have the device respond to the setup address. Otherwise, the
-> > following error is shown:
-> > 
-> >     usb 2-2: Device not responding to setup address.
-> >     usb 2-2: device not accepting address 14, error -71
-> >     usb usb2-port2: unable to enumerate USB device
-> > 
-> > The patch tells the PHY to force the B-Device Session Valid bit when the
-> > OTG role is device and clear that bit if the OTG role is host, when an
-> > extcon is available.
-> > 
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
+> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
 > > ---
-> > 
-> > Hi all,
-> > 
-> > The main purpose of this patch is have the Type-C port on the Samsung
-> > Chromebook Plus work as a device or in OTG mode.
-> > 
-> > That patch was originally a part of that patchset[1]; all other patches
-> > was merged recently in master.
-> > 
-> > The patch was tested on a Samsung Chromebook Plus by configuring one
-> > port to work as device, configure a cdc ethernet gadget and communicate
-> > via ethernet gadget my workstation with the chromebook through a usb-a
-> > to type-c cable.
-> > 
-> > Best regards,
-> > Gaël
-> > 
-> > [1]: https://lkml.org/lkml/2018/8/15/141
-> > 
+> > v2: create a dfl_fme_power hwmon to expose power sysfs interfaces.
+> >     move all sysfs interfaces under hwmon
+> >         consumed          --> hwmon power1_input
+> >         threshold1        --> hwmon power1_cap
+> >         threshold2        --> hwmon power1_crit
+> >         threshold1_status --> hwmon power1_cap_status
+> >         threshold2_status --> hwmon power1_crit_status
+> >         xeon_limit        --> hwmon power1_xeon_limit
+> >         fpga_limit        --> hwmon power1_fpga_limit
+> 
+> How do those limits differ from the other limits ?
+> We do have powerX_cap and powerX_cap_max, and from the context
+> it appears that you could possibly at least use power1_cap_max
+> (and power1_cap instead of power1_max) instead of
+> power1_fpga_limit.
 
-We still need the above devicetree changes.
+Thanks a lot for the review and comments.
 
-> > Changes since v1:
-> >  - [PATCH 3/4] Remove introduction of dt property "rockchip,force-bvalid"
-> >                and replace cable state using extcon instead (if set).
+Actually xeon/fpga_limit are introduced for different purpose. It shows
+the power limit of CPU and FPGA, that may be useful in some integrated
+solution, e.g. CPU and FPGA shares power. We should never these
+interfaces as throttling thresholds.
+
+> 
+> >         ltr               --> hwmon power1_ltr
+> > v3: rename some hwmon sysfs interfaces to follow hwmon ABI.
+> > 	power1_cap         --> power1_max
+> > 	power1_cap_status  --> power1_max_alarm
+> > 	power1_crit_status --> power1_crit_alarm
+> 
+> power1_cap is standard ABI, and since the value is enforced by HW,
+> it should be usable.
+
+As you see, in thermal management, threshold1 and threshold2 are
+mapped to temp1_max_alarm and temp1_crit_alarm. So we feel that if
+it will be friendly to user that we keep using max_alarm and crit_alarm
+in power management for threshold1 and threshold2 too.
+
+Do you think if we can keep this, or it's better to switch back to
+power1_cap?
+
+
+> 
+> >     update sysfs doc for above sysfs interface changes.
+> >     replace scnprintf with sprintf in sysfs interface.
+> > v4: use HWMON_CHANNEL_INFO.
+> >     update date in sysfs doc.
+> > ---
+> >  Documentation/ABI/testing/sysfs-platform-dfl-fme |  67 +++++++
+> >  drivers/fpga/dfl-fme-main.c                      | 221 +++++++++++++++++++++++
+> >  2 files changed, 288 insertions(+)
 > > 
-> >  drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 51 +++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
-> > 
-> > diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-> > index ba07121c3eff..5e9d50b5ae16 100644
-> > --- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-> > +++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-> > @@ -125,6 +125,7 @@ struct rockchip_chg_det_reg {
-> >   * @bvalid_det_en: vbus valid rise detection enable register.
-> >   * @bvalid_det_st: vbus valid rise detection status register.
-> >   * @bvalid_det_clr: vbus valid rise detection clear register.
-> > + * @bvalid_session: force B-device session valid register.
-> >   * @ls_det_en: linestate detection enable register.
-> >   * @ls_det_st: linestate detection state register.
-> >   * @ls_det_clr: linestate detection clear register.
-> > @@ -138,6 +139,7 @@ struct rockchip_usb2phy_port_cfg {
-> >  	struct usb2phy_reg	bvalid_det_en;
-> >  	struct usb2phy_reg	bvalid_det_st;
-> >  	struct usb2phy_reg	bvalid_det_clr;
-> > +	struct usb2phy_reg	bvalid_session;
-> >  	struct usb2phy_reg	ls_det_en;
-> >  	struct usb2phy_reg	ls_det_st;
-> >  	struct usb2phy_reg	ls_det_clr;
-> > @@ -169,6 +171,7 @@ struct rockchip_usb2phy_cfg {
-> >   * @port_id: flag for otg port or host port.
-> >   * @suspended: phy suspended flag.
-> >   * @vbus_attached: otg device vbus status.
-> > + * @force_bvalid: force the control of the B-device session valid bit.
-> >   * @bvalid_irq: IRQ number assigned for vbus valid rise detection.
-> >   * @ls_irq: IRQ number assigned for linestate detection.
-> >   * @otg_mux_irq: IRQ number which multiplex otg-id/otg-bvalid/linestate
-> > @@ -187,6 +190,7 @@ struct rockchip_usb2phy_port {
-> >  	unsigned int	port_id;
-> >  	bool		suspended;
-> >  	bool		vbus_attached;
-> > +	bool		force_bvalid;
-> >  	int		bvalid_irq;
-> >  	int		ls_irq;
-> >  	int		otg_mux_irq;
-> > @@ -553,6 +557,13 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
-> >  	switch (rport->state) {
-> >  	case OTG_STATE_UNDEFINED:
-> >  		rport->state = OTG_STATE_B_IDLE;
-> > +		if (rport->force_bvalid) {
-> > +			property_enable(rphy->grf,
-> > +					&rport->port_cfg->bvalid_session,
-> > +					true);
-> > +			dev_dbg(&rport->phy->dev,
-> > +				"set the B-Device Session Valid\n");
-> > +		}
-> >  		if (!vbus_attach)
-> >  			rockchip_usb2phy_power_off(rport->phy);
-> >  		/* fall through */
-> > @@ -560,6 +571,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
-> >  		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) > 0) {
-> >  			dev_dbg(&rport->phy->dev, "usb otg host connect\n");
-> >  			rport->state = OTG_STATE_A_HOST;
-> > +			/* When leaving device mode force end the session */
-> > +			if (rport->force_bvalid) {
-> > +				property_enable(rphy->grf,
-> > +					&rport->port_cfg->bvalid_session,
-> > +					false);
-> > +				dev_dbg(&rport->phy->dev,
-> > +					"clear the B-Device Session Valid\n");
-> > +			}
-> >  			rockchip_usb2phy_power_on(rport->phy);
-> >  			return;
-> >  		} else if (vbus_attach) {
-> > @@ -634,6 +653,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
-> >  		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) == 0) {
-> >  			dev_dbg(&rport->phy->dev, "usb otg host disconnect\n");
-> >  			rport->state = OTG_STATE_B_IDLE;
-> > +			/* When leaving host mode force start the session */
-> > +			if (rport->force_bvalid) {
-> > +				property_enable(rphy->grf,
-> > +					&rport->port_cfg->bvalid_session,
-> > +					true);
-> > +				dev_dbg(&rport->phy->dev,
-> > +					"set the B-Device Session Valid\n");
-> > +			}
-> >  			rockchip_usb2phy_power_off(rport->phy);
-> >  		}
-> >  		break;
-> > @@ -1016,6 +1043,28 @@ static int rockchip_usb2phy_otg_port_init(struct rockchip_usb2phy *rphy,
-> >  	INIT_DELAYED_WORK(&rport->chg_work, rockchip_chg_detect_work);
-> >  	INIT_DELAYED_WORK(&rport->otg_sm_work, rockchip_usb2phy_otg_sm_work);
+> > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > index 2cd17dc..a669548 100644
+> > --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > @@ -127,6 +127,7 @@ Contact:	Wu Hao <hao.wu@intel.com>
+> >  Description:	Read-Only. Read this file to get the name of hwmon device, it
+> >  		supports values:
+> >  		    'dfl_fme_thermal' - thermal hwmon device name
+> > +		    'dfl_fme_power'   - power hwmon device name
 > >  
-> > +	/*
-> > +	 * Some platforms doesn't have the ID pin connected to the phy, hence
-> > +	 * the OTD ID event is not generated, but in some cases we can get the
-> > +	 * cable state from an extcon driver. In such case we can force to set
-> > +	 * the B-Device Session Valid bit on the PHY to have the device working
-> > +	 * as a OTG.
-> > +	 */
-> > +	if (rphy->edev) {
+> >  What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_input
+> >  Date:		June 2019
+> > @@ -183,3 +184,69 @@ Description:	Read-Only. Read this file to get the policy of hardware threshold1
+> >  		(see 'temp1_max'). It only supports two values (policies):
+> >  		    0 - AP2 state (90% throttling)
+> >  		    1 - AP1 state (50% throttling)
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_input
+> > +Date:		June 2019
+> > +KernelVersion:	5.3
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-Only. It returns current FPGA power consumption in uW.
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_max
+> > +Date:		June 2019
+> > +KernelVersion:	5.3
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-Write. Read this file to get current hardware power
+> > +		threshold1 in uW. If power consumption rises at or above
+> > +		this threshold, hardware starts 50% throttling.
+> > +		Write this file to set current hardware power threshold1 in uW.
+> > +		As hardware only accepts values in Watts, so input value will
+> > +		be round down per Watts (< 1 watts part will be discarded).
+> > +		Write fails with -EINVAL if input parsing fails or input isn't
+> > +		in the valid range (0 - 127000000 uW).
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_crit
+> > +Date:		June 2019
+> > +KernelVersion:	5.3
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-Write. Read this file to get current hardware power
+> > +		threshold2 in uW. If power consumption rises at or above
+> > +		this threshold, hardware starts 90% throttling.
+> > +		Write this file to set current hardware power threshold2 in uW.
+> > +		As hardware only accepts values in Watts, so input value will
+> > +		be round down per Watts (< 1 watts part will be discarded).
+> > +		Write fails with -EINVAL if input parsing fails or input isn't
+> > +		in the valid range (0 - 127000000 uW).
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_max_alarm
+> > +Date:		June 2019
+> > +KernelVersion:	5.3
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-only. It returns 1 if power consumption is currently at or
+> > +		above hardware threshold1 (see 'power1_max'), otherwise 0.
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_crit_alarm
+> > +Date:		June 2019
+> > +KernelVersion:	5.3
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-only. It returns 1 if power consumption is currently at or
+> > +		above hardware threshold2 (see 'power1_crit'), otherwise 0.
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_xeon_limit
+> > +Date:		June 2019
+> > +KernelVersion:	5.3
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-Only. It returns power limit for XEON in uW.
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_fpga_limit
+> > +Date:		June 2019
+> > +KernelVersion:	5.3
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-Only. It returns power limit for FPGA in uW.
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_ltr
+> > +Date:		June 2019
+> > +KernelVersion:	5.3
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-only. Read this file to get current Latency Tolerance
+> > +		Reporting (ltr) value. This ltr impacts the CPU low power
+> > +		state in integrated solution.
+> 
+> Does that attribute add any value without any kind of unit or an explanation
+> of its meaning ? What is userspace supposed to do with that information ?
+> Without context, it is just a meaningless number.
 
-I might be missing something, but this check seems bogus.
+I should add more description here, will fix it in the next version.
 
-edev can't be NULL as the driver creates an extcon if
-there is none assigned in the devicetree.
+> 
+> Also, it appears that the information is supposed to be passed to power
+> management via the set_latency_tolerance() callback. If so, it would be
+> reported there. Would it possibly make more sense to use that interface ?
 
-> > +		/*
-> > +		 * Check if bvalid_session register is set in the structure
-> > +		 * rockchip_usb2phy_cfg for this SoC.
-> > +		 */
-> > +		if (rport->port_cfg->bvalid_session.offset == 0x0) {
-> > +			rport->force_bvalid = false;
-> > +			dev_err(rphy->dev,
-> > +				"cannot force B-device session, the register is not set for that SoC\n");
-> > +		} else {
-> > +			rport->force_bvalid = true;
-> > +			dev_info(rphy->dev, "force B-device session enabled\n");
-> > +		}
+If I remember correctly set_latency_tolerance is used to communicate a tolerance
+to device, but actually this is a read-only value, to indicate latency tolerance
+requirement for memory access from FPGA device, as you know FPGA could be
+programmed for different workloads, and different workloads may have different
+latency requirements, if workloads in FPGA don't have any need for immediate
+memory access, then it would be safe for deeper sleep state of system memory.
 
-I think we should be doing something more like:
+> 
+> > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> > index 59ff9f1..9225b68 100644
+> > --- a/drivers/fpga/dfl-fme-main.c
+> > +++ b/drivers/fpga/dfl-fme-main.c
+> > @@ -400,6 +400,223 @@ static void fme_thermal_mgmt_uinit(struct platform_device *pdev,
+> >  	.uinit = fme_thermal_mgmt_uinit,
+> >  };
+> >  
+> > +#define FME_PWR_STATUS		0x8
+> > +#define FME_LATENCY_TOLERANCE	BIT_ULL(18)
+> > +#define PWR_CONSUMED		GENMASK_ULL(17, 0)
+> > +
+> > +#define FME_PWR_THRESHOLD	0x10
+> > +#define PWR_THRESHOLD1		GENMASK_ULL(6, 0)	/* in Watts */
+> > +#define PWR_THRESHOLD2		GENMASK_ULL(14, 8)	/* in Watts */
+> > +#define PWR_THRESHOLD_MAX	0x7f			/* in Watts */
+> > +#define PWR_THRESHOLD1_STATUS	BIT_ULL(16)
+> > +#define PWR_THRESHOLD2_STATUS	BIT_ULL(17)
+> > +
+> > +#define FME_PWR_XEON_LIMIT	0x18
+> > +#define XEON_PWR_LIMIT		GENMASK_ULL(14, 0)	/* in 0.1 Watts */
+> > +#define XEON_PWR_EN		BIT_ULL(15)
+> > +#define FME_PWR_FPGA_LIMIT	0x20
+> > +#define FPGA_PWR_LIMIT		GENMASK_ULL(14, 0)	/* in 0.1 Watts */
+> > +#define FPGA_PWR_EN		BIT_ULL(15)
+> > +
+> > +#define PWR_THRESHOLD_MAX_IN_UW (PWR_THRESHOLD_MAX * 1000000)
+> > +
+> > +static int power_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+> > +			    u32 attr, int channel, long *val)
+> > +{
+> > +	struct dfl_feature *feature = dev_get_drvdata(dev);
+> > +	u64 v;
+> > +
+> > +	switch (attr) {
+> > +	case hwmon_power_input:
+> > +		v = readq(feature->ioaddr + FME_PWR_STATUS);
+> > +		*val = (long)(FIELD_GET(PWR_CONSUMED, v) * 1000000);
+> > +		break;
+> > +	case hwmon_power_max:
+> > +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
+> > +		*val = (long)(FIELD_GET(PWR_THRESHOLD1, v) * 1000000);
+> > +		break;
+> > +	case hwmon_power_crit:
+> > +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
+> > +		*val = (long)(FIELD_GET(PWR_THRESHOLD2, v) * 1000000);
+> > +		break;
+> > +	case hwmon_power_max_alarm:
+> > +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
+> > +		*val = (long)FIELD_GET(PWR_THRESHOLD1_STATUS, v);
+> > +		break;
+> > +	case hwmon_power_crit_alarm:
+> > +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
+> > +		*val = (long)FIELD_GET(PWR_THRESHOLD2_STATUS, v);
+> > +		break;
+> > +	default:
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int power_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+> > +			     u32 attr, int channel, long val)
+> > +{
+> > +	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev->parent);
+> > +	struct dfl_feature *feature = dev_get_drvdata(dev);
+> > +	int ret = 0;
+> > +	u64 v;
+> > +
+> > +	if (val < 0 || val > PWR_THRESHOLD_MAX_IN_UW)
+> > +		return -EINVAL;
+> 
+> We usually use clamp_val() in such cases because there is no useful means
+> for the user to know the valid range.
 
-if (HAS_REG(rport->port_cfg->bvalid_session)) {
-	rport->force_bvalid = true;
-	dev_info(rphy->dev, "force B-device session enabled\n");
-}
+Sure. Will fix this in the next version. Thanks for the comments.
 
-And not error verbosely on platforms that don't
-care about this.
- 
-Thanks,
-Ezequiel
+Thanks
+Hao
 
+> 
+> > +
+> > +	val = val / 1000000;
+> > +
+> > +	mutex_lock(&pdata->lock);
+> > +
+> > +	switch (attr) {
+> > +	case hwmon_power_max:
+> > +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
+> > +		v &= ~PWR_THRESHOLD1;
+> > +		v |= FIELD_PREP(PWR_THRESHOLD1, val);
+> > +		writeq(v, feature->ioaddr + FME_PWR_THRESHOLD);
+> > +		break;
+> > +	case hwmon_power_crit:
+> > +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
+> > +		v &= ~PWR_THRESHOLD2;
+> > +		v |= FIELD_PREP(PWR_THRESHOLD2, val);
+> > +		writeq(v, feature->ioaddr + FME_PWR_THRESHOLD);
+> > +		break;
+> > +	default:
+> > +		ret = -EOPNOTSUPP;
+> > +		break;
+> > +	}
+> > +
+> > +	mutex_unlock(&pdata->lock);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static umode_t power_hwmon_attrs_visible(const void *drvdata,
+> > +					 enum hwmon_sensor_types type,
+> > +					 u32 attr, int channel)
+> > +{
+> > +	switch (attr) {
+> > +	case hwmon_power_input:
+> > +	case hwmon_power_max_alarm:
+> > +	case hwmon_power_crit_alarm:
+> > +		return 0444;
+> > +	case hwmon_power_max:
+> > +	case hwmon_power_crit:
+> > +		return 0644;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct hwmon_ops power_hwmon_ops = {
+> > +	.is_visible = power_hwmon_attrs_visible,
+> > +	.read = power_hwmon_read,
+> > +	.write = power_hwmon_write,
+> > +};
+> > +
+> > +static const struct hwmon_channel_info *power_hwmon_info[] = {
+> > +	HWMON_CHANNEL_INFO(power, HWMON_P_INPUT |
+> > +				  HWMON_P_MAX   | HWMON_P_MAX_ALARM |
+> > +				  HWMON_P_CRIT  | HWMON_P_CRIT_ALARM),
+> > +	NULL
+> > +};
+> > +
+> > +static const struct hwmon_chip_info power_hwmon_chip_info = {
+> > +	.ops = &power_hwmon_ops,
+> > +	.info = power_hwmon_info,
+> > +};
+> > +
+> > +static ssize_t power1_xeon_limit_show(struct device *dev,
+> > +				      struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct dfl_feature *feature = dev_get_drvdata(dev);
+> > +	u16 xeon_limit = 0;
+> > +	u64 v;
+> > +
+> > +	v = readq(feature->ioaddr + FME_PWR_XEON_LIMIT);
+> > +
+> > +	if (FIELD_GET(XEON_PWR_EN, v))
+> > +		xeon_limit = FIELD_GET(XEON_PWR_LIMIT, v);
+> > +
+> > +	return sprintf(buf, "%u\n", xeon_limit * 100000);
+> > +}
+> > +
+> > +static ssize_t power1_fpga_limit_show(struct device *dev,
+> > +				      struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct dfl_feature *feature = dev_get_drvdata(dev);
+> > +	u16 fpga_limit = 0;
+> > +	u64 v;
+> > +
+> > +	v = readq(feature->ioaddr + FME_PWR_FPGA_LIMIT);
+> > +
+> > +	if (FIELD_GET(FPGA_PWR_EN, v))
+> > +		fpga_limit = FIELD_GET(FPGA_PWR_LIMIT, v);
+> > +
+> > +	return sprintf(buf, "%u\n", fpga_limit * 100000);
+> > +}
+> > +
+> > +static ssize_t power1_ltr_show(struct device *dev,
+> > +			       struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct dfl_feature *feature = dev_get_drvdata(dev);
+> > +	u64 v;
+> > +
+> > +	v = readq(feature->ioaddr + FME_PWR_STATUS);
+> > +
+> > +	return sprintf(buf, "%u\n",
+> > +		       (unsigned int)FIELD_GET(FME_LATENCY_TOLERANCE, v));
+> > +}
+> > +
+> > +static DEVICE_ATTR_RO(power1_xeon_limit);
+> > +static DEVICE_ATTR_RO(power1_fpga_limit);
+> > +static DEVICE_ATTR_RO(power1_ltr);
+> > +
+> > +static struct attribute *power_extra_attrs[] = {
+> > +	&dev_attr_power1_xeon_limit.attr,
+> > +	&dev_attr_power1_fpga_limit.attr,
+> > +	&dev_attr_power1_ltr.attr,
+> > +	NULL
+> > +};
+> > +
+> > +ATTRIBUTE_GROUPS(power_extra);
+> > +
+> > +static int fme_power_mgmt_init(struct platform_device *pdev,
+> > +			       struct dfl_feature *feature)
+> > +{
+> > +	struct device *hwmon;
+> > +
+> > +	dev_dbg(&pdev->dev, "FME Power Management Init.\n");
+> > +
+> > +	hwmon = devm_hwmon_device_register_with_info(&pdev->dev,
+> > +						     "dfl_fme_power", feature,
+> > +						     &power_hwmon_chip_info,
+> > +						     power_extra_groups);
+> > +	if (IS_ERR(hwmon)) {
+> > +		dev_err(&pdev->dev, "Fail to register power hwmon\n");
+> > +		return PTR_ERR(hwmon);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void fme_power_mgmt_uinit(struct platform_device *pdev,
+> > +				 struct dfl_feature *feature)
+> > +{
+> > +	dev_dbg(&pdev->dev, "FME Power Management UInit.\n");
+> > +}
+> > +
+> > +static const struct dfl_feature_id fme_power_mgmt_id_table[] = {
+> > +	{.id = FME_FEATURE_ID_POWER_MGMT,},
+> > +	{0,}
+> > +};
+> > +
+> > +static const struct dfl_feature_ops fme_power_mgmt_ops = {
+> > +	.init = fme_power_mgmt_init,
+> > +	.uinit = fme_power_mgmt_uinit,
+> > +};
+> > +
+> >  static struct dfl_feature_driver fme_feature_drvs[] = {
+> >  	{
+> >  		.id_table = fme_hdr_id_table,
+> > @@ -418,6 +635,10 @@ static void fme_thermal_mgmt_uinit(struct platform_device *pdev,
+> >  		.ops = &fme_thermal_mgmt_ops,
+> >  	},
+> >  	{
+> > +		.id_table = fme_power_mgmt_id_table,
+> > +		.ops = &fme_power_mgmt_ops,
+> > +	},
+> > +	{
+> >  		.ops = NULL,
+> >  	},
+> >  };
+> > -- 
+> > 1.8.3.1
+> > 
