@@ -2,113 +2,199 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17385C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1E4C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32192086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdBm/5W3"
+	by mail.kernel.org (Postfix) with ESMTP id 67AF02086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:36:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561804613;
+	bh=WQISJOmbDdC9q8LZL61fY5BQ5stNZJg9kvf3XL54gkM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Mo/O7f9gtb/Ud89n8SXymPL+SAY7aJSS0c+/aZDGH/sB/hWSoIOe/rZEpsdJT+CtM
+	 J//Yl+Tq1E7MV9zvFzC3B8dw7sX+r+mlPBM494U0++scxJnbVV0OOn8JxDQfPcSP4B
+	 TKPfC4Fh0ywQbNa9/eOgjbIS1B7JRyROZpMJkaYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfF2KgI (ORCPT
+        id S1727053AbfF2Kgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 06:36:08 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46056 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfF2KgI (ORCPT
+        Sat, 29 Jun 2019 06:36:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:32870 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfF2Kgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 06:36:08 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bi6so4644346plb.12
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 03:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=5LHkBJhseA7dswWKyXE2Jck+WxMFtGP/bseyhBGdc+o=;
-        b=kdBm/5W3nCQHYCHkDl3RPvqQ77+P01XIG8cKg5dIOThq36njd2kH8bzO+dXt+6jtff
-         u1nwN19fXhEiJbSxCG0+vEJPA6hJR2zNl3faM/igk2C7iQY+LRcjvcfk8YvvEAkICQMc
-         /01P08NoKF03qF4lRmC04VieWwaFWLGP5uOXlzIhoxT6+PfhRch2N/95Fe3UBL/tQ5bq
-         DBDn3pbIY71TMv6kOhh3hLg3pUPInqG1Ab9SpuScRbrVwKch0GoZm2FMO95KeERn7J1O
-         +RBrjYE414hSyrmtS8b9uitql24/WZLc8SQ/ubTYibLQH7XmopfJ8cbT4F3kH6XiTvl8
-         UJ0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=5LHkBJhseA7dswWKyXE2Jck+WxMFtGP/bseyhBGdc+o=;
-        b=av/yB4V4jPCzsRvffSck7hfc23jUmgvNFLHWM0qJH4SPSNpA8neKRxjAhYFte9U8eO
-         5A+vPVwL1RGAgh3E/wNMPK6hwugGh/sWGvA0UXALwOYQaAqgCNOzMp8V2tH78VEnl96k
-         fIZ/lX3hN9H7kP9PZzFJmhj9Gj6OFaG+gRyecmiESPmvaJQBuPhsgNhaDjowbV7Q7CCV
-         ko1f/XCa0oHh2MnfhZqm0qMnFRAmlR7UTbp+Ufgij5STb0SlvSn54uGaozFLwWfjbl22
-         0Mqiwy1WdyXEkAaIGZoqb/tEe2gv7w1DAcvXoyuvBesKegC7TUVnFLVo6IrRzD0TUtvP
-         771A==
-X-Gm-Message-State: APjAAAXz8dfeQJnqy0uMMJcrO2aAYwVjiVi9S9Wl/vtGq9GfEYso9Af7
-        gUOXHeigXDnY6M181lGPcVw=
-X-Google-Smtp-Source: APXvYqwMrWBD5H8o3UVSrF+L8X2bCKm5bqMVp9I6iEetozmgmMMea+YSQpZIG2AbN7yNfHV5ShX6Qw==
-X-Received: by 2002:a17:902:7c8e:: with SMTP id y14mr15913012pll.298.1561804567526;
-        Sat, 29 Jun 2019 03:36:07 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id 65sm4306022pgf.30.2019.06.29.03.36.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 03:36:07 -0700 (PDT)
-Date:   Sat, 29 Jun 2019 16:06:03 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/10] staging/rtl8723bs/hal: fix comparison to true/false is
- error prone
-Message-ID: <20190629103603.GA15524@hari-Inspiron-1545>
+        Sat, 29 Jun 2019 06:36:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0ZTqox4zKZHSfjynSHuFlYTUSFoi9akGLNFU/TMkLz8=; b=RQlxVlV+vnKr+HuhHrN/9tY/e
+        LN2f40ZNR3ZcpjZqJosL+P4ZU6Cjb2XOJS+kmPEIYk6v8Bqht+w+OY4ticHvGN0iEPOalUYhCxg7y
+        NjZS2XKOdl/ooLSoW8OpjAkI+M3KyQWH87SZtL9l+5sO7gikQXoNtXgYubcJ4EWQ0inUfXVOu0NVj
+        JSK0qvaCkfhtfYMBLLzxEphxuK7oNoXrdJMsjKH1/K8Qqb3hukK7ivA6mNoANbMK6neuonbgcKioq
+        3fJDY5S2+rUh2EC/55AmIJQz0Dp6kaPFe7D877eHgcP6OUm22xhSZ9KCjTe2NbN3AI17IUFAjeB/d
+        s3yaUFznA==;
+Received: from [187.113.3.250] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hhAiv-0002ct-C2; Sat, 29 Jun 2019 10:36:49 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hhAit-0006kO-8P; Sat, 29 Jun 2019 07:36:47 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Asmaa Mnebhi <Asmaa@mellanox.com>,
+        Corey Minyard <cminyard@mvista.com>, vadimp@mellanox.com
+Subject: [PATCH] docs: ipmb: place it at driver-api and convert to ReST
+Date:   Sat, 29 Jun 2019 07:36:46 -0300
+Message-Id: <d23c36ca65fe6ad56af1723bf70f7a7f4154c410.1561804596.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below issues reported by checkpatch
+No new doc should be added at the main Documentation/ directory.
 
-CHECK: Using comparison to false is error prone
-CHECK: Using comparison to true is error prone
+Instead, new docs should be added as ReST files, within the
+Kernel documentation body.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Fixes: 51bd6f291583 ("Add support for IPMB driver")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- drivers/staging/rtl8723bs/hal/hal_phy.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/driver-api/index.rst            |  1 +
+ .../{IPMB.txt => driver-api/ipmb.rst}         | 62 ++++++++++---------
+ 2 files changed, 33 insertions(+), 30 deletions(-)
+ rename Documentation/{IPMB.txt => driver-api/ipmb.rst} (71%)
 
-diff --git a/drivers/staging/rtl8723bs/hal/hal_phy.c b/drivers/staging/rtl8723bs/hal/hal_phy.c
-index ebaefca..520f860 100644
---- a/drivers/staging/rtl8723bs/hal/hal_phy.c
-+++ b/drivers/staging/rtl8723bs/hal/hal_phy.c
-@@ -81,7 +81,7 @@ bool PHY_RFShadowCompare(IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset)
- {
- 	u32 reg;
- 	/*  Check if we need to check the register */
--	if (RF_Shadow[eRFPath][Offset].Compare == true) {
-+	if (RF_Shadow[eRFPath][Offset].Compare) {
- 		reg = rtw_hal_read_rfreg(Adapter, eRFPath, Offset, bRFRegOffsetMask);
- 		/*  Compare shadow and real rf register for 20bits!! */
- 		if (RF_Shadow[eRFPath][Offset].Value != reg) {
-@@ -100,9 +100,9 @@ bool PHY_RFShadowCompare(IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset)
- void PHY_RFShadowRecorver(IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset)
- {
- 	/*  Check if the address is error */
--	if (RF_Shadow[eRFPath][Offset].ErrorOrNot == true) {
-+	if (RF_Shadow[eRFPath][Offset].ErrorOrNot) {
- 		/*  Check if we need to recorver the register. */
--		if (RF_Shadow[eRFPath][Offset].Recorver == true) {
-+		if (RF_Shadow[eRFPath][Offset].Recorver) {
- 			rtw_hal_write_rfreg(Adapter, eRFPath, Offset, bRFRegOffsetMask,
- 							RF_Shadow[eRFPath][Offset].Value);
- 			/* RT_TRACE(COMP_INIT, DBG_LOUD, */
+diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
+index e33849b948c7..e49c34bf16c0 100644
+--- a/Documentation/driver-api/index.rst
++++ b/Documentation/driver-api/index.rst
+@@ -75,6 +75,7 @@ available subsections can be seen below.
+    dell_rbu
+    edid
+    eisa
++   ipmb
+    isa
+    isapnp
+    generic-counter
+diff --git a/Documentation/IPMB.txt b/Documentation/driver-api/ipmb.rst
+similarity index 71%
+rename from Documentation/IPMB.txt
+rename to Documentation/driver-api/ipmb.rst
+index cd20c9764705..3ec3baed84c4 100644
+--- a/Documentation/IPMB.txt
++++ b/Documentation/driver-api/ipmb.rst
+@@ -32,11 +32,11 @@ This driver works with the I2C driver and a userspace
+ program such as OpenIPMI:
+ 
+ 1) It is an I2C slave backend driver. So, it defines a callback
+-function to set the Satellite MC as an I2C slave.
+-This callback function handles the received IPMI requests.
++   function to set the Satellite MC as an I2C slave.
++   This callback function handles the received IPMI requests.
+ 
+ 2) It defines the read and write functions to enable a user
+-space program (such as OpenIPMI) to communicate with the kernel.
++   space program (such as OpenIPMI) to communicate with the kernel.
+ 
+ 
+ Load the IPMB driver
+@@ -48,34 +48,35 @@ CONFIG_IPMB_DEVICE_INTERFACE=y
+ 
+ 1) If you want the driver to be loaded at boot time:
+ 
+-a) Add this entry to your ACPI table, under the appropriate SMBus:
++a) Add this entry to your ACPI table, under the appropriate SMBus::
+ 
+-Device (SMB0) // Example SMBus host controller
+-{
+-  Name (_HID, "<Vendor-Specific HID>") // Vendor-Specific HID
+-  Name (_UID, 0) // Unique ID of particular host controller
+-  :
+-  :
+-    Device (IPMB)
+-    {
+-      Name (_HID, "IPMB0001") // IPMB device interface
+-      Name (_UID, 0) // Unique device identifier
+-    }
+-}
++     Device (SMB0) // Example SMBus host controller
++     {
++     Name (_HID, "<Vendor-Specific HID>") // Vendor-Specific HID
++     Name (_UID, 0) // Unique ID of particular host controller
++     :
++     :
++       Device (IPMB)
++       {
++         Name (_HID, "IPMB0001") // IPMB device interface
++         Name (_UID, 0) // Unique device identifier
++       }
++     }
+ 
+-b) Example for device tree:
++b) Example for device tree::
+ 
+-&i2c2 {
+-         status = "okay";
++     &i2c2 {
++            status = "okay";
+ 
+-         ipmb@10 {
+-                 compatible = "ipmb-dev";
+-                 reg = <0x10>;
+-         };
+-};
++            ipmb@10 {
++                    compatible = "ipmb-dev";
++                    reg = <0x10>;
++            };
++     };
+ 
+-2) Manually from Linux:
+-modprobe ipmb-dev-int
++2) Manually from Linux::
++
++     modprobe ipmb-dev-int
+ 
+ 
+ Instantiate the device
+@@ -86,15 +87,16 @@ described in 'Documentation/i2c/instantiating-devices.rst'.
+ If you have multiple BMCs, each connected to your Satellite MC via
+ a different I2C bus, you can instantiate a device for each of
+ those BMCs.
++
+ The name of the instantiated device contains the I2C bus number
+-associated with it as follows:
++associated with it as follows::
+ 
+-BMC1 ------ IPMB/I2C bus 1 ---------|   /dev/ipmb-1
++  BMC1 ------ IPMB/I2C bus 1 ---------|   /dev/ipmb-1
+ 				Satellite MC
+-BMC1 ------ IPMB/I2C bus 2 ---------|   /dev/ipmb-2
++  BMC1 ------ IPMB/I2C bus 2 ---------|   /dev/ipmb-2
+ 
+ For instance, you can instantiate the ipmb-dev-int device from
+-user space at the 7 bit address 0x10 on bus 2:
++user space at the 7 bit address 0x10 on bus 2::
+ 
+   # echo ipmb-dev 0x1010 > /sys/bus/i2c/devices/i2c-2/new_device
+ 
 -- 
-2.7.4
+2.21.0
 
