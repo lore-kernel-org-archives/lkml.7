@@ -2,199 +2,99 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83258C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09631C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9EE214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0922083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfF2HQj (ORCPT
+        id S1726857AbfF2HVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 03:16:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:60776 "EHLO foss.arm.com"
+        Sat, 29 Jun 2019 03:21:05 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2509 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbfF2HQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 03:16:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D18B228;
-        Sat, 29 Jun 2019 00:16:38 -0700 (PDT)
-Received: from [192.168.1.18] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E66EA3F246;
-        Sat, 29 Jun 2019 00:18:27 -0700 (PDT)
-Subject: Re: [RFC] arm64: Detecting tagged addresses
-To:     Andrew Murray <andrew.murray@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        smatch@vger.kernel.org
-References: <20190619121619.GV20984@e119886-lin.cambridge.arm.com>
- <20190626174502.GH29672@arrakis.emea.arm.com>
- <20190627131834.GE34530@e119886-lin.cambridge.arm.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <0887dbcd-0b38-9f58-c2b7-d0b2dabf58cb@arm.com>
-Date:   Sat, 29 Jun 2019 08:17:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190627131834.GE34530@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
+        id S1726796AbfF2HVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 03:21:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jun 2019 00:21:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,430,1557212400"; 
+   d="scan'208";a="164867061"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga007.fm.intel.com with ESMTP; 29 Jun 2019 00:21:04 -0700
+Received: from fmsmsx121.amr.corp.intel.com (10.18.125.36) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 29 Jun 2019 00:21:04 -0700
+Received: from crsmsx104.amr.corp.intel.com (172.18.63.32) by
+ fmsmsx121.amr.corp.intel.com (10.18.125.36) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 29 Jun 2019 00:21:04 -0700
+Received: from crsmsx101.amr.corp.intel.com ([169.254.1.124]) by
+ CRSMSX104.amr.corp.intel.com ([169.254.6.189]) with mapi id 14.03.0439.000;
+ Sat, 29 Jun 2019 01:21:01 -0600
+From:   "Bae, Chang Seok" <chang.seok.bae@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     Andy Lutomirski <luto@kernel.org>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH v7 12/18] x86/fsgsbase/64: GSBASE handling with FSGSBASE
+ in the paranoid path
+Thread-Topic: [PATCH v7 12/18] x86/fsgsbase/64: GSBASE handling with
+ FSGSBASE in the paranoid path
+Thread-Index: AQHVBb/uJnB46cEwCkSKnwiziojozaay73oA
+Date:   Sat, 29 Jun 2019 07:21:00 +0000
+Message-ID: <E8E632D1-7A16-4F42-954B-0ACA3C5F7409@intel.com>
+References: <1557309753-24073-1-git-send-email-chang.seok.bae@intel.com>
+ <1557309753-24073-13-git-send-email-chang.seok.bae@intel.com>
+In-Reply-To: <1557309753-24073-13-git-send-email-chang.seok.bae@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.254.33.104]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0B652891D6911048A7074E739991CDAC@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Dan and smatch@vger.kernel.org
-
-Hi Andrew,
-
-I am adding Dan to this thread since he is the smatch maintainer, and the
-smatch@vger.kernel.org list.
-
-@Dan and @smatch@vger.kernel.org: a reference to the beginning of this thread
-can be found at [1].
-
-[1] https://lkml.org/lkml/2019/6/19/376
-
-On 6/27/19 2:18 PM, Andrew Murray wrote:
-> On Wed, Jun 26, 2019 at 06:45:03PM +0100, Catalin Marinas wrote:
->> Hi Andrew,
->>
->> Cc'ing Luc (sparse maintainer) who's been involved in the past
->> discussions around static checking of user pointers:
->>
->> https://lore.kernel.org/linux-arm-kernel/20180905190316.a34yycthgbamx2t3@ltop.local/
->>
->> So I think the difference here from the previous approach is that we
->> explicitly mark functions that cannot take tagged addresses (like
->> find_vma()) and identify the callers.
-> 
-> Indeed.
-> 
-> 
->>
->> More comments below:
->>
->> On Wed, Jun 19, 2019 at 01:16:20PM +0100, Andrew Murray wrote:
->>> The proposed introduction of a relaxed ARM64 ABI [1] will allow tagged memory
->>> addresses to be passed through the user-kernel syscall ABI boundary. Tagged
->>> memory addresses are those which contain a non-zero top byte (the hardware
->>> has always ignored this top byte due to TCR_EL1.TBI0) and may be useful
->>> for features such as HWASan.
->>>
->>> To permit this relaxation a proposed patchset [2] strips the top byte (tag)
->>> from user provided memory addresses prior to use in kernel functions which
->>> require untagged addresses (for example comparasion/arithmetic of addresses).
->>> The author of this patchset relied on a variety of techniques [2] (such as
->>> grep, BUG_ON, sparse etc) to identify as many instances of possible where
->>> tags need to be stipped.
->>>
->>> To support this effort and to catch future regressions (e.g. in new syscalls
->>> or ioctls), I've devised an additional approach for detecting the use of
->>> tagged addresses in functions that do not want them. This approach makes
->>> use of Smatch [3] and is outlined in this RFC. Due to the ability of Smatch
->>> to do flow analysis I believe we can annotate the kernel in fewer places
->>> than a similar approach in sparse.
->>>
->>> I'm keen for feedback on the likely usefulness of this approach.
->>>
->>> We first add some new annotations that are exclusively consumed by Smatch:
->>>
->>> --- a/include/linux/compiler_types.h
->>> +++ b/include/linux/compiler_types.h
->>> @@ -19,6 +19,7 @@
->>>  # define __cond_lock(x,c)      ((c) ? ({ __acquire(x); 1; }) : 0)
->>>  # define __percpu      __attribute__((noderef, address_space(3)))
->>>  # define __rcu         __attribute__((noderef, address_space(4)))
->>> +# define __untagged    __attribute__((address_space(5)))
->>>  # define __private     __attribute__((noderef))
->>>  extern void __chk_user_ptr(const volatile void __user *);
->>>  extern void __chk_io_ptr(const volatile void __iomem *);
->> [...]
->>> --- a/mm/mmap.c
->>> +++ b/mm/mmap.c
->>> @@ -2224,7 +2224,7 @@ get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
->>>  EXPORT_SYMBOL(get_unmapped_area);
->>>  
->>>  /* Look up the first VMA which satisfies  addr < vm_end,  NULL if none. */
->>> -struct vm_area_struct *find_vma(struct mm_struct *mm, unsigned long addr)
->>> +struct vm_area_struct *find_vma(struct mm_struct *mm, unsigned long __untagged addr)
->>>  {
->>>         struct rb_node *rb_node;
->>>         struct vm_area_struct *vma;
->> [...]
->>> This can be further improved - the problem here is that for a given function,
->>> e.g. find_vma we look for callers where *any* of the parameters
->>> passed to find_vma are tagged addresses from userspace - i.e. not *just*
->>> the annotated parameter. This is also true for find_vma's callers' callers'.
->>> This results in the call tree having false positives.
->>>
->>> It *is* possible to track parameters (e.g. find_vma arg 1 comes from arg 3 of
->>> do_pages_stat_array etc), but this is limited as if functions modify the
->>> data then the tracking is stopped (however this can be fixed).
->> [...]
->>> An example of a false positve is do_mlock. We untag the address and pass that
->>> to apply_vma_lock_flags - however we also pass a length - because the length
->>> came from userspace and could have the top bits set - it's flagged. However
->>> with improved parameter tracking we can remove this false positive and similar.
->>
->> Could we track only the conversions from __user * that eventually end up
->> as __untagged? (I'm not familiar with smatch, so not sure what it can
->> do).
-> 
-> I assume you mean 'that eventually end up as an argument annotated __untagged'?
-> 
-> The warnings smatch currently produce relate to only the conversions you
-> mention - however further work is needed in smatch to improve the scripts that
-> retrospectively provide call traces (without false positives).
-> 
-> 
->> We could assume that an unsigned long argument to a syscall is
->> default __untagged, unless explicitly marked as __tagged. For example,
->> sys_munmap() is allowed to take a tagged address.
-> 
-> I'll give this some further thought.
-> 
-> 
->>
->>> Prior to smatch I attempted a similar approach with sparse - however it seemed
->>> necessary to propogate the __untagged annotation in every function up the call tree,
->>> and resulted in adding the __untagged annotation to functions that would never
->>> get near user provided data. This leads to a littering of __untagged all over the
->>> kernel which doesn't seem appealing.
->>
->> Indeed. We attempted this last year (see the above thread).
->>
->>> Smatch is more capable, however it almost
->>> certainly won't pick up 100% of issues due to the difficulity of making flow
->>> analysis understand everything a compiler can.
->>>
->>> Is it likely to be acceptable to use the __untagged annotation in user-path
->>> functions that require untagged addresses across the kernel?
->>
->> If it helps with identifying missing untagged_addr() calls, I would say
->> yes (as long as we keep them to a minimum).
-> 
-> Thanks for the feedback.
-> 
-> Andrew Murray
-> 
->>
->>> [1] https://lkml.org/lkml/2019/6/13/534
->>> [2] https://patchwork.kernel.org/cover/10989517/
->>> [3] http://smatch.sourceforge.net/
->>
->> -- 
->> Catalin
-
--- 
-Regards,
-Vincenzo
+DQo+IE9uIE1heSA4LCAyMDE5LCBhdCAwMzowMiwgQ2hhbmcgUy4gQmFlIDxjaGFuZy5zZW9rLmJh
+ZUBpbnRlbC5jb20+IHdyb3RlOg0KPiANCj4gRU5UUlkocGFyYW5vaWRfZXhpdCkNCj4g4oCmDQo+
+ICsNCj4gKwkvKiBPbiBGU0dTQkFTRSBzeXN0ZW1zLCBhbHdheXMgcmVzdG9yZSB0aGUgc3Rhc2hl
+ZCBHU0JBU0UgKi8NCj4gKwl3cmdzYmFzZQklcmJ4DQo+ICsJam1wCS5McGFyYW5vaWRfZXhpdF9u
+b19zd2FwZ3M7DQoNCkl0IHdvdWxkIGNyYXNoIGFueSB0aW1lIGdldHRpbmcgYSBwYXJhbm9pZCBl
+bnRyeSB3aXRoIHVzZXIgR1MgYnV0IGtlcm5lbCBDUjMuDQpUaGUgaXNzdWUgaXMgdGhhbmtmdWxs
+eSB1bmNvdmVyZWQgYnkgVmVnYXJkIE4uIEEgcmVsZXZhbnQgdGVzdCBjYXNlIHdpbGwgYmUNCnB1
+Ymxpc2hlZCBieSBBbmR5IEwuIFRoZSBwYXRjaCBmaXhlcyB0aGUgaXNzdWUuIChSZWJhc2VkIG9u
+IHRoZSB0aXAgbWFzdGVyLikNCg0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L2VudHJ5L2VudHJ5XzY0
+LlMgYi9hcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5TDQppbmRleCBiNWU3ODJhLi5kZmRhZGMxIDEw
+MDY0NA0KLS0tIGEvYXJjaC94ODYvZW50cnkvZW50cnlfNjQuUw0KKysrIGIvYXJjaC94ODYvZW50
+cnkvZW50cnlfNjQuUw0KQEAgLTEyODgsOSArMTI4OCwxMiBAQCBFTlRSWShwYXJhbm9pZF9leGl0
+KQ0KICAgICAgIC8qIEhhbmRsZSBHUyBkZXBlbmRpbmcgb24gRlNHU0JBU0UgYXZhaWxhYmlsaXR5
+ICovDQogICAgICAgQUxURVJOQVRJVkUgImptcCAuTHBhcmFub2lkX2V4aXRfY2hlY2tncyIsICJu
+b3AiLFg4Nl9GRUFUVVJFX0ZTR1NCQVNFDQoNCisgICAgICAgVFJBQ0VfSVJRU19JUkVUUQ0KKyAg
+ICAgICAvKiBBbHdheXMgcmVzdG9yZSBzdGFzaGVkIENSMyB2YWx1ZSAoc2VlIHBhcmFub2lkX2Vu
+dHJ5KSAqLw0KKyAgICAgICBSRVNUT1JFX0NSMyAgICAgc2NyYXRjaF9yZWc9JXJheCBzYXZlX3Jl
+Zz0lcjE0DQogICAgICAgLyogV2l0aCBGU0dTQkFTRSBlbmFibGVkLCB1bmNvbmRpdGlvbmFsbHkg
+cmVzdG9yZSBHU0JBU0UgKi8NCiAgICAgICB3cmdzYmFzZSAgICAgICAgJXJieA0KLSAgICAgICBq
+bXAgICAgIC5McGFyYW5vaWRfZXhpdF9ub19zd2FwZ3M7DQorICAgICAgIGptcCAgICAgLkxwYXJh
+bm9pZF9leGl0X3Jlc3RvcmU7DQoNCi5McGFyYW5vaWRfZXhpdF9jaGVja2dzOg0KICAgICAgIC8q
+IE9uIG5vbi1GU0dTQkFTRSBzeXN0ZW1zLCBjb25kaXRpb25hbGx5IGRvIFNXQVBHUyAqLw0KDQo+
+ICAuLi4NCj4gLkxwYXJhbm9pZF9leGl0X25vX3N3YXBnczoNCj4gCVRSQUNFX0lSUVNfSVJFVFFf
+REVCVUcNCj4gCS8qIEFsd2F5cyByZXN0b3JlIHN0YXNoZWQgQ1IzIHZhbHVlIChzZWUgcGFyYW5v
+aWRfZW50cnkpICovDQo+IAlSRVNUT1JFX0NSMwlzY3JhdGNoX3JlZz0lcmJ4IHNhdmVfcmVnPSVy
+MTQNCj4gKw0KPiAuTHBhcmFub2lkX2V4aXRfcmVzdG9yZToNCj4gLQlqbXAgcmVzdG9yZV9yZWdz
+X2FuZF9yZXR1cm5fdG9fa2VybmVsDQo+ICsJam1wCXJlc3RvcmVfcmVnc19hbmRfcmV0dXJuX3Rv
+X2tlcm5lbA0KPiBFTkQocGFyYW5vaWRfZXhpdCkNCj4gDQoNCg0K
