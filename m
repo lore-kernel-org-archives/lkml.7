@@ -2,101 +2,101 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0F1C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 11:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2325C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 12:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18118215EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 11:47:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561808873;
-	bh=QqIK/wq6CAql+1yE4dVAaHOMSzbguVlkuNzXU6IwT04=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0U2HhoTFi4KyuTH+NwjI/l8aKYw2fPVDnwYBvzs3ZGzF3y2LdC5fkjoAt7JHLgbtc
-	 jQe9CUjWuzlh39+DDrXAmeRd2vAmPkgBCEn3DOvbRlOVkjU9FmA17o607V8yLKTTVs
-	 8LpFBSVR0wk9CJ2bQPq3RmpynwG9KRUhnRqgUVpw=
+	by mail.kernel.org (Postfix) with ESMTP id 8EE89208E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 12:19:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpIP4kxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfF2Lrv (ORCPT
+        id S1727076AbfF2MT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 07:47:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbfF2Lrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 07:47:49 -0400
-Received: from localhost.localdomain (unknown [194.230.155.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DED40216FD;
-        Sat, 29 Jun 2019 11:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561808868;
-        bh=QqIK/wq6CAql+1yE4dVAaHOMSzbguVlkuNzXU6IwT04=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=ibEz1k48uMtAiph2Ifwow6bIPoOdD3jtTVIAv4F1J3UbzO2reCAVFZWWSnVXXkT16
-         KvXjFDAXtVeItjYQde/3pLUG60sGiLigN9MC0qEestV6iwBu9s9n/9e7lX/4YKHt+f
-         t657is9fPiPtorrqfT3mfvRlgv/RyHFEbMWc+a+w=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Anand Moon <linux.amoon@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ARM: dts: exynos: Adjust buck[78] regulators to supported values on Arndale Octa
-Date:   Sat, 29 Jun 2019 13:47:39 +0200
-Message-Id: <20190629114739.11702-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190629114739.11702-1-krzk@kernel.org>
-References: <20190629114739.11702-1-krzk@kernel.org>
+        Sat, 29 Jun 2019 08:19:26 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41471 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfF2MTZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 08:19:25 -0400
+Received: by mail-io1-f68.google.com with SMTP id w25so18312968ioc.8;
+        Sat, 29 Jun 2019 05:19:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LQjCzj6kSAyiqgx/XnEaKVR/sAwnNleQB4HH0jju7V8=;
+        b=bpIP4kxPiE+RWJOuxStAinVwrrG63ZYrHRp2HCJwRYwAdR+lFxIYpqvGF3sWc2ZLPi
+         zrGbBlFq4ZTm7REMzBqLIA0DFC47AFjYmn7eT3BUl6yHQQMvk3UOXnG+vaOGmRNJi28L
+         ofuHSMYEvHT2nbFS9ccP5Zn6txZzHctp+Kt9hDbdYlONjeLC5f3vInzVTi3yuyEg2ep7
+         BzdfgqEZRKpDlR3MhB2vvHjxT5f8+TPK1h28FJPufjgNfpqRsX/JUh3G93WYaVfXDy9W
+         NqXufPp3tQL7hQqRTXu4NaFvbgU4EwDxKsWYNujafWId1VkiWvS8Cg08BxxOice4Nfdz
+         0K/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LQjCzj6kSAyiqgx/XnEaKVR/sAwnNleQB4HH0jju7V8=;
+        b=ttrL8ACGPKBjFa0JkGODRU+kv2E4HSf7uzgcuFcXLODW3Oq3xC8I5VnMg/fhqmbCKJ
+         i7B9J5TSU0XMAY84f311PvVeL5q3eW5Ap1BlcAWEtUw+7TmFR0L2BSDsU369rvFot9V3
+         aA73LHQXC0IOFQf77/YCWKGIj8d1vwFyR+hOeFiXVvKQG98tVh9y6dX+3PtyaxhBG4jV
+         5WJQbBWwEJD2K21sapCEOYoUUVqLZW3jy0DzAHpbjyW5JlRPDeT+Jb0JDDy9t5LLXWdX
+         oEuJTyFWJcpCsQpdJ+BkvWZ+73+scwVi0UyWHa5/rVWDpJGWSPJvhPsCG9Cr/sw/SbBZ
+         siow==
+X-Gm-Message-State: APjAAAWOHPwybQO23WKztIY9ozQ6HYQzmT0MqN3ULbKEPrB9nMhiiHeN
+        BXfkf0wiBmaYqoihYw7XJweSOcaj
+X-Google-Smtp-Source: APXvYqyCvOSFAQauAhkgL2UBuPYzxiopJq4a3k5G6qQi2Y/DyBwRIt5xEtWt8QQMf1/iVWIf/Kw++A==
+X-Received: by 2002:a05:6638:6a3:: with SMTP id d3mr17657118jad.33.1561810764861;
+        Sat, 29 Jun 2019 05:19:24 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:958e:c3e2:46b7:3acd? ([2601:282:800:fd80:958e:c3e2:46b7:3acd])
+        by smtp.googlemail.com with ESMTPSA id a7sm8887373iok.19.2019.06.29.05.19.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Jun 2019 05:19:23 -0700 (PDT)
+Subject: Re: [PATCH v4] net: netfilter: Fix rpfilter dropping vrf packets by
+ mistake
+To:     linmiaohe <linmiaohe@huawei.com>,
+        "pablo@netfilter.org" <pablo@netfilter.org>
+Cc:     "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>
+References: <2213b3e722a14ee48768ecc7118efc46@huawei.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <08740476-acfb-d35a-50b7-3aee42f23bfa@gmail.com>
+Date:   Sat, 29 Jun 2019 06:19:22 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <2213b3e722a14ee48768ecc7118efc46@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The datasheet of S2MPS11 PMIC is slightly non-consistent in buck[78]
-voltage regulators values.
+On 6/28/19 8:13 PM, linmiaohe wrote:
+> You're right. Fib rules code would set FLOWI_FLAG_SKIP_NH_OIF flag.  But I set
+> it here for distinguish with the flags & XT_RPFILTER_LOOSE branch. Without
+> this, they do the same work and maybe should be  combined. I don't want to
+> do that as that makes code confusing.
+> Is this code snipet below ok ? If so, I would delete this flag setting.
+>  
+>        } else if (netif_is_l3_master(dev) || netif_is_l3_slave(dev)) {
+>                fl6.flowi6_oif = dev->ifindex;
+>         } else if ((flags & XT_RPFILTER_LOOSE) == 0)
+>                 fl6.flowi6_oif = dev->ifindex;
 
-1. The voltage tables for configuring their registers mention range of
-   voltages: 0.750 V to 3.55 V,
-2. The constrains in electrical specifications say output voltage range
-   to be different (buck7: 1.2 V to 1.5 V, buck8: 1.8 V to 2.1 V).
-
-Adjust the ranges to match the electrical specifications to stay on the
-safe side.  Anyway these regulators stay at default value so this should
-not have effect.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos5420-arndale-octa.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-index ac7f2fa0ba22..592d7b45ecc8 100644
---- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-+++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-@@ -723,15 +723,15 @@
- 
- 			buck7_reg: BUCK7 {
- 				regulator-name = "VIN_LLDO_1V4";
--				regulator-min-microvolt = <800000>;
-+				regulator-min-microvolt = <1200000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
- 
- 			buck8_reg: BUCK8 {
- 				regulator-name = "VIN_MLDO_2V0";
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <2000000>;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <2100000>;
- 				regulator-always-on;
- 			};
- 
--- 
-2.17.1
-
+that looks fine to me, but it is up to Pablo.
