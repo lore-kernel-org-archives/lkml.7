@@ -2,92 +2,75 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA3CC5B579
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E2EC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD9402133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1902083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbfF2CNL (ORCPT
+        id S1726770AbfF2ChC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 22:13:11 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2959 "EHLO huawei.com"
+        Fri, 28 Jun 2019 22:37:02 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8237 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726682AbfF2CNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 22:13:11 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 009771E16AABD9844CA4;
-        Sat, 29 Jun 2019 10:13:07 +0800 (CST)
-Received: from dggeme714-chm.china.huawei.com (10.1.199.110) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 29 Jun 2019 10:13:06 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme714-chm.china.huawei.com (10.1.199.110) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Sat, 29 Jun 2019 10:13:06 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1591.008;
- Sat, 29 Jun 2019 10:13:06 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     David Ahern <dsahern@gmail.com>
-CC:     "pablo@netfilter.org" <pablo@netfilter.org>,
-        "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>
-Subject: Re: [PATCH v4] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-Thread-Topic: [PATCH v4] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-Thread-Index: AdUuGy8DDB3uB4ksWUWckzFOhXp+DA==
-Date:   Sat, 29 Jun 2019 02:13:06 +0000
-Message-ID: <2213b3e722a14ee48768ecc7118efc46@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726687AbfF2ChC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 22:37:02 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 54AF7D4561FCB134751B;
+        Sat, 29 Jun 2019 10:36:57 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 29 Jun 2019 10:36:47 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Brian Austin <brian.austin@cirrus.com>,
+        Paul Handrigan <Paul.Handrigan@cirrus.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC:     YueHaibing <yuehaibing@huawei.com>, <alsa-devel@alsa-project.org>,
+        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] ASoC: madera: Remove duplicated include from cs47l35.c
+Date:   Sat, 29 Jun 2019 02:43:33 +0000
+Message-ID: <20190629024333.177027-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNi8yOS8xOSAxOjA1IEFNLCBEYXZpZCBBaGVybiB3cm90ZToNCj4gT24gNi8yOC8xOSAzOjA2
-IEFNLCBNaWFvaGUgTGluIHdyb3RlOg0KPiA+IGRpZmYgLS1naXQgYS9uZXQvaXB2Ni9uZXRmaWx0
-ZXIvaXA2dF9ycGZpbHRlci5jIA0KPiA+IGIvbmV0L2lwdjYvbmV0ZmlsdGVyL2lwNnRfcnBmaWx0
-ZXIuYw0KPiA+IGluZGV4IDZiY2FmNzM1NzE4My4uM2M0YTE3NzJjMTVmIDEwMDY0NA0KPiA+IC0t
-LSBhL25ldC9pcHY2L25ldGZpbHRlci9pcDZ0X3JwZmlsdGVyLmMNCj4gPiArKysgYi9uZXQvaXB2
-Ni9uZXRmaWx0ZXIvaXA2dF9ycGZpbHRlci5jDQo+ID4gQEAgLTU1LDYgKzU1LDEwIEBAIHN0YXRp
-YyBib29sIHJwZmlsdGVyX2xvb2t1cF9yZXZlcnNlNihzdHJ1Y3QgbmV0ICpuZXQsIGNvbnN0IHN0
-cnVjdCBza19idWZmICpza2IsDQo+ID4gIAlpZiAocnBmaWx0ZXJfYWRkcl9saW5rbG9jYWwoJmlw
-aC0+c2FkZHIpKSB7DQo+ID4gIAkJbG9va3VwX2ZsYWdzIHw9IFJUNl9MT09LVVBfRl9JRkFDRTsN
-Cj4gPiAgCQlmbDYuZmxvd2k2X29pZiA9IGRldi0+aWZpbmRleDsNCj4gPiArCS8qIFNldCBmbG93
-aTZfb2lmIGZvciB2cmYgZGV2aWNlcyB0byBsb29rdXAgcm91dGUgaW4gbDNtZGV2IGRvbWFpbi4g
-Ki8NCj4gPiArCX0gZWxzZSBpZiAobmV0aWZfaXNfbDNfbWFzdGVyKGRldikgfHwgbmV0aWZfaXNf
-bDNfc2xhdmUoZGV2KSkgew0KPiA+ICsJCWxvb2t1cF9mbGFncyB8PSBGTE9XSV9GTEFHX1NLSVBf
-TkhfT0lGOw0KPg0KPiB5b3UgZG9uJ3QgbmVlZCB0byBzZXQgdGhhdCBmbGFnIGhlcmUuIEl0IGlz
-IGRvbmUgYnkgdGhlIGZpYl9ydWxlcyBjb2RlIGFzIG5lZWRlZC4NCj4NCllvdSdyZSByaWdodC4g
-RmliIHJ1bGVzIGNvZGUgd291bGQgc2V0IEZMT1dJX0ZMQUdfU0tJUF9OSF9PSUYgZmxhZy4gIEJ1
-dCBJIHNldA0KaXQgaGVyZSBmb3IgZGlzdGluZ3Vpc2ggd2l0aCB0aGUgZmxhZ3MgJiBYVF9SUEZJ
-TFRFUl9MT09TRSBicmFuY2guIFdpdGhvdXQNCnRoaXMsIHRoZXkgZG8gdGhlIHNhbWUgd29yayBh
-bmQgbWF5YmUgc2hvdWxkIGJlICBjb21iaW5lZC4gSSBkb24ndCB3YW50IHRvDQpkbyB0aGF0IGFz
-IHRoYXQgbWFrZXMgY29kZSBjb25mdXNpbmcuDQpJcyB0aGlzIGNvZGUgc25pcGV0IGJlbG93IG9r
-ID8gSWYgc28sIEkgd291bGQgZGVsZXRlIHRoaXMgZmxhZyBzZXR0aW5nLg0KIA0KICAgICAgIH0g
-ZWxzZSBpZiAobmV0aWZfaXNfbDNfbWFzdGVyKGRldikgfHwgbmV0aWZfaXNfbDNfc2xhdmUoZGV2
-KSkgew0KICAgICAgICAgICAgICAgZmw2LmZsb3dpNl9vaWYgPSBkZXYtPmlmaW5kZXg7DQogICAg
-ICAgIH0gZWxzZSBpZiAoKGZsYWdzICYgWFRfUlBGSUxURVJfTE9PU0UpID09IDApDQogICAgICAg
-ICAgICAgICAgZmw2LmZsb3dpNl9vaWYgPSBkZXYtPmlmaW5kZXg7DQo=
+Remove duplicated include.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ sound/soc/codecs/cs47l35.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/sound/soc/codecs/cs47l35.c b/sound/soc/codecs/cs47l35.c
+index 511d0d6fa962..e3585c1dab3d 100644
+--- a/sound/soc/codecs/cs47l35.c
++++ b/sound/soc/codecs/cs47l35.c
+@@ -19,7 +19,6 @@
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+ #include <sound/tlv.h>
+-#include <sound/tlv.h>
+ 
+ #include <linux/irqchip/irq-madera.h>
+ #include <linux/mfd/madera/core.h>
+
+
+
+
+
