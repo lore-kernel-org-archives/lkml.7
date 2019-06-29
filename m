@@ -2,118 +2,107 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA79C5B577
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7C0C5B577
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 20:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0239A214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:56:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JdzMUl+g"
+	by mail.kernel.org (Postfix) with ESMTP id 957BA214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 20:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561838402;
+	bh=TcvK9LqmN7NZ0/TO88jPAltX1iz5Okh8Ogj6cr/Xz6s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pmZv6nCwy/N513FJQHx9UdmauZHf/91vDVea02UlTLUORgDfXiwDjwiGtP2IucoZX
+	 Kf+AMX6kS9Kg7vAqSKbFHwb105nhfK796IyaYgnRzuMNzbEZXiN+Z7OeNKh/hROe22
+	 tLmVHMdNjF/8agjUKHNYIFDdd7QaLx2O2c4in1zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfF2T4R (ORCPT
+        id S1726946AbfF2UAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 15:56:17 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39624 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfF2T4R (ORCPT
+        Sat, 29 Jun 2019 16:00:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35334 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbfF2UAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 15:56:17 -0400
-Received: by mail-ed1-f65.google.com with SMTP id m10so16617164edv.6;
-        Sat, 29 Jun 2019 12:56:16 -0700 (PDT)
+        Sat, 29 Jun 2019 16:00:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c27so1933855wrb.2
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 12:59:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KEEhZe9y6Tj5RmcezO+cewOsrq7aqdui6cDX8dh2Q2k=;
-        b=JdzMUl+g0sgQi4R0D+GbHLxaAa5c7AWRgFEEklS/7g6WAeoD6rJIKsdrMTwlbY9rXP
-         oLHHjRu5HRgDSjiwgAgR2TdDmljNPySDVTB16UX/vaiIppKpOjBUNVG6px1Vd64zi5iz
-         VIktfHa4jIIRFZVScW6Su4o6aDd3Tu+RzPh4n/KOLvxOsVZzOhoRxm7bwD3MaUfKLbpO
-         UpEUmQWsHVI8E/tk4c9rVWDmqy3GcC3zlZWnnv4teHQuw2qtnZtmsL4wzWbjqyBVEnwc
-         MyqiZ4WSMKt00UHmIzosXVqHIW9RPCtaZubzJw60t7vFIXOToT1Ls7e0NgNOJ0uFYSRp
-         TkZw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7gve1XIB6qFihzoZrREZMHuH1w3Xvh8/V0xsajTSO+c=;
+        b=JpQ0mJH2q9tRnA02USH96/beGiuQl3I+41zd6THZnJWI/zuwew2jikeCJ2WBkkZ6sQ
+         nbZKoxDzMtPEo/tHsQdToEQKSnhu/ek534VfHxI7gzxOHEcII8jDVqOorp0Q5e2Ux+Ob
+         65wHnOuN7Iae/ym/hYG/J6OnJxtgTo8ykPkLCyRY1EDzGyir0lmOsq44Y1EUdUpGJYMy
+         +8PINFU8WXtEtBt4FACFqh5haknKfTpdI0NDiB5sgL4oXYAGVgXeN+TT2dyKXl0SxBct
+         c1guPK+Hd4XUdUMUf1sHsAgxerlu4aLMGK4CKis0aEM+zxyZ5dLO3gYykjwfr8u63u1L
+         odFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KEEhZe9y6Tj5RmcezO+cewOsrq7aqdui6cDX8dh2Q2k=;
-        b=AFHSiKCGytqdq2lGm5Zp1iADP2T1JVBkq8+WHP0rspFAnLFy+hQ1jnBo1WV6iibETB
-         dCOf0fvtDU22O8XX2yeG5cADLD8XWHBOnwbWGljHjNfAHgWNn9GMXd+94U0UFz4O4Yn0
-         zqf+hMfj5RgNv8J8Q188SsY1U4GmntT9Ci1k/lWn2LcA6fekuNBPpVJY43NKRwdgqRlg
-         lBsAd0o5esUybvzsIq2PLyeYjpZq6o0AhyejuBaWKuqsiHnhZUTJggBESWEf22xy3ZDj
-         bhyaoVNFo1ezfqirn6HXdgUnRGMCh6r0RA2bjvx3cZoTNPyClQu1MB3IO3Sjb3gRPUpi
-         icug==
-X-Gm-Message-State: APjAAAXJSoKOkffy18EoJfIW8K2wGD8/qJfOq6mvUM72XRaOloeAo1xO
-        0smaNa/JBCQhSW2yKLxbdXyMM80BLi4XC+zHx6A=
-X-Google-Smtp-Source: APXvYqxN8gyKudU+Xnn2u4IYRblYxfkXdpeZl+cSB3KMU/hJ1uQ2wvTMlirxK6ZIgGSs/Sn7JnpPaVq3iwWKiFzvauw=
-X-Received: by 2002:a17:906:3612:: with SMTP id q18mr15527385ejb.278.1561838175538;
- Sat, 29 Jun 2019 12:56:15 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7gve1XIB6qFihzoZrREZMHuH1w3Xvh8/V0xsajTSO+c=;
+        b=PG3y26Wt+U+3k9OSp1/I6HKcUMrKraTrNlL9myA2mzq0Cu3rS1+xlnCejAfXKgQNB+
+         MCJrXUNCTQXPzJstI+Ec+r0hGtJ0BMybWlSY8A+vBXf9G0kZGF4TcCukYmm/bxj5wja9
+         zlo9vntABG0q9dbS1p/HS+b4HmpnEcK2njzUNdEnzBk4YqxPxYW+byrLO+UdWSR4q8XC
+         rtraJu2HBqds6J7vd6bPmXCRmmH1TZhJpbC7xjylrVFx8dFEMy1iUz/2Oi5VSnhFDMzK
+         iP3d2iE7/x8Z7NfBGz0DxTxTBy8LKit7k7eOoZ3twMnvk3rlSCCZH7R5urS69perO6Ip
+         fo4Q==
+X-Gm-Message-State: APjAAAUf8mAs4bQZa+t88EDDxipS1KdNNy0PE4YxmuXMqFzOzAAZ9KSI
+        FS13VS4C++9h2iC8X3RSJ1E=
+X-Google-Smtp-Source: APXvYqxWQzCxWoh4UjsqoRFazhiQ+rRBIV5iCURq0qMW20Azj5/MqCWawsKwcS9xOU98NnGaHtb32Q==
+X-Received: by 2002:a5d:518c:: with SMTP id k12mr12673759wrv.322.1561838398655;
+        Sat, 29 Jun 2019 12:59:58 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id h14sm6346245wrs.66.2019.06.29.12.59.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 29 Jun 2019 12:59:58 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 21:59:56 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] smp/urgent fixes
+Message-ID: <20190629195956.GA581@gmail.com>
+References: <20190629194535.GA79708@gmail.com>
 MIME-Version: 1.0
-References: <20190628162831.20645-1-jeffrey.l.hugo@gmail.com> <CAF6AEGuLvgfWYdGm-0caGbWcvzt7raCWkz_sBCxFKV99YQZmeg@mail.gmail.com>
-In-Reply-To: <CAF6AEGuLvgfWYdGm-0caGbWcvzt7raCWkz_sBCxFKV99YQZmeg@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sat, 29 Jun 2019 12:55:59 -0700
-Message-ID: <CAF6AEGty6eJwi5ORm5z5xtC6pKe5iKiSAVLaT_++Qn_ZTX-0zw@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm: Transition console to msm framebuffer
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190629194535.GA79708@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 10:46 AM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Fri, Jun 28, 2019 at 9:28 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> >
-> > If booting a device using EFI, efifb will likely come up and claim the
-> > console.  When the msm display stack finally comes up, we want the
-> > console to move over to the msm fb, so add support to kick out any
-> > firmware based framebuffers to accomplish the console transition.
-> >
-> > Suggested-by: Rob Clark <robdclark@gmail.com>
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->
-> lgtm,
->
-> Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-and I'll also add, on yoga c630,
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-Tested-by: Rob Clark <robdclark@gmail.com>
+> Linus,
+> 
+> Please pull the latest smp-urgent-for-linus git tree from:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git smp-urgent-for-linus
+> 
+>    # HEAD: 33d4a5a7a5b4d02915d765064b2319e90a11cbde cpu/hotplug: Fix out-of-bounds read when setting fail state
+> 
+> Two fixes:
+> 
+>  - Fix an out of bounds access when writing nonsensical values to 
+>    /sys/devices/system/cpu/cpuX/hotplug/fail
+> 
+>  - Warn about unsupported mitigations= parameters.
 
+Linus, please ignore this duplicate pull request. I thought Thomas didn't 
+send this one yet, but he has a few hours ago but the Cc: to me was buggy 
+so I didn't notice it at first. :-/
 
->
->
-> > ---
-> >  drivers/gpu/drm/msm/msm_fbdev.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/msm/msm_fbdev.c b/drivers/gpu/drm/msm/msm_fbdev.c
-> > index 2429d5e6ce9f..e3836c7725a6 100644
-> > --- a/drivers/gpu/drm/msm/msm_fbdev.c
-> > +++ b/drivers/gpu/drm/msm/msm_fbdev.c
-> > @@ -169,6 +169,9 @@ struct drm_fb_helper *msm_fbdev_init(struct drm_device *dev)
-> >         if (ret)
-> >                 goto fini;
-> >
-> > +       /* the fw fb could be anywhere in memory */
-> > +       drm_fb_helper_remove_conflicting_framebuffers(NULL, "msm", false);
-> > +
-> >         ret = drm_fb_helper_initial_config(helper, 32);
-> >         if (ret)
-> >                 goto fini;
-> > --
-> > 2.17.1
-> >
+Thanks,
+
+	Ingo
