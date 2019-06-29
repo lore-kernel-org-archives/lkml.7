@@ -2,228 +2,94 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D94CC5B57A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEDEC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1072086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:33:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kq/PtaMK"
+	by mail.kernel.org (Postfix) with ESMTP id DD4142054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfF2NdR (ORCPT
+        id S1726851AbfF2Nzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 09:33:17 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40459 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfF2NdR (ORCPT
+        Sat, 29 Jun 2019 09:55:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35093 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbfF2Nzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 09:33:17 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a9so5809924lff.7;
-        Sat, 29 Jun 2019 06:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wqC91kN2z8pwwbsf+i4CCKuzyZv4LVpkroUyov/rXt0=;
-        b=Kq/PtaMK747mIbS+3CEfKcGHmUcaAyzO49GryVMstXrzWQtOmJURLDb6D6JpHwJYMQ
-         JYYnT0ZIq+6R85vEhLBPGBX9lpqjwUbKiNntpWF+5XZYHaOOMoCAqIQnVh8TtXoMPsm+
-         8ZQi/zzJtmytD0wRRJsS/9Zf1P2B0F0zC82/8AnRAqkMJbJAe6+rlj833+pwkb/ZfCEi
-         eIaoVDjQ4xuA9MkDo4jICO3CYilZ1KOIWbrXVX2JXixEGuvrggkPc7DzsOWiXU7A5LaD
-         CEtYPTmzyKMBc7Ql44qFxoOvLhiIPNxt3PbXHN8KEiuqj1NWQDpPpjMq4zlWeLY8bEc8
-         LTEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wqC91kN2z8pwwbsf+i4CCKuzyZv4LVpkroUyov/rXt0=;
-        b=cOpvleIvuu2e58zopBieEj1Pp40KhKRN8RU11EIDzS8X+sValdzFqxZVdZFI8W7N53
-         T61T7Zh31AhBTfObxxkqjdJqmtpavx9TginDw+zqukbFg9qkct/eqNZaUPjBM0wSWMN/
-         UTKbDVQZexWt92fM8Af39H9EV1Mhb5f2BVLEoesvo8p2CBMZa8eBfH+tlypxA/aJL9rb
-         VG2WrhrDzT5XpK8eEwlPzyYWVTt1SvR7Y7JK3F0zmBGWrvKkqSw+xtlqXbgX3t8l6XjU
-         tz/1+xhHGUHc4idzpYUJaLCavpHcMuQ4r87budAogp5Fbf/HK9FKfUy4FVk7oDMUgu/o
-         lt+Q==
-X-Gm-Message-State: APjAAAX46wjhM6HOWNrbuIevpU0Rdnu6xLR9U/db9jlysyqTDUVo6FZx
-        lQqsG14vMQgwWh4aL/Xez6Df3Xh8
-X-Google-Smtp-Source: APXvYqxJkhouaDVad4g+tnS3yko8FqNv/HIfJQCOb9WqSa5NS6XfjIElZR7HWSq4DW3r7C9EbnAyLg==
-X-Received: by 2002:ac2:4839:: with SMTP id 25mr7478440lft.79.1561815194077;
-        Sat, 29 Jun 2019 06:33:14 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id 16sm1375534lfy.21.2019.06.29.06.33.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 06:33:13 -0700 (PDT)
-Subject: Re: [PATCH V5 06/18] clk: tegra: Save and restore CPU and System
- clocks context
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <dd0d57bb-287c-11cf-fadf-0b2d8ace507f@gmail.com>
-Date:   Sat, 29 Jun 2019 16:33:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Sat, 29 Jun 2019 09:55:39 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hhDpG-0006Uw-Gt; Sat, 29 Jun 2019 13:55:34 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd/pp: fix a dereference of a pointer before it is null checked
+Date:   Sat, 29 Jun 2019 14:55:34 +0100
+Message-Id: <20190629135534.15116-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1561687972-19319-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.06.2019 5:12, Sowjanya Komatineni пишет:
-> During system suspend state, core power goes off and looses all the
-> CAR controller register settings.
-> 
-> This patch creates APIs for saving and restoring the context of Tegra
-> CPUG, CPULP and SCLK.
-> 
-> CPU and System clock context includes
-> - CPUG, CPULP, and SCLK burst policy settings for clock sourcea of all
->   their normal states.
-> - SCLK divisor and System clock rate for restoring SCLK, AHB and APB
->   rates on resume.
-> - OSC_DIV settings which are used as reference clock input to some PLLs.
-> - SPARE_REG and CLK_MASK settings.
-> 
-> These APIs are used in Tegra210 clock driver during suspend and resume
-> operation.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-tegra-super-gen4.c |  4 --
->  drivers/clk/tegra/clk.c                  | 80 ++++++++++++++++++++++++++++++++
->  drivers/clk/tegra/clk.h                  | 14 ++++++
->  3 files changed, 94 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c b/drivers/clk/tegra/clk-tegra-super-gen4.c
-> index cdfe7c9697e1..ed69ec4d883e 100644
-> --- a/drivers/clk/tegra/clk-tegra-super-gen4.c
-> +++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
-> @@ -19,10 +19,6 @@
->  #define PLLX_MISC2 0x514
->  #define PLLX_MISC3 0x518
->  
-> -#define CCLKG_BURST_POLICY 0x368
-> -#define CCLKLP_BURST_POLICY 0x370
-> -#define SCLK_BURST_POLICY 0x028
-> -#define SYSTEM_CLK_RATE 0x030
->  #define SCLK_DIVIDER 0x2c
->  
->  static DEFINE_SPINLOCK(sysrate_lock);
-> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-> index 573e3c967ae1..9e863362d2bf 100644
-> --- a/drivers/clk/tegra/clk.c
-> +++ b/drivers/clk/tegra/clk.c
-> @@ -70,6 +70,12 @@ static struct clk **clks;
->  static int clk_num;
->  static struct clk_onecell_data clk_data;
->  
-> +static u32 cclkg_burst_policy_ctx[2];
-> +static u32 cclklp_burst_policy_ctx[2];
-> +static u32 sclk_burst_policy_ctx[2];
-> +static u32 sys_clk_divisor_ctx, system_rate_ctx;
-> +static u32 spare_ctx, misc_clk_enb_ctx, clk_arm_ctx;
-> +
->  /* Handlers for SoC-specific reset lines */
->  static int (*special_reset_assert)(unsigned long);
->  static int (*special_reset_deassert)(unsigned long);
-> @@ -199,6 +205,80 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
->  	}
->  }
->  
-> +void tegra_cclkg_burst_policy_save_context(void)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
-> +		cclkg_burst_policy_ctx[i] = readl_relaxed(clk_base +
-> +							  CCLKG_BURST_POLICY +
-> +							  (i * 4));
-> +}
-> +
-> +void tegra_cclkg_burst_policy_restore_context(void)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
-> +		writel_relaxed(cclkg_burst_policy_ctx[i],
-> +			       clk_base + CCLKG_BURST_POLICY + (i * 4));
-> +
-> +	fence_udelay(2, clk_base);
-> +}
-> +
-> +void tegra_sclk_cclklp_burst_policy_save_context(void)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
-> +		cclklp_burst_policy_ctx[i] = readl_relaxed(clk_base +
-> +							  CCLKLP_BURST_POLICY +
-> +							  (i * 4));
-> +
-> +		sclk_burst_policy_ctx[i] = readl_relaxed(clk_base +
-> +							  SCLK_BURST_POLICY +
-> +							  (i * 4));
-> +	}
-> +
-> +	sys_clk_divisor_ctx = readl_relaxed(clk_base + SYS_CLK_DIV);
-> +	system_rate_ctx = readl_relaxed(clk_base + SYSTEM_CLK_RATE);
-> +	spare_ctx = readl_relaxed(clk_base + SPARE_REG0);
-> +	misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
-> +	clk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
-> +}
-> +
-> +void tegra_sclk_cpulp_burst_policy_restore_context(void)
-> +{
-> +	unsigned int i;
-> +	u32 val;
-> +
-> +	/*
-> +	 * resume SCLK and CPULP clocks
-> +	 * for SCLk, set safe dividers values first and then restore source
-> +	 * and dividers
-> +	 */
-> +
-> +	writel_relaxed(0x1, clk_base + SYSTEM_CLK_RATE);
-> +	val = readl_relaxed(clk_base + SYS_CLK_DIV);
-> +	if (val < sys_clk_divisor_ctx)
-> +		writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
-> +
-> +	fence_udelay(2, clk_base);
-> +
-> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
-> +		writel_relaxed(cclklp_burst_policy_ctx[i],
-> +			       clk_base + CCLKLP_BURST_POLICY + (i * 4));
-> +		writel_relaxed(sclk_burst_policy_ctx[i],
-> +			       clk_base + SCLK_BURST_POLICY + (i * 4));
-> +	}
-> +
-> +	writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
-> +	writel_relaxed(system_rate_ctx, clk_base + SYSTEM_CLK_RATE);
-> +	writel_relaxed(spare_ctx, clk_base + SPARE_REG0);
-> +	writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
-> +	writel_relaxed(clk_arm_ctx, clk_base + CLK_MASK_ARM);
+From: Colin Ian King <colin.king@canonical.com>
 
-Why fence_udelay was needed above and not needed here?
+The pointer hwmgr is dereferenced when initializing pointer adev however
+it is a little later hwmgr is null checked, implying it could potentially
+be null hence the assignment of adev may cause a null pointer dereference.
+Fix this by moving the assignment after the null check. Note that I did
+think of removing adev as it is only used once, however, hwmgr->adev is
+a void * pointer, so using adev avoids some ugly casting so it makes sense
+to still use it.
 
-> +}
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 59156faf810e ("drm/amd/pp: Remove the cgs wrapper for notify smu version on APU")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/powerplay/smumgr/smu8_smumgr.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/smu8_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/smu8_smumgr.c
+index 8189fe402c6d..12815b3830e4 100644
+--- a/drivers/gpu/drm/amd/powerplay/smumgr/smu8_smumgr.c
++++ b/drivers/gpu/drm/amd/powerplay/smumgr/smu8_smumgr.c
+@@ -722,13 +722,11 @@ static int smu8_request_smu_load_fw(struct pp_hwmgr *hwmgr)
+ 
+ static int smu8_start_smu(struct pp_hwmgr *hwmgr)
+ {
+-	struct amdgpu_device *adev = hwmgr->adev;
+-
++	struct amdgpu_device *adev;
+ 	uint32_t index = SMN_MP1_SRAM_START_ADDR +
+ 			 SMU8_FIRMWARE_HEADER_LOCATION +
+ 			 offsetof(struct SMU8_Firmware_Header, Version);
+ 
+-
+ 	if (hwmgr == NULL || hwmgr->device == NULL)
+ 		return -EINVAL;
+ 
+@@ -738,6 +736,7 @@ static int smu8_start_smu(struct pp_hwmgr *hwmgr)
+ 		((hwmgr->smu_version >> 16) & 0xFF),
+ 		((hwmgr->smu_version >> 8) & 0xFF),
+ 		(hwmgr->smu_version & 0xFF));
++	adev = hwmgr->adev;
+ 	adev->pm.fw_version = hwmgr->smu_version >> 8;
+ 
+ 	return smu8_request_smu_load_fw(hwmgr);
+-- 
+2.20.1
 
