@@ -2,95 +2,103 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B75C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5341AC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3016B2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:41:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LmDgU/vG"
+	by mail.kernel.org (Postfix) with ESMTP id 245EE214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfF2Blk (ORCPT
+        id S1726907AbfF2BtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 21:41:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42214 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfF2Blj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 21:41:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uZry5nOKE0RdjtGQW20tgZ++YaVaPCtY5Y/rs8C+Lf8=; b=LmDgU/vGTOxmGauugqKzplBDm
-        SuPGk5nuRE3SwxoDOaPxYPkT502BNZpExJierNW+ab6Q7BGpu9nFIMRYxa1b6kyBTP8KU4lMXgqhW
-        Ng1DxhFQLS/9Sk4kohiKko1F+XzMXkG1trOakC3/1JA8V1xgU1a87BzxADK+mle6vas3nKn5g4Tcf
-        +sLmMHyHKpCgMkbNFwk0H0iWpGvcL89KvBO/3uUKcWMDJUkuqeH37eT6mIRojU8o6JFqCUzXnzcrW
-        YWxfD2mD0MYEQLDKxs3HEarP5pBGNuHvA7sxijBVbOWhUR1lxbxJgN+SP7DblEhhLRNVVpQHEuYaa
-        OtkpCtFtg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hh2My-0005GU-C6; Sat, 29 Jun 2019 01:41:36 +0000
-Date:   Fri, 28 Jun 2019 18:41:36 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Sheriff Esseson <sheriffesseson@gmail.com>
-Cc:     skhan@linuxfoundation.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v1] Doc : fs : convert xfs.txt to ReST
-Message-ID: <20190629014136.GF4286@bombadil.infradead.org>
-References: <20190628214302.GA12096@localhost>
- <20190629010733.GA31770@localhost>
+        Fri, 28 Jun 2019 21:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726682AbfF2BtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 21:49:06 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B5B12083B;
+        Sat, 29 Jun 2019 01:49:05 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 21:49:03 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     minyard@acm.org, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
+        Corey Minyard <cminyard@mvista.com>
+Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
+Message-ID: <20190628214903.6f92a9ea@oasis.local.home>
+In-Reply-To: <20190510103318.6cieoifz27eph4n5@linutronix.de>
+References: <20190509193320.21105-1-minyard@acm.org>
+        <20190510103318.6cieoifz27eph4n5@linutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190629010733.GA31770@localhost>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 02:25:08AM +0100, Sheriff Esseson wrote:
-> On Fri, Jun 28, 2019 at 10:43:24PM +0100, Sheriff Esseson wrote:
-> > 	Convert xfs.txt to ReST, markup and rename accordingly. Update
-> > 	Documentation/index.rst.
+On Fri, 10 May 2019 12:33:18 +0200
+Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 
-Don't quote the entire previous patch when submitting a new one.
-
-> Rid Documentation/filesystems/index.rst of ".rst" in toc-tree references.
+> On 2019-05-09 14:33:20 [-0500], minyard@acm.org wrote:
+> > From: Corey Minyard <cminyard@mvista.com>
+> > 
+> > The function call do_wait_for_common() has a race condition that
+> > can result in lockups waiting for completions.  Adding the thread
+> > to (and removing the thread from) the wait queue for the completion
+> > is done outside the do loop in that function.  However, if the thread
+> > is woken up, the swake_up_locked() function will delete the entry
+> > from the wait queue.  If that happens and another thread sneaks
+> > in and decrements the done count in the completion to zero, the
+> > loop will go around again, but the thread will no longer be in the
+> > wait queue, so there is no way to wake it up.  
 > 
-> CC xfs-list.
+> applied, thank you.
 > 
-> Correct email indentation.
 
-This text should be below the --- line, and it should be marked as "v2:"
+When I applied this patch to 4.19-rt, I get the following lock up:
 
-And you didn't update the MAINTAINERS file.
+watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [sh:745]
+Modules linked in: floppy i915 drm_kms_helper drm fb_sys_fops sysimgblt sysfillrect syscopyarea iosf_mbi i2c_algo_bit video
+CPU: 2 PID: 745 Comm: sh Not tainted 4.19.56-test-rt23+ #16
+Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./To be filled by O.E.M., BIOS SDBLI944.86P 05/08/2007
+RIP: 0010:_raw_spin_unlock_irq+0x17/0x4d
+Code: 48 8b 12 0f ba e2 12 73 07 e8 f1 4a 92 ff 31 c0 5b 5d c3 66 66 66 66 90 55 48 89 e5 c6 07 00 e8 de 3d a3 ff fb bf 01 00 00 00 <e8> a7 27 9a ff 65 8b 05 c8 7f 93 7e 85 c0 74 1f a9 ff ff
+ ff 7f 75
+RSP: 0018:ffffc90000c8bbb8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: ffffc90000c8bd58 RCX: 0000000000000003
+RDX: 0000000000000000 RSI: ffffffff8108ffab RDI: 0000000000000001
+RBP: ffffc90000c8bbb8 R08: ffffffff816dcd76 R09: 0000000000020600
+R10: 0000000000000400 R11: 0000001c0eef1808 R12: ffffc90000c8bbc8
+R13: ffffc90000f13ca0 R14: ffff888074b2d7d8 R15: ffff8880789efe10
+FS:  0000000000000000(0000) GS:ffff88807b300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000030662001b8 CR3: 00000000376ac000 CR4: 00000000000006e0
+Call Trace:
+ swake_up_all+0xa6/0xde
+ __d_lookup_done+0x7c/0xc7
+ __d_add+0x44/0xf7
+ d_splice_alias+0x208/0x218
+ ext4_lookup+0x1a6/0x1c5
+ path_openat+0x63a/0xb15
+ ? preempt_latency_stop+0x25/0x27
+ do_filp_open+0x51/0xae
+ ? trace_preempt_on+0xde/0xe7
+ ? rt_spin_unlock+0x13/0x24
+ ? __alloc_fd+0x145/0x155
+ do_sys_open+0x81/0x125
+ __x64_sys_open+0x21/0x23
+ do_syscall_64+0x5c/0x6e
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> +For boolean mount options, the names with the "(*)" prefix is the
-> +default behaviour. For example, take an behaviour enabled by default to be a one (1) or,
+I haven't really looked too much into it though. I ran out of time :-/
 
-This line is too long.  Doesn't checkpatch.pl complain?
-
-> +   rtdev=<device>
-> +        An XFS filesystem has up to three parts: a data section, a log
-> +	section, and a real-time section.  The real-time section is optional.
-> +        If enabled, ``rtdev`` sets ``device`` to be used as an
-> +        external real-time section, similar to ``logdev`` above.
-
-Darrick mentioned the indentation was weird here, and you haven't fixed that.
-
-> +   sunit=<value>
-> +	Used to specify the stripe unit for a RAID device
-> +	or (in conjunction with ``swidth`` below) a stripe volume.  ``value`` must be specified in 512-byte
-> +	block units. This option is only relevant to filesystems
-
-line length
-
+-- Steve
