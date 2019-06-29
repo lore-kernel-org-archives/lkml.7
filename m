@@ -2,101 +2,93 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2325C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 12:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC3EC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 12:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE89208E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 12:19:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpIP4kxP"
+	by mail.kernel.org (Postfix) with ESMTP id 5121D214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 12:26:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfF2MT0 (ORCPT
+        id S1727072AbfF2M0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 08:19:26 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41471 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbfF2MTZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 08:19:25 -0400
-Received: by mail-io1-f68.google.com with SMTP id w25so18312968ioc.8;
-        Sat, 29 Jun 2019 05:19:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LQjCzj6kSAyiqgx/XnEaKVR/sAwnNleQB4HH0jju7V8=;
-        b=bpIP4kxPiE+RWJOuxStAinVwrrG63ZYrHRp2HCJwRYwAdR+lFxIYpqvGF3sWc2ZLPi
-         zrGbBlFq4ZTm7REMzBqLIA0DFC47AFjYmn7eT3BUl6yHQQMvk3UOXnG+vaOGmRNJi28L
-         ofuHSMYEvHT2nbFS9ccP5Zn6txZzHctp+Kt9hDbdYlONjeLC5f3vInzVTi3yuyEg2ep7
-         BzdfgqEZRKpDlR3MhB2vvHjxT5f8+TPK1h28FJPufjgNfpqRsX/JUh3G93WYaVfXDy9W
-         NqXufPp3tQL7hQqRTXu4NaFvbgU4EwDxKsWYNujafWId1VkiWvS8Cg08BxxOice4Nfdz
-         0K/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LQjCzj6kSAyiqgx/XnEaKVR/sAwnNleQB4HH0jju7V8=;
-        b=ttrL8ACGPKBjFa0JkGODRU+kv2E4HSf7uzgcuFcXLODW3Oq3xC8I5VnMg/fhqmbCKJ
-         i7B9J5TSU0XMAY84f311PvVeL5q3eW5Ap1BlcAWEtUw+7TmFR0L2BSDsU369rvFot9V3
-         aA73LHQXC0IOFQf77/YCWKGIj8d1vwFyR+hOeFiXVvKQG98tVh9y6dX+3PtyaxhBG4jV
-         5WJQbBWwEJD2K21sapCEOYoUUVqLZW3jy0DzAHpbjyW5JlRPDeT+Jb0JDDy9t5LLXWdX
-         oEuJTyFWJcpCsQpdJ+BkvWZ+73+scwVi0UyWHa5/rVWDpJGWSPJvhPsCG9Cr/sw/SbBZ
-         siow==
-X-Gm-Message-State: APjAAAWOHPwybQO23WKztIY9ozQ6HYQzmT0MqN3ULbKEPrB9nMhiiHeN
-        BXfkf0wiBmaYqoihYw7XJweSOcaj
-X-Google-Smtp-Source: APXvYqyCvOSFAQauAhkgL2UBuPYzxiopJq4a3k5G6qQi2Y/DyBwRIt5xEtWt8QQMf1/iVWIf/Kw++A==
-X-Received: by 2002:a05:6638:6a3:: with SMTP id d3mr17657118jad.33.1561810764861;
-        Sat, 29 Jun 2019 05:19:24 -0700 (PDT)
-Received: from ?IPv6:2601:282:800:fd80:958e:c3e2:46b7:3acd? ([2601:282:800:fd80:958e:c3e2:46b7:3acd])
-        by smtp.googlemail.com with ESMTPSA id a7sm8887373iok.19.2019.06.29.05.19.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 05:19:23 -0700 (PDT)
-Subject: Re: [PATCH v4] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-To:     linmiaohe <linmiaohe@huawei.com>,
-        "pablo@netfilter.org" <pablo@netfilter.org>
-Cc:     "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>
-References: <2213b3e722a14ee48768ecc7118efc46@huawei.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <08740476-acfb-d35a-50b7-3aee42f23bfa@gmail.com>
-Date:   Sat, 29 Jun 2019 06:19:22 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Sat, 29 Jun 2019 08:26:30 -0400
+Received: from ozlabs.org ([203.11.71.1]:32857 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726906AbfF2M03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 08:26:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45bXtV6c8Gz9s3C;
+        Sat, 29 Jun 2019 22:26:26 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        npiggin@gmail.com
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.2-7 tag
+Date:   Sat, 29 Jun 2019 22:26:26 +1000
+Message-ID: <871rzck26l.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <2213b3e722a14ee48768ecc7118efc46@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/19 8:13 PM, linmiaohe wrote:
-> You're right. Fib rules code would set FLOWI_FLAG_SKIP_NH_OIF flag.  But I set
-> it here for distinguish with the flags & XT_RPFILTER_LOOSE branch. Without
-> this, they do the same work and maybe should be  combined. I don't want to
-> do that as that makes code confusing.
-> Is this code snipet below ok ? If so, I would delete this flag setting.
->  
->        } else if (netif_is_l3_master(dev) || netif_is_l3_slave(dev)) {
->                fl6.flowi6_oif = dev->ifindex;
->         } else if ((flags & XT_RPFILTER_LOOSE) == 0)
->                 fl6.flowi6_oif = dev->ifindex;
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-that looks fine to me, but it is up to Pablo.
+Hi Linus,
+
+Please pull one more powerpc fix for 5.2:
+
+The following changes since commit 50087112592016a3fc10b394a55f1f1a1bde6908:
+
+  KVM: PPC: Book3S HV: Invalidate ERAT when flushing guest TLB entries (2019-06-20 22:11:25 +1000)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.2-7
+
+for you to fetch changes up to e13e7cd4c0c1cc9984d9b6a8663e10d76b53f2aa:
+
+  powerpc/64s/exception: Fix machine check early corrupting AMR (2019-06-25 21:04:27 +1000)
+
+- ------------------------------------------------------------------
+powerpc fixes for 5.2 #7
+
+One fix for a regression in my commit adding KUAP (Kernel User Access
+Prevention) on Radix, which incorrectly touched the AMR in the early machine
+check handler.
+
+Thanks to:
+  Nicholas Piggin.
+
+- ------------------------------------------------------------------
+Nicholas Piggin (1):
+      powerpc/64s/exception: Fix machine check early corrupting AMR
+
+
+ arch/powerpc/kernel/exceptions-64s.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJdF1XlAAoJEFHr6jzI4aWAYGcP/0zAPEOaQjgDIn8fgHIMQxiS
+A3R2Il77YJXukTkbukGE3i47x22N+dOl0Cl3LruUVVHy5sEGf1y7qxJuJY8qLY85
+rMsObpkOtxq2+Cax59t7heBd3W7kJ81FgELc2d3V5/xKTUrc6A3X1Lvf2V6sejEz
+qfvcW+BvH56x4an8WuZTw/QyndI28bvYWeWd/fHrIqqNUmYIViS6huKX6vgWZOvr
+LsKqSgmlA/fmR658hkG1bayJdmkQfT0XzJCck9xFftY2/tm2NYXk+F06PviUqVDT
+VjWAu0CUohj+rb+b1NtrIaRz645gxYQJL51H9IWvjssUqhZ9Xf9kcVogQJ4l1U3W
+q3Kcs0FhZbtkJ7b72Wt829Z95awZqiZpQYeBB0QnGLzr7anQWxzCosXw1jWrnI2e
+xWfUBpBzzRK92Dn9Qkg7e5iydipSfMMiEMyoKTbZu4bG7aRltodzDuhWM1yzv1RU
+zrznOTZqB97Ui+DtwMAZsnLzpAAacm4JuSWKEHA+kjE8TLZlOtmHX16cCWGZU2FE
+xTUn30yJJj5qesQalIZ/33sVm1vH+DjbMhFZhnjGwb1W7USiPQby5H5eEvj0l3at
+cZLWQOiskZpya6+FCL9sRPd5OUyONEiyQz0pnw0/evOvJuo2nounDled0k/s5ljz
+WtsfvGeQBE760byvtENF
+=dP4O
+-----END PGP SIGNATURE-----
