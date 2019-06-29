@@ -2,132 +2,154 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE6AC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C31C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADFB2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D572075B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561797784;
+	bh=tWHRy4FMp7DnQydopt93j2ub9TZE/tkPNsRLnlo7cAM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=beI83W5lasnGqUVk46VtBn+sp3LOwHunjM+vbSdvK2gheuhf7BgTFdY1dvkYM32p4
+	 FBuyDVa4BYBn+0KUpdG0sd7zUKKB5NYobZAsNY4llpkqAo4NutzWQm78PVZAxo2yqt
+	 fTxm7KLKpKOzetX6vAJMDwdvvGl9TtcX/+7nrKOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfF2Iit (ORCPT
+        id S1726888AbfF2InC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 04:38:49 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7680 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726795AbfF2Iis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 04:38:48 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 41C8D1123E9AD6730A49;
-        Sat, 29 Jun 2019 16:38:46 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 29 Jun
- 2019 16:38:39 +0800
-Subject: Re: [PATCH] staging: erofs: don't check special inode layout
-To:     Yue Hu <zbestahu@gmail.com>, Gao Xiang <gaoxiang25@huawei.com>
-CC:     <gregkh@linuxfoundation.org>, <linux-erofs@lists.ozlabs.org>,
-        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        <huyue2@yulong.com>, Miao Xie <miaoxie@huawei.com>
-References: <20190628034234.8832-1-zbestahu@gmail.com>
- <276837dc-b18a-6f20-fc33-d988dff5ae9f@huawei.com>
- <20190628121952.000028fc.zbestahu@gmail.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <a3743d00-a5c8-6e2a-7b1b-f5111ca59009@huawei.com>
-Date:   Sat, 29 Jun 2019 16:38:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sat, 29 Jun 2019 04:43:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726812AbfF2InB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 04:43:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 627942083B;
+        Sat, 29 Jun 2019 08:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561797780;
+        bh=tWHRy4FMp7DnQydopt93j2ub9TZE/tkPNsRLnlo7cAM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LKBomON3r/S7SyY7Eqki+fWCLEWIPU4w/rIRzZaeWmyOfxx1B3FLZx6TQBDblJc1l
+         XrQjGbY5ux+sVe8zI2M3034WpDTMf8StbhUq0ZBdXk6WcojV4q6vWoZUe5jXcqM5Aq
+         9qQU6idbLCiayBzIs1G0nHGaFhtrRFa/OtApGnOU=
+Date:   Sat, 29 Jun 2019 10:42:57 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Cristina Moraru <cristina.moraru09@gmail.com>,
+        "vegard.nossum@gmail.com" <vegard.nossum@gmail.com>,
+        Valentin Rothberg <valentinrothberg@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <mmarek@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tom Gundersen <teg@jklm.no>, Kay Sievers <kay@vrfy.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        backports@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Paul Bolle <pebolle@tiscali.nl>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Tejun Heo <tj@kernel.org>,
+        Jej B <James.Bottomley@hansenpartnership.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Daniel Jonsson <danijons@student.chalmers.se>,
+        Andrzej Wasowski <wasowski@itu.dk>
+Subject: Re: [RFC PATCH 0/5] Add CONFIG symbol as module attribute
+Message-ID: <20190629084257.GA1227@kroah.com>
+References: <1471462023-119645-1-git-send-email-cristina.moraru09@gmail.com>
+ <20160818175505.GM3296@wotan.suse.de>
+ <20160825074313.GC18622@lst.de>
+ <20160825201919.GE3296@wotan.suse.de>
+ <CAB=NE6UfkNN5kES6QmkM-dVC=HzKsZEkevH+Y3beXhVb2gC5vg@mail.gmail.com>
+ <CAB=NE6XEnZ1uH2nidRbn6myvdQJ+vArpTTT6iSJebUmyfdaLcQ@mail.gmail.com>
+ <20190627045052.GA7594@lst.de>
+ <CAB=NE6Xa525g+3oWROjCyDT3eD0sw-6O+7o97HGX8zORJfYw4w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190628121952.000028fc.zbestahu@gmail.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAB=NE6Xa525g+3oWROjCyDT3eD0sw-6O+7o97HGX8zORJfYw4w@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/28 12:19, Yue Hu wrote:
-> On Fri, 28 Jun 2019 11:50:21 +0800
-> Gao Xiang <gaoxiang25@huawei.com> wrote:
+On Fri, Jun 28, 2019 at 11:40:22AM -0700, Luis Chamberlain wrote:
+> On Wed, Jun 26, 2019 at 9:51 PM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Wed, Jun 26, 2019 at 03:21:08PM -0700, Luis Chamberlain wrote:
+> > > On Tue, Feb 5, 2019 at 2:07 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > > > In lieu of no Luke Skywalker, if you will, for a large kconfig revamp
+> > > > on this, I'm inclined to believe *at least* having some kconfig_symb
+> > > > exposed for some modules is better than nothing. Christoph are you
+> > > > totally opposed to this effort until we get a non-reverse engineered
+> > > > effort in place? It just seems like an extraordinary amount of work
+> > > > and I'm not quite sure who's volunteering to do it.
+> > > >
+> > > > Other stakeholders may benefit from at least having some config -->
+> > > > module mapping for now. Not just backports or building slimmer
+> > > > kernels.
+> > >
+> > > Christoph, *poke*
+> >
+> > Yes, I'm still totally opposed to a half-backed hack like this.
 > 
->> Hi Yue,
->>
->> On 2019/6/28 11:42, Yue Hu wrote:
->>> From: Yue Hu <huyue2@yulong.com>
->>>
->>> Currently, we will check if inode layout is compression or inline if
->>> the inode is special in fill_inode(). Also set ->i_mapping->a_ops for
->>> it. That is pointless since the both modes won't be set for special
->>> inode when creating EROFS filesystem image. So, let's avoid it.
->>>
->>> Signed-off-by: Yue Hu <huyue2@yulong.com>  
->>
->> Have you test this patch with some actual image with legacy mkfs since
->> new mkfs framework have not supported special inode...
+> The solution puts forward a mechanism to add a kconfig_symb where we
+> are 100% certain we have a direct module --> config mapping.
 > 
-> Hi Xiang,
+> This is *currently* determined when the streamline_config.pl finds
+> that an object has only *one* associated config symbol associated. As
+> Cristina noted, of 62 modules on a running system 58 of them ended up
+> getting the kconfig_symb assigned, that is 93.5% of all modules on the
+> system being tested. For the other modules, if they did want this
+> association, we could allow a way for modules to define their own
+> KBUILD_KCONF variable so that this could be considered as well, or
+> they can look at their own kconfig stuff to try to fit the model that
+> does work. To be clear, the heuristics *can* be updated if there is
+> confidence in alternative methods for resolution. But since it is
+> reflective of our current situation, I cannot consider it a hack.
 > 
-> I'm studying the testing :)
+> This implementation is a reflection of our reality in the kernel, and
+> as has been discussed in this thread, if we want to correct the gaps
+> we need to do a lot of work. And *no one* is working towards these
+> goals.
 > 
-> However, already check the code handling for special inode in leagcy mkfs as below:
+> That said, even if you go forward with an intrusive solution like the
+> one you proposed we could still use the same kconfig_symb...
 > 
-> ```c
->                 break;
->         case EROFS_FT_BLKDEV:
->         case EROFS_FT_CHRDEV:
->         case EROFS_FT_FIFO:
->         case EROFS_FT_SOCK:
->                 mkfs_rank_inode(d);
->                 break;
+> So no, I don't see this as a hack. It's a reflection as to our current
+> reality. And I cannot see how the kconfig_symb can lie or be
+> incorrect. So in fact I think that pushing this forward also makes the
+> problem statement clearer for the future of what semantics needs to be
+> addressed, and helps us even annotate the problematic areas of the
+> kernel.
 > 
->         default:
->                 erofs_err("inode[%s] file_type error =%d",
->                           d->i_fullpath,
-> ```
-> 
-> No special inode layout operations, so this change should be fine.
-> 
-> Thx.
-> 
->>
->> I think that is fine in priciple, however, in case to introduce some potential
->> issues, I will test this patch later. I will give a Reviewed-by tag after I tested
->> this patch.
+> What negative aspects do you see with this being merged in practice?
 
-This patch looks good to me, if this won't fail any tests from Xiang, you can add:
+I'm trying to see what the actual problem that you are wanting to solve
+here with this.  What exactly is it?  Who needs to determine the
+"singular" configuration option that caused a kernel module to be built
+at the expense of all other options?  What can that be used for and who
+will use it?
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+confused,
 
-Thanks,
-
-> 
-> Thanks.
-> 
->>
->> Thanks,
->> Gao Xiang
->>
->>> ---
->>>  drivers/staging/erofs/inode.c | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
->>> index 1433f25..2fe0f6d 100644
->>> --- a/drivers/staging/erofs/inode.c
->>> +++ b/drivers/staging/erofs/inode.c
->>> @@ -205,6 +205,7 @@ static int fill_inode(struct inode *inode, int isdir)
->>>  			S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
->>>  			inode->i_op = &erofs_generic_iops;
->>>  			init_special_inode(inode, inode->i_mode, inode->i_rdev);
->>> +			goto out_unlock;
->>>  		} else {
->>>  			err = -EIO;
->>>  			goto out_unlock;
->>>   
-> 
-> .
-> 
+greg k-h
