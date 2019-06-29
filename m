@@ -2,152 +2,118 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D05C5B57B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA79C5B577
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18383216FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0239A214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:56:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JdzMUl+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfF2TqI (ORCPT
+        id S1726944AbfF2T4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 15:46:08 -0400
-Received: from mailout2n.rrzn.uni-hannover.de ([130.75.2.113]:46469 "EHLO
-        mailout2n.rrzn.uni-hannover.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726901AbfF2TqI (ORCPT
+        Sat, 29 Jun 2019 15:56:17 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39624 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbfF2T4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 15:46:08 -0400
-Received: from [192.168.32.100] (p5DCCE4B4.dip0.t-ipconnect.de [93.204.228.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailout2n.rrzn.uni-hannover.de (Postfix) with ESMTPSA id 1289F1F453;
-        Sat, 29 Jun 2019 21:46:04 +0200 (CEST)
-Subject: Re: [PATCH v2] drivers/block/loop: Replace deprecated function in
- option parsing code
-To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Cc:     "linux-kernel@i4.cs.fau.de" <linux-kernel@i4.cs.fau.de>,
-        Jens Axboe <axboe@kernel.dk>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christian Ewert <christian.ewert@stud.uni-hannover.de>
-References: <BYAPR04MB574936B98A60EB42B9A7C97886E30@BYAPR04MB5749.namprd04.prod.outlook.com>
- <20190625175517.31133-1-florian.knauf@stud.uni-hannover.de>
- <BYAPR04MB574963E31CE0DB5581F5311F86E30@BYAPR04MB5749.namprd04.prod.outlook.com>
-From:   Florian Knauf <florian.knauf@stud.uni-hannover.de>
-Message-ID: <eb0b0981-aba3-93dc-5ae5-d36f1f728024@stud.uni-hannover.de>
-Date:   Sat, 29 Jun 2019 21:46:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Sat, 29 Jun 2019 15:56:17 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m10so16617164edv.6;
+        Sat, 29 Jun 2019 12:56:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KEEhZe9y6Tj5RmcezO+cewOsrq7aqdui6cDX8dh2Q2k=;
+        b=JdzMUl+g0sgQi4R0D+GbHLxaAa5c7AWRgFEEklS/7g6WAeoD6rJIKsdrMTwlbY9rXP
+         oLHHjRu5HRgDSjiwgAgR2TdDmljNPySDVTB16UX/vaiIppKpOjBUNVG6px1Vd64zi5iz
+         VIktfHa4jIIRFZVScW6Su4o6aDd3Tu+RzPh4n/KOLvxOsVZzOhoRxm7bwD3MaUfKLbpO
+         UpEUmQWsHVI8E/tk4c9rVWDmqy3GcC3zlZWnnv4teHQuw2qtnZtmsL4wzWbjqyBVEnwc
+         MyqiZ4WSMKt00UHmIzosXVqHIW9RPCtaZubzJw60t7vFIXOToT1Ls7e0NgNOJ0uFYSRp
+         TkZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KEEhZe9y6Tj5RmcezO+cewOsrq7aqdui6cDX8dh2Q2k=;
+        b=AFHSiKCGytqdq2lGm5Zp1iADP2T1JVBkq8+WHP0rspFAnLFy+hQ1jnBo1WV6iibETB
+         dCOf0fvtDU22O8XX2yeG5cADLD8XWHBOnwbWGljHjNfAHgWNn9GMXd+94U0UFz4O4Yn0
+         zqf+hMfj5RgNv8J8Q188SsY1U4GmntT9Ci1k/lWn2LcA6fekuNBPpVJY43NKRwdgqRlg
+         lBsAd0o5esUybvzsIq2PLyeYjpZq6o0AhyejuBaWKuqsiHnhZUTJggBESWEf22xy3ZDj
+         bhyaoVNFo1ezfqirn6HXdgUnRGMCh6r0RA2bjvx3cZoTNPyClQu1MB3IO3Sjb3gRPUpi
+         icug==
+X-Gm-Message-State: APjAAAXJSoKOkffy18EoJfIW8K2wGD8/qJfOq6mvUM72XRaOloeAo1xO
+        0smaNa/JBCQhSW2yKLxbdXyMM80BLi4XC+zHx6A=
+X-Google-Smtp-Source: APXvYqxN8gyKudU+Xnn2u4IYRblYxfkXdpeZl+cSB3KMU/hJ1uQ2wvTMlirxK6ZIgGSs/Sn7JnpPaVq3iwWKiFzvauw=
+X-Received: by 2002:a17:906:3612:: with SMTP id q18mr15527385ejb.278.1561838175538;
+ Sat, 29 Jun 2019 12:56:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <BYAPR04MB574963E31CE0DB5581F5311F86E30@BYAPR04MB5749.namprd04.prod.outlook.com>
-Content-Type: multipart/mixed;
- boundary="------------696AF862470C2DEF88101BCF"
-Content-Language: en-US
+References: <20190628162831.20645-1-jeffrey.l.hugo@gmail.com> <CAF6AEGuLvgfWYdGm-0caGbWcvzt7raCWkz_sBCxFKV99YQZmeg@mail.gmail.com>
+In-Reply-To: <CAF6AEGuLvgfWYdGm-0caGbWcvzt7raCWkz_sBCxFKV99YQZmeg@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sat, 29 Jun 2019 12:55:59 -0700
+Message-ID: <CAF6AEGty6eJwi5ORm5z5xtC6pKe5iKiSAVLaT_++Qn_ZTX-0zw@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm: Transition console to msm framebuffer
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------696AF862470C2DEF88101BCF
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+On Sat, Jun 29, 2019 at 10:46 AM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Fri, Jun 28, 2019 at 9:28 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> >
+> > If booting a device using EFI, efifb will likely come up and claim the
+> > console.  When the msm display stack finally comes up, we want the
+> > console to move over to the msm fb, so add support to kick out any
+> > firmware based framebuffers to accomplish the console transition.
+> >
+> > Suggested-by: Rob Clark <robdclark@gmail.com>
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+>
+> lgtm,
+>
+> Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-I have now, on the latest staging master (test log attached, everything 
-green), and also learned a lesson about looking more thoroughly for 
-automated test cases. That's a mea culpa, I suppose. :P
+and I'll also add, on yoga c630,
 
-Before this I'd only found the Linux Test Project, which (if I'm not 
-mistaken) contains tests that use loopback devices but no tests that 
-specifically test the loopback driver itself. Given the small scope of 
-the change, we then considered it sufficient to test manually that the 
-loop device still worked and that the max_loop parameter was handled 
-correctly. Of course, the blktests way is better.
+Tested-by: Rob Clark <robdclark@gmail.com>
 
-Thanks for taking the time to answer and review.
 
-Am 25.06.19 um 21:24 schrieb Chaitanya Kulkarni:
-> I believe you have tested this patch with loop testcases present in the
-> :- https://github.com/osandov/blktests/tree/master/tests/loop.
-> 
-> With that, looks good.
-> 
-> Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>.
-> 
-> On 06/25/2019 10:55 AM, Florian Knauf wrote:
->> This patch removes the deprecated simple_strtol function from the option
->> parsing logic in the loopback device driver. Instead kstrtoint is used to
->> parse int max_loop, to ensure that input values it cannot represent are
->> ignored.
->>
->> Signed-off-by: Florian Knauf <florian.knauf@stud.uni-hannover.de>
->> Signed-off-by: Christian Ewert <christian.ewert@stud.uni-hannover.de>
->> ---
->> Thank you for your feedback.
->>
->> There's no specific reason to use kstrtol, other than the fact that we
->> weren't yet aware that kstrtoint exists. (We're new at this, I'm afraid.)
->>
->> We've amended the patch to make use of kstrtoint, which is of course much
->> more straightforward.
->>
->> drivers/block/loop.c | 2 +-
->>    1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
->> index 102d79575895..adfaf4ad37d1 100644
->> --- a/drivers/block/loop.c
->> +++ b/drivers/block/loop.c
->> @@ -2289,7 +2289,7 @@ module_exit(loop_exit);
->>    #ifndef MODULE
->>    static int __init max_loop_setup(char *str)
->>    {
->> -	max_loop = simple_strtol(str, NULL, 0);
->> +	kstrtoint(str, 0, &max_loop);
->>    	return 1;
->>    }
->>
->>
-> 
-
---------------696AF862470C2DEF88101BCF
-Content-Type: text/x-log;
- name="check.log"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="check.log"
-
-loop/001 (scan loop device partitions)                      
-    runtime  0,401s  ...
-loop/001 (scan loop device partitions)                       [passed]
-    runtime  0,401s  ...  0,269s
-loop/002 (try various loop device block sizes)              
-    runtime  0,142s  ...
-loop/002 (try various loop device block sizes)               [passed]
-    runtime  0,142s  ...  0,148s
-loop/003 (time opening and closing an unbound loop device)  
-    runtime  0,047s  ...
-loop/003 (time opening and closing an unbound loop device)   [passed]
-    runtime  0,047s  ...  0,052s
-loop/004 (combine loop direct I/O mode and a custom block size)
-    runtime  0,382s  ...
-loop/004 (combine loop direct I/O mode and a custom block size) [passed]
-    runtime  0,382s  ...  0,383s
-loop/005 (call LOOP_GET_STATUS{,64} with a NULL arg)        
-    runtime  0,024s  ...
-loop/005 (call LOOP_GET_STATUS{,64} with a NULL arg)         [passed]
-    runtime  0,024s  ...  0,025s
-loop/006 (change loop backing file while creating/removing another loop device)
-    runtime  31,071s  ...
-loop/006 (change loop backing file while creating/removing another loop device) [passed]
-    runtime  31,071s  ...  31,050s
-loop/007 (update loop device capacity with filesystem)      
-    runtime  0,417s  ...
-loop/007 (update loop device capacity with filesystem)       [passed]
-    runtime  0,417s  ...  0,351s
-
---------------696AF862470C2DEF88101BCF--
+>
+>
+> > ---
+> >  drivers/gpu/drm/msm/msm_fbdev.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/msm/msm_fbdev.c b/drivers/gpu/drm/msm/msm_fbdev.c
+> > index 2429d5e6ce9f..e3836c7725a6 100644
+> > --- a/drivers/gpu/drm/msm/msm_fbdev.c
+> > +++ b/drivers/gpu/drm/msm/msm_fbdev.c
+> > @@ -169,6 +169,9 @@ struct drm_fb_helper *msm_fbdev_init(struct drm_device *dev)
+> >         if (ret)
+> >                 goto fini;
+> >
+> > +       /* the fw fb could be anywhere in memory */
+> > +       drm_fb_helper_remove_conflicting_framebuffers(NULL, "msm", false);
+> > +
+> >         ret = drm_fb_helper_initial_config(helper, 32);
+> >         if (ret)
+> >                 goto fini;
+> > --
+> > 2.17.1
+> >
