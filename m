@@ -2,104 +2,92 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E926DC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBDCC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59DA217D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2D62086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:32:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lZW1QkFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfF2KbR (ORCPT
+        id S1727000AbfF2Kck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 06:31:17 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:34926 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726941AbfF2KbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 06:31:13 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 76E101A05B9;
-        Sat, 29 Jun 2019 12:31:11 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A438D1A028A;
-        Sat, 29 Jun 2019 12:31:01 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A94E94030F;
-        Sat, 29 Jun 2019 18:30:49 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, viresh.kumar@linaro.org, ping.bai@nxp.com,
-        daniel.baluta@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com,
-        andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca,
-        agx@sigxcpu.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 2/2] arm64: dts: imx8mq: Correct OPP table according to latest datasheet
-Date:   Sat, 29 Jun 2019 18:21:57 +0800
-Message-Id: <20190629102157.8026-2-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20190629102157.8026-1-Anson.Huang@nxp.com>
-References: <20190629102157.8026-1-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sat, 29 Jun 2019 06:32:40 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34996 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbfF2Kck (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 06:32:40 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5TASv4t078874;
+        Sat, 29 Jun 2019 10:32:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=2oU+baNnGYXLU4uPl5XcwjOYu5QeXXsmvgarRO4YJus=;
+ b=lZW1QkFJN6GpNXLAAUB/sWg4pjVBfdAQ5bNF5+MI4ots4E+FR7Y+NDgtogqXEQFmEvzP
+ gG3gkxPzht/ACgvfxfDpbfGhUid1LdGAyucfbaSh8t1qPoTywZT98zATH4bqnqz5Pyon
+ Uc0Fy5JI9hkGq9HPigW988LJ8cjXt7bxXODtuTF22Z3xQx3ERTE2dcComsZT4aa/Njjr
+ p9ySP6TbPuh7fVPe5hCoo0WOKXTpn8TgkAXQG0wFt/PCDRzjiuYBWEmdKJ+V6LGejJD2
+ bh6ewWZd7NMjuRSbV8hm14QiEbajwFZfih0Ra14TuzAqU6VJCys0/TQtz2IT3QEhZMkV 3g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2te61pg0mu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 29 Jun 2019 10:32:36 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5TAW0ON085529;
+        Sat, 29 Jun 2019 10:32:35 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2tdx1a3kda-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Jun 2019 10:32:35 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5TAWYBw028039;
+        Sat, 29 Jun 2019 10:32:34 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 29 Jun 2019 03:32:33 -0700
+Date:   Sat, 29 Jun 2019 13:32:24 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/10] staging/rtl8723bs/hal: fix comparison to
+ true/false is error prone
+Message-ID: <20190629103222.GH19015@kadam>
+References: <20190629101909.GA14880@hari-Inspiron-1545>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190629101909.GA14880@hari-Inspiron-1545>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906290132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906290132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+You sent 10 patches with the same subject.
 
-According to latest datasheet (Rev.1, 10/2018) from below links,
-in the consumer datasheet, 1.5GHz is mentioned as highest opp but
-depends on speed grading fuse, and in the industrial datasheet,
-1.3GHz is mentioned as highest opp but depends on speed grading
-fuse. 1.5GHz and 1.3GHz opp use same voltage, so no need for
-consumer part to support 1.3GHz opp, with same voltage, CPU should
-run at highest frequency in order to go into idle as quick as
-possible, this can save power.
+Btw, I can't recall ever seeing a bug caused by a true false comparison.
+I agree on style principles with the checkpatch warning, but I do
+think it over states the risk (which is as far as I can see is zero).
 
-That means for consumer part, 1GHz/1.5GHz are supported, for
-industrial part, 800MHz/1.3GHz are supported, and then check the
-speed grading fuse to limit the highest CPU frequency further.
-Correct the market segment bits in opp table to make them work
-according to datasheets.
-
-https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQIEC.pdf
-https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQCEC.pdf
-
-Fixes: 12629c5c3749 ("arm64: dts: imx8mq: Add cpu speed grading and all OPPs")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- remove the comment to avoid any confusion.
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 9d99191..477c523 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -169,15 +169,14 @@
- 		opp-1300000000 {
- 			opp-hz = /bits/ 64 <1300000000>;
- 			opp-microvolt = <1000000>;
--			opp-supported-hw = <0xc>, <0x7>;
-+			opp-supported-hw = <0xc>, <0x4>;
- 			clock-latency-ns = <150000>;
- 		};
- 
- 		opp-1500000000 {
- 			opp-hz = /bits/ 64 <1500000000>;
- 			opp-microvolt = <1000000>;
--			/* Consumer only but rely on speed grading */
--			opp-supported-hw = <0x8>, <0x7>;
-+			opp-supported-hw = <0x8>, <0x3>;
- 			clock-latency-ns = <150000>;
- 		};
- 	};
--- 
-2.7.4
+regards,
+dan carpenter
 
