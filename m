@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B61C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E228C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65AE9217D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314DA2086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:27:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dho7eNQ3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKdmZG2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfF2K0S (ORCPT
+        id S1726990AbfF2K12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 06:26:18 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42867 "EHLO
+        Sat, 29 Jun 2019 06:27:28 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33602 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfF2K0S (ORCPT
+        with ESMTP id S1726839AbfF2K11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 06:26:18 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t132so353399pgb.9
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 03:26:18 -0700 (PDT)
+        Sat, 29 Jun 2019 06:27:27 -0400
+Received: by mail-pg1-f196.google.com with SMTP id m4so3728934pgk.0
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 03:27:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
         bh=ufreqsCqUEbtwakQjfPG4/XQRKe+4sPPeMiA/RmTprM=;
-        b=Dho7eNQ35SIyPNTS5qQQ9O587OsHxdkVAYouk63JcVIwNEL9lPwUKJExKokYaLWNX1
-         DZIlbYQghqtSNwrxpE6B5pAfwL5WOST9YHz6/WlIcI/ShbF32WL0kQ8Yi1nXihz0uBk1
-         z18GmAc9Fl0xS57Jk9kN0X8jBwtu/bI1k7U4+PZHh6DOlKVZC2Ga+3C93TNvlUe+c17E
-         9DChqt+1QCSJwtCQjR1vL9KaxvywQHt5CTQuky1vE5BYfe2XsX/zl3UyaVkK05i4HLED
-         Aw0Mh5XjZqZzITiksUK49sZ04c0m1JrF8WEE+8etK9Y8jjIojdOXfumlOlcE16p9T+wl
-         5eiQ==
+        b=cKdmZG2fv2FHyq/gn/WOY2fDnZNUuTcUVfnB4nLqEAMAuWtVkSOgN0EBoQFxbmI2sC
+         kLg51yMJLQdyZoqoQJLsLVglMD8dhONK+dIblCpriafBpJAN3lDXcHADZsw6rXN1cIOV
+         tJJi6JKUh4ybqBp8oi2KqNO4EyxOOB6aSRWsX7p9l6kqGVjz5+FjYCcUC9y0gwPM1JhE
+         GrEISObJScRohTISa26+gFXHGtL4m8XVNm9sqtHvJH8gNU0bKCu7oomgNIeZjUDmMsjS
+         cAHQUQMOxe4t8kJ+ZpPwTC+0hngYLr1hIlylIssQRwK7wpBMonPTgbhNija94oDUK/ST
+         x71w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
         bh=ufreqsCqUEbtwakQjfPG4/XQRKe+4sPPeMiA/RmTprM=;
-        b=EWu2VIa6PomzPzaCXyzuw4B6qdVfHcP3rvEu/YqcI1yyx84WyIj6vqEbM4rDa/za8f
-         Lk130gld0uw8fmiZTQohqIuhiMeaKhUMZhvlOdTTrt4WeypVuhKKfdEfRfQDGSAkApqQ
-         wbmqQH/nWkwtILnR2mEYmah2FMrzN+eP4YS1eT3gTdi6G4YhhMx+QUVQFB3ADk65hd98
-         sDXsxVXm7o0335Hdr943HKbm6yFbDrXFzpj5TQaPq06eOzeJd6KCnVkyZdgd9NioRwUf
-         Sce2yaGuWLNWBUdiJANqZ6cA4IbDxPp8CEiSyp69XWTjkzYdoeDJYY2APEulfEOc3wvz
-         soyA==
-X-Gm-Message-State: APjAAAVIJvh3TD+2D6lR8BiKh6KWuJtXgCXGFvqOyfm7nJ62tcjBMpNx
-        nb+r03+VZwEcETbSKZI7MZ4=
-X-Google-Smtp-Source: APXvYqwBKGNKE3vZ+Zq3TlQ7LCTTVgLrGQhenDVitR7CKr7vXXkcOv+Od0d+XRptoBRec8S7tS0MVw==
-X-Received: by 2002:a17:90a:30cf:: with SMTP id h73mr18934769pjb.42.1561803978031;
-        Sat, 29 Jun 2019 03:26:18 -0700 (PDT)
+        b=AlBdaBqB6R4JnaCRIOifAG3DLyxsjTUKCiXxlB9AT6n3BsYshOeyQyi/4cbIVTKK7g
+         clUlq3SVL+iRyK+WTvQf+dm8WFZthL6CFQT/Xob0B97ShkmYvbt4g46N4nRlcfET64w2
+         I0QGN7/8p100swAW5RdIqE+6XFQH0DkB+/jqE40GaFHmt5W4jMU1xylbgB5xJryOjYVQ
+         NfUIxzn3HuVO+Qf5qELoPOGxex2zX1jCtWhhw06tO9TH7JH0vbYTyBmSMFQyJqvTBN95
+         +T96yOMkVhSfYj6AFbHs046xzq7tYFaMVfk7MZW2oChdx70hgOvIibAKjzv6nr7IlDtE
+         zKqw==
+X-Gm-Message-State: APjAAAXmFvWnzGl+OVH7GSqCtw+YhBleynDo/AYcGtlLAnN0hG49TIRp
+        Ii1ZQFk9+PzI+8Zd2/RjUME=
+X-Google-Smtp-Source: APXvYqwaG/2Dn1EssqX0/2D6nzUNtjJIVIVQ/SdduLespqMNDIkEbPkRWjTzg5DrjWSFmxl9BTJqTA==
+X-Received: by 2002:a63:231c:: with SMTP id j28mr13633480pgj.430.1561804046903;
+        Sat, 29 Jun 2019 03:27:26 -0700 (PDT)
 Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id x128sm13085346pfd.17.2019.06.29.03.26.16
+        by smtp.gmail.com with ESMTPSA id b29sm11633100pfr.159.2019.06.29.03.27.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 03:26:17 -0700 (PDT)
-Date:   Sat, 29 Jun 2019 15:56:14 +0530
+        Sat, 29 Jun 2019 03:27:26 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 15:57:22 +0530
 From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hariprasad Kelam <hariprasad.kelam@gmail.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
 Subject: [PATCH 07/10] staging/rtl8723bs/hal: fix comparison to true/false is
  error prone
-Message-ID: <20190629102614.GA15248@hari-Inspiron-1545>
+Message-ID: <20190629102722.GA15300@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
