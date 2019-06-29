@@ -2,96 +2,158 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E301C5B57A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 09:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8354C5B579
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 09:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C89F214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 09:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561799247;
-	bh=+pOxQU6jSteF5aiA2otLMOKUGncIApCCJZOBitvQK7w=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=taDDYvvt1TYeZ/zUdqhRRMNNrfVjlUyiWt3RL7WhyPimS+5ON5aoTW75NT4HI5CEr
-	 D9g6g2loAhkvpaEC/imMdnNX0cZGVghsqZSgGVz9b0u9DRnpEuCYsjJ0yd5xxzxerh
-	 2/OYwJEw5MPtDG+QmgRx5d4/SOcETSYL4x0AWkNI=
+	by mail.kernel.org (Postfix) with ESMTP id CB64D214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 09:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfF2JHY (ORCPT
+        id S1726931AbfF2JOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 05:07:24 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33676 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfF2JHX (ORCPT
+        Sat, 29 Jun 2019 05:14:04 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:37993 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726818AbfF2JOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 05:07:23 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q20so8521321otl.0;
-        Sat, 29 Jun 2019 02:07:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Ry0ikm9jlJIGPa85x3qVakAXT3GF98XkEln9GjZGy08=;
-        b=E69qwa8qQUd5RtGkz7SPJkWvSMxk7vArVhBA4nHx3WOIuL1NqgUMv9YUn7G4k5bTiw
-         08NIKNaoXkp0VmIQDVdTPWL2z5y0x2w2EY3bFWyAS4/ENCseIZU0jPlzWda71fw6BkR6
-         prYRBYLZE9pFmjR4Ovri7XXq2ElsmuzXmLBqGkiGPjYq7l5O0ClT9t0EzbIW48/EyiKM
-         +JEepAVeNbPfpuNGGtNiNFW8CB8dWOhG+JBM6Ghg0cL3WJ+gb/28/m4H08wqwKAzbPa7
-         RPw+wSZNUg691DAriBvu0cFOfpgMmprFp9ldRUL8fnpfEaATiONfcWMqrECbG4ZlIs+e
-         EjPg==
-X-Gm-Message-State: APjAAAVAZqUE/2FE6mKggO7mrhfKZYWMS/S7BRKZ04vF6amiZbcatGyo
-        stybQSefByw9sYX/vgKKpVlwUFn3iLHuVS+um9WreTFf
-X-Google-Smtp-Source: APXvYqwGyLH5570+dqH9wO99dggC8HFynAKWOaBFTQQyCjPw3pM+ZlRMu6ExF8TxHk0GYk5P1I9OlI5+Cs/AaAimzRU=
-X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr12133029otn.266.1561799242826;
- Sat, 29 Jun 2019 02:07:22 -0700 (PDT)
+        Sat, 29 Jun 2019 05:14:03 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id h9Qjh6jrP2g2jh9QmhegYe; Sat, 29 Jun 2019 11:14:01 +0200
+Subject: Re: [PATCH v7 0/3] media: v4l2-subdev: Verify arguments in
+ v4l2_subdev_call()
+To:     =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@fsdn.se>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190520212747.368-1-jmkrzyszt@gmail.com>
+ <20190629032817.GQ32581@bigcity.dyn.berto.se>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <859e0e85-f09c-f143-e4f8-2ff1f4cf04c1@xs4all.nl>
+Date:   Sat, 29 Jun 2019 11:13:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sat, 29 Jun 2019 11:07:09 +0200
-Message-ID: <CAJZ5v0ieD3bohHtsk4dZtZL-oJF8NUz5MJ3p+zHvQ2McgaSqaw@mail.gmail.com>
-Subject: [GIT PULL] Power management fix for v5.2-rc7
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190629032817.GQ32581@bigcity.dyn.berto.se>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfNqVc+Sy6bjEMOPneC0xOnJOBzdfDknbFBMiM/tdG3gNu1++KyGQwC2WFwMs4SEqa55kGaKiXRAh5aiqNPoeBkoXetbLAh2f1dsZ4ATZSrFluM26ilf0
+ npzyqWniac1TXDLbRTroWYNyuqb1L0hGoqMJii9DaLlNqC9vjTPnqo5mQ026rKjgSx5QdUcZaT6xTMy/VIA7TARKfcXEp+8qDd9rgFiMVS3jaPmD97w+junu
+ qDqjtJzElyNZngblRzMa/biFHdHv4gTRmp1kOfpe2oU+Nd28uC5wfF8xsWD29MqYJi31bxvspHYBx2QVm471KZyQuEfMVIpIhavlCM4NFxo6oMoN1DJKW/E2
+ GPilQ96g
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 6/29/19 5:28 AM, Niklas Söderlund wrote:
+> Hi,
+> 
+> This patch breaks rcar-vin. I'm sorry I did not find out before it was 
+> merged as a8fa55078a7784a9 ("media: v4l2-subdev: Verify arguments in 
+> v4l2_subdev_call()").
+> 
+> The problem is that rcar-vin calls enum_mbus_code in its bound callback.  
+> At this point call_enum_mbus_code() is invoked which then calls 
+> check_pad(). At this point sd->entity.graph_obj.mdev is not set so the 
+> check if (pad > 0) fails and the binding of the subdevice in rcar-vin 
+> fails.
+> 
+> I'm not sure how to best solve this, suggestions are appreciated. I see 
+> two options, move the call to enum_mbus_code from the bound to the 
+> complete callback or make sure the mdev is associated with the subdev 
+> before the bound callback is invoked. I don't like the former as I think 
+> the complete callback should be removed ;-)
 
-Please pull from the tag
+I don't think check_pad() should check mdev. Try this instead:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.2-rc7
+static inline int check_pad(struct v4l2_subdev *sd, __u32 pad)
+{
+#if defined(CONFIG_MEDIA_CONTROLLER)
+	if (sd->entity.num_pads)
+	        return pad >= sd->entity.num_pads ? -EINVAL : 0;
+#endif
+	/* allow pad 0 on subdevices not registered as media entities */
+	return pad ? -EINVAL : 0;
+}
 
-with top-most commit 471a739a47aa7d582f0cdf9d392957d04632bae2
+If the subdev defines pads, then sd->entity.num_pads is non-zero and it can
+be used to check the pad value, otherwise it should just only accept pad 0.
 
- PCI: PM: Avoid skipping bus-level PM on platforms without ACPI
+And it shouldn't depend on mdev, since that (as you discovered) may not be
+set yet.
 
-on top of commit 4b972a01a7da614b4796475f933094751a295a2f
+Regards,
 
- Linux 5.2-rc6
+	Hans
 
-to receive a PCI power management fix for 5.2-rc7.
+> 
+> On 2019-05-20 23:27:44 +0200, Janusz Krzysztofik wrote:
+>> Correctness of format type (try or active) and pad ID parameters passed
+>> to subdevice operation callbacks is now verified only for IOCTL calls.
+>> However, those callbacks are also used by drivers, e.g., V4L2 host
+>> interfaces.
+>>
+>> Since both subdev_do_ioctl() and drivers are using v4l2_subdev_call()
+>> macro while calling subdevice operations, move those parameter checks
+>> from subdev_do_ioctl() to v4l2_subdev_call().  Also, add check for
+>> non-NULL pointers, including pad config if V4L2_SUBDEV_FORMAT_TRY is
+>> requested.
+>>
+>> Having that done, we can avoid taking care of those checks inside
+>> drivers.
+>>
+>> Janusz Krzysztofik (3):
+>>   media: v4l2-subdev: Verify arguments in v4l2_subdev_call()
+>>   media: v4l2-subdev: Verify v4l2_subdev_call() pointer arguments
+>>   media: v4l2-subdev: Verify v4l2_subdev_call() pad config argument
+>>
+>>  drivers/media/v4l2-core/v4l2-subdev.c | 268 +++++++++++++++++---------
+>>  include/media/v4l2-subdev.h           |   6 +
+>>  2 files changed, 188 insertions(+), 86 deletions(-)
+>>
+>> Changelog:
+>> v6->v7:
+>> Changes suggested by Sakari - thanks!
+>> - never succeed pad check on media entities with pad_num == 0,
+>> - allow pad 0 on subdevies not registered as media entities.
+>>
+>> v5->v6:
+>> - rename wrappers to call_something() as suggested by Sakari - thanks!
+>> - make check_ functions inline - also on Sakari's suggestion, thanks!
+>> - drop patch 2/4 and remove WARN_ONs from remaining patches to avoid
+>>   kernel WARNs on non-kernel bugs - thanks Hans for pointing this out!
+>>
+>> v4->v5:
+>> - a few coding style and code formatting changes,
+>> - require CONFIG_MEDIA_CONTROLLER, not CONFIG_VIDEO_V4L2_SUBDEV_API,
+>>   for a valid pad ID check,
+>> - perform pad ID check only if at least one pad is configured so
+>>   drivers which don't configure pads are not affected if built with
+>>   CONFIG_MEDIA_CONTROLLER defined,
+>> - issue kernel warnings on invalid parameters (new patch - 2/4),
+>> - validate pointers before using them (new patch - 3/4).
+>>
+>> v3->v4:
+>> - fix 'struct' keyword missing from patch 2/2,
+>> - fix checkpatch reported style issue in patch 2/2
+>> Sorry for that.
+>>
+>> v2->v3:
+>> - add patch 2/2 with pad config check,
+>> - adjust continuation line alignments in patch 1/2 to match those
+>>   used in 2/2.
+>>
+>> v1->v2:
+>> - replace the horrible macro with a structure of wrapper functions;
+>>   inspired by Hans' and Sakari's comments - thanks!
+>>
+>> -- 
+>> 2.21.0
+>>
 
-This avoids skipping bus-level PCI power management during system
-resume for PCIe ports left in D0 during the preceding suspend
-transition on platforms where the power states of those ports
-can change out of the PCI layer's control.
-
-Thanks!
-
-
----------------
-
-Rafael J. Wysocki (1):
-      PCI: PM: Avoid skipping bus-level PM on platforms without ACPI
-
----------------
-
- drivers/pci/pci-driver.c |  8 ++++----
- include/linux/suspend.h  | 26 ++++++++++++++++++++++++--
- kernel/power/suspend.c   |  3 +++
- 3 files changed, 31 insertions(+), 6 deletions(-)
