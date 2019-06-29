@@ -2,86 +2,93 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309ECC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC70EC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C2E214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C48B214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561794799;
+	bh=eXUSg5gAEOz4gIaibl+P2xmyG9y3MtvzIka3bgkCHPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T6KrTMuO8v15badufjXVQRCemNGfgpA9LZyiYUtCRzp2exfi//sukEfUZMv3wVGLm
+	 SyVMg/PxMJ5ba2UVn0hN3kIInZO2MBpq9hhag2aku4LVCQw0z1VXuo3lHgqp6L8qcE
+	 EANGMZDS4W0UnbpjYH5AEpdW+VZ16KxqAI3AMH7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfF2HtG (ORCPT
+        id S1726863AbfF2HxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 03:49:06 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:42778
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726796AbfF2HtG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 03:49:06 -0400
-X-IronPort-AV: E=Sophos;i="5.63,430,1557180000"; 
-   d="scan'208";a="311853501"
-Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jun 2019 09:49:04 +0200
-Date:   Sat, 29 Jun 2019 09:49:04 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Wen Yang <wen.yang99@zte.com.cn>, linux-kernel@vger.kernel.org,
-        cocci@systeme.lip6.fr, Yi Wang <wang.yi59@zte.com.cn>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [v2] coccinelle: semantic code search for missing of_node_put
-In-Reply-To: <76641efc-2e3e-8664-03b2-4eb82f01c275@web.de>
-Message-ID: <alpine.DEB.2.21.1906290947470.2579@hadrien>
-References: <1561690732-20694-1-git-send-email-wen.yang99@zte.com.cn> <904b9362-cd01-ffc9-600b-0c48848617a0@web.de> <76641efc-2e3e-8664-03b2-4eb82f01c275@web.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 29 Jun 2019 03:53:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726789AbfF2HxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 03:53:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06BE02083B;
+        Sat, 29 Jun 2019 07:53:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561794796;
+        bh=eXUSg5gAEOz4gIaibl+P2xmyG9y3MtvzIka3bgkCHPk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ODorpqjjRnnfWVgc4AoMyhb95CgAYXOg95HTZNCI2fdm9S5IZJzrwvPKO+bvpfZoB
+         l8I7tpjsrJxntfggfnIGQR395WNwx/gxF1kdqB11ihc+NsRu8mKMAnoBtICevomkBL
+         MweFIxCIiw01QKFBB0/3L9XQFo0lCVYl1sWcnc2A=
+Date:   Sat, 29 Jun 2019 09:53:12 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        David Miller <davem@davemloft.net>, brian.brooks@linaro.org,
+        linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        nadavh@marvell.com, stefanc@marvell.com,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: Re: [PATCH] driver core: platform: Allow using a dedicated dma_mask
+ for platform_device
+Message-ID: <20190629075312.GB28708@kroah.com>
+References: <20190628141550.22938-1-maxime.chevallier@bootlin.com>
+ <20190628155946.GA16956@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-766857525-1561794544=:2579"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628155946.GA16956@infradead.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, Jun 28, 2019 at 08:59:46AM -0700, Christoph Hellwig wrote:
+> I'd much rather bite the bullet and make dev->dma_mask a scalar
+> instead of a pointer.  The pointer causes way to much boiler plate code,
+> and the semantics are way to subtile.  Below is a POV patch that
+> compiles and boots with my usual x86 test config, and at least compiles
+> with the arm and pmac32 defconfigs.  It probably breaks just about
+> everything else, but should give us an idea what is involve in the
+> switch:
+> 
+> ---
+> >From ea73ba2d29f56ff6413066b10f018a671f2b26ac Mon Sep 17 00:00:00 2001
+> From: Christoph Hellwig <hch@lst.de>
+> Date: Fri, 28 Jun 2019 16:24:01 +0200
+> Subject: device.h: make dma_mask a scalar instead of a pointer
+> 
+> Kill the dma_mask indirection to clean up the mess we acquired around
+> it.
 
---8323329-766857525-1561794544=:2579
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+I have no objection to this at all.  I would love to see the indirection
+go away.
 
+thanks,
 
-
-On Sat, 29 Jun 2019, Markus Elfring wrote:
-
-> >> +if (x == NULL || ...) S
-> >> +... when != e = (T)x
-> >> +    when != true x == NULL
-> >
-> > I wonder if this code exclusion specification is really required
-> > after a null pointer was checked before.
->
-> I would like to add another view for this implementation detail.
->
-> The when constraint can express a software desire which can be reasonable
-> to some degree. You would like to be sure that a null pointer will not occur
-> after a corresponding check succeeded.
-
-He wants to be sure that the true branch through a NULL pointer check is
-not taken.
-
-> * But I feel unsure about the circumstances under which the Coccinelle software
->   can determine this aspect actually.
->
-> * I find that it can eventually make sense only after the content of
->   the local variable (which is identified by “x”) was modified.
->   Thus I would find the exclusion of assignments more useful at this place.
-
-I assume that it was added because it was found to be useful.  Please
-actually try things out before declaring them to be useless.
-
-julia
---8323329-766857525-1561794544=:2579--
+greg k-h
