@@ -6,91 +6,84 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE7FC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1EAC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290622086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03B32086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfF2OJn (ORCPT
+        id S1726891AbfF2OOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 10:09:43 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:54212 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726731AbfF2OJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 10:09:43 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hhE2n-00029i-Fh; Sat, 29 Jun 2019 16:09:33 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Brian Norris <briannorris@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Enric =?ISO-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v5 0/7] drm/panel: simple: Add mode support to devicetree
-Date:   Sat, 29 Jun 2019 16:09:32 +0200
-Message-ID: <2169143.hEFa8b2HQR@diego>
-In-Reply-To: <20190628171342.GA2238@ravnborg.org>
-References: <20190401171724.215780-1-dianders@chromium.org> <CAD=FV=Vi2C7s2oWBDD0n+HK=_SuBYhRM9saMK-y6Qa0+k-g17w@mail.gmail.com> <20190628171342.GA2238@ravnborg.org>
+        Sat, 29 Jun 2019 10:14:02 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3016 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726770AbfF2OOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 10:14:02 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id EBD3F63A0F28E98C15C6;
+        Sat, 29 Jun 2019 22:13:59 +0800 (CST)
+Received: from dggeme766-chm.china.huawei.com (10.3.19.112) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 29 Jun 2019 22:13:59 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme766-chm.china.huawei.com (10.3.19.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Sat, 29 Jun 2019 22:13:59 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1591.008;
+ Sat, 29 Jun 2019 22:13:59 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     David Ahern <dsahern@gmail.com>,
+        "pablo@netfilter.org" <pablo@netfilter.org>
+CC:     "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjRdIG5ldDogbmV0ZmlsdGVyOiBGaXggcnBmaWx0?=
+ =?utf-8?Q?er_dropping_vrf_packets_by_mistake?=
+Thread-Topic: [PATCH v4] net: netfilter: Fix rpfilter dropping vrf packets by
+ mistake
+Thread-Index: AdUuGy8DDB3uB4ksWUWckzFOhXp+DAAFqTYAABSVBMA=
+Date:   Sat, 29 Jun 2019 14:13:59 +0000
+Message-ID: <cef929f9a14f462f9f7d3fa475f84e76@huawei.com>
+References: <2213b3e722a14ee48768ecc7118efc46@huawei.com>
+ <08740476-acfb-d35a-50b7-3aee42f23bfa@gmail.com>
+In-Reply-To: <08740476-acfb-d35a-50b7-3aee42f23bfa@gmail.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.184.189.20]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
-
-Am Freitag, 28. Juni 2019, 19:13:42 CEST schrieb Sam Ravnborg:
-> Hi Doug.
-> 
-> > Sam: Oh!  I hadn't noticed that you've been added as a panel
-> > maintainer in commit ef0db94f94a0 ("MAINTAINERS: Add Sam as reviewer
-> > for drm/panel").  Does that mean you are able to provide some advice
-> > for how to land this series?
-> Reviewer only, not maintainer....
-> 
-> It is on my TODO list for the weekend to go through the patch set in
-> details and provide feedback. I have read them before, but I miss to do
-> a more detailed read through.
-> 
-> But I cannot apply this unless Thierry or one of the DRM maintainers
-> ack it.
-> We simply need someone with a better general knowledge of DRM to ack it
-> than I have.
-
-So Thierry was able to look at the patches yesterday it seems and has Acked
-all the relevant ones. As a drm-misc-contributor I could also apply them
-myself, but now don't want to preempt any additional comments you might
-have ;-) . So I guess my question would be if you still want to do a review
-or if I should apply them.
-
-
-In any case, I'd like to take the actual dts patches (patches 3+6+7 if
-I'm not mistaken) through my tree up to arm-soc after the fact, to
-prevent conflicts.
-
-Thanks
-Heiko
-
-
+T24gNi8yOS8xOSAyMDoyMCBQTSwgRGF2aWQgQWhlcm4gd3JvdGU6DQo+IE9uIDYvMjgvMTkgODox
+MyBQTSwgbGlubWlhb2hlIHdyb3RlOg0KPiA+IFlvdSdyZSByaWdodC4gRmliIHJ1bGVzIGNvZGUg
+d291bGQgc2V0IEZMT1dJX0ZMQUdfU0tJUF9OSF9PSUYgZmxhZy4gIA0KPiA+IEJ1dCBJIHNldCBp
+dCBoZXJlIGZvciBkaXN0aW5ndWlzaCB3aXRoIHRoZSBmbGFncyAmIFhUX1JQRklMVEVSX0xPT1NF
+IA0KPiA+IGJyYW5jaC4gV2l0aG91dCB0aGlzLCB0aGV5IGRvIHRoZSBzYW1lIHdvcmsgYW5kIG1h
+eWJlIHNob3VsZCBiZSAgDQo+ID4gY29tYmluZWQuIEkgZG9uJ3Qgd2FudCB0byBkbyB0aGF0IGFz
+IHRoYXQgbWFrZXMgY29kZSBjb25mdXNpbmcuDQo+ID4gSXMgdGhpcyBjb2RlIHNuaXBldCBiZWxv
+dyBvayA/IElmIHNvLCBJIHdvdWxkIGRlbGV0ZSB0aGlzIGZsYWcgc2V0dGluZy4NCj4gPiAgDQo+
+ID4gICAgICAgIH0gZWxzZSBpZiAobmV0aWZfaXNfbDNfbWFzdGVyKGRldikgfHwgbmV0aWZfaXNf
+bDNfc2xhdmUoZGV2KSkgew0KPiA+ICAgICAgICAgICAgICAgIGZsNi5mbG93aTZfb2lmID0gZGV2
+LT5pZmluZGV4Ow0KPiA+ICAgICAgICAgfSBlbHNlIGlmICgoZmxhZ3MgJiBYVF9SUEZJTFRFUl9M
+T09TRSkgPT0gMCkNCj4gPiAgICAgICAgICAgICAgICAgZmw2LmZsb3dpNl9vaWYgPSBkZXYtPmlm
+aW5kZXg7DQoNCj4gdGhhdCBsb29rcyBmaW5lIHRvIG1lLCBidXQgaXQgaXMgdXAgdG8gUGFibG8u
+DQoNCkBEYXZpZCBBaGVybiAgTWFueSB0aGFua3MgZm9yIHlvdXIgdmFsdWFibGUgYWR2aWNlLg0K
+DQpAIFBhYmxvIEhpLCBjb3VsZCB5b3UgcGxlYXNlIHRlbGwgbWUgaWYgdGhpcyBjb2RlIHNuaXBl
+dCBpcyBvaz8NCklmIG5vdCwgd2hpY2ggY29kZSB3b3VsZCB5b3UgcHJlZmVyPyBJdCdzIHZlcnkg
+bmljZSBvZiB5b3UgdG8NCmZpZ3VyZSBpdCBvdXQgZm9yIG1lLiBUaGFua3MgYSBsb3QuDQoNCkhh
+dmUgYSBuaWNlIGRheS4NCkJlc3Qgd2lzaGVzLg0K
