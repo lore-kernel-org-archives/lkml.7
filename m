@@ -2,139 +2,243 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6C8C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA9BC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0E3215EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93687214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NroLZ76O"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Kg/T8ZN0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfF2PPi (ORCPT
+        id S1726866AbfF2PYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 11:15:38 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34947 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfF2PPi (ORCPT
+        Sat, 29 Jun 2019 11:24:39 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40974 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbfF2PYj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 11:15:38 -0400
-Received: by mail-pf1-f194.google.com with SMTP id d126so4412927pfd.2;
-        Sat, 29 Jun 2019 08:15:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GttoCpwXZ0YnEgD480v+8xB8TagEdr3d83SlTOyEyRY=;
-        b=NroLZ76Oo2crKQBJo8fp4wAzbrnPDUyi6puDLTX4qr11cTGH0bOeLepMhvdQwo020B
-         6pSoWWR3kH9ARotFu1VoLKq6TSkJTxnPuTI+vnkbouCiYTmlB0siA0LLLwkSWELVY4CK
-         B+AHB27xD0ZZtvlZYod6I2Kb2OBLCXiVyLpVClEMHQnK9lP8gLwCCqFYFsjv0bK9djvg
-         Ip/SsNDsbNHaOhOd02uWeVmcEQMegCbYeZeUFqCm22rmEQRnUUfF69IsdbjxePKKKYqS
-         xiuv7ChyahFmSIJuO7fdh+Iu669GD3DcuLWeVzI495UDhi+Douu8YoWlFVimf0oV7mWe
-         xUDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GttoCpwXZ0YnEgD480v+8xB8TagEdr3d83SlTOyEyRY=;
-        b=OR6vOQFMjQrzauk+EcQ8X4Se1IGWpxi+lgYBp19LU0wp4mZmudOOfquyu8mSPbLW23
-         vhPgRi9ZymSVDugEcEuDrzj4i7jYKz7MJHfRB1YL84p3C6u3B9fz5VNtSv5BxmByaDZ/
-         D9lBCgd9xcfLQI9TaUz2tBdlHR1ijAOiFJXg/394Yg1sx0aaNdjAnuN5pVJAqljAMQmH
-         JDUQ/ssxhhK+4Fme+PgybRouJGyjBvh6vQ+SRhqh5mleONg5Ps65XzRo+KD65dD/dGoq
-         05eA94iR7Yym8c+dWRuSmnui97D+ZItFUdkhb0cCBm1sssCXdJHOPBohueoBLFT7Ax3t
-         f7OQ==
-X-Gm-Message-State: APjAAAVkqlFkv9Z9j0WHGhFk0Zhz94BM63aDg2TQdfFxyMufC4vPJ/Iw
-        Sdu81GNyJEvbtFeYkWprN+s=
-X-Google-Smtp-Source: APXvYqyVpBWX0MYstsM24PSiU2G6Tv937ge94evRwlPCysvJPgEe57082Y4skMOs3eYeU4vWifx+4w==
-X-Received: by 2002:a63:4e58:: with SMTP id o24mr14663917pgl.366.1561821337246;
-        Sat, 29 Jun 2019 08:15:37 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 85sm8120381pfv.130.2019.06.29.08.15.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 08:15:36 -0700 (PDT)
-Date:   Sat, 29 Jun 2019 08:15:35 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/16] sh: use the generic get_user_pages_fast code
-Message-ID: <20190629151535.GA18067@roeck-us.net>
-References: <20190625143715.1689-1-hch@lst.de>
- <20190625143715.1689-7-hch@lst.de>
+        Sat, 29 Jun 2019 11:24:39 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5TFKfvP148349;
+        Sat, 29 Jun 2019 15:24:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=4OHLK4IWIUnj6L3SkVEiPHXjBaVqnaA9UEdmYiKZwwg=;
+ b=Kg/T8ZN0wWYoQgjjRK105k/MzXc/SM0KUMguWeKPQi1wCDb5KkowkOKAc+eZEBt3PysI
+ FopjaD0TSGtkdMGsA9IdYfmqRP2Z0xOQ5Axsy+oEJyxiGSGeR36yeu2XmUm199B+iNTa
+ O2mIIIIJXGZIW22hJo7vlHrl/CL8bs55KIzBljsKtFpQ0qgi8zWBzhpQf7Ugb2NUbUpe
+ glyog0BLncSx51SxU6CXDwZw4snTa6ZTlBmfi2bo7q4B6Q33w7fKKHTi3lHZVJ5elZQ8
+ in7+oetTHEFUa6A6POE/cm5jOLD3b53I/FiFs6JuwEFi94emEPeOnCGW1tJ6mGZ7t8U1 3Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2te5tb8d8x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Jun 2019 15:24:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5TFO3k5139273;
+        Sat, 29 Jun 2019 15:24:32 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2tdw3sdjdk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Jun 2019 15:24:31 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5TFOQoj019427;
+        Sat, 29 Jun 2019 15:24:26 GMT
+Received: from [10.175.49.61] (/10.175.49.61)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 29 Jun 2019 08:24:26 -0700
+Subject: Re: [PATCH v8 4/5] x86/xsave: Make XSAVE check the base CPUID
+ features before enabling
+To:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org
+Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+References: <20171005215256.25659-1-andi@firstfloor.org>
+ <20171005215256.25659-5-andi@firstfloor.org>
+From:   Vegard Nossum <vegard.nossum@oracle.com>
+Message-ID: <a36a8cc2-3d9e-dc70-bbe4-bfc5edef395a@oracle.com>
+Date:   Sat, 29 Jun 2019 17:22:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625143715.1689-7-hch@lst.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20171005215256.25659-5-andi@firstfloor.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9303 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906290192
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9303 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906290192
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 04:37:05PM +0200, Christoph Hellwig wrote:
-> The sh code is mostly equivalent to the generic one, minus various
-> bugfixes and two arch overrides that this patch adds to pgtable.h.
+
+On 10/5/17 11:52 PM, Andi Kleen wrote:
+> From: Andi Kleen <ak@linux.intel.com>
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Before enabling XSAVE, not only check the XSAVE specific CPUID bits,
+> but also the base CPUID features of the respective XSAVE feature.
+> This allows to disable individual XSAVE states using the existing
+> clearcpuid= option, which can be useful for performance testing
+> and debugging, and also in general avoids inconsistencies.
+> 
+> v2:
+> Add curly brackets (Thomas Gleixner)
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>   arch/x86/kernel/fpu/xstate.c | 23 +++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+> index f1d5476c9022..924bd895b5ee 100644
+> --- a/arch/x86/kernel/fpu/xstate.c
+> +++ b/arch/x86/kernel/fpu/xstate.c
+> @@ -15,6 +15,7 @@
+>   #include <asm/fpu/xstate.h>
+>   
+>   #include <asm/tlbflush.h>
+> +#include <asm/cpufeature.h>
+>   
+>   /*
+>    * Although we spell it out in here, the Processor Trace
+> @@ -36,6 +37,19 @@ static const char *xfeature_names[] =
+>   	"unknown xstate feature"	,
+>   };
+>   
+> +static short xsave_cpuid_features[] = {
+> +	X86_FEATURE_FPU,
+> +	X86_FEATURE_XMM,
+> +	X86_FEATURE_AVX,
+> +	X86_FEATURE_MPX,
+> +	X86_FEATURE_MPX,
+> +	X86_FEATURE_AVX512F,
+> +	X86_FEATURE_AVX512F,
+> +	X86_FEATURE_AVX512F,
+> +	X86_FEATURE_INTEL_PT,
+> +	X86_FEATURE_PKU,
+> +};
+> +
+>   /*
+>    * Mask of xstate features supported by the CPU and the kernel:
+>    */
+> @@ -726,6 +740,7 @@ void __init fpu__init_system_xstate(void)
+>   	unsigned int eax, ebx, ecx, edx;
+>   	static int on_boot_cpu __initdata = 1;
+>   	int err;
+> +	int i;
+>   
+>   	WARN_ON_FPU(!on_boot_cpu);
+>   	on_boot_cpu = 0;
+> @@ -759,6 +774,14 @@ void __init fpu__init_system_xstate(void)
+>   		goto out_disable;
+>   	}
+>   
+> +	/*
+> +	 * Clear XSAVE features that are disabled in the normal CPUID.
+> +	 */
+> +	for (i = 0; i < ARRAY_SIZE(xsave_cpuid_features); i++) {
+> +		if (!boot_cpu_has(xsave_cpuid_features[i]))
+> +			xfeatures_mask &= ~BIT(i);
+> +	}
+> +
+>   	xfeatures_mask &= fpu__get_supported_xfeatures_mask();
+>   
+>   	/* Enable xstate instructions to be able to continue with initialization: */
+> 
 
-sh:defconfig no longer builds with this patch applied.
+Hi,
 
-mm/gup.c: In function 'gup_huge_pud':
-arch/sh/include/asm/pgtable-3level.h:40:36: error:
-	implicit declaration of function 'pud_pfn'; did you mean 'pte_pfn'? 
+The commit for this patch in mainline
+(ccb18db2ab9d923df07e7495123fe5fb02329713) causes the kernel to hang on
+boot when passing the "nofxsr" option:
 
-Bisect log attached.
+$ kvm -cpu host -kernel arch/x86/boot/bzImage -append "console=ttyS0 
+nofxsr earlyprintk=ttyS0" -serial stdio -display none -smp 2
+early console in extract_kernel
+input_data: 0x0000000001dea276
+input_len: 0x0000000000500704
+output: 0x0000000001000000
+output_len: 0x00000000012c79b4
+kernel_total_size: 0x0000000000f24000
+booted via startup_32()
+Physical KASLR using RDRAND RDTSC...
+Virtual KASLR using RDRAND RDTSC...
 
-Guenter
+Decompressing Linux... Parsing ELF... Performing relocations... done.
+Booting the kernel.
+[..hang..]
 
----
-# bad: [48568d8c7f479ec45b9c3d02b4b1895f3ef61a03] Add linux-next specific files for 20190628
-# good: [4b972a01a7da614b4796475f933094751a295a2f] Linux 5.2-rc6
-git bisect start 'HEAD' 'v5.2-rc6'
-# good: [89a77c9176fe88f68c3bf7bd255cfea6797258d4] Merge remote-tracking branch 'crypto/master'
-git bisect good 89a77c9176fe88f68c3bf7bd255cfea6797258d4
-# good: [2cedca636ad73ed838bd636685b245404e490c73] Merge remote-tracking branch 'security/next-testing'
-git bisect good 2cedca636ad73ed838bd636685b245404e490c73
-# good: [ea260819fdc2f8a64e6c87f3ad80ecc5e4015921] Merge remote-tracking branch 'char-misc/char-misc-next'
-git bisect good ea260819fdc2f8a64e6c87f3ad80ecc5e4015921
-# good: [aca42ca2a32eacf804ac56a33526f049debc8ec0] Merge remote-tracking branch 'rpmsg/for-next'
-git bisect good aca42ca2a32eacf804ac56a33526f049debc8ec0
-# good: [f4cd0c7f3c07876f7173b5306e974644c6eec141] Merge remote-tracking branch 'pidfd/for-next'
-git bisect good f4cd0c7f3c07876f7173b5306e974644c6eec141
-# bad: [09c57a8ab1fc3474b4a620247a0f9e3ac61c4cfe] mm/sparsemem: support sub-section hotplug
-git bisect bad 09c57a8ab1fc3474b4a620247a0f9e3ac61c4cfe
-# good: [aaffcf10880c363870413c5cdee5dfb6a923e9ae] mm: memcontrol: dump memory.stat during cgroup OOM
-git bisect good aaffcf10880c363870413c5cdee5dfb6a923e9ae
-# bad: [81d90bb2d2784258ed7c0762ecf34d4665198bad] um: switch to generic version of pte allocation
-git bisect bad 81d90bb2d2784258ed7c0762ecf34d4665198bad
-# bad: [dadae650472841f004882a2409aa844e37809c60] sparc64-add-the-missing-pgd_page-definition-fix
-git bisect bad dadae650472841f004882a2409aa844e37809c60
-# good: [d1edd06c6ac8c8c49345ff34de1c72ee571f3f7b] mm: memcg/slab: stop setting page->mem_cgroup pointer for slab pages
-git bisect good d1edd06c6ac8c8c49345ff34de1c72ee571f3f7b
-# good: [b1ceaacca9e63794bd3f574c928e7e6aca01bce7] mm: simplify gup_fast_permitted
-git bisect good b1ceaacca9e63794bd3f574c928e7e6aca01bce7
-# good: [59f238b3353caf43b118e1bb44010aa1abd56d7f] sh: add the missing pud_page definition
-git bisect good 59f238b3353caf43b118e1bb44010aa1abd56d7f
-# bad: [51bbf54b3f26a85217db720f4e5b01a6c4d3f010] sparc64: add the missing pgd_page definition
-git bisect bad 51bbf54b3f26a85217db720f4e5b01a6c4d3f010
-# bad: [be748d6e72113580af7e37ad68a0047659e60189] sh: use the generic get_user_pages_fast code
-git bisect bad be748d6e72113580af7e37ad68a0047659e60189
-# first bad commit: [be748d6e72113580af7e37ad68a0047659e60189] sh: use the generic get_user_pages_fast code
+If I revert it from Linus's tree (~5.2-rc6) then it boots again:
+
+early console in extract_kernel
+input_data: 0x00000000024192e9
+input_len: 0x00000000005d8ea1
+output: 0x0000000001000000
+output_len: 0x00000000019c7fa4
+kernel_total_size: 0x000000000162c000
+trampoline_32bit: 0x000000000009d000
+booted via startup_32()
+Physical KASLR using RDRAND RDTSC...
+Virtual KASLR using RDRAND RDTSC...
+
+Decompressing Linux... Parsing ELF... Performing relocations... done.
+Booting the kernel.
+Linux version 5.2.0-rc6+ (vegard@t460) (gcc version 5.5.0 20171010 
+(Ubuntu 5.5.0-12ubuntu1~16.04)) #98 SMP PREEMPT Sat Jun 29 17:13:31 CEST 
+2019
+Command line: console=ttyS0 nofxsr earlyprintk=ttyS0
+[..normal boot..]
+
+/proc/cpuinfo inside the VM is:
+
+processor       : 0
+vendor_id       : GenuineIntel
+cpu family      : 6
+model           : 78
+model name      : Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
+stepping        : 3
+microcode       : 0x1
+cpu MHz         : 2496.000
+cache size      : 4096 KB
+physical id     : 0
+siblings        : 1
+core id         : 0
+cpu cores       : 1
+apicid          : 0
+initial apicid  : 0
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 13
+wp              : yes
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
+mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb 
+rdtscp lm constant_tsc arch_perfmon rep_good nopl cpuid tsc_known_freq 
+pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt 
+tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 
+3dnowprefetch cpuid_fault invpcid_single pti ssbd ibrs ibpb tpr_shadow 
+vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 hle avx2 smep 
+bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt xsaveopt xsavec 
+xgetbv1 xsaves arat
+bugs            : cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass 
+l1tf mds
+bogomips        : 4992.00
+clflush size    : 64
+cache_alignment : 64
+address sizes   : 40 bits physical, 48 bits virtual
+power management:
+
+
+Vegard
