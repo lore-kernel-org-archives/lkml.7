@@ -2,408 +2,441 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8FCC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F7DC5B579
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C5B2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:57:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oDxvQLQ9"
+	by mail.kernel.org (Postfix) with ESMTP id 3C55C2083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 07:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfF2H5y (ORCPT
+        id S1726903AbfF2H7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 03:57:54 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46847 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfF2H5y (ORCPT
+        Sat, 29 Jun 2019 03:59:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38372 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbfF2H7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 03:57:54 -0400
-Received: by mail-io1-f68.google.com with SMTP id i10so3717080iol.13
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 00:57:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vdbfuoLchcIE1My5J35pL4a5I8XHXT+l6lrvTBtwDzw=;
-        b=oDxvQLQ9WI9wxIIDkZz20WUeGOB1IWnBzHwFGy63LjKNchs5cITbd7FyXjYCD8NcVQ
-         RaQvCcA4n73YS83tEmBSvvMcIOSL1403ZNo8GhP5kAOZOKseBy2NhtW8zpyylQHgxkCj
-         Zrx59Z1jfnvkAViELi0LNeoZpHYmTx+AP4u0k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vdbfuoLchcIE1My5J35pL4a5I8XHXT+l6lrvTBtwDzw=;
-        b=LOMDYXHO1KzuolmmLwhUTHAPnBPBEMVBx2NfXn5y7gJJ/CGkLCGW3tgtLVlpt2yKaF
-         fZmNEdPUDQEIP/ETECkKwZalpn09lpe9itYgeQ1Zn4mCkSfu9sMlyWEHgjRyqKaYoPhC
-         SqenlgmAOm1GmBZKbZtKCErUYRAZZ2mjx9zh9egGABKfc0yNpTC1QoRmATpVrBUo4Zvg
-         MtJEDvo/RQgdCf+6ocvRZ8pmf9ml906sSltwSbn7XM2+ktE0XrbCxve2rgwS4sTmnSrU
-         Cg1JqM0V9btrNRS0Tdds6Agyqh3/CoCl93/b+J22dRTEYpXRKwQNb6KCMlz30gmXqZDs
-         IVSg==
-X-Gm-Message-State: APjAAAX7VsoseB2YxOrPeUtDRZ/STPliDfnd5sTPn7/TnaHy7IMz2JDC
-        CyAFrbuauZu3DVDfaQ8vvaZLttzCEqVWB2RYqdr2GQ==
-X-Google-Smtp-Source: APXvYqy3xR3cySHbVXXW9i5+SU598HEiIUc57g5b7PDv9CANjAFhTjQBNMDgJqtpv74TbnfP+CufzdBZmrf8tRtYtbQ=
-X-Received: by 2002:a5e:c748:: with SMTP id g8mr13570780iop.267.1561795073285;
- Sat, 29 Jun 2019 00:57:53 -0700 (PDT)
+        Sat, 29 Jun 2019 03:59:33 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hh8GZ-00029q-HN; Sat, 29 Jun 2019 09:59:23 +0200
+Date:   Sat, 29 Jun 2019 09:59:22 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Megha Dey <megha.dey@linux.intel.com>
+cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
+        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
+        megha.dey@intel.com
+Subject: Re: [RFC V1 RESEND 2/6] PCI/MSI: Dynamic allocation of MSI-X vectors
+ by group
+In-Reply-To: <1561162778-12669-3-git-send-email-megha.dey@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de>
+References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com> <1561162778-12669-3-git-send-email-megha.dey@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190627104039.26285-1-enric.balletbo@collabora.com> <20190627104039.26285-2-enric.balletbo@collabora.com>
-In-Reply-To: <20190627104039.26285-2-enric.balletbo@collabora.com>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Sat, 29 Jun 2019 00:57:41 -0700
-Message-ID: <CAPUE2uvpokN6+7ZpTqr-M=rrGJs__5Lqtg1d_f6Q9wGP5S5Dnw@mail.gmail.com>
-Subject: Re: [PATCH v4 01/11] mfd / platform: cros_ec: Handle chained ECs as
- platform devices
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Collabora kernel ML <kernel@collabora.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Review and tested the whole series:
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Tested-by: Gwendal Grignou <gwendal@chromium.org>
+Megha,
 
-On Thu, Jun 27, 2019 at 3:40 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> An MFD is a device that contains several sub-devices (cells). For instance,
-> the ChromeOS EC fits in this description as usually contains a charger and
-> can have other devices with different functions like a Real-Time Clock,
-> an Audio codec, a Real-Time Clock, ...
->
-> If you look at the driver, though, we're doing something odd. We have
-> two MFD cros-ec drivers where one of them (cros-ec-core) instantiates
-> another MFD driver as sub-driver (cros-ec-dev), and the latest
-> instantiates the different sub-devices (Real-Time Clock, Audio codec,
-> etc).
->
->                   MFD
-> ------------------------------------------
->    cros-ec-core
->        |___ mfd-cellA (cros-ec-dev)
->        |       |__ mfd-cell0
->        |       |__ mfd-cell1
->        |       |__ ...
->        |
->        |___ mfd-cellB (cros-ec-dev)
->                |__ mfd-cell0
->                |__ mfd-cell1
->                |__ ...
->
-> The problem that was trying to solve is to describe some kind of topology for
-> the case where we have an EC (cros-ec) chained with another EC
-> (cros-pd). Apart from that this extends the bounds of what MFD was
-> designed to do we might be interested on have other kinds of topology that
-> can't be implemented in that way.
->
-> Let's prepare the code to move the cros-ec-core part from MFD to
-> platform/chrome as this is clearly a platform specific thing non-related
-> to a MFD device.
->
->   platform/chrome  |         MFD
-> ------------------------------------------
->                    |
->    cros-ec ________|___ cros-ec-dev
->                    |       |__ mfd-cell0
->                    |       |__ mfd-cell1
->                    |       |__ ...
->                    |
->    cros-pd ________|___ cros-ec-dev
->                    |        |__ mfd-cell0
->                    |        |__ mfd-cell1
->                    |        |__ ...
->
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Tested-by: Gwendal Grignou <gwendal@chromium.org>
-> ---
->
-> Changes in v4:
-> - Rebase again on top of for-mfd-next to avoid conflicts.
->
-> Changes in v3:
-> - Collect more acks an tested-by
->
-> Changes in v2:
-> - Collect acks received.
-> - Remove '[PATCH 07/10] mfd: cros_ec: Update with SPDX Licence identifier
->   and fix description' to avoid conflicts with some tree-wide patches
->   that actually updates the Licence identifier.
-> - Add '[PATCH 10/10] arm/arm64: defconfig: Update configs to use the new
->   CROS_EC options' to update the defconfigs after change some config
->   symbols.
->
->  drivers/mfd/cros_ec.c                   | 61 +++++++++++++------------
->  drivers/platform/chrome/cros_ec_i2c.c   |  8 ++++
->  drivers/platform/chrome/cros_ec_lpc.c   |  3 +-
->  drivers/platform/chrome/cros_ec_rpmsg.c |  2 +
->  drivers/platform/chrome/cros_ec_spi.c   |  8 ++++
->  include/linux/mfd/cros_ec.h             | 18 ++++++++
->  6 files changed, 69 insertions(+), 31 deletions(-)
->
-> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
-> index bd2bcdd4718b..11fced7917fc 100644
-> --- a/drivers/mfd/cros_ec.c
-> +++ b/drivers/mfd/cros_ec.c
-> @@ -21,7 +21,6 @@
->  #include <linux/interrupt.h>
->  #include <linux/slab.h>
->  #include <linux/module.h>
-> -#include <linux/mfd/core.h>
->  #include <linux/mfd/cros_ec.h>
->  #include <linux/suspend.h>
->  #include <asm/unaligned.h>
-> @@ -39,18 +38,6 @@ static struct cros_ec_platform pd_p = {
->         .cmd_offset = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX),
->  };
->
-> -static const struct mfd_cell ec_cell = {
-> -       .name = "cros-ec-dev",
-> -       .platform_data = &ec_p,
-> -       .pdata_size = sizeof(ec_p),
-> -};
+On Fri, 21 Jun 2019, Megha Dey wrote:
+
+> Currently, MSI-X vector enabling and allocation for a PCIe device is
+> static i.e. a device driver gets only one chance to enable a specific
+> number of MSI-X vectors, usually during device probe. Also, in many
+> cases, drivers usually reserve more than required number of vectors
+> anticipating their use, which unnecessarily blocks resources that
+> could have been made available to other devices. Lastly, there is no
+> way for drivers to reserve more vectors, if the MSI-X has already been
+> enabled for that device.
+
+It would be helpful if the justification for this would contain a real
+world example instead of some handwaving. Also this whole set lacks a
+pointer to a driver which makes use of it.
+
+> Hence, a dynamic MSI-X kernel infrastructure can benefit drivers by
+> deferring MSI-X allocation to post probe phase, where actual demand
+> information is available.
+> 
+> This patch enables the dynamic allocation of MSI-X vectors even after
+
+git grep 'This patch' Documentation/process/submitting-patches.rst
+
+> MSI-X is enabled for a PCIe device by introducing a new API:
+> pci_alloc_irq_vectors_dyn().
+> 
+> This API can be called multiple times by the driver. The MSI-X vectors
+> allocated each time are associated with a group ID. If the existing
+> static allocation is used, a default group ID of -1 is assigned. The
+
+Why -1? Why not start from group ID 0 which is the most natural thing,
+
+> +
+>  	/* Configure MSI capability structure */
+>  	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSI);
+>  	if (ret) {
+> @@ -669,7 +676,7 @@ static void __iomem *msix_map_region(struct pci_dev *dev, unsigned nr_entries)
+>  
+>  static int msix_setup_entries(struct pci_dev *dev, void __iomem *base,
+>  			      struct msix_entry *entries, int nvec,
+> -			      struct irq_affinity *affd)
+> +			      struct irq_affinity *affd, int group)
+>  {
+>  	struct irq_affinity_desc *curmsk, *masks = NULL;
+>  	struct msi_desc *entry;
+> @@ -698,8 +705,20 @@ static int msix_setup_entries(struct pci_dev *dev, void __iomem *base,
+>  			entry->msi_attrib.entry_nr = i;
+>  		entry->msi_attrib.default_irq	= dev->irq;
+>  		entry->mask_base		= base;
+> +		entry->group_id			= group;
+>  
+>  		list_add_tail(&entry->list, dev_to_msi_list(&dev->dev));
+
+What protects other users which might concurrently iterate the list from
+falling on their nose?
+
+Right now the device entry list is set up and then considered immutable
+until the driver shuts down. So there is no need for serialization.
+
+With that scheme entries are populated piecewise and are visible and might
+be in use.
+
+> +
+> +		/*
+> +		 * Save the pointer to the first msi_desc entry of every
+> +		 * MSI-X group. This pointer is used by other functions
+> +		 * as the starting point to iterate through each of the
+> +		 * entries in that particular group.
+> +		 */
+> +		if (!i)
+> +			dev->dev.grp_first_desc = list_last_entry
+> +			(dev_to_msi_list(&dev->dev), struct msi_desc, list);
+
+How is that supposed to work? The pointer gets overwritten on every
+invocation of that interface. I assume this is merily an intermediate
+storage for setup. Shudder.
+
+> +
+>  		if (masks)
+>  			curmsk++;
+>  	}
+> @@ -715,7 +734,7 @@ static void msix_program_entries(struct pci_dev *dev,
+>  	struct msi_desc *entry;
+>  	int i = 0;
+>  
+> -	for_each_pci_msi_entry(entry, dev) {
+> +	for_each_pci_msi_entry_from(entry, dev) {
+
+  > +/* Iterate through MSI entries of device dev starting from a given desc */
+  > +#define for_each_msi_entry_from(desc, dev)                             \
+  > +       desc = (*dev).grp_first_desc;                                   \
+  > +       list_for_each_entry_from((desc), dev_to_msi_list((dev)), list)  \
+
+So this hides the whole group stuff behind a hideous iterator.
+
+for_each_pci_msi_entry_from() ? from what? from the device? Sane iterators
+which have a _from naming, have also a from argument.
+
+>  		if (entries)
+>  			entries[i++].vector = entry->irq;
+>  		entry->masked = readl(pci_msix_desc_addr(entry) +
+> @@ -730,28 +749,31 @@ static void msix_program_entries(struct pci_dev *dev,
+>   * @entries: pointer to an array of struct msix_entry entries
+>   * @nvec: number of @entries
+>   * @affd: Optional pointer to enable automatic affinity assignement
+> + * @group: The Group ID to be allocated to the msi-x vectors
+
+That suggest that the group id is allocated in this function. Which is not
+true. The id is handed in so the entries can be associated to that group.
+
+>   *
+>   * Setup the MSI-X capability structure of device function with a
+>   * single MSI-X irq. A return of zero indicates the successful setup of
+>   * requested MSI-X entries with allocated irqs or non-zero for otherwise.
+>   **/
+>  static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+> -				int nvec, struct irq_affinity *affd)
+> +				int nvec, struct irq_affinity *affd, int group)
+>  {
+>  	int ret;
+>  	u16 control;
+> -	void __iomem *base;
+>  
+>  	/* Ensure MSI-X is disabled while it is set up */
+>  	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
+>  
+>  	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &control);
+> +
+>  	/* Request & Map MSI-X table region */
+> -	base = msix_map_region(dev, msix_table_size(control));
+> -	if (!base)
+> -		return -ENOMEM;
+> +	if (!dev->msix_enabled) {
+> +		dev->base = msix_map_region(dev, msix_table_size(control));
+> +		if (!dev->base)
+> +			return -ENOMEM;
+> +	}
+>  
+> -	ret = msix_setup_entries(dev, base, entries, nvec, affd);
+> +	ret = msix_setup_entries(dev, dev->base, entries, nvec, affd, group);
+>  	if (ret)
+>  		return ret;
+
+Any error exit in this function will leave MSIx disabled. That means if
+this is a subsequent group allocation which fails for whatever reason, this
+will render all existing and possibly already in use interrupts unusable.
+
+>  static int __pci_enable_msix_range(struct pci_dev *dev,
+>  				   struct msix_entry *entries, int minvec,
+> -				   int maxvec, struct irq_affinity *affd)
+> +				   int maxvec, struct irq_affinity *affd,
+> +				   bool one_shot, int group)
+>  {
+>  	int rc, nvec = maxvec;
+>  
+>  	if (maxvec < minvec)
+>  		return -ERANGE;
+>  
+> -	if (WARN_ON_ONCE(dev->msix_enabled))
+> -		return -EINVAL;
+
+So any misbehaving PCI driver can now call into this without being caught.
+
 > -
-> -static const struct mfd_cell ec_pd_cell = {
-> -       .name = "cros-ec-dev",
-> -       .platform_data = &pd_p,
-> -       .pdata_size = sizeof(pd_p),
-> -};
-> -
->  static irqreturn_t ec_irq_thread(int irq, void *data)
+>  	for (;;) {
+>  		if (affd) {
+>  			nvec = irq_calc_affinity_vectors(minvec, nvec, affd);
+> @@ -1096,7 +1118,8 @@ static int __pci_enable_msix_range(struct pci_dev *dev,
+>  				return -ENOSPC;
+>  		}
+>  
+> -		rc = __pci_enable_msix(dev, entries, nvec, affd);
+> +		rc = __pci_enable_msix(dev, entries, nvec, affd, one_shot,
+> +									group);
+>  		if (rc == 0)
+>  			return nvec;
+>  
+> @@ -1127,7 +1150,8 @@ static int __pci_enable_msix_range(struct pci_dev *dev,
+>  int pci_enable_msix_range(struct pci_dev *dev, struct msix_entry *entries,
+>  		int minvec, int maxvec)
 >  {
->         struct cros_ec_device *ec_dev = data;
-> @@ -158,38 +145,42 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
->                 }
->         }
->
-> -       err = devm_mfd_add_devices(ec_dev->dev, PLATFORM_DEVID_AUTO, &ec_cell,
-> -                                  1, NULL, ec_dev->irq, NULL);
-> -       if (err) {
-> -               dev_err(dev,
-> -                       "Failed to register Embedded Controller subdevice %d\n",
-> -                       err);
-> -               return err;
-> +       /* Register a platform device for the main EC instance */
-> +       ec_dev->ec = platform_device_register_data(ec_dev->dev, "cros-ec-dev",
-> +                                       PLATFORM_DEVID_AUTO, &ec_p,
-> +                                       sizeof(struct cros_ec_platform));
-> +       if (IS_ERR(ec_dev->ec)) {
-> +               dev_err(ec_dev->dev,
-> +                       "Failed to create CrOS EC platform device\n");
-> +               return PTR_ERR(ec_dev->ec);
->         }
->
->         if (ec_dev->max_passthru) {
->                 /*
-> -                * Register a PD device as well on top of this device.
-> +                * Register a platform device for the PD behind the main EC.
->                  * We make the following assumptions:
->                  * - behind an EC, we have a pd
->                  * - only one device added.
->                  * - the EC is responsive at init time (it is not true for a
-> -                *   sensor hub.
-> +                *   sensor hub).
->                  */
-> -               err = devm_mfd_add_devices(ec_dev->dev, PLATFORM_DEVID_AUTO,
-> -                                     &ec_pd_cell, 1, NULL, ec_dev->irq, NULL);
-> -               if (err) {
-> -                       dev_err(dev,
-> -                               "Failed to register Power Delivery subdevice %d\n",
-> -                               err);
-> -                       return err;
-> +               ec_dev->pd = platform_device_register_data(ec_dev->dev,
-> +                                       "cros-ec-dev",
-> +                                       PLATFORM_DEVID_AUTO, &pd_p,
-> +                                       sizeof(struct cros_ec_platform));
-> +               if (IS_ERR(ec_dev->pd)) {
-> +                       dev_err(ec_dev->dev,
-> +                               "Failed to create CrOS PD platform device\n");
-> +                       platform_device_unregister(ec_dev->ec);
-> +                       return PTR_ERR(ec_dev->pd);
->                 }
->         }
->
->         if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
->                 err = devm_of_platform_populate(dev);
->                 if (err) {
-> -                       mfd_remove_devices(dev);
-> +                       platform_device_unregister(ec_dev->pd);
-> +                       platform_device_unregister(ec_dev->ec);
->                         dev_err(dev, "Failed to register sub-devices\n");
->                         return err;
->                 }
-> @@ -210,6 +201,16 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+> -	return __pci_enable_msix_range(dev, entries, minvec, maxvec, NULL);
+> +	return __pci_enable_msix_range(dev, entries, minvec, maxvec, NULL,
+> +								false, -1);
 >  }
->  EXPORT_SYMBOL(cros_ec_register);
->
-> +int cros_ec_unregister(struct cros_ec_device *ec_dev)
-> +{
-> +       if (ec_dev->pd)
-> +               platform_device_unregister(ec_dev->pd);
-> +       platform_device_unregister(ec_dev->ec);
+>  EXPORT_SYMBOL(pci_enable_msix_range);
+>  
+> @@ -1153,9 +1177,49 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+>  				   unsigned int max_vecs, unsigned int flags,
+>  				   struct irq_affinity *affd)
+>  {
+> +	int group = -1;
 > +
-> +       return 0;
+> +	dev->one_shot = true;
+
+So instead of checking first whether this was already initialized you
+unconditionally allow this function to be called and cause havoc.
+
+> +
+> +	return pci_alloc_irq_vectors_affinity_dyn(dev, min_vecs, max_vecs,
+> +					flags, NULL, &group, dev->one_shot);
 > +}
-> +EXPORT_SYMBOL(cros_ec_unregister);
+> +EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
 > +
->  #ifdef CONFIG_PM_SLEEP
->  int cros_ec_suspend(struct cros_ec_device *ec_dev)
->  {
-> diff --git a/drivers/platform/chrome/cros_ec_i2c.c b/drivers/platform/chrome/cros_ec_i2c.c
-> index 61d75395f86d..6bb82dfa7dae 100644
-> --- a/drivers/platform/chrome/cros_ec_i2c.c
-> +++ b/drivers/platform/chrome/cros_ec_i2c.c
-> @@ -307,6 +307,13 @@ static int cros_ec_i2c_probe(struct i2c_client *client,
->         return 0;
->  }
->
-> +static int cros_ec_i2c_remove(struct i2c_client *client)
-> +{
-> +       struct cros_ec_device *ec_dev = i2c_get_clientdata(client);
-> +
-> +       return cros_ec_unregister(ec_dev);
-> +}
-> +
->  #ifdef CONFIG_PM_SLEEP
->  static int cros_ec_i2c_suspend(struct device *dev)
->  {
-> @@ -357,6 +364,7 @@ static struct i2c_driver cros_ec_driver = {
->                 .pm     = &cros_ec_i2c_pm_ops,
->         },
->         .probe          = cros_ec_i2c_probe,
-> +       .remove         = cros_ec_i2c_remove,
->         .id_table       = cros_ec_i2c_id,
->  };
->
-> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-> index c9c240fbe7c6..2c7e654cf89c 100644
-> --- a/drivers/platform/chrome/cros_ec_lpc.c
-> +++ b/drivers/platform/chrome/cros_ec_lpc.c
-> @@ -317,6 +317,7 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
->
->  static int cros_ec_lpc_remove(struct platform_device *pdev)
->  {
-> +       struct cros_ec_device *ec_dev = platform_get_drvdata(pdev);
->         struct acpi_device *adev;
->
->         adev = ACPI_COMPANION(&pdev->dev);
-> @@ -324,7 +325,7 @@ static int cros_ec_lpc_remove(struct platform_device *pdev)
->                 acpi_remove_notify_handler(adev->handle, ACPI_ALL_NOTIFY,
->                                            cros_ec_lpc_acpi_notify);
->
-> -       return 0;
-> +       return cros_ec_unregister(ec_dev);
->  }
->
->  static const struct acpi_device_id cros_ec_lpc_acpi_device_ids[] = {
-> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-> index 5d3fb2abad1d..520e507bfa54 100644
-> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
-> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-> @@ -233,6 +233,8 @@ static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
->         struct cros_ec_device *ec_dev = dev_get_drvdata(&rpdev->dev);
->         struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
->
-> +       cros_ec_unregister(ec_dev);
-> +
->         cancel_work_sync(&ec_rpmsg->host_event_work);
->  }
->
-> diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-> index 8e9451720e73..02f9e8257581 100644
-> --- a/drivers/platform/chrome/cros_ec_spi.c
-> +++ b/drivers/platform/chrome/cros_ec_spi.c
-> @@ -743,6 +743,13 @@ static int cros_ec_spi_probe(struct spi_device *spi)
->         return 0;
->  }
->
-> +static int cros_ec_spi_remove(struct spi_device *spi)
-> +{
-> +       struct cros_ec_device *ec_dev = spi_get_drvdata(spi);
-> +
-> +       return cros_ec_unregister(ec_dev);
-> +}
-> +
->  #ifdef CONFIG_PM_SLEEP
->  static int cros_ec_spi_suspend(struct device *dev)
->  {
-> @@ -781,6 +788,7 @@ static struct spi_driver cros_ec_driver_spi = {
->                 .pm     = &cros_ec_spi_pm_ops,
->         },
->         .probe          = cros_ec_spi_probe,
-> +       .remove         = cros_ec_spi_remove,
->         .id_table       = cros_ec_spi_id,
->  };
->
-> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-> index 751cb3756d49..669962ac392b 100644
-> --- a/include/linux/mfd/cros_ec.h
-> +++ b/include/linux/mfd/cros_ec.h
-> @@ -129,6 +129,10 @@ struct cros_ec_command {
->   * @event_data: Raw payload transferred with the MKBP event.
->   * @event_size: Size in bytes of the event data.
->   * @host_event_wake_mask: Mask of host events that cause wake from suspend.
-> + * @ec: The platform_device used by the mfd driver to interface with the
-> + *      main EC.
-> + * @pd: The platform_device used by the mfd driver to interface with the
-> + *      PD behind an EC.
->   */
->  struct cros_ec_device {
->         /* These are used by other drivers that want to talk to the EC */
-> @@ -164,6 +168,10 @@ struct cros_ec_device {
->         struct ec_response_get_next_event_v1 event_data;
->         int event_size;
->         u32 host_event_wake_mask;
-> +
-> +       /* The platform devices used by the mfd driver */
-> +       struct platform_device *ec;
-> +       struct platform_device *pd;
->  };
->
->  /**
-> @@ -298,6 +306,16 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
->   */
->  int cros_ec_register(struct cros_ec_device *ec_dev);
->
 > +/**
-> + * cros_ec_unregister() - Remove a ChromeOS EC.
-> + * @ec_dev: Device to unregister.
+> + * pci_alloc_irq_vectors_affinity_dyn - allocate multiple IRQs for a device
+> + * dynamically. Can be called multiple times.
+> + * @dev:		PCI device to operate on
+> + * @min_vecs:		minimum number of vectors required (must be >= 1)
+> + * @max_vecs:		maximum (desired) number of vectors
+> + * @flags:		flags or quirks for the allocation
+> + * @affd:		optional description of the affinity requirements
+> + * @group_id:		group ID assigned to vectors allocated
+
+This is again misleading. It suggest that this is a group id handed in,
+while it is a pointer to an int where the group id will be stored.
+
+> + * @one_shot:		true if dynamic MSI-X allocation is disabled, else false
+
+What? You have a interface for dynamically allocating the vectors and that
+has an argument to disable dynamic allocation?
+
+> + * Allocate up to @max_vecs interrupt vectors for @dev, using MSI-X. Return
+> + * the number of vectors allocated (which might be smaller than @max_vecs)
+> + * if successful, or a negative error code on error. If less than @min_vecs
+> + * interrupt vectors are available for @dev the function will fail with -ENOSPC.
+> + * Assign a unique group ID to the set of vectors being allocated.
 > + *
-> + * Call this to deregister a ChromeOS EC, then clean up any private data.
-> + *
-> + * Return: 0 on success or negative error code.
+> + * To get the Linux IRQ number used for a vector that can be passed to
+> + * request_irq() use the pci_irq_vector_group() helper.
 > + */
-> +int cros_ec_unregister(struct cros_ec_device *ec_dev);
+> +int pci_alloc_irq_vectors_affinity_dyn(struct pci_dev *dev,
+> +				       unsigned int min_vecs,
+> +				       unsigned int max_vecs,
+> +				       unsigned int flags,
+> +				       struct irq_affinity *affd,
+> +				       int *group_id, bool one_shot)
+> +{
 > +
->  /**
->   * cros_ec_query_all() -  Query the protocol version supported by the
->   *         ChromeOS EC.
-> --
-> 2.20.1
->
+>  	struct irq_affinity msi_default_affd = {0};
+> -	int msix_vecs = -ENOSPC;
+> +	int msix_vecs = -ENOSPC, i;
+>  	int msi_vecs = -ENOSPC;
+> +	struct msix_entry *entries = NULL;
+> +	struct msi_desc *entry;
+> +	int p = 0;
+>  
+>  	if (flags & PCI_IRQ_AFFINITY) {
+>  		if (!affd)
+> @@ -1166,8 +1230,54 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+>  	}
+>  
+>  	if (flags & PCI_IRQ_MSIX) {
+> -		msix_vecs = __pci_enable_msix_range(dev, NULL, min_vecs,
+> -						    max_vecs, affd);
+> +		if (dev->msix_enabled) {
+> +			if (one_shot) {
+> +				goto err_alloc;
+> +			} else {
+> +				for_each_pci_msi_entry(entry, dev) {
+> +					if (entry->group_id != -1)
+> +						p = 1;
+> +				}
+> +				if (!p)
+> +					goto err_alloc;
+> +			}
+> +		} else {
+> +			dev->num_msix = pci_msix_vec_count(dev);
+> +			dev->entry = kcalloc(BITS_TO_LONGS(dev->num_msix),
+> +					sizeof(unsigned long), GFP_KERNEL);
+> +			if (!dev->entry)
+> +				return -ENOMEM;
+> +		}
+> +
+> +		entries = kcalloc(max_vecs, sizeof(struct msix_entry),
+> +								GFP_KERNEL);
+> +		if (entries == NULL)
+> +			return -ENOMEM;
+> +
+> +		for (i = 0; i < max_vecs; i++) {
+> +			entries[i].entry = find_first_zero_bit(
+> +						dev->entry, dev->num_msix);
+> +			if (entries[i].entry == dev->num_msix)
+> +				return -ENOSPC;
+
+Leaks entries and dev->entry
+
+> +			set_bit(entries[i].entry, dev->entry);
+> +		}
+> +
+> +		if (!one_shot) {
+> +			/* Assign a unique group ID */
+> +			*group_id = idr_alloc(dev->grp_idr, NULL,
+> +						0, dev->num_msix, GFP_KERNEL);
+
+Why on earth do you need an IDR for this? The group ID is merily a
+cookie. So just having an u64 which starts from 0 and is incremented after
+each invocation should be good enough. You can catch the wraparound case,
+but even if you just use an unsigned int, then it takes 4G invocations to
+reach that point.
+
+> +			if (*group_id < 0) {
+> +				if (*group_id == -ENOSPC)
+> +					pci_err(dev, "No free group IDs\n");
+> +				return *group_id;
+> +			}
+> +		}
+> +
+> +		msix_vecs = __pci_enable_msix_range(dev, entries, min_vecs,
+> +					max_vecs, affd, one_shot, *group_id);
+> +
+> +		kfree(entries);
+> +
+>  		if (msix_vecs > 0)
+>  			return msix_vecs;
+>  	}
+> @@ -1197,8 +1307,12 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+>  	if (msix_vecs == -ENOSPC)
+>  		return -ENOSPC;
+>  	return msi_vecs;
+> +
+> +err_alloc:
+> +	WARN_ON_ONCE(dev->msix_enabled);
+
+Oh well. 
+
+> +	return -EINVAL;
+>  }
+> -EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
+> +EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity_dyn);
+>  
+> +	/* For dynamic MSI-x */
+> +	dev->grp_idr = kzalloc(sizeof(struct idr), GFP_KERNEL);
+> +	if (!dev->grp_idr)
+> +		return NULL;
+> +
+> +	/* Initialise the IDR structures */
+> +	idr_init(dev->grp_idr);
+
+As already pointed out, that's overengineered.
+
+First of all this patch is doing too many things at once. These changes
+need to be split up in reviewable bits and pieces.
+
+But I consider this approach as a POC and not something which can be meant
+as a maintainable solution. It just duct tapes this new functionality into
+the existing code thereby breaking things left and right. And even if you
+can 'fix' these issues with more duct tape it won't be maintainable at all.
+
+If you want to support group based allocations, then the PCI/MSI facility
+has to be refactored from ground up.
+
+  1) Introduce the concept of groups by adding a group list head to struct
+     pci_dev. Ideally you create a new struct pci_dev_msi or whatever where
+     all this muck goes into.
+
+  2) Change the existing code to treat the current allocation mode as a
+     group allocation. Keep the entries in a new struct msi_entry_group and
+     have a group id, list head and the entries in there.
+
+     Take care of protecting the group list.
+
+     Assign group id 0 and add the entry_group to the list in the pci device.
+
+     Rework the related functions so they are group aware.
+
+     This can be split into preparatory and functional pieces, i.e. multiple
+     patches.
+
+  3) Split out the 'first time' enablement code into separate functions and
+     store the relevant state in struct pci_dev_msi
+
+  4) Rename pci_alloc_irq_vectors_affinity() to
+     pci_alloc_irq_vectors_affinity_group() and add a group_id pointer
+     argument.
+
+     Make pci_alloc_irq_vectors_affinity() a wrapper function which hands
+     in a NULL group id pointer and does proper sanity checking.
+
+  5) Create similar constructs for related functionality
+
+  6) Enable the group allocation mode for subsequent allocations
+
+Thanks,
+
+	tglx
+
+
+  
+
