@@ -2,100 +2,104 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B63C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B23C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28252215EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC28215EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:14:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3X7Njb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfF2PNJ (ORCPT
+        id S1726944AbfF2POF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 11:13:09 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38634 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfF2PNI (ORCPT
+        Sat, 29 Jun 2019 11:14:05 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34556 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfF2POE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 11:13:08 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hhF2I-0000kC-BW; Sat, 29 Jun 2019 17:13:06 +0200
-Date:   Sat, 29 Jun 2019 17:13:04 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     LKML <linux-kernel@vger.kernel.org>, x6@kernel.org
-Subject: [GIT pull] smp fixes for 5.2
-Message-ID: <alpine.DEB.2.21.1906291709410.1802@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 29 Jun 2019 11:14:04 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p17so8821383ljg.1;
+        Sat, 29 Jun 2019 08:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=02Cu0f2MMPEZvxtYCjjo9cdoIYvTe6kV6bJMyfIwr7g=;
+        b=C3X7Njb9DEgT2IW+9FfrLZz2FKu+X6yB/3onHkR15mwuETmKxbwbKW6e7T4PsyVFvP
+         R/qoSQjhX/x7spFcu1EPYdBUpXgkpJvqs50xwvaBH6bXAnnfkDpwLSbiU5O1a1SXZmQl
+         zn92tnRB1NqakeVONCZ7cAGhqD870W9ahErMQgliBJr8fpyC/puSExlRnPx8x5U2nT3y
+         n6Jvk//TgBz8Pw/9AHGTnWSGbd+zNeNwDyz0h9U+mM22l7THqi0o++XPKcoVb8pV0yZX
+         3ApGfacc9mknRUw/j1w/STXMAvFZtTCi74IEXI1dy0FZ1/VSVnpSwf1vWdfNAgzVZtQf
+         Y8Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=02Cu0f2MMPEZvxtYCjjo9cdoIYvTe6kV6bJMyfIwr7g=;
+        b=VmyP4gNkS2uSLALMWiXW7nRueWw1MD7YUfqEYil8bqw4pQqjkcgO9YMG0hDOm6B1RS
+         +2r26778j8LD+O5RiKhAg9A+slHB7C+dviaRb8lMPGzmDoWdkVzQQBmKYgNFjZolrBVs
+         9U22w0tT15KcYNoBUe+oPGXbHj3EiYiqQ+nzi5t8ij7DBhWCSVDF77kKOVdipKwjX7Bh
+         QZnqUJYQXU5X8bJI+EFqZKhKZFS9qvuj/cJE94YVETYjkvSwHTX72anoffSOwLq14G6o
+         fl4BHHlUvM1crxji3m7EoDzd1y5QHa5Ec50Q0jwe2T3rhd/4ZHtPQ3RXtW7J6hMGdM8+
+         0Cew==
+X-Gm-Message-State: APjAAAVI0p6ZMzWtwWQsEHNhLJJtFXJEZ+pzRBosDKqogofi5xngGNHD
+        ttGKYEbDSefSvAqFfbUoTYBmHrfb
+X-Google-Smtp-Source: APXvYqzCfNL+HZooksrAmdFHUlFEUyl0JR7cCePgn3WgUJVxGxhR7AxGfce2VK7kwkIk6NDJNT2EOw==
+X-Received: by 2002:a2e:3a05:: with SMTP id h5mr9338721lja.114.1561821241605;
+        Sat, 29 Jun 2019 08:14:01 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id w15sm1976164ljh.0.2019.06.29.08.14.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Jun 2019 08:14:00 -0700 (PDT)
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+ <1561687972-19319-12-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f49039d7-7ab6-2e8c-19a2-aef44b90597d@gmail.com>
+Date:   Sat, 29 Jun 2019 18:13:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <1561687972-19319-12-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+28.06.2019 5:12, Sowjanya Komatineni пишет:
+> This patch adds system suspend and resume support for Tegra210
+> clocks.
+> 
+> All the CAR controller settings are lost on suspend when core power
+> goes off.
+> 
+> This patch has implementation for saving and restoring all the PLLs
+> and clocks context during system suspend and resume to have the
+> clocks back to same state for normal operation.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
 
-please pull the latest smp-urgent-for-linus git tree from:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git smp-urgent-for-linus
-
-up to:  33d4a5a7a5b4: cpu/hotplug: Fix out-of-bounds read when setting fail state
-
-Two small changes for the cpu hotplug code:
-
-    - Prevent out of bounds access which actually might crash the machine
-      caused by a missing bounds check in the fail injection code
-      
-    - Warn about unsupported migitation mode command line arguments to make
-      people aware that they typoed the paramater. Not necessarily a fix
-      but quite some people tripped over that.
-
-Thanks,
-
-	tglx
-
------------------->
-Eiichi Tsukata (1):
-      cpu/hotplug: Fix out-of-bounds read when setting fail state
-
-Geert Uytterhoeven (1):
-      cpu/speculation: Warn on unsupported mitigations= parameter
-
-
- kernel/cpu.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 077fde6fb953..ef1c565edc5d 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1964,6 +1964,9 @@ static ssize_t write_cpuhp_fail(struct device *dev,
- 	if (ret)
- 		return ret;
- 
-+	if (fail < CPUHP_OFFLINE || fail > CPUHP_ONLINE)
-+		return -EINVAL;
-+
- 	/*
- 	 * Cannot fail STARTING/DYING callbacks.
- 	 */
-@@ -2339,6 +2342,9 @@ static int __init mitigations_parse_cmdline(char *arg)
- 		cpu_mitigations = CPU_MITIGATIONS_AUTO;
- 	else if (!strcmp(arg, "auto,nosmt"))
- 		cpu_mitigations = CPU_MITIGATIONS_AUTO_NOSMT;
-+	else
-+		pr_crit("Unsupported mitigations=%s, system may still be vulnerable\n",
-+			arg);
- 
- 	return 0;
- }
+I'd also change the commit's title to something more brief and explicit, like "clk:
+tegra210: Support suspend-resume".
