@@ -2,243 +2,248 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA9BC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C61C5B579
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93687214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BE4214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:26:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Kg/T8ZN0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MynHykDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfF2PYj (ORCPT
+        id S1726903AbfF2P0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 11:24:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40974 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfF2PYj (ORCPT
+        Sat, 29 Jun 2019 11:26:17 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38479 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfF2P0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 11:24:39 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5TFKfvP148349;
-        Sat, 29 Jun 2019 15:24:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=4OHLK4IWIUnj6L3SkVEiPHXjBaVqnaA9UEdmYiKZwwg=;
- b=Kg/T8ZN0wWYoQgjjRK105k/MzXc/SM0KUMguWeKPQi1wCDb5KkowkOKAc+eZEBt3PysI
- FopjaD0TSGtkdMGsA9IdYfmqRP2Z0xOQ5Axsy+oEJyxiGSGeR36yeu2XmUm199B+iNTa
- O2mIIIIJXGZIW22hJo7vlHrl/CL8bs55KIzBljsKtFpQ0qgi8zWBzhpQf7Ugb2NUbUpe
- glyog0BLncSx51SxU6CXDwZw4snTa6ZTlBmfi2bo7q4B6Q33w7fKKHTi3lHZVJ5elZQ8
- in7+oetTHEFUa6A6POE/cm5jOLD3b53I/FiFs6JuwEFi94emEPeOnCGW1tJ6mGZ7t8U1 3Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2te5tb8d8x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 29 Jun 2019 15:24:32 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5TFO3k5139273;
-        Sat, 29 Jun 2019 15:24:32 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2tdw3sdjdk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 29 Jun 2019 15:24:31 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5TFOQoj019427;
-        Sat, 29 Jun 2019 15:24:26 GMT
-Received: from [10.175.49.61] (/10.175.49.61)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 29 Jun 2019 08:24:26 -0700
-Subject: Re: [PATCH v8 4/5] x86/xsave: Make XSAVE check the base CPUID
- features before enabling
-To:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org
-Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-References: <20171005215256.25659-1-andi@firstfloor.org>
- <20171005215256.25659-5-andi@firstfloor.org>
-From:   Vegard Nossum <vegard.nossum@oracle.com>
-Message-ID: <a36a8cc2-3d9e-dc70-bbe4-bfc5edef395a@oracle.com>
-Date:   Sat, 29 Jun 2019 17:22:59 +0200
+        Sat, 29 Jun 2019 11:26:16 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r9so8808865ljg.5;
+        Sat, 29 Jun 2019 08:26:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MAISvrZEFKf3K6sQaaEzdG1/Hb09pTM6bSrULCKOUP4=;
+        b=MynHykDHkWoq2B8MMxowF7bRzEEJcEkYquho70+f8Vq5+sqJStUmGDk9nOUVL5IkW5
+         Uxo+f0TmAovXKd12EC7K19pYw/38yPdAEaL1E140IQPC334tsSkU6AOxslkSAVQaQpMN
+         YmjicIydABFuITwj2id6uswmN8FURbQc8Vu+KMYhwcr0SRb8Pgoh+R2ZV6zFHhbKck86
+         1K/T3Qgq8RBpgwtnDlnFCojc9ZODs2UkJDyrJ+lcFWEeOrI/xDQyO9skpBxRf0t3nCdJ
+         zighWnVtl06XrRC9oBvvJFeNiJ5vUytiYyTI06QM27Iy5MOufSX7ur5yrEoo9Cnme2QU
+         jpoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MAISvrZEFKf3K6sQaaEzdG1/Hb09pTM6bSrULCKOUP4=;
+        b=TO5PZ+9yDJQ76DeGZkyeecfpYgcr2wQ7Zh2h7T91cHcXQ/N2GsmEZiAkdJ8X2k2RW5
+         oqM62uPPRyhGvxdWrQrH04gYBGoui4b69y6E6LO2BgfAxyjE7giPCDHbeyE3eeFARGIR
+         sKnSJl4zhoVb7mDT01eAzbvpQw6Wb41xKckRrN2Dm+r6vPjWiH2NJFCFSXtrPedWacTL
+         UoltRJIwr06JPMHpmB1y2vWhytdVAYPg1NSNNEd65WTpI30GKS1NsKXKLhkas1uBrQM/
+         Q8hzgwLX0rH8hjMC8x39UiYGnKweT62Rd0/NqEypf3wETtiFxncv5+2AmFfrau/g8GAR
+         ofaQ==
+X-Gm-Message-State: APjAAAV81lQkyNhQWEoFpPlEVAXve0RVR5SQ5oBzzGEwR1SC7YaSR8Iv
+        ItCXtXICXU73FjJKrjOPGIOoBuLl
+X-Google-Smtp-Source: APXvYqw93tmA6VN/oXwhmxYZTNS5ln9SvC9oIx14Mo9lLK+NjqRxQv8p8GF2ZQfRS2Ywa3NzRGlduw==
+X-Received: by 2002:a2e:8583:: with SMTP id b3mr9316878lji.171.1561821973102;
+        Sat, 29 Jun 2019 08:26:13 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id w15sm1984880ljh.0.2019.06.29.08.26.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Jun 2019 08:26:12 -0700 (PDT)
+Subject: Re: [PATCH V5 06/18] clk: tegra: Save and restore CPU and System
+ clocks context
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+ <1561687972-19319-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1054682d-5cab-2997-6795-f777d074d972@gmail.com>
+Date:   Sat, 29 Jun 2019 18:26:11 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <20171005215256.25659-5-andi@firstfloor.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1561687972-19319-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9303 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906290192
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9303 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906290192
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 10/5/17 11:52 PM, Andi Kleen wrote:
-> From: Andi Kleen <ak@linux.intel.com>
+28.06.2019 5:12, Sowjanya Komatineni пишет:
+> During system suspend state, core power goes off and looses all the
+> CAR controller register settings.
 > 
-> Before enabling XSAVE, not only check the XSAVE specific CPUID bits,
-> but also the base CPUID features of the respective XSAVE feature.
-> This allows to disable individual XSAVE states using the existing
-> clearcpuid= option, which can be useful for performance testing
-> and debugging, and also in general avoids inconsistencies.
+> This patch creates APIs for saving and restoring the context of Tegra
+> CPUG, CPULP and SCLK.
 > 
-> v2:
-> Add curly brackets (Thomas Gleixner)
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> CPU and System clock context includes
+> - CPUG, CPULP, and SCLK burst policy settings for clock sourcea of all
+>   their normal states.
+> - SCLK divisor and System clock rate for restoring SCLK, AHB and APB
+>   rates on resume.
+> - OSC_DIV settings which are used as reference clock input to some PLLs.
+> - SPARE_REG and CLK_MASK settings.
+> 
+> These APIs are used in Tegra210 clock driver during suspend and resume
+> operation.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->   arch/x86/kernel/fpu/xstate.c | 23 +++++++++++++++++++++++
->   1 file changed, 23 insertions(+)
+>  drivers/clk/tegra/clk-tegra-super-gen4.c |  4 --
+>  drivers/clk/tegra/clk.c                  | 80 ++++++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk.h                  | 14 ++++++
+>  3 files changed, 94 insertions(+), 4 deletions(-)
 > 
-> diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-> index f1d5476c9022..924bd895b5ee 100644
-> --- a/arch/x86/kernel/fpu/xstate.c
-> +++ b/arch/x86/kernel/fpu/xstate.c
-> @@ -15,6 +15,7 @@
->   #include <asm/fpu/xstate.h>
->   
->   #include <asm/tlbflush.h>
-> +#include <asm/cpufeature.h>
->   
->   /*
->    * Although we spell it out in here, the Processor Trace
-> @@ -36,6 +37,19 @@ static const char *xfeature_names[] =
->   	"unknown xstate feature"	,
->   };
->   
-> +static short xsave_cpuid_features[] = {
-> +	X86_FEATURE_FPU,
-> +	X86_FEATURE_XMM,
-> +	X86_FEATURE_AVX,
-> +	X86_FEATURE_MPX,
-> +	X86_FEATURE_MPX,
-> +	X86_FEATURE_AVX512F,
-> +	X86_FEATURE_AVX512F,
-> +	X86_FEATURE_AVX512F,
-> +	X86_FEATURE_INTEL_PT,
-> +	X86_FEATURE_PKU,
-> +};
+> diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c b/drivers/clk/tegra/clk-tegra-super-gen4.c
+> index cdfe7c9697e1..ed69ec4d883e 100644
+> --- a/drivers/clk/tegra/clk-tegra-super-gen4.c
+> +++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
+> @@ -19,10 +19,6 @@
+>  #define PLLX_MISC2 0x514
+>  #define PLLX_MISC3 0x518
+>  
+> -#define CCLKG_BURST_POLICY 0x368
+> -#define CCLKLP_BURST_POLICY 0x370
+> -#define SCLK_BURST_POLICY 0x028
+> -#define SYSTEM_CLK_RATE 0x030
+>  #define SCLK_DIVIDER 0x2c
+>  
+>  static DEFINE_SPINLOCK(sysrate_lock);
+> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+> index 573e3c967ae1..9e863362d2bf 100644
+> --- a/drivers/clk/tegra/clk.c
+> +++ b/drivers/clk/tegra/clk.c
+> @@ -70,6 +70,12 @@ static struct clk **clks;
+>  static int clk_num;
+>  static struct clk_onecell_data clk_data;
+>  
+> +static u32 cclkg_burst_policy_ctx[2];
+> +static u32 cclklp_burst_policy_ctx[2];
+> +static u32 sclk_burst_policy_ctx[2];
+> +static u32 sys_clk_divisor_ctx, system_rate_ctx;
+> +static u32 spare_ctx, misc_clk_enb_ctx, clk_arm_ctx;
 > +
->   /*
->    * Mask of xstate features supported by the CPU and the kernel:
->    */
-> @@ -726,6 +740,7 @@ void __init fpu__init_system_xstate(void)
->   	unsigned int eax, ebx, ecx, edx;
->   	static int on_boot_cpu __initdata = 1;
->   	int err;
-> +	int i;
->   
->   	WARN_ON_FPU(!on_boot_cpu);
->   	on_boot_cpu = 0;
-> @@ -759,6 +774,14 @@ void __init fpu__init_system_xstate(void)
->   		goto out_disable;
->   	}
->   
-> +	/*
-> +	 * Clear XSAVE features that are disabled in the normal CPUID.
-> +	 */
-> +	for (i = 0; i < ARRAY_SIZE(xsave_cpuid_features); i++) {
-> +		if (!boot_cpu_has(xsave_cpuid_features[i]))
-> +			xfeatures_mask &= ~BIT(i);
+>  /* Handlers for SoC-specific reset lines */
+>  static int (*special_reset_assert)(unsigned long);
+>  static int (*special_reset_deassert)(unsigned long);
+> @@ -199,6 +205,80 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
+>  	}
+>  }
+>  
+> +void tegra_cclkg_burst_policy_save_context(void)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
+> +		cclkg_burst_policy_ctx[i] = readl_relaxed(clk_base +
+> +							  CCLKG_BURST_POLICY +
+> +							  (i * 4));
+> +}
+> +
+> +void tegra_cclkg_burst_policy_restore_context(void)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
+> +		writel_relaxed(cclkg_burst_policy_ctx[i],
+> +			       clk_base + CCLKG_BURST_POLICY + (i * 4));
+> +
+> +	fence_udelay(2, clk_base);
+> +}
+> +
+> +void tegra_sclk_cclklp_burst_policy_save_context(void)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
+> +		cclklp_burst_policy_ctx[i] = readl_relaxed(clk_base +
+> +							  CCLKLP_BURST_POLICY +
+> +							  (i * 4));
+> +
+> +		sclk_burst_policy_ctx[i] = readl_relaxed(clk_base +
+> +							  SCLK_BURST_POLICY +
+> +							  (i * 4));
 > +	}
 > +
->   	xfeatures_mask &= fpu__get_supported_xfeatures_mask();
->   
->   	/* Enable xstate instructions to be able to continue with initialization: */
-> 
+> +	sys_clk_divisor_ctx = readl_relaxed(clk_base + SYS_CLK_DIV);
+> +	system_rate_ctx = readl_relaxed(clk_base + SYSTEM_CLK_RATE);
+> +	spare_ctx = readl_relaxed(clk_base + SPARE_REG0);
+> +	misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
+> +	clk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
+> +}
+> +
+> +void tegra_sclk_cpulp_burst_policy_restore_context(void)
+> +{
+> +	unsigned int i;
+> +	u32 val;
+> +
+> +	/*
+> +	 * resume SCLK and CPULP clocks
+> +	 * for SCLk, set safe dividers values first and then restore source
+> +	 * and dividers
+> +	 */
+> +
+> +	writel_relaxed(0x1, clk_base + SYSTEM_CLK_RATE);
+> +	val = readl_relaxed(clk_base + SYS_CLK_DIV);
+> +	if (val < sys_clk_divisor_ctx)
+> +		writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
+> +
+> +	fence_udelay(2, clk_base);
+> +
+> +	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
+> +		writel_relaxed(cclklp_burst_policy_ctx[i],
+> +			       clk_base + CCLKLP_BURST_POLICY + (i * 4));
+> +		writel_relaxed(sclk_burst_policy_ctx[i],
+> +			       clk_base + SCLK_BURST_POLICY + (i * 4));
+> +	}
+> +
+> +	writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
+> +	writel_relaxed(system_rate_ctx, clk_base + SYSTEM_CLK_RATE);
+> +	writel_relaxed(spare_ctx, clk_base + SPARE_REG0);
+> +	writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
+> +	writel_relaxed(clk_arm_ctx, clk_base + CLK_MASK_ARM);
+> +}
+> +
+>  struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
+>  {
+>  	clk_base = regs;
+> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> index 8532f5150091..c66b0a73bb01 100644
+> --- a/drivers/clk/tegra/clk.h
+> +++ b/drivers/clk/tegra/clk.h
+> @@ -10,6 +10,16 @@
+>  #include <linux/clkdev.h>
+>  #include <linux/delay.h>
+>  
+> +#define SCLK_BURST_POLICY	0x28
+> +#define SYSTEM_CLK_RATE		0x30
+> +#define CLK_MASK_ARM		0x44
+> +#define MISC_CLK_ENB		0x48
+> +#define CCLKG_BURST_POLICY	0x368
+> +#define CCLKLP_BURST_POLICY	0x370
+> +#define SYS_CLK_DIV		0x400
+> +#define SPARE_REG0		0x55c
+> +#define BURST_POLICY_REG_SIZE	2
 
-Hi,
-
-The commit for this patch in mainline
-(ccb18db2ab9d923df07e7495123fe5fb02329713) causes the kernel to hang on
-boot when passing the "nofxsr" option:
-
-$ kvm -cpu host -kernel arch/x86/boot/bzImage -append "console=ttyS0 
-nofxsr earlyprintk=ttyS0" -serial stdio -display none -smp 2
-early console in extract_kernel
-input_data: 0x0000000001dea276
-input_len: 0x0000000000500704
-output: 0x0000000001000000
-output_len: 0x00000000012c79b4
-kernel_total_size: 0x0000000000f24000
-booted via startup_32()
-Physical KASLR using RDRAND RDTSC...
-Virtual KASLR using RDRAND RDTSC...
-
-Decompressing Linux... Parsing ELF... Performing relocations... done.
-Booting the kernel.
-[..hang..]
-
-If I revert it from Linus's tree (~5.2-rc6) then it boots again:
-
-early console in extract_kernel
-input_data: 0x00000000024192e9
-input_len: 0x00000000005d8ea1
-output: 0x0000000001000000
-output_len: 0x00000000019c7fa4
-kernel_total_size: 0x000000000162c000
-trampoline_32bit: 0x000000000009d000
-booted via startup_32()
-Physical KASLR using RDRAND RDTSC...
-Virtual KASLR using RDRAND RDTSC...
-
-Decompressing Linux... Parsing ELF... Performing relocations... done.
-Booting the kernel.
-Linux version 5.2.0-rc6+ (vegard@t460) (gcc version 5.5.0 20171010 
-(Ubuntu 5.5.0-12ubuntu1~16.04)) #98 SMP PREEMPT Sat Jun 29 17:13:31 CEST 
-2019
-Command line: console=ttyS0 nofxsr earlyprintk=ttyS0
-[..normal boot..]
-
-/proc/cpuinfo inside the VM is:
-
-processor       : 0
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 78
-model name      : Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
-stepping        : 3
-microcode       : 0x1
-cpu MHz         : 2496.000
-cache size      : 4096 KB
-physical id     : 0
-siblings        : 1
-core id         : 0
-cpu cores       : 1
-apicid          : 0
-initial apicid  : 0
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 13
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
-mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb 
-rdtscp lm constant_tsc arch_perfmon rep_good nopl cpuid tsc_known_freq 
-pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt 
-tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 
-3dnowprefetch cpuid_fault invpcid_single pti ssbd ibrs ibpb tpr_shadow 
-vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 hle avx2 smep 
-bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt xsaveopt xsavec 
-xgetbv1 xsaves arat
-bugs            : cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass 
-l1tf mds
-bogomips        : 4992.00
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 40 bits physical, 48 bits virtual
-power management:
-
-
-Vegard
+"clk-tegra30.c",  "clk-tegra114.c" and "clk-tegra124.c" also define the
+CCLKG_BURST_POLICY .. apparently you haven't tried to compile ARM32 kernel because I
+assume that compile should bark at the re-definitions.
