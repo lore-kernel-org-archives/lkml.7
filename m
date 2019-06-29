@@ -7,68 +7,71 @@ X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ECDC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67968C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D11920828
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C9320828
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 15:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XT1vSftJ"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gzx7V4JX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfF2PnU (ORCPT
+        id S1726954AbfF2Pna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 11:43:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45216 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbfF2PnT (ORCPT
+        Sat, 29 Jun 2019 11:43:30 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44704 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfF2Pn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 11:43:19 -0400
-Received: by mail-io1-f67.google.com with SMTP id e3so18984937ioc.12
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 08:43:19 -0700 (PDT)
+        Sat, 29 Jun 2019 11:43:29 -0400
+Received: by mail-io1-f68.google.com with SMTP id s7so18955375iob.11
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 08:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sOx1hbPyZTSyxrijx5gkB9/AvD6BlWJPkD8kP2n7Rk0=;
-        b=XT1vSftJh4vXYeGUSNXOGJS41ySgB3A+ls+Rp911xHb4NxVBSvKmGuhSmBSP2OBJ/+
-         f8EgWwh3K3tNK4exbSH9vNdpE6rUChyANqP9Nk3Rftjym++2fJ/t1js6xZjPlVfrvJp3
-         UlGemSUY2rGTJJuFjZqL5EaBRKrSDiHUAemQdQw5uNZW58iVq/TN517DaCje/7ZthOjm
-         AqSUchTpVbnELVcYA2wFPXu8peiqvhL+vh2SqbBctYo2W1zdxlJzEAMQa2uzrcvm/XSe
-         A8RSGiwKkgGLmQsIqeBPrRc8glqVQQZLFhUUz6s1BSRYV31CcYPK4YvqOrPVJYZL8gsH
-         xi8g==
+        bh=YhneT2OmUYYi9QQ0MWtStUhcK32OoDHrBHLq0QqvII0=;
+        b=gzx7V4JXv1yIMC1C4PE+AlQaFNr4179v472zY8PYX88RGqUxkH3tj0QWMraoyrCur+
+         x0Ln//TKjRXU3/0daqZ4WhxmD48qGGn6/KTpnFa8W7fivp7KOEWfMFv3W869Lqila3O/
+         pfRqFtQ22fhNfMf0mqwEWooFYh3b4NwPyr3FsIPAXUHzWsrkXWzuo3E6C0Vubol99OZs
+         NB3xAU3tI0lb2lyyB0dUmtkgyng5YH4fn6RE8JzN9XZ54izZnDssDHYrRwuPQu1U1zV0
+         Ebic1VG1ZhQ+lZrXNTtPucunew8pUH9ohcNRLtIyBdlD0LVnhn/LS6yo7W/qm31oACsm
+         YpWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=sOx1hbPyZTSyxrijx5gkB9/AvD6BlWJPkD8kP2n7Rk0=;
-        b=mijVGASg+E3YO8RtvO6GfZ6m2FfMOkhyKwF7qSIJbvLOwX5M2SNMOLCTlPGa9J5Y9E
-         9T+HP2qoI4vLgUddzrFFwwf8c6Kae1F+nKyAq8XO3wegLD8bJaYIbM7Bomecm0sE5Q6/
-         nL1z1JsOlyCw8UPb0ggM5LjOUeG+FNFOL9u9iKq5fi9LMGycGc/4mGA6VEgNfk80uMDX
-         0aWM24QxU9XE60AmkvRbF6OkAbddERYkIcMM0rfZw/rUJhxMasqFuSnxrPzLMDbGnZG9
-         CfBWKjvtAvAiIMtG8b1acqMTgQZUQvNewZ/wiSsqIo4ezoKT4K5CZNrSgQlpIB0P60al
-         mZkQ==
-X-Gm-Message-State: APjAAAUv6CtOb7sff1PlBpIDOdrG0d0DHmj54t20jP2+TcDgLMEE/uzc
-        LQEStB76UqAczuI/kjQ3PeajXNt4/+yfRQ==
-X-Google-Smtp-Source: APXvYqx0Smu0Bzy2x6EEOU+5J+Uk5t6GL4NayykldjvS1X8mFcaLskdcqJvUiQmSysEF3OgCKPmOQQ==
-X-Received: by 2002:a6b:f711:: with SMTP id k17mr3362605iog.273.1561822998325;
-        Sat, 29 Jun 2019 08:43:18 -0700 (PDT)
+        bh=YhneT2OmUYYi9QQ0MWtStUhcK32OoDHrBHLq0QqvII0=;
+        b=LbKsdICuVqXyEWWuihZvB83gLA+g+BIYOXFbZoLYLBqrcBAkIXRnyAklCHh/6A5NlC
+         WCdyjiUVQG6YDubzzHjy/oHVXCOK5c7DFv9g0Bs9dVvNDswxRPnMHzF+j33gOx+ZFQGl
+         6qXJ7S8qK0qlwh5yEBR3dtLT+12uFMTCZSvEMtcyGgrAIOLSgHiUmQBOeJIgqWOQDx+3
+         OC61nKim+L7nHECuxK5TqoRTfrqohixNu+EFbChpiaWCHB8E7hwU1iMT+dmIcRVkLWE1
+         Cbwho40lwDqlVDrhyuUUcfeO4LqyNsdmcdQnxYgENqu2G5ZfSXnIwvPuEHq8LFMtsFoG
+         thyw==
+X-Gm-Message-State: APjAAAUBrOdgRYoE+zEmAvhEEI/bUmLLTvt6PRHecIAdjDr7gvP1mnlm
+        CZpHoEc2SMl97mMDeUbDyi8bnc9qJCPfSg==
+X-Google-Smtp-Source: APXvYqwoYmEeVwgNhFmmEm7gDfo/KRAYwjfDRTfmgp9SoHljFXCTaI8fFJZj1aodx+zyjKdpr100Sg==
+X-Received: by 2002:a05:6638:5:: with SMTP id z5mr18717283jao.58.1561823008600;
+        Sat, 29 Jun 2019 08:43:28 -0700 (PDT)
 Received: from [192.168.1.158] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id p10sm6715393iob.54.2019.06.29.08.43.17
+        by smtp.gmail.com with ESMTPSA id c17sm8007129ioo.82.2019.06.29.08.43.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 08:43:17 -0700 (PDT)
-Subject: Re: [PATCH 02/87] ata: acard-ahci: Remove call to memset after
- dmam_alloc_coherent
+        Sat, 29 Jun 2019 08:43:27 -0700 (PDT)
+Subject: Re: [PATCH 09/87] block: mtip32xx: Remove call to memset after
+ dma_alloc_coherent
 To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190627173346.1933-1-huangfq.daxian@gmail.com>
+Cc:     Hannes Reinecke <hare@suse.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190627173506.2297-1-huangfq.daxian@gmail.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8de5399c-aaeb-5c51-6d78-63292db2fbaa@kernel.dk>
-Date:   Sat, 29 Jun 2019 09:43:16 -0600
+Message-ID: <b0606906-4371-48b1-b0cf-8e687769b46a@kernel.dk>
+Date:   Sat, 29 Jun 2019 09:43:26 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <20190627173346.1933-1-huangfq.daxian@gmail.com>
+In-Reply-To: <20190627173506.2297-1-huangfq.daxian@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -77,13 +80,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/27/19 11:33 AM, Fuqian Huang wrote:
+On 6/27/19 11:35 AM, Fuqian Huang wrote:
 > In commit af7ddd8a627c
 > ("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
-> dmam_alloc_coherent has already zeroed the memory.
+> dma_alloc_coherent has already zeroed the memory.
 > So memset is not needed.
 
-Applied this, and the rest of the ATA related patches, for 5.3. Thanks.
+Applied, thanks.
 
 -- 
 Jens Axboe
