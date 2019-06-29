@@ -2,106 +2,208 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722DEC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6524C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4640A2086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:21:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+sD4Tg2"
+	by mail.kernel.org (Postfix) with ESMTP id 9BA12214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 08:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561796646;
+	bh=8UqnfN4imJpcl5i5ca8bW9juGIJ3WbAG3H9rhe9X4Nk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=qILh6Pm0iaNoAiieDqfErVJOZ9Q0l0c9ujjjO2PNOvi3iF7ACvqUHKNU6J20bfFvp
+	 j3nDDqZgfTgc7Sj8/qt/5zS/shnk7KSMGSaM0rZNgsv6QBqF7zVz3LcbgaLYiUd0lb
+	 6+WGT1FMsudyQRWIyFfdwJpMItgnRq1yC1S8LObM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfF2IVp (ORCPT
+        id S1726892AbfF2IYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 04:21:45 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37776 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbfF2IVo (ORCPT
+        Sat, 29 Jun 2019 04:24:00 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36246 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbfF2IYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 04:21:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 19so4132966pfa.4;
-        Sat, 29 Jun 2019 01:21:44 -0700 (PDT)
+        Sat, 29 Jun 2019 04:24:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n4so8558482wrs.3;
+        Sat, 29 Jun 2019 01:23:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=HB5G4BCyKAU7NWh04NXHQUYQWJo7mRMg3f1DS79X9is=;
-        b=U+sD4Tg2i5EmnQ+E96oYuHmFfjRIZFhu+ImSjldFv+pp7bnarxQt4kZTlckg4DVX+M
-         5BwiyO9vyxW50aW05AoE/XIReZ9UkFMhsaXqrral2F+wzcVqDlYG9Mvy5WHbXw3EVJDh
-         O+MEOuUIm8CeKDhIpzNb9pUSquazzH3bdV8LKIxTfBVuq8knnPvwv2H4AHzKPX2lgP4s
-         trkpZ1ybjg/Y1kuSq/ywv3KuZTsKx+BT4RNyIxMJxKYktCp2UZVQyYwlHdkJpOF55bVO
-         qgTm4y/L71e3PxcXX0+KKUtPt/aEITyjaj+U13dkDaAkNQB52CqYfAurITZQgPSEwS/+
-         iYYA==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=wz9MuRcRQHuFynHDJ998w7L3YyTkzZbxNSj8T+XmXCU=;
+        b=cwCqQLBLaWrQCVEjQwflsfJk4+ID2tkdbAi+qpTbDnbACvrB7KF6Ag5wGY+KGewn/O
+         3z34KSm0VQRMASKhIke9Fal1ZIVyQCduGfEwbxJOMVaaeyBiGpHgxm7vjQZJyhv0AOB4
+         cExOwG4aNPxrQGkZCwWbCxgTEhBs50Qjfg+2TBvsQER0dStQ61p1pi24Sr5HEnlQHZIi
+         s8+4skiIs56RcJGT2k/i2KidJNW/iHmVX8OrKGsJpChzS8ZMyMOPl+6RQFLpEHmntCUS
+         XciFMzG3sd9ayd8cbrndcsoOUWmwKwmJmtxuyykd39fGW4d1uUv34z+3Um7D4DdUOUqP
+         zBbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HB5G4BCyKAU7NWh04NXHQUYQWJo7mRMg3f1DS79X9is=;
-        b=GvsMbNdKXv/hGaCFh45x2DeiIZnhv2PDkV7YHMYejqqkTNRIO43fmufrSVx/p10P53
-         FiREzKoZj7HgDFVShF0+e6Wws8v0ElPcP+a7yRr+QeeYTSkrO7iSS+3rvhLNTof4YiTw
-         0fhwF7Poazp/HUnmU4+4U3Ul072Z1hOdEhTRcAxP4jgpnCI6wPVBC5C8SLltcgVRvbAw
-         BuNxxj3EVlkY7Wf1OKOwJKdcc4xYKfN0VaSjwRfut2aiYpFgZABhLvIPl1XupMIdBnYt
-         1e6Sx8zUCPxYAglPPT86rRJMVnuMOLmx2FRWZ99ZtOzjXczk7bUUh/eUaMsxSMZ9wxCS
-         33ag==
-X-Gm-Message-State: APjAAAVPlu3TTwLg1uysEYc4/0JOYuUiYDvoPvCAFwke20yt3ai8QChK
-        rDZRRF+e376RsKmBBRzt0XvvJKYacYU=
-X-Google-Smtp-Source: APXvYqxe+pfvA2fNml3PD0CjRgo9z23VagyA/eh1M1nZFUM5QLw9+cWEf3nEyzTfGxa1nZKlTrc+TA==
-X-Received: by 2002:a17:90a:228b:: with SMTP id s11mr17710124pjc.23.1561796503508;
-        Sat, 29 Jun 2019 01:21:43 -0700 (PDT)
-Received: from localhost.localdomain ([219.91.196.157])
-        by smtp.googlemail.com with ESMTPSA id 27sm3834610pgt.6.2019.06.29.01.21.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 29 Jun 2019 01:21:42 -0700 (PDT)
-From:   Raag Jadav <raagjadav@gmail.com>
-To:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Raag Jadav <raagjadav@gmail.com>
-Subject: [PATCH] dmaengine: at_xdmac: check for non-empty xfers_list before invoking callback
-Date:   Sat, 29 Jun 2019 13:50:48 +0530
-Message-Id: <1561796448-3321-1-git-send-email-raagjadav@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=wz9MuRcRQHuFynHDJ998w7L3YyTkzZbxNSj8T+XmXCU=;
+        b=ZK9kUY+YO73iPrlTglLCuE3Wxl7t7btwDeinVKNiWta9g/tIDgE42rcK9Wj1M2N8id
+         58R/PhtK091FHpDISds6W8+usGVSrx3puAvQBY3tzvLAi2rXvHWe/tBzQFgC9YWPEaE+
+         1p67ikHlscDy2Q588rFFiJl9jVA6yIC4PrIUAos8KosYgm4R466fGzO11VsTmr/cfSY3
+         hAkZ2aVQvhkyOUZFyuRIH0AYiZRptW83SDCsKIXtyJTHxB8PUBgUvoLLFtx4TnLvXj/H
+         CSV6Vw2KbwGkiSPxrF+Yar79TkMDAer9xcmsOBYEd2FlEV7SKgKso7EHYkKPRsN8I6r8
+         7t0Q==
+X-Gm-Message-State: APjAAAVQ5mgSrsc2X+co8RxbCbBFKIcNtwVG8Gzq6cp9zeGgOhLgfOHE
+        gXTjQ4za65KJKQ/ZfIzd4ZM=
+X-Google-Smtp-Source: APXvYqx3NLOHdkEYwP922BKThLfnrgG2MwfuMZ6rRtgZ/1xTtxr1hpNhdp1jOgDepuoCZi4ujmNVQA==
+X-Received: by 2002:adf:ea87:: with SMTP id s7mr11321350wrm.24.1561796637189;
+        Sat, 29 Jun 2019 01:23:57 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id r79sm4071532wme.2.2019.06.29.01.23.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 29 Jun 2019 01:23:56 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 10:23:54 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi@vger.kernel.org
+Subject: [GIT PULL] EFI fixes
+Message-ID: <20190629082354.GA128031@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tx descriptor retrieved from an empty xfers_list may not have valid
-pointers to the callback functions.
-Avoid calling dmaengine_desc_get_callback_invoke if xfers_list is empty.
+Linus,
 
-Signed-off-by: Raag Jadav <raagjadav@gmail.com>
----
- drivers/dma/at_xdmac.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Please pull the latest efi-urgent-for-linus git tree from:
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 627ef3e..b58ac72 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1568,11 +1568,14 @@ static void at_xdmac_handle_cyclic(struct at_xdmac_chan *atchan)
- 	struct at_xdmac_desc		*desc;
- 	struct dma_async_tx_descriptor	*txd;
- 
--	desc = list_first_entry(&atchan->xfers_list, struct at_xdmac_desc, xfer_node);
--	txd = &desc->tx_dma_desc;
-+	if (!list_empty(&atchan->xfers_list)) {
-+		desc = list_first_entry(&atchan->xfers_list,
-+					struct at_xdmac_desc, xfer_node);
-+		txd = &desc->tx_dma_desc;
- 
--	if (txd->flags & DMA_PREP_INTERRUPT)
--		dmaengine_desc_get_callback_invoke(txd, NULL);
-+		if (txd->flags & DMA_PREP_INTERRUPT)
-+			dmaengine_desc_get_callback_invoke(txd, NULL);
-+	}
- }
- 
- static void at_xdmac_handle_error(struct at_xdmac_chan *atchan)
--- 
-2.7.4
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-urgent-for-linus
 
+   # HEAD: 48c7d73b2362ce61503551ad70052617b3e8857d Merge tag 'efi-urgent' of git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi into efi/urgent
+
+Four fixes:
+
+ - fix a kexec crash on arm64
+ - fix a reboot crash on some Android platforms
+ - future-proof the code for upcoming ACPI 6.2 changes
+ - fix a build warning on x86
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Ard Biesheuvel (1):
+      efi/memreserve: deal with memreserve entries in unmapped memory
+
+Hans de Goede (1):
+      efi/bgrt: Drop BGRT status field reserved bits check
+
+Qian Cai (1):
+      x86/efi: fix a -Wtype-limits compilation warning
+
+Tian Baofeng (1):
+      efibc: Replace variable set function in notifier call
+
+
+ arch/x86/platform/efi/quirks.c  |  2 +-
+ drivers/firmware/efi/efi-bgrt.c |  5 -----
+ drivers/firmware/efi/efi.c      | 12 ++++++++++--
+ drivers/firmware/efi/efibc.c    | 12 +++++++-----
+ 4 files changed, 18 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 632b83885867..3b9fd679cea9 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -728,7 +728,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
+ 	 * Address range 0x0000 - 0x0fff is always mapped in the efi_pgd, so
+ 	 * page faulting on these addresses isn't expected.
+ 	 */
+-	if (phys_addr >= 0x0000 && phys_addr <= 0x0fff)
++	if (phys_addr <= 0x0fff)
+ 		return;
+ 
+ 	/*
+diff --git a/drivers/firmware/efi/efi-bgrt.c b/drivers/firmware/efi/efi-bgrt.c
+index a2384184a7de..b07c17643210 100644
+--- a/drivers/firmware/efi/efi-bgrt.c
++++ b/drivers/firmware/efi/efi-bgrt.c
+@@ -47,11 +47,6 @@ void __init efi_bgrt_init(struct acpi_table_header *table)
+ 		       bgrt->version);
+ 		goto out;
+ 	}
+-	if (bgrt->status & 0xfe) {
+-		pr_notice("Ignoring BGRT: reserved status bits are non-zero %u\n",
+-		       bgrt->status);
+-		goto out;
+-	}
+ 	if (bgrt->image_type != 0) {
+ 		pr_notice("Ignoring BGRT: invalid image type %u (expected 0)\n",
+ 		       bgrt->image_type);
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 16b2137d117c..4b7cf7bc0ded 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -1009,14 +1009,16 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+ 
+ 	/* first try to find a slot in an existing linked list entry */
+ 	for (prsv = efi_memreserve_root->next; prsv; prsv = rsv->next) {
+-		rsv = __va(prsv);
++		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
+ 		index = atomic_fetch_add_unless(&rsv->count, 1, rsv->size);
+ 		if (index < rsv->size) {
+ 			rsv->entry[index].base = addr;
+ 			rsv->entry[index].size = size;
+ 
++			memunmap(rsv);
+ 			return 0;
+ 		}
++		memunmap(rsv);
+ 	}
+ 
+ 	/* no slot found - allocate a new linked list entry */
+@@ -1024,7 +1026,13 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+ 	if (!rsv)
+ 		return -ENOMEM;
+ 
+-	rsv->size = EFI_MEMRESERVE_COUNT(PAGE_SIZE);
++	/*
++	 * The memremap() call above assumes that a linux_efi_memreserve entry
++	 * never crosses a page boundary, so let's ensure that this remains true
++	 * even when kexec'ing a 4k pages kernel from a >4k pages kernel, by
++	 * using SZ_4K explicitly in the size calculation below.
++	 */
++	rsv->size = EFI_MEMRESERVE_COUNT(SZ_4K);
+ 	atomic_set(&rsv->count, 1);
+ 	rsv->entry[0].base = addr;
+ 	rsv->entry[0].size = size;
+diff --git a/drivers/firmware/efi/efibc.c b/drivers/firmware/efi/efibc.c
+index 61e099826cbb..35dccc88ac0a 100644
+--- a/drivers/firmware/efi/efibc.c
++++ b/drivers/firmware/efi/efibc.c
+@@ -43,11 +43,13 @@ static int efibc_set_variable(const char *name, const char *value)
+ 	efibc_str_to_str16(value, (efi_char16_t *)entry->var.Data);
+ 	memcpy(&entry->var.VendorGuid, &guid, sizeof(guid));
+ 
+-	ret = efivar_entry_set(entry,
+-			       EFI_VARIABLE_NON_VOLATILE
+-			       | EFI_VARIABLE_BOOTSERVICE_ACCESS
+-			       | EFI_VARIABLE_RUNTIME_ACCESS,
+-			       size, entry->var.Data, NULL);
++	ret = efivar_entry_set_safe(entry->var.VariableName,
++				    entry->var.VendorGuid,
++				    EFI_VARIABLE_NON_VOLATILE
++				    | EFI_VARIABLE_BOOTSERVICE_ACCESS
++				    | EFI_VARIABLE_RUNTIME_ACCESS,
++				    false, size, entry->var.Data);
++
+ 	if (ret)
+ 		pr_err("failed to set %s EFI variable: 0x%x\n",
+ 		       name, ret);
