@@ -2,111 +2,230 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5247EC5B579
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 00:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D32BC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 00:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA972133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 00:33:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OBn1+/ty"
+	by mail.kernel.org (Postfix) with ESMTP id C5463208E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 00:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfF2Ad1 (ORCPT
+        id S1726828AbfF2Aih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 20:33:27 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45703 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbfF2Ad1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 20:33:27 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45bF3m2GWVz9s4Y;
-        Sat, 29 Jun 2019 10:33:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561768404;
-        bh=2rnkgoVCNl6T9AFkgEUYGK1CF5Gp3iHLZ1ROdDv2nDg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OBn1+/tysERdPthOZdJuB/A6wcfJvzG8pqtRTo0Df3X4LUoLrxmgkpc5HNkb9IxFb
-         5+pwMyv0heZt00ZADoSkgmq0lHovPmpY0eTZIUY4/mpIDfYV5LKs7VTyseY9vxOHUy
-         yUM7CjN9IF+vTPcleMEo3BxRriSdv0otMgQZGIgYxL1tIWgrrHMBOy9fZ5fiv30DUs
-         FK1ysJwwqCcjTovAO4CqP68LIUHHQwhTU+m++buE7wBdsA2xgsqo+y/+33sR9Myn3n
-         PX0RkMdiA2zWYW1zWLElWmaOrd9X6tL1KwtE9+fdRxfNO3eQ2lybx68uRn479CRtkz
-         HlyIcRylDc3tg==
-Date:   Sat, 29 Jun 2019 10:33:17 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Crews <ncrews@chromium.org>
-Subject: Re: linux-next: build failure after merge of the battery tree
-Message-ID: <20190629103317.421ed4b6@canb.auug.org.au>
-In-Reply-To: <d3515009-c922-7aa6-2ded-4ca39ed324f2@collabora.com>
-References: <20190628140304.76caf572@canb.auug.org.au>
-        <20190628153146.c2lh4y55qvcmqhry@earth.universe>
-        <d3515009-c922-7aa6-2ded-4ca39ed324f2@collabora.com>
+        Fri, 28 Jun 2019 20:38:37 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59558 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfF2Aih (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 20:38:37 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 93515285639
+Message-ID: <f8f3565c18cc0c1ede107311dbe41df1a07da07b.camel@collabora.com>
+Subject: Re: [PATCH v2] phy: rockchip-inno-usb2: allow to force the B-Device
+ Session Valid bit.
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        kernel@collabora.com,
+        =?ISO-8859-1?Q?Ga=EBl?= PORTAY <gael.portay@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Date:   Fri, 28 Jun 2019 21:38:26 -0300
+In-Reply-To: <7a205885f0599f04da067a7f41a14ee0b0d759f5.camel@collabora.com>
+References: <20190515222050.15075-1-gael.portay@collabora.com>
+         <7a205885f0599f04da067a7f41a14ee0b0d759f5.camel@collabora.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/EV3ZVoILqOP7tCULXoI=mx0"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EV3ZVoILqOP7tCULXoI=mx0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Heiko, Kishon,
 
-Hi Enric,
+I'll try to pick up this patch.
+Some comments below, just for self-reference.
 
-On Fri, 28 Jun 2019 18:56:56 +0200 Enric Balletbo i Serra <enric.balletbo@c=
-ollabora.com> wrote:
->
-> Hmm, I just applied this patch on top of linux-next and it build with
-> allmodconfig on x86_64
->=20
-> I am wondering if the build was done without this commit, which is in
-> chrome-platform for-next branch. Could be this the problem?
->=20
-> commit 0c0b7ea23aed0b55ef2f9803f13ddaae1943713d
-> Author: Nick Crews <ncrews@chromium.org>
-> Date:   Wed Apr 24 10:56:50 2019 -0600
->=20
->     platform/chrome: wilco_ec: Add property helper library
+On Wed, 2019-06-26 at 12:32 -0300, Ezequiel Garcia wrote:
+> On Wed, 2019-05-15 at 18:20 -0400, Gaël PORTAY wrote:
+> > From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > 
+> > The OTG disconnection event is generated after the presence/absence of
+> > an ID connection, but some platforms don't have the ID pin connected, so
+> > the event is not generated. In such case, for detecting the
+> > disconnection event, we can get the cable state from an extcon driver.
+> > We need, though, to force to set the B-Device Session Valid bit on the
+> > PHY to have the device respond to the setup address. Otherwise, the
+> > following error is shown:
+> > 
+> >     usb 2-2: Device not responding to setup address.
+> >     usb 2-2: device not accepting address 14, error -71
+> >     usb usb2-port2: unable to enumerate USB device
+> > 
+> > The patch tells the PHY to force the B-Device Session Valid bit when the
+> > OTG role is device and clear that bit if the OTG role is host, when an
+> > extcon is available.
+> > 
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
+> > ---
+> > 
+> > Hi all,
+> > 
+> > The main purpose of this patch is have the Type-C port on the Samsung
+> > Chromebook Plus work as a device or in OTG mode.
+> > 
+> > That patch was originally a part of that patchset[1]; all other patches
+> > was merged recently in master.
+> > 
+> > The patch was tested on a Samsung Chromebook Plus by configuring one
+> > port to work as device, configure a cdc ethernet gadget and communicate
+> > via ethernet gadget my workstation with the chromebook through a usb-a
+> > to type-c cable.
+> > 
+> > Best regards,
+> > Gaël
+> > 
+> > [1]: https://lkml.org/lkml/2018/8/15/141
+> > 
 
-Exactly since I merge the battery tree before the chrome-platform
-tree ... Cross tree dependencies are a pain.
+We still need the above devicetree changes.
 
-> Anyway, I think the proper way to do it is create an immutable branch for
-> Sebastian as the patch he picked depends on the above commit. I'll create=
- one,
-> sorry about that missing dependency.
+> > Changes since v1:
+> >  - [PATCH 3/4] Remove introduction of dt property "rockchip,force-bvalid"
+> >                and replace cable state using extcon instead (if set).
+> > 
+> >  drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 51 +++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> > 
+> > diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+> > index ba07121c3eff..5e9d50b5ae16 100644
+> > --- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+> > +++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+> > @@ -125,6 +125,7 @@ struct rockchip_chg_det_reg {
+> >   * @bvalid_det_en: vbus valid rise detection enable register.
+> >   * @bvalid_det_st: vbus valid rise detection status register.
+> >   * @bvalid_det_clr: vbus valid rise detection clear register.
+> > + * @bvalid_session: force B-device session valid register.
+> >   * @ls_det_en: linestate detection enable register.
+> >   * @ls_det_st: linestate detection state register.
+> >   * @ls_det_clr: linestate detection clear register.
+> > @@ -138,6 +139,7 @@ struct rockchip_usb2phy_port_cfg {
+> >  	struct usb2phy_reg	bvalid_det_en;
+> >  	struct usb2phy_reg	bvalid_det_st;
+> >  	struct usb2phy_reg	bvalid_det_clr;
+> > +	struct usb2phy_reg	bvalid_session;
+> >  	struct usb2phy_reg	ls_det_en;
+> >  	struct usb2phy_reg	ls_det_st;
+> >  	struct usb2phy_reg	ls_det_clr;
+> > @@ -169,6 +171,7 @@ struct rockchip_usb2phy_cfg {
+> >   * @port_id: flag for otg port or host port.
+> >   * @suspended: phy suspended flag.
+> >   * @vbus_attached: otg device vbus status.
+> > + * @force_bvalid: force the control of the B-device session valid bit.
+> >   * @bvalid_irq: IRQ number assigned for vbus valid rise detection.
+> >   * @ls_irq: IRQ number assigned for linestate detection.
+> >   * @otg_mux_irq: IRQ number which multiplex otg-id/otg-bvalid/linestate
+> > @@ -187,6 +190,7 @@ struct rockchip_usb2phy_port {
+> >  	unsigned int	port_id;
+> >  	bool		suspended;
+> >  	bool		vbus_attached;
+> > +	bool		force_bvalid;
+> >  	int		bvalid_irq;
+> >  	int		ls_irq;
+> >  	int		otg_mux_irq;
+> > @@ -553,6 +557,13 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
+> >  	switch (rport->state) {
+> >  	case OTG_STATE_UNDEFINED:
+> >  		rport->state = OTG_STATE_B_IDLE;
+> > +		if (rport->force_bvalid) {
+> > +			property_enable(rphy->grf,
+> > +					&rport->port_cfg->bvalid_session,
+> > +					true);
+> > +			dev_dbg(&rport->phy->dev,
+> > +				"set the B-Device Session Valid\n");
+> > +		}
+> >  		if (!vbus_attach)
+> >  			rockchip_usb2phy_power_off(rport->phy);
+> >  		/* fall through */
+> > @@ -560,6 +571,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
+> >  		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) > 0) {
+> >  			dev_dbg(&rport->phy->dev, "usb otg host connect\n");
+> >  			rport->state = OTG_STATE_A_HOST;
+> > +			/* When leaving device mode force end the session */
+> > +			if (rport->force_bvalid) {
+> > +				property_enable(rphy->grf,
+> > +					&rport->port_cfg->bvalid_session,
+> > +					false);
+> > +				dev_dbg(&rport->phy->dev,
+> > +					"clear the B-Device Session Valid\n");
+> > +			}
+> >  			rockchip_usb2phy_power_on(rport->phy);
+> >  			return;
+> >  		} else if (vbus_attach) {
+> > @@ -634,6 +653,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
+> >  		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) == 0) {
+> >  			dev_dbg(&rport->phy->dev, "usb otg host disconnect\n");
+> >  			rport->state = OTG_STATE_B_IDLE;
+> > +			/* When leaving host mode force start the session */
+> > +			if (rport->force_bvalid) {
+> > +				property_enable(rphy->grf,
+> > +					&rport->port_cfg->bvalid_session,
+> > +					true);
+> > +				dev_dbg(&rport->phy->dev,
+> > +					"set the B-Device Session Valid\n");
+> > +			}
+> >  			rockchip_usb2phy_power_off(rport->phy);
+> >  		}
+> >  		break;
+> > @@ -1016,6 +1043,28 @@ static int rockchip_usb2phy_otg_port_init(struct rockchip_usb2phy *rphy,
+> >  	INIT_DELAYED_WORK(&rport->chg_work, rockchip_chg_detect_work);
+> >  	INIT_DELAYED_WORK(&rport->otg_sm_work, rockchip_usb2phy_otg_sm_work);
+> >  
+> > +	/*
+> > +	 * Some platforms doesn't have the ID pin connected to the phy, hence
+> > +	 * the OTD ID event is not generated, but in some cases we can get the
+> > +	 * cable state from an extcon driver. In such case we can force to set
+> > +	 * the B-Device Session Valid bit on the PHY to have the device working
+> > +	 * as a OTG.
+> > +	 */
+> > +	if (rphy->edev) {
 
-Thanks.
+I might be missing something, but this check seems bogus.
 
---=20
-Cheers,
-Stephen Rothwell
+edev can't be NULL as the driver creates an extcon if
+there is none assigned in the devicetree.
 
---Sig_/EV3ZVoILqOP7tCULXoI=mx0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> > +		/*
+> > +		 * Check if bvalid_session register is set in the structure
+> > +		 * rockchip_usb2phy_cfg for this SoC.
+> > +		 */
+> > +		if (rport->port_cfg->bvalid_session.offset == 0x0) {
+> > +			rport->force_bvalid = false;
+> > +			dev_err(rphy->dev,
+> > +				"cannot force B-device session, the register is not set for that SoC\n");
+> > +		} else {
+> > +			rport->force_bvalid = true;
+> > +			dev_info(rphy->dev, "force B-device session enabled\n");
+> > +		}
 
------BEGIN PGP SIGNATURE-----
+I think we should be doing something more like:
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0Wsc0ACgkQAVBC80lX
-0GxE+Qf+LWHhQMfML7/yMhynM0XlpayytjoF8f5fmrFFc4kZzKax2ML6G43B0Umi
-eAPjYaLanaD6XtLwSQ8T0gUSsdW4ery0ScohPs3RGHStpgYkQsx1KEMR3HmHFP8Z
-7Oc2SNNq6I0uPBWo/Gb7Rs8ysL2JqldTD870nFukthLEvrRa21sg3XtR1THmZdD5
-VcDYWzJ1dIGKINimqi6jo+sc9dKzlurMyanVw7ElkXsJ1+mTAQMQ7HcipRdO3Obd
-xSMxBlX9bErTXwkXZ82qfb54KiL7ydUeGSJHJLPLsme25UthY0lW7kzfgmjEwBgt
-N3BjJRzsXwJDTlGgxNe8Z8EEQN4ZdA==
-=xJA6
------END PGP SIGNATURE-----
+if (HAS_REG(rport->port_cfg->bvalid_session)) {
+	rport->force_bvalid = true;
+	dev_info(rphy->dev, "force B-device session enabled\n");
+}
 
---Sig_/EV3ZVoILqOP7tCULXoI=mx0--
+And not error verbosely on platforms that don't
+care about this.
+ 
+Thanks,
+Ezequiel
+
