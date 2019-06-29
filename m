@@ -2,129 +2,108 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC2FC5B577
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB811C5B577
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A782216FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE18D214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:10:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t248GpiW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfF2TGx (ORCPT
+        id S1726925AbfF2TKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 15:06:53 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:59356 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbfF2TGx (ORCPT
+        Sat, 29 Jun 2019 15:10:43 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38895 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbfF2TKm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 15:06:53 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhIg4-0007QN-HD; Sat, 29 Jun 2019 19:06:24 +0000
-Date:   Sat, 29 Jun 2019 20:06:24 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Christopher Lameter <cl@linux.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: shrink_dentry_list() logics change (was Re: [RFC PATCH v3 14/15]
- dcache: Implement partial shrink via Slab Movable Objects)
-Message-ID: <20190629190624.GU17978@ZenIV.linux.org.uk>
-References: <20190411013441.5415-1-tobin@kernel.org>
- <20190411013441.5415-15-tobin@kernel.org>
- <20190411023322.GD2217@ZenIV.linux.org.uk>
- <20190411024821.GB6941@eros.localdomain>
- <20190411044746.GE2217@ZenIV.linux.org.uk>
- <20190411210200.GH2217@ZenIV.linux.org.uk>
- <20190629040844.GS17978@ZenIV.linux.org.uk>
- <20190629043803.GT17978@ZenIV.linux.org.uk>
+        Sat, 29 Jun 2019 15:10:42 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y15so4576692pfn.5
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 12:10:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=4Z+5F7GZWV6rxZhVeShHNbtKUyddpMRHWbu6DiZ08GA=;
+        b=t248GpiWEmIRFs5MIDUs+28DYxiAWNjP36UII3qCngr8Lf/syn0fZAZ0UH8nbam4rd
+         TjCM32w8LJE7r79g+I52LK04219ZMIgNP3w65LpHElwSzufsI/e8V4Z7/Bu/BB893+1R
+         VWPqOn2Nl9CrcKcemUNvzZteLZwmrdkgwaDkh5nzp3UCHnnrH0+q5H9EscAaBqFEZcOU
+         /U60CVJv558id4b75Ve1a6kbWvOlxfguuCdmye61wy95gFfOsN5fiNN+xJnH83tCwEN2
+         axCrWWvXsqULG9BPJrP5d4Cx571lX6hEduLtpPGvc+JtCjr2rJu8s+zRZPt9eQ/wQE1g
+         srKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=4Z+5F7GZWV6rxZhVeShHNbtKUyddpMRHWbu6DiZ08GA=;
+        b=ISojh90Xp7S2AEHKNLRE+HqQaSSvuDyP+rVlcsOGJMea1Z7LB5eIeKPUDy7dGHwYh5
+         aEfsioT8PMDww9xancJTomngeJ44nAwPcAYBPf6sW37zJvcdCkFid8xmtFQZSYuo9W98
+         2nCHhlUQjQSKst4e8vxxgw5hmFbvLPIzB/zq8ZPJnOPBnNu7FH5TcMMUsEZnQDC73G7j
+         wYL/L/VN2ayAJ08itPiFS679VpiJ/f4zlztJv+M3h/GITd2fFCXKWZP3anIPPMk8EeZO
+         Mu98GlJQ3Kd6+FyOtlCh1e6bvYPJsVFgOJLbibYkqDNCO0L2VRcJaQnFU7jtjNZLj+8t
+         oZrw==
+X-Gm-Message-State: APjAAAVnsDGz5uniaXK3SqHylBbB7pJukzkiMrkWvR1H2cg1mnj+jbxi
+        MGzPYj4mFmw5Ae8QOGEj984=
+X-Google-Smtp-Source: APXvYqzfNPzemt4/vzbiZ1Eq4EiPFQlnvLf9LygcvLhrFA5WGnR01TsCMLQ4uYmsJc+7L83UkaNR0A==
+X-Received: by 2002:a17:90a:1ae2:: with SMTP id p89mr19823864pjp.26.1561835441671;
+        Sat, 29 Jun 2019 12:10:41 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id s5sm5706805pgj.60.2019.06.29.12.10.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Jun 2019 12:10:40 -0700 (PDT)
+Date:   Sun, 30 Jun 2019 00:40:35 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bhagyashri Dighole <digholebhagyashri@gmail.com>,
+        Wentao Cai <etsai042@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Ivan Safonov <insafonov@gmail.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Himadri Pandya <himadri18.07@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: netlogic: Change GFP_ATOMIC to GFP_KERNEL
+Message-ID: <20190629191035.GA15292@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190629043803.GT17978@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 05:38:03AM +0100, Al Viro wrote:
+Below is data path of xlr_config_spill
+xlr_net_probe
+  -->xlr_config_fifo_spill_area
+  --->xlr_config_spill
 
-> PS: the problem is not gone in the next iteration of the patchset in
-> question.  The patch I'm proposing (including dput_to_list() and _ONLY_
-> compile-tested) follows.  Comments?
+We can use GFP_KERNEL as this function is getting called from
+xlr_net_probe and there are no locks.
 
-FWIW, there's another unpleasantness in the whole thing.  Suppose we have
-picked a page full of dentries, all with refcount 0.  We decide to
-evict all of them.  As it turns out, they are from two filesystems.
-Filesystem 1 is NFS on a server, with currently downed hub on the way
-to it.  Filesystem 2 is local.  We attempt to evict an NFS dentry and
-get stuck - tons of dirty data with no way to flush them on server.
-In the meanwhile, admin tries to unmount the local filesystem.  And
-gets stuck as well, since umount can't do anything to its dentries
-that happen to sit in our shrink list.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/netlogic/xlr_net.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I wonder if the root of problem here isn't in shrink_dcache_for_umount();
-all it really needs is to have everything on that fs with refcount 0
-dragged through __dentry_kill().  If something had been on a shrink
-list, __dentry_kill() will just leave behind a struct dentry completely
-devoid of any connection to superblock, other dentries, filesystem
-type, etc. - it's just a piece of memory that won't be freed until
-the owner of shrink list finally gets around to it.  Which can happen
-at any point - all they'll do to it is dentry_free(), and that doesn't
-need any fs-related data structures.
+diff --git a/drivers/staging/netlogic/xlr_net.c b/drivers/staging/netlogic/xlr_net.c
+index 07a06c5..05079f7 100644
+--- a/drivers/staging/netlogic/xlr_net.c
++++ b/drivers/staging/netlogic/xlr_net.c
+@@ -385,7 +385,7 @@ static void *xlr_config_spill(struct xlr_net_priv *priv, int reg_start_0,
+ 
+ 	base = priv->base_addr;
+ 	spill_size = size;
+-	spill = kmalloc(spill_size + SMP_CACHE_BYTES, GFP_ATOMIC);
++	spill = kmalloc(spill_size + SMP_CACHE_BYTES, GFP_KERNEL);
+ 	if (!spill)
+ 		return ZERO_SIZE_PTR;
+ 
+-- 
+2.7.4
 
-The logics in shrink_dcache_parent() is
-	collect everything evictable into a shrink list
-	if anything found - kick it out and repeat the scan
-	otherwise, if something had been on other's shrink list
-		repeat the scan
-
-I wonder if after the "no evictable candidates, but something
-on other's shrink lists" we ought to do something along the
-lines of
-	rcu_read_lock
-	walk it, doing
-		if dentry has zero refcount
-			if it's not on a shrink list,
-				move it to ours
-			else
-				store its address in 'victim'
-				end the walk
-	if no victim found
-		rcu_read_unlock
-	else
-		lock victim for __dentry_kill
-		rcu_read_unlock
-		if it's still alive
-			if it's not IS_ROOT
-				if parent is not on shrink list
-					decrement parent's refcount
-					put it on our list
-				else
-					decrement parent's refcount
-			__dentry_kill(victim)
-		else
-			unlock
-	if our list is non-empty
-		shrink_dentry_list on it
-in there...
