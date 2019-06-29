@@ -2,90 +2,96 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB83DC5B57A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2A4C5B579
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA9220665
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2EEB20665
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfF2Qho (ORCPT
+        id S1726944AbfF2Qpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 12:37:44 -0400
-Received: from bout01.mta.xmission.com ([166.70.11.15]:49749 "EHLO
-        bout01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfF2Qho (ORCPT
+        Sat, 29 Jun 2019 12:45:35 -0400
+Received: from smtprelay0042.hostedemail.com ([216.40.44.42]:48378 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726837AbfF2Qpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 12:37:44 -0400
-Received: from mx02.mta.xmission.com ([166.70.13.212])
-        by bout01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <sbauer@plzdonthack.me>)
-        id 1hhGM8-0008Vd-Kr; Sat, 29 Jun 2019 10:37:40 -0600
-Received: from plesk14-shared.xmission.com ([166.70.198.161] helo=plesk14.xmission.com)
-        by mx02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <sbauer@plzdonthack.me>)
-        id 1hhGM7-0000gT-Tq; Sat, 29 Jun 2019 10:37:40 -0600
-Received: from hacktheplanet (c-68-50-34-150.hsd1.in.comcast.net [68.50.34.150])
-        by plesk14.xmission.com (Postfix) with ESMTPSA id 2E121193879;
-        Sat, 29 Jun 2019 16:37:39 +0000 (UTC)
-Date:   Sat, 29 Jun 2019 12:37:37 -0400
-From:   Scott Bauer <sbauer@plzdonthack.me>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     jonathan.derrick@intel.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zub@linux.fjfi.cvut.cz" <zub@linux.fjfi.cvut.cz>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "jonas.rabenstein@studium.uni-erlangen.de" 
-        <jonas.rabenstein@studium.uni-erlangen.de>
-Message-ID: <20190629163737.GB21042@hacktheplanet>
-References: <1558471606-25139-1-git-send-email-zub@linux.fjfi.cvut.cz>
- <7ee5d705c12d770bf7566bce7d664bf733b25206.camel@intel.com>
- <20190629161947.GA20127@hacktheplanet>
- <d3074ee1-0506-511d-c29c-44effb4eda97@kernel.dk>
- <20190629162835.GA21042@hacktheplanet>
- <cb37028f-bff9-92a6-4ecd-efe938274d24@kernel.dk>
+        Sat, 29 Jun 2019 12:45:34 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 72872182CF666;
+        Sat, 29 Jun 2019 16:45:32 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: wood26_67b7f2b025644
+X-Filterd-Recvd-Size: 3038
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 29 Jun 2019 16:45:12 +0000 (UTC)
+Message-ID: <c3b83ba7f9b003dd4fb9cad885461ce93165dc04.camel@perches.com>
+Subject: Re: [PATCH V2] include: linux: Regularise the use of FIELD_SIZEOF
+ macro
+From:   Joe Perches <joe@perches.com>
+To:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Andreas Dilger <adilger@dilger.ca>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Shyam Saini <shyam.saini@amarulasolutions.com>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        netdev@vger.kernel.org, linux-ext4 <linux-ext4@vger.kernel.org>,
+        devel@lists.orangefs.org, linux-mm@kvack.org,
+        linux-sctp@vger.kernel.org, bpf@vger.kernel.org,
+        kvm@vger.kernel.org, mayhs11saini@gmail.com
+Date:   Sat, 29 Jun 2019 09:45:10 -0700
+In-Reply-To: <20190629142510.GA10629@avx2>
+References: <20190611193836.2772-1-shyam.saini@amarulasolutions.com>
+         <20190611134831.a60c11f4b691d14d04a87e29@linux-foundation.org>
+         <6DCAE4F8-3BEC-45F2-A733-F4D15850B7F3@dilger.ca>
+         <20190629142510.GA10629@avx2>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cb37028f-bff9-92a6-4ecd-efe938274d24@kernel.dk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-XM-SPF: eid=1hhGM7-0000gT-Tq;;;mid=<20190629163737.GB21042@hacktheplanet>;;;hst=mx02.mta.xmission.com;;;ip=166.70.198.161;;;frm=sbauer@plzdonthack.me;;;spf=none
-X-SA-Exim-Connect-IP: 166.70.198.161
-X-SA-Exim-Mail-From: sbauer@plzdonthack.me
-Subject: Re: [PATCH v2 0/3] block: sed-opal: add support for shadow MBR done
- flag and write
-X-SA-Exim-Version: 4.2.1 (built Mon, 03 Jun 2019 09:49:16 -0600)
-X-SA-Exim-Scanned: Yes (on mx02.mta.xmission.com)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-e1;5202;0csOn Sat, Jun 29, 2019 at 10:35:30AM -0600, Jens Axboe wrote:
-> On 6/29/19 10:28 AM, Scott Bauer wrote:
-> > On Sat, Jun 29, 2019 at 10:26:52AM -0600, Jens Axboe wrote:
-> >> On 6/29/19 10:19 AM, Scott Bauer wrote:
-> >>>
-> >>> Hey Jens,
-> >>>
-> >>> Can you please stage these for 5.3 aswell?
-> >>
-> >> Yes, looks fine to me. But it conflicts with the psid revert in terms
-> >> of ioctl numbering. You fine with me renumbering IOC_OPAL_MBR_DONE to:
-> >>
-> >> #define IOC_OPAL_MBR_DONE           _IOW('p', 233, struct opal_mbr_done)
+On Sat, 2019-06-29 at 17:25 +0300, Alexey Dobriyan wrote:
+> On Tue, Jun 11, 2019 at 03:00:10PM -0600, Andreas Dilger wrote:
+> > On Jun 11, 2019, at 2:48 PM, Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > On Wed, 12 Jun 2019 01:08:36 +0530 Shyam Saini <shyam.saini@amarulasolutions.com> wrote:
+> > I did a check, and FIELD_SIZEOF() is used about 350x, while sizeof_field()
+> > is about 30x, and SIZEOF_FIELD() is only about 5x.
 > > 
-> > Sorry for the conflict. That's fine. I'll fix up userland tooling.
+> > That said, I'm much more in favour of "sizeof_field()" or "sizeof_member()"
+> > than FIELD_SIZEOF().  Not only does that better match "offsetof()", with
+> > which it is closely related, but is also closer to the original "sizeof()".
+> > 
+> > Since this is a rather trivial change, it can be split into a number of
+> > patches to get approval/landing via subsystem maintainers, and there is no
+> > huge urgency to remove the original macros until the users are gone.  It
+> > would make sense to remove SIZEOF_FIELD() and sizeof_field() quickly so
+> > they don't gain more users, and the remaining FIELD_SIZEOF() users can be
+> > whittled away as the patches come through the maintainer trees.
 > 
-> Renamed 232 -> 233, and 233 -> 234, for the two conflicts. So now we have:
+> The signature should be
 > 
-> #define IOC_OPAL_PSID_REVERT_TPR    _IOW('p', 232, struct opal_key)
-> #define IOC_OPAL_MBR_DONE           _IOW('p', 233, struct opal_mbr_done)
-> #define IOC_OPAL_WRITE_SHADOW_MBR   _IOW('p', 234, struct opal_shadow_mbr)
+> 	sizeof_member(T, m)
+> 
+> it is proper English,
+> it is lowercase, so is easier to type,
+> it uses standard term (member, not field),
+> it blends in with standard "sizeof" operator,
 
-Looks good, thank you for handling this.
+yes please.
+
+Also, a simple script conversion applied
+immediately after an rc1 might be easiest
+rather than individual patches.
+
+
