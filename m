@@ -2,113 +2,128 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C312C5B57B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F82C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1508B214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F650214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 14:27:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wmn42cCj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/yJsoDS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfF2OZc (ORCPT
+        id S1726891AbfF2O1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 10:25:32 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33353 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfF2OZb (ORCPT
+        Sat, 29 Jun 2019 10:27:41 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33723 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfF2O1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 10:25:31 -0400
-Received: by mail-wm1-f68.google.com with SMTP id h19so11225072wme.0;
-        Sat, 29 Jun 2019 07:25:28 -0700 (PDT)
+        Sat, 29 Jun 2019 10:27:40 -0400
+Received: by mail-pg1-f193.google.com with SMTP id m4so3895630pgk.0;
+        Sat, 29 Jun 2019 07:27:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tSfTfCg1RYrQS9+orWf92BVXcSGyjMupz270+2KJ+Us=;
-        b=Wmn42cCjIZF370922nlT8XBZNT0vFC3qdUoivrJz5yLafRIjdx1Vw+bUvno+QUBVO5
-         oMyQcmwqGx4DE3Y07CmSTM0IATWqZAW8kgg+hDEKwh+1CP4NznlAWonwVsCaGpQLaVCV
-         I2vA/VdkUZjqS9WvauRGJBO3Xjdwe01bpXzqQP8wAMh3LJ6yI1E5Z9SfpRw+TuNVA5cx
-         Mol2Xo2HUenKPsAtO6b1Hxjmm06+PdB0ii0cFoQihuSTWnRJjwjpf6NZuH7lsl3/21RK
-         LnPOrpaBytkjll+vsC5zrv5VKacw2e2sTlF82+ldUSC/dM1uFOjAFEnxgQGkqlBXSG7l
-         +TOw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w9kX/n0b6f6ujUCXc3PZGJaxc+3qpnnuRsSEZJ/yJNk=;
+        b=t/yJsoDSM5sqEsERahyJWoye/Lzjud6YFZ/UY/Bswp7m+DUlR42TA+sKmKNvAQ0M6w
+         V7f057KHykhT4FArhd8oZhB42vyXKOc0scQGr9rRx/NLysuqoRRzi0QvlTZ+LAXLhL58
+         pjMWVjAMMlzSnBwvUFrDTEhly02bXMp8MglhY2Q2w0nRFPnEAjOv7YOky0Ho4uNbee6f
+         3WTkOFB3krsjVwnLp9NiDsreJ9oNE7hzjCYY88Sh6gMBgvNL6a9h6yb3ZNPKGpxDAtzV
+         Dtrk5vQEG30cdlNrC6/eNubPFFjTh+rM0q04uNotTm7w5UfPR5exH8BvnB1ELVZjcIe9
+         A9JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tSfTfCg1RYrQS9+orWf92BVXcSGyjMupz270+2KJ+Us=;
-        b=XaIdppMftJuD3uEwrow4pHAKBqgnJbPuLGiMRhssI+Hi3bgImFGA5HEdpi25c/1Fam
-         kfrGr6s4j2Ag2+IpaXvJQ1wqR9kj99rW1Z9mGEZZeACRq5S+FAzzSPBFWuPSYj3vdx5u
-         SAmYhMKCWKk4OFGZMo6NncAb3sIA1aEwgiIUCZ1Ub39EFQjYPGqyoLkYXSFqj7c7srzh
-         0aItlNF9bi+jesdKebazgVPOIH5IXFT/VtdhhVgTlSaTtOWT0jOG6xpphccPe6sNt1eS
-         I+tNrBI3fDFRZJHl55w9shqt07ZneFt5sQjQUSSVSer6qTCcpkTK8Duullqe0Kfgo8rx
-         J0iA==
-X-Gm-Message-State: APjAAAWpj2QdGaAcPzCg3ksEjKAX/RGqLpODhql+FbQWJxaANIrHIPHC
-        XgZFz2NOWutr2t8NaGyiQg==
-X-Google-Smtp-Source: APXvYqzYjeGlAIXCK0Otnr3tBdPOmwP6gFHgUXBBLaR5nRWD1D7mhQsGKJ7ZXMMjG4yeTA5UDqjZKg==
-X-Received: by 2002:a1c:dc46:: with SMTP id t67mr9957034wmg.159.1561818328264;
-        Sat, 29 Jun 2019 07:25:28 -0700 (PDT)
-Received: from avx2 ([46.53.248.49])
-        by smtp.gmail.com with ESMTPSA id g123sm3503855wme.12.2019.06.29.07.25.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 07:25:27 -0700 (PDT)
-Date:   Sat, 29 Jun 2019 17:25:10 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Shyam Saini <shyam.saini@amarulasolutions.com>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-ext4 <linux-ext4@vger.kernel.org>,
-        devel@lists.orangefs.org, linux-mm@kvack.org,
-        linux-sctp@vger.kernel.org, bpf@vger.kernel.org,
-        kvm@vger.kernel.org, mayhs11saini@gmail.com
-Subject: Re: [PATCH V2] include: linux: Regularise the use of FIELD_SIZEOF
- macro
-Message-ID: <20190629142510.GA10629@avx2>
-References: <20190611193836.2772-1-shyam.saini@amarulasolutions.com>
- <20190611134831.a60c11f4b691d14d04a87e29@linux-foundation.org>
- <6DCAE4F8-3BEC-45F2-A733-F4D15850B7F3@dilger.ca>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w9kX/n0b6f6ujUCXc3PZGJaxc+3qpnnuRsSEZJ/yJNk=;
+        b=kctM2k9Us1Wua0vO5IhK3JHOPkrPvxmqYEHVx8DFYCcu/Z5j7GlRLH4jqAj7wD9/Ag
+         8t98zKnzj9vYPU6i3PIO8FRZFOdHHf9rNk4crwS3dxQIZBwhhUv9xw/mC338tmY9UbKf
+         DFdwIfW4jnipim1QqS3TK6o9dr86HCnwfNVZR/4A9bpHn2QUTvQwWuOn5XylrIKmyuK4
+         RUTZVPxOLsdJOeEEVpZD7ZehRI17spvhOFxDf81+a/YHaH1IkU8ZJ1FrM/gjKsjpW3f5
+         deteJPMiuqpWiebx9wE8aQAJ8hbGf5e/TbyM6r2krVVcx8bw4t0FCDbGwdKIsQpIQT9H
+         VfAA==
+X-Gm-Message-State: APjAAAVOFT/4ZvYcxyeKZqd7xaecAmoxLkoDCpuiG1lPsMCBHS+Wi0YI
+        Mvz1IRbF6i+2plaOjMpBu4zgkcLOMilo7B5yJlk=
+X-Google-Smtp-Source: APXvYqwqtpcT5DPWoj7CDByWP4fzCLM+F2kxHTKzJsIRjvNnpVHeFz3tc8bogTl58nNsnotu7pe/Wj/eloUIPQznNkU=
+X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr19895079pjb.20.1561818459937;
+ Sat, 29 Jun 2019 07:27:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6DCAE4F8-3BEC-45F2-A733-F4D15850B7F3@dilger.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190613030416.25807-1-ayman.bagabas@gmail.com>
+In-Reply-To: <20190613030416.25807-1-ayman.bagabas@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 29 Jun 2019 17:27:29 +0300
+Message-ID: <CAHp75Vd2oLkjYjh6k8a3fitAHDvQeu9zm2LpHM7fCXUWN9zaVQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/8] platform/x86: Huawei WMI laptop extras driver
+To:     Ayman Bagabas <ayman.bagabas@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 03:00:10PM -0600, Andreas Dilger wrote:
-> On Jun 11, 2019, at 2:48 PM, Andrew Morton <akpm@linux-foundation.org> wrote:
-> > 
-> > On Wed, 12 Jun 2019 01:08:36 +0530 Shyam Saini <shyam.saini@amarulasolutions.com> wrote:
+On Thu, Jun 13, 2019 at 6:04 AM Ayman Bagabas <ayman.bagabas@gmail.com> wrote:
+>
+> Changes from v1:
+> * introducing debugfs
+> * code reformatting
+>
+> This patch series introduce new features to the driver and also moves the
+> driver from wmi_driver to platform_driver. This move is necessary because the
+> driver is no longer only a hotkeys driver and platform_driver offers easier
+> future extensibility.
+>
+> The patch series introduces a WMI BIOS interface that brings on new features
+> and enables controlling micmute LED through this interface on supported models.
+> It also enables controlling battery charging thresholds and fn-lock state.
+> These features are controlled through the HWMI WMI device present in most of
+> these laptops.
+>
+> Currently, micmute LED is controlled through an ACPI method under EC.
+> This method ("SPIN", "WPIN") is specific to some models and wouldn't
+> work on all Huawei laptops. Controlling this LED through the interface provides
+> a better unified method to control the LED on models that implements this
+> feature.
+>
+> The behavior of hotkeys is not the same among all models. Some models
+> require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. Fn-lock inverts the
+> behavior of the top row from special keys to F1-F12 keys.
+>
+> A debugfs interface is also implemented to support unrepresented features and to
+> provide debugging feedback from users.
 
-> I did a check, and FIELD_SIZEOF() is used about 350x, while sizeof_field()
-> is about 30x, and SIZEOF_FIELD() is only about 5x.
-> 
-> That said, I'm much more in favour of "sizeof_field()" or "sizeof_member()"
-> than FIELD_SIZEOF().  Not only does that better match "offsetof()", with
-> which it is closely related, but is also closer to the original "sizeof()".
-> 
-> Since this is a rather trivial change, it can be split into a number of
-> patches to get approval/landing via subsystem maintainers, and there is no
-> huge urgency to remove the original macros until the users are gone.  It
-> would make sense to remove SIZEOF_FIELD() and sizeof_field() quickly so
-> they don't gain more users, and the remaining FIELD_SIZEOF() users can be
-> whittled away as the patches come through the maintainer trees.
+You have sent few series regarding Huawei devices.
+And from the patch 1 this is not applicable.
+So, I dropped all your patches from patchwork queue and will wait for
+new versions in order they are applicable.
 
-The signature should be
+>
+> Ayman Bagabas (8):
+>   platform/x86: huawei-wmi: move to platform driver
+>   platform/x86: huawei-wmi: implement WMI management interface
+>   platform/x86: huawei-wmi: use quirks and module parameters
+>   platform/x86: huawei-wmi: control micmute LED through WMI interface
+>   platform/x86: huawei-wmi: add battery charging protection support
+>   platform/x86: huawei-wmi: add fn-lock support
+>   platform/x86: huawei-wmi: add sysfs interface support
+>   platform/x86: huawei-wmi: add debugfs files support
+>
+>  drivers/platform/x86/huawei-wmi.c | 754 ++++++++++++++++++++++++++----
+>  1 file changed, 665 insertions(+), 89 deletions(-)
+>
+> --
+> 2.20.1
+>
 
-	sizeof_member(T, m)
 
-it is proper English,
-it is lowercase, so is easier to type,
-it uses standard term (member, not field),
-it blends in with standard "sizeof" operator,
+-- 
+With Best Regards,
+Andy Shevchenko
