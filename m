@@ -2,124 +2,59 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3596EC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45ACAC5B579
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072AF2086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B022133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:16:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfF2BPT (ORCPT
+        id S1726942AbfF2BQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 21:15:19 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8233 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726643AbfF2BPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 21:15:19 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 635BA4AA946E0D202CDB;
-        Sat, 29 Jun 2019 09:15:15 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sat, 29 Jun 2019
- 09:15:05 +0800
-Subject: Re: [PATCH net-next 02/12] net: hns3: enable DCB when TC num is one
- and pfc_en is non-zero
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-CC:     David Miller <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Peng Li <lipeng321@huawei.com>
-References: <1561722618-12168-1-git-send-email-tanhuazhong@huawei.com>
- <1561722618-12168-3-git-send-email-tanhuazhong@huawei.com>
- <CA+FuTSdWa0dMz15m79SLsNAw9zkp3+3MSfKiRwKnjZ7QAyq1Uw@mail.gmail.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <b3d14dce-45a9-2d13-93d5-be6e5ef0c709@huawei.com>
-Date:   Sat, 29 Jun 2019 09:15:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Fri, 28 Jun 2019 21:16:09 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:60656 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726884AbfF2BQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 21:16:08 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hh1yE-0002yf-KG; Sat, 29 Jun 2019 09:16:02 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hh1yB-0006BE-Ca; Sat, 29 Jun 2019 09:15:59 +0800
+Date:   Sat, 29 Jun 2019 09:15:59 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] crypto: serpent - mark __serpent_setkey_sbox
+ noinline
+Message-ID: <20190629011559.vp4t2tubhyihow3q@gondor.apana.org.au>
+References: <20190618111953.3183723-1-arnd@arndb.de>
+ <20190628041912.qprczc23gzeelag7@gondor.apana.org.au>
+ <20190628170437.GA103946@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+FuTSdWa0dMz15m79SLsNAw9zkp3+3MSfKiRwKnjZ7QAyq1Uw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628170437.GA103946@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/29 2:47, Willem de Bruijn wrote:
-> On Fri, Jun 28, 2019 at 7:53 AM Huazhong Tan <tanhuazhong@huawei.com> wrote:
->>
->> From: Yunsheng Lin <linyunsheng@huawei.com>
->>
->> Currently when TC num is one, the DCB will be disabled no matter if
->> pfc_en is non-zero or not.
->>
->> This patch enables the DCB if pfc_en is non-zero, even when TC num
->> is one.
->>
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> Signed-off-by: Peng Li <lipeng321@huawei.com>
->> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-> 
->> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
->> index 9edae5f..cb2fb5a 100644
->> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
->> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
->> @@ -597,8 +597,10 @@ static void hclge_tm_tc_info_init(struct hclge_dev *hdev)
->>                 hdev->tm_info.prio_tc[i] =
->>                         (i >= hdev->tm_info.num_tc) ? 0 : i;
->>
->> -       /* DCB is enabled if we have more than 1 TC */
->> -       if (hdev->tm_info.num_tc > 1)
->> +       /* DCB is enabled if we have more than 1 TC or pfc_en is
->> +        * non-zero.
->> +        */
->> +       if (hdev->tm_info.num_tc > 1 || hdev->tm_info.pfc_en)
-> 
-> small nit: comments that just repeat the condition are not very informative.
-> 
-> More helpful might be to explain why the DCB should be enabled in both
-> these cases. Though such detailed comments, if useful, are better left
-> to the commit message usually.
+On Fri, Jun 28, 2019 at 10:04:38AM -0700, Eric Biggers wrote:
+>
+> Hi Herbert, seems you forgot to push?  I don't see this in cryptodev.
 
-Very helpful suggestion. thanks.
-Will keep that in mind next time.
+Yes you're right.  It should be there now.
 
-> 
->>                 hdev->flag |= HCLGE_FLAG_DCB_ENABLE;
->>         else
->>                 hdev->flag &= ~HCLGE_FLAG_DCB_ENABLE;
->> @@ -1388,6 +1390,19 @@ void hclge_tm_schd_info_update(struct hclge_dev *hdev, u8 num_tc)
->>         hclge_tm_schd_info_init(hdev);
->>  }
->>
->> +void hclge_tm_pfc_info_update(struct hclge_dev *hdev)
->> +{
->> +       /* DCB is enabled if we have more than 1 TC or pfc_en is
->> +        * non-zero.
->> +        */
->> +       if (hdev->tm_info.num_tc > 1 || hdev->tm_info.pfc_en)
->> +               hdev->flag |= HCLGE_FLAG_DCB_ENABLE;
->> +       else
->> +               hdev->flag &= ~HCLGE_FLAG_DCB_ENABLE;
->> +
->> +       hclge_pfc_info_init(hdev);
->> +}
-> 
-> Avoid introducing this code duplication by defining a helper?
-> 
-
-Will send out a new patch to remove the code duplication by defining a helper.
-
-> .
-> 
-
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
