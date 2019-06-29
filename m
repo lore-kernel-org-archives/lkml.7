@@ -2,297 +2,119 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EA3C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1B6C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2551B214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0051214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:19:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSiTJ0VH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfF2KQj (ORCPT
+        id S1726965AbfF2KTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 06:16:39 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49108 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726839AbfF2KQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 06:16:39 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 33FCA289E10B9AADC0D9;
-        Sat, 29 Jun 2019 18:16:36 +0800 (CST)
-Received: from localhost.localdomain (10.175.34.53) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 29 Jun 2019 18:16:29 +0800
-From:   Xue Chaojing <xuechaojing@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoshaokai@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <xuechaojing@huawei.com>, <chiqijun@huawei.com>,
-        <wulike1@huawei.com>
-Subject: [PATCH net-next] hinic: add vlan offload support
-Date:   Sat, 29 Jun 2019 02:26:27 +0000
-Message-ID: <20190629022627.25396-1-xuechaojing@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 29 Jun 2019 06:19:15 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39364 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfF2KTO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 06:19:14 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b7so4646565pls.6
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 03:19:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=66nQjAJxmJvEqdK76xbS0v4Awl8Ld4jHNoG2MYlrSPc=;
+        b=hSiTJ0VH2LR8cD4eJvD9GFiE8771rr/Wd0rwQVye9hTyXBYynhUsJK21v3cZ5R4HbD
+         cQAgS3qiSbsEu5XjEtG47z6H0i2gfSO914VH4Us4NOFg8x9yQudP+BHtgVnNt7rBJXFU
+         ZUZB+0hWO3/OwM6iOax3YNg6AZBp1su1VZ7AJsI8EMSUK61be8ney6l2xXtpKg86PnCR
+         m+U0Xzexx3snRiAwQRrQX/JUqBQ8Eg8FBrj2IhZQu0gRO94f2yIkbehUlA0DShHmLWxz
+         +pcUsvJw0GZIu+63MRRMc1twS/hJ6sOBL7ap2QLqQP2uxQ3egf0YfvmzdQBiVRjs8PDC
+         sKvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=66nQjAJxmJvEqdK76xbS0v4Awl8Ld4jHNoG2MYlrSPc=;
+        b=CKkM+P3ZFM6xf2HvHD9a+8E6JZr1hMbxAsXoRBPZ6uJWD4IsyTxqGBwbbN5+OrOYoR
+         U1HPVjIWOk/8mQo5/92SiGWghP58hRjGUxFzetdhsolruutPFnZtDNpnCc/vAaaTLwFg
+         j1+dPsegeCV+WmSkQYfSELvtFYGL8I7sD9x36obLwmNrzoyxDt5fd+WNEszcjPDifSS/
+         sx32FovQOdnKkELUBG4SoXRXGF5x2MDfePJDiECk8V029mdclNtoI3s1Is+xm9eu8KXX
+         SN1HuW9iqjg8drmQH5U5SspiS/NN0UegX22bvNzVCYYSxEpVLCUVDrxzUmd01cfGXSBe
+         /6vA==
+X-Gm-Message-State: APjAAAXJ0XNyYv042FU+9jf5uOWEcX+r9vu6GzqiX4ZWfSx1bdTQFpDJ
+        8ngAdAadKhicBgQ/SgTf06Q=
+X-Google-Smtp-Source: APXvYqwfqiCBofp4EV/LyHS60DAP50fcMYoXiAq34ZMr1M4xaFUUCRyg0J/wRkSIB7P3M0mv4xA4uw==
+X-Received: by 2002:a17:902:290b:: with SMTP id g11mr16690707plb.26.1561803554032;
+        Sat, 29 Jun 2019 03:19:14 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id x26sm5907869pfq.69.2019.06.29.03.19.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Jun 2019 03:19:13 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 15:49:09 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 01/10] staging/rtl8723bs/hal: fix comparison to true/false is
+ error prone
+Message-ID: <20190629101909.GA14880@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.34.53]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds vlan offload support for the HINIC driver.
+fix below issues reported by checkpatch
 
-Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
+CHECK: Using comparison to false is error prone
+CHECK: Using comparison to true is error prone
+
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  2 ++
- .../net/ethernet/huawei/hinic/hinic_hw_wqe.h  | 15 ++++++++++
- .../net/ethernet/huawei/hinic/hinic_main.c    |  9 ++++--
- .../net/ethernet/huawei/hinic/hinic_port.c    | 30 +++++++++++++++++++
- .../net/ethernet/huawei/hinic/hinic_port.h    | 13 ++++++++
- drivers/net/ethernet/huawei/hinic/hinic_rx.c  | 13 ++++++++
- drivers/net/ethernet/huawei/hinic/hinic_tx.c  | 17 +++++++++++
- 7 files changed, 97 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8723bs/hal/hal_intf.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-index e83e3bf850d5..984c98f33258 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-@@ -45,6 +45,8 @@ enum hinic_port_cmd {
+diff --git a/drivers/staging/rtl8723bs/hal/hal_intf.c b/drivers/staging/rtl8723bs/hal/hal_intf.c
+index 4a4d17b..b9d13e3 100644
+--- a/drivers/staging/rtl8723bs/hal/hal_intf.c
++++ b/drivers/staging/rtl8723bs/hal/hal_intf.c
+@@ -230,7 +230,7 @@ s32	rtw_hal_mgnt_xmit(struct adapter *padapter, struct xmit_frame *pmgntframe)
+ 	/* pwlanhdr = (struct rtw_ieee80211_hdr *)pframe; */
+ 	/* memcpy(pmgntframe->attrib.ra, pwlanhdr->addr1, ETH_ALEN); */
  
- 	HINIC_PORT_CMD_SET_RX_CSUM	= 26,
+-	if (padapter->securitypriv.binstallBIPkey == true) {
++	if (padapter->securitypriv.binstallBIPkey) {
+ 		if (IS_MCAST(pmgntframe->attrib.ra)) {
+ 			pmgntframe->attrib.encrypt = _BIP_;
+ 			/* pmgntframe->attrib.bswenc = true; */
+@@ -430,7 +430,7 @@ s32 rtw_hal_macid_sleep(struct adapter *padapter, u32 macid)
  
-+	HINIC_PORT_CMD_SET_RX_VLAN_OFFLOAD = 27,
-+
- 	HINIC_PORT_CMD_GET_PORT_STATISTICS = 28,
+ 	support = false;
+ 	rtw_hal_get_def_var(padapter, HAL_DEF_MACID_SLEEP, &support);
+-	if (false == support)
++	if (!support)
+ 		return _FAIL;
  
- 	HINIC_PORT_CMD_CLEAR_PORT_STATISTICS = 29,
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_wqe.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_wqe.h
-index c6b809e24983..f4b6d2c1061f 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_wqe.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_wqe.h
-@@ -222,6 +222,8 @@
+ 	rtw_hal_set_hwreg(padapter, HW_VAR_MACID_SLEEP, (u8 *)&macid);
+@@ -445,7 +445,7 @@ s32 rtw_hal_macid_wakeup(struct adapter *padapter, u32 macid)
  
- #define RQ_CQE_OFFOLAD_TYPE_PKT_TYPE_SHIFT		0
- #define RQ_CQE_OFFOLAD_TYPE_PKT_TYPE_MASK		0xFFFU
-+#define RQ_CQE_OFFOLAD_TYPE_VLAN_EN_SHIFT		21
-+#define RQ_CQE_OFFOLAD_TYPE_VLAN_EN_MASK		0x1U
+ 	support = false;
+ 	rtw_hal_get_def_var(padapter, HAL_DEF_MACID_SLEEP, &support);
+-	if (false == support)
++	if (!support)
+ 		return _FAIL;
  
- #define RQ_CQE_OFFOLAD_TYPE_GET(val, member)		(((val) >> \
- 				RQ_CQE_OFFOLAD_TYPE_##member##_SHIFT) & \
-@@ -230,6 +232,19 @@
- #define HINIC_GET_RX_PKT_TYPE(offload_type)	\
- 			RQ_CQE_OFFOLAD_TYPE_GET(offload_type, PKT_TYPE)
- 
-+#define HINIC_GET_RX_VLAN_OFFLOAD_EN(offload_type)	\
-+			RQ_CQE_OFFOLAD_TYPE_GET(offload_type, VLAN_EN)
-+
-+#define RQ_CQE_SGE_VLAN_MASK				0xFFFFU
-+#define RQ_CQE_SGE_VLAN_SHIFT				0
-+
-+#define RQ_CQE_SGE_GET(val, member)			(((val) >> \
-+					RQ_CQE_SGE_##member##_SHIFT) & \
-+					RQ_CQE_SGE_##member##_MASK)
-+
-+#define HINIC_GET_RX_VLAN_TAG(vlan_len)	\
-+		RQ_CQE_SGE_GET(vlan_len, VLAN)
-+
- #define HINIC_RSS_TYPE_VALID_SHIFT			23
- #define HINIC_RSS_TYPE_TCP_IPV6_EXT_SHIFT		24
- #define HINIC_RSS_TYPE_IPV6_EXT_SHIFT			25
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index 1b917543feac..0eb83d529eac 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -830,14 +830,14 @@ static const struct net_device_ops hinic_netdev_ops = {
- 	.ndo_get_stats64 = hinic_get_stats64,
- 	.ndo_fix_features = hinic_fix_features,
- 	.ndo_set_features = hinic_set_features,
--
- };
- 
- static void netdev_features_init(struct net_device *netdev)
- {
- 	netdev->hw_features = NETIF_F_SG | NETIF_F_HIGHDMA | NETIF_F_IP_CSUM |
- 			      NETIF_F_IPV6_CSUM | NETIF_F_TSO | NETIF_F_TSO6 |
--			      NETIF_F_RXCSUM | NETIF_F_LRO;
-+			      NETIF_F_RXCSUM | NETIF_F_LRO |
-+			      NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX;
- 
- 	netdev->vlan_features = netdev->hw_features;
- 
-@@ -917,6 +917,11 @@ static int set_features(struct hinic_dev *nic_dev,
- 					     HINIC_LRO_MAX_WQE_NUM_DEFAULT);
- 	}
- 
-+	if (changed & NETIF_F_HW_VLAN_CTAG_RX)
-+		err = hinic_set_rx_vlan_offload(nic_dev,
-+						!!(features &
-+						   NETIF_F_HW_VLAN_CTAG_RX));
-+
- 	return err;
- }
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.c b/drivers/net/ethernet/huawei/hinic/hinic_port.c
-index c07adf793215..1bbeb91be808 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_port.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_port.c
-@@ -431,6 +431,36 @@ int hinic_set_rx_csum_offload(struct hinic_dev *nic_dev, u32 en)
- 	return 0;
- }
- 
-+int hinic_set_rx_vlan_offload(struct hinic_dev *nic_dev, u8 en)
-+{
-+	struct hinic_hwdev *hwdev = nic_dev->hwdev;
-+	struct hinic_vlan_cfg vlan_cfg;
-+	struct hinic_hwif *hwif;
-+	struct pci_dev *pdev;
-+	u16 out_size;
-+	int err;
-+
-+	if (!hwdev)
-+		return -EINVAL;
-+
-+	hwif = hwdev->hwif;
-+	pdev = hwif->pdev;
-+	vlan_cfg.func_id = HINIC_HWIF_FUNC_IDX(hwif);
-+	vlan_cfg.vlan_rx_offload = en;
-+
-+	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_SET_RX_VLAN_OFFLOAD,
-+				 &vlan_cfg, sizeof(vlan_cfg),
-+				 &vlan_cfg, &out_size);
-+	if (err || !out_size || vlan_cfg.status) {
-+		dev_err(&pdev->dev,
-+			"Failed to set rx vlan offload, err: %d, status: 0x%x, out size: 0x%x\n",
-+			err, vlan_cfg.status, out_size);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- int hinic_set_max_qnum(struct hinic_dev *nic_dev, u8 num_rqs)
- {
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.h b/drivers/net/ethernet/huawei/hinic/hinic_port.h
-index 16140a13000b..1bc47c7a5c00 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_port.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_port.h
-@@ -223,6 +223,16 @@ struct hinic_lro_timer {
- 	u32	timer;
- };
- 
-+struct hinic_vlan_cfg {
-+	u8      status;
-+	u8      version;
-+	u8      rsvd0[6];
-+
-+	u16     func_id;
-+	u8      vlan_rx_offload;
-+	u8      rsvd1[5];
-+};
-+
- struct hinic_rss_template_mgmt {
- 	u8	status;
- 	u8	version;
-@@ -558,4 +568,7 @@ int hinic_get_phy_port_stats(struct hinic_dev *nic_dev,
- 
- int hinic_get_vport_stats(struct hinic_dev *nic_dev,
- 			  struct hinic_vport_stats *stats);
-+
-+int hinic_set_rx_vlan_offload(struct hinic_dev *nic_dev, u8 en);
-+
- #endif
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-index 609ad4333cdd..56ea6d692f1c 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-@@ -18,6 +18,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/prefetch.h>
- #include <linux/cpumask.h>
-+#include <linux/if_vlan.h>
- #include <asm/barrier.h>
- 
- #include "hinic_common.h"
-@@ -325,6 +326,7 @@ static int rx_recv_jumbo_pkt(struct hinic_rxq *rxq, struct sk_buff *head_skb,
- static int rxq_recv(struct hinic_rxq *rxq, int budget)
- {
- 	struct hinic_qp *qp = container_of(rxq->rq, struct hinic_qp, rq);
-+	struct net_device *netdev = rxq->netdev;
- 	u64 pkt_len = 0, rx_bytes = 0;
- 	struct hinic_rq *rq = rxq->rq;
- 	struct hinic_rq_wqe *rq_wqe;
-@@ -334,8 +336,11 @@ static int rxq_recv(struct hinic_rxq *rxq, int budget)
- 	struct hinic_sge sge;
- 	unsigned int status;
- 	struct sk_buff *skb;
-+	u32 offload_type;
- 	u16 ci, num_lro;
- 	u16 num_wqe = 0;
-+	u32 vlan_len;
-+	u16 vid;
- 
- 	while (pkts < budget) {
- 		num_wqes = 0;
-@@ -368,6 +373,14 @@ static int rxq_recv(struct hinic_rxq *rxq, int budget)
- 		hinic_rq_put_wqe(rq, ci,
- 				 (num_wqes + 1) * HINIC_RQ_WQE_SIZE);
- 
-+		offload_type = be32_to_cpu(cqe->offload_type);
-+		vlan_len = be32_to_cpu(cqe->len);
-+		if ((netdev->features & NETIF_F_HW_VLAN_CTAG_RX) &&
-+		    HINIC_GET_RX_VLAN_OFFLOAD_EN(offload_type)) {
-+			vid = HINIC_GET_RX_VLAN_TAG(vlan_len);
-+			__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vid);
-+		}
-+
- 		skb_record_rx_queue(skb, qp->q_id);
- 		skb->protocol = eth_type_trans(skb, rxq->netdev);
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-index f4f76370cd65..9c78251f9c39 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-@@ -407,10 +407,20 @@ static int offload_csum(struct hinic_sq_task *task, u32 *queue_info,
- 	return 1;
- }
- 
-+static void offload_vlan(struct hinic_sq_task *task, u32 *queue_info,
-+			 u16 vlan_tag, u16 vlan_pri)
-+{
-+	task->pkt_info0 |= HINIC_SQ_TASK_INFO0_SET(vlan_tag, VLAN_TAG) |
-+				HINIC_SQ_TASK_INFO0_SET(1U, VLAN_OFFLOAD);
-+
-+	*queue_info |= HINIC_SQ_CTRL_SET(vlan_pri, QUEUE_INFO_PRI);
-+}
-+
- static int hinic_tx_offload(struct sk_buff *skb, struct hinic_sq_task *task,
- 			    u32 *queue_info)
- {
- 	enum hinic_offload_type offload = 0;
-+	u16 vlan_tag;
- 	int enabled;
- 
- 	enabled = offload_tso(task, queue_info, skb);
-@@ -424,6 +434,13 @@ static int hinic_tx_offload(struct sk_buff *skb, struct hinic_sq_task *task,
- 		return -EPROTONOSUPPORT;
- 	}
- 
-+	if (unlikely(skb_vlan_tag_present(skb))) {
-+		vlan_tag = skb_vlan_tag_get(skb);
-+		offload_vlan(task, queue_info, vlan_tag,
-+			     vlan_tag >> VLAN_PRIO_SHIFT);
-+		offload |= TX_OFFLOAD_VLAN;
-+	}
-+
- 	if (offload)
- 		hinic_task_set_l2hdr(task, skb_network_offset(skb));
- 
+ 	rtw_hal_set_hwreg(padapter, HW_VAR_MACID_WAKEUP, (u8 *)&macid);
 -- 
-2.17.1
+2.7.4
 
