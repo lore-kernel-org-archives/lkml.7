@@ -4,40 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4581C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 12:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8127BC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 12:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C346C214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 12:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9492054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 12:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfF2M14 (ORCPT
+        id S1727041AbfF2MdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 08:27:56 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34268 "EHLO
+        Sat, 29 Jun 2019 08:33:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34309 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbfF2M14 (ORCPT
+        with ESMTP id S1726906AbfF2MdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 08:27:56 -0400
+        Sat, 29 Jun 2019 08:33:09 -0400
 Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
         (Exim 4.76)
         (envelope-from <colin.king@canonical.com>)
-        id 1hhCSM-0005rH-VE; Sat, 29 Jun 2019 12:27:51 +0000
+        id 1hhCXS-0006RS-P7; Sat, 29 Jun 2019 12:33:06 +0000
 From:   Colin King <colin.king@canonical.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/amd/display: don't release dc->current_state if it is null
-Date:   Sat, 29 Jun 2019 13:27:50 +0100
-Message-Id: <20190629122750.12219-1-colin.king@canonical.com>
+Subject: [PATCH][next] gpio: bd70528: remove redundant assignment to variable ret
+Date:   Sat, 29 Jun 2019 13:33:06 +0100
+Message-Id: <20190629123306.12519-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -49,35 +45,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-Currently function construct calls destruct if the allocation of
-dc->current_state fails, however, the destruct function will
-attempt dereference dc->current_state when calling dc_release_state.
-Avoid this null pointer dereference by checking if the pointer is
-not null before calling dc_release_state.
+Variable ret is being initialized with a value that is never read
+and ret is being re-assigned a little later on. The assignment is
+redundant and hence can be removed.
 
-Addresses-Coverity: ("Dereference after null check")
+Addresses-Coverity: ("Unused value")
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-bd70528.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 18c775a950cc..0e1f132ae310 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -608,8 +608,10 @@ const struct dc_link_settings *dc_link_get_link_cap(
+diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
+index 633422b430b4..0c1ead12d883 100644
+--- a/drivers/gpio/gpio-bd70528.c
++++ b/drivers/gpio/gpio-bd70528.c
+@@ -153,7 +153,7 @@ static int bd70528_gpio_get_i(struct bd70528_gpio *bdgpio, unsigned int offset)
  
- static void destruct(struct dc *dc)
+ static int bd70528_gpio_get(struct gpio_chip *chip, unsigned int offset)
  {
--	dc_release_state(dc->current_state);
--	dc->current_state = NULL;
-+	if (dc->current_state) {
-+		dc_release_state(dc->current_state);
-+		dc->current_state = NULL;
-+	}
+-	int ret = -EINVAL;
++	int ret;
+ 	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
  
- 	destroy_links(dc);
- 
+ 	/*
 -- 
 2.20.1
 
