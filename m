@@ -2,70 +2,62 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFC0C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 17:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAFBC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 18:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D3520665
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 17:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 784AD215EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 18:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfF2RxI convert rfc822-to-8bit (ORCPT
+        id S1726930AbfF2SGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 13:53:08 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:38174 "EHLO
+        Sat, 29 Jun 2019 14:06:42 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38388 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbfF2RxH (ORCPT
+        with ESMTP id S1726864AbfF2SGl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 13:53:07 -0400
+        Sat, 29 Jun 2019 14:06:41 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 09FC214B566FC;
-        Sat, 29 Jun 2019 10:53:06 -0700 (PDT)
-Date:   Sat, 29 Jun 2019 10:53:06 -0700 (PDT)
-Message-Id: <20190629.105306.762888643756822083.davem@davemloft.net>
-To:     bjorn.topel@gmail.com
-Cc:     ivan.khoronzhuk@linaro.org, bjorn.topel@intel.com,
-        magnus.karlsson@intel.com, ast@kernel.org, daniel@iogearbox.net,
-        hawk@kernel.org, john.fastabend@gmail.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] xdp: xdp_umem: fix umem pages mapping for
- 32bits systems
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 41DA914B8DAC4;
+        Sat, 29 Jun 2019 11:06:41 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 11:06:40 -0700 (PDT)
+Message-Id: <20190629.110640.41970452437281023.davem@davemloft.net>
+To:     c0d1n61at3@gmail.com
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees][PATCH v2] packet: Fix undefined
+ behavior in bit shift
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <CAJ+HfNid3PntipAJHuPR-tQudf+E6UQK6mPDHdc0O=wCUSjEEA@mail.gmail.com>
-References: <20190626155911.13574-1-ivan.khoronzhuk@linaro.org>
-        <CAJ+HfNid3PntipAJHuPR-tQudf+E6UQK6mPDHdc0O=wCUSjEEA@mail.gmail.com>
+In-Reply-To: <20190627032532.18374-2-c0d1n61at3@gmail.com>
+References: <20190627010137.5612-1-c0d1n61at3@gmail.com>
+        <20190627032532.18374-2-c0d1n61at3@gmail.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 29 Jun 2019 10:53:07 -0700 (PDT)
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 29 Jun 2019 11:06:41 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Björn Töpel <bjorn.topel@gmail.com>
-Date: Wed, 26 Jun 2019 22:50:23 +0200
+From: Jiunn Chang <c0d1n61at3@gmail.com>
+Date: Wed, 26 Jun 2019 22:25:30 -0500
 
-> On Wed, 26 Jun 2019 at 17:59, Ivan Khoronzhuk
-> <ivan.khoronzhuk@linaro.org> wrote:
->>
->> Use kmap instead of page_address as it's not always in low memory.
->>
+> Shifting signed 32-bit value by 31 bits is undefined.  Changing most
+> significant bit to unsigned.
 > 
-> Ah, some 32-bit love. :-) Thanks for working on this!
+> Changes included in v2:
+>   - use subsystem specific subject lines
+>   - CC required mailing lists
 > 
-> For future patches, please base AF_XDP patches on the bpf/bpf-next
-> tree instead of net/net-next.
-> 
-> Acked-by: Björn Töpel <bjorn.topel@intel.com>
+> Signed-off-by: Jiunn Chang <c0d1n61at3@gmail.com>
 
-Alexei and Daniel, I'll let you guys take this one.
-
-Thanks.
+Applied.
