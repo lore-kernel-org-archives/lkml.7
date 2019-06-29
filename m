@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29FDC5B579
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B280AC5B578
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6383208E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955EB2133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:11:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfF2CKv (ORCPT
+        id S1727126AbfF2CLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 22:10:51 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:43967 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726770AbfF2CKu (ORCPT
+        Fri, 28 Jun 2019 22:11:15 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:38237 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726770AbfF2CLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 22:10:50 -0400
-X-UUID: 83a935a73ae5450ca0420418350fce25-20190629
-X-UUID: 83a935a73ae5450ca0420418350fce25-20190629
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        Fri, 28 Jun 2019 22:11:15 -0400
+X-UUID: 27af247326b4486180f7118b5c522e4a-20190629
+X-UUID: 27af247326b4486180f7118b5c522e4a-20190629
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
         (envelope-from <yong.wu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1516495271; Sat, 29 Jun 2019 10:10:45 +0800
+        with ESMTP id 764061952; Sat, 29 Jun 2019 10:11:08 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 29 Jun 2019 10:10:44 +0800
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 29 Jun 2019 10:10:59 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 29 Jun 2019 10:10:42 +0800
+ Transport; Sat, 29 Jun 2019 10:10:58 +0800
 From:   Yong Wu <yong.wu@mediatek.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -48,9 +48,9 @@ CC:     Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>,
         <yong.wu@mediatek.com>, <youlin.pei@mediatek.com>,
         Nicolas Boichat <drinkcat@chromium.org>,
         <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v8 04/21] memory: mtk-smi: Use a struct for the platform data for smi-common
-Date:   Sat, 29 Jun 2019 10:09:10 +0800
-Message-ID: <1561774167-24141-5-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v8 05/21] iommu/mediatek: Fix iova_to_phys PA start for 4GB mode
+Date:   Sat, 29 Jun 2019 10:09:11 +0800
+Message-ID: <1561774167-24141-6-git-send-email-yong.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
 References: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
@@ -62,117 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a struct as the platform special data instead of the enumeration.
+In the 4GB mode, the physical address is remapped,
 
-Also there is a minor change that moving the position of
-"enum mtk_smi_gen" definition, this is because we expect define
-"struct mtk_smi_common_plat" before it is referred.
+Here is the detailed remap relationship.
+CPU PA         ->    HW PA
+0x4000_0000          0x1_4000_0000 (Add bit32)
+0x8000_0000          0x1_8000_0000 ...
+0xc000_0000          0x1_c000_0000 ...
+0x1_0000_0000        0x1_0000_0000 (No change)
 
-This is a preparing patch for mt8183.
+The PA in the iova_to_phys that is got from v7s always is u32, But
+from the CPU point of view, PA should add BIT(32) when PA < 0x4000_0000.
 
+Fixes: 30e2fccf9512 ("iommu/mediatek: Enlarge the validate PA range
+for 4GB mode")
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Reviewed-by: Evan Green <evgreen@chromium.org>
 ---
- drivers/memory/mtk-smi.c | 35 ++++++++++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+ drivers/iommu/mtk_iommu.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-index 9fd6b3d..8a2f968 100644
---- a/drivers/memory/mtk-smi.c
-+++ b/drivers/memory/mtk-smi.c
-@@ -49,6 +49,15 @@
- #define SMI_LARB_NONSEC_CON(id)	(0x380 + ((id) * 4))
- #define F_MMU_EN		BIT(0)
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index 1ddb2b7..fefc2e0 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -115,6 +115,19 @@ struct mtk_iommu_domain {
  
-+enum mtk_smi_gen {
-+	MTK_SMI_GEN1,
-+	MTK_SMI_GEN2
-+};
+ static const struct iommu_ops mtk_iommu_ops;
+ 
++/*
++ * In M4U 4GB mode, the physical address is remapped as below:
++ *  CPU PA         ->   M4U HW PA
++ *  0x4000_0000         0x1_4000_0000 (Add bit32)
++ *  0x8000_0000         0x1_8000_0000 ...
++ *  0xc000_0000         0x1_c000_0000 ...
++ *  0x1_0000_0000       0x1_0000_0000 (No change)
++ *
++ * The PA in the iova_to_phys that is got from v7s always is u32, But from
++ * the CPU point of view, PA should add BIT(32) when PA < 0x4000_0000.
++ */
++#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x40000000
 +
-+struct mtk_smi_common_plat {
-+	enum mtk_smi_gen gen;
-+};
-+
- struct mtk_smi_larb_gen {
- 	bool need_larbid;
- 	int port_in_larb[MTK_LARB_NR_MAX + 1];
-@@ -61,6 +70,8 @@ struct mtk_smi {
- 	struct clk			*clk_apb, *clk_smi;
- 	struct clk			*clk_async; /*only needed by mt2701*/
- 	void __iomem			*smi_ao_base;
-+
-+	const struct mtk_smi_common_plat *plat;
- };
+ static LIST_HEAD(m4ulist);	/* List all the M4U HWs */
  
- struct mtk_smi_larb { /* larb: local arbiter */
-@@ -72,11 +83,6 @@ struct mtk_smi_larb { /* larb: local arbiter */
- 	u32				*mmu;
- };
+ #define for_each_m4u(data)	list_for_each_entry(data, &m4ulist, list)
+@@ -409,7 +422,7 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
+ 	pa = dom->iop->iova_to_phys(dom->iop, iova);
+ 	spin_unlock_irqrestore(&dom->pgtlock, flags);
  
--enum mtk_smi_gen {
--	MTK_SMI_GEN1,
--	MTK_SMI_GEN2
--};
--
- static int mtk_smi_enable(const struct mtk_smi *smi)
- {
- 	int ret;
-@@ -351,18 +357,26 @@ static int mtk_smi_larb_remove(struct platform_device *pdev)
- 	}
- };
+-	if (data->enable_4GB)
++	if (data->enable_4GB && pa < MTK_IOMMU_4GB_MODE_REMAP_BASE)
+ 		pa |= BIT_ULL(32);
  
-+static const struct mtk_smi_common_plat mtk_smi_common_gen1 = {
-+	.gen = MTK_SMI_GEN1,
-+};
-+
-+static const struct mtk_smi_common_plat mtk_smi_common_gen2 = {
-+	.gen = MTK_SMI_GEN2,
-+};
-+
- static const struct of_device_id mtk_smi_common_of_ids[] = {
- 	{
- 		.compatible = "mediatek,mt8173-smi-common",
--		.data = (void *)MTK_SMI_GEN2
-+		.data = &mtk_smi_common_gen2,
- 	},
- 	{
- 		.compatible = "mediatek,mt2701-smi-common",
--		.data = (void *)MTK_SMI_GEN1
-+		.data = &mtk_smi_common_gen1,
- 	},
- 	{
- 		.compatible = "mediatek,mt2712-smi-common",
--		.data = (void *)MTK_SMI_GEN2
-+		.data = &mtk_smi_common_gen2,
- 	},
- 	{}
- };
-@@ -372,13 +386,13 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct mtk_smi *common;
- 	struct resource *res;
--	enum mtk_smi_gen smi_gen;
- 	int ret;
- 
- 	common = devm_kzalloc(dev, sizeof(*common), GFP_KERNEL);
- 	if (!common)
- 		return -ENOMEM;
- 	common->dev = dev;
-+	common->plat = of_device_get_match_data(dev);
- 
- 	common->clk_apb = devm_clk_get(dev, "apb");
- 	if (IS_ERR(common->clk_apb))
-@@ -394,8 +408,7 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
- 	 * clock into emi clock domain, but for mtk smi gen2, there's no smi ao
- 	 * base.
- 	 */
--	smi_gen = (enum mtk_smi_gen)of_device_get_match_data(dev);
--	if (smi_gen == MTK_SMI_GEN1) {
-+	if (common->plat->gen == MTK_SMI_GEN1) {
- 		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 		common->smi_ao_base = devm_ioremap_resource(dev, res);
- 		if (IS_ERR(common->smi_ao_base))
+ 	return pa;
 -- 
 1.9.1
 
