@@ -2,118 +2,116 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2739AC5B57B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 23:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DADC5B57D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 23:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF87520828
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 23:44:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RpTiS9tU"
+	by mail.kernel.org (Postfix) with ESMTP id E108E21743
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 23:45:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561851910;
+	bh=NO9SldPrvEHCV9L05HomDu1WyC6FUgdLlHc97KSTRsQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MEAEKCXiykWCcgDn5NyXHC1bRJ9H5nfjCQ5emXDAD44xeOC0F3Umsgr6yzKqE9PCa
+	 CtQJnptPAoNx4GNlNnU8+QQEt7zCKmxB4NqGcPnfnf3qyTKQewEnyf2v3vL3zWOtwj
+	 etb1VVM9Qa7SNMUHciuwucSRgNqkqNpzKWmhacbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfF2Xoh (ORCPT
+        id S1727036AbfF2XpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 19:44:37 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45691 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfF2Xoh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 19:44:37 -0400
-Received: by mail-qk1-f195.google.com with SMTP id s22so8144830qkj.12
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 16:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3Xm3J3uqRoSxwPDCNXasCxmtcHa0Ckg5BrlIZ4QZDYk=;
-        b=RpTiS9tUTq/bz/Esm/3gUjoC24b3otsafuyXxvGmqpsVxHp58E3hrfnV7CeTe4NHr7
-         hvqcTa9BWFQEDB3SAJh7gDx48/2zGFqcP++Vcp6ENkMV6D6dyzrf+GxPPy1cgX/HNvVf
-         8ui1ARLX7VbpuZpHuLrxEr2LVHfiUKpLfy4qu4HPZ3IZcfk/v87Pq6VUIXldRVSLnitw
-         nAdwUmgxEtaxyTAY/Lcaf84h+PJX3mjJE6WewFdgxzx98/hSqYS2RKJbTx+irpWjoP7F
-         IYDKHy+eZEKmDDguto15V9nLDxNVLEyMBl013J6zSkxOL3ovO9oeMJ3J+gebwqpRI56U
-         bZmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3Xm3J3uqRoSxwPDCNXasCxmtcHa0Ckg5BrlIZ4QZDYk=;
-        b=bQqo5f7XDyLUq7OsNCgi+/vhREsoqGSmX3EFZ08gNpNocaNHuMDZfc4oDnFr3mQYkr
-         klYoPoxWFsh+6oXv1A20trsEvMTa3BRzNhpTFlPy7XzGTH7TfBSnbKTomCvqL8TaWEZQ
-         XMAa+Q0Txb9AsQhEFHEK909jJ7ScsD4PLtG2LI9f0JM9Z3DyVZLk+iMUKR0QvBJExd9K
-         u+pCHOmnG9NaObASzJx1DAYcugiL22uAer9PT3gaKd/teq3gY/hlfhpXu5xiKNQJ1BE5
-         rs4eoJFTA4fDHgH37j59tLUEqNgrJ0Led0Ulgy+x9wlwLjKOUP/vB9YY6U+dRTahTE3o
-         9ChQ==
-X-Gm-Message-State: APjAAAW+pEaf+Rcn2M6zR/y7qFlVK5ASQ9v09HuxZHVvP6flDp+vDrAW
-        MPutp9yIt2CWfOf1h3LEkAE=
-X-Google-Smtp-Source: APXvYqzHhsFnjFiMgZqt12GbymY/kxdtoq7iSgGuVU5Urj8xgzQYFrN3krjz4Nfa3xTu6+AI6TzwrA==
-X-Received: by 2002:ae9:f20c:: with SMTP id m12mr13868766qkg.58.1561851876434;
-        Sat, 29 Jun 2019 16:44:36 -0700 (PDT)
-Received: from localhost.localdomain ([45.58.106.199])
-        by smtp.gmail.com with ESMTPSA id c18sm2849775qkk.73.2019.06.29.16.44.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 16:44:35 -0700 (PDT)
-From:   Gabriel Beauchamp <beauchampgabriel@gmail.com>
-To:     gregkh@linuxfoundation.org, christian.gromm@microchip.com,
-        colin.king@canonical.com, gustavo@embeddedor.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Gabriel Beauchamp <beauchampgabriel@gmail.com>
-Subject: [PATCH] Staging: most: fix coding style issues
-Date:   Sat, 29 Jun 2019 16:44:27 -0700
-Message-Id: <20190629234427.20746-1-beauchampgabriel@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Sat, 29 Jun 2019 19:45:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726953AbfF2XpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Jun 2019 19:45:07 -0400
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EB0921773
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 23:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561851907;
+        bh=NO9SldPrvEHCV9L05HomDu1WyC6FUgdLlHc97KSTRsQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=L9zsQCD3SME4yCdiZ91gR5mu3dTU7iHytvauDPWLVWJ5PVYhrkz4Xa1e7uv4wAgV3
+         dn6A6uxhscIfZ/fM0Q/M50uV8Zprd9O/fI/u2BZF1R7eLQPpJWxVUZ9macy7ZQ9u1d
+         B6qcP8VfgVBU5+U66FxTgTcWis+nQEC2Uneo6t/g=
+Received: by mail-wm1-f54.google.com with SMTP id u8so12258824wmm.1
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 16:45:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAWcNmczK0uZ/1ITt+S5XQJ58unDxpN+1dzy6wi3Pyhx5rwZ4mV2
+        KE3uZ4SPE7t7rn/Ts1TaPx+N07+2LsUQTuKqUjUBaA==
+X-Google-Smtp-Source: APXvYqw7AqV0riQVWfNq9DWyOR0lQPRhOlZu5oCeDxSJhE/lHbPusIgX678jLiDRugcnqjeaEdrl0RkDIaMs4WKe0VE=
+X-Received: by 2002:a1c:9a53:: with SMTP id c80mr11059844wme.173.1561851905663;
+ Sat, 29 Jun 2019 16:45:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190628194158.2431-1-yu-cheng.yu@intel.com> <20190628194158.2431-3-yu-cheng.yu@intel.com>
+In-Reply-To: <20190628194158.2431-3-yu-cheng.yu@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 29 Jun 2019 16:44:54 -0700
+X-Gmail-Original-Message-ID: <CALCETrXsXXJWTSJxUO8YxHUo=QJKmHyJa7iz+jOBjWMRhno4rA@mail.gmail.com>
+Message-ID: <CALCETrXsXXJWTSJxUO8YxHUo=QJKmHyJa7iz+jOBjWMRhno4rA@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] Prevent user from writing to IBT bitmap.
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a patch for the core.[ch] files that fixes up warnings
-found with the checkpatch.pl tool.
+On Fri, Jun 28, 2019 at 12:50 PM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+>
+> The IBT bitmap is visiable from user-mode, but not writable.
+>
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+>
+> ---
+>  arch/x86/mm/fault.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> index 59f4f66e4f2e..231196abb62e 100644
+> --- a/arch/x86/mm/fault.c
+> +++ b/arch/x86/mm/fault.c
+> @@ -1454,6 +1454,13 @@ void do_user_addr_fault(struct pt_regs *regs,
+>          * we can handle it..
+>          */
+>  good_area:
+> +#define USER_MODE_WRITE (FAULT_FLAG_WRITE | FAULT_FLAG_USER)
+> +       if (((flags & USER_MODE_WRITE)  == USER_MODE_WRITE) &&
+> +           (vma->vm_flags & VM_IBT)) {
+> +               bad_area_access_error(regs, hw_error_code, address, vma);
+> +               return;
+> +       }
+> +
 
-Signed-off-by: Gabriel Beauchamp <beauchampgabriel@gmail.com>
----
- drivers/staging/most/core.c | 4 +++-
- drivers/staging/most/core.h | 2 +-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/most/core.c b/drivers/staging/most/core.c
-index 86a8545c8d97..f49c550ed48e 100644
---- a/drivers/staging/most/core.c
-+++ b/drivers/staging/most/core.c
-@@ -303,7 +303,8 @@ static ssize_t set_datatype_show(struct device *dev,
- 
- 	for (i = 0; i < ARRAY_SIZE(ch_data_type); i++) {
- 		if (c->cfg.data_type & ch_data_type[i].most_ch_data_type)
--			return snprintf(buf, PAGE_SIZE, "%s", ch_data_type[i].name);
-+			return snprintf(buf, PAGE_SIZE,
-+					"%s", ch_data_type[i].name);
- 	}
- 	return snprintf(buf, PAGE_SIZE, "unconfigured\n");
- }
-@@ -728,6 +729,7 @@ int most_add_link(char *mdev, char *mdev_ch, char *comp_name, char *link_name,
- 
- 	return link_channel_to_component(c, comp, link_name, comp_param);
- }
-+
- /**
-  * remove_link_store - store function for remove_link attribute
-  * @drv: device driver
-diff --git a/drivers/staging/most/core.h b/drivers/staging/most/core.h
-index 652aaa771029..6ba7c2b34c1c 100644
---- a/drivers/staging/most/core.h
-+++ b/drivers/staging/most/core.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * most.h - API for component and adapter drivers
-  *
--- 
-2.21.0
-
+Just make the VMA have VM_WRITE and VM_MAYWRITE clear.  No new code
+like this should be required.
