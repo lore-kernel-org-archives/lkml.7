@@ -2,159 +2,316 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68219C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D32C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306592054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39F22054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:15:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HhRK+YGJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y86brGgi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfF2NNx (ORCPT
+        id S1726912AbfF2NPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 09:13:53 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35138 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbfF2NNw (ORCPT
+        Sat, 29 Jun 2019 09:15:02 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33338 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfF2NPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 09:13:52 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s27so3842655pgl.2;
-        Sat, 29 Jun 2019 06:13:52 -0700 (PDT)
+        Sat, 29 Jun 2019 09:15:01 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h10so8650954ljg.0;
+        Sat, 29 Jun 2019 06:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yvMYZzTvRn3JBPnqgcTLb5iHAAODpQxbz+FdLrvD3Is=;
-        b=HhRK+YGJXOeDaXekatjzL0eqYYo29hMPJeDRjZu+BAEGu5O/SKm6rVc138NxBfGFEW
-         mx1WhLC0zr2Ccukyy3tk33GBP0OH90dk04GgxXI5ApG/KiGKvm9XpSOi9WKERNeZ+9VP
-         PNqlRKoTFnD6lWTRFDoLZW5C/xVZV0UdWYDIZ49KdnR1Kw3bhlVHas+qDYlPyBTf4BSM
-         QQmhGSoefLELeCutwqxHD6IrFjrgZJRMtq5fwK0BO5VGQ95YrOOxtjBGwFx5X1FQirkW
-         T1ODlerBY5u81fn7lKTfqYr1rmm5OoY3i870uIF0AG1fbSY7G0HgYAOkfxXsP5ulApAQ
-         n94w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FIFyKUxoPgfvRtyFllrw/f3o/hPYL0zGbMIg9vu/atY=;
+        b=Y86brGgipsGJPBJITcIeo4Xc3Ki1pjQlXj+pfkPJoL58bYG0p+jYezu5dJ5p07hvhI
+         idP9uISuWjv9iwYefF41HntpY8whgYUhdV2EI5J4BsnVOBjps5a/McngOHWpYotNPsob
+         TDflZiRLUA1uj/uQt9HSDNCQG5FVpoHr2VsXpP2CjzIxuvGGbT8bxfcGavpvLfwlgbrg
+         n2j6/b04clOeE/TGzsOLKVfniSASPoqInetjVWrdDhosBMgbdVUiwdDEiBgPj6idebqR
+         INFelSkTZ5YcEWIb2nraM72gE2dkT1chB0xebSrnVq5hoLi/vq4jI1Suj5IKpb7/fZS3
+         q66g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yvMYZzTvRn3JBPnqgcTLb5iHAAODpQxbz+FdLrvD3Is=;
-        b=tNLQGZ1ycGwc4OdKRWYak2K73Cn5qeEAdGTtiIubISVSmCP+mDEA5cUD81F/gB+n3s
-         Dzgvwca6dTOi628ydVD+kGt7Di9lZR4e9+VNVbIofi3Fd9csy98mJprY6mEC8h7SDgje
-         +Yg4epHhAAKjheP744LOdbxIE2VDHXEkEvSooWlY2sil8IwyPBBn7iGCzoDUTmNDOMpH
-         /7nRZRoEhHv4vtpIh99wOGxTGTmvd1zySU4hxa2mxX8pXZBSFbI5kbUgUuQEisWGQBDl
-         I2rYoBWv0+RLP4CMhF/+8TRdVRV+0iA7+yLLh9tNpCBfr8SO9imFkplVeQ2gPnLeqsqV
-         94qw==
-X-Gm-Message-State: APjAAAWY3H3GkAOBW+y5F8etAnkayKZ9BlQUkAkgL5UjytljLCRApLKG
-        xUgl/fOsZfIKn3QcViWduxLzocDVkSI16ve83+M=
-X-Google-Smtp-Source: APXvYqyPOUCTYe9czqwc5cFs5diXN/oQuZGkbrw4ZKfXoMgZs4qDe/dymYHgGTCNg5+AxRmoj+AxsvKH2c/uCPcOG8A=
-X-Received: by 2002:a17:90b:d8b:: with SMTP id bg11mr19378072pjb.30.1561814032194;
- Sat, 29 Jun 2019 06:13:52 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FIFyKUxoPgfvRtyFllrw/f3o/hPYL0zGbMIg9vu/atY=;
+        b=Z7NPPkoJrXYkGwQzfoXHn8V9XeUzjck2FEXL61ZzZ8oRmyOs/fzJKqlowjINkuwMTF
+         iuhsng0CCpzXN5gGMG3ebDyrAt5YC2OvOxGqlgtzCSgL/+PArEeWMFu91XwVu9y/gMxx
+         GJLL0xnArdR41PlWCGTdcxm3rTapYTG6asESYJl5o8wN6SXpbAVvzKl/kCKmn9GuVDVg
+         LCvQ33OlH+NYWmjeAKveURUbP6kuFtZ2HY9QuZAsJJCi8mfjUXdDKsQ6A6ME7Qg8RIFu
+         QxtNyhVf2zl8AyT86uFpnoXt69jvil7I8kJY2yM0a0RYQgG2fYbpsISzyjoL4D3Q4FtV
+         gc6w==
+X-Gm-Message-State: APjAAAWsWvZgYr3zG9q9dfVPqzgI0nPoT/LtE6oMSAafkr2g+F8+dipA
+        eNmuCWoxYi2O+wloFRat4F3CU77a
+X-Google-Smtp-Source: APXvYqyfgjjSBCqAeKxGN+y8lPQPnHS9gkYe3ys6ZcuMpzpe58RlnoSmGaT1uMq/yPyrv0lET+gF4w==
+X-Received: by 2002:a2e:4794:: with SMTP id u142mr9113238lja.222.1561814097620;
+        Sat, 29 Jun 2019 06:14:57 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id z12sm1332000lfg.67.2019.06.29.06.14.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Jun 2019 06:14:56 -0700 (PDT)
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
+        pdeschrijver@nvidia.com
+Cc:     pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+ <1561687972-19319-12-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <066a7297-6d7c-f83d-5306-c79db0c92b84@gmail.com>
+Date:   Sat, 29 Jun 2019 16:14:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
-In-Reply-To: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 29 Jun 2019 16:13:41 +0300
-Message-ID: <CAHp75Vd4mYrwT__DgogRJdSUSOZXU+b6KX_50-O=zS_oSxwE8w@mail.gmail.com>
-Subject: Re: [PATCH v4 00/13] Support of ASUS TUF Gaming series laptops
-To:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Chris Chiu <chiu@endlessm.com>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1561687972-19319-12-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 9:47 PM Yurii Pavlovskyi
-<yurii.pavlovskyi@gmail.com> wrote:
->
-> Hi,
->
-> this is the fourth version of the patch series.
->
+28.06.2019 5:12, Sowjanya Komatineni пишет:
+> This patch adds system suspend and resume support for Tegra210
+> clocks.
+> 
+> All the CAR controller settings are lost on suspend when core power
+> goes off.
+> 
+> This patch has implementation for saving and restoring all the PLLs
+> and clocks context during system suspend and resume to have the
+> clocks back to same state for normal operation.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-tegra210.c | 115 ++++++++++++++++++++++++++++++++++++++-
+>  drivers/clk/tegra/clk.c          |  14 +++++
+>  drivers/clk/tegra/clk.h          |   1 +
+>  3 files changed, 127 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+> index 1c08c53482a5..1b839544e086 100644
+> --- a/drivers/clk/tegra/clk-tegra210.c
+> +++ b/drivers/clk/tegra/clk-tegra210.c
+> @@ -9,10 +9,12 @@
+>  #include <linux/clkdev.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/delay.h>
+>  #include <linux/export.h>
+>  #include <linux/mutex.h>
+>  #include <linux/clk/tegra.h>
+> +#include <linux/syscore_ops.h>
+>  #include <dt-bindings/clock/tegra210-car.h>
+>  #include <dt-bindings/reset/tegra210-car.h>
+>  #include <linux/iopoll.h>
+> @@ -20,6 +22,7 @@
+>  #include <soc/tegra/pmc.h>
+>  
+>  #include "clk.h"
+> +#include "clk-dfll.h"
+>  #include "clk-id.h"
+>  
+>  /*
+> @@ -225,6 +228,7 @@
+>  
+>  #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>  #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+> +#define CPU_SOFTRST_CTRL 0x380
+>  
+>  #define LVL2_CLK_GATE_OVRA 0xf8
+>  #define LVL2_CLK_GATE_OVRC 0x3a0
+> @@ -2820,6 +2824,7 @@ static int tegra210_enable_pllu(void)
+>  	struct tegra_clk_pll_freq_table *fentry;
+>  	struct tegra_clk_pll pllu;
+>  	u32 reg;
+> +	int ret;
+>  
+>  	for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
+>  		if (fentry->input_rate == pll_ref_freq)
+> @@ -2847,10 +2852,10 @@ static int tegra210_enable_pllu(void)
+>  	fence_udelay(1, clk_base);
+>  	reg |= PLL_ENABLE;
+>  	writel(reg, clk_base + PLLU_BASE);
+> +	fence_udelay(1, clk_base);
+>  
+> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+> -					  reg & PLL_BASE_LOCK, 2, 1000);
+> -	if (!(reg & PLL_BASE_LOCK)) {
+> +	ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+> +	if (ret) {
+>  		pr_err("Timed out waiting for PLL_U to lock\n");
+>  		return -ETIMEDOUT;
+>  	}
+> @@ -3283,6 +3288,103 @@ static void tegra210_disable_cpu_clock(u32 cpu)
+>  }
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> +static u32 cpu_softrst_ctx[3];
+> +static struct platform_device *dfll_pdev;
+> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
+> +#define car_writel(_val, _base, _off) \
+> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
+> +
+> +static int tegra210_clk_suspend(void)
+> +{
+> +	unsigned int i;
+> +	struct device_node *node;
+> +
+> +	tegra_cclkg_burst_policy_save_context();
+> +
+> +	if (!dfll_pdev) {
+> +		node = of_find_compatible_node(NULL, NULL,
+> +					       "nvidia,tegra210-dfll");
+> +		if (node)
+> +			dfll_pdev = of_find_device_by_node(node);
+> +
+> +		of_node_put(node);
+> +		if (!dfll_pdev)
+> +			pr_err("dfll node not found. no suspend for dfll\n");
+> +	}
+> +
+> +	if (dfll_pdev)
+> +		tegra_dfll_suspend(dfll_pdev);
+> +
+> +	/* Enable PLLP_OUT_CPU after dfll suspend */
+> +	tegra_clk_set_pllp_out_cpu(true);
+> +
+> +	tegra_sclk_cclklp_burst_policy_save_context();
+> +
+> +	clk_save_context();
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+> +		cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
+> +
+> +	return 0;
+> +}
+> +
+> +static void tegra210_clk_resume(void)
+> +{
+> +	unsigned int i;
+> +	struct clk_hw *parent;
+> +	struct clk *clk;
+> +
+> +	/*
+> +	 * clk_restore_context restores clocks as per the clock tree.
+> +	 *
+> +	 * dfllCPU_out is first in the clock tree to get restored and it
+> +	 * involves programming DFLL controller along with restoring CPUG
+> +	 * clock burst policy.
+> +	 *
+> +	 * DFLL programming needs dfll_ref and dfll_soc peripheral clocks
+> +	 * to be restores which are part ofthe peripheral clocks.
+> +	 * So, peripheral clocks restore should happen prior to dfll clock
+> +	 * restore.
+> +	 */
+> +
+> +	tegra_clk_osc_resume(clk_base);
+> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
+> +
+> +	/* restore all plls and peripheral clocks */
+> +	tegra210_init_pllu();
+> +	clk_restore_context();
+> +
+> +	fence_udelay(5, clk_base);
+> +
+> +	/* resume SCLK and CPULP clocks */
+> +	tegra_sclk_cpulp_burst_policy_restore_context();
+> +
+> +	/*
+> +	 * restore CPUG clocks:
+> +	 * - enable DFLL in open loop mode
+> +	 * - switch CPUG to DFLL clock source
+> +	 * - close DFLL loop
+> +	 * - sync PLLX state
+> +	 */
+> +	if (dfll_pdev)
+> +		tegra_dfll_resume(dfll_pdev, false);
+> +
+> +	tegra_cclkg_burst_policy_restore_context();
+> +	fence_udelay(2, clk_base);
+> +
+> +	if (dfll_pdev)
+> +		tegra_dfll_resume(dfll_pdev, true);
+> +
+> +	parent = clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
+> +	clk = clks[TEGRA210_CLK_PLL_X];
+> +	if (parent != __clk_get_hw(clk))
+> +		tegra_clk_sync_state_pll(__clk_get_hw(clk));
+> +
+> +	/* Disable PLL_OUT_CPU after DFLL resume */
+> +	tegra_clk_set_pllp_out_cpu(false);
+> +}
+> +
+>  static void tegra210_cpu_clock_suspend(void)
+>  {
+>  	/* switch coresite to clk_m, save off original source */
+> @@ -3298,6 +3400,11 @@ static void tegra210_cpu_clock_resume(void)
+>  }
+>  #endif
+>  
+> +static struct syscore_ops tegra_clk_syscore_ops = {
+> +	.suspend = tegra210_clk_suspend,
+> +	.resume = tegra210_clk_resume,
+> +};
+> +
+>  static struct tegra_cpu_car_ops tegra210_cpu_car_ops = {
+>  	.wait_for_reset	= tegra210_wait_cpu_in_reset,
+>  	.disable_clock	= tegra210_disable_cpu_clock,
+> @@ -3583,5 +3690,7 @@ static void __init tegra210_clock_init(struct device_node *np)
+>  	tegra210_mbist_clk_init();
+>  
+>  	tegra_cpu_car_ops = &tegra210_cpu_car_ops;
+> +
+> +	register_syscore_ops(&tegra_clk_syscore_ops);
+>  }
+>  CLK_OF_DECLARE(tegra210, "nvidia,tegra210-car", tegra210_clock_init);
+> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+> index 9e863362d2bf..96cc9937ea37 100644
+> --- a/drivers/clk/tegra/clk.c
+> +++ b/drivers/clk/tegra/clk.c
+> @@ -23,6 +23,7 @@
+>  #define CLK_OUT_ENB_W			0x364
+>  #define CLK_OUT_ENB_X			0x280
+>  #define CLK_OUT_ENB_Y			0x298
+> +#define CLK_ENB_PLLP_OUT_CPU		BIT(31)
+>  #define CLK_OUT_ENB_SET_L		0x320
+>  #define CLK_OUT_ENB_CLR_L		0x324
+>  #define CLK_OUT_ENB_SET_H		0x328
+> @@ -205,6 +206,19 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
+>  	}
+>  }
+>  
+> +void tegra_clk_set_pllp_out_cpu(bool enable)
+> +{
+> +	u32 val;
+> +
+> +	val = readl_relaxed(clk_base + CLK_OUT_ENB_Y);
+> +	if (enable)
+> +		val |= CLK_ENB_PLLP_OUT_CPU;
+> +	else
+> +		val &= ~CLK_ENB_PLLP_OUT_CPU;
+> +
+> +	writel_relaxed(val, clk_base + CLK_OUT_ENB_Y);
+> +}
 
-Pushed to my review and testing queue, thanks!
-
-> Changelog:
-> v4:
->   * Rebase on for-next branch
->   * Extract local variable in patch 01
->   * Rename new method to "..._method3" and keep comma in struct declaration
->     in patch 03 (NOTE: the arg2 does not fit on same line by 1 character)
->   * Patch "Improve DSTS WMI method ID detection":
->     - sort local variables
->     - use dev_info
->     - separate changes to wmi module in an own patch
->     - rename method ID constants and fix comment capitalization
->   * "Support WMI event queue": split into separate refactoring and new
->     functionality patches, use dev_info as well
->   * "Organize code into sections": split out error handling refactoring
->   * "Enhance detection of thermal data": remove unreasonable refactoring
->     and just change the currently used condition
->   * "Control RGB keyboard backlight": removed, will be posted afterwards.
->     I will follow on the status of the multicolor framework, it does look
->     promising for this.
->   * Mark URL references with "Link:"
->   * Minor corrections to commit messages
-> v3:
->   * Use devm_* function in patch 01
->   * Detect DSTS/DCTS using _UID in patch 04
->   * Detect event queue by _UID as well in patch 05
->   * Rename poll function in patch 05
->   * Fix terminology in patches 09 and 10
->   * Correct commit messages
-> v2:
->   * Fix logging
->
-> INTRODUCTION
-> The support for this laptop series is currently non-existent, as the
-> asus-nb-wmi driver (which is essentially configuration for asus-wmi) fails
-> to load and multiple ACPI errors are logged in dmesg. This patch series
-> adds pretty comprehensive support for these relatively new laptops, adds
-> some code organization, and fixes a couple of bugs in the asus-wmi module.
->
-> Thread for V1/V2: https://lkml.org/lkml/2019/4/10/973
-> Thread for V3: https://lkml.org/lkml/2019/4/19/178
->
-> Yurii Pavlovskyi (13):
->   platform/x86: asus-wmi: Fix hwmon device cleanup
->   platform/x86: asus-wmi: Fix preserving keyboard backlight intensity on
->     load
->   platform/x86: asus-wmi: Increase input buffer size of WMI methods
->   platform/x86: wmi: Add function to get _UID of WMI device
->   platform/x86: asus-wmi: Improve DSTS WMI method ID detection
->   platform/x86: asus-wmi: Refactor WMI event handling
->   platform/x86: asus-wmi: Support WMI event queue
->   platform/x86: asus-nb-wmi: Add microphone mute key code
->   platform/x86: asus-wmi: Refactor error handling
->   platform/x86: asus-wmi: Organize code into sections
->   platform/x86: asus-wmi: Enhance detection of thermal data
->   platform/x86: asus-wmi: Switch fan boost mode
->   platform/x86: asus-wmi: Do not disable keyboard backlight on unloading
->
->  .../ABI/testing/sysfs-platform-asus-wmi       |  10 +
->  drivers/hid/hid-asus.c                        |   2 +-
->  drivers/platform/x86/asus-nb-wmi.c            |   3 +-
->  drivers/platform/x86/asus-wmi.c               | 427 ++++++++++++++----
->  drivers/platform/x86/wmi.c                    |  19 +
->  include/linux/acpi.h                          |   1 +
->  include/linux/platform_data/x86/asus-wmi.h    |   5 +-
->  7 files changed, 374 insertions(+), 93 deletions(-)
->
-> --
-> 2.17.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Do we needed fence_udelay() here? I'm a bit confused about when the fence should be
+used for the CLK hardware.. Maybe Peter could clarify?
