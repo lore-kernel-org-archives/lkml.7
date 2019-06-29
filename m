@@ -2,96 +2,526 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2A4C5B579
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F035BC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2EEB20665
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA81720665
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 16:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561826900;
+	bh=Day3zXpwb8IG3SZB1+ssTzHIsDFLFpJexVoyJ7UV454=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VFnR9jyaLRxKh2M5u2cVzC5DfZuNSFzVss1OY2vEWrZ/rrWeAAtP5EesxklDMxLPF
+	 WuYv0tq0EQKwhAc0cGNBAj0Nk1ZAHohCcLxIJDeBJ108TgC4CzgBMKC6ze2gP0MP9m
+	 52bZ/UlzLQU7I/lfzNB31CQbRD9GpZj4Yzdb1iYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfF2Qpf (ORCPT
+        id S1726953AbfF2QsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 12:45:35 -0400
-Received: from smtprelay0042.hostedemail.com ([216.40.44.42]:48378 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726837AbfF2Qpe (ORCPT
+        Sat, 29 Jun 2019 12:48:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48758 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbfF2QsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 12:45:34 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 72872182CF666;
-        Sat, 29 Jun 2019 16:45:32 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: wood26_67b7f2b025644
-X-Filterd-Recvd-Size: 3038
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 29 Jun 2019 16:45:12 +0000 (UTC)
-Message-ID: <c3b83ba7f9b003dd4fb9cad885461ce93165dc04.camel@perches.com>
-Subject: Re: [PATCH V2] include: linux: Regularise the use of FIELD_SIZEOF
- macro
-From:   Joe Perches <joe@perches.com>
-To:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Andreas Dilger <adilger@dilger.ca>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Shyam Saini <shyam.saini@amarulasolutions.com>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-ext4 <linux-ext4@vger.kernel.org>,
-        devel@lists.orangefs.org, linux-mm@kvack.org,
-        linux-sctp@vger.kernel.org, bpf@vger.kernel.org,
-        kvm@vger.kernel.org, mayhs11saini@gmail.com
-Date:   Sat, 29 Jun 2019 09:45:10 -0700
-In-Reply-To: <20190629142510.GA10629@avx2>
-References: <20190611193836.2772-1-shyam.saini@amarulasolutions.com>
-         <20190611134831.a60c11f4b691d14d04a87e29@linux-foundation.org>
-         <6DCAE4F8-3BEC-45F2-A733-F4D15850B7F3@dilger.ca>
-         <20190629142510.GA10629@avx2>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Sat, 29 Jun 2019 12:48:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=N1ejTlpwZnCTUghpIHq8P2Lmbrrd6bok9kAG4lzf3Os=; b=ONhCKG2a4+Umd4B9V64o4QjxL
+        kxEapl1xhvLB1lenXTLFQI/VzEt359hKywNn0iuzjSru/PNS7szQd5Gj1BHiHBzMLcw5uNKsB3GS8
+        VDpWHUTBNK6O96jLbHZcwWyuUmWUmfy5ixZiStHUnAFYyImCagGw6p7lCrV8vBuyCBdSc9WjqO+DQ
+        DbARG7MjQMKPWs6OpEuZR9oy3aGYvm+OWjvSRUDrBu5f6D40+Ug9bQgngquIcPzM2HjZwlqmr+AO2
+        mnXp1RvHzmMxJla24BA0f5trhBT0JUBXsIuqYt5brH/xMnCExIbD5V7XB0Gkops1kiFz5Cu9vJYrO
+        roM6PAG/Q==;
+Received: from [187.113.3.250] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hhGWK-0002EE-4t; Sat, 29 Jun 2019 16:48:12 +0000
+Date:   Sat, 29 Jun 2019 13:48:07 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Vandana BN <bnvandana@gmail.com>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-sh@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v5] Documentation:sh:convert register-banks.txt  and
+ new-machine.txt to rst format.
+Message-ID: <20190629134807.653f2ff9@coco.lan>
+In-Reply-To: <20190629162501.4901-1-bnvandana@gmail.com>
+References: <20190627063347.11137-1-bnvandana@gmail.com>
+        <20190629162501.4901-1-bnvandana@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-06-29 at 17:25 +0300, Alexey Dobriyan wrote:
-> On Tue, Jun 11, 2019 at 03:00:10PM -0600, Andreas Dilger wrote:
-> > On Jun 11, 2019, at 2:48 PM, Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > On Wed, 12 Jun 2019 01:08:36 +0530 Shyam Saini <shyam.saini@amarulasolutions.com> wrote:
-> > I did a check, and FIELD_SIZEOF() is used about 350x, while sizeof_field()
-> > is about 30x, and SIZEOF_FIELD() is only about 5x.
-> > 
-> > That said, I'm much more in favour of "sizeof_field()" or "sizeof_member()"
-> > than FIELD_SIZEOF().  Not only does that better match "offsetof()", with
-> > which it is closely related, but is also closer to the original "sizeof()".
-> > 
-> > Since this is a rather trivial change, it can be split into a number of
-> > patches to get approval/landing via subsystem maintainers, and there is no
-> > huge urgency to remove the original macros until the users are gone.  It
-> > would make sense to remove SIZEOF_FIELD() and sizeof_field() quickly so
-> > they don't gain more users, and the remaining FIELD_SIZEOF() users can be
-> > whittled away as the patches come through the maintainer trees.
+Em Sat, 29 Jun 2019 21:55:01 +0530
+Vandana BN <bnvandana@gmail.com> escreveu:
+
+> This patch converts new-machine.txt and register-banks.txt
+> to ReST format, No content change.
+> Added interfaces.rst to contain kernel-doc markups from index.rst
+> Added interfaces.rst,new-machine.rst and register-banks.rst to sh/index.rst
+> Added SPDX tag in index.rst
+> Fixed broken reference in arch/sh/Kconfig.cpu
 > 
-> The signature should be
+> Signed-off-by: Vandana BN <bnvandana@gmail.com>
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+
+> ---
+>  Documentation/sh/index.rst                    |  65 +------
+>  Documentation/sh/interface.rst                |  59 ++++++
+>  .../sh/{new-machine.txt => new-machine.rst}   | 171 +++++++++---------
+>  ...{register-banks.txt => register-banks.rst} |   8 +-
+>  arch/sh/Kconfig.cpu                           |   2 +-
+>  5 files changed, 164 insertions(+), 141 deletions(-)
+>  create mode 100644 Documentation/sh/interface.rst
+>  rename Documentation/sh/{new-machine.txt => new-machine.rst} (79%)
+>  rename Documentation/sh/{register-banks.txt => register-banks.rst} (90%)
 > 
-> 	sizeof_member(T, m)
+> diff --git a/Documentation/sh/index.rst b/Documentation/sh/index.rst
+> index bc8db7ba894a..fec3c405b6b9 100644
+> --- a/Documentation/sh/index.rst
+> +++ b/Documentation/sh/index.rst
+> @@ -1,59 +1,14 @@
+> -=======================
+> -SuperH Interfaces Guide
+> -=======================
+> +.. SPDX-License-Identifier: GPL-2.0
 > 
-> it is proper English,
-> it is lowercase, so is easier to type,
-> it uses standard term (member, not field),
-> it blends in with standard "sizeof" operator,
+> -:Author: Paul Mundt
+> -
+> -Memory Management
+> -=================
+> -
+> -SH-4
+> -----
+> -
+> -Store Queue API
+> -~~~~~~~~~~~~~~~
+> -
+> -.. kernel-doc:: arch/sh/kernel/cpu/sh4/sq.c
+> -   :export:
+> -
+> -SH-5
+> -----
+> -
+> -TLB Interfaces
+> -~~~~~~~~~~~~~~
+> -
+> -.. kernel-doc:: arch/sh/mm/tlb-sh5.c
+> -   :internal:
+> -
+> -.. kernel-doc:: arch/sh/include/asm/tlb_64.h
+> -   :internal:
+> +====================
+> +SuperH Documentation
+> +====================
+> 
+> -Machine Specific Interfaces
+> -===========================
+> -
+> -mach-dreamcast
+> ---------------
+> -
+> -.. kernel-doc:: arch/sh/boards/mach-dreamcast/rtc.c
+> -   :internal:
+> -
+> -mach-x3proto
+> -------------
+> -
+> -.. kernel-doc:: arch/sh/boards/mach-x3proto/ilsel.c
+> -   :export:
+> -
+> -Busses
+> -======
+> -
+> -SuperHyway
+> -----------
+> -
+> -.. kernel-doc:: drivers/sh/superhyway/superhyway.c
+> -   :export:
+> +:Author: Paul Mundt
+> 
+> -Maple
+> ------
+> +.. toctree::
+> +   :maxdepth: 2
+> 
+> -.. kernel-doc:: drivers/sh/maple/maple.c
+> -   :export:
+> +   interface
+> +   new-machine
+> +   register-banks
+> diff --git a/Documentation/sh/interface.rst b/Documentation/sh/interface.rst
+> new file mode 100644
+> index 000000000000..bc8db7ba894a
+> --- /dev/null
+> +++ b/Documentation/sh/interface.rst
+> @@ -0,0 +1,59 @@
+> +=======================
+> +SuperH Interfaces Guide
+> +=======================
+> +
+> +:Author: Paul Mundt
+> +
+> +Memory Management
+> +=================
+> +
+> +SH-4
+> +----
+> +
+> +Store Queue API
+> +~~~~~~~~~~~~~~~
+> +
+> +.. kernel-doc:: arch/sh/kernel/cpu/sh4/sq.c
+> +   :export:
+> +
+> +SH-5
+> +----
+> +
+> +TLB Interfaces
+> +~~~~~~~~~~~~~~
+> +
+> +.. kernel-doc:: arch/sh/mm/tlb-sh5.c
+> +   :internal:
+> +
+> +.. kernel-doc:: arch/sh/include/asm/tlb_64.h
+> +   :internal:
+> +
+> +Machine Specific Interfaces
+> +===========================
+> +
+> +mach-dreamcast
+> +--------------
+> +
+> +.. kernel-doc:: arch/sh/boards/mach-dreamcast/rtc.c
+> +   :internal:
+> +
+> +mach-x3proto
+> +------------
+> +
+> +.. kernel-doc:: arch/sh/boards/mach-x3proto/ilsel.c
+> +   :export:
+> +
+> +Busses
+> +======
+> +
+> +SuperHyway
+> +----------
+> +
+> +.. kernel-doc:: drivers/sh/superhyway/superhyway.c
+> +   :export:
+> +
+> +Maple
+> +-----
+> +
+> +.. kernel-doc:: drivers/sh/maple/maple.c
+> +   :export:
+> diff --git a/Documentation/sh/new-machine.txt b/Documentation/sh/new-machine.rst
+> similarity index 79%
+> rename from Documentation/sh/new-machine.txt
+> rename to Documentation/sh/new-machine.rst
+> index e0961a66130b..b16c33342642 100644
+> --- a/Documentation/sh/new-machine.txt
+> +++ b/Documentation/sh/new-machine.rst
+> @@ -1,8 +1,8 @@
+> +================================
+> +Adding a new board to LinuxSH
+> +================================
+> 
+> -                Adding a new board to LinuxSH
+> -               ================================
+> -
+> -               Paul Mundt <lethal@linux-sh.org>
+> +Paul Mundt <lethal@linux-sh.org>
+> 
+>  This document attempts to outline what steps are necessary to add support
+>  for new boards to the LinuxSH port under the new 2.5 and 2.6 kernels. This
+> @@ -19,65 +19,67 @@ include/asm-sh/. For the new kernel, things are broken out by board type,
+>  companion chip type, and CPU type. Looking at a tree view of this directory
+>  hierarchy looks like the following:
+> 
+> -Board-specific code:
+> -
+> -.
+> -|-- arch
+> -|   `-- sh
+> -|       `-- boards
+> -|           |-- adx
+> -|           |   `-- board-specific files
+> -|           |-- bigsur
+> -|           |   `-- board-specific files
+> -|           |
+> -|           ... more boards here ...
+> -|
+> -`-- include
+> -    `-- asm-sh
+> -        |-- adx
+> -        |   `-- board-specific headers
+> -        |-- bigsur
+> -        |   `-- board-specific headers
+> -        |
+> -	.. more boards here ...
+> -
+> -Next, for companion chips:
+> -.
+> -`-- arch
+> -    `-- sh
+> -        `-- cchips
+> -            `-- hd6446x
+> -                `-- hd64461
+> -                    `-- cchip-specific files
+> +Board-specific code::
+> +
+> + .
+> + |-- arch
+> + |   `-- sh
+> + |       `-- boards
+> + |           |-- adx
+> + |           |   `-- board-specific files
+> + |           |-- bigsur
+> + |           |   `-- board-specific files
+> + |           |
+> + |           ... more boards here ...
+> + |
+> + `-- include
+> +     `-- asm-sh
+> +         |-- adx
+> +         |   `-- board-specific headers
+> +         |-- bigsur
+> +         |   `-- board-specific headers
+> +         |
+> +       	 .. more boards here ...
+> +
+> +Next, for companion chips::
+> +
+> + .
+> + `-- arch
+> +     `-- sh
+> +         `-- cchips
+> +             `-- hd6446x
+> +                 `-- hd64461
+> +                     `-- cchip-specific files
+> 
+>  ... and so on. Headers for the companion chips are treated the same way as
+>  board-specific headers. Thus, include/asm-sh/hd64461 is home to all of the
+>  hd64461-specific headers.
+> 
+> -Finally, CPU family support is also abstracted:
+> -.
+> -|-- arch
+> -|   `-- sh
+> -|       |-- kernel
+> -|       |   `-- cpu
+> -|       |       |-- sh2
+> -|       |       |   `-- SH-2 generic files
+> -|       |       |-- sh3
+> -|       |       |   `-- SH-3 generic files
+> -|       |       `-- sh4
+> -|       |           `-- SH-4 generic files
+> -|       `-- mm
+> -|           `-- This is also broken out per CPU family, so each family can
+> -|               have their own set of cache/tlb functions.
+> -|
+> -`-- include
+> -    `-- asm-sh
+> -        |-- cpu-sh2
+> -        |   `-- SH-2 specific headers
+> -        |-- cpu-sh3
+> -        |   `-- SH-3 specific headers
+> -        `-- cpu-sh4
+> -            `-- SH-4 specific headers
+> +Finally, CPU family support is also abstracted::
+> +
+> + .
+> + |-- arch
+> + |   `-- sh
+> + |       |-- kernel
+> + |       |   `-- cpu
+> + |       |       |-- sh2
+> + |       |       |   `-- SH-2 generic files
+> + |       |       |-- sh3
+> + |       |       |   `-- SH-3 generic files
+> + |       |       `-- sh4
+> + |       |           `-- SH-4 generic files
+> + |       `-- mm
+> + |           `-- This is also broken out per CPU family, so each family can
+> + |               have their own set of cache/tlb functions.
+> + |
+> + `-- include
+> +     `-- asm-sh
+> +         |-- cpu-sh2
+> +         |   `-- SH-2 specific headers
+> +         |-- cpu-sh3
+> +         |   `-- SH-3 specific headers
+> +         `-- cpu-sh4
+> +             `-- SH-4 specific headers
+> 
+>  It should be noted that CPU subtypes are _not_ abstracted. Thus, these still
+>  need to be dealt with by the CPU family specific code.
+> @@ -112,18 +114,20 @@ setup code, we're required at the very least to provide definitions for
+>  get_system_type() and platform_setup(). For our imaginary board, this
+>  might look something like:
+> 
+> -/*
+> - * arch/sh/boards/vapor/setup.c - Setup code for imaginary board
+> - */
+> -#include <linux/init.h>
+> +.. code-block:: c
+> +
+> +    /*
+> +     * arch/sh/boards/vapor/setup.c - Setup code for imaginary board
+> +     */
+> +    #include <linux/init.h>
+> 
+> -const char *get_system_type(void)
+> -{
+> -	return "FooTech Vaporboard";
+> -}
+> +    const char *get_system_type(void)
+> +    {
+> +        return "FooTech Vaporboard";
+> +    }
+> 
+> -int __init platform_setup(void)
+> -{
+> +    int __init platform_setup(void)
+> +    {
+>    	/*
+>  	 * If our hardware actually existed, we would do real
+>  	 * setup here. Though it's also sane to leave this empty
+> @@ -136,7 +140,8 @@ int __init platform_setup(void)
+>  	/* And whatever else ... */
+> 
+>  	return 0;
+> -}
+> +    }
+> +
+> 
+>  Our new imaginary board will also have to tie into the machvec in order for it
+>  to be of any use.
+> @@ -172,16 +177,17 @@ sufficient.
+>     vector.
+> 
+>     Note that these prototypes are generated automatically by setting
+> -   __IO_PREFIX to something sensible. A typical example would be:
+> +   __IO_PREFIX to something sensible. A typical example would be::
+> 
+>  	#define __IO_PREFIX vapor
+>     	#include <asm/io_generic.h>
+> 
+> +
+>     somewhere in the board-specific header. Any boards being ported that still
+>     have a legacy io.h should remove it entirely and switch to the new model.
+> 
+>   - Add machine vector definitions to the board's setup.c. At a bare minimum,
+> -   this must be defined as something like:
+> +   this must be defined as something like::
+> 
+>  	struct sh_machine_vector mv_vapor __initmv = {
+>  		.mv_name = "vapor",
+> @@ -202,11 +208,11 @@ Large portions of the build system are now entirely dynamic, and merely
+>  require the proper entry here and there in order to get things done.
+> 
+>  The first thing to do is to add an entry to arch/sh/Kconfig, under the
+> -"System type" menu:
+> +"System type" menu::
+> 
+> -config SH_VAPOR
+> -	bool "Vapor"
+> -	help
+> + config SH_VAPOR
+> +	 bool "Vapor"
+> +	 help
+>  	  select Vapor if configuring for a FooTech Vaporboard.
+> 
+>  next, this has to be added into arch/sh/Makefile. All boards require a
+> @@ -232,6 +238,8 @@ space restating it here. After this is done, you will be able to use
+>  implicit checks for your board if you need this somewhere throughout the
+>  common code, such as:
+> 
+> +::
+> +
+>  	/* Make sure we're on the FooTech Vaporboard */
+>  	if (!mach_is_vapor())
+>  		return -ENODEV;
+> @@ -253,12 +261,13 @@ build target, and it will be implicitly listed as such in the help text.
+>  Looking at the 'make help' output, you should now see something like:
+> 
+>  Architecture specific targets (sh):
+> -  zImage                  - Compressed kernel image (arch/sh/boot/zImage)
+> -  adx_defconfig           - Build for adx
+> -  cqreek_defconfig        - Build for cqreek
+> -  dreamcast_defconfig     - Build for dreamcast
+> -...
+> -  vapor_defconfig         - Build for vapor
+> +
+> + - zImage                  - Compressed kernel image (arch/sh/boot/zImage)
+> + - adx_defconfig           - Build for adx
+> + - cqreek_defconfig        - Build for cqreek
+> + - dreamcast_defconfig     - Build for dreamcast
+> + - ...
+> + - vapor_defconfig         - Build for vapor
+> 
+>  which then allows you to do:
+> 
+> diff --git a/Documentation/sh/register-banks.txt b/Documentation/sh/register-banks.rst
+> similarity index 90%
+> rename from Documentation/sh/register-banks.txt
+> rename to Documentation/sh/register-banks.rst
+> index a6719f2f6594..acccfaf80355 100644
+> --- a/Documentation/sh/register-banks.txt
+> +++ b/Documentation/sh/register-banks.rst
+> @@ -1,8 +1,9 @@
+> -	Notes on register bank usage in the kernel
+> -	==========================================
+> +==========================================
+> +Notes on register bank usage in the kernel
+> +==========================================
+> 
+>  Introduction
+> -------------
+> +============
+> 
+>  The SH-3 and SH-4 CPU families traditionally include a single partial register
+>  bank (selected by SR.RB, only r0 ... r7 are banked), whereas other families
+> @@ -30,4 +31,3 @@ Presently the kernel uses several of these registers.
+>  		- The SR.IMASK interrupt handler makes use of this to set the
+>  		  interrupt priority level (used by local_irq_enable())
+>  	- r7_bank (current)
+> -
+> diff --git a/arch/sh/Kconfig.cpu b/arch/sh/Kconfig.cpu
+> index 4a4edc7e03d4..07ad7597cbe7 100644
+> --- a/arch/sh/Kconfig.cpu
+> +++ b/arch/sh/Kconfig.cpu
+> @@ -94,7 +94,7 @@ config CPU_HAS_SR_RB
+>  	  that are lacking this bit must have another method in place for
+>  	  accomplishing what is taken care of by the banked registers.
+> 
+> -	  See <file:Documentation/sh/register-banks.txt> for further
+> +	  See <file:Documentation/sh/register-banks.rst> for further
+>  	  information on SR.RB and register banking in the kernel in general.
+> 
+>  config CPU_HAS_PTEAEX
+> --
+> 2.17.1
+> 
 
-yes please.
-
-Also, a simple script conversion applied
-immediately after an rc1 might be easiest
-rather than individual patches.
 
 
+Thanks,
+Mauro
