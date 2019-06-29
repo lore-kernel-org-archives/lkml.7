@@ -4,73 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E2EC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA63C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1902083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE07E2086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfF2ChC (ORCPT
+        id S1726812AbfF2ClB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 22:37:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8237 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726687AbfF2ChC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 22:37:02 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 54AF7D4561FCB134751B;
-        Sat, 29 Jun 2019 10:36:57 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 29 Jun 2019 10:36:47 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Brian Austin <brian.austin@cirrus.com>,
-        Paul Handrigan <Paul.Handrigan@cirrus.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <alsa-devel@alsa-project.org>,
-        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] ASoC: madera: Remove duplicated include from cs47l35.c
-Date:   Sat, 29 Jun 2019 02:43:33 +0000
-Message-ID: <20190629024333.177027-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 28 Jun 2019 22:41:01 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:62239 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726694AbfF2ClB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 22:41:01 -0400
+X-UUID: d6985d809fff4701bb6ed9b0506cb2c5-20190629
+X-UUID: d6985d809fff4701bb6ed9b0506cb2c5-20190629
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 800062253; Sat, 29 Jun 2019 10:40:54 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 29 Jun 2019 10:40:54 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 29 Jun 2019 10:40:53 +0800
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
+        <yong.wu@mediatek.com>, <youlin.pei@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v8 10/21] iommu/mediatek: Refine protect memory definition
+Date:   Sat, 29 Jun 2019 10:39:44 +0800
+Message-ID: <1561775995-24963-11-git-send-email-yong.wu@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove duplicated include.
+The protect memory setting is a little different in the different SoCs.
+In the register REG_MMU_CTRL_REG(0x110), the TF_PROT(translation fault
+protect) shift bit is normally 4 while it shift 5 bits only in the
+mt8173. This patch delete the complex MACRO and use a common if-else
+instead.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Reviewed-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- sound/soc/codecs/cs47l35.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/iommu/mtk_iommu.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/sound/soc/codecs/cs47l35.c b/sound/soc/codecs/cs47l35.c
-index 511d0d6fa962..e3585c1dab3d 100644
---- a/sound/soc/codecs/cs47l35.c
-+++ b/sound/soc/codecs/cs47l35.c
-@@ -19,7 +19,6 @@
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
- #include <sound/tlv.h>
--#include <sound/tlv.h>
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index a915c25..4f8a2cb 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -52,12 +52,9 @@
+ #define REG_MMU_DCM_DIS				0x050
  
- #include <linux/irqchip/irq-madera.h>
- #include <linux/mfd/madera/core.h>
-
-
-
-
+ #define REG_MMU_CTRL_REG			0x110
++#define F_MMU_TF_PROT_TO_PROGRAM_ADDR		(2 << 4)
+ #define F_MMU_PREFETCH_RT_REPLACE_MOD		BIT(4)
+-#define F_MMU_TF_PROTECT_SEL_SHIFT(data) \
+-	((data)->plat_data->m4u_plat == M4U_MT2712 ? 4 : 5)
+-/* It's named by F_MMU_TF_PROT_SEL in mt2712. */
+-#define F_MMU_TF_PROTECT_SEL(prot, data) \
+-	(((prot) & 0x3) << F_MMU_TF_PROTECT_SEL_SHIFT(data))
++#define F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173	(2 << 5)
+ 
+ #define REG_MMU_IVRP_PADDR			0x114
+ 
+@@ -537,9 +534,11 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+ 		return ret;
+ 	}
+ 
+-	regval = F_MMU_TF_PROTECT_SEL(2, data);
+ 	if (data->plat_data->m4u_plat == M4U_MT8173)
+-		regval |= F_MMU_PREFETCH_RT_REPLACE_MOD;
++		regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
++			 F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173;
++	else
++		regval = F_MMU_TF_PROT_TO_PROGRAM_ADDR;
+ 	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
+ 
+ 	regval = F_L2_MULIT_HIT_EN |
+-- 
+1.9.1
 
