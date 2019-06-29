@@ -2,110 +2,70 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E5AC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 17:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFC0C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 17:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210F0214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 17:46:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+6e1QTx"
+	by mail.kernel.org (Postfix) with ESMTP id 94D3520665
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 17:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfF2Rqi (ORCPT
+        id S1726936AbfF2RxI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 13:46:38 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41929 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbfF2Rqh (ORCPT
+        Sat, 29 Jun 2019 13:53:08 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38174 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbfF2RxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 13:46:37 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p15so16375507eds.8;
-        Sat, 29 Jun 2019 10:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oS4u77vgav7S0otvzH8LMeZADY7EGXm5N/CxQuMHfSM=;
-        b=e+6e1QTxfFgkzcdZhJunA6Ct+8ha0O1DfUbQjgsjQqjYps2ZvV5kba2ZIPGmElFafJ
-         6ZkRRwzhAIJgI74zdMnptFXDGOABgiwuQ+dKf6eFGw2khIogKOm2ewQGLI+1hM4rfl1Y
-         pcih2gIwTBVn5/lpQTywXclzvmomMyF72zvVKr32AVD6hw9KShCO4afyQOgakWHv3SzN
-         wFU71HUBq7Sri2Or86N2o4k4SERnsbmcHEB0U6lmoe0vkxukquZ3OfAub1Ebz5/WjBMX
-         bC0AaO/vseVQxG6Ut2MPs/dPFnEF7M2beW01+Bo/J1MmxKzYa2hJjppTCCuG/k3aDQki
-         aw8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oS4u77vgav7S0otvzH8LMeZADY7EGXm5N/CxQuMHfSM=;
-        b=EnTXcvYYp62yqk634rtYjUhR1oPzA34X3d8Ou2Lt8LfUxb29r6T+cs3lg7JXcfaqDv
-         hA8CfTclXeUnrTUH/+Qnub39SXY1LsXjHlHsTVSXB2Z/0u0punhEBMCsdc/SaU7Up4iX
-         QENTyM25+FaMVENma/iAUglgoXeKtRRhxS711RL6rgrnaGrnQdsCgPjnLRedD4AwrfDN
-         LeEaokhNo0e5Ats4Pv91+iXUr0XYrXxH44vAYmx7gMuNEPy10yk253G35V23AO4R31pz
-         BiRkc5Oe7sNhQwOOKHyYhFa1XYSijGXtQlP+agRE9VEDHtPLaKx3oqNJFX98+pvqzgcw
-         u53g==
-X-Gm-Message-State: APjAAAX6lKhBEnmW+ajOuGZqq7LADploEoaIwKYdvxLNuVDTZg8G+kzs
-        LoF4LBoMmhrDHA0dJE2uSElKsktgy4Z4L6GbRhQ=
-X-Google-Smtp-Source: APXvYqxYvVZOgGBFm54TxrTpBfq0bzHSSjreYYrXi4UK5pPO6x/a3qS8QtwnZtalBDYLKjsMIZD67Pz++TiVcu+4dtc=
-X-Received: by 2002:a17:906:418:: with SMTP id d24mr14904800eja.258.1561830395655;
- Sat, 29 Jun 2019 10:46:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190628162831.20645-1-jeffrey.l.hugo@gmail.com>
-In-Reply-To: <20190628162831.20645-1-jeffrey.l.hugo@gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sat, 29 Jun 2019 10:46:20 -0700
-Message-ID: <CAF6AEGuLvgfWYdGm-0caGbWcvzt7raCWkz_sBCxFKV99YQZmeg@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm: Transition console to msm framebuffer
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 29 Jun 2019 13:53:07 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 09FC214B566FC;
+        Sat, 29 Jun 2019 10:53:06 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 10:53:06 -0700 (PDT)
+Message-Id: <20190629.105306.762888643756822083.davem@davemloft.net>
+To:     bjorn.topel@gmail.com
+Cc:     ivan.khoronzhuk@linaro.org, bjorn.topel@intel.com,
+        magnus.karlsson@intel.com, ast@kernel.org, daniel@iogearbox.net,
+        hawk@kernel.org, john.fastabend@gmail.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] xdp: xdp_umem: fix umem pages mapping for
+ 32bits systems
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <CAJ+HfNid3PntipAJHuPR-tQudf+E6UQK6mPDHdc0O=wCUSjEEA@mail.gmail.com>
+References: <20190626155911.13574-1-ivan.khoronzhuk@linaro.org>
+        <CAJ+HfNid3PntipAJHuPR-tQudf+E6UQK6mPDHdc0O=wCUSjEEA@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 29 Jun 2019 10:53:07 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 9:28 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> If booting a device using EFI, efifb will likely come up and claim the
-> console.  When the msm display stack finally comes up, we want the
-> console to move over to the msm fb, so add support to kick out any
-> firmware based framebuffers to accomplish the console transition.
->
-> Suggested-by: Rob Clark <robdclark@gmail.com>
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Björn Töpel <bjorn.topel@gmail.com>
+Date: Wed, 26 Jun 2019 22:50:23 +0200
 
-lgtm,
+> On Wed, 26 Jun 2019 at 17:59, Ivan Khoronzhuk
+> <ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> Use kmap instead of page_address as it's not always in low memory.
+>>
+> 
+> Ah, some 32-bit love. :-) Thanks for working on this!
+> 
+> For future patches, please base AF_XDP patches on the bpf/bpf-next
+> tree instead of net/net-next.
+> 
+> Acked-by: Björn Töpel <bjorn.topel@intel.com>
 
-Reviewed-by: Rob Clark <robdclark@gmail.com>
+Alexei and Daniel, I'll let you guys take this one.
 
-
-> ---
->  drivers/gpu/drm/msm/msm_fbdev.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/gpu/drm/msm/msm_fbdev.c b/drivers/gpu/drm/msm/msm_fbdev.c
-> index 2429d5e6ce9f..e3836c7725a6 100644
-> --- a/drivers/gpu/drm/msm/msm_fbdev.c
-> +++ b/drivers/gpu/drm/msm/msm_fbdev.c
-> @@ -169,6 +169,9 @@ struct drm_fb_helper *msm_fbdev_init(struct drm_device *dev)
->         if (ret)
->                 goto fini;
->
-> +       /* the fw fb could be anywhere in memory */
-> +       drm_fb_helper_remove_conflicting_framebuffers(NULL, "msm", false);
-> +
->         ret = drm_fb_helper_initial_config(helper, 32);
->         if (ret)
->                 goto fini;
-> --
-> 2.17.1
->
+Thanks.
