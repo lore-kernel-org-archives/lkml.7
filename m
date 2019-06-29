@@ -2,316 +2,236 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D32C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E31E4C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D39F22054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89BB2054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:16:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y86brGgi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfatlPzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfF2NPC (ORCPT
+        id S1726892AbfF2NQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 09:15:02 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33338 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbfF2NPB (ORCPT
+        Sat, 29 Jun 2019 09:16:07 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41523 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfF2NQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 09:15:01 -0400
-Received: by mail-lj1-f195.google.com with SMTP id h10so8650954ljg.0;
-        Sat, 29 Jun 2019 06:14:58 -0700 (PDT)
+        Sat, 29 Jun 2019 09:16:07 -0400
+Received: by mail-pl1-f195.google.com with SMTP id m7so4770252pls.8;
+        Sat, 29 Jun 2019 06:16:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FIFyKUxoPgfvRtyFllrw/f3o/hPYL0zGbMIg9vu/atY=;
-        b=Y86brGgipsGJPBJITcIeo4Xc3Ki1pjQlXj+pfkPJoL58bYG0p+jYezu5dJ5p07hvhI
-         idP9uISuWjv9iwYefF41HntpY8whgYUhdV2EI5J4BsnVOBjps5a/McngOHWpYotNPsob
-         TDflZiRLUA1uj/uQt9HSDNCQG5FVpoHr2VsXpP2CjzIxuvGGbT8bxfcGavpvLfwlgbrg
-         n2j6/b04clOeE/TGzsOLKVfniSASPoqInetjVWrdDhosBMgbdVUiwdDEiBgPj6idebqR
-         INFelSkTZ5YcEWIb2nraM72gE2dkT1chB0xebSrnVq5hoLi/vq4jI1Suj5IKpb7/fZS3
-         q66g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oZH7srH293GzXaPIhoiVN9XL4MTAYK6bMjRqUu3n++g=;
+        b=lfatlPzW+wGWhcBiY5YcUE8n9XAVbRoxujyUdMfgMkXNyuIzJ/owsC7OuW382PWtSQ
+         CzUUSKt5UuV+XqwuhEn7p0TUTzrYS8TardBVza4UKysmEtcZ+ZQa7r9RETI8tjDYWXRG
+         i0D9Hz9JUqpxD6lWEReM+wi34sVh2YuCedp5UJesa4B3m4gv5Lx6J3JOBIEvjBKQe+2v
+         SePJscnW1x6fCqVxUG5SnZVnPlgG4XazX8evJePfBt6Ddye3Qx5l0bJMLfxxUZNizxuT
+         ffCXkRwvUf6ra2GUjRbfBAd7rdiP0OA+/eoiJWfj493PQT+24Ue1RtD8qUpzB9Q2qoW6
+         MFmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FIFyKUxoPgfvRtyFllrw/f3o/hPYL0zGbMIg9vu/atY=;
-        b=Z7NPPkoJrXYkGwQzfoXHn8V9XeUzjck2FEXL61ZzZ8oRmyOs/fzJKqlowjINkuwMTF
-         iuhsng0CCpzXN5gGMG3ebDyrAt5YC2OvOxGqlgtzCSgL/+PArEeWMFu91XwVu9y/gMxx
-         GJLL0xnArdR41PlWCGTdcxm3rTapYTG6asESYJl5o8wN6SXpbAVvzKl/kCKmn9GuVDVg
-         LCvQ33OlH+NYWmjeAKveURUbP6kuFtZ2HY9QuZAsJJCi8mfjUXdDKsQ6A6ME7Qg8RIFu
-         QxtNyhVf2zl8AyT86uFpnoXt69jvil7I8kJY2yM0a0RYQgG2fYbpsISzyjoL4D3Q4FtV
-         gc6w==
-X-Gm-Message-State: APjAAAWsWvZgYr3zG9q9dfVPqzgI0nPoT/LtE6oMSAafkr2g+F8+dipA
-        eNmuCWoxYi2O+wloFRat4F3CU77a
-X-Google-Smtp-Source: APXvYqyfgjjSBCqAeKxGN+y8lPQPnHS9gkYe3ys6ZcuMpzpe58RlnoSmGaT1uMq/yPyrv0lET+gF4w==
-X-Received: by 2002:a2e:4794:: with SMTP id u142mr9113238lja.222.1561814097620;
-        Sat, 29 Jun 2019 06:14:57 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id z12sm1332000lfg.67.2019.06.29.06.14.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 06:14:56 -0700 (PDT)
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com
-Cc:     pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-12-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <066a7297-6d7c-f83d-5306-c79db0c92b84@gmail.com>
-Date:   Sat, 29 Jun 2019 16:14:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oZH7srH293GzXaPIhoiVN9XL4MTAYK6bMjRqUu3n++g=;
+        b=kQPlLqOUIXEhlzYBtk/k9NA/HdDHDkEnnhn//ZWktcYdcvbyu5nhp/Zpnw/0QT393H
+         nsF3kdHiaajJpJNCjjuMd6VbxoX2slJO0qCWVvoP5RaHJhortGZt1BsGJPaI6/BCcrIV
+         fl+zU8gkdjUjx3NDCEd9dQoGJ9LRlIXOmEfIchn0OHl/KQNyvz2AWblnqdLywkMwGB89
+         EqMoiP8XVgWtMVgsYoT2SbcSb4GNZLhFXc+qsN//OP8SiAvuqzwb7ky1KZeOoacnXdAC
+         A6EyPpSHbMO2mYRQ3yot7HlhCf5ItK0VhKheP3vhdpfAo7N7f/cEELMvyTq8GL26FmYu
+         Zbug==
+X-Gm-Message-State: APjAAAVAYIk39c1VLuJJ/6MS9g4HAqHpgjeWNaed8rNxgbXZcGPjCEd/
+        kcmENXdbXrcTmEaDlMKUhUAFIg5GYIPX3cCN0cfIzO+pESs=
+X-Google-Smtp-Source: APXvYqyuK+3WEiL/OHaUVZapvgUmTBt62blpxoWv+cvkZ1Jytrjvgvm/1aujnuc0dGgb4IzSQFAxHvO0fPNqBHutQfI=
+X-Received: by 2002:a17:902:ab90:: with SMTP id f16mr17338532plr.262.1561814166287;
+ Sat, 29 Jun 2019 06:16:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1561687972-19319-12-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1558968964.git.2pi@mok.nu> <eb57957045495464539c8b4896a8d83b5d87377b.1558968964.git.2pi@mok.nu>
+In-Reply-To: <eb57957045495464539c8b4896a8d83b5d87377b.1558968964.git.2pi@mok.nu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 29 Jun 2019 16:15:55 +0300
+Message-ID: <CAHp75VewdbB7xStMOaomf2FVKrTeZVVhFyrBWYL=MJ4HOYKTWQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] platform/x86: wmi: add Xiaomi WMI key driver
+To:     Mattias Jacobsson <2pi@mok.nu>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.06.2019 5:12, Sowjanya Komatineni пишет:
-> This patch adds system suspend and resume support for Tegra210
-> clocks.
-> 
-> All the CAR controller settings are lost on suspend when core power
-> goes off.
-> 
-> This patch has implementation for saving and restoring all the PLLs
-> and clocks context during system suspend and resume to have the
-> clocks back to same state for normal operation.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+On Mon, May 27, 2019 at 7:22 PM Mattias Jacobsson <2pi@mok.nu> wrote:
+>
+> Some function keys on the built in keyboard on Xiaomi's notebooks does
+> not produce any key events when pressed in combination with the function
+> key. Some of these keys do report that they are being pressed via WMI
+> events.
+>
+> This driver reports key events for Fn+F7 and double tap on Fn.
+>
+> Other WMI events that are reported by the hardware but not utilized by
+> this driver are Caps Lock(which already work) and Fn lock/unlock.
+>
+
+Pushed to my review and testing queue, thanks!
+
+> Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
 > ---
->  drivers/clk/tegra/clk-tegra210.c | 115 ++++++++++++++++++++++++++++++++++++++-
->  drivers/clk/tegra/clk.c          |  14 +++++
->  drivers/clk/tegra/clk.h          |   1 +
->  3 files changed, 127 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-> index 1c08c53482a5..1b839544e086 100644
-> --- a/drivers/clk/tegra/clk-tegra210.c
-> +++ b/drivers/clk/tegra/clk-tegra210.c
-> @@ -9,10 +9,12 @@
->  #include <linux/clkdev.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_platform.h>
->  #include <linux/delay.h>
->  #include <linux/export.h>
->  #include <linux/mutex.h>
->  #include <linux/clk/tegra.h>
-> +#include <linux/syscore_ops.h>
->  #include <dt-bindings/clock/tegra210-car.h>
->  #include <dt-bindings/reset/tegra210-car.h>
->  #include <linux/iopoll.h>
-> @@ -20,6 +22,7 @@
->  #include <soc/tegra/pmc.h>
->  
->  #include "clk.h"
-> +#include "clk-dfll.h"
->  #include "clk-id.h"
->  
->  /*
-> @@ -225,6 +228,7 @@
->  
->  #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
->  #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
-> +#define CPU_SOFTRST_CTRL 0x380
->  
->  #define LVL2_CLK_GATE_OVRA 0xf8
->  #define LVL2_CLK_GATE_OVRC 0x3a0
-> @@ -2820,6 +2824,7 @@ static int tegra210_enable_pllu(void)
->  	struct tegra_clk_pll_freq_table *fentry;
->  	struct tegra_clk_pll pllu;
->  	u32 reg;
-> +	int ret;
->  
->  	for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
->  		if (fentry->input_rate == pll_ref_freq)
-> @@ -2847,10 +2852,10 @@ static int tegra210_enable_pllu(void)
->  	fence_udelay(1, clk_base);
->  	reg |= PLL_ENABLE;
->  	writel(reg, clk_base + PLLU_BASE);
-> +	fence_udelay(1, clk_base);
->  
-> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
-> -					  reg & PLL_BASE_LOCK, 2, 1000);
-> -	if (!(reg & PLL_BASE_LOCK)) {
-> +	ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
-> +	if (ret) {
->  		pr_err("Timed out waiting for PLL_U to lock\n");
->  		return -ETIMEDOUT;
->  	}
-> @@ -3283,6 +3288,103 @@ static void tegra210_disable_cpu_clock(u32 cpu)
->  }
->  
->  #ifdef CONFIG_PM_SLEEP
-> +static u32 cpu_softrst_ctx[3];
-> +static struct platform_device *dfll_pdev;
-> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
-> +#define car_writel(_val, _base, _off) \
-> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
+>  drivers/platform/x86/Kconfig      | 10 ++++
+>  drivers/platform/x86/Makefile     |  1 +
+>  drivers/platform/x86/xiaomi-wmi.c | 94 +++++++++++++++++++++++++++++++
+>  3 files changed, 105 insertions(+)
+>  create mode 100644 drivers/platform/x86/xiaomi-wmi.c
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 5d5cc6111081..257a99134b64 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -781,6 +781,16 @@ config INTEL_WMI_THUNDERBOLT
+>           To compile this driver as a module, choose M here: the module will
+>           be called intel-wmi-thunderbolt.
+>
+> +config XIAOMI_WMI
+> +         tristate "Xiaomi WMI key driver"
+> +         depends on ACPI_WMI
+> +         depends on INPUT
+> +         help
+> +         Say Y here if you want to support WMI-based keys on Xiaomi notebooks.
 > +
-> +static int tegra210_clk_suspend(void)
-> +{
-> +	unsigned int i;
-> +	struct device_node *node;
+> +         To compile this driver as a module, choose M here: the module will
+> +         be called xiaomi-wmi.
 > +
-> +	tegra_cclkg_burst_policy_save_context();
+>  config MSI_WMI
+>         tristate "MSI WMI extras"
+>         depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 87b0069bd781..f64445d69f99 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -51,6 +51,7 @@ obj-$(CONFIG_SURFACE3_WMI)    += surface3-wmi.o
+>  obj-$(CONFIG_TOPSTAR_LAPTOP)   += topstar-laptop.o
+>  obj-$(CONFIG_WMI_BMOF)         += wmi-bmof.o
+>  obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)    += intel-wmi-thunderbolt.o
+> +obj-$(CONFIG_XIAOMI_WMI)       += xiaomi-wmi.o
+>
+>  # toshiba_acpi must link after wmi to ensure that wmi devices are found
+>  # before toshiba_acpi initializes
+> diff --git a/drivers/platform/x86/xiaomi-wmi.c b/drivers/platform/x86/xiaomi-wmi.c
+> new file mode 100644
+> index 000000000000..4ff9df5eb88f
+> --- /dev/null
+> +++ b/drivers/platform/x86/xiaomi-wmi.c
+> @@ -0,0 +1,94 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * WMI driver for Xiaomi Laptops
+> + *
+> + */
 > +
-> +	if (!dfll_pdev) {
-> +		node = of_find_compatible_node(NULL, NULL,
-> +					       "nvidia,tegra210-dfll");
-> +		if (node)
-> +			dfll_pdev = of_find_device_by_node(node);
+> +#include <linux/acpi.h>
+> +#include <linux/input.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +#include <uapi/linux/input-event-codes.h>
 > +
-> +		of_node_put(node);
-> +		if (!dfll_pdev)
-> +			pr_err("dfll node not found. no suspend for dfll\n");
-> +	}
+> +#define XIAOMI_KEY_FN_ESC_0    "A2095CCE-0491-44E7-BA27-F8ED8F88AA86"
+> +#define XIAOMI_KEY_FN_ESC_1    "7BBE8E39-B486-473D-BA13-66F75C5805CD"
+> +#define XIAOMI_KEY_FN_FN       "409B028D-F06B-4C7C-8BBB-EE133A6BD87E"
+> +#define XIAOMI_KEY_CAPSLOCK    "83FE7607-053A-4644-822A-21532C621FC7"
+> +#define XIAOMI_KEY_FN_F7       "76E9027C-95D0-4180-8692-DA6747DD1C2D"
 > +
-> +	if (dfll_pdev)
-> +		tegra_dfll_suspend(dfll_pdev);
+> +#define XIAOMI_DEVICE(guid, key)               \
+> +       .guid_string = (guid),                  \
+> +       .context = &(const unsigned int){key}
 > +
-> +	/* Enable PLLP_OUT_CPU after dfll suspend */
-> +	tegra_clk_set_pllp_out_cpu(true);
-> +
-> +	tegra_sclk_cclklp_burst_policy_save_context();
-> +
-> +	clk_save_context();
-> +
-> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
-> +		cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
-> +
-> +	return 0;
-> +}
-> +
-> +static void tegra210_clk_resume(void)
-> +{
-> +	unsigned int i;
-> +	struct clk_hw *parent;
-> +	struct clk *clk;
-> +
-> +	/*
-> +	 * clk_restore_context restores clocks as per the clock tree.
-> +	 *
-> +	 * dfllCPU_out is first in the clock tree to get restored and it
-> +	 * involves programming DFLL controller along with restoring CPUG
-> +	 * clock burst policy.
-> +	 *
-> +	 * DFLL programming needs dfll_ref and dfll_soc peripheral clocks
-> +	 * to be restores which are part ofthe peripheral clocks.
-> +	 * So, peripheral clocks restore should happen prior to dfll clock
-> +	 * restore.
-> +	 */
-> +
-> +	tegra_clk_osc_resume(clk_base);
-> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
-> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
-> +
-> +	/* restore all plls and peripheral clocks */
-> +	tegra210_init_pllu();
-> +	clk_restore_context();
-> +
-> +	fence_udelay(5, clk_base);
-> +
-> +	/* resume SCLK and CPULP clocks */
-> +	tegra_sclk_cpulp_burst_policy_restore_context();
-> +
-> +	/*
-> +	 * restore CPUG clocks:
-> +	 * - enable DFLL in open loop mode
-> +	 * - switch CPUG to DFLL clock source
-> +	 * - close DFLL loop
-> +	 * - sync PLLX state
-> +	 */
-> +	if (dfll_pdev)
-> +		tegra_dfll_resume(dfll_pdev, false);
-> +
-> +	tegra_cclkg_burst_policy_restore_context();
-> +	fence_udelay(2, clk_base);
-> +
-> +	if (dfll_pdev)
-> +		tegra_dfll_resume(dfll_pdev, true);
-> +
-> +	parent = clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
-> +	clk = clks[TEGRA210_CLK_PLL_X];
-> +	if (parent != __clk_get_hw(clk))
-> +		tegra_clk_sync_state_pll(__clk_get_hw(clk));
-> +
-> +	/* Disable PLL_OUT_CPU after DFLL resume */
-> +	tegra_clk_set_pllp_out_cpu(false);
-> +}
-> +
->  static void tegra210_cpu_clock_suspend(void)
->  {
->  	/* switch coresite to clk_m, save off original source */
-> @@ -3298,6 +3400,11 @@ static void tegra210_cpu_clock_resume(void)
->  }
->  #endif
->  
-> +static struct syscore_ops tegra_clk_syscore_ops = {
-> +	.suspend = tegra210_clk_suspend,
-> +	.resume = tegra210_clk_resume,
+> +struct xiaomi_wmi {
+> +       struct input_dev *input_dev;
+> +       unsigned int key_code;
 > +};
 > +
->  static struct tegra_cpu_car_ops tegra210_cpu_car_ops = {
->  	.wait_for_reset	= tegra210_wait_cpu_in_reset,
->  	.disable_clock	= tegra210_disable_cpu_clock,
-> @@ -3583,5 +3690,7 @@ static void __init tegra210_clock_init(struct device_node *np)
->  	tegra210_mbist_clk_init();
->  
->  	tegra_cpu_car_ops = &tegra210_cpu_car_ops;
-> +
-> +	register_syscore_ops(&tegra_clk_syscore_ops);
->  }
->  CLK_OF_DECLARE(tegra210, "nvidia,tegra210-car", tegra210_clock_init);
-> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-> index 9e863362d2bf..96cc9937ea37 100644
-> --- a/drivers/clk/tegra/clk.c
-> +++ b/drivers/clk/tegra/clk.c
-> @@ -23,6 +23,7 @@
->  #define CLK_OUT_ENB_W			0x364
->  #define CLK_OUT_ENB_X			0x280
->  #define CLK_OUT_ENB_Y			0x298
-> +#define CLK_ENB_PLLP_OUT_CPU		BIT(31)
->  #define CLK_OUT_ENB_SET_L		0x320
->  #define CLK_OUT_ENB_CLR_L		0x324
->  #define CLK_OUT_ENB_SET_H		0x328
-> @@ -205,6 +206,19 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
->  	}
->  }
->  
-> +void tegra_clk_set_pllp_out_cpu(bool enable)
+> +int xiaomi_wmi_probe(struct wmi_device *wdev, const void *context)
 > +{
-> +	u32 val;
+> +       struct xiaomi_wmi *data;
 > +
-> +	val = readl_relaxed(clk_base + CLK_OUT_ENB_Y);
-> +	if (enable)
-> +		val |= CLK_ENB_PLLP_OUT_CPU;
-> +	else
-> +		val &= ~CLK_ENB_PLLP_OUT_CPU;
+> +       if (wdev == NULL || context == NULL)
+> +               return -EINVAL;
 > +
-> +	writel_relaxed(val, clk_base + CLK_OUT_ENB_Y);
+> +       data = devm_kzalloc(&wdev->dev, sizeof(struct xiaomi_wmi), GFP_KERNEL);
+> +       if (data == NULL)
+> +               return -ENOMEM;
+> +       dev_set_drvdata(&wdev->dev, data);
+> +
+> +       data->input_dev = devm_input_allocate_device(&wdev->dev);
+> +       if (data->input_dev == NULL)
+> +               return -ENOMEM;
+> +       data->input_dev->name = "Xiaomi WMI keys";
+> +       data->input_dev->phys = "wmi/input0";
+> +
+> +       data->key_code = *((const unsigned int *)context);
+> +       set_bit(EV_KEY, data->input_dev->evbit);
+> +       set_bit(data->key_code, data->input_dev->keybit);
+> +
+> +       return input_register_device(data->input_dev);
 > +}
+> +
+> +void xiaomi_wmi_notify(struct wmi_device *wdev, union acpi_object *_)
+> +{
+> +       struct xiaomi_wmi *data;
+> +
+> +       if (wdev == NULL)
+> +               return;
+> +
+> +       data = dev_get_drvdata(&wdev->dev);
+> +       if (data == NULL)
+> +               return;
+> +
+> +       input_report_key(data->input_dev, data->key_code, 1);
+> +       input_sync(data->input_dev);
+> +       input_report_key(data->input_dev, data->key_code, 0);
+> +       input_sync(data->input_dev);
+> +}
+> +
+> +static const struct wmi_device_id xiaomi_wmi_id_table[] = {
+> +       // { XIAOMI_DEVICE(XIAOMI_KEY_FN_ESC_0, KEY_FN_ESC) },
+> +       // { XIAOMI_DEVICE(XIAOMI_KEY_FN_ESC_1, KEY_FN_ESC) },
+> +       { XIAOMI_DEVICE(XIAOMI_KEY_FN_FN, KEY_PROG1) },
+> +       // { XIAOMI_DEVICE(XIAOMI_KEY_CAPSLOCK, KEY_CAPSLOCK) },
+> +       { XIAOMI_DEVICE(XIAOMI_KEY_FN_F7, KEY_CUT) },
+> +
+> +       /* Terminating entry */
+> +       { }
+> +};
+> +
+> +static struct wmi_driver xiaomi_wmi_driver = {
+> +       .driver = {
+> +               .name = "xiaomi-wmi",
+> +       },
+> +       .id_table = xiaomi_wmi_id_table,
+> +       .probe = xiaomi_wmi_probe,
+> +       .notify = xiaomi_wmi_notify,
+> +};
+> +module_wmi_driver(xiaomi_wmi_driver);
+> +
+> +MODULE_DEVICE_TABLE(wmi, xiaomi_wmi_id_table);
+> +MODULE_AUTHOR("Mattias Jacobsson");
+> +MODULE_DESCRIPTION("Xiaomi WMI driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.21.0
+>
 
-Do we needed fence_udelay() here? I'm a bit confused about when the fence should be
-used for the CLK hardware.. Maybe Peter could clarify?
+
+-- 
+With Best Regards,
+Andy Shevchenko
