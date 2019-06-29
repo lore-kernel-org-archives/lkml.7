@@ -2,92 +2,113 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBDCC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17385C4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2D62086D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32192086D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 10:36:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lZW1QkFJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdBm/5W3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbfF2Kck (ORCPT
+        id S1726937AbfF2KgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 06:32:40 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34996 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfF2Kck (ORCPT
+        Sat, 29 Jun 2019 06:36:08 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46056 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfF2KgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 06:32:40 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5TASv4t078874;
-        Sat, 29 Jun 2019 10:32:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=2oU+baNnGYXLU4uPl5XcwjOYu5QeXXsmvgarRO4YJus=;
- b=lZW1QkFJN6GpNXLAAUB/sWg4pjVBfdAQ5bNF5+MI4ots4E+FR7Y+NDgtogqXEQFmEvzP
- gG3gkxPzht/ACgvfxfDpbfGhUid1LdGAyucfbaSh8t1qPoTywZT98zATH4bqnqz5Pyon
- Uc0Fy5JI9hkGq9HPigW988LJ8cjXt7bxXODtuTF22Z3xQx3ERTE2dcComsZT4aa/Njjr
- p9ySP6TbPuh7fVPe5hCoo0WOKXTpn8TgkAXQG0wFt/PCDRzjiuYBWEmdKJ+V6LGejJD2
- bh6ewWZd7NMjuRSbV8hm14QiEbajwFZfih0Ra14TuzAqU6VJCys0/TQtz2IT3QEhZMkV 3g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2te61pg0mu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 29 Jun 2019 10:32:36 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5TAW0ON085529;
-        Sat, 29 Jun 2019 10:32:35 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2tdx1a3kda-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 29 Jun 2019 10:32:35 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5TAWYBw028039;
-        Sat, 29 Jun 2019 10:32:34 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 29 Jun 2019 03:32:33 -0700
-Date:   Sat, 29 Jun 2019 13:32:24 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sat, 29 Jun 2019 06:36:08 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bi6so4644346plb.12
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 03:36:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=5LHkBJhseA7dswWKyXE2Jck+WxMFtGP/bseyhBGdc+o=;
+        b=kdBm/5W3nCQHYCHkDl3RPvqQ77+P01XIG8cKg5dIOThq36njd2kH8bzO+dXt+6jtff
+         u1nwN19fXhEiJbSxCG0+vEJPA6hJR2zNl3faM/igk2C7iQY+LRcjvcfk8YvvEAkICQMc
+         /01P08NoKF03qF4lRmC04VieWwaFWLGP5uOXlzIhoxT6+PfhRch2N/95Fe3UBL/tQ5bq
+         DBDn3pbIY71TMv6kOhh3hLg3pUPInqG1Ab9SpuScRbrVwKch0GoZm2FMO95KeERn7J1O
+         +RBrjYE414hSyrmtS8b9uitql24/WZLc8SQ/ubTYibLQH7XmopfJ8cbT4F3kH6XiTvl8
+         UJ0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=5LHkBJhseA7dswWKyXE2Jck+WxMFtGP/bseyhBGdc+o=;
+        b=av/yB4V4jPCzsRvffSck7hfc23jUmgvNFLHWM0qJH4SPSNpA8neKRxjAhYFte9U8eO
+         5A+vPVwL1RGAgh3E/wNMPK6hwugGh/sWGvA0UXALwOYQaAqgCNOzMp8V2tH78VEnl96k
+         fIZ/lX3hN9H7kP9PZzFJmhj9Gj6OFaG+gRyecmiESPmvaJQBuPhsgNhaDjowbV7Q7CCV
+         ko1f/XCa0oHh2MnfhZqm0qMnFRAmlR7UTbp+Ufgij5STb0SlvSn54uGaozFLwWfjbl22
+         0Mqiwy1WdyXEkAaIGZoqb/tEe2gv7w1DAcvXoyuvBesKegC7TUVnFLVo6IrRzD0TUtvP
+         771A==
+X-Gm-Message-State: APjAAAXz8dfeQJnqy0uMMJcrO2aAYwVjiVi9S9Wl/vtGq9GfEYso9Af7
+        gUOXHeigXDnY6M181lGPcVw=
+X-Google-Smtp-Source: APXvYqwMrWBD5H8o3UVSrF+L8X2bCKm5bqMVp9I6iEetozmgmMMea+YSQpZIG2AbN7yNfHV5ShX6Qw==
+X-Received: by 2002:a17:902:7c8e:: with SMTP id y14mr15913012pll.298.1561804567526;
+        Sat, 29 Jun 2019 03:36:07 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id 65sm4306022pgf.30.2019.06.29.03.36.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Jun 2019 03:36:07 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 16:06:03 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/10] staging/rtl8723bs/hal: fix comparison to
- true/false is error prone
-Message-ID: <20190629103222.GH19015@kadam>
-References: <20190629101909.GA14880@hari-Inspiron-1545>
+Subject: [PATCH 08/10] staging/rtl8723bs/hal: fix comparison to true/false is
+ error prone
+Message-ID: <20190629103603.GA15524@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190629101909.GA14880@hari-Inspiron-1545>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906290132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906290132
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-You sent 10 patches with the same subject.
+fix below issues reported by checkpatch
 
-Btw, I can't recall ever seeing a bug caused by a true false comparison.
-I agree on style principles with the checkpatch warning, but I do
-think it over states the risk (which is as far as I can see is zero).
+CHECK: Using comparison to false is error prone
+CHECK: Using comparison to true is error prone
 
-regards,
-dan carpenter
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/hal_phy.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/hal/hal_phy.c b/drivers/staging/rtl8723bs/hal/hal_phy.c
+index ebaefca..520f860 100644
+--- a/drivers/staging/rtl8723bs/hal/hal_phy.c
++++ b/drivers/staging/rtl8723bs/hal/hal_phy.c
+@@ -81,7 +81,7 @@ bool PHY_RFShadowCompare(IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset)
+ {
+ 	u32 reg;
+ 	/*  Check if we need to check the register */
+-	if (RF_Shadow[eRFPath][Offset].Compare == true) {
++	if (RF_Shadow[eRFPath][Offset].Compare) {
+ 		reg = rtw_hal_read_rfreg(Adapter, eRFPath, Offset, bRFRegOffsetMask);
+ 		/*  Compare shadow and real rf register for 20bits!! */
+ 		if (RF_Shadow[eRFPath][Offset].Value != reg) {
+@@ -100,9 +100,9 @@ bool PHY_RFShadowCompare(IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset)
+ void PHY_RFShadowRecorver(IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset)
+ {
+ 	/*  Check if the address is error */
+-	if (RF_Shadow[eRFPath][Offset].ErrorOrNot == true) {
++	if (RF_Shadow[eRFPath][Offset].ErrorOrNot) {
+ 		/*  Check if we need to recorver the register. */
+-		if (RF_Shadow[eRFPath][Offset].Recorver == true) {
++		if (RF_Shadow[eRFPath][Offset].Recorver) {
+ 			rtw_hal_write_rfreg(Adapter, eRFPath, Offset, bRFRegOffsetMask,
+ 							RF_Shadow[eRFPath][Offset].Value);
+ 			/* RT_TRACE(COMP_INIT, DBG_LOUD, */
+-- 
+2.7.4
 
