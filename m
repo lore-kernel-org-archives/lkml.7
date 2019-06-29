@@ -2,183 +2,158 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43ACC5B57B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 21:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593C3C5B57B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 22:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A072B215EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 21:45:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ooD/XQQO"
+	by mail.kernel.org (Postfix) with ESMTP id 2C4D8216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 22:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561845790;
+	bh=q/T0y/NBeCqA4dwhBrFXTl1i5980robBmw1UQGNKE6s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aYZC+1DWVej8m4jOAmGOhlAcZ4y6zqgUbYB9bnI6tBjI8ipTbpqeyJsHDxMywXDvR
+	 rjF7mcupaLfeejG+wd1saCsuU9GE+D7L6p2Fg6kbOY8wJihC+GB9hIMQH3GOBECzVU
+	 YPDwPJ9xR3Nx+OZB0ylcfRshWjfRGMJXVOsLLBQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfF2Vpr (ORCPT
+        id S1726985AbfF2WDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 17:45:47 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38268 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfF2Vpr (ORCPT
+        Sat, 29 Jun 2019 18:03:07 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42639 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfF2WDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 17:45:47 -0400
-Received: by mail-qt1-f193.google.com with SMTP id n11so10429287qtl.5;
-        Sat, 29 Jun 2019 14:45:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PydfWRx3VTHAN1rB2bk+LBoB6vW7pvGp02+1fwRJ1RE=;
-        b=ooD/XQQOQhvoEjTcZV6/wWStcuJOHhQMYnlsHrJ+EZACNHEgB+ETmYQVB1+KkPL0mv
-         +ZTWXmMYQ5LzQL2UNNw3atUoWU6DjrpOfQyyKTM20LU2WWtAyWtPW5H97uWBVF/0DOp8
-         p5QIBlCQ4WYMWAz35A5rnFrUOWaiDuWgPErcAS/bepzjkfr9c12dlMStrP3HOWV2d064
-         1VqsugQ4Ln8GmzJvaYBCvCCfmYUrY/Lt5yoJK0U9FOQ/nnADrqpcmdywc2e9nBGMFsKT
-         oKZ9M2SQbYZh5hUBDoSrwIHqYHRkK7vxqTYr0LhO4ztn4mGmpeZFshB23SjG9t6F2J8E
-         6G0A==
+        Sat, 29 Jun 2019 18:03:06 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l15so9648708otn.9;
+        Sat, 29 Jun 2019 15:03:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PydfWRx3VTHAN1rB2bk+LBoB6vW7pvGp02+1fwRJ1RE=;
-        b=Q+txQT4l3rdGJlC9uEbLQy1lDjMqHoSpN24BNzCxYH6zamKDAXT0vOx8WfakHJOiF6
-         PsQX3dbEaOjq+j59vpbHv8Ei34iZGPI+yxcVT55WREvbVgd3eZZCwuHOJNzvjbNveMYJ
-         pSH4aHeEX/72cSPrBzFTzn6tjHzdBtod+kHyrRY/yB6eLL8CCKJG9UDiRJa/WLN+vZLe
-         PNfymA+cMI5evWQ8m/zyVXlnsZbvngAxwhwnA8Waroz8SPslQRqyKnRtnwhUESiPDkjl
-         LFe80Eda+KWGyeM0NK+r5vzNb9NpJQ1eTcYS9adhLoON21mZUxjnE3GW03gJgSWBOCfx
-         AitQ==
-X-Gm-Message-State: APjAAAWmspr7bnGsKbqikkWNXzifdo/R4IYiD8MGYJBn6UxKuCc+2Q2y
-        v/hjqFTz4URHp/x+PBpZQowsbQRJ
-X-Google-Smtp-Source: APXvYqxA4587hJlAfsh1OBgH3szPnO3jRvYdnE8AaoChTYYqPjyg0eVjEufh+AkrbjRBUIV36G6PTQ==
-X-Received: by 2002:ac8:30a7:: with SMTP id v36mr13504603qta.119.1561844745818;
-        Sat, 29 Jun 2019 14:45:45 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id k38sm3244931qtk.10.2019.06.29.14.45.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Jun 2019 14:45:45 -0700 (PDT)
-Subject: Re: [PATCH V5 08/18] clk: tegra: Add suspend resume support for DFLL
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-9-git-send-email-skomatineni@nvidia.com>
- <594adc1e-4345-33ae-c79f-ad6f00964587@gmail.com>
-Message-ID: <e641e95e-57e5-4654-c951-a3b63d3b37c4@gmail.com>
-Date:   Sun, 30 Jun 2019 00:45:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FUpz/PJBYvLHMXt6LdH1sbpzCmvKiqzMsbmF/J4YLoQ=;
+        b=UKIDm7zVFGnuwFwyxyolKXzqM0s8YtTMD1v3jedqzctOqWVT+u37jODoZUWAjUnoqq
+         YW198ZaQF45YCtBtn1ETO1rtV4G2vgLdj2u2wH9MlSrDA7zuUj+UMxjuklwmT94vvO+7
+         kZ82uRF7OxvonDLjqkSD1OunMS2Ytqhmctd1HU4E22BEvVP86idRNkFq7wlNsbe/npBw
+         Yoxho3USJfzm2+kZG2IKKmfJitcJpgdBo41CCGFmOwcJZdL8496hnHYoTRI+XVOBg5IY
+         R8llczu+FJ8grwIlhO3q2P+QXWQ0Qc39ivBODk2KgctLYrtAeD7oBxGuNWO6I80SahRl
+         aCog==
+X-Gm-Message-State: APjAAAVSLiLBEKXpfkR2H/po89SaHpI8Bjz9aK4EfLULm+jk+L/55pw3
+        Gy+ONkYh3uiZprcAXIAXw87FxA33l3X65FflCao=
+X-Google-Smtp-Source: APXvYqzWorUFIf3n5S01H4tlmbojU7clNJv0OqZ1rTVdvLW0a2GvABtXLCDFaPI0k9j91lAJyIHRchji2PbUU45yV3U=
+X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr13212772otp.189.1561845785457;
+ Sat, 29 Jun 2019 15:03:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <594adc1e-4345-33ae-c79f-ad6f00964587@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <2318839.0szTqvJMZa@kreacher> <2981101.tKVHzisTAg@kreacher> <c41b5efe-049c-fc72-8697-b2ec9125a55e@redhat.com>
+In-Reply-To: <c41b5efe-049c-fc72-8697-b2ec9125a55e@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 30 Jun 2019 00:02:54 +0200
+Message-ID: <CAJZ5v0iUOv0MYOHP7938V=6qsURBYO6B4LHqfdm_DCHH8GvfLA@mail.gmail.com>
+Subject: Re: [PATCH 4/6] ACPI: LPSS: Fix ->suspend_late callbacks handling
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Robert R. Howell" <RHowell@uwyo.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-29.06.2019 16:28, Dmitry Osipenko пишет:
-> 28.06.2019 5:12, Sowjanya Komatineni пишет:
->> This patch creates APIs for supporting Tegra210 clock driver to
->> perform DFLL suspend and resume operation.
->>
->> During suspend, DFLL mode is saved and on resume Tegra210 clock driver
->> invokes DFLL resume API to re-initialize DFLL to enable target device
->> clock in open loop mode or closed loop mode.
->>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/clk/tegra/clk-dfll.c | 78 ++++++++++++++++++++++++++++++++++++++++++++
->>  drivers/clk/tegra/clk-dfll.h |  2 ++
->>  2 files changed, 80 insertions(+)
->>
->> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
->> index f8688c2ddf1a..a1f37cf99b00 100644
->> --- a/drivers/clk/tegra/clk-dfll.c
->> +++ b/drivers/clk/tegra/clk-dfll.c
->> @@ -277,6 +277,7 @@ struct tegra_dfll {
->>  	unsigned long			dvco_rate_min;
->>  
->>  	enum dfll_ctrl_mode		mode;
->> +	enum dfll_ctrl_mode		resume_mode;
->>  	enum dfll_tune_range		tune_range;
->>  	struct dentry			*debugfs_dir;
->>  	struct clk_hw			dfll_clk_hw;
->> @@ -1864,6 +1865,83 @@ static int dfll_fetch_common_params(struct tegra_dfll *td)
->>  }
->>  
->>  /*
->> + * tegra_dfll_suspend
->> + * @pdev: DFLL instance
->> + *
->> + * dfll controls clock/voltage to other devices, including CPU. Therefore,
->> + * dfll driver pm suspend callback does not stop cl-dvfs operations.
->> + */
->> +void tegra_dfll_suspend(struct platform_device *pdev)
->> +{
->> +	struct tegra_dfll *td = dev_get_drvdata(&pdev->dev);
->> +
->> +	if (!td)
->> +		return;
->> +
->> +	if (td->mode <= DFLL_DISABLED)
->> +		return;
->> +
->> +	td->resume_mode = td->mode;
->> +	switch (td->mode) {
->> +	case DFLL_CLOSED_LOOP:
->> +		dfll_set_mode(td, DFLL_CLOSED_LOOP);
->> +		dfll_set_frequency_request(td, &td->last_req);
->> +
->> +		dfll_unlock(td);
->> +		break;
->> +	default:
->> +		break;
->> +	}
->> +}
->> +
->> +/**
->> + * tegra_dfll_resume - reprogram the DFLL after context-loss
->> + * @pdev: DFLL instance
->> + *
->> + * Re-initialize and enable target device clock in open loop mode. Called
->> + * directly from SoC clock resume syscore operation. Closed loop will be
->> + * re-entered in platform syscore ops as well after CPU clock source is
->> + * switched to DFLL in open loop.
->> + */
->> +void tegra_dfll_resume(struct platform_device *pdev, bool on_dfll)
->> +{
->> +	struct tegra_dfll *td = dev_get_drvdata(&pdev->dev);
->> +
->> +	if (!td)
->> +		return;
->> +
->> +	if (on_dfll) {
->> +		if (td->resume_mode == DFLL_CLOSED_LOOP)
->> +			dfll_lock(td);
->> +		td->resume_mode = DFLL_DISABLED;
->> +		return;
->> +	}
->> +
->> +	reset_control_deassert(td->dvco_rst);
->> +
->> +	pm_runtime_get(td->dev);
-> 
-> pm_runtime_get_sync()?
-> 
-> Otherwise looks like you're risking a lot here because pm_runtime_get() is an
-> asynchronous request.
+On Sat, Jun 29, 2019 at 1:34 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi Rafael,
+>
+> On 29-06-19 11:50, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > If the resume_from_noirq flag is set in dev_desc, the ->suspend_late
+> > callback provided by the device driver will be invoked at the "noirq"
+> > stage of system suspend, via acpi_lpss_do_suspend_late(), which is
+> > incorrect.
+> >
+> > To fix that, drop acpi_lpss_do_suspend_late() and rearrange
+> > acpi_lpss_suspend_late() to call pm_generic_suspend_late()
+> > directly, before calling acpi_lpss_suspend(), in analogy with
+> > acpi_subsys_suspend_late().
+>
+> Ah now I see the logic in your previous test-patch.
+>
+> I'm afraid that this is going to break things though, the calling
+> of the device-driver's suspend-late method at noirq time is
+> *intentional* !
 
-It looks like DFLL driver should be masked as IRQ-safe using pm_runtime_irq_safe()
-and then the synchronous resume could be used..
+But it is a bug too.
+
+> The resume_from_noirq flag is only set for i2c controllers which
+> use: drivers/i2c/busses/i2c-designware-platdrv.c as driver.
+>
+> This driver's suspend late method looks like this:
+>
+> static int dw_i2c_plat_suspend(struct device *dev)
+> {
+>          struct dw_i2c_dev *i_dev = dev_get_drvdata(dev);
+>
+>          i_dev->suspended = true;
+>
+>          if (i_dev->shared_with_punit)
+>                  return 0;
+>
+>          i_dev->disable(i_dev);
+>          i2c_dw_prepare_clk(i_dev, false);
+>
+>          return 0;
+> }
+>
+> The i_dev->disable(i_dev) and i2c_dw_prepare_clk(i_dev, false) calls here
+> will make the i2c controller non functional. But (some of) these i2c
+> controllers are used by code in the _PS0  / _PS3 methods of some PCI
+> devices and the PCI core calls _PS0 / _PS3 at *noirq* time, so as explained
+> in the commit message which introduced acpi_lpss_do_suspend_late():
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=48402cee6889fb3fce58e95fea1471626286dc63
+>
+> We must not only make sure that the suspending of the i2c controller is
+> ordered so that it happens after these PCI devices are suspended, we must
+> also make sure that the i2c controller stays functional until the
+> i2c-controller is put in the suspend-noirq state.
+>
+> If you really want to go this route, we must duplicate the resume_from_noirq
+> flag inside drivers/i2c/busses/i2c-designware-platdrv.c, setting it
+> only for acpi_lpss enumerated devices (the driver handles a whole lot more
+> devices) ans then make the driver's suspend_late method a no-op and instead
+> to the suspend from its suspend_noirq callback.
+>
+> Since pm_generic_suspend_late() is just a wrapper to call dev->driver->pm->suspend_late
+> duplicating the resume_from_noirq flag inside i2c-designware-platdrv.c seems
+> unproductive.
+>
+> Note that we have the same thing going on in acpi_lpss.c with resume_early vs
+> resume_noirq, we call the resume_early callback from acpi_lpss_resume_noirq
+> if the resume_from_noirq flag is set.
+>
+> TL;DR: the behavior you are trying to fix here is intentional and
+> IMHO this patch should be dropped.
+
+I can drop the patch, but the current code is simply incorrect.
+
+If the driver provided a ->suspend_late callback, it wanted that
+callback to be invoked during the "late" stage of suspend.  Calling it
+later simply papers over a driver bug.  If invoking that callback
+during the "late" stage doesn't work, the driver should have provided
+a "noirq" callback instead.
+
+> I guess we could / should do a patch adding a comment that the calling
+> the drivers' suspend_late / resume_early callback at noirq time is intentional
+> to avoid this confusing people in the future.
+
+No.  We need to fix drivers doing wrong things.
+
+Thanks!
