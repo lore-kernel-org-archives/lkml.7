@@ -2,140 +2,92 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2107BC5B579
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA3CC5B579
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02DE82133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9402133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 02:13:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbfF2CMI (ORCPT
+        id S1727037AbfF2CNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 22:12:08 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:4531 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726682AbfF2CMI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 22:12:08 -0400
-X-UUID: f94d49c2242045cb898b39913da939f8-20190629
-X-UUID: f94d49c2242045cb898b39913da939f8-20190629
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2085313190; Sat, 29 Jun 2019 10:12:03 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 29 Jun 2019 10:12:03 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 29 Jun 2019 10:12:01 +0800
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
-        <yong.wu@mediatek.com>, <youlin.pei@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v8 09/21] iommu/mediatek: Add larb-id remapped support
-Date:   Sat, 29 Jun 2019 10:09:15 +0800
-Message-ID: <1561774167-24141-10-git-send-email-yong.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
-References: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
+        Fri, 28 Jun 2019 22:13:11 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2959 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726682AbfF2CNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Jun 2019 22:13:11 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 009771E16AABD9844CA4;
+        Sat, 29 Jun 2019 10:13:07 +0800 (CST)
+Received: from dggeme714-chm.china.huawei.com (10.1.199.110) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 29 Jun 2019 10:13:06 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme714-chm.china.huawei.com (10.1.199.110) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Sat, 29 Jun 2019 10:13:06 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1591.008;
+ Sat, 29 Jun 2019 10:13:06 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     David Ahern <dsahern@gmail.com>
+CC:     "pablo@netfilter.org" <pablo@netfilter.org>,
+        "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>
+Subject: Re: [PATCH v4] net: netfilter: Fix rpfilter dropping vrf packets by
+ mistake
+Thread-Topic: [PATCH v4] net: netfilter: Fix rpfilter dropping vrf packets by
+ mistake
+Thread-Index: AdUuGy8DDB3uB4ksWUWckzFOhXp+DA==
+Date:   Sat, 29 Jun 2019 02:13:06 +0000
+Message-ID: <2213b3e722a14ee48768ecc7118efc46@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.184.189.20]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The larb-id may be remapped in the smi-common, this means the
-larb-id reported in the mtk_iommu_isr isn't the real larb-id,
-
-Take mt8183 as a example:
-                       M4U
-                        |
----------------------------------------------
-|               SMI common                  |
--0-----7-----5-----6-----1-----2------3-----4- <- Id remapped
- |     |     |     |     |     |      |     |
-larb0 larb1 IPU0  IPU1 larb4 larb5  larb6  CCU
-disp  vdec  img   cam   venc  img    cam
-As above, larb0 connects with the id 0 in smi-common.
-          larb1 connects with the id 7 in smi-common.
-          ...
-If the larb-id reported in the isr is 7, actually it's larb1(vdec).
-In order to output the right larb-id in the isr, we add a larb-id
-remapping relationship in this patch.
-
-If there is no this larb-id remapping in some SoCs, use the linear
-mapping array instead.
-
-This also is a preparing patch for mt8183.
-
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- drivers/iommu/mtk_iommu.c | 4 ++++
- drivers/iommu/mtk_iommu.h | 2 ++
- 2 files changed, 6 insertions(+)
-
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 0482bee..a915c25 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -234,6 +234,8 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
- 	fault_larb = F_MMU0_INT_ID_LARB_ID(regval);
- 	fault_port = F_MMU0_INT_ID_PORT_ID(regval);
- 
-+	fault_larb = data->plat_data->larbid_remap[fault_larb];
-+
- 	if (report_iommu_fault(&dom->domain, data->dev, fault_iova,
- 			       write ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ)) {
- 		dev_err_ratelimited(
-@@ -764,12 +766,14 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
- 	.m4u_plat     = M4U_MT2712,
- 	.has_4gb_mode = true,
- 	.has_bclk     = true,
-+	.larbid_remap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
- };
- 
- static const struct mtk_iommu_plat_data mt8173_data = {
- 	.m4u_plat     = M4U_MT8173,
- 	.has_4gb_mode = true,
- 	.has_bclk     = true,
-+	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
- };
- 
- static const struct of_device_id mtk_iommu_of_ids[] = {
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index 63e235e..61fd5d6 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -46,6 +46,8 @@ struct mtk_iommu_plat_data {
- 
- 	/* HW will use the EMI clock if there isn't the "bclk". */
- 	bool                has_bclk;
-+
-+	unsigned char       larbid_remap[MTK_LARB_NR_MAX];
- };
- 
- struct mtk_iommu_domain;
--- 
-1.9.1
-
+T24gNi8yOS8xOSAxOjA1IEFNLCBEYXZpZCBBaGVybiB3cm90ZToNCj4gT24gNi8yOC8xOSAzOjA2
+IEFNLCBNaWFvaGUgTGluIHdyb3RlOg0KPiA+IGRpZmYgLS1naXQgYS9uZXQvaXB2Ni9uZXRmaWx0
+ZXIvaXA2dF9ycGZpbHRlci5jIA0KPiA+IGIvbmV0L2lwdjYvbmV0ZmlsdGVyL2lwNnRfcnBmaWx0
+ZXIuYw0KPiA+IGluZGV4IDZiY2FmNzM1NzE4My4uM2M0YTE3NzJjMTVmIDEwMDY0NA0KPiA+IC0t
+LSBhL25ldC9pcHY2L25ldGZpbHRlci9pcDZ0X3JwZmlsdGVyLmMNCj4gPiArKysgYi9uZXQvaXB2
+Ni9uZXRmaWx0ZXIvaXA2dF9ycGZpbHRlci5jDQo+ID4gQEAgLTU1LDYgKzU1LDEwIEBAIHN0YXRp
+YyBib29sIHJwZmlsdGVyX2xvb2t1cF9yZXZlcnNlNihzdHJ1Y3QgbmV0ICpuZXQsIGNvbnN0IHN0
+cnVjdCBza19idWZmICpza2IsDQo+ID4gIAlpZiAocnBmaWx0ZXJfYWRkcl9saW5rbG9jYWwoJmlw
+aC0+c2FkZHIpKSB7DQo+ID4gIAkJbG9va3VwX2ZsYWdzIHw9IFJUNl9MT09LVVBfRl9JRkFDRTsN
+Cj4gPiAgCQlmbDYuZmxvd2k2X29pZiA9IGRldi0+aWZpbmRleDsNCj4gPiArCS8qIFNldCBmbG93
+aTZfb2lmIGZvciB2cmYgZGV2aWNlcyB0byBsb29rdXAgcm91dGUgaW4gbDNtZGV2IGRvbWFpbi4g
+Ki8NCj4gPiArCX0gZWxzZSBpZiAobmV0aWZfaXNfbDNfbWFzdGVyKGRldikgfHwgbmV0aWZfaXNf
+bDNfc2xhdmUoZGV2KSkgew0KPiA+ICsJCWxvb2t1cF9mbGFncyB8PSBGTE9XSV9GTEFHX1NLSVBf
+TkhfT0lGOw0KPg0KPiB5b3UgZG9uJ3QgbmVlZCB0byBzZXQgdGhhdCBmbGFnIGhlcmUuIEl0IGlz
+IGRvbmUgYnkgdGhlIGZpYl9ydWxlcyBjb2RlIGFzIG5lZWRlZC4NCj4NCllvdSdyZSByaWdodC4g
+RmliIHJ1bGVzIGNvZGUgd291bGQgc2V0IEZMT1dJX0ZMQUdfU0tJUF9OSF9PSUYgZmxhZy4gIEJ1
+dCBJIHNldA0KaXQgaGVyZSBmb3IgZGlzdGluZ3Vpc2ggd2l0aCB0aGUgZmxhZ3MgJiBYVF9SUEZJ
+TFRFUl9MT09TRSBicmFuY2guIFdpdGhvdXQNCnRoaXMsIHRoZXkgZG8gdGhlIHNhbWUgd29yayBh
+bmQgbWF5YmUgc2hvdWxkIGJlICBjb21iaW5lZC4gSSBkb24ndCB3YW50IHRvDQpkbyB0aGF0IGFz
+IHRoYXQgbWFrZXMgY29kZSBjb25mdXNpbmcuDQpJcyB0aGlzIGNvZGUgc25pcGV0IGJlbG93IG9r
+ID8gSWYgc28sIEkgd291bGQgZGVsZXRlIHRoaXMgZmxhZyBzZXR0aW5nLg0KIA0KICAgICAgIH0g
+ZWxzZSBpZiAobmV0aWZfaXNfbDNfbWFzdGVyKGRldikgfHwgbmV0aWZfaXNfbDNfc2xhdmUoZGV2
+KSkgew0KICAgICAgICAgICAgICAgZmw2LmZsb3dpNl9vaWYgPSBkZXYtPmlmaW5kZXg7DQogICAg
+ICAgIH0gZWxzZSBpZiAoKGZsYWdzICYgWFRfUlBGSUxURVJfTE9PU0UpID09IDApDQogICAgICAg
+ICAgICAgICAgZmw2LmZsb3dpNl9vaWYgPSBkZXYtPmlmaW5kZXg7DQo=
