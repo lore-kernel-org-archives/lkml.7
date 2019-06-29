@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31E4C4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A803EC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A89BB2054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BE12054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 13:17:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfatlPzW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfGn8M6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfF2NQH (ORCPT
+        id S1726903AbfF2NRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 09:16:07 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41523 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbfF2NQH (ORCPT
+        Sat, 29 Jun 2019 09:17:14 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38419 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfF2NRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 09:16:07 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m7so4770252pls.8;
-        Sat, 29 Jun 2019 06:16:06 -0700 (PDT)
+        Sat, 29 Jun 2019 09:17:13 -0400
+Received: by mail-pl1-f193.google.com with SMTP id 9so4023290ple.5;
+        Sat, 29 Jun 2019 06:17:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oZH7srH293GzXaPIhoiVN9XL4MTAYK6bMjRqUu3n++g=;
-        b=lfatlPzW+wGWhcBiY5YcUE8n9XAVbRoxujyUdMfgMkXNyuIzJ/owsC7OuW382PWtSQ
-         CzUUSKt5UuV+XqwuhEn7p0TUTzrYS8TardBVza4UKysmEtcZ+ZQa7r9RETI8tjDYWXRG
-         i0D9Hz9JUqpxD6lWEReM+wi34sVh2YuCedp5UJesa4B3m4gv5Lx6J3JOBIEvjBKQe+2v
-         SePJscnW1x6fCqVxUG5SnZVnPlgG4XazX8evJePfBt6Ddye3Qx5l0bJMLfxxUZNizxuT
-         ffCXkRwvUf6ra2GUjRbfBAd7rdiP0OA+/eoiJWfj493PQT+24Ue1RtD8qUpzB9Q2qoW6
-         MFmw==
+        bh=uDIV4a0i1z5RBGO8wq6m3SKx8Sgt3IM3RbtpqDU5AZI=;
+        b=gfGn8M6cr8R5VydfYKQUZ+DdzJQXzDqvDzKRLpSA552gXQe8/4wkWGoirIbwxk97tO
+         B+1B4ufe1y0mhu+hRIdNU/M7dkK5JAsM+OjQRTn3oXZjowtJJ6x0POWUB/rUm6jfpEpW
+         KUbt59J2j/iBPjUTb/LxLROlTU2y/kUd4LTRcX2Rm6t4c16cUp+PIrIuyTLG+7XHyF2U
+         hTC70RkbX7bhoinJhV4Zxs8gwnreDubS/g/++0w837vV2jCxUI8mKkWc3qUSgrHCLXXE
+         2+9lYCcOI1xKoppCHM2nuP36F+qwJbVmPoenAH00vtXrtbbxfR+E3PoAl06cWGkxOGpf
+         zyag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oZH7srH293GzXaPIhoiVN9XL4MTAYK6bMjRqUu3n++g=;
-        b=kQPlLqOUIXEhlzYBtk/k9NA/HdDHDkEnnhn//ZWktcYdcvbyu5nhp/Zpnw/0QT393H
-         nsF3kdHiaajJpJNCjjuMd6VbxoX2slJO0qCWVvoP5RaHJhortGZt1BsGJPaI6/BCcrIV
-         fl+zU8gkdjUjx3NDCEd9dQoGJ9LRlIXOmEfIchn0OHl/KQNyvz2AWblnqdLywkMwGB89
-         EqMoiP8XVgWtMVgsYoT2SbcSb4GNZLhFXc+qsN//OP8SiAvuqzwb7ky1KZeOoacnXdAC
-         A6EyPpSHbMO2mYRQ3yot7HlhCf5ItK0VhKheP3vhdpfAo7N7f/cEELMvyTq8GL26FmYu
-         Zbug==
-X-Gm-Message-State: APjAAAVAYIk39c1VLuJJ/6MS9g4HAqHpgjeWNaed8rNxgbXZcGPjCEd/
-        kcmENXdbXrcTmEaDlMKUhUAFIg5GYIPX3cCN0cfIzO+pESs=
-X-Google-Smtp-Source: APXvYqyuK+3WEiL/OHaUVZapvgUmTBt62blpxoWv+cvkZ1Jytrjvgvm/1aujnuc0dGgb4IzSQFAxHvO0fPNqBHutQfI=
-X-Received: by 2002:a17:902:ab90:: with SMTP id f16mr17338532plr.262.1561814166287;
- Sat, 29 Jun 2019 06:16:06 -0700 (PDT)
+        bh=uDIV4a0i1z5RBGO8wq6m3SKx8Sgt3IM3RbtpqDU5AZI=;
+        b=pb7CH6dwdJms7GJJRYM5aHIk0E6TpZ6MOLh6OfFf2RLVA9H8YrXiCLYqlgGUIyA74T
+         hanpimaJNM5Mi50qhs8LbJlZf2EJRd5fAtnUQY7eOQWxE/jkZoMHyRDuk4oiABCPLHxA
+         mJU2nP0yWlBZSVeagLh3aunZLneyWjDL3cBv1/bv3G19A7PnBUBidMOn/i1Ga7nX+pvl
+         D04jwDPFHMb0g7hXBUua45j5civQoC2l/Elvs+3WW0ud2ruVnYMUMFOVpPojc3xd/llB
+         EW8dmaFa0fSWaPWqBi4Ay3eLVj9aeayU1kB77kSh0DRLoePZEaWanOJmwQSmAvFfM7Uk
+         NYOw==
+X-Gm-Message-State: APjAAAWDUAqtaPWqNrp3Xlw0wNyGtJ+JdctesQzqOep2PMLipmfb3qiv
+        u4eB92z4t2otlbZnZSZFJhRJb56oDAMVX1P4D0I=
+X-Google-Smtp-Source: APXvYqwF7psoVrgqeU0y6nHrADGyWRXLHg94eI3RU+igsydbwSgstb5K9SHWRVnMPQXxX2FGnhY8ZFL1rw2M/btJYfs=
+X-Received: by 2002:a17:902:694a:: with SMTP id k10mr17467364plt.255.1561814232894;
+ Sat, 29 Jun 2019 06:17:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1558968964.git.2pi@mok.nu> <eb57957045495464539c8b4896a8d83b5d87377b.1558968964.git.2pi@mok.nu>
-In-Reply-To: <eb57957045495464539c8b4896a8d83b5d87377b.1558968964.git.2pi@mok.nu>
+References: <1559094951-25391-1-git-send-email-92siuyang@gmail.com>
+In-Reply-To: <1559094951-25391-1-git-send-email-92siuyang@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 29 Jun 2019 16:15:55 +0300
-Message-ID: <CAHp75VewdbB7xStMOaomf2FVKrTeZVVhFyrBWYL=MJ4HOYKTWQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] platform/x86: wmi: add Xiaomi WMI key driver
-To:     Mattias Jacobsson <2pi@mok.nu>
-Cc:     Darren Hart <dvhart@infradead.org>,
+Date:   Sat, 29 Jun 2019 16:17:01 +0300
+Message-ID: <CAHp75Vc1gMowXgBPFaTo9_B_4B443+F2XDn_2xGj6chahk1wOg@mail.gmail.com>
+Subject: Re: [PATCH] intel_menlow: avoid null pointer deference error
+To:     Young Xiao <92siuyang@gmail.com>
+Cc:     Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
@@ -71,164 +71,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 7:22 PM Mattias Jacobsson <2pi@mok.nu> wrote:
+On Wed, May 29, 2019 at 4:55 AM Young Xiao <92siuyang@gmail.com> wrote:
 >
-> Some function keys on the built in keyboard on Xiaomi's notebooks does
-> not produce any key events when pressed in combination with the function
-> key. Some of these keys do report that they are being pressed via WMI
-> events.
->
-> This driver reports key events for Fn+F7 and double tap on Fn.
->
-> Other WMI events that are reported by the hardware but not utilized by
-> this driver are Caps Lock(which already work) and Fn lock/unlock.
+> Fix a null pointer deference by acpi_driver_data() if device is
+> null (dereference before check). We should only set cdev and check
+> this is OK after we are sure device is not null.
 >
 
 Pushed to my review and testing queue, thanks!
 
-> Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+> Signed-off-by: Young Xiao <92siuyang@gmail.com>
 > ---
->  drivers/platform/x86/Kconfig      | 10 ++++
->  drivers/platform/x86/Makefile     |  1 +
->  drivers/platform/x86/xiaomi-wmi.c | 94 +++++++++++++++++++++++++++++++
->  3 files changed, 105 insertions(+)
->  create mode 100644 drivers/platform/x86/xiaomi-wmi.c
+>  drivers/platform/x86/intel_menlow.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 5d5cc6111081..257a99134b64 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -781,6 +781,16 @@ config INTEL_WMI_THUNDERBOLT
->           To compile this driver as a module, choose M here: the module will
->           be called intel-wmi-thunderbolt.
+> diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
+> index 77eb870..28feb5c 100644
+> --- a/drivers/platform/x86/intel_menlow.c
+> +++ b/drivers/platform/x86/intel_menlow.c
+> @@ -180,9 +180,13 @@ static int intel_menlow_memory_add(struct acpi_device *device)
 >
-> +config XIAOMI_WMI
-> +         tristate "Xiaomi WMI key driver"
-> +         depends on ACPI_WMI
-> +         depends on INPUT
-> +         help
-> +         Say Y here if you want to support WMI-based keys on Xiaomi notebooks.
+>  static int intel_menlow_memory_remove(struct acpi_device *device)
+>  {
+> -       struct thermal_cooling_device *cdev = acpi_driver_data(device);
+> +       struct thermal_cooling_device *cdev;
 > +
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called xiaomi-wmi.
-> +
->  config MSI_WMI
->         tristate "MSI WMI extras"
->         depends on ACPI_WMI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 87b0069bd781..f64445d69f99 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -51,6 +51,7 @@ obj-$(CONFIG_SURFACE3_WMI)    += surface3-wmi.o
->  obj-$(CONFIG_TOPSTAR_LAPTOP)   += topstar-laptop.o
->  obj-$(CONFIG_WMI_BMOF)         += wmi-bmof.o
->  obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)    += intel-wmi-thunderbolt.o
-> +obj-$(CONFIG_XIAOMI_WMI)       += xiaomi-wmi.o
->
->  # toshiba_acpi must link after wmi to ensure that wmi devices are found
->  # before toshiba_acpi initializes
-> diff --git a/drivers/platform/x86/xiaomi-wmi.c b/drivers/platform/x86/xiaomi-wmi.c
-> new file mode 100644
-> index 000000000000..4ff9df5eb88f
-> --- /dev/null
-> +++ b/drivers/platform/x86/xiaomi-wmi.c
-> @@ -0,0 +1,94 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * WMI driver for Xiaomi Laptops
-> + *
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +#include <uapi/linux/input-event-codes.h>
-> +
-> +#define XIAOMI_KEY_FN_ESC_0    "A2095CCE-0491-44E7-BA27-F8ED8F88AA86"
-> +#define XIAOMI_KEY_FN_ESC_1    "7BBE8E39-B486-473D-BA13-66F75C5805CD"
-> +#define XIAOMI_KEY_FN_FN       "409B028D-F06B-4C7C-8BBB-EE133A6BD87E"
-> +#define XIAOMI_KEY_CAPSLOCK    "83FE7607-053A-4644-822A-21532C621FC7"
-> +#define XIAOMI_KEY_FN_F7       "76E9027C-95D0-4180-8692-DA6747DD1C2D"
-> +
-> +#define XIAOMI_DEVICE(guid, key)               \
-> +       .guid_string = (guid),                  \
-> +       .context = &(const unsigned int){key}
-> +
-> +struct xiaomi_wmi {
-> +       struct input_dev *input_dev;
-> +       unsigned int key_code;
-> +};
-> +
-> +int xiaomi_wmi_probe(struct wmi_device *wdev, const void *context)
-> +{
-> +       struct xiaomi_wmi *data;
-> +
-> +       if (wdev == NULL || context == NULL)
+> +       if (!device)
 > +               return -EINVAL;
-> +
-> +       data = devm_kzalloc(&wdev->dev, sizeof(struct xiaomi_wmi), GFP_KERNEL);
-> +       if (data == NULL)
-> +               return -ENOMEM;
-> +       dev_set_drvdata(&wdev->dev, data);
-> +
-> +       data->input_dev = devm_input_allocate_device(&wdev->dev);
-> +       if (data->input_dev == NULL)
-> +               return -ENOMEM;
-> +       data->input_dev->name = "Xiaomi WMI keys";
-> +       data->input_dev->phys = "wmi/input0";
-> +
-> +       data->key_code = *((const unsigned int *)context);
-> +       set_bit(EV_KEY, data->input_dev->evbit);
-> +       set_bit(data->key_code, data->input_dev->keybit);
-> +
-> +       return input_register_device(data->input_dev);
-> +}
-> +
-> +void xiaomi_wmi_notify(struct wmi_device *wdev, union acpi_object *_)
-> +{
-> +       struct xiaomi_wmi *data;
-> +
-> +       if (wdev == NULL)
-> +               return;
-> +
-> +       data = dev_get_drvdata(&wdev->dev);
-> +       if (data == NULL)
-> +               return;
-> +
-> +       input_report_key(data->input_dev, data->key_code, 1);
-> +       input_sync(data->input_dev);
-> +       input_report_key(data->input_dev, data->key_code, 0);
-> +       input_sync(data->input_dev);
-> +}
-> +
-> +static const struct wmi_device_id xiaomi_wmi_id_table[] = {
-> +       // { XIAOMI_DEVICE(XIAOMI_KEY_FN_ESC_0, KEY_FN_ESC) },
-> +       // { XIAOMI_DEVICE(XIAOMI_KEY_FN_ESC_1, KEY_FN_ESC) },
-> +       { XIAOMI_DEVICE(XIAOMI_KEY_FN_FN, KEY_PROG1) },
-> +       // { XIAOMI_DEVICE(XIAOMI_KEY_CAPSLOCK, KEY_CAPSLOCK) },
-> +       { XIAOMI_DEVICE(XIAOMI_KEY_FN_F7, KEY_CUT) },
-> +
-> +       /* Terminating entry */
-> +       { }
-> +};
-> +
-> +static struct wmi_driver xiaomi_wmi_driver = {
-> +       .driver = {
-> +               .name = "xiaomi-wmi",
-> +       },
-> +       .id_table = xiaomi_wmi_id_table,
-> +       .probe = xiaomi_wmi_probe,
-> +       .notify = xiaomi_wmi_notify,
-> +};
-> +module_wmi_driver(xiaomi_wmi_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, xiaomi_wmi_id_table);
-> +MODULE_AUTHOR("Mattias Jacobsson");
-> +MODULE_DESCRIPTION("Xiaomi WMI driver");
-> +MODULE_LICENSE("GPL v2");
+>
+> -       if (!device || !cdev)
+> +       cdev = acpi_driver_data(device);
+> +       if (!cdev)
+>                 return -EINVAL;
+>
+>         sysfs_remove_link(&device->dev.kobj, "thermal_cooling");
 > --
-> 2.21.0
+> 2.7.4
 >
 
 
