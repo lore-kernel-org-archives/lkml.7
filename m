@@ -2,134 +2,152 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722DCC5B577
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D05C5B57B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B42216FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561837542;
-	bh=aNGhjTlauXBAX1R2rS5eZelZ/isDvCGZ0ObqehgBCCw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=fCIv4pTza/4xcir7fhPqXw///sto8Q5nKUAkM80iz3GU59mf5xz2VXte8vVw3kk2w
-	 5HWwfoCJRlK45/Rl3kKXbFBJKDspHIPLI4Sqoydo7Gf8GUOOugCI2tkbRDdvwobIOy
-	 bEidFZuHmfyMUwufuYtXawrNkPEhIG1dzD4EYn4g=
+	by mail.kernel.org (Postfix) with ESMTP id 18383216FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 19:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfF2Tpk (ORCPT
+        id S1726963AbfF2TqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 15:45:40 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37401 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbfF2Tpk (ORCPT
+        Sat, 29 Jun 2019 15:46:08 -0400
+Received: from mailout2n.rrzn.uni-hannover.de ([130.75.2.113]:46469 "EHLO
+        mailout2n.rrzn.uni-hannover.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726901AbfF2TqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 15:45:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f17so12002679wme.2
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 12:45:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=i9bIbekwL2VrPm4IMJP3CGrBD4pqZvbgGOnwWEwLu/4=;
-        b=dosGB9LBpZoENBntDpfX7OFSMgwi097OfeyX66KQPNFehcu2EKMKd8XvkBqCfz/qYP
-         lGDk8AraryQmCE0CZ1CeppOHu1yeBLWyj91DH5iHvNTVqqVvuutsT8e+awIKImLWFjgH
-         P5xoqkqnc3EmPpDontgCNQxf+s2K12D2mE8Ev2rgkMaLVXVpI8V7TLC/K6KH+oocCsed
-         DujczcaVAUdQXP5Gbjy/q9EuRh7CwH6OTXsA4MSWQi2Vhq6aW3kTkSMxdM3ieoLjJaCB
-         mlDD51XRaZIGNq7JXmHthy7Kojv84jY3uLMB+c/2fGq1D3BtluuxqZeMiBY6Z4KnurK9
-         qK/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=i9bIbekwL2VrPm4IMJP3CGrBD4pqZvbgGOnwWEwLu/4=;
-        b=La+2QfEpRp2hjjUSdMxkPZM5RhsPgiVHiES8lzuIY12Thgn4TdwXEH8H8wkpdBcnc2
-         fhMiUjW07xExTiTwo7+sZh4IFFW5ZmJ5N3oR94LB22ciGYITOQRIf7HPhh7FPpJFTgnH
-         YEBFHbzju/f78QXHb8+YPka1lkJGEBWFPgJeXDRF5JAPixWBKcuoRsTUkTgb0Iklej63
-         caFLd/qFprWxHCNYaaUAzzh48yobqtVKej8JpiTYZXk73Vdwa4neaNKsJnofR+KnJ4Ak
-         7v44CWTunL3WvhWOoBtY+IAU1gET6Ssw51s03VG1WZ0O1QEGW7tyDrTApZC5BgYNIPq8
-         IqLA==
-X-Gm-Message-State: APjAAAVTZWuZAynUMwjZqK6Omx/7uq+9tbRXJXNNgY/gBzJhp79wnGUQ
-        +nuaUgJEHvTelOm6riBfx+E=
-X-Google-Smtp-Source: APXvYqw3vVLgralcYhVGSLxP1N3OuaS+69tawKV+XMfV10gNkIpwTVEwl68Pu/BB21qYmhHLpW8xlw==
-X-Received: by 2002:a7b:c310:: with SMTP id k16mr10713598wmj.133.1561837538153;
-        Sat, 29 Jun 2019 12:45:38 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id n5sm4475408wmi.21.2019.06.29.12.45.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 29 Jun 2019 12:45:37 -0700 (PDT)
-Date:   Sat, 29 Jun 2019 21:45:35 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] smp/urgent fixes
-Message-ID: <20190629194535.GA79708@gmail.com>
+        Sat, 29 Jun 2019 15:46:08 -0400
+Received: from [192.168.32.100] (p5DCCE4B4.dip0.t-ipconnect.de [93.204.228.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailout2n.rrzn.uni-hannover.de (Postfix) with ESMTPSA id 1289F1F453;
+        Sat, 29 Jun 2019 21:46:04 +0200 (CEST)
+Subject: Re: [PATCH v2] drivers/block/loop: Replace deprecated function in
+ option parsing code
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Cc:     "linux-kernel@i4.cs.fau.de" <linux-kernel@i4.cs.fau.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christian Ewert <christian.ewert@stud.uni-hannover.de>
+References: <BYAPR04MB574936B98A60EB42B9A7C97886E30@BYAPR04MB5749.namprd04.prod.outlook.com>
+ <20190625175517.31133-1-florian.knauf@stud.uni-hannover.de>
+ <BYAPR04MB574963E31CE0DB5581F5311F86E30@BYAPR04MB5749.namprd04.prod.outlook.com>
+From:   Florian Knauf <florian.knauf@stud.uni-hannover.de>
+Message-ID: <eb0b0981-aba3-93dc-5ae5-d36f1f728024@stud.uni-hannover.de>
+Date:   Sat, 29 Jun 2019 21:46:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <BYAPR04MB574963E31CE0DB5581F5311F86E30@BYAPR04MB5749.namprd04.prod.outlook.com>
+Content-Type: multipart/mixed;
+ boundary="------------696AF862470C2DEF88101BCF"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+This is a multi-part message in MIME format.
+--------------696AF862470C2DEF88101BCF
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Please pull the latest smp-urgent-for-linus git tree from:
+I have now, on the latest staging master (test log attached, everything 
+green), and also learned a lesson about looking more thoroughly for 
+automated test cases. That's a mea culpa, I suppose. :P
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git smp-urgent-for-linus
+Before this I'd only found the Linux Test Project, which (if I'm not 
+mistaken) contains tests that use loopback devices but no tests that 
+specifically test the loopback driver itself. Given the small scope of 
+the change, we then considered it sufficient to test manually that the 
+loop device still worked and that the max_loop parameter was handled 
+correctly. Of course, the blktests way is better.
 
-   # HEAD: 33d4a5a7a5b4d02915d765064b2319e90a11cbde cpu/hotplug: Fix out-of-bounds read when setting fail state
+Thanks for taking the time to answer and review.
 
-Two fixes:
+Am 25.06.19 um 21:24 schrieb Chaitanya Kulkarni:
+> I believe you have tested this patch with loop testcases present in the
+> :- https://github.com/osandov/blktests/tree/master/tests/loop.
+> 
+> With that, looks good.
+> 
+> Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>.
+> 
+> On 06/25/2019 10:55 AM, Florian Knauf wrote:
+>> This patch removes the deprecated simple_strtol function from the option
+>> parsing logic in the loopback device driver. Instead kstrtoint is used to
+>> parse int max_loop, to ensure that input values it cannot represent are
+>> ignored.
+>>
+>> Signed-off-by: Florian Knauf <florian.knauf@stud.uni-hannover.de>
+>> Signed-off-by: Christian Ewert <christian.ewert@stud.uni-hannover.de>
+>> ---
+>> Thank you for your feedback.
+>>
+>> There's no specific reason to use kstrtol, other than the fact that we
+>> weren't yet aware that kstrtoint exists. (We're new at this, I'm afraid.)
+>>
+>> We've amended the patch to make use of kstrtoint, which is of course much
+>> more straightforward.
+>>
+>> drivers/block/loop.c | 2 +-
+>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+>> index 102d79575895..adfaf4ad37d1 100644
+>> --- a/drivers/block/loop.c
+>> +++ b/drivers/block/loop.c
+>> @@ -2289,7 +2289,7 @@ module_exit(loop_exit);
+>>    #ifndef MODULE
+>>    static int __init max_loop_setup(char *str)
+>>    {
+>> -	max_loop = simple_strtol(str, NULL, 0);
+>> +	kstrtoint(str, 0, &max_loop);
+>>    	return 1;
+>>    }
+>>
+>>
+> 
 
- - Fix an out of bounds access when writing nonsensical values to 
-   /sys/devices/system/cpu/cpuX/hotplug/fail
+--------------696AF862470C2DEF88101BCF
+Content-Type: text/x-log;
+ name="check.log"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="check.log"
 
- - Warn about unsupported mitigations= parameters.
+loop/001 (scan loop device partitions)                      
+    runtime  0,401s  ...
+loop/001 (scan loop device partitions)                       [passed]
+    runtime  0,401s  ...  0,269s
+loop/002 (try various loop device block sizes)              
+    runtime  0,142s  ...
+loop/002 (try various loop device block sizes)               [passed]
+    runtime  0,142s  ...  0,148s
+loop/003 (time opening and closing an unbound loop device)  
+    runtime  0,047s  ...
+loop/003 (time opening and closing an unbound loop device)   [passed]
+    runtime  0,047s  ...  0,052s
+loop/004 (combine loop direct I/O mode and a custom block size)
+    runtime  0,382s  ...
+loop/004 (combine loop direct I/O mode and a custom block size) [passed]
+    runtime  0,382s  ...  0,383s
+loop/005 (call LOOP_GET_STATUS{,64} with a NULL arg)        
+    runtime  0,024s  ...
+loop/005 (call LOOP_GET_STATUS{,64} with a NULL arg)         [passed]
+    runtime  0,024s  ...  0,025s
+loop/006 (change loop backing file while creating/removing another loop device)
+    runtime  31,071s  ...
+loop/006 (change loop backing file while creating/removing another loop device) [passed]
+    runtime  31,071s  ...  31,050s
+loop/007 (update loop device capacity with filesystem)      
+    runtime  0,417s  ...
+loop/007 (update loop device capacity with filesystem)       [passed]
+    runtime  0,417s  ...  0,351s
 
- Thanks,
-
-	Ingo
-
------------------->
-Eiichi Tsukata (1):
-      cpu/hotplug: Fix out-of-bounds read when setting fail state
-
-Geert Uytterhoeven (1):
-      cpu/speculation: Warn on unsupported mitigations= parameter
-
-
- kernel/cpu.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 077fde6fb953..ef1c565edc5d 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1964,6 +1964,9 @@ static ssize_t write_cpuhp_fail(struct device *dev,
- 	if (ret)
- 		return ret;
- 
-+	if (fail < CPUHP_OFFLINE || fail > CPUHP_ONLINE)
-+		return -EINVAL;
-+
- 	/*
- 	 * Cannot fail STARTING/DYING callbacks.
- 	 */
-@@ -2339,6 +2342,9 @@ static int __init mitigations_parse_cmdline(char *arg)
- 		cpu_mitigations = CPU_MITIGATIONS_AUTO;
- 	else if (!strcmp(arg, "auto,nosmt"))
- 		cpu_mitigations = CPU_MITIGATIONS_AUTO_NOSMT;
-+	else
-+		pr_crit("Unsupported mitigations=%s, system may still be vulnerable\n",
-+			arg);
- 
- 	return 0;
- }
+--------------696AF862470C2DEF88101BCF--
