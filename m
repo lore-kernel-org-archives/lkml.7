@@ -2,130 +2,162 @@ Return-Path: <SRS0=Dr8o=U4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FFDC4321A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C11AC4321A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B06208E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4E0208E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Jun 2019 01:24:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GQ0jzzrV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="RKq2QYwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfF2BWW (ORCPT
+        id S1726882AbfF2BYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Jun 2019 21:22:22 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33962 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfF2BWV (ORCPT
+        Fri, 28 Jun 2019 21:24:32 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:41532 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbfF2BYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Jun 2019 21:22:21 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5T1Ixaq093372;
-        Sat, 29 Jun 2019 01:21:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=fBGmRTkrzzmqFmPm0DXAkq8x/dtU+TebvIHnF1bOMkU=;
- b=GQ0jzzrVlKOppRKt/M1ZZ/8kWsNAA5b6xOUPTPkXAc9SvcNnc8JaZN9R1XinKMKhi4Th
- 3VT7+lswdz0AGc0amxE/XqGSiq/VUrA7e4bk2+pnLQr62gt8GP5+o5giLIHqvlXEE0F3
- ioFHPbZv+ayXjc1DcATePJq+1axPTJN0oFXtYHVuoSR+zDMWl4qtbxi3rZ37YRYTmJ9Y
- aW16wfAsPCWd/7o0b8trsV/4SYwprcL40e2AiHE8nK+BN5KvjHC2LAz9RrSt1JzT6hqA
- 2PS7kIPnwVtSd4dDu4vkZbyRkfLQkJNdHXHzS1glbuVyxSxwG8ljNL3se+TGpPY7Rs38 ig== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2t9c9q80m4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 29 Jun 2019 01:21:38 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5T1LXe1185556;
-        Sat, 29 Jun 2019 01:21:38 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2tat7e7h6s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 29 Jun 2019 01:21:37 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5T1LY34029233;
-        Sat, 29 Jun 2019 01:21:36 GMT
-Received: from [10.132.91.175] (/10.132.91.175)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 28 Jun 2019 18:21:34 -0700
-Subject: Re: [PATCH V3 2/2] sched/fair: Fallback to sched-idle CPU if idle CPU
- isn't found
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        quentin.perret@linaro.org, chris.redpath@arm.com,
-        steven.sistare@oracle.com, songliubraving@fb.com
-References: <cover.1561523542.git.viresh.kumar@linaro.org>
- <eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <32bd769c-b692-8896-5cc9-d19ab0a23abb@oracle.com>
-Date:   Fri, 28 Jun 2019 18:16:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 28 Jun 2019 21:24:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1561771469; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=JORYQDkjxc8DqLmFxNTlEoAuKTGQtHsRV1UcYYJiQrw=;
+        b=RKq2QYwOg8PlXAJDDnK13ML+2JqEHBTmSAc4rE41tPTYzXicW022n1KrbJcmRiodgfd12h
+        A71Gr3yaojtVsF3tnVfCYc4m7Im6MSW5C1Ec2G0iz4t74KkpobmjFy9kr/BsWWCCjoM4H0
+        HjbTNnSR+5gg8bnx7jquJhr06jfgqiM=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>, od@zcrc.me,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        Arnd Bergmann <arnd@arndb.de>, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>, stable@vger.kernel.org
+Subject: [PATCH] mtd: rawnand: ingenic: Fix ingenic_ecc dependency
+Date:   Sat, 29 Jun 2019 03:22:48 +0200
+Message-Id: <20190629012248.12447-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906290012
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9302 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906290013
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If MTD_NAND_JZ4780 is y and MTD_NAND_JZ4780_BCH is m,
+which select CONFIG_MTD_NAND_INGENIC_ECC to m, building fails:
 
-On 6/25/19 10:06 PM, Viresh Kumar wrote:
-> We try to find an idle CPU to run the next task, but in case we don't
-> find an idle CPU it is better to pick a CPU which will run the task the
-> soonest, for performance reason.
->
-> A CPU which isn't idle but has only SCHED_IDLE activity queued on it
-> should be a good target based on this criteria as any normal fair task
-> will most likely preempt the currently running SCHED_IDLE task
-> immediately. In fact, choosing a SCHED_IDLE CPU over a fully idle one
-> shall give better results as it should be able to run the task sooner
-> than an idle CPU (which requires to be woken up from an idle state).
->
-> This patch updates both fast and slow paths with this optimization.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->   kernel/sched/fair.c | 43 +++++++++++++++++++++++++++++++++----------
->   1 file changed, 33 insertions(+), 10 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 1277adc3e7ed..2e0527fd468c 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5376,6 +5376,15 @@ static struct {
->   
->   #endif /* CONFIG_NO_HZ_COMMON */
->   
-> +/* CPU only has SCHED_IDLE tasks enqueued */
-> +static int sched_idle_cpu(int cpu)
-> +{
-> +	struct rq *rq = cpu_rq(cpu);
-> +
-> +	return unlikely(rq->nr_running == rq->cfs.idle_h_nr_running &&
-> +			rq->nr_running);
-> +}
-> +
-Shouldn't this check if rq->curr is also sched idle? And why not drop the
-rq->nr_running non zero check?
+drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function `ingenic_nand_remove':
+ingenic_nand.c:(.text+0x177): undefined reference to `ingenic_ecc_release'
+drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function `ingenic_nand_ecc_correct':
+ingenic_nand.c:(.text+0x2ee): undefined reference to `ingenic_ecc_correct'
+
+To fix that, the ingenic_nand and ingenic_ecc modules have been fused
+into one single module.
+- The ingenic_ecc.c code is now compiled in only if
+  $(CONFIG_MTD_NAND_INGENIC_ECC) is set. This is now a boolean instead
+  of tristate.
+- To avoid changing the module name, the ingenic_nand.c file is moved to
+  ingenic_nand_drv.c. Then the module name is still ingenic_nand.
+- Since ingenic_ecc.c is no more a module, the module-specific macros
+  have been dropped, and the functions are no more exported for use by
+  the ingenic_nand driver.
+
+Fixes: 15de8c6efd0e ("mtd: rawnand: ingenic: Separate top-level and SoC specific code")
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/mtd/nand/raw/ingenic/Kconfig                     | 2 +-
+ drivers/mtd/nand/raw/ingenic/Makefile                    | 4 +++-
+ drivers/mtd/nand/raw/ingenic/ingenic_ecc.c               | 9 ---------
+ .../raw/ingenic/{ingenic_nand.c => ingenic_nand_drv.c}   | 0
+ 4 files changed, 4 insertions(+), 11 deletions(-)
+ rename drivers/mtd/nand/raw/ingenic/{ingenic_nand.c => ingenic_nand_drv.c} (100%)
+
+diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig b/drivers/mtd/nand/raw/ingenic/Kconfig
+index 19a96ce515c1..66b7cffdb0c2 100644
+--- a/drivers/mtd/nand/raw/ingenic/Kconfig
++++ b/drivers/mtd/nand/raw/ingenic/Kconfig
+@@ -16,7 +16,7 @@ config MTD_NAND_JZ4780
+ if MTD_NAND_JZ4780
+ 
+ config MTD_NAND_INGENIC_ECC
+-	tristate
++	bool
+ 
+ config MTD_NAND_JZ4740_ECC
+ 	tristate "Hardware BCH support for JZ4740 SoC"
+diff --git a/drivers/mtd/nand/raw/ingenic/Makefile b/drivers/mtd/nand/raw/ingenic/Makefile
+index 1ac4f455baea..b63d36889263 100644
+--- a/drivers/mtd/nand/raw/ingenic/Makefile
++++ b/drivers/mtd/nand/raw/ingenic/Makefile
+@@ -2,7 +2,9 @@
+ obj-$(CONFIG_MTD_NAND_JZ4740) += jz4740_nand.o
+ obj-$(CONFIG_MTD_NAND_JZ4780) += ingenic_nand.o
+ 
+-obj-$(CONFIG_MTD_NAND_INGENIC_ECC) += ingenic_ecc.o
++ingenic_nand-y += ingenic_nand_drv.o
++ingenic_nand-$(CONFIG_MTD_NAND_INGENIC_ECC) += ingenic_ecc.o
++
+ obj-$(CONFIG_MTD_NAND_JZ4740_ECC) += jz4740_ecc.o
+ obj-$(CONFIG_MTD_NAND_JZ4725B_BCH) += jz4725b_bch.o
+ obj-$(CONFIG_MTD_NAND_JZ4780_BCH) += jz4780_bch.o
+diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
+index d3e085c5685a..c954189606f6 100644
+--- a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
++++ b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
+@@ -30,7 +30,6 @@ int ingenic_ecc_calculate(struct ingenic_ecc *ecc,
+ {
+ 	return ecc->ops->calculate(ecc, params, buf, ecc_code);
+ }
+-EXPORT_SYMBOL(ingenic_ecc_calculate);
+ 
+ /**
+  * ingenic_ecc_correct() - detect and correct bit errors
+@@ -51,7 +50,6 @@ int ingenic_ecc_correct(struct ingenic_ecc *ecc,
+ {
+ 	return ecc->ops->correct(ecc, params, buf, ecc_code);
+ }
+-EXPORT_SYMBOL(ingenic_ecc_correct);
+ 
+ /**
+  * ingenic_ecc_get() - get the ECC controller device
+@@ -111,7 +109,6 @@ struct ingenic_ecc *of_ingenic_ecc_get(struct device_node *of_node)
+ 	}
+ 	return ecc;
+ }
+-EXPORT_SYMBOL(of_ingenic_ecc_get);
+ 
+ /**
+  * ingenic_ecc_release() - release the ECC controller device
+@@ -122,7 +119,6 @@ void ingenic_ecc_release(struct ingenic_ecc *ecc)
+ 	clk_disable_unprepare(ecc->clk);
+ 	put_device(ecc->dev);
+ }
+-EXPORT_SYMBOL(ingenic_ecc_release);
+ 
+ int ingenic_ecc_probe(struct platform_device *pdev)
+ {
+@@ -159,8 +155,3 @@ int ingenic_ecc_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ EXPORT_SYMBOL(ingenic_ecc_probe);
+-
+-MODULE_AUTHOR("Alex Smith <alex@alex-smith.me.uk>");
+-MODULE_AUTHOR("Harvey Hunt <harveyhuntnexus@gmail.com>");
+-MODULE_DESCRIPTION("Ingenic ECC common driver");
+-MODULE_LICENSE("GPL v2");
+diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+similarity index 100%
+rename from drivers/mtd/nand/raw/ingenic/ingenic_nand.c
+rename to drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+-- 
+2.21.0.593.g511ec345e18
+
