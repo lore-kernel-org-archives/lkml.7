@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01618C5B576
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 05:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC26C5B576
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 05:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A14208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 05:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F75208E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 05:41:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCWj05Ak"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJFvM45d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfF3Fli (ORCPT
+        id S1726846AbfF3Flq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 01:41:38 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:44636 "EHLO
+        Sun, 30 Jun 2019 01:41:46 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:46373 "EHLO
         mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbfF3Flg (ORCPT
+        with ESMTP id S1726711AbfF3Fln (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 01:41:36 -0400
-Received: by mail-vs1-f67.google.com with SMTP id v129so6713129vsb.11;
-        Sat, 29 Jun 2019 22:41:35 -0700 (PDT)
+        Sun, 30 Jun 2019 01:41:43 -0400
+Received: by mail-vs1-f67.google.com with SMTP id l125so6723218vsl.13;
+        Sat, 29 Jun 2019 22:41:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kdPbODA0z2TZ5tYy71TYwrIsVN8PGj8ecEakmSP6UzE=;
-        b=OCWj05AkY2RKsFE5SNjS+CPe4S2AEw2yAn4kKEVdJCq0ZqB2OA1Kg8Pn+nqw47/V5K
-         Dct9L+5joOhtBynfVpousAIlYu6Rr/OcRIh1Flskl5u4CEqCyav9IWukfhda04tAUEh8
-         95NlApNSWCAjQsvV1W2bwMiqDhrPXfNc9H8PPebMOkvh1/0hUJ1KZ+GcNAlltiFn1/tm
-         NP7DaQmQ5MhWPEXQL6nuUiTIrxYd3Z+k2yGTdrzBcZaSEUJN/p3dH/l53egLwKxMSAEZ
-         iFSpFEd5Xm7x6B62+Pr5kkx4Jlors/BR2faJI+fmbXmkNmi3mwU/XxXfBt+DmRfEmF5Z
-         I3gw==
+        bh=qZ9bQ4qlIvn0nmi3/fOq2/nuJUUiXRlbGalFjI3uA7I=;
+        b=MJFvM45dSjeXQnIwgGChPqc4FraiBlk+gI9fp7jI8CBRA73+ZssYzngmHfnLilOpnE
+         shixoE/eoDN/4fRgXOqNDjLu1sbxLAFUM9hPLLxWa+veRZUPI1PvJJDqQ984NR8EztKY
+         +HJ0fsrQlwyZ7X9tK1IqCY4PG6dussZwiRgxI21ab1CXYBfM9oGbGM8dJ3ajETQ4wsPk
+         dMp2IZOdJ1fhP3rJXWvvscEnbqV2CIUQhfwA+VXQRNc1m2pbjQ3LER1cHZJMlOID0VMp
+         RorLT60EuDiJPyuC1xiynE3DrcU6qeiA25PCGrH+0TSvWoGBfO20A9z7PghDXyI5Q07s
+         jvuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kdPbODA0z2TZ5tYy71TYwrIsVN8PGj8ecEakmSP6UzE=;
-        b=dEcxXqr1mGW6Ce+4LbrJ68MYjEa2clOBnyE4rem7aZ2cgsLIwzkaxuG/uHArosWtXv
-         KqwSoIMFdVKiOnaT6Z7iaZsBNXOiCmFtH3FabfzuHOJnzCzZqYApv38rpn+JhylxgzkK
-         h5LSUbRA39A2WNkoiwraPDW1zBJfo+n7GDIDGhe/P/Te2WnqGQCIHdpqrBKH6tzdbF99
-         6Gj5EHpvSVWNAaclqkcqGAmnlx5FRNanym/+vVXKymDXAdIbv5hVYG/AhDG0Xwv3n88r
-         BifoYm85xkz9m5RTmxUwMNTJk7QqOHUinQ+OqqGcDAUbIHbC20UjcgdrYDXwivarV64b
-         4n/w==
-X-Gm-Message-State: APjAAAVVu9B+s4X5w/PuijjUfLmV9MtQJ2TOR+0Ai3zJyT661xEIXdLg
-        M9EbdWzZdRtaii+TsfwX6q4SJlfRaQ==
-X-Google-Smtp-Source: APXvYqxVcxS3c2jmSWFZuWGvdC+pBCSZmzkJJ8oAsoyKtehe4IvFrMZih2OqW7/oxLKGbl1dNa/N0Q==
-X-Received: by 2002:a67:9946:: with SMTP id b67mr11038017vse.37.1561873294998;
-        Sat, 29 Jun 2019 22:41:34 -0700 (PDT)
+        bh=qZ9bQ4qlIvn0nmi3/fOq2/nuJUUiXRlbGalFjI3uA7I=;
+        b=YLUH1qzQW8dphStthDHPueGmZmiz3ekn3y8pxoweppVbpajFVHEQuhKLCgrJujbxKP
+         MHkx2SrXH/McgR/a6GjfZwIhKnsL3QI0ITFNF6G1HmWVtTIT0xbwF6qZA2X8a+5GBoOc
+         Ox+7MY8rr9kyNuvl3aVZWURXTJ08+/XQdj0cx+Zhicc5R2P2shYKRHhcPlnGbKFmDd3z
+         cZB+E+RlZ7ExWrvfmMPHHABrI0DjfjRruLGpamIDXD9AD8r00J9AAG2Y2d9eMKpQmsVT
+         K6pvTiheitc+x1ECGussFWGslgf4Y5aVCfVhFjkMcTWogMt8qGRol/JwVbz3wsZKByj8
+         41BA==
+X-Gm-Message-State: APjAAAUCBLdqlBSkH0q0HnyR8GZVHYjCdutUDf5p+UJrzEsIa+tc0HXf
+        sjSb1Uxd8gahNgkTSseJmA==
+X-Google-Smtp-Source: APXvYqzcsnxe1ixaVvXGxui+zIBMylqPDrCwwR84fAUxX2R7ER30T4/9RM55EcjLobAyizJTve4yrQ==
+X-Received: by 2002:a67:2586:: with SMTP id l128mr10987147vsl.52.1561873301726;
+        Sat, 29 Jun 2019 22:41:41 -0700 (PDT)
 Received: from localhost.localdomain ([2601:902:c200:6512:37bd:d695:3a39:ceb9])
-        by smtp.gmail.com with ESMTPSA id r136sm1926676vke.46.2019.06.29.22.41.34
+        by smtp.gmail.com with ESMTPSA id r136sm1926676vke.46.2019.06.29.22.41.41
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 29 Jun 2019 22:41:34 -0700 (PDT)
+        Sat, 29 Jun 2019 22:41:41 -0700 (PDT)
 From:   Ayman Bagabas <ayman.bagabas@gmail.com>
 To:     Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     ayman.bagabas@gmail.com
-Subject: [RFC 3/9] platform/x86: huawei-wmi: Implement huawei wmi management interface
-Date:   Sun, 30 Jun 2019 01:41:02 -0400
-Message-Id: <20190630054108.19205-4-ayman.bagabas@gmail.com>
+Subject: [RFC 5/9] platform/x86: huawei-wmi: Control micmute led through wmi interface
+Date:   Sun, 30 Jun 2019 01:41:04 -0400
+Message-Id: <20190630054108.19205-6-ayman.bagabas@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190630054108.19205-1-ayman.bagabas@gmail.com>
 References: <20190630054108.19205-1-ayman.bagabas@gmail.com>
@@ -75,205 +75,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Huawei Matebook laptops come with a WMI management interface that can
-control various aspects of the device. This interface is also found on
-the old Matebook X released in 2017.
-
-Implement basic functionality of this interface along with supported
-command IDs that are implemented in this series.
+Now that huawei WMI management interface is implemented, micmute LED can
+be controlled easily through this interface. Exception is the Matebook X
+(2017) which continue to uses ACPI EC method to control the LED. This
+model can control the LED through the legacy WMI interface which is not
+implemented ATM.
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- drivers/platform/x86/huawei-wmi.c | 130 ++++++++++++++++++++++++++++++
- 1 file changed, 130 insertions(+)
+ drivers/platform/x86/huawei-wmi.c | 86 ++++++++++++++++++-------------
+ 1 file changed, 49 insertions(+), 37 deletions(-)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 12cae450fc1f..27520b0f8956 100644
+index 8f918138053a..9013a05d2832 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -10,24 +10,36 @@
- #include <linux/input/sparse-keymap.h>
- #include <linux/leds.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/platform_device.h>
- #include <linux/wmi.h>
- 
- /*
-  * Huawei WMI GUIDs
-  */
-+#define HWMI_METHOD_GUID "ABBC0F5B-8EA1-11D1-A000-C90629100000"
- #define HWMI_EVENT_GUID "ABBC0F5C-8EA1-11D1-A000-C90629100000"
- 
- /* Legacy GUIDs */
- #define WMI0_EXPENSIVE_GUID "39142400-C6A3-40fa-BADB-8A2652834100"
- #define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
- 
-+/* HWMI commands */
-+
-+enum {
-+	BATTERY_THRESH_GET		= 0x00001103, /* \GBTT */
-+	BATTERY_THRESH_SET		= 0x00001003, /* \SBTT */
-+	FN_LOCK_GET			= 0x00000604, /* \GFRS */
-+	FN_LOCK_SET			= 0x00000704, /* \SFRS */
-+	MICMUTE_LED_SET			= 0x00000b04, /* \SMLS */
-+};
- 
+@@ -46,8 +46,6 @@ static struct quirk_entry *quirks;
  struct huawei_wmi_priv {
  	struct input_dev *idev[2];
  	struct led_classdev cdev;
- 	acpi_handle handle;
- 	char *acpi_method;
-+	struct mutex wmi_lock;
+-	acpi_handle handle;
+-	char *acpi_method;
+ 	struct mutex wmi_lock;
  	struct platform_device *pdev;
  };
- 
-@@ -50,6 +62,116 @@ static const struct key_entry huawei_wmi_keymap[] = {
- 	{ KE_END,	 0 }
- };
- 
-+/* Utils */
-+
-+static int huawei_wmi_call(struct device *dev, struct acpi_buffer *in,
-+		struct acpi_buffer *out)
-+{
-+	struct huawei_wmi_priv *priv = dev_get_drvdata(dev);
-+	acpi_status status;
-+
-+	mutex_lock(&priv->wmi_lock);
-+	status = wmi_evaluate_method(HWMI_METHOD_GUID, 0, 1, in, out);
-+	mutex_unlock(&priv->wmi_lock);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(dev, "Failed to evaluate wmi method\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+/* HWMI takes a 64 bit input and returns either a package with 2 buffers, one of
-+ * 4 bytes and the other of 256 bytes, or one buffer of size 0x104 (260) bytes.
-+ * The first 4 bytes are ignored, we ignore the first 4 bytes buffer if we got a
-+ * package, or skip the first 4 if a buffer of 0x104 is used. The first byte of
-+ * the remaining 0x100 sized buffer has the return status of every call. In case
-+ * the return status is non-zero, we return -ENODEV but still copy the returned
-+ * buffer to the given buffer parameter (buf).
-+ */
-+static int huawei_wmi_cmd(struct device *dev, u64 arg, u8 *buf, size_t buflen)
-+{
-+	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
-+	struct acpi_buffer in;
-+	union acpi_object *obj;
-+	size_t len;
-+	int err, i;
-+
-+	in.length = sizeof(arg);
-+	in.pointer = &arg;
-+
-+	/* Some models require calling HWMI twice to execute a command. We evaluate
-+	 * HWMI and if we get a non-zero return status we evaluate it again.
-+	 */
-+	for (i = 0; i < 2; i++) {
-+		err = huawei_wmi_call(dev,  &in, &out);
-+		if (err)
-+			goto fail_cmd;
-+
-+		obj = out.pointer;
-+		if (!obj) {
-+			err = -EIO;
-+			goto fail_cmd;
-+		}
-+
-+		switch (obj->type) {
-+		/* Models that implement both "legacy" and HWMI tend to return a 0x104
-+		 * sized buffer instead of a package of 0x4 and 0x100 buffers.
-+		 */
-+		case ACPI_TYPE_BUFFER:
-+			if (obj->buffer.length == 0x104) {
-+				// Skip the first 4 bytes.
-+				obj->buffer.pointer += 4;
-+				len = 0x100;
-+			} else {
-+				dev_err(dev, "Bad buffer length, got %d\n", obj->buffer.length);
-+				err = -EIO;
-+				goto fail_cmd;
-+			}
-+
-+			break;
-+		/* HWMI returns a package with 2 buffer elements, one of 4 bytes and the
-+		 * other is 256 bytes.
-+		 */
-+		case ACPI_TYPE_PACKAGE:
-+			if (obj->package.count != 2) {
-+				dev_err(dev, "Bad package count, got %d\n", obj->package.count);
-+				err = -EIO;
-+				goto fail_cmd;
-+			}
-+
-+			obj = &obj->package.elements[1];
-+			if (obj->type != ACPI_TYPE_BUFFER) {
-+				dev_err(dev, "Bad package element type, got %d\n", obj->type);
-+				err = -EIO;
-+				goto fail_cmd;
-+			}
-+			len = obj->buffer.length;
-+
-+			break;
-+		/* Shouldn't get here! */
-+		default:
-+			dev_err(dev, "Unexpected obj type, got: %d\n", obj->type);
-+			err = -EIO;
-+			goto fail_cmd;
-+		}
-+
-+		if (!*obj->buffer.pointer)
-+			break;
-+	}
-+
-+	err = (*obj->buffer.pointer) ? -ENODEV : 0;
-+
-+	if (buf) {
-+		len = min(buflen, len);
-+		memcpy(buf, obj->buffer.pointer, len);
-+	}
-+
-+fail_cmd:
-+	kfree(out.pointer);
-+	return err;
-+}
-+
- /* LEDs */
- 
+@@ -238,49 +236,57 @@ static int huawei_wmi_cmd(struct device *dev, u64 arg, u8 *buf, size_t buflen)
  static int huawei_wmi_micmute_led_set(struct led_classdev *led_cdev,
-@@ -222,6 +344,10 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 		}
+ 		enum led_brightness brightness)
+ {
+-	struct huawei_wmi_priv *priv = dev_get_drvdata(led_cdev->dev->parent);
+-	acpi_status status;
+-	union acpi_object args[3];
+-	struct acpi_object_list arg_list = {
+-		.pointer = args,
+-		.count = ARRAY_SIZE(args),
+-	};
+-
+-	args[0].type = args[1].type = args[2].type = ACPI_TYPE_INTEGER;
+-	args[1].integer.value = 0x04;
+-
+-	if (strcmp(priv->acpi_method, "SPIN") == 0) {
+-		args[0].integer.value = 0;
+-		args[2].integer.value = brightness ? 1 : 0;
+-	} else if (strcmp(priv->acpi_method, "WPIN") == 0) {
+-		args[0].integer.value = 1;
+-		args[2].integer.value = brightness ? 0 : 1;
++	/* This is a workaround until the "legacy" interface is implemented. */
++	if (quirks && quirks->ec_micmute) {
++		char *acpi_method;
++		acpi_handle handle;
++		acpi_status status;
++		union acpi_object args[3];
++		struct acpi_object_list arg_list = {
++			.pointer = args,
++			.count = ARRAY_SIZE(args),
++		};
++
++		handle = ec_get_handle();
++		if (!handle) {
++			dev_err(led_cdev->dev->parent, "Failed to get EC handle\n");
++			return -ENODEV;
++		}
++
++		args[0].type = args[1].type = args[2].type = ACPI_TYPE_INTEGER;
++		args[1].integer.value = 0x04;
++
++		if (acpi_has_method(handle, "SPIN")) {
++			acpi_method = "SPIN";
++			args[0].integer.value = 0;
++			args[2].integer.value = brightness ? 1 : 0;
++		} else if (acpi_has_method(handle, "WPIN")) {
++			acpi_method = "WPIN";
++			args[0].integer.value = 1;
++			args[2].integer.value = brightness ? 0 : 1;
++		} else {
++			return -ENODEV;
++		}
++
++		status = acpi_evaluate_object(handle, acpi_method, &arg_list, NULL);
++		if (ACPI_FAILURE(status))
++			return -ENODEV;
++
++		return 0;
+ 	} else {
+-		return -EINVAL;
+-	}
++		u8 arg[8];
+ 
+-	status = acpi_evaluate_object(priv->handle, priv->acpi_method, &arg_list, NULL);
+-	if (ACPI_FAILURE(status))
+-		return -ENXIO;
++		*(u64 *)arg = MICMUTE_LED_SET;
++		arg[2] = brightness;
+ 
+-	return 0;
++		return huawei_wmi_cmd(led_cdev->dev->parent, *(u64 *)arg, NULL, NULL);
++	}
+ }
+ 
+ static int huawei_wmi_leds_setup(struct device *dev)
+ {
+ 	struct huawei_wmi_priv *priv = dev_get_drvdata(dev);
+ 
+-	priv->handle = ec_get_handle();
+-	if (!priv->handle)
+-		return 0;
+-
+-	if (acpi_has_method(priv->handle, "SPIN"))
+-		priv->acpi_method = "SPIN";
+-	else if (acpi_has_method(priv->handle, "WPIN"))
+-		priv->acpi_method = "WPIN";
+-	else
+-		return 0;
+-
+ 	priv->cdev.name = "platform::micmute";
+ 	priv->cdev.max_brightness = 1;
+ 	priv->cdev.brightness_set_blocking = huawei_wmi_micmute_led_set;
+@@ -412,9 +418,15 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+ 
+ 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
+ 		mutex_init(&priv->wmi_lock);
++
++		err = huawei_wmi_leds_setup(&pdev->dev);
++		if (err) {
++			dev_err(&pdev->dev, "Failed to setup leds\n");
++			return err;
++		}
  	}
  
-+	if (wmi_has_guid(HWMI_METHOD_GUID)) {
-+		mutex_init(&priv->wmi_lock);
-+	}
-+
- 	return huawei_wmi_leds_setup(&pdev->dev);
+-	return huawei_wmi_leds_setup(&pdev->dev);
++	return 0;
  }
  
-@@ -233,6 +359,9 @@ static int huawei_wmi_remove(struct platform_device *pdev)
- 	if (wmi_has_guid(HWMI_EVENT_GUID))
- 		wmi_remove_notify_handler(HWMI_EVENT_GUID);
- 
-+	if (wmi_has_guid(HWMI_METHOD_GUID)) {
-+	}
-+
- 	return 0;
- }
- 
-@@ -272,6 +401,7 @@ module_exit(huawei_wmi_exit);
- 
- MODULE_ALIAS("wmi:"WMI0_EVENT_GUID);
- MODULE_ALIAS("wmi:"HWMI_EVENT_GUID);
-+MODULE_ALIAS("wmi:"HWMI_METHOD_GUID);
- MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
- MODULE_DESCRIPTION("Huawei WMI laptop extras driver");
- MODULE_LICENSE("GPL v2");
+ static int huawei_wmi_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
