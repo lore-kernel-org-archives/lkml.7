@@ -2,70 +2,69 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD37BC5B57E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 13:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58255C5B57E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 13:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9820920665
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 13:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F4320665
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 13:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfF3NkJ (ORCPT
+        id S1726647AbfF3NrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 09:40:09 -0400
-Received: from ms.lwn.net ([45.79.88.28]:46034 "EHLO ms.lwn.net"
+        Sun, 30 Jun 2019 09:47:11 -0400
+Received: from mga04.intel.com ([192.55.52.120]:48976 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbfF3NkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 09:40:08 -0400
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id E50282CF;
-        Sun, 30 Jun 2019 13:40:07 +0000 (UTC)
-Date:   Sun, 30 Jun 2019 07:40:06 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Sheriff Esseson <sheriffesseson@gmail.com>
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [linux-kernel-mentees] [PATCH] Doc : doc-guide : Fix a typo
-Message-ID: <20190630074006.477305c2@lwn.net>
-In-Reply-To: <20190630071707.GA12881@localhost>
-References: <20190628060111.24851-1-sheriffesseson@gmail.com>
-        <20190630071707.GA12881@localhost>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1726500AbfF3NrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 09:47:10 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jun 2019 06:47:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,434,1557212400"; 
+   d="scan'208";a="186131455"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
+  by fmsmga004.fm.intel.com with ESMTP; 30 Jun 2019 06:47:08 -0700
+Date:   Sun, 30 Jun 2019 21:49:44 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Kalle Valo <kvalo@codeaurora.org>, rong.a.chen@intel.com
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: buildbot status?
+Message-ID: <20190630134944.GA22324@intel.com>
+References: <20190628142859.GA4844@lst.de>
+ <87h887qu2t.fsf@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h887qu2t.fsf@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 30 Jun 2019 08:17:07 +0100
-Sheriff Esseson <sheriffesseson@gmail.com> wrote:
-
-> > fix the disjunction by replacing "of" with "or".
-> > 
-> > Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
-> > ---
-> > -- 
-> > 2.22.0
-> >   
+On Sun, Jun 30, 2019 at 12:51:54PM +0300, Kalle Valo wrote:
+> Christoph Hellwig <hch@lst.de> writes:
 > 
-> Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
-> ---
+> > Hi buildbot maintainers,
+> >
+> > lately I usually get no, in some case a few very delayed build bot
+> > results for my repos.  Is this as known issue?
 > 
-> changes in v2:
-> - cc-ed Corbet.
+> I have the same problem, I did receive few reports on Wednesday but
+> nothing after that. I rely a lot for buildbot doing build checks on
+> wireless-drivers patches so I hope it comes back soon.
+hi Kalle and Christoph, sorry for inconvenience. We will check this as
+early as possible which may be due to certain issue in our side. +Rong
+to help check the exact problem.
+
 > 
->  Documentation/doc-guide/kernel-doc.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-So why are you sending me this again?  I applied it a few days ago and
-told you so at the time.
-
-jon
+> -- 
+> Kalle Valo
