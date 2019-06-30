@@ -2,186 +2,134 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7BCC06508
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 18:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2F1C5B576
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 19:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA5A2089F
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 18:59:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="CW+oGbza"
+	by mail.kernel.org (Postfix) with ESMTP id 6FB7920881
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 19:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfF3S7R (ORCPT
+        id S1726838AbfF3TjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 14:59:17 -0400
-Received: from sonic308-55.consmr.mail.gq1.yahoo.com ([98.137.68.31]:38135
-        "EHLO sonic308-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726572AbfF3S7R (ORCPT
+        Sun, 30 Jun 2019 15:39:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14792 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726674AbfF3TjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 14:59:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1561921156; bh=qvS6AX1nqTURIJxkra+F23NzHGUKeOF9WJqZLfkSZ3I=; h=From:To:Cc:Subject:Date:From:Subject; b=CW+oGbzaBWtkvpId2t7MjFmW3VQ1LGlDqhON0VM2t/0CxgH2BBjkyQKOquW/AXGsvZil2x/axn8pSyW5zDy1VgTvJjBFBtkNthJOhDImFuF9ydc+dvHHVRRcE0rkUlQxUcXrTJk/k6aHK5PNclXNyfOVT3eQnF+X9faLTBnE+YP84nMeMkcH4Usw/F1pqIeYhoX4u9SeNE5aPjZjITBTSfMQ9kN+jlbTPan4bkjbq76Q3Pjy93GrOgyXcxd4zvCbqbzQYQdZdg05r3KviubxLLiIRpXcMvhGeC6oRI+66uIlMvMFxUPjbHuAzfFNPnm+y1qEBC6R9RkUwq1zvVcPlw==
-X-YMail-OSG: _MUMI6UVM1kHv.o_3n8h5.C86RBWmC5Ch5VWinQzlhBgdFfZyAkqN9w.q0VDv8O
- Bq9_fJ0niS4mJdEJX41zaNPoEBzdm.tTw3mfdOMbcWRGuxtZRygQcbDSILjfbJYHHb7WJQJ2M6B_
- 8HQCd7dMN4viBzEBufJeYgzPtIcEY0NBEZVKsWTDHUvQ_ukCnhSix81RWjSMp1rv4shCKr.j3P5P
- QWHZ4.o_ehIKIZhBNBKQR9vKDsAL.H7rClKvw1h0elZEWGMrFbcD1J6hL4qjiW9l8qzkIFRp2zHU
- 9CTcnEpcqKaQD0GIkoPoi..vWvUsWBUSp08LXnT0bmj32AewdLZ4ZWnJS5PvJoBGRr_6egNFCl4M
- _ZQuGUpSsZKWLgqwmk2FvbfEqxneyW9rLUA12kcSgUi4a84KBAIqs7K59cq1j_Zck5FBomu.tjFY
- dBxgANcpbre88L.WWoGP_RKI694ntxZMgcSPo82XRl0iMrEQmdt6hCmlDWRANLXlWiVJCsISd8ZO
- KxedfV_HVtTwvCJYzUwc0QlUloGcBRtY0PF13_047K1m7pg1mp4NC7VtEGp2k035dF3LW2miBjob
- C.ubNzB4a2Uo_NnlK5noM27sGWWsBEPvnpnuXC3CJbrDSW9ywmaqwKPqJaS4Cxbkn6czw_ET.Luq
- 9LtQIHA5sMYC8zLgD0CIU0uA2OFTYlE.LqPu8ZVGhoDbYTzeYSrPoYP08xD5Ao4AyxPuSEFH9emA
- ZvgTcx1A8msiqfMcM8EUyLMV.p0M7tO.w6SsGk3JRjcAFjUS0M0ls7eBKI1aE_HqQgLNQlwUp4O5
- Y5lcAA0cwNjR4tpgfHWYkOsxnNFzQ.3Jw_OEC6UIqX5QD2kUOQXN.UH0XyEF8BbdktSzuAC.NF1A
- KXmB9ORyvvv_O8inwLQ1N5EtinF8ThdmTEfjinP7ThaF7zE2z3zPuxhWziHVE45e.kttoRyFhjJR
- 82r6PmUl8sFRyGXDWe4YhDxcS7TQhpyA1OfmjOaHggE8PrqX_mi9CYc0qtpLXuOrdFwBNCsn7yau
- ErZ5xWgKVFfHFHDW5r7nwzI2N2U94_Yux6TMx9TZB5Ed_TunUSAgUyz_VN8lqYvttnh3K8DONMVL
- 39OrpEG4EbCILlzmT.oZ86fgtQ4svSTqUp9aZ2ktxhUOxXI5dRr6xrAxVp4qahdXNFEGNGsrtNEr
- 5okIlXlIeW8H5N2BzOdG1w9Mht7wdD0OUIUEWNJHd_LdcpFBab5_Igyd_Avg-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.gq1.yahoo.com with HTTP; Sun, 30 Jun 2019 18:59:16 +0000
-Received: from 115.192.39.149 (EHLO localhost.localdomain) ([115.192.39.149])
-          by smtp430.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 4f455e50a02bda45690c67a6db1d1f3b;
-          Sun, 30 Jun 2019 18:59:13 +0000 (UTC)
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-erofs@lists.ozlabs.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Du Wei <weidu.du@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH] staging: erofs: fix LZ4 limited bounced page mis-reuse
-Date:   Mon,  1 Jul 2019 02:58:46 +0800
-Message-Id: <20190630185846.16624-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 30 Jun 2019 15:39:15 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5UJacsk133648;
+        Sun, 30 Jun 2019 15:38:34 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tenkn31ya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 30 Jun 2019 15:38:34 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5UJcX7P137109;
+        Sun, 30 Jun 2019 15:38:33 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tenkn31y3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 30 Jun 2019 15:38:33 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5UJYSZ6014453;
+        Sun, 30 Jun 2019 19:38:33 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01wdc.us.ibm.com with ESMTP id 2tdym6a59s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 30 Jun 2019 19:38:33 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5UJcWU554133076
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 30 Jun 2019 19:38:32 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E435B2064;
+        Sun, 30 Jun 2019 19:38:32 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6CB83B205F;
+        Sun, 30 Jun 2019 19:38:32 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.128.230])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sun, 30 Jun 2019 19:38:32 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id CEDF416C1F1D; Sun, 30 Jun 2019 12:38:34 -0700 (PDT)
+Date:   Sun, 30 Jun 2019 12:38:34 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Byungchul Park <byungchul.park@lge.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: Re: [PATCH v2] rcu: Change return type of
+ rcu_spawn_one_boost_kthread()
+Message-ID: <20190630193834.GU26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <1561619266-8850-1-git-send-email-byungchul.park@lge.com>
+ <20190627134240.GB215968@google.com>
+ <20190627205703.GF26519@linux.ibm.com>
+ <20190628024339.GA13650@X58A-UD3R>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628024339.GA13650@X58A-UD3R>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-30_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906300252
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+On Fri, Jun 28, 2019 at 11:43:39AM +0900, Byungchul Park wrote:
+> On Thu, Jun 27, 2019 at 01:57:03PM -0700, Paul E. McKenney wrote:
+> > On Thu, Jun 27, 2019 at 09:42:40AM -0400, Joel Fernandes wrote:
+> > > On Thu, Jun 27, 2019 at 04:07:46PM +0900, Byungchul Park wrote:
+> > > > Hello,
+> > > > 
+> > > > I tested if the WARN_ON_ONCE() is fired with my box and it was ok.
+> > > 
+> > > Looks pretty safe to me and nice clean up!
+> > > 
+> > > Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > 
+> > Agreed, but I still cannot find where this applies.  I did try rcu/next,
+> > which is currently here:
+> > 
+> > commit b989ff070574ad8b8621d866de0a8e9a65d42c80 (rcu/rcu/next, rcu/next)
+> > Merge: 4289ee7d5a83 11ca7a9d541d
+> > Author: Paul E. McKenney <paulmck@linux.ibm.com>
+> > Date:   Mon Jun 24 09:12:39 2019 -0700
+> > 
+> >     Merge LKMM and RCU commits
+> > 
+> > Help?
+> 
+> commit 204d7a60670f3f6399a4d0826667ab7863b3e429
+> 
+>      Merge LKMM and RCU commits
+> 
+> I made it on top of the above. And could you tell me which branch I'd
+> better use when developing. I think it's been changing sometimes.
 
-Like all lz77-based algrithms, lz4 has a dynamically populated
-("sliding window") dictionary and the maximum lookback distance
-is 65535. Therefore the number of bounced pages could be limited
-by erofs based on this property.
+That would be because idiot here took so much care to avoid risking
+pushing some early development commits into the upcoming merge window
+that he managed to misplace them entirely.  The -rcu tree's "dev" branch
+now includes them.  Could you please port to it?
 
-However, just now we observed some lz4 sequences in the extreme
-case cannot be decompressed correctly after this feature is enabled,
-the root causes after analysis are clear as follows:
-1) max bounced pages should be 17 rather than 16 pages;
-2) considering the following case, the broken implementation
-   could reuse unsafely in advance (in other words, reuse it
-   less than a safe distance),
-   0 1 2 ... 16 17 18 ... 33 34
-   b             p  b         b
-   note that the bounce page that we are concerned was allocated
-   at 0, and it reused at 18 since page 17 exists, but it mis-reused
-   at 34 in advance again, which causes decompress failure.
+a1af11a24cb0 ("rcu/nocb: Make __call_rcu_nocb_wake() safe for many callbacks")
 
-This patch resolves the issue by introducing a bitmap to mark
-whether the page in the same position of last round is a bounced
-page or not, and a micro stack data structure to store all
-available bounced pages.
+> Thank you for the answer in advance!
 
-Fixes: 7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- drivers/staging/erofs/decompressor.c | 50 ++++++++++++++++------------
- 1 file changed, 28 insertions(+), 22 deletions(-)
+And please accept my apologies for the very confusing tree layout this
+time around!
 
-diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
-index 80f1f39719ba..1fb0abb98dff 100644
---- a/drivers/staging/erofs/decompressor.c
-+++ b/drivers/staging/erofs/decompressor.c
-@@ -13,7 +13,7 @@
- #define LZ4_DISTANCE_MAX 65535	/* set to maximum value by default */
- #endif
- 
--#define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
-+#define LZ4_MAX_DISTANCE_PAGES	(DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE) + 1)
- #ifndef LZ4_DECOMPRESS_INPLACE_MARGIN
- #define LZ4_DECOMPRESS_INPLACE_MARGIN(srcsize)  (((srcsize) >> 8) + 32)
- #endif
-@@ -35,19 +35,28 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
- 	const unsigned int nr =
- 		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
- 	struct page *availables[LZ4_MAX_DISTANCE_PAGES] = { NULL };
--	unsigned long unused[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
--					  BITS_PER_LONG)] = { 0 };
-+	unsigned long bounced[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
-+					   BITS_PER_LONG)] = { 0 };
- 	void *kaddr = NULL;
--	unsigned int i, j, k;
-+	unsigned int i, j, top;
- 
--	for (i = 0; i < nr; ++i) {
-+	top = 0;
-+	for (i = j = 0; i < nr; ++i, ++j) {
- 		struct page *const page = rq->out[i];
-+		struct page *victim;
- 
--		j = i & (LZ4_MAX_DISTANCE_PAGES - 1);
--		if (availables[j])
--			__set_bit(j, unused);
-+		if (j >= LZ4_MAX_DISTANCE_PAGES)
-+			j = 0;
-+
-+		/* 'valid' bounced can only be tested after a complete round */
-+		if (test_bit(j, bounced)) {
-+			DBG_BUGON(i < LZ4_MAX_DISTANCE_PAGES);
-+			DBG_BUGON(top >= LZ4_MAX_DISTANCE_PAGES);
-+			availables[top++] = rq->out[i - LZ4_MAX_DISTANCE_PAGES];
-+		}
- 
- 		if (page) {
-+			__clear_bit(j, bounced);
- 			if (kaddr) {
- 				if (kaddr + PAGE_SIZE == page_address(page))
- 					kaddr += PAGE_SIZE;
-@@ -59,27 +68,24 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
- 			continue;
- 		}
- 		kaddr = NULL;
-+		__set_bit(j, bounced);
- 
--		k = find_first_bit(unused, LZ4_MAX_DISTANCE_PAGES);
--		if (k < LZ4_MAX_DISTANCE_PAGES) {
--			j = k;
--			get_page(availables[j]);
-+		if (top) {
-+			victim = availables[--top];
-+			get_page(victim);
- 		} else {
--			DBG_BUGON(availables[j]);
--
- 			if (!list_empty(pagepool)) {
--				availables[j] = lru_to_page(pagepool);
--				list_del(&availables[j]->lru);
--				DBG_BUGON(page_ref_count(availables[j]) != 1);
-+				victim = lru_to_page(pagepool);
-+				list_del(&victim->lru);
-+				DBG_BUGON(page_ref_count(victim) != 1);
- 			} else {
--				availables[j] = alloc_pages(GFP_KERNEL, 0);
--				if (!availables[j])
-+				victim = alloc_pages(GFP_KERNEL, 0);
-+				if (!victim)
- 					return -ENOMEM;
- 			}
--			availables[j]->mapping = Z_EROFS_MAPPING_STAGING;
-+			victim->mapping = Z_EROFS_MAPPING_STAGING;
- 		}
--		rq->out[i] = availables[j];
--		__clear_bit(j, unused);
-+		rq->out[i] = victim;
- 	}
- 	return kaddr ? 1 : 0;
- }
--- 
-2.17.1
-
+							Thanx, Paul
