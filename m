@@ -2,131 +2,110 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23A5C5B57E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 15:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BD8C5B57E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 15:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759F120663
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 15:27:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCoPh9Wd"
+	by mail.kernel.org (Postfix) with ESMTP id C2DBE20663
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 15:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfF3P1u (ORCPT
+        id S1726714AbfF3P2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 11:27:50 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44085 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfF3P1u (ORCPT
+        Sun, 30 Jun 2019 11:28:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23018 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726674AbfF3P2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 11:27:50 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x47so11914981qtk.11
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 08:27:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eq2HukLiuzFzKASlbDJ2Cm/tBYYzarf/IV9FWDHC4+k=;
-        b=LCoPh9WdvLxOamjgGnaksBaExNO9y2okQn3Byp2aMNjJTk+00rPGWli+R+5e0ClVT0
-         nGC1hobErUz1XQK+95CPL5N0FUZZv6B9aGpIWMRhu4RH2rCmxcM/8HIPyF9VRtIcLPZw
-         qge8lWPJeahjV8gU69Ho+BZk+jYwZW62/70VAwk/hp8t/T8JqIiKHkhKKOT/spTe904r
-         sjIHpXqALcE7G8X8lTsyJIz/z+HyYQjn8XqZpD2UaZjgBReyAxvw7sR0Zo/uTqR70ftL
-         wLnTRqFaKW1zMJlpLVhImodLJnwVkznhgcjejYfzNKFHV1FlM/52TeYHjfjsLx234PcY
-         74DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eq2HukLiuzFzKASlbDJ2Cm/tBYYzarf/IV9FWDHC4+k=;
-        b=WUFW9pIFtF/vPtt67KuP24fikDIb88ZWtBG14mLpoexHxLHSEy+fYyDI2W5Yaabfmx
-         9nrpY2izkQUJS0BdcMcjo3ikLvygBdjqjSZTEgj4itDI6Gh3eq84ULePQJbfXo58px1F
-         UIqH0C+fDNt9Wt0szK/9VNonY5qMYLMAwQvPaBoqG2si7hLtCSSC86T+WxBFEFyUKMYQ
-         AkamV/Gx6ijRwWKVXq/GrIOUGNMErPFB2ieyTTNa4h1/UY73kZh2AyFukENbds2r6o0N
-         2lzugfiZ91brT1sv6KZJV3E9HHKdMmFBGURiie858FdsZFb7KXbOkn8Y09f1/VEgALmM
-         UDyA==
-X-Gm-Message-State: APjAAAVB7hAEp0FXs18Z0cvCQphJMRPUELUwTy1fChdgCGdvpyB7n3Jo
-        EnuJBNdkgVdDTRnuDqS2wDs=
-X-Google-Smtp-Source: APXvYqw+lugXdizRx7WEqmvH2EBqSTj9jTiIdRBtsYzArslAuyuqt9RY3tdcwaj4F0EzrFFgemmNmQ==
-X-Received: by 2002:a0c:aa0f:: with SMTP id d15mr12141717qvb.229.1561908469379;
-        Sun, 30 Jun 2019 08:27:49 -0700 (PDT)
-Received: from localhost.localdomain ([45.58.106.199])
-        by smtp.gmail.com with ESMTPSA id j184sm3648364qkc.65.2019.06.30.08.27.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 30 Jun 2019 08:27:48 -0700 (PDT)
-From:   Gabriel Beauchamp <beauchampgabriel@gmail.com>
-To:     gregkh@linuxfoundation.org, christian.gromm@microchip.com,
-        colin.king@canonical.com, gustavo@embeddedor.com, joe@perches.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Gabriel Beauchamp <beauchampgabriel@gmail.com>
-Subject: [PATCH v2] Staging: most: fix coding style issues
-Date:   Sun, 30 Jun 2019 08:27:26 -0700
-Message-Id: <20190630152726.21092-1-beauchampgabriel@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <dbe411be6aa32a32aafc5a5b77f08e8507b45da3.camel@perches.com>
-References: <dbe411be6aa32a32aafc5a5b77f08e8507b45da3.camel@perches.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 30 Jun 2019 11:28:00 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5UFQwNe082675
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 11:27:59 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2texjw9phj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 11:27:59 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sun, 30 Jun 2019 16:27:56 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 30 Jun 2019 16:27:50 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5UFRnW946596282
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 30 Jun 2019 15:27:49 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B55842041;
+        Sun, 30 Jun 2019 15:27:49 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AF8CF4203F;
+        Sun, 30 Jun 2019 15:27:46 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.41])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 30 Jun 2019 15:27:46 +0000 (GMT)
+Subject: Re: [PATCH v4 3/3] gen_init_cpio: add support for file metadata
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>, viro@zeniv.linux.org.uk
+Cc:     linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bug-cpio@gnu.org,
+        zohar@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com,
+        dmitry.kasatkin@huawei.com, takondra@cisco.com, kamensky@cisco.com,
+        hpa@zytor.com, arnd@arndb.de, rob@landley.net,
+        james.w.mcmechan@gmail.com, niveditas98@gmail.com
+Date:   Sun, 30 Jun 2019 11:27:36 -0400
+In-Reply-To: <20190523121803.21638-4-roberto.sassu@huawei.com>
+References: <20190523121803.21638-1-roberto.sassu@huawei.com>
+         <20190523121803.21638-4-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19063015-4275-0000-0000-00000347BAA7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19063015-4276-0000-0000-00003857CB02
+Message-Id: <1561908456.3985.23.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-30_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906300198
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a patch for the core.[ch] files that fixes up warnings
-found with the checkpatch.pl tool.
+On Thu, 2019-05-23 at 14:18 +0200, Roberto Sassu wrote:
 
-Signed-off-by: Gabriel Beauchamp <beauchampgabriel@gmail.com>
----
-Changes in v2:
-- use a single snprintf
----
- drivers/staging/most/core.c | 7 +++++--
- drivers/staging/most/core.h | 2 +-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+> diff --git a/usr/Kconfig b/usr/Kconfig
+> index 43658b8a975e..8d9f54a16440 100644
+> --- a/usr/Kconfig
+> +++ b/usr/Kconfig
+> @@ -233,3 +233,11 @@ config INITRAMFS_COMPRESSION
+>  	default ".lzma" if RD_LZMA
+>  	default ".bz2"  if RD_BZIP2
+>  	default ""
+> +
+> +config INITRAMFS_FILE_METADATA
+> +	string "File metadata type"
+> +	default ""
+> +	help
+> +	  Specify xattr to include xattrs in the image.
+> +
+> +	  If you are not sure, leave it blank.
+> 	fi
 
-diff --git a/drivers/staging/most/core.c b/drivers/staging/most/core.c
-index 86a8545c8d97..852f8788ce2e 100644
---- a/drivers/staging/most/core.c
-+++ b/drivers/staging/most/core.c
-@@ -299,13 +299,15 @@ static ssize_t set_datatype_show(struct device *dev,
- 				 char *buf)
- {
- 	int i;
-+	char *type = "unconfigured\n";
-+
- 	struct most_channel *c = to_channel(dev);
- 
- 	for (i = 0; i < ARRAY_SIZE(ch_data_type); i++) {
- 		if (c->cfg.data_type & ch_data_type[i].most_ch_data_type)
--			return snprintf(buf, PAGE_SIZE, "%s", ch_data_type[i].name);
-+			type = ch_data_type[i].name;
- 	}
--	return snprintf(buf, PAGE_SIZE, "unconfigured\n");
-+	return snprintf(buf, PAGE_SIZE, "%s", type);
- }
- 
- static ssize_t set_subbuffer_size_show(struct device *dev,
-@@ -728,6 +730,7 @@ int most_add_link(char *mdev, char *mdev_ch, char *comp_name, char *link_name,
- 
- 	return link_channel_to_component(c, comp, link_name, comp_param);
- }
-+
- /**
-  * remove_link_store - store function for remove_link attribute
-  * @drv: device driver
-diff --git a/drivers/staging/most/core.h b/drivers/staging/most/core.h
-index 652aaa771029..6ba7c2b34c1c 100644
---- a/drivers/staging/most/core.h
-+++ b/drivers/staging/most/core.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * most.h - API for component and adapter drivers
-  *
--- 
-2.21.0
+Instead of having to specify the metdata type, let's make this a
+choice.
+
+Mimi
 
