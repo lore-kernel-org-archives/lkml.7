@@ -2,712 +2,330 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694DBC5B57E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 14:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D345C5B57E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 14:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2260D20663
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 14:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B871620673
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 14:09:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cZ1nAl23"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="NV3Cy4QB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfF3OFT (ORCPT
+        id S1726597AbfF3OJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 10:05:19 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34261 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfF3OFT (ORCPT
+        Sun, 30 Jun 2019 10:09:06 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35426 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfF3OJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 10:05:19 -0400
-Received: by mail-lj1-f194.google.com with SMTP id p17so10396298ljg.1
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 07:05:16 -0700 (PDT)
+        Sun, 30 Jun 2019 10:09:06 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c27so3249476wrb.2
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 07:09:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=it38dr8JUaUYwbqHb0L1miB1LZC8lq57tBffuyv0i4g=;
-        b=cZ1nAl23rVXo1eeZwmmSPLz7rKYbwoEHmBsZ9YV+65w0lCeJSw/f1Eaf1HVi0vOtN9
-         rVj2GTdR2DS1+lYPdrltkR6CrlpngHwWeERBgPkAew7wZPq5utBbSIYcYY7CtAKvVYtG
-         6NwWO5iNCJ8E+yVHjvgNbSAD9u3Os/02WWUS519xB87X0/JLAvyydV2ULqmYl/KZFw1r
-         graaSqqtCYGQ/hubp0hw4NJjjn8gaJx12HAcIafQXuf7//lFrmbgdf24MrnbLYlv0c2V
-         jYL7lDFw69bwZAsOI5cahfKBbEq0iVnuHrrihFtc9lP2dm7QcE2gCHrBzGZiLat5LD/c
-         i8EA==
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AogWi8TSNWmIW7j+f7NO9gOCrgpejE2nA84vzwlUQ3E=;
+        b=NV3Cy4QBC5Gm0xolyqjaCpPWmwXnN2raUikdyOl+67o1JF7zMX8kHokueZhABFegY7
+         LRqexbyJcaG8cFNkBOHs+ozUrrkzgSJW4bw0Rhx3+2DWWO1GBq6kR9TXuWBNPmhJiybW
+         2bWS9+LBRUdJatyGl7XgEBjlOyWP6hFEnIesc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=it38dr8JUaUYwbqHb0L1miB1LZC8lq57tBffuyv0i4g=;
-        b=p0Vlo9z+1sHZ2qOLRZGAanz+xiWgcdKHT5ff3MXEijb7wHItsrvcO8TJhr6heSXuj3
-         3R18R2MWrYUeAnHSkygHx3QFl2vBUa64Pfl7Fs8YLZLxGMTSXiGbEkiMu6g9GSK9L2/x
-         QWOFI8y0HKHdN5zCO0IboTmbjbWLxjkFBg5HFe+9KjqiCckwnHwteTYKCy0HqX5kcC/0
-         mMinc+m5gpvlp1zPdzXpZJ2P//68i65Igean/JIioZ64XJgAJ9t1N/woMJVPnoH4gYIo
-         VtatdljCuk22wJS1mWGv6Yh+xjMF0APbuX7V4PuedCFoaKF1+uAJ6XWh5sbnXwqBVrCD
-         JVnQ==
-X-Gm-Message-State: APjAAAXitytB0hJcji/o8auNT3IN2/SQ58jtImz3QoxnPJexEBeBjG4+
-        PjVffQLIwdnQqJPLGi754RVLWtg3070=
-X-Google-Smtp-Source: APXvYqyRCAq9TyVbgFOe8/NYaBeFp8qP8kCaIQbfMUrmZwx7GySdc+fOIQhZNCbmmhbQy50JQgq81g==
-X-Received: by 2002:a05:651c:95:: with SMTP id 21mr11613220ljq.128.1561903515763;
-        Sun, 30 Jun 2019 07:05:15 -0700 (PDT)
-Received: from localhost.localdomain (c-22cd225c.014-348-6c756e10.bbcust.telenor.se. [92.34.205.34])
-        by smtp.gmail.com with ESMTPSA id i62sm2666585lji.14.2019.06.30.07.05.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 30 Jun 2019 07:05:14 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-kernel@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AogWi8TSNWmIW7j+f7NO9gOCrgpejE2nA84vzwlUQ3E=;
+        b=tamJqxAp9eAo+z/96YmD2gGa1QDm+B/3kcL7nvRnxwooMEM0dmPX8Ly1J1Kko8PkE/
+         6oPXIL9xheLPcN/J6D/X0yjpSFcIiJK3rEJE+pZeTMx+IlydzhTxQHUZOPzbLqkq8bF3
+         mwMXdXDxmVQ00GTOalzP41u4+ZBq/+f8cWRMkywhLWJYDpU2PDPRLsXZSla/GAx/ZDF7
+         43DSHo9CgURTV9eEuxzTr2lr0nMsF+jZkCyHB5J3A0iDBa3RHkUAPdIZZ6k2xNw4WvUT
+         qUBuuJk5WWC1mMTCJ2n56CE41u6rXl4RzCOD/RXJAyGJ+k5YmuzZvnTkaGhkGMSSDBbI
+         2KdQ==
+X-Gm-Message-State: APjAAAVH1X/cvZaExJmvCindyJr0riN8hPaEcf6VrN36Zk/VzFmehIyR
+        icK6Bww1KQG8pqjZWIK5XzjtKA==
+X-Google-Smtp-Source: APXvYqwYTwEcEt+dmBUxEoIpXhYZIabGivuXllOg7ofvpH2WrwR6s8B0vU/jgb/kIPQO8BOe7/9QJw==
+X-Received: by 2002:adf:c614:: with SMTP id n20mr16064403wrg.17.1561903742685;
+        Sun, 30 Jun 2019 07:09:02 -0700 (PDT)
+Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
+        by smtp.gmail.com with ESMTPSA id g8sm14923503wme.20.2019.06.30.07.09.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 30 Jun 2019 07:09:01 -0700 (PDT)
+Date:   Sun, 30 Jun 2019 16:08:55 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH] misc: fsa9480: Delete this driver
-Date:   Sun, 30 Jun 2019 16:03:02 +0200
-Message-Id: <20190630140302.16245-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer
+ implementation
+Message-ID: <20190630140855.GA6005@andrea>
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+ <20190607162349.18199-2-john.ogness@linutronix.de>
+ <20190618114747.GQ3436@hirez.programming.kicks-ass.net>
+ <87k1df28x4.fsf@linutronix.de>
+ <20190626224034.GK2490@worktop.programming.kicks-ass.net>
+ <87mui2ujh2.fsf@linutronix.de>
+ <20190629210528.GA3922@andrea>
+ <87imsnaky1.fsf@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imsnaky1.fsf@linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The FSA9480 has a new driver more appropriately located
-in the drivers/extcon subsystem. It is also more complete
-and includes device tree support. Delete the old misc
-driver.
+On Sun, Jun 30, 2019 at 04:03:34AM +0200, John Ogness wrote:
+> On 2019-06-29, Andrea Parri <andrea.parri@amarulasolutions.com> wrote:
+> >> /**
+> >>  * add_descr_list() - Add a descriptor to the descriptor list.
+> >>  *
+> >>  * @e: An entry that has already reserved data.
+> >>  *
+> >>  * The provided entry contains a pointer to a descriptor that has already
+> >>  * been reserved for this entry. However, the reserved descriptor is not
+> >>  * yet on the list. Add this descriptor as the newest item.
+> >>  *
+> >>  * A descriptor is added in two steps. The first step is to make this
+> >>  * descriptor the newest. The second step is to update @next of the former
+> >>  * newest descriptor to point to this one (or set @oldest to this one if
+> >>  * this will be the first descriptor on the list).
+> >>  */
+> >> static void add_descr_list(struct prb_reserved_entry *e)
+> >> {
+> >> 	struct printk_ringbuffer *rb = e->rb;
+> >> 	struct prb_list *l = &rb->descr_list;
+> >> 	struct prb_descr *d = e->descr;
+> >> 	struct prb_descr *newest_d;
+> >> 	unsigned long newest_id;
+> >> 
+> >> 	WRITE_ONCE(d->next, EOL);
+> >
+> > /* C */
+> >
+> >
+> >> 
+> >> 	do {
+> >> 		newest_id = READ_ONCE(l->newest);
+> >
+> > /* A */
+> >
+> >
+> >> 		newest_d = TO_DESC(rb, newest_id);
+> >> 
+> >> 		if (newest_id == EOL) {
+> >> 			WRITE_ONCE(d->seq, 1);
+> >> 		} else {
+> >> 			/*
+> >> 			 * MB5-read: synchronize setting newest descr
+> >> 			 *
+> >> 			 * context-pair: 2 writers adding a descriptor via
+> >> 			 * add_descr_list().
+> >> 			 *
+> >> 			 * @newest will load before @seq due to a data
+> >> 			 * dependency, therefore, the stores of @seq
+> >> 			 * and @next from the pairing MB5-write context
+> >> 			 * will be visible.
+> >> 			 *
+> >> 			 * Although @next is not loaded by this context,
+> >> 			 * this context must overwrite the stored @next
+> >> 			 * value of the pairing MB5-write context.
+> >> 			 */
+> >> 			WRITE_ONCE(d->seq, READ_ONCE(newest_d->seq) + 1);
+> >
+> > /* B: this READ_ONCE() */
+> >
+> > Hence you're claiming a data dependency from A to B. (FWIW, the LKMM
+> > would call "A ->dep B" an "address dependency.)
+> >
+> > This comment also claims that the "pairing MB5-write" orders "stores
+> > of @seq and @next" (which are to different memory locations w.r.t. A
+> > and B): I do not get why this access to @next (C above?, that's also
+> > "unordered" w.r.t. A) can be relevant; can you elaborate?
+> 
+> I will add some more labels to complete the picture. All these events
+> are within this function:
+> 
+> D: the WRITE_ONCE() to @seq
+> 
+> E: the STORE of a successful cmpxchg() for @newest (the MB5-write
+> cmpxchg())
+> 
+> F: the STORE of a new @next (the last smp_store_release() of this
+> function, note that the _release() is not relevant for this pair)
+> 
+> The significant events for 2 contexts that are accessing the same
+> addresses of a descriptor are:
+> 
+> P0(struct desc *d0)
+> {
+>         // adding a new descriptor d0
+> 
+>         WRITE_ONCE(d0->next, EOL);               // C
+>         WRITE_ONCE(d0->seq, X);                  // D
+>         cmpxchg_release(newest, Y, indexof(d0)); // E
+> }
+> 
+> P1(struct desc *d1)
+> {
+>         // adding a new descriptor d1 that comes after d0
+> 
+>         struct desc *d0;
+>         int r0, r1;
+> 
+>         r0 = READ_ONCE(newest);                 // A
+>         d0 = &array[r0];
+>         r1 = READ_ONCE(d0->seq);                // B
+>         WRITE_ONCE(d0->next, Z);                // F
+> }
+> 
+> d0 is the same address for P0 and P1. (The values of EOL, X, Y, Z are
+> unrelated and irrelevant.)
+> 
+> I am claiming that:
+> 
+> - B comes after D
+> - F comes after C
 
-Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/misc/Kconfig                  |   9 -
- drivers/misc/Makefile                 |   1 -
- drivers/misc/fsa9480.c                | 547 --------------------------
- include/linux/platform_data/fsa9480.h |  24 --
- 4 files changed, 581 deletions(-)
- delete mode 100644 drivers/misc/fsa9480.c
- delete mode 100644 include/linux/platform_data/fsa9480.h
+I think these are both assuming that A is reading the value stored by E
+(shortly, "A reads from E")?  If so, then the two claims become/are:
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 85fc77148d19..88e59bb1b06f 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -431,15 +431,6 @@ config PCH_PHUB
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called pch_phub.
- 
--config USB_SWITCH_FSA9480
--	tristate "FSA9480 USB Switch"
--	depends on I2C
--	help
--	  The FSA9480 is a USB port accessory detector and switch.
--	  The FSA9480 is fully controlled using I2C and enables USB data,
--	  stereo and mono audio, video, microphone and UART data to use
--	  a common connector port.
--
- config LATTICE_ECP3_CONFIG
- 	tristate "Lattice ECP3 FPGA bitstream configuration via SPI"
- 	depends on SPI && SYSFS
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index b9affcdaa3d6..95440c335dd4 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -42,7 +42,6 @@ obj-$(CONFIG_VMWARE_BALLOON)	+= vmw_balloon.o
- obj-$(CONFIG_PCH_PHUB)		+= pch_phub.o
- obj-y				+= ti-st/
- obj-y				+= lis3lv02d/
--obj-$(CONFIG_USB_SWITCH_FSA9480) += fsa9480.o
- obj-$(CONFIG_ALTERA_STAPL)	+=altera-stapl/
- obj-$(CONFIG_INTEL_MEI)		+= mei/
- obj-$(CONFIG_VMWARE_VMCI)	+= vmw_vmci/
-diff --git a/drivers/misc/fsa9480.c b/drivers/misc/fsa9480.c
-deleted file mode 100644
-index fab02f2da077..000000000000
---- a/drivers/misc/fsa9480.c
-+++ /dev/null
-@@ -1,547 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * fsa9480.c - FSA9480 micro USB switch device driver
-- *
-- * Copyright (C) 2010 Samsung Electronics
-- * Minkyu Kang <mk7.kang@samsung.com>
-- * Wonguk Jeong <wonguk.jeong@samsung.com>
-- */
--
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include <linux/err.h>
--#include <linux/i2c.h>
--#include <linux/platform_data/fsa9480.h>
--#include <linux/irq.h>
--#include <linux/interrupt.h>
--#include <linux/workqueue.h>
--#include <linux/platform_device.h>
--#include <linux/slab.h>
--#include <linux/pm_runtime.h>
--
--/* FSA9480 I2C registers */
--#define FSA9480_REG_DEVID		0x01
--#define FSA9480_REG_CTRL		0x02
--#define FSA9480_REG_INT1		0x03
--#define FSA9480_REG_INT2		0x04
--#define FSA9480_REG_INT1_MASK		0x05
--#define FSA9480_REG_INT2_MASK		0x06
--#define FSA9480_REG_ADC			0x07
--#define FSA9480_REG_TIMING1		0x08
--#define FSA9480_REG_TIMING2		0x09
--#define FSA9480_REG_DEV_T1		0x0a
--#define FSA9480_REG_DEV_T2		0x0b
--#define FSA9480_REG_BTN1		0x0c
--#define FSA9480_REG_BTN2		0x0d
--#define FSA9480_REG_CK			0x0e
--#define FSA9480_REG_CK_INT1		0x0f
--#define FSA9480_REG_CK_INT2		0x10
--#define FSA9480_REG_CK_INTMASK1		0x11
--#define FSA9480_REG_CK_INTMASK2		0x12
--#define FSA9480_REG_MANSW1		0x13
--#define FSA9480_REG_MANSW2		0x14
--
--/* Control */
--#define CON_SWITCH_OPEN		(1 << 4)
--#define CON_RAW_DATA		(1 << 3)
--#define CON_MANUAL_SW		(1 << 2)
--#define CON_WAIT		(1 << 1)
--#define CON_INT_MASK		(1 << 0)
--#define CON_MASK		(CON_SWITCH_OPEN | CON_RAW_DATA | \
--				CON_MANUAL_SW | CON_WAIT)
--
--/* Device Type 1 */
--#define DEV_USB_OTG		(1 << 7)
--#define DEV_DEDICATED_CHG	(1 << 6)
--#define DEV_USB_CHG		(1 << 5)
--#define DEV_CAR_KIT		(1 << 4)
--#define DEV_UART		(1 << 3)
--#define DEV_USB			(1 << 2)
--#define DEV_AUDIO_2		(1 << 1)
--#define DEV_AUDIO_1		(1 << 0)
--
--#define DEV_T1_USB_MASK		(DEV_USB_OTG | DEV_USB)
--#define DEV_T1_UART_MASK	(DEV_UART)
--#define DEV_T1_CHARGER_MASK	(DEV_DEDICATED_CHG | DEV_USB_CHG)
--
--/* Device Type 2 */
--#define DEV_AV			(1 << 6)
--#define DEV_TTY			(1 << 5)
--#define DEV_PPD			(1 << 4)
--#define DEV_JIG_UART_OFF	(1 << 3)
--#define DEV_JIG_UART_ON		(1 << 2)
--#define DEV_JIG_USB_OFF		(1 << 1)
--#define DEV_JIG_USB_ON		(1 << 0)
--
--#define DEV_T2_USB_MASK		(DEV_JIG_USB_OFF | DEV_JIG_USB_ON)
--#define DEV_T2_UART_MASK	(DEV_JIG_UART_OFF | DEV_JIG_UART_ON)
--#define DEV_T2_JIG_MASK		(DEV_JIG_USB_OFF | DEV_JIG_USB_ON | \
--				DEV_JIG_UART_OFF | DEV_JIG_UART_ON)
--
--/*
-- * Manual Switch
-- * D- [7:5] / D+ [4:2]
-- * 000: Open all / 001: USB / 010: AUDIO / 011: UART / 100: V_AUDIO
-- */
--#define SW_VAUDIO		((4 << 5) | (4 << 2))
--#define SW_UART			((3 << 5) | (3 << 2))
--#define SW_AUDIO		((2 << 5) | (2 << 2))
--#define SW_DHOST		((1 << 5) | (1 << 2))
--#define SW_AUTO			((0 << 5) | (0 << 2))
--
--/* Interrupt 1 */
--#define INT_DETACH		(1 << 1)
--#define INT_ATTACH		(1 << 0)
--
--struct fsa9480_usbsw {
--	struct i2c_client		*client;
--	struct fsa9480_platform_data	*pdata;
--	int				dev1;
--	int				dev2;
--	int				mansw;
--};
--
--static struct fsa9480_usbsw *chip;
--
--static int fsa9480_write_reg(struct i2c_client *client,
--		int reg, int value)
--{
--	int ret;
--
--	ret = i2c_smbus_write_byte_data(client, reg, value);
--
--	if (ret < 0)
--		dev_err(&client->dev, "%s: err %d\n", __func__, ret);
--
--	return ret;
--}
--
--static int fsa9480_read_reg(struct i2c_client *client, int reg)
--{
--	int ret;
--
--	ret = i2c_smbus_read_byte_data(client, reg);
--
--	if (ret < 0)
--		dev_err(&client->dev, "%s: err %d\n", __func__, ret);
--
--	return ret;
--}
--
--static int fsa9480_read_irq(struct i2c_client *client, int *value)
--{
--	int ret;
--
--	ret = i2c_smbus_read_i2c_block_data(client,
--			FSA9480_REG_INT1, 2, (u8 *)value);
--	*value &= 0xffff;
--
--	if (ret < 0)
--		dev_err(&client->dev, "%s: err %d\n", __func__, ret);
--
--	return ret;
--}
--
--static void fsa9480_set_switch(const char *buf)
--{
--	struct fsa9480_usbsw *usbsw = chip;
--	struct i2c_client *client = usbsw->client;
--	unsigned int value;
--	unsigned int path = 0;
--
--	value = fsa9480_read_reg(client, FSA9480_REG_CTRL);
--
--	if (!strncmp(buf, "VAUDIO", 6)) {
--		path = SW_VAUDIO;
--		value &= ~CON_MANUAL_SW;
--	} else if (!strncmp(buf, "UART", 4)) {
--		path = SW_UART;
--		value &= ~CON_MANUAL_SW;
--	} else if (!strncmp(buf, "AUDIO", 5)) {
--		path = SW_AUDIO;
--		value &= ~CON_MANUAL_SW;
--	} else if (!strncmp(buf, "DHOST", 5)) {
--		path = SW_DHOST;
--		value &= ~CON_MANUAL_SW;
--	} else if (!strncmp(buf, "AUTO", 4)) {
--		path = SW_AUTO;
--		value |= CON_MANUAL_SW;
--	} else {
--		printk(KERN_ERR "Wrong command\n");
--		return;
--	}
--
--	usbsw->mansw = path;
--	fsa9480_write_reg(client, FSA9480_REG_MANSW1, path);
--	fsa9480_write_reg(client, FSA9480_REG_CTRL, value);
--}
--
--static ssize_t fsa9480_get_switch(char *buf)
--{
--	struct fsa9480_usbsw *usbsw = chip;
--	struct i2c_client *client = usbsw->client;
--	unsigned int value;
--
--	value = fsa9480_read_reg(client, FSA9480_REG_MANSW1);
--
--	if (value == SW_VAUDIO)
--		return sprintf(buf, "VAUDIO\n");
--	else if (value == SW_UART)
--		return sprintf(buf, "UART\n");
--	else if (value == SW_AUDIO)
--		return sprintf(buf, "AUDIO\n");
--	else if (value == SW_DHOST)
--		return sprintf(buf, "DHOST\n");
--	else if (value == SW_AUTO)
--		return sprintf(buf, "AUTO\n");
--	else
--		return sprintf(buf, "%x", value);
--}
--
--static ssize_t fsa9480_show_device(struct device *dev,
--				   struct device_attribute *attr,
--				   char *buf)
--{
--	struct fsa9480_usbsw *usbsw = dev_get_drvdata(dev);
--	struct i2c_client *client = usbsw->client;
--	int dev1, dev2;
--
--	dev1 = fsa9480_read_reg(client, FSA9480_REG_DEV_T1);
--	dev2 = fsa9480_read_reg(client, FSA9480_REG_DEV_T2);
--
--	if (!dev1 && !dev2)
--		return sprintf(buf, "NONE\n");
--
--	/* USB */
--	if (dev1 & DEV_T1_USB_MASK || dev2 & DEV_T2_USB_MASK)
--		return sprintf(buf, "USB\n");
--
--	/* UART */
--	if (dev1 & DEV_T1_UART_MASK || dev2 & DEV_T2_UART_MASK)
--		return sprintf(buf, "UART\n");
--
--	/* CHARGER */
--	if (dev1 & DEV_T1_CHARGER_MASK)
--		return sprintf(buf, "CHARGER\n");
--
--	/* JIG */
--	if (dev2 & DEV_T2_JIG_MASK)
--		return sprintf(buf, "JIG\n");
--
--	return sprintf(buf, "UNKNOWN\n");
--}
--
--static ssize_t fsa9480_show_manualsw(struct device *dev,
--		struct device_attribute *attr, char *buf)
--{
--	return fsa9480_get_switch(buf);
--
--}
--
--static ssize_t fsa9480_set_manualsw(struct device *dev,
--				    struct device_attribute *attr,
--				    const char *buf, size_t count)
--{
--	fsa9480_set_switch(buf);
--
--	return count;
--}
--
--static DEVICE_ATTR(device, S_IRUGO, fsa9480_show_device, NULL);
--static DEVICE_ATTR(switch, S_IRUGO | S_IWUSR,
--		fsa9480_show_manualsw, fsa9480_set_manualsw);
--
--static struct attribute *fsa9480_attributes[] = {
--	&dev_attr_device.attr,
--	&dev_attr_switch.attr,
--	NULL
--};
--
--static const struct attribute_group fsa9480_group = {
--	.attrs = fsa9480_attributes,
--};
--
--static void fsa9480_detect_dev(struct fsa9480_usbsw *usbsw, int intr)
--{
--	int val1, val2, ctrl;
--	struct fsa9480_platform_data *pdata = usbsw->pdata;
--	struct i2c_client *client = usbsw->client;
--
--	val1 = fsa9480_read_reg(client, FSA9480_REG_DEV_T1);
--	val2 = fsa9480_read_reg(client, FSA9480_REG_DEV_T2);
--	ctrl = fsa9480_read_reg(client, FSA9480_REG_CTRL);
--
--	dev_info(&client->dev, "intr: 0x%x, dev1: 0x%x, dev2: 0x%x\n",
--			intr, val1, val2);
--
--	if (!intr)
--		goto out;
--
--	if (intr & INT_ATTACH) {	/* Attached */
--		/* USB */
--		if (val1 & DEV_T1_USB_MASK || val2 & DEV_T2_USB_MASK) {
--			if (pdata->usb_cb)
--				pdata->usb_cb(FSA9480_ATTACHED);
--
--			if (usbsw->mansw) {
--				fsa9480_write_reg(client,
--					FSA9480_REG_MANSW1, usbsw->mansw);
--			}
--		}
--
--		/* UART */
--		if (val1 & DEV_T1_UART_MASK || val2 & DEV_T2_UART_MASK) {
--			if (pdata->uart_cb)
--				pdata->uart_cb(FSA9480_ATTACHED);
--
--			if (!(ctrl & CON_MANUAL_SW)) {
--				fsa9480_write_reg(client,
--					FSA9480_REG_MANSW1, SW_UART);
--			}
--		}
--
--		/* CHARGER */
--		if (val1 & DEV_T1_CHARGER_MASK) {
--			if (pdata->charger_cb)
--				pdata->charger_cb(FSA9480_ATTACHED);
--		}
--
--		/* JIG */
--		if (val2 & DEV_T2_JIG_MASK) {
--			if (pdata->jig_cb)
--				pdata->jig_cb(FSA9480_ATTACHED);
--		}
--	} else if (intr & INT_DETACH) {	/* Detached */
--		/* USB */
--		if (usbsw->dev1 & DEV_T1_USB_MASK ||
--			usbsw->dev2 & DEV_T2_USB_MASK) {
--			if (pdata->usb_cb)
--				pdata->usb_cb(FSA9480_DETACHED);
--		}
--
--		/* UART */
--		if (usbsw->dev1 & DEV_T1_UART_MASK ||
--			usbsw->dev2 & DEV_T2_UART_MASK) {
--			if (pdata->uart_cb)
--				pdata->uart_cb(FSA9480_DETACHED);
--		}
--
--		/* CHARGER */
--		if (usbsw->dev1 & DEV_T1_CHARGER_MASK) {
--			if (pdata->charger_cb)
--				pdata->charger_cb(FSA9480_DETACHED);
--		}
--
--		/* JIG */
--		if (usbsw->dev2 & DEV_T2_JIG_MASK) {
--			if (pdata->jig_cb)
--				pdata->jig_cb(FSA9480_DETACHED);
--		}
--	}
--
--	usbsw->dev1 = val1;
--	usbsw->dev2 = val2;
--
--out:
--	ctrl &= ~CON_INT_MASK;
--	fsa9480_write_reg(client, FSA9480_REG_CTRL, ctrl);
--}
--
--static irqreturn_t fsa9480_irq_handler(int irq, void *data)
--{
--	struct fsa9480_usbsw *usbsw = data;
--	struct i2c_client *client = usbsw->client;
--	int intr;
--
--	/* clear interrupt */
--	fsa9480_read_irq(client, &intr);
--
--	/* device detection */
--	fsa9480_detect_dev(usbsw, intr);
--
--	return IRQ_HANDLED;
--}
--
--static int fsa9480_irq_init(struct fsa9480_usbsw *usbsw)
--{
--	struct fsa9480_platform_data *pdata = usbsw->pdata;
--	struct i2c_client *client = usbsw->client;
--	int ret;
--	int intr;
--	unsigned int ctrl = CON_MASK;
--
--	/* clear interrupt */
--	fsa9480_read_irq(client, &intr);
--
--	/* unmask interrupt (attach/detach only) */
--	fsa9480_write_reg(client, FSA9480_REG_INT1_MASK, 0xfc);
--	fsa9480_write_reg(client, FSA9480_REG_INT2_MASK, 0x1f);
--
--	usbsw->mansw = fsa9480_read_reg(client, FSA9480_REG_MANSW1);
--
--	if (usbsw->mansw)
--		ctrl &= ~CON_MANUAL_SW;	/* Manual Switching Mode */
--
--	fsa9480_write_reg(client, FSA9480_REG_CTRL, ctrl);
--
--	if (pdata && pdata->cfg_gpio)
--		pdata->cfg_gpio();
--
--	if (client->irq) {
--		ret = request_threaded_irq(client->irq, NULL,
--				fsa9480_irq_handler,
--				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
--				"fsa9480 micro USB", usbsw);
--		if (ret) {
--			dev_err(&client->dev, "failed to request IRQ\n");
--			return ret;
--		}
--
--		if (pdata)
--			device_init_wakeup(&client->dev, pdata->wakeup);
--	}
--
--	return 0;
--}
--
--static int fsa9480_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
--{
--	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
--	struct fsa9480_usbsw *usbsw;
--	int ret = 0;
--
--	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
--		return -EIO;
--
--	usbsw = kzalloc(sizeof(struct fsa9480_usbsw), GFP_KERNEL);
--	if (!usbsw) {
--		dev_err(&client->dev, "failed to allocate driver data\n");
--		return -ENOMEM;
--	}
--
--	usbsw->client = client;
--	usbsw->pdata = client->dev.platform_data;
--
--	chip = usbsw;
--
--	i2c_set_clientdata(client, usbsw);
--
--	ret = fsa9480_irq_init(usbsw);
--	if (ret)
--		goto fail1;
--
--	ret = sysfs_create_group(&client->dev.kobj, &fsa9480_group);
--	if (ret) {
--		dev_err(&client->dev,
--				"failed to create fsa9480 attribute group\n");
--		goto fail2;
--	}
--
--	/* ADC Detect Time: 500ms */
--	fsa9480_write_reg(client, FSA9480_REG_TIMING1, 0x6);
--
--	if (chip->pdata->reset_cb)
--		chip->pdata->reset_cb();
--
--	/* device detection */
--	fsa9480_detect_dev(usbsw, INT_ATTACH);
--
--	pm_runtime_set_active(&client->dev);
--
--	return 0;
--
--fail2:
--	if (client->irq)
--		free_irq(client->irq, usbsw);
--fail1:
--	kfree(usbsw);
--	return ret;
--}
--
--static int fsa9480_remove(struct i2c_client *client)
--{
--	struct fsa9480_usbsw *usbsw = i2c_get_clientdata(client);
--
--	if (client->irq)
--		free_irq(client->irq, usbsw);
--
--	sysfs_remove_group(&client->dev.kobj, &fsa9480_group);
--	device_init_wakeup(&client->dev, 0);
--	kfree(usbsw);
--	return 0;
--}
--
--#ifdef CONFIG_PM_SLEEP
--
--static int fsa9480_suspend(struct device *dev)
--{
--	struct i2c_client *client = to_i2c_client(dev);
--	struct fsa9480_usbsw *usbsw = i2c_get_clientdata(client);
--	struct fsa9480_platform_data *pdata = usbsw->pdata;
--
--	if (device_may_wakeup(&client->dev) && client->irq)
--		enable_irq_wake(client->irq);
--
--	if (pdata->usb_power)
--		pdata->usb_power(0);
--
--	return 0;
--}
--
--static int fsa9480_resume(struct device *dev)
--{
--	struct i2c_client *client = to_i2c_client(dev);
--	struct fsa9480_usbsw *usbsw = i2c_get_clientdata(client);
--	int dev1, dev2;
--
--	if (device_may_wakeup(&client->dev) && client->irq)
--		disable_irq_wake(client->irq);
--
--	/*
--	 * Clear Pending interrupt. Note that detect_dev does what
--	 * the interrupt handler does. So, we don't miss pending and
--	 * we reenable interrupt if there is one.
--	 */
--	fsa9480_read_reg(client, FSA9480_REG_INT1);
--	fsa9480_read_reg(client, FSA9480_REG_INT2);
--
--	dev1 = fsa9480_read_reg(client, FSA9480_REG_DEV_T1);
--	dev2 = fsa9480_read_reg(client, FSA9480_REG_DEV_T2);
--
--	/* device detection */
--	fsa9480_detect_dev(usbsw, (dev1 || dev2) ? INT_ATTACH : INT_DETACH);
--
--	return 0;
--}
--
--static SIMPLE_DEV_PM_OPS(fsa9480_pm_ops, fsa9480_suspend, fsa9480_resume);
--#define FSA9480_PM_OPS (&fsa9480_pm_ops)
--
--#else
--
--#define FSA9480_PM_OPS NULL
--
--#endif /* CONFIG_PM_SLEEP */
--
--static const struct i2c_device_id fsa9480_id[] = {
--	{"fsa9480", 0},
--	{}
--};
--MODULE_DEVICE_TABLE(i2c, fsa9480_id);
--
--static struct i2c_driver fsa9480_i2c_driver = {
--	.driver = {
--		.name = "fsa9480",
--		.pm = FSA9480_PM_OPS,
--	},
--	.probe = fsa9480_probe,
--	.remove = fsa9480_remove,
--	.id_table = fsa9480_id,
--};
--
--module_i2c_driver(fsa9480_i2c_driver);
--
--MODULE_AUTHOR("Minkyu Kang <mk7.kang@samsung.com>");
--MODULE_DESCRIPTION("FSA9480 USB Switch driver");
--MODULE_LICENSE("GPL");
-diff --git a/include/linux/platform_data/fsa9480.h b/include/linux/platform_data/fsa9480.h
-deleted file mode 100644
-index dea8d84448ec..000000000000
---- a/include/linux/platform_data/fsa9480.h
-+++ /dev/null
-@@ -1,24 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * Copyright (C) 2010 Samsung Electronics
-- * Minkyu Kang <mk7.kang@samsung.com>
-- */
--
--#ifndef _FSA9480_H_
--#define _FSA9480_H_
--
--#define FSA9480_ATTACHED	1
--#define FSA9480_DETACHED	0
--
--struct fsa9480_platform_data {
--	void (*cfg_gpio) (void);
--	void (*usb_cb) (u8 attached);
--	void (*uart_cb) (u8 attached);
--	void (*charger_cb) (u8 attached);
--	void (*jig_cb) (u8 attached);
--	void (*reset_cb) (void);
--	void (*usb_power) (u8 on);
--	int wakeup;
--};
--
--#endif /* _FSA9480_H_ */
--- 
-2.20.1
+  - If A reads from E, then B comes after D
 
+  - If A reads from E, then F comes after C
+
+I think you could avoid the (ambiguous) "comes after" and say something
+like:
+
+  (1) If A reads from E, then B reads from D (or from another store
+      to ->seq, not reported in the snippet, which overwrites D)
+
+  (2) If A reads from E, then F overwrites C
+
+This, IIUC, for the informal descriptions of the (intended) guarantees.
+Back to the pairings in question: AFAICT,
+
+  (a) For (1), we rely on the pairing:
+
+        RELEASE from D to E  (matching)  ADDRESS DEP. from A to B
+
+  (b) For (2), we rely on the pairing:
+
+        RELEASE from C to E  (matching)  ADDRESS DEP. from A to F
+
+Does this make sense?
+
+
+> 
+> >> 		}
+> >> 
+> >> 		/*
+> >> 		 * MB5-write: synchronize setting newest descr
+> >> 		 *
+> >> 		 * context-pair: 2 writers adding a descriptor via
+> >> 		 * add_descr_list().
+> >> 		 *
+> >> 		 * Ensure that @next and @seq are stored before @d is
+> >> 		 * visible via @newest. The pairing MB5-read context
+> >> 		 * must load this @seq value and must overwrite this
+> >> 		 * @next value.
+> >> 		 */
+> >> 	} while (cmpxchg_release(&l->newest, newest_id, e->id) != newest_id);
+> >> 
+> >> 	if (unlikely(newest_id == EOL)) {
+> >> 		/*
+> >> 		 * MB0-write: synchronize adding first descr
+> >> 		 *
+> >> 		 * context-pair: 1 writer adding the first descriptor via
+> >> 		 * add_descr_list(), 1 reader getting the beginning of
+> >> 		 * the list via iter_peek_next_id().
+> >> 		 *
+> >> 		 * This context recently assigned new values for @id,
+> >> 		 * @next, @seq. Ensure these are stored before the first
+> >> 		 * store to @oldest so that the new values are visible
+> >> 		 * to the reader in the pairing MB0-read context.
+> >> 		 *
+> >> 		 * Note: Before this store, the value of @oldest is EOL.
+> >> 		 */
+> >
+> > My gmail-search foo is unable to locate MB0-read: what am I missing?
+> > Also, can you maybe annotate the memory accesses to @id, @next, @seq
+> > and @oldest (as I did above)? I find myself guessing their location.
+> 
+> Sorry. The MB0-read is a _new_ comment that would be added to the
+> smp_rmb() of the reader functions. I didn't repost everything because I
+> just wanted to get a feel if the comments for _this_ function are
+> improving. Really all I care about right now is properly documenting
+> MB5. It is a good example because MB5 is completely within this
+> function. If I can satisfactorily document MB5, then I can post a new
+> version with updated comments for everything.
+
+Oh, I see, thanks for this clarification.
+
+
+> 
+> >> 		smp_store_release(&l->oldest, e->id);
+> >> 	} else {
+> >> 		/*
+> >> 		 * MB6-write: synchronize linking new descr
+> >> 		 *
+> >> 		 * context-pair-1: 1 writer adding a descriptor via
+> >> 		 * add_descr_list(), 1 writer removing a descriptor via
+> >> 		 * remove_oldest_descr().
+> >> 		 *
+> >> 		 * If this is a recycled descriptor, this context
+> >> 		 * recently stored a new @oldest value. Ensure that
+> >> 		 * @oldest is stored before storing @next so that
+> >> 		 * if the pairing MB6-read context sees a non-EOL
+> >> 		 * @next value, it is ensured that it will also see
+> >> 		 * an updated @oldest value.
+> >> 		 *
+> >> 		 * context-pair-2: 1 writer adding a descriptor via
+> >> 		 * add_descr_list(), 1 reader iterating the list via
+> >> 		 * prb_iter_next_valid_entry().
+> >> 		 *
+> >> 		 * This context recently assigned new values for @id,
+> >> 		 * @next, @seq, @data, @data_next. Ensure these are
+> >> 		 * stored before storing @next of the previously
+> >> 		 * newest descriptor so that the new values are
+> >> 		 * visible to the iterating reader in the pairing
+> >> 		 * MB6-read context.
+> >> 		 *
+> >> 		 * Note: Before this store, the value of @next of the
+> >> 		 * previously newest descriptor is EOL.
+> >> 		 */
+> >
+> > Same as above but for MB6-read and the accesses to @id, @next, @seq,
+> > @data, @data_next.
+> >
+> > In conclusion, I have been unable to produce litmus tests by reading
+> > your comments (meaning I'm lost).
+> 
+> I feel like I'm stating all the information, but nobody understands it.
+> If you can help me to correctly document MB5, I can submit a new version
+> with all the memory barriers correctly documented.
+
+IMO (and assuming that what I wrote above makes some sense), (a-b) and
+(1-2) above, together with the associated annotations of the code/ops,
+provide all the desired and necessary information to document MB5.
+
+For readability purposes, it could be nice to also keep the snippet you
+provided above (but let me stress, again, that such a snippet should be
+integrated with additional information as suggested above).
+
+As to "where to insert the memory barrier documentation", I really have
+no suggestion ATM.  I guess someone would split it (say, before A and E)
+while others could prefer to keep it within a same inline comment.
+
+Thanks for this information (and for your patience!),
+
+  Andrea
