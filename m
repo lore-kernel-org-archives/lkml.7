@@ -2,187 +2,92 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1337C06508
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 23:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13CDC0650F
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 23:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC11212F5
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 23:46:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ygn7+cu4"
+	by mail.kernel.org (Postfix) with ESMTP id C38E8214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 23:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfF3Xqz (ORCPT
+        id S1727284AbfF3X4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 19:46:55 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43852 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbfF3Xqz (ORCPT
+        Sun, 30 Jun 2019 19:56:12 -0400
+Received: from lgeamrelo11.lge.com ([156.147.23.51]:34181 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbfF3X4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 19:46:55 -0400
-Received: by mail-pl1-f195.google.com with SMTP id cl9so6301957plb.10;
-        Sun, 30 Jun 2019 16:46:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=A6kq3xfcTnwLBiBV3ctiAErmF3NRCSlEnFmtaNhnXok=;
-        b=Ygn7+cu41HkcAPBkxqiMdAycsuSTCUphtFxUkI+FHiF3u/96Ok7FsVXwNXFMrguz2C
-         Ol/+CdkVaaC5+b2mvHxdDvHxBJ5F/eWfKNr3Lt8HoHr3fWTUEZf+3Ae7Z7+ConwL4XOe
-         Ir8AO9zDxsUe0TQleJZTH8J8CxqphD48wc3jDP6PQcs8KOpNz8SlaHrvHNdQ92FoRoV9
-         Wx6lyGSeQZ2klx42HTXspC16tYOwghK+q9UfQa4949J+Alqwuh1qoEkI3Rbqw9i06LBH
-         kLfCkFXEVqzYSmse6Rv38Lk277rBnXJOdnhzUE2CvPdwiPZvWj+NEZcNRJKrJaoFjvRp
-         eXcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=A6kq3xfcTnwLBiBV3ctiAErmF3NRCSlEnFmtaNhnXok=;
-        b=KmzQFPTg37nyirQWhve8XYoVOmRmULpMkN9zQXFg4Qj67VyI1K6SOV0ffCYcTWQhnn
-         3HhLCspvRFkzrYkvCCz4+jOD3XDxdCpv6hlZi6zH6Xu3/AvkPRRz1HTfMsoJGJfGV5im
-         Bx/9C4Nq5xGT05qNruWAw7gJM5i2xLoLShey+ukhlF+ae6jq/HuXt2U//FW98CA5m8uZ
-         HSDz+Tm0hNPKa1ropVK7NhiCps9WqFESgPLnWpfCpvLTf4mv7qDH3Lwpst0RxpqE9meq
-         uDHTVdVvf9Rp1fbvdk3KI0hb6lJN2XLJLpH5Yly1eDrQ/Yy+/O2Rgv7kFVvbECk16gFq
-         An1w==
-X-Gm-Message-State: APjAAAXT2B0l3HVfDVj0ijGf1EGMzG9Tn6q979ssdQ7Vodgk92cLeg1Q
-        fvqosT/JqIoMfGyKFMJ/o1sTjl2FnCY=
-X-Google-Smtp-Source: APXvYqzzDTDlwaZQT6F4ZDmY0tHy7f+zo0oVdXhG3651u2LCun4cOzlCfadDtb1yBZxrHOgRZcyj4w==
-X-Received: by 2002:a17:902:bcc4:: with SMTP id o4mr24884473pls.90.1561938413906;
-        Sun, 30 Jun 2019 16:46:53 -0700 (PDT)
-Received: from debian.net.fpt ([58.187.168.105])
-        by smtp.gmail.com with ESMTPSA id t8sm289092pji.24.2019.06.30.16.46.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 30 Jun 2019 16:46:53 -0700 (PDT)
-From:   Phong Tran <tranmanphong@gmail.com>
-To:     syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com
-Cc:     davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        lynxis@fe80.eu, marcel.ziswiler@toradex.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        yang.wei9@zte.com.cn, zhang.run@zte.com.cn,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Phong Tran <tranmanphong@gmail.com>
-Subject: [PATCH] net: usb: asix: init MAC address buffers
-Date:   Mon,  1 Jul 2019 06:45:33 +0700
-Message-Id: <20190630234533.15089-1-tranmanphong@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <00000000000008f06d058a6e9783@google.com>
-References: <00000000000008f06d058a6e9783@google.com>
+        Sun, 30 Jun 2019 19:56:12 -0400
+Received: from unknown (HELO lgemrelse7q.lge.com) (156.147.1.151)
+        by 156.147.23.51 with ESMTP; 1 Jul 2019 08:56:10 +0900
+X-Original-SENDERIP: 156.147.1.151
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.151 with ESMTP; 1 Jul 2019 08:56:10 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Mon, 1 Jul 2019 08:55:25 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Scott Wood <swood@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Message-ID: <20190630235525.GA23795@X58A-UD3R>
+References: <20190627155506.GU26519@linux.ibm.com>
+ <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
+ <20190627173831.GW26519@linux.ibm.com>
+ <20190627181638.GA209455@google.com>
+ <20190627184107.GA26519@linux.ibm.com>
+ <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
+ <20190627203612.GD26519@linux.ibm.com>
+ <20190628073138.GB13650@X58A-UD3R>
+ <20190628104045.GA8394@X58A-UD3R>
+ <20190628114411.5d9ab351@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628114411.5d9ab351@gandalf.local.home>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is for fixing bug KMSAN: uninit-value in ax88772_bind
+On Fri, Jun 28, 2019 at 11:44:11AM -0400, Steven Rostedt wrote:
+> On Fri, 28 Jun 2019 19:40:45 +0900
+> Byungchul Park <byungchul.park@lge.com> wrote:
+> 
+> > Wait.. I got a little bit confused on recordering.
+> > 
+> > This 'STORE rcu_read_lock_nesting = 0' can happen before
+> > 'STORE rcu_read_unlock_special.b.exp_hint = false' regardless of the
+> > order a compiler generated to by the barrier(), because anyway they
+> > are independent so it's within an arch's right.
+> > 
+> > Then.. is this scenario possible? Or all archs properly deal with
+> > interrupts across this kind of reordering?
+> 
+> As Paul stated, interrupts are synchronization points. Archs can only
+> play games with ordering when dealing with entities outside the CPU
+> (devices and other CPUs). But if you have assembly that has two stores,
+> and an interrupt comes in, the arch must guarantee that the stores are
+> done in that order as the interrupt sees it.
+> 
+> If this is not the case, there's a hell of a lot more broken in the
+> kernel than just this, and "barrier()" would also be meaningless, as
+> that is used mostly to deal with interrupts.
 
-Tested by
-https://groups.google.com/d/msg/syzkaller-bugs/aFQurGotng4/cFe9nxMCCwAJ
+Clear. Dear Paul and Steve, Thank you.
 
-Reported-by: syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com
-
-syzbot found the following crash on:
-
-HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
-git tree:       kmsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=136d720ea00000
-kernel config:
-https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
-dashboard link:
-https://syzkaller.appspot.com/bug?extid=8a3fc6674bbc3978ed4e
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
-syz repro:
-https://syzkaller.appspot.com/x/repro.syz?x=12788316a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120359aaa00000
-
-==================================================================
-BUG: KMSAN: uninit-value in is_valid_ether_addr
-include/linux/etherdevice.h:200 [inline]
-BUG: KMSAN: uninit-value in asix_set_netdev_dev_addr
-drivers/net/usb/asix_devices.c:73 [inline]
-BUG: KMSAN: uninit-value in ax88772_bind+0x93d/0x11e0
-drivers/net/usb/asix_devices.c:724
-CPU: 0 PID: 3348 Comm: kworker/0:2 Not tainted 5.1.0+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
-  is_valid_ether_addr include/linux/etherdevice.h:200 [inline]
-  asix_set_netdev_dev_addr drivers/net/usb/asix_devices.c:73 [inline]
-  ax88772_bind+0x93d/0x11e0 drivers/net/usb/asix_devices.c:724
-  usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
-  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
-  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x189c/0x2460 kernel/workqueue.c:2417
-  kthread+0x4b5/0x4f0 kernel/kthread.c:254
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
----
- drivers/net/usb/asix_devices.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/usb/asix_devices.c b/drivers/net/usb/asix_devices.c
-index c9bc96310ed4..f514d19316b1 100644
---- a/drivers/net/usb/asix_devices.c
-+++ b/drivers/net/usb/asix_devices.c
-@@ -230,6 +230,7 @@ static int ax88172_bind(struct usbnet *dev, struct usb_interface *intf)
- 	int i;
- 	unsigned long gpio_bits = dev->driver_info->data;
- 
-+	memset(buf, 0, sizeof(buf));
- 	usbnet_get_endpoints(dev,intf);
- 
- 	/* Toggle the GPIOs in a manufacturer/model specific way */
-@@ -681,6 +682,7 @@ static int ax88772_bind(struct usbnet *dev, struct usb_interface *intf)
- 	u32 phyid;
- 	struct asix_common_private *priv;
- 
-+	memset(buf, 0, sizeof(buf));
- 	usbnet_get_endpoints(dev, intf);
- 
- 	/* Maybe the boot loader passed the MAC address via device tree */
-@@ -1063,6 +1065,7 @@ static int ax88178_bind(struct usbnet *dev, struct usb_interface *intf)
- 	int ret;
- 	u8 buf[ETH_ALEN];
- 
-+	memset(buf, 0, sizeof(buf));
- 	usbnet_get_endpoints(dev,intf);
- 
- 	/* Get the MAC address */
--- 
-2.11.0
-
+> -- Steve
