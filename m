@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF39DC5B576
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3B9C5B576
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62382089C
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96585208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+faajvM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrq2AxzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfF3VEq (ORCPT
+        id S1727284AbfF3VFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 17:04:46 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45835 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfF3VEo (ORCPT
+        Sun, 30 Jun 2019 17:05:37 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38170 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfF3VEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 17:04:44 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m23so10894629lje.12;
-        Sun, 30 Jun 2019 14:04:42 -0700 (PDT)
+        Sun, 30 Jun 2019 17:04:41 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b11so7347249lfa.5;
+        Sun, 30 Jun 2019 14:04:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Y0shjWZR4s9zJHqVWwZPltTGcrU0R1di6AYm7h2L5QM=;
-        b=T+faajvMgLP1K2fUnnSXBp/7tjaTuCnOhiYwR30av2VJWAT0ujGQ6xXps6SLmd5mOe
-         P59xGl2TZoE6mj0ow2Nlv3Dt95M7/SAcpWB4PQ1FWf/EbbJz3CV7k3dDn9gF2XUrL01I
-         dRVoiGClfNWBmcKK/zPYIVHgW/THOCIFqSUmB6s+O8sXvDZX9elyJ2bjCNDk3ZhX9Zso
-         HvO6/7X0o4B3YXTjOj5nrA1wqck//7I273QgDPnSFmN2jWQGGIVyYVJjrewWl1A4Fk5N
-         7FhuXSXxJoqU9RVk6ec3z+t9uUASU3Ykq1K11kJt7YxL5kl9fTjJvhVrJiA0czL0+wdA
-         KNpw==
+        bh=QlyZLBKwKgWOLFPT5a8Dy2/0ax3CQfhDrOHN/BJl+n0=;
+        b=rrq2AxzJv3jw6XWbvW68xb1FfHMZ2U98H+PlzRzvbaUPTPYK8z9hLaCIyzKbEZEpOF
+         Cv6aDW0IrB6bH/Nd00kh6ujN1oaV789sDHazZfvro69SidGc5iX+I+BvjY+0pixVgTYg
+         GdQQuqxBKCxBIdjZg6efBOfn2QOkxdM0+UxkxVPFiGB9cmZLREdkvoySvZIWIdWnXnnU
+         EZJVJJBL24CEeelZQq9SZB/qoqzsodoceesi/vD5RyGdZANc80ax9YaEZVj07F9MSl8R
+         9iJO44CvoQvguxIU+wInZVbVjieGzbHV6XgFb1nw+OscJbzDaA+/IbUJYVLHdVvpQ2Bf
+         QMDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Y0shjWZR4s9zJHqVWwZPltTGcrU0R1di6AYm7h2L5QM=;
-        b=DovVbDKX+H2hxRnxdUzXrFNqbJvIr106pa2KymNflyozcCLgiyjkjdnQ8T0jLlKKsW
-         ihcxuxF8+o03Wulvv4bWyauK/m6q0sw+T3E99Tlwvs/T2xlhAyu/z2x3yGuw7u5dWykY
-         c89vfjPPzbGr0D9t5hida2Gh3nBsIvo5nej/dSCCXWQSmuqCR9KI5mEGzkn5gRnYp6qF
-         xLAGOHAS7aquTFxy60iTql/VclV3AMkKf9Wc/d80TeN2oHnEZErSlJSmycsgBbKC8pra
-         aERuCx1de6z1ijbpSuhQekh+2eUpIPgpmsv8Tlch1Nqx4A8SDj9SqxA4rTz1k6ew3j8+
-         S+UA==
-X-Gm-Message-State: APjAAAXh1Iug9WHfETTQ2Rwn1yI9SIFPQAznzKtUzDrfDI/RIkxwLX34
-        RsMFGUwFPo1S/aGq4t4hYHwHRovh
-X-Google-Smtp-Source: APXvYqyZHgC9SYFnxGooyhRrhsUXVoJhUckvX3Pk8JwqgP7ZmWuUu7XJFsPQMmpdAjGweCJQEbPJVA==
-X-Received: by 2002:a2e:8583:: with SMTP id b3mr12106482lji.171.1561928681754;
-        Sun, 30 Jun 2019 14:04:41 -0700 (PDT)
+        bh=QlyZLBKwKgWOLFPT5a8Dy2/0ax3CQfhDrOHN/BJl+n0=;
+        b=pG5rsSdptLvJzTHV3/DPHhdQ5F6J4QKU3f5pXp7NEHb+mbaeYGCRsn7ATnX2CptvTc
+         I57pehTWFN+wAo2JbH8igyoezqFjn4UW41MLYdwiD0dqMIB52GQOfyIvpRwBmUilylh+
+         dOj9lkPM9c5jB1SYKq0/ZbZOhSIU09N4JwvwNgTJg9iSLDUIWViZv17LzWgo/PbgP15z
+         qrMG3Taywz/msOONojwyzxUNs798cZds5gixHaVXJPXUVVr3LB5Irgx/+WPNSRy8cAlx
+         cJ258ZuRH1VMRStURl7l+NOxt4wR8ShczZpiSyoanZPRoOZmgc+9+6IbHj0dxVVcyCml
+         d/0Q==
+X-Gm-Message-State: APjAAAWn5+4TNMw86Yuq9DGhyFA/FMIpUlDQHjSi37M/QGoy9qUihbEC
+        1iGkq2o5f04lkGvyQ6Oz7IU=
+X-Google-Smtp-Source: APXvYqwavnlwUAE/80aKxtlz6Mdy/WBNTjYxfm8FRZKijIPIzcjIiEjWPHSdDMQxtJTftJMNBiq26w==
+X-Received: by 2002:ac2:598d:: with SMTP id w13mr9698467lfn.165.1561928677472;
+        Sun, 30 Jun 2019 14:04:37 -0700 (PDT)
 Received: from localhost.localdomain (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id u9sm2221408lfb.38.2019.06.30.14.04.40
+        by smtp.gmail.com with ESMTPSA id u9sm2221408lfb.38.2019.06.30.14.04.36
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 30 Jun 2019 14:04:41 -0700 (PDT)
+        Sun, 30 Jun 2019 14:04:36 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -68,9 +68,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 05/15] memory: tegra20-emc: Pre-configure debug register
-Date:   Mon,  1 Jul 2019 00:00:09 +0300
-Message-Id: <20190630210019.26914-6-digetx@gmail.com>
+Subject: [PATCH v6 01/15] clk: tegra20/30: Add custom EMC clock implementation
+Date:   Mon,  1 Jul 2019 00:00:05 +0300
+Message-Id: <20190630210019.26914-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190630210019.26914-1-digetx@gmail.com>
 References: <20190630210019.26914-1-digetx@gmail.com>
@@ -81,65 +81,569 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver expects certain debug features to be disabled in order to
-work properly. Let's disable them explicitly for consistency and to not
-rely on a boot state.
+A proper External Memory Controller clock rounding and parent selection
+functionality is required by the EMC drivers, it is not available using
+the generic clock implementation because only the Memory Controller driver
+is aware of what clock rates are actually available for a particular
+device. EMC drivers will have to register a Tegra-specific CLK-API
+callback which will perform rounding of a requested rate. EMC clock users
+won't be able to request EMC clock by getting -EPROBE_DEFER until EMC
+driver is probed and the callback is set up.
+
+The functionality is somewhat similar to the clk-emc.c which serves
+Tegra124+ SoCs. The later HW generations support more parent clock sources
+and the HW configuration / integration with the EMC drivers differs a tad
+from the older gens, hence it's not really worth to try to squash
+everything into a single source file.
 
 Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/tegra20-emc.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ drivers/clk/tegra/Makefile          |   2 +
+ drivers/clk/tegra/clk-tegra20-emc.c | 293 ++++++++++++++++++++++++++++
+ drivers/clk/tegra/clk-tegra20.c     |  55 ++----
+ drivers/clk/tegra/clk-tegra30.c     |  38 ++--
+ drivers/clk/tegra/clk.h             |   3 +
+ include/linux/clk/tegra.h           |  11 ++
+ 6 files changed, 350 insertions(+), 52 deletions(-)
+ create mode 100644 drivers/clk/tegra/clk-tegra20-emc.c
 
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index 1ce351dd5461..85c24f285fd4 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -22,6 +22,7 @@
- 
- #define EMC_INTSTATUS				0x000
- #define EMC_INTMASK				0x004
-+#define EMC_DBG					0x008
- #define EMC_TIMING_CONTROL			0x028
- #define EMC_RC					0x02c
- #define EMC_RFC					0x030
-@@ -80,6 +81,12 @@
- #define EMC_REFRESH_OVERFLOW_INT		BIT(3)
- #define EMC_CLKCHANGE_COMPLETE_INT		BIT(4)
- 
-+#define EMC_DBG_READ_MUX_ASSEMBLY		BIT(0)
-+#define EMC_DBG_WRITE_MUX_ACTIVE		BIT(1)
-+#define EMC_DBG_FORCE_UPDATE			BIT(2)
-+#define EMC_DBG_READ_DQM_CTRL			BIT(9)
-+#define EMC_DBG_CFG_PRIORITY			BIT(24)
+diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
+index 4812e45c2214..df966ca06788 100644
+--- a/drivers/clk/tegra/Makefile
++++ b/drivers/clk/tegra/Makefile
+@@ -17,7 +17,9 @@ obj-y					+= clk-tegra-fixed.o
+ obj-y					+= clk-tegra-super-gen4.o
+ obj-$(CONFIG_TEGRA_CLK_EMC)		+= clk-emc.o
+ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o
++obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= clk-tegra20-emc.o
+ obj-$(CONFIG_ARCH_TEGRA_3x_SOC)         += clk-tegra30.o
++obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= clk-tegra20-emc.o
+ obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= clk-tegra114.o
+ obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124.o
+ obj-$(CONFIG_TEGRA_CLK_DFLL)		+= clk-tegra124-dfll-fcpu.o
+diff --git a/drivers/clk/tegra/clk-tegra20-emc.c b/drivers/clk/tegra/clk-tegra20-emc.c
+new file mode 100644
+index 000000000000..03bf0009a33c
+--- /dev/null
++++ b/drivers/clk/tegra/clk-tegra20-emc.c
+@@ -0,0 +1,293 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Based on drivers/clk/tegra/clk-emc.c
++ * Copyright (c) 2014, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * Author: Dmitry Osipenko <digetx@gmail.com>
++ * Copyright (C) 2019 GRATE-DRIVER project
++ */
 +
- static const u16 emc_timing_registers[] = {
- 	EMC_RC,
- 	EMC_RFC,
-@@ -396,7 +403,7 @@ tegra_emc_find_node_by_ram_code(struct device *dev)
- static int emc_setup_hw(struct tegra_emc *emc)
++#define pr_fmt(fmt)	"tegra-emc-clk: " fmt
++
++#include <linux/bits.h>
++#include <linux/clk-provider.h>
++#include <linux/clk/tegra.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++
++#include "clk.h"
++
++#define CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK	GENMASK(7, 0)
++#define CLK_SOURCE_EMC_2X_CLK_SRC_MASK		GENMASK(31, 30)
++#define CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT		30
++
++#define MC_EMC_SAME_FREQ	BIT(16)
++#define USE_PLLM_UD		BIT(29)
++
++#define EMC_SRC_PLL_M		0
++#define EMC_SRC_PLL_C		1
++#define EMC_SRC_PLL_P		2
++#define EMC_SRC_CLK_M		3
++
++static const char * const emc_parent_clk_names[] = {
++	"pll_m", "pll_c", "pll_p", "clk_m",
++};
++
++struct tegra_clk_emc {
++	struct clk_hw hw;
++	void __iomem *reg;
++	bool mc_same_freq;
++	bool want_low_jitter;
++
++	tegra20_clk_emc_round_cb *round_cb;
++	void *cb_arg;
++};
++
++static inline struct tegra_clk_emc *to_tegra_clk_emc(struct clk_hw *hw)
++{
++	return container_of(hw, struct tegra_clk_emc, hw);
++}
++
++static unsigned long emc_recalc_rate(struct clk_hw *hw,
++				     unsigned long parent_rate)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++	u32 val, div;
++
++	val = readl_relaxed(emc->reg);
++	div = val & CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
++
++	return DIV_ROUND_UP(parent_rate * 2, div + 2);
++}
++
++static u8 emc_get_parent(struct clk_hw *hw)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++
++	return readl_relaxed(emc->reg) >> CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
++}
++
++static int emc_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++	u32 val, div;
++
++	val = readl_relaxed(emc->reg);
++	val &= ~CLK_SOURCE_EMC_2X_CLK_SRC_MASK;
++	val |= index << CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
++
++	div = val & CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
++
++	if (index == EMC_SRC_PLL_M && div == 0 && emc->want_low_jitter)
++		val |= USE_PLLM_UD;
++	else
++		val &= ~USE_PLLM_UD;
++
++	if (emc->mc_same_freq)
++		val |= MC_EMC_SAME_FREQ;
++	else
++		val &= ~MC_EMC_SAME_FREQ;
++
++	writel_relaxed(val, emc->reg);
++
++	fence_udelay(1, emc->reg);
++
++	return 0;
++}
++
++static int emc_set_rate(struct clk_hw *hw, unsigned long rate,
++			unsigned long parent_rate)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++	unsigned int index;
++	u32 val, div;
++
++	div = div_frac_get(rate, parent_rate, 8, 1, 0);
++
++	val = readl_relaxed(emc->reg);
++	val &= ~CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
++	val |= div;
++
++	index = val >> CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
++
++	if (index == EMC_SRC_PLL_M && div == 0 && emc->want_low_jitter)
++		val |= USE_PLLM_UD;
++	else
++		val &= ~USE_PLLM_UD;
++
++	if (emc->mc_same_freq)
++		val |= MC_EMC_SAME_FREQ;
++	else
++		val &= ~MC_EMC_SAME_FREQ;
++
++	writel_relaxed(val, emc->reg);
++
++	fence_udelay(1, emc->reg);
++
++	return 0;
++}
++
++static int emc_set_rate_and_parent(struct clk_hw *hw,
++				   unsigned long rate,
++				   unsigned long parent_rate,
++				   u8 index)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++	u32 val, div;
++
++	div = div_frac_get(rate, parent_rate, 8, 1, 0);
++
++	val = readl_relaxed(emc->reg);
++
++	val &= ~CLK_SOURCE_EMC_2X_CLK_SRC_MASK;
++	val |= index << CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
++
++	val &= ~CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
++	val |= div;
++
++	if (index == EMC_SRC_PLL_M && div == 0 && emc->want_low_jitter)
++		val |= USE_PLLM_UD;
++	else
++		val &= ~USE_PLLM_UD;
++
++	if (emc->mc_same_freq)
++		val |= MC_EMC_SAME_FREQ;
++	else
++		val &= ~MC_EMC_SAME_FREQ;
++
++	writel_relaxed(val, emc->reg);
++
++	fence_udelay(1, emc->reg);
++
++	return 0;
++}
++
++static int emc_determine_rate(struct clk_hw *hw, struct clk_rate_request *req)
++{
++	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
++	struct clk_hw *parent_hw;
++	unsigned long divided_rate;
++	unsigned long parent_rate;
++	unsigned int i;
++	long emc_rate;
++	int div;
++
++	emc_rate = emc->round_cb(req->rate, req->min_rate, req->max_rate,
++				 emc->cb_arg);
++	if (emc_rate < 0)
++		return emc_rate;
++
++	for (i = 0; i < ARRAY_SIZE(emc_parent_clk_names); i++) {
++		parent_hw = clk_hw_get_parent_by_index(hw, i);
++
++		if (req->best_parent_hw == parent_hw)
++			parent_rate = req->best_parent_rate;
++		else
++			parent_rate = clk_hw_get_rate(parent_hw);
++
++		if (emc_rate > parent_rate)
++			continue;
++
++		div = div_frac_get(emc_rate, parent_rate, 8, 1, 0);
++		divided_rate = DIV_ROUND_UP(parent_rate * 2, div + 2);
++
++		if (divided_rate != emc_rate)
++			continue;
++
++		req->best_parent_rate = parent_rate;
++		req->best_parent_hw = parent_hw;
++		req->rate = emc_rate;
++		break;
++	}
++
++	if (i == ARRAY_SIZE(emc_parent_clk_names)) {
++		pr_err_once("can't find parent for rate %lu emc_rate %lu\n",
++			    req->rate, emc_rate);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static const struct clk_ops tegra_clk_emc_ops = {
++	.recalc_rate = emc_recalc_rate,
++	.get_parent = emc_get_parent,
++	.set_parent = emc_set_parent,
++	.set_rate = emc_set_rate,
++	.set_rate_and_parent = emc_set_rate_and_parent,
++	.determine_rate = emc_determine_rate,
++};
++
++void tegra20_clk_set_emc_round_callback(tegra20_clk_emc_round_cb *round_cb,
++					void *cb_arg)
++{
++	struct clk *clk = __clk_lookup("emc");
++	struct tegra_clk_emc *emc;
++	struct clk_hw *hw;
++
++	if (clk) {
++		hw = __clk_get_hw(clk);
++		emc = to_tegra_clk_emc(hw);
++
++		emc->round_cb = round_cb;
++		emc->cb_arg = cb_arg;
++	}
++}
++
++bool tegra20_clk_emc_driver_available(struct clk_hw *emc_hw)
++{
++	return to_tegra_clk_emc(emc_hw)->round_cb != NULL;
++}
++
++struct clk *tegra20_clk_register_emc(void __iomem *ioaddr, bool low_jitter)
++{
++	struct tegra_clk_emc *emc;
++	struct clk_init_data init;
++	struct clk *clk;
++
++	emc = kzalloc(sizeof(*emc), GFP_KERNEL);
++	if (!emc)
++		return NULL;
++
++	/*
++	 * EMC stands for External Memory Controller.
++	 *
++	 * We don't want EMC clock to be disabled ever by gating its
++	 * parent and whatnot because system is busted immediately in that
++	 * case, hence the clock is marked as critical.
++	 */
++	init.name = "emc";
++	init.ops = &tegra_clk_emc_ops;
++	init.flags = CLK_IS_CRITICAL;
++	init.parent_names = emc_parent_clk_names;
++	init.num_parents = ARRAY_SIZE(emc_parent_clk_names);
++
++	emc->reg = ioaddr;
++	emc->hw.init = &init;
++	emc->want_low_jitter = low_jitter;
++
++	clk = clk_register(NULL, &emc->hw);
++	if (IS_ERR(clk)) {
++		kfree(emc);
++		return NULL;
++	}
++
++	return clk;
++}
++
++int tegra20_clk_prepare_emc_mc_same_freq(struct clk *emc_clk, bool same)
++{
++	struct tegra_clk_emc *emc;
++	struct clk_hw *hw;
++
++	if (!emc_clk)
++		return -EINVAL;
++
++	hw = __clk_get_hw(emc_clk);
++	emc = to_tegra_clk_emc(hw);
++	emc->mc_same_freq = same;
++
++	return 0;
++}
+diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+index bcd871134f45..cceefbd67a3b 100644
+--- a/drivers/clk/tegra/clk-tegra20.c
++++ b/drivers/clk/tegra/clk-tegra20.c
+@@ -130,8 +130,6 @@ static struct cpu_clk_suspend_context {
+ static void __iomem *clk_base;
+ static void __iomem *pmc_base;
+ 
+-static DEFINE_SPINLOCK(emc_lock);
+-
+ #define TEGRA_INIT_DATA_MUX(_name, _parents, _offset,	\
+ 			    _clk_num, _gate_flags, _clk_id)	\
+ 	TEGRA_INIT_DATA(_name, NULL, NULL, _parents, _offset,	\
+@@ -760,7 +758,6 @@ static const char *pwm_parents[] = { "pll_p", "pll_c", "audio", "clk_m",
+ static const char *mux_pllpcm_clkm[] = { "pll_p", "pll_c", "pll_m", "clk_m" };
+ static const char *mux_pllpdc_clkm[] = { "pll_p", "pll_d_out0", "pll_c",
+ 					 "clk_m" };
+-static const char *mux_pllmcp_clkm[] = { "pll_m", "pll_c", "pll_p", "clk_m" };
+ 
+ static struct tegra_periph_init_data tegra_periph_clk_list[] = {
+ 	TEGRA_INIT_DATA_MUX("i2s1", i2s1_parents,     CLK_SOURCE_I2S1,   11, TEGRA_PERIPH_ON_APB, TEGRA20_CLK_I2S1),
+@@ -787,41 +784,6 @@ static struct tegra_periph_init_data tegra_periph_nodiv_clk_list[] = {
+ 	TEGRA_INIT_DATA_NODIV("disp2",	mux_pllpdc_clkm, CLK_SOURCE_DISP2, 30, 2, 26,  0, TEGRA20_CLK_DISP2),
+ };
+ 
+-static void __init tegra20_emc_clk_init(void)
+-{
+-	const u32 use_pllm_ud = BIT(29);
+-	struct clk *clk;
+-	u32 emc_reg;
+-
+-	clk = clk_register_mux(NULL, "emc_mux", mux_pllmcp_clkm,
+-			       ARRAY_SIZE(mux_pllmcp_clkm),
+-			       CLK_SET_RATE_NO_REPARENT,
+-			       clk_base + CLK_SOURCE_EMC,
+-			       30, 2, 0, &emc_lock);
+-
+-	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
+-				    &emc_lock);
+-	clks[TEGRA20_CLK_MC] = clk;
+-
+-	/* un-divided pll_m_out0 is currently unsupported */
+-	emc_reg = readl_relaxed(clk_base + CLK_SOURCE_EMC);
+-	if (emc_reg & use_pllm_ud) {
+-		pr_err("%s: un-divided PllM_out0 used as clock source\n",
+-		       __func__);
+-		return;
+-	}
+-
+-	/*
+-	 * Note that 'emc_mux' source and 'emc' rate shouldn't be changed at
+-	 * the same time due to a HW bug, this won't happen because we're
+-	 * defining 'emc_mux' and 'emc' as distinct clocks.
+-	 */
+-	clk = tegra_clk_register_divider("emc", "emc_mux",
+-				clk_base + CLK_SOURCE_EMC, CLK_IS_CRITICAL,
+-				TEGRA_DIVIDER_INT, 0, 8, 1, &emc_lock);
+-	clks[TEGRA20_CLK_EMC] = clk;
+-}
+-
+ static void __init tegra20_periph_clk_init(void)
  {
- 	u32 intmask = EMC_REFRESH_OVERFLOW_INT | EMC_CLKCHANGE_COMPLETE_INT;
--	u32 emc_cfg;
-+	u32 emc_cfg, emc_dbg;
+ 	struct tegra_periph_init_data *data;
+@@ -835,7 +797,13 @@ static void __init tegra20_periph_clk_init(void)
+ 	clks[TEGRA20_CLK_AC97] = clk;
  
- 	emc_cfg = readl_relaxed(emc->regs + EMC_CFG_2);
- 
-@@ -419,6 +426,14 @@ static int emc_setup_hw(struct tegra_emc *emc)
- 	writel_relaxed(intmask, emc->regs + EMC_INTMASK);
- 	writel_relaxed(intmask, emc->regs + EMC_INTSTATUS);
- 
-+	/* ensure that unwanted debug features are disabled */
-+	emc_dbg = readl_relaxed(emc->regs + EMC_DBG);
-+	emc_dbg |= EMC_DBG_CFG_PRIORITY;
-+	emc_dbg &= ~EMC_DBG_READ_MUX_ASSEMBLY;
-+	emc_dbg &= ~EMC_DBG_WRITE_MUX_ACTIVE;
-+	emc_dbg &= ~EMC_DBG_FORCE_UPDATE;
-+	writel_relaxed(emc_dbg, emc->regs + EMC_DBG);
+ 	/* emc */
+-	tegra20_emc_clk_init();
++	clk = tegra20_clk_register_emc(clk_base + CLK_SOURCE_EMC, false);
 +
- 	return 0;
++	clks[TEGRA20_CLK_EMC] = clk;
++
++	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
++				    NULL);
++	clks[TEGRA20_CLK_MC] = clk;
+ 
+ 	/* dsi */
+ 	clk = tegra_clk_register_periph_gate("dsi", "pll_d", 0, clk_base, 0,
+@@ -1115,6 +1083,8 @@ static struct clk *tegra20_clk_src_onecell_get(struct of_phandle_args *clkspec,
+ 	if (IS_ERR(clk))
+ 		return clk;
+ 
++	hw = __clk_get_hw(clk);
++
+ 	/*
+ 	 * Tegra20 CDEV1 and CDEV2 clocks are a bit special case, their parent
+ 	 * clock is created by the pinctrl driver. It is possible for clk user
+@@ -1124,13 +1094,16 @@ static struct clk *tegra20_clk_src_onecell_get(struct of_phandle_args *clkspec,
+ 	 */
+ 	if (clkspec->args[0] == TEGRA20_CLK_CDEV1 ||
+ 	    clkspec->args[0] == TEGRA20_CLK_CDEV2) {
+-		hw = __clk_get_hw(clk);
+-
+ 		parent_hw = clk_hw_get_parent(hw);
+ 		if (!parent_hw)
+ 			return ERR_PTR(-EPROBE_DEFER);
+ 	}
+ 
++	if (clkspec->args[0] == TEGRA20_CLK_EMC) {
++		if (!tegra20_clk_emc_driver_available(hw))
++			return ERR_PTR(-EPROBE_DEFER);
++	}
++
+ 	return clk;
  }
  
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index 7b4c6a488527..95b0e4a16dd5 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -151,7 +151,6 @@ static unsigned long input_freq;
+ 
+ static DEFINE_SPINLOCK(cml_lock);
+ static DEFINE_SPINLOCK(pll_d_lock);
+-static DEFINE_SPINLOCK(emc_lock);
+ 
+ #define TEGRA_INIT_DATA_MUX(_name, _parents, _offset,	\
+ 			    _clk_num, _gate_flags, _clk_id)	\
+@@ -808,7 +807,7 @@ static struct tegra_clk tegra30_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_pll_a] = { .dt_id = TEGRA30_CLK_PLL_A, .present = true },
+ 	[tegra_clk_pll_a_out0] = { .dt_id = TEGRA30_CLK_PLL_A_OUT0, .present = true },
+ 	[tegra_clk_cec] = { .dt_id = TEGRA30_CLK_CEC, .present = true },
+-	[tegra_clk_emc] = { .dt_id = TEGRA30_CLK_EMC, .present = true },
++	[tegra_clk_emc] = { .dt_id = TEGRA30_CLK_EMC, .present = false },
+ };
+ 
+ static const char *pll_e_parents[] = { "pll_ref", "pll_p" };
+@@ -995,7 +994,6 @@ static void __init tegra30_super_clk_init(void)
+ static const char *mux_pllacp_clkm[] = { "pll_a_out0", "unused", "pll_p",
+ 					 "clk_m" };
+ static const char *mux_pllpcm_clkm[] = { "pll_p", "pll_c", "pll_m", "clk_m" };
+-static const char *mux_pllmcp_clkm[] = { "pll_m", "pll_c", "pll_p", "clk_m" };
+ static const char *spdif_out_parents[] = { "pll_a_out0", "spdif_2x", "pll_p",
+ 					   "clk_m" };
+ static const char *mux_pllmcpa[] = { "pll_m", "pll_c", "pll_p", "pll_a_out0" };
+@@ -1044,14 +1042,12 @@ static void __init tegra30_periph_clk_init(void)
+ 	clks[TEGRA30_CLK_AFI] = clk;
+ 
+ 	/* emc */
+-	clk = clk_register_mux(NULL, "emc_mux", mux_pllmcp_clkm,
+-			       ARRAY_SIZE(mux_pllmcp_clkm),
+-			       CLK_SET_RATE_NO_REPARENT,
+-			       clk_base + CLK_SOURCE_EMC,
+-			       30, 2, 0, &emc_lock);
++	clk = tegra20_clk_register_emc(clk_base + CLK_SOURCE_EMC, true);
++
++	clks[TEGRA30_CLK_EMC] = clk;
+ 
+-	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
+-				    &emc_lock);
++	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
++				    NULL);
+ 	clks[TEGRA30_CLK_MC] = clk;
+ 
+ 	/* cml0 */
+@@ -1302,6 +1298,26 @@ static struct tegra_audio_clk_info tegra30_audio_plls[] = {
+ 	{ "pll_a", &pll_a_params, tegra_clk_pll_a, "pll_p_out1" },
+ };
+ 
++static struct clk *tegra30_clk_src_onecell_get(struct of_phandle_args *clkspec,
++					       void *data)
++{
++	struct clk_hw *hw;
++	struct clk *clk;
++
++	clk = of_clk_src_onecell_get(clkspec, data);
++	if (IS_ERR(clk))
++		return clk;
++
++	hw = __clk_get_hw(clk);
++
++	if (clkspec->args[0] == TEGRA30_CLK_EMC) {
++		if (!tegra20_clk_emc_driver_available(hw))
++			return ERR_PTR(-EPROBE_DEFER);
++	}
++
++	return clk;
++}
++
+ static void __init tegra30_clock_init(struct device_node *np)
+ {
+ 	struct device_node *node;
+@@ -1345,7 +1361,7 @@ static void __init tegra30_clock_init(struct device_node *np)
+ 
+ 	tegra_init_dup_clks(tegra_clk_duplicates, clks, TEGRA30_CLK_CLK_MAX);
+ 
+-	tegra_add_of_provider(np, of_clk_src_onecell_get);
++	tegra_add_of_provider(np, tegra30_clk_src_onecell_get);
+ 	tegra_register_devclks(devclks, ARRAY_SIZE(devclks));
+ 
+ 	tegra_clk_apply_init_table = tegra30_clock_apply_init_table;
+diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+index 905bf1096558..20b3ee123050 100644
+--- a/drivers/clk/tegra/clk.h
++++ b/drivers/clk/tegra/clk.h
+@@ -838,4 +838,7 @@ int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+ 		udelay(delay);		\
+ 	} while (0)
+ 
++bool tegra20_clk_emc_driver_available(struct clk_hw *emc_hw);
++struct clk *tegra20_clk_register_emc(void __iomem *ioaddr, bool low_jitter);
++
+ #endif /* TEGRA_CLK_H */
+diff --git a/include/linux/clk/tegra.h b/include/linux/clk/tegra.h
+index b8aef62cc3f5..6a7cbc3cfadc 100644
+--- a/include/linux/clk/tegra.h
++++ b/include/linux/clk/tegra.h
+@@ -119,4 +119,15 @@ extern void tegra210_put_utmipll_in_iddq(void);
+ extern void tegra210_put_utmipll_out_iddq(void);
+ extern int tegra210_clk_handle_mbist_war(unsigned int id);
+ 
++struct clk;
++
++typedef long (tegra20_clk_emc_round_cb)(unsigned long rate,
++					unsigned long min_rate,
++					unsigned long max_rate,
++					void *arg);
++
++void tegra20_clk_set_emc_round_callback(tegra20_clk_emc_round_cb *round_cb,
++					void *cb_arg);
++int tegra20_clk_prepare_emc_mc_same_freq(struct clk *emc_clk, bool same);
++
+ #endif /* __LINUX_CLK_TEGRA_H_ */
 -- 
 2.22.0
 
