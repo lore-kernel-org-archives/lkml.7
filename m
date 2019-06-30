@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F65C5B576
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC61C5B576
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE13221473
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022402089C
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDbK7S2Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDI+oZls"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfF3VFD (ORCPT
+        id S1727240AbfF3VFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 17:05:03 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34419 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbfF3VEy (ORCPT
+        Sun, 30 Jun 2019 17:05:07 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45851 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727171AbfF3VEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 17:04:54 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y198so7349209lfa.1;
-        Sun, 30 Jun 2019 14:04:52 -0700 (PDT)
+        Sun, 30 Jun 2019 17:04:55 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m23so10894887lje.12;
+        Sun, 30 Jun 2019 14:04:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+OvHoOucTtPtgMGupRgibL0AaI8RRb9BuEbjOandQO8=;
-        b=rDbK7S2YYJoIEfU4SJ2J9FsgAI8xbqlA+BBhF2cQh6Os6c655QCvniW9MjevmrsOsJ
-         Ly44kRYJe2BK7NoQMKQ3NfMOAELjM/7oNQXu0lCpOuP6F3GRyMdNMOikoCD+HMJdmSWv
-         /J4czIA33pLhjnpLRf489Pp9asxOpaP4xhqKZnxN/yUW0B4m4WjyfOwxfaCUkoUyoUM9
-         MWf2x4S8braSBcw9bgqCNGDo0aGViQY6BCbBT1CYrgKmwZR6oQcF6qcvAgoA3plPu4wO
-         KIltgT2SU9qbD8yxPpFEmCyQm/akEcpeFZ5na4+yfR60Tfgrs17jvtVOme5XsDLs/2bq
-         Gvog==
+        bh=3ErUctKt9CJ3rgf9ZExT4u2Tmx1X1fVjtqY74IUmVOo=;
+        b=mDI+oZlsTjMZ011aaWfEOzGbNWiemzxQO7S1znKAjaG9I4rRDjx5EWabNeNZQ66jyC
+         row9h2FgywRmlwPif8BkAuj52pWOQ2xZqHeulXTwLSjxkzpwd93F92IHymOoVOKgZCxx
+         zU0DfjYHCkvy7Zn+iVoGseJDq3KZaLBlgXIuY/klh4dqhrOmwHs/OG2fPbISrt0lEUuW
+         Eg1OJxOEvOeTzGBwO+gDr74Zf1j9c0QlFormhMF8mxDFborDgdOzrKFx1NDPiox+pK1G
+         nF8dWqjO/jYtLPcZfM59nYrr08Kgs5bsTcBb78nx+9kZXvKXImhAZhGjaIwfPBhVsP7i
+         HfTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+OvHoOucTtPtgMGupRgibL0AaI8RRb9BuEbjOandQO8=;
-        b=f+k0RuE0OezGXH4xa1gJUQWsTGOLSnkeQpW2qGUuO6olWGNw9EHKqamEV0SakZK+Ln
-         LXM44EAazwlmb/skkNIeEgJcY9rigXif+QIMj8J4c5++FeUb/KpT3sQBml8yHPkmc/3G
-         nusp0Qrdjam9kVZkfSTCyTYhfA9vCgdHgZ64QnxgK2NuqMQhGi6hBhMdU+RbWhRmBtbX
-         KpEv9Npsshc8jB+T48T/RZVv/bZCZqN5kP23Iecs5fPsf2FO69lEbZUOU1qLfXzidjoO
-         uyiIl/1K8SBv8Z/l2cahKmwV0oyOxLqIAgx1yQ2YN0k/XQ0Ao666K1Kx9AkjCrVsuz2e
-         /IRg==
-X-Gm-Message-State: APjAAAVWg3MSP2MvNcLoeg/H6DLiSMvpZNMwIrPy2jOtXyqaZXmGWJlF
-        KxMwBz4SZNdYyX20kXI7g54=
-X-Google-Smtp-Source: APXvYqxyrLZ85JeyLJ5xc4A+k1GrDjiaxpGZBeKSBLBqtOP1hfBGErFVObmrbGRtIThiRRGTFHJ1cw==
-X-Received: by 2002:ac2:44a4:: with SMTP id c4mr5814412lfm.116.1561928691435;
-        Sun, 30 Jun 2019 14:04:51 -0700 (PDT)
+        bh=3ErUctKt9CJ3rgf9ZExT4u2Tmx1X1fVjtqY74IUmVOo=;
+        b=uDiQKGrxb9eW5fr7ePOQz6sD2zf1LgZ3dz+vmF7qjTuJKSTUlJBXUpd1WqWJrpw30Y
+         nv2MZlBgIQFc4edb1girgABN3phn+xTktrZgXGLb/l42SdNLxj7oZ2PogAI/vsq2BlwR
+         RK3LyvIntmch4EKbgbZ5A7ozIRNyuV5hdLeXWbX/LWhQt1+e94aWSE5KbHNEatQJgx3f
+         s/uIQBr/ssyD4bYZud/Qz4lxdhbaC01q2z2de/WQHDFKzPc3ZIzWoQPNtPJAaOLTeanp
+         y+gHOMTX0fkTWY39N0UfV9QA9Lz3BoX+pHBHuPe0JM56Y4j+zD0F55MbHMtq9dYBv4vd
+         ncGg==
+X-Gm-Message-State: APjAAAUSPGKYN0587WTWhETYu7ahs1QLOD8KjT8xM551BuBd6HeDKiqu
+        d59fGDiKC7S+uk+4ayGvcl4=
+X-Google-Smtp-Source: APXvYqxMSOrFJP6zHqgaD4UXKs1yS4doambgrEVLaOY6bgg0oynk4XyWhKJMI02wb5r/vMxpeHVJFw==
+X-Received: by 2002:a2e:8847:: with SMTP id z7mr12128141ljj.51.1561928692491;
+        Sun, 30 Jun 2019 14:04:52 -0700 (PDT)
 Received: from localhost.localdomain (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id u9sm2221408lfb.38.2019.06.30.14.04.50
+        by smtp.gmail.com with ESMTPSA id u9sm2221408lfb.38.2019.06.30.14.04.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 30 Jun 2019 14:04:50 -0700 (PDT)
+        Sun, 30 Jun 2019 14:04:51 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -68,9 +68,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 14/15] ARM: tegra30: cpuidle: Don't enter LP2 on CPU0 when EMC runs off PLLP
-Date:   Mon,  1 Jul 2019 00:00:18 +0300
-Message-Id: <20190630210019.26914-15-digetx@gmail.com>
+Subject: [PATCH v6 15/15] ARM: dts: tegra30: Add External Memory Controller node
+Date:   Mon,  1 Jul 2019 00:00:19 +0300
+Message-Id: <20190630210019.26914-16-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190630210019.26914-1-digetx@gmail.com>
 References: <20190630210019.26914-1-digetx@gmail.com>
@@ -81,42 +81,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Machine hangs after entering LP2 if EMC clock is running off the PLLP.
-Either hardware is touching PLLP during LP2, making it unstable, or there
-is a software bug somewhere around PLLP programming. Real reason is
-unknown, hence let's simply avoid LP2 for CPU0 for now to workaround the
-problem. Note that LP2 works fine when EMC is running off any other parent
-clock, LP1 is totally unaffected. Also note that there is no hang on LP2
-if memory timing is set up for a higher rate (600MHz) when on PLLP, which
-makes this extra suspicious.
+Add External Memory Controller node to the device-tree.
 
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/mach-tegra/cpuidle-tegra30.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/tegra30.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
-index c6128526877d..0f8da69ba5be 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra30.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
-@@ -60,10 +60,15 @@ static bool tegra30_cpu_cluster_power_down(struct cpuidle_device *dev,
- 					   struct cpuidle_driver *drv,
- 					   int index)
- {
--	/* All CPUs entering LP2 is not working.
-+	/*
-+	 * All CPUs entering LP2 is not working.
- 	 * Don't let CPU0 enter LP2 when any secondary CPU is online.
-+	 *
-+	 * Machine hangs after entering LP2 if EMC is running off PLLP,
-+	 * reason is unknown.
- 	 */
--	if (num_online_cpus() > 1 || !tegra_cpu_rail_off_ready()) {
-+	if (num_online_cpus() > 1 || !tegra_cpu_rail_off_ready() ||
-+	    tegra20_clk_emc_on_pllp()) {
- 		cpu_do_idle();
- 		return false;
- 	}
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index e074258d4518..8355264e2265 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -732,6 +732,15 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
++	memory-controller@7000f400 {
++		compatible = "nvidia,tegra30-emc";
++		reg = <0x7000f400 0x400>;
++		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&tegra_car TEGRA30_CLK_EMC>;
++
++		nvidia,memory-controller = <&mc>;
++	};
++
+ 	fuse@7000f800 {
+ 		compatible = "nvidia,tegra30-efuse";
+ 		reg = <0x7000f800 0x400>;
 -- 
 2.22.0
 
