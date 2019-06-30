@@ -2,150 +2,90 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BB2C5B57E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 12:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E713C5B57E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 13:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1ED20673
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 12:47:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p+x7qPUH"
+	by mail.kernel.org (Postfix) with ESMTP id 406B420665
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 13:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfF3Mrq (ORCPT
+        id S1726572AbfF3NDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 08:47:46 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34047 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfF3Mrq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 08:47:46 -0400
-Received: by mail-qk1-f196.google.com with SMTP id t8so8899619qkt.1;
-        Sun, 30 Jun 2019 05:47:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t3NBRelcVNRRw+RFPngDYC9BWfE+P0zgYLat4rYCV1Q=;
-        b=p+x7qPUHCxUv2jRoxomZbQsK2Iigsp9wix/13yErFTnhyS6qq5QjWt+mOLP2OfEpXq
-         w302DafhUYJ4TYKN9yctny6hYLZgUjbdBC5IrdfE2jrP5bnP7oDuoOynwoCplHkWGNDr
-         kY9eiSxtMyGO/INb/4uddNWepnoRhVOpb85nHVid/fPe8QfQBz9wVYldoExXDTAWjum+
-         xbJbqAeoOFRyw1e37Aw4PJ7OgJy2TlSHNnIeglb3RwLZvU/SeSUliDsMHM78zzShC94J
-         7UbZBWxunzSpK3RtSy0ei5INFdm5MSyRzch3h8k+86nK9C46IUhn15pWhISA2g4GxX7t
-         NRWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t3NBRelcVNRRw+RFPngDYC9BWfE+P0zgYLat4rYCV1Q=;
-        b=rO0ZzSkkVK9mkLVcKfZNaA+W6JZK+EZDzhjYRPectfzKn9XcrIP8ApM8Mxh5T2TEjo
-         cyFg1gRao4XUQuW78TYSTj1TCVMMoH41o48o4UoQp4iAJ8R04BO+bpd5hsz9z7hn0Lfm
-         7qrvlgRuVKsuYxm9JZdj8/1o8s+yrybR1t0JjGGwQbqffCMBCskHwiYDNq8pR5juRBSo
-         YzIei/8cyickYVFzm2E4jvxCAie1HozdyE9klLAoAcHBch2V5fNOe5rqWi8KOPRn8ykJ
-         9wCkKh04FooGKFx5HVXbR01SWTfdaixBFwcAmwGfTtOYaD8cRwabWFw45plrSqeCKkn3
-         q1qg==
-X-Gm-Message-State: APjAAAVaW4sWUsxfBFE5D5M8qaJQ4DDlTP8zGP4goKtZ+Jfrln16wkIV
-        20u40Z3i5lVzz6wBWhV19Us=
-X-Google-Smtp-Source: APXvYqyIyUYukkDxRx7t79cs57tG26rWbuzJPdYsR1pGolt/m1xirpeDO6OapATzvjaB5ZgubI9puw==
-X-Received: by 2002:a37:a247:: with SMTP id l68mr15234079qke.89.1561898865197;
-        Sun, 30 Jun 2019 05:47:45 -0700 (PDT)
-Received: from localhost ([2601:184:4780:7861:5010:5849:d76d:b714])
-        by smtp.gmail.com with ESMTPSA id d17sm3388167qtp.84.2019.06.30.05.47.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 30 Jun 2019 05:47:44 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/msm: stop abusing dma_map/unmap for cache
-Date:   Sun, 30 Jun 2019 05:47:22 -0700
-Message-Id: <20190630124735.27786-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 30 Jun 2019 09:03:47 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23627 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726500AbfF3NDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 09:03:46 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jun 2019 06:03:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,434,1557212400"; 
+   d="scan'208";a="165096721"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Jun 2019 06:03:43 -0700
+Date:   Sun, 30 Jun 2019 21:03:47 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Chen, Rong A" <rong.a.chen@intel.com>,
+        "tipbuild@zytor.com" <tipbuild@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>, "lkp@01.org" <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [LKP] [x86/hotplug] e1056a25da:
+ WARNING:at_arch/x86/kernel/apic/apic.c:#setup_local_APIC
+Message-ID: <20190630130347.GB93752@shbuild999.sh.intel.com>
+References: <20190620021856.GP7221@shao2-debian>
+ <alpine.DEB.2.21.1906212108150.5503@nanos.tec.linutronix.de>
+ <58ea508f-dc2e-8537-fe96-49cca0a7c799@intel.com>
+ <alpine.DEB.2.21.1906250821220.32342@nanos.tec.linutronix.de>
+ <f5c36f89-61bf-a82e-3d3b-79720b2da2ef@intel.com>
+ <alpine.DEB.2.21.1906251330330.32342@nanos.tec.linutronix.de>
+ <20190628063231.GA7766@shbuild999.sh.intel.com>
+ <alpine.DEB.2.21.1906280929010.32342@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1906290912390.1802@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1906301334290.1802@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906301334290.1802@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+Hi Thomas,
 
-Recently splats like this started showing up:
+On Sun, Jun 30, 2019 at 01:35:39PM +0200, Thomas Gleixner wrote:
+> On Sat, 29 Jun 2019, Thomas Gleixner wrote:
+> > On Fri, 28 Jun 2019, Thomas Gleixner wrote:
+> > > On Fri, 28 Jun 2019, Feng Tang wrote:
+> > > That function just 'works' by chance not by design. I'll stare into it and
+> > > fix it up for real.
+> > > 
+> > > Thank you very much for that information. Your debug was spot on!
+> > 
+> > I rewrote that function so it actually handles that case correctly along
+> > with some other things which were broken and force pushed the WIP.x86/ipi
+> > branch.
+> > 
+> > Can you please run exactly that test again against that new version and
+> > verify that this is fixed now?
+> 
+> Just found another issue with that thing. Don't waste your time on it. I'll
+> come back to you when I'm done.
 
-   WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
-   Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops vide
-   CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
-   Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
-   Workqueue: msm msm_gem_free_work [msm]
-   pstate: 80c00005 (Nzcv daif +PAN +UAO)
-   pc : __iommu_dma_unmap+0xb8/0xc0
-   lr : __iommu_dma_unmap+0x54/0xc0
-   sp : ffff0000119abce0
-   x29: ffff0000119abce0 x28: 0000000000000000
-   x27: ffff8001f9946648 x26: ffff8001ec271068
-   x25: 0000000000000000 x24: ffff8001ea3580a8
-   x23: ffff8001f95ba010 x22: ffff80018e83ba88
-   x21: ffff8001e548f000 x20: fffffffffffff000
-   x19: 0000000000001000 x18: 00000000c00001fe
-   x17: 0000000000000000 x16: 0000000000000000
-   x15: ffff000015b70068 x14: 0000000000000005
-   x13: 0003142cc1be1768 x12: 0000000000000001
-   x11: ffff8001f6de9100 x10: 0000000000000009
-   x9 : ffff000015b78000 x8 : 0000000000000000
-   x7 : 0000000000000001 x6 : fffffffffffff000
-   x5 : 0000000000000fff x4 : ffff00001065dbc8
-   x3 : 000000000000000d x2 : 0000000000001000
-   x1 : fffffffffffff000 x0 : 0000000000000000
-   Call trace:
-    __iommu_dma_unmap+0xb8/0xc0
-    iommu_dma_unmap_sg+0x98/0xb8
-    put_pages+0x5c/0xf0 [msm]
-    msm_gem_free_work+0x10c/0x150 [msm]
-    process_one_work+0x1e0/0x330
-    worker_thread+0x40/0x438
-    kthread+0x12c/0x130
-    ret_from_fork+0x10/0x18
-   ---[ end trace afc0dc5ab81a06bf ]---
+Ok. I noticed that the ipi branch has been merged to tip/master.
 
-Not quite sure what triggered that, but we really shouldn't be abusing
-dma_{map,unmap}_sg() for cache maint.
+Thanks,
+Feng
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Cc: Stephen Boyd <sboyd@kernel.org>
----
- drivers/gpu/drm/msm/msm_gem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index d31d9f927887..3b84cbdcafa3 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -108,7 +108,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
- 		 * because display controller, GPU, etc. are not coherent:
- 		 */
- 		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
--			dma_map_sg(dev->dev, msm_obj->sgt->sgl,
-+			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
- 					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
- 	}
- 
-@@ -138,7 +138,7 @@ static void put_pages(struct drm_gem_object *obj)
- 			 * GPU, etc. are not coherent:
- 			 */
- 			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
--				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
-+				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
- 					     msm_obj->sgt->nents,
- 					     DMA_BIDIRECTIONAL);
- 
--- 
-2.20.1
-
+> 
+> Thanks,
+> 
+> 	tglx
