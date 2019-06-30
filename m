@@ -2,91 +2,106 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5868CC5B57E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 14:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5B4C5B57E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 14:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3593B20673
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 14:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4AF820665
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 14:29:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WocshXmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfF3OMs (ORCPT
+        id S1726650AbfF3O35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 10:12:48 -0400
-Received: from mailout2n.rrzn.uni-hannover.de ([130.75.2.113]:54360 "EHLO
-        mailout2n.rrzn.uni-hannover.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726509AbfF3OMs (ORCPT
+        Sun, 30 Jun 2019 10:29:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46722 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfF3O35 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 10:12:48 -0400
-Received: from [192.168.2.27] (p4FF11F7C.dip0.t-ipconnect.de [79.241.31.124])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailout2n.rrzn.uni-hannover.de (Postfix) with ESMTPSA id E33431F435;
-        Sun, 30 Jun 2019 16:12:44 +0200 (CEST)
-Subject: Re: [PATCH 1/2] staging: rts5208: Rewrite redundant if statement to
- improve code style
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        Sabrina Gaube <sabrina-gaube@web.de>,
-        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de
-References: <20190626142857.30155-1-tobias.niessen@stud.uni-hannover.de>
- <20190626142857.30155-2-tobias.niessen@stud.uni-hannover.de>
- <20190626145636.GG28859@kadam>
-From:   =?UTF-8?Q?Tobias_Nie=c3=9fen?= 
-        <tobias.niessen@stud.uni-hannover.de>
-Message-ID: <a0f3ac8b-541a-d3d0-e25e-26da11e29748@stud.uni-hannover.de>
-Date:   Sun, 30 Jun 2019 16:12:44 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 30 Jun 2019 10:29:57 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i8so1536846pgm.13;
+        Sun, 30 Jun 2019 07:29:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=A7XL+qSvCLvsjTbzTI2K8VFDVm1pv1sO4YoeogNZP4U=;
+        b=WocshXmMMY6BwgYpCy4zHm/Ouj9z7d7H/lj+vQDCYBdpdAy8OUaopHsgnr6Y+B97Fs
+         Yo8D5vpgW/gh1ZWd06NpV00WlHlxcGZREd2lHacooXqMV0qV5Dlk9auViSk7sdp26KIw
+         1yjz9ZLxDkJo3nx1NHI2I/d14RslPvZsWWOLh5Q4G8zaaXLmU3+/E1Fd4cib1YDZEXJE
+         1rL2THNoIjoXaICsqz1rre+zLSWJxtoU9XuW2bdBTe0JzVWZLi7PDz0dZXvr+0LPFvlh
+         /cpNCJQVjE5PKrneKsWW7v700qI0IpquHQw5+IDA2sJPkqQYBOPqv05BB2iAYvpCBDGm
+         kgYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=A7XL+qSvCLvsjTbzTI2K8VFDVm1pv1sO4YoeogNZP4U=;
+        b=GF0qkCZ//xcI/d/Za84MdNVEfsZ6BzG4SXfQfdVkrZZ9/HkGhMa2d6XbKn2W/+kq02
+         90QqKvr4oQCnJbtybrfH9tcMOHTNuh2D6Q/Xrc3EqiBq/kIa76CgdPW48AwS86z5xu9E
+         P/FQ07x3PmSJUZflea3CzC+dqx2uZePrI90lFqc5bJm5fc3ssu+VaglzhwfiC03MI8vX
+         v7pc7pVoJpdAGbOLDhiQYhfKYwAYyAiExHD61XxGlwKqQxhpeXWjHP2dG4pQ83U54EHY
+         3irZq0Htp2mW3loGhXkYEKuRQDJAjng5jdD0/Q508t/03qlaGudxCAJvUkZUEIrmmbrj
+         q4CQ==
+X-Gm-Message-State: APjAAAUChYvQXlzUvYitkJIp/gtAbgTUwqb89OxrOyY+k9QwaI2tQAu3
+        U+r0xT3586hc1jRrLLRYvoU=
+X-Google-Smtp-Source: APXvYqyUF3CwPFMn20FOljcrALPcEPpdki7WvtU6sHNL98Jy13f9+56fQo1hMMyrcAo/c/1QtOELnA==
+X-Received: by 2002:a63:1a5e:: with SMTP id a30mr18908127pgm.433.1561904996250;
+        Sun, 30 Jun 2019 07:29:56 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.164.161])
+        by smtp.gmail.com with ESMTPSA id t8sm7930660pfq.31.2019.06.30.07.29.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 30 Jun 2019 07:29:55 -0700 (PDT)
+Date:   Sun, 30 Jun 2019 19:59:49 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Andrew Lunn <andrew@lunn.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Luis Chamberlain <mcgrof@kernel.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: ethernet: broadcom: bcm63xx_enet: Remove unneeded memset
+Message-ID: <20190630142949.GA7422@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <20190626145636.GG28859@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 26.06.2019 um 16:56 schrieb Dan Carpenter:
-> Both these patches seem fine.
-> 
-> On Wed, Jun 26, 2019 at 04:28:56PM +0200, Tobias Nießen wrote:
->> This commit uses the fact that
->>
->>     if (a) {
->>             if (b) {
->>                     ...
->>             }
->>     }
->>
->> can instead be written as
->>
->>     if (a && b) {
->>             ...
->>     }
->>
->> without any change in behavior, allowing to decrease the indentation
->> of the contained code block and thus reducing the average line length.
->>
->> Signed-off-by: Tobias Nießen <tobias.niessen@stud.uni-hannover.de>
->> Signed-off-by: Sabrina Gaube <sabrina-gaube@web.de>
-> 
-> Signed-off-by is like signing a legal document that you didn't put any
-> of SCO's secret UNIXWARE source code into your patch or do other illegal
-> activities.  Everyone who handles a patch is supposed to Sign it.
-> 
-> It's weird to see Sabrina randomly signing your patches.  Probably there
-> is a more appropriate kind of tag to use as well or instead such as
-> Co-Developed-by, Reviewed-by or Suggested-by.
-> 
-> regards,
-> dan carpenter
-> 
+Remove unneeded memset as alloc_etherdev is using kvzalloc which uses
+__GFP_ZERO flag
 
-Thank you, Dan. This patch series is a mandatory part of a course Sabrina and I are taking at university. We were told to add Signed-off-by for both of us. I can add Co-Developed-by if that helps? Or should she just verify via email that she did indeed sign off?
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/net/ethernet/broadcom/bcm63xx_enet.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Regards,
-Tobias
+diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+index 85e6102..f2dd74c 100644
+--- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
++++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+@@ -2659,8 +2659,7 @@ static int bcm_enetsw_probe(struct platform_device *pdev)
+ 	if (!dev)
+ 		return -ENOMEM;
+ 	priv = netdev_priv(dev);
+-	memset(priv, 0, sizeof(*priv));
+-
++
+ 	/* initialize default and fetch platform data */
+ 	priv->enet_is_sw = true;
+ 	priv->irq_rx = irq_rx;
+-- 
+2.7.4
+
