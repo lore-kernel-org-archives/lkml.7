@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF83C5B576
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 05:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C388DC5B576
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 05:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF896208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 05:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973A7208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 05:41:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCc/vC1X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Claumc/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfF3Flt (ORCPT
+        id S1726992AbfF3Fly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 01:41:49 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:35280 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfF3Flq (ORCPT
+        Sun, 30 Jun 2019 01:41:54 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:41847 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbfF3Flv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 01:41:46 -0400
-Received: by mail-vs1-f66.google.com with SMTP id u124so6771800vsu.2;
-        Sat, 29 Jun 2019 22:41:45 -0700 (PDT)
+        Sun, 30 Jun 2019 01:41:51 -0400
+Received: by mail-vs1-f65.google.com with SMTP id 2so6745600vso.8;
+        Sat, 29 Jun 2019 22:41:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4B7kxSwn+Y6/oG1SY2GzSzP2SB2pWwxeXqv90tBjdMY=;
-        b=jCc/vC1XqzTYIFNeJfM/xeE3xOwQ43DZyhJWvaRpGAefwxg7mFzCB2/F4gYPskEc7k
-         TKBo97FfcMCg6ah+8sRGm+Vz/UEqVxxtr4E2g11zgjYV7vuamluSpMbJksdyYd46vHFg
-         el4fE0oOQy2cAQ6f58Sh/HbLqIiIaAxbo6RgOeElW199IF4R4xiVwQ/GGqRLjlmhthzj
-         oBOVjyMLuBrUR7rS4Das8pvWHsIvZX+hCugET3XLVdH0h9FSK0B9JiS6Iw9b0HBDKfIN
-         mK1rBYodTxMdaRV6yznyau0ue9wSc6nUGwsnnfl2U2HYUclf/XSi2iMbk5ZqWh3rmCrG
-         e2lg==
+        bh=tCO4bB5RG1i1zaVkyEc6qftvnA4HN0QLB0O4PI95vVE=;
+        b=Claumc/bSvhmkaPdNUpy8Taf8SARFzxVzvtqYvLmkI2NV4GXM7R2dyhMyHEtq8F+3m
+         QA8a7r0Y7kNbRP70KFXgC57/X6IZIIN888k9nUAFdeEMPV0PpZbW0w1j0kGx8VU7Qvjc
+         P3GUvKFI/gNV2B3ZkzRHvvKlG04vjmtZbuXb8dtK1rYHrssFUw+icgJMQY+prnr13obe
+         fXFSrmsaOccryExTJS+mUzMrgqEhW7gkUrGQlNLI+grA1aMu2aodYNQjvqytvvndPorM
+         OI/DkstzT1a2KCgggq2ZWuRIX6suDZUvj+vY7Nl4wbh64fR//iRSEDFKHl71+/qUeMIm
+         ligA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4B7kxSwn+Y6/oG1SY2GzSzP2SB2pWwxeXqv90tBjdMY=;
-        b=fX6QWob78iha66KOrjSRA+/LYHqJ33JYjtZ40Y8SDV2ZperLTdm9n/wiC1/M7tApKH
-         v6KF20ZuGgMjkI7P6/yJeJfJsUJVQLfp9AqC3ie9t1TCkn+XcRhy8IgoXIixhpQoKiOo
-         VqDj8c1LotqDY9RPtXBkq3qDB2y7vOKxSnqiTxdLTm8iO1xs/z2JW0vg0HiJIbsimzZj
-         LMG79e9v7omounH5g5aADvzrde2Oh2ZyfiePKoCR3tpbm2kx1/JrQ7a4DSAIAlmeNQAF
-         bVD1LVGiVaTvgRrtHtcOILXVrHGlQmuaUoH4LF6qkOW1flE28/h0uH+ISBtGlSPYakQK
-         Djrg==
-X-Gm-Message-State: APjAAAVxZ697v+H2RUSmeECkS5RsA0kgeGdEtVkt24TEC/BkKYe62Cb6
-        X9fxueZZdfgv3w2ENC+vdQ==
-X-Google-Smtp-Source: APXvYqy3rCNaSwyeTCXNaqDdY1SOY79rL80DZeQ70j6ZYXaa54tCdbKImmJ1pA6ER3VS20XW9nHORg==
-X-Received: by 2002:a67:eb93:: with SMTP id e19mr11128489vso.208.1561873304884;
-        Sat, 29 Jun 2019 22:41:44 -0700 (PDT)
+        bh=tCO4bB5RG1i1zaVkyEc6qftvnA4HN0QLB0O4PI95vVE=;
+        b=fStxABud1fY0kReOIXkS+1UibCUSydnelDW0JPKQLuXyJwpFyfqf5WQLCzT5J9rBye
+         36CrOVggVp+D8//uAqJy8CixFAgNeWESmswGD2sUnwN4L8y2l/nQSrvjtOStdIAhqQ20
+         w442F3v8PnJPkeNYhtUQJZ/zh88ZoxLybd5E/z1EGZd+JmYjFlQhv+4upCUQO1U9nsVS
+         lN5POixLKTveUwTJwRNYFMDo6tpG/Sdi4OfPKG0urWOygGHuDoqEF+gBDC8cNTCiCVNZ
+         aJN+G7+tuRjtIahCDbKqyXSL1iB7/wpfplnZP3sQMwXKR1BtO0CLHoP+u0oOE9EhbqFC
+         Y5pQ==
+X-Gm-Message-State: APjAAAXiRPBG/cimFre9Q2u/RWQHJAITIc9WV52M84AGw1xpavNx9wfT
+        uGoTkk2P+aWaQ/MiTtoE3A==
+X-Google-Smtp-Source: APXvYqxzpzthH1VQv9WA2DronCje4ZVLbcQZRCXt43nVNtNZmb/vNqpgGZ88zd8CfHLPLKS4sSUTmg==
+X-Received: by 2002:a67:887:: with SMTP id 129mr11361418vsi.82.1561873309837;
+        Sat, 29 Jun 2019 22:41:49 -0700 (PDT)
 Received: from localhost.localdomain ([2601:902:c200:6512:37bd:d695:3a39:ceb9])
-        by smtp.gmail.com with ESMTPSA id r136sm1926676vke.46.2019.06.29.22.41.44
+        by smtp.gmail.com with ESMTPSA id r136sm1926676vke.46.2019.06.29.22.41.49
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 29 Jun 2019 22:41:44 -0700 (PDT)
+        Sat, 29 Jun 2019 22:41:49 -0700 (PDT)
 From:   Ayman Bagabas <ayman.bagabas@gmail.com>
 To:     Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     ayman.bagabas@gmail.com
-Subject: [RFC 6/9] platform/x86: huawei-wmi: Add battery charging thresholds
-Date:   Sun, 30 Jun 2019 01:41:05 -0400
-Message-Id: <20190630054108.19205-7-ayman.bagabas@gmail.com>
+Subject: [RFC 8/9] platform/x86: huawei-wmi: Add sysfs interface support
+Date:   Sun, 30 Jun 2019 01:41:07 -0400
+Message-Id: <20190630054108.19205-9-ayman.bagabas@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190630054108.19205-1-ayman.bagabas@gmail.com>
 References: <20190630054108.19205-1-ayman.bagabas@gmail.com>
@@ -75,116 +75,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement battery charging thresholds functionality to be used with
-sysfs interface support that is implemented in this series.
-
-Setting battery charging thresholds can introduce a race condition where
-two are trying to read/write values from/to EC memory. Even though a
-mutex is used, this doesn't guarantee that these values will make it to
-EC so a blocking sleep is necessary.
-
-This sleep is enforced on the MACH-WX9 model since turning off battery
-protection using (0,100) doesn't change the values in the EC memory,
-instead it only disables the protection. So a workaround is to set the
-thresholds to (0,0) before setting it to (0,100). This will ensure
-that we update these values in EC memory and then turning it off with
-(0,100). Thus, the msleep(1000).
+Add sysfs interface to enable the use of battery charging thresholds and
+fn-lock support introduced in this series.
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
-In huawei_wmi_battery_get and later in huawei_wmi_fn_lock_get, 256 bytes
-buffer is allocated dynamically on the stack. Now I know this is
-discouraged, should it be changed to use kmalloc?
-
- drivers/platform/x86/huawei-wmi.c | 54 +++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ drivers/platform/x86/huawei-wmi.c | 82 +++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 9013a05d2832..da3986cd0428 100644
+index 4159e10bda26..f7041fb71026 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -6,6 +6,7 @@
-  */
+@@ -14,6 +14,7 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/platform_device.h>
++#include <linux/sysfs.h>
+ #include <linux/wmi.h>
  
- #include <linux/acpi.h>
-+#include <linux/delay.h>
- #include <linux/dmi.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
-@@ -46,6 +47,7 @@ static struct quirk_entry *quirks;
- struct huawei_wmi_priv {
- 	struct input_dev *idev[2];
- 	struct led_classdev cdev;
-+	struct mutex battery_lock;
- 	struct mutex wmi_lock;
- 	struct platform_device *pdev;
- };
-@@ -298,6 +300,57 @@ static int huawei_wmi_leds_setup(struct device *dev)
- 	return devm_led_classdev_register(dev, &priv->cdev);
+ /*
+@@ -381,6 +382,80 @@ static int huawei_wmi_fn_lock_set(struct device *dev, int on)
+ 	return huawei_wmi_cmd(dev, *(u64 *)arg, NULL, NULL);
  }
  
-+/* Battery protection */
++/* sysfs */
 +
-+static int huawei_wmi_battery_get(struct device *dev, int *low, int *high)
++static ssize_t charge_thresholds_show(struct device *dev,
++		struct device_attribute *attr,
++		char *buf)
 +{
-+	struct huawei_wmi_priv *priv = dev_get_drvdata(dev);
-+	u8 ret[0x100];
-+	int err, i;
++	int err, low, high;
 +
-+	mutex_lock(&priv->battery_lock);
-+	err = huawei_wmi_cmd(dev, BATTERY_THRESH_GET, ret, 0x100);
-+	mutex_unlock(&priv->battery_lock);
++	err = huawei_wmi_battery_get(dev, &low, &high);
 +	if (err)
 +		return err;
 +
-+	/* Find the last two non-zero values. Return status is ignored. */
-+	i = 0x100;
-+	do {
-+		*low = ret[i-1];
-+		*high = ret[i];
-+	} while (i > 2 && !ret[i--]);
-+
-+	return 0;
++	return sprintf(buf, "%d %d\n", low, high);
 +}
 +
-+static int huawei_wmi_battery_set(struct device *dev, int low, int high)
++static ssize_t charge_thresholds_store(struct device *dev,
++		struct device_attribute *attr,
++		const char *buf, size_t size)
 +{
-+	struct huawei_wmi_priv *priv = dev_get_drvdata(dev);
-+	u8 arg[8];
-+	int err;
++	int low, high, err;
 +
-+	*(u64 *)arg = BATTERY_THRESH_SET;
-+	arg[2] = low;
-+	arg[3] = high;
++	if (sscanf(buf, "%d %d", &low, &high) != 2 ||
++			low < 0 || high > 100 ||
++			low > high)
++		return -EINVAL;
 +
-+	/* This is an edge case were some models turn battery protection
-+	 * off without changing their thresholds values. We clear the
-+	 * values before turning off protection. Sometimes we need a sleep delay to
-+	 * make sure these values make their way to EC memory.
-+	 */
-+	if (low == 0 && high == 100)
-+		huawei_wmi_battery_set(dev, 0, 0);
++	err = huawei_wmi_battery_set(dev, low, high);
++	if (err)
++		return err;
 +
-+	mutex_lock(&priv->battery_lock);
-+	err = huawei_wmi_cmd(dev, *(u64 *)arg, NULL, NULL);
-+	if (quirks && quirks->battery_sleep)
-+		msleep(1000);
-+	mutex_unlock(&priv->battery_lock);
-+
-+	return err;
++	return size;
 +}
++
++static ssize_t fn_lock_state_show(struct device *dev,
++		struct device_attribute *attr,
++		char *buf)
++{
++	int err, on;
++
++	err = huawei_wmi_fn_lock_get(dev, &on);
++	if (err)
++		return err;
++
++	return sprintf(buf, "%d\n", on);
++}
++
++static ssize_t fn_lock_state_store(struct device *dev,
++		struct device_attribute *attr,
++		const char *buf, size_t size)
++{
++	int on, err;
++
++	if (kstrtoint(buf, 10, &on) ||
++			on < 0 || on > 1)
++		return -EINVAL;
++
++	err = huawei_wmi_fn_lock_set(dev, on);
++	if (err)
++		return err;
++
++	return size;
++}
++
++static DEVICE_ATTR_RW(charge_thresholds);
++static DEVICE_ATTR_RW(fn_lock_state);
++
++static struct attribute *huawei_wmi_attrs[] = {
++	&dev_attr_charge_thresholds.attr,
++	&dev_attr_fn_lock_state.attr,
++	NULL
++};
++
++ATTRIBUTE_GROUPS(huawei_wmi);
 +
  /* Input */
  
  static void huawei_wmi_process_key(struct input_dev *idev, int code)
-@@ -418,6 +471,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+@@ -508,6 +583,12 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+ 			dev_err(&pdev->dev, "Failed to setup leds\n");
+ 			return err;
+ 		}
++
++		err = sysfs_create_groups(&pdev->dev.kobj, huawei_wmi_groups);
++		if (err) {
++			dev_err(&pdev->dev, "Failed to create sysfs interface\n");
++			return err;
++		}
+ 	}
+ 
+ 	return 0;
+@@ -522,6 +603,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
+ 		wmi_remove_notify_handler(HWMI_EVENT_GUID);
  
  	if (wmi_has_guid(HWMI_METHOD_GUID)) {
- 		mutex_init(&priv->wmi_lock);
-+		mutex_init(&priv->battery_lock);
++		sysfs_remove_groups(&pdev->dev.kobj, huawei_wmi_groups);
+ 	}
  
- 		err = huawei_wmi_leds_setup(&pdev->dev);
- 		if (err) {
+ 	return 0;
 -- 
 2.20.1
 
