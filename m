@@ -2,183 +2,137 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0172C5B57F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3425C5B576
 	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 05:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8836208E3
+	by mail.kernel.org (Postfix) with ESMTP id A69D4208C4
 	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 05:41:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/mPOGsW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfF3FlZ (ORCPT
+        id S1726523AbfF3FlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 01:41:25 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:38042 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfF3FlZ (ORCPT
+        Sun, 30 Jun 2019 01:41:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:50564 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfF3FlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 01:41:25 -0400
-Received: by mail-vs1-f68.google.com with SMTP id k9so6754344vso.5;
-        Sat, 29 Jun 2019 22:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=clQOczYwEsKKHOAzZidWMeMT4c+c0AdrHLZADibcT5I=;
-        b=W/mPOGsWnmXShX2vqkfncaWdrS7qRg6/Q1NYGxtqgZ+SH3up6HKAvKzs4/qYdRi0V/
-         RtZ4Z0HjgZOXP/27vA3bqMvIWO3SdEKlE1e91Nu4ZsBBKdQgGNCP+Farh/ROc609Hgwd
-         7qz2w6v31iNrCop4m4nqiFmmWxY/X5H0XGr/aWlBlxIb7wHIvqd4PY+8TanEkcZli+bV
-         mCHk4OPRyEqLUICPQWH3DpkTLeWsLu9e9uY/JKdqudig/8mFzRox7F0Iq7DEfru/QgKu
-         /4ipuPi4+b7lnC72+O7hEVeEQL91yFZuXR+b4cuCTIgJDHxmOlYa/7JRW4gvcJPU9K+w
-         xcIg==
+        Sun, 30 Jun 2019 01:41:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id m26so11550694ioh.17
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 22:41:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=clQOczYwEsKKHOAzZidWMeMT4c+c0AdrHLZADibcT5I=;
-        b=DYrNZmLOtA7fs5RJMfJLPwC08rR3W/AR59UWv1ZCBVbIswY07cUQDzsRY/mvqZmDob
-         dP+cj+g7xZVMRlHZ4hs0IxMyqV2ITX30QBkqDZjE301gXPdCiPfbU8TycM9hwXLokQ8P
-         JtxuS1CQj7QdyvVIiTgnpNgXm6NWbir0m8UjwTU4IU5uxBHkPnOTwj9/C7YoQY5/rXlW
-         qJ5KBVW1TgWw1mYa8Z7Jy5Hpo7qXEWM9mdF+OdSvxKDkmITqPkF2KhPm/rjhGVJvTwNc
-         oquhM2JDTTU2nhl+/FpVkqW1Yv1EjGjJS0nqye1ue447eIkFVX2apHWLsgQebbYXR/kz
-         Xy4A==
-X-Gm-Message-State: APjAAAXr7NBoNgWZiyK1olkJjIukZaVZh+Ekzt2ezGFHnJCka7glYpA5
-        Ra6NTeh8Jj3oPOWF/IZZ1w==
-X-Google-Smtp-Source: APXvYqw9LJGr9ejHAdvNsQ9iGU8WklErdwKaLxgXTbnEBJ8pZKaD42ZyLSYN5Fo7+9QPSAezcArV+Q==
-X-Received: by 2002:a67:ff0b:: with SMTP id v11mr10657498vsp.14.1561873283358;
-        Sat, 29 Jun 2019 22:41:23 -0700 (PDT)
-Received: from localhost.localdomain ([2601:902:c200:6512:37bd:d695:3a39:ceb9])
-        by smtp.gmail.com with ESMTPSA id r136sm1926676vke.46.2019.06.29.22.41.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 29 Jun 2019 22:41:22 -0700 (PDT)
-From:   Ayman Bagabas <ayman.bagabas@gmail.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     ayman.bagabas@gmail.com
-Subject: [RFC 0/9] platform/x86: Huawei WMI laptop extras driver
-Date:   Sun, 30 Jun 2019 01:40:59 -0400
-Message-Id: <20190630054108.19205-1-ayman.bagabas@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=ZK+EGFyyaLs8zHzX8Fucqyg/8P+TjO5T0KN14v7SrV0=;
+        b=mz1+USoqCGIlAmes8IvNkI6tiiSl7FHvtqjPMmh+Ykyd2Tp9rObiCGjzMq6Q+httO8
+         nL4cDh0RcrwXjjOf4pJaQBQPPv6WR9gXhFwxe/ok93i6ShcHAR43jimFUDaDn5rmbjXY
+         8jJ0Z5iTjagCiXnp7xB/iFk/KM0jiXZl/cEMae9M1OWNMHMSl+v/7gym38pJabuGfj7L
+         gOObw8DNUnMAoy8gBIH89XcWXlfKVeo391qsDoZXo7Xx8RrIf/tEpA/g6HEaM905YU5v
+         j2hdPlwZuZUxi/MLyqB/QKBWCnZsF5sXyYexPSvmEqHHPtQ0FHqhI1RBKChnYp6HPss+
+         L8nQ==
+X-Gm-Message-State: APjAAAXURVscluTBdrcuxy8ASx/oJm9yQ4wmWFVhcU4+UiXrHj1cGZOG
+        uIM64ZNrbAz3+8Kq0+ZCxYIPCiO35m2AXCbqYXxzdIUVm27t
+X-Google-Smtp-Source: APXvYqxiQ4vYpOMhwHBxxNdpHPkgyYdl+AQbIEF53NJQ4KR+MVk0M/x23iMe3Li6dlj1inPDWcF+h6nMCu1SgQ2W0onuUZPkwQA9
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5e:da47:: with SMTP id o7mr20036663iop.83.1561873266488;
+ Sat, 29 Jun 2019 22:41:06 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 22:41:06 -0700
+In-Reply-To: <0000000000003ec128058c7624ec@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003bbf1b058c83f55a@google.com>
+Subject: Re: WARNING in kernfs_create_dir_ns
+From:   syzbot <syzbot+38f5d5cf7ae88c46b11a@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series introduce changes to huawei-wmi driver that includes:
-* Move to platform driver
-* Implement WMI management interface
-* Add micmute LED support through WMI
-* Add battery charging protection support through WMI
-* Add fn-lock support through WMI
-* Implement driver quirks and parameters
-* Add a debugfs interface to WMI
+syzbot has found a reproducer for the following crash on:
 
-# Move to platform driver
+HEAD commit:    72825454 Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=104d6755a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31528e58cc12e2
+dashboard link: https://syzkaller.appspot.com/bug?extid=38f5d5cf7ae88c46b11a
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a6c439a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1353c323a00000
 
-The current driver offers hotkeys and micmute led support only. With
-these changes, a platform driver makes more sense since it handles these
-changes pretty nicely.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+38f5d5cf7ae88c46b11a@syzkaller.appspotmail.com
 
-# Implement WMI management interface
-
-Huawei Matebook laptops come with two WMI interfaces. The first being
-WMI0 which is considered "legacy" and AFAIK only found on the Matebook X
-released in 2017. The second has a UID of "HWMI" and is found in pretty
-much all models with a slight difference in implementation except for
-the Matebook X (2017). Since this model has two interfaces, some aspects
-are controlled through the legacy interface and some through the other
-interface. Currently, the legacy interface is not fully implemented and
-is only used for hotkeys and further debugging has to be done.
-
-The WMI interface takes a 64 bit integer, although uses 32 bits most of
-the time, and returns a 256-260 bytes buffer consists of either one ACPI
-buffer of 260 bytes, in the case of Matebook X (2017), or one ACPI
-package of two buffers, one with 4 bytes, and the other with 256 bytes.
-We only care about the latter 256 buffer in both cases since the 4 bytes
-always return zeros. The first byte of this 256 buffer always has the
-return status where 1 indicated error. Some models require calling the
-WMI interface twice to execute a command.
-
-# Add micmute LED support through WMI
-
-After implementing the WMI interface, micmute LED can be controlled
-easily. Models with the legacy interface fall back to ACPI EC method
-control since the legacy interface is not implemented.
-
-# Add battery charging protection support through WMI
-
-Most models, that has the WMI interface, are capable of battery
-protection where it can control battery charging thresholds and limits
-charging the battery to certain values.
-
-# Add fn-lock support through WMI
-
-The behavior of hotkeys is not the same among all models. Some models
-require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. By default,
-hotkeys behave as special keys (media keys, Ins, etc), but if a modifier
-is used (ctrl, alt, shift) these keys behave as F1-F12 keys. If the Fn
-key is toggled on, the hotkeys with or without a modifier, behave as
-F1-F12 keys. This makes it impossible to use a modifier and `PrtSc` or
-`Ins`.
-
-Now, some models fix this by excluding `PrtSc` and `Ins` keys from being
-treated as F11 and F12 keys with the use of a modifier. However, some
-models do not, and fixes this by the so called fn-lock.
-
-Fn-lock inverts the behavior of the top row from special keys to F1-F12
-keys. So a modifier and a special key would be possible which make
-things like `Alt-Ins` possible. Now, with fn-lock we would have 4 modes:
-
-* Fn-key off & fn-lock off - hotkeys treated as special keys using a
-  modifier gives F1-F12 keys.
-* Fn-key on & fn-lock off - hotkeys treated as F1-F12 keys and using a
-  modifier gives F1-F12.
-* Fn-key off & fn-lock on - hotkeys are treated as F1-F12 keys and using
-  a modifier gives special keys.
-* Fn-key on & fn-lock on - hotkeys are treated as special keys and using
-  a modifier gives special keys.
-
-# Implement driver quirks and parameters
-
-The driver introduces 3 quirks and 2 parameters that can change the
-driver's behavior. These quirks being as:
-1. Fixes reporting brightness keys twice since it's already handled by
-   acpi-video.
-2. Some models need a short delay when setting battery thresholds to
-   prevent a race condition when two processes read/write.
-3. Matebook X (2017) handles micmute led through the "legacy" interface
-   which is not currently implemented. Use ACPI EC method to control
-   this led.
-
-and the 2 parameters can enforce the behavior of quirk 1 & 2.
-
-# Add a debugfs interface to WMI
-
-An interface to the WMI management interface that allows easier
-debugging.
-
-Ayman Bagabas (9):
-  platform/x86: huawei-wmi: rename guid and driver name
-  platform/x86: huawei-wmi: move to platform driver
-  platform/x86: huawei-wmi: implement huawei wmi management interface
-  platform/x86: huawei-wmi: add quirks and module parameters
-  platform/x86: huawei-wmi: control micmute led through wmi interface
-  platform/x86: huawei-wmi: add battery charging thresholds
-  platform/x86: huawei-wmi: add fn-lock support
-  platform/x86: huawei-wmi: add sysfs interface support
-  platform/x86: huawei-wmi: add debugfs support
-
- drivers/platform/x86/huawei-wmi.c | 710 ++++++++++++++++++++++++++----
- 1 file changed, 629 insertions(+), 81 deletions(-)
-
--- 
-2.20.1
+WARNING: CPU: 0 PID: 8613 at fs/kernfs/dir.c:493 kernfs_get  
+fs/kernfs/dir.c:493 [inline]
+WARNING: CPU: 0 PID: 8613 at fs/kernfs/dir.c:493 kernfs_new_node  
+fs/kernfs/dir.c:700 [inline]
+WARNING: CPU: 0 PID: 8613 at fs/kernfs/dir.c:493  
+kernfs_create_dir_ns+0x205/0x230 fs/kernfs/dir.c:1022
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8613 Comm: syz-executor696 Not tainted 5.2.0-rc6+ #11
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  panic+0x28a/0x7c9 kernel/panic.c:219
+  __warn+0x216/0x220 kernel/panic.c:576
+  report_bug+0x190/0x290 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  do_error_trap+0xd7/0x450 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:kernfs_get fs/kernfs/dir.c:493 [inline]
+RIP: 0010:kernfs_new_node fs/kernfs/dir.c:700 [inline]
+RIP: 0010:kernfs_create_dir_ns+0x205/0x230 fs/kernfs/dir.c:1022
+Code: ff 4c 89 ff e8 7c cd ff ff 4c 63 fb eb 05 e8 22 27 9a ff 4c 89 f8 48  
+83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 0b 27 9a ff <0f> 0b e9 e9 fe  
+ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c be fe ff
+RSP: 0018:ffff88808d26f730 EFLAGS: 00010293
+RAX: ffffffff81db8a95 RBX: ffff88809e5252a0 RCX: ffff88808a4aa000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffff88808d26f768 R08: ffffffff81db8977 R09: ffffed1013ca4a55
+R10: ffffed1013ca4a55 R11: 1ffff11013ca4a54 R12: ffff888098a8a200
+R13: dffffc0000000000 R14: 0000000000000000 R15: ffff8880a339e620
+  sysfs_create_dir_ns+0x161/0x300 fs/sysfs/dir.c:59
+  create_dir lib/kobject.c:89 [inline]
+  kobject_add_internal+0x459/0xd50 lib/kobject.c:255
+  kobject_add_varg lib/kobject.c:390 [inline]
+  kobject_add+0x138/0x200 lib/kobject.c:442
+  device_add+0x508/0x1570 drivers/base/core.c:2062
+  hci_register_dev+0x331/0x6c0 net/bluetooth/hci_core.c:3305
+  __vhci_create_device drivers/bluetooth/hci_vhci.c:124 [inline]
+  vhci_create_device+0x2d1/0x510 drivers/bluetooth/hci_vhci.c:148
+  vhci_get_user drivers/bluetooth/hci_vhci.c:204 [inline]
+  vhci_write+0x3ac/0x440 drivers/bluetooth/hci_vhci.c:284
+  call_write_iter include/linux/fs.h:1872 [inline]
+  new_sync_write fs/read_write.c:483 [inline]
+  __vfs_write+0x617/0x7d0 fs/read_write.c:496
+  vfs_write+0x227/0x510 fs/read_write.c:558
+  ksys_write+0x16b/0x2a0 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x7b/0x90 fs/read_write.c:620
+  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441279
+Code: e8 ac e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffa3738588 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441279
+RDX: 0000000000000002 RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 000000000000ef5c R08: 00000000004002c8 R09: 00000000004002c8
+R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000401ff0
+R13: 0000000000402080 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
