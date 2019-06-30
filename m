@@ -3,166 +3,168 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6FBC06508
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 07:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4F6C06508
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 08:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C95208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 07:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7963D208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 08:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zUawODtU"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="H9jsFDlY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfF3H60 (ORCPT
+        id S1726652AbfF3IBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 03:58:26 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:19799 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfF3H6Z (ORCPT
+        Sun, 30 Jun 2019 04:01:17 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33893 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfF3IBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 03:58:25 -0400
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x5U7vxPV023007;
-        Sun, 30 Jun 2019 16:58:00 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5U7vxPV023007
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561881480;
-        bh=+9brw8RpKfPCHLaNnVG0ALKGMwnUyxhWFifAcm1Jy9A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zUawODtU0vhTiPl5qaNgEo9ByKy2yYb9HTAWd7jH5/KmRFRbCTqDf1r2buPkH6eY7
-         9KWkOkbCmnK9rkMatOmM0itxGnwHB/mMPuqRIjog1NzLgK//i1B3cXHhcTtE4pC6OU
-         VNXerozMf6mNDQ2YuNycgdEq1clJ5Ax3fRXt2Pykx7Eg5zzgtutbB8rwb3gug/dYXr
-         O98/bPfya6esIc3ETSzeD3199w5ae4W/Lwcu2gAXFoPoyufabN5ofgPBt7+mBFPuRl
-         yTH6VnFiqBpTquzJOkRU+fykLB1M8/iymSMC+5w1Mo4YIFRRu6hO3v+dQXWv3IKe2k
-         Skm8IrMNwnxoQ==
-X-Nifty-SrcIP: [209.85.222.49]
-Received: by mail-ua1-f49.google.com with SMTP id z13so3851870uaa.4;
-        Sun, 30 Jun 2019 00:58:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAWysMbNscscgdcwsu+dZATRmuJuaguufvScETMbNbgnIXct6t2m
-        LqZIl0OYZjwAjoaIWjYoBL6cZFfUIYYY90xpG9I=
-X-Google-Smtp-Source: APXvYqzyVZpInW2H6+hLd4o8U+kv7ZbqLoJ5DBzo4XhAbsuYuwZv3Nes7LIrEN98cU8HrIW65l38Jgqlp5UdZQn0x3E=
-X-Received: by 2002:a9f:25e9:: with SMTP id 96mr10993006uaf.95.1561881479132;
- Sun, 30 Jun 2019 00:57:59 -0700 (PDT)
+        Sun, 30 Jun 2019 04:01:17 -0400
+Received: by mail-io1-f65.google.com with SMTP id k8so21817474iot.1;
+        Sun, 30 Jun 2019 01:01:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FoNepBnZ0uw1TMBUJtB3fTwNze8vJxH2e+2QtYNEbJY=;
+        b=H9jsFDlY6VwbFX3rcCgjkRMkFe6Q6XRfuDbTXkobnjT4NI3geCYku3+CeM1V1w6tFw
+         96AUNXJw3ZA2omDANIrWro7NFLWRj8o2YMh2rRDjxk9AtFjgtbCUjabZJWJyHm8k+JyM
+         Rn4fPCXCcUK0dzMAtPEBjLsUBcVnGsisCD07HiPXkSmWXuxfq4RijVZw+NGOyqlCjBn8
+         7+RElAyeRGeSwD6CPfhOj5FxMVe+jyV7tKUSp37evpChACr4Lcq0vy8pkfFtCxSwqcXw
+         PVj7KS6JJ+drP/7VEaeHAD/hp7bDD7xJ6Q/kOKV7j9wh7ZjMLoquFmwVNNtr814eFhwW
+         hI2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FoNepBnZ0uw1TMBUJtB3fTwNze8vJxH2e+2QtYNEbJY=;
+        b=VnGwvCWwzBTIe2AAESHAwrgp3PNB4aK9+TXYYmNtgbluEUQLFFrFzSWFNGNJYhC7B1
+         xuN99mSqmTAYa3ZthYByOBWMkHY/Qf5Hx1coyQss7dRiP9L9hiQH/dZHAHWtifvnVpA8
+         W+u2h+Baorldonr6nFbi8bI13y2opfftEWhkf161Y1aMOg2Zl7mvzOqSWXKFoVEGn3hV
+         8SLwQY/Tn1Kw1+JhVkXBGEsby/ss8LiKYlYOQ5UUnWuJXMHv3OtoYO+bkxGnlViMv0Ud
+         WUt7fI2ThCEEPegx2EzJBmTW6y0vUQGN/DEMed6QOZfdPMZ3GZYA117vYk2Zes+zmaUO
+         Wjvg==
+X-Gm-Message-State: APjAAAWdxw+C4/7Vto4sYQTagN9OxieVHtar+rH6Sfb9l0IVM+3QFttW
+        ydWwLI8XCWJzCYJ5WZRC2Zik5A16ONxNhCeQ/GtTm7XpoYw=
+X-Google-Smtp-Source: APXvYqzAlxzOg8Oqo7PxgMEkEn0NMFiCD4Uwn+M0tYmXyOupg5dar4/wIIyxwgtKRLFMDP30ibdgP3uYsh63yGsxBnI=
+X-Received: by 2002:a6b:3102:: with SMTP id j2mr12154498ioa.5.1561881675411;
+ Sun, 30 Jun 2019 01:01:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190627163903.28398-1-yamada.masahiro@socionext.com>
- <20190627163903.28398-5-yamada.masahiro@socionext.com> <20190628180057.GA22758@ravnborg.org>
-In-Reply-To: <20190628180057.GA22758@ravnborg.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 30 Jun 2019 16:57:23 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQDqtm5F_JoPAjPOuf6s3d0F1=Ctyq6s0u2DWNpbFr5vg@mail.gmail.com>
-Message-ID: <CAK7LNAQDqtm5F_JoPAjPOuf6s3d0F1=Ctyq6s0u2DWNpbFr5vg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] kbuild: compile-test kernel headers to ensure they
- are self-contained
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Colin Cross <ccross@android.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
+References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190627123415.GA4286@bombadil.infradead.org> <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
+ <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+ <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
+ <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
+ <20190627195948.GB4286@bombadil.infradead.org> <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
+ <20190629160336.GB1180@bombadil.infradead.org> <CAPcyv4ge3Ht1k_v=tSoVA6hCzKg1N3imhs_rTL3oTB+5_KC8_Q@mail.gmail.com>
+In-Reply-To: <CAPcyv4ge3Ht1k_v=tSoVA6hCzKg1N3imhs_rTL3oTB+5_KC8_Q@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sun, 30 Jun 2019 01:01:04 -0700
+Message-ID: <CAA9_cmcb-Prn6CnOx-mJfb9CRdf0uG9u4M1Vq1B1rKVemCD-Vw@mail.gmail.com>
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
-
-
-On Sat, Jun 29, 2019 at 3:01 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+On Sun, Jun 30, 2019 at 12:27 AM Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> Hi Masahiro.
->
-> On Fri, Jun 28, 2019 at 01:39:02AM +0900, Masahiro Yamada wrote:
-> > The headers in include/ are globally used in the kernel source tree
-> > to provide common APIs. They are included from external modules, too.
+> On Sat, Jun 29, 2019 at 9:03 AM Matthew Wilcox <willy@infradead.org> wrote:
 > >
-> > It will be useful to make as many headers self-contained as possible
-> > so that we do not have to rely on a specific include order.
+> > On Thu, Jun 27, 2019 at 07:39:37PM -0700, Dan Williams wrote:
+> > > On Thu, Jun 27, 2019 at 12:59 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > > >
+> > > > On Thu, Jun 27, 2019 at 12:09:29PM -0700, Dan Williams wrote:
+> > > > > > This bug feels like we failed to unlock, or unlocked the wrong entry
+> > > > > > and this hunk in the bisected commit looks suspect to me. Why do we
+> > > > > > still need to drop the lock now that the radix_tree_preload() calls
+> > > > > > are gone?
+> > > > >
+> > > > > Nevermind, unmapp_mapping_pages() takes a sleeping lock, but then I
+> > > > > wonder why we don't restart the lookup like the old implementation.
+> > > >
+> > > > We have the entry locked:
+> > > >
+> > > >                 /*
+> > > >                  * Make sure 'entry' remains valid while we drop
+> > > >                  * the i_pages lock.
+> > > >                  */
+> > > >                 dax_lock_entry(xas, entry);
+> > > >
+> > > >                 /*
+> > > >                  * Besides huge zero pages the only other thing that gets
+> > > >                  * downgraded are empty entries which don't need to be
+> > > >                  * unmapped.
+> > > >                  */
+> > > >                 if (dax_is_zero_entry(entry)) {
+> > > >                         xas_unlock_irq(xas);
+> > > >                         unmap_mapping_pages(mapping,
+> > > >                                         xas->xa_index & ~PG_PMD_COLOUR,
+> > > >                                         PG_PMD_NR, false);
+> > > >                         xas_reset(xas);
+> > > >                         xas_lock_irq(xas);
+> > > >                 }
+> > > >
+> > > > If something can remove a locked entry, then that would seem like the
+> > > > real bug.  Might be worth inserting a lookup there to make sure that it
+> > > > hasn't happened, I suppose?
+> > >
+> > > Nope, added a check, we do in fact get the same locked entry back
+> > > after dropping the lock.
+> > >
+> > > The deadlock revolves around the mmap_sem. One thread holds it for
+> > > read and then gets stuck indefinitely in get_unlocked_entry(). Once
+> > > that happens another rocksdb thread tries to mmap and gets stuck
+> > > trying to take the mmap_sem for write. Then all new readers, including
+> > > ps and top that try to access a remote vma, then get queued behind
+> > > that write.
+> > >
+> > > It could also be the case that we're missing a wake up.
 > >
-> > There are more than 4000 headers in include/. In my rough analysis,
-> > 70% of them are already self-contained. With efforts, most of them
-> > can be self-contained.
+> > OK, I have a Theory.
 > >
-> > For now, we must exclude more than 1000 headers just because they
-> > cannot be compiled as standalone units. I added them to header-test-.
-> > The black list was mostly generated by a script, so should be checked
-> > later.
-> The list is smaller than I had expected.
-> And I see why you insisted on avoiding a maze ok Kbuild files.
-> It looks good, except there is a few issues..
+> > get_unlocked_entry() doesn't check the size of the entry being waited for.
+> > So dax_iomap_pmd_fault() can end up sleeping waiting for a PTE entry,
+> > which is (a) foolish, because we know it's going to fall back, and (b)
+> > can lead to a missed wakeup because it's going to sleep waiting for
+> > the PMD entry to come unlocked.  Which it won't, unless there's a happy
+> > accident that happens to map to the same hash bucket.
+> >
+> > Let's see if I can steal some time this weekend to whip up a patch.
 >
+> Theory seems to have some evidence... I instrumented fs/dax.c to track
+> outstanding 'lock' entries and 'wait' events. At the time of the hang
+> we see no locks held and the waiter is waiting on a pmd entry:
 >
-> The file kernel/kheaders_data.tar.xz includes all the .s files.
-> Something needs to be done to exclude the .s files...
+> [ 4001.354334] fs/dax locked entries: 0
+> [ 4001.358425] fs/dax wait entries: 1
+> [ 4001.362227] db_bench/2445 index: 0x0 shift: 6
+> [ 4001.367099]  grab_mapping_entry+0x17a/0x260
+> [ 4001.371773]  dax_iomap_pmd_fault.isra.43+0x168/0x7a0
+> [ 4001.377316]  ext4_dax_huge_fault+0x16f/0x1f0
+> [ 4001.382086]  __handle_mm_fault+0x411/0x1390
+> [ 4001.386756]  handle_mm_fault+0x172/0x360
 
-Good catch. I will change scripts/gen_kheaders.sh
+In fact, this naive fix is holding up so far:
 
-
-> When building a full kernel the build fails like this:
->   LD      vmlinux.o
-> aarch64-linux-gnu-ld: cannot find include/lib.a: No such file or directory
-> make[1]: *** [/home/sam/kernel/linux-kbuild.git/Makefile:1054: vmlinux] Error 1
-> make[1]: Leaving directory '/home/sam/kernel/linux-kbuild.git/.build/arm64-allyesconfig'
-> make: *** [Makefile:179: sub-make] Error 2
-
-My bad - I built only include/,
-without testing full build.
-
-I will fix.
-
-
->
-> include/uapi/linux/mman.h fails when building sparc64 allmodconfig.
-> There is likely more header files that will fail when we start to
-> throw this after diverse randconfigs.
-> I have no good idea how to catch this.
-> Unless your scripts could automate this across several architectures.
-
-Thanks. I excluded a little more headers.
-
-
-> I did not continue my testing futher.
->
-> > +header-test-                 += uapi/drm/vmwgfx_drm.h
-> > +header-test-                 += uapi/linux/a.out.h
-> > +header-test-                 += uapi/linux/coda.h
-> ...
-> > +header-test-                 += uapi/xen/evtchn.h
-> > +header-test-                 += uapi/xen/gntdev.h
-> > +header-test-                 += uapi/xen/privcmd.h
->
-> I though uapi files were covered by another Makefile?
-> If they are added because we pull them in using a pattern, maybe they
-> should be removed using a specific filer-out?
-
-I have not looked at this closely yet.
-
-usr/include/Makefile tests UAPI headers
-crafted by scripts/headers_install.sh
-
-Testing UAPI headers in their raw form
-makes sense, I think.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+@@ -215,7 +216,7 @@ static wait_queue_head_t
+*dax_entry_waitqueue(struct xa_state *xas,
+         * queue to the start of that PMD.  This ensures that all offsets in
+         * the range covered by the PMD map to the same bit lock.
+         */
+-       if (dax_is_pmd_entry(entry))
++       //if (dax_is_pmd_entry(entry))
+                index &= ~PG_PMD_COLOUR;
+        key->xa = xas->xa;
+        key->entry_start = index;
