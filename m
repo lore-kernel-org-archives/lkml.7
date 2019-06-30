@@ -2,203 +2,195 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1F8C5B57F
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 15:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1759DC5B57E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 16:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974B220673
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 15:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C88206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 16:19:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="0IUNIBpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfF3PkW (ORCPT
+        id S1726652AbfF3QTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 11:40:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37030 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726578AbfF3PkV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 11:40:21 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5UFapp4109656
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 11:40:20 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2temfseyjr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 11:40:20 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Sun, 30 Jun 2019 16:40:17 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 30 Jun 2019 16:40:13 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5UFeClL51773530
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 30 Jun 2019 15:40:12 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 53070A405B;
-        Sun, 30 Jun 2019 15:40:12 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07E17A4054;
-        Sun, 30 Jun 2019 15:40:10 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.110.41])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 30 Jun 2019 15:40:09 +0000 (GMT)
-Subject: Re: [PATCH v4 0/3] initramfs: add support for xattrs in the initial
- ram disk
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        Rob Landley <rob@landley.net>, viro@zeniv.linux.org.uk
-Cc:     linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bug-cpio@gnu.org,
-        zohar@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com,
-        dmitry.kasatkin@huawei.com, takondra@cisco.com, kamensky@cisco.com,
-        hpa@zytor.com, arnd@arndb.de, james.w.mcmechan@gmail.com,
-        niveditas98@gmail.com
-Date:   Sun, 30 Jun 2019 11:39:59 -0400
-In-Reply-To: <33cfb804-6a17-39f0-92b7-01d54e9c452d@huawei.com>
-References: <20190523121803.21638-1-roberto.sassu@huawei.com>
-         <cf9d08ca-74c7-c945-5bf9-7c3495907d1e@huawei.com>
-         <541e9ea1-024f-5c22-0b58-f8692e6c1eb1@landley.net>
-         <33cfb804-6a17-39f0-92b7-01d54e9c452d@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19063015-0020-0000-0000-0000034ED9B7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19063015-0021-0000-0000-000021A25F56
-Message-Id: <1561909199.3985.33.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-30_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906300201
+        Sun, 30 Jun 2019 12:19:51 -0400
+Received: from mail-eopbgr800077.outbound.protection.outlook.com ([40.107.80.77]:23808
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726520AbfF3QTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 12:19:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=34g7r27o4aZkGzZ0SrpnDYOutRqJR8LCtIXpwMYWBmg=;
+ b=0IUNIBpyuQBB7BJf23G1osRrrsJUMM7Xx/oFBaJvcpCYgsRl+cnzD8T1PeXVa/AUJsUPnnQP4hrMWuPz3Ist7uf+1LTYVAq4ecekyvln7thVFWzf2LfV8lwPD/XtenwJ7nlqeKMWuTkuKWgetXxZxP3o8FRKXGtwOnl9U62HX7Q=
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
+ DM6PR12MB4091.namprd12.prod.outlook.com (10.141.8.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Sun, 30 Jun 2019 16:19:48 +0000
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::9b0:ee82:ca4b:a4e7]) by DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::9b0:ee82:ca4b:a4e7%6]) with mapi id 15.20.2008.020; Sun, 30 Jun 2019
+ 16:19:47 +0000
+From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+To:     =?utf-8?B?SmFuIEguIFNjaMO2bmhlcnI=?= <jschoenh@amazon.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "joro@8bytes.org" <joro@8bytes.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
+Subject: Re: [PATCH 3/6] svm: Add support for APIC_ACCESS_PAGE_PRIVATE_MEMSLOT
+ setup/destroy
+Thread-Topic: [PATCH 3/6] svm: Add support for
+ APIC_ACCESS_PAGE_PRIVATE_MEMSLOT setup/destroy
+Thread-Index: AQHU4KZuc7R0vj5ZskiFGY4oB385JqZh40iAgFMarAA=
+Date:   Sun, 30 Jun 2019 16:19:47 +0000
+Message-ID: <7215044a-af35-49a6-771d-1f1a5ec72bfd@amd.com>
+References: <20190322115702.10166-1-suravee.suthikulpanit@amd.com>
+ <20190322115702.10166-4-suravee.suthikulpanit@amd.com>
+ <5b786dde-1fc4-9abc-ae95-8360e033fb97@amazon.de>
+In-Reply-To: <5b786dde-1fc4-9abc-ae95-8360e033fb97@amazon.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+x-originating-ip: [165.204.77.11]
+x-clientproxiedby: SN4PR0401CA0028.namprd04.prod.outlook.com
+ (2603:10b6:803:2a::14) To DM6PR12MB2844.namprd12.prod.outlook.com
+ (2603:10b6:5:45::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 89b8bf0b-011f-4893-92a9-08d6fd76c517
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB4091;
+x-ms-traffictypediagnostic: DM6PR12MB4091:
+x-microsoft-antispam-prvs: <DM6PR12MB4091AB7166AC699B08288479F3FE0@DM6PR12MB4091.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 008421A8FF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(396003)(39860400002)(346002)(136003)(189003)(199004)(31686004)(81166006)(81156014)(54906003)(8676002)(6486002)(110136005)(58126008)(316002)(2906002)(8936002)(229853002)(305945005)(53936002)(6246003)(2501003)(6512007)(486006)(64126003)(72206003)(6436002)(7736002)(446003)(11346002)(71190400001)(71200400001)(478600001)(476003)(2616005)(4326008)(256004)(14444005)(66446008)(73956011)(66476007)(66556008)(64756008)(66946007)(66574012)(36756003)(5660300002)(186003)(26005)(65806001)(65956001)(2201001)(25786009)(99286004)(76176011)(6506007)(6116002)(65826007)(86362001)(386003)(53546011)(102836004)(68736007)(66066001)(3846002)(31696002)(52116002)(14454004)(60764002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4091;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8N9QxMSLoq2SuL8YaQ7+c7RruWNsXw+ZEIi4LhvO7RBBzZ9YPEJrPK1TwAvoSOyRT8ngwhj/y2LcHRJZx1M1y660/argVZ2dy3awWMgPmX6xz1GqnqFJnqyKEpEN0ntTwiw7Dktzn1X0hMtpfR9OA6RFOQvkGOQ1LiTWr78a4FZo/A23sbyWYdqXhxKrPUwkuq+riTR2owukBUkcUQopPZcB7dRFqigSowBxBFhWcteAWT+5EGZnhXjxjbsGGhl05LZojtrDomzzJ/Y506nRTB42IPpDUtwwQxdIg5If9o2qJNnxNHVBOk16NJ0S6/FyyLTj3NboslqUJVCk3Hnimx3GPWnDAe/xtXwRfMrX8Kspw4zdlp37AAYcDen1VAHOo7+9DpSK+VsiYm6L8Sv1sHUp/Bi8hzS8788sfioF1xU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5107C47AF54A2A4B85FC6206576D0287@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89b8bf0b-011f-4893-92a9-08d6fd76c517
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2019 16:19:47.7746
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ssuthiku@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-26 at 10:15 +0200, Roberto Sassu wrote:
-> On 6/3/2019 8:32 PM, Rob Landley wrote:
-> > On 6/3/19 4:31 AM, Roberto Sassu wrote:
-> >>> This patch set aims at solving the following use case: appraise files from
-> >>> the initial ram disk. To do that, IMA checks the signature/hash from the
-> >>> security.ima xattr. Unfortunately, this use case cannot be implemented
-> >>> currently, as the CPIO format does not support xattrs.
-> >>>
-> >>> This proposal consists in including file metadata as additional files named
-> >>> METADATA!!!, for each file added to the ram disk. The CPIO parser in the
-> >>> kernel recognizes these special files from the file name, and calls the
-> >>> appropriate parser to add metadata to the previously extracted file. It has
-> >>> been proposed to use bit 17:16 of the file mode as a way to recognize files
-> >>> with metadata, but both the kernel and the cpio tool declare the file mode
-> >>> as unsigned short.
-> >>
-> >> Any opinion on this patch set?
-> >>
-> >> Thanks
-> >>
-> >> Roberto
-> > 
-> > Sorry, I've had the window open since you posted it but haven't gotten around to
-> > it. I'll try to build it later today.
-> > 
-> > It does look interesting, and I have no objections to the basic approach. I
-> > should be able to add support to toybox cpio over a weekend once I've got the
-> > kernel doing it to test against.
-> 
-> Ok.
-> 
-> Let me give some instructions so that people can test this patch set.
-> 
-> To add xattrs to the ram disk embedded in the kernel it is sufficient
-> to set CONFIG_INITRAMFS_FILE_METADATA="xattr" and
-> CONFIG_INITRAMFS_SOURCE="<file with xattr>" in the kernel configuration.
-> 
-> To add xattrs to the external ram disk, it is necessary to patch cpio:
-> 
-> https://github.com/euleros/cpio/commit/531cabc88e9ecdc3231fad6e4856869baa9a91ef 
-> (xattr-v1 branch)
-> 
-> and dracut:
-> 
-> https://github.com/euleros/dracut/commit/a2dee56ea80495c2c1871bc73186f7b00dc8bf3b 
-> (digest-lists branch)
-> 
-> The same modification can be done for mkinitramfs (add '-e xattr' to the
-> cpio command line).
-> 
-> To simplify the test, it would be sufficient to replace only the cpio
-> binary and the dracut script with the modified versions. For dracut, the
-> patch should be applied to the local dracut (after it has been renamed
-> to dracut.sh).
-> 
-> Then, run:
-> 
-> dracut -e xattr -I <file with xattr> (add -f to overwrite the ram disk)
-> 
-> Xattrs can be seen by stopping the boot process for example by adding
-> rd.break to the kernel command line.
-
-A simple way of testing, without needing any changes other than the
-kernel patches, is to save the dracut temporary directory by supplying
-"--keep" on the dracut command line, calling
-usr/gen_initramfs_list.sh, followed by usr/gen_init_cpio with the "-e
-xattr" option.
-
-If your filesystem already has and copied the security xattrs to the
-dracut temporary directory, the script, below, will include them in
-the initramfs file.  Otherwise, you'll need to write the desired
-security xattrs on the files, using setfattr, in the temporary dracut
-directory, before creating the initramfs.
-
-Remember to make sure that the initramfs_list includes "getfattr",
-otherwise you'll need to wait until real root is mounted as /sysroot
-to see the security xattrs for the rootfs files.
-
-The following script has not been tested on a recent version of
-dracut.  Some changes might be needed, as well as some code cleanup.
-
-#!/bin/bash
-
-initramfs_name=/boot/initramfs-`uname -r`.img
-initramfs_output_name=${initramfs_name/.img/.test.img}
-
-if [ $# -eq 1 ]; then
-        initramfs_name=$1
-fi
-
-if [ ! -f "$initramfs_name" ]; then
-        echo "Usage; $0 <initramfs pathanem>"
-        exit 1
-fi
-
-tmp=$(dracut -H -f "$initramfs_name" --keep --noprelink --nostrip 2>&1)
-suffix=$(echo $tmp | cut -d ' ' -f 3 | cut -d '.' -f 2)
-
-tmpdir="/var/tmp/dracut.$suffix/initramfs"
-
-if [ ! -d "$tmpdir" ]; then
-        echo "$tmpdir does not exist"
-        exit 1
-fi
-
-usr/gen_initramfs_list.sh ${tmpdir} > usr/initramfs_list
-usr/gen_init_cpio -e xattr usr/initramfs_list > usr/initramfs_data.cpio
-gzip usr/initramfs_data.cpio
-
-echo "Copying usr/initramfs_data.cpio to $initramfs_output_name"
-cp usr/initramfs_data.cpio.gz "$initramfs_output_name"
-
-Mimi
-
+SmFuLA0KDQpPbiA1LzgvMjAxOSAyOjE0IFBNLCBKYW4gSC4gU2Now7ZuaGVyciB3cm90ZToNCj4g
+T24gMjIvMDMvMjAxOSAxMi41NywgU3V0aGlrdWxwYW5pdCwgU3VyYXZlZSB3cm90ZToNCj4+IEFj
+dGl2YXRlL2RlYWN0aXZhdGUgQVZJQyByZXF1aXJlcyBzZXR0aW5nL3Vuc2V0dGluZyB0aGUgbWVt
+b3J5IHJlZ2lvbiB1c2VkDQo+PiBmb3IgQVBJQ19BQ0NFU1NfUEFHRV9QUklWQVRFX01FTVNMT1Qu
+IFNvLCByZS1mYWN0b3IgYXZpY19pbml0X2FjY2Vzc19wYWdlKCkNCj4+IHRvIGF2aWNfc2V0dXBf
+YWNjZXNzX3BhZ2UoKSBhbmQgYWRkIHNyY3VfcmVhZF9sb2NrL3VubG9jaywgd2hpY2ggYXJlIG5l
+ZWRlZA0KPj4gdG8gYWxsb3cgdGhpcyBmdW5jdGlvbiB0byBiZSBjYWxsZWQgZHVyaW5nIHJ1bi10
+aW1lLg0KPj4NCj4+IEFsc28sIGludHJvZHVjZSBhdmljX2Rlc3Ryb3lfYWNjZXNzX3BhZ2UoKSB0
+byB1bnNldCB0aGUgcGFnZSB3aGVuDQo+PiBkZWFjdGl2YXRlIEFWSUMuDQo+Pg0KPj4gU2lnbmVk
+LW9mZi1ieTogU3VyYXZlZSBTdXRoaWt1bHBhbml0PHN1cmF2ZWUuc3V0aGlrdWxwYW5pdEBhbWQu
+Y29tPg0KPj4gLS0tDQo+PiAgIGFyY2gveDg2L2t2bS9zdm0uYyB8IDI4ICsrKysrKysrKysrKysr
+KysrKysrKysrKysrLS0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKyksIDIg
+ZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2bS9zdm0uYyBiL2Fy
+Y2gveDg2L2t2bS9zdm0uYw0KPj4gaW5kZXggNGNmOTNhNzI5YWQ4Li5mNDFmMzRmNzBkZGUgMTAw
+NjQ0DQo+PiAtLS0gYS9hcmNoL3g4Ni9rdm0vc3ZtLmMNCj4+ICsrKyBiL2FyY2gveDg2L2t2bS9z
+dm0uYw0KPj4gQEAgLTE2NjYsNyArMTY2Niw3IEBAIHN0YXRpYyB1NjQgKmF2aWNfZ2V0X3BoeXNp
+Y2FsX2lkX2VudHJ5KHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwNCj4+ICAgICogZmllbGQgb2YgdGhl
+IFZNQ0IuIFRoZXJlZm9yZSwgd2Ugc2V0IHVwIHRoZQ0KPj4gICAgKiBBUElDX0FDQ0VTU19QQUdF
+X1BSSVZBVEVfTUVNU0xPVCAoNEtCKSBoZXJlLg0KPj4gICAgKi8NCj4+IC1zdGF0aWMgaW50IGF2
+aWNfaW5pdF9hY2Nlc3NfcGFnZShzdHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUpDQo+PiArc3RhdGljIGlu
+dCBhdmljX3NldHVwX2FjY2Vzc19wYWdlKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwgYm9vbCBpbml0
+KQ0KPj4gICB7DQo+PiAgICAgICAgc3RydWN0IGt2bSAqa3ZtID0gdmNwdS0+a3ZtOw0KPj4gICAg
+ICAgIGludCByZXQgPSAwOw0KPj4gQEAgLTE2NzUsMTAgKzE2NzUsMTQgQEAgc3RhdGljIGludCBh
+dmljX2luaXRfYWNjZXNzX3BhZ2Uoc3RydWN0IGt2bV92Y3B1ICp2Y3B1KQ0KPj4gICAgICAgIGlm
+IChrdm0tPmFyY2guYXBpY19hY2Nlc3NfcGFnZV9kb25lKQ0KPj4gICAgICAgICAgICAgICAgZ290
+byBvdXQ7DQo+Pg0KPj4gKyAgICAgaWYgKCFpbml0KQ0KPj4gKyAgICAgICAgICAgICBzcmN1X3Jl
+YWRfdW5sb2NrKCZrdm0tPnNyY3UsIHZjcHUtPnNyY3VfaWR4KTsNCj4+ICAgICAgICByZXQgPSBf
+X3g4Nl9zZXRfbWVtb3J5X3JlZ2lvbihrdm0sDQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgQVBJQ19BQ0NFU1NfUEFHRV9QUklWQVRFX01FTVNMT1QsDQo+PiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQVBJQ19ERUZBVUxUX1BIWVNfQkFTRSwNCj4+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBQQUdFX1NJWkUpOw0KPj4gKyAg
+ICAgaWYgKCFpbml0KQ0KPj4gKyAgICAgICAgICAgICB2Y3B1LT5zcmN1X2lkeCA9IHNyY3VfcmVh
+ZF9sb2NrKCZrdm0tPnNyY3UpOw0KPj4gICAgICAgIGlmIChyZXQpDQo+PiAgICAgICAgICAgICAg
+ICBnb3RvIG91dDsNCj4+DQo+PiBAQCAtMTY4OCw2ICsxNjkyLDI2IEBAIHN0YXRpYyBpbnQgYXZp
+Y19pbml0X2FjY2Vzc19wYWdlKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSkNCj4+ICAgICAgICByZXR1
+cm4gcmV0Ow0KPj4gICB9DQo+Pg0KPj4gK3N0YXRpYyB2b2lkIGF2aWNfZGVzdHJveV9hY2Nlc3Nf
+cGFnZShzdHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUpDQo+PiArew0KPj4gKyAgICAgc3RydWN0IGt2bSAq
+a3ZtID0gdmNwdS0+a3ZtOw0KPj4gKw0KPj4gKyAgICAgbXV0ZXhfbG9jaygma3ZtLT5zbG90c19s
+b2NrKTsNCj4+ICsNCj4+ICsgICAgIGlmICgha3ZtLT5hcmNoLmFwaWNfYWNjZXNzX3BhZ2VfZG9u
+ZSkNCj4+ICsgICAgICAgICAgICAgZ290byBvdXQ7DQo+PiArDQo+PiArICAgICBzcmN1X3JlYWRf
+dW5sb2NrKCZrdm0tPnNyY3UsIHZjcHUtPnNyY3VfaWR4KTsNCj4+ICsgICAgIF9feDg2X3NldF9t
+ZW1vcnlfcmVnaW9uKGt2bSwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFQSUNf
+QUNDRVNTX1BBR0VfUFJJVkFURV9NRU1TTE9ULA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgQVBJQ19ERUZBVUxUX1BIWVNfQkFTRSwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIDApOw0KPj4gKyAgICAgdmNwdS0+c3JjdV9pZHggPSBzcmN1X3JlYWRfbG9jaygma3Zt
+LT5zcmN1KTsNCj4gVGhpcyBwYXR0ZXJuIG9mICJ1bmxvY2ssIGRvIHNvbWV0aGluZywgcmUtbG9j
+ayIgc3RyaWtlcyBtZSBhcyBvZGQgLS0NCj4gaGVyZSBhbmQgaW4gdGhlIHNldHVwIGZ1bmN0aW9u
+Lg0KPiANCj4gVGhlcmUgc2VlbSB0byBiZSBhIGZldyBhc3N1bXB0aW9ucyBmb3IgdGhpcyB0byB3
+b3JrOg0KPiBhKSBTUkNVIHJlYWQtc2lkZSBjcml0aWNhbCBzZWN0aW9ucyBtdXN0IG5vdCBiZSBu
+ZXN0ZWQuDQo+IGIpIFdlIG11c3Qgbm90IGtlZXAgYW55IHBvaW50ZXIgdG8gYSBTUkNVIHByb3Rl
+Y3RlZCBzdHJ1Y3R1cmUNCj4gICAgIGFjcm9zcyBhIGNhbGwgdG8gdGhpcyBmdW5jdGlvbi4NCj4g
+DQo+IENhbiB3ZSBndWFyYW50ZWUgdGhlc2UgYXNzdW1wdGlvbnM/IE5vdyBhbmQgaW4gdGhlIGZ1
+dHVyZSAoZ2l2ZW4gdGhhdCB0aGlzIGlzIGFscmVhZHkNCj4gYSBiaXQgaGlkZGVuIGluIHRoZSBj
+YWxsIHN0YWNrKT8NCj4gDQo+IChBbmQgaWYgd2UgY2FuIGd1YXJhbnRlZSB0aGVtLCB3aHkgYXJl
+IHdlIGhvbGRpbmcgdGhlIFNSQ1UgbG9jayBpbiB0aGUgZmlyc3QgcGxhY2U/KQ0KDQpUaGUgcmVh
+c29uIHdlIG5lZWQgdG8gY2FsbCBzcmN1X3JlYWRfdW5sb2NrKCkgaGVyZSBpcyBiZWNhdXNlIHRo
+ZSBzcmN1X3JlYWRfbG9jaygpIGlzDQpjYWxsZWQgYXQgdGhlIGJlZ2lubmluZyBvZiB2Y3B1X3J1
+bigpIGJlZm9yZSBnb2luZyBpbnRvIHZjcHVfZW50ZXJfZ3Vlc3QoKS4NCg0KSGVyZSwgc2luY2Ug
+d2UgbmVlZCB0byBfX3g4Nl9zZXRfbWVtb3J5X3JlZ2lvbigpLCB3aGljaCB1cGRhdGUgdGhlIHBh
+Z2UgdGFibGUuDQpJZiB3ZSBkbyBub3QgY2FsbCBzcmN1X3JlYWRfdW5sb2NrKCksIHdlIGVuZCB1
+cCB3aXRoIHRoZSBmb2xsb3dpbmcgY2FsbCB0cmFjZToNCg0KWzk0NjE3Ljk5MjgzNV0gSU5GTzog
+dGFzayBxZW11LXN5c3RlbS14ODY6MjQ2Nzk5IGJsb2NrZWQgZm9yIG1vcmUgdGhhbiAxMjAgc2Vj
+b25kcy4NCls5NDYxOC4wMDE2MzVdICAgICAgIE5vdCB0YWludGVkIDUuMS4wLWF2aWMrICMxNA0K
+Wzk0NjE4LjAwNjkzNF0gImVjaG8gMCA+IC9wcm9jL3N5cy9rZXJuZWwvaHVuZ190YXNrX3RpbWVv
+dXRfc2VjcyIgZGlzYWJsZXMgdGhpcyBtZXNzYWdlLg0KWzk0NjE4LjAxNjExNF0gcWVtdS1zeXN0
+ZW0teDg2IEQgICAgMCAyNDY3OTkgMjQ2Nzg4IDB4MDAwMDAwODQNCls5NDYxOC4wMjI3NzNdIENh
+bGwgVHJhY2U6DQpbOTQ2MTguMDI1OTE5XSAgPyBfX3NjaGVkdWxlKzB4MmY5LzB4ODYwDQpbOTQ2
+MTguMDMwNDE2XSAgc2NoZWR1bGUrMHgzMi8weDcwDQpbOTQ2MTguMDM0MzM1XSAgc2NoZWR1bGVf
+dGltZW91dCsweDFkOC8weDMwMA0KWzk0NjE4LjAzOTIzNF0gID8gX19xdWV1ZV93b3JrKzB4MTJj
+LzB4M2IwDQpbOTQ2MTguMDQzOTM4XSAgd2FpdF9mb3JfY29tcGxldGlvbisweGI5LzB4MTQwDQpb
+OTQ2MTguMDQ5MDM2XSAgPyB3YWtlX3VwX3ErMHg3MC8weDcwDQpbOTQ2MTguMDUzMjY1XSAgX19z
+eW5jaHJvbml6ZV9zcmN1LnBhcnQuMTcrMHg4YS8weGMwDQpbOTQ2MTguMDU4OTU5XSAgPyBfX2Jw
+Zl90cmFjZV9yY3VfaW52b2tlX2NhbGxiYWNrKzB4MTAvMHgxMA0KWzk0NjE4LjA2NTM1OV0gIGlu
+c3RhbGxfbmV3X21lbXNsb3RzKzB4NTYvMHg5MCBba3ZtXQ0KWzk0NjE4LjA3MTA4MF0gIF9fa3Zt
+X3NldF9tZW1vcnlfcmVnaW9uKzB4N2RmLzB4OGMwIFtrdm1dDQpbOTQ2MTguMDc3Mjc1XSAgX194
+ODZfc2V0X21lbW9yeV9yZWdpb24rMHhiNi8weDE5MCBba3ZtXQ0KWzk0NjE4LjA4MzM0N10gIHN2
+bV9wcmVfdXBkYXRlX2FwaWN2X2V4ZWNfY3RybCsweDQyLzB4NzAgW2t2bV9hbWRdDQpbOTQ2MTgu
+MDkwNDEwXSAga3ZtX21ha2VfYXBpY3ZfZGVhY3RpdmF0ZV9yZXF1ZXN0KzB4YTQvMHhkMCBba3Zt
+XQ0KWzk0NjE4LjA5NzQ1MF0gIGVuYWJsZV9pcnFfd2luZG93KzB4MTE5LzB4MTcwIFtrdm1fYW1k
+XQ0KWzk0NjE4LjEwMzQ2MV0gIGt2bV9hcmNoX3ZjcHVfaW9jdGxfcnVuKzB4OGJmLzB4MWE4MCBb
+a3ZtXQ0KWzk0NjE4LjEwOTc3NF0gIGt2bV92Y3B1X2lvY3RsKzB4M2FiLzB4NWQwIFtrdm1dDQpb
+OTQ2MTguMTE1MTE5XSAgZG9fdmZzX2lvY3RsKzB4YTkvMHg2MzANCls5NDYxOC4xMTk1OTNdICBr
+c3lzX2lvY3RsKzB4NjAvMHg5MA0KWzk0NjE4LjEyMzc4MF0gIF9feDY0X3N5c19pb2N0bCsweDE2
+LzB4MjANCls5NDYxOC4xMjg0NTldICBkb19zeXNjYWxsXzY0KzB4NTUvMHgxMTANCls5NDYxOC4x
+MzMwMzddICBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg0NC8weGE5DQpbOTQ2MTgu
+MTM5MTYzXSBSSVA6IDAwMzM6MHg3ZjJhOWQ1NDc4ZDcNCls5NDYxOC4xNDM2MzBdIENvZGU6IEJh
+ZCBSSVAgdmFsdWUuDQpbOTQ2MTguMTQ3NzA3XSBSU1A6IDAwMmI6MDAwMDdmMmE5YWRlNDk4OCBF
+RkxBR1M6IDAwMDAwMjQ2IE9SSUdfUkFYOiAwMDAwMDAwMDAwMDAwMDEwDQpbOTQ2MTguMTU2NjYw
+XSBSQVg6IGZmZmZmZmZmZmZmZmZmZGEgUkJYOiAwMDAwMDAwMDAwMDAwMDAwIFJDWDogMDAwMDdm
+MmE5ZDU0NzhkNw0KWzk0NjE4LjE2NTE2MF0gUkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJTSTogMDAw
+MDAwMDAwMDAwYWU4MCBSREk6IDAwMDAwMDAwMDAwMDAwMTENCls5NDYxOC4xNzM2NDldIFJCUDog
+MDAwMDdmMmE5YWRlNGE5MCBSMDg6IDAwMDAwMDAwMDAwMDAwMDAgUjA5OiAwMDAwMDAwMDAwMDAw
+MGZmDQpbOTQ2MTguMTgyMTQyXSBSMTA6IDAwMDAwMDAwMDAwMDAwMDEgUjExOiAwMDAwMDAwMDAw
+MDAwMjQ2IFIxMjogMDAwMDAwMDAwMDAwMDAwMA0KWzk0NjE4LjE5MDY0MV0gUjEzOiAwMDAwMDAw
+MDAwODAxMDAwIFIxNDogMDAwMDAwMDAwMDAwMDAwMCBSMTU6IDAwMDA3ZjJhOWFkZTU3MDANCg0K
+UmVnYXJkcywNClN1cmF2ZWUNCg==
