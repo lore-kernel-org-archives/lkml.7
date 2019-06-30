@@ -2,351 +2,167 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ECCC5B57E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 07:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6FBC06508
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 07:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A34A208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 07:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C95208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 07:58:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEn/62K+"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zUawODtU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfF3H6C (ORCPT
+        id S1726970AbfF3H60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 03:58:02 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46358 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfF3H6B (ORCPT
+        Sun, 30 Jun 2019 03:58:26 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:19799 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfF3H6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 03:58:01 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i8so1305770pgm.13
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 00:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1O194sl4mriIRHMJ+1n1JK+TuGyK9Js7DoiaFQdgQv8=;
-        b=OEn/62K+J11Xx0gAIj6SvDBBuGQTLa7CSqID3ESlLB8MnLY6lpCNrF2hf2cdH56/VF
-         C/MeWypHaohajj1XSCX3Ypfj1PjJgM3wxihALO1JUA4y3m+rLAFjaTxwnTKjWDvoH7Bx
-         /vOaXx5/8WsrzgspGBMsW91Nt1VCbPJRydP5taAv12MLBMLHirmt5zbDE2Y2fuzt0tZc
-         xf8PDH89r+DSPWgJnEJQvCcvD5hTDgGmkX3MxEa5VdkGpetQmxBHyniA9t0aFiTLSgQ4
-         bBtVJKRZrqr90QxPzQnDv+xt8B0M0XkM2XxtRM1yBak0SLvLqxW6arty/2QR96RQcNGt
-         9+LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1O194sl4mriIRHMJ+1n1JK+TuGyK9Js7DoiaFQdgQv8=;
-        b=HMpRS0gbpGkBAs6Y9xGTCWCXKIVJKc0EwWy0N67LkrEquG5wz6Gg3XRlhR+R0hIKVV
-         dwAfc/FUl/vcxjBBCUkiHuEXnPFGOLHQ9MLxH3YsiPpqKDuKPUvWMB5Z3yQ6WysPCuIe
-         NSePPYmTaj9iooSoJCZw3CbhcpfYva7AinW6ysZcE00fPME0LFgMjg2UuWRKF60xaJ6G
-         L4m0EZBFvi+QXnNlVn/hhvzpYwuxDiEvr62XJr87FNNqA5sQPc8zJv5a7gatzs5mT9K3
-         45Yv4+2bcULmJQ/9+ugWJQyPZTTbfajjuFf8UcF+Ww3ehAWA2L32yjgzn9KIBeCLOS9N
-         8WCA==
-X-Gm-Message-State: APjAAAW0oMiiSJN8mjKSFSUxNN/PI2kqNXimPKrZEckkPGFGxjIvqtK6
-        eNBEBYInilF5hQV9TmQ3YZA=
-X-Google-Smtp-Source: APXvYqxwJ/beY2Bt8wvFjmEdWCtorwLHvk8lQaWPG6WozdEGoz5Cy3qsjOPOmLtmHXolEV7ZWBCVIQ==
-X-Received: by 2002:a65:6210:: with SMTP id d16mr17859467pgv.180.1561881481064;
-        Sun, 30 Jun 2019 00:58:01 -0700 (PDT)
-Received: from localhost.localdomain.localdomain ([2408:823c:c11:648:b8c3:8577:bf2f:2])
-        by smtp.gmail.com with ESMTPSA id w10sm5989637pgs.32.2019.06.30.00.57.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 30 Jun 2019 03:58:25 -0400
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x5U7vxPV023007;
+        Sun, 30 Jun 2019 16:58:00 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5U7vxPV023007
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561881480;
+        bh=+9brw8RpKfPCHLaNnVG0ALKGMwnUyxhWFifAcm1Jy9A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zUawODtU0vhTiPl5qaNgEo9ByKy2yYb9HTAWd7jH5/KmRFRbCTqDf1r2buPkH6eY7
+         9KWkOkbCmnK9rkMatOmM0itxGnwHB/mMPuqRIjog1NzLgK//i1B3cXHhcTtE4pC6OU
+         VNXerozMf6mNDQ2YuNycgdEq1clJ5Ax3fRXt2Pykx7Eg5zzgtutbB8rwb3gug/dYXr
+         O98/bPfya6esIc3ETSzeD3199w5ae4W/Lwcu2gAXFoPoyufabN5ofgPBt7+mBFPuRl
+         yTH6VnFiqBpTquzJOkRU+fykLB1M8/iymSMC+5w1Mo4YIFRRu6hO3v+dQXWv3IKe2k
+         Skm8IrMNwnxoQ==
+X-Nifty-SrcIP: [209.85.222.49]
+Received: by mail-ua1-f49.google.com with SMTP id z13so3851870uaa.4;
         Sun, 30 Jun 2019 00:58:00 -0700 (PDT)
-From:   Pengfei Li <lpf.vector@gmail.com>
-To:     akpm@linux-foundation.org, peterz@infradead.org, urezki@gmail.com
-Cc:     rpenyaev@suse.de, mhocko@suse.com, guro@fb.com,
-        aryabinin@virtuozzo.com, rppt@linux.ibm.com, mingo@kernel.org,
-        rick.p.edgecombe@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Pengfei Li <lpf.vector@gmail.com>
-Subject: [PATCH 5/5] mm/vmalloc.c: Rewrite struct vmap_area to reduce its size
-Date:   Sun, 30 Jun 2019 15:56:50 +0800
-Message-Id: <20190630075650.8516-6-lpf.vector@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190630075650.8516-1-lpf.vector@gmail.com>
-References: <20190630075650.8516-1-lpf.vector@gmail.com>
+X-Gm-Message-State: APjAAAWysMbNscscgdcwsu+dZATRmuJuaguufvScETMbNbgnIXct6t2m
+        LqZIl0OYZjwAjoaIWjYoBL6cZFfUIYYY90xpG9I=
+X-Google-Smtp-Source: APXvYqzyVZpInW2H6+hLd4o8U+kv7ZbqLoJ5DBzo4XhAbsuYuwZv3Nes7LIrEN98cU8HrIW65l38Jgqlp5UdZQn0x3E=
+X-Received: by 2002:a9f:25e9:: with SMTP id 96mr10993006uaf.95.1561881479132;
+ Sun, 30 Jun 2019 00:57:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190627163903.28398-1-yamada.masahiro@socionext.com>
+ <20190627163903.28398-5-yamada.masahiro@socionext.com> <20190628180057.GA22758@ravnborg.org>
+In-Reply-To: <20190628180057.GA22758@ravnborg.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 30 Jun 2019 16:57:23 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQDqtm5F_JoPAjPOuf6s3d0F1=Ctyq6s0u2DWNpbFr5vg@mail.gmail.com>
+Message-ID: <CAK7LNAQDqtm5F_JoPAjPOuf6s3d0F1=Ctyq6s0u2DWNpbFr5vg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] kbuild: compile-test kernel headers to ensure they
+ are self-contained
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Colin Cross <ccross@android.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kees Cook <keescook@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Members of struct vmap_area are not being used at the same time.
-For example,
-(1)members @flags, @purge_list, and @vm are unused when vmap area is
-in the *FREE* tree;
+Hi Sam,
 
-(2)members @subtree_max_size and @purge_list are unused when vmap area is
-in the *BUSY* tree and not in the purge list;
 
-(3)members @subtree_max_size and @vm are unused when vmap area is
-in the *BUSY* tree and in the purge list.
+On Sat, Jun 29, 2019 at 3:01 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Masahiro.
+>
+> On Fri, Jun 28, 2019 at 01:39:02AM +0900, Masahiro Yamada wrote:
+> > The headers in include/ are globally used in the kernel source tree
+> > to provide common APIs. They are included from external modules, too.
+> >
+> > It will be useful to make as many headers self-contained as possible
+> > so that we do not have to rely on a specific include order.
+> >
+> > There are more than 4000 headers in include/. In my rough analysis,
+> > 70% of them are already self-contained. With efforts, most of them
+> > can be self-contained.
+> >
+> > For now, we must exclude more than 1000 headers just because they
+> > cannot be compiled as standalone units. I added them to header-test-.
+> > The black list was mostly generated by a script, so should be checked
+> > later.
+> The list is smaller than I had expected.
+> And I see why you insisted on avoiding a maze ok Kbuild files.
+> It looks good, except there is a few issues..
+>
+>
+> The file kernel/kheaders_data.tar.xz includes all the .s files.
+> Something needs to be done to exclude the .s files...
 
-Since members @subtree_max_size, @purge_list and @vm are not used
-at the same time, so they can be placed in a union to reduce the
-size of struct vmap_area.
+Good catch. I will change scripts/gen_kheaders.sh
 
-Besides, rename @flags to @_vm_valid to indicate if @vm is valid.
-The reason why @_vm_valid can be placed in a union with @va_start
-is that if @vm is valid, then @va_start can be known by @vm.
 
-Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
----
- include/linux/vmalloc.h | 28 ++++++++++----
- mm/vmalloc.c            | 85 +++++++++++++++++++++++++++++++----------
- 2 files changed, 85 insertions(+), 28 deletions(-)
+> When building a full kernel the build fails like this:
+>   LD      vmlinux.o
+> aarch64-linux-gnu-ld: cannot find include/lib.a: No such file or directory
+> make[1]: *** [/home/sam/kernel/linux-kbuild.git/Makefile:1054: vmlinux] Error 1
+> make[1]: Leaving directory '/home/sam/kernel/linux-kbuild.git/.build/arm64-allyesconfig'
+> make: *** [Makefile:179: sub-make] Error 2
 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 51e131245379..7b99de5ccbec 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -48,18 +48,30 @@ struct vm_struct {
- };
- 
- struct vmap_area {
--	unsigned long va_start;
-+	union {
-+		unsigned long va_start;
-+		/*
-+		 * Determine whether vm is valid according to
-+		 * the value of _vm_valid
-+		 */
-+		unsigned long _vm_valid;
-+	};
-+
- 	unsigned long va_end;
- 
--	/*
--	 * Largest available free size in subtree.
--	 */
--	unsigned long subtree_max_size;
--	unsigned long flags;
-+	union {
-+		/* Only used when vmap area in *FREE* vmap_area tree */
-+		unsigned long subtree_max_size;
-+
-+		/* Only used when vmap area in vmap_purge_list */
-+		struct llist_node purge_list;
-+
-+		/* Only used when va_vm_is_valid() return true */
-+		struct vm_struct *vm;
-+	};
-+
- 	struct rb_node rb_node;         /* address sorted rbtree */
- 	struct list_head list;          /* address sorted list */
--	struct llist_node purge_list;    /* "lazy purge" list */
--	struct vm_struct *vm;
- };
- 
- /*
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 4148d6fdfb6d..89b93ee0ec04 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -329,8 +329,28 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
- #define DEBUG_AUGMENT_PROPAGATE_CHECK 0
- #define DEBUG_AUGMENT_LOWEST_MATCH_CHECK 0
- 
--#define VM_LAZY_FREE	0x02
--#define VM_VM_AREA	0x04
-+#define VA_VM_VALID	0x01UL
-+
-+static __always_inline void
-+__va_set_vm(struct vmap_area *va, struct vm_struct *vm)
-+{
-+	/* Overwrite va->va_start by va->_vm_valid */
-+	va->_vm_valid = VA_VM_VALID;
-+	va->vm = vm;
-+}
-+
-+static __always_inline void
-+__va_unset_vm(struct vmap_area *va)
-+{
-+	/* Restore va->va_start and overwrite va->_vm_valid */
-+	va->va_start = (unsigned long)va->vm->addr;
-+}
-+
-+static __always_inline bool
-+va_vm_is_valid(struct vmap_area *va)
-+{
-+	return (va->_vm_valid == VA_VM_VALID);
-+}
- 
- static DEFINE_SPINLOCK(vmap_area_lock);
- /* Export for kexec only */
-@@ -399,15 +419,26 @@ static void purge_vmap_area_lazy(void);
- static BLOCKING_NOTIFIER_HEAD(vmap_notify_list);
- static unsigned long lazy_max_pages(void);
- 
-+/*
-+ * Search the *BUSY* vmap_area tree. If va_vm_is_valid() return true,
-+ * then va->va_start has been overwritten by va->_vm_valid,
-+ * otherwise va->va_start remains the original value.
-+ */
- static struct vmap_area *__search_va_from_busy_tree(unsigned long addr)
- {
- 	struct rb_node *n = vmap_area_root.rb_node;
- 
- 	while (n) {
- 		struct vmap_area *va;
-+		unsigned long start;
- 
- 		va = rb_entry(n, struct vmap_area, rb_node);
--		if (addr < va->va_start)
-+		if (va_vm_is_valid(va))
-+			start = (unsigned long)va->vm->addr;
-+		else
-+			start = va->va_start;
-+
-+		if (addr < start)
- 			n = n->rb_left;
- 		else if (addr >= va->va_end)
- 			n = n->rb_right;
-@@ -429,8 +460,13 @@ find_va_links(struct vmap_area *va,
- {
- 	struct vmap_area *tmp_va;
- 	struct rb_node **link;
-+	unsigned long start;
-+	bool is_busy_va_tree = false;
- 
- 	if (root) {
-+		if (root == &vmap_area_root)
-+			is_busy_va_tree = true;
-+
- 		link = &root->rb_node;
- 		if (unlikely(!*link)) {
- 			*parent = NULL;
-@@ -447,6 +483,10 @@ find_va_links(struct vmap_area *va,
- 	 */
- 	do {
- 		tmp_va = rb_entry(*link, struct vmap_area, rb_node);
-+		if (is_busy_va_tree && va_vm_is_valid(tmp_va))
-+			start = (unsigned long)tmp_va->vm->addr;
-+		else
-+			start = tmp_va->va_start;
- 
- 		/*
- 		 * During the traversal we also do some sanity check.
-@@ -454,9 +494,9 @@ find_va_links(struct vmap_area *va,
- 		 * or full overlaps.
- 		 */
- 		if (va->va_start < tmp_va->va_end &&
--				va->va_end <= tmp_va->va_start)
-+				va->va_end <= start)
- 			link = &(*link)->rb_left;
--		else if (va->va_end > tmp_va->va_start &&
-+		else if (va->va_end > start &&
- 				va->va_start >= tmp_va->va_end)
- 			link = &(*link)->rb_right;
- 		else
-@@ -1079,8 +1119,8 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
- 
- 	va->va_start = addr;
- 	va->va_end = addr + size;
--	va->flags = 0;
- 	insert_va_to_busy_tree(va);
-+	va->vm = NULL;
- 
- 	spin_unlock(&vmap_area_lock);
- 
-@@ -1872,11 +1912,11 @@ void __init vmalloc_init(void)
- 		if (WARN_ON_ONCE(!va))
- 			continue;
- 
--		va->flags = VM_VM_AREA;
- 		va->va_start = (unsigned long)tmp->addr;
- 		va->va_end = va->va_start + tmp->size;
--		va->vm = tmp;
- 		insert_va_to_busy_tree(va);
-+
-+		__va_set_vm(va, tmp);
- 	}
- 
- 	/*
-@@ -1969,8 +2009,9 @@ static void setup_vmalloc_vm(struct vm_struct *vm, struct vmap_area *va,
- 	vm->addr = (void *)va->va_start;
- 	vm->size = va->va_end - va->va_start;
- 	vm->caller = caller;
--	va->vm = vm;
--	va->flags |= VM_VM_AREA;
-+
-+	__va_set_vm(va, vm);
-+
- 	spin_unlock(&vmap_area_lock);
- }
- 
-@@ -2075,7 +2116,7 @@ struct vm_struct *find_vm_area(const void *addr)
- 	struct vmap_area *va;
- 
- 	va = find_vmap_area((unsigned long)addr);
--	if (va && va->flags & VM_VM_AREA)
-+	if (va && va_vm_is_valid(va))
- 		return va->vm;
- 
- 	return NULL;
-@@ -2098,13 +2139,15 @@ struct vm_struct *remove_vm_area(const void *addr)
- 	might_sleep();
- 
- 	va = find_vmap_area((unsigned long)addr);
--	if (va && va->flags & VM_VM_AREA) {
-+	if (va && va_vm_is_valid(va)) {
- 		struct vm_struct *vm = va->vm;
- 
- 		spin_lock(&vmap_area_lock);
--		va->vm = NULL;
--		va->flags &= ~VM_VM_AREA;
--		va->flags |= VM_LAZY_FREE;
-+		/*
-+		 * Call __va_unset_vm() to restore the value of va->va_start
-+		 * before calling free_unmap_vmap_area() to add it to purge list
-+		 */
-+		__va_unset_vm(va);
- 		spin_unlock(&vmap_area_lock);
- 
- 		kasan_free_shadow(vm);
-@@ -2813,7 +2856,7 @@ long vread(char *buf, char *addr, unsigned long count)
- 		if (!count)
- 			break;
- 
--		if (!(va->flags & VM_VM_AREA))
-+		if (!va_vm_is_valid(va))
- 			continue;
- 
- 		vm = va->vm;
-@@ -2893,7 +2936,7 @@ long vwrite(char *buf, char *addr, unsigned long count)
- 		if (!count)
- 			break;
- 
--		if (!(va->flags & VM_VM_AREA))
-+		if (!va_vm_is_valid(va))
- 			continue;
- 
- 		vm = va->vm;
-@@ -3407,14 +3450,16 @@ static int s_show(struct seq_file *m, void *p)
- 	va = list_entry(p, struct vmap_area, list);
- 
- 	/*
--	 * s_show can encounter race with remove_vm_area, !VM_VM_AREA on
-+	 * s_show can encounter race with remove_vm_area, !va_vm_is_valid() on
- 	 * behalf of vmap area is being tear down or vm_map_ram allocation.
-+	 * And if va->vm != NULL then vmap area is being tear down,
-+	 * otherwise vmap area is allocated by vm_map_ram().
- 	 */
--	if (!(va->flags & VM_VM_AREA)) {
-+	if (!va_vm_is_valid(va)) {
- 		seq_printf(m, "0x%pK-0x%pK %7ld %s\n",
- 			(void *)va->va_start, (void *)va->va_end,
- 			va->va_end - va->va_start,
--			va->flags & VM_LAZY_FREE ? "unpurged vm_area" : "vm_map_ram");
-+			va->vm ? "unpurged vm_area" : "vm_map_ram");
- 
- 		return 0;
- 	}
+My bad - I built only include/,
+without testing full build.
+
+I will fix.
+
+
+>
+> include/uapi/linux/mman.h fails when building sparc64 allmodconfig.
+> There is likely more header files that will fail when we start to
+> throw this after diverse randconfigs.
+> I have no good idea how to catch this.
+> Unless your scripts could automate this across several architectures.
+
+Thanks. I excluded a little more headers.
+
+
+> I did not continue my testing futher.
+>
+> > +header-test-                 += uapi/drm/vmwgfx_drm.h
+> > +header-test-                 += uapi/linux/a.out.h
+> > +header-test-                 += uapi/linux/coda.h
+> ...
+> > +header-test-                 += uapi/xen/evtchn.h
+> > +header-test-                 += uapi/xen/gntdev.h
+> > +header-test-                 += uapi/xen/privcmd.h
+>
+> I though uapi files were covered by another Makefile?
+> If they are added because we pull them in using a pattern, maybe they
+> should be removed using a specific filer-out?
+
+I have not looked at this closely yet.
+
+usr/include/Makefile tests UAPI headers
+crafted by scripts/headers_install.sh
+
+Testing UAPI headers in their raw form
+makes sense, I think.
+
+
+
 -- 
-2.21.0
-
+Best Regards
+Masahiro Yamada
