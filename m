@@ -3,57 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0536CC5B57E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 08:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F97C5B57E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 08:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D602E208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 08:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF876208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 08:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfF3IhW (ORCPT
+        id S1726711AbfF3Ihc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 04:37:22 -0400
-Received: from ozlabs.org ([203.11.71.1]:39209 "EHLO ozlabs.org"
+        Sun, 30 Jun 2019 04:37:32 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53993 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbfF3IhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 04:37:22 -0400
+        id S1726605AbfF3Ihb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 04:37:31 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 45c3lg68Lrz9sBr; Sun, 30 Jun 2019 18:37:19 +1000 (AEST)
+        id 45c3ls4ssQz9sNl; Sun, 30 Jun 2019 18:37:29 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 9c4e4c90ec24652921e31e9551fcaedc26eec86d
+X-powerpc-patch-commit: 46c2478af610efb3212b8b08f74389d69899ef70
 X-Patchwork-Hint: ignore
-In-Reply-To: <7b15f4a18ab2d9fb54559acbadf2cd83a7d147f7.1557469839.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell Currey <ruscur@russell.cc>
+In-Reply-To: <87muif52lv.fsf_-_@igel.home>
+To:     Andreas Schwab <schwab@linux-m68k.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/64: mark start_here_multiplatform as __ref
-Message-Id: <45c3lg68Lrz9sBr@ozlabs.org>
-Date:   Sun, 30 Jun 2019 18:37:19 +1000 (AEST)
+Cc:     j.neuschaefer@gmx.net, linux-kernel@vger.kernel.org,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc/mm/32s: fix condition that is always true
+Message-Id: <45c3ls4ssQz9sNl@ozlabs.org>
+Date:   Sun, 30 Jun 2019 18:37:29 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-10 at 06:31:28 UTC, Christophe Leroy wrote:
-> Otherwise, the following warning is encountered:
+On Mon, 2019-06-17 at 21:22:20 UTC, Andreas Schwab wrote:
+> Move a misplaced paren that makes the condition always true.
 > 
-> WARNING: vmlinux.o(.text+0x3dc6): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup()
-> The function start_here_multiplatform() references
-> the function __init .early_setup().
-> This is often because start_here_multiplatform lacks a __init
-> annotation or the annotation of .early_setup is wrong.
-> 
-> Fixes: 56c46bba9bbf ("powerpc/64: Fix booting large kernels with STRICT_KERNEL_RWX")
-> Cc: Russell Currey <ruscur@russell.cc>
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
+> Signed-off-by: Andreas Schwab <schwab@linux-m68k.org>
+> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/9c4e4c90ec24652921e31e9551fcaedc26eec86d
+https://git.kernel.org/powerpc/c/46c2478af610efb3212b8b08f74389d69899ef70
 
 cheers
