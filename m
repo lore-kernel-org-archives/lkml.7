@@ -2,153 +2,194 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E80C5B576
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 20:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519E1C5B57F
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 20:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37400217D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 20:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC77217F5
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 20:47:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JvQhk0CY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfF3UjD (ORCPT
+        id S1726951AbfF3Urr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 16:39:03 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:43360 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726669AbfF3UjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 16:39:03 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x5UKafTT007280;
-        Sun, 30 Jun 2019 23:36:41 +0300
-Date:   Sun, 30 Jun 2019 23:36:41 +0300 (EEST)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     Kees Cook <keescook@chromium.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morris <jmorris@namei.org>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH 4/4] ipvs: reduce kernel stack usage
-In-Reply-To: <20190628123819.2785504-4-arnd@arndb.de>
-Message-ID: <alpine.LFD.2.21.1906302308280.3788@ja.home.ssi.bg>
-References: <20190628123819.2785504-1-arnd@arndb.de> <20190628123819.2785504-4-arnd@arndb.de>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Sun, 30 Jun 2019 16:47:47 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48718 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbfF3Urq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 16:47:46 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 47CFD255;
+        Sun, 30 Jun 2019 22:47:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1561927663;
+        bh=dBe3yAq6Q1C4VcXG06Vz7nXaIG0pbndeYddXgCeKg/A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JvQhk0CYuLPmvsnXgMfQ54qleQCRDC8h/euYya5WJKEGZT4y8cPE6Qkd/pT7ktb2c
+         BNXwwxE1Vl5Rh76y5JDDSQFISCh4/fpR2a+4HdNPKJdBK14JEHP2ycWds3maKAy/UD
+         Ef8mWClZdv+sgFXvRnCu62dq9xZKjV4vxoaEy31k=
+Date:   Sun, 30 Jun 2019 23:47:23 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Julien Thierry <julien.thierry@arm.com>,
+        "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" 
+        <linux-efi@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 0/4] drm+dt+efi: support devices with multiple possible
+ panels
+Message-ID: <20190630204723.GH7043@pendragon.ideasonboard.com>
+References: <20190630203614.5290-1-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190630203614.5290-1-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rob,
 
-	Hello,
+Thank you for the patch.
 
-On Fri, 28 Jun 2019, Arnd Bergmann wrote:
-
-> With the new CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL option, the stack
-> usage in the ipvs debug output grows because each instance of
-> IP_VS_DBG_BUF() now has its own buffer of 160 bytes that add up
-> rather than reusing the stack slots:
+On Sun, Jun 30, 2019 at 01:36:04PM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
 > 
-> net/netfilter/ipvs/ip_vs_core.c: In function 'ip_vs_sched_persist':
-> net/netfilter/ipvs/ip_vs_core.c:427:1: error: the frame size of 1052 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-> net/netfilter/ipvs/ip_vs_core.c: In function 'ip_vs_new_conn_out':
-> net/netfilter/ipvs/ip_vs_core.c:1231:1: error: the frame size of 1048 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-> net/netfilter/ipvs/ip_vs_ftp.c: In function 'ip_vs_ftp_out':
-> net/netfilter/ipvs/ip_vs_ftp.c:397:1: error: the frame size of 1104 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-> net/netfilter/ipvs/ip_vs_ftp.c: In function 'ip_vs_ftp_in':
-> net/netfilter/ipvs/ip_vs_ftp.c:555:1: error: the frame size of 1200 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+> Now that we can deal gracefully with bootloader (firmware) initialized
+> display on aarch64 laptops[1], the next step is to deal with the fact
+> that the same model of laptop can have one of multiple different panels.
+> (For the yoga c630 that I have, I know of at least two possible panels,
+> there might be a third.)
+
+I have to ask the obvious question: why doesn't the boot loader just
+pass a correct DT to Linux ? There's no point in passing a list of
+panels that are not there, this seems quite a big hack to me. A proper
+boot loader should construct the DT based on hardware detection.
+
+> This is actually a scenario that comes up frequently in phones and
+> tablets as well, so it is useful to have an upstream solution for this.
 > 
-> Since printk() already has a way to print IPv4/IPv6 addresses using
-> the %pIS format string, use that instead, combined with a macro that
-> creates a local sockaddr structure on the stack. These will still
-> add up, but the stack frames are now under 200 bytes.
+> The basic idea is to add a 'panel-id' property in dt chosen node, and
+> use that to pick the endpoint we look at when loading the panel driver,
+> e.g.
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> I'm not sure this actually does what I think it does. Someone
-> needs to verify that we correctly print the addresses here.
-> I've also only added three files that caused the warning messages
-> to be reported. There are still a lot of other instances of
-> IP_VS_DBG_BUF() that could be converted the same way after the
-> basic idea is confirmed.
-> ---
->  include/net/ip_vs.h             | 71 +++++++++++++++++++--------------
->  net/netfilter/ipvs/ip_vs_core.c | 44 ++++++++++----------
->  net/netfilter/ipvs/ip_vs_ftp.c  | 20 +++++-----
->  3 files changed, 72 insertions(+), 63 deletions(-)
+> / {
+> 	chosen {
+> 		panel-id = <0xc4>;
+> 	};
 > 
-> diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-> index 3759167f91f5..3dfbeef67be6 100644
-> --- a/include/net/ip_vs.h
-> +++ b/include/net/ip_vs.h
-> @@ -227,6 +227,16 @@ static inline const char *ip_vs_dbg_addr(int af, char *buf, size_t buf_len,
->  		       sizeof(ip_vs_dbg_buf), addr,			\
->  		       &ip_vs_dbg_idx)
->  
-> +#define IP_VS_DBG_SOCKADDR4(fam, addr, port)				\
-> +	(struct sockaddr*)&(struct sockaddr_in)				\
-> +	{ .sin_family = (fam), .sin_addr = (addr)->in, .sin_port = (port) }
-> +#define IP_VS_DBG_SOCKADDR6(fam, addr, port)				\
-> +	(struct sockaddr*)&(struct sockaddr_in6) \
-> +	{ .sin6_family = (fam), .sin6_addr = (addr)->in6, .sin6_port = (port) }
-> +#define IP_VS_DBG_SOCKADDR(fam, addr, port) (fam == AF_INET ?		\
-> +			IP_VS_DBG_SOCKADDR4(fam, addr, port) :		\
-> +			IP_VS_DBG_SOCKADDR6(fam, addr, port))
-> +
->  #define IP_VS_DBG(level, msg, ...)					\
->  	do {								\
->  		if (level <= ip_vs_get_debug_level())			\
-> @@ -251,6 +261,7 @@ static inline const char *ip_vs_dbg_addr(int af, char *buf, size_t buf_len,
->  #else	/* NO DEBUGGING at ALL */
->  #define IP_VS_DBG_BUF(level, msg...)  do {} while (0)
->  #define IP_VS_ERR_BUF(msg...)  do {} while (0)
-> +#define IP_VS_DBG_SOCKADDR(fam, addr, port) NULL
->  #define IP_VS_DBG(level, msg...)  do {} while (0)
->  #define IP_VS_DBG_RL(msg...)  do {} while (0)
->  #define IP_VS_DBG_PKT(level, af, pp, skb, ofs, msg)	do {} while (0)
-> @@ -1244,31 +1255,31 @@ static inline void ip_vs_control_del(struct ip_vs_conn *cp)
->  {
->  	struct ip_vs_conn *ctl_cp = cp->control;
->  	if (!ctl_cp) {
-> -		IP_VS_ERR_BUF("request control DEL for uncontrolled: "
-> -			      "%s:%d to %s:%d\n",
-> -			      IP_VS_DBG_ADDR(cp->af, &cp->caddr),
-> -			      ntohs(cp->cport),
-> -			      IP_VS_DBG_ADDR(cp->af, &cp->vaddr),
-> -			      ntohs(cp->vport));
-> +		pr_err("request control DEL for uncontrolled: "
-> +		       "%pISp to %pISp\n",
+> 	ivo_panel {
+> 		compatible = "ivo,m133nwf4-r0";
+> 		power-supply = <&vlcm_3v3>;
+> 		no-hpd;
+> 
+> 		ports {
+> 			port {
+> 				ivo_panel_in_edp: endpoint {
+> 					remote-endpoint = <&sn65dsi86_out_ivo>;
+> 				};
+> 			};
+> 		};
+> 	};
+> 
+> 	boe_panel {
+> 		compatible = "boe,nv133fhm-n61";
+> 		power-supply = <&vlcm_3v3>;
+> 		no-hpd;
+> 
+> 		ports {
+> 			port {
+> 				boe_panel_in_edp: endpoint {
+> 					remote-endpoint = <&sn65dsi86_out_boe>;
+> 				};
+> 			};
+> 		};
+> 	};
+> 
+> 	sn65dsi86: bridge@2c {
+> 		compatible = "ti,sn65dsi86";
+> 
+> 		...
+> 
+> 		ports {
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 
+> 			...
+> 
+> 			port@1 {
+> 				#address-cells = <1>;
+> 				#size-cells = <0>;
+> 				reg = <1>;
+> 
+> 				endpoint@c4 {
+> 					reg = <0xc4>;
+> 					remote-endpoint = <&boe_panel_in_edp>;
+> 				};
+> 
+> 				endpoint@c5 {
+> 					reg = <0xc5>;
+> 					remote-endpoint = <&ivo_panel_in_edp>;
+> 				};
+> 			};
+> 		};
+> 	}
+> };
+> 
+> Note that the panel-id is potentially a sparse-int.  The values I've
+> seen so far on aarch64 laptops are:
+> 
+>   * 0xc2
+>   * 0xc3
+>   * 0xc4
+>   * 0xc5
+>   * 0x8011
+>   * 0x8012
+>   * 0x8055
+>   * 0x8056
+> 
+> At least on snapdragon aarch64 laptops, they can be any u32 value.
+> 
+> However, on these laptops, the bootloader/firmware is not populating the
+> chosen node, but instead providing an "UEFIDisplayInfo" variable, which
+> contains the panel id.  Unfortunately EFI variables are only available
+> before ExitBootServices, so the second patch checks for this variable
+> before EBS and populates the /chosen/panel-id variable.
+> 
+> [1] https://patchwork.freedesktop.org/series/63001/
+> 
+> Rob Clark (4):
+>   dt-bindings: chosen: document panel-id binding
+>   efi/libstub: detect panel-id
+>   drm: add helper to lookup panel-id
+>   drm/bridge: ti-sn65dsi86: use helper to lookup panel-id
+> 
+>  Documentation/devicetree/bindings/chosen.txt | 69 ++++++++++++++++++++
+>  drivers/firmware/efi/libstub/arm-stub.c      | 49 ++++++++++++++
+>  drivers/firmware/efi/libstub/efistub.h       |  2 +
+>  drivers/firmware/efi/libstub/fdt.c           |  9 +++
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c        |  5 +-
+>  drivers/gpu/drm/drm_of.c                     | 21 ++++++
+>  include/drm/drm_of.h                         |  7 ++
+>  7 files changed, 160 insertions(+), 2 deletions(-)
 
-	ip_vs_dbg_addr() used compact form (%pI6c), so it would be
-better to use %pISc and %pISpc everywhere in IPVS...
+-- 
+Regards,
 
-	Also, note that before now port was printed with %d and
-ntohs() was used, now port should be in network order, so:
-
-- ntohs() should be removed
-- htons() should be added, if missing. At first look, this case
-is not present in IPVS, we have only ntohs() usage
-
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
+Laurent Pinchart
