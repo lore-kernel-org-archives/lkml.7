@@ -2,158 +2,153 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA11AC5B57E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 07:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8CCC06508
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 07:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC33208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 07:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DF92089C
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 07:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efWyaDxl"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="LU835ZbJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfF3HTD (ORCPT
+        id S1726620AbfF3H1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 03:19:03 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40177 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfF3HTD (ORCPT
+        Sun, 30 Jun 2019 03:27:23 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42127 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbfF3H1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 03:19:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p184so4997089pfp.7;
-        Sun, 30 Jun 2019 00:19:02 -0700 (PDT)
+        Sun, 30 Jun 2019 03:27:23 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l15so10280003otn.9
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 00:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lqmewgLdox3q6xeJleJbddpt+EE2+zPuCoLU7Opy5NU=;
-        b=efWyaDxla4encwtVoRQlQMgzCCy1yi9jsLij1Mj7K2vjKBK6SiQXu1lY3DhcfakNjx
-         XI2MXwwdeNce4iLXPk9TD3vhIOknXMbUWiMd3dkncW2LDID6UFwrwfnKYMjybMiVPkI8
-         JGqCzfEYkvUG7OXgnjphZ0KMNmhGBTVudIB5NPMdIyiq8Co6Eu43vIdVYD3zSYoRu/2w
-         cdo+SPbBYixsF9i7cs+hnQ3JJvkc8MwB9BtI2plvpG4J62o1UjS2rlK4p2NV+sBSbtV5
-         hQMtUA1qE0Kfu/L846Df0zH129iNWzhQQLoYdCjqS38EA4wlJ5UDN7ZK574gvageYbcG
-         4CUA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0ifuX0GPUPwU8sJc/BBSReUnmOObSyjtXhS37cebQo4=;
+        b=LU835ZbJa6zElZNkXLBkWXoIWv0zK5xbEYX9CWP5Tf/akdP5trCGEfpuxDozkOC7bx
+         tQUcIxoINIM+CEi9IRccQJySPhwZ25NmI6sp+AUWSckXq39KldCbbbpCUCdtr7U5FqmS
+         JZWDf/EV1vZJxZJt9Hp4Rmr4lfSgGpuXx35W44uFwcc5gz5iJcQ8d2x0/kVxjbJwKAMZ
+         zJdbi/BO1uliKiutjuwvCpUSl6KpJCoMb6XetG3BAfi0FKTktexTzuJ5KZbUq0xlNwin
+         cFAYQxjjwQpPsbCZ0gLyBIJRre7DPRBKg5qnIinCJ1x1F966ivSqXFFGmmKlbypcwng/
+         tCfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lqmewgLdox3q6xeJleJbddpt+EE2+zPuCoLU7Opy5NU=;
-        b=g6lhQGr6FTlIXhcAWUZ8MFftUjGoNXK29CcY7J479nAuwRmqX4VIZv8dzm5hgJy1n7
-         v9rq/UYe75f/5n8m8MiKf7+hA0AoejIQRDnXSZtGIvudmr/5PN+ClEEFhN/B3qRiekoU
-         V1h+cf16jIpxPSs2l8v9SxQWCy+crYhYaqecqPiNTGjHE1HHGh7JAcwUgwIktWXdH0yO
-         tahsIiXIGnnv8C+EsaYhojH85eEZdD9FhXaPMd/wqIoIicyBfvVJaBYreOk6VjlScONU
-         T6sbYqAacr7Ag12m/UqHD6GP3xBTSzvdYgKj3DIWPSyKYuV2nt8/LEihsMQyp+ZEHEx4
-         sPlw==
-X-Gm-Message-State: APjAAAWKlK/yPGIhA+RIDPcx5TY8KLzKTtV+pyQy2Xm0IHeIIk6iZNtJ
-        YswbN8hvKE5AFzsOfdAzPts=
-X-Google-Smtp-Source: APXvYqxq1FfZolN72MUIb2gYPB+AVLb5ynmNoJoQGYQapzNp7erPqeCrhwH73WodcdxI5ce42NeFoA==
-X-Received: by 2002:a17:90a:ff17:: with SMTP id ce23mr561811pjb.47.1561879142087;
-        Sun, 30 Jun 2019 00:19:02 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id s20sm6386360pfe.169.2019.06.30.00.19.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 30 Jun 2019 00:19:01 -0700 (PDT)
-Date:   Sun, 30 Jun 2019 00:18:59 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     benjamin.tissoires@redhat.com, jikos@kernel.org,
-        hdegoede@redhat.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
-Message-ID: <20190630071859.GD91171@dtor-ws>
-References: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
- <20190621145312.38688-1-jeffrey.l.hugo@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0ifuX0GPUPwU8sJc/BBSReUnmOObSyjtXhS37cebQo4=;
+        b=I55/1aCFicQlYAI+yLDbX9zAVMRmHgJZMUpz5GgV0SmXRbJvzSL4qCRk4KHkIN31ho
+         vFNvQ/AZkVzJrml0KcAW2b359yfHytxKseX0j8SFTFOeaeDw1PdIUspvUsJJreZWF6oE
+         kWP6ZPGWOgmjMMwJjb4s65TRBJwHitLN76yM7VwpGWkj1HfyeOt0iphEOPN1e0miLNlp
+         vx+7j6gxP51Uk1B6uVjNzQc6sVPsOnmZwF2K0N1ahj5Y+FMrVC90Qcj+At3FKjjG9kDl
+         Ppb/uRpDw3TuySeZ02/AU71MIhmrVzb9ReX+6OTLZxRtkRr57QdUEaDHvu4BzXjYUlXV
+         KtGA==
+X-Gm-Message-State: APjAAAXF7GQJ/q5liIMGyE9UlZ9alzGwdBEWMFHJQe3w0x/kaSWSSmah
+        ZLCHpQDptm/joF7zA9Gk3MEHNZs2tEAMsiNATLkvRw==
+X-Google-Smtp-Source: APXvYqzG3yWwXue81yNig6ezxWIPCgBdC5dvtqes+GhNboUBH50PqIBy7laVTzJ0AvIOZbQvNAl3Xx/oC59rNVkK+6A=
+X-Received: by 2002:a9d:470d:: with SMTP id a13mr14638073otf.126.1561879642668;
+ Sun, 30 Jun 2019 00:27:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621145312.38688-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190627123415.GA4286@bombadil.infradead.org> <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
+ <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+ <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
+ <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
+ <20190627195948.GB4286@bombadil.infradead.org> <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
+ <20190629160336.GB1180@bombadil.infradead.org>
+In-Reply-To: <20190629160336.GB1180@bombadil.infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sun, 30 Jun 2019 00:27:11 -0700
+Message-ID: <CAPcyv4ge3Ht1k_v=tSoVA6hCzKg1N3imhs_rTL3oTB+5_KC8_Q@mail.gmail.com>
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 07:53:12AM -0700, Jeffrey Hugo wrote:
-> There needs to be coordination between hid-quirks and the elan_i2c driver
-> about which devices are handled by what drivers.  Currently, both use
-> whitelists, which results in valid devices being unhandled by default,
-> when they should not be rejected by hid-quirks.  This is quickly becoming
-> an issue.
-> 
-> Since elan_i2c has a maintained whitelist of what devices it will handle,
-> which is now in a header file that hid-quirks can access, use that to
-> implement a blacklist in hid-quirks so that only the devices that need to
-> be handled by elan_i2c get rejected by hid-quirks, and everything else is
-> handled by default.
-> 
-> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+On Sat, Jun 29, 2019 at 9:03 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Thu, Jun 27, 2019 at 07:39:37PM -0700, Dan Williams wrote:
+> > On Thu, Jun 27, 2019 at 12:59 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > >
+> > > On Thu, Jun 27, 2019 at 12:09:29PM -0700, Dan Williams wrote:
+> > > > > This bug feels like we failed to unlock, or unlocked the wrong entry
+> > > > > and this hunk in the bisected commit looks suspect to me. Why do we
+> > > > > still need to drop the lock now that the radix_tree_preload() calls
+> > > > > are gone?
+> > > >
+> > > > Nevermind, unmapp_mapping_pages() takes a sleeping lock, but then I
+> > > > wonder why we don't restart the lookup like the old implementation.
+> > >
+> > > We have the entry locked:
+> > >
+> > >                 /*
+> > >                  * Make sure 'entry' remains valid while we drop
+> > >                  * the i_pages lock.
+> > >                  */
+> > >                 dax_lock_entry(xas, entry);
+> > >
+> > >                 /*
+> > >                  * Besides huge zero pages the only other thing that gets
+> > >                  * downgraded are empty entries which don't need to be
+> > >                  * unmapped.
+> > >                  */
+> > >                 if (dax_is_zero_entry(entry)) {
+> > >                         xas_unlock_irq(xas);
+> > >                         unmap_mapping_pages(mapping,
+> > >                                         xas->xa_index & ~PG_PMD_COLOUR,
+> > >                                         PG_PMD_NR, false);
+> > >                         xas_reset(xas);
+> > >                         xas_lock_irq(xas);
+> > >                 }
+> > >
+> > > If something can remove a locked entry, then that would seem like the
+> > > real bug.  Might be worth inserting a lookup there to make sure that it
+> > > hasn't happened, I suppose?
+> >
+> > Nope, added a check, we do in fact get the same locked entry back
+> > after dropping the lock.
+> >
+> > The deadlock revolves around the mmap_sem. One thread holds it for
+> > read and then gets stuck indefinitely in get_unlocked_entry(). Once
+> > that happens another rocksdb thread tries to mmap and gets stuck
+> > trying to take the mmap_sem for write. Then all new readers, including
+> > ps and top that try to access a remote vma, then get queued behind
+> > that write.
+> >
+> > It could also be the case that we're missing a wake up.
+>
+> OK, I have a Theory.
+>
+> get_unlocked_entry() doesn't check the size of the entry being waited for.
+> So dax_iomap_pmd_fault() can end up sleeping waiting for a PTE entry,
+> which is (a) foolish, because we know it's going to fall back, and (b)
+> can lead to a missed wakeup because it's going to sleep waiting for
+> the PMD entry to come unlocked.  Which it won't, unless there's a happy
+> accident that happens to map to the same hash bucket.
+>
+> Let's see if I can steal some time this weekend to whip up a patch.
 
-Applied, thank you.
+Theory seems to have some evidence... I instrumented fs/dax.c to track
+outstanding 'lock' entries and 'wait' events. At the time of the hang
+we see no locks held and the waiter is waiting on a pmd entry:
 
-> ---
->  drivers/hid/hid-quirks.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> index e5ca6fe2ca57..48ed4caf0ebc 100644
-> --- a/drivers/hid/hid-quirks.c
-> +++ b/drivers/hid/hid-quirks.c
-> @@ -16,6 +16,7 @@
->  #include <linux/export.h>
->  #include <linux/slab.h>
->  #include <linux/mutex.h>
-> +#include <linux/input/elan-i2c-ids.h>
->  
->  #include "hid-ids.h"
->  
-> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
->  
->  bool hid_ignore(struct hid_device *hdev)
->  {
-> +	int i;
-> +
->  	if (hdev->quirks & HID_QUIRK_NO_IGNORE)
->  		return false;
->  	if (hdev->quirks & HID_QUIRK_IGNORE)
-> @@ -978,18 +981,15 @@ bool hid_ignore(struct hid_device *hdev)
->  		break;
->  	case USB_VENDOR_ID_ELAN:
->  		/*
-> -		 * Many Elan devices have a product id of 0x0401 and are handled
-> -		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
-> -		 * is not (and cannot be) handled by that driver ->
-> -		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
-> +		 * Blacklist of everything that gets handled by the elan_i2c
-> +		 * input driver.  This avoids disabling valid touchpads and
-> +		 * other ELAN devices.
->  		 */
-> -		if (hdev->product == 0x0401 &&
-> -		    strncmp(hdev->name, "ELAN0800", 8) != 0)
-> -			return true;
-> -		/* Same with product id 0x0400 */
-> -		if (hdev->product == 0x0400 &&
-> -		    strncmp(hdev->name, "QTEC0001", 8) != 0)
-> -			return true;
-> +		if ((hdev->product == 0x0401 || hdev->product == 0x0400))
-> +			for (i = 0; strlen(elan_acpi_id[i].id); ++i)
-> +				if (!strncmp(hdev->name, elan_acpi_id[i].id,
-> +					     strlen(elan_acpi_id[i].id)))
-> +					return true;
->  		break;
->  	}
->  
-> -- 
-> 2.17.1
-> 
-
--- 
-Dmitry
+[ 4001.354334] fs/dax locked entries: 0
+[ 4001.358425] fs/dax wait entries: 1
+[ 4001.362227] db_bench/2445 index: 0x0 shift: 6
+[ 4001.367099]  grab_mapping_entry+0x17a/0x260
+[ 4001.371773]  dax_iomap_pmd_fault.isra.43+0x168/0x7a0
+[ 4001.377316]  ext4_dax_huge_fault+0x16f/0x1f0
+[ 4001.382086]  __handle_mm_fault+0x411/0x1390
+[ 4001.386756]  handle_mm_fault+0x172/0x360
