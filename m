@@ -2,89 +2,141 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A28C5B57F
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 03:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF10FC5B576
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 04:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF9320B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 03:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7651D20838
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 04:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="cxRkBFtL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jbxz7Mfd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfF3D4e (ORCPT
+        id S1726472AbfF3ED1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Jun 2019 23:56:34 -0400
-Received: from knopi.disroot.org ([178.21.23.139]:46712 "EHLO
-        knopi.disroot.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbfF3D4d (ORCPT
+        Sun, 30 Jun 2019 00:03:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35301 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725771AbfF3ED1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Jun 2019 23:56:33 -0400
-X-Greylist: delayed 397 seconds by postgrey-1.27 at vger.kernel.org; Sat, 29 Jun 2019 23:56:32 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by disroot.org (Postfix) with ESMTP id 82CE435AD1;
-        Sun, 30 Jun 2019 05:49:54 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at disroot.org
-Received: from knopi.disroot.org ([127.0.0.1])
-        by localhost (disroot.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RcVaHcMZLjIq; Sun, 30 Jun 2019 05:49:53 +0200 (CEST)
-From:   Chinmaya Krishnan Mahesh <chinmaya.mahesh@disroot.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-        t=1561866593; bh=9Ans4RlZn8dOH7qDF/10KOpQwK7T65Z7lmdyjzSs6EM=;
-        h=From:To:Cc:Subject:Date;
-        b=cxRkBFtLkJqF49ZKRJOmdQPn1WiL+0gAI0IbH2izNDvE48VmypAe/M+yVswDVcpFO
-         G0jOYvwIl4tfIuw0ErGts8jklgNnMtIWEvNlyZh8OcbO8t+B05MxH238awK/j5QT/v
-         nbXssB0o4AV839WeDkBIp/uhnTDe0fbi/XVVhvPViaoGK6bTFZNUFLBjloaQ5Di5dq
-         RXOmMjmDq8tGhSHt/U4rrmlPxmbRJOkNDNvw4+b26gcLLvKWHgsf5t5eQpesV8YC9v
-         zQX855x2+tPa8WxqO2WIhB0VOjyXG2m+5kjkuCm5D5k7o7pU+3BZF6rvzObA8kfsqZ
-         zhNvFdQA6TUqw==
-Cc:     Chinmaya Krishnan Mahesh <chinmaya.mahesh@disroot.org>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: imx7-media-csi: Remove unneeded break after return
-Date:   Sat, 29 Jun 2019 22:49:04 -0500
-Message-Id: <20190630034905.7124-1-chinmaya.mahesh@disroot.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Sun, 30 Jun 2019 00:03:27 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d126so4889929pfd.2
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2019 21:03:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FottbFd+Y+82l+HM3Qswb2Sq8WrNqq+eO0NHXgs+EzI=;
+        b=Jbxz7MfdMmZ9o9WU6TyUqf6ZrfL8RUrvfvoPxbBG22L3Tk4Wp4DfYo+d5qshIfFkE9
+         fgBRyvXj3dz2nThbe4d4j5HkIqi5yJKZqqq58a5QkEIa5ucRT5F3Q/RESOgmYITY8I40
+         5336Xb0h7bFTtr/NhQA5vU2YWSvUZFBZP7s9FlQUeRlqCPcqmQkagTr3JIx2v6PUz3Y5
+         QG74FO1lM5nd/FfBjZJDEvn4mXH25GFuLaBuXo2Rh3w8Oz3yUqYF0Mtmrr/RjPdRbs+l
+         DyWY2Oz1E+/p+cFcFnewixFBpL9QEfwc4srdp17MhLaVfLGmWp+vtSHJpldVrahD+6Zf
+         3Vkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FottbFd+Y+82l+HM3Qswb2Sq8WrNqq+eO0NHXgs+EzI=;
+        b=TI63CpZHSTXy7pyp50rIuLJKlg1kzPJzSxR8mcCZKoksNAMPYXHGz7VcvuxUMb4aV/
+         wkkHNkWcXbLf5pI1+Vs5Laws/41GUTncdZrw520dOipcCyFxbMa1Xutp1UZvwsG+9eV4
+         v4AGHuEoQVc7Ssz2WLlOG+lVaVax7PpSiCnsbTk3CAmWT40+D21879LM8xnWcMcTcQKV
+         mkn5vzAXd+vXtYgUwFNC32L9PwcStYxhcma01VpwgIuKUFDhlUJOwX1viyHZKvsbN3Me
+         Le2LqS6TGW3bWlKbghXqjUA1lcji0WqfFCLHGf4IM88/hiuluYfC+LtuQB0rtBFQ5IHg
+         ZcwQ==
+X-Gm-Message-State: APjAAAWgD/1FkqoHMyPtz4VIjjABwezbg1ncVfD/ozH0Nm7NmpMc5jE5
+        envQv1ItYhXhERu/0/75gd90dA==
+X-Google-Smtp-Source: APXvYqxVT5FLTspCDUieP0WCVk9yzwrr53RtQxt9iPVStpUeXliigG7L7l0TCjnf4tDvnu5Xv5KGMw==
+X-Received: by 2002:a63:f146:: with SMTP id o6mr17077968pgk.179.1561867405996;
+        Sat, 29 Jun 2019 21:03:25 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j15sm6860777pfr.146.2019.06.29.21.03.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 29 Jun 2019 21:03:25 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 21:03:22 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v4 0/8] stm32 m4 remoteproc on STM32MP157c
+Message-ID: <20190630040322.GH23094@builder>
+References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the checkpatch.pl warning:
+On Tue 14 May 01:26 PDT 2019, Fabien Dessenne wrote:
 
-WARNING: break is not useful after a goto or return
+> STMicrolectronics STM32MP157 MPU are based on a Dual Arm Cortex-A7 core and a
+> Cortex-M4.
+> This patchset adds the support of the stm32_rproc driver allowing to control
+> the M4 remote processor.
+> 
 
-Signed-off-by: Chinmaya Krishnan Mahesh <chinmaya.mahesh@disroot.org>
----
- drivers/staging/media/imx/imx7-media-csi.c | 1 -
- 1 file changed, 1 deletion(-)
+Applied patches 1 through 3, with a few fixes of compile warnings on
+data types in dev_dbg, in patch 3.
 
-diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-index a708a0340eb1..c15acca1dc0d 100644
---- a/drivers/staging/media/imx/imx7-media-csi.c
-+++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -1021,7 +1021,6 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
- 		break;
- 	default:
- 		return -EINVAL;
--		break;
- 	}
- 	return 0;
- }
--- 
-2.22.0
+Thanks,
+Bjorn
 
+> Changes since v3:
+> -Replaced "st,auto_boot" with "st,auto-boot"
+> -Update m4 reg values and align with unit-address
+> 
+> Changes since v2:
+> - Clarified "reg" description
+> - Change m4 unit adress to 38000000
+> - Renamed "auto_boot" in "st,auto-boot"
+> 
+> Changes since v1:
+> - Gave details about the memory mapping (in bindings).
+> - Used 'dma-ranges' instead of 'ranges'.
+> - Updated the 'compatible' property.
+> - Remove the 'recovery', 'reset-names' and 'interrupt-names' properties.
+> - Clarified why / when mailboxes are optional.
+> 
+> Fabien Dessenne (8):
+>   dt-bindings: stm32: add bindings for ML-AHB interconnect
+>   dt-bindings: remoteproc: add bindings for stm32 remote processor
+>     driver
+>   remoteproc: stm32: add an ST stm32_rproc driver
+>   ARM: dts: stm32: add m4 remoteproc support on STM32MP157c
+>   ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
+>   ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
+>   ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
+>   ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
+> 
+>  .../devicetree/bindings/arm/stm32/mlahb.txt        |  37 ++
+>  .../devicetree/bindings/remoteproc/stm32-rproc.txt |  63 +++
+>  arch/arm/boot/dts/stm32mp157a-dk1.dts              |  52 ++
+>  arch/arm/boot/dts/stm32mp157c-ed1.dts              |  52 ++
+>  arch/arm/boot/dts/stm32mp157c.dtsi                 |  20 +
+>  drivers/remoteproc/Kconfig                         |  15 +
+>  drivers/remoteproc/Makefile                        |   1 +
+>  drivers/remoteproc/stm32_rproc.c                   | 628 +++++++++++++++++++++
+>  8 files changed, 868 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+>  create mode 100644 drivers/remoteproc/stm32_rproc.c
+> 
+> -- 
+> 2.7.4
+> 
