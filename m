@@ -2,110 +2,364 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BD8C5B57E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 15:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01865C5B57E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 15:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2DBE20663
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 15:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B77B20663
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 15:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfF3P2B (ORCPT
+        id S1726617AbfF3Pbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 11:28:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23018 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726674AbfF3P2A (ORCPT
+        Sun, 30 Jun 2019 11:31:51 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:59831 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfF3Pbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 11:28:00 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5UFQwNe082675
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 11:27:59 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2texjw9phj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 11:27:59 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Sun, 30 Jun 2019 16:27:56 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 30 Jun 2019 16:27:50 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5UFRnW946596282
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 30 Jun 2019 15:27:49 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B55842041;
-        Sun, 30 Jun 2019 15:27:49 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AF8CF4203F;
-        Sun, 30 Jun 2019 15:27:46 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.110.41])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 30 Jun 2019 15:27:46 +0000 (GMT)
-Subject: Re: [PATCH v4 3/3] gen_init_cpio: add support for file metadata
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>, viro@zeniv.linux.org.uk
-Cc:     linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bug-cpio@gnu.org,
-        zohar@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com,
-        dmitry.kasatkin@huawei.com, takondra@cisco.com, kamensky@cisco.com,
-        hpa@zytor.com, arnd@arndb.de, rob@landley.net,
-        james.w.mcmechan@gmail.com, niveditas98@gmail.com
-Date:   Sun, 30 Jun 2019 11:27:36 -0400
-In-Reply-To: <20190523121803.21638-4-roberto.sassu@huawei.com>
-References: <20190523121803.21638-1-roberto.sassu@huawei.com>
-         <20190523121803.21638-4-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19063015-4275-0000-0000-00000347BAA7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19063015-4276-0000-0000-00003857CB02
-Message-Id: <1561908456.3985.23.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-30_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906300198
+        Sun, 30 Jun 2019 11:31:50 -0400
+Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 5E3F9200004;
+        Sun, 30 Jun 2019 15:31:40 +0000 (UTC)
+Subject: Re: [PATCH REBASE v2 0/2] Hugetlbfs support for riscv
+From:   Alex Ghiti <alex@ghiti.fr>
+To:     Christoph Hellwig <hch@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org, paul.walmsley@sifive.com
+References: <20190526125038.8419-1-alex@ghiti.fr>
+ <59847eea-cee6-62ba-71b9-3e09a444f857@ghiti.fr>
+Message-ID: <f77afa03-67df-046a-2b49-819cf04d1099@ghiti.fr>
+Date:   Sun, 30 Jun 2019 11:31:39 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <59847eea-cee6-62ba-71b9-3e09a444f857@ghiti.fr>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: sv-FI
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-23 at 14:18 +0200, Roberto Sassu wrote:
 
-> diff --git a/usr/Kconfig b/usr/Kconfig
-> index 43658b8a975e..8d9f54a16440 100644
-> --- a/usr/Kconfig
-> +++ b/usr/Kconfig
-> @@ -233,3 +233,11 @@ config INITRAMFS_COMPRESSION
->  	default ".lzma" if RD_LZMA
->  	default ".bz2"  if RD_BZIP2
->  	default ""
-> +
-> +config INITRAMFS_FILE_METADATA
-> +	string "File metadata type"
-> +	default ""
-> +	help
-> +	  Specify xattr to include xattrs in the image.
-> +
-> +	  If you are not sure, leave it blank.
-> 	fi
+On 6/13/19 1:18 AM, Alex Ghiti wrote:
+> Hi Paul, Palmer,
+>
+> Now Ingo and Catalin have acked their part, do you consider this patch
+> for inclusion ?
+>
+> Thanks,
+>
+> Alex
+>
 
-Instead of having to specify the metdata type, let's make this a
-choice.
+Hi Paul, Palmer,
 
-Mimi
+Any thought about this patch ?
 
+Thanks,
+
+Alex
+
+
+> On 5/26/19 8:50 AM, Alexandre Ghiti wrote:
+>> This series is simply rebased on v5.2rc1 and I added the Reviewed-By
+>> from Palmer for the first patch, thanks for that.
+>>
+>> This series introduces hugetlbfs support for both riscv 32/64. Riscv32
+>> is architecturally limited to huge pages of size 4MB whereas riscv64 has
+>> 2MB/1G huge pages support. Transparent huge page support is not
+>> implemented here, I will submit another series later.
+>> As stated in "The RISC-V Instruction Set Manual, Volume II: Privileged
+>> Architecture", riscv page table entries are marked as non-leaf entries
+>> as soon as at least one of the R/W/X bit set:
+>> - pmd_huge/pud_huge check if one of those bits are set,
+>> - pte_mkhuge simply returns the same pte value and does not set any of
+>>    the R/W/X bits
+>> This series was validated using libhugetlbfs testsuite ported to riscv64
+>> without linker script support.
+>> (https://github.com/AlexGhiti/libhugetlbfs.git, branch dev/alex/riscv).
+>> - libhugetlbfs testsuite on riscv64/2M:
+>>    - brk_near_huge triggers an assert in malloc.c, does not on x86.
+>> - libhugetlbfs testsuite on riscv64/1G:
+>>    - brk_near_huge triggers an assert in malloc.c, does not on x86.
+>>    - mmap-gettest, mmap-cow: testsuite passes the number of default free
+>>      pages as parameters and then fails for 1G which is not the default.
+>>      Otherwise succeeds when given the right number of pages.
+>>    - map_high_truncate_2 fails on x86 too: 0x60000000 is not 1G aligned
+>>      and fails at line 694 of fs/hugetlbfs/inode.c.
+>>    - heapshrink on 1G fails on x86 too, not investigated.
+>>    - counters.sh on 1G fails on x86 too: alloc_surplus_huge_page returns
+>>      NULL in case of gigantic pages.
+>>    - icache-hygiene succeeds after patch #3 of this series which lowers
+>>      the base address of mmap.
+>>    - fallocate_stress.sh on 1G never ends, on x86 too, not investigated.
+>> - libhugetlbfs testsuite on riscv32/4M: kernel build passes, lacks
+>>    libhugetlbfs support for 32bits.
+>> * Output for riscv64 2M and 1G libhugetbfs testsuite:
+>> zero_filesize_segment (2M: 64):
+>> zero_filesize_segment (1024M: 64):
+>> test_root (2M: 64):     PASS
+>> test_root (1024M: 64):  PASS
+>> meminfo_nohuge (2M: 64):        PASS
+>> meminfo_nohuge (1024M: 64):     PASS
+>> gethugepagesize (2M: 64):       PASS
+>> gethugepagesize (1024M: 64):    PASS
+>> gethugepagesizes (2M: 64):      PASS
+>> gethugepagesizes (1024M: 64):   PASS
+>> HUGETLB_VERBOSE=1 empty_mounts (2M: 64):        PASS
+>> HUGETLB_VERBOSE=1 empty_mounts (1024M: 64):     PASS
+>> HUGETLB_VERBOSE=1 large_mounts (2M: 64):        PASS
+>> HUGETLB_VERBOSE=1 large_mounts (1024M: 64):     PASS
+>> find_path (2M: 64):     PASS
+>> find_path (1024M: 64):  PASS
+>> unlinked_fd (2M: 64):   PASS
+>> unlinked_fd (1024M: 64):        PASS
+>> readback (2M: 64):      PASS
+>> readback (1024M: 64):   PASS
+>> truncate (2M: 64):      PASS
+>> truncate (1024M: 64):   PASS
+>> shared (2M: 64):        PASS
+>> shared (1024M: 64):     PASS
+>> mprotect (2M: 64):      PASS
+>> mprotect (1024M: 64):   PASS
+>> mlock (2M: 64): PASS
+>> mlock (1024M: 64):      PASS
+>> misalign (2M: 64):      PASS
+>> misalign (1024M: 64):   PASS
+>> fallocate_basic.sh (2M: 64):    PASS
+>> fallocate_basic.sh (1024M: 64): PASS
+>> fallocate_align.sh (2M: 64):    PASS
+>> fallocate_align.sh (1024M: 64): PASS
+>> ptrace-write-hugepage (2M: 64): PASS
+>> ptrace-write-hugepage (1024M: 64):      PASS
+>> icache-hygiene (2M: 64):        PASS
+>> icache-hygiene (1024M: 64):     PASS
+>> slbpacaflush (2M: 64):  PASS (inconclusive)
+>> slbpacaflush (1024M: 64):       PASS (inconclusive)
+>> straddle_4GB_static (2M: 64):   PASS
+>> straddle_4GB_static (1024M: 64):        PASS
+>> huge_at_4GB_normal_below_static (2M: 64):       PASS
+>> huge_at_4GB_normal_below_static (1024M: 64):    PASS
+>> huge_below_4GB_normal_above_static (2M: 64):    PASS
+>> huge_below_4GB_normal_above_static (1024M: 64): PASS
+>> map_high_truncate_2 (2M: 64):   PASS
+>> map_high_truncate_2 (1024M: 64):        FAIL    ftruncate(): Invalid
+>> argument
+>> misaligned_offset (2M: 64):     PASS (inconclusive)
+>> misaligned_offset (1024M: 64):  PASS (inconclusive)
+>> truncate_above_4GB (2M: 64):    PASS
+>> truncate_above_4GB (1024M: 64): PASS
+>> brk_near_huge (2M: 64): brk_near_huge: malloc.c:2385: sysmalloc:
+>> Assertion `(old_top == initial_top (av) && old_size == 0) || ((unsigned
+>> long) (old_size) >= MINSIZE && prev_inuse (old_top) && ((unsigned long)
+>> old_end & (pagesize - 1)) == 0)' failed.
+>> brk_near_huge (1024M: 64):      brk_near_huge: malloc.c:2385: sysmalloc:
+>> Assertion `(old_top == initial_top (av) && old_size == 0) || ((unsigned
+>> long) (old_size) >= MINSIZE && prev_inuse (old_top) && ((unsigned long)
+>> old_end & (pagesize - 1)) == 0)' failed.
+>> task-size-overrun (2M: 64):     PASS
+>> task-size-overrun (1024M: 64):  PASS
+>> stack_grow_into_huge (2M: 64):   PASS
+>> stack_grow_into_huge (1024M: 64): PASS
+>> corrupt-by-cow-opt (2M: 64):    PASS
+>> corrupt-by-cow-opt (1024M: 64): PASS
+>> noresv-preserve-resv-page (2M: 64):     PASS
+>> noresv-preserve-resv-page (1024M: 64):  PASS
+>> noresv-regarded-as-resv (2M: 64):       PASS
+>> noresv-regarded-as-resv (1024M: 64):    PASS
+>> readahead_reserve.sh (2M: 64):  PASS
+>> readahead_reserve.sh (1024M: 64):       PASS
+>> madvise_reserve.sh (2M: 64):    PASS
+>> madvise_reserve.sh (1024M: 64): PASS
+>> fadvise_reserve.sh (2M: 64):    PASS
+>> fadvise_reserve.sh (1024M: 64): PASS
+>> mremap-expand-slice-collision.sh (2M: 64):      PASS
+>> mremap-expand-slice-collision.sh (1024M: 64):   PASS
+>> mremap-fixed-normal-near-huge.sh (2M: 64):      PASS
+>> mremap-fixed-normal-near-huge.sh (1024M: 64):   PASS
+>> mremap-fixed-huge-near-normal.sh (2M: 64):      PASS
+>> mremap-fixed-huge-near-normal.sh (1024M: 64):   PASS
+>> set shmmax limit to 67108864
+>> shm-perms (2M: 64):     PASS
+>> private (2M: 64):       PASS
+>> private (1024M: 64):    PASS
+>> fork-cow (2M: 64):      PASS
+>> fork-cow (1024M: 64):   PASS
+>> direct (2M: 64):        Bad configuration: Failed to open direct-IO
+>> file: Invalid argument
+>> direct (1024M: 64):     Bad configuration: Failed to open direct-IO
+>> file: File exists
+>> malloc (2M: 64):        PASS
+>> malloc (1024M: 64):     PASS
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_MORECORE=yes malloc (2M: 64):
+>> PASS
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_MORECORE=yes malloc (1024M: 64):
+>> PASS
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_RESTRICT_EXE=unknown:none
+>> HUGETLB_MORECORE=yes malloc (2M: 64):      PASS
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_RESTRICT_EXE=unknown:none
+>> HUGETLB_MORECORE=yes malloc (1024M: 64):PASS
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_RESTRICT_EXE=unknown:malloc
+>> HUGETLB_MORECORE=yes malloc (2M: 64):    PASS
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_RESTRICT_EXE=unknown:malloc
+>> HUGETLB_MORECORE=yes malloc (1024M: 64): PASS
+>> malloc_manysmall (2M: 64):      PASS
+>> malloc_manysmall (1024M: 64):   PASS
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_MORECORE=yes malloc_manysmall (2M:
+>> 64):      PASS
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_MORECORE=yes malloc_manysmall (1024M:
+>> 64):   PASS
+>> heapshrink (2M: 64):    PASS
+>> heapshrink (1024M: 64): PASS
+>> LD_PRELOAD=libheapshrink.so heapshrink (2M: 64):        PASS
+>> LD_PRELOAD=libheapshrink.so heapshrink (1024M: 64):     PASS
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_MORECORE=yes heapshrink (2M: 64):
+>> PASS
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_MORECORE=yes heapshrink (1024M: 64):
+>> PASS
+>> LD_PRELOAD=libhugetlbfs.so libheapshrink.so HUGETLB_MORECORE=yes
+>> heapshrink (2M: 64):   PASS
+>> LD_PRELOAD=libhugetlbfs.so libheapshrink.so HUGETLB_MORECORE=yes
+>> heapshrink (1024M: 64):        PASS
+>> LD_PRELOAD=libheapshrink.so HUGETLB_MORECORE_SHRINK=yes
+>> HUGETLB_MORECORE=yes heapshrink (2M: 64):       PASS (inconclusive)
+>> LD_PRELOAD=libheapshrink.so HUGETLB_MORECORE_SHRINK=yes
+>> HUGETLB_MORECORE=yes heapshrink (1024M: 64):    PASS (inconclusive)
+>> LD_PRELOAD=libhugetlbfs.so libheapshrink.so HUGETLB_MORECORE_SHRINK=yes
+>> HUGETLB_MORECORE=yes heapshrink (2M: 64):       PASS
+>> LD_PRELOAD=libhugetlbfs.so libheapshrink.so HUGETLB_MORECORE_SHRINK=yes
+>> HUGETLB_MORECORE=yes heapshrink (1024M: 64):    FAIL    Heap did not
+>> shrink
+>> HUGETLB_VERBOSE=1 HUGETLB_MORECORE=yes heap-overflow (2M: 64): PASS
+>> HUGETLB_VERBOSE=1 HUGETLB_MORECORE=yes heap-overflow (1024M: 64):
+>> PASS
+>> HUGETLB_VERBOSE=0 linkhuge_nofd (2M: 64):
+>> HUGETLB_VERBOSE=0 linkhuge_nofd (1024M: 64):
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_VERBOSE=0 linkhuge_nofd (2M: 64):
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_VERBOSE=0 linkhuge_nofd (1024M: 64):
+>> linkhuge (2M: 64):
+>> linkhuge (1024M: 64):
+>> LD_PRELOAD=libhugetlbfs.so linkhuge (2M: 64):
+>> LD_PRELOAD=libhugetlbfs.so linkhuge (1024M: 64):
+>> linkhuge_rw (2M: 64):
+>> linkhuge_rw (1024M: 64):
+>> HUGETLB_ELFMAP=R linkhuge_rw (2M: 64):
+>> HUGETLB_ELFMAP=R linkhuge_rw (1024M: 64):
+>> HUGETLB_ELFMAP=W linkhuge_rw (2M: 64):
+>> HUGETLB_ELFMAP=W linkhuge_rw (1024M: 64):
+>> HUGETLB_ELFMAP=RW linkhuge_rw (2M: 64):
+>> HUGETLB_ELFMAP=RW linkhuge_rw (1024M: 64):
+>> HUGETLB_ELFMAP=no linkhuge_rw (2M: 64):
+>> HUGETLB_ELFMAP=no linkhuge_rw (1024M: 64):
+>> HUGETLB_ELFMAP=R HUGETLB_MINIMAL_COPY=no linkhuge_rw (2M: 64):
+>> HUGETLB_ELFMAP=R HUGETLB_MINIMAL_COPY=no linkhuge_rw (1024M: 64):
+>> HUGETLB_ELFMAP=W HUGETLB_MINIMAL_COPY=no linkhuge_rw (2M: 64):
+>> HUGETLB_ELFMAP=W HUGETLB_MINIMAL_COPY=no linkhuge_rw (1024M: 64):
+>> HUGETLB_ELFMAP=RW HUGETLB_MINIMAL_COPY=no linkhuge_rw (2M: 64):
+>> HUGETLB_ELFMAP=RW HUGETLB_MINIMAL_COPY=no linkhuge_rw (1024M: 64):
+>> HUGETLB_SHARE=0 HUGETLB_ELFMAP=R linkhuge_rw (2M: 64):
+>> HUGETLB_SHARE=0 HUGETLB_ELFMAP=R linkhuge_rw (1024M: 64):
+>> HUGETLB_SHARE=1 HUGETLB_ELFMAP=R linkhuge_rw (2M: 64):
+>> HUGETLB_SHARE=1 HUGETLB_ELFMAP=R linkhuge_rw (1024M: 64):
+>> HUGETLB_SHARE=0 HUGETLB_ELFMAP=W linkhuge_rw (2M: 64):
+>> HUGETLB_SHARE=0 HUGETLB_ELFMAP=W linkhuge_rw (1024M: 64):
+>> HUGETLB_SHARE=1 HUGETLB_ELFMAP=W linkhuge_rw (2M: 64):
+>> HUGETLB_SHARE=1 HUGETLB_ELFMAP=W linkhuge_rw (1024M: 64):
+>> HUGETLB_SHARE=0 HUGETLB_ELFMAP=RW linkhuge_rw (2M: 64):
+>> HUGETLB_SHARE=0 HUGETLB_ELFMAP=RW linkhuge_rw (1024M: 64):
+>> HUGETLB_SHARE=1 HUGETLB_ELFMAP=RW linkhuge_rw (2M: 64):
+>> HUGETLB_SHARE=1 HUGETLB_ELFMAP=RW linkhuge_rw (1024M: 64):
+>> chunk-overcommit (2M: 64):      PASS
+>> chunk-overcommit (1024M: 64):   PASS
+>> alloc-instantiate-race shared (2M: 64): PASS
+>> alloc-instantiate-race shared (1024M: 64):      PASS
+>> alloc-instantiate-race private (2M: 64):        PASS
+>> alloc-instantiate-race private (1024M: 64):     PASS
+>> truncate_reserve_wraparound (2M: 64):   PASS
+>> truncate_reserve_wraparound (1024M: 64):        PASS
+>> truncate_sigbus_versus_oom (2M: 64):    PASS
+>> truncate_sigbus_versus_oom (1024M: 64): PASS
+>> get_huge_pages (2M: 64):        PASS
+>> get_huge_pages (1024M: 64):     PASS
+>> shmoverride_linked (2M: 64):    PASS
+>> HUGETLB_SHM=yes shmoverride_linked (2M: 64):    PASS
+>> shmoverride_linked_static (2M: 64):
+>> HUGETLB_SHM=yes shmoverride_linked_static (2M: 64):
+>> LD_PRELOAD=libhugetlbfs.so shmoverride_unlinked (2M: 64): PASS
+>> LD_PRELOAD=libhugetlbfs.so HUGETLB_SHM=yes shmoverride_unlinked (2M:
+>> 64):       PASS
+>> quota.sh (2M: 64):      PASS
+>> quota.sh (1024M: 64):   PASS
+>> counters.sh (2M: 64):   PASS
+>> counters.sh (1024M: 64):        FAIL mmap failed: Invalid argument
+>> mmap-gettest 10 35 (2M: 64):    PASS
+>> mmap-gettest 10 35 (1024M: 64): FAIL    Failed to mmap the hugetlb file:
+>> Cannot allocate memory
+>> mmap-cow 34 35 (2M: 64):        PASS
+>> mmap-cow 34 35 (1024M: 64):     FAIL    Thread 15 (pid=514) failed
+>> set shmmax limit to 73400320
+>> shm-fork 10 17 (2M: 64):        PASS
+>> set shmmax limit to 73400320
+>> shm-fork 10 35 (2M: 64):        PASS
+>> set shmmax limit to 73400320
+>> shm-getraw 35 /dev/full (2M: 64):       PASS
+>> fallocate_stress.sh (2M: 64):   libgcc_s.so.1 must be installed for
+>> pthread_cancel to work
+>> fallocate_stress.sh (1024M: 64):
+>> ********** TEST SUMMARY
+>> *                      2M             1024M
+>> *                      32-bit 64-bit  32-bit 64-bit
+>> *     Total testcases:     0     93       0     83
+>> *             Skipped:     0      0       0      0
+>> *                PASS:     0     69       0     56
+>> *                FAIL:     0      0       0      5
+>> *    Killed by signal:     0      1       0      2
+>> *   Bad configuration:     0      1       0      1
+>> *       Expected FAIL:     0      0       0      0
+>> *     Unexpected PASS:     0      0       0      0
+>> *    Test not present:     0     21       0     19
+>> * Strange test result:     0      1       0      0
+>> **********
+>> Changes in v2:
+>>    - Merge comment fix about task size.
+>>    - Patch about mmap base address was merged separately.
+>>    - Rebased on top of linux-next where series about the capability
+>>      to free gigantic pages regardless of the configuration was merged.
+>>    - Add huge pmd sharing as suggested by Mike Kravetz.
+>>    - Gigantic page hstate is automatically created if CONTIG_ALLOC is
+>>      set, even if not explicitly asked for in command line, as suggested
+>>      by Mike.
+>>    - Replace #ifdef CONFIG_64BIT into IS_ENABLED(CONFIG_64BIT), as 
+>> suggested
+>>      by Christoph Hellwig.
+>>
+>> Alexandre Ghiti (2):
+>>    x86, arm64: Move ARCH_WANT_HUGE_PMD_SHARE config in arch/Kconfig
+>>    riscv: Introduce huge page support for 32/64bit kernel
+>>
+>>   arch/Kconfig                     |  3 +++
+>>   arch/arm64/Kconfig               |  2 +-
+>>   arch/riscv/Kconfig               |  8 ++++++
+>>   arch/riscv/include/asm/hugetlb.h | 18 +++++++++++++
+>>   arch/riscv/include/asm/page.h    | 10 ++++++++
+>>   arch/riscv/include/asm/pgtable.h |  8 ++++--
+>>   arch/riscv/mm/Makefile           |  2 ++
+>>   arch/riscv/mm/hugetlbpage.c      | 44 ++++++++++++++++++++++++++++++++
+>>   arch/x86/Kconfig                 |  4 +--
+>>   9 files changed, 93 insertions(+), 6 deletions(-)
+>>   create mode 100644 arch/riscv/include/asm/hugetlb.h
+>>   create mode 100644 arch/riscv/mm/hugetlbpage.c
+>>
