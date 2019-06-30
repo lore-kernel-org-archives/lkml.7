@@ -2,84 +2,105 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A9BC06508
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 10:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641AFC5B57E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 11:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20AC120665
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 10:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3284A2064B
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 11:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfF3KkC (ORCPT
+        id S1726620AbfF3LJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 06:40:02 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:44980 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbfF3KkB (ORCPT
+        Sun, 30 Jun 2019 07:09:18 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:46684 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfF3LJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 06:40:01 -0400
-Received: by mail-io1-f72.google.com with SMTP id i133so12022996ioa.11
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 03:40:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=eziCMEFtU+C3qoNYfJHsPKHY2FKR9JngSHlmZZHqzFo=;
-        b=rP+sNu4kFpbxaw03nVjCo7VEL3ZbEkrgoK2KdaGQWvw1MRzMKEBWTk+ZQuhlemhoBG
-         iLpDpEbl77QMqj1MVPlvnjAF7gFcyypbjKf0U88Fsk/5uY/HWvPIexFenIN/knsneiSV
-         8J2Di9VMcLVIyHZeQqXVkZt5H6yUFNZeor39cnJb29oRlIm0jYb36cFsVIk7w12wqD1b
-         SDBR8hCgbxUsBavI3gk2Xf3iienf0f5WD1ZfklqOG5jXGvNPMZfcvBdO50poWKv3s9W2
-         Y70sQl+nsDkKjjsUifMaKqUO5Om9yQPe7ntjvZOFEBIH+R1BDst7Q2moQNdQUu1OHZQP
-         Otyg==
-X-Gm-Message-State: APjAAAU7gJbqY0cI4a1hwSTGLOFEGvbGHJnPuF/og3eP7YalmmstO+fZ
-        yUQ4TBCtvVcLamm2BQU7jwoDqP7ToBy6o/nGIjsqa1/pIN9M
-X-Google-Smtp-Source: APXvYqwc7jNxeDwuXuaVmtRV4iFyubee59JJU/yaTue7FDuw9a59U5XBHdkSI5CIzX3MUpYnDTjMD5X25A8OGVnPI50yMEKLHG28
+        Sun, 30 Jun 2019 07:09:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1561892954; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1VKx1wk+WzUoklxrAuKWgU2OQk4oJuRQqz3GgyjEXAY=;
+        b=CrXPn/sYqzf1H1ODHym18aKQJeF/xMPQZ28pa7eIooieBYCSB2sBik0mJSykhwEDFTzdhj
+        PxBiKXVGVIigKUq9U1EYzNU1bChseQe9AinV+wvnsgxd2sxIUTZnyjHKDBCJyPRhOR0P2T
+        8Ixi7Ch5feBvSoUR/QTLgF8PJ210aq8=
+Date:   Sun, 30 Jun 2019 13:09:09 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/3] DRM: ingenic: Use devm_platform_ioremap_resource
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        od@zcrc.me, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Message-Id: <1561892949.1773.0@crapouillou.net>
+In-Reply-To: <20190630081833.GC5081@ravnborg.org>
+References: <20190627182114.27299-1-paul@crapouillou.net>
+        <20190630081833.GC5081@ravnborg.org>
 MIME-Version: 1.0
-X-Received: by 2002:a02:c6a9:: with SMTP id o9mr10128962jan.90.1561891200769;
- Sun, 30 Jun 2019 03:40:00 -0700 (PDT)
-Date:   Sun, 30 Jun 2019 03:40:00 -0700
-In-Reply-To: <0000000000003ec128058c7624ec@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003326c1058c8822c7@google.com>
-Subject: Re: WARNING in kernfs_create_dir_ns
-From:   syzbot <syzbot+38f5d5cf7ae88c46b11a@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        hongjiefang@asrmicro.com, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com, tj@kernel.org,
-        ulf.hansson@linaro.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
 
-commit 7f38abf220e2c800a2c451372e9f07ed5fd0ea49
-Author: Hongjie Fang <hongjiefang@asrmicro.com>
-Date:   Tue Jul 31 02:55:09 2018 +0000
 
-     mmc: core: improve reasonableness of bus width setting for HS400es
+Le dim. 30 juin 2019 =E0 10:18, Sam Ravnborg <sam@ravnborg.org> a =E9crit=20
+:
+> Hi Paul.
+>=20
+> On Thu, Jun 27, 2019 at 08:21:12PM +0200, Paul Cercueil wrote:
+>>  Simplify a bit the probe function by using the newly introduced
+>>  devm_platform_ioremap_resource(), instead of having to call
+>>  platform_get_resource() followed by devm_ioremap_resource().
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>   drivers/gpu/drm/ingenic/ingenic-drm.c | 4 +---
+>>   1 file changed, 1 insertion(+), 3 deletions(-)
+>>=20
+>>  diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
+>> b/drivers/gpu/drm/ingenic/ingenic-drm.c
+>>  index a069579ca749..02c4788ef1c7 100644
+>>  --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
+>>  +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+>>  @@ -580,7 +580,6 @@ static int ingenic_drm_probe(struct=20
+>> platform_device *pdev)
+>>   	struct drm_bridge *bridge;
+>>   	struct drm_panel *panel;
+>>   	struct drm_device *drm;
+>>  -	struct resource *mem;
+>>   	void __iomem *base;
+>>   	long parent_rate;
+>>   	int ret, irq;
+>>  @@ -614,8 +613,7 @@ static int ingenic_drm_probe(struct=20
+>> platform_device *pdev)
+>>   	drm->mode_config.max_height =3D 600;
+>>   	drm->mode_config.funcs =3D &ingenic_drm_mode_config_funcs;
+>>=20
+>>  -	mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>  -	base =3D devm_ioremap_resource(dev, mem);
+>>  +	base =3D devm_platform_ioremap_resource(pdev, 0);
+>>   	if (IS_ERR(base)) {
+>>   		dev_err(dev, "Failed to get memory resource");
+> Consider to include the error code in the error message here.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=129d6755a00000
-start commit:   72825454 Merge branch 'x86-urgent-for-linus' of git://git...
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=119d6755a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=169d6755a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31528e58cc12e2
-dashboard link: https://syzkaller.appspot.com/bug?extid=38f5d5cf7ae88c46b11a
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a6c439a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1353c323a00000
+I don't think it's needed; a non-zero error code in the probe function=20
+will
+have the drivers core automatically print a message with the name of the
+failing driver and the return code.
 
-Reported-by: syzbot+38f5d5cf7ae88c46b11a@syzkaller.appspotmail.com
-Fixes: 7f38abf220e2 ("mmc: core: improve reasonableness of bus width  
-setting for HS400es")
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>>   		return PTR_ERR(base);
+>=20
+> With the above fixed/considered:
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+
+=
+
