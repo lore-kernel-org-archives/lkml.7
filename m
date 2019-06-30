@@ -2,138 +2,67 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FREEMAIL_REPLYTO_END_DIGIT,FROM_LOCAL_DIGITS,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB12C0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 23:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25E0C06508
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 23:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A7A2146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 23:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4242089F
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 23:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NclGqIAT"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XQScMS5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfF3XGs (ORCPT
+        id S1727247AbfF3Xc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 19:06:48 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34135 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727200AbfF3XGr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 19:06:47 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n5so11578474otk.1
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 16:06:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=bl+8fccvQ+Vw0cb2jDFiMa7kxLSzzNYBzyYR78H/6zs=;
-        b=NclGqIATbUTGEGvFGfvyAKJsQ3Wsyo9OEJAJV4eNIIXaQtWTv1qGxGwG65g02Quva7
-         p/M3ofz5qKgSpMrd//ezAR7w3QAI/1GuPsVtnm7N0AgVJjM1umhgZ+XoxtR4bcOnjtWA
-         kRrh01URyCYf8NBw6Hs539A1pNVWhcK9JfhM+VWY/nlPevY0fk1lcmJi3jN6BTx1EIa7
-         L97hbwq1GAMoGw/eUC10KjlA7sENrYhRhrQT+cxc47LKeOW0jtvy093Phu13g7k5Zw9h
-         6/j3Ui2uRJ37DSDkBxVukEjHdL6IqYOQPdF1yie7lNtnv+1Xv8FADP6iF8d1+DwqE8Yk
-         HSKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=bl+8fccvQ+Vw0cb2jDFiMa7kxLSzzNYBzyYR78H/6zs=;
-        b=nKT3HtnrALOudiQHoyVKqoc+TtB01guA1BxX6Sn8VxrpcYJWNKjcZs7rPP5N+uRE8E
-         79aHp2pdvQTjV75C/De119AZMsQAj2MBCgSkyJdnUd6Uok3E5eUUqVyjqLn8f2wVtb2P
-         Qt590t7iAsRmb0cL005TqaK92qomHVrcqyY5m+Oe3ne8OLOOxwsqgK8VJIQns6ooPL30
-         vOQtGWPV7tqWccgj6ORBNGNBkQy2tVLLBWxUGOAXIddwt0MyhrBLGtVRlg7gx+UOXo0s
-         lamOhQRRqABmBTdg8NGCAzrpb6GOKvG6fAHE/4DPDYyFtI+kvuYTEg+bhi5hCJWO3EhQ
-         AcQw==
-X-Gm-Message-State: APjAAAV7AzwcycrNa/FFj7O1XiyRhGv+Ye0SGhBKC4ocYJ2yVVYyrzAG
-        +i211vqfp0eaoI0mbhvxScmxVw==
-X-Google-Smtp-Source: APXvYqwsNJqRsUaScDSVFeKcrfnQNXKYf7CsN+IusCoyenNGR11PQ6HvLabLyOiq5tnxR0X7o8uN/A==
-X-Received: by 2002:a9d:7a45:: with SMTP id z5mr18205451otm.197.1561936006723;
-        Sun, 30 Jun 2019 16:06:46 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id n106sm2153839ota.31.2019.06.30.16.06.44
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 30 Jun 2019 16:06:45 -0700 (PDT)
-Date:   Sun, 30 Jun 2019 16:06:25 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Jens Axboe <axboe@kernel.dk>, Oleg Nesterov <oleg@redhat.com>
-cc:     Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
-        akpm@linux-foundation.org, hch@lst.de, gkohli@codeaurora.org,
-        mingo@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block: fix a crash in do_task_dead()
-In-Reply-To: <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
-Message-ID: <alpine.LSU.2.11.1906301542410.1105@eggly.anvils>
-References: <1559161526-618-1-git-send-email-cai@lca.pw> <20190530080358.GG2623@hirez.programming.kicks-ass.net> <82e88482-1b53-9423-baad-484312957e48@kernel.dk> <20190603123705.GB3419@hirez.programming.kicks-ass.net>
- <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Sun, 30 Jun 2019 19:32:29 -0400
+Received: from m12-12.163.com ([220.181.12.12]:38802 "EHLO m12-12.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727175AbfF3Xc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 19:32:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=MIME-Version:From:Subject:Message-Id:Date; bh=8nrcv
+        OM0VthkztCPNwX7t4pd0gJ53hUmMRJ1TWMAnrk=; b=XQScMS5BRne1tPnwI5AGl
+        sPV2+uIk1uQABGjR1YNPVdiCezVrB6OPA7ThcgX0tl2Ch011iuiYLrfloKqdtMXj
+        WtgZkfxGXR2e2pmYZumZ3yVFtJB6Mi0iVHyYkMlW780UfM5m3bWQ9p8EXU4Rq3JM
+        qFcRLaYAtFYQZ3nHbJxkRs=
+Received: from [172.16.0.5] (unknown [106.12.128.37])
+        by smtp8 (Coremail) with SMTP id DMCowABXFAmKRhldJP47Ag--.1660S2;
+        Mon, 01 Jul 2019 07:32:27 +0800 (CST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: base64
+From:   =?utf-8?q?Shenzhen_ZDCL_Trade_Co=2E_=2C_Ltd=2E?= 
+        <18475635876@163.com>
+To:     linux-kernel@vger.kernel.org
+Reply-to: 18475635876@163.com
+Subject: High quality PCB
+X-CM-TRANSID: DMCowABXFAmKRhldJP47Ag--.1660S2
+Message-Id: <5D19468B.730D9E.20213@m12-12.163.com>
+X-Coremail-Antispam: 1Uf129KBjvdXoWrCw48Ww4UXr4ktFyruryUKFg_yoWxGwbEgF
+        yrJryxZFn7t3WUC34Ygr43AF9ruw4jkry0kryrJ3WUJwnayF4kuFWDtFW0vryfKryDtF45
+        C3Z0y34fZan7ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8GsjUUUUUU==
+X-Originating-IP: [106.12.128.37]
+Date:   Mon, 1 Jul 2019 07:32:27 +0800 (CST)
+X-CM-SenderInfo: rpryklivwtkmixw6il2tof0z/1tbivxTjY1WBkrwvTwAAsx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019, Jens Axboe wrote:
-> 
-> How about the following plan - if folks are happy with this sched patch,
-> we can queue it up for 5.3. Once that is in, I'll kill the block change
-> that special cases the polled task wakeup. For 5.2, we go with Oleg's
-> patch for the swap case.
+RGVhciBQdXJjaGFzaW5nIE1hbmdhZ2VyOgoKTmljZSBkYXkhCgpUaGFua3MgZm9yIHlvdXIgdGlt
+ZSB0byByZWFkIG15IGVtYWlsLkknbSBFdmEsZnJvbSBTaGVuemhlbiBaRENMIFRyYWRlIENvLiwg
+THRkLHdobyBsZWFybnMgeW91ciBjb250YWN0IGluZm9ybWF0aW9uIGZyb20gaW50ZXJuZXQuV2Ug
+bWFpbmx5IG1hbnVmYWN0dXJlIGFuZCBleHBvcnQgaW4gUENCIGNvcHkgYm9hcmQgYW5kIFBDQkEg
+T0VNIGdlbmVyYXRpb24gb2YgbWF0ZXJpYWwuTWFpbiBQcmludGVkIGNpcmN1aXQgYm9hcmQsUENC
+IGRlc2lnbixJQyBkZWNyeXB0aW9uLHByb3RvdHlwZSBwcm9kdWN0aW9uIGRlYnVnZ2luZyxtb3Ro
+ZXJib2FyZHMgY29weSBib2FyZC4KCklmIHlvdSBhcmUgaW50ZXJlc3RlZCBpbiBvdXIgYnVzaW5l
+c3MseW91IGNhbiBjb250YWN0IHVzIGFueSB0aW1lLndpc2ggb3VyIHByb2R1Y3RzIHdpbGwgYmUg
+aGVscGZ1bCBmb3IgeW91ciBidXNpbmVzcy4KCgoKRXZhCgpDb21wYW55IG5hbWXvvJpTaGVuemhl
+biBaRENMIFRyYWRlIENvLiwgTHRkLgoKTWFpbO+8mjE4NDc1NjM1ODc2QDE2My5jb20KClNreXBl
+77yaKzg2MTg0NzU2MzU4NzYKCldlY2hhdO+8mjE4NDc1NjM1ODc2
 
-I just hit the do_task_dead() kernel BUG at kernel/sched/core.c:3463!
-while heavy swapping on 5.2-rc7: it looks like Oleg's patch intended
-for 5.2 was not signed off, and got forgotten.
-
-I did hit the do_task_dead() BUG (but not at all easily) on early -rcs
-before seeing Oleg's patch, then folded it in and and didn't hit the BUG
-again; then just tried again without it, and luckily hit in a few hours.
-
-So I can give it an enthusiastic
-Acked-by: Hugh Dickins <hughd@google.com>
-because it makes good sense to avoid the get/blk_wake/put overhead on
-the asynch path anyway, even if it didn't work around a bug; but only
-Half-Tested-by: Hugh Dickins <hughd@google.com>
-since I have not been exercising the synchronous path at all.
-
-Hugh, requoting Oleg:
-
-> 
-> I don't understand this code at all but I am just curious, can we do
-> something like incomplete patch below ?
-> 
-> Oleg.
-> 
-> --- x/mm/page_io.c
-> +++ x/mm/page_io.c
-> @@ -140,8 +140,10 @@ int swap_readpage(struct page *page, bool synchronous)
->  	unlock_page(page);
->  	WRITE_ONCE(bio->bi_private, NULL);
->  	bio_put(bio);
-> -	blk_wake_io_task(waiter);
-> -	put_task_struct(waiter);
-> +	if (waiter) {
-> +		blk_wake_io_task(waiter);
-> +		put_task_struct(waiter);
-> +	}
->  }
->  
->  int generic_swapfile_activate(struct swap_info_struct *sis,
-> @@ -398,11 +400,12 @@ int swap_readpage(struct page *page, boo
->  	 * Keep this task valid during swap readpage because the oom killer may
->  	 * attempt to access it in the page fault retry time check.
->  	 */
-> -	get_task_struct(current);
-> -	bio->bi_private = current;
->  	bio_set_op_attrs(bio, REQ_OP_READ, 0);
-> -	if (synchronous)
-> +	if (synchronous) {
->  		bio->bi_opf |= REQ_HIPRI;
-> +		get_task_struct(current);
-> +		bio->bi_private = current;
-> +	}
->  	count_vm_event(PSWPIN);
->  	bio_get(bio);
->  	qc = submit_bio(bio);
