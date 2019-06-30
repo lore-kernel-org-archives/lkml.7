@@ -2,97 +2,135 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C55FC5B57E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7A0C5B57F
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6072089F
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D789A2089F
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:51:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AvbuDWzw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="swHJlUxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfF3VtO (ORCPT
+        id S1727080AbfF3VvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 17:49:14 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39323 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbfF3VtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 17:49:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cPKM2pXXz9s4V;
-        Mon,  1 Jul 2019 07:49:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561931352;
-        bh=O/Y5svxR89JBDFNq/bdF3kpJz7bNfTxUebVyz/vh7gI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=AvbuDWzwVbxAIgqlLITV20B3HFCTzJcM/0InHsvupI9fUiGZQeP3/C31kjLnzFMPa
-         0lKlSOywmG8kjMnZrcyvWJKSekn9okeHbUeSBiHFAFmZX4foxNSfaNouU7Z5+0ExEW
-         tXx0QAeMgO1n7O1ee2nIChCpYx+7Rtv3rIq88V4ocOy6+/b8Br7fJAbbMyudGg1NGW
-         cLKDSF52VKe0/5ORIQrRJSod9RtyxibEdLEw1LTC4hHU7a3HsOt/JBYW6Gaip6H/mE
-         Ta7mmZJS+r5B4KpWyPunBef8T/qQt4mvYdd+FZIf1DnSs6fQBlFRVCd7WpWOwDAvjg
-         OxoTnNrK8JoCw==
-Date:   Mon, 1 Jul 2019 07:49:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: linux-next: Fixes tag needs some work in the sound-asoc tree
-Message-ID: <20190701074911.5bb8a58c@canb.auug.org.au>
+        Sun, 30 Jun 2019 17:51:17 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39615 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfF3VvR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 17:51:17 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m10so19334711edv.6;
+        Sun, 30 Jun 2019 14:51:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cEH/o2HqpCknJy9nBRwsk/dmMAy15QQ1nN1L9qQycZE=;
+        b=swHJlUxLQh9WSUVWMGFVfNaERr7FI/U6xHa2WiwUDplT1QHGinlHfeOkVEPbAeWKDy
+         SDrlERC+XPDRlLP7VBhI3Eut+59BpwzU9FLLsH9aCpKdxED/oh2XR1QL/5yNqJmannXG
+         kOXgIw1N7U3JROMuXrxtr8ecLR4WvNYeJ70EUbVIv3ZsNzazYxGVlNbyZXf2Oz4BtNyc
+         bcxkuzq/rX31WUekCwhk5G/KFOlZAs8asUrjs8FCzwMcRKGP0bH148HifFS18/3OEJ3+
+         i67q3WrMmFjxhWDDiUGjmAK0bPcSUNacn+qfeg7jziurh5wsb0IgE17PJkaHAOAdryWr
+         6EEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cEH/o2HqpCknJy9nBRwsk/dmMAy15QQ1nN1L9qQycZE=;
+        b=jSACQBF9c4o+DJ9DFKUCnOxJYlTU3F5wMSma2ZKKP/dGHw6ue4s5kxwVe6QiWoID1z
+         PBSbxGbeAMCJwk5ChzhBiP1PJQNQYrQw+lKJhTKrgEX3KvOBcx0BbnlKurqH10iuW2ue
+         VeFVESxNuYHSwkLKSBQz7YMR02N927dgZbNUJLQWitA1+i5fv4vnHorPRB7PGxW50sfA
+         ssObpCfsCPLT/BMsWM8wfc2SO1FDrhH37hcKBrR8qi84K8V8UsH9TevpxQNvR8GKCEIh
+         Iwi7IwpNeGQnHvl/ehmkdG4tY0zc2HDJ4CYqk7lO9M6GrnT4V4x5UcVceN3SV8cyCj6e
+         U2HA==
+X-Gm-Message-State: APjAAAWNwV8aZ6yytsyE6Cm8gLDw+TujFX8Ko0PODM30jxI0IKmXh5nD
+        pH324TFO1izjhbmQhpLULs9FP+YxXY7rmJQSzVo=
+X-Google-Smtp-Source: APXvYqwqSO7bWu5n9I4u0fubDx1l3J2iji+w1ZRrnKG2OiBWNy76A/X+iG46a48ivT0yJjFdJt+MkLstJA8aFc8wAQI=
+X-Received: by 2002:a17:906:85d4:: with SMTP id i20mr20309832ejy.256.1561931475535;
+ Sun, 30 Jun 2019 14:51:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/DhWd_BwTnNx59M7Wj2/FX1A"; protocol="application/pgp-signature"
+References: <20190630203614.5290-1-robdclark@gmail.com> <20190630203614.5290-5-robdclark@gmail.com>
+ <20190630211726.GJ7043@pendragon.ideasonboard.com>
+In-Reply-To: <20190630211726.GJ7043@pendragon.ideasonboard.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sun, 30 Jun 2019 14:50:59 -0700
+Message-ID: <CAF6AEGu7XschmqWz_t9xWk_kFQoE=U-KTSB_+k9-SDAYNDdFww@mail.gmail.com>
+Subject: Re: [PATCH 4/4] drm/bridge: ti-sn65dsi86: use helper to lookup panel-id
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DhWd_BwTnNx59M7Wj2/FX1A
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jun 30, 2019 at 2:17 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Rob,
+>
+> Thank you for the patch.
+>
+> On Sun, Jun 30, 2019 at 01:36:08PM -0700, Rob Clark wrote:
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > Use the drm_of_find_panel_id() helper to decide which endpoint to use
+> > when looking up panel.  This way we can support devices that have
+> > multiple possible panels, such as the aarch64 laptops.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > index 2719d9c0864b..56c66a43f1a6 100644
+> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > @@ -790,7 +790,7 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
+> >                             const struct i2c_device_id *id)
+> >  {
+> >       struct ti_sn_bridge *pdata;
+> > -     int ret;
+> > +     int ret, panel_id;
+> >
+> >       if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+> >               DRM_ERROR("device doesn't support I2C\n");
+> > @@ -811,7 +811,8 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
+> >
+> >       pdata->dev = &client->dev;
+> >
+> > -     ret = drm_of_find_panel_or_bridge(pdata->dev->of_node, 1, 0,
+> > +     panel_id = drm_of_find_panel_id();
+> > +     ret = drm_of_find_panel_or_bridge(pdata->dev->of_node, 1, panel_id,
+> >                                         &pdata->panel, NULL);
+> >       if (ret) {
+> >               DRM_ERROR("could not find any panel node\n");
+>
+> No, I'm sorry, but that's a no-go. We can't patch every single bridge
+> driver to support this hack. We need a solution implemented at another
+> level that will not spread throughout the whole subsystem.
+>
 
-Hi all,
+it could be possible to make a better helper.. but really there aren't
+*that* many bridge drivers
 
-In commit
+suggestions ofc welcome, but I think one way or another we are going
+to need to patch bridges by the time we get to adding ACPI support, so
+really trivial couple line patches to the handful of bridges we have
+isn't really something that worries me
 
-  8a90efd15ef6 ("ASoC: vc4: vc4_htmi: consider CPU-Platform possibility")
-
-Fixes tag
-
-  Fixes: commit 6c6de1c9e2bf2 ("ASoC: vc4: vc4_hdmi: don't select unnecessa=
-ry Platform")
-
-has these problem(s):
-
-  - leading word 'commit' unexpected
-
-This as also the case for the whole follogin series of commits :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/DhWd_BwTnNx59M7Wj2/FX1A
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ZLlcACgkQAVBC80lX
-0GwJ8gf+PEHRtQuGagPju9MVntBoRpFOXUNtzpwVLRaZbpCKWUZ1Dz7fq/M6g5j3
-Nw+xNWaRfYDrhId2gX1vIDcWFJOFBKljMty9gw1JoV0bQu8bNTZ737WWbesWrhq1
-fgAASmbE8r/NueyZPqxqz2gRHQ2ZTOxNTQx2DzLGh+yVg7nPs5Z5cz0T3GJVhuRZ
-w/++gbYYBP1+p+rw1uCcr0NXEbI+Qsl4BwbmhpgiUMo9ym/1u3ugKRbEGmqxW3OG
-vCUDcG4++LkdWi0sOvtEa4oLVH64MAlwhb5DD0Btbv0s/9pyPGNMysWvGT7lPJoX
-VA/81hOEgAZyx60T1pJ9WwQvfED9OA==
-=Fn06
------END PGP SIGNATURE-----
-
---Sig_/DhWd_BwTnNx59M7Wj2/FX1A--
+BR,
+-R
