@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E1DC5B57E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 18:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EFEC5B57E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 18:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E5520673
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 18:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B98208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 18:32:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCcbdXH9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7JpeaKi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfF3SXD (ORCPT
+        id S1726720AbfF3S36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 14:23:03 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40157 "EHLO
+        Sun, 30 Jun 2019 14:29:58 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44503 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbfF3SXC (ORCPT
+        with ESMTP id S1726572AbfF3S36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 14:23:02 -0400
-Received: by mail-io1-f65.google.com with SMTP id n5so23565523ioc.7
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 11:23:02 -0700 (PDT)
+        Sun, 30 Jun 2019 14:29:58 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so23533453iob.11
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 11:29:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=thtzmkw13aDuZDygR3uiUylpyUs6othiMlPhmCe3nAU=;
-        b=fCcbdXH9WO0fjnsX0cG4kMxd8kDGj9eP4YcIaQOOKv5Ozt5PxyEJ9hoY9qtJPyIvE0
-         aZjGB9sWgGskqozbUzllzSvwa4DUEZLCWfymAoZMXW2ouFATq/2lTaFbIw7kLnFhnpzk
-         V9eRCBawjO47dljbxZq0vbv0t5s10P1Xhiw0f0HHRnE43pz0VKOxNMhuA8RpUF0SOI37
-         BjLZZcA99lc7C28BqRbFsGFeev9Rth5p3LfoH3pCa5upP52BFN7ysvpHqepK11WoY1TK
-         IA6BA6Z6j+rjISDK5SQXLv9EQs/k7R6DulDG3DB+p39SUif2IV8lM6wvCOuJvO5PDl6x
-         juhg==
+        bh=/43Bg0jXYenu/Pg+l3Ul35tTlNWTMcV5XmLjDQ3kCRE=;
+        b=i7JpeaKiALBrXoo8k1h+tGbeaNd++nOnV8YieLcRUMfJko6XLf0S1k/8vaoC+VgGod
+         NDadIX8yVfD3qkXwCfkS2GNSx3G25FOkK2zWoCZCsdvb1XUXdBtwhhaemEqxCGLOCnti
+         LEvEzzMTmkmLNGhNqGmRtlv2c8+1Mj4WeSdvfTfv8YdOTP5CM/Pwxjv/dy/3JiufIt36
+         44MfUQh1D7m1dZEcRWSB1DYgiB2lVcp231QZLxUwurOA8iDnnt3ICfUlXiT5T4vTsOYf
+         5CmEGE/kehn1f5/ieODc8kyQLym77N/v88q23ygHeqbtIcrxOCWT7LKb9RIvFKVa2BnB
+         jaqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=thtzmkw13aDuZDygR3uiUylpyUs6othiMlPhmCe3nAU=;
-        b=PUsulXkWTs+r/i0SSkvOimWTdE19R9wEHPVwRyO1eIA9vm8JVRZLXLGl+CI51G4EO9
-         mE3FngRK0QOso6bqwLGPkVLtlmB1c9rTGg5Kd+j8RA96oiPbZL/g+v9LyH45qBFLyDU5
-         BwxXWW9uST0cVFDrZeL+t+3NIdS0KxXe9D8+HmT2/GZc5VPfGp8p8eeqBvRnyc6g1ceS
-         y8v9TD/8LCeuNrqkNY/zV3t9mhdIQkihABUKj66P8yFQ11FlGQXN8k3ENZw53VqKV/6c
-         GxpEHC8OoqfMfOIy1AwazIwj7XwQ7rvWsokPwMtaJ1VB4+r2xY6bdnQ7JPX8/FilD1Dt
-         3plA==
-X-Gm-Message-State: APjAAAXJyoY+QhCqP5EsSgyqfhJd6bNkKOPQVv+H7NwzjWaku1JEPtAX
-        0xd99PPtHlu+a0o2hM1zhyMW5JRLdMenC0qUA2g=
-X-Google-Smtp-Source: APXvYqyjDNYRK/s9/BxWAEOavJrJdn2pveXoixy7KR63PBJct6zgL0JmPikVQ1pnvsc/XbBtBVyLkxFPxtoujjrrQEc=
-X-Received: by 2002:a5d:8e08:: with SMTP id e8mr23366852iod.139.1561918981319;
- Sun, 30 Jun 2019 11:23:01 -0700 (PDT)
+        bh=/43Bg0jXYenu/Pg+l3Ul35tTlNWTMcV5XmLjDQ3kCRE=;
+        b=DPGgJ8A4hAXFdBvxhYzxSLaAQILlSqRaMoGhJOsRRAoxkyq+Qy/2o4nLXotGeCNBMB
+         s0VZ8ZRzX4G1vASL1jenlAjyHhCsgQaL1kCSvQQ0G2ph1gp/Uhv2PRR25FcgC4ImMK8U
+         Zyq0RdP7ulL9tW0owfLrBh8Eh721BOOykeakjlStKH+NXJpP/m6JxlPsNPrn5riAZb8A
+         JLQItwZ6WSGZ0meb8y0agFAMuCxi5Rc5NUq2Sgvp+JZ7IlFi+w37fR+6kPPbDHH7fJEy
+         l4TIPElLft8HMG2PSKH6tddu2xwJDMMitw7ZUaLKDEfNJCmW1XMXsNSqbsvQrL1thJwC
+         I6Kg==
+X-Gm-Message-State: APjAAAVzUf4AX5iFGGmAKjQ+sULyjZDyCxQLWTXPwHhGsUAkbrF2M/zZ
+        NGAmFmoCcNwlmbcbKmkNEipmEZp2/lheY/XDa08=
+X-Google-Smtp-Source: APXvYqwSL9GCuvuncW8ED0ohZrODEnOED10uEHR5MBaDgS0mGcSxUZ4msko1qf724z4X5ST665QvMvEAX32PmOcXkSE=
+X-Received: by 2002:a6b:6012:: with SMTP id r18mr4184797iog.241.1561919397145;
+ Sun, 30 Jun 2019 11:29:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190628121338.24398-1-kraxel@redhat.com> <20190628121338.24398-10-kraxel@redhat.com>
-In-Reply-To: <20190628121338.24398-10-kraxel@redhat.com>
+References: <20190628121338.24398-1-kraxel@redhat.com> <20190628121338.24398-9-kraxel@redhat.com>
+ <CAPaKu7RRf3T3RCYXJ466xt7U1dAxRx++Ln+ey50a=yjdXpZw6g@mail.gmail.com>
+In-Reply-To: <CAPaKu7RRf3T3RCYXJ466xt7U1dAxRx++Ln+ey50a=yjdXpZw6g@mail.gmail.com>
 From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Sun, 30 Jun 2019 11:22:50 -0700
-Message-ID: <CAPaKu7T0fv08oVbyYLcpaHomB0w-ZbF4mKGsgt7ObziQxk3YNQ@mail.gmail.com>
-Subject: Re: [PATCH v5 09/12] drm/virtio: rework virtio_gpu_object_create fencing
+Date:   Sun, 30 Jun 2019 11:29:45 -0700
+Message-ID: <CAPaKu7Qab2XyWs830YHK8iAcVUXX3KPt_5CT_U9MmivGc3iJ4Q@mail.gmail.com>
+Subject: Re: [PATCH v5 08/12] drm/virtio: rework virtio_gpu_execbuffer_ioctl fencing
 To:     Gerd Hoffmann <kraxel@redhat.com>
 Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
         David Airlie <airlied@linux.ie>,
@@ -73,172 +73,234 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 5:13 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> Use gem reservation helpers and direct reservation_object_* calls
-> instead of ttm.
->
-> v5: fix fencing (Chia-I Wu).
-> v3: Due to using the gem reservation object it is initialized and ready
-> for use before calling ttm_bo_init, so we can also drop the tricky fence
-> logic which checks whenever the command is in flight still.  We can
-> simply fence our object before submitting the virtio command and be done
-> with it.
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_drv.h    |  2 +
->  drivers/gpu/drm/virtio/virtgpu_object.c | 55 ++++++++++---------------
->  drivers/gpu/drm/virtio/virtgpu_vq.c     |  4 ++
->  3 files changed, 27 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> index 356d27132388..c4b266b6f731 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> @@ -267,6 +267,7 @@ void virtio_gpu_free_vbufs(struct virtio_gpu_device *vgdev);
->  void virtio_gpu_cmd_create_resource(struct virtio_gpu_device *vgdev,
->                                     struct virtio_gpu_object *bo,
->                                     struct virtio_gpu_object_params *params,
-> +                                   struct virtio_gpu_object_array *objs,
->                                     struct virtio_gpu_fence *fence);
->  void virtio_gpu_cmd_unref_resource(struct virtio_gpu_device *vgdev,
->                                    uint32_t resource_id);
-> @@ -329,6 +330,7 @@ void
->  virtio_gpu_cmd_resource_create_3d(struct virtio_gpu_device *vgdev,
->                                   struct virtio_gpu_object *bo,
->                                   struct virtio_gpu_object_params *params,
-> +                                 struct virtio_gpu_object_array *objs,
->                                   struct virtio_gpu_fence *fence);
->  void virtio_gpu_ctrl_ack(struct virtqueue *vq);
->  void virtio_gpu_cursor_ack(struct virtqueue *vq);
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-> index 82bfbf983fd2..fa0ea22c68b0 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-> @@ -97,7 +97,9 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
->                              struct virtio_gpu_object **bo_ptr,
->                              struct virtio_gpu_fence *fence)
->  {
-> +       struct virtio_gpu_object_array *objs = NULL;
->         struct virtio_gpu_object *bo;
-> +       struct ww_acquire_ctx ticket;
->         size_t acc_size;
->         int ret;
->
-> @@ -123,12 +125,29 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
->         }
->         bo->dumb = params->dumb;
->
-> +       if (fence) {
-> +               objs = virtio_gpu_array_alloc(1);
-> +               objs->objs[0] = &bo->gem_base;
-> +               drm_gem_object_get(objs->objs[0]);
-> +
-> +               ret = drm_gem_lock_reservations(objs->objs, objs->nents,
-> +                                               &ticket);
-We can use virtio_gpu_object_reserve when there is only one object.
+(pressed Send too early)
 
-> +               if (ret == 0)
-> +                       reservation_object_add_excl_fence(objs->objs[0]->resv,
-> +                                                         &fence->f);
-Similar to in execbuffer, this might need to be moved to after
-virtio_gpu_cmd_resource_create_*.
-> +       }
-> +
->         if (params->virgl) {
-> -               virtio_gpu_cmd_resource_create_3d(vgdev, bo, params, fence);
-> +               virtio_gpu_cmd_resource_create_3d(vgdev, bo, params,
-> +                                                 objs, fence);
->         } else {
-> -               virtio_gpu_cmd_create_resource(vgdev, bo, params, fence);
-> +               virtio_gpu_cmd_create_resource(vgdev, bo, params,
-> +                                              objs, fence);
->         }
+On Sun, Jun 30, 2019 at 11:20 AM Chia-I Wu <olvaffe@gmail.com> wrote:
 >
-> +       if (fence)
-> +               drm_gem_unlock_reservations(objs->objs, objs->nents, &ticket);
-objs might have been freed.
-> +
->         virtio_gpu_init_ttm_placement(bo);
->         ret = ttm_bo_init(&vgdev->mman.bdev, &bo->tbo, params->size,
->                           ttm_bo_type_device, &bo->placement, 0,
-> @@ -139,38 +158,6 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
->         if (ret != 0)
->                 return ret;
+> On Fri, Jun 28, 2019 at 5:13 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+> >
+> > Use gem reservation helpers and direct reservation_object_* calls
+> > instead of ttm.
+> >
+> > v5: fix fencing (Chia-I Wu).
+> > v3: Also attach the array of gem objects to the virtio command buffer,
+> > so we can drop the object references in the completion callback.  Needed
+> > because ttm fence helpers grab a reference for us, but gem helpers
+> > don't.
+> There are other places
+There are other places where a vbuffer uses objects, such as in
+transfers.  Do we need to make sure the objects are alive in those
+places?
+
+> >
+> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> > Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > ---
+> >  drivers/gpu/drm/virtio/virtgpu_drv.h   |  6 ++-
+> >  drivers/gpu/drm/virtio/virtgpu_ioctl.c | 62 +++++++++++---------------
+> >  drivers/gpu/drm/virtio/virtgpu_vq.c    | 17 ++++---
+> >  3 files changed, 43 insertions(+), 42 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> > index 98d646789d23..356d27132388 100644
+> > --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> > @@ -120,9 +120,9 @@ struct virtio_gpu_vbuffer {
+> >
+> >         char *resp_buf;
+> >         int resp_size;
+> > -
+> >         virtio_gpu_resp_cb resp_cb;
+> >
+> > +       struct virtio_gpu_object_array *objs;
+> >         struct list_head list;
+> >  };
+> >
+> > @@ -311,7 +311,9 @@ void virtio_gpu_cmd_context_detach_resource(struct virtio_gpu_device *vgdev,
+> >                                             uint32_t resource_id);
+> >  void virtio_gpu_cmd_submit(struct virtio_gpu_device *vgdev,
+> >                            void *data, uint32_t data_size,
+> > -                          uint32_t ctx_id, struct virtio_gpu_fence *fence);
+> > +                          uint32_t ctx_id,
+> > +                          struct virtio_gpu_object_array *objs,
+> > +                          struct virtio_gpu_fence *fence);
+> >  void virtio_gpu_cmd_transfer_from_host_3d(struct virtio_gpu_device *vgdev,
+> >                                           uint32_t resource_id, uint32_t ctx_id,
+> >                                           uint64_t offset, uint32_t level,
+> > diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> > index 0caff3fa623e..ae6830aa38c9 100644
+> > --- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> > +++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+> > @@ -105,14 +105,11 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
+> >         struct drm_virtgpu_execbuffer *exbuf = data;
+> >         struct virtio_gpu_device *vgdev = dev->dev_private;
+> >         struct virtio_gpu_fpriv *vfpriv = drm_file->driver_priv;
+> > -       struct drm_gem_object *gobj;
+> >         struct virtio_gpu_fence *out_fence;
+> > -       struct virtio_gpu_object *qobj;
+> >         int ret;
+> >         uint32_t *bo_handles = NULL;
+> >         void __user *user_bo_handles = NULL;
+> > -       struct list_head validate_list;
+> > -       struct ttm_validate_buffer *buflist = NULL;
+> > +       struct virtio_gpu_object_array *buflist = NULL;
+> >         int i;
+> >         struct ww_acquire_ctx ticket;
+> >         struct sync_file *sync_file;
+> > @@ -155,15 +152,10 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
+> >                         return out_fence_fd;
+> >         }
+> >
+> > -       INIT_LIST_HEAD(&validate_list);
+> >         if (exbuf->num_bo_handles) {
+> > -
+> >                 bo_handles = kvmalloc_array(exbuf->num_bo_handles,
+> > -                                          sizeof(uint32_t), GFP_KERNEL);
+> > -               buflist = kvmalloc_array(exbuf->num_bo_handles,
+> > -                                          sizeof(struct ttm_validate_buffer),
+> > -                                          GFP_KERNEL | __GFP_ZERO);
+> > -               if (!bo_handles || !buflist) {
+> > +                                           sizeof(uint32_t), GFP_KERNEL);
+> > +               if (!bo_handles) {
+> >                         ret = -ENOMEM;
+> >                         goto out_unused_fd;
+> >                 }
+> > @@ -175,25 +167,22 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
+> >                         goto out_unused_fd;
+> >                 }
+> >
+> > -               for (i = 0; i < exbuf->num_bo_handles; i++) {
+> > -                       gobj = drm_gem_object_lookup(drm_file, bo_handles[i]);
+> > -                       if (!gobj) {
+> > -                               ret = -ENOENT;
+> > -                               goto out_unused_fd;
+> > -                       }
+> > -
+> > -                       qobj = gem_to_virtio_gpu_obj(gobj);
+> > -                       buflist[i].bo = &qobj->tbo;
+> > -
+> > -                       list_add(&buflist[i].head, &validate_list);
+> > +               buflist = virtio_gpu_array_from_handles(drm_file, bo_handles,
+> > +                                                       exbuf->num_bo_handles);
+> > +               if (!buflist) {
+> > +                       ret = -ENOENT;
+> > +                       goto out_unused_fd;
+> >                 }
+> >                 kvfree(bo_handles);
+> >                 bo_handles = NULL;
+> >         }
+> >
+> > -       ret = virtio_gpu_object_list_validate(&ticket, &validate_list);
+> > -       if (ret)
+> > -               goto out_free;
+> > +       if (buflist) {
+> > +               ret = drm_gem_lock_reservations(buflist->objs, buflist->nents,
+> > +                                               &ticket);
+> > +               if (ret)
+> > +                       goto out_unused_fd;
+> > +       }
+> >
+> >         buf = memdup_user(u64_to_user_ptr(exbuf->command), exbuf->size);
+> >         if (IS_ERR(buf)) {
+> > @@ -219,25 +208,28 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
+> >                 fd_install(out_fence_fd, sync_file->file);
+> >         }
+> >
+> > +       if (buflist)
+> > +               for (i = 0; i < exbuf->num_bo_handles; i++)
+> > +                       reservation_object_add_excl_fence(buflist->objs[i]->resv,
+> > +                                                         &out_fence->f);
+> > +
+> Another module can see the semi-initialized fence after this.  We
+> should move this after virtio_gpu_cmd_submit.
 >
-> -       if (fence) {
-> -               struct virtio_gpu_fence_driver *drv = &vgdev->fence_drv;
-> -               struct list_head validate_list;
-> -               struct ttm_validate_buffer mainbuf;
-> -               struct ww_acquire_ctx ticket;
-> -               unsigned long irq_flags;
-> -               bool signaled;
-> -
-> -               INIT_LIST_HEAD(&validate_list);
-> -               memset(&mainbuf, 0, sizeof(struct ttm_validate_buffer));
-> -
-> -               /* use a gem reference since unref list undoes them */
-> -               drm_gem_object_get(&bo->gem_base);
-> -               mainbuf.bo = &bo->tbo;
-> -               list_add(&mainbuf.head, &validate_list);
-> -
-> -               ret = virtio_gpu_object_list_validate(&ticket, &validate_list);
-> -               if (ret == 0) {
-> -                       spin_lock_irqsave(&drv->lock, irq_flags);
-> -                       signaled = virtio_fence_signaled(&fence->f);
-> -                       if (!signaled)
-> -                               /* virtio create command still in flight */
-> -                               ttm_eu_fence_buffer_objects(&ticket, &validate_list,
-> -                                                           &fence->f);
-> -                       spin_unlock_irqrestore(&drv->lock, irq_flags);
-> -                       if (signaled)
-> -                               /* virtio create command finished */
-> -                               ttm_eu_backoff_reservation(&ticket, &validate_list);
-> -               }
-> -               virtio_gpu_unref_list(&validate_list);
-> -       }
-> -
->         *bo_ptr = bo;
->         return 0;
->  }
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> index 0c87c3e086f8..0a735e51a803 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> @@ -391,6 +391,7 @@ static int virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
->  void virtio_gpu_cmd_create_resource(struct virtio_gpu_device *vgdev,
->                                     struct virtio_gpu_object *bo,
->                                     struct virtio_gpu_object_params *params,
-> +                                   struct virtio_gpu_object_array *objs,
->                                     struct virtio_gpu_fence *fence)
->  {
->         struct virtio_gpu_resource_create_2d *cmd_p;
-> @@ -398,6 +399,7 @@ void virtio_gpu_cmd_create_resource(struct virtio_gpu_device *vgdev,
+> >         virtio_gpu_cmd_submit(vgdev, buf, exbuf->size,
+> > -                             vfpriv->ctx_id, out_fence);
+> > +                             vfpriv->ctx_id, buflist, out_fence);
+> >
+> > -       ttm_eu_fence_buffer_objects(&ticket, &validate_list, &out_fence->f);
+> > -
+> > -       /* fence the command bo */
+> > -       virtio_gpu_unref_list(&validate_list);
+> > -       kvfree(buflist);
+> > +       if (buflist)
+> > +               drm_gem_unlock_reservations(buflist->objs, buflist->nents,
+> > +                                           &ticket);
+> When virtio_gpu_cmd_submit progresses really fast, buflist might have
+> been freed.
 >
->         cmd_p = virtio_gpu_alloc_cmd(vgdev, &vbuf, sizeof(*cmd_p));
->         memset(cmd_p, 0, sizeof(*cmd_p));
-> +       vbuf->objs = objs;
->
->         cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_RESOURCE_CREATE_2D);
->         cmd_p->resource_id = cpu_to_le32(bo->hw_res_handle);
-> @@ -864,6 +866,7 @@ void
->  virtio_gpu_cmd_resource_create_3d(struct virtio_gpu_device *vgdev,
->                                   struct virtio_gpu_object *bo,
->                                   struct virtio_gpu_object_params *params,
-> +                                 struct virtio_gpu_object_array *objs,
->                                   struct virtio_gpu_fence *fence)
->  {
->         struct virtio_gpu_resource_create_3d *cmd_p;
-> @@ -871,6 +874,7 @@ virtio_gpu_cmd_resource_create_3d(struct virtio_gpu_device *vgdev,
->
->         cmd_p = virtio_gpu_alloc_cmd(vgdev, &vbuf, sizeof(*cmd_p));
->         memset(cmd_p, 0, sizeof(*cmd_p));
-> +       vbuf->objs = objs;
->
->         cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_RESOURCE_CREATE_3D);
->         cmd_p->resource_id = cpu_to_le32(bo->hw_res_handle);
-> --
-> 2.18.1
->
+> >         return 0;
+> >
+> >  out_memdup:
+> >         kfree(buf);
+> >  out_unresv:
+> > -       ttm_eu_backoff_reservation(&ticket, &validate_list);
+> > -out_free:
+> > -       virtio_gpu_unref_list(&validate_list);
+> > +       if (buflist)
+> > +               drm_gem_unlock_reservations(buflist->objs, buflist->nents, &ticket);
+> >  out_unused_fd:
+> >         kvfree(bo_handles);
+> > -       kvfree(buflist);
+> > +       if (buflist)
+> > +               virtio_gpu_array_put_free(buflist);
+> >
+> >         if (out_fence_fd >= 0)
+> >                 put_unused_fd(out_fence_fd);
+> > diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> > index 6c1a90717535..0c87c3e086f8 100644
+> > --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
+> > +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> > @@ -191,7 +191,7 @@ void virtio_gpu_dequeue_ctrl_func(struct work_struct *work)
+> >         } while (!virtqueue_enable_cb(vgdev->ctrlq.vq));
+> >         spin_unlock(&vgdev->ctrlq.qlock);
+> >
+> > -       list_for_each_entry_safe(entry, tmp, &reclaim_list, list) {
+> > +       list_for_each_entry(entry, &reclaim_list, list) {
+> >                 resp = (struct virtio_gpu_ctrl_hdr *)entry->resp_buf;
+> >
+> >                 trace_virtio_gpu_cmd_response(vgdev->ctrlq.vq, resp);
+> > @@ -218,14 +218,18 @@ void virtio_gpu_dequeue_ctrl_func(struct work_struct *work)
+> >                 }
+> >                 if (entry->resp_cb)
+> >                         entry->resp_cb(vgdev, entry);
+> > -
+> > -               list_del(&entry->list);
+> > -               free_vbuf(vgdev, entry);
+> >         }
+> >         wake_up(&vgdev->ctrlq.ack_queue);
+> >
+> >         if (fence_id)
+> >                 virtio_gpu_fence_event_process(vgdev, fence_id);
+> > +
+> > +       list_for_each_entry_safe(entry, tmp, &reclaim_list, list) {
+> > +               if (entry->objs)
+> > +                       virtio_gpu_array_put_free(entry->objs);
+> > +               list_del(&entry->list);
+> > +               free_vbuf(vgdev, entry);
+> > +       }
+> >  }
+> >
+> >  void virtio_gpu_dequeue_cursor_func(struct work_struct *work)
+> > @@ -939,7 +943,9 @@ void virtio_gpu_cmd_transfer_from_host_3d(struct virtio_gpu_device *vgdev,
+> >
+> >  void virtio_gpu_cmd_submit(struct virtio_gpu_device *vgdev,
+> >                            void *data, uint32_t data_size,
+> > -                          uint32_t ctx_id, struct virtio_gpu_fence *fence)
+> > +                          uint32_t ctx_id,
+> > +                          struct virtio_gpu_object_array *objs,
+> > +                          struct virtio_gpu_fence *fence)
+> >  {
+> >         struct virtio_gpu_cmd_submit *cmd_p;
+> >         struct virtio_gpu_vbuffer *vbuf;
+> > @@ -949,6 +955,7 @@ void virtio_gpu_cmd_submit(struct virtio_gpu_device *vgdev,
+> >
+> >         vbuf->data_buf = data;
+> >         vbuf->data_size = data_size;
+> > +       vbuf->objs = objs;
+> >
+> >         cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_SUBMIT_3D);
+> >         cmd_p->hdr.ctx_id = cpu_to_le32(ctx_id);
+> > --
+> > 2.18.1
+> >
