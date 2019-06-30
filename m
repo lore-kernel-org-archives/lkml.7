@@ -2,202 +2,236 @@ Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56D3C5B57F
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEA9C5B576
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFE2208E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8660E2089C
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJ6bekFP"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Sryzx76y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbfF3VfX (ORCPT
+        id S1726963AbfF3Vhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 17:35:23 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45429 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfF3VfW (ORCPT
+        Sun, 30 Jun 2019 17:37:46 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34618 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfF3Vhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 17:35:22 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a14so19246600edv.12;
-        Sun, 30 Jun 2019 14:35:20 -0700 (PDT)
+        Sun, 30 Jun 2019 17:37:45 -0400
+Received: by mail-oi1-f193.google.com with SMTP id l12so8375096oil.1
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 14:37:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=drW2YTBKN6ODzV8fpJChJUilq9RUfbBjnjppu5Nuk2w=;
-        b=cJ6bekFPnfqGyakEnAscY4w+19vNzVvyQTnuLMUpd9zx0kBpuoYqRAfbyxgMnI15JD
-         QQBafOwtBzLUiUz+e5G4jv7g2YcEXJ0SJR1H/Okt7ZOsYgpstIqNb9k/EY5gK761qMMN
-         /6FC0Ap2qs6nnorET907XIZsxwZOlYwLLFr/4Dyw5AjFGaSPm6KrJykDIsLlGmFRMtWJ
-         056BNBqVLWyhMdP8yWQ5CzLV0SArxzqim2kozKYIXmVWiRra9m4xlwYa+rqVQ2PWsct2
-         NK6DGHZ0/1Uh1b9NOdEkAMw0/fKw6hNs9dSMT32jigjyzg5lEQJvmdbzngP/Ung2Hrrs
-         TrCg==
+        bh=zX2YyQKrwAtLXzMGd1ZzMeQeW/2MOINdhvS/Pjj0Or8=;
+        b=Sryzx76yhFmzdPE+tVyLEjojYxynQpjV6uqI6VU+dUyYo6kvmBVPrpSg+BGfA8Dm5H
+         mh9J841lGyhhfmpDLeIWdDr4iVo7krDBlOLY/LCOKHfV4Tl2yoMEc0wnLUAuP36rNQTu
+         qBMLuIqhcOxcmZHwIiMmYHyXW2kopPNvm8HTMDaPmKCZLYmcQl61LwNz7So2zwo+qxPj
+         eA1QcuzWRAmdPvw3PpNA09H2JVr44DWRXXePhGZPgHCXWH025PcOtrsy6dhpQDi5rjo0
+         C5vU+8YqAMbBY6kFy2y0SdFA7srvUOC8IBrbLbY4aXYm0d7kMycWLufWM2N8mcVlA2BK
+         NXdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=drW2YTBKN6ODzV8fpJChJUilq9RUfbBjnjppu5Nuk2w=;
-        b=kqk/P/ssXphs5Z7vS+qX+jlF571w61R/DJXXlVdve0Cf8HL+eHy/5vl30U55xwbDGc
-         hH5UZZ/zgxlJsafEtpr5zmaeNbop6o2jqiME8V8zQckWZx8msPSag0cKDR2u+x784UmT
-         //4ft4aqGTOl50wucmT2wxY/Y+we26v6nB8ftQ011ixHB8nOfLxlFWsxxFygSAX6qvUD
-         A51lHge4hGtbw5eQpIUODsJXkI57qiwm7V8/DlirqE8ZiOn2LWpa70jqOUwRWhHC8t+V
-         mSmNQHihZ76o67G0cmNW5tdzpO6WxP7hWlJnxyz0ZBg4ntSqh8cO1cPHWKXM4U7m1oqS
-         7Llw==
-X-Gm-Message-State: APjAAAVCupjyCbxCHqeP7SH5wewKVPXi9pw1dieZNNJmL5cCMWgvN+tO
-        ddqy6J5svsK2adGtRiazFaPj3e6JJltIpACqmno=
-X-Google-Smtp-Source: APXvYqyfzt5ulq5SOtHkjn3qBwTNbdXmkvyLV9Y0HOd765n8mKeEG94kxcuB56qn/tdJ6mZ6/TSKAUbb6wKfdt+MToo=
-X-Received: by 2002:a17:906:e241:: with SMTP id gq1mr19281848ejb.265.1561930519755;
- Sun, 30 Jun 2019 14:35:19 -0700 (PDT)
+        bh=zX2YyQKrwAtLXzMGd1ZzMeQeW/2MOINdhvS/Pjj0Or8=;
+        b=aGnxqEw7ugAAoY+GuvOXiY4e6tDa7DOTUNxiKmsQ3l0yE/kuKvCQ3yZTBRc7hXJiqL
+         TtfoaLkukHIXuhQoNpg1Ar2jYRC9uEMNvyJjfyDBs7oHjpIZpqEUnJVKuWy7Kl5N7RWH
+         0XtZkyf688AY4iSLX8cyQ3M2VLOQf8r+xkA+I1RAz33Z8qSFyJfCD43XUYwoKu0PrPAS
+         cn/zLEeGB3XQvppPN/57Yx0g7HocSqfWnZtYjMz8iH3micy0+fEg3AAuSXA6WQhkRE/l
+         dXyY5ZNEr5QgWl6t1TZMCD4pGBgjIX+873yc0B/QOjY7D7OukRlD20q/PQVEUqci0kns
+         yxhQ==
+X-Gm-Message-State: APjAAAVBbTr5iZpqVe4sG1n50tcLzuVVijDW1HGJK3Nbm0vlvQSvU6k7
+        naw6qBj2etBA05+7ehjDK3K4KEUY8+c4Y4oxaD7uFF31m/M=
+X-Google-Smtp-Source: APXvYqzLe5GaWGJOfiOsBEzieZ/ae6JzO9eXsaMWe7B6qu1tptZdKDnjJgfQzU/Ta0EgbE+Mtcnf+G7PmqdAEPdTR5s=
+X-Received: by 2002:aca:ba02:: with SMTP id k2mr4483979oif.70.1561930664648;
+ Sun, 30 Jun 2019 14:37:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190630203614.5290-1-robdclark@gmail.com> <20190630204723.GH7043@pendragon.ideasonboard.com>
- <CAF6AEGvA-wVyC4jJC-nZU-pdVH=KYtye9twDgup-Nq0C_+wtvQ@mail.gmail.com> <20190630211520.GI7043@pendragon.ideasonboard.com>
-In-Reply-To: <20190630211520.GI7043@pendragon.ideasonboard.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sun, 30 Jun 2019 14:35:04 -0700
-Message-ID: <CAF6AEGtA=xB6QCAZK0oiv4DVd3VvVX-f=C_+23tW2fBqyfLqbw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] drm+dt+efi: support devices with multiple possible panels
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        aarch64-laptops@lists.linaro.org,
-        Rob Clark <robdclark@chromium.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Julien Thierry <julien.thierry@arm.com>,
-        "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" 
-        <linux-efi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Steve Capper <steve.capper@arm.com>,
-        Will Deacon <will@kernel.org>
+References: <20190627123415.GA4286@bombadil.infradead.org> <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
+ <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+ <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
+ <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
+ <20190627195948.GB4286@bombadil.infradead.org> <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
+ <20190629160336.GB1180@bombadil.infradead.org> <CAPcyv4ge3Ht1k_v=tSoVA6hCzKg1N3imhs_rTL3oTB+5_KC8_Q@mail.gmail.com>
+ <CAA9_cmcb-Prn6CnOx-mJfb9CRdf0uG9u4M1Vq1B1rKVemCD-Vw@mail.gmail.com> <20190630152324.GA15900@bombadil.infradead.org>
+In-Reply-To: <20190630152324.GA15900@bombadil.infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sun, 30 Jun 2019 14:37:32 -0700
+Message-ID: <CAPcyv4j2NBPBEUU3UW1Q5OyOEuo9R5e90HpkowpeEkMsAKiUyQ@mail.gmail.com>
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 2:15 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
+On Sun, Jun 30, 2019 at 8:23 AM Matthew Wilcox <willy@infradead.org> wrote:
 >
-> Hi Rob,
->
-> On Sun, Jun 30, 2019 at 02:05:21PM -0700, Rob Clark wrote:
-> > On Sun, Jun 30, 2019 at 1:47 PM Laurent Pinchart wrote:
-> > > On Sun, Jun 30, 2019 at 01:36:04PM -0700, Rob Clark wrote:
-> > > > From: Rob Clark <robdclark@chromium.org>
-> > > >
-> > > > Now that we can deal gracefully with bootloader (firmware) initialized
-> > > > display on aarch64 laptops[1], the next step is to deal with the fact
-> > > > that the same model of laptop can have one of multiple different panels.
-> > > > (For the yoga c630 that I have, I know of at least two possible panels,
-> > > > there might be a third.)
+> On Sun, Jun 30, 2019 at 01:01:04AM -0700, Dan Williams wrote:
+> > On Sun, Jun 30, 2019 at 12:27 AM Dan Williams <dan.j.williams@intel.com> wrote:
 > > >
-> > > I have to ask the obvious question: why doesn't the boot loader just
-> > > pass a correct DT to Linux ? There's no point in passing a list of
-> > > panels that are not there, this seems quite a big hack to me. A proper
-> > > boot loader should construct the DT based on hardware detection.
+> > > On Sat, Jun 29, 2019 at 9:03 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > > >
+> > > > On Thu, Jun 27, 2019 at 07:39:37PM -0700, Dan Williams wrote:
+> > > > > On Thu, Jun 27, 2019 at 12:59 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > > > > >
+> > > > > > On Thu, Jun 27, 2019 at 12:09:29PM -0700, Dan Williams wrote:
+> > > > > > > > This bug feels like we failed to unlock, or unlocked the wrong entry
+> > > > > > > > and this hunk in the bisected commit looks suspect to me. Why do we
+> > > > > > > > still need to drop the lock now that the radix_tree_preload() calls
+> > > > > > > > are gone?
+> > > > > > >
+> > > > > > > Nevermind, unmapp_mapping_pages() takes a sleeping lock, but then I
+> > > > > > > wonder why we don't restart the lookup like the old implementation.
+> > > > > >
+> > > > > > We have the entry locked:
+> > > > > >
+> > > > > >                 /*
+> > > > > >                  * Make sure 'entry' remains valid while we drop
+> > > > > >                  * the i_pages lock.
+> > > > > >                  */
+> > > > > >                 dax_lock_entry(xas, entry);
+> > > > > >
+> > > > > >                 /*
+> > > > > >                  * Besides huge zero pages the only other thing that gets
+> > > > > >                  * downgraded are empty entries which don't need to be
+> > > > > >                  * unmapped.
+> > > > > >                  */
+> > > > > >                 if (dax_is_zero_entry(entry)) {
+> > > > > >                         xas_unlock_irq(xas);
+> > > > > >                         unmap_mapping_pages(mapping,
+> > > > > >                                         xas->xa_index & ~PG_PMD_COLOUR,
+> > > > > >                                         PG_PMD_NR, false);
+> > > > > >                         xas_reset(xas);
+> > > > > >                         xas_lock_irq(xas);
+> > > > > >                 }
+> > > > > >
+> > > > > > If something can remove a locked entry, then that would seem like the
+> > > > > > real bug.  Might be worth inserting a lookup there to make sure that it
+> > > > > > hasn't happened, I suppose?
+> > > > >
+> > > > > Nope, added a check, we do in fact get the same locked entry back
+> > > > > after dropping the lock.
+> > > > >
+> > > > > The deadlock revolves around the mmap_sem. One thread holds it for
+> > > > > read and then gets stuck indefinitely in get_unlocked_entry(). Once
+> > > > > that happens another rocksdb thread tries to mmap and gets stuck
+> > > > > trying to take the mmap_sem for write. Then all new readers, including
+> > > > > ps and top that try to access a remote vma, then get queued behind
+> > > > > that write.
+> > > > >
+> > > > > It could also be the case that we're missing a wake up.
+> > > >
+> > > > OK, I have a Theory.
+> > > >
+> > > > get_unlocked_entry() doesn't check the size of the entry being waited for.
+> > > > So dax_iomap_pmd_fault() can end up sleeping waiting for a PTE entry,
+> > > > which is (a) foolish, because we know it's going to fall back, and (b)
+> > > > can lead to a missed wakeup because it's going to sleep waiting for
+> > > > the PMD entry to come unlocked.  Which it won't, unless there's a happy
+> > > > accident that happens to map to the same hash bucket.
+> > > >
+> > > > Let's see if I can steal some time this weekend to whip up a patch.
+> > >
+> > > Theory seems to have some evidence... I instrumented fs/dax.c to track
+> > > outstanding 'lock' entries and 'wait' events. At the time of the hang
+> > > we see no locks held and the waiter is waiting on a pmd entry:
+> > >
+> > > [ 4001.354334] fs/dax locked entries: 0
+> > > [ 4001.358425] fs/dax wait entries: 1
+> > > [ 4001.362227] db_bench/2445 index: 0x0 shift: 6
+> > > [ 4001.367099]  grab_mapping_entry+0x17a/0x260
+> > > [ 4001.371773]  dax_iomap_pmd_fault.isra.43+0x168/0x7a0
+> > > [ 4001.377316]  ext4_dax_huge_fault+0x16f/0x1f0
+> > > [ 4001.382086]  __handle_mm_fault+0x411/0x1390
+> > > [ 4001.386756]  handle_mm_fault+0x172/0x360
 > >
-> > Hi Laurent,
+> > In fact, this naive fix is holding up so far:
 > >
-> > Actually the bootloader on these devices is passing *no* dt (they boot
-> > ACPI, we are loading dtb from grub currently)
+> > @@ -215,7 +216,7 @@ static wait_queue_head_t
+> > *dax_entry_waitqueue(struct xa_state *xas,
+> >          * queue to the start of that PMD.  This ensures that all offsets in
+> >          * the range covered by the PMD map to the same bit lock.
+> >          */
+> > -       if (dax_is_pmd_entry(entry))
+> > +       //if (dax_is_pmd_entry(entry))
+> >                 index &= ~PG_PMD_COLOUR;
+> >         key->xa = xas->xa;
+> >         key->entry_start = index;
 >
-> Ah, the broken promises of ACPI on ARM64. I wonder how long it will take
-> before a public acknowledgement that it was a bad idea. Bad ideas happen
-> and can be forgiven, but stubborness in claiming it was the right
-> decision is another story.
+> Hah, that's a great naive fix!  Thanks for trying that out.
 >
-> (Not that you can be blamed for this of course :-))
-
-To be fair, I think the only blame here is that MS let qcom get away
-with some things in their ACPI and UEFI implementation..  I think
-we'll need to shift to ACPI eventually for these laptops, in order to
-keep up.  DT isn't a thing that would scale with the volume of x86
-laptops that exist, and if aarch64 laptops get there too, we'll need
-ACPI.  Lets face it, the # of different dt devices supported upstream
-is a drop in the bucket compared to number of *actually physically
-different* x86 devices supported by upstream.  (And I don't mean
-individual models of laptops, but different production runs where they
-picked a different panel or trackpad or whatever.)
-
-But we have a lot of upstream work to get there to support how ACPI
-works on these things:
-
- * The new Platform Extension Plugin (PEP) model for device power
-   control
- * untangling drm bridge hookup from DT
- * untangling drm panel hook from DT
- * figuring out how to deal with mis-matches between dt device
-   model and ACPI device model
-
-There is some early work for ACPI support for these devices, but
-realistically I think it is going to take a better part of a year to
-get there.  Until then we rely on DT.
-
-That isn't to say my proposal doesn't make a ton of sense.  We also
-need to solve this problem for DT based devices, and I think
-/chosen/panel-id makes a *ton* of sense for those devices.
-
-> > I think normally a device built w/ dt in mind would populate
-> > /chosen/panel-id directly (rather than the way it is currently
-> > populated based on reading an efi variable prior to ExitBootServices).
-> > But that is considerably easier ask than having it re-write of_graph
-> > bindings. Either way, we aren't in control of the bootloader on these
-> > devices,
+> I think my theory was slightly mistaken, but your fix has the effect of
+> fixing the actual problem too.
 >
-> If you can't control the initial boot loader, then I see two options,
-> none of which you will like I'm afraid.
+> The xas->xa_index for a PMD is going to be PMD-aligned (ie a multiple of
+> 512), but xas_find_conflict() does _not_ adjust xa_index (... which I
+> really should have mentioned in the documentation).  So we go to sleep
+> on the PMD-aligned index instead of the index of the PTE.  Your patch
+> fixes this by using the PMD-aligned index for PTEs too.
 >
-> - As you pass the DT to Linux from grub, there's your intermediate boot
->   loader where you can construct a valid DT.
-
-not really a solution that is going to scale
-
-> - If the ACPI cult needs to be venerated, then drivers should be
->   converted to support ACPI without the need for DT.
-
-we're working on it
-
-> A possible a middleground could be a platform driver (in
-> drivers/firmware/efi/ ? in drivers/platform/ ?) that will patch the DT
-> to instantiate the right panel based on the information retrieved from
-> the boot loader. We will need something similar for the Intel IPU3
-> camera driver, as Intel decided to come up with two different ACPI
-> "bindings", one for Windows and one for Chrome OS, leaving Windows
-> machine impossible to handle from a kernel driver due to required
-> information being hardcoded in Windows drivers shipped by Intel. This is
-> thus an option that may (unfortunately) need to become more widespread
-> for ACPI-based systems.
-
-again, a kernel (or bootloader) side massively intrusive re-write the
-dt approach isn't going to scale.  If you keep it simple, ie.
-/chosen/panel-id I can see a possibility to move my patch from
-drivers/firmware/efi into an earlier stage.  But if it has to re-write
-graph, that falls apart as soon as a new device comes along with a
-different bridge, or perhaps some vendor decides to use dsi directly
-and forego the bridge.
-
-usually (from what I've seen so far) there are a few gpios to probe to
-decide which panel you have.  So after a few lines of gpio banging you
-can either ask fw engineers to set appropriate node in chosen.. or
-re-write of_graph bindings.  I think the former has a chance of
-gaining traction on android devices.. latter not so much.  You are
-really making too big of an ask for fw engineers ;-)
-
-> > so it is a matter of coming up with something that works on actual hw
-> > that we don't like rather than idealized hw that we don't have ;-)
+> I'm trying to come up with a clean fix for this.  Clearly we
+> shouldn't wait for a PTE entry if we're looking for a PMD entry.
+> But what should get_unlocked_entry() return if it detects that case?
+> We could have it return an error code encoded as an internal entry,
+> like grab_mapping_entry() does.  Or we could have it return the _locked_
+> PTE entry, and have callers interpret that.
 >
-> That doesn't however justify not going for the best solution we can
-> achieve. What do you like best in the above ? :-)
+> At least get_unlocked_entry() is static, but it's got quite a few callers.
+> Trying to discern which ones might ask for a PMD entry is a bit tricky.
+> So this seems like a large patch which might have bugs.
+>
+> Thoughts?
 
-I want a solution that is achievable ;-)
+...but if it was a problem of just mismatched waitqueue's I would have
+expected it to trigger prior to commit b15cd800682f "dax: Convert page
+fault handlers to XArray". This hunk, if I'm reading it correctly,
+looks suspicious: @index in this case is coming directly from
+vm->pgoff without pmd alignment adjustment whereas after the
+conversion it's always pmd aligned from the xas->xa_index. So perhaps
+the issue is that the lock happens at pte granularity. I expect it
+would cause the old put_locked_mapping_entry() to WARN, but maybe that
+avoids the lockup and was missed in the bisect.
 
-BR,
--R
+@@ -884,21 +711,18 @@ static void *dax_insert_entry(struct
+address_space *mapping,
+                 * existing entry is a PMD, we will just leave the PMD in the
+                 * tree and dirty it if necessary.
+                 */
+-               struct radix_tree_node *node;
+-               void **slot;
+-               void *ret;
+-
+-               ret = __radix_tree_lookup(pages, index, &node, &slot);
+-               WARN_ON_ONCE(ret != entry);
+-               __radix_tree_replace(pages, node, slot,
+-                                    new_entry, NULL);
++               void *old = dax_lock_entry(xas, new_entry);
++               WARN_ON_ONCE(old != xa_mk_value(xa_to_value(entry) |
++                                       DAX_LOCKED));
+                entry = new_entry;
++       } else {
++               xas_load(xas);  /* Walk the xa_state */
+        }
+
+        if (dirty)
+-               radix_tree_tag_set(pages, index, PAGECACHE_TAG_DIRTY);
++               xas_set_mark(xas, PAGECACHE_TAG_DIRTY);
+
+-       xa_unlock_irq(pages);
++       xas_unlock_irq(xas);
+        return entry;
+ }
