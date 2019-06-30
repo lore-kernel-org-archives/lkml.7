@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC61C5B576
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C482CC5B57F
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022402089C
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8EC2089C
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 21:05:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDI+oZls"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1mBBGjP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfF3VFH (ORCPT
+        id S1727256AbfF3VFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 17:05:07 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45851 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727171AbfF3VEz (ORCPT
+        Sun, 30 Jun 2019 17:05:16 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34418 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727153AbfF3VEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 17:04:55 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so10894887lje.12;
-        Sun, 30 Jun 2019 14:04:53 -0700 (PDT)
+        Sun, 30 Jun 2019 17:04:52 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y198so7349195lfa.1;
+        Sun, 30 Jun 2019 14:04:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3ErUctKt9CJ3rgf9ZExT4u2Tmx1X1fVjtqY74IUmVOo=;
-        b=mDI+oZlsTjMZ011aaWfEOzGbNWiemzxQO7S1znKAjaG9I4rRDjx5EWabNeNZQ66jyC
-         row9h2FgywRmlwPif8BkAuj52pWOQ2xZqHeulXTwLSjxkzpwd93F92IHymOoVOKgZCxx
-         zU0DfjYHCkvy7Zn+iVoGseJDq3KZaLBlgXIuY/klh4dqhrOmwHs/OG2fPbISrt0lEUuW
-         Eg1OJxOEvOeTzGBwO+gDr74Zf1j9c0QlFormhMF8mxDFborDgdOzrKFx1NDPiox+pK1G
-         nF8dWqjO/jYtLPcZfM59nYrr08Kgs5bsTcBb78nx+9kZXvKXImhAZhGjaIwfPBhVsP7i
-         HfTw==
+        bh=UWa9gcb+W/CIAOv0/O/hapxydWbD232AuhpZZZL43dE=;
+        b=R1mBBGjPpO0e9Twwx/yLI1BLIts6HffsD7ASrtqz1JixYL6LCnpb6sQK6pbhh1dLs4
+         OZG94EZs/VSwOpNQtUiOINg7+LelgXHENSzyLfjsenHJ44FI+ZPhxnbm9aQR+k5grrB+
+         yRahKYpPCVhAefBc9s/QyqiZu9on7NJ8UizQp4jYzIPB4j2giyIUrLkaK6/IPDfFBCAu
+         FgHku59mVZBQtxVEyOGrDwamej3AksSveD8Yw4LneTMNwBq/IX4UV5M9h5uSHPjex8If
+         SX95KVgLUsXgocTf72jFy9NJPrJzRb5LabU9y7PK855EwIYfotU0ReZe0F2WsqHlsky3
+         NMPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3ErUctKt9CJ3rgf9ZExT4u2Tmx1X1fVjtqY74IUmVOo=;
-        b=uDiQKGrxb9eW5fr7ePOQz6sD2zf1LgZ3dz+vmF7qjTuJKSTUlJBXUpd1WqWJrpw30Y
-         nv2MZlBgIQFc4edb1girgABN3phn+xTktrZgXGLb/l42SdNLxj7oZ2PogAI/vsq2BlwR
-         RK3LyvIntmch4EKbgbZ5A7ozIRNyuV5hdLeXWbX/LWhQt1+e94aWSE5KbHNEatQJgx3f
-         s/uIQBr/ssyD4bYZud/Qz4lxdhbaC01q2z2de/WQHDFKzPc3ZIzWoQPNtPJAaOLTeanp
-         y+gHOMTX0fkTWY39N0UfV9QA9Lz3BoX+pHBHuPe0JM56Y4j+zD0F55MbHMtq9dYBv4vd
-         ncGg==
-X-Gm-Message-State: APjAAAUSPGKYN0587WTWhETYu7ahs1QLOD8KjT8xM551BuBd6HeDKiqu
-        d59fGDiKC7S+uk+4ayGvcl4=
-X-Google-Smtp-Source: APXvYqxMSOrFJP6zHqgaD4UXKs1yS4doambgrEVLaOY6bgg0oynk4XyWhKJMI02wb5r/vMxpeHVJFw==
-X-Received: by 2002:a2e:8847:: with SMTP id z7mr12128141ljj.51.1561928692491;
-        Sun, 30 Jun 2019 14:04:52 -0700 (PDT)
+        bh=UWa9gcb+W/CIAOv0/O/hapxydWbD232AuhpZZZL43dE=;
+        b=LdmHmLUCtxeDjFSNkNwQwe/cFpAZdaRuJAp/cnhcC0iofBgy7LrZGajrazpWcAoSnF
+         fuqJA5IePYf8s2N0vr7jq8yacQibnp3tf3LgPAFqKy++bMEKmEep8g/bEkaLDudvrNfX
+         bxsX13vyXvlpiYLi9frFEcPyVrRlIkqYOmhGpabFoAigJwxOAzSXNXBGyfAcATBjIjow
+         a4NLQp3VIg8sZ9NU8dXbaBh70qf+V0fxYTXFQw4mbk/+b2TesJFQNzGp2ahvMc3dwRFu
+         8MmR/HqIa+IHhgUMlU6fzULTFWzKJBERU73Fqmkt9YFXJ/FGfzOWQFmoCIN9SIPFp3hb
+         BjGg==
+X-Gm-Message-State: APjAAAXoLgnW6B7XuGYW3yLCiRq0duVnFMapsymunH9Oia982PunaOK6
+        TuroYXty0Hk99zGgRaN/u2Q=
+X-Google-Smtp-Source: APXvYqxJoXqkyWpUSSljPUi1j17FgA/hwZs8PNXxo+dpg+Djzn+6kO7rg/wN/eGK7Q1JuuJo7wgugQ==
+X-Received: by 2002:a19:c14f:: with SMTP id r76mr10426342lff.70.1561928690409;
+        Sun, 30 Jun 2019 14:04:50 -0700 (PDT)
 Received: from localhost.localdomain (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id u9sm2221408lfb.38.2019.06.30.14.04.51
+        by smtp.gmail.com with ESMTPSA id u9sm2221408lfb.38.2019.06.30.14.04.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 30 Jun 2019 14:04:51 -0700 (PDT)
+        Sun, 30 Jun 2019 14:04:49 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -68,9 +68,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 15/15] ARM: dts: tegra30: Add External Memory Controller node
-Date:   Mon,  1 Jul 2019 00:00:19 +0300
-Message-Id: <20190630210019.26914-16-digetx@gmail.com>
+Subject: [PATCH v6 13/15] clk: tegra20: emc: Add tegra20_clk_emc_on_pllp()
+Date:   Mon,  1 Jul 2019 00:00:17 +0300
+Message-Id: <20190630210019.26914-14-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190630210019.26914-1-digetx@gmail.com>
 References: <20190630210019.26914-1-digetx@gmail.com>
@@ -81,34 +81,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add External Memory Controller node to the device-tree.
+This function will be used by Tegra30 CPUIDLE driver to determine whether
+CPU could be power-gated.
 
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/boot/dts/tegra30.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/clk/tegra/clk-tegra20-emc.c | 14 ++++++++++++++
+ include/linux/clk/tegra.h           |  1 +
+ 2 files changed, 15 insertions(+)
 
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index e074258d4518..8355264e2265 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -732,6 +732,15 @@
- 		#reset-cells = <1>;
- 	};
+diff --git a/drivers/clk/tegra/clk-tegra20-emc.c b/drivers/clk/tegra/clk-tegra20-emc.c
+index 03bf0009a33c..ace7150d5cc1 100644
+--- a/drivers/clk/tegra/clk-tegra20-emc.c
++++ b/drivers/clk/tegra/clk-tegra20-emc.c
+@@ -291,3 +291,17 @@ int tegra20_clk_prepare_emc_mc_same_freq(struct clk *emc_clk, bool same)
  
-+	memory-controller@7000f400 {
-+		compatible = "nvidia,tegra30-emc";
-+		reg = <0x7000f400 0x400>;
-+		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA30_CLK_EMC>;
+ 	return 0;
+ }
 +
-+		nvidia,memory-controller = <&mc>;
-+	};
++bool tegra20_clk_emc_on_pllp(void)
++{
++	struct clk *clk = __clk_lookup("emc");
++	struct clk_hw *hw;
 +
- 	fuse@7000f800 {
- 		compatible = "nvidia,tegra30-efuse";
- 		reg = <0x7000f800 0x400>;
++	if (clk) {
++		hw = __clk_get_hw(clk);
++
++		return emc_get_parent(hw) == EMC_SRC_PLL_P;
++	}
++
++	return true;
++}
+diff --git a/include/linux/clk/tegra.h b/include/linux/clk/tegra.h
+index 6a7cbc3cfadc..c862447ffada 100644
+--- a/include/linux/clk/tegra.h
++++ b/include/linux/clk/tegra.h
+@@ -129,5 +129,6 @@ typedef long (tegra20_clk_emc_round_cb)(unsigned long rate,
+ void tegra20_clk_set_emc_round_callback(tegra20_clk_emc_round_cb *round_cb,
+ 					void *cb_arg);
+ int tegra20_clk_prepare_emc_mc_same_freq(struct clk *emc_clk, bool same);
++bool tegra20_clk_emc_on_pllp(void);
+ 
+ #endif /* __LINUX_CLK_TEGRA_H_ */
 -- 
 2.22.0
 
