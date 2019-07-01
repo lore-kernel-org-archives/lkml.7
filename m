@@ -2,100 +2,90 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132FBC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D03C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85FC208CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:57:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SGuzD8+l"
+	by mail.kernel.org (Postfix) with ESMTP id 359C5214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfGAL5a (ORCPT
+        id S1727521AbfGAMAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 07:57:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34452 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfGAL5a (ORCPT
+        Mon, 1 Jul 2019 08:00:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44860 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727187AbfGAMAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 07:57:30 -0400
-Received: by mail-wr1-f66.google.com with SMTP id u18so5361869wru.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 04:57:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OWBpEvn4nRZz1cmchO61KMpCxGabkWCJ3N6fsTIImxE=;
-        b=SGuzD8+l7yIVTo4NJFrk5PQLhWUNIRIl+L2MIiLrNt2+dqP7uthb9y+UvZlfRDiShW
-         W9SI2QjMio/nGjOHqcbJUrtYFWAYdaar70RuhUzDf9r6paqbgSGD8gdsYZlJYoWKJJye
-         spj31of4THSKTqUlWnaUqUFe1Oi1R/mcK84Nes5jYXa16piAAdAAxckeWVeWVRfQU55u
-         F3SiwkKDc1lKOO++wQwy9pM4QE7WV6NVWX3zRFpe6pSzHeC8xL/yZPwZr8D2frYayYRT
-         gDFGy0aei38sRKxDcgPp/k1TdKS03J5XWlol9PzE0Q3G2sHwFFd8/8q1Ripa5qcoAj2/
-         gFDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OWBpEvn4nRZz1cmchO61KMpCxGabkWCJ3N6fsTIImxE=;
-        b=mNtWnKcg+Z+/jiR82+GYIL4jYWM4fWmkswB22TbTtthP8kmGEF6ms+5E5/qLNJgw5a
-         u6l9E/rYwuKZblSg2qQeVGS+BslssSNetU8pfyVJajYHhVz1/e1KuccdgF/PMDMNUDjT
-         8g+CL796M1ev4k0MjG5Hxhosd3/Zh/HKMf8IpdnDDOrNlwHKXH9hH1dQWQ1JQYgAzUED
-         +MaV+7ihwjKMhRQCyMxXpkvwm40Z94BvejsrdwIe31YwypllfXYQWKPQageztzkrhmUY
-         J0Ej+ViwP7HANbJDNNLQMKsx0TX1H8auLg7qFWBHupRq6N1CUmk3y5WhKkRZ9dsdcFpq
-         jePQ==
-X-Gm-Message-State: APjAAAUVcaExsQCbQqwM8+5LCIsWl8DeUxC1ATCF3UzpDj0yBj7d8Egh
-        UMQhAutE6wZ0XysljUdFRLpqLA==
-X-Google-Smtp-Source: APXvYqxYE/6Py43lG5VkCd6ZaToMDiKOWJY63MqNtt/xP+N1a4IkXdPwDaoToh3uN/qzhr9j4omYOg==
-X-Received: by 2002:adf:fb8d:: with SMTP id a13mr18930522wrr.273.1561982248294;
-        Mon, 01 Jul 2019 04:57:28 -0700 (PDT)
-Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id w25sm5660944wmk.18.2019.07.01.04.57.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 01 Jul 2019 04:57:27 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH RESEND] arm64: dts: meson-g12a-sei510: enable IR controller
-Date:   Mon,  1 Jul 2019 13:57:24 +0200
-Message-Id: <20190701115724.15801-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 1 Jul 2019 08:00:39 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61BuhG7007311
+        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 08:00:38 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfh69j4pc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 08:00:38 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Mon, 1 Jul 2019 13:00:36 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 1 Jul 2019 13:00:31 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61C0TsO51707912
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 1 Jul 2019 12:00:29 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 55C91AE079;
+        Mon,  1 Jul 2019 12:00:29 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA7A2AE076;
+        Mon,  1 Jul 2019 12:00:28 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.119])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  1 Jul 2019 12:00:28 +0000 (GMT)
+Date:   Mon, 1 Jul 2019 14:00:27 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v9 0/4] vfio: ap: AP Queue Interrupt Control
+In-Reply-To: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
+References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070112-0020-0000-0000-0000034F263C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070112-0021-0000-0000-000021A2B05B
+Message-Id: <20190701140027.04de417a.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=574 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907010150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the IR receiver controller on the SEI510 board.
+On Tue, 21 May 2019 17:34:33 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+> This patch series implements PQAP/AQIC interception in KVM.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-index c7a87368850b..12aa7eaeaf68 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-@@ -339,6 +339,12 @@
- 	pinctrl-names = "default";
- };
- 
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
- &pwm_ef {
- 	status = "okay";
- 	pinctrl-0 = <&pwm_e_pins>;
--- 
-2.21.0
+Thanks, applied
 
