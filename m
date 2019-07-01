@@ -2,81 +2,256 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35953C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 880E3C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057C420B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561995802;
-	bh=+m8Ocelpq6IIEdvehzEZ7RfzLRSFhV0Ix0maHlwbSlI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P02SaussnMOFa1i2D7Y/jKksjANy4kvYYH2taloYPdnr4PDIAewe+gV6VZqqr22PC
-	 tJ/nXSmurL4+sVhQiWcdTMpeH9AffB/7cMOHdYPxyUpi8UnkXLSbUHbU5E521KQteQ
-	 c3Kh3KDBhBMtXom+X5L8xd+jGGfNaXGKystSiNoI=
+	by mail.kernel.org (Postfix) with ESMTP id 60BF0214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:45:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DJ3zwEyE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbfGAPnU (ORCPT
+        id S1729826AbfGAPpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727640AbfGAPnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:43:20 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 428EC205C9;
-        Mon,  1 Jul 2019 15:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561995799;
-        bh=+m8Ocelpq6IIEdvehzEZ7RfzLRSFhV0Ix0maHlwbSlI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I3WXaZ/toRpBKp2h1GgJ2CKzOjeyx7woYnDHIKnJE93FDeYQs3Q7TMmTdQddUCdG6
-         l5QQzWkGSFwppS0ZtBwytsfPTWxaVHs3oxNOOPViOCbYfYW3hS2BW7DOtKwBGmSM+X
-         IDbCt+3HYx0fCQ1Z5jZIY++u2tTyWCVWi85bur/8=
-Date:   Mon, 1 Jul 2019 08:43:17 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] vfs: move_mount: reject moving kernel internal mounts
-Message-ID: <20190701154317.GB790@sol.localdomain>
-References: <CACT4Y+ZN8CZq7L1GQANr25extEqPASRERGVh+sD4-55cvWPOSg@mail.gmail.com>
- <20190629202744.12396-1-ebiggers@kernel.org>
- <20190629203916.GV17978@ZenIV.linux.org.uk>
- <20190701010847.GA23778@ZenIV.linux.org.uk>
+        Mon, 1 Jul 2019 11:45:24 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41222 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727373AbfGAPpX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 11:45:23 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 136so9117106lfa.8
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 08:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ImGPcfrTaxEgEgkx65mt0ofrgVu0PRsPNy18Ds0mkaY=;
+        b=DJ3zwEyEiuc0ibdOqvlPD77n0POZywfOmkhuiKrjmpUkv/CUdB7OAvyi8F3WIrr9c7
+         1XJXiToXr0WVG76FIprtNBZJQ7Oosvjrx2NseXQUdzeXBJZB27n9fHUyYdCjMQeZEwhI
+         3pNdNprHm0a4E/6PNk0Jq2BUeph/Qyy4zcT4sF15duqYle1Vm8DzD6FtfD+P4cMRVRG8
+         VhTyZCy5xt1rJu5kcV/bE0bZrDYsRMnCEZpNp2sl5GhB3MkqcCQvZ8jL2wL/xKsp/bFx
+         volPESdFR5/agT5n5MRrBlXQxL1FFXCaqiVUhUgeBokXm2SqtZwROS/LfBtUavelQ+SO
+         c+FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ImGPcfrTaxEgEgkx65mt0ofrgVu0PRsPNy18Ds0mkaY=;
+        b=CTKIFWVXZoxWd7JnKHrIka/EZCchkuimne9d1kcjsYLrkFqn1P3kbyj/+E18z/kvZJ
+         /DpMnIuUs8lmsw/qw5PyKZd+ynmm4s3PsiIL+Lym8QNXdj39JId9gDHxeGVVw58gGH5c
+         rZglGgQc9+KPIya4apgmMMFlbQRl0GYJhw7GU21gH71fQtGzJatWt75WW9mYTZB+IMu8
+         hKCwlw7bwpQLjy9g9aUwhp1B9uUljpGrij3nzPu0L9gyBBFJsPbKbdC8VnFc5afLRhyZ
+         wDd16l3nAKzPjcTtOT46VfNPgROMOjZIEbjzuWrw8lkPdzypIvt0Vlk5ZufXwZpceUCC
+         L2yw==
+X-Gm-Message-State: APjAAAVe9MMkXgqgdqM3v7XQAU7JRDoMuKbkKrxshcoCcuovOcEiGbrS
+        q51SV200ypZ6I/SCn7q4L/r+lA==
+X-Google-Smtp-Source: APXvYqzk0XOCZg21kyRORRVSjb0/8YorIcCUA+32A0b0dNQUMjDUYn6pNRk78iQwOuVc652c8JW+rg==
+X-Received: by 2002:ac2:4a6e:: with SMTP id q14mr12179312lfp.154.1561995921133;
+        Mon, 01 Jul 2019 08:45:21 -0700 (PDT)
+Received: from [192.168.27.209] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id d4sm2609795lfi.91.2019.07.01.08.45.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 08:45:20 -0700 (PDT)
+Subject: Re: [PATCH] media: venus: Update to bitrate based clock scaling
+To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org
+References: <1561537416-2067-1-git-send-email-amasule@codeaurora.org>
+ <1561537416-2067-2-git-send-email-amasule@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <00818fe7-95e6-b43f-fca8-c4669ffad947@linaro.org>
+Date:   Mon, 1 Jul 2019 18:45:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701010847.GA23778@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1561537416-2067-2-git-send-email-amasule@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 02:08:48AM +0100, Al Viro wrote:
-> 
-> Let's reorder that a bit:
->         /* The mountpoint must be in our namespace. */
->         if (!check_mnt(p))
->                 goto out;
-> 
-> 	/* The thing moved must be mounted... */
-> 	if (!is_mounted(old_path->mnt))
-> 		goto out;
-> 
->         /* ... and either ours or the root of anon namespace */
-> 	if (!(attached ? check_mnt(old) : is_anon_ns(ns)))
-> 		goto out;
-> 
-> IMO that looks saner and all it costs us is a redundant check
-> in attached case.  Objections?
+Hi Aniket,
 
-Looks good to me.
+On 6/26/19 11:23 AM, Aniket Masule wrote:
+> Introduced clock scaling using bitrate, current
+> calculations consider only the cycles per mb.
+> Also, clock scaling is now triggered before every
+> buffer being queued to the device. This helps in
+> deciding precise clock cycles required.
+> 
+> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.c    | 16 +++++------
+>  drivers/media/platform/qcom/venus/core.h    |  1 +
+>  drivers/media/platform/qcom/venus/helpers.c | 43 +++++++++++++++++++++++++----
+>  3 files changed, 47 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index f1597d6..ad6bb74 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -474,14 +474,14 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+>  };
+>  
+>  static struct codec_freq_data sdm845_codec_freq_data[] =  {
+> -	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675 },
+> -	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675 },
+> -	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675 },
+> -	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200 },
+> -	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200 },
+> -	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200 },
+> -	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200 },
+> -	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200 },
+> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
+> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
+> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
+> +	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
+> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
+> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
+> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
+> +	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
+>  };
+>  
+>  static const struct venus_resources sdm845_res = {
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 2ed6496..b964b7c 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -39,6 +39,7 @@ struct codec_freq_data {
+>  	u32 pixfmt;
+>  	u32 session_type;
+>  	unsigned int vpp_freq;
+> +	unsigned int vsp_freq;
 
-- Eric
+unsigned long?
+
+>  };
+>  
+>  struct venus_resources {
+> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+> index ef35fd8..634778a 100644
+> --- a/drivers/media/platform/qcom/venus/helpers.c
+> +++ b/drivers/media/platform/qcom/venus/helpers.c
+> @@ -379,6 +379,9 @@ static int scale_clocks(struct venus_inst *inst)
+>  	unsigned int i;
+>  	int ret;
+>  
+> +	if (inst->state == INST_START)
+> +		return 0;
+
+This condition is related (probably) to the change in
+venus_helper_vb2_buf_queue() but shouldn't it be copied in
+scale_clocks_v4 too?
+
+> +
+>  	mbs_per_sec = load_per_type(core, VIDC_SESSION_TYPE_ENC) +
+>  		      load_per_type(core, VIDC_SESSION_TYPE_DEC);
+>  
+> @@ -418,17 +421,26 @@ static int scale_clocks(struct venus_inst *inst)
+>  	return ret;
+>  }
+>  
+> -static unsigned long calculate_vpp_freq(struct venus_inst *inst)
+> +static unsigned long calculate_inst_freq(struct venus_inst *inst,
+> +					 unsigned long filled_len)
+>  {
+> -	unsigned long vpp_freq = 0;
+> +	unsigned long vpp_freq = 0, vsp_freq = 0;
+> +	u64 fps = inst->fps;
+>  	u32 mbs_per_sec;
+>  
+>  	mbs_per_sec = load_per_instance(inst);
+>  	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
+>  	/* 21 / 20 is overhead factor */
+>  	vpp_freq += vpp_freq / 20;
+> +	vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vsp_freq;
+
+this calculation is not used below. Is that intentional?
+
+> +
+> +	/* 10 / 7 is overhead factor */
+> +	if (inst->session_type == VIDC_SESSION_TYPE_ENC)
+> +		vsp_freq = (inst->controls.enc.bitrate * 10) / 7;
+> +	else
+> +		vsp_freq = ((fps * filled_len * 8) * 10) / 7;
+>  
+> -	return vpp_freq;
+> +	return max(vpp_freq, vsp_freq);
+>  }
+>  
+>  static int scale_clocks_v4(struct venus_inst *inst)
+> @@ -436,14 +448,30 @@ static int scale_clocks_v4(struct venus_inst *inst)
+>  	struct venus_core *core = inst->core;
+>  	const struct freq_tbl *table = core->res->freq_tbl;
+>  	unsigned int num_rows = core->res->freq_tbl_size;
+> -
+> +	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
+>  	struct clk *clk = core->clks[0];
+>  	struct device *dev = core->dev;
+> +
+
+drop this addition of blank line.
+
+>  	unsigned int i;
+>  	unsigned long freq = 0, freq_core0 = 0, freq_core1 = 0;
+> +	unsigned long filled_len = 0;
+> +	struct venus_buffer *buf, *n;
+> +	struct vb2_buffer *vb;
+>  	int ret;
+>  
+> -	freq = calculate_vpp_freq(inst);
+> +	mutex_lock(&inst->lock);
+> +	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
+> +		vb = &buf->vb.vb2_buf;
+> +		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
+> +	}
+> +	mutex_unlock(&inst->lock);
+> +
+> +	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len) {
+> +		dev_dbg(dev, "%s: No input to the session\n", __func__);
+
+please drop this debug message, if the user pushes empty buffers
+something will blow up earlier.
+
+> +		return 0;
+> +	}
+> +
+> +	freq = calculate_inst_freq(inst, filled_len);
+>  
+>  	if (freq > table[0].freq)
+>  		goto err;
+> @@ -471,6 +499,9 @@ static int scale_clocks_v4(struct venus_inst *inst)
+>  
+>  	freq = max(freq_core0, freq_core1);
+>  
+> +	if (clk_get_rate(clk) == freq)
+> +		return 0;
+> +
+
+above check is included in clk_set_rate(), you don't need it.
+
+>  	ret = clk_set_rate(clk, freq);
+>  	if (ret)
+>  		goto err;
+> @@ -1150,6 +1181,8 @@ void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
+>  	if (ret)
+>  		goto unlock;
+>  
+> +	load_scale_clocks(inst);
+> +
+>  	ret = session_process_buf(inst, vbuf);
+>  	if (ret)
+>  		return_buf_error(inst, vbuf);
+> 
+
+-- 
+regards,
+Stan
