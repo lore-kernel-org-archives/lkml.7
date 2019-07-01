@@ -2,137 +2,220 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6950C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06773C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F35C208CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:04:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="u84Sii5a"
+	by mail.kernel.org (Postfix) with ESMTP id C5866208CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfGAEE2 (ORCPT
+        id S1727392AbfGAEEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 00:04:28 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37009 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbfGAEE0 (ORCPT
+        Mon, 1 Jul 2019 00:04:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64232 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727379AbfGAEEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 00:04:26 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 19so5864301pfa.4
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 21:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Jy/K9h1um5pl+8SDvWEqL6+5KT54XouLblV746P0ug4=;
-        b=u84Sii5aAkBvGlPfBDUEFlgzWi9pe/R8agHeC9cZDawsEvVr//eP4lbs319tS7MB+i
-         QOphyTpWRhB92FW2gofqOe6B7/CBXpE5N4uRQQaCnTbXxHoIMZGYSLBUw3o2TvY3QAaF
-         TZvXL0aKUkdSOgS71c1JNmf+geptZjHeKrEqo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Jy/K9h1um5pl+8SDvWEqL6+5KT54XouLblV746P0ug4=;
-        b=FtAfQNcasSTKlOJFxXgEAAhc3aY9zOly1fnKLqmxVFBnBJPl+whDvESL3A5+SenadN
-         bkb09FdEq+UZy+BE/WR0kYcofp32xvVrsuHH6O6H7r7KQ55FurnZHoCjwRhf0MWlJTkA
-         I5RjymyzCe7Xq9U5YTKOHzwEWOFDYqg3DnWdhbQHiHs6ShX79v/6vhZqZR3dUU6sfrU7
-         v9GBWKcudzh6V+2x1XJa1CsO9ZJ6x3JpHXSLtHY0DmlmVw40oInjRl8L5lCTs/8Ty+rP
-         9Hya+sLQJhiZklogfzU3yLeLGVewNhDiNs8GcTUy6+/04WGrB/TkWPAA4uXzzrPhoOed
-         hiTg==
-X-Gm-Message-State: APjAAAWJA0UJvnyvkgt8nO6joWVu1LvlbAoEXJ0HRCznDBKRlf8mfw0T
-        9Zj8ESpCvHKZdNkJhxeu71M3TSBfaXs=
-X-Google-Smtp-Source: APXvYqz7Htdbd6b36gdXr2EmEP4Fdix5WXB90ZCvu4Hf3VsWtGkMTcw8H7gq6+NbImTPXG9SZmJJRg==
-X-Received: by 2002:a63:4554:: with SMTP id u20mr16528634pgk.406.1561953865200;
-        Sun, 30 Jun 2019 21:04:25 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id w1sm10841305pjt.30.2019.06.30.21.04.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 30 Jun 2019 21:04:24 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kselftest@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [RFC 3/3] Revert "rcutorture: Tweak kvm options"
-Date:   Mon,  1 Jul 2019 00:04:15 -0400
-Message-Id: <20190701040415.219001-3-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190701040415.219001-1-joel@joelfernandes.org>
-References: <20190701040415.219001-1-joel@joelfernandes.org>
+        Mon, 1 Jul 2019 00:04:36 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6141agh021983
+        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 00:04:35 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tf6bbr3bq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 00:04:35 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 1 Jul 2019 05:04:34 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 1 Jul 2019 05:04:29 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6144Slg51315040
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 1 Jul 2019 04:04:28 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1EEA7B205F;
+        Mon,  1 Jul 2019 04:04:28 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD1CFB2064;
+        Mon,  1 Jul 2019 04:04:27 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.128.230])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  1 Jul 2019 04:04:27 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id D286C16C2E92; Sun, 30 Jun 2019 21:04:30 -0700 (PDT)
+Date:   Sun, 30 Jun 2019 21:04:30 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>
+Subject: Re: [PATCH] tools/memory-model: Update the informal documentation
+Reply-To: paulmck@linux.ibm.com
+References: <1561842644-5354-1-git-send-email-andrea.parri@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561842644-5354-1-git-send-email-andrea.parri@amarulasolutions.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19070104-0060-0000-0000-000003576B51
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011358; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01225723; UDB=6.00645233; IPR=6.01006934;
+ MB=3.00027534; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-01 04:04:32
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070104-0061-0000-0000-000049F80EF4
+Message-Id: <20190701040430.GY26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907010049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit a6fda6dab93c2c06ef4b8cb4b9258df6674d2438 which
-causes kvm.sh to not run on my machines. The qemu-system-x86_64 command
-runs but does nothing.
+On Sat, Jun 29, 2019 at 11:10:44PM +0200, Andrea Parri wrote:
+> The formal memory consistency model has added support for plain accesses
+> (and data races).  While updating the informal documentation to describe
+> this addition to the model is highly desirable and important future work,
+> update the informal documentation to at least acknowledge such addition.
+> 
+> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+> Cc: Alan Stern <stern@rowland.harvard.edu>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Jade Alglave <j.alglave@ucl.ac.uk>
+> Cc: Luc Maranget <luc.maranget@inria.fr>
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Cc: Akira Yokosawa <akiyks@gmail.com>
+> Cc: Daniel Lustig <dlustig@nvidia.com>
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
-I am Ok if we want to drop this patch but it is in my tree because
-without it I can't run the tests.
+Queued for review, thank you, Andrea!
 
- tools/testing/selftests/rcutorture/bin/functions.sh | 13 +------------
- .../selftests/rcutorture/configs/rcu/CFcommon       |  3 ---
- 2 files changed, 1 insertion(+), 15 deletions(-)
+							Thanx, Paul
 
-diff --git a/tools/testing/selftests/rcutorture/bin/functions.sh b/tools/testing/selftests/rcutorture/bin/functions.sh
-index c3a49fb4d6f6..6bcb8b5b2ff2 100644
---- a/tools/testing/selftests/rcutorture/bin/functions.sh
-+++ b/tools/testing/selftests/rcutorture/bin/functions.sh
-@@ -172,7 +172,7 @@ identify_qemu_append () {
- 	local console=ttyS0
- 	case "$1" in
- 	qemu-system-x86_64|qemu-system-i386)
--		echo selinux=0 initcall_debug debug
-+		echo noapic selinux=0 initcall_debug debug
- 		;;
- 	qemu-system-aarch64)
- 		console=ttyAMA0
-@@ -191,19 +191,8 @@ identify_qemu_append () {
- # Output arguments for qemu arguments based on the TORTURE_QEMU_MAC
- # and TORTURE_QEMU_INTERACTIVE environment variables.
- identify_qemu_args () {
--	local KVM_CPU=""
--	case "$1" in
--	qemu-system-x86_64)
--		KVM_CPU=kvm64
--		;;
--	qemu-system-i386)
--		KVM_CPU=kvm32
--		;;
--	esac
- 	case "$1" in
- 	qemu-system-x86_64|qemu-system-i386)
--		echo -machine q35,accel=kvm
--		echo -cpu ${KVM_CPU}
- 		;;
- 	qemu-system-aarch64)
- 		echo -machine virt,gic-version=host -cpu host
-diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
-index e19a444a0684..d2d2a86139db 100644
---- a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
-+++ b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
-@@ -1,5 +1,2 @@
- CONFIG_RCU_TORTURE_TEST=y
- CONFIG_PRINTK_TIME=y
--CONFIG_HYPERVISOR_GUEST=y
--CONFIG_PARAVIRT=y
--CONFIG_KVM_GUEST=y
--- 
-2.22.0.410.gd8fdbe21b5-goog
+> ---
+>  tools/memory-model/Documentation/explanation.txt | 47 +++++++++++-------------
+>  tools/memory-model/README                        | 18 ++++-----
+>  2 files changed, 30 insertions(+), 35 deletions(-)
+> 
+> diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
+> index 68caa9a976d0c..b42f7cd718242 100644
+> --- a/tools/memory-model/Documentation/explanation.txt
+> +++ b/tools/memory-model/Documentation/explanation.txt
+> @@ -42,7 +42,8 @@ linux-kernel.bell and linux-kernel.cat files that make up the formal
+>  version of the model; they are extremely terse and their meanings are
+>  far from clear.
+>  
+> -This document describes the ideas underlying the LKMM.  It is meant
+> +This document describes the ideas underlying the LKMM, but excluding
+> +the modeling of bare C (or plain) shared memory accesses.  It is meant
+>  for people who want to understand how the model was designed.  It does
+>  not go into the details of the code in the .bell and .cat files;
+>  rather, it explains in English what the code expresses symbolically.
+> @@ -354,31 +355,25 @@ be extremely complex.
+>  Optimizing compilers have great freedom in the way they translate
+>  source code to object code.  They are allowed to apply transformations
+>  that add memory accesses, eliminate accesses, combine them, split them
+> -into pieces, or move them around.  Faced with all these possibilities,
+> -the LKMM basically gives up.  It insists that the code it analyzes
+> -must contain no ordinary accesses to shared memory; all accesses must
+> -be performed using READ_ONCE(), WRITE_ONCE(), or one of the other
+> -atomic or synchronization primitives.  These primitives prevent a
+> -large number of compiler optimizations.  In particular, it is
+> -guaranteed that the compiler will not remove such accesses from the
+> -generated code (unless it can prove the accesses will never be
+> -executed), it will not change the order in which they occur in the
+> -code (within limits imposed by the C standard), and it will not
+> -introduce extraneous accesses.
+> -
+> -This explains why the MP and SB examples above used READ_ONCE() and
+> -WRITE_ONCE() rather than ordinary memory accesses.  Thanks to this
+> -usage, we can be certain that in the MP example, P0's write event to
+> -buf really is po-before its write event to flag, and similarly for the
+> -other shared memory accesses in the examples.
+> -
+> -Private variables are not subject to this restriction.  Since they are
+> -not shared between CPUs, they can be accessed normally without
+> -READ_ONCE() or WRITE_ONCE(), and there will be no ill effects.  In
+> -fact, they need not even be stored in normal memory at all -- in
+> -principle a private variable could be stored in a CPU register (hence
+> -the convention that these variables have names starting with the
+> -letter 'r').
+> +into pieces, or move them around.  The use of READ_ONCE(), WRITE_ONCE(),
+> +or one of the other atomic or synchronization primitives prevents a
+> +large number of compiler optimizations.  In particular, it is guaranteed
+> +that the compiler will not remove such accesses from the generated code
+> +(unless it can prove the accesses will never be executed), it will not
+> +change the order in which they occur in the code (within limits imposed
+> +by the C standard), and it will not introduce extraneous accesses.
+> +
+> +The MP and SB examples above used READ_ONCE() and WRITE_ONCE() rather
+> +than ordinary memory accesses.  Thanks to this usage, we can be certain
+> +that in the MP example, the compiler won't reorder P0's write event to
+> +buf and P0's write event to flag, and similarly for the other shared
+> +memory accesses in the examples.
+> +
+> +Since private variables are not shared between CPUs, they can be
+> +accessed normally without READ_ONCE() or WRITE_ONCE().  In fact, they
+> +need not even be stored in normal memory at all -- in principle a
+> +private variable could be stored in a CPU register (hence the convention
+> +that these variables have names starting with the letter 'r').
+>  
+>  
+>  A WARNING
+> diff --git a/tools/memory-model/README b/tools/memory-model/README
+> index 2b87f3971548c..fc07b52f20286 100644
+> --- a/tools/memory-model/README
+> +++ b/tools/memory-model/README
+> @@ -167,15 +167,15 @@ scripts	Various scripts, see scripts/README.
+>  LIMITATIONS
+>  ===========
+>  
+> -The Linux-kernel memory model has the following limitations:
+> -
+> -1.	Compiler optimizations are not modeled.  Of course, the use
+> -	of READ_ONCE() and WRITE_ONCE() limits the compiler's ability
+> -	to optimize, but there is Linux-kernel code that uses bare C
+> -	memory accesses.  Handling this code is on the to-do list.
+> -	For more information, see Documentation/explanation.txt (in
+> -	particular, the "THE PROGRAM ORDER RELATION: po AND po-loc"
+> -	and "A WARNING" sections).
+> +The Linux-kernel memory model (LKMM) has the following limitations:
+> +
+> +1.	Compiler optimizations are not accurately modeled.  Of course,
+> +	the use of READ_ONCE() and WRITE_ONCE() limits the compiler's
+> +	ability to optimize, but under some circumstances it is possible
+> +	for the compiler to undermine the memory model.  For more
+> +	information, see Documentation/explanation.txt (in particular,
+> +	the "THE PROGRAM ORDER RELATION: po AND po-loc" and "A WARNING"
+> +	sections).
+>  
+>  	Note that this limitation in turn limits LKMM's ability to
+>  	accurately model address, control, and data dependencies.
+> -- 
+> 2.7.4
+> 
 
