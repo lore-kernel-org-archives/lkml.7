@@ -4,162 +4,389 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E058C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668A6C06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00ADE20881
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400DB2173C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbfGAM2z convert rfc822-to-8bit (ORCPT
+        id S1728884AbfGAMaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 08:28:55 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:45207 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbfGAM2z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 08:28:55 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id C27BC24001A;
-        Mon,  1 Jul 2019 12:28:48 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 14:28:47 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Richard Weinberger <richard@nod.at>, od@zcrc.me,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] mtd: rawnand: ingenic: Fix ingenic_ecc dependency
-Message-ID: <20190701142847.1c1ac4b1@xps13>
-In-Reply-To: <20190629012248.12447-1-paul@crapouillou.net>
-References: <20190629012248.12447-1-paul@crapouillou.net>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 1 Jul 2019 08:30:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:33830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727239AbfGAMaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 08:30:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32942344;
+        Mon,  1 Jul 2019 05:30:07 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E450D3F246;
+        Mon,  1 Jul 2019 05:30:05 -0700 (PDT)
+Subject: Re: [PATCH] iommu: io-pgtable: Support non-coherent page tables
+To:     Will Deacon <will@kernel.org>, Will Deacon <will.deacon@arm.com>,
+        bjorn.andersson@linaro.org
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Vivek Gautam <vgautam@qti.qualcomm.com>
+References: <20190515233234.22990-1-bjorn.andersson@linaro.org>
+ <20190618173929.GG4270@fuggles.cambridge.arm.com>
+ <20190624115349.f62uqypyt7l73skf@willie-the-truck>
+ <20190625115646.pgsuhz6dza5bsa6q@willie-the-truck>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <22833309-753c-2ded-f0ba-247eb577e74f@arm.com>
+Date:   Mon, 1 Jul 2019 13:30:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190625115646.pgsuhz6dza5bsa6q@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
-
-One question below.
-
-Paul Cercueil <paul@crapouillou.net> wrote on Sat, 29 Jun 2019 03:22:48
-+0200:
-
-> If MTD_NAND_JZ4780 is y and MTD_NAND_JZ4780_BCH is m,
-> which select CONFIG_MTD_NAND_INGENIC_ECC to m, building fails:
+On 25/06/2019 12:56, Will Deacon wrote:
+> On Mon, Jun 24, 2019 at 12:53:49PM +0100, Will Deacon wrote:
+>> On Tue, Jun 18, 2019 at 06:39:33PM +0100, Will Deacon wrote:
+>>> On Wed, May 15, 2019 at 04:32:34PM -0700, Bjorn Andersson wrote:
+>>>> Describe the memory related to page table walks as non-cachable for iommu
+>>>> instances that are not DMA coherent.
+>>>>
+>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>> ---
+>>>>   drivers/iommu/io-pgtable-arm.c | 12 +++++++++---
+>>>>   1 file changed, 9 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+>>>> index 4e21efbc4459..68ff22ffd2cb 100644
+>>>> --- a/drivers/iommu/io-pgtable-arm.c
+>>>> +++ b/drivers/iommu/io-pgtable-arm.c
+>>>> @@ -803,9 +803,15 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
+>>>>   		return NULL;
+>>>>   
+>>>>   	/* TCR */
+>>>> -	reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
+>>>> -	      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_IRGN0_SHIFT) |
+>>>> -	      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_ORGN0_SHIFT);
+>>>> +	if (cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA) {
+>>>> +		reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
+>>>> +		      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_IRGN0_SHIFT) |
+>>>> +		      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_ORGN0_SHIFT);
+>>>> +	} else {
+>>>> +		reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
+>>>
+>>> Nit: this should be outer-shareable (ARM_LPAE_TCR_SH_OS).
+>>>
+>>>> +		      (ARM_LPAE_TCR_RGN_NC << ARM_LPAE_TCR_IRGN0_SHIFT) |
+>>>> +		      (ARM_LPAE_TCR_RGN_NC << ARM_LPAE_TCR_ORGN0_SHIFT);
+>>>> +	}>>
+>>> Should we also be doing something similar for the short-descriptor code
+>>> in io-pgtable-arm-v7s.c? Looks like you just need to use ARM_V7S_RGN_NC
+>>> instead of ARM_V7S_RGN_WBWA when initialising ttbr0 for non-coherent
+>>> SMMUs.
+>>
+>> Do you plan to respin this? I'll need it this week if you're shooting for
+>> 5.3.
 > 
-> drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function `ingenic_nand_remove':
-> ingenic_nand.c:(.text+0x177): undefined reference to `ingenic_ecc_release'
-> drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function `ingenic_nand_ecc_correct':
-> ingenic_nand.c:(.text+0x2ee): undefined reference to `ingenic_ecc_correct'
+> I started having a crack at this myself, but in doing so I realised that
+> using IO_PGTABLE_QUIRK_NO_DMA for this isn't quite right based on its
+> current description. When that flag is set, we can rely on the page-table walker
+> being coherent, but I don't think it works the other way around: you can't
+> rely on the flag being clear meaning that the page-table walker is not
+> coherent.
 > 
-> To fix that, the ingenic_nand and ingenic_ecc modules have been fused
-> into one single module.
-> - The ingenic_ecc.c code is now compiled in only if
->   $(CONFIG_MTD_NAND_INGENIC_ECC) is set. This is now a boolean instead
->   of tristate.
-> - To avoid changing the module name, the ingenic_nand.c file is moved to
->   ingenic_nand_drv.c. Then the module name is still ingenic_nand.
-> - Since ingenic_ecc.c is no more a module, the module-specific macros
->   have been dropped, and the functions are no more exported for use by
->   the ingenic_nand driver.
-
-I am fine with this approach.
-
+> Ideally, we'd use something like is_device_dma_coherent, but that's a Xen
+> thing and it doesn't look reliable for the IOMMU.
 > 
-> Fixes: 15de8c6efd0e ("mtd: rawnand: ingenic: Separate top-level and SoC specific code")
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Cc: YueHaibing <yuehaibing@huawei.com>
-> Cc: stable@vger.kernel.org
+> Looking at the users of io-pgtable, we have:
+> 
+> panfrost_mmu.c	- I can't see where the page-table even gets installed...
+> arm-smmu.c	- IO_PGTABLE_QUIRK_NO_DMA is reliable
+> arm-smmu-v3.c	- IO_PGTABLE_QUIRK_NO_DMA is reliable
+> ipmmu-vmsa.c	- Always sets TTBCR as cacheable (ignores tcr)
+> msm_iommu.c	- Always non-coherent
+> mtk_iommu.c	- Ignores tcr
+> qcom_iommu.c	- Always non-coherent
+> 
+> so we could go ahead and change IO_PGTABLE_QUIRK_NO_DMA to do what you want
+> without breaking any drivers. In any case, the driver is free to override
+> the control register if it knows better, as seems to be the case for some
+> of these already.
+> 
+> See patch below. I'll rework your patch on top.
+> 
+> Will
+> 
+> --->8
+> 
+>  From 4f41845b340783eaec9cc2840fe3cb9a00574054 Mon Sep 17 00:00:00 2001
+> From: Will Deacon <will@kernel.org>
+> Date: Tue, 25 Jun 2019 12:51:25 +0100
+> Subject: [PATCH] iommu/io-pgtable: Replace IO_PGTABLE_QUIRK_NO_DMA with
+>   specific flag
+> 
+> IO_PGTABLE_QUIRK_NO_DMA is a bit of a misnomer, since it's really just
+> an indication of whether or not the page-table walker for the IOMMU is
+> coherent with the CPU caches. Since cache coherency is more than just a
+> quirk, replace the flag with its own field in the io_pgtable_cfg
+> structure.
+
+The comment may have ended up being a bit misleading, but the name 
+itself wasn't a misnomer - it specifically meant "skip DMA API calls", 
+which served two purposes:
+
+  - Firstly, for the selftests where we didn't have a valid DMA API 
+device available.
+  - Secondly, as a performance hack to short-circuit the DMA API call 
+overhead (and fiddly intermediate-table-flush-flag logic) when, due to 
+other assumptions elsewhere, we could be sure that they would be no-ops.
+
+I don't massively object to this change having been merged (after all, 
+the original reasoning was mine[1]), but I don't believe it really makes 
+anything better either - it's mostly just moving the goalposts. As it 
+stands, now it looks like you can make a coherent SMMU do non-cacheable 
+walks on a per-context basis by choosing not to set this flag, but 
+anyone trying that will quickly find it subtly and fundamentally broken.
+
+Robin.
+
+[1] 
+https://lore.kernel.org/linux-arm-kernel/a508a6a5-8e1f-3660-51ef-e65bc382931e@arm.com/
+
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Will Deacon <will@kernel.org>
 > ---
->  drivers/mtd/nand/raw/ingenic/Kconfig                     | 2 +-
->  drivers/mtd/nand/raw/ingenic/Makefile                    | 4 +++-
->  drivers/mtd/nand/raw/ingenic/ingenic_ecc.c               | 9 ---------
->  .../raw/ingenic/{ingenic_nand.c => ingenic_nand_drv.c}   | 0
->  4 files changed, 4 insertions(+), 11 deletions(-)
->  rename drivers/mtd/nand/raw/ingenic/{ingenic_nand.c => ingenic_nand_drv.c} (100%)
+>   drivers/iommu/arm-smmu-v3.c        |  4 +---
+>   drivers/iommu/arm-smmu.c           |  4 +---
+>   drivers/iommu/io-pgtable-arm-v7s.c | 10 +++++-----
+>   drivers/iommu/io-pgtable-arm.c     | 19 ++++++++-----------
+>   drivers/iommu/ipmmu-vmsa.c         |  1 +
+>   include/linux/io-pgtable.h         | 11 ++++-------
+>   6 files changed, 20 insertions(+), 29 deletions(-)
 > 
-> diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig b/drivers/mtd/nand/raw/ingenic/Kconfig
-> index 19a96ce515c1..66b7cffdb0c2 100644
-> --- a/drivers/mtd/nand/raw/ingenic/Kconfig
-> +++ b/drivers/mtd/nand/raw/ingenic/Kconfig
-> @@ -16,7 +16,7 @@ config MTD_NAND_JZ4780
->  if MTD_NAND_JZ4780
->  
->  config MTD_NAND_INGENIC_ECC
-> -	tristate
-> +	bool
->  
->  config MTD_NAND_JZ4740_ECC
->  	tristate "Hardware BCH support for JZ4740 SoC"
-> diff --git a/drivers/mtd/nand/raw/ingenic/Makefile b/drivers/mtd/nand/raw/ingenic/Makefile
-> index 1ac4f455baea..b63d36889263 100644
-> --- a/drivers/mtd/nand/raw/ingenic/Makefile
-> +++ b/drivers/mtd/nand/raw/ingenic/Makefile
-> @@ -2,7 +2,9 @@
->  obj-$(CONFIG_MTD_NAND_JZ4740) += jz4740_nand.o
->  obj-$(CONFIG_MTD_NAND_JZ4780) += ingenic_nand.o
->  
-> -obj-$(CONFIG_MTD_NAND_INGENIC_ECC) += ingenic_ecc.o
-> +ingenic_nand-y += ingenic_nand_drv.o
-> +ingenic_nand-$(CONFIG_MTD_NAND_INGENIC_ECC) += ingenic_ecc.o
-> +
->  obj-$(CONFIG_MTD_NAND_JZ4740_ECC) += jz4740_ecc.o
->  obj-$(CONFIG_MTD_NAND_JZ4725B_BCH) += jz4725b_bch.o
->  obj-$(CONFIG_MTD_NAND_JZ4780_BCH) += jz4780_bch.o
-> diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-> index d3e085c5685a..c954189606f6 100644
-> --- a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-> +++ b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-> @@ -30,7 +30,6 @@ int ingenic_ecc_calculate(struct ingenic_ecc *ecc,
->  {
->  	return ecc->ops->calculate(ecc, params, buf, ecc_code);
->  }
-> -EXPORT_SYMBOL(ingenic_ecc_calculate);
->  
->  /**
->   * ingenic_ecc_correct() - detect and correct bit errors
-> @@ -51,7 +50,6 @@ int ingenic_ecc_correct(struct ingenic_ecc *ecc,
->  {
->  	return ecc->ops->correct(ecc, params, buf, ecc_code);
->  }
-> -EXPORT_SYMBOL(ingenic_ecc_correct);
->  
->  /**
->   * ingenic_ecc_get() - get the ECC controller device
-> @@ -111,7 +109,6 @@ struct ingenic_ecc *of_ingenic_ecc_get(struct device_node *of_node)
->  	}
->  	return ecc;
->  }
-> -EXPORT_SYMBOL(of_ingenic_ecc_get);
->  
->  /**
->   * ingenic_ecc_release() - release the ECC controller device
-> @@ -122,7 +119,6 @@ void ingenic_ecc_release(struct ingenic_ecc *ecc)
->  	clk_disable_unprepare(ecc->clk);
->  	put_device(ecc->dev);
->  }
-> -EXPORT_SYMBOL(ingenic_ecc_release);
->  
->  int ingenic_ecc_probe(struct platform_device *pdev)
->  {
-> @@ -159,8 +155,3 @@ int ingenic_ecc_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  EXPORT_SYMBOL(ingenic_ecc_probe);
-
-Any reason to keep this one?
-
-Thanks,
-Miquèl
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 65de2458999f..8ff8f61d9e1c 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -1789,13 +1789,11 @@ static int arm_smmu_domain_finalise(struct iommu_domain *domain)
+>   		.pgsize_bitmap	= smmu->pgsize_bitmap,
+>   		.ias		= ias,
+>   		.oas		= oas,
+> +		.coherent_walk	= smmu->features & ARM_SMMU_FEAT_COHERENCY,
+>   		.tlb		= &arm_smmu_gather_ops,
+>   		.iommu_dev	= smmu->dev,
+>   	};
+>   
+> -	if (smmu->features & ARM_SMMU_FEAT_COHERENCY)
+> -		pgtbl_cfg.quirks = IO_PGTABLE_QUIRK_NO_DMA;
+> -
+>   	if (smmu_domain->non_strict)
+>   		pgtbl_cfg.quirks |= IO_PGTABLE_QUIRK_NON_STRICT;
+>   
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 5e54cc0a28b3..009156bb6d42 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -895,13 +895,11 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>   		.pgsize_bitmap	= smmu->pgsize_bitmap,
+>   		.ias		= ias,
+>   		.oas		= oas,
+> +		.coherent_walk	= smmu->features & ARM_SMMU_FEAT_COHERENT_WALK,
+>   		.tlb		= smmu_domain->tlb_ops,
+>   		.iommu_dev	= smmu->dev,
+>   	};
+>   
+> -	if (smmu->features & ARM_SMMU_FEAT_COHERENT_WALK)
+> -		pgtbl_cfg.quirks = IO_PGTABLE_QUIRK_NO_DMA;
+> -
+>   	if (smmu_domain->non_strict)
+>   		pgtbl_cfg.quirks |= IO_PGTABLE_QUIRK_NON_STRICT;
+>   
+> diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
+> index 9a8a8870e267..8454de93e356 100644
+> --- a/drivers/iommu/io-pgtable-arm-v7s.c
+> +++ b/drivers/iommu/io-pgtable-arm-v7s.c
+> @@ -215,7 +215,7 @@ static void *__arm_v7s_alloc_table(int lvl, gfp_t gfp,
+>   		dev_err(dev, "Page table does not fit in PTE: %pa", &phys);
+>   		goto out_free;
+>   	}
+> -	if (table && !(cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA)) {
+> +	if (table && !cfg->coherent_walk) {
+>   		dma = dma_map_single(dev, table, size, DMA_TO_DEVICE);
+>   		if (dma_mapping_error(dev, dma))
+>   			goto out_free;
+> @@ -249,7 +249,7 @@ static void __arm_v7s_free_table(void *table, int lvl,
+>   	struct device *dev = cfg->iommu_dev;
+>   	size_t size = ARM_V7S_TABLE_SIZE(lvl);
+>   
+> -	if (!(cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA))
+> +	if (!cfg->coherent_walk)
+>   		dma_unmap_single(dev, __arm_v7s_dma_addr(table), size,
+>   				 DMA_TO_DEVICE);
+>   	if (lvl == 1)
+> @@ -261,7 +261,7 @@ static void __arm_v7s_free_table(void *table, int lvl,
+>   static void __arm_v7s_pte_sync(arm_v7s_iopte *ptep, int num_entries,
+>   			       struct io_pgtable_cfg *cfg)
+>   {
+> -	if (cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA)
+> +	if (cfg->coherent_walk)
+>   		return;
+>   
+>   	dma_sync_single_for_device(cfg->iommu_dev, __arm_v7s_dma_addr(ptep),
+> @@ -727,7 +727,6 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+>   			    IO_PGTABLE_QUIRK_NO_PERMS |
+>   			    IO_PGTABLE_QUIRK_TLBI_ON_MAP |
+>   			    IO_PGTABLE_QUIRK_ARM_MTK_4GB |
+> -			    IO_PGTABLE_QUIRK_NO_DMA |
+>   			    IO_PGTABLE_QUIRK_NON_STRICT))
+>   		return NULL;
+>   
+> @@ -846,7 +845,8 @@ static int __init arm_v7s_do_selftests(void)
+>   		.tlb = &dummy_tlb_ops,
+>   		.oas = 32,
+>   		.ias = 32,
+> -		.quirks = IO_PGTABLE_QUIRK_ARM_NS | IO_PGTABLE_QUIRK_NO_DMA,
+> +		.coherent_walk = true,
+> +		.quirks = IO_PGTABLE_QUIRK_ARM_NS,
+>   		.pgsize_bitmap = SZ_4K | SZ_64K | SZ_1M | SZ_16M,
+>   	};
+>   	unsigned int iova, size, iova_start;
+> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+> index 2454ac11aa97..91d0a4228b58 100644
+> --- a/drivers/iommu/io-pgtable-arm.c
+> +++ b/drivers/iommu/io-pgtable-arm.c
+> @@ -252,7 +252,7 @@ static void *__arm_lpae_alloc_pages(size_t size, gfp_t gfp,
+>   		return NULL;
+>   
+>   	pages = page_address(p);
+> -	if (!(cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA)) {
+> +	if (!cfg->coherent_walk) {
+>   		dma = dma_map_single(dev, pages, size, DMA_TO_DEVICE);
+>   		if (dma_mapping_error(dev, dma))
+>   			goto out_free;
+> @@ -278,7 +278,7 @@ static void *__arm_lpae_alloc_pages(size_t size, gfp_t gfp,
+>   static void __arm_lpae_free_pages(void *pages, size_t size,
+>   				  struct io_pgtable_cfg *cfg)
+>   {
+> -	if (!(cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA))
+> +	if (!cfg->coherent_walk)
+>   		dma_unmap_single(cfg->iommu_dev, __arm_lpae_dma_addr(pages),
+>   				 size, DMA_TO_DEVICE);
+>   	free_pages((unsigned long)pages, get_order(size));
+> @@ -296,7 +296,7 @@ static void __arm_lpae_set_pte(arm_lpae_iopte *ptep, arm_lpae_iopte pte,
+>   {
+>   	*ptep = pte;
+>   
+> -	if (!(cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA))
+> +	if (!cfg->coherent_walk)
+>   		__arm_lpae_sync_pte(ptep, cfg);
+>   }
+>   
+> @@ -374,8 +374,7 @@ static arm_lpae_iopte arm_lpae_install_table(arm_lpae_iopte *table,
+>   
+>   	old = cmpxchg64_relaxed(ptep, curr, new);
+>   
+> -	if ((cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA) ||
+> -	    (old & ARM_LPAE_PTE_SW_SYNC))
+> +	if (cfg->coherent_walk || (old & ARM_LPAE_PTE_SW_SYNC))
+>   		return old;
+>   
+>   	/* Even if it's not ours, there's no point waiting; just kick it */
+> @@ -416,8 +415,7 @@ static int __arm_lpae_map(struct arm_lpae_io_pgtable *data, unsigned long iova,
+>   		pte = arm_lpae_install_table(cptep, ptep, 0, cfg);
+>   		if (pte)
+>   			__arm_lpae_free_pages(cptep, tblsz, cfg);
+> -	} else if (!(cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA) &&
+> -		   !(pte & ARM_LPAE_PTE_SW_SYNC)) {
+> +	} else if (!cfg->coherent_walk && !(pte & ARM_LPAE_PTE_SW_SYNC)) {
+>   		__arm_lpae_sync_pte(ptep, cfg);
+>   	}
+>   
+> @@ -799,7 +797,7 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
+>   	u64 reg;
+>   	struct arm_lpae_io_pgtable *data;
+>   
+> -	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS | IO_PGTABLE_QUIRK_NO_DMA |
+> +	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
+>   			    IO_PGTABLE_QUIRK_NON_STRICT))
+>   		return NULL;
+>   
+> @@ -894,8 +892,7 @@ arm_64_lpae_alloc_pgtable_s2(struct io_pgtable_cfg *cfg, void *cookie)
+>   	struct arm_lpae_io_pgtable *data;
+>   
+>   	/* The NS quirk doesn't apply at stage 2 */
+> -	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_NO_DMA |
+> -			    IO_PGTABLE_QUIRK_NON_STRICT))
+> +	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_NON_STRICT))
+>   		return NULL;
+>   
+>   	data = arm_lpae_alloc_pgtable(cfg);
+> @@ -1230,7 +1227,7 @@ static int __init arm_lpae_do_selftests(void)
+>   	struct io_pgtable_cfg cfg = {
+>   		.tlb = &dummy_tlb_ops,
+>   		.oas = 48,
+> -		.quirks = IO_PGTABLE_QUIRK_NO_DMA,
+> +		.coherent_walk = true,
+>   	};
+>   
+>   	for (i = 0; i < ARRAY_SIZE(pgsize); ++i) {
+> diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
+> index 9a380c10655e..12bcb95bdaa8 100644
+> --- a/drivers/iommu/ipmmu-vmsa.c
+> +++ b/drivers/iommu/ipmmu-vmsa.c
+> @@ -431,6 +431,7 @@ static int ipmmu_domain_init_context(struct ipmmu_vmsa_domain *domain)
+>   	 * TODO: Add support for coherent walk through CCI with DVM and remove
+>   	 * cache handling. For now, delegate it to the io-pgtable code.
+>   	 */
+> +	domain->cfg.coherent_walk = false;
+>   	domain->cfg.iommu_dev = domain->mmu->root->dev;
+>   
+>   	/*
+> diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
+> index 76969a564831..b5a450a3bb47 100644
+> --- a/include/linux/io-pgtable.h
+> +++ b/include/linux/io-pgtable.h
+> @@ -44,6 +44,8 @@ struct iommu_gather_ops {
+>    *                 tables.
+>    * @ias:           Input address (iova) size, in bits.
+>    * @oas:           Output address (paddr) size, in bits.
+> + * @coherent_walk  A flag to indicate whether or not page table walks made
+> + *                 by the IOMMU are coherent with the CPU caches.
+>    * @tlb:           TLB management callbacks for this set of tables.
+>    * @iommu_dev:     The device representing the DMA configuration for the
+>    *                 page table walker.
+> @@ -68,11 +70,6 @@ struct io_pgtable_cfg {
+>   	 *	when the SoC is in "4GB mode" and they can only access the high
+>   	 *	remap of DRAM (0x1_00000000 to 0x1_ffffffff).
+>   	 *
+> -	 * IO_PGTABLE_QUIRK_NO_DMA: Guarantees that the tables will only ever
+> -	 *	be accessed by a fully cache-coherent IOMMU or CPU (e.g. for a
+> -	 *	software-emulated IOMMU), such that pagetable updates need not
+> -	 *	be treated as explicit DMA data.
+> -	 *
+>   	 * IO_PGTABLE_QUIRK_NON_STRICT: Skip issuing synchronous leaf TLBIs
+>   	 *	on unmap, for DMA domains using the flush queue mechanism for
+>   	 *	delayed invalidation.
+> @@ -81,12 +78,12 @@ struct io_pgtable_cfg {
+>   	#define IO_PGTABLE_QUIRK_NO_PERMS	BIT(1)
+>   	#define IO_PGTABLE_QUIRK_TLBI_ON_MAP	BIT(2)
+>   	#define IO_PGTABLE_QUIRK_ARM_MTK_4GB	BIT(3)
+> -	#define IO_PGTABLE_QUIRK_NO_DMA		BIT(4)
+> -	#define IO_PGTABLE_QUIRK_NON_STRICT	BIT(5)
+> +	#define IO_PGTABLE_QUIRK_NON_STRICT	BIT(4)
+>   	unsigned long			quirks;
+>   	unsigned long			pgsize_bitmap;
+>   	unsigned int			ias;
+>   	unsigned int			oas;
+> +	bool				coherent_walk;
+>   	const struct iommu_gather_ops	*tlb;
+>   	struct device			*iommu_dev;
+>   
+> 
