@@ -2,117 +2,74 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D29C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A81C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D31208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D462145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfGAGXJ (ORCPT
+        id S1727249AbfGAGXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:23:09 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52066 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726036AbfGAGXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 02:23:09 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 68DFBF79AA04DEFD7165;
-        Mon,  1 Jul 2019 14:23:05 +0800 (CST)
-Received: from [127.0.0.1] (10.57.101.250) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 1 Jul 2019
- 14:22:58 +0800
-Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
-To:     Olof Johansson <olof@lixom.net>, John Garry <john.garry@huawei.com>
-References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
- <20190625112148.ckj7sgdgvyeel7vy@localhost>
- <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
- <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
- <20190627021937.kk4lklv2uz3mogoq@localhost>
-CC:     ARM-SoC Maintainers <arm@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5D19A6C1.70104@hisilicon.com>
-Date:   Mon, 1 Jul 2019 14:22:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190627021937.kk4lklv2uz3mogoq@localhost>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+        Mon, 1 Jul 2019 02:23:50 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:16898 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725616AbfGAGXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 02:23:50 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id 3D5E5422633A9622B803;
+        Mon,  1 Jul 2019 14:23:48 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x616Merk061391;
+        Mon, 1 Jul 2019 14:22:40 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070114224387-1995712 ;
+          Mon, 1 Jul 2019 14:22:43 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     pbonzini@redhat.com
+Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
+Subject: [PATCH 0/4] kvm: x86: introduce CONFIG_KVM_DEBUG
+Date:   Mon, 1 Jul 2019 14:21:07 +0800
+Message-Id: <1561962071-25974-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-01 14:22:44,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-01 14:22:41,
+        Serialize complete at 2019-07-01 14:22:41
+X-MAIL: mse-fl2.zte.com.cn x616Merk061391
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Olof,
+This series introduce CONFIG_KVM_DEBUG, using which we can make
+the invoking *_debug in KVM simly and uniform.
 
-On 2019/6/27 10:19, Olof Johansson wrote:
-> On Tue, Jun 25, 2019 at 02:31:26PM +0100, John Garry wrote:
->> On 25/06/2019 14:03, Olof Johansson wrote:
->>>>> are available in the Git repository at:
->>>>>>>    git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
->>>>>>>
->>>>>>> for you to fetch changes up to 07c811af1c00d7b4212eac86900b023b6405a954:
->>>>>>>
->>>>>>>    lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration (2019-06-25 09:40:42 +0100)
->>>>>>>
->>>>>>> ----------------------------------------------------------------
->>>>>>> Hisilicon fixes for v5.2-rc
->>>>>>>
->>>>>>> - fixed RCU usage in logical PIO
->>>>>>> - Added a function to unregister a logical PIO range in logical PIO
->>>>>>>    to support the fixes in the hisi-lpc driver
->>>>>>> - fixed and optimized hisi-lpc driver to avoid potential use-after-free
->>>>>>>    and driver unbind crash
->>>>> Merged to fixes, thanks.
->>> This broke arm64 allmodconfig:
->>>
->>>         arm64.allmodconfig:
->>> drivers/bus/hisi_lpc.c:656:3: error: implicit declaration of function
->>> 'hisi_lpc_acpi_remove'; did you mean 'hisi_lpc_acpi_probe'?
->>> [-Werror=implicit-function-declaration]
->>>
->>>
->> Uhhh, that's my fault - I didn't provide a stub for !ACPI. Sorry. I'll send
->> a fixed v3 series.
-> No worries, it happens -- but it's good if maintainers do at least a few test
-> builds before sending in pull requests so we don't catch all of it at our end.
+FYI: the former discussion can been found in:
+https://www.spinics.net/lists/kvm/msg187026.html
 
-Sorry for the late reply!
-I had a trip last week and did the pull request in a hurry that forgot 
-to do the some building
-test like allmodconfig, allyesconfig and so on.
-In the future, I will do more testing before sending out to avoid this 
-kind fault.
+Yi Wang (4):
+  kvm: x86: Add CONFIG_KVM_DEBUG
+  kvm: x86: allow set apic and ioapic debug dynamically
+  kvm: x86: replace MMU_DEBUG with CONFIG_KVM_DEBUG
+  kvm: x86: convert TSC pr_debugs to be gated by CONFIG_KVM_DEBUG
 
-Best Regards,
-Wei
+ arch/x86/kvm/Kconfig  |  8 ++++++++
+ arch/x86/kvm/ioapic.c |  2 +-
+ arch/x86/kvm/lapic.c  |  5 ++++-
+ arch/x86/kvm/mmu.c    |  5 ++---
+ arch/x86/kvm/x86.c    | 18 ++++++++++++------
+ 5 files changed, 27 insertions(+), 11 deletions(-)
 
->
-> -Olof
->
-> .
->
-
+-- 
+1.8.3.1
 
