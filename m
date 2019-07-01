@@ -2,37 +2,36 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E52C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3AEC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F68208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1E4208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbfGAHtj (ORCPT
+        id S1727981AbfGAHts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 03:49:39 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:64882 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727169AbfGAHs4 (ORCPT
+        Mon, 1 Jul 2019 03:49:48 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:10171 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727996AbfGAHsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 03:48:56 -0400
-X-UUID: 9e4416b908cb4a5bb672750b37d5b231-20190701
-X-UUID: 9e4416b908cb4a5bb672750b37d5b231-20190701
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        Mon, 1 Jul 2019 03:48:55 -0400
+X-UUID: 29e458313bd94780bffa386dc71126cc-20190701
+X-UUID: 29e458313bd94780bffa386dc71126cc-20190701
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1183916571; Mon, 01 Jul 2019 15:48:46 +0800
+        with ESMTP id 551608128; Mon, 01 Jul 2019 15:48:45 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 1 Jul 2019 15:48:44 +0800
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 1 Jul 2019 15:48:43 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 1 Jul 2019 15:48:44 +0800
+ Transport; Mon, 1 Jul 2019 15:48:43 +0800
 From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
 To:     Jassi Brar <jassisinghbrar@gmail.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -52,41 +51,98 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v10 05/12] mailbox: mediatek: cmdq: support mt8183 gce function
-Date:   Mon, 1 Jul 2019 15:48:35 +0800
-Message-ID: <20190701074842.15401-6-bibby.hsieh@mediatek.com>
+Subject: [PATCH v10 00/12] support gce on mt8183 platform
+Date:   Mon, 1 Jul 2019 15:48:30 +0800
+Message-ID: <20190701074842.15401-1-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190701074842.15401-1-bibby.hsieh@mediatek.com>
-References: <20190701074842.15401-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 9E9356D076D3B3BE81E35A6BD91B4C4C86CF88B2A248753E7BB5F6361D1F9BB02000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add mt8183 compatible name for supporting gce function
+Changes since v8 and v9:
+ - change the error return code in cmdq_dev_get_client_reg()
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
----
- drivers/mailbox/mtk-cmdq-mailbox.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes since v7:
+ - remove the memory allocation out of cmdq_dev_get_client_reg()
+ - rebase onto 5.2-rc1
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 8fddd26288e8..69daaadc3a5f 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -539,6 +539,7 @@ static const struct dev_pm_ops cmdq_pm_ops = {
- 
- static const struct of_device_id cmdq_of_ids[] = {
- 	{.compatible = "mediatek,mt8173-gce", .data = (void *)16},
-+	{.compatible = "mediatek,mt8183-gce", .data = (void *)24},
- 	{}
- };
- 
+Changes since v6:
+ - remove cmdq_dev_get_event function and gce event property
+ - separate some changes to indepentent patch
+ - change the binding document related to gce-client-reg property
+
+Changes since v5:
+ - fix typo
+ - remove gce-event-name form the dt-binding
+ - add reasons in commit message
+
+Changes since v4:
+ - refine the architecture of the packet encoder function
+ - refine the gce enevt property
+ - change the patch's title
+
+Changes since v3:
+ - fix a typo in dt-binding and dtsi
+ - cast the return value to right format
+
+Changes since v2:
+ - according to CK's review comment, change the property name and
+   refine the parameter
+ - change the patch's title
+ - remove unused property from dt-binding and dts
+
+Changes since v1:
+ - add prefix "cmdq" in the commit subject
+ - add dt-binding document for get event and subsys function
+ - add fix up tag in fixup patch
+ - fix up some coding style (alignment)
+
+MTK will support gce function on mt8183 platform.
+  dt-binding: gce: add gce header file for mt8183
+  mailbox: mediatek: cmdq: support mt8183 gce function
+  arm64: dts: add gce node for mt8183
+
+Besides above patches, we refine gce driver on those patches.
+  soc: mediatek: cmdq: reorder the parameter
+  soc: mediatek: cmdq: change the type of input parameter
+  mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
+  soc: mediatek: cmdq: clear the event in cmdq initial flow
+
+In order to enhance the convenience of gce usage, we add new helper functions and refine the method of instruction combining.
+  dt-binding: gce: remove thread-num property
+  dt-binding: gce: add binding for gce client reg property
+  soc: mediatek: cmdq: define the instruction struct
+  soc: mediatek: cmdq: add polling function
+  soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
+
+Bibby Hsieh (12):
+  dt-binding: gce: remove thread-num property
+  dt-binding: gce: add gce header file for mt8183
+  dt-binding: gce: add binding for gce client reg property
+  mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
+  mailbox: mediatek: cmdq: support mt8183 gce function
+  soc: mediatek: cmdq: clear the event in cmdq initial flow
+  soc: mediatek: cmdq: reorder the parameter
+  soc: mediatek: cmdq: change the type of input parameter
+  soc: mediatek: cmdq: define the instruction struct
+  soc: mediatek: cmdq: add polling function
+  soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
+  arm64: dts: add gce node for mt8183
+
+ .../devicetree/bindings/mailbox/mtk-gce.txt   |  25 ++-
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  11 ++
+ drivers/mailbox/mtk-cmdq-mailbox.c            |  18 +-
+ drivers/soc/mediatek/mtk-cmdq-helper.c        | 169 +++++++++++++----
+ include/dt-bindings/gce/mt8183-gce.h          | 177 ++++++++++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h      |   5 +
+ include/linux/soc/mediatek/mtk-cmdq.h         |  53 +++++-
+ 7 files changed, 397 insertions(+), 61 deletions(-)
+ create mode 100644 include/dt-bindings/gce/mt8183-gce.h
+
 -- 
 2.18.0
 
