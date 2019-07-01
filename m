@@ -2,153 +2,68 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A37C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A19C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3559D208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A6E217D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbfGAIsM (ORCPT
+        id S1728105AbfGAIsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:48:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:57688 "EHLO foss.arm.com"
+        Mon, 1 Jul 2019 04:48:37 -0400
+Received: from verein.lst.de ([213.95.11.211]:59641 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbfGAIsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:48:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A88612B;
-        Mon,  1 Jul 2019 01:48:10 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BAD33F718;
-        Mon,  1 Jul 2019 01:48:09 -0700 (PDT)
-Subject: Re: [patch V2 3/6] genirq: Add optional hardware synchronization for
- shutdown
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Robert Hodaszi <Robert.Hodaszi@digi.com>
-References: <20190628111148.828731433@linutronix.de>
- <20190628111440.279463375@linutronix.de>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <f516fe3a-39de-698b-eb15-c52d88c8f0c6@arm.com>
-Date:   Mon, 1 Jul 2019 09:48:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726442AbfGAIsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 04:48:37 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id AC3E268B20; Mon,  1 Jul 2019 10:48:33 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 10:48:33 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc:     devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Subject: Re: use exact allocation for dma coherent memory
+Message-ID: <20190701084833.GA22927@lst.de>
+References: <20190614134726.3827-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190628111440.279463375@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614134726.3827-1-hch@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/06/2019 12:11, Thomas Gleixner wrote:
-> free_irq() ensures that no hardware interrupt handler is executing on a
-> different CPU before actually releasing resources and deactivating the
-> interrupt completely in a domain hierarchy.
-> 
-> But that does not catch the case where the interrupt is on flight at the
-> hardware level but not yet serviced by the target CPU. That creates an
-> interesing race condition:
-> 
->    CPU 0                  CPU 1               IRQ CHIP
-> 
->                                               interrupt is raised
->                                               sent to CPU1
-> 			  Unable to handle
-> 			  immediately
-> 			  (interrupts off,
-> 			   deep idle delay)
->    mask()
->    ...
->    free()
->      shutdown()
->      synchronize_irq()
->      release_resources()
->                           do_IRQ()
->                             -> resources are not available
-> 
-> That might be harmless and just trigger a spurious interrupt warning, but
-> some interrupt chips might get into a wedged state.
-> 
-> Utilize the existing irq_get_irqchip_state() callback for the
-> synchronization in free_irq().
-> 
-> synchronize_hardirq() is not using this mechanism as it might actually
-> deadlock unter certain conditions, e.g. when called with interrupts
-> disabled and the target CPU is the one on which the synchronization is
-> invoked. synchronize_irq() uses it because that function cannot be called
-> from non preemtible contexts as it might sleep.
-> 
-> No functional change intended and according to Marc the existing GIC
-> implementations where the driver supports the callback should be able
-> to cope with that core change. Famous last words.
+On Fri, Jun 14, 2019 at 03:47:10PM +0200, Christoph Hellwig wrote:
+> Switching to a slightly cleaned up alloc_pages_exact is pretty easy,
+> but it turns out that because we didn't filter valid gfp_t flags
+> on the DMA allocator, a bunch of drivers were passing __GFP_COMP
+> to it, which is rather bogus in too many ways to explain.  Arm has
+> been filtering it for a while, but this series instead tries to fix
+> the drivers and warn when __GFP_COMP is passed, which makes it much
+> larger than just adding the functionality.
 
-I still stand by what I've said! I gave it a go on a small sample of my
- home zoo, and nothing caught fire (although it is not exactly easy to
-trigger a situation where the additional synchronization would be useful).
+Dear driver maintainers,
 
-> 
-> Fixes: 464d12309e1b ("x86/vector: Switch IOAPIC to global reservation mode")
-> Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
-FWIW:
-
-Reviewed-and-tested-by: Marc Zyngier <marc.zyngier@arm.com>
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+can you look over the patches touching your drivers, please?  I'd
+like to get as much as possible of the driver patches into this
+merge window, so that it can you through your maintainer trees.
