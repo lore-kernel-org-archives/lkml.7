@@ -2,98 +2,117 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D64C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D29C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D392145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:22:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="McY+jahO"
+	by mail.kernel.org (Postfix) with ESMTP id C8D31208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfGAGUl (ORCPT
+        id S1727187AbfGAGXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:20:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48188 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbfGAGUg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 02:20:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ha0G2SIX3qJwQBHCJ94hXS+l70ON3HkLuGbICbqpRXk=; b=McY+jahORBX9m/je/bQ6Q38b0
-        28WcXEPXZE6Hcjq+4+sHpTWSUUYsygvbEwNrGXLJDRekMZBBLHs2JA6d74Md5I104lXzbV968Av2Z
-        J3DQ3Q8m0Co759Cpf29dQlJNwis3r3MTh0SnOtF3FTLzlzDD1UtJcPF1MrRi/lcAYx9uEtoYU6DI1
-        zW2v8jIkosACsyQpdiePRz4xMw1/0Q20ytuHFjDVBFY4moXLnh+l4DZt9Ylgq8UV1BYJzXJjsmDli
-        YQZuhtMWHmwqMewYBuiuiE9Re+8KsGcSZTxhoYiwxkwOqQWnvw8dyNpA8uGeK74XtpU4V04Cfy3z7
-        hn4lvcOUg==;
-Received: from [46.140.178.35] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhpfz-0002ta-A6; Mon, 01 Jul 2019 06:20:31 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Philip Yang <Philip.Yang@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>
-Subject: [PATCH 04/22] mm/hmm: support automatic NUMA balancing
-Date:   Mon,  1 Jul 2019 08:20:02 +0200
-Message-Id: <20190701062020.19239-5-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190701062020.19239-1-hch@lst.de>
-References: <20190701062020.19239-1-hch@lst.de>
+        Mon, 1 Jul 2019 02:23:09 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52066 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726036AbfGAGXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 02:23:09 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 68DFBF79AA04DEFD7165;
+        Mon,  1 Jul 2019 14:23:05 +0800 (CST)
+Received: from [127.0.0.1] (10.57.101.250) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 1 Jul 2019
+ 14:22:58 +0800
+Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
+To:     Olof Johansson <olof@lixom.net>, John Garry <john.garry@huawei.com>
+References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
+ <20190625112148.ckj7sgdgvyeel7vy@localhost>
+ <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
+ <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
+ <20190627021937.kk4lklv2uz3mogoq@localhost>
+CC:     ARM-SoC Maintainers <arm@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
+        "xuwei (O)" <xuwei5@huawei.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>
+From:   Wei Xu <xuwei5@hisilicon.com>
+Message-ID: <5D19A6C1.70104@hisilicon.com>
+Date:   Mon, 1 Jul 2019 14:22:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190627021937.kk4lklv2uz3mogoq@localhost>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.101.250]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philip Yang <Philip.Yang@amd.com>
+Hi Olof,
 
-While the page is migrating by NUMA balancing, HMM failed to detect this
-condition and still return the old page. Application will use the new page
-migrated, but driver pass the old page physical address to GPU, this crash
-the application later.
+On 2019/6/27 10:19, Olof Johansson wrote:
+> On Tue, Jun 25, 2019 at 02:31:26PM +0100, John Garry wrote:
+>> On 25/06/2019 14:03, Olof Johansson wrote:
+>>>>> are available in the Git repository at:
+>>>>>>>    git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
+>>>>>>>
+>>>>>>> for you to fetch changes up to 07c811af1c00d7b4212eac86900b023b6405a954:
+>>>>>>>
+>>>>>>>    lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration (2019-06-25 09:40:42 +0100)
+>>>>>>>
+>>>>>>> ----------------------------------------------------------------
+>>>>>>> Hisilicon fixes for v5.2-rc
+>>>>>>>
+>>>>>>> - fixed RCU usage in logical PIO
+>>>>>>> - Added a function to unregister a logical PIO range in logical PIO
+>>>>>>>    to support the fixes in the hisi-lpc driver
+>>>>>>> - fixed and optimized hisi-lpc driver to avoid potential use-after-free
+>>>>>>>    and driver unbind crash
+>>>>> Merged to fixes, thanks.
+>>> This broke arm64 allmodconfig:
+>>>
+>>>         arm64.allmodconfig:
+>>> drivers/bus/hisi_lpc.c:656:3: error: implicit declaration of function
+>>> 'hisi_lpc_acpi_remove'; did you mean 'hisi_lpc_acpi_probe'?
+>>> [-Werror=implicit-function-declaration]
+>>>
+>>>
+>> Uhhh, that's my fault - I didn't provide a stub for !ACPI. Sorry. I'll send
+>> a fixed v3 series.
+> No worries, it happens -- but it's good if maintainers do at least a few test
+> builds before sending in pull requests so we don't catch all of it at our end.
 
-Use pte_protnone(pte) to return this condition and then hmm_vma_do_fault
-will allocate new page.
+Sorry for the late reply!
+I had a trip last week and did the pull request in a hurry that forgot 
+to do the some building
+test like allmodconfig, allyesconfig and so on.
+In the future, I will do more testing before sending out to avoid this 
+kind fault.
 
-Signed-off-by: Philip Yang <Philip.Yang@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
----
- mm/hmm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Best Regards,
+Wei
 
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 4db5dcf110ba..dce4e70e648a 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -548,7 +548,7 @@ static int hmm_vma_handle_pmd(struct mm_walk *walk,
- 
- static inline uint64_t pte_to_hmm_pfn_flags(struct hmm_range *range, pte_t pte)
- {
--	if (pte_none(pte) || !pte_present(pte))
-+	if (pte_none(pte) || !pte_present(pte) || pte_protnone(pte))
- 		return 0;
- 	return pte_write(pte) ? range->flags[HMM_PFN_VALID] |
- 				range->flags[HMM_PFN_WRITE] :
--- 
-2.20.1
+>
+> -Olof
+>
+> .
+>
+
 
