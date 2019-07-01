@@ -2,254 +2,316 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AE2C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E12EC06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8DC216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2722D21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:47:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hvx2+nxv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tJ4W5Nic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbfGAQqn (ORCPT
+        id S1729666AbfGAQrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 12:46:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41922 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbfGAQqm (ORCPT
+        Mon, 1 Jul 2019 12:47:32 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:55600 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728726AbfGAQrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 12:46:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c2so14606975wrm.8;
-        Mon, 01 Jul 2019 09:46:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=c3//MA/Cr82sdIDNuwbYaxW9M8hPn0hK4In2v8Q7bb0=;
-        b=Hvx2+nxv1oVxpSfs8b/PRBTZX48qL3G4GFhgANMWnLxeaCGxzxqu+C6v9PrY4H4b7I
-         a86txvKXqOd5ntnVbU4pDqXCgB20OnrxiZqYuakCChZGA9CCbSR4SEc+6YCGOGR3NB1K
-         ZG2lY3id8ZFyd1N7H8MvotZaX6fEZuUoaDKrYY38QGDJasTUSLNQXZy3t/3d1gnYm54U
-         RuYF/nom7JkiZFJe2yaXZ2iDOSmsTX6ciDJnIkFkYrd+28dVCASokKOeFqKYPW/GAeNg
-         iz1qixgPv8U62juuxn7KCrLY8L+cD9LTfkikDu8PpY2bt9ahaMwM1b5ORWwld3aotOX6
-         Gc7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=c3//MA/Cr82sdIDNuwbYaxW9M8hPn0hK4In2v8Q7bb0=;
-        b=FqR8JK64ZdnSXO7yONWrQujwTC+uBqhLfWXTuQmAcxwAA36A5L1wrnLeui9HmKcN1v
-         TJqva6lKMyGP3CVPjDQruJOKuP/B+I1krboS0qN2imvI31iXvny845s4esr9oIdwJVrX
-         EKLwbQVaBYeRcyA4no37RekHQLpBBXT/Aplje4dX6FXjZ218OAFz1kjJ5bVU5uG26mD/
-         J8reyeH9aMNTOKssFHLi8lyg2MgLkLhGY0O1BfzRbZGjBhT84mWU3+Ry8R7+fgvUHqeC
-         JYf0/UC5dWQkn+FPu+KihZ4trTVCfTferJ3yN12eExvyiXb9Z8DSVMTtsYNOSpcALxrD
-         LTtQ==
-X-Gm-Message-State: APjAAAWCRFpoat4Mqeqhac8B4X5efB63gHbM33gWlq4z3aWqP7YK1+h/
-        +nt8X6kXedsn8BO6Y/Rrt6OKVHMI
-X-Google-Smtp-Source: APXvYqyTaKW4k8uDJSU48/u3lJ5Z1OJa6/CNyJfmud31oe9NsNw6Nl9uefodvM3k3+InM5+2zv0FuA==
-X-Received: by 2002:a5d:6b12:: with SMTP id v18mr20123783wrw.306.1561999599803;
-        Mon, 01 Jul 2019 09:46:39 -0700 (PDT)
-Received: from myhost.home (ckl210.neoplus.adsl.tpnet.pl. [83.31.87.210])
-        by smtp.gmail.com with ESMTPSA id y6sm10823368wrp.12.2019.07.01.09.46.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 09:46:39 -0700 (PDT)
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        dmurphy@ti.com, jacek.anaszewski@gmail.com,
-        mchehab+samsung@kernel.org, oss@c-mauderer.de, pavel@ucw.cz,
-        wsa+renesas@sang-engineering.com, yuehaibing@huawei.com
-Subject: [GIT PULL] LED updates for 5.3-rc1
-Date:   Mon,  1 Jul 2019 18:46:33 +0200
-Message-Id: <20190701164633.6133-1-jacek.anaszewski@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Mon, 1 Jul 2019 12:47:31 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61GY0vg171845;
+        Mon, 1 Jul 2019 16:47:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=8gxkRObKYbMrXDLgGJZlKItu1lvgD7pvqBSu/EBf7k0=;
+ b=tJ4W5NicwThgq+LmSAQiHrlkpGltUTl2THNi6lOJ8Pd3BhJMcYMbJcwE7P4Z9l8C/ald
+ NHq4kt+GTidTfnfW0HO3G056budSJRIq3B8E6A6X7M12J+10HOJTcPWotKvnh1ndOabL
+ CPr163YgWsjqF38QEFZ+QCvKBAIPQQgx4QZj8o1a0ncRSg9z5SyKlX1S+FO5FyP81jQF
+ Qt2y1hNvWuGOq0OObDTSLxvqf3F9CZCU1+1mq+xNrPs93UdxsdjURkEUvzgba/XAmR85
+ cjx0EgKjwP1u7LHSc7YNpMpCRTH7b8/liHuB8KvSuchqhRrydlmwRg6UWGP5bIwWfh91 Qg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2te61dxrxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 16:47:10 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61GWUdf119089;
+        Mon, 1 Jul 2019 16:47:10 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2tebqg19dp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 16:47:10 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x61Gl7Fv000314;
+        Mon, 1 Jul 2019 16:47:07 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 01 Jul 2019 09:47:07 -0700
+Date:   Mon, 1 Jul 2019 09:47:05 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eric Biggers <ebiggers@google.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the xfs tree with the f2fs tree
+Message-ID: <20190701164705.GN1404256@magnolia>
+References: <20190701110603.5abcbb2c@canb.auug.org.au>
+ <20190701163146.GA195588@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701163146.GA195588@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907010200
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907010200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Jul 01, 2019 at 09:31:46AM -0700, Eric Biggers wrote:
+> [+f2fs mailing list]
+> 
+> On Mon, Jul 01, 2019 at 11:06:03AM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Today's linux-next merge of the xfs tree got a conflict in:
+> > 
+> >   fs/f2fs/file.c
+> > 
+> > between commit:
+> > 
+> >   360985573b55 ("f2fs: separate f2fs i_flags from fs_flags and ext4 i_flags")
+> > 
+> > from the f2fs tree and commits:
+> > 
+> >   de2baa49bbae ("vfs: create a generic checking and prep function for FS_IOC_SETFLAGS")
+> >   3dd3ba36a8ee ("vfs: create a generic checking function for FS_IOC_FSSETXATTR")
+> > 
+> > from the xfs tree.
+> > 
+> > I fixed it up (I think - see below) and can carry the fix as necessary.
+> > This is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts.
+> > 
+> > -- 
+> > Cheers,
+> > Stephen Rothwell
+> > 
+> > diff --cc fs/f2fs/file.c
+> > index e7c368db8185,8799468724f9..000000000000
+> > --- a/fs/f2fs/file.c
+> > +++ b/fs/f2fs/file.c
+> > @@@ -1645,22 -1648,45 +1645,23 @@@ static int f2fs_file_flush(struct file 
+> >   	return 0;
+> >   }
+> >   
+> >  -static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
+> >  -{
+> >  -	struct inode *inode = file_inode(filp);
+> >  -	struct f2fs_inode_info *fi = F2FS_I(inode);
+> >  -	unsigned int flags = fi->i_flags;
+> >  -
+> >  -	if (IS_ENCRYPTED(inode))
+> >  -		flags |= F2FS_ENCRYPT_FL;
+> >  -	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
+> >  -		flags |= F2FS_INLINE_DATA_FL;
+> >  -	if (is_inode_flag_set(inode, FI_PIN_FILE))
+> >  -		flags |= F2FS_NOCOW_FL;
+> >  -
+> >  -	flags &= F2FS_FL_USER_VISIBLE;
+> >  -
+> >  -	return put_user(flags, (int __user *)arg);
+> >  -}
+> >  -
+> >  -static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
+> >  +static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+> >   {
+> >   	struct f2fs_inode_info *fi = F2FS_I(inode);
+> >  -	unsigned int oldflags;
+> >  +	u32 oldflags;
+> > + 	int err;
+> >   
+> >   	/* Is it quota file? Do not allow user to mess with it */
+> >   	if (IS_NOQUOTA(inode))
+> >   		return -EPERM;
+> >   
+> >  -	flags = f2fs_mask_flags(inode->i_mode, flags);
+> >  -
+> >   	oldflags = fi->i_flags;
+> >   
+> > - 	if ((iflags ^ oldflags) & (F2FS_APPEND_FL | F2FS_IMMUTABLE_FL))
+> > - 		if (!capable(CAP_LINUX_IMMUTABLE))
+> > - 			return -EPERM;
+> >  -	err = vfs_ioc_setflags_prepare(inode, oldflags, flags);
+> > ++	err = vfs_ioc_setflags_prepare(inode, oldflags, iflags);
+> > + 	if (err)
+> > + 		return err;
+> 
+> I don't think this is the correct resolution.  Now f2fs_setflags_common() is
+> meant to take the f2fs on-disk i_flags, which aren't necessarily the same as the
+> flags passed to the FS_IOC_SETFLAGS ioctl.  So it's not appropriate to call
+> vfs_ioc_setflags_prepare() in it.  It should be in f2fs_ioc_setflags() instead.
+> 
+> I've pushed up what I think is the correct resolution to
+> https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=f2fs-setflags-resolved
+> 
+> Here is my diff of fs/f2fs/file.c from f2fs/dev.  Darrick, can you check that
+> this is what you would have done if you had patched f2fs/dev instead of v5.2?
 
-I'm sending early LED pull request for 5.3-rc1 since I will not
-have access to the Internet for most part of the next week.
-Please pull.
+Yep, that's roughly what I was planning to do to connect f2fs to the
+checking functions.
 
-This time we move lm3697 backlight support from MFD to LED subsystem
-and on top of that we add support for LED cell of LM36274 to the ti-lmu MFD
-driver. All these, supplemented by the need for changes in lm363x-regulator.c,
-required by LM36274, entailed the need for immutable branch between
-LED, MFD and REGULATOR subsystems:
+I withdrew the fs/f2fs/ parts of the setflags/fssetxattr cleanups from
+the branch with the intent to fix it after f2fs-dev lands, because I
+think this is too messy a merge resolution to push through Linus.
 
-Merge tag 'ti-lmu-led-drivers' into for-next
-leds: lm36274: Introduce the TI LM36274 LED driver
-dt-bindings: leds: Add LED bindings for the LM36274
-regulator: lm363x: Add support for LM36274
-mfd: ti-lmu: Add LM36274 support to the ti-lmu
-dt-bindings: mfd: Add lm36274 bindings to ti-lmu
-leds: lm3697: Introduce the lm3697 driver
-mfd: ti-lmu: Remove support for LM3697
-dt-bindings: ti-lmu: Modify dt bindings for the LM3697
-leds: TI LMU: Add common code for TI LMU devices
-dt-bindings: mfd: LMU: Add ti,brightness-resolution
-dt-bindings: mfd: LMU: Add the ramp up/down property
+Would you mind resending this with a proper subject line and SOB? :)
 
-And here is the summary of this LED development cycle:
+--D
 
-1) Add a new LED common module for ti-lmu driver family
-
-2) Modify MFD ti-lmu bindings
-        - add ti,brightness-resolution
-        - add the ramp up/down property
-
-3) Add regulator support for LM36274 driver to lm363x-regulator.c
-
-4) New LED class drivers with DT bindings:
-        - leds-spi-byte
-        - leds-lm36274
-        - leds-lm3697 (move the support from MFD to LED subsystem)
-
-5) Simplify getting the I2C adapter of a client:
-        - leds-tca6507
-        - leds-pca955x
-
-6) Convert LED documentation to ReST
-
-
-There is also the following in the diffstat:
-
-        - leds: avoid flush_work in atomic context,
-
-but it was sent as a fix for 5.2-rc3, and I just didn't want to rebase
-onto that because of the immutable branch that is based on 5.2-rc1.
-
-
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/leds-for-5.3-rc1
-
-for you to fetch changes up to 2605085fba22792f3d4a6b856c7c5a05492d1fde:
-
-  dt: leds-lm36274.txt: fix a broken reference to ti-lmu.txt (2019-06-28 20:57:36 +0200)
-
-Thanks,
-Jacek Anaszewski
-
-----------------------------------------------------------------
-LED updates for 5.3-rc1
-----------------------------------------------------------------
-Christian Mauderer (2):
-      dt-bindings: leds: Add binding for spi-byte LED.
-      leds: spi-byte: add single byte SPI LED driver
-
-Dan Murphy (11):
-      dt-bindings: mfd: LMU: Add the ramp up/down property
-      dt-bindings: mfd: LMU: Add ti,brightness-resolution
-      leds: TI LMU: Add common code for TI LMU devices
-      dt-bindings: ti-lmu: Modify dt bindings for the LM3697
-      mfd: ti-lmu: Remove support for LM3697
-      leds: lm3697: Introduce the lm3697 driver
-      dt-bindings: mfd: Add lm36274 bindings to ti-lmu
-      mfd: ti-lmu: Add LM36274 support to the ti-lmu
-      regulator: lm363x: Add support for LM36274
-      dt-bindings: leds: Add LED bindings for the LM36274
-      leds: lm36274: Introduce the TI LM36274 LED driver
-
-Jacek Anaszewski (1):
-      Merge tag 'ti-lmu-led-drivers' into for-next
-
-Mauro Carvalho Chehab (2):
-      docs: leds: convert to ReST
-      dt: leds-lm36274.txt: fix a broken reference to ti-lmu.txt
-
-Pavel Machek (1):
-      leds: avoid flush_work in atomic context
-
-Wolfram Sang (2):
-      leds: leds-pca955x: simplify getting the adapter of a client
-      leds: leds-tca6507: simplify getting the adapter of a client
-
-YueHaibing (1):
-      leds: max77650: Remove set but not used variable 'parent'
-
- .../devicetree/bindings/leds/leds-lm36274.txt      |  85 +++++
- .../devicetree/bindings/leds/leds-lm3697.txt       |  73 ++++
- .../devicetree/bindings/leds/leds-spi-byte.txt     |  44 +++
- Documentation/devicetree/bindings/mfd/ti-lmu.txt   |  88 +++--
- Documentation/laptops/thinkpad-acpi.txt            |   4 +-
- Documentation/leds/index.rst                       |  25 ++
- .../leds/{leds-blinkm.txt => leds-blinkm.rst}      |  64 ++--
- .../{leds-class-flash.txt => leds-class-flash.rst} |  49 ++-
- .../leds/{leds-class.txt => leds-class.rst}        |  15 +-
- .../leds/{leds-lm3556.txt => leds-lm3556.rst}      | 100 ++++--
- .../leds/{leds-lp3944.txt => leds-lp3944.rst}      |  23 +-
- Documentation/leds/leds-lp5521.rst                 | 115 ++++++
- Documentation/leds/leds-lp5521.txt                 | 101 ------
- Documentation/leds/leds-lp5523.rst                 | 147 ++++++++
- Documentation/leds/leds-lp5523.txt                 | 130 -------
- Documentation/leds/leds-lp5562.rst                 | 137 +++++++
- Documentation/leds/leds-lp5562.txt                 | 120 -------
- Documentation/leds/leds-lp55xx.rst                 | 224 ++++++++++++
- Documentation/leds/leds-lp55xx.txt                 | 194 ----------
- Documentation/leds/leds-mlxcpld.rst                | 118 ++++++
- Documentation/leds/leds-mlxcpld.txt                | 110 ------
- .../{ledtrig-oneshot.txt => ledtrig-oneshot.rst}   |  11 +-
- ...ledtrig-transient.txt => ledtrig-transient.rst} |  65 ++--
- .../{ledtrig-usbport.txt => ledtrig-usbport.rst}   |  11 +-
- Documentation/leds/{uleds.txt => uleds.rst}        |   5 +-
- MAINTAINERS                                        |   2 +-
- drivers/leds/Kconfig                               |  35 ++
- drivers/leds/Makefile                              |   4 +
- drivers/leds/led-core.c                            |   5 -
- drivers/leds/leds-lm36274.c                        | 172 +++++++++
- drivers/leds/leds-lm3697.c                         | 395 +++++++++++++++++++++
- drivers/leds/leds-max77650.c                       |   2 -
- drivers/leds/leds-pca955x.c                        |   2 +-
- drivers/leds/leds-spi-byte.c                       | 161 +++++++++
- drivers/leds/leds-tca6507.c                        |   2 +-
- drivers/leds/leds-ti-lmu-common.c                  | 156 ++++++++
- drivers/leds/trigger/Kconfig                       |   2 +-
- drivers/leds/trigger/ledtrig-timer.c               |   5 +
- drivers/leds/trigger/ledtrig-transient.c           |   2 +-
- drivers/mfd/Kconfig                                |   5 +-
- drivers/mfd/ti-lmu.c                               |  23 +-
- drivers/regulator/Kconfig                          |   2 +-
- drivers/regulator/lm363x-regulator.c               |  78 +++-
- include/linux/leds-ti-lmu-common.h                 |  47 +++
- include/linux/mfd/ti-lmu-register.h                |  63 ++--
- include/linux/mfd/ti-lmu.h                         |   5 +-
- net/netfilter/Kconfig                              |   2 +-
- 47 files changed, 2355 insertions(+), 873 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
- create mode 100644 Documentation/devicetree/bindings/leds/leds-spi-byte.txt
- create mode 100644 Documentation/leds/index.rst
- rename Documentation/leds/{leds-blinkm.txt => leds-blinkm.rst} (57%)
- rename Documentation/leds/{leds-class-flash.txt => leds-class-flash.rst} (74%)
- rename Documentation/leds/{leds-class.txt => leds-class.rst} (92%)
- rename Documentation/leds/{leds-lm3556.txt => leds-lm3556.rst} (70%)
- rename Documentation/leds/{leds-lp3944.txt => leds-lp3944.rst} (78%)
- create mode 100644 Documentation/leds/leds-lp5521.rst
- delete mode 100644 Documentation/leds/leds-lp5521.txt
- create mode 100644 Documentation/leds/leds-lp5523.rst
- delete mode 100644 Documentation/leds/leds-lp5523.txt
- create mode 100644 Documentation/leds/leds-lp5562.rst
- delete mode 100644 Documentation/leds/leds-lp5562.txt
- create mode 100644 Documentation/leds/leds-lp55xx.rst
- delete mode 100644 Documentation/leds/leds-lp55xx.txt
- create mode 100644 Documentation/leds/leds-mlxcpld.rst
- delete mode 100644 Documentation/leds/leds-mlxcpld.txt
- rename Documentation/leds/{ledtrig-oneshot.txt => ledtrig-oneshot.rst} (90%)
- rename Documentation/leds/{ledtrig-transient.txt => ledtrig-transient.rst} (81%)
- rename Documentation/leds/{ledtrig-usbport.txt => ledtrig-usbport.rst} (86%)
- rename Documentation/leds/{uleds.txt => uleds.rst} (95%)
- create mode 100644 drivers/leds/leds-lm36274.c
- create mode 100644 drivers/leds/leds-lm3697.c
- create mode 100644 drivers/leds/leds-spi-byte.c
- create mode 100644 drivers/leds/leds-ti-lmu-common.c
- create mode 100644 include/linux/leds-ti-lmu-common.h
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index e7c368db81851f..64f157f2e8d5e4 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -1648,19 +1648,12 @@ static int f2fs_file_flush(struct file *file, fl_owner_t id)
+>  static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+>  {
+>  	struct f2fs_inode_info *fi = F2FS_I(inode);
+> -	u32 oldflags;
+>  
+>  	/* Is it quota file? Do not allow user to mess with it */
+>  	if (IS_NOQUOTA(inode))
+>  		return -EPERM;
+>  
+> -	oldflags = fi->i_flags;
+> -
+> -	if ((iflags ^ oldflags) & (F2FS_APPEND_FL | F2FS_IMMUTABLE_FL))
+> -		if (!capable(CAP_LINUX_IMMUTABLE))
+> -			return -EPERM;
+> -
+> -	fi->i_flags = iflags | (oldflags & ~mask);
+> +	fi->i_flags = iflags | (fi->i_flags & ~mask);
+>  
+>  	if (fi->i_flags & F2FS_PROJINHERIT_FL)
+>  		set_inode_flag(inode, FI_PROJ_INHERIT);
+> @@ -1765,7 +1758,8 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
+>  static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
+>  {
+>  	struct inode *inode = file_inode(filp);
+> -	u32 fsflags;
+> +	struct f2fs_inode_info *fi = F2FS_I(inode);
+> +	u32 fsflags, old_fsflags;
+>  	u32 iflags;
+>  	int ret;
+>  
+> @@ -1789,8 +1783,14 @@ static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
+>  
+>  	inode_lock(inode);
+>  
+> +	old_fsflags = f2fs_iflags_to_fsflags(fi->i_flags);
+> +	ret = vfs_ioc_setflags_prepare(inode, old_fsflags, fsflags);
+> +	if (ret)
+> +		goto out;
+> +
+>  	ret = f2fs_setflags_common(inode, iflags,
+>  			f2fs_fsflags_to_iflags(F2FS_SETTABLE_FS_FL));
+> +out:
+>  	inode_unlock(inode);
+>  	mnt_drop_write_file(filp);
+>  	return ret;
+> @@ -2850,52 +2850,32 @@ static inline u32 f2fs_xflags_to_iflags(u32 xflags)
+>  	return iflags;
+>  }
+>  
+> -static int f2fs_ioc_fsgetxattr(struct file *filp, unsigned long arg)
+> +static void f2fs_fill_fsxattr(struct inode *inode, struct fsxattr *fa)
+>  {
+> -	struct inode *inode = file_inode(filp);
+>  	struct f2fs_inode_info *fi = F2FS_I(inode);
+> -	struct fsxattr fa;
+>  
+> -	memset(&fa, 0, sizeof(struct fsxattr));
+> -	fa.fsx_xflags = f2fs_iflags_to_xflags(fi->i_flags);
+> +	simple_fill_fsxattr(fa, f2fs_iflags_to_xflags(fi->i_flags));
+>  
+>  	if (f2fs_sb_has_project_quota(F2FS_I_SB(inode)))
+> -		fa.fsx_projid = (__u32)from_kprojid(&init_user_ns,
+> -							fi->i_projid);
+> -
+> -	if (copy_to_user((struct fsxattr __user *)arg, &fa, sizeof(fa)))
+> -		return -EFAULT;
+> -	return 0;
+> +		fa->fsx_projid = from_kprojid(&init_user_ns, fi->i_projid);
+>  }
+>  
+> -static int f2fs_ioctl_check_project(struct inode *inode, struct fsxattr *fa)
+> +static int f2fs_ioc_fsgetxattr(struct file *filp, unsigned long arg)
+>  {
+> -	/*
+> -	 * Project Quota ID state is only allowed to change from within the init
+> -	 * namespace. Enforce that restriction only if we are trying to change
+> -	 * the quota ID state. Everything else is allowed in user namespaces.
+> -	 */
+> -	if (current_user_ns() == &init_user_ns)
+> -		return 0;
+> +	struct inode *inode = file_inode(filp);
+> +	struct fsxattr fa;
+>  
+> -	if (__kprojid_val(F2FS_I(inode)->i_projid) != fa->fsx_projid)
+> -		return -EINVAL;
+> -
+> -	if (F2FS_I(inode)->i_flags & F2FS_PROJINHERIT_FL) {
+> -		if (!(fa->fsx_xflags & FS_XFLAG_PROJINHERIT))
+> -			return -EINVAL;
+> -	} else {
+> -		if (fa->fsx_xflags & FS_XFLAG_PROJINHERIT)
+> -			return -EINVAL;
+> -	}
+> +	f2fs_fill_fsxattr(inode, &fa);
+>  
+> +	if (copy_to_user((struct fsxattr __user *)arg, &fa, sizeof(fa)))
+> +		return -EFAULT;
+>  	return 0;
+>  }
+>  
+>  static int f2fs_ioc_fssetxattr(struct file *filp, unsigned long arg)
+>  {
+>  	struct inode *inode = file_inode(filp);
+> -	struct fsxattr fa;
+> +	struct fsxattr fa, old_fa;
+>  	u32 iflags;
+>  	int err;
+>  
+> @@ -2918,7 +2898,9 @@ static int f2fs_ioc_fssetxattr(struct file *filp, unsigned long arg)
+>  		return err;
+>  
+>  	inode_lock(inode);
+> -	err = f2fs_ioctl_check_project(inode, &fa);
+> +
+> +	f2fs_fill_fsxattr(inode, &old_fa);
+> +	err = vfs_ioc_fssetxattr_check(inode, &old_fa, &fa);
+>  	if (err)
+>  		goto out;
+>  	err = f2fs_setflags_common(inode, iflags,
