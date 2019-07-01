@@ -2,83 +2,82 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759A9C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B95C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 483992173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D9412173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqMMVu3l"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gFk3SbTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbfGAOkI (ORCPT
+        id S1729778AbfGAOkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:40:08 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33953 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfGAOkI (ORCPT
+        Mon, 1 Jul 2019 10:40:36 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35790 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfGAOkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:40:08 -0400
-Received: by mail-io1-f68.google.com with SMTP id k8so29422089iot.1;
-        Mon, 01 Jul 2019 07:40:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BboFdGHXMhlaYC4iuvduLO/5CvlIjMoquBv/OOaryQs=;
-        b=NqMMVu3llexL60UENojjstBHElmazSQGlT5mfzIWlDDCPUA891e7qURrQirX8HzJ72
-         6IjdEllgsTzSdOpKVUw1yuV3JysTIK+Io/GEZOSQ/+EzM8Y2r69YwpVVmeQggIitbdpX
-         jnvFMNkJq6cVZuN2Mz6BMp9jkcVNJcbDi9s86wfGkHnfNBiKFYtcQq5MGWxCwE+HxzKX
-         SJ3UuKKkLaJP7csE54n4l3DWcvnu0LIvYVif/hJ971lGkvj2j4a2dLi6+FNyVSDsCXdI
-         1PQhz0oGOkeJlYKuo+nKxysj/NK9vfjU8/KgvHr7yts3Wsmt5roWjw0C/s5oTAkrMQ/5
-         SedQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BboFdGHXMhlaYC4iuvduLO/5CvlIjMoquBv/OOaryQs=;
-        b=KZOo5Zr6vKArSQA2G38vhYrsHioPGLUSRMXgErPGRjs4piWjN5vNiffYXx2Tl0NJBl
-         HDJmkJDfCKRpzZQIXf3ChHzWxiMqdBTmFRJyxZPzM1Ngz2zD1TsZWjnGTDHi90itSSx9
-         NStaXnSXXAXU62Y98W2kFlVuRb6Hv4TcuFZND1Xmpvifx3bSBce83ZBmQV3iXKj/ihxo
-         gKIbDRK5C1TuVUrmX/ATYDYq4YJjHELLUCTqvhK+Cj9fJjxnIq4+yCbNh9wYKzo9VHDU
-         B1JuQkR3v3BDyQLs/ePWzb1YQcgAlhbiMdAT6Xv67SfJ0Z+z/CrvYt8FDZIVtXFxFirX
-         tiLg==
-X-Gm-Message-State: APjAAAUF69E3VkTtU0q1L86MaYzi6KkrS0prhwn9JU/ckwsHyMCrCYYz
-        W2/EpGyYqV1bhy/CGZYsUnTN+IYu21n69o5tEPGhdQ==
-X-Google-Smtp-Source: APXvYqzgLHeNZMqJcEb5ubxuwQsPJ48nre6r9+dQmTZ2NcyMxnBcWv8rhxfhmshBBNwlBZrEP9qPrg36GcRKjS8idWc=
-X-Received: by 2002:a6b:1494:: with SMTP id 142mr6658360iou.72.1561992007874;
- Mon, 01 Jul 2019 07:40:07 -0700 (PDT)
+        Mon, 1 Jul 2019 10:40:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Gy9trNaeRO8Sfc06lKqxrcigtnZWNPvY30p1SECBOi4=; b=gFk3SbTw4Qj/LLUCbtp4D7iHZ
+        p3+JMSb8Q7g/zMP2sfCS1xCjgopYpWimLLt2tgWcwQFlkEBIHreJgoyXWqB+JPloQlOBCqLLRydo6
+        oHib19a4FcNkOw9P0b0ZP27oenx7DB1FCtk6hFpR6gWDYFx3VG62mOUjo4wqlef8qiaZ6/v/e48fB
+        HlpN8H0yGuIk/mLKE6r4t9YxPHWCyoUhqOMllQJsr1uORReJBuJsG4zCtE5E9GbwWMd59caZueMm1
+        tGafd3rZfc6hLj/JWbEh+Ny58tho2YXkYKSuXnfy7NFFLO5/w6efpgnlOjmu9lDpaKJH5L32TJPAr
+        QKnqCPCNA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hhxTo-00006F-IP; Mon, 01 Jul 2019 14:40:28 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F23CE20A18938; Mon,  1 Jul 2019 16:40:26 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 16:40:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] augmented rbtree: rework the RB_DECLARE_CALLBACKS
+ macro definition
+Message-ID: <20190701144026.GF3463@hirez.programming.kicks-ass.net>
+References: <20190629004952.6611-1-walken@google.com>
+ <20190629004952.6611-3-walken@google.com>
+ <20190701074630.GM3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190622012146.19719-1-bjorn.andersson@linaro.org> <20190622012146.19719-3-bjorn.andersson@linaro.org>
-In-Reply-To: <20190622012146.19719-3-bjorn.andersson@linaro.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 1 Jul 2019 08:39:57 -0600
-Message-ID: <CAOCk7NqwYz9OdYfKHJKet4AQFN7a68ussJi6Z3Aq4B_-za1K6w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] remoteproc: qcom: q6v5-mss: Support loading non-split images
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701074630.GM3402@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 7:22 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> In some software releases the firmware images are not split up with each
-> loadable segment in it's own file. Check the size of the loaded firmware
-> to see if it still contains each segment to be loaded, before falling
-> back to the split-out segments.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Mon, Jul 01, 2019 at 09:46:30AM +0200, Peter Zijlstra wrote:
+> On Fri, Jun 28, 2019 at 05:49:52PM -0700, Michel Lespinasse wrote:
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > The motivation for this change is that I want to introduce augmented rbtree
+> > uses where the augmented data for the subtree is a struct instead of a scalar.
+
+> Can't we have a helper macro that converts an old (scalar) style compute
+> into a new style compute and avoid this unfortunate and error prone
+> copy/pasta ?
+
+Or add a RBEQUAL argument that does:
+
+-		if (node->RBAUGMENTED == augmented)
++		if (RBEQUAL(&node->RBAUGMENTED, &augmented))
+
+With a bit of foo you can even provide a default implementation that
+does: *a == *b.
+
+See GEN_UNARY_RMWcc() for how to do that.
