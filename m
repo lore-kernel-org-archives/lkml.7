@@ -2,193 +2,102 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90138C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D42AC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695A4217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561962060;
-	bh=StqomvvpXflnRhDKL1dnp4Cn8wLcNE+ioYBf5EJMvSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I24i8D3lfuqNXFnFP3pjYYnG7f1ThEqomdvDvlt2buLQU4tHHiWhImGHnPVXes44E
-	 laZXrPbs9VWlJpbOI68kOZYuuGKmWGNbyWa/TC8JEWN5lfjTpTmNP20z7/iBiCJe7J
-	 90XwFQ8XSql1UT4207A2brH52wJWS6tK+UbYx4Qs=
+	by mail.kernel.org (Postfix) with ESMTP id E0DD52146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uEwsBCXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfGAGU7 (ORCPT
+        id S1727703AbfGAGVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727659AbfGAGU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 02:21:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48458 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727665AbfGAGU4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Jul 2019 02:20:56 -0400
-Received: from localhost (unknown [122.167.76.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05D3C20B7C;
-        Mon,  1 Jul 2019 06:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561962055;
-        bh=StqomvvpXflnRhDKL1dnp4Cn8wLcNE+ioYBf5EJMvSU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qhdnkx3NMl/OHo0W8jfSJlvavK54m9wt+kzowzosr+VKbbTez0psR/3NasyeR6f0v
-         MlPxTCL58hYRS1tO+jFj0z7MK3WIXILIEkzL8Id+8R112wvw26PTCMX0ZQix5pGYay
-         PiCd+55IRc/33wtU7duuPBEEiHt+/+7EtYec9C74=
-Date:   Mon, 1 Jul 2019 11:47:45 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        bgoswami@quicinc.com
-Subject: Re: [RFC PATCH 2/5] soundwire: core: add device tree support for
- slave devices
-Message-ID: <20190701061745.GK2911@vkoul-mobl>
-References: <20190611104043.22181-1-srinivas.kandagatla@linaro.org>
- <20190611104043.22181-3-srinivas.kandagatla@linaro.org>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=T9L9b2qHusEgYVnEV0zNHhUWzUZ4CrAFpQ1lfd/2V3Q=; b=uEwsBCXo4kNVg1cdlTcZ6OQwT
+        V77aSF2koYFI6fO6vmNmbj1w3NL5OsxXP8Se91mN/ixPBJrvWQUc7JNf4j04wFaAqTbKyFXgGLWRf
+        wPuUarztGE18wV59Arf6P/hupXGoCTIBqLpufaY8xaGdkdvx/Q8VMLVv0tnLHEQJVeopYpSBh052p
+        5Q+aQ3mlTS3dldfsf+ivaqpsFy5r8m2ioQmXyGeCdmrlloPdTFiVHFGaXTy7FbYp2E6CesRB0KFie
+        YdOBWrDVTPdo++UTICIQeUq8omxGj/sgWAsDoFZS8ib0Snh1C8z7FE5HiEOrigdW0jlsGYSDAMqZF
+        uRNOJPWrA==;
+Received: from [46.140.178.35] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hhpgK-00032M-0s; Mon, 01 Jul 2019 06:20:52 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Philip Yang <Philip.Yang@amd.com>
+Subject: [PATCH 13/22] mm/hmm: Use lockdep instead of comments
+Date:   Mon,  1 Jul 2019 08:20:11 +0200
+Message-Id: <20190701062020.19239-14-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190701062020.19239-1-hch@lst.de>
+References: <20190701062020.19239-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611104043.22181-3-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-06-19, 11:40, Srinivas Kandagatla wrote:
-> This patch adds support to parsing device tree based
-> SoundWire slave devices.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  drivers/soundwire/bus.c   |  2 +-
->  drivers/soundwire/bus.h   |  1 +
->  drivers/soundwire/slave.c | 54 ++++++++++++++++++++++++++++++++++++++-
->  3 files changed, 55 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-> index fe745830a261..20f26cf4ba74 100644
-> --- a/drivers/soundwire/bus.c
-> +++ b/drivers/soundwire/bus.c
-> @@ -78,7 +78,7 @@ int sdw_add_bus_master(struct sdw_bus *bus)
->  	if (IS_ENABLED(CONFIG_ACPI) && ACPI_HANDLE(bus->dev))
->  		ret = sdw_acpi_find_slaves(bus);
->  	else
-> -		ret = -ENOTSUPP; /* No ACPI/DT so error out */
-> +		ret = sdw_of_find_slaves(bus);
->  
->  	if (ret) {
->  		dev_err(bus->dev, "Finding slaves failed:%d\n", ret);
-> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
-> index 3048ca153f22..ee46befedbd1 100644
-> --- a/drivers/soundwire/bus.h
-> +++ b/drivers/soundwire/bus.h
-> @@ -15,6 +15,7 @@ static inline int sdw_acpi_find_slaves(struct sdw_bus *bus)
->  }
->  #endif
->  
-> +int sdw_of_find_slaves(struct sdw_bus *bus);
->  void sdw_extract_slave_id(struct sdw_bus *bus,
->  			  u64 addr, struct sdw_slave_id *id);
->  
-> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-> index f39a5815e25d..6e7f5cfeb854 100644
-> --- a/drivers/soundwire/slave.c
-> +++ b/drivers/soundwire/slave.c
-> @@ -2,6 +2,7 @@
->  // Copyright(c) 2015-17 Intel Corporation.
->  
->  #include <linux/acpi.h>
-> +#include <linux/of.h>
->  #include <linux/soundwire/sdw.h>
->  #include <linux/soundwire/sdw_type.h>
->  #include "bus.h"
-> @@ -28,13 +29,14 @@ static int sdw_slave_add(struct sdw_bus *bus,
->  	slave->dev.parent = bus->dev;
->  	slave->dev.fwnode = fwnode;
->  
-> -	/* name shall be sdw:link:mfg:part:class:unique */
-> +	/* name shall be sdw:link:mfg:part:class */
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-nope we are not changing dev_set_name below so this comment should not
-be modified
+So we can check locking at runtime.
 
->  	dev_set_name(&slave->dev, "sdw:%x:%x:%x:%x:%x",
->  		     bus->link_id, id->mfg_id, id->part_id,
->  		     id->class_id, id->unique_id);
->  
->  	slave->dev.release = sdw_slave_release;
->  	slave->dev.bus = &sdw_bus_type;
-> +	slave->dev.of_node = of_node_get(to_of_node(fwnode));
->  	slave->bus = bus;
->  	slave->status = SDW_SLAVE_UNATTACHED;
->  	slave->dev_num = 0;
-> @@ -112,3 +114,53 @@ int sdw_acpi_find_slaves(struct sdw_bus *bus)
->  }
->  
->  #endif
-> +
-> +#if IS_ENABLED(CONFIG_OF)
-> +/*
-> + * sdw_of_find_slaves() - Find Slave devices in master device tree node
-> + * @bus: SDW bus instance
-> + *
-> + * Scans Master DT node for SDW child Slave devices and registers it.
-> + */
-> +int sdw_of_find_slaves(struct sdw_bus *bus)
-> +{
-> +	struct device *dev = bus->dev;
-> +	struct device_node *node;
-> +
-> +	if (!bus->dev->of_node)
-> +		return 0;
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Tested-by: Philip Yang <Philip.Yang@amd.com>
+---
+ mm/hmm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-this should be error, otherwise next condition of checking slaves wont
-be triggered..
-
-> +
-> +	for_each_child_of_node(bus->dev->of_node, node) {
-> +		struct sdw_slave_id id;
-> +		const char *compat = NULL;
-> +		int unique_id, ret;
-> +		int ver, mfg_id, part_id, class_id;
-> +		compat = of_get_property(node, "compatible", NULL);
-> +		if (!compat)
-> +			continue;
-> +
-> +		ret = sscanf(compat, "sdw%x,%x,%x,%x",
-> +			     &ver, &mfg_id, &part_id, &class_id);
-> +		if (ret != 4) {
-> +			dev_err(dev, "Manf ID & Product code not found %s\n",
-> +				compat);
-> +			continue;
-> +		}
-> +
-> +		ret = of_property_read_u32(node, "sdw-instance-id", &unique_id);
-> +		if (ret) {
-> +			dev_err(dev, "Instance id not found:%d\n", ret);
-> +			continue;
-> +		}
-> +
-> +		id.sdw_version = ver - 0xF;
-> +		id.unique_id = unique_id;
-> +		id.mfg_id = mfg_id;
-> +		id.part_id = part_id;
-> +		id.class_id = class_id;
-> +		sdw_slave_add(bus, &id, of_fwnode_handle(node));
-> +	}
-> +	return 0;
-> +}
-> +
-> +#endif
-> -- 
-> 2.21.0
-
+diff --git a/mm/hmm.c b/mm/hmm.c
+index 1eddda45cefa..6f5dc6d568fe 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -246,11 +246,11 @@ static const struct mmu_notifier_ops hmm_mmu_notifier_ops = {
+  *
+  * To start mirroring a process address space, the device driver must register
+  * an HMM mirror struct.
+- *
+- * THE mm->mmap_sem MUST BE HELD IN WRITE MODE !
+  */
+ int hmm_mirror_register(struct hmm_mirror *mirror, struct mm_struct *mm)
+ {
++	lockdep_assert_held_exclusive(&mm->mmap_sem);
++
+ 	/* Sanity check */
+ 	if (!mm || !mirror || !mirror->ops)
+ 		return -EINVAL;
 -- 
-~Vinod
+2.20.1
+
