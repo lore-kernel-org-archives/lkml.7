@@ -2,88 +2,269 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D6BC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A4CC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649092146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF052133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbfGAKKw (ORCPT
+        id S1728718AbfGAKLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 06:10:52 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:57099 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbfGAKKw (ORCPT
+        Mon, 1 Jul 2019 06:11:18 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47622 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfGAKLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 06:10:52 -0400
-X-Originating-IP: 83.155.44.161
-Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
-        (Authenticated sender: hadess@hadess.net)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A25142000E;
-        Mon,  1 Jul 2019 10:10:49 +0000 (UTC)
-Message-ID: <25207fcb87900100fc00da17b2515fde79ecfb1e.camel@hadess.net>
-Subject: Re: [PATCH v3] HID: sb0540: add support for Creative SB0540 IR
- receivers
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Bastien Nocera <bnocera@redhat.com>
-Date:   Mon, 01 Jul 2019 12:10:47 +0200
-In-Reply-To: <CAO-hwJJDf68gqgJZHQtAdjZcEzuL+LbOJD=OYHtod1xN6G+GjA@mail.gmail.com>
-References: <20190626140618.8944-1-hadess@hadess.net>
-         <CAO-hwJJDf68gqgJZHQtAdjZcEzuL+LbOJD=OYHtod1xN6G+GjA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
+        Mon, 1 Jul 2019 06:11:17 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 5418826395F
+Subject: Re: [PATCH v2] phy: rockchip-inno-usb2: allow to force the B-Device
+ Session Valid bit.
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     kernel@collabora.com,
+        =?UTF-8?Q?Ga=c3=abl_PORTAY?= <gael.portay@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+References: <20190515222050.15075-1-gael.portay@collabora.com>
+ <7a205885f0599f04da067a7f41a14ee0b0d759f5.camel@collabora.com>
+ <f8f3565c18cc0c1ede107311dbe41df1a07da07b.camel@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <f32877d0-6d36-73ec-599d-740ed98b27dc@collabora.com>
+Date:   Mon, 1 Jul 2019 12:11:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <f8f3565c18cc0c1ede107311dbe41df1a07da07b.camel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-01 at 11:45 +0200, Benjamin Tissoires wrote:
-> Hi Bastien,
+Hi Ezequiel,
+
+Thanks for reviewing these patches.
+
+On 29/6/19 2:38, Ezequiel Garcia wrote:
+> Hi Heiko, Kishon,
 > 
-> On Wed, Jun 26, 2019 at 4:07 PM Bastien Nocera <hadess@hadess.net>
-> wrote:
-> > From: Bastien Nocera <bnocera@redhat.com>
-> > 
-> > Add a new hid driver for the Creative SB0540 IR receiver. This
-> > receiver
-> > is usually coupled with an RM-1500 or an RM-1800 remote control.
-> > 
-> > The scrollwheels on the RM-1800 remote are not bound, as they are
-> > labelled for specific audio controls that don't usually exist on
-> > most
-> > systems. They can be remapped using standard Linux keyboard
-> > remapping tools.
+> I'll try to pick up this patch.
+> Some comments below, just for self-reference.
 > 
-> Much better commit message :)
-> Thanks!
+> On Wed, 2019-06-26 at 12:32 -0300, Ezequiel Garcia wrote:
+>> On Wed, 2019-05-15 at 18:20 -0400, Gaël PORTAY wrote:
+>>> From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>>
+>>> The OTG disconnection event is generated after the presence/absence of
+>>> an ID connection, but some platforms don't have the ID pin connected, so
+>>> the event is not generated. In such case, for detecting the
+>>> disconnection event, we can get the cable state from an extcon driver.
+>>> We need, though, to force to set the B-Device Session Valid bit on the
+>>> PHY to have the device respond to the setup address. Otherwise, the
+>>> following error is shown:
+>>>
+>>>     usb 2-2: Device not responding to setup address.
+>>>     usb 2-2: device not accepting address 14, error -71
+>>>     usb usb2-port2: unable to enumerate USB device
+>>>
+>>> The patch tells the PHY to force the B-Device Session Valid bit when the
+>>> OTG role is device and clear that bit if the OTG role is host, when an
+>>> extcon is available.
+>>>
+>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>> Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
+>>> ---
+>>>
+>>> Hi all,
+>>>
+>>> The main purpose of this patch is have the Type-C port on the Samsung
+>>> Chromebook Plus work as a device or in OTG mode.
+>>>
+>>> That patch was originally a part of that patchset[1]; all other patches
+>>> was merged recently in master.
+>>>
+>>> The patch was tested on a Samsung Chromebook Plus by configuring one
+>>> port to work as device, configure a cdc ethernet gadget and communicate
+>>> via ethernet gadget my workstation with the chromebook through a usb-a
+>>> to type-c cable.
+>>>
+>>> Best regards,
+>>> Gaël
+>>>
+>>> [1]: https://lkml.org/lkml/2018/8/15/141
+>>>
 > 
-> I have a few nitpicks however
-
-Most of the checkpatch.pl warnings are now fixed. I ignored the one
-about writing docs for the symbol (I have no idea what it wants, looks
-like a false positive) and the too long line for the USB device match.
-
-<snip>
-> > +       /* force input as some remotes bypass the input
-> > registration */
-> > +       hid->quirks |= HID_QUIRK_HIDINPUT_FORCE;
+> We still need the above devicetree changes.
 > 
-> Does this still applies to your remote?
+>>> Changes since v1:
+>>>  - [PATCH 3/4] Remove introduction of dt property "rockchip,force-bvalid"
+>>>                and replace cable state using extcon instead (if set).
+>>>
+>>>  drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 51 +++++++++++++++++++
+>>>  1 file changed, 51 insertions(+)
+>>>
+>>> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+>>> index ba07121c3eff..5e9d50b5ae16 100644
+>>> --- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+>>> +++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+>>> @@ -125,6 +125,7 @@ struct rockchip_chg_det_reg {
+>>>   * @bvalid_det_en: vbus valid rise detection enable register.
+>>>   * @bvalid_det_st: vbus valid rise detection status register.
+>>>   * @bvalid_det_clr: vbus valid rise detection clear register.
+>>> + * @bvalid_session: force B-device session valid register.
+>>>   * @ls_det_en: linestate detection enable register.
+>>>   * @ls_det_st: linestate detection state register.
+>>>   * @ls_det_clr: linestate detection clear register.
+>>> @@ -138,6 +139,7 @@ struct rockchip_usb2phy_port_cfg {
+>>>  	struct usb2phy_reg	bvalid_det_en;
+>>>  	struct usb2phy_reg	bvalid_det_st;
+>>>  	struct usb2phy_reg	bvalid_det_clr;
+>>> +	struct usb2phy_reg	bvalid_session;
+>>>  	struct usb2phy_reg	ls_det_en;
+>>>  	struct usb2phy_reg	ls_det_st;
+>>>  	struct usb2phy_reg	ls_det_clr;
+>>> @@ -169,6 +171,7 @@ struct rockchip_usb2phy_cfg {
+>>>   * @port_id: flag for otg port or host port.
+>>>   * @suspended: phy suspended flag.
+>>>   * @vbus_attached: otg device vbus status.
+>>> + * @force_bvalid: force the control of the B-device session valid bit.
+>>>   * @bvalid_irq: IRQ number assigned for vbus valid rise detection.
+>>>   * @ls_irq: IRQ number assigned for linestate detection.
+>>>   * @otg_mux_irq: IRQ number which multiplex otg-id/otg-bvalid/linestate
+>>> @@ -187,6 +190,7 @@ struct rockchip_usb2phy_port {
+>>>  	unsigned int	port_id;
+>>>  	bool		suspended;
+>>>  	bool		vbus_attached;
+>>> +	bool		force_bvalid;
+>>>  	int		bvalid_irq;
+>>>  	int		ls_irq;
+>>>  	int		otg_mux_irq;
+>>> @@ -553,6 +557,13 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
+>>>  	switch (rport->state) {
+>>>  	case OTG_STATE_UNDEFINED:
+>>>  		rport->state = OTG_STATE_B_IDLE;
+>>> +		if (rport->force_bvalid) {
+>>> +			property_enable(rphy->grf,
+>>> +					&rport->port_cfg->bvalid_session,
+>>> +					true);
+>>> +			dev_dbg(&rport->phy->dev,
+>>> +				"set the B-Device Session Valid\n");
+>>> +		}
+>>>  		if (!vbus_attach)
+>>>  			rockchip_usb2phy_power_off(rport->phy);
+>>>  		/* fall through */
+>>> @@ -560,6 +571,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
+>>>  		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) > 0) {
+>>>  			dev_dbg(&rport->phy->dev, "usb otg host connect\n");
+>>>  			rport->state = OTG_STATE_A_HOST;
+>>> +			/* When leaving device mode force end the session */
+>>> +			if (rport->force_bvalid) {
+>>> +				property_enable(rphy->grf,
+>>> +					&rport->port_cfg->bvalid_session,
+>>> +					false);
+>>> +				dev_dbg(&rport->phy->dev,
+>>> +					"clear the B-Device Session Valid\n");
+>>> +			}
+>>>  			rockchip_usb2phy_power_on(rport->phy);
+>>>  			return;
+>>>  		} else if (vbus_attach) {
+>>> @@ -634,6 +653,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
+>>>  		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) == 0) {
+>>>  			dev_dbg(&rport->phy->dev, "usb otg host disconnect\n");
+>>>  			rport->state = OTG_STATE_B_IDLE;
+>>> +			/* When leaving host mode force start the session */
+>>> +			if (rport->force_bvalid) {
+>>> +				property_enable(rphy->grf,
+>>> +					&rport->port_cfg->bvalid_session,
+>>> +					true);
+>>> +				dev_dbg(&rport->phy->dev,
+>>> +					"set the B-Device Session Valid\n");
+>>> +			}
+>>>  			rockchip_usb2phy_power_off(rport->phy);
+>>>  		}
+>>>  		break;
+>>> @@ -1016,6 +1043,28 @@ static int rockchip_usb2phy_otg_port_init(struct rockchip_usb2phy *rphy,
+>>>  	INIT_DELAYED_WORK(&rport->chg_work, rockchip_chg_detect_work);
+>>>  	INIT_DELAYED_WORK(&rport->otg_sm_work, rockchip_usb2phy_otg_sm_work);
+>>>  
+>>> +	/*
+>>> +	 * Some platforms doesn't have the ID pin connected to the phy, hence
+>>> +	 * the OTD ID event is not generated, but in some cases we can get the
+>>> +	 * cable state from an extcon driver. In such case we can force to set
+>>> +	 * the B-Device Session Valid bit on the PHY to have the device working
+>>> +	 * as a OTG.
+>>> +	 */
+>>> +	if (rphy->edev) {
+> 
+> I might be missing something, but this check seems bogus.
+> 
+> edev can't be NULL as the driver creates an extcon if
+> there is none assigned in the devicetree.
+> 
 
-Yes, you mentioned it in your original review as well, and it was
-necessary.
+Right, I also don't see why this is needed.
 
-v4's been sent.
+For extra points, there is another place ;-)
 
-Thanks!
+drivers/phy/rockchip/phy-rockchip-inno-usb2.c:1049:     if (!IS_ERR(rphy->edev))
 
+
+>>> +		/*
+>>> +		 * Check if bvalid_session register is set in the structure
+>>> +		 * rockchip_usb2phy_cfg for this SoC.
+>>> +		 */
+>>> +		if (rport->port_cfg->bvalid_session.offset == 0x0) {
+>>> +			rport->force_bvalid = false;
+>>> +			dev_err(rphy->dev,
+>>> +				"cannot force B-device session, the register is not set for that SoC\n");
+>>> +		} else {
+>>> +			rport->force_bvalid = true;
+>>> +			dev_info(rphy->dev, "force B-device session enabled\n");
+>>> +		}
+> 
+> I think we should be doing something more like:
+> 
+> if (HAS_REG(rport->port_cfg->bvalid_session)) {
+> 	rport->force_bvalid = true;
+> 	dev_info(rphy->dev, "force B-device session enabled\n");
+> }
+> 
+> And not error verbosely on platforms that don't
+> care about this.
+
+I tried to do some memory exercice about this and seemed that all platforms care
+about it. But a second check would be nice.
+
+>  
+
+The rockchip_usb2phy_otg_sm_work is only called on those that the port is
+configured as OTG. It makes sense trigger an error on those platforms that try
+to configure the port as OTG but doesn't have an bvalid_session register
+defined, otherwise will not work.
+
+Said that, the question is, if all the supported SoCs have left unused the OTG
+Port ID. I'm pretty sure that is the case for the RK3399 and I remember check
+other SoCs, but not all, because I didn't find the datasheet or were really vague.
+
+Maybe you can do a second round to double check?
+
+If we discover that this is not SoC specific maybe we should go back to the
+first proposal and use a DT property instead.
+
+Thanks,
+~ Enric
+
+
+> Thanks,
+> Ezequiel
+> 
