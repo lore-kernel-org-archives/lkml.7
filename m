@@ -2,142 +2,89 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E65C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE32CC06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F76421473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8EFB21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:03:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="aOPoFzu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbfGAQBM (ORCPT
+        id S1730254AbfGAQDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 12:01:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7578 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728142AbfGAQBL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 12:01:11 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61FvauR115900
-        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 12:01:10 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tfma43unx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 12:01:10 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 1 Jul 2019 17:01:09 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Jul 2019 17:01:05 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61G14Yh10289498
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 16:01:04 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4085B2067;
-        Mon,  1 Jul 2019 16:01:04 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 956AFB2066;
-        Mon,  1 Jul 2019 16:01:04 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Jul 2019 16:01:04 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 7054916C0B88; Mon,  1 Jul 2019 09:01:07 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 09:01:07 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Scott Wood <swood@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Reply-To: paulmck@linux.ibm.com
-References: <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
- <20190627203612.GD26519@linux.ibm.com>
- <20190628141522.GF3402@hirez.programming.kicks-ass.net>
- <20190628155404.GV26519@linux.ibm.com>
- <20190628160408.GH32547@worktop.programming.kicks-ass.net>
- <20190628172056.GW26519@linux.ibm.com>
- <20190701094215.GR3402@hirez.programming.kicks-ass.net>
- <20190701102442.35grdpcsbrwyyaco@linutronix.de>
- <20190701122305.GB26519@linux.ibm.com>
- <20190701140053.GV3402@hirez.programming.kicks-ass.net>
+        Mon, 1 Jul 2019 12:03:16 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46012 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727419AbfGAQDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 12:03:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=IetNNsaoWLkYSAXHE+XLJKKaYo2maSqrxawr9i3AODM=; b=aOPoFzu5X7DIXa6UoMwgiG7W4O
+        dEG+8mePAq/q1GKJV5ij276Gar/vIfjp5D6Gn+ilv3X7r4mITYTQBKzBmDCOqmazbSVrCZpM0Rgfu
+        bD1AXorJAWLUU/UpxuflwHXIkXlpVBNaXiBRvzQzEL8HCGlLZCOkd1UZFV2oAk/bcK/Q=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hhylr-0008CQ-5d; Mon, 01 Jul 2019 18:03:11 +0200
+Date:   Mon, 1 Jul 2019 18:03:11 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     linus.walleij@linaro.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] net: dsa: vsc73xx: Split vsc73xx driver
+Message-ID: <20190701160311.GB30468@lunn.ch>
+References: <20190701152723.624-1-paweldembicki@gmail.com>
+ <20190701152723.624-2-paweldembicki@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190701140053.GV3402@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19070116-0060-0000-0000-000003579D17
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011360; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01225960; UDB=6.00645376; IPR=6.01007172;
- MB=3.00027538; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-01 16:01:09
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070116-0061-0000-0000-000049F9B055
-Message-Id: <20190701160107.GG26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=830 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010192
+In-Reply-To: <20190701152723.624-2-paweldembicki@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 04:00:53PM +0200, Peter Zijlstra wrote:
-> On Mon, Jul 01, 2019 at 05:23:05AM -0700, Paul E. McKenney wrote:
-> > On Mon, Jul 01, 2019 at 12:24:42PM +0200, Sebastian Andrzej Siewior wrote:
-> > > On 2019-07-01 11:42:15 [+0200], Peter Zijlstra wrote:
-> > > > I'm not sure if smp_send_reschedule() can be used as self-IPI, some
-> > > > hardware doesn't particularly like that IIRC. That is, hardware might
-> > > > only have interfaces to IPI _other_ CPUs, but not self.
-> > > > 
-> > > > The normal scheduler code takes care to not call smp_send_reschedule()
-> > > > to self.
-> > > 
-> > > and irq_work:
-> > >   471ba0e686cb1 ("irq_work: Do not raise an IPI when queueing work on the local CPU")
-> > 
-> > OK, so it looks like I will need to use something else.  But thank you
-> > for calling my attention to this commit.
-> 
-> I think that commit is worded slight confusing -- sorry I should've paid
-> more attention.
-> 
-> irq_work _does_ work locally, and arch_irq_work_raise() must self-IPI,
-> otherwise everything is horribly broken.
-> 
-> But what happened, was that irq_work_queue() and irq_work_queue_on(.cpu
-> = smp_processor_id()) wasn't using the same code, and the latter would
-> try to self-IPI through arch_send_call_function_single_ipi().
-> 
-> Nick fixed that so that irq_work_queue() and irq_work_queue_on(.cpu =
-> smp_processor_id() now both use arch_raise_irq_work() and remote stuff
-> uses arch_send_call_function_single_ipi().
+> @@ -495,12 +380,12 @@ static int vsc73xx_update_bits(struct vsc73xx *vsc, u8 block, u8 subblock,
+>  	int ret;
+>  
+>  	/* Same read-modify-write algorithm as e.g. regmap */
+> -	ret = vsc73xx_read(vsc, block, subblock, reg, &orig);
+> +	ret = vsc->ops->read(vsc, block, subblock, reg, &orig);
+>  	if (ret)
+>  		return ret;
+>  	tmp = orig & ~mask;
+>  	tmp |= val & mask;
+> -	return vsc73xx_write(vsc, block, subblock, reg, tmp);
+> +	return vsc->ops->write(vsc, block, subblock, reg, tmp);
 
-OK, thank you for looking into this!
+This patch would be a lot less invasive and smaller if you hid the
+difference between SPI and platform inside vsc73xx_write() and
+vsc73xx_read().
 
-I therefore continue relying on IRQ work.  Should there be problems with
-kernels not supporting IRQ work, and if there is a legitimate reason
-why they should not support IRQ work, I can look into things like timers
-for those kernels.
+> -static int vsc73xx_probe(struct spi_device *spi)
+> +int vsc73xx_probe(struct vsc73xx *vsc)
+>  {
+> -	struct device *dev = &spi->dev;
 
-							Thanx, Paul
+  struct device *dev = vsc->dev;
 
+and then a lot of the changes you make here go away.
+
+In general, think about how to make the changes small. It saves your
+time from actually making changes, and reviewer time since the patch
+it smaller.
+
+    Andrew
