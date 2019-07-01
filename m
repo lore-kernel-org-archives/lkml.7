@@ -2,352 +2,415 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,WEIRD_QUOTING
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396B6C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4518C06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0963E205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B0F2173C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbfGANNY convert rfc822-to-8bit (ORCPT
+        id S1728486AbfGANPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 09:13:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46100 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfGANNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 09:13:23 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EAEBF308FEC0;
-        Mon,  1 Jul 2019 13:13:20 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B90601001B20;
-        Mon,  1 Jul 2019 13:13:17 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190701104048.c2t5aful2sabngmr@brauner.io>
-References: <20190701104048.c2t5aful2sabngmr@brauner.io> <156173661696.14042.17822154531324224780.stgit@warthog.procyon.org.uk> <156173662509.14042.3867242748127323502.stgit@warthog.procyon.org.uk>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
-        mszeredi@redhat.com, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH 01/11] vfs: syscall: Add fsinfo() to query filesystem information [ver #15]
+        Mon, 1 Jul 2019 09:15:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58258 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726329AbfGANPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 09:15:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DDC53AD78;
+        Mon,  1 Jul 2019 13:15:10 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linux-integrity@vger.kernel.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: [PATCH] Revert "tpm: pass an array of tpm_extend_digest structures to tpm_pcr_extend()"
+Date:   Mon,  1 Jul 2019 15:15:05 +0200
+Message-Id: <20190701131505.17759-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27311.1561986796.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Mon, 01 Jul 2019 14:13:16 +0100
-Message-ID: <27313.1561986796@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 01 Jul 2019 13:13:22 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian@brauner.io> wrote:
+This reverts commit 0b6cf6b97b7ef1fa3c7fefab0cac897a1c4a3400 to avoid following crash:
 
-> > +config FSINFO
-> 
-> Hm, any reason why we would hide that syscalls under a config option?
+    BUG: Kernel NULL pointer dereference at 0x00000012
+    Faulting instruction address: 0xc000000000897908
+    Oops: Kernel access of bad area, sig: 11 [#1]
+    LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+    Modules linked in:
+    CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc6-2.gf99f70b-default #1 openSUSE Tumbleweed (unreleased)
+    NIP:  c000000000897908 LR: c000000000897860 CTR: 0000000000000009
+    REGS: c000000004eb7550 TRAP: 0380   Not tainted  (5.2.0-rc6-2.gf99f70b-default)
+    MSR:  800000010280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 88000224  XER: 20040001
+    CFAR: c000000000c4e964 IRQMASK: 0
+    GPR00: c000000000897860 c000000004eb77e0 c0000000015ced00 0000000000000000
+    GPR04: 0000000000000003 0000000000000001 0000000022000000 000000000000000e
+    GPR08: c0000005b46b0000 0000000000010000 0000000000000022 0000000010325476
+    GPR12: 0000000048000222 c0000000019a0000 c000000000010b70 0000000000000000
+    GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+    GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+    GPR24: c000000000eded00 c0000000014ecb60 c000000000ccedf8 c0000005b5c9d000
+    GPR28: 000000000000000a 0000000000000012 c000000000f01180 c00c0000016d1ac0
+    NIP [c000000000897908] tpm1_pcr_extend+0x118/0x1d0
+    LR [c000000000897860] tpm1_pcr_extend+0x70/0x1d0
+    Call Trace:
+    [c000000004eb77e0] [c000000000897860] tpm1_pcr_extend+0x70/0x1d0 (unreliable)
+    [c000000004eb7890] [c0000000008964e4] tpm_pcr_extend+0xe4/0x170
+    [c000000004eb78d0] [c000000000667bac] ima_add_template_entry+0x1ac/0x350
+    [c000000004eb79b0] [c00000000066ad04] ima_store_template+0xc4/0x150
+    [c000000004eb7a30] [c000000001021a4c] ima_add_boot_aggregate+0xec/0x17c
+    [c000000004eb7b30] [c000000001021b70] ima_init+0x94/0xbc
+    [c000000004eb7b90] [c000000001021ce0] init_ima+0x44/0xec
+    [c000000004eb7c10] [c000000000010694] do_one_initcall+0x64/0x2b0
+    [c000000004eb7ce0] [c000000000fd445c] kernel_init_freeable+0x2e4/0x3cc
+    [c000000004eb7db0] [c000000000010b94] kernel_init+0x2c/0x148
+    [c000000004eb7e20] [c00000000000bc54] ret_from_kernel_thread+0x5c/0x68
+    Instruction dump:
+    90c80002 81410070 714a0001 e9010078 39480002 7d40542c 79470020 4082003c
+    394a0014 7c0a4840 41810090 5546c03e <e87d0000> e89d0008 80bd0010 7d283a14
+    ---[ end trace 786ebab24be797a3 ]---
+---
+ drivers/char/tpm/tpm-interface.c   | 30 +++++++++++++--------
+ drivers/char/tpm/tpm.h             |  2 +-
+ drivers/char/tpm/tpm2-cmd.c        | 10 ++++---
+ include/linux/tpm.h                |  5 ++--
+ security/integrity/ima/ima.h       |  1 -
+ security/integrity/ima/ima_init.c  |  4 ---
+ security/integrity/ima/ima_queue.c | 27 +------------------
+ security/keys/trusted.c            | 42 ++++++------------------------
+ 8 files changed, 38 insertions(+), 83 deletions(-)
 
-Rasmus Villemoes asked for it to be made conditional.
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index 1b4f95c13e00..dda742184ce2 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -303,34 +303,42 @@ EXPORT_SYMBOL_GPL(tpm_pcr_read);
+  * tpm_pcr_extend - extend a PCR value in SHA1 bank.
+  * @chip:	a &struct tpm_chip instance, %NULL for the default chip
+  * @pcr_idx:	the PCR to be retrieved
+- * @digests:	array of tpm_digest structures used to extend PCRs
++ * @hash:	the hash value used to extend the PCR value
+  *
+- * Note: callers must pass a digest for every allocated PCR bank, in the same
+- * order of the banks in chip->allocated_banks.
++ * Note: with TPM 2.0 extends also those banks for which no digest was
++ * specified in order to prevent malicious use of those PCR banks.
+  *
+  * Return: same as with tpm_transmit_cmd()
+  */
+-int tpm_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
+-		   struct tpm_digest *digests)
++int tpm_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash)
+ {
+ 	int rc;
++	struct tpm_digest *digest_list;
+ 	int i;
+ 
+ 	chip = tpm_find_get_ops(chip);
+ 	if (!chip)
+ 		return -ENODEV;
+ 
+-	for (i = 0; i < chip->nr_allocated_banks; i++)
+-		if (digests[i].alg_id != chip->allocated_banks[i].alg_id)
+-			return -EINVAL;
+-
+ 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+-		rc = tpm2_pcr_extend(chip, pcr_idx, digests);
++		digest_list = kcalloc(chip->nr_allocated_banks,
++				      sizeof(*digest_list), GFP_KERNEL);
++		if (!digest_list)
++			return -ENOMEM;
++
++		for (i = 0; i < chip->nr_allocated_banks; i++) {
++			digest_list[i].alg_id = chip->allocated_banks[i].alg_id;
++			memcpy(digest_list[i].digest, hash, TPM_DIGEST_SIZE);
++		}
++
++		rc = tpm2_pcr_extend(chip, pcr_idx, chip->nr_allocated_banks,
++				     digest_list);
++		kfree(digest_list);
+ 		tpm_put_ops(chip);
+ 		return rc;
+ 	}
+ 
+-	rc = tpm1_pcr_extend(chip, pcr_idx, digests[0].digest,
++	rc = tpm1_pcr_extend(chip, pcr_idx, hash,
+ 			     "attempting extend a PCR value");
+ 	tpm_put_ops(chip);
+ 	return rc;
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index e503ffc3aa39..3cf8ed290305 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -436,7 +436,7 @@ static inline u32 tpm2_rc_value(u32 rc)
+ int tpm2_get_timeouts(struct tpm_chip *chip);
+ int tpm2_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
+ 		  struct tpm_digest *digest, u16 *digest_size_ptr);
+-int tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
++int tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, u32 count,
+ 		    struct tpm_digest *digests);
+ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max);
+ void tpm2_flush_context(struct tpm_chip *chip, u32 handle);
+diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+index 4de49924cfc4..231937d5f58c 100644
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -242,11 +242,12 @@ struct tpm2_null_auth_area {
+  *
+  * @chip:	TPM chip to use.
+  * @pcr_idx:	index of the PCR.
++ * @count:	number of digests passed.
+  * @digests:	list of pcr banks and corresponding digest values to extend.
+  *
+  * Return: Same as with tpm_transmit_cmd.
+  */
+-int tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
++int tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, u32 count,
+ 		    struct tpm_digest *digests)
+ {
+ 	struct tpm_buf buf;
+@@ -254,6 +255,9 @@ int tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
+ 	int rc;
+ 	int i;
+ 
++	if (count > chip->nr_allocated_banks)
++		return -EINVAL;
++
+ 	rc = tpm_buf_init(&buf, TPM2_ST_SESSIONS, TPM2_CC_PCR_EXTEND);
+ 	if (rc)
+ 		return rc;
+@@ -268,9 +272,9 @@ int tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
+ 	tpm_buf_append_u32(&buf, sizeof(struct tpm2_null_auth_area));
+ 	tpm_buf_append(&buf, (const unsigned char *)&auth_area,
+ 		       sizeof(auth_area));
+-	tpm_buf_append_u32(&buf, chip->nr_allocated_banks);
++	tpm_buf_append_u32(&buf, count);
+ 
+-	for (i = 0; i < chip->nr_allocated_banks; i++) {
++	for (i = 0; i < count; i++) {
+ 		tpm_buf_append_u16(&buf, digests[i].alg_id);
+ 		tpm_buf_append(&buf, (const unsigned char *)&digests[i].digest,
+ 			       chip->allocated_banks[i].digest_size);
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 53c0ea9ec9df..d4516164dc9f 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -166,8 +166,7 @@ struct tpm_chip {
+ extern int tpm_is_tpm2(struct tpm_chip *chip);
+ extern int tpm_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
+ 			struct tpm_digest *digest);
+-extern int tpm_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
+-			  struct tpm_digest *digests);
++extern int tpm_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash);
+ extern int tpm_send(struct tpm_chip *chip, void *cmd, size_t buflen);
+ extern int tpm_get_random(struct tpm_chip *chip, u8 *data, size_t max);
+ extern int tpm_seal_trusted(struct tpm_chip *chip,
+@@ -190,7 +189,7 @@ static inline int tpm_pcr_read(struct tpm_chip *chip, int pcr_idx,
+ }
+ 
+ static inline int tpm_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
+-				 struct tpm_digest *digests)
++				 const u8 *hash)
+ {
+ 	return -ENODEV;
+ }
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index ca10917b5f89..bf7178ef1619 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -149,7 +149,6 @@ int ima_measurements_show(struct seq_file *m, void *v);
+ unsigned long ima_get_binary_runtime_size(void);
+ int ima_init_template(void);
+ void ima_init_template_list(void);
+-int __init ima_init_digests(void);
+ 
+ /*
+  * used to protect h_table and sha_table
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index 1e47c1026471..cf7a2f58077e 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -119,12 +119,8 @@ int __init ima_init(void)
+ 	if (rc != 0)
+ 		return rc;
+ 
+-	/* It can be called before ima_init_digests(), it does not use TPM. */
+ 	ima_load_kexec_buffer();
+ 
+-	rc = ima_init_digests();
+-	if (rc != 0)
+-		return rc;
+ 	rc = ima_add_boot_aggregate();	/* boot aggregate must be first entry */
+ 	if (rc != 0)
+ 		return rc;
+diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
+index 1ce8b1701566..03afa67c2e04 100644
+--- a/security/integrity/ima/ima_queue.c
++++ b/security/integrity/ima/ima_queue.c
+@@ -23,9 +23,6 @@
+ 
+ #define AUDIT_CAUSE_LEN_MAX 32
+ 
+-/* pre-allocated array of tpm_digest structures to extend a PCR */
+-static struct tpm_digest *digests;
+-
+ LIST_HEAD(ima_measurements);	/* list of all measurements */
+ #ifdef CONFIG_IMA_KEXEC
+ static unsigned long binary_runtime_size;
+@@ -139,15 +136,11 @@ unsigned long ima_get_binary_runtime_size(void)
+ static int ima_pcr_extend(const u8 *hash, int pcr)
+ {
+ 	int result = 0;
+-	int i;
+ 
+ 	if (!ima_tpm_chip)
+ 		return result;
+ 
+-	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++)
+-		memcpy(digests[i].digest, hash, TPM_DIGEST_SIZE);
+-
+-	result = tpm_pcr_extend(ima_tpm_chip, pcr, digests);
++	result = tpm_pcr_extend(ima_tpm_chip, pcr, hash);
+ 	if (result != 0)
+ 		pr_err("Error Communicating to TPM chip, result: %d\n", result);
+ 	return result;
+@@ -214,21 +207,3 @@ int ima_restore_measurement_entry(struct ima_template_entry *entry)
+ 	mutex_unlock(&ima_extend_list_mutex);
+ 	return result;
+ }
+-
+-int __init ima_init_digests(void)
+-{
+-	int i;
+-
+-	if (!ima_tpm_chip)
+-		return 0;
+-
+-	digests = kcalloc(ima_tpm_chip->nr_allocated_banks, sizeof(*digests),
+-			  GFP_NOFS);
+-	if (!digests)
+-		return -ENOMEM;
+-
+-	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++)
+-		digests[i].alg_id = ima_tpm_chip->allocated_banks[i].alg_id;
+-
+-	return 0;
+-}
+diff --git a/security/keys/trusted.c b/security/keys/trusted.c
+index 9a94672e7adc..287553039f0f 100644
+--- a/security/keys/trusted.c
++++ b/security/keys/trusted.c
+@@ -32,7 +32,6 @@
+ static const char hmac_alg[] = "hmac(sha1)";
+ static const char hash_alg[] = "sha1";
+ static struct tpm_chip *chip;
+-static struct tpm_digest *digests;
+ 
+ struct sdesc {
+ 	struct shash_desc shash;
+@@ -386,10 +385,15 @@ EXPORT_SYMBOL_GPL(trusted_tpm_send);
+  */
+ static int pcrlock(const int pcrnum)
+ {
++	unsigned char hash[SHA1_DIGEST_SIZE];
++	int ret;
++
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+-
+-	return tpm_pcr_extend(chip, pcrnum, digests) ? -EINVAL : 0;
++	ret = tpm_get_random(chip, hash, SHA1_DIGEST_SIZE);
++	if (ret != SHA1_DIGEST_SIZE)
++		return ret;
++	return tpm_pcr_extend(chip, pcrnum, hash) ? -EINVAL : 0;
+ }
+ 
+ /*
+@@ -1226,29 +1230,6 @@ static int __init trusted_shash_alloc(void)
+ 	return ret;
+ }
+ 
+-static int __init init_digests(void)
+-{
+-	u8 digest[TPM_MAX_DIGEST_SIZE];
+-	int ret;
+-	int i;
+-
+-	ret = tpm_get_random(chip, digest, TPM_MAX_DIGEST_SIZE);
+-	if (ret < 0)
+-		return ret;
+-	if (ret < TPM_MAX_DIGEST_SIZE)
+-		return -EFAULT;
+-
+-	digests = kcalloc(chip->nr_allocated_banks, sizeof(*digests),
+-			  GFP_KERNEL);
+-	if (!digests)
+-		return -ENOMEM;
+-
+-	for (i = 0; i < chip->nr_allocated_banks; i++)
+-		memcpy(digests[i].digest, digest, TPM_MAX_DIGEST_SIZE);
+-
+-	return 0;
+-}
+-
+ static int __init init_trusted(void)
+ {
+ 	int ret;
+@@ -1259,21 +1240,15 @@ static int __init init_trusted(void)
+ 	chip = tpm_default_chip();
+ 	if (!chip)
+ 		return 0;
+-
+-	ret = init_digests();
+-	if (ret < 0)
+-		goto err_put;
+ 	ret = trusted_shash_alloc();
+ 	if (ret < 0)
+-		goto err_free;
++		goto err_put;
+ 	ret = register_key_type(&key_type_trusted);
+ 	if (ret < 0)
+ 		goto err_release;
+ 	return 0;
+ err_release:
+ 	trusted_shash_release();
+-err_free:
+-	kfree(digests);
+ err_put:
+ 	put_device(&chip->dev);
+ 	return ret;
+@@ -1283,7 +1258,6 @@ static void __exit cleanup_trusted(void)
+ {
+ 	if (chip) {
+ 		put_device(&chip->dev);
+-		kfree(digests);
+ 		trusted_shash_release();
+ 		unregister_key_type(&key_type_trusted);
+ 	}
+-- 
+2.21.0
 
-https://lore.kernel.org/lkml/f3646774-ee9e-d5b7-8a11-670012034d59@rasmusvillemoes.dk/
-
-> Do we, not have any dumb helpers for scenarios like this?:
-> 
-> #define strlen_literal(x) (sizeof(""x"") - 1)
-> #define strlen_array(x) (sizeof(x) - 1)
-
-git grep doesn't find them under this name.
-
-> > +	while (!signal_pending(current)) {
-> > +		params->usage = 0;
-> > +		ret = fsinfo(path, params);
-> > +		if (IS_ERR_VALUE((long)ret))
-> > +			return ret; /* Error */
-> > +		if ((unsigned int)ret <= params->buf_size)
-> 
-> if ((size_t)ret ...? Just for the sake of clarity if for nothing else.
-> 
-> > +			return ret; /* It fitted */
-> 
-> Ok, a little confused here, tbh. params->buf_size is size_t
-
-It's "unsigned int".
-
-> and this function returns an int. Forgot whether you mentioned this before,
-> buf_size exceed can't exceed INT_MAX?
-
-It's mentioned in the documentation (ie. fsinfo.rst).  I'll mention it in the
-comments adjacent to the attribute definition table also.
-
-> Is it really wort it to have this code generating stuff in there?
-
-From a readability PoV, yes, tabulation is awesome, IMO;-).  Up to 5 lines per
-attribute is too much vertical space and expanding it makes the whole thing
-much less readable.  Add to that that not all attributes will be the same
-number of lines.
-
-It would be easier if the I could get away with making the constant names
-lower case, but the thou-shalt-capitalise-constantists dislike that, so, given
-that I don't know of a way to make the C preprocessor change the case of a
-symbol, I have to include both parts.
-
-I have four pieces of information: type, depth, constant name, struct name (if
-applicable), and I can fit them on one line this way.
-
-You really find this:
-
-static const struct fsinfo_attr_info fsinfo_buffer_info[FSINFO_ATTR__NR] = {
-	[FSINFO_ATTR_STATFS] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_SINGLE,
-		.size	= sizeof(struct fsinfo_statfs)
-	},
-	[FSINFO_ATTR_FSINFO] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_SINGLE,
-		.size	= sizeof(struct fsinfo_fsinfo)
-	},
-	[FSINFO_ATTR_IDS] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_SINGLE,
-		.size	= sizeof(struct fsinfo_ids)
-	},
-	[FSINFO_ATTR_LIMITS] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_SINGLE,
-		.size	= sizeof(struct fsinfo_limits)
-	},
-	[FSINFO_ATTR_CAPABILITIES] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_SINGLE,
-		.size	= sizeof(struct fsinfo_capabilities)
-	},
-	[FSINFO_ATTR_SUPPORTS] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_SINGLE,
-		.size	= sizeof(struct fsinfo_supports)
-	},
-	[FSINFO_ATTR_TIMESTAMP_INFO] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_SINGLE,
-		.size	= sizeof(struct fsinfo_timestamp_info)
-	},
-	[FSINFO_ATTR_VOLUME_ID] = {
-		.type	= __FSINFO_STRING,
-		.flags	= __FSINFO_SINGLE,
-	},
-	[FSINFO_ATTR_VOLUME_UUID] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_SINGLE,
-		.size	= sizeof(struct fsinfo_volume_uuid)
-	},
-	[FSINFO_ATTR_VOLUME_NAME] = {
-		.type	= __FSINFO_STRING,
-		.flags	= __FSINFO_SINGLE,
-	},
-	[FSINFO_ATTR_NAME_ENCODING] = {
-		.type	= __FSINFO_STRING,
-		.flags	= __FSINFO_SINGLE,
-	},
-	[FSINFO_ATTR_NAME_CODEPAGE] = {
-		.type	= __FSINFO_STRING,
-		.flags	= __FSINFO_SINGLE,
-	},
-	[FSINFO_ATTR_PARAM_DESCRIPTION] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_SINGLE,
-		.size	= sizeof(struct fsinfo_param_description)
-	},
-	[FSINFO_ATTR_PARAM_SPECIFICATION] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_N,
-		.size	= sizeof(struct fsinfo_param_specification)
-	},
-	[FSINFO_ATTR_PARAM_ENUM] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_N,
-		.size	= sizeof(struct fsinfo_param_enum)
-	},
-	[FSINFO_ATTR_PARAMETERS] = {
-		.type	= __FSINFO_OPAQUE,
-		.flags	= __FSINFO_SINGLE,
-	},
-	[FSINFO_ATTR_LSM_PARAMETERS] = {
-		.type	= __FSINFO_OPAQUE,
-		.flags	= __FSINFO_SINGLE,
-	},
-	[FSINFO_ATTR_SERVER_NAME] = {
-		.type	= __FSINFO_STRING,
-		.flags	= __FSINFO_N,
-	},
-	[FSINFO_ATTR_SERVER_ADDRESS] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_NM,
-		.size	= sizeof(struct fsinfo_server_address)
-	},
-	[FSINFO_ATTR_AFS_CELL_NAME] = {
-		.type	= __FSINFO_STRING,
-		.flags	= __FSINFO_SINGLE,
-	},
-	[FSINFO_ATTR_MOUNT_INFO] = {
-		.type	= __FSINFO_STRUCT,
-		.flags	= __FSINFO_SINGLE,
-		.size	= sizeof(struct fsinfo_mount_info)
-	},
-	[FSINFO_ATTR_MOUNT_DEVNAME] = {
-		.type	= __FSINFO_STRING,
-		.flags	= __FSINFO_SINGLE,
-	},
-	[FSINFO_ATTR_MOUNT_CHILDREN] = {
-		.type	= __FSINFO_STRUCT_ARRAY,
-		.flags	= __FSINFO_SINGLE,
-		.size	= sizeof(struct fsinfo_mount_child)
-	},
-	[FSINFO_ATTR_MOUNT_SUBMOUNT] = {
-		.type	= __FSINFO_STRING,
-		.flags	= __FSINFO_N,
-	},
-};
-
-is easier to read than this?:
-
-static const struct fsinfo_attr_info fsinfo_buffer_info[FSINFO_ATTR__NR] = {
-	FSINFO_STRUCT		(STATFS,		statfs),
-	FSINFO_STRUCT		(FSINFO,		fsinfo),
-	FSINFO_STRUCT		(IDS,			ids),
-	FSINFO_STRUCT		(LIMITS,		limits),
-	FSINFO_STRUCT		(CAPABILITIES,		capabilities),
-	FSINFO_STRUCT		(SUPPORTS,		supports),
-	FSINFO_STRUCT		(TIMESTAMP_INFO,	timestamp_info),
-	FSINFO_STRING		(VOLUME_ID),
-	FSINFO_STRUCT		(VOLUME_UUID,		volume_uuid),
-	FSINFO_STRING		(VOLUME_NAME),
-	FSINFO_STRING		(NAME_ENCODING),
-	FSINFO_STRING		(NAME_CODEPAGE),
-	FSINFO_STRUCT		(PARAM_DESCRIPTION,	param_description),
-	FSINFO_STRUCT_N		(PARAM_SPECIFICATION,	param_specification),
-	FSINFO_STRUCT_N		(PARAM_ENUM,		param_enum),
-	FSINFO_OPAQUE		(PARAMETERS),
-	FSINFO_OPAQUE		(LSM_PARAMETERS),
-	FSINFO_STRING_N		(SERVER_NAME),
-	FSINFO_STRUCT_NM	(SERVER_ADDRESS,	server_address),
-	FSINFO_STRING		(AFS_CELL_NAME),
-	FSINFO_STRUCT		(MOUNT_INFO,		mount_info),
-	FSINFO_STRING		(MOUNT_DEVNAME),
-	FSINFO_STRUCT_ARRAY	(MOUNT_CHILDREN,	mount_child),
-	FSINFO_STRING_N		(MOUNT_SUBMOUNT),
-};
-
-The latter also has the advantage that I can take this and drop it into the
-test program and change the helper macros to make it do other things.  With
-the fully expanded code, that isn't possible.
-
-One thing I will grant you, though, I can simplify:
-
-#define __FSINFO_STRUCT		0
-#define __FSINFO_STRING		1
-#define __FSINFO_OPAQUE		2
-#define __FSINFO_STRUCT_ARRAY	3
-#define __FSINFO_0		0
-#define __FSINFO_N		0x0001
-#define __FSINFO_NM		0x0002
-
-#define _Z(T, F, S) { .type = __FSINFO_##T, .flags = __FSINFO_##F, .size = S }
-#define FSINFO_STRING(X)	 [FSINFO_ATTR_##X] = _Z(STRING, 0, 0)
-#define FSINFO_STRUCT(X,Y)	 [FSINFO_ATTR_##X] = _Z(STRUCT, 0, sizeof(struct fsinfo_##Y))
-#define FSINFO_STRING_N(X)	 [FSINFO_ATTR_##X] = _Z(STRING, N, 0)
-#define FSINFO_STRUCT_N(X,Y)	 [FSINFO_ATTR_##X] = _Z(STRUCT, N, sizeof(struct fsinfo_##Y))
-#define FSINFO_STRING_NM(X)	 [FSINFO_ATTR_##X] = _Z(STRING, NM, 0)
-#define FSINFO_STRUCT_NM(X,Y)	 [FSINFO_ATTR_##X] = _Z(STRUCT, NM, sizeof(struct fsinfo_##Y))
-#define FSINFO_OPAQUE(X)	 [FSINFO_ATTR_##X] = _Z(OPAQUE, 0, 0)
-#define FSINFO_STRUCT_ARRAY(X,Y) [FSINFO_ATTR_##X] = _Z(STRUCT_ARRAY, 0, sizeof(struct fsinfo_##Y))
-
-a bit:
-
-#define __FSINFO_STRUCT		0
-#define __FSINFO_STRING		1
-#define __FSINFO_OPAQUE		2
-#define __FSINFO_STRUCT_ARRAY	3
-#define __FSINFO_N		0x01
-#define __FSINFO_NM		0x02
-
-#define _Z(T, S)    { .type = __FSINFO_##T, .flags = 0,		  .size = S }
-#define _Z_N(T, S)  { .type = __FSINFO_##T, .flags = __FSINFO_N,  .size = S }
-#define _Z_NM(T, S) { .type = __FSINFO_##T, .flags = __FSINFO_NM, .size = S }
-#define FSINFO_STRING(X)	 [FSINFO_ATTR_##X] = _Z(STRING, 0)
-#define FSINFO_STRUCT(X,Y)	 [FSINFO_ATTR_##X] = _Z(STRUCT, sizeof(struct fsinfo_##Y))
-#define FSINFO_STRING_N(X)	 [FSINFO_ATTR_##X] = _Z_N(STRING, 0)
-#define FSINFO_STRUCT_N(X,Y)	 [FSINFO_ATTR_##X] = _Z_N(STRUCT, sizeof(struct fsinfo_##Y))
-#define FSINFO_STRING_NM(X)	 [FSINFO_ATTR_##X] = _Z_NM(STRING, 0)
-#define FSINFO_STRUCT_NM(X,Y)	 [FSINFO_ATTR_##X] = _Z_NM(STRUCT, sizeof(struct fsinfo_##Y))
-#define FSINFO_OPAQUE(X)	 [FSINFO_ATTR_##X] = _Z(OPAQUE, 0)
-#define FSINFO_STRUCT_ARRAY(X,Y) [FSINFO_ATTR_##X] = _Z(STRUCT_ARRAY, sizeof(struct fsinfo_##Y))
-
-> I urge you to think about git grep users. For them this is an absolute
-> nightmare. :)
-
-That's a valid point, but it's a problem all over the kernel.  We use
-macroisation everywhere.  See all the declaration and define macros that nest
-layers deep.
-
-If that's your main worry, The attribute type name could be fully expanded in
-the table, eg.:
-
-	FSINFO_STRUCT		(FSINFO_ATTR_CAPABILITIES,	capabilities),
-	FSINFO_STRING_N		(FSINFO_ATTR_MOUNT_SUBMOUNT),
-
-> > +	unsigned int result_size;
-> 
-> Wouldn't it be better if this could be a size_t?
-
-Why?  size_t takes more space on a 64-bit system, but I'm not allowing the
-filesystem to return that much data, mainly because I don't really want to be
-allocating a >2G buffer.
-
-In fact, for large objects there's something to be said for writing directly
-to userspace rather than going through a buffer, but for the fact that I want
-to hold, say, the RCU readlock across the entire transaction in some
-instances.
-
-> > +	if (!user_buffer || !user_buf_size) {
-> 
-> Maybe we could be a little more strict and require both be set to their
-> respective zero values, i.e. only support reporting the size if
-> !user_buffer && user_buf_size = 0 for that to work. If only one of them
-> is set to their zero value we report EINVAL.
-
-That's an option, certainly.
-
-> Hm, I'm not sure that "capabilities" is a good name here. This is
-> potentially misleading because of other uses of "capabilities" we
-> already have. Like, I don't want thes capabilities to pop up when I do
-> git grep capabilities. Just a short way until someone also speaks of
-> "fscaps" or "fsinfocaps" and then confusion is basically guaranteed. :)
-> 
-> Maybe "features" would be better?
-
-Yeah - that's probably better.  The only issue is that it doesn't have a nice
-short hypocoristicon like "cap", though I could use "feat" I guess.
-
-> > +#define _ATFILE_SOURCE
-> 
-> nit: Defining fsinfoat() implicitly or what's that supposed to do? If that's
-> the case wouldn't it be nicer to just explicitly declare fsinfoat()
-
-Um...  fsinfo() takes AT_* flags.  It's fsinfoat(), ffsinfo() and lfsinfo()
-all rolled into one, plus a couple of extra bits.  It doesn't really need an
-at-suffix on the name as there's no at-less original.
-
-David
