@@ -2,105 +2,74 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34ADC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BA3C06514
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5004208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:41:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s44Z+4+t"
+	by mail.kernel.org (Postfix) with ESMTP id 797F1208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbfGAKlg (ORCPT
+        id S1729044AbfGAKnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 06:41:36 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44184 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727701AbfGAKlf (ORCPT
+        Mon, 1 Jul 2019 06:43:40 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:56119 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbfGAKnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 06:41:35 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i18so1185156pgl.11;
-        Mon, 01 Jul 2019 03:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qm0d/CL3AkP/V4Y4ZQYCIS3sz2RJH3rKXt+V91e+yAw=;
-        b=s44Z+4+tvtVjpZ+4o0FixYM973uPTWE+IO4rIWyC9KQz/f6SU7XpTikUH/0jn1GyAx
-         Rn+Z1EGiji54UfQV51rKgXDPlg5XwZXAShPrmLub2oGVO0rt2mxCVtfHA++8wUYeKbKG
-         QWf0Yx/knZjWmZfJNfa2WFOgNCM3tcmAGLGaTySaPDXqxpKIwL48nITPWlCzKZW/IeG3
-         QnLzcD/4mk+z4v2ik7/p5ot9U7NTxKsMapjxF/5dYNpb5CrAgLgyclH+71m5fMFAWlcF
-         jiUhK0c3STsJJXTULByK09dKkIn4Uf0LQmPM6qNDRsCvO+WrskhcDhGYcy9VZ9rnuiM+
-         LNJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qm0d/CL3AkP/V4Y4ZQYCIS3sz2RJH3rKXt+V91e+yAw=;
-        b=KDSe008id/W0JzqxHYGj3g/QzZbTuZQkLWWoq6AEcCTPSFeePs5l9jlicFRa4gpKJS
-         +dyIzPqreiqUyUZzrWywhVhDbMBaefrE1A+Eds0pUlh4lDfnMDWydJe+/om8yuBRJ/3E
-         EkLbTbcyygIZwA/Ik1x82qz5f1nKAMxVJB6Feut0D5FYTerLkTT90ykbLnGmQIolxVuO
-         WP1V6In7TY0dz7FM0Rgygid8Yqqr6nogbXKLla5xI09nGhJY4NRMYy8MPBtF2DmLkzZl
-         RrbBtpPRzjWVk0hGyB7ivR9MMTPYeNyjJf7SZz9y5JzOw6HHuDaXOIuefv8bgfW9FrFQ
-         cHLw==
-X-Gm-Message-State: APjAAAVEyATdxDtDPNeHzOdZy3LhwvvULUmRvpC71sGFKQR8FQ6briHo
-        7Husa2XOvk0fwdSiMY7vt+NXrVF8lYyjeq0NGu8=
-X-Google-Smtp-Source: APXvYqxy7nS2uDui+cjNUAygqng7DoFk2KoHqMLGHqfRb8SSxP/qTghmKNm130kHFZ27SwiMcoedPD8AdYSDX1/W8v8=
-X-Received: by 2002:a17:90b:8d2:: with SMTP id ds18mr31003825pjb.132.1561977695103;
- Mon, 01 Jul 2019 03:41:35 -0700 (PDT)
+        Mon, 1 Jul 2019 06:43:39 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id c2c9cab37650c19c; Mon, 1 Jul 2019 12:43:36 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        "Robert R. Howell" <RHowell@uwyo.edu>
+Subject: [PATCH v2 0/5] PM: PCI/ACPI: Hibernation handling fixes
+Date:   Mon, 01 Jul 2019 12:42:14 +0200
+Message-ID: <4976412.ihyb9sT5jY@kreacher>
 MIME-Version: 1.0
-References: <20190623063153.261546-1-dmitry.torokhov@gmail.com>
- <20190623063153.261546-2-dmitry.torokhov@gmail.com> <CAHp75VfgR4d7aOG6XPBXisrfa=30pYfCJZ1Yhh2E44bs8vWmVw@mail.gmail.com>
- <20190630070552.GA91171@dtor-ws>
-In-Reply-To: <20190630070552.GA91171@dtor-ws>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 1 Jul 2019 13:41:24 +0300
-Message-ID: <CAHp75VfZn6ZuScgQtXt=5_T=LmsodG7NCCo1ABx6v9aON19c0w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Input: edt-ft5x06 - simplify event reporting code
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input <linux-input@vger.kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Benoit Parrot <bparrot@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 10:05 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Sun, Jun 23, 2019 at 10:59:18AM +0300, Andy Shevchenko wrote:
-> > On Sun, Jun 23, 2019 at 9:31 AM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> > >
-> > > Now that input_mt_report_slot_state() returns true if slot is active we no
-> > > longer need a temporary for the slot state.
+Hi All,
 
-> > > -               down = type != TOUCH_EVENT_UP;
-> > >
-> > >                 input_mt_slot(tsdata->input, id);
-> > > -               input_mt_report_slot_state(tsdata->input, MT_TOOL_FINGER, down);
-> >
-> > > +               if (input_mt_report_slot_state(tsdata->input, MT_TOOL_FINGER,
-> > > +                                              type != TOUCH_EVENT_UP))
-> >
-> > Can't we simple do somethink like
-> > -               down = type != TOUCH_EVENT_UP;
-> > +               down = input_mt_report_slot_state(tsdata->input,
-> > MT_TOOL_FINGER, type != TOUCH_EVENT_UP);
->
-> Why though? The temporary was needed so we did not have to repeat the
-> expression for "contact down" condition, and now we do not need it. The
-> whole change was done so that we cab remove the temporary...
+This series of patches addresses a few issues related to the handling of
+hibernation in the PCI bus type and the ACPI PM domain and ACPI LPSS driver.
 
-I see. Thanks for explanation.
+The v2 addresses Hans' concerns regarding the LPSS changes.
 
--- 
-With Best Regards,
-Andy Shevchenko
+First of all, all of the runtime-suspended PCI devices and devices in the ACPI PM and LPSS
+PM domains will be resumed during hibernation (first patch).  This appears to be the
+only way to avoid weird corner cases and the benefit from avoiding to resume those
+devices during hibernation is questionable.
+
+That change allows the the hibernation callbacks in all of the involved subsystems to be
+simplified (patches 2 and 3).
+
+Moreover, reusing bus-level suspend callbacks for the "poweroff" transition during
+hibernation (which is the case for the ACPI PM domain and LPSS) is incorrect, so patch 4
+fixes that.
+
+Finally, there are some leftover items in linux/acpi.h that can be dropped (patch 5).
+
+Thanks,
+Rafael
+
+
+
+
+
+
