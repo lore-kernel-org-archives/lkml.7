@@ -2,129 +2,141 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EFAC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D35BC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127AF205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420432177E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XJ+3tS+j"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ttk+HU8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbfGAKxX (ORCPT
+        id S1727993AbfGAKxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 06:53:23 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39363 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727748AbfGAKxW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 06:53:22 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z23so15398157wma.4
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 03:53:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XQRgtdqFvFQnOaqF03WKbmLwzJnjU6e4GX4WQg9aUEE=;
-        b=XJ+3tS+jL/QjdpOVjmp9BRCWLIHz7jZljZJh7Fk4FhpGWcTVlTSkYNHz2DdPmF614d
-         j3tuBbpzQ/YBEE5k2uAQtGq1s3l2zabF05npx29UbYwSEf9fzQYjgbBmIAcMdumAUmf0
-         +1J93W9T/JNQK4pBCyL8QfR52JZYX9HYPGwzSYc4Xii3t71r/gcO5TtoJBnXZTSXXJXj
-         1HJUVCFvmOTivPBU5JVmOr83+0ilNL7A63SWRRU9zM94C36jvCfiMxcwjLXa7WEvq7gc
-         twjPXeIVOYOtqmGpLRBvni6eMsQR6Gz5rufMhPbhMpYqQ/1bnYtK4f0k6BhTikF4x21+
-         AeZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XQRgtdqFvFQnOaqF03WKbmLwzJnjU6e4GX4WQg9aUEE=;
-        b=RfjkXRtEBH0mJj97+4uEcJ0oYo85GG9xLG7tRWshUQbvcvnySaBpf7YsYBwrBsfxOP
-         3y8jmGyAi2EZQVb1BMci0YdJB+5RDQCwsEhHHvddOU5w8dRZfdmq/cCCcTliYVo1yji5
-         D8wvarJ3tVoktbKKC9nEdfrzKUsRalxO0VthwQEwHyZBSWYIHynveZNHnzDPwqwEuQDl
-         dsV5nOmcGMJeZxOWxzv+Kd04OigAeFNPDvWuQMFa1RIRzZGwbrDtyhrXhVzQTDx7AUYJ
-         uvYL2VVujPtHSC5RR57x71owIq3gs2fE4h0zxWehB0L9UnBSkA9f7+3cjdGRwUXurhMo
-         t/oQ==
-X-Gm-Message-State: APjAAAWebq83U6FsT4Wtm+E2RETiuUEeGIMFie0Z2QscR+LH15KpxY5z
-        cHdMfuVshLfmlnUNe834letXHA==
-X-Google-Smtp-Source: APXvYqzJjbWlOiQousy1pzRxgrhvnrnX7mi2poCoEZm9lqei0E+ibL7N9E8kRbCeMA5zupykF95tsg==
-X-Received: by 2002:a1c:a019:: with SMTP id j25mr17433129wme.95.1561978400374;
-        Mon, 01 Jul 2019 03:53:20 -0700 (PDT)
-Received: from localhost.localdomain (30.red-83-34-200.dynamicip.rima-tde.net. [83.34.200.30])
-        by smtp.gmail.com with ESMTPSA id x11sm9353525wmi.26.2019.07.01.03.53.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 01 Jul 2019 03:53:19 -0700 (PDT)
-From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-To:     jorge.ramirez-ortiz@linaro.org, adrian.hunter@intel.com,
-        agross@kernel.org, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, khasim.mohammed@linaro.org,
-        vinod.koul@linaro.org
-Subject: [PATCH] mmc: sdhci-msm: fix mutex while in spinlock
-Date:   Mon,  1 Jul 2019 12:53:16 +0200
-Message-Id: <20190701105316.19419-1-jorge.ramirez-ortiz@linaro.org>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 1 Jul 2019 06:53:53 -0400
+Received: from mout.web.de ([217.72.192.78]:48907 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727748AbfGAKxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 06:53:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1561978413;
+        bh=I/QjOQfnNEp+6gWnTdhnQHhx6cwc6tKomQBR2IAazMo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=Ttk+HU8XcYXObRs9tbo1R4nUtucJ64v7kQpyNAyvBamwemwlGTfVjHr5+/sF2xyZy
+         PbQzHqF5B/EpVGYKdPH0q5cYvrMME6CNXeGLuk/I3v1y1ehBSo9TyWcJKZAHwQQtyE
+         xcDOysDYP8CTPk89OJcvWa4AurtFbsPGmHPgk+Qs=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from platinum.localdomain ([77.13.129.177]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MUWBb-1i8TEM1zUp-00RKKO; Mon, 01
+ Jul 2019 12:53:33 +0200
+From:   Soeren Moch <smoch@web.de>
+To:     Stanislaw Gruszka <sgruszka@redhat.com>
+Cc:     Soeren Moch <smoch@web.de>,
+        Helmut Schaa <helmut.schaa@googlemail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] rt2x00usb: remove unnecessary rx flag checks
+Date:   Mon,  1 Jul 2019 12:53:14 +0200
+Message-Id: <20190701105314.9707-2-smoch@web.de>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190701105314.9707-1-smoch@web.de>
+References: <20190701105314.9707-1-smoch@web.de>
+X-Provags-ID: V03:K1:OMXn9QTSt153/7tqZJt4i+x+aIEyNHTbfy3eZOSJQUqc7b9dnke
+ w9AmAsbOmh22QQQIcCEzPZr71snmLOyi5Y7LKVKJQYd2LeLzzRVK9xW1FHhi3valkx7dB2Y
+ zwcO0yV9xrbwZpFYEFIa+kPyIhJPB3eFgz8WzRlONiY8C6mm1oQf2EqEgnp9YHz2iIRs1rh
+ zBFCAfZSzRl3xH0J/VTxA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7WaoN3sm11s=:6IY+TMsmNBePJyPrIbBizr
+ RfPgWmHkfHkpO/IiEuWNBZ1Ep3MZlpf4Q5cDucsB/AQvVz22lXmDvz6JfCnawugQPtOpbSfHB
+ r+QyiO9chdNEI60Sxf1w75nOgfov5hjP6ghHjNHtEdGrLbMKieX1M4CZLkDkMuu3CfNNzurn+
+ 9EVyXBmC5/McE9NUkAWdYTa099T+JlB+r311V9VRM10grf4CsQZqrpbaLabtsW5RN59KZ46cG
+ 5ZGkVA6F1yM2SyETaRiZllPSN01G5ukfw4C2pefwGnN3cK1s5jY/9GeIZ2ov9ak6QiaLkub0f
+ 4kyxOZ78yL3rev+KIUGbIOwGWrFeFVwjyC53I6KaypVIIlrpP6SLIqOJmuV+/MOb4ObENuaQH
+ OobvvAa0KpO4ctOIvO+MCv8rm1Qi3juUM7nM7XqSE5QFyG3f/GN9Vihz/Ve7UHml7js37bkuY
+ Hx6dotpkbNC3MLWYCm7kMRWikjdHqifWztwyjtKftV0tX3NbT4I2JSfU7kI4WCLTbcpZ7WA5o
+ NTFuADH0HSzIcS0oMB1YXv6wvJjiLtEOdoCKaqauMC3VYpAJqbxlziqaXnyE4q+uyh4xZzXNy
+ VkgigCAkZ+ftE4q7ofX4oF7BmyCLcXDpeU4gG4KP8qKcFaEsJYxljoJsI8W/DoIHXx5udzXTh
+ MElX+hNlikEGxvdb82WRHqq/b5gBG5bWOVcYAHMfh813qCk0ut3+Ll5Qi4D3Tqc2p24rgWlG6
+ hpxOrRH1IWw9Q+C6hh/Ffq7YaAIwqT9EBSuZBUoD+JF4f/HbbO4DjrCRudImFlzlwoj6AQjyd
+ HBtVWqP6nXGNcSwAMhx1b1vAMYXEND6vujQ5w4WMFGs22vgoo6lolqYvxXscHEBXeAYLfYo+T
+ nuDkKkROiVR8CxOcp6WKjuMMjPIHerjLnsQZRrFEVUK4RhqYIlo/jhSsUPwJipwfPtFXOoUnQ
+ DZsho3RSb21YMrCUU+CwIzGq6WQSqqDgMYzznd6x7pttMBzk+ynFMaryI1TRMfC2CtQWp6zTM
+ w5USkTF0yK22NefyHt55M6l41P7ajRrOpOSauYHyb6hojb8D9S1f99/xDGllxvk/BQ==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mutexes can sleep and therefore should not be taken while holding a
-spinlock. move clk_get_rate (can sleep) outside the spinlock protected
-region.
+In contrast to the TX path, there is no need to separately read the transf=
+er
+status from the device after receiving RX data. Consequently, there is no
+real STATUS_PENDING RX processing queue entry state.
+Remove the unnecessary ENTRY_DATA_STATUS_PENDING flag checks from the RX p=
+ath.
+Also remove the misleading comment about reading RX status from device.
 
-This regression was introduced with commit
-     Date:   Mon Nov 21 12:07:16 2016 +0530
-     mmc: sdhci-msm: Update DLL reset sequence
+Suggested-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Signed-off-by: Soeren Moch <smoch@web.de>
+=2D--
+Changes in v2:
+ new patch
 
-     SDCC core with minor version >= 0x42 introduced new 14lpp
-     DLL. This has additional requirements in the reset sequence
-     for DLL tuning. Make necessary changes as needed.
+Cc: Stanislaw Gruszka <sgruszka@redhat.com>
+Cc: Helmut Schaa <helmut.schaa@googlemail.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+=2D--
+ drivers/net/wireless/ralink/rt2x00/rt2x00usb.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Fixes: 83736352e0ca ("mmc: sdhci-msm: Update DLL reset sequence")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
----
- drivers/mmc/host/sdhci-msm.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c b/drivers/net/=
+wireless/ralink/rt2x00/rt2x00usb.c
+index 7e3a621b9c0d..bc2dfef0de22 100644
+=2D-- a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
+@@ -349,8 +349,7 @@ static void rt2x00usb_work_rxdone(struct work_struct *=
+work)
+ 	while (!rt2x00queue_empty(rt2x00dev->rx)) {
+ 		entry =3D rt2x00queue_get_entry(rt2x00dev->rx, Q_INDEX_DONE);
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index 5fc76a1993d0..9cf14b359c14 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -575,11 +575,14 @@ static int msm_init_cm_dll(struct sdhci_host *host)
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
- 	int wait_cnt = 50;
--	unsigned long flags;
-+	unsigned long flags, xo_clk = 0;
- 	u32 config;
- 	const struct sdhci_msm_offset *msm_offset =
- 					msm_host->offset;
- 
-+	if (msm_host->use_14lpp_dll_reset && !IS_ERR_OR_NULL(msm_host->xo_clk))
-+		xo_clk = clk_get_rate(msm_host->xo_clk);
-+
- 	spin_lock_irqsave(&host->lock, flags);
- 
+-		if (test_bit(ENTRY_OWNER_DEVICE_DATA, &entry->flags) ||
+-		    !test_bit(ENTRY_DATA_STATUS_PENDING, &entry->flags))
++		if (test_bit(ENTRY_OWNER_DEVICE_DATA, &entry->flags))
+ 			break;
+
+ 		/*
+@@ -389,8 +388,7 @@ static void rt2x00usb_interrupt_rxdone(struct urb *urb=
+)
+ 	rt2x00lib_dmadone(entry);
+
  	/*
-@@ -627,10 +630,10 @@ static int msm_init_cm_dll(struct sdhci_host *host)
- 		config &= CORE_FLL_CYCLE_CNT;
- 		if (config)
- 			mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock * 8),
--					clk_get_rate(msm_host->xo_clk));
-+					xo_clk);
- 		else
- 			mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock * 4),
--					clk_get_rate(msm_host->xo_clk));
-+					xo_clk);
- 
- 		config = readl_relaxed(host->ioaddr +
- 				msm_offset->core_dll_config_2);
--- 
-2.21.0
+-	 * Schedule the delayed work for reading the RX status
+-	 * from the device.
++	 * Schedule the delayed work for processing RX data
+ 	 */
+ 	queue_work(rt2x00dev->workqueue, &rt2x00dev->rxdone_work);
+ }
+@@ -402,8 +400,7 @@ static bool rt2x00usb_kick_rx_entry(struct queue_entry=
+ *entry, void *data)
+ 	struct queue_entry_priv_usb *entry_priv =3D entry->priv_data;
+ 	int status;
+
+-	if (test_and_set_bit(ENTRY_OWNER_DEVICE_DATA, &entry->flags) ||
+-	    test_bit(ENTRY_DATA_STATUS_PENDING, &entry->flags))
++	if (test_and_set_bit(ENTRY_OWNER_DEVICE_DATA, &entry->flags))
+ 		return false;
+
+ 	rt2x00lib_dmastart(entry);
+=2D-
+2.17.1
 
