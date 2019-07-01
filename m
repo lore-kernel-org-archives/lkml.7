@@ -2,150 +2,250 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BC6C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF96C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830F220B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C798120652
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfGAHxr (ORCPT
+        id S1727535AbfGAHzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 03:53:47 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:33209 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfGAHxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 03:53:46 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x617rh0D004617, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x617rh0D004617
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 1 Jul 2019 15:53:43 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.439.0; Mon, 1 Jul 2019
- 15:53:42 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net] r8152: fix the setting of detecting the linking change for runtime suspend
-Date:   Mon, 1 Jul 2019 15:53:19 +0800
-Message-ID: <1394712342-15778-286-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
+        Mon, 1 Jul 2019 03:55:16 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7685 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726036AbfGAHzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 03:55:16 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2D3EDC673DAA50F06FFE;
+        Mon,  1 Jul 2019 15:55:12 +0800 (CST)
+Received: from [127.0.0.1] (10.65.94.163) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 1 Jul 2019
+ 15:55:05 +0800
+Subject: Re: linux-next: build failure after merge of the rdma tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Lijun Ou <oulijun@huawei.com>
+References: <20190701141431.5cba95c3@canb.auug.org.au>
+From:   wangxi <wangxi11@huawei.com>
+Message-ID: <bbd5fbc9-2dac-ae1b-7cae-68790b6ea878@huawei.com>
+Date:   Mon, 1 Jul 2019 15:54:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+In-Reply-To: <20190701141431.5cba95c3@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.65.94.163]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Rename r8153b_queue_wake() to r8153_queue_wake().
 
-2. Correct the setting. The enable bit should be 0xd38c bit 0. Besides,
-   the 0xd38a bit 0 and 0xd398 bit 8 have to be cleared for both enabled
-   and disabled.
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
- drivers/net/usb/r8152.c | 38 +++++++++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 11 deletions(-)
+在 2019/7/1 12:14, Stephen Rothwell 写道:
+> Hi all,
+> 
+> After merging the rdma tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns_roce_ah.o
+> see include/linux/module.h for more information
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns_roce_alloc.o
+> see include/linux/module.h for more information
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns_roce_cmd.o
+> see include/linux/module.h for more information
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns_roce_cq.o
+> see include/linux/module.h for more information
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns_roce_db.o
+> see include/linux/module.h for more information
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns_roce_hem.o
+> see include/linux/module.h for more information
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns_roce_mr.o
+> see include/linux/module.h for more information
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns_roce_pd.o
+> see include/linux/module.h for more information
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns_roce_qp.o
+> see include/linux/module.h for more information
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns_roce_restrack.o
+> see include/linux/module.h for more information
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns_roce_srq.o
+> see include/linux/module.h for more information
+> ERROR: "hns_roce_bitmap_cleanup" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_bitmap_init" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_free_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_alloc_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_table_get" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_bitmap_alloc" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_table_find" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_ib_umem_write_mtt" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_mtt_cleanup" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_buf_write_mtt" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_buf_free" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_buf_alloc" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_mtt_init" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_bitmap_free" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_table_put" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_cmd_mbox" [drivers/infiniband/hw/hns/hns_roce_srq.ko] undefined!
+> ERROR: "hns_roce_bitmap_cleanup" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_bitmap_init" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_buf_free" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_free_db" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_alloc_db" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_bitmap_free_range" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_bitmap_alloc_range" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_db_unmap_user" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_mtr_cleanup" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_get_kmem_bufs" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_buf_alloc" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_db_map_user" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_free_buf_list" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_table_get" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_mtr_attach" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_mtr_init" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_hem_list_calc_root_ba" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_get_umem_bufs" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_alloc_buf_list" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_table_put" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_init_buf_region" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefined!
+> ERROR: "hns_roce_bitmap_free" [drivers/infiniband/hw/hns/hns_roce_pd.ko] undefined!
+> ERROR: "hns_roce_bitmap_alloc" [drivers/infiniband/hw/hns/hns_roce_pd.ko] undefined!
+> ERROR: "hns_roce_bitmap_cleanup" [drivers/infiniband/hw/hns/hns_roce_pd.ko] undefined!
+> ERROR: "hns_roce_bitmap_init" [drivers/infiniband/hw/hns/hns_roce_pd.ko] undefined!
+> ERROR: "hns_roce_hem_list_find_mtt" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_hem_list_request" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_hem_list_release" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_hem_list_init" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_check_whether_mhop" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_bitmap_cleanup" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_bitmap_init" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_table_put_range" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_table_get_range" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_bitmap_alloc" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_table_find" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_bitmap_free" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_table_put" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_free_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_cmd_mbox" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_alloc_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_table_get" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undefined!
+> ERROR: "hns_roce_fill_res_entry" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_dereg_mr" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_reg_user_mr" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_get_dma_mr" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_ib_destroy_cq" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_ib_create_cq" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_modify_qp" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_create_qp" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_destroy_ah" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_query_ah" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_create_ah" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_dealloc_pd" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_alloc_pd" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_rereg_user_mr" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_dealloc_mw" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_alloc_mw" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_map_mr_sg" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_alloc_mr" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_destroy_srq" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_create_srq" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cleanup_qp_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cleanup_uar_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cleanup_pd_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cleanup_mr_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cleanup_cq_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cleanup_hem_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cmd_use_polling" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_init_srq_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cmd_cleanup" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cleanup_hem" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cleanup_bitmap" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cmd_use_events" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_init_qp_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_init_cq_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_init_mr_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_init_pd_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_init_uar_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_check_whether_mhop" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_init_hem_table" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_cmd_init" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_uar_alloc" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_uar_free" [drivers/infiniband/hw/hns/hns_roce_main.ko] undefined!
+> ERROR: "hns_roce_bitmap_cleanup" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_bitmap_init" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_free_db" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_db_unmap_user" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_buf_free" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_mtt_cleanup" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_ib_umem_write_mtt" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_db_map_user" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_buf_write_mtt" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_buf_alloc" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_alloc_db" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_mtt_init" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_free_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_alloc_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_table_get" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_bitmap_alloc" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_table_find" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_check_whether_mhop" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_bitmap_free" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_table_put" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_cmd_mbox" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefined!
+> ERROR: "hns_roce_cleanup_srq_table" [drivers/infiniband/hw/hns/hns_roce_alloc.ko] undefined!
+> ERROR: "hns_roce_cleanup_uar_table" [drivers/infiniband/hw/hns/hns_roce_alloc.ko] undefined!
+> ERROR: "hns_roce_cleanup_pd_table" [drivers/infiniband/hw/hns/hns_roce_alloc.ko] undefined!
+> ERROR: "hns_roce_cleanup_mr_table" [drivers/infiniband/hw/hns/hns_roce_alloc.ko] undefined!
+> ERROR: "hns_roce_cleanup_cq_table" [drivers/infiniband/hw/hns/hns_roce_alloc.ko] undefined!
+> ERROR: "hns_roce_cleanup_qp_table" [drivers/infiniband/hw/hns/hns_roce_alloc.ko] undefined!
+> ERROR: "to_hr_qp_type" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "get_send_wqe" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_release_range_qp" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_mtt_cleanup" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_cmd_mbox" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_cmd_event" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_cq_completion" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_create_qp" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_init" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_buf_free" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_free_cq" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_hw2sw_mpt" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_get_gid_index" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_dealloc_pd" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_alloc_cmd_mailbox" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_qp_remove" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_alloc_pd" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_free_cmd_mailbox" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "get_recv_wqe" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_unlock_cqs" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_exit" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_qp_event" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_table_find" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "to_hns_roce_state" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_ib_create_cq" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_cq_event" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_qp_free" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_lock_cqs" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_wq_overflow" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "key_to_hw_index" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_bitmap_free" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> ERROR: "hns_roce_ib_destroy_cq" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefined!
+> 
+> Presumably caused by commit
+> 
+>   e9816ddf2a33 ("RDMA/hns: Cleanup unnecessary exported symbols")
+> 
+I have confirmed the latest code in https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git.
+I found that the changes to Makefile and Kconfig in the original patch have been lost.
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index e0dcb681cfe5..101d1325f3f1 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -53,6 +53,9 @@
- #define PAL_BDC_CR		0xd1a0
- #define PLA_TEREDO_TIMER	0xd2cc
- #define PLA_REALWOW_TIMER	0xd2e8
-+#define PLA_SUSPEND_FLAG	0xd38a
-+#define PLA_INDICATE_FALG	0xd38c
-+#define PLA_EXTRA_STATUS	0xd398
- #define PLA_EFUSE_DATA		0xdd00
- #define PLA_EFUSE_CMD		0xdd02
- #define PLA_LEDSEL		0xdd90
-@@ -336,6 +339,15 @@
- /* PLA_BOOT_CTRL */
- #define AUTOLOAD_DONE		0x0002
- 
-+/* PLA_SUSPEND_FLAG */
-+#define LINK_CHG_EVENT		BIT(0)
-+
-+/* PLA_INDICATE_FALG */
-+#define UPCOMING_RUNTIME_D3	BIT(0)
-+
-+/* PLA_EXTRA_STATUS */
-+#define LINK_CHANGE_FLAG	BIT(8)
-+
- /* USB_USB2PHY */
- #define USB2PHY_SUSPEND		0x0001
- #define USB2PHY_L1		0x0002
-@@ -2806,20 +2818,24 @@ static void r8153b_power_cut_en(struct r8152 *tp, bool enable)
- 	ocp_write_word(tp, MCU_TYPE_USB, USB_MISC_0, ocp_data);
- }
- 
--static void r8153b_queue_wake(struct r8152 *tp, bool enable)
-+static void r8153_queue_wake(struct r8152 *tp, bool enable)
- {
- 	u32 ocp_data;
- 
--	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, 0xd38a);
-+	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_INDICATE_FALG);
- 	if (enable)
--		ocp_data |= BIT(0);
-+		ocp_data |= UPCOMING_RUNTIME_D3;
- 	else
--		ocp_data &= ~BIT(0);
--	ocp_write_byte(tp, MCU_TYPE_PLA, 0xd38a, ocp_data);
-+		ocp_data &= ~UPCOMING_RUNTIME_D3;
-+	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_INDICATE_FALG, ocp_data);
-+
-+	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_SUSPEND_FLAG);
-+	ocp_data &= ~LINK_CHG_EVENT;
-+	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_SUSPEND_FLAG, ocp_data);
- 
--	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, 0xd38c);
--	ocp_data &= ~BIT(0);
--	ocp_write_byte(tp, MCU_TYPE_PLA, 0xd38c, ocp_data);
-+	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_EXTRA_STATUS);
-+	ocp_data &= ~LINK_CHANGE_FLAG;
-+	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EXTRA_STATUS, ocp_data);
- }
- 
- static bool rtl_can_wakeup(struct r8152 *tp)
-@@ -2887,14 +2903,14 @@ static void rtl8153_runtime_enable(struct r8152 *tp, bool enable)
- static void rtl8153b_runtime_enable(struct r8152 *tp, bool enable)
- {
- 	if (enable) {
--		r8153b_queue_wake(tp, true);
-+		r8153_queue_wake(tp, true);
- 		r8153b_u1u2en(tp, false);
- 		r8153_u2p3en(tp, false);
- 		rtl_runtime_suspend_enable(tp, true);
- 		r8153b_ups_en(tp, true);
- 	} else {
- 		r8153b_ups_en(tp, false);
--		r8153b_queue_wake(tp, false);
-+		r8153_queue_wake(tp, false);
- 		rtl_runtime_suspend_enable(tp, false);
- 		r8153_u2p3en(tp, true);
- 		r8153b_u1u2en(tp, true);
-@@ -4221,7 +4237,7 @@ static void r8153b_init(struct r8152 *tp)
- 
- 	r8153b_power_cut_en(tp, false);
- 	r8153b_ups_en(tp, false);
--	r8153b_queue_wake(tp, false);
-+	r8153_queue_wake(tp, false);
- 	rtl_runtime_suspend_enable(tp, false);
- 	r8153b_u1u2en(tp, true);
- 	usb_enable_lpm(tp->udev);
--- 
-2.21.0
+> I have used the rdma tree from next-20190628 for today.
+> 
 
