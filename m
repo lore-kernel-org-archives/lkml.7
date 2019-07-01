@@ -2,101 +2,123 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB37C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA6BC06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F13F121721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:43:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GbhLpV+A"
+	by mail.kernel.org (Postfix) with ESMTP id E57D8214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfGAMnD (ORCPT
+        id S1727778AbfGAMn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 08:43:03 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:42231 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfGAMnD (ORCPT
+        Mon, 1 Jul 2019 08:43:26 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33403 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfGAMn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 08:43:03 -0400
-Received: by mail-ua1-f65.google.com with SMTP id a97so4998643uaa.9
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 05:43:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y3jn62uRqDDtMfGSPLqczsPcfH+yK4fZYdwDPBUJ9p0=;
-        b=GbhLpV+AH96F+DztaPdUMOLia9bsRPFhOxnwM5nfLyLBUGwObVkdKGjNH7SkQD0ihj
-         8IXr9UnczQV8dtTOevWQmMRTbPEgDWDyadWBrApGXxqfmaFD7h3geJEEi7Pgqvkz9A8G
-         dkTlL+49nwq6ftLE1XbrSX5iEICSnJcN+goRsX2ofg5teUgDj2psMTlamkNgVqHuPxKK
-         fdBtVbWRk49W1eyi0HLil9RaroAxwff1/c3D/Bufslwc07bSFN1fDU6DDTTW6DSghykj
-         llMQIGnbGQsTSf3IzN3OJoz1a2M+pf2iYXb0twY5ZuRlUEWaZV4CnjUPTBiSz7XYajT4
-         KI4Q==
+        Mon, 1 Jul 2019 08:43:26 -0400
+Received: by mail-oi1-f195.google.com with SMTP id u15so9697678oiv.0;
+        Mon, 01 Jul 2019 05:43:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y3jn62uRqDDtMfGSPLqczsPcfH+yK4fZYdwDPBUJ9p0=;
-        b=rnmgllAqYgwwrm5Hk8Yl6s6ldhhfWIQXHRPW1cUmBUa6PVjZa9wBjYGNXlatmkpKGQ
-         yKF8bGspOlfHuUBgxXVHEeJRy2oB6FZlMwd8kHY3gTZw84ECAhxDR7YmSi64TtXBK7WT
-         pXzyEClpFyqCtAiQ0OiIG5h5loJfVpZjeQUFJGrAPnpgo/vGm5sFhtapdc5VOevZy+40
-         Lesb7NMfkFNp/BHMALjvJN/CQtjSI7+5auXw4k+MfbXkPmJ2qIXAl+TPwsJ9shW3qSwi
-         rQBXyuC57IjPU3OHUwZgBITq9OYgcu7dUOCNQ85aCqTwzJMn3eLMae+IIPYrmfXEQIRf
-         /5UA==
-X-Gm-Message-State: APjAAAUv7j+ZRdJmg5GKISNDe13PssFVctk7Lif/Du3Dl8a/pSxkzvPB
-        V9KxQVQ64NtjXBmKOm0RJ+e8B9xAw7qCTZcWW/qKHQkk
-X-Google-Smtp-Source: APXvYqxywlnTdPSPmdCseZKudC27fw/bhXEBeJ9DnY8UG/svaAtgHnOvqEPjimSJtJ/B+M7qeQAoK9JlTIk32++9jUo=
-X-Received: by 2002:ab0:2556:: with SMTP id l22mr8965354uan.46.1561984982144;
- Mon, 01 Jul 2019 05:43:02 -0700 (PDT)
+         :message-id:subject:to;
+        bh=0ZbxY3O8o2NP9TexAMOwwfSs+xrQAQGyizd11XhK8Uk=;
+        b=TIgRyR0LA86uJoZTcDD5dBk/CNS5MM8HUecDdf9mvRhh+N3CUyuJnM6lXDyGzupcbI
+         29DXSpm6yE9T7vd1gO8F27XB7FcBJO7NGu8IljyJo2+nPMJupYTkJDpjoplL1xpn1dkE
+         WiIxzQBUHGgOB4VjzzNlVxvpbEa07dWEozIZVBRx/dhP6NKpsR+2mSYYE3EvttTtX7Da
+         68AucV46Lm4FkNK7u1+gxf63CzA6HEsfzVHwk45gUV5buXuNJiR/uCklzvZcyZtewzwm
+         0yqitgYS7FIDBebnOyncR7wMESum1Ox5s484yb6M2vgTS4H0UkqNTuGdKSUWitOylLT/
+         DqVQ==
+X-Gm-Message-State: APjAAAXGFha8aLUadTfGmb2nHg3CpYOtO5U0ZvbneQmjXvI12Jpo8gOK
+        QwndgKV5/zSY6So3cP1nqHbYPQwmsuEK+/5GgJ4=
+X-Google-Smtp-Source: APXvYqyblOS/qtfu8kJg+Wvk3SX2O68dr4THZP1KeL8DXVnYrMO7nsHTasiHahYQ+V+HrFxwliyZczCQoa9yogvWNJI=
+X-Received: by 2002:aca:bd43:: with SMTP id n64mr6147488oif.148.1561985005437;
+ Mon, 01 Jul 2019 05:43:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190628024700.15141-1-huangfq.daxian@gmail.com>
-In-Reply-To: <20190628024700.15141-1-huangfq.daxian@gmail.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Mon, 1 Jul 2019 13:43:16 +0100
-Message-ID: <CACvgo52dW16DahT37aAxF8snZSJo_42ie3M0Le_edF19SBYL0Q@mail.gmail.com>
-Subject: Re: [PATCH v2 07/27] gpu: drm: remove memset after zalloc
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Leo Li <sunpeng.li@amd.com>, Rex Zhu <rex.zhu@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        David Francis <David.Francis@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Evan Quan <evan.quan@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+References: <48BA4A6E-5E2A-478E-A96E-A31FA959964C@internode.on.net>
+ <CAFLxGvwnKKHOnM2w8i9hn7LTVYKh5PQP2zYMBmma2k9z7HBpzw@mail.gmail.com>
+ <20190511220659.GB8507@mit.edu> <09D87554-6795-4AEA-B8D0-FEBCB45673A9@internode.on.net>
+ <850EDDE2-5B82-4354-AF1C-A2D0B8571093@internode.on.net> <17C30FA3-1AB3-4DAD-9B86-9FA9088F11C9@internode.on.net>
+ <20190515045717.GB5394@mit.edu> <CAMuHMdV=63MwLdOB2kcX0=23itHg+_q22wXCycTvH3yn4zsfWw@mail.gmail.com>
+In-Reply-To: <CAMuHMdV=63MwLdOB2kcX0=23itHg+_q22wXCycTvH3yn4zsfWw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 1 Jul 2019 14:43:14 +0200
+Message-ID: <CAMuHMdU-vfWjomDpttYTqgp4YzBu7z__p48r7rq6TSUwx7uFqQ@mail.gmail.com>
+Subject: Re: ext3/ext4 filesystem corruption under post 5.1.0 kernels
+To:     "Theodore Ts'o" <tytso@mit.edu>,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fuqian,
+Hi Ted,
 
-On Fri, 28 Jun 2019 at 09:30, Fuqian Huang <huangfq.daxian@gmail.com> wrote:
+On Fri, May 17, 2019 at 6:44 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Wed, May 15, 2019 at 6:57 AM Theodore Ts'o <tytso@mit.edu> wrote:
+> > Ah, I think I see the problem.  Sorry, this one was my fault.  Does
+> > this fix things for you?
 >
-> zalloc has already zeroed the memory.
-> so memset is unneeded.
+> Thanks!
+> Sorry for missing this patch in the thread before.
 >
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> ---
->  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c       | 2 --
->  drivers/gpu/drm/amd/powerplay/hwmgr/process_pptables_v1_0.c | 2 --
->  drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c            | 2 --
->  drivers/gpu/drm/amd/powerplay/smumgr/iceland_smumgr.c       | 2 --
->  drivers/gpu/drm/amd/powerplay/smumgr/tonga_smumgr.c         | 2 --
->  5 files changed, 10 deletions(-)
+> > From 0c72924ef346d54e8627440e6d71257aa5b56105 Mon Sep 17 00:00:00 2001
+> > From: Theodore Ts'o <tytso@mit.edu>
+> > Date: Wed, 15 May 2019 00:51:19 -0400
+> > Subject: [PATCH] ext4: fix block validity checks for journal inodes using indirect blocks
+> >
+> > Commit 345c0dbf3a30 ("ext4: protect journal inode's blocks using
+> > block_validity") failed to add an exception for the journal inode in
+> > ext4_check_blockref(), which is the function used by ext4_get_branch()
+> > for indirect blocks.  This caused attempts to read from the ext3-style
+> > journals to fail with:
+> >
+> > [  848.968550] EXT4-fs error (device sdb7): ext4_get_branch:171: inode #8: block 30343695: comm jbd2/sdb7-8: invalid block
+> >
+> > Fix this by adding the missing exception check.
+> >
+> > Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+> > Reported-by: Arthur Marsh <arthur.marsh@internode.on.net>
+> > Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 >
-Thanks for fixing these. One nit pick: the commit message should start
-with "drm/amdgpu:" as you can see from git log.
-With that:
+> Intermittent issue no more seen in 10 test boots, so
+> Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+Despite this fix having been applied upstream,  the kernel prints from
+time to time:
 
--Emil
+    EXT4-fs (sda1): error count since last fsck: 5
+    EXT4-fs (sda1): initial error at time 1557931133:
+ext4_get_branch:171: inode 1980: block 27550
+    EXT4-fs (sda1): last error at time 1558114349:
+ext4_get_branch:171: inode 1980: block 27550
+
+This happens even after a manual run of "e2fsck -f" (while it's mounted
+RO), which reports a clean file system.
+
+The inode and block numbers match the numbers printed due to the
+previous bug.
+
+Do you have an idea what's wrong?
+Note that I run a very old version of e2fsck (from a decade ago).
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
