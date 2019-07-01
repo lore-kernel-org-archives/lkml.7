@@ -2,121 +2,145 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CEAC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690E4C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2422064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9922064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K3yJdL9M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L5VhDhOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729836AbfGAOs6 (ORCPT
+        id S1729721AbfGAOuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:48:58 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35424 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbfGAOs6 (ORCPT
+        Mon, 1 Jul 2019 10:50:20 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38940 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728190AbfGAOuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:48:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so29471958ioo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 07:48:57 -0700 (PDT)
+        Mon, 1 Jul 2019 10:50:20 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b7so7489226pls.6
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 07:50:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y6YcGWfOU8rFsr47ij/9QYJL9sEYCWLhNptNeqOoAi0=;
-        b=K3yJdL9Mr0Yzp2bwDn4QsngYGZhC7It+tkAQHGbENhMnb5nJgOc+dBhfWsO4MEO3oV
-         bEIRkF/DHhsgx8UZG61pxaFBAwfW2Hq3lWsz+jpL+xRjw+ZlO+/vP01a6jagyZvUjq5l
-         elKNn0FjpSrZIWzxJC4mlCEmvA+A6/8relqbSewIKsE9/NvCfpQIszJjQjJ3tChT9AIR
-         iDn42aHRugRGyx5xmmG+EfeNMc3jtdFJLguFYEwV+MrZQ83jX+3r+WndNyingUFBqpjn
-         9JGESWuEfHjWmjaa/Avn1P1EZV9TOvOdSxemkqdfGLbFqDW3Ss5byq2ECe5hHgrgj9Q3
-         KDuQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8DhsHhHpoG4ayeBdiyvK+pQwK61SKZGiv/7oJsmdxfQ=;
+        b=L5VhDhOasgqtS3rmT4OyVLkqJ1TYyfKg2P8XQbp5QQO7hjCxtOcaKKIAKddBHecQV0
+         cFWTLzZobWI7tQV6sV3j+osS2+QI33oWJadpmazRGkTUUNDbmlIy6iDXDPnpDh+tMB+C
+         fdRGo3qyXR9gZEFEVq0dcTQDqYfvjWOjOv9YvvzHO63DFjCTONk8jLCNpdvTt5p+Q+c8
+         oDGdpOCBUxWcNvKFUJ4LgOMFk8avMky1Ld0uZ8wl6tiDWp0OUewoixMdmlw1OEnaNirl
+         0p3mliGk86rDGiTzJhq4IrBQEkc7nHEZfjzmmEGt0cMdFipbsMbfj+AB4OXTeXyiwPy8
+         MYaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y6YcGWfOU8rFsr47ij/9QYJL9sEYCWLhNptNeqOoAi0=;
-        b=pxpGutDh3v3ewIdZ3DZMRNKsj1kAdzCxmHp9pazNhnTL1XEpw95JkRtwQ1oMRVnXEW
-         Cgb6vNQZIVMhcbn9XxOZnDNDH42s6Bsd0zt/C/LGxRdSuvHXF3M3ZY70tg1/fPRepCN4
-         GYETU/VFg6svF2+sn3Ht983WEGp+EBNZ3+Bq8nk36o0qCawqgfTC8o+nyehu95EP7Xu8
-         VuOaS9yhinh32MdGmyyA++IpLA6uh0FFIo30nY0UVbNpE5RSEQ/mrbgulVw7/bVoCNMa
-         1B4rMTWGKx6jFj8xEi86QJ5ATHZptTgQrFw5PAKLhcV92vKILQNAd2fkqKtpN9DpUU5E
-         OMqQ==
-X-Gm-Message-State: APjAAAUwzNMQre7k7UgMBNQzvMpTFTgbaxm8WR1ZyyKUc2Wtqj2gYBER
-        aIeUwe3zJQxe4FZEPRsbUuFn1SZxuDSAc+59IYp7YA==
-X-Google-Smtp-Source: APXvYqzUJmuBYuVAjhf6yTj6LxkHzZwqx0Qg+4XKjRCmyODJb1NLbenuAlb8zq4pZoQb4hDAW3FIQstcxFk6dedV10k=
-X-Received: by 2002:a02:22c6:: with SMTP id o189mr28192020jao.35.1561992537157;
- Mon, 01 Jul 2019 07:48:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8DhsHhHpoG4ayeBdiyvK+pQwK61SKZGiv/7oJsmdxfQ=;
+        b=BtKjAoyuZQDNUHukjC4sMqbn0G0W4+YEaw711jQDIxpPV89UvokNigwmxT/YDeFyVI
+         kho/i+ynrqjZB5vFgsVZ2slXFrKZ0/hroyz/ytuw5DKZ1xePVnBpTbrfeCGfMEqwFcNe
+         r6KuyW2IipllZ9/WOtxrK9ytYsOUZnZ9h6mQVA0hnwvvI9+Svao6JxzTv2Z5lcGls4Pz
+         1qhdPShDw0YQnQBfCxoTEXchR8Tbtb7w6VPqV11ADFpA9lLu6lbBjw/nWHLqIk5HPJm5
+         s2mtxaf+vkd5W70dXOP7UBSLpMoDL0GZ6tvnqCnOWKCgK+x+kcuNR4WCvRKWwrNTGrom
+         f5+g==
+X-Gm-Message-State: APjAAAVU9DCCyxJqi/yDe5S4lA3gmERgW1jo7nX1wrE4fES2vqyZ93t8
+        Z+vgIClQE/hKa+o6DGzOTLKf8VaXmY0=
+X-Google-Smtp-Source: APXvYqwrleYyr6IvOOFIQ4S8xa7usHyTCZaoYl3JWrGqM5qod9TTX390XudbbJ+PaKE4W4aZmlckxw==
+X-Received: by 2002:a17:902:1102:: with SMTP id d2mr29415786pla.149.1561992619449;
+        Mon, 01 Jul 2019 07:50:19 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i6sm814419pgi.40.2019.07.01.07.50.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 07:50:18 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 07:51:06 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc:     adrian.hunter@intel.com, agross@kernel.org, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, khasim.mohammed@linaro.org,
+        vinod.koul@linaro.org
+Subject: Re: [PATCH] mmc: sdhci-msm: fix mutex while in spinlock
+Message-ID: <20190701145106.GE12249@tuxbook-pro>
+References: <20190701105316.19419-1-jorge.ramirez-ortiz@linaro.org>
 MIME-Version: 1.0
-References: <20190701040415.219001-1-joel@joelfernandes.org>
- <20190701040415.219001-3-joel@joelfernandes.org> <20190701122358.nzebpuunp6o5jxhx@linutronix.de>
- <20190701141403.GA246562@google.com>
-In-Reply-To: <20190701141403.GA246562@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 1 Jul 2019 16:48:43 +0200
-Message-ID: <CACT4Y+bJ-tNvMsfHcFEsWdjtBnaLTP9q=u7PCk4VMVPvW51WLQ@mail.gmail.com>
-Subject: Re: [RFC 3/3] Revert "rcutorture: Tweak kvm options"
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701105316.19419-1-jorge.ramirez-ortiz@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 4:14 PM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> On Mon, Jul 01, 2019 at 02:23:58PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2019-07-01 00:04:15 [-0400], Joel Fernandes (Google) wrote:
-> > > This reverts commit a6fda6dab93c2c06ef4b8cb4b9258df6674d2438 which
-> > > causes kvm.sh to not run on my machines. The qemu-system-x86_64 command
-> > > runs but does nothing.
-> >
-> > Nope. I would like to know *why* you need 'noapic' to work. Is it a
-> > brand new or old qemu-system-x86_64?
->
-> I did not have time to debug yesterday and I posted this particular revert as
-> an 'RFC' just to make aware of this problem.
->
-> I spent some more time just now, it looks like this has nothing to do with
-> 'noapic' and appears to be a problem on debian distros with the e1000e NIC.
-> May be this NIC was added to the virtual hardware because of -machine in the
-> patch?
->
-> Any if I add the following to the qemu command that kvm.sh runs, it works again:
-> -net nic,model=e1000
->
-> Without it I get:
->  qemu-system-x86_64: Initialization of device e1000e failed: failed to find romfile "efi-e1000e.rom"
->
-> Seems to be mentioned here:
-> https://bugs.launchpad.net/ubuntu/+source/ipxe/+bug/1737211
->
-> And in syzkaller as well:
-> https://github.com/google/syzkaller/blob/master/vm/qemu/qemu.go#L88
->
-> Adding Dmitry who is syzkaller owner for any thoughts as well.
+On Mon 01 Jul 03:53 PDT 2019, Jorge Ramirez-Ortiz wrote:
 
-I don't have many thoughts on this. That particular error looked like
-a bug in the package in the particular distro/version.
+> mutexes can sleep and therefore should not be taken while holding a
+> spinlock. move clk_get_rate (can sleep) outside the spinlock protected
+> region.
+> 
+> This regression was introduced with commit
+>      Date:   Mon Nov 21 12:07:16 2016 +0530
+>      mmc: sdhci-msm: Update DLL reset sequence
+> 
+>      SDCC core with minor version >= 0x42 introduced new 14lpp
+>      DLL. This has additional requirements in the reset sequence
+>      for DLL tuning. Make necessary changes as needed.
 
+Your Fixes: below already states this.
 
-> I'm happy to write a patch to set the nic model as e1000 and send it out if
-> we agree this solution is good enough.
->
->  - Joel
->
+> 
+> Fixes: 83736352e0ca ("mmc: sdhci-msm: Update DLL reset sequence")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+
+Apart from that, your patch is good
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 5fc76a1993d0..9cf14b359c14 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -575,11 +575,14 @@ static int msm_init_cm_dll(struct sdhci_host *host)
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>  	int wait_cnt = 50;
+> -	unsigned long flags;
+> +	unsigned long flags, xo_clk = 0;
+>  	u32 config;
+>  	const struct sdhci_msm_offset *msm_offset =
+>  					msm_host->offset;
+>  
+> +	if (msm_host->use_14lpp_dll_reset && !IS_ERR_OR_NULL(msm_host->xo_clk))
+> +		xo_clk = clk_get_rate(msm_host->xo_clk);
+> +
+>  	spin_lock_irqsave(&host->lock, flags);
+>  
+>  	/*
+> @@ -627,10 +630,10 @@ static int msm_init_cm_dll(struct sdhci_host *host)
+>  		config &= CORE_FLL_CYCLE_CNT;
+>  		if (config)
+>  			mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock * 8),
+> -					clk_get_rate(msm_host->xo_clk));
+> +					xo_clk);
+>  		else
+>  			mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock * 4),
+> -					clk_get_rate(msm_host->xo_clk));
+> +					xo_clk);
+>  
+>  		config = readl_relaxed(host->ioaddr +
+>  				msm_offset->core_dll_config_2);
+> -- 
+> 2.21.0
+> 
