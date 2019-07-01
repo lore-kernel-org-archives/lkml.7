@@ -2,204 +2,123 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECD7C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499BAC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9A420673
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F1720673
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbfGALBB (ORCPT
+        id S1728192AbfGALFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 07:01:01 -0400
-Received: from mga05.intel.com ([192.55.52.43]:3349 "EHLO mga05.intel.com"
+        Mon, 1 Jul 2019 07:05:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34190 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727208AbfGALBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 07:01:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 04:01:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,439,1557212400"; 
-   d="scan'208";a="338578091"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 01 Jul 2019 04:00:58 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        mathieu.poirier@linaro.org, will.deacon@arm.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH v1] perf: Fix exclusive events' grouping
-Date:   Mon,  1 Jul 2019 14:00:53 +0300
-Message-Id: <20190701110053.23761-1-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1727162AbfGALFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 07:05:00 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1FBA53091740;
+        Mon,  1 Jul 2019 11:04:55 +0000 (UTC)
+Received: from localhost (ovpn-204-140.brq.redhat.com [10.40.204.140])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9357E6F924;
+        Mon,  1 Jul 2019 11:04:52 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 13:04:51 +0200
+From:   Stanislaw Gruszka <sgruszka@redhat.com>
+To:     Soeren Moch <smoch@web.de>
+Cc:     Helmut Schaa <helmut.schaa@googlemail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] rt2x00: fix rx queue hang
+Message-ID: <20190701110451.GA16985@redhat.com>
+References: <20190617094656.3952-1-smoch@web.de>
+ <20190618093431.GA2577@redhat.com>
+ <b6899d78-447c-3cb3-4bec-e4050660ccaa@web.de>
+ <20190625095734.GA2886@redhat.com>
+ <8d7da251-8218-ff4b-2cf3-8ed69c97275e@web.de>
+ <20190629085041.GA2854@redhat.com>
+ <06c55c1d-6da6-76b2-f6e7-c8eeccd5aa35@web.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06c55c1d-6da6-76b2-f6e7-c8eeccd5aa35@web.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 01 Jul 2019 11:05:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far, we tried to disallow grouping exclusive events for the fear of
-complications they would cause with moving between contexts. Specifically,
-moving a software group to a hardware context would violate the exclusivity
-rules if both groups contain matching exclusive events.
+On Mon, Jul 01, 2019 at 12:49:50PM +0200, Soeren Moch wrote:
+> Hello!
+> 
+> On 29.06.19 10:50, Stanislaw Gruszka wrote:
+> > Hello
+> >
+> > On Wed, Jun 26, 2019 at 03:28:00PM +0200, Soeren Moch wrote:
+> >> Hi Stanislaw,
+> >>
+> >> the good news is: your patch below also solves the issue for me. But
+> >> removing the ENTRY_DATA_STATUS_PENDING check in
+> >> rt2x00usb_kick_rx_entry() alone does not help, while removing this check
+> >> in rt2x00usb_work_rxdone() alone does the trick.
+> >>
+> >> So the real race seems to be that the flags set in the completion
+> >> handler are not yet visible on the cpu core running the workqueue. And
+> >> because the worker is not rescheduled when aborted, the entry can just
+> >> wait forever.
+> >> Do you think this could make sense?
+> > Yes.
+> >
+> >>> I'm somewhat reluctant to change the order, because TX processing
+> >>> might relay on it (we first mark we wait for TX status and
+> >>> then mark entry is no longer owned by hardware).
+> >> OK, maybe it's just good luck that changing the order solves the rx
+> >> problem. Or can memory barriers associated with the spinlock in
+> >> rt2x00lib_dmadone() be responsible for that?
+> >> (I'm testing on a armv7 system, Cortex-A9 quadcore.)
+> > I'm not sure, rt2x00queue_index_inc() also disable/enable interrupts,
+> > so maybe that make race not reproducible. 
+> I tested some more, the race is between setting ENTRY_DATA_IO_FAILED (if
+> needed) and enabling workqueue processing. This enabling was done via
+> ENTRY_DATA_STATUS_PENDING in my patch. So setting
+> ENTRY_DATA_STATUS_PENDING behind the spinlock in
+> rt2x00lib_dmadone()/rt2x00queue_index_inc() moved this very close to
+> setting of ENTRY_DATA_IO_FAILED (if needed). While still in the wrong
+> order, this made it very unlikely for the race to show up.
+> >
+> >> While looking at it, why we double-clear ENTRY_OWNER_DEVICE_DATA in
+> >> rt2x00usb_interrupt_rxdone() directly and in rt2x00lib_dmadone() again,
+> > rt2x00lib_dmadone() is called also on other palaces (error paths)
+> > when we have to clear flags.
+> Yes, but also clearing ENTRY_OWNER_DEVICE_DATA in
+> rt2x00usb_interrupt_rxdone() directly is not necessary and can lead to
+> the wrong processing order.
+> >>  while not doing the same for tx? 
+> > If I remember correctly we have some races on rx (not happened on tx)
+> > that was solved by using test_and_clear_bit(ENTRY_OWNER_DEVICE_DATA).
+> I searched in the history, it actually was the other way around. You
+> changed test_and_clear_bit() to test_bit() in the TX path. I think this
+> is also the right way to go in RX.
+> >> Would it make more sense to possibly
+> >> set ENTRY_DATA_IO_FAILED before clearing ENTRY_OWNER_DEVICE_DATA in
+> >> rt2x00usb_interrupt_rxdone() as for tx?
+> > I don't think so, ENTRY_DATA_IO_FAILED should be only set on error
+> > case.
+> 
+> Yes of course. But if the error occurs, it should be signalled before
+> enabling the workqueue processing, see the race described above.
+> 
+> After some more testing I'm convinced that this would be the right fix
+> for this problem. I will send a v2 of this patch accordingly.
 
-This attempt was, however, unsuccessful: the check that we have in the
-perf_event_open() syscall is both wrong (looks at wrong PMU) and
-insufficient (group leader may still be exclusive), as can be illustrated
-by running
+Great, now I understand the problem. Thank you very much!
 
-$ perf record -e '{intel_pt//,cycles}' uname
-$ perf record -e '{cycles,intel_pt//}' uname
-
-ultimately successfully.
-
-Furthermore, we are completely free to trigger the exclusivity violation
-by -e '{cycles,intel_pt//}' -e '{intel_pt//,instructions}', even though
-the helpful perf record will not allow that, the ABI will. The warning
-later in the perf_event_open() path will also not trigger, because it's
-also wrong.
-
-Fix all this by validating the original group before moving, getting rid
-of broken safeguards and placing a useful one to perf_install_in_context().
-
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: bed5b25ad9c8a ("perf: Add a pmu capability for "exclusive" events")
----
- include/linux/perf_event.h |  6 ++++++
- kernel/events/core.c       | 33 +++++++++++++++++++++------------
- 2 files changed, 27 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 2ddae518dce6..1be21d5c0599 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -574,6 +574,7 @@ struct perf_event {
- 	 */
- 	struct list_head		sibling_list;
- 	struct list_head		active_list;
-+
- 	/*
- 	 * Node on the pinned or flexible tree located at the event context;
- 	 */
-@@ -1054,6 +1055,11 @@ static inline int in_software_context(struct perf_event *event)
- 	return event->ctx->pmu->task_ctx_nr == perf_sw_context;
- }
- 
-+static inline int is_exclusive_pmu(struct pmu *pmu)
-+{
-+	return pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE;
-+}
-+
- extern struct static_key perf_swevent_enabled[PERF_COUNT_SW_MAX];
- 
- extern void ___perf_sw_event(u32, u64, struct pt_regs *, u64);
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 23efe6792abc..dfac4caa9c5e 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2553,6 +2553,9 @@ static int  __perf_install_in_context(void *info)
- 	return ret;
- }
- 
-+static bool exclusive_event_installable(struct perf_event *event,
-+					struct perf_event_context *ctx);
-+
- /*
-  * Attach a performance event to a context.
-  *
-@@ -2567,6 +2570,8 @@ perf_install_in_context(struct perf_event_context *ctx,
- 
- 	lockdep_assert_held(&ctx->mutex);
- 
-+	WARN_ON_ONCE(!exclusive_event_installable(event, ctx));
-+
- 	if (event->cpu != -1)
- 		event->cpu = cpu;
- 
-@@ -4360,7 +4365,7 @@ static int exclusive_event_init(struct perf_event *event)
- {
- 	struct pmu *pmu = event->pmu;
- 
--	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
-+	if (!is_exclusive_pmu(pmu))
- 		return 0;
- 
- 	/*
-@@ -4391,7 +4396,7 @@ static void exclusive_event_destroy(struct perf_event *event)
- {
- 	struct pmu *pmu = event->pmu;
- 
--	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
-+	if (!is_exclusive_pmu(pmu))
- 		return;
- 
- 	/* see comment in exclusive_event_init() */
-@@ -4411,14 +4416,15 @@ static bool exclusive_event_match(struct perf_event *e1, struct perf_event *e2)
- 	return false;
- }
- 
--/* Called under the same ctx::mutex as perf_install_in_context() */
- static bool exclusive_event_installable(struct perf_event *event,
- 					struct perf_event_context *ctx)
- {
- 	struct perf_event *iter_event;
- 	struct pmu *pmu = event->pmu;
- 
--	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
-+	lockdep_assert_held(&ctx->mutex);
-+
-+	if (!is_exclusive_pmu(pmu))
- 		return true;
- 
- 	list_for_each_entry(iter_event, &ctx->event_list, event_entry) {
-@@ -10917,11 +10923,6 @@ SYSCALL_DEFINE5(perf_event_open,
- 		goto err_alloc;
- 	}
- 
--	if ((pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE) && group_leader) {
--		err = -EBUSY;
--		goto err_context;
--	}
--
- 	/*
- 	 * Look up the group leader (we will attach this event to it):
- 	 */
-@@ -11009,6 +11010,17 @@ SYSCALL_DEFINE5(perf_event_open,
- 				move_group = 0;
- 			}
- 		}
-+
-+		/*
-+		 * Failure to create exclusive events returns -EBUSY.
-+		 */
-+		err = -EBUSY;
-+		if (!exclusive_event_installable(group_leader, ctx))
-+			goto err_locked;
-+
-+		for_each_sibling_event(sibling, group_leader)
-+			if (!exclusive_event_installable(sibling, ctx))
-+				goto err_locked;
- 	} else {
- 		mutex_lock(&ctx->mutex);
- 	}
-@@ -11045,9 +11057,6 @@ SYSCALL_DEFINE5(perf_event_open,
- 	 * because we need to serialize with concurrent event creation.
- 	 */
- 	if (!exclusive_event_installable(event, ctx)) {
--		/* exclusive and group stuff are assumed mutually exclusive */
--		WARN_ON_ONCE(move_group);
--
- 		err = -EBUSY;
- 		goto err_locked;
- 	}
--- 
-2.20.1
-
+Stanislaw
