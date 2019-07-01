@@ -2,141 +2,149 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62524C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB26FC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE0821850
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0332146F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:10:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ck38QBfh";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LU5l7gGr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OpJ53oWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfGATHt (ORCPT
+        id S1726738AbfGATKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 15:07:49 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36502 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfGATHs (ORCPT
+        Mon, 1 Jul 2019 15:10:11 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41832 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfGATKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 15:07:48 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 726AF60909; Mon,  1 Jul 2019 19:07:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562008067;
-        bh=JOuG+nTYGCjaeKzLDowBOJbURARYzc8K6dnbmDqxo5w=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ck38QBfhx0ASNbTLUs/P7hIZ/CHzVCxwrz+NbEpXD3OEIsHZe2T6LtR8briEtk0LK
-         GWqgTvbW+tP+p+Wwb7vlXbN2cYcPcppYPG6jK6ituM1S012ZCzq3dgQwy3BCYYW5Nf
-         KzSOwmJDz16LR+fzu6wOimuHBwIGOz3ZxAR8WRr4=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1039860159;
-        Mon,  1 Jul 2019 19:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562008066;
-        bh=JOuG+nTYGCjaeKzLDowBOJbURARYzc8K6dnbmDqxo5w=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LU5l7gGr1FEPmta4AJmGEQAPQFGo0rdKD+PFdW62YuNsghwk7IwzUe6tzRFn6F7js
-         PyWhjfYebOvd+IaTv+2fyeLFffPjkvQUKRJ/KTt/WY3HqzlSUUaWp1m3/ThDO3xO16
-         QU7nH04rCu8zINAGQPc/dTsdQoiuGfUSocRV9tp4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1039860159
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH 4/5] drm/msm/dsi: get the clocks into OFF state at init
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        aarch64-laptops@lists.linaro.org,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Archit Taneja <architt@codeaurora.org>,
-        Rajesh Yadav <ryadav@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190630150230.7878-1-robdclark@gmail.com>
- <20190630150230.7878-5-robdclark@gmail.com>
- <75a2921d-bf1a-c4c1-6d9a-122474eface4@codeaurora.org>
- <CAF6AEGufiSU_sFZFdLH=KT5iCQGwccszURqAQCHd=dhuZafvZg@mail.gmail.com>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <9fbf9226-578a-90aa-693d-9ea4fcda8281@codeaurora.org>
-Date:   Mon, 1 Jul 2019 13:07:44 -0600
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 1 Jul 2019 15:10:10 -0400
+Received: by mail-io1-f68.google.com with SMTP id w25so31269946ioc.8;
+        Mon, 01 Jul 2019 12:10:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=emRJcnTtw5aSYB2dXLemJk0HV3s3ejeGzXLaOETmDMc=;
+        b=OpJ53oWdu24vPuFb/tmw91yU9U4su5Q7jKXYCBo4zjCo1szJtHaLLdrkPqeLXmq5Lc
+         SsoApBqqkbfU0R2IFq/yLXRHDknfD+kgJOcQK+uyZXiRXs1LcKnFgy2GjBZ8TyBO23wR
+         eaoXLsHuabhldTFvoWZHjQvIORRc7ki+1Sn+nuTJ60kyKL0W/lxc3Ln1Ld/ZfxtXrqws
+         gNhnJUF2mXAk8UTUV4u9HSYdhNxrE5yrV66oy6MjLjPNEVImul0+ToNnv1llOnSziIjW
+         XpHOyqIUicKzdxYtCG8WTYTXJ9wuXWKSYjIW350hd3wKwgzIu0E5iD833jM/E0pWL6j5
+         eKOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=emRJcnTtw5aSYB2dXLemJk0HV3s3ejeGzXLaOETmDMc=;
+        b=gXDM9gXhScJC//fbphAz1kQwDoLVwa32fcFJ6GFoIJsmfTlTuYpyGhL/iiKpESQ7TS
+         pjmj+lo64WAuGFfl+jhnMlLUb9CWm7ih2lSXNCd+e1572Mde8kOcu1zl4CtHwqe8XF5i
+         YYxg/ZH8Ce1FHUqdsk0FqapgFaxUgLnOmzTmZXsG6jHi7rtvtZQZIJANk6SmFIqKj2uP
+         gF4znWI+78bTH/bf3CwrJ8d8AvBKnB9EzclxxE5iCbUfFFBaP0pcKjQPW5dc3INyuP4a
+         gB+ypZ7twuK2uU28vVVeeybHVMO1yfrzllDk3AEsqjpMULep3Posh4VHMEt86KrsL5dg
+         uSYw==
+X-Gm-Message-State: APjAAAUj4MuejcRmzshPDtr39FPPb+4S1SyB1MKtb5IGaaXM2/aRBiCk
+        IkHz7ars3cn5GVUIx1RvtQ==
+X-Google-Smtp-Source: APXvYqw2upm3DxWP5X8c+UGFfWyuMUj8NmXd7S1ELO8WStFW5LmA5vn0KRToEz/jHV59fdudW6D3bg==
+X-Received: by 2002:a02:16c5:: with SMTP id a188mr31603978jaa.86.1562008209669;
+        Mon, 01 Jul 2019 12:10:09 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.134.43])
+        by smtp.gmail.com with ESMTPSA id y20sm10356970iol.34.2019.07.01.12.10.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 12:10:08 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:9575:16b6:1dd6:2173])
+        by serve.minyard.net (Postfix) with ESMTPSA id 8B9701800D1;
+        Mon,  1 Jul 2019 19:10:06 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 14:09:49 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
+        Corey Minyard <cminyard@mvista.com>
+Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
+Message-ID: <20190701190949.GB4336@minyard.net>
+Reply-To: minyard@acm.org
+References: <20190509193320.21105-1-minyard@acm.org>
+ <20190510103318.6cieoifz27eph4n5@linutronix.de>
+ <20190628214903.6f92a9ea@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <CAF6AEGufiSU_sFZFdLH=KT5iCQGwccszURqAQCHd=dhuZafvZg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628214903.6f92a9ea@oasis.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/2019 12:58 PM, Rob Clark wrote:
-> On Mon, Jul 1, 2019 at 11:37 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
->>
->> On 6/30/2019 9:01 AM, Rob Clark wrote:
->>> From: Rob Clark <robdclark@chromium.org>
->>>
->>> Do an extra enable/disable cycle at init, to get the clks into disabled
->>> state in case bootloader left them enabled.
->>>
->>> In case they were already enabled, the clk_prepare_enable() has no real
->>> effect, other than getting the enable_count/prepare_count into the right
->>> state so that we can disable clocks in the correct order.  This way we
->>> avoid having stuck clocks when we later want to do a modeset and set the
->>> clock rates.
->>>
->>> Signed-off-by: Rob Clark <robdclark@chromium.org>
->>> ---
->>>    drivers/gpu/drm/msm/dsi/dsi_host.c         | 18 +++++++++++++++---
->>>    drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c |  1 +
->>>    2 files changed, 16 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
->>> index aabab6311043..d0172d8db882 100644
->>> --- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
->>> +++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
->>> @@ -354,6 +354,7 @@ static int dsi_pll_10nm_lock_status(struct dsi_pll_10nm *pll)
->>>        if (rc)
->>>                pr_err("DSI PLL(%d) lock failed, status=0x%08x\n",
->>>                       pll->id, status);
->>> +rc = 0; // HACK, this will fail if PLL already running..
->>
->> Umm, why?  Is this intentional?
->>
+On Fri, Jun 28, 2019 at 09:49:03PM -0400, Steven Rostedt wrote:
+> On Fri, 10 May 2019 12:33:18 +0200
+> Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 > 
-> I need to sort out a proper solution for this.. but PLL lock will fail
-> if the clk is already running (which, in that case, is fine since it
-> is already running and locked), which will cause the clk_enable to
-> fail..
+> > On 2019-05-09 14:33:20 [-0500], minyard@acm.org wrote:
+> > > From: Corey Minyard <cminyard@mvista.com>
+> > > 
+> > > The function call do_wait_for_common() has a race condition that
+> > > can result in lockups waiting for completions.  Adding the thread
+> > > to (and removing the thread from) the wait queue for the completion
+> > > is done outside the do loop in that function.  However, if the thread
+> > > is woken up, the swake_up_locked() function will delete the entry
+> > > from the wait queue.  If that happens and another thread sneaks
+> > > in and decrements the done count in the completion to zero, the
+> > > loop will go around again, but the thread will no longer be in the
+> > > wait queue, so there is no way to wake it up.  
+> > 
+> > applied, thank you.
+> > 
 > 
-> I guess there is some way that I can check that clk is already running
-> and skip this check..
+> When I applied this patch to 4.19-rt, I get the following lock up:
 
+I was unable to reproduce, and I looked at the code and I can't really
+see a connection between this change and this crash.
 
-I'm sorry, but this makes no sense to me.  What clock are we talking 
-about here?
+Can you reproduce at will?  If so, can you send a testcase?
 
-If the pll is locked, the the lock check should just drop through.  If 
-the pll cannot lock, you have an issue.  I'm confused as to how any of 
-the downstream clocks can actually be running if the pll isn't locked.
+-corey
 
-I feel like we are not yet on the same page about what situation you 
-seem to be in.  Can you describe in exacting detail?
-
+> 
+> watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [sh:745]
+> Modules linked in: floppy i915 drm_kms_helper drm fb_sys_fops sysimgblt sysfillrect syscopyarea iosf_mbi i2c_algo_bit video
+> CPU: 2 PID: 745 Comm: sh Not tainted 4.19.56-test-rt23+ #16
+> Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./To be filled by O.E.M., BIOS SDBLI944.86P 05/08/2007
+> RIP: 0010:_raw_spin_unlock_irq+0x17/0x4d
+> Code: 48 8b 12 0f ba e2 12 73 07 e8 f1 4a 92 ff 31 c0 5b 5d c3 66 66 66 66 90 55 48 89 e5 c6 07 00 e8 de 3d a3 ff fb bf 01 00 00 00 <e8> a7 27 9a ff 65 8b 05 c8 7f 93 7e 85 c0 74 1f a9 ff ff
+>  ff 7f 75
+> RSP: 0018:ffffc90000c8bbb8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+> RAX: 0000000000000000 RBX: ffffc90000c8bd58 RCX: 0000000000000003
+> RDX: 0000000000000000 RSI: ffffffff8108ffab RDI: 0000000000000001
+> RBP: ffffc90000c8bbb8 R08: ffffffff816dcd76 R09: 0000000000020600
+> R10: 0000000000000400 R11: 0000001c0eef1808 R12: ffffc90000c8bbc8
+> R13: ffffc90000f13ca0 R14: ffff888074b2d7d8 R15: ffff8880789efe10
+> FS:  0000000000000000(0000) GS:ffff88807b300000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000030662001b8 CR3: 00000000376ac000 CR4: 00000000000006e0
+> Call Trace:
+>  swake_up_all+0xa6/0xde
+>  __d_lookup_done+0x7c/0xc7
+>  __d_add+0x44/0xf7
+>  d_splice_alias+0x208/0x218
+>  ext4_lookup+0x1a6/0x1c5
+>  path_openat+0x63a/0xb15
+>  ? preempt_latency_stop+0x25/0x27
+>  do_filp_open+0x51/0xae
+>  ? trace_preempt_on+0xde/0xe7
+>  ? rt_spin_unlock+0x13/0x24
+>  ? __alloc_fd+0x145/0x155
+>  do_sys_open+0x81/0x125
+>  __x64_sys_open+0x21/0x23
+>  do_syscall_64+0x5c/0x6e
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> I haven't really looked too much into it though. I ran out of time :-/
+> 
+> -- Steve
