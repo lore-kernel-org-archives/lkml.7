@@ -2,181 +2,532 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E8DC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9BCC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12822089C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4958C206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="HbMdosaK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BXvZF4Hv"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="GJnXGms1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbfGAJ0f (ORCPT
+        id S1728419AbfGAJ3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 05:26:35 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:58351 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728345AbfGAJ0f (ORCPT
+        Mon, 1 Jul 2019 05:29:18 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41442 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728366AbfGAJ3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 05:26:35 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 67F391926;
-        Mon,  1 Jul 2019 05:26:31 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 01 Jul 2019 05:26:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=f4czRt2dBkv8pN065obux10iigs
-        5H2P/jUH4YPctBX4=; b=HbMdosaKJFUEmlxfPpgvwRPfUZZUnDtXEJSulkXKgRS
-        iq2GM3kPTqhnydLP/Hn1C1SM0wRFzxeqFQeuMY0cl17hHk0C4KQqSIu9e4hM9Nc/
-        1zY63VrUibN3ZqIkqGDzcgcgMLBRU3ezQvgVh+OV6PHp6CvTgFqXjvc7F6h9sS3A
-        s+psyVrnpX+4fRU1CEdKWo4NZTck9e93U1dpLG/+U2oVKS09doU0qqMw9okwRRRY
-        6YSXvr9WPdOAwrycZTB5T9Y54XbrUOasHAvfBpe++hlNwRQei0ErkXozmdjG0kE2
-        ANDFeR7mAs5D6Liz8gJdrSj/lANX4Bwz9Htdki1KOcg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=f4czRt
-        2dBkv8pN065obux10iigs5H2P/jUH4YPctBX4=; b=BXvZF4HvskL2NSVGHZ0Fai
-        pg5j0fHec3NoomL+fMN06PIxdn1g8X6AjhJoax5Q8jGxMrLCDpaWFSdepVlxV/Fa
-        9/yN6jJcMkJj0lBvOjvjfC4uLa7pqMoW30cqqRdZ0DvBXam/RwuUx1dBvhW/r41o
-        opZS+NBFQyPyxIGUTe2rnK4wsyA80nXXE+H4Xbn0O2Psfm9lqvwKecFMkqGpK0jn
-        ZeJKqfLElbOxcX5t46Fa+N5zhyGvzKrySddU3sfs5RVCnn1VGp5RL40vMbqmOu0d
-        uukhWVdWs501gAzAuRSPWubLEk80RDGAQCDuXScXf0on+ITTTdLmSFhquXCCFqUg
-        ==
-X-ME-Sender: <xms:xNEZXZ2Ol1P8OXll-4lgGH7sAy1d0uFZSyHMJ-Es9JVAQyiHZbvw8w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrvdeigddugecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdeftddmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
-    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
-    hinhdrtggtqeenucfkphepuddvgedrudelrdefuddrgeenucfrrghrrghmpehmrghilhhf
-    rhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:xNEZXcFQV42vo-KmGldRMALNC7NGl2OO0b9N5E_bqmxd0JpnDAmVMQ>
-    <xmx:xNEZXciLWpFKc4Ak5VIpYa2gAJwJGtzduq1hkcjeLPi1SRM0TX3zKA>
-    <xmx:xNEZXVD8xLq-PNaGPYToblU5TA44fwD_xjDHmcubFMuYvWg0YhS7Og>
-    <xmx:x9EZXReMZW3f4q3cfjMzqXuJlFpECY_7lk8QU65JRm-j6WdmfvGskw>
-Received: from localhost (unknown [124.19.31.4])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 63C7F380074;
-        Mon,  1 Jul 2019 05:26:27 -0400 (EDT)
-Date:   Mon, 1 Jul 2019 19:26:25 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Christopher Lameter <cl@linux.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: shrink_dentry_list() logics change (was Re: [RFC PATCH v3 14/15]
- dcache: Implement partial shrink via Slab Movable Objects)
-Message-ID: <20190701092625.GA9703@ares>
-References: <20190411013441.5415-1-tobin@kernel.org>
- <20190411013441.5415-15-tobin@kernel.org>
- <20190411023322.GD2217@ZenIV.linux.org.uk>
- <20190411024821.GB6941@eros.localdomain>
- <20190411044746.GE2217@ZenIV.linux.org.uk>
- <20190411210200.GH2217@ZenIV.linux.org.uk>
- <20190629040844.GS17978@ZenIV.linux.org.uk>
- <20190629043803.GT17978@ZenIV.linux.org.uk>
- <20190629190624.GU17978@ZenIV.linux.org.uk>
+        Mon, 1 Jul 2019 05:29:17 -0400
+Received: by mail-pf1-f193.google.com with SMTP id m30so6269048pff.8
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 02:29:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iDw/goxCt1y9+DQIyqB+MGutvTLuKgf8NLhHMUyG4Lc=;
+        b=GJnXGms1EWRX5IL/hzy7F4uIE5YHHmRlBPlMYoktuvtkrtvc8max+YtnVOgDHWC3iQ
+         yh1cIo2SXIbrn88f4fjufBsCw/kQxBRFVrI5hW6U97d0/2rxRWKctR1VXxV/X6Kqq3pe
+         Zne6NbhpWMa5QWSzmkka+0aXQ8yxxR8heqWaKVNGQEQipdaOK+wnLlJGUMEQbPIPY7rs
+         i6xXIQ7HKunIV90xq545KvqToL70aCw1OY266IFh58p+Li7MT0FHueFIE1aZn+cnTZQg
+         Vyuq96du+hk87UwTHXgmpeq0/SaaZ+xvNhzPoMPpn0FLchtDZRuS8hnkQktEnwZsjn5O
+         pnDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iDw/goxCt1y9+DQIyqB+MGutvTLuKgf8NLhHMUyG4Lc=;
+        b=NQs3kvugXGMrMsO4ea5PpYctNpArcXoyHMvD9xtKNnubEb/iPpr1PHXuH7y6x4kgvX
+         yfecyg7I3h3wGu9o9PEQFb5twWE75n8j3NtJZ4PjIQAWPOwq+I/g1WYALwEyQ7oCsXgZ
+         OnWJKejLRdZ2WPN9U9XnNU2YRVeTkcTi8u8qpbCOgOoZv2Ct51SrJHyColx98EJNCeLp
+         eru3/JzHeQpCux0uLmYVKq0RFhu2acoXazdeNpUbLoRnjaiitD6DvfcJGSLOorX6eEWu
+         SuEAC1vnUBRgSCmPNhAc4UBo3IY0/1hjoVIMkomOmBsL8Ohnjh/RviRou4Cuzn0nLLMV
+         j8zQ==
+X-Gm-Message-State: APjAAAWO3zK/TCrGFkXxwz+QQd7TdVcFLK/x7NoWdXo2uRaBkKLg0oyc
+        P8Sf1fjlU+YCBEUn1t0j7Qiyhg==
+X-Google-Smtp-Source: APXvYqwPid/Ht5pgeu9oSBb5rh5r5s8bK6H3x3i71j7JNfRLghgEKPQaUTqkZjOULu2/Tfvvx2P8TA==
+X-Received: by 2002:a63:db49:: with SMTP id x9mr23079665pgi.93.1561973356297;
+        Mon, 01 Jul 2019 02:29:16 -0700 (PDT)
+Received: from localhost.localdomain (220-133-8-232.HINET-IP.hinet.net. [220.133.8.232])
+        by smtp.gmail.com with ESMTPSA id r7sm14187192pfl.134.2019.07.01.02.29.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 01 Jul 2019 02:29:15 -0700 (PDT)
+From:   Chris Chiu <chiu@endlessm.com>
+To:     jes.sorensen@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Daniel Drake <drake@endlessm.com>
+Subject: [RFC PATCH v6] rtl8xxxu: Improve TX performance of RTL8723BU on rtl8xxxu driver
+Date:   Mon,  1 Jul 2019 17:29:11 +0800
+Message-Id: <20190701092911.45564-1-chiu@endlessm.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190629190624.GU17978@ZenIV.linux.org.uk>
-X-Mailer: Mutt 1.9.4 (2018-02-28)
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 08:06:24PM +0100, Al Viro wrote:
-> On Sat, Jun 29, 2019 at 05:38:03AM +0100, Al Viro wrote:
-> 
-> > PS: the problem is not gone in the next iteration of the patchset in
-> > question.  The patch I'm proposing (including dput_to_list() and _ONLY_
-> > compile-tested) follows.  Comments?
-> 
-> FWIW, there's another unpleasantness in the whole thing.  Suppose we have
-> picked a page full of dentries, all with refcount 0.  We decide to
-> evict all of them.  As it turns out, they are from two filesystems.
-> Filesystem 1 is NFS on a server, with currently downed hub on the way
-> to it.  Filesystem 2 is local.  We attempt to evict an NFS dentry and
-> get stuck - tons of dirty data with no way to flush them on server.
-> In the meanwhile, admin tries to unmount the local filesystem.  And
-> gets stuck as well, since umount can't do anything to its dentries
-> that happen to sit in our shrink list.
-> 
-> I wonder if the root of problem here isn't in shrink_dcache_for_umount();
-> all it really needs is to have everything on that fs with refcount 0
-> dragged through __dentry_kill().  If something had been on a shrink
-> list, __dentry_kill() will just leave behind a struct dentry completely
-> devoid of any connection to superblock, other dentries, filesystem
-> type, etc. - it's just a piece of memory that won't be freed until
-> the owner of shrink list finally gets around to it.  Which can happen
-> at any point - all they'll do to it is dentry_free(), and that doesn't
-> need any fs-related data structures.
-> 
-> The logics in shrink_dcache_parent() is
-> 	collect everything evictable into a shrink list
-> 	if anything found - kick it out and repeat the scan
-> 	otherwise, if something had been on other's shrink list
-> 		repeat the scan
-> 
-> I wonder if after the "no evictable candidates, but something
-> on other's shrink lists" we ought to do something along the
-> lines of
-> 	rcu_read_lock
-> 	walk it, doing
-> 		if dentry has zero refcount
-> 			if it's not on a shrink list,
-> 				move it to ours
-> 			else
-> 				store its address in 'victim'
-> 				end the walk
-> 	if no victim found
-> 		rcu_read_unlock
-> 	else
-> 		lock victim for __dentry_kill
-> 		rcu_read_unlock
-> 		if it's still alive
-> 			if it's not IS_ROOT
-> 				if parent is not on shrink list
-> 					decrement parent's refcount
-> 					put it on our list
-> 				else
-> 					decrement parent's refcount
-> 			__dentry_kill(victim)
-> 		else
-> 			unlock
-> 	if our list is non-empty
-> 		shrink_dentry_list on it
-> in there...
+We have 3 laptops which connect the wifi by the same RTL8723BU.
+The PCI VID/PID of the wifi chip is 10EC:B720 which is supported.
+They have the same problem with the in-kernel rtl8xxxu driver, the
+iperf (as a client to an ethernet-connected server) gets ~1Mbps.
+Nevertheless, the signal strength is reported as around -40dBm,
+which is quite good. From the wireshark capture, the tx rate for each
+data and qos data packet is only 1Mbps. Compare to the Realtek driver
+at https://github.com/lwfinger/rtl8723bu, the same iperf test gets
+~12Mbps or better. The signal strength is reported similarly around
+-40dBm. That's why we want to improve.
 
-Thanks for still thinking about this Al.  I don't have a lot of idea
-about what to do with your comments until I can grok them fully but I
-wanted to acknowledge having read them.
+After reading the source code of the rtl8xxxu driver and Realtek's, the
+major difference is that Realtek's driver has a watchdog which will keep
+monitoring the signal quality and updating the rate mask just like the
+rtl8xxxu_gen2_update_rate_mask() does if signal quality changes.
+And this kind of watchdog also exists in rtlwifi driver of some specific
+chips, ex rtl8192ee, rtl8188ee, rtl8723ae, rtl8821ae...etc. They have
+the same member function named dm_watchdog and will invoke the
+corresponding dm_refresh_rate_adaptive_mask to adjust the tx rate
+mask.
 
-Thanks,
-Tobin.
+With this commit, the tx rate of each data and qos data packet will
+be 39Mbps (MCS4) with the 0xF00000 as the tx rate mask. The 20th bit
+to 23th bit means MCS4 to MCS7. It means that the firmware still picks
+the lowest rate from the rate mask and explains why the tx rate of
+data and qos data is always lowest 1Mbps because the default rate mask
+passed is always 0xFFFFFFF ranges from the basic CCK rate, OFDM rate,
+and MCS rate. However, with Realtek's driver, the tx rate observed from
+wireshark under the same condition is almost 65Mbps or 72Mbps, which
+indicating that rtl8xxxu could still be further improved.
+
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Reviewed-by: Daniel Drake <drake@endlessm.com>
+---
+
+
+Notes:
+  v2:
+   - Fix errors and warnings complained by checkpatch.pl
+   - Replace data structure rate_adaptive by 2 member variables
+   - Make rtl8xxxu_wireless_mode non-static
+   - Runs refresh_rate_mask() only in station mode
+  v3:
+   - Remove ugly rtl8xxxu_watchdog data structure
+   - Make sure only one vif exists
+  v4:
+   - Move cancel_delayed_work from rtl8xxxu_disconnect to rtl8xxxu_stop
+   - Clear priv->vif in rtl8xxxu_remove_interface
+   - Add rateid as the function argument of update_rate_mask
+   - Rephrase the comment for priv->vif more explicit.
+  v5:
+   - Make refresh_rate_mask() generic for all sub-drivers.
+   - Add definitions for SNR related to help determine rssi_level
+  v6: 
+   - Fix typo of the comment for priv->vif
+
+
+ .../net/wireless/realtek/rtl8xxxu/rtl8xxxu.h  |  55 ++++-
+ .../wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 226 +++++++++++++++++-
+ 2 files changed, 274 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+index 8828baf26e7b..95b990c976ed 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+@@ -1195,6 +1195,48 @@ struct rtl8723bu_c2h {
+ 
+ struct rtl8xxxu_fileops;
+ 
++/*mlme related.*/
++enum wireless_mode {
++	WIRELESS_MODE_UNKNOWN = 0,
++	/* Sub-Element */
++	WIRELESS_MODE_B = BIT(0),
++	WIRELESS_MODE_G = BIT(1),
++	WIRELESS_MODE_A = BIT(2),
++	WIRELESS_MODE_N_24G = BIT(3),
++	WIRELESS_MODE_N_5G = BIT(4),
++	WIRELESS_AUTO = BIT(5),
++	WIRELESS_MODE_AC = BIT(6),
++	WIRELESS_MODE_MAX = 0x7F,
++};
++
++/* from rtlwifi/wifi.h */
++enum ratr_table_mode_new {
++	RATEID_IDX_BGN_40M_2SS = 0,
++	RATEID_IDX_BGN_40M_1SS = 1,
++	RATEID_IDX_BGN_20M_2SS_BN = 2,
++	RATEID_IDX_BGN_20M_1SS_BN = 3,
++	RATEID_IDX_GN_N2SS = 4,
++	RATEID_IDX_GN_N1SS = 5,
++	RATEID_IDX_BG = 6,
++	RATEID_IDX_G = 7,
++	RATEID_IDX_B = 8,
++	RATEID_IDX_VHT_2SS = 9,
++	RATEID_IDX_VHT_1SS = 10,
++	RATEID_IDX_MIX1 = 11,
++	RATEID_IDX_MIX2 = 12,
++	RATEID_IDX_VHT_3SS = 13,
++	RATEID_IDX_BGN_3SS = 14,
++};
++
++#define RTL8XXXU_RATR_STA_INIT 0
++#define RTL8XXXU_RATR_STA_HIGH 1
++#define RTL8XXXU_RATR_STA_MID  2
++#define RTL8XXXU_RATR_STA_LOW  3
++
++#define RTL8XXXU_NOISE_FLOOR_MIN	-95
++#define RTL8XXXU_SNR_THRESH_HIGH	50
++#define RTL8XXXU_SNR_THRESH_LOW	20
++
+ struct rtl8xxxu_priv {
+ 	struct ieee80211_hw *hw;
+ 	struct usb_device *udev;
+@@ -1299,6 +1341,13 @@ struct rtl8xxxu_priv {
+ 	u8 pi_enabled:1;
+ 	u8 no_pape:1;
+ 	u8 int_buf[USB_INTR_CONTENT_LENGTH];
++	u8 rssi_level;
++	/*
++	 * Only one virtual interface permitted because only STA mode
++	 * is supported and no iface_combinations are provided.
++	 */
++	struct ieee80211_vif *vif;
++	struct delayed_work ra_watchdog;
+ };
+ 
+ struct rtl8xxxu_rx_urb {
+@@ -1334,7 +1383,7 @@ struct rtl8xxxu_fileops {
+ 	void (*set_tx_power) (struct rtl8xxxu_priv *priv, int channel,
+ 			      bool ht40);
+ 	void (*update_rate_mask) (struct rtl8xxxu_priv *priv,
+-				  u32 ramask, int sgi);
++				  u32 ramask, u8 rateid, int sgi);
+ 	void (*report_connect) (struct rtl8xxxu_priv *priv,
+ 				u8 macid, bool connect);
+ 	void (*fill_txdesc) (struct ieee80211_hw *hw, struct ieee80211_hdr *hdr,
+@@ -1419,9 +1468,9 @@ void rtl8xxxu_gen2_config_channel(struct ieee80211_hw *hw);
+ void rtl8xxxu_gen1_usb_quirks(struct rtl8xxxu_priv *priv);
+ void rtl8xxxu_gen2_usb_quirks(struct rtl8xxxu_priv *priv);
+ void rtl8xxxu_update_rate_mask(struct rtl8xxxu_priv *priv,
+-			       u32 ramask, int sgi);
++			       u32 ramask, u8 rateid, int sgi);
+ void rtl8xxxu_gen2_update_rate_mask(struct rtl8xxxu_priv *priv,
+-				    u32 ramask, int sgi);
++				    u32 ramask, u8 rateid, int sgi);
+ void rtl8xxxu_gen1_report_connect(struct rtl8xxxu_priv *priv,
+ 				  u8 macid, bool connect);
+ void rtl8xxxu_gen2_report_connect(struct rtl8xxxu_priv *priv,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 039e5ca9d2e4..474dea2291a9 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -4311,7 +4311,8 @@ static void rtl8xxxu_sw_scan_complete(struct ieee80211_hw *hw,
+ 	rtl8xxxu_write8(priv, REG_BEACON_CTRL, val8);
+ }
+ 
+-void rtl8xxxu_update_rate_mask(struct rtl8xxxu_priv *priv, u32 ramask, int sgi)
++void rtl8xxxu_update_rate_mask(struct rtl8xxxu_priv *priv,
++			       u32 ramask, u8 rateid, int sgi)
+ {
+ 	struct h2c_cmd h2c;
+ 
+@@ -4331,7 +4332,7 @@ void rtl8xxxu_update_rate_mask(struct rtl8xxxu_priv *priv, u32 ramask, int sgi)
+ }
+ 
+ void rtl8xxxu_gen2_update_rate_mask(struct rtl8xxxu_priv *priv,
+-				    u32 ramask, int sgi)
++				    u32 ramask, u8 rateid, int sgi)
+ {
+ 	struct h2c_cmd h2c;
+ 	u8 bw = 0;
+@@ -4345,7 +4346,7 @@ void rtl8xxxu_gen2_update_rate_mask(struct rtl8xxxu_priv *priv,
+ 	h2c.b_macid_cfg.ramask3 = (ramask >> 24) & 0xff;
+ 
+ 	h2c.ramask.arg = 0x80;
+-	h2c.b_macid_cfg.data1 = 0;
++	h2c.b_macid_cfg.data1 = rateid;
+ 	if (sgi)
+ 		h2c.b_macid_cfg.data1 |= BIT(7);
+ 
+@@ -4485,6 +4486,40 @@ static void rtl8xxxu_set_basic_rates(struct rtl8xxxu_priv *priv, u32 rate_cfg)
+ 	rtl8xxxu_write8(priv, REG_INIRTS_RATE_SEL, rate_idx);
+ }
+ 
++static u16
++rtl8xxxu_wireless_mode(struct ieee80211_hw *hw, struct ieee80211_sta *sta)
++{
++	u16 network_type = WIRELESS_MODE_UNKNOWN;
++	u32 rate_mask;
++
++	rate_mask = (sta->supp_rates[0] & 0xfff) |
++		    (sta->ht_cap.mcs.rx_mask[0] << 12) |
++		    (sta->ht_cap.mcs.rx_mask[0] << 20);
++
++	if (hw->conf.chandef.chan->band == NL80211_BAND_5GHZ) {
++		if (sta->vht_cap.vht_supported)
++			network_type = WIRELESS_MODE_AC;
++		else if (sta->ht_cap.ht_supported)
++			network_type = WIRELESS_MODE_N_5G;
++
++		network_type |= WIRELESS_MODE_A;
++	} else {
++		if (sta->vht_cap.vht_supported)
++			network_type = WIRELESS_MODE_AC;
++		else if (sta->ht_cap.ht_supported)
++			network_type = WIRELESS_MODE_N_24G;
++
++		if (sta->supp_rates[0] <= 0xf)
++			network_type |= WIRELESS_MODE_B;
++		else if (sta->supp_rates[0] & 0xf)
++			network_type |= (WIRELESS_MODE_B | WIRELESS_MODE_G);
++		else
++			network_type |= WIRELESS_MODE_G;
++	}
++
++	return network_type;
++}
++
+ static void
+ rtl8xxxu_bss_info_changed(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+ 			  struct ieee80211_bss_conf *bss_conf, u32 changed)
+@@ -4527,7 +4562,10 @@ rtl8xxxu_bss_info_changed(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+ 				sgi = 1;
+ 			rcu_read_unlock();
+ 
+-			priv->fops->update_rate_mask(priv, ramask, sgi);
++			priv->vif = vif;
++			priv->rssi_level = RTL8XXXU_RATR_STA_INIT;
++
++			priv->fops->update_rate_mask(priv, ramask, 0, sgi);
+ 
+ 			rtl8xxxu_write8(priv, REG_BCN_MAX_ERR, 0xff);
+ 
+@@ -5471,6 +5509,10 @@ static int rtl8xxxu_add_interface(struct ieee80211_hw *hw,
+ 
+ 	switch (vif->type) {
+ 	case NL80211_IFTYPE_STATION:
++		if (!priv->vif)
++			priv->vif = vif;
++		else
++			return -EOPNOTSUPP;
+ 		rtl8xxxu_stop_tx_beacon(priv);
+ 
+ 		val8 = rtl8xxxu_read8(priv, REG_BEACON_CTRL);
+@@ -5494,6 +5536,9 @@ static void rtl8xxxu_remove_interface(struct ieee80211_hw *hw,
+ 	struct rtl8xxxu_priv *priv = hw->priv;
+ 
+ 	dev_dbg(&priv->udev->dev, "%s\n", __func__);
++
++	if (priv->vif)
++		priv->vif = NULL;
+ }
+ 
+ static int rtl8xxxu_config(struct ieee80211_hw *hw, u32 changed)
+@@ -5779,6 +5824,174 @@ rtl8xxxu_ampdu_action(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+ 	return 0;
+ }
+ 
++static u8 rtl8xxxu_signal_to_snr(int signal)
++{
++	if (signal < RTL8XXXU_NOISE_FLOOR_MIN)
++		signal = RTL8XXXU_NOISE_FLOOR_MIN;
++	return (u8)(signal - RTL8XXXU_NOISE_FLOOR_MIN);
++}
++
++static void rtl8xxxu_refresh_rate_mask(struct rtl8xxxu_priv *priv,
++				       int signal, struct ieee80211_sta *sta)
++{
++	struct ieee80211_hw *hw = priv->hw;
++	u16 wireless_mode;
++	u8 rssi_level, ratr_idx;
++	u8 txbw_40mhz;
++	u8 snr, snr_thresh_high, snr_thresh_low;
++	u8 go_up_gap = 5;
++
++	rssi_level = priv->rssi_level;
++	snr = rtl8xxxu_signal_to_snr(signal);
++	snr_thresh_high = RTL8XXXU_SNR_THRESH_HIGH;
++	snr_thresh_low = RTL8XXXU_SNR_THRESH_LOW;
++	txbw_40mhz = (hw->conf.chandef.width == NL80211_CHAN_WIDTH_40) ? 1 : 0;
++
++	switch (rssi_level) {
++	case RTL8XXXU_RATR_STA_MID:
++		snr_thresh_high += go_up_gap;
++		break;
++	case RTL8XXXU_RATR_STA_LOW:
++		snr_thresh_high += go_up_gap;
++		snr_thresh_low += go_up_gap;
++		break;
++	default:
++		break;
++	}
++
++	if (snr > snr_thresh_high)
++		rssi_level = RTL8XXXU_RATR_STA_HIGH;
++	else if (snr > snr_thresh_low)
++		rssi_level = RTL8XXXU_RATR_STA_MID;
++	else
++		rssi_level = RTL8XXXU_RATR_STA_LOW;
++
++	if (rssi_level != priv->rssi_level) {
++		int sgi = 0;
++		u32 rate_bitmap = 0;
++
++		rcu_read_lock();
++		rate_bitmap = (sta->supp_rates[0] & 0xfff) |
++				(sta->ht_cap.mcs.rx_mask[0] << 12) |
++				(sta->ht_cap.mcs.rx_mask[1] << 20);
++		if (sta->ht_cap.cap &
++		    (IEEE80211_HT_CAP_SGI_40 | IEEE80211_HT_CAP_SGI_20))
++			sgi = 1;
++		rcu_read_unlock();
++
++		wireless_mode = rtl8xxxu_wireless_mode(hw, sta);
++		switch (wireless_mode) {
++		case WIRELESS_MODE_B:
++			ratr_idx = RATEID_IDX_B;
++			if (rate_bitmap & 0x0000000c)
++				rate_bitmap &= 0x0000000d;
++			else
++				rate_bitmap &= 0x0000000f;
++			break;
++		case WIRELESS_MODE_A:
++		case WIRELESS_MODE_G:
++			ratr_idx = RATEID_IDX_G;
++			if (rssi_level == RTL8XXXU_RATR_STA_HIGH)
++				rate_bitmap &= 0x00000f00;
++			else
++				rate_bitmap &= 0x00000ff0;
++			break;
++		case (WIRELESS_MODE_B | WIRELESS_MODE_G):
++			ratr_idx = RATEID_IDX_BG;
++			if (rssi_level == RTL8XXXU_RATR_STA_HIGH)
++				rate_bitmap &= 0x00000f00;
++			else if (rssi_level == RTL8XXXU_RATR_STA_MID)
++				rate_bitmap &= 0x00000ff0;
++			else
++				rate_bitmap &= 0x00000ff5;
++			break;
++		case WIRELESS_MODE_N_24G:
++		case WIRELESS_MODE_N_5G:
++		case (WIRELESS_MODE_G | WIRELESS_MODE_N_24G):
++		case (WIRELESS_MODE_A | WIRELESS_MODE_N_5G):
++			if (priv->tx_paths == 2 && priv->rx_paths == 2)
++				ratr_idx = RATEID_IDX_GN_N2SS;
++			else
++				ratr_idx = RATEID_IDX_GN_N1SS;
++		case (WIRELESS_MODE_B | WIRELESS_MODE_G | WIRELESS_MODE_N_24G):
++		case (WIRELESS_MODE_B | WIRELESS_MODE_N_24G):
++			if (txbw_40mhz) {
++				if (priv->tx_paths == 2 && priv->rx_paths == 2)
++					ratr_idx = RATEID_IDX_BGN_40M_2SS;
++				else
++					ratr_idx = RATEID_IDX_BGN_40M_1SS;
++			} else {
++				if (priv->tx_paths == 2 && priv->rx_paths == 2)
++					ratr_idx = RATEID_IDX_BGN_20M_2SS_BN;
++				else
++					ratr_idx = RATEID_IDX_BGN_20M_1SS_BN;
++			}
++
++			if (priv->tx_paths == 2 && priv->rx_paths == 2) {
++				if (rssi_level == RTL8XXXU_RATR_STA_HIGH) {
++					rate_bitmap &= 0x0f8f0000;
++				} else if (rssi_level == RTL8XXXU_RATR_STA_MID) {
++					rate_bitmap &= 0x0f8ff000;
++				} else {
++					if (txbw_40mhz)
++						rate_bitmap &= 0x0f8ff015;
++					else
++						rate_bitmap &= 0x0f8ff005;
++				}
++			} else {
++				if (rssi_level == RTL8XXXU_RATR_STA_HIGH) {
++					rate_bitmap &= 0x000f0000;
++				} else if (rssi_level == RTL8XXXU_RATR_STA_MID) {
++					rate_bitmap &= 0x000ff000;
++				} else {
++					if (txbw_40mhz)
++						rate_bitmap &= 0x000ff015;
++					else
++						rate_bitmap &= 0x000ff005;
++				}
++			}
++			break;
++		default:
++			ratr_idx = RATEID_IDX_BGN_40M_2SS;
++			rate_bitmap &= 0x0fffffff;
++			break;
++		}
++
++		priv->rssi_level = rssi_level;
++		priv->fops->update_rate_mask(priv, rate_bitmap, ratr_idx, sgi);
++	}
++}
++
++static void rtl8xxxu_watchdog_callback(struct work_struct *work)
++{
++	struct ieee80211_vif *vif;
++	struct rtl8xxxu_priv *priv;
++
++	priv = container_of(work, struct rtl8xxxu_priv, ra_watchdog.work);
++	vif = priv->vif;
++
++	if (vif && vif->type == NL80211_IFTYPE_STATION) {
++		int signal;
++		struct ieee80211_sta *sta;
++
++		rcu_read_lock();
++		sta = ieee80211_find_sta(vif, vif->bss_conf.bssid);
++		if (!sta) {
++			struct device *dev = &priv->udev->dev;
++
++			dev_info(dev, "%s: no sta found\n", __func__);
++			rcu_read_unlock();
++			return;
++		}
++		rcu_read_unlock();
++
++		signal = ieee80211_ave_rssi(vif);
++		rtl8xxxu_refresh_rate_mask(priv, signal, sta);
++	}
++
++	schedule_delayed_work(&priv->ra_watchdog, 2 * HZ);
++}
++
+ static int rtl8xxxu_start(struct ieee80211_hw *hw)
+ {
+ 	struct rtl8xxxu_priv *priv = hw->priv;
+@@ -5835,6 +6048,8 @@ static int rtl8xxxu_start(struct ieee80211_hw *hw)
+ 
+ 		ret = rtl8xxxu_submit_rx_urb(priv, rx_urb);
+ 	}
++
++	schedule_delayed_work(&priv->ra_watchdog, 2 * HZ);
+ exit:
+ 	/*
+ 	 * Accept all data and mgmt frames
+@@ -5886,6 +6101,8 @@ static void rtl8xxxu_stop(struct ieee80211_hw *hw)
+ 	if (priv->usb_interrupts)
+ 		rtl8xxxu_write32(priv, REG_USB_HIMR, 0);
+ 
++	cancel_delayed_work_sync(&priv->ra_watchdog);
++
+ 	rtl8xxxu_free_rx_resources(priv);
+ 	rtl8xxxu_free_tx_resources(priv);
+ }
+@@ -6058,6 +6275,7 @@ static int rtl8xxxu_probe(struct usb_interface *interface,
+ 	INIT_LIST_HEAD(&priv->rx_urb_pending_list);
+ 	spin_lock_init(&priv->rx_urb_lock);
+ 	INIT_WORK(&priv->rx_urb_wq, rtl8xxxu_rx_urb_work);
++	INIT_DELAYED_WORK(&priv->ra_watchdog, rtl8xxxu_watchdog_callback);
+ 
+ 	usb_set_intfdata(interface, hw);
+ 
+-- 
+2.21.0
+
