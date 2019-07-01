@@ -1,62 +1,201 @@
 Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A8FC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32D7C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2AAC2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8510212F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561966738;
+	bh=zAyY0lDzDu7ZqrBM5+8o/AVTSGqnO8jg8XR0lZ8kF9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wa1OOcw0J2wwxWPoZkVZCWYO2/uG5TrAVM3C71WQm0mtOit4SpXdqBniTDeQIPPtP
+	 IMlVssR1dzX51JWDKLEfbEtGpasGuxEN7NEDydU8mtAkwOe/jmcTPszHyEze7Cmic5
+	 veRdv/2zylq6UtFtrZ4J5MWL7WfB0+4CKut6HXm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbfGAHiO (ORCPT
+        id S1727928AbfGAHi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 03:38:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40082 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727282AbfGAHiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 03:38:13 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9204087622;
-        Mon,  1 Jul 2019 07:38:13 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4535C608C2;
-        Mon,  1 Jul 2019 07:38:11 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190701010847.GA23778@ZenIV.linux.org.uk>
-References: <20190701010847.GA23778@ZenIV.linux.org.uk> <CACT4Y+ZN8CZq7L1GQANr25extEqPASRERGVh+sD4-55cvWPOSg@mail.gmail.com> <20190629202744.12396-1-ebiggers@kernel.org> <20190629203916.GV17978@ZenIV.linux.org.uk>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     dhowells@redhat.com, Eric Biggers <ebiggers@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] vfs: move_mount: reject moving kernel internal mounts
+        Mon, 1 Jul 2019 03:38:57 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46433 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbfGAHi4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 03:38:56 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 81so6116628pfy.13;
+        Mon, 01 Jul 2019 00:38:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=oLH1OncNHxs8jMVlyqKzbM2LmgvaD0Lm4DDU5l+6xuE=;
+        b=nKCbXIFP0qhCB9TYyiIPTDswXVswW8CR9y8Csly4Id5HAH94lfYeljtiMc58SdKPxU
+         pwXoZijwnVSxsgPzAl/R9CvVncgvHBxXeEPQjkY4CQ8CorFmkIN4zMiIIIPXaZnYuAlC
+         EgFuUgMnbYFoKaRigKTPbD01B9cpVCfV9RQlcIfFEvpIDBFKQSXxa5K34RKkqnG3WDtl
+         RlKK4bi/fAYaN5APqWQ5PddFXT4IxjihNUz0gk9JwBzVjc3J7bNX4EFXYc/QEtpKlwzC
+         9OYZmZCQ5TKdl/FwhtRPjD9UCuuSdguZGdKBLGBEBouIwzY4SpU5ZzNaJZQxfJmHZWsK
+         6oOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=oLH1OncNHxs8jMVlyqKzbM2LmgvaD0Lm4DDU5l+6xuE=;
+        b=a37euXlUgZDBcImqEfUrToapxsHe+5owQo3x9kiSgDQtwAF88AILIV8b8zpo6Ee+fY
+         t08P41MHJaBm3mike6kkIQubUGv7bCBBRH1vZtBMKhNjm/ze2FF99VNoJr6DMGFW0rz/
+         x7JeU7sR+MdOJ9sOYW3iNrBNlmVOFOlCN5SCWmgitqmDZ6MsfZMb2baK4Wi6fAXJTVZ4
+         zxLqempm5XAzosgohCkVU1WhzNWSf39IIgCScPV/7OahTVt6GYHYlNr5bp/af0G9biht
+         cO/NqSi3LP7yplyTKlcG96bUhwJn+1+IuIJ1Ns1qqF5sn20HWDCtLtB42t8VfvWvbtYN
+         t/qQ==
+X-Gm-Message-State: APjAAAUnbW3htuVSQWBL0+Mb9pGRXx0gTN5DL3tUZ7XUzCLMopW5zFWj
+        mONngMF5p8HJv+dH8iGnX1c=
+X-Google-Smtp-Source: APXvYqyCp/N10OoZuyoBqCG1Owt7owZdT4mU1H00JSac3imof61OnjmhaWbc9E9JZ9rjSsi/ctXplw==
+X-Received: by 2002:a63:2cd1:: with SMTP id s200mr23505101pgs.439.1561966735773;
+        Mon, 01 Jul 2019 00:38:55 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id z4sm9658756pfa.142.2019.07.01.00.38.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 00:38:54 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 16:38:48 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v3 0/5] Introduce MADV_COLD and MADV_PAGEOUT
+Message-ID: <20190701073848.GB136163@google.com>
+References: <20190627115405.255259-1-minchan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2576.1561966690.1@warthog.procyon.org.uk>
-Date:   Mon, 01 Jul 2019 08:38:10 +0100
-Message-ID: <2578.1561966690@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 01 Jul 2019 07:38:13 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190627115405.255259-1-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro <viro@zeniv.linux.org.uk> wrote:
 
-> 	/* The thing moved must be mounted... */
-> 	if (!is_mounted(old_path->mnt))
-> 		goto out;
+Hi Folks,
 
-Um...  Doesn't that stuff up fsmount()?
+Do you guys have comments? I think it would be long enough to be
+pending. If there is no further comments, I want to ask to merge.
 
-David
+Thanks.
+
+On Thu, Jun 27, 2019 at 08:54:00PM +0900, Minchan Kim wrote:
+> This patch is part of previous series:
+> https://lore.kernel.org/lkml/20190531064313.193437-1-minchan@kernel.org/T/#u
+> Originally, it was created for external madvise hinting feature.
+> 
+> https://lkml.org/lkml/2019/5/31/463
+> Michal wanted to separte the discussion from external hinting interface
+> so this patchset includes only first part of my entire patchset
+> 
+>   - introduce MADV_COLD and MADV_PAGEOUT hint to madvise.
+> 
+> However, I keep entire description for others for easier understanding
+> why this kinds of hint was born.
+> 
+> Thanks.
+> 
+> This patchset is against on next-20190530.
+> 
+> Below is description of previous entire patchset.
+> ================= &< =====================
+> 
+> - Background
+> 
+> The Android terminology used for forking a new process and starting an app
+> from scratch is a cold start, while resuming an existing app is a hot start.
+> While we continually try to improve the performance of cold starts, hot
+> starts will always be significantly less power hungry as well as faster so
+> we are trying to make hot start more likely than cold start.
+> 
+> To increase hot start, Android userspace manages the order that apps should
+> be killed in a process called ActivityManagerService. ActivityManagerService
+> tracks every Android app or service that the user could be interacting with
+> at any time and translates that into a ranked list for lmkd(low memory
+> killer daemon). They are likely to be killed by lmkd if the system has to
+> reclaim memory. In that sense they are similar to entries in any other cache.
+> Those apps are kept alive for opportunistic performance improvements but
+> those performance improvements will vary based on the memory requirements of
+> individual workloads.
+> 
+> - Problem
+> 
+> Naturally, cached apps were dominant consumers of memory on the system.
+> However, they were not significant consumers of swap even though they are
+> good candidate for swap. Under investigation, swapping out only begins
+> once the low zone watermark is hit and kswapd wakes up, but the overall
+> allocation rate in the system might trip lmkd thresholds and cause a cached
+> process to be killed(we measured performance swapping out vs. zapping the
+> memory by killing a process. Unsurprisingly, zapping is 10x times faster
+> even though we use zram which is much faster than real storage) so kill
+> from lmkd will often satisfy the high zone watermark, resulting in very
+> few pages actually being moved to swap.
+> 
+> - Approach
+> 
+> The approach we chose was to use a new interface to allow userspace to
+> proactively reclaim entire processes by leveraging platform information.
+> This allowed us to bypass the inaccuracy of the kernel’s LRUs for pages
+> that are known to be cold from userspace and to avoid races with lmkd
+> by reclaiming apps as soon as they entered the cached state. Additionally,
+> it could provide many chances for platform to use much information to
+> optimize memory efficiency.
+> 
+> To achieve the goal, the patchset introduce two new options for madvise.
+> One is MADV_COLD which will deactivate activated pages and the other is
+> MADV_PAGEOUT which will reclaim private pages instantly. These new options
+> complement MADV_DONTNEED and MADV_FREE by adding non-destructive ways to
+> gain some free memory space. MADV_PAGEOUT is similar to MADV_DONTNEED in a way
+> that it hints the kernel that memory region is not currently needed and
+> should be reclaimed immediately; MADV_COLD is similar to MADV_FREE in a way
+> that it hints the kernel that memory region is not currently needed and
+> should be reclaimed when memory pressure rises.
+> 
+> Minchan Kim (5):
+>   mm: introduce MADV_COLD
+>   mm: change PAGEREF_RECLAIM_CLEAN with PAGE_REFRECLAIM
+>   mm: account nr_isolated_xxx in [isolate|putback]_lru_page
+>   mm: introduce MADV_PAGEOUT
+>   mm: factor out pmd young/dirty bit handling and THP split
+> 
+>  include/linux/huge_mm.h                |   3 -
+>  include/linux/swap.h                   |   2 +
+>  include/uapi/asm-generic/mman-common.h |   2 +
+>  mm/compaction.c                        |   2 -
+>  mm/gup.c                               |   7 +-
+>  mm/huge_memory.c                       |  74 -----
+>  mm/internal.h                          |   2 +-
+>  mm/khugepaged.c                        |   3 -
+>  mm/madvise.c                           | 438 ++++++++++++++++++++++++-
+>  mm/memory-failure.c                    |   3 -
+>  mm/memory_hotplug.c                    |   4 -
+>  mm/mempolicy.c                         |   6 +-
+>  mm/migrate.c                           |  37 +--
+>  mm/oom_kill.c                          |   2 +-
+>  mm/swap.c                              |  42 +++
+>  mm/vmscan.c                            |  86 ++++-
+>  16 files changed, 566 insertions(+), 147 deletions(-)
+> 
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
