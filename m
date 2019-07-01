@@ -2,101 +2,79 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8F0C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B63C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBFD20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FEC7208C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:53:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561964026;
+	bh=odWFKN/v6uhJ1wZgS3JZoIz8uAE4V7d8K7ikdqDiizc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=krUpvFcN/N7Fiy5efDarEHmYkzU7ywuANmSyiewlV1T4cxzcZt03Q7gKZNFPcSgex
+	 UiXaGBBBtNrqf7ct1Fci+KmWova81QX5fjEi76E1RXRa4kMyljOdgSsHCjfr5BnKrk
+	 971Hos4K3z6ZFlVBiGkGUJ7RwYzJXwOFcQCxwTHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfGAGxV (ORCPT
+        id S1727662AbfGAGxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:53:21 -0400
-Received: from mga07.intel.com ([134.134.136.100]:59538 "EHLO mga07.intel.com"
+        Mon, 1 Jul 2019 02:53:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726402AbfGAGxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 02:53:20 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jun 2019 23:47:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,437,1557212400"; 
-   d="scan'208";a="361732774"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga005.fm.intel.com with ESMTP; 30 Jun 2019 23:47:07 -0700
-Date:   Mon, 1 Jul 2019 14:30:27 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, yilun.xu@intel.com,
-        gregkh@linuxfoundation.org, atull@kernel.org
-Subject: Re: [PATCH v4 05/15] Documentation: fpga: dfl: add descriptions for
- virtualization and new interfaces.
-Message-ID: <20190701063027.GA3824@hao-dev>
-References: <1561610695-5414-1-git-send-email-hao.wu@intel.com>
- <1561610695-5414-6-git-send-email-hao.wu@intel.com>
- <20190628011256.GB5671@archbook>
- <20190628021333.GB9994@hao-dev>
+        id S1726402AbfGAGxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 02:53:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B506620663;
+        Mon,  1 Jul 2019 06:53:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561964024;
+        bh=odWFKN/v6uhJ1wZgS3JZoIz8uAE4V7d8K7ikdqDiizc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bDDq4nK31Qe0QMmIlQI0ShcHdCjqdzm2mx4JIVE/ppBqGuyh9NzvE56GHJhk7KJqp
+         t//eppnFnh4OXVqSzagqK33KHVX4SthEFLRyAjwQIYLIfUmzhFZN9Rta3qB+SV+Zoh
+         RPcO8tIzb7NafFAFQr53YaL1bcJ/14X/QnLmBLGY=
+Date:   Mon, 1 Jul 2019 08:53:41 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/10] staging/rtl8723bs/hal: fix comparison to
+ true/false is error prone
+Message-ID: <20190701065341.GA2481@kroah.com>
+References: <20190629101909.GA14880@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190628021333.GB9994@hao-dev>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190629101909.GA14880@hari-Inspiron-1545>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 10:13:33AM +0800, Wu Hao wrote:
-> On Thu, Jun 27, 2019 at 06:12:56PM -0700, Moritz Fischer wrote:
-> > Hi Wu,
-> > 
-> > On Thu, Jun 27, 2019 at 12:44:45PM +0800, Wu Hao wrote:
-> > > This patch adds virtualization support description for DFL based
-> > > FPGA devices (based on PCIe SRIOV), and introductions to new
-> > > interfaces added by new dfl private feature drivers.
-> > > 
-> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > Acked-by: Alan Tull <atull@kernel.org>
-> > > ---
-> > >  Documentation/fpga/dfl.txt | 101 +++++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 101 insertions(+)
-> > > 
-> > > diff --git a/Documentation/fpga/dfl.txt b/Documentation/fpga/dfl.txt
-> > > index 6df4621..a22631f 100644
-> > > --- a/Documentation/fpga/dfl.txt
-> > > +++ b/Documentation/fpga/dfl.txt
-> > 
-> > This got re{named,formatted} in linux-next. I've tried to fix it before sending it
-> > to Greg.
+On Sat, Jun 29, 2019 at 03:49:09PM +0530, Hariprasad Kelam wrote:
+> fix below issues reported by checkpatch
 > 
-> Many Thanks for the help! :)
+> CHECK: Using comparison to false is error prone
+> CHECK: Using comparison to true is error prone
 > 
-> I think I need rebase thermal/power management (hwmon) and perf support
-> patchsets as they update this documentation file too. But I feel we
-> can go ahead on code review for the other patches, if there are some
-> comments received and something need to fix, i can put fixes together in
-> the next version.
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/hal/hal_intf.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-Hi Moritz,
+As Dan said, you sent 10 patches with the same subject, so I can't take
+these.
 
-I found some descriptions are dropped unexpectedly in your patch, so I 
-prepared and sent out a new version (v2) to fix it. Please let me know if
-you prefer an increamental patch.
+Also, please properly "thread" the patches so they show up linked to
+each other.  git send-email will do this automatically for you if you
+use it (and you should) for multiple emails.
 
-Thanks!
-Hao
+thanks,
 
-> 
-> Thanks
-> Hao
-> 
-> > 
-> > Thanks,
-> > Moritz
+greg k-h
