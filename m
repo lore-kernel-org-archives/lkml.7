@@ -2,198 +2,147 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3327AC06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC81C06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C03F20881
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:34:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="E0sGXP6R"
+	by mail.kernel.org (Postfix) with ESMTP id D9069214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbfGAMeP (ORCPT
+        id S1728817AbfGAMhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 08:34:15 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:39072 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbfGAMeP (ORCPT
+        Mon, 1 Jul 2019 08:37:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:56263 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727379AbfGAMhH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 08:34:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1561984453; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GKdiybgHwDA7Rf/+crtL91g2jVq40fX1lbPYqcmDUIc=;
-        b=E0sGXP6Rjt92eLRONxsaEYEjWc2c1tVfvUHUUzoBY6FQC+6ALxc5rGcxzDCOIzAYXfZHCV
-        SXDwEiwzZdHvgXsDo2To51nqShAQpG+v5883uoYa4J2G4owqKydPZrgz1ErG/7ns3P7rdB
-        MlrykTmEQYkZjnjuIry0PZWm4VDkF1Y=
-Date:   Mon, 01 Jul 2019 14:34:07 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] mtd: rawnand: ingenic: Fix ingenic_ecc dependency
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>, od@zcrc.me,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>, stable@vger.kernel.org
-Message-Id: <1561984447.1999.0@crapouillou.net>
-In-Reply-To: <20190701142847.1c1ac4b1@xps13>
-References: <20190629012248.12447-1-paul@crapouillou.net>
-        <20190701142847.1c1ac4b1@xps13>
+        Mon, 1 Jul 2019 08:37:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id f22so14959720ioh.22
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 05:37:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=pMxZZ70O0V0hjw3EXHgfElf4ixnh4VNfcUOd8Ya2llY=;
+        b=Wk2vhRy4H8tHiFDrbVfRw2SG1DRmXa6TzTrZmihkcOf+DKWn0N5PtRihruGO7E6iDv
+         D2EYG/3Tvbicuq5cznaYL/1F1evzstH8+QBH1iriq5iYbWk8jefI6b2pcMLtcKf9i7HO
+         tQ83nLYPrdYCiv0LbOhcJ9sBhwOqs1iouMZrzaeoL/NrPK+2oyb3brL20W5V9K6U4mIV
+         pWjbLb1qY+gBw9X2BtqHrG7z6bYq7cW9PnOxmxRAwOrOjvDFVIJ51MuaRkeNx5OcQHSN
+         FXUqgAKhiw3LbT4wQFVDR7iXJYiI19YiuUBG2MBHLgecEMKODUMwhSz0JB4NLQamBgdu
+         lh6w==
+X-Gm-Message-State: APjAAAWdDzcxkGJR6Ns6Pt9EoxXr9MCn8cTfu1zHzhf1O5z1IyPKqM+3
+        lTxun5KHR72uQkCVD5k16Xtag0O3jI6Mf8XHnmVR6UEJyYN4
+X-Google-Smtp-Source: APXvYqw6QrJ5B4Yoa17We1Cvh3zctwgZFwlNPhtfVhApaIvQ5nZDs5o9DZsqZEAZJmse72yi40BZzWYiRurD3AfwPbhBLH7HR7oq
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a02:ac09:: with SMTP id a9mr29515352jao.48.1561984626405;
+ Mon, 01 Jul 2019 05:37:06 -0700 (PDT)
+Date:   Mon, 01 Jul 2019 05:37:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cd404e058c9de28b@google.com>
+Subject: WARNING in dlfb_submit_urb/usb_submit_urb
+From:   syzbot <syzbot+53ce4a4246d0fe0fee34@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=1092d175a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f6d4561982f71f63
+dashboard link: https://syzkaller.appspot.com/bug?extid=53ce4a4246d0fe0fee34
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=114686eba00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15518903a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+53ce4a4246d0fe0fee34@syzkaller.appspotmail.com
+
+usb 1-1: Read EDID byte 0 failed: -71
+usb 1-1: Unable to get valid EDID from device/display
+------------[ cut here ]------------
+usb 1-1: BOGUS urb xfer, pipe 3 != type 1
+WARNING: CPU: 0 PID: 108 at drivers/usb/core/urb.c:477  
+usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 108 Comm: kworker/0:2 Not tainted 5.2.0-rc6+ #13
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x292/0x6c9 kernel/panic.c:219
+  __warn.cold+0x20/0x4b kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Code: 4d 85 ed 74 2c e8 78 db e8 fd 4c 89 f7 e8 a0 36 13 ff 41 89 d8 44 89  
+e1 4c 89 ea 48 89 c6 48 c7 c7 80 23 1a 86 e8 03 a0 be fd <0f> 0b e9 20 f4  
+ff ff e8 4c db e8 fd 4c 89 f2 48 b8 00 00 00 00 00
+RSP: 0018:ffff8881d422eed8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103a845dcd
+RBP: ffff8881d41d6cd0 R08: ffff8881d7b53000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000003
+R13: ffff8881d0e92f18 R14: ffff8881cfa71a20 R15: ffff8881d4204c00
+  dlfb_submit_urb+0x89/0x160 drivers/video/fbdev/udlfb.c:1971
+  dlfb_set_video_mode+0x2249/0x29b0 drivers/video/fbdev/udlfb.c:315
+  dlfb_ops_set_par+0x2a3/0x810 drivers/video/fbdev/udlfb.c:1110
+  dlfb_usb_probe.cold+0xc70/0x193a drivers/video/fbdev/udlfb.c:1734
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x30b/0x410 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-Le lun. 1 juil. 2019 =E0 14:28, Miquel Raynal=20
-<miquel.raynal@bootlin.com> a =E9crit :
-> Hi Paul,
->=20
-> One question below.
->=20
-> Paul Cercueil <paul@crapouillou.net> wrote on Sat, 29 Jun 2019=20
-> 03:22:48
-> +0200:
->=20
->>  If MTD_NAND_JZ4780 is y and MTD_NAND_JZ4780_BCH is m,
->>  which select CONFIG_MTD_NAND_INGENIC_ECC to m, building fails:
->>=20
->>  drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function=20
->> `ingenic_nand_remove':
->>  ingenic_nand.c:(.text+0x177): undefined reference to=20
->> `ingenic_ecc_release'
->>  drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function=20
->> `ingenic_nand_ecc_correct':
->>  ingenic_nand.c:(.text+0x2ee): undefined reference to=20
->> `ingenic_ecc_correct'
->>=20
->>  To fix that, the ingenic_nand and ingenic_ecc modules have been=20
->> fused
->>  into one single module.
->>  - The ingenic_ecc.c code is now compiled in only if
->>    $(CONFIG_MTD_NAND_INGENIC_ECC) is set. This is now a boolean=20
->> instead
->>    of tristate.
->>  - To avoid changing the module name, the ingenic_nand.c file is=20
->> moved to
->>    ingenic_nand_drv.c. Then the module name is still ingenic_nand.
->>  - Since ingenic_ecc.c is no more a module, the module-specific=20
->> macros
->>    have been dropped, and the functions are no more exported for use=20
->> by
->>    the ingenic_nand driver.
->=20
-> I am fine with this approach.
->=20
->>=20
->>  Fixes: 15de8c6efd0e ("mtd: rawnand: ingenic: Separate top-level and=20
->> SoC specific code")
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  Reported-by: Arnd Bergmann <arnd@arndb.de>
->>  Reported-by: Hulk Robot <hulkci@huawei.com>
->>  Cc: YueHaibing <yuehaibing@huawei.com>
->>  Cc: stable@vger.kernel.org
->>  ---
->>   drivers/mtd/nand/raw/ingenic/Kconfig                     | 2 +-
->>   drivers/mtd/nand/raw/ingenic/Makefile                    | 4 +++-
->>   drivers/mtd/nand/raw/ingenic/ingenic_ecc.c               | 9=20
->> ---------
->>   .../raw/ingenic/{ingenic_nand.c =3D> ingenic_nand_drv.c}   | 0
->>   4 files changed, 4 insertions(+), 11 deletions(-)
->>   rename drivers/mtd/nand/raw/ingenic/{ingenic_nand.c =3D>=20
->> ingenic_nand_drv.c} (100%)
->>=20
->>  diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig=20
->> b/drivers/mtd/nand/raw/ingenic/Kconfig
->>  index 19a96ce515c1..66b7cffdb0c2 100644
->>  --- a/drivers/mtd/nand/raw/ingenic/Kconfig
->>  +++ b/drivers/mtd/nand/raw/ingenic/Kconfig
->>  @@ -16,7 +16,7 @@ config MTD_NAND_JZ4780
->>   if MTD_NAND_JZ4780
->>=20
->>   config MTD_NAND_INGENIC_ECC
->>  -	tristate
->>  +	bool
->>=20
->>   config MTD_NAND_JZ4740_ECC
->>   	tristate "Hardware BCH support for JZ4740 SoC"
->>  diff --git a/drivers/mtd/nand/raw/ingenic/Makefile=20
->> b/drivers/mtd/nand/raw/ingenic/Makefile
->>  index 1ac4f455baea..b63d36889263 100644
->>  --- a/drivers/mtd/nand/raw/ingenic/Makefile
->>  +++ b/drivers/mtd/nand/raw/ingenic/Makefile
->>  @@ -2,7 +2,9 @@
->>   obj-$(CONFIG_MTD_NAND_JZ4740) +=3D jz4740_nand.o
->>   obj-$(CONFIG_MTD_NAND_JZ4780) +=3D ingenic_nand.o
->>=20
->>  -obj-$(CONFIG_MTD_NAND_INGENIC_ECC) +=3D ingenic_ecc.o
->>  +ingenic_nand-y +=3D ingenic_nand_drv.o
->>  +ingenic_nand-$(CONFIG_MTD_NAND_INGENIC_ECC) +=3D ingenic_ecc.o
->>  +
->>   obj-$(CONFIG_MTD_NAND_JZ4740_ECC) +=3D jz4740_ecc.o
->>   obj-$(CONFIG_MTD_NAND_JZ4725B_BCH) +=3D jz4725b_bch.o
->>   obj-$(CONFIG_MTD_NAND_JZ4780_BCH) +=3D jz4780_bch.o
->>  diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c=20
->> b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
->>  index d3e085c5685a..c954189606f6 100644
->>  --- a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
->>  +++ b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
->>  @@ -30,7 +30,6 @@ int ingenic_ecc_calculate(struct ingenic_ecc *ecc,
->>   {
->>   	return ecc->ops->calculate(ecc, params, buf, ecc_code);
->>   }
->>  -EXPORT_SYMBOL(ingenic_ecc_calculate);
->>=20
->>   /**
->>    * ingenic_ecc_correct() - detect and correct bit errors
->>  @@ -51,7 +50,6 @@ int ingenic_ecc_correct(struct ingenic_ecc *ecc,
->>   {
->>   	return ecc->ops->correct(ecc, params, buf, ecc_code);
->>   }
->>  -EXPORT_SYMBOL(ingenic_ecc_correct);
->>=20
->>   /**
->>    * ingenic_ecc_get() - get the ECC controller device
->>  @@ -111,7 +109,6 @@ struct ingenic_ecc *of_ingenic_ecc_get(struct=20
->> device_node *of_node)
->>   	}
->>   	return ecc;
->>   }
->>  -EXPORT_SYMBOL(of_ingenic_ecc_get);
->>=20
->>   /**
->>    * ingenic_ecc_release() - release the ECC controller device
->>  @@ -122,7 +119,6 @@ void ingenic_ecc_release(struct ingenic_ecc=20
->> *ecc)
->>   	clk_disable_unprepare(ecc->clk);
->>   	put_device(ecc->dev);
->>   }
->>  -EXPORT_SYMBOL(ingenic_ecc_release);
->>=20
->>   int ingenic_ecc_probe(struct platform_device *pdev)
->>   {
->>  @@ -159,8 +155,3 @@ int ingenic_ecc_probe(struct platform_device=20
->> *pdev)
->>   	return 0;
->>   }
->>   EXPORT_SYMBOL(ingenic_ecc_probe);
->=20
-> Any reason to keep this one?
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-This one is called from the three ECC drivers, which can be modules,
-so it still needs to be exported.
-
--Paul
-
-=
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
