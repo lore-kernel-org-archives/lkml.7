@@ -2,264 +2,308 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25DEC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E2BC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83E2620881
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59AF92173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wdYzzOfB"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o91J2qOA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfGANLN (ORCPT
+        id S1728571AbfGANL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 09:11:13 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35589 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGANLL (ORCPT
+        Mon, 1 Jul 2019 09:11:56 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:57888 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727852AbfGANLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 09:11:11 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a25so8782281lfg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 06:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9qPAEduDttguVrRhnFHFeM0ZPJNxzjxTsr13ZbAL/XQ=;
-        b=wdYzzOfBt97yyuJLzOb8OuGg59i3B7h4TdHF3MKL6PG2BSj/1kmvCwZqoTClPN/1zx
-         5XE6Cy+7PUnWbzXEMsmZkFWPi/INchUSTSCNj7WUQ1LxebRIlhCt6gytVBlX1UHtjo2n
-         gHOHuAZZyzQtfTVeQO1PXnw68P9PDBUuQFo6rZRmvl4jFIwZWS8EKTD91+lGK3x377ZZ
-         eX76Xfbe+RSzOn4wjkqBPHGwtQfGdO1FuHs6LH6+XhPF1lO02wbH5cSuGeEEdufn457T
-         ZPYH3UOboZTayCGyXmIzGmOHpYpGJkzTwwOsjQ6s6AeVxOs/Y6b0cQI0dWr/wApNw9OT
-         3jBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9qPAEduDttguVrRhnFHFeM0ZPJNxzjxTsr13ZbAL/XQ=;
-        b=jrKGSMDB28ThjB3DM27jzvQNCbGRAFvRT3OSgf5WlcNUGYuhgJLqnrseYdgTtiHV4z
-         7RjgtWIOgvwHiGSDE2XrDIighJGF/0FSM7QfWIc2eeURkF30+KYmc8O00K7MEsnu8UBz
-         lr9UmQtEG8Lr/V1tKVcFzExqlXY1dnbs/fbjQjvpEp9JWtwaJOVdtiqJdrAesre1tMCJ
-         RybBnEn3CFk3WqOGUOTgbQMXW4DVToIf6fmnJxKMSOnYPYSW5EpHQArt/3B0RPLSuzHE
-         CyJdFjrVsGMccKY1pfK57WD8IKsCNbGxZRNJ1NILVAnzuhTASzDMqN4PtT7a8+ECzBHU
-         JmTQ==
-X-Gm-Message-State: APjAAAXLDlNN5vXi0Iot8mJX8kI3njR7CztlZTl2eHzS72GXWJuQQNOm
-        UI+4C8lJB2Dy8S1yw8b06+sP7g==
-X-Google-Smtp-Source: APXvYqyx33ZIsI958Tuf3hLJwehoeTSJ5Dm7gL2VbsmwJbhrCbwavwKV21ymlpZnqNFyAbajX7ue1A==
-X-Received: by 2002:ac2:52ac:: with SMTP id r12mr12759243lfm.126.1561986668853;
-        Mon, 01 Jul 2019 06:11:08 -0700 (PDT)
-Received: from [192.168.27.209] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id o74sm2456561lff.46.2019.07.01.06.11.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 06:11:08 -0700 (PDT)
-Subject: Re: [PATCH v3 2/4] media: venus: Update clock scaling
-To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org
-References: <1561480044-11834-1-git-send-email-amasule@codeaurora.org>
- <1561480044-11834-3-git-send-email-amasule@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <69610fc3-5333-ccc6-316f-aee96dc11150@linaro.org>
-Date:   Mon, 1 Jul 2019 16:11:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <1561480044-11834-3-git-send-email-amasule@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 1 Jul 2019 09:11:53 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190701131151euoutp011b9e764e3a180fe303e774ec6becf7b2~tSqNsyyV52302723027euoutp01e
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2019 13:11:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190701131151euoutp011b9e764e3a180fe303e774ec6becf7b2~tSqNsyyV52302723027euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561986711;
+        bh=YJeFbalqd+qWF4YGvZEIpj6/rX59tRYrPhdtDBDyxfw=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=o91J2qOAF4dTjnN9KyYoZyI9vHz65iVN4qIosoZtLqfo9h5sDtz7P9X5NN0dz8Qdq
+         o10X7bgXKzXhU/cQqeP999kYQdBbH/w4BlLtV1NsPP8mqqEwbmc9eDGhcjvsTmOTxZ
+         Dis7vmTBS3eo0VBdQZrdSB6AGLas7Nqv4Cod/rws=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190701131150eucas1p24c12c22985dabba5985413293ae41e31~tSqMye_QT1082510825eucas1p2R;
+        Mon,  1 Jul 2019 13:11:50 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 8B.77.04325.6960A1D5; Mon,  1
+        Jul 2019 14:11:50 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190701131149eucas1p1911af36ecdd9efc6b00039b67d810721~tSqLvtuFb0099700997eucas1p1X;
+        Mon,  1 Jul 2019 13:11:49 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190701131149eusmtrp28670386e7c153c02cd6dc941c2239520~tSqLhZ1Bf0788807888eusmtrp20;
+        Mon,  1 Jul 2019 13:11:49 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-cc-5d1a0696dee8
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 1E.F1.04146.5960A1D5; Mon,  1
+        Jul 2019 14:11:49 +0100 (BST)
+Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190701131148eusmtip154508f09ddccffdd87ace69c881d1aee~tSqKoUCfZ2623726237eusmtip1Z;
+        Mon,  1 Jul 2019 13:11:48 +0000 (GMT)
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        cw00.choi@samsung.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
+        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
+        gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com,
+        Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v11 0/9] Exynos5 Dynamic Memory Controller driver
+Date:   Mon,  1 Jul 2019 15:11:29 +0200
+Message-Id: <20190701131138.22666-1-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSeyyVcRjH/c57dXLa26H8ktGO1aotFf74lW7W7V2tZtNW05RT3jDOofNS
+        iT8OCrlEFKbc1swlElkh4ZysU8flpCLLoYtJ5dJMWqdMeXup/z7P83y/v++zZz8ak78kHOhg
+        dQSnUStDFaQUv//EYlqfTTr4bRy5boNqcqsJ9PrbCIEK27oIdHtyCKD4W9UkyjLmS1BHigql
+        D41iyGS6S6HOuDEKvdE6osnUQQK9bLxJoqm0NoByTc0SVNU2QKFu4x7UH1tGosdjiQSa7a3B
+        Ucur/aj/12L0/ekHsNOe/T6dibNf+y5R7A1tN8425A1QbG3FZZJtya+k2LT4CZLVTTRJ2Ct1
+        FYC91x7NTtU6eS/ylW4N4EKDz3KaDdv9pUFdxgPhLQfPx+u6cC3I2J4MrGnIeEBzapEkGUhp
+        OVMG4OecGUIsvgE4nJmIi8UUgN2Tl8kFS92VIkpgOVMKYGzVvn+Ohz9SQDKgaZJxhfUVZwSN
+        HZML4I1PPoIGYx5gcLzfDISBLeMF21OKJQLjzCqYlHOVErwyZgdMyFstZjnD23dbMcELmUkK
+        Zuelzy+xG94Z7sdEtoVfDHWUyI7wd0OhRGQeatOKgcgxcCg9f17jCR8bugkhC2PWwurGDWLb
+        Cz4bN/xdATKLYd/4EqGNzWHm/RxMbMtgUoJcVK+BdanP54OWwdLK7PnHWTh87S0hXscPvtW9
+        pzKAU97/rCIAKoA9F8mrAjneXc2dc+WVKj5SHeh6KkxVC+a+WvusYboeNM+c1AOGBgobmdYM
+        /eSE8iwfpdIDSGMKO1lL2XI/uSxAGXWB04Sd0ESGcrwerKBxhb0s2urdMTkTqIzgQjgunNMs
+        TCW0tYMWdJYD9yqOdvZ/HxO3lq7cUuRmtbKn3FBSetxtl93gCXtjhq5vc4iPce+hyLjwhKmc
+        qpiafSX8Lsvxno/eRz18OxOTCjrM7k66Y4+6XPwtp80vjrSGzEhdBrcpuZ/++o6l01aeNpbD
+        sa2OWaNOBXhS/dfVkgO+vU2yiy+c8faJLAcFzgcpN63DNLzyDxePt/xmAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsVy+t/xu7pT2aRiDaYu47TYOGM9q8X1L89Z
+        LeYfOcdqsfrjY0aL5sXr2Swmn5rLZHGmO9ei//FrZovz5zewW5xtesNucatBxuJjzz1Wi8u7
+        5rBZfO49wmgx4/w+Jou1R+6yW1w85Wpxu3EFm8XhN+2sFv+ubWSx2H/Fy+L2bz6LbyceMTqI
+        e3z7OonF4/2NVnaP2Q0XWTx2zrrL7rFpVSebx/65a9g9epvfsXkcfLeHyaNvyypGj82nqz0+
+        b5IL4I7SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQ
+        yzh3yrtgv29F88FzLA2ME+y6GDk5JARMJLb0LWDvYuTiEBJYyijR8vEpO0RCTGLSvu1QtrDE
+        n2tdbBBFnxglXrw/zNLFyMHBJqAnsWNVIUhcRGAOo8TPrm2MIA6zwFlmid0r3jCBdAsLOEqc
+        7l4IZrMIqEp0TJ/IDtLMK2Av0TZLDWKBvMTqDQeYJzDyLGBkWMUoklpanJueW2yoV5yYW1ya
+        l66XnJ+7iREYU9uO/dy8g/HSxuBDjAIcjEo8vBq3JGKFWBPLiitzDzFKcDArifDuXyEZK8Sb
+        klhZlVqUH19UmpNafIjRFGj3RGYp0eR8YLznlcQbmhqaW1gamhubG5tZKInzdggcjBESSE8s
+        Sc1OTS1ILYLpY+LglGpgDDs9zfvakaOXs816BU6Xf7y0aWKvPEPPw0YTzWWxeS++Z4rHlkl/
+        FFxXonSwRC4g8IF3DLeJp5tz5LPnrvX8Fk/mhF9jE5PLPNbnb3GyqVXuYKDFq73/DzS8DS03
+        SnQtcOAQnSMnzMUmv/FJjOS87fKpU3L3rLP9XTLJqagnKyWgXPfJj7tKLMUZiYZazEXFiQDL
+        GtNJvwIAAA==
+X-CMS-MailID: 20190701131149eucas1p1911af36ecdd9efc6b00039b67d810721
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190701131149eucas1p1911af36ecdd9efc6b00039b67d810721
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190701131149eucas1p1911af36ecdd9efc6b00039b67d810721
+References: <CGME20190701131149eucas1p1911af36ecdd9efc6b00039b67d810721@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
+
+This is v11 which introduces minor changes. The patch set adds support of
+Dynamic Memory Controller for Exynos5422 SoC.
+The driver supports Dynamic Voltage and Frequency Scaling
+for the DMC and DRAM. It also provides needed timings for different
+speed operations of the DRAM memory.
+There is also new generic code in of_memory and headers which allows to parse
+LPDDR3 memories defined in device-tree.
+
+The patch set has been cut to land mainline quickly and the dependency
+on PPMU patches are removed (which was in v7). It implies that the debugging
+code which was presenting details about traffic on the AXI slots has been
+removed. It will be added when this driver got mainline and the PPMU code
+got mainline. Also DT dependency of PPMU header has been removed.
+
+changes:
+v11:
+- added code during probe in clocks init which disables 2 paths to PHY,
+  which should be done in the bootloader but some of them missed it.
+- removed unused macros and changed into BIT(x) sets.
+- changed 'selects' in Kconfig into 'depends on', added COMPILE_TEST
+  and moved in alphabetical order entry in MAINTAINERS file
+- it is based on Samsung clk development tree 'for-next' where there are 3
+  patches with Exynos5422 clocks (they are skipped here)
+- skipped PATCH v10 09/13 with new PPMU events, since it is in devfreq tree
+  'for-next' now
+- caution: possible conflict with 'next-20190621' or newer due to a patch
+  in there, which moves include/memory/jedec_ddr.h into drivers/memory/;
+  my changes: '[PATCH 3/9] drivers: memory: extend of_memory by LPDDR3 support'
+v10 [5]:
+- added disabling counters and cleaning clocks in probe when it fails
+- added Reviewed-by for dt-bindings: memory-controllers from Rob
+- based on v5.2-rc4 tag
+v9 [4]:
+- disable bpll instead of spll clocks in the remove path
+- safely disable 'bypass' clocks when error was captured
+- removed unused clocks and related code
+- changed code to make 'if' statement clean as Krzysztof suggested
+- removed cloks from dt-binding and DT
+- minor fix for clocks to read the state for DIV with NOCACHE
+- removed spaces in #define and put tabs
+- removed duplicated entry for OPPs phandle in dt-binding
+- collected ACKs
+- based on v5.2-rc3 tag
+v8 [3]:
+- removed chipID dependency, as Krzysztof suggested and drop the whole checking
+  code in the driver (which also Marek suggested offline) (it might be needed
+  in future when other configuration would be supported). It also avoids
+  a misunderstandings and simplifies the documentation.
+- reordered clock IDs in 1st patch to keep the old IDs and add the new clocks
+  at the end as Chanwoo suggested (added also his ACK there)
+- in patch 6 (dt-bindings) added explicit clocks and names in the right order
+  needed for the driver
+- added proper address for the memory node in the documentation and in the DT
+  (lpddr3-timings@0 -> @80000000)
+- fixed wrong reg offset for pause feature
+- removed debug code which shows AXI slots traffic and removed DT ppmu events
+- in the driver code usage of 'dev', 'pdev->dev' has been aligned
+- manipulating clocks has been aligned as Krzysztof suggested, now it enables
+  only two clocks (and disables) and enables/disables the 'bypass' clocks
+  on demand
+- added comments in the documentation why there is a need of clock registers
+  to be accessed via syscon regmap
+- added proper link to Documentation/devicetree/bindings/ddr/lpddr3.txt
+  in dt-bindings for memory controller doc
+- removed unneeded prints when there was a deferred probe or during remove
+- added 'syscon' also to exynos5420-clock node as Krzysztof suggested
+- from 2nd patch removed blank line and added Acked-by: Chanwoo Choi
+- collecting ACKs, which makes the clock related 3 patches
+  ready to be merged (4 ACKs),
+- patches 4,5 got 'Reviewed-by' from Rob
+- it is now based on v5.2-rc3 tag
+v7 [2]:
+- added using regmap in chipid registers and clock registers
+- in DT added "syscon" to compatible field in clock and chipid
+- added two addition clocks in clocks definition file which were there
+  in first implementation but now are grouped and commented properly
+  (CLK_DOUT_PCLK_DREX0, CLK_DOUT_PCLK_DREX1)
+- the BPLL ratio table now is set for Exynos 5422 and 5800 and not for 5420
+- in DMC driver, changed code macro which generates functions for setup events
+  into normal three functions as Krzysztof suggested
+- moved 'clock_prepare_enable()' calls into the same function where 'disable'
+  were called
+- changed 'timing_reg' static variables into static const
+- in DMC driver: the proper device_node *np_ddr is now put correctly
+- in DMC driver: removed code related to counters_enabled
+- mapped only 0x100 from DREX registers
+- in DT memory node there is now 'reg' as Rob suggested instead of 'max-freq'
+- in Documentation/devicetree/bindings/lpddr2 renamed into 'ddr' and the lpdd3*
+  files landed there.
+- cleaned the commit subject and message as Rob suggested for the patch 4/10 in v6
+- added doxygen comments to exported functions in of_memory file
+- cleaned minor issues like: missing space, 2 empty lines, in the doc JESD209-2 ->
+  JESD209-3C, removed 'status = "okay"' from the doc file, etc
+- based on v5.1 (+ PPMU patches from [1])
+v6:
+- driver code has been converted to use generic code which parses DT memory
+  definition in drivers/memory/of_memory.c
+- extended of_memory by LPDDR3 support (there was LPDDR2 made by TI)
+- extended jedec_lpddr.h by the needed structures for LPDDR3 (AC timings)
+- driver file moved to proper directory, where other memory controllers
+  live, which is in this case drivers/memory/samsung/
+- driver code now uses regmap_{read|write} to access registers for pausing
+  and changing timings set, as suggested by Chanwoo
+- DT contains simple definition of memory device, similar to LPDDR2 made by TI
+- driver code generates the needed timings for registered OPPs, based on
+  memory description in DT
+- patch 1 contains Rob's ACK,
+- simplified memory bandwidth calculation
+- added debug information files with timings, raw counters and statistics
+- updated dt-bindings files accordingly
+- based on v5.1-rc5 (+ PPMU patches from [1])
+v5:
+- removed unneeded wrapper functions i.e. for regulator_set_voltage
+- removed unused defines
+- removed direct access to clock register base and used CCF for
+  pause and timing set usage
+- switched to OPP comming from DT according to Chanowoo's comments
+- switched to timings comming from DT, added parsing function
+- extended dt-binding with description of OPPs and timings
+- according to Rob Herring comment, moved dt-binding file before driver code
+  in the patch set.
+- rebased on top of v5.0
+v4:
+- removed unneeded DPLL and G3D clocks IDs
+- changed names of parent clocks for mout_mx_mspll_ccore_phy_p
+  and added one more parent: mout_sclk_epll
+- removed 933Mhz and 138MHz from the BPLL ratio table
+v3:
+- in DTS align to proper indent the clocks and clock-names entries
+v2:
+- changed file name exynos5-dmc.c -> exynos5422-dmc.c
+  and related entries in other files
+- changed dt-binding file name
+- changed config entry to CONFIG_ARM_EXYNOS5422_DMC_DEVFREQ
+- removed sysfs and print info messages (print only one line)
+- removed function exynos5_read_chip_info and compact code
+- changed dt-binding patch and move it up in the patch set
+- new entries in MAINTAINERS are added with the driver c code
+- clean-up in DTS file: renamed nodes to 'ppmu' and 'memory-controller',
+  entries moved to suggested location (before nocp nodes or after),
+  moved according to alfabetical order, compacted clocks names with right indent.
+
+Regards,
+Lukasz Luba
+
+[1] https://lkml.org/lkml/2019/4/19/158
+[2] https://lkml.org/lkml/2019/5/6/829
+[3] https://lkml.org/lkml/2019/6/5/687
+[4] https://lkml.org/lkml/2019/6/7/488
+[5] https://lkml.org/lkml/2019/6/14/296
 
 
-On 6/25/19 7:27 PM, Aniket Masule wrote:
-> Current clock scaling calculations are same for vpu4 and
-> previous versions. For vpu4, Clock scaling calculations
-> are updated with cycles/mb. This helps in getting precise
-> clock required.
-> 
-> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-> ---
->  drivers/media/platform/qcom/venus/helpers.c | 111 ++++++++++++++++++++++++----
->  drivers/media/platform/qcom/venus/helpers.h |   2 +-
->  drivers/media/platform/qcom/venus/vdec.c    |   2 +-
->  drivers/media/platform/qcom/venus/venc.c    |   2 +-
->  4 files changed, 99 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-> index f7f724b..e1a0247 100644
-> --- a/drivers/media/platform/qcom/venus/helpers.c
-> +++ b/drivers/media/platform/qcom/venus/helpers.c
-> @@ -348,8 +348,9 @@ static u32 load_per_type(struct venus_core *core, u32 session_type)
->  	return mbs_per_sec;
->  }
->  
-> -static int load_scale_clocks(struct venus_core *core)
-> +static int scale_clocks(struct venus_inst *inst)
->  {
-> +	struct venus_core *core = inst->core;
->  	const struct freq_tbl *table = core->res->freq_tbl;
->  	unsigned int num_rows = core->res->freq_tbl_size;
->  	unsigned long freq = table[0].freq;
-> @@ -398,6 +399,86 @@ static int load_scale_clocks(struct venus_core *core)
->  	return ret;
->  }
->  
-> +static unsigned long calculate_vpp_freq(struct venus_inst *inst)
-> +{
-> +	unsigned long vpp_freq = 0;
-> +	u32 mbs_per_sec;
-> +
-> +	mbs_per_sec = load_per_instance(inst);
-> +	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
-> +	/* 21 / 20 is overhead factor */
-> +	vpp_freq += vpp_freq / 20;
-> +
-> +	return vpp_freq;
-> +}
-> +
-> +static int scale_clocks_v4(struct venus_inst *inst)
-> +{
-> +	struct venus_core *core = inst->core;
-> +	const struct freq_tbl *table = core->res->freq_tbl;
-> +	unsigned int num_rows = core->res->freq_tbl_size;
-> +
+Lukasz Luba (9):
+  dt-bindings: ddr: rename lpddr2 directory
+  dt-bindings: ddr: add LPDDR3 memories
+  drivers: memory: extend of_memory by LPDDR3 support
+  dt-bindings: memory-controllers: add Exynos5422 DMC device description
+  drivers: memory: add DMC driver for Exynos5422
+  ARM: dts: exynos: add chipid label and syscon compatible
+  ARM: dts: exynos: add syscon to clock compatible
+  ARM: dts: exynos: add DMC device for exynos5422
+  ARM: exynos_defconfig: enable DMC driver
 
-please remove this blank line.
-
-> +	struct clk *clk = core->clks[0];
-> +	struct device *dev = core->dev;
-> +	unsigned int i;
-> +	unsigned long freq = 0, freq_core0 = 0, freq_core1 = 0;
-
-could you count the cores as it is done for VIDC_CORE_ID_ ?
-i.e. start counting from one.
-
-> +	int ret;
-> +
-> +	freq = calculate_vpp_freq(inst);
-> +
-> +	if (freq > table[0].freq)
-> +		goto err;
-
-if the goto is triggered the error message will be wrong. Infact the
-dev_err message is targeted for clk_set_rate failure.
-
-> +
-> +	for (i = 0; i < num_rows; i++) {
-> +		if (freq > table[i].freq)
-> +			break;
-> +		freq = table[i].freq;
-> +	}
-> +
-> +	inst->clk_data.freq = freq;
-> +
-> +	mutex_lock(&core->lock);
-> +	list_for_each_entry(inst, &core->instances, list) {
-> +		if (inst->clk_data.core_id == VIDC_CORE_ID_1) {
-> +			freq_core0 += inst->clk_data.freq;
-> +		} else if (inst->clk_data.core_id == VIDC_CORE_ID_2) {
-> +			freq_core1 += inst->clk_data.freq;
-> +		} else if (inst->clk_data.core_id == VIDC_CORE_ID_3) {
-> +			freq_core0 += inst->clk_data.freq;
-> +			freq_core1 += inst->clk_data.freq;
-> +		}
-> +	}
-> +	mutex_unlock(&core->lock);
-> +
-> +	freq = max(freq_core0, freq_core1);
-> +
-> +	ret = clk_set_rate(clk, freq);
-> +	if (ret)
-> +		goto err;
-> +
-> +	ret = clk_set_rate(core->core0_clk, freq);
-> +	if (ret)
-> +		goto err;
-> +
-> +	ret = clk_set_rate(core->core1_clk, freq);
-> +	if (ret)
-> +		goto err;
-> +
-> +	return 0;
-> +
-> +err:
-> +	dev_err(dev, "failed to set clock rate %lu (%d)\n", freq, ret);
-> +	return ret;
-> +}
-> +
-> +static int load_scale_clocks(struct venus_inst *inst)
-> +{
-> +	if (IS_V4(inst->core))
-> +		return scale_clocks_v4(inst);
-> +
-> +	return scale_clocks(inst);
-> +}
-> +
->  static void fill_buffer_desc(const struct venus_buffer *buf,
->  			     struct hfi_buffer_desc *bd, bool response)
->  {
-> @@ -715,35 +796,36 @@ int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage)
->  }
->  EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
->  
-> -int venus_helper_init_codec_data(struct venus_inst *inst)
-> +int venus_helper_init_codec_freq_data(struct venus_inst *inst)
->  {
-> -	const struct codec_data *codec_data;
-> -	unsigned int i, codec_data_size;
-
-those deletions shouldn't exist once you fix the git rebase issue.
-
-> +	const struct codec_freq_data *codec_freq_data;
-> +	unsigned int i, codec_freq_data_size;
-
-could you rename the variables to shorter?
-
->  	u32 pixfmt;
->  	int ret = 0;
->  
->  	if (!IS_V4(inst->core))
->  		return 0;
->  
-> -	codec_data = inst->core->res->codec_data;
-> -	codec_data_size = inst->core->res->codec_data_size;
-> +	codec_freq_data = inst->core->res->codec_freq_data;
-> +	codec_freq_data_size = inst->core->res->codec_freq_data_size;
->  	pixfmt = inst->session_type == VIDC_SESSION_TYPE_DEC ?
->  			inst->fmt_out->pixfmt : inst->fmt_cap->pixfmt;
->  
-> -	for (i = 0; i < codec_data_size; i++) {
-> -		if (codec_data[i].pixfmt == pixfmt &&
-> -		    codec_data[i].session_type == inst->session_type) {
-> -			inst->clk_data.codec_data = &codec_data[i];
-> +	for (i = 0; i < codec_freq_data_size; i++) {
-> +		if (codec_freq_data[i].pixfmt == pixfmt &&
-> +		    codec_freq_data[i].session_type == inst->session_type) {
-> +			inst->clk_data.codec_freq_data =
-> +				&codec_freq_data[i];
->  			break;
->  		}
->  	}
->  
-> -	if (!inst->clk_data.codec_data)
-> +	if (!inst->clk_data.codec_freq_data)
->  		ret = -EINVAL;
->  
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(venus_helper_init_codec_data);
-> +EXPORT_SYMBOL_GPL(venus_helper_init_codec_freq_data);
->  
+ .../{lpddr2 => ddr}/lpddr2-timings.txt        |    0
+ .../bindings/{lpddr2 => ddr}/lpddr2.txt       |    2 +-
+ .../bindings/ddr/lpddr3-timings.txt           |   58 +
+ .../devicetree/bindings/ddr/lpddr3.txt        |   97 ++
+ .../memory-controllers/exynos5422-dmc.txt     |   73 +
+ MAINTAINERS                                   |    8 +
+ arch/arm/boot/dts/exynos5.dtsi                |    4 +-
+ arch/arm/boot/dts/exynos5420.dtsi             |   73 +-
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  116 ++
+ arch/arm/boot/dts/exynos5800.dtsi             |    2 +-
+ arch/arm/configs/exynos_defconfig             |    2 +
+ drivers/memory/of_memory.c                    |  149 ++
+ drivers/memory/of_memory.h                    |   18 +
+ drivers/memory/samsung/Kconfig                |   13 +
+ drivers/memory/samsung/Makefile               |    1 +
+ drivers/memory/samsung/exynos5422-dmc.c       | 1257 +++++++++++++++++
+ include/memory/jedec_ddr.h                    |   61 +
+ 17 files changed, 1929 insertions(+), 5 deletions(-)
+ rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2-timings.txt (100%)
+ rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt (96%)
+ create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
+ create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+ create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
 
 -- 
-regards,
-Stan
+2.17.1
+
