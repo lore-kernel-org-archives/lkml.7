@@ -2,198 +2,826 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BA9C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B4DC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5B520659
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:36:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="Jr6IrngZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5A62D20673
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbfGAIgw (ORCPT
+        id S1727932AbfGAIiN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:36:52 -0400
-Received: from mail-eopbgr70113.outbound.protection.outlook.com ([40.107.7.113]:6044
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727128AbfGAIgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:36:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=uT+DrDtfWxUN63T4x++zkI1gYhMKDhLmJ9au+pHdn+LI9cr1+DspHDwpqX4p6qNa/yGYvv+C6Adla7+WBFZcJUqr5FYLC8NLUbxx5cqYJXeXTla+RoYvHn4US4HvOGhjy8534EJcwvUxqAlQuX/kU8BdNCXLQ0qdUYy0kLumhV0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8fa2s8YAFQOdT4rQMDCFbBrfg7QkLY1PR+iR7QTZV28=;
- b=qBuf5aGdJQIdMvCdxvls3a0zj4cbb9WjBf2yUga25c9yNQes7F1vfWsnVYV3LXEZhGd8+5hrk3WIlq9PReMKGmEYYvrlKCY90COYjO5/o7MobC6dRma3+EtLI7MH0/jQzW2SyQvBf3z1aCsBDVsgoH1kDjVFDzl2dCI6BVTBbkY=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector1-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8fa2s8YAFQOdT4rQMDCFbBrfg7QkLY1PR+iR7QTZV28=;
- b=Jr6IrngZqIkw3uymDo5bBS6FjslZCWnojq9ESH177pPA5CxVnYGDAnMTD9yO66cJNn+8eptNSf3I5WnhNZ3g7uB/Tnov4Nk4HweuA4XKt3/bT0FA1YQspittbu3MKZ70MUyPdfg8ho/N7R7cRkDiRpHlHu0VGW1sxn5e7S+HgvQ=
-Received: from VI1PR02MB3054.eurprd02.prod.outlook.com (10.170.235.155) by
- VI1PR02MB3903.eurprd02.prod.outlook.com (20.177.58.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.15; Mon, 1 Jul 2019 08:36:18 +0000
-Received: from VI1PR02MB3054.eurprd02.prod.outlook.com
- ([fe80::f92b:de76:1404:8783]) by VI1PR02MB3054.eurprd02.prod.outlook.com
- ([fe80::f92b:de76:1404:8783%7]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
- 08:36:18 +0000
-From:   Tomer Tayar <ttayar@habana.ai>
-To:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] habanalabs: Add busy engines bitmask to HW idle IOCTL
-Thread-Topic: [PATCH 2/2] habanalabs: Add busy engines bitmask to HW idle
- IOCTL
-Thread-Index: AQHVL+gN6+FoxezCeUig5OXrhCvIlQ==
-Date:   Mon, 1 Jul 2019 08:36:17 +0000
-Message-ID: <20190701083604.24528-2-ttayar@habana.ai>
-References: <20190701083604.24528-1-ttayar@habana.ai>
-In-Reply-To: <20190701083604.24528-1-ttayar@habana.ai>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR2P264CA0021.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::33)
- To VI1PR02MB3054.eurprd02.prod.outlook.com (2603:10a6:802:17::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ttayar@habana.ai; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [31.154.190.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f16f00a2-f5a5-4fd6-d0f2-08d6fdff2f48
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR02MB3903;
-x-ms-traffictypediagnostic: VI1PR02MB3903:
-x-microsoft-antispam-prvs: <VI1PR02MB39034A9ED51EEA1B6F21A208D2F90@VI1PR02MB3903.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2089;
-x-forefront-prvs: 00851CA28B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(39840400004)(136003)(366004)(396003)(199004)(189003)(1076003)(2351001)(5660300002)(4326008)(14444005)(256004)(66066001)(2906002)(76176011)(36756003)(52116002)(102836004)(25786009)(478600001)(186003)(99286004)(26005)(68736007)(14454004)(86362001)(386003)(66446008)(64756008)(316002)(66476007)(1361003)(8676002)(66556008)(6116002)(6916009)(66946007)(6436002)(73956011)(50226002)(8936002)(81156014)(476003)(6512007)(6486002)(11346002)(53936002)(446003)(7736002)(5640700003)(3846002)(71190400001)(71200400001)(74482002)(2501003)(2616005)(305945005)(81166006)(6506007)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR02MB3903;H:VI1PR02MB3054.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: habana.ai does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: IoCjeG78sMy07kx76OeKEGEXq584uGPa0u7kss+fMlwewgtK5uoOicZCxS1kfKLVE16uuQfRFJVrXXsH8RQ/1jD6d3bHi3r9Ejtt34gAiqGGQRj2pqs3KYtDSrKab7gZEIAQbLCulXiwdr6kMWrd2JiG4XnJXgNuIF+tWMkN4AATYzzFIBsV8P3sYQmQm5zq3PAsA80KcN4mqiqmH3MNCC3dCNs+RHxhAd7EgK1xGp7m9HbY48VT3A4/kMyUm5Ghi/QQA19+w3hKvObZRhVEpPzROtA+z3VejhXEiAqNBKhndAPCVE6f0fcIIUG46m6VT/b3+upt6iGyiSShY1I1EHsisBc87GXV7zpOR23pzR6VwZ0wicZo7Q41ZLlrCcSQMzj+0Fcbp3nUEjUc3VWsHxzvTeIn2a1OJEX1A4Iglik=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 1 Jul 2019 04:38:13 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38978 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfGAIiM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 04:38:12 -0400
+Received: by mail-qt1-f195.google.com with SMTP id i34so13746993qta.6
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 01:38:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8kZdGQlcoZZfGxuBfThxtPgrox5HwzWDUU0HhI3VDsQ=;
+        b=q3i/HSdvw7+yuCsCGpEEi3YOp864O99+CR+aSOngCVZOvzl/f0T1Ma34oqZKYoC3rh
+         5y0pU4jCIxB9WGrDfMVnfJZ1XQTAmeg5/L2k5EVJZMGxuUSa/zargN/ulgZtChNZcz9y
+         wUNighoGEPIBgN7Y+drIi+K4cYu0wl8VI8o+8f8+obuhxttd3HZp/PaWrNR2VIFZgNbd
+         Q6ABBrPZOLnMbBOegWyJoDbFu6xRt53SfP2M570cRiTORXOpBrR2JoQBJhu2rKToOOc1
+         O7kUiLpjLmu8nqgduCx6JlySIcs2d8Y5NSvEp1TD6UoQ8zq4eEVHU4OlvZxNuIoLEWE5
+         YK1g==
+X-Gm-Message-State: APjAAAW5HWDzsok45dn7j8f1tCwIXYukgzGYhFBFTrchFYqJzafVwGGB
+        pLDDomlufSisDBV5YqRsIhLGIx6Vy2vAWvelZSYxog==
+X-Google-Smtp-Source: APXvYqwcODURueb9M/bM/QUO4mW6tpxAThTLfYybYlOiH5Q+sYpEgRteYfbGO6wi4bA/qjwIzYaFhqOo3hSg/MG0XDU=
+X-Received: by 2002:a0c:af18:: with SMTP id i24mr20344553qvc.115.1561970290490;
+ Mon, 01 Jul 2019 01:38:10 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: f16f00a2-f5a5-4fd6-d0f2-08d6fdff2f48
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 08:36:17.9828
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ttayar@habana.ai
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB3903
+References: <CGME20190614145128eucas1p2783e7d644ef8823d211896298e8988fc@eucas1p2.samsung.com>
+ <3da197ed-a701-2aa7-d775-2bdbe9deab4a@samsung.com>
+In-Reply-To: <3da197ed-a701-2aa7-d775-2bdbe9deab4a@samsung.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Mon, 1 Jul 2019 10:37:58 +0200
+Message-ID: <CAO-hwJJFKQEwEiDe1M6gP5D_yf0BxyzaJH-kxwxqkCVo52WK6g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] video: fbdev: don't print error message on
+ framebuffer_alloc() failure
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>,
+        Jiri Kosina <jikos@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIGluZm9ybWF0aW9uIHdoaWNoIGlzIGN1cnJlbnRseSBwcm92aWRlZCBhcyBhIHJlc3BvbnNl
-IHRvIHRoZQ0KIkhMX0lORk9fSFdfSURMRSIgSU9DVEwgaXMgbWVyZWx5IGEgZ2VuZXJhbCBib29s
-ZWFuIHZhbHVlLg0KVGhpcyBwYXRjaCBleHRlbmRzIGl0IGFuZCBwcm92aWRlcyBhbHNvIGEgYml0
-bWFzayB0aGF0IGluZGljYXRlcyB3aGljaA0Kb2YgdGhlIGRldmljZSBlbmdpbmVzIGFyZSBidXN5
-Lg0KDQpTaWduZWQtb2ZmLWJ5OiBUb21lciBUYXlhciA8dHRheWFyQGhhYmFuYS5haT4NCi0tLQ0K
-IGRyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2RlYnVnZnMuYyAgICAgICAgICB8ICAyICstDQogZHJp
-dmVycy9taXNjL2hhYmFuYWxhYnMvZ295YS9nb3lhLmMgICAgICAgIHwgMTEgKysrKysrLS0NCiBk
-cml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzLmggICAgICAgfCAgMyArKy0NCiBkcml2
-ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzX2lvY3RsLmMgfCAgMyArKy0NCiBpbmNsdWRl
-L3VhcGkvbWlzYy9oYWJhbmFsYWJzLmggICAgICAgICAgICAgfCAzMCArKysrKysrKysrKysrKysr
-KysrKystDQogNSBmaWxlcyBjaGFuZ2VkLCA0MyBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygt
-KQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMvZGVidWdmcy5jIGIvZHJp
-dmVycy9taXNjL2hhYmFuYWxhYnMvZGVidWdmcy5jDQppbmRleCA2YTVkZmIxNGVjYTEuLjE4ZTQ5
-OWM5MDBjNyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2RlYnVnZnMuYw0K
-KysrIGIvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMvZGVidWdmcy5jDQpAQCAtNTA2LDcgKzUwNiw3
-IEBAIHN0YXRpYyBpbnQgZW5naW5lc19zaG93KHN0cnVjdCBzZXFfZmlsZSAqcywgdm9pZCAqZGF0
-YSkNCiAJc3RydWN0IGhsX2RiZ19kZXZpY2VfZW50cnkgKmRldl9lbnRyeSA9IGVudHJ5LT5kZXZf
-ZW50cnk7DQogCXN0cnVjdCBobF9kZXZpY2UgKmhkZXYgPSBkZXZfZW50cnktPmhkZXY7DQogDQot
-CWhkZXYtPmFzaWNfZnVuY3MtPmlzX2RldmljZV9pZGxlKGhkZXYsIHMpOw0KKwloZGV2LT5hc2lj
-X2Z1bmNzLT5pc19kZXZpY2VfaWRsZShoZGV2LCBOVUxMLCBzKTsNCiANCiAJcmV0dXJuIDA7DQog
-fQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2dveWEvZ295YS5jIGIvZHJp
-dmVycy9taXNjL2hhYmFuYWxhYnMvZ295YS9nb3lhLmMNCmluZGV4IDQxZTk3NTMxZjMwMC4uNzUy
-OTRlYzY1MjU3IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMvZ295YS9nb3lh
-LmMNCisrKyBiL2RyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2dveWEvZ295YS5jDQpAQCAtMjgyOCw3
-ICsyODI4LDcgQEAgc3RhdGljIGludCBnb3lhX3NlbmRfam9iX29uX3FtYW4wKHN0cnVjdCBobF9k
-ZXZpY2UgKmhkZXYsIHN0cnVjdCBobF9jc19qb2IgKmpvYikNCiAJZWxzZQ0KIAkJdGltZW91dCA9
-IEhMX0RFVklDRV9USU1FT1VUX1VTRUM7DQogDQotCWlmICghaGRldi0+YXNpY19mdW5jcy0+aXNf
-ZGV2aWNlX2lkbGUoaGRldiwgTlVMTCkpIHsNCisJaWYgKCFoZGV2LT5hc2ljX2Z1bmNzLT5pc19k
-ZXZpY2VfaWRsZShoZGV2LCBOVUxMLCBOVUxMKSkgew0KIAkJZGV2X2Vycl9yYXRlbGltaXRlZCho
-ZGV2LT5kZXYsDQogCQkJIkNhbid0IHNlbmQgS01EIGpvYiBvbiBRTUFOMCBiZWNhdXNlIHRoZSBk
-ZXZpY2UgaXMgbm90IGlkbGVcbiIpOw0KIAkJcmV0dXJuIC1FQlVTWTsNCkBAIC00OTE0LDcgKzQ5
-MTQsOCBAQCBpbnQgZ295YV9hcm1jcF9pbmZvX2dldChzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2KQ0K
-IAlyZXR1cm4gMDsNCiB9DQogDQotc3RhdGljIGJvb2wgZ295YV9pc19kZXZpY2VfaWRsZShzdHJ1
-Y3QgaGxfZGV2aWNlICpoZGV2LCBzdHJ1Y3Qgc2VxX2ZpbGUgKnMpDQorc3RhdGljIGJvb2wgZ295
-YV9pc19kZXZpY2VfaWRsZShzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2LCB1MzIgKm1hc2ssDQorCQkJ
-CXN0cnVjdCBzZXFfZmlsZSAqcykNCiB7DQogCWNvbnN0IGNoYXIgKmZtdCA9ICIlLTVkJS05cyUj
-LTE0eCUjLTE2eCUjeFxuIjsNCiAJY29uc3QgY2hhciAqZG1hX2ZtdCA9ICIlLTVkJS05cyUjLTE0
-eCUjeFxuIjsNCkBAIC00OTM3LDYgKzQ5MzgsOCBAQCBzdGF0aWMgYm9vbCBnb3lhX2lzX2Rldmlj
-ZV9pZGxlKHN0cnVjdCBobF9kZXZpY2UgKmhkZXYsIHN0cnVjdCBzZXFfZmlsZSAqcykNCiAJCQkJ
-SVNfRE1BX0lETEUoZG1hX2NvcmVfc3RzMCk7DQogCQlpc19pZGxlICY9IGlzX2VuZ19pZGxlOw0K
-IA0KKwkJaWYgKG1hc2spDQorCQkJKm1hc2sgfD0gIWlzX2VuZ19pZGxlIDw8IChHT1lBX0VOR0lO
-RV9JRF9ETUFfMCArIGkpOw0KIAkJaWYgKHMpDQogCQkJc2VxX3ByaW50ZihzLCBkbWFfZm10LCBp
-LCBpc19lbmdfaWRsZSA/ICJZIiA6ICJOIiwNCiAJCQkJCXFtX2dsYmxfc3RzMCwgZG1hX2NvcmVf
-c3RzMCk7DQpAQCAtNDk1OCw2ICs0OTYxLDggQEAgc3RhdGljIGJvb2wgZ295YV9pc19kZXZpY2Vf
-aWRsZShzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2LCBzdHJ1Y3Qgc2VxX2ZpbGUgKnMpDQogCQkJCUlT
-X1RQQ19JRExFKHRwY19jZmdfc3RzKTsNCiAJCWlzX2lkbGUgJj0gaXNfZW5nX2lkbGU7DQogDQor
-CQlpZiAobWFzaykNCisJCQkqbWFzayB8PSAhaXNfZW5nX2lkbGUgPDwgKEdPWUFfRU5HSU5FX0lE
-X1RQQ18wICsgaSk7DQogCQlpZiAocykNCiAJCQlzZXFfcHJpbnRmKHMsIGZtdCwgaSwgaXNfZW5n
-X2lkbGUgPyAiWSIgOiAiTiIsDQogCQkJCXFtX2dsYmxfc3RzMCwgY21kcV9nbGJsX3N0czAsIHRw
-Y19jZmdfc3RzKTsNCkBAIC00OTc2LDYgKzQ5ODEsOCBAQCBzdGF0aWMgYm9vbCBnb3lhX2lzX2Rl
-dmljZV9pZGxlKHN0cnVjdCBobF9kZXZpY2UgKmhkZXYsIHN0cnVjdCBzZXFfZmlsZSAqcykNCiAJ
-CQlJU19NTUVfSURMRShtbWVfYXJjaF9zdHMpOw0KIAlpc19pZGxlICY9IGlzX2VuZ19pZGxlOw0K
-IA0KKwlpZiAobWFzaykNCisJCSptYXNrIHw9ICFpc19lbmdfaWRsZSA8PCBHT1lBX0VOR0lORV9J
-RF9NTUVfMDsNCiAJaWYgKHMpIHsNCiAJCXNlcV9wcmludGYocywgZm10LCAwLCBpc19lbmdfaWRs
-ZSA/ICJZIiA6ICJOIiwgcW1fZ2xibF9zdHMwLA0KIAkJCQljbWRxX2dsYmxfc3RzMCwgbW1lX2Fy
-Y2hfc3RzKTsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJz
-LmggYi9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzLmgNCmluZGV4IDJjOWVhNjEw
-OTliNC4uMTBkYTk5NDBlZTBkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMv
-aGFiYW5hbGFicy5oDQorKysgYi9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzLmgN
-CkBAIC01NTcsNyArNTU3LDggQEAgc3RydWN0IGhsX2FzaWNfZnVuY3Mgew0KIAkJCXUzMiBhc2lk
-LCB1NjQgdmEsIHU2NCBzaXplKTsNCiAJaW50ICgqc2VuZF9oZWFydGJlYXQpKHN0cnVjdCBobF9k
-ZXZpY2UgKmhkZXYpOw0KIAlpbnQgKCpkZWJ1Z19jb3Jlc2lnaHQpKHN0cnVjdCBobF9kZXZpY2Ug
-KmhkZXYsIHZvaWQgKmRhdGEpOw0KLQlib29sICgqaXNfZGV2aWNlX2lkbGUpKHN0cnVjdCBobF9k
-ZXZpY2UgKmhkZXYsIHN0cnVjdCBzZXFfZmlsZSAqcyk7DQorCWJvb2wgKCppc19kZXZpY2VfaWRs
-ZSkoc3RydWN0IGhsX2RldmljZSAqaGRldiwgdTMyICptYXNrLA0KKwkJCQlzdHJ1Y3Qgc2VxX2Zp
-bGUgKnMpOw0KIAlpbnQgKCpzb2Z0X3Jlc2V0X2xhdGVfaW5pdCkoc3RydWN0IGhsX2RldmljZSAq
-aGRldik7DQogCXZvaWQgKCpod19xdWV1ZXNfbG9jaykoc3RydWN0IGhsX2RldmljZSAqaGRldik7
-DQogCXZvaWQgKCpod19xdWV1ZXNfdW5sb2NrKShzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2KTsNCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzX2lvY3RsLmMgYi9k
-cml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzX2lvY3RsLmMNCmluZGV4IGIwNDU4NWFm
-MjdhZC4uMDcxMjc1NzZiM2U4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMv
-aGFiYW5hbGFic19pb2N0bC5jDQorKysgYi9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFs
-YWJzX2lvY3RsLmMNCkBAIC0xMTksNyArMTE5LDggQEAgc3RhdGljIGludCBod19pZGxlKHN0cnVj
-dCBobF9kZXZpY2UgKmhkZXYsIHN0cnVjdCBobF9pbmZvX2FyZ3MgKmFyZ3MpDQogCWlmICgoIW1h
-eF9zaXplKSB8fCAoIW91dCkpDQogCQlyZXR1cm4gLUVJTlZBTDsNCiANCi0JaHdfaWRsZS5pc19p
-ZGxlID0gaGRldi0+YXNpY19mdW5jcy0+aXNfZGV2aWNlX2lkbGUoaGRldiwgTlVMTCk7DQorCWh3
-X2lkbGUuaXNfaWRsZSA9IGhkZXYtPmFzaWNfZnVuY3MtPmlzX2RldmljZV9pZGxlKGhkZXYsDQor
-CQkJCQkmaHdfaWRsZS5idXN5X2VuZ2luZXNfbWFzaywgTlVMTCk7DQogDQogCXJldHVybiBjb3B5
-X3RvX3VzZXIob3V0LCAmaHdfaWRsZSwNCiAJCW1pbigoc2l6ZV90KSBtYXhfc2l6ZSwgc2l6ZW9m
-KGh3X2lkbGUpKSkgPyAtRUZBVUxUIDogMDsNCmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbWlz
-Yy9oYWJhbmFsYWJzLmggYi9pbmNsdWRlL3VhcGkvbWlzYy9oYWJhbmFsYWJzLmgNCmluZGV4IDIw
-NGFiOWI0YWU2Ny4uMzk1NmMyMjZjYTM1IDEwMDY0NA0KLS0tIGEvaW5jbHVkZS91YXBpL21pc2Mv
-aGFiYW5hbGFicy5oDQorKysgYi9pbmNsdWRlL3VhcGkvbWlzYy9oYWJhbmFsYWJzLmgNCkBAIC00
-NSw2ICs0NSwzMCBAQCBlbnVtIGdveWFfcXVldWVfaWQgew0KIAlHT1lBX1FVRVVFX0lEX1NJWkUN
-CiB9Ow0KIA0KKy8qDQorICogRW5naW5lIE51bWJlcmluZw0KKyAqDQorICogVXNlZCBpbiB0aGUg
-ImJ1c3lfZW5naW5lc19tYXNrIiBmaWVsZCBpbiBgc3RydWN0IGhsX2luZm9faHdfaWRsZScNCisg
-Ki8NCisNCitlbnVtIGdveWFfZW5naW5lX2lkIHsNCisJR09ZQV9FTkdJTkVfSURfRE1BXzAgPSAw
-LA0KKwlHT1lBX0VOR0lORV9JRF9ETUFfMSwNCisJR09ZQV9FTkdJTkVfSURfRE1BXzIsDQorCUdP
-WUFfRU5HSU5FX0lEX0RNQV8zLA0KKwlHT1lBX0VOR0lORV9JRF9ETUFfNCwNCisJR09ZQV9FTkdJ
-TkVfSURfTU1FXzAsDQorCUdPWUFfRU5HSU5FX0lEX1RQQ18wLA0KKwlHT1lBX0VOR0lORV9JRF9U
-UENfMSwNCisJR09ZQV9FTkdJTkVfSURfVFBDXzIsDQorCUdPWUFfRU5HSU5FX0lEX1RQQ18zLA0K
-KwlHT1lBX0VOR0lORV9JRF9UUENfNCwNCisJR09ZQV9FTkdJTkVfSURfVFBDXzUsDQorCUdPWUFf
-RU5HSU5FX0lEX1RQQ182LA0KKwlHT1lBX0VOR0lORV9JRF9UUENfNywNCisJR09ZQV9FTkdJTkVf
-SURfU0laRQ0KK307DQorDQogZW51bSBobF9kZXZpY2Vfc3RhdHVzIHsNCiAJSExfREVWSUNFX1NU
-QVRVU19PUEVSQVRJT05BTCwNCiAJSExfREVWSUNFX1NUQVRVU19JTl9SRVNFVCwNCkBAIC04Niw3
-ICsxMTAsMTEgQEAgc3RydWN0IGhsX2luZm9fZHJhbV91c2FnZSB7DQogDQogc3RydWN0IGhsX2lu
-Zm9faHdfaWRsZSB7DQogCV9fdTMyIGlzX2lkbGU7DQotCV9fdTMyIHBhZDsNCisJLyoNCisJICog
-Qml0bWFzayBvZiBidXN5IGVuZ2luZXMuDQorCSAqIEJpdHMgZGVmaW5pdGlvbiBpcyBhY2NvcmRp
-bmcgdG8gYGVudW0gPGNoaXA+X2VuZ2luZ19pZCcuDQorCSAqLw0KKwlfX3UzMiBidXN5X2VuZ2lu
-ZXNfbWFzazsNCiB9Ow0KIA0KIHN0cnVjdCBobF9pbmZvX2RldmljZV9zdGF0dXMgew0KLS0gDQoy
-LjE3LjENCg0K
+Hi Bartlomiej,
+
+On Fri, Jun 14, 2019 at 4:52 PM Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
+>
+> framebuffer_alloc() can fail only on kzalloc() memory allocation
+> failure and since kzalloc() will print error message in such case
+> we can omit printing extra error message in drivers (which BTW is
+> what the majority of framebuffer_alloc() users is doing already).
+>
+> Cc: "Bruno Prémont" <bonbons@linux-vserver.org>
+> Cc: Jiri Kosina <jikos@kernel.org>
+> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> ---
+>  drivers/hid/hid-picolcd_fb.c                   |    4 +---
+>  drivers/video/fbdev/amifb.c                    |    4 +---
+>  drivers/video/fbdev/arkfb.c                    |    4 +---
+>  drivers/video/fbdev/atmel_lcdfb.c              |    4 +---
+>  drivers/video/fbdev/aty/aty128fb.c             |    5 ++---
+>  drivers/video/fbdev/aty/atyfb_base.c           |   10 ++++------
+>  drivers/video/fbdev/aty/radeon_base.c          |    2 --
+>  drivers/video/fbdev/chipsfb.c                  |    1 -
+>  drivers/video/fbdev/cirrusfb.c                 |    5 +----
+>  drivers/video/fbdev/da8xx-fb.c                 |    1 -
+>  drivers/video/fbdev/efifb.c                    |    1 -
+>  drivers/video/fbdev/grvga.c                    |    4 +---
+>  drivers/video/fbdev/gxt4500.c                  |    5 ++---
+>  drivers/video/fbdev/hyperv_fb.c                |    4 +---
+>  drivers/video/fbdev/i740fb.c                   |    4 +---
+>  drivers/video/fbdev/imsttfb.c                  |    5 +----
+>  drivers/video/fbdev/intelfb/intelfbdrv.c       |    5 ++---
+>  drivers/video/fbdev/jz4740_fb.c                |    4 +---
+>  drivers/video/fbdev/mb862xx/mb862xxfbdrv.c     |    5 +----
+>  drivers/video/fbdev/mbx/mbxfb.c                |    4 +---
+>  drivers/video/fbdev/omap/omapfb_main.c         |    2 --
+>  drivers/video/fbdev/omap2/omapfb/omapfb-main.c |    6 +-----
+>  drivers/video/fbdev/platinumfb.c               |    5 ++---
+>  drivers/video/fbdev/pmag-aa-fb.c               |    4 +---
+>  drivers/video/fbdev/pmag-ba-fb.c               |    4 +---
+>  drivers/video/fbdev/pmagb-b-fb.c               |    4 +---
+>  drivers/video/fbdev/pvr2fb.c                   |    6 +-----
+>  drivers/video/fbdev/riva/fbdev.c               |    1 -
+>  drivers/video/fbdev/s3c-fb.c                   |    4 +---
+>  drivers/video/fbdev/s3fb.c                     |    4 +---
+>  drivers/video/fbdev/sh_mobile_lcdcfb.c         |    8 ++------
+>  drivers/video/fbdev/sm501fb.c                  |    4 +---
+>  drivers/video/fbdev/sm712fb.c                  |    1 -
+>  drivers/video/fbdev/smscufx.c                  |    4 +---
+>  drivers/video/fbdev/ssd1307fb.c                |    4 +---
+>  drivers/video/fbdev/sunxvr1000.c               |    1 -
+>  drivers/video/fbdev/sunxvr2500.c               |    1 -
+>  drivers/video/fbdev/sunxvr500.c                |    1 -
+>  drivers/video/fbdev/tgafb.c                    |    4 +---
+>  drivers/video/fbdev/udlfb.c                    |    4 +---
+>  drivers/video/fbdev/via/viafbdev.c             |    6 +-----
+>  drivers/video/fbdev/vt8623fb.c                 |    4 +---
+>  42 files changed, 40 insertions(+), 123 deletions(-)
+>
+> Index: b/drivers/hid/hid-picolcd_fb.c
+> ===================================================================
+> --- a/drivers/hid/hid-picolcd_fb.c
+> +++ b/drivers/hid/hid-picolcd_fb.c
+> @@ -522,10 +522,8 @@ int picolcd_init_framebuffer(struct pico
+>                         sizeof(struct fb_deferred_io) +
+>                         sizeof(struct picolcd_fb_data) +
+>                         PICOLCDFB_SIZE, dev);
+> -       if (info == NULL) {
+> -               dev_err(dev, "failed to allocate a framebuffer\n");
+> +       if (!info)
+>                 goto err_nomem;
+> -       }
+
+It would have been better to split this change as the HID and fbdev
+are different trees.
+
+However, I do not expect a conflict here (there hasn't been updates of
+hid-picolcd_fb.c in a while), so feel free to take this patch through
+the fbdev tree with my:
+Acked-By: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+
+Cheers,
+Benjamin
+
+>
+>         info->fbdefio = info->par;
+>         *info->fbdefio = picolcd_fb_defio;
+> Index: b/drivers/video/fbdev/amifb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/amifb.c
+> +++ b/drivers/video/fbdev/amifb.c
+> @@ -3554,10 +3554,8 @@ static int __init amifb_probe(struct pla
+>         custom.dmacon = DMAF_ALL | DMAF_MASTER;
+>
+>         info = framebuffer_alloc(sizeof(struct amifb_par), &pdev->dev);
+> -       if (!info) {
+> -               dev_err(&pdev->dev, "framebuffer_alloc failed\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         strcpy(info->fix.id, "Amiga ");
+>         info->fix.visual = FB_VISUAL_PSEUDOCOLOR;
+> Index: b/drivers/video/fbdev/arkfb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/arkfb.c
+> +++ b/drivers/video/fbdev/arkfb.c
+> @@ -954,10 +954,8 @@ static int ark_pci_probe(struct pci_dev
+>
+>         /* Allocate and fill driver data structure */
+>         info = framebuffer_alloc(sizeof(struct arkfb_info), &(dev->dev));
+> -       if (! info) {
+> -               dev_err(&(dev->dev), "cannot allocate memory\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>         mutex_init(&par->open_lock);
+> Index: b/drivers/video/fbdev/atmel_lcdfb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/atmel_lcdfb.c
+> +++ b/drivers/video/fbdev/atmel_lcdfb.c
+> @@ -1053,10 +1053,8 @@ static int __init atmel_lcdfb_probe(stru
+>
+>         ret = -ENOMEM;
+>         info = framebuffer_alloc(sizeof(struct atmel_lcdfb_info), dev);
+> -       if (!info) {
+> -               dev_err(dev, "cannot allocate memory\n");
+> +       if (!info)
+>                 goto out;
+> -       }
+>
+>         sinfo = info->par;
+>         sinfo->pdev = pdev;
+> Index: b/drivers/video/fbdev/aty/aty128fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/aty/aty128fb.c
+> +++ b/drivers/video/fbdev/aty/aty128fb.c
+> @@ -2102,10 +2102,9 @@ static int aty128_probe(struct pci_dev *
+>
+>         /* We have the resources. Now virtualize them */
+>         info = framebuffer_alloc(sizeof(struct aty128fb_par), &pdev->dev);
+> -       if (info == NULL) {
+> -               printk(KERN_ERR "aty128fb: can't alloc fb_info_aty128\n");
+> +       if (!info)
+>                 goto err_free_mmio;
+> -       }
+> +
+>         par = info->par;
+>
+>         info->pseudo_palette = par->pseudo_palette;
+> Index: b/drivers/video/fbdev/aty/atyfb_base.c
+> ===================================================================
+> --- a/drivers/video/fbdev/aty/atyfb_base.c
+> +++ b/drivers/video/fbdev/aty/atyfb_base.c
+> @@ -3550,10 +3550,9 @@ static int atyfb_pci_probe(struct pci_de
+>
+>         /* Allocate framebuffer */
+>         info = framebuffer_alloc(sizeof(struct atyfb_par), &pdev->dev);
+> -       if (!info) {
+> -               PRINTKE("atyfb_pci_probe() can't alloc fb_info\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+> +
+>         par = info->par;
+>         par->bus_type = PCI;
+>         info->fix = atyfb_fix;
+> @@ -3643,10 +3642,9 @@ static int __init atyfb_atari_probe(void
+>                 }
+>
+>                 info = framebuffer_alloc(sizeof(struct atyfb_par), NULL);
+> -               if (!info) {
+> -                       PRINTKE("atyfb_atari_probe() can't alloc fb_info\n");
+> +               if (!info)
+>                         return -ENOMEM;
+> -               }
+> +
+>                 par = info->par;
+>
+>                 info->fix = atyfb_fix;
+> Index: b/drivers/video/fbdev/aty/radeon_base.c
+> ===================================================================
+> --- a/drivers/video/fbdev/aty/radeon_base.c
+> +++ b/drivers/video/fbdev/aty/radeon_base.c
+> @@ -2294,8 +2294,6 @@ static int radeonfb_pci_register(struct
+>
+>         info = framebuffer_alloc(sizeof(struct radeonfb_info), &pdev->dev);
+>         if (!info) {
+> -               printk (KERN_ERR "radeonfb (%s): could not allocate memory\n",
+> -                       pci_name(pdev));
+>                 ret = -ENOMEM;
+>                 goto err_disable;
+>         }
+> Index: b/drivers/video/fbdev/chipsfb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/chipsfb.c
+> +++ b/drivers/video/fbdev/chipsfb.c
+> @@ -366,7 +366,6 @@ static int chipsfb_pci_init(struct pci_d
+>
+>         p = framebuffer_alloc(0, &dp->dev);
+>         if (p == NULL) {
+> -               dev_err(&dp->dev, "Cannot allocate framebuffer structure\n");
+>                 rc = -ENOMEM;
+>                 goto err_disable;
+>         }
+> Index: b/drivers/video/fbdev/cirrusfb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/cirrusfb.c
+> +++ b/drivers/video/fbdev/cirrusfb.c
+> @@ -2093,7 +2093,6 @@ static int cirrusfb_pci_register(struct
+>
+>         info = framebuffer_alloc(sizeof(struct cirrusfb_info), &pdev->dev);
+>         if (!info) {
+> -               printk(KERN_ERR "cirrusfb: could not allocate memory\n");
+>                 ret = -ENOMEM;
+>                 goto err_out;
+>         }
+> @@ -2206,10 +2205,8 @@ static int cirrusfb_zorro_register(struc
+>         struct cirrusfb_info *cinfo;
+>
+>         info = framebuffer_alloc(sizeof(struct cirrusfb_info), &z->dev);
+> -       if (!info) {
+> -               printk(KERN_ERR "cirrusfb: could not allocate memory\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         zcl = (const struct zorrocl *)ent->driver_data;
+>         btype = zcl->type;
+> Index: b/drivers/video/fbdev/da8xx-fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/da8xx-fb.c
+> +++ b/drivers/video/fbdev/da8xx-fb.c
+> @@ -1400,7 +1400,6 @@ static int fb_probe(struct platform_devi
+>         da8xx_fb_info = framebuffer_alloc(sizeof(struct da8xx_fb_par),
+>                                         &device->dev);
+>         if (!da8xx_fb_info) {
+> -               dev_dbg(&device->dev, "Memory allocation failed for fb_info\n");
+>                 ret = -ENOMEM;
+>                 goto err_pm_runtime_disable;
+>         }
+> Index: b/drivers/video/fbdev/efifb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/efifb.c
+> +++ b/drivers/video/fbdev/efifb.c
+> @@ -448,7 +448,6 @@ static int efifb_probe(struct platform_d
+>
+>         info = framebuffer_alloc(sizeof(u32) * 16, &dev->dev);
+>         if (!info) {
+> -               pr_err("efifb: cannot allocate framebuffer\n");
+>                 err = -ENOMEM;
+>                 goto err_release_mem;
+>         }
+> Index: b/drivers/video/fbdev/grvga.c
+> ===================================================================
+> --- a/drivers/video/fbdev/grvga.c
+> +++ b/drivers/video/fbdev/grvga.c
+> @@ -341,10 +341,8 @@ static int grvga_probe(struct platform_d
+>         char *options = NULL, *mode_opt = NULL;
+>
+>         info = framebuffer_alloc(sizeof(struct grvga_par), &dev->dev);
+> -       if (!info) {
+> -               dev_err(&dev->dev, "framebuffer_alloc failed\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         /* Expecting: "grvga: modestring, [addr:<framebuffer physical address>], [size:<framebuffer size>]
+>          *
+> Index: b/drivers/video/fbdev/gxt4500.c
+> ===================================================================
+> --- a/drivers/video/fbdev/gxt4500.c
+> +++ b/drivers/video/fbdev/gxt4500.c
+> @@ -642,10 +642,9 @@ static int gxt4500_probe(struct pci_dev
+>         }
+>
+>         info = framebuffer_alloc(sizeof(struct gxt4500_par), &pdev->dev);
+> -       if (!info) {
+> -               dev_err(&pdev->dev, "gxt4500: cannot alloc FB info record\n");
+> +       if (!info)
+>                 goto err_free_fb;
+> -       }
+> +
+>         par = info->par;
+>         cardtype = ent->driver_data;
+>         par->refclk_ps = cardinfo[cardtype].refclk_ps;
+> Index: b/drivers/video/fbdev/hyperv_fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/hyperv_fb.c
+> +++ b/drivers/video/fbdev/hyperv_fb.c
+> @@ -771,10 +771,8 @@ static int hvfb_probe(struct hv_device *
+>         int ret;
+>
+>         info = framebuffer_alloc(sizeof(struct hvfb_par), &hdev->device);
+> -       if (!info) {
+> -               pr_err("No memory for framebuffer info\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>         par->info = info;
+> Index: b/drivers/video/fbdev/i740fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/i740fb.c
+> +++ b/drivers/video/fbdev/i740fb.c
+> @@ -1005,10 +1005,8 @@ static int i740fb_probe(struct pci_dev *
+>         u8 *edid;
+>
+>         info = framebuffer_alloc(sizeof(struct i740fb_par), &(dev->dev));
+> -       if (!info) {
+> -               dev_err(&(dev->dev), "cannot allocate framebuffer\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>         mutex_init(&par->open_lock);
+> Index: b/drivers/video/fbdev/imsttfb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/imsttfb.c
+> +++ b/drivers/video/fbdev/imsttfb.c
+> @@ -1477,11 +1477,8 @@ static int imsttfb_probe(struct pci_dev
+>                 printk(KERN_ERR "imsttfb: no OF node for pci device\n");
+>
+>         info = framebuffer_alloc(sizeof(struct imstt_par), &pdev->dev);
+> -
+> -       if (!info) {
+> -               printk(KERN_ERR "imsttfb: Can't allocate memory\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>
+> Index: b/drivers/video/fbdev/intelfb/intelfbdrv.c
+> ===================================================================
+> --- a/drivers/video/fbdev/intelfb/intelfbdrv.c
+> +++ b/drivers/video/fbdev/intelfb/intelfbdrv.c
+> @@ -491,10 +491,9 @@ static int intelfb_pci_register(struct p
+>         }
+>
+>         info = framebuffer_alloc(sizeof(struct intelfb_info), &pdev->dev);
+> -       if (!info) {
+> -               ERR_MSG("Could not allocate memory for intelfb_info.\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+> +
+>         if (fb_alloc_cmap(&info->cmap, 256, 1) < 0) {
+>                 ERR_MSG("Could not allocate cmap for intelfb_info.\n");
+>                 goto err_out_cmap;
+> Index: b/drivers/video/fbdev/jz4740_fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/jz4740_fb.c
+> +++ b/drivers/video/fbdev/jz4740_fb.c
+> @@ -544,10 +544,8 @@ static int jzfb_probe(struct platform_de
+>         }
+>
+>         fb = framebuffer_alloc(sizeof(struct jzfb), &pdev->dev);
+> -       if (!fb) {
+> -               dev_err(&pdev->dev, "Failed to allocate framebuffer device\n");
+> +       if (!fb)
+>                 return -ENOMEM;
+> -       }
+>
+>         fb->fbops = &jzfb_ops;
+>         fb->flags = FBINFO_DEFAULT;
+> Index: b/drivers/video/fbdev/mb862xx/mb862xxfbdrv.c
+> ===================================================================
+> --- a/drivers/video/fbdev/mb862xx/mb862xxfbdrv.c
+> +++ b/drivers/video/fbdev/mb862xx/mb862xxfbdrv.c
+> @@ -684,10 +684,8 @@ static int of_platform_mb862xx_probe(str
+>         }
+>
+>         info = framebuffer_alloc(sizeof(struct mb862xxfb_par), dev);
+> -       if (info == NULL) {
+> -               dev_err(dev, "cannot allocate framebuffer\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>         par->info = info;
+> @@ -1009,7 +1007,6 @@ static int mb862xx_pci_probe(struct pci_
+>
+>         info = framebuffer_alloc(sizeof(struct mb862xxfb_par), dev);
+>         if (!info) {
+> -               dev_err(dev, "framebuffer alloc failed\n");
+>                 ret = -ENOMEM;
+>                 goto dis_dev;
+>         }
+> Index: b/drivers/video/fbdev/mbx/mbxfb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/mbx/mbxfb.c
+> +++ b/drivers/video/fbdev/mbx/mbxfb.c
+> @@ -899,10 +899,8 @@ static int mbxfb_probe(struct platform_d
+>         }
+>
+>         fbi = framebuffer_alloc(sizeof(struct mbxfb_info), &dev->dev);
+> -       if (fbi == NULL) {
+> -               dev_err(&dev->dev, "framebuffer_alloc failed\n");
+> +       if (!fbi)
+>                 return -ENOMEM;
+> -       }
+>
+>         mfbi = fbi->par;
+>         fbi->pseudo_palette = mfbi->pseudo_palette;
+> Index: b/drivers/video/fbdev/omap/omapfb_main.c
+> ===================================================================
+> --- a/drivers/video/fbdev/omap/omapfb_main.c
+> +++ b/drivers/video/fbdev/omap/omapfb_main.c
+> @@ -1515,8 +1515,6 @@ static int planes_init(struct omapfb_dev
+>                 fbi = framebuffer_alloc(sizeof(struct omapfb_plane_struct),
+>                                         fbdev->dev);
+>                 if (fbi == NULL) {
+> -                       dev_err(fbdev->dev,
+> -                               "unable to allocate memory for plane info\n");
+>                         planes_cleanup(fbdev);
+>                         return -ENOMEM;
+>                 }
+> Index: b/drivers/video/fbdev/omap2/omapfb/omapfb-main.c
+> ===================================================================
+> --- a/drivers/video/fbdev/omap2/omapfb/omapfb-main.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/omapfb-main.c
+> @@ -1892,12 +1892,8 @@ static int omapfb_create_framebuffers(st
+>
+>                 fbi = framebuffer_alloc(sizeof(struct omapfb_info),
+>                                 fbdev->dev);
+> -
+> -               if (fbi == NULL) {
+> -                       dev_err(fbdev->dev,
+> -                               "unable to allocate memory for plane info\n");
+> +               if (!fbi)
+>                         return -ENOMEM;
+> -               }
+>
+>                 clear_fb_info(fbi);
+>
+> Index: b/drivers/video/fbdev/platinumfb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/platinumfb.c
+> +++ b/drivers/video/fbdev/platinumfb.c
+> @@ -538,10 +538,9 @@ static int platinumfb_probe(struct platf
+>         dev_info(&odev->dev, "Found Apple Platinum video hardware\n");
+>
+>         info = framebuffer_alloc(sizeof(*pinfo), &odev->dev);
+> -       if (info == NULL) {
+> -               dev_err(&odev->dev, "Failed to allocate fbdev !\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+> +
+>         pinfo = info->par;
+>
+>         if (of_address_to_resource(dp, 0, &pinfo->rsrc_reg) ||
+> Index: b/drivers/video/fbdev/pmag-aa-fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/pmag-aa-fb.c
+> +++ b/drivers/video/fbdev/pmag-aa-fb.c
+> @@ -165,10 +165,8 @@ static int pmagaafb_probe(struct device
+>         int err;
+>
+>         info = framebuffer_alloc(sizeof(struct aafb_par), dev);
+> -       if (!info) {
+> -               printk(KERN_ERR "%s: Cannot allocate memory\n", dev_name(dev));
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>         dev_set_drvdata(dev, info);
+> Index: b/drivers/video/fbdev/pmag-ba-fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/pmag-ba-fb.c
+> +++ b/drivers/video/fbdev/pmag-ba-fb.c
+> @@ -150,10 +150,8 @@ static int pmagbafb_probe(struct device
+>         int err;
+>
+>         info = framebuffer_alloc(sizeof(struct pmagbafb_par), dev);
+> -       if (!info) {
+> -               printk(KERN_ERR "%s: Cannot allocate memory\n", dev_name(dev));
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>         dev_set_drvdata(dev, info);
+> Index: b/drivers/video/fbdev/pmagb-b-fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/pmagb-b-fb.c
+> +++ b/drivers/video/fbdev/pmagb-b-fb.c
+> @@ -257,10 +257,8 @@ static int pmagbbfb_probe(struct device
+>         int err;
+>
+>         info = framebuffer_alloc(sizeof(struct pmagbbfb_par), dev);
+> -       if (!info) {
+> -               printk(KERN_ERR "%s: Cannot allocate memory\n", dev_name(dev));
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>         dev_set_drvdata(dev, info);
+> Index: b/drivers/video/fbdev/pvr2fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/pvr2fb.c
+> +++ b/drivers/video/fbdev/pvr2fb.c
+> @@ -1069,12 +1069,8 @@ static int __init pvr2fb_init(void)
+>  #endif
+>
+>         fb_info = framebuffer_alloc(sizeof(struct pvr2fb_par), NULL);
+> -
+> -       if (!fb_info) {
+> -               printk(KERN_ERR "Failed to allocate memory for fb_info\n");
+> +       if (!fb_info)
+>                 return -ENOMEM;
+> -       }
+> -
+>
+>         currentpar = fb_info->par;
+>
+> Index: b/drivers/video/fbdev/riva/fbdev.c
+> ===================================================================
+> --- a/drivers/video/fbdev/riva/fbdev.c
+> +++ b/drivers/video/fbdev/riva/fbdev.c
+> @@ -1902,7 +1902,6 @@ static int rivafb_probe(struct pci_dev *
+>
+>         info = framebuffer_alloc(sizeof(struct riva_par), &pd->dev);
+>         if (!info) {
+> -               printk (KERN_ERR PFX "could not allocate memory\n");
+>                 ret = -ENOMEM;
+>                 goto err_ret;
+>         }
+> Index: b/drivers/video/fbdev/s3c-fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/s3c-fb.c
+> +++ b/drivers/video/fbdev/s3c-fb.c
+> @@ -1189,10 +1189,8 @@ static int s3c_fb_probe_win(struct s3c_f
+>
+>         fbinfo = framebuffer_alloc(sizeof(struct s3c_fb_win) +
+>                                    palette_size * sizeof(u32), sfb->dev);
+> -       if (!fbinfo) {
+> -               dev_err(sfb->dev, "failed to allocate framebuffer\n");
+> +       if (!fbinfo)
+>                 return -ENOMEM;
+> -       }
+>
+>         windata = sfb->pdata->win[win_no];
+>         initmode = *sfb->pdata->vtiming;
+> Index: b/drivers/video/fbdev/s3fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/s3fb.c
+> +++ b/drivers/video/fbdev/s3fb.c
+> @@ -1128,10 +1128,8 @@ static int s3_pci_probe(struct pci_dev *
+>
+>         /* Allocate and fill driver data structure */
+>         info = framebuffer_alloc(sizeof(struct s3fb_info), &(dev->dev));
+> -       if (!info) {
+> -               dev_err(&(dev->dev), "cannot allocate memory\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>         mutex_init(&par->open_lock);
+> Index: b/drivers/video/fbdev/sh_mobile_lcdcfb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/sh_mobile_lcdcfb.c
+> +++ b/drivers/video/fbdev/sh_mobile_lcdcfb.c
+> @@ -1644,10 +1644,8 @@ sh_mobile_lcdc_overlay_fb_init(struct sh
+>
+>         /* Allocate and initialize the frame buffer device. */
+>         info = framebuffer_alloc(0, priv->dev);
+> -       if (info == NULL) {
+> -               dev_err(priv->dev, "unable to allocate fb_info\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         ovl->info = info;
+>
+> @@ -2138,10 +2136,8 @@ sh_mobile_lcdc_channel_fb_init(struct sh
+>          * list and allocate the color map.
+>          */
+>         info = framebuffer_alloc(0, priv->dev);
+> -       if (info == NULL) {
+> -               dev_err(priv->dev, "unable to allocate fb_info\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         ch->info = info;
+>
+> Index: b/drivers/video/fbdev/sm501fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/sm501fb.c
+> +++ b/drivers/video/fbdev/sm501fb.c
+> @@ -1868,10 +1868,8 @@ static int sm501fb_probe_one(struct sm50
+>         }
+>
+>         fbi = framebuffer_alloc(sizeof(struct sm501fb_par), info->dev);
+> -       if (fbi == NULL) {
+> -               dev_err(info->dev, "cannot allocate %s framebuffer\n", name);
+> +       if (!fbi)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = fbi->par;
+>         par->info = info;
+> Index: b/drivers/video/fbdev/sm712fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/sm712fb.c
+> +++ b/drivers/video/fbdev/sm712fb.c
+> @@ -1538,7 +1538,6 @@ static int smtcfb_pci_probe(struct pci_d
+>
+>         info = framebuffer_alloc(sizeof(*sfb), &pdev->dev);
+>         if (!info) {
+> -               dev_err(&pdev->dev, "framebuffer_alloc failed\n");
+>                 err = -ENOMEM;
+>                 goto failed_free;
+>         }
+> Index: b/drivers/video/fbdev/smscufx.c
+> ===================================================================
+> --- a/drivers/video/fbdev/smscufx.c
+> +++ b/drivers/video/fbdev/smscufx.c
+> @@ -1653,10 +1653,8 @@ static int ufx_usb_probe(struct usb_inte
+>
+>         /* allocates framebuffer driver structure, not framebuffer memory */
+>         info = framebuffer_alloc(0, &usbdev->dev);
+> -       if (!info) {
+> -               dev_err(dev->gdev, "framebuffer_alloc failed\n");
+> +       if (!info)
+>                 goto e_nomem;
+> -       }
+>
+>         dev->info = info;
+>         info->par = dev;
+> Index: b/drivers/video/fbdev/ssd1307fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/ssd1307fb.c
+> +++ b/drivers/video/fbdev/ssd1307fb.c
+> @@ -556,10 +556,8 @@ static int ssd1307fb_probe(struct i2c_cl
+>         }
+>
+>         info = framebuffer_alloc(sizeof(struct ssd1307fb_par), &client->dev);
+> -       if (!info) {
+> -               dev_err(&client->dev, "Couldn't allocate framebuffer.\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>         par->info = info;
+> Index: b/drivers/video/fbdev/sunxvr1000.c
+> ===================================================================
+> --- a/drivers/video/fbdev/sunxvr1000.c
+> +++ b/drivers/video/fbdev/sunxvr1000.c
+> @@ -121,7 +121,6 @@ static int gfb_probe(struct platform_dev
+>
+>         info = framebuffer_alloc(sizeof(struct gfb_info), &op->dev);
+>         if (!info) {
+> -               printk(KERN_ERR "gfb: Cannot allocate fb_info\n");
+>                 err = -ENOMEM;
+>                 goto err_out;
+>         }
+> Index: b/drivers/video/fbdev/sunxvr2500.c
+> ===================================================================
+> --- a/drivers/video/fbdev/sunxvr2500.c
+> +++ b/drivers/video/fbdev/sunxvr2500.c
+> @@ -132,7 +132,6 @@ static int s3d_pci_register(struct pci_d
+>
+>         info = framebuffer_alloc(sizeof(struct s3d_info), &pdev->dev);
+>         if (!info) {
+> -               printk(KERN_ERR "s3d: Cannot allocate fb_info\n");
+>                 err = -ENOMEM;
+>                 goto err_disable;
+>         }
+> Index: b/drivers/video/fbdev/sunxvr500.c
+> ===================================================================
+> --- a/drivers/video/fbdev/sunxvr500.c
+> +++ b/drivers/video/fbdev/sunxvr500.c
+> @@ -272,7 +272,6 @@ static int e3d_pci_register(struct pci_d
+>
+>         info = framebuffer_alloc(sizeof(struct e3d_info), &pdev->dev);
+>         if (!info) {
+> -               printk(KERN_ERR "e3d: Cannot allocate fb_info\n");
+>                 err = -ENOMEM;
+>                 goto err_disable;
+>         }
+> Index: b/drivers/video/fbdev/tgafb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/tgafb.c
+> +++ b/drivers/video/fbdev/tgafb.c
+> @@ -1416,10 +1416,8 @@ static int tgafb_register(struct device
+>
+>         /* Allocate the fb and par structures.  */
+>         info = framebuffer_alloc(sizeof(struct tga_par), dev);
+> -       if (!info) {
+> -               printk(KERN_ERR "tgafb: Cannot allocate memory\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>         dev_set_drvdata(dev, info);
+> Index: b/drivers/video/fbdev/udlfb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/udlfb.c
+> +++ b/drivers/video/fbdev/udlfb.c
+> @@ -1689,10 +1689,8 @@ static int dlfb_usb_probe(struct usb_int
+>
+>         /* allocates framebuffer driver structure, not framebuffer memory */
+>         info = framebuffer_alloc(0, &dlfb->udev->dev);
+> -       if (!info) {
+> -               dev_err(&dlfb->udev->dev, "framebuffer_alloc failed\n");
+> +       if (!info)
+>                 goto error;
+> -       }
+>
+>         dlfb->info = info;
+>         info->par = dlfb;
+> Index: b/drivers/video/fbdev/via/viafbdev.c
+> ===================================================================
+> --- a/drivers/video/fbdev/via/viafbdev.c
+> +++ b/drivers/video/fbdev/via/viafbdev.c
+> @@ -1756,10 +1756,8 @@ int via_fb_pci_probe(struct viafb_dev *v
+>         viafbinfo = framebuffer_alloc(viafb_par_length +
+>                 ALIGN(sizeof(struct viafb_shared), BITS_PER_LONG/8),
+>                 &vdev->pdev->dev);
+> -       if (!viafbinfo) {
+> -               printk(KERN_ERR"Could not allocate memory for viafb_info.\n");
+> +       if (!viafbinfo)
+>                 return -ENOMEM;
+> -       }
+>
+>         viaparinfo = (struct viafb_par *)viafbinfo->par;
+>         viaparinfo->shared = viafbinfo->par + viafb_par_length;
+> @@ -1834,8 +1832,6 @@ int via_fb_pci_probe(struct viafb_dev *v
+>                 viafbinfo1 = framebuffer_alloc(viafb_par_length,
+>                                 &vdev->pdev->dev);
+>                 if (!viafbinfo1) {
+> -                       printk(KERN_ERR
+> -                       "allocate the second framebuffer struct error\n");
+>                         rc = -ENOMEM;
+>                         goto out_fb_release;
+>                 }
+> Index: b/drivers/video/fbdev/vt8623fb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/vt8623fb.c
+> +++ b/drivers/video/fbdev/vt8623fb.c
+> @@ -669,10 +669,8 @@ static int vt8623_pci_probe(struct pci_d
+>
+>         /* Allocate and fill driver data structure */
+>         info = framebuffer_alloc(sizeof(struct vt8623fb_info), &(dev->dev));
+> -       if (! info) {
+> -               dev_err(&(dev->dev), "cannot allocate memory\n");
+> +       if (!info)
+>                 return -ENOMEM;
+> -       }
+>
+>         par = info->par;
+>         mutex_init(&par->open_lock);
