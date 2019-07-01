@@ -2,220 +2,443 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06773C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E71C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5866208CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C93121479
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:14:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fOg6vUJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfGAEEh (ORCPT
+        id S1727070AbfGAEOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 00:04:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64232 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727379AbfGAEEg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 00:04:36 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6141agh021983
-        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 00:04:35 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tf6bbr3bq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 00:04:35 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 1 Jul 2019 05:04:34 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Jul 2019 05:04:29 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6144Slg51315040
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 04:04:28 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1EEA7B205F;
-        Mon,  1 Jul 2019 04:04:28 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD1CFB2064;
-        Mon,  1 Jul 2019 04:04:27 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.128.230])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Jul 2019 04:04:27 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D286C16C2E92; Sun, 30 Jun 2019 21:04:30 -0700 (PDT)
-Date:   Sun, 30 Jun 2019 21:04:30 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>
-Subject: Re: [PATCH] tools/memory-model: Update the informal documentation
-Reply-To: paulmck@linux.ibm.com
-References: <1561842644-5354-1-git-send-email-andrea.parri@amarulasolutions.com>
+        Mon, 1 Jul 2019 00:14:36 -0400
+Received: from ozlabs.org ([203.11.71.1]:42217 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726402AbfGAEOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 00:14:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cYt00YzYz9s4V;
+        Mon,  1 Jul 2019 14:14:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561954472;
+        bh=G/tCFqQumIeB98X+oAPxxzeuP/Ji3xklGnACIPGPhBw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=fOg6vUJJrAxfsY35rhtC4vWP597Z2YhD0zht4DrO4OMu0kkJrXrJ1HXRQP1FmScKf
+         lVxAVwxxmwcIBYjcXnLXIwq/QvOB7RSKXM82iMg9P+30vhhcqxti2wVYDxoVIu+sq7
+         8QKhOY0DeZBW4KGozEmEJuUAMyNTP8KFYCvCIeduOhu5hP2jxCKxhYf8qJnttn7oTr
+         /qsegM8jGqrTcpL1mr8hvC36jLyvr+muciIVe08C3pDsvqqFPxKL/qa0YSUjhW5KhJ
+         C9AfMsYmoMkQ+RSPgm5frb6gq6o28cdlpQgAdW3SF56lGRvyBebGsnaUjlFnJvwjYi
+         X1pK5v2Rdy8XA==
+Date:   Mon, 1 Jul 2019 14:14:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Xi Wang <wangxi11@huawei.com>, Lijun Ou <oulijun@huawei.com>
+Subject: linux-next: build failure after merge of the rdma tree
+Message-ID: <20190701141431.5cba95c3@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561842644-5354-1-git-send-email-andrea.parri@amarulasolutions.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19070104-0060-0000-0000-000003576B51
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011358; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01225723; UDB=6.00645233; IPR=6.01006934;
- MB=3.00027534; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-01 04:04:32
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070104-0061-0000-0000-000049F80EF4
-Message-Id: <20190701040430.GY26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010049
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/+FPGlPJ2GeCyfc/tbV3pq_G"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 11:10:44PM +0200, Andrea Parri wrote:
-> The formal memory consistency model has added support for plain accesses
-> (and data races).  While updating the informal documentation to describe
-> this addition to the model is highly desirable and important future work,
-> update the informal documentation to at least acknowledge such addition.
-> 
-> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Jade Alglave <j.alglave@ucl.ac.uk>
-> Cc: Luc Maranget <luc.maranget@inria.fr>
-> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Cc: Akira Yokosawa <akiyks@gmail.com>
-> Cc: Daniel Lustig <dlustig@nvidia.com>
+--Sig_/+FPGlPJ2GeCyfc/tbV3pq_G
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Queued for review, thank you, Andrea!
+Hi all,
 
-							Thanx, Paul
+After merging the rdma tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-> ---
->  tools/memory-model/Documentation/explanation.txt | 47 +++++++++++-------------
->  tools/memory-model/README                        | 18 ++++-----
->  2 files changed, 30 insertions(+), 35 deletions(-)
-> 
-> diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-> index 68caa9a976d0c..b42f7cd718242 100644
-> --- a/tools/memory-model/Documentation/explanation.txt
-> +++ b/tools/memory-model/Documentation/explanation.txt
-> @@ -42,7 +42,8 @@ linux-kernel.bell and linux-kernel.cat files that make up the formal
->  version of the model; they are extremely terse and their meanings are
->  far from clear.
->  
-> -This document describes the ideas underlying the LKMM.  It is meant
-> +This document describes the ideas underlying the LKMM, but excluding
-> +the modeling of bare C (or plain) shared memory accesses.  It is meant
->  for people who want to understand how the model was designed.  It does
->  not go into the details of the code in the .bell and .cat files;
->  rather, it explains in English what the code expresses symbolically.
-> @@ -354,31 +355,25 @@ be extremely complex.
->  Optimizing compilers have great freedom in the way they translate
->  source code to object code.  They are allowed to apply transformations
->  that add memory accesses, eliminate accesses, combine them, split them
-> -into pieces, or move them around.  Faced with all these possibilities,
-> -the LKMM basically gives up.  It insists that the code it analyzes
-> -must contain no ordinary accesses to shared memory; all accesses must
-> -be performed using READ_ONCE(), WRITE_ONCE(), or one of the other
-> -atomic or synchronization primitives.  These primitives prevent a
-> -large number of compiler optimizations.  In particular, it is
-> -guaranteed that the compiler will not remove such accesses from the
-> -generated code (unless it can prove the accesses will never be
-> -executed), it will not change the order in which they occur in the
-> -code (within limits imposed by the C standard), and it will not
-> -introduce extraneous accesses.
-> -
-> -This explains why the MP and SB examples above used READ_ONCE() and
-> -WRITE_ONCE() rather than ordinary memory accesses.  Thanks to this
-> -usage, we can be certain that in the MP example, P0's write event to
-> -buf really is po-before its write event to flag, and similarly for the
-> -other shared memory accesses in the examples.
-> -
-> -Private variables are not subject to this restriction.  Since they are
-> -not shared between CPUs, they can be accessed normally without
-> -READ_ONCE() or WRITE_ONCE(), and there will be no ill effects.  In
-> -fact, they need not even be stored in normal memory at all -- in
-> -principle a private variable could be stored in a CPU register (hence
-> -the convention that these variables have names starting with the
-> -letter 'r').
-> +into pieces, or move them around.  The use of READ_ONCE(), WRITE_ONCE(),
-> +or one of the other atomic or synchronization primitives prevents a
-> +large number of compiler optimizations.  In particular, it is guaranteed
-> +that the compiler will not remove such accesses from the generated code
-> +(unless it can prove the accesses will never be executed), it will not
-> +change the order in which they occur in the code (within limits imposed
-> +by the C standard), and it will not introduce extraneous accesses.
-> +
-> +The MP and SB examples above used READ_ONCE() and WRITE_ONCE() rather
-> +than ordinary memory accesses.  Thanks to this usage, we can be certain
-> +that in the MP example, the compiler won't reorder P0's write event to
-> +buf and P0's write event to flag, and similarly for the other shared
-> +memory accesses in the examples.
-> +
-> +Since private variables are not shared between CPUs, they can be
-> +accessed normally without READ_ONCE() or WRITE_ONCE().  In fact, they
-> +need not even be stored in normal memory at all -- in principle a
-> +private variable could be stored in a CPU register (hence the convention
-> +that these variables have names starting with the letter 'r').
->  
->  
->  A WARNING
-> diff --git a/tools/memory-model/README b/tools/memory-model/README
-> index 2b87f3971548c..fc07b52f20286 100644
-> --- a/tools/memory-model/README
-> +++ b/tools/memory-model/README
-> @@ -167,15 +167,15 @@ scripts	Various scripts, see scripts/README.
->  LIMITATIONS
->  ===========
->  
-> -The Linux-kernel memory model has the following limitations:
-> -
-> -1.	Compiler optimizations are not modeled.  Of course, the use
-> -	of READ_ONCE() and WRITE_ONCE() limits the compiler's ability
-> -	to optimize, but there is Linux-kernel code that uses bare C
-> -	memory accesses.  Handling this code is on the to-do list.
-> -	For more information, see Documentation/explanation.txt (in
-> -	particular, the "THE PROGRAM ORDER RELATION: po AND po-loc"
-> -	and "A WARNING" sections).
-> +The Linux-kernel memory model (LKMM) has the following limitations:
-> +
-> +1.	Compiler optimizations are not accurately modeled.  Of course,
-> +	the use of READ_ONCE() and WRITE_ONCE() limits the compiler's
-> +	ability to optimize, but under some circumstances it is possible
-> +	for the compiler to undermine the memory model.  For more
-> +	information, see Documentation/explanation.txt (in particular,
-> +	the "THE PROGRAM ORDER RELATION: po AND po-loc" and "A WARNING"
-> +	sections).
->  
->  	Note that this limitation in turn limits LKMM's ability to
->  	accurately model address, control, and data dependencies.
-> -- 
-> 2.7.4
-> 
+WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns=
+_roce_ah.o
+see include/linux/module.h for more information
+WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns=
+_roce_alloc.o
+see include/linux/module.h for more information
+WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns=
+_roce_cmd.o
+see include/linux/module.h for more information
+WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns=
+_roce_cq.o
+see include/linux/module.h for more information
+WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns=
+_roce_db.o
+see include/linux/module.h for more information
+WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns=
+_roce_hem.o
+see include/linux/module.h for more information
+WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns=
+_roce_mr.o
+see include/linux/module.h for more information
+WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns=
+_roce_pd.o
+see include/linux/module.h for more information
+WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns=
+_roce_qp.o
+see include/linux/module.h for more information
+WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns=
+_roce_restrack.o
+see include/linux/module.h for more information
+WARNING: modpost: missing MODULE_LICENSE() in drivers/infiniband/hw/hns/hns=
+_roce_srq.o
+see include/linux/module.h for more information
+ERROR: "hns_roce_bitmap_cleanup" [drivers/infiniband/hw/hns/hns_roce_srq.ko=
+] undefined!
+ERROR: "hns_roce_bitmap_init" [drivers/infiniband/hw/hns/hns_roce_srq.ko] u=
+ndefined!
+ERROR: "hns_roce_free_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_srq.=
+ko] undefined!
+ERROR: "hns_roce_alloc_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_srq=
+.ko] undefined!
+ERROR: "hns_roce_table_get" [drivers/infiniband/hw/hns/hns_roce_srq.ko] und=
+efined!
+ERROR: "hns_roce_bitmap_alloc" [drivers/infiniband/hw/hns/hns_roce_srq.ko] =
+undefined!
+ERROR: "hns_roce_table_find" [drivers/infiniband/hw/hns/hns_roce_srq.ko] un=
+defined!
+ERROR: "hns_roce_ib_umem_write_mtt" [drivers/infiniband/hw/hns/hns_roce_srq=
+.ko] undefined!
+ERROR: "hns_roce_mtt_cleanup" [drivers/infiniband/hw/hns/hns_roce_srq.ko] u=
+ndefined!
+ERROR: "hns_roce_buf_write_mtt" [drivers/infiniband/hw/hns/hns_roce_srq.ko]=
+ undefined!
+ERROR: "hns_roce_buf_free" [drivers/infiniband/hw/hns/hns_roce_srq.ko] unde=
+fined!
+ERROR: "hns_roce_buf_alloc" [drivers/infiniband/hw/hns/hns_roce_srq.ko] und=
+efined!
+ERROR: "hns_roce_mtt_init" [drivers/infiniband/hw/hns/hns_roce_srq.ko] unde=
+fined!
+ERROR: "hns_roce_bitmap_free" [drivers/infiniband/hw/hns/hns_roce_srq.ko] u=
+ndefined!
+ERROR: "hns_roce_table_put" [drivers/infiniband/hw/hns/hns_roce_srq.ko] und=
+efined!
+ERROR: "hns_roce_cmd_mbox" [drivers/infiniband/hw/hns/hns_roce_srq.ko] unde=
+fined!
+ERROR: "hns_roce_bitmap_cleanup" [drivers/infiniband/hw/hns/hns_roce_qp.ko]=
+ undefined!
+ERROR: "hns_roce_bitmap_init" [drivers/infiniband/hw/hns/hns_roce_qp.ko] un=
+defined!
+ERROR: "hns_roce_buf_free" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undef=
+ined!
+ERROR: "hns_roce_free_db" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undefi=
+ned!
+ERROR: "hns_roce_alloc_db" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undef=
+ined!
+ERROR: "hns_roce_bitmap_free_range" [drivers/infiniband/hw/hns/hns_roce_qp.=
+ko] undefined!
+ERROR: "hns_roce_bitmap_alloc_range" [drivers/infiniband/hw/hns/hns_roce_qp=
+.ko] undefined!
+ERROR: "hns_roce_db_unmap_user" [drivers/infiniband/hw/hns/hns_roce_qp.ko] =
+undefined!
+ERROR: "hns_roce_mtr_cleanup" [drivers/infiniband/hw/hns/hns_roce_qp.ko] un=
+defined!
+ERROR: "hns_roce_get_kmem_bufs" [drivers/infiniband/hw/hns/hns_roce_qp.ko] =
+undefined!
+ERROR: "hns_roce_buf_alloc" [drivers/infiniband/hw/hns/hns_roce_qp.ko] unde=
+fined!
+ERROR: "hns_roce_db_map_user" [drivers/infiniband/hw/hns/hns_roce_qp.ko] un=
+defined!
+ERROR: "hns_roce_free_buf_list" [drivers/infiniband/hw/hns/hns_roce_qp.ko] =
+undefined!
+ERROR: "hns_roce_table_get" [drivers/infiniband/hw/hns/hns_roce_qp.ko] unde=
+fined!
+ERROR: "hns_roce_mtr_attach" [drivers/infiniband/hw/hns/hns_roce_qp.ko] und=
+efined!
+ERROR: "hns_roce_mtr_init" [drivers/infiniband/hw/hns/hns_roce_qp.ko] undef=
+ined!
+ERROR: "hns_roce_hem_list_calc_root_ba" [drivers/infiniband/hw/hns/hns_roce=
+_qp.ko] undefined!
+ERROR: "hns_roce_get_umem_bufs" [drivers/infiniband/hw/hns/hns_roce_qp.ko] =
+undefined!
+ERROR: "hns_roce_alloc_buf_list" [drivers/infiniband/hw/hns/hns_roce_qp.ko]=
+ undefined!
+ERROR: "hns_roce_table_put" [drivers/infiniband/hw/hns/hns_roce_qp.ko] unde=
+fined!
+ERROR: "hns_roce_init_buf_region" [drivers/infiniband/hw/hns/hns_roce_qp.ko=
+] undefined!
+ERROR: "hns_roce_bitmap_free" [drivers/infiniband/hw/hns/hns_roce_pd.ko] un=
+defined!
+ERROR: "hns_roce_bitmap_alloc" [drivers/infiniband/hw/hns/hns_roce_pd.ko] u=
+ndefined!
+ERROR: "hns_roce_bitmap_cleanup" [drivers/infiniband/hw/hns/hns_roce_pd.ko]=
+ undefined!
+ERROR: "hns_roce_bitmap_init" [drivers/infiniband/hw/hns/hns_roce_pd.ko] un=
+defined!
+ERROR: "hns_roce_hem_list_find_mtt" [drivers/infiniband/hw/hns/hns_roce_mr.=
+ko] undefined!
+ERROR: "hns_roce_hem_list_request" [drivers/infiniband/hw/hns/hns_roce_mr.k=
+o] undefined!
+ERROR: "hns_roce_hem_list_release" [drivers/infiniband/hw/hns/hns_roce_mr.k=
+o] undefined!
+ERROR: "hns_roce_hem_list_init" [drivers/infiniband/hw/hns/hns_roce_mr.ko] =
+undefined!
+ERROR: "hns_roce_check_whether_mhop" [drivers/infiniband/hw/hns/hns_roce_mr=
+.ko] undefined!
+ERROR: "hns_roce_bitmap_cleanup" [drivers/infiniband/hw/hns/hns_roce_mr.ko]=
+ undefined!
+ERROR: "hns_roce_bitmap_init" [drivers/infiniband/hw/hns/hns_roce_mr.ko] un=
+defined!
+ERROR: "hns_roce_table_put_range" [drivers/infiniband/hw/hns/hns_roce_mr.ko=
+] undefined!
+ERROR: "hns_roce_table_get_range" [drivers/infiniband/hw/hns/hns_roce_mr.ko=
+] undefined!
+ERROR: "hns_roce_bitmap_alloc" [drivers/infiniband/hw/hns/hns_roce_mr.ko] u=
+ndefined!
+ERROR: "hns_roce_table_find" [drivers/infiniband/hw/hns/hns_roce_mr.ko] und=
+efined!
+ERROR: "hns_roce_bitmap_free" [drivers/infiniband/hw/hns/hns_roce_mr.ko] un=
+defined!
+ERROR: "hns_roce_table_put" [drivers/infiniband/hw/hns/hns_roce_mr.ko] unde=
+fined!
+ERROR: "hns_roce_free_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_mr.k=
+o] undefined!
+ERROR: "hns_roce_cmd_mbox" [drivers/infiniband/hw/hns/hns_roce_mr.ko] undef=
+ined!
+ERROR: "hns_roce_alloc_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_mr.=
+ko] undefined!
+ERROR: "hns_roce_table_get" [drivers/infiniband/hw/hns/hns_roce_mr.ko] unde=
+fined!
+ERROR: "hns_roce_fill_res_entry" [drivers/infiniband/hw/hns/hns_roce_main.k=
+o] undefined!
+ERROR: "hns_roce_dereg_mr" [drivers/infiniband/hw/hns/hns_roce_main.ko] und=
+efined!
+ERROR: "hns_roce_reg_user_mr" [drivers/infiniband/hw/hns/hns_roce_main.ko] =
+undefined!
+ERROR: "hns_roce_get_dma_mr" [drivers/infiniband/hw/hns/hns_roce_main.ko] u=
+ndefined!
+ERROR: "hns_roce_ib_destroy_cq" [drivers/infiniband/hw/hns/hns_roce_main.ko=
+] undefined!
+ERROR: "hns_roce_ib_create_cq" [drivers/infiniband/hw/hns/hns_roce_main.ko]=
+ undefined!
+ERROR: "hns_roce_modify_qp" [drivers/infiniband/hw/hns/hns_roce_main.ko] un=
+defined!
+ERROR: "hns_roce_create_qp" [drivers/infiniband/hw/hns/hns_roce_main.ko] un=
+defined!
+ERROR: "hns_roce_destroy_ah" [drivers/infiniband/hw/hns/hns_roce_main.ko] u=
+ndefined!
+ERROR: "hns_roce_query_ah" [drivers/infiniband/hw/hns/hns_roce_main.ko] und=
+efined!
+ERROR: "hns_roce_create_ah" [drivers/infiniband/hw/hns/hns_roce_main.ko] un=
+defined!
+ERROR: "hns_roce_dealloc_pd" [drivers/infiniband/hw/hns/hns_roce_main.ko] u=
+ndefined!
+ERROR: "hns_roce_alloc_pd" [drivers/infiniband/hw/hns/hns_roce_main.ko] und=
+efined!
+ERROR: "hns_roce_rereg_user_mr" [drivers/infiniband/hw/hns/hns_roce_main.ko=
+] undefined!
+ERROR: "hns_roce_dealloc_mw" [drivers/infiniband/hw/hns/hns_roce_main.ko] u=
+ndefined!
+ERROR: "hns_roce_alloc_mw" [drivers/infiniband/hw/hns/hns_roce_main.ko] und=
+efined!
+ERROR: "hns_roce_map_mr_sg" [drivers/infiniband/hw/hns/hns_roce_main.ko] un=
+defined!
+ERROR: "hns_roce_alloc_mr" [drivers/infiniband/hw/hns/hns_roce_main.ko] und=
+efined!
+ERROR: "hns_roce_destroy_srq" [drivers/infiniband/hw/hns/hns_roce_main.ko] =
+undefined!
+ERROR: "hns_roce_create_srq" [drivers/infiniband/hw/hns/hns_roce_main.ko] u=
+ndefined!
+ERROR: "hns_roce_cleanup_qp_table" [drivers/infiniband/hw/hns/hns_roce_main=
+.ko] undefined!
+ERROR: "hns_roce_cleanup_uar_table" [drivers/infiniband/hw/hns/hns_roce_mai=
+n.ko] undefined!
+ERROR: "hns_roce_cleanup_pd_table" [drivers/infiniband/hw/hns/hns_roce_main=
+.ko] undefined!
+ERROR: "hns_roce_cleanup_mr_table" [drivers/infiniband/hw/hns/hns_roce_main=
+.ko] undefined!
+ERROR: "hns_roce_cleanup_cq_table" [drivers/infiniband/hw/hns/hns_roce_main=
+.ko] undefined!
+ERROR: "hns_roce_cleanup_hem_table" [drivers/infiniband/hw/hns/hns_roce_mai=
+n.ko] undefined!
+ERROR: "hns_roce_cmd_use_polling" [drivers/infiniband/hw/hns/hns_roce_main.=
+ko] undefined!
+ERROR: "hns_roce_init_srq_table" [drivers/infiniband/hw/hns/hns_roce_main.k=
+o] undefined!
+ERROR: "hns_roce_cmd_cleanup" [drivers/infiniband/hw/hns/hns_roce_main.ko] =
+undefined!
+ERROR: "hns_roce_cleanup_hem" [drivers/infiniband/hw/hns/hns_roce_main.ko] =
+undefined!
+ERROR: "hns_roce_cleanup_bitmap" [drivers/infiniband/hw/hns/hns_roce_main.k=
+o] undefined!
+ERROR: "hns_roce_cmd_use_events" [drivers/infiniband/hw/hns/hns_roce_main.k=
+o] undefined!
+ERROR: "hns_roce_init_qp_table" [drivers/infiniband/hw/hns/hns_roce_main.ko=
+] undefined!
+ERROR: "hns_roce_init_cq_table" [drivers/infiniband/hw/hns/hns_roce_main.ko=
+] undefined!
+ERROR: "hns_roce_init_mr_table" [drivers/infiniband/hw/hns/hns_roce_main.ko=
+] undefined!
+ERROR: "hns_roce_init_pd_table" [drivers/infiniband/hw/hns/hns_roce_main.ko=
+] undefined!
+ERROR: "hns_roce_init_uar_table" [drivers/infiniband/hw/hns/hns_roce_main.k=
+o] undefined!
+ERROR: "hns_roce_check_whether_mhop" [drivers/infiniband/hw/hns/hns_roce_ma=
+in.ko] undefined!
+ERROR: "hns_roce_init_hem_table" [drivers/infiniband/hw/hns/hns_roce_main.k=
+o] undefined!
+ERROR: "hns_roce_cmd_init" [drivers/infiniband/hw/hns/hns_roce_main.ko] und=
+efined!
+ERROR: "hns_roce_uar_alloc" [drivers/infiniband/hw/hns/hns_roce_main.ko] un=
+defined!
+ERROR: "hns_roce_uar_free" [drivers/infiniband/hw/hns/hns_roce_main.ko] und=
+efined!
+ERROR: "hns_roce_bitmap_cleanup" [drivers/infiniband/hw/hns/hns_roce_cq.ko]=
+ undefined!
+ERROR: "hns_roce_bitmap_init" [drivers/infiniband/hw/hns/hns_roce_cq.ko] un=
+defined!
+ERROR: "hns_roce_free_db" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undefi=
+ned!
+ERROR: "hns_roce_db_unmap_user" [drivers/infiniband/hw/hns/hns_roce_cq.ko] =
+undefined!
+ERROR: "hns_roce_buf_free" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undef=
+ined!
+ERROR: "hns_roce_mtt_cleanup" [drivers/infiniband/hw/hns/hns_roce_cq.ko] un=
+defined!
+ERROR: "hns_roce_ib_umem_write_mtt" [drivers/infiniband/hw/hns/hns_roce_cq.=
+ko] undefined!
+ERROR: "hns_roce_db_map_user" [drivers/infiniband/hw/hns/hns_roce_cq.ko] un=
+defined!
+ERROR: "hns_roce_buf_write_mtt" [drivers/infiniband/hw/hns/hns_roce_cq.ko] =
+undefined!
+ERROR: "hns_roce_buf_alloc" [drivers/infiniband/hw/hns/hns_roce_cq.ko] unde=
+fined!
+ERROR: "hns_roce_alloc_db" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undef=
+ined!
+ERROR: "hns_roce_mtt_init" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undef=
+ined!
+ERROR: "hns_roce_free_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_cq.k=
+o] undefined!
+ERROR: "hns_roce_alloc_cmd_mailbox" [drivers/infiniband/hw/hns/hns_roce_cq.=
+ko] undefined!
+ERROR: "hns_roce_table_get" [drivers/infiniband/hw/hns/hns_roce_cq.ko] unde=
+fined!
+ERROR: "hns_roce_bitmap_alloc" [drivers/infiniband/hw/hns/hns_roce_cq.ko] u=
+ndefined!
+ERROR: "hns_roce_table_find" [drivers/infiniband/hw/hns/hns_roce_cq.ko] und=
+efined!
+ERROR: "hns_roce_check_whether_mhop" [drivers/infiniband/hw/hns/hns_roce_cq=
+.ko] undefined!
+ERROR: "hns_roce_bitmap_free" [drivers/infiniband/hw/hns/hns_roce_cq.ko] un=
+defined!
+ERROR: "hns_roce_table_put" [drivers/infiniband/hw/hns/hns_roce_cq.ko] unde=
+fined!
+ERROR: "hns_roce_cmd_mbox" [drivers/infiniband/hw/hns/hns_roce_cq.ko] undef=
+ined!
+ERROR: "hns_roce_cleanup_srq_table" [drivers/infiniband/hw/hns/hns_roce_all=
+oc.ko] undefined!
+ERROR: "hns_roce_cleanup_uar_table" [drivers/infiniband/hw/hns/hns_roce_all=
+oc.ko] undefined!
+ERROR: "hns_roce_cleanup_pd_table" [drivers/infiniband/hw/hns/hns_roce_allo=
+c.ko] undefined!
+ERROR: "hns_roce_cleanup_mr_table" [drivers/infiniband/hw/hns/hns_roce_allo=
+c.ko] undefined!
+ERROR: "hns_roce_cleanup_cq_table" [drivers/infiniband/hw/hns/hns_roce_allo=
+c.ko] undefined!
+ERROR: "hns_roce_cleanup_qp_table" [drivers/infiniband/hw/hns/hns_roce_allo=
+c.ko] undefined!
+ERROR: "to_hr_qp_type" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefi=
+ned!
+ERROR: "get_send_wqe" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefin=
+ed!
+ERROR: "hns_roce_release_range_qp" [drivers/infiniband/hw/hns/hns-roce-hw-v=
+1.ko] undefined!
+ERROR: "hns_roce_mtt_cleanup" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko]=
+ undefined!
+ERROR: "hns_roce_cmd_mbox" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] un=
+defined!
+ERROR: "hns_roce_cmd_event" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] u=
+ndefined!
+ERROR: "hns_roce_cq_completion" [drivers/infiniband/hw/hns/hns-roce-hw-v1.k=
+o] undefined!
+ERROR: "hns_roce_create_qp" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] u=
+ndefined!
+ERROR: "hns_roce_init" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefi=
+ned!
+ERROR: "hns_roce_buf_free" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] un=
+defined!
+ERROR: "hns_roce_free_cq" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] und=
+efined!
+ERROR: "hns_roce_hw2sw_mpt" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] u=
+ndefined!
+ERROR: "hns_get_gid_index" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] un=
+defined!
+ERROR: "hns_roce_dealloc_pd" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] =
+undefined!
+ERROR: "hns_roce_alloc_cmd_mailbox" [drivers/infiniband/hw/hns/hns-roce-hw-=
+v1.ko] undefined!
+ERROR: "hns_roce_qp_remove" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] u=
+ndefined!
+ERROR: "hns_roce_alloc_pd" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] un=
+defined!
+ERROR: "hns_roce_free_cmd_mailbox" [drivers/infiniband/hw/hns/hns-roce-hw-v=
+1.ko] undefined!
+ERROR: "get_recv_wqe" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefin=
+ed!
+ERROR: "hns_roce_unlock_cqs" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] =
+undefined!
+ERROR: "hns_roce_exit" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] undefi=
+ned!
+ERROR: "hns_roce_qp_event" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] un=
+defined!
+ERROR: "hns_roce_table_find" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] =
+undefined!
+ERROR: "to_hns_roce_state" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] un=
+defined!
+ERROR: "hns_roce_ib_create_cq" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko=
+] undefined!
+ERROR: "hns_roce_cq_event" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] un=
+defined!
+ERROR: "hns_roce_qp_free" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] und=
+efined!
+ERROR: "hns_roce_lock_cqs" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] un=
+defined!
+ERROR: "hns_roce_wq_overflow" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko]=
+ undefined!
+ERROR: "key_to_hw_index" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko] unde=
+fined!
+ERROR: "hns_roce_bitmap_free" [drivers/infiniband/hw/hns/hns-roce-hw-v1.ko]=
+ undefined!
+ERROR: "hns_roce_ib_destroy_cq" [drivers/infiniband/hw/hns/hns-roce-hw-v1.k=
+o] undefined!
 
+Presumably caused by commit
+
+  e9816ddf2a33 ("RDMA/hns: Cleanup unnecessary exported symbols")
+
+I have used the rdma tree from next-20190628 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+FPGlPJ2GeCyfc/tbV3pq_G
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ZiKcACgkQAVBC80lX
+0GwVZAgAlfrtorIma4ZcC0O4p+KmPrgi5JbYPXvDXAExecdgHmXGD2lJmysPZVw9
+T4sbf85cPB73IO0QuiHrkBzzklmlcQHjkmOMnbTkfrcjtfP8513Jyr9qEfPpKHWD
+ZCvMEX0c1MCbmBh/zMsErD0JgFST1OneNcGpaKxZrz+nliIlXELXa2FNVQ0Dlf9j
+8Rs8CdaaU6ctANCKNUk6dMOlzqo9zrJa/WFJy7T7F8mBgh2mmu4YfeNzCBpJYroC
+mL3IN/VHpTxpCI+JR80q5vo3AACxlyvv5xTkFg9vB7WugYdUTZ+MkRg3jhO2n5pI
+lSptwRSWgvlt6Vasoj40lo6wtbb5cA==
+=vWFJ
+-----END PGP SIGNATURE-----
+
+--Sig_/+FPGlPJ2GeCyfc/tbV3pq_G--
