@@ -2,96 +2,118 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A95C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0230AC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52B5206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:34:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YVFFkZJj"
+	by mail.kernel.org (Postfix) with ESMTP id D8E2520B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfGAEeD (ORCPT
+        id S1727368AbfGAEkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 00:34:03 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39505 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfGAEeD (ORCPT
+        Mon, 1 Jul 2019 00:40:49 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33984 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfGAEkr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 00:34:03 -0400
-Received: by mail-qt1-f194.google.com with SMTP id i34so13257169qta.6
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 21:34:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j4LijnemKoLKQMl/B23h/AFjsTibtIxnLw1/ziD/okk=;
-        b=YVFFkZJj/CNI+ghOb+Ya0Nzz514913rZbQ1YwSPyXWJG0iedMSqToFMHZSnvnPuPT0
-         O8cxNkk5ThpOsJF6gBM/kMDq+25cqP4doJFO4stISlZcxnEC15ROlJ6RTv+tUb36RMUP
-         oJiNOHbUBSYf7k9M2h1kSEXdcBrPmOJGKebzY=
+        Mon, 1 Jul 2019 00:40:47 -0400
+Received: from mail-pl1-f200.google.com ([209.85.214.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <po-hsu.lin@canonical.com>)
+        id 1hho7Q-0001hj-Ta
+        for linux-kernel@vger.kernel.org; Mon, 01 Jul 2019 04:40:45 +0000
+Received: by mail-pl1-f200.google.com with SMTP id r7so6636450plo.6
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 21:40:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j4LijnemKoLKQMl/B23h/AFjsTibtIxnLw1/ziD/okk=;
-        b=gN2IW6dPviHTo72TR5D4JuCBigjs+A0pFP9pA1tryHvr8TSpssn3Ym9GdAKBofh1sh
-         ZDkadzM8TQrOMGZCWcU/XKRml33i0xZ03RS79R14SLOYUHCS20xHpGGb9OT+DZEIZ4bZ
-         IJkSTebcsOdJIgF3WCRpVxDJARi/TOnFl512Uy9r1tLU2I5x1xF4KpLs1vYRyn55kiac
-         4mBXkgrb2H4V3Zxa9tg4DvfrEPWirsx3i8CnGS/D5GMp6sJuKM7nOS9t2e8gk1ba7znK
-         a+r5oF0VtOI+lTHJ9YWpvsAJ893RfLijG7HPcr1Gi++nd4iw3puaxoBChg1//okTf85p
-         Uo+Q==
-X-Gm-Message-State: APjAAAU+0fFjedUPs+yzWQ3FQyo/TSHphXNoI8MszSeA0ja6MGsxiAu8
-        1vdUEPPRwjmPNlghLSKWD1IEGXVu6FIFOZL1UlV0PA==
-X-Google-Smtp-Source: APXvYqxyxJ+qsb/SSss0UK1hGoxcUxWom7jpMAM+lCcXcmwPccZYE52XG+D0cY4RU1de6kdV4cOwi/jxIN29tjlaZDo=
-X-Received: by 2002:ac8:4601:: with SMTP id p1mr18877187qtn.181.1561955642169;
- Sun, 30 Jun 2019 21:34:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190612043258.166048-1-hsinyi@chromium.org> <20190612043258.166048-4-hsinyi@chromium.org>
- <20190628094251.GC36437@lakrids.cambridge.arm.com> <CAJMQK-iRKkOS9q-qGVj-3o6BVMeANrBoF_4MWQ1g-=4_6HRdbw@mail.gmail.com>
-In-Reply-To: <CAJMQK-iRKkOS9q-qGVj-3o6BVMeANrBoF_4MWQ1g-=4_6HRdbw@mail.gmail.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Mon, 1 Jul 2019 12:33:36 +0800
-Message-ID: <CAJMQK-g66_G3M9j1b2fBiMQrr5H7w4WQ5ZVy+aDdsmjb4A1==Q@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] arm64: kexec_file: add rng-seed support
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9vifoJSKcoFZv9bK756pSy0guphf7tbgTB5siI2JqwU=;
+        b=LLlX+NKPGSlYZj92a5IRhovfcmEfTNfjY7DR6nL+10/P4CTehhis3G/4xpw3er14BO
+         yqbFuwY8+UHaIvaxnRXPf+mpPwYRHyCRYuibaB1j5d5dpaCvLJiQNTSdV1EhsgTzgdxw
+         9GxzaqYMbIk+EW2LiGYpEm/GdYLZ+wNKjN4som8LPaBLPvfKfy/ugYH+v8Bf609pr3O2
+         5xQHFAIKgfXV0zC0qGWCtOP78MTTEaaQ9HeuSE3LXV1MjyZfx6buWYN7k9UyBn9XnmdC
+         RNK8dWAr8mGCPNxSGYI7KT+lxhC9lhIfWw5F8HE6pTej+sbVPM1IWidtnNrVfW/r04ov
+         Tv8A==
+X-Gm-Message-State: APjAAAVGe4HgKCXOrct5BHXvZ6D3ty7Imjpqlwo8SWobD8CpRxD2px/+
+        xhlhDNdQVuDL0aN7FD6geoT7MUuT1UBdSfExL+4ReEsvhpq20RLNOue1IG2PEBO138VaGSzL2sE
+        f5TwkLTUJw0AUDuRRC2j/VJZuuXCTzZYpBHDgTqI3
+X-Received: by 2002:a17:902:324:: with SMTP id 33mr370877pld.340.1561956043685;
+        Sun, 30 Jun 2019 21:40:43 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyrjpjZ50ynx/B04ND0r1L7o7s7teiIgeCRvr0C5WzfvIZjiG3+mRjQfq4G+knSH+kt+kLTVA==
+X-Received: by 2002:a17:902:324:: with SMTP id 33mr370862pld.340.1561956043442;
+        Sun, 30 Jun 2019 21:40:43 -0700 (PDT)
+Received: from Leggiero.taipei.internal (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id h1sm7823505pgv.93.2019.06.30.21.40.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 30 Jun 2019 21:40:42 -0700 (PDT)
+From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
+To:     davem@davemloft.net, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCHv2] selftests/net: skip psock_tpacket test if KALLSYMS was not enabled
+Date:   Mon,  1 Jul 2019 12:40:31 +0800
+Message-Id: <20190701044031.19451-1-po-hsu.lin@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 7:47 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+The psock_tpacket test will need to access /proc/kallsyms, this would
+require the kernel config CONFIG_KALLSYMS to be enabled first.
 
-> >
-> > If the RNG wasn't initialised, we'd carry on with a warning. Why do we
-> > follow a different policy here?
-> >
-(Sorry, please ignore previous comment)
-I think this part should be same as kaslr, since they are both adding
-random seeds:
-If RNG isn't initialized, we won't be able to set these seeds, and dtb
-can't do anything else to deal with this, so carry on with warning.
-If fdt_setprop failed with no space, create_dtb() will try to setup
-dtb again with more space.
-Other failures are setting fdt's error, so returns invalid.
+Apart from adding CONFIG_KALLSYMS to the net/config file here, check the
+file existence to determine if we can run this test will be helpful to
+avoid a false-positive test result when testing it directly with the
+following commad against a kernel that have CONFIG_KALLSYMS disabled:
+    make -C tools/testing/selftests TARGETS=net run_tests
+
+Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+---
+ tools/testing/selftests/net/config            |  1 +
+ tools/testing/selftests/net/run_afpackettests | 14 +++++++++-----
+ 2 files changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/tools/testing/selftests/net/config b/tools/testing/selftests/net/config
+index 4740404..3dea2cb 100644
+--- a/tools/testing/selftests/net/config
++++ b/tools/testing/selftests/net/config
+@@ -25,3 +25,4 @@ CONFIG_NF_TABLES_IPV6=y
+ CONFIG_NF_TABLES_IPV4=y
+ CONFIG_NFT_CHAIN_NAT_IPV6=m
+ CONFIG_NFT_CHAIN_NAT_IPV4=m
++CONFIG_KALLSYMS=y
+diff --git a/tools/testing/selftests/net/run_afpackettests b/tools/testing/selftests/net/run_afpackettests
+index ea5938e..8b42e8b 100755
+--- a/tools/testing/selftests/net/run_afpackettests
++++ b/tools/testing/selftests/net/run_afpackettests
+@@ -21,12 +21,16 @@ fi
+ echo "--------------------"
+ echo "running psock_tpacket test"
+ echo "--------------------"
+-./in_netns.sh ./psock_tpacket
+-if [ $? -ne 0 ]; then
+-	echo "[FAIL]"
+-	ret=1
++if [ -f /proc/kallsyms ]; then
++	./in_netns.sh ./psock_tpacket
++	if [ $? -ne 0 ]; then
++		echo "[FAIL]"
++		ret=1
++	else
++		echo "[PASS]"
++	fi
+ else
+-	echo "[PASS]"
++	echo "[SKIP] CONFIG_KALLSYMS not enabled"
+ fi
+ 
+ echo "--------------------"
+-- 
+2.7.4
+
