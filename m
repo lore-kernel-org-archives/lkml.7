@@ -2,92 +2,89 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BECC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917A0C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3CB620652
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7018020652
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbfGAHOA convert rfc822-to-8bit (ORCPT
+        id S1727778AbfGAHOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 03:14:00 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:37173 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727206AbfGAHOA (ORCPT
+        Mon, 1 Jul 2019 03:14:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39710 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727723AbfGAHOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 03:14:00 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id D61AEE0007;
-        Mon,  1 Jul 2019 07:13:52 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 09:13:52 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>, Han Xu <han.xu@nxp.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] mtd: rawnand: gpmi: remove double assignment to
- block_size
-Message-ID: <20190701091352.3e3caf11@xps13>
-In-Reply-To: <20190604105859.16627-1-colin.king@canonical.com>
-References: <20190604105859.16627-1-colin.king@canonical.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 1 Jul 2019 03:14:02 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hhqVf-0007zg-BT; Mon, 01 Jul 2019 09:13:55 +0200
+Date:   Mon, 1 Jul 2019 09:13:54 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Feng Tang <feng.tang@intel.com>
+cc:     "Chen, Rong A" <rong.a.chen@intel.com>,
+        "tipbuild@zytor.com" <tipbuild@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>, "lkp@01.org" <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [LKP] [x86/hotplug] e1056a25da:
+ WARNING:at_arch/x86/kernel/apic/apic.c:#setup_local_APIC
+In-Reply-To: <alpine.DEB.2.21.1906302021320.1802@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1907010829590.1802@nanos.tec.linutronix.de>
+References: <20190620021856.GP7221@shao2-debian> <alpine.DEB.2.21.1906212108150.5503@nanos.tec.linutronix.de> <58ea508f-dc2e-8537-fe96-49cca0a7c799@intel.com> <alpine.DEB.2.21.1906250821220.32342@nanos.tec.linutronix.de> <f5c36f89-61bf-a82e-3d3b-79720b2da2ef@intel.com>
+ <alpine.DEB.2.21.1906251330330.32342@nanos.tec.linutronix.de> <20190628063231.GA7766@shbuild999.sh.intel.com> <alpine.DEB.2.21.1906280929010.32342@nanos.tec.linutronix.de> <alpine.DEB.2.21.1906290912390.1802@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1906301334290.1802@nanos.tec.linutronix.de> <20190630130347.GB93752@shbuild999.sh.intel.com> <alpine.DEB.2.21.1906302021320.1802@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
+Feng,
 
-Colin King <colin.king@canonical.com> wrote on Tue,  4 Jun 2019
-11:58:59 +0100:
-
-> From: Colin Ian King <colin.king@canonical.com>
+On Sun, 30 Jun 2019, Thomas Gleixner wrote:
+> On Sun, 30 Jun 2019, Feng Tang wrote:
+> > On Sun, Jun 30, 2019 at 01:35:39PM +0200, Thomas Gleixner wrote:
+> > > On Sat, 29 Jun 2019, Thomas Gleixner wrote:
+> > > > On Fri, 28 Jun 2019, Thomas Gleixner wrote:
+> > > > > On Fri, 28 Jun 2019, Feng Tang wrote:
+> > > > > That function just 'works' by chance not by design. I'll stare into it and
+> > > > > fix it up for real.
+> > > > > 
+> > > > > Thank you very much for that information. Your debug was spot on!
+> > > > 
+> > > > I rewrote that function so it actually handles that case correctly along
+> > > > with some other things which were broken and force pushed the WIP.x86/ipi
+> > > > branch.
+> > > > 
+> > > > Can you please run exactly that test again against that new version and
+> > > > verify that this is fixed now?
+> > > 
+> > > Just found another issue with that thing. Don't waste your time on it. I'll
+> > > come back to you when I'm done.
+> > 
+> > Ok. I noticed that the ipi branch has been merged to tip/master.
 > 
-> The variable block_size is being assigned to itself and to
-> geo->ecc_chunk_size.  Clean up the double assignment by removing
-> the assignment to itself.
-> 
-> Addresses-Coverity: ("Evaluation order violation")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-> index 5db84178edff..334fe3130285 100644
-> --- a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-> +++ b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-> @@ -1428,7 +1428,7 @@ static void gpmi_bch_layout_std(struct gpmi_nand_data *this)
->  	struct bch_geometry *geo = &this->bch_geometry;
->  	unsigned int ecc_strength = geo->ecc_strength >> 1;
->  	unsigned int gf_len = geo->gf_len;
-> -	unsigned int block_size = block_size = geo->ecc_chunk_size;
-> +	unsigned int block_size = geo->ecc_chunk_size;
->  
->  	this->bch_flashlayout0 =
->  		BF_BCH_FLASH0LAYOUT0_NBLOCKS(geo->ecc_chunk_count - 1) |
+> Yes, but it will be zapped there as well.
 
+In case you still have your debug version (that old tree which triggered
+the warn) around, could you please run that again and add
 
+    'lapic=notscdeadline'
 
-Applied to nand/next, thanks.
-
-Miquèl
-
+to the kernel command line please?
 
 Thanks,
-Miquèl
+
+	tglx
