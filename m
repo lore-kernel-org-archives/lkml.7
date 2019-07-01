@@ -2,135 +2,157 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E68C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6665C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C05213F2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:09:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IV7sS6Vg"
+	by mail.kernel.org (Postfix) with ESMTP id B3CC6213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:11:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbfGAJJq (ORCPT
+        id S1728344AbfGAJL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 05:09:46 -0400
-Received: from ozlabs.org ([203.11.71.1]:60429 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728246AbfGAJJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 05:09:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45chQb09x7z9s00;
-        Mon,  1 Jul 2019 19:09:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561972183;
-        bh=vmJfcAnvoqHOZoRT+MJCXj2iLUCQNGeOcljg8P1nO30=;
-        h=Date:From:To:Cc:Subject:From;
-        b=IV7sS6VgqpSDPmUTLLkpYxJWbUgMoRyRi7TQmRg28+2XOzBbbxbZcyl+VsOCUuJQ/
-         Ru6M+2KSWHi/+n4+3sY+cS5AOAjxLPcn+Igv2LL4jCrVMD9aBSvMoAl4y5jRDZbGyW
-         fBpwQT44poNhbeltlJn5krpJ/veQuQxahb1lIHr/jcw1yEO1Gn/5ZKgM8stXb1jjM9
-         WZbxpQoTQoXre/BujPKO4Ig0mD7jks9lhA4ui9l60gqT9O2EcSQxhuyGibqvwkyJ/h
-         RNVR2C/D4VJrXx/FMZ24HZ0AmgxQE5PUSZGLgOEiItiH+pmANRJv409rzb/2IrX3IE
-         SPksc62IBVu1A==
-Date:   Mon, 1 Jul 2019 19:09:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: linux-next: manual merge of the char-misc tree with the driver-core
- tree
-Message-ID: <20190701190940.7f23ac15@canb.auug.org.au>
+        Mon, 1 Jul 2019 05:11:57 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44425 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfGAJL5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 05:11:57 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b7so12701010otl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 02:11:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vrfkJssjVDLW+XqYQpIBNfx1iw/D41O+Rgdu06lVQjo=;
+        b=kQuWgHPwFCTnjgTkrQPgEdi8GAGNa5/VW2ocgPnEjW/EQAoT8qWwyzAASc7CaVf0L+
+         m5odRzSpuFn9BoFWdbsGi3T6NJRCAgfTFLFComixuKrqOhniXsr1TEnwjymVR71OxWoU
+         QkKSb1yT0Fbs4beUXSW9LlKCTzNm5GfBkFompFW/ei8nI0LD7ie/nBGAubNA623gVgy5
+         b/mH9u/QdX+C2n7a7nJseTQjujeZbpda4ubEU48NaBhPqertlSVMgAy+tRbT5OLZnvYI
+         +3buJBoGtUD0a8wT4Qj0LatwOmYDCN95R9/puSJ9ShkCPPBDqEFpmpRiV4nSIPLK+B/F
+         L2bw==
+X-Gm-Message-State: APjAAAX3249GNTseWX9NkbrACCC3YiObYt+0rxfEKyNzRuRytvpQvWae
+        FJ7pO61D0YabfEa0vuNgu7yAWYek+I+p5Z1Nu4+JZA==
+X-Google-Smtp-Source: APXvYqzVk/OyjjzY0nFtClX5qDGpGeyg9GkiF4n9W945/G5IBkuHr61awlT7Lm9v1RLyJvTz3n3CldjmYOSicw0m17c=
+X-Received: by 2002:a9d:2f03:: with SMTP id h3mr18782897otb.107.1561972316496;
+ Mon, 01 Jul 2019 02:11:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/w_KPwi04vtaR+bmu90XDEeM"; protocol="application/pgp-signature"
+References: <20190625090135.18872-1-hch@lst.de> <20190625090135.18872-2-hch@lst.de>
+In-Reply-To: <20190625090135.18872-2-hch@lst.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 1 Jul 2019 11:11:45 +0200
+Message-ID: <CAMuHMdUqVi61Uf15w4xxDVDmHU1mAyipq75otE7j14C3tLjMmw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] m68k: use the generic dma coherent remap allocator
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/w_KPwi04vtaR+bmu90XDEeM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Christoph,
 
-Hi all,
+On Tue, Jun 25, 2019 at 11:01 AM Christoph Hellwig <hch@lst.de> wrote:
+> This switche to using common code for the DMA allocations, including
 
-Today's linux-next merge of the char-misc tree got a conflict in:
+switches m68k
 
-  drivers/hwtracing/coresight/of_coresight.c
+> potential use of the CMA allocator if configure.  Also add a
 
-between commit:
+configured
 
-  418e3ea157ef ("bus_find_device: Unify the match callback with class_find_=
-device")
+> comment where the existing behavior seems to be lacking.
+>
+> Switching to the generic code enables DMA allocations from atomic
+> context, which is required by the DMA API documentation, and also
+> adds various other minor features drivers start relying upon.  It
+> also makes sure we have on tested code base for all architectures
 
-from the driver-core tree and commits:
+a tested code base
 
-  22aa495a6477 ("coresight: Rename of_coresight to coresight-platform")
-  20961aea982e ("coresight: platform: Use fwnode handle for device search")
+> that require uncached pte bits for coherent DMA allocations.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-from the char-misc tree.
+Thanks, applying and queueing for v5.3.
 
-I fixed it up (I removed the file and added the following merge fix patch)
-and can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
+> --- a/arch/m68k/kernel/dma.c
+> +++ b/arch/m68k/kernel/dma.c
+> @@ -18,57 +18,20 @@
+>  #include <asm/pgalloc.h>
+>
+>  #if defined(CONFIG_MMU) && !defined(CONFIG_COLDFIRE)
+> -
+> -void *arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *handle,
+> -               gfp_t flag, unsigned long attrs)
+> +pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
+> +               unsigned long attrs)
+>  {
+> -       struct page *page, **map;
+> -       pgprot_t pgprot;
+> -       void *addr;
+> -       int i, order;
+> -
+> -       pr_debug("dma_alloc_coherent: %d,%x\n", size, flag);
+> -
+> -       size = PAGE_ALIGN(size);
+> -       order = get_order(size);
+> -
+> -       page = alloc_pages(flag | __GFP_ZERO, order);
+> -       if (!page)
+> -               return NULL;
+> -
+> -       *handle = page_to_phys(page);
+> -       map = kmalloc(sizeof(struct page *) << order, flag & ~__GFP_DMA);
+> -       if (!map) {
+> -               __free_pages(page, order);
+> -               return NULL;
+> +       /*
+> +        * XXX: this doesn't seem to handle the sun3 MMU at all.
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 1 Jul 2019 19:07:20 +1000
-Subject: [PATCH] coresight: fix for "bus_find_device: Unify the match callb=
-ack
- with class_find_device"
+Correct.  This file is not compiled on Sun-3, which selects NO_DMA, so
+I'll drop the comment while applying.
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/hwtracing/coresight/coresight-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +        */
+> +       if (CPU_IS_040_OR_060) {
+> +               pgprot_val(prot) &= ~_PAGE_CACHE040;
+> +               pgprot_val(prot) |= _PAGE_GLOBAL040 | _PAGE_NOCACHE_S;
+> +       } else {
+> +               pgprot_val(prot) |= _PAGE_NOCACHE030;
+>         }
+> -       split_page(page, order);
+> -
+> -       order = 1 << order;
+> -       size >>= PAGE_SHIFT;
+> -       map[0] = page;
+> -       for (i = 1; i < size; i++)
+> -               map[i] = page + i;
+> -       for (; i < order; i++)
+> -               __free_page(page + i);
+> -       pgprot = __pgprot(_PAGE_PRESENT | _PAGE_ACCESSED | _PAGE_DIRTY);
+> -       if (CPU_IS_040_OR_060)
+> -               pgprot_val(pgprot) |= _PAGE_GLOBAL040 | _PAGE_NOCACHE_S;
+> -       else
+> -               pgprot_val(pgprot) |= _PAGE_NOCACHE030;
+> -       addr = vmap(map, size, VM_MAP, pgprot);
+> -       kfree(map);
+> -
+> -       return addr;
+> +       return prot;
+>  }
 
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwt=
-racing/coresight/coresight-platform.c
-index 3c5ceda8db24..fc67f6ae0b3e 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -37,7 +37,7 @@ static int coresight_alloc_conns(struct device *dev,
- 	return 0;
- }
-=20
--int coresight_device_fwnode_match(struct device *dev, void *fwnode)
-+int coresight_device_fwnode_match(struct device *dev, const void *fwnode)
- {
- 	return dev_fwnode(dev) =3D=3D fwnode;
- }
---=20
-2.20.1
+Gr{oetje,eeting}s,
 
---=20
-Cheers,
-Stephen Rothwell
+                        Geert
 
---Sig_/w_KPwi04vtaR+bmu90XDEeM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ZzdQACgkQAVBC80lX
-0Gwv2Qf9GjZkU2JzPMuJ1xhcyTzOoq6RNWz7LUUaS34qvI4Aou+eQb2xv+/6E5lb
-loS5GGUjXBKrlGDEgfkxxuIjEY8y0YPG/kQyhPkYK4JFC/B2B8OjE0iVdxbgqu/Y
-9A7vHz6lhAK5mVjFgw1oZnQUL6WywjGoCTtgLzVG/aThKCNVtGE3h/cYHtrFGQuT
-uVr1iN2t621lsekTE9IV3y8QUzF58cMVEb2h7GJdS2pfKhQ4MCuYMIOcqWlsq8C7
-m7JAGPl+SOXmnfGCwSTcmvbF7GGWyaUvLXpsMpD3IBh1GOTl1YBwDLkic2TKKafY
-Y4mKeIXrE4D09M3RSk4dVa+059WVoA==
-=/hD3
------END PGP SIGNATURE-----
-
---Sig_/w_KPwi04vtaR+bmu90XDEeM--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
