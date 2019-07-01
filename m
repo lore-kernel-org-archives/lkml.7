@@ -2,84 +2,148 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8463CC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFF4C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530F620881
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBF720881
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbfGAQOL (ORCPT
+        id S1730223AbfGAQP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 12:14:11 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33610 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728238AbfGAQOK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 12:14:10 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y17so9225091lfe.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 09:14:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0U0YPTwJgVIJVRdYc6tYY8FIRvP636LwdBcXQglF9w0=;
-        b=IQUTI4XZ3Q82yeW5G2g6aJi/+RXNjWJxHYSjkEsncEsS8yuPpQJl3Sa8ATmFqdLMga
-         o6bZ1sr8wRmR0ZOJEXF6lQzUgVRxTCFGR28o3RD61ZdNBkbaJpq4e8DNgcDqRbv1qLdw
-         J+jVrq3b59dP1Q8deX0BGOM6rlxCcJllBFeLXS4A2P0TORWRfsLEhE2MizuLOv75Xc9n
-         E/3cvhBI12PBGjVGVhSAgP/2dETxV+4u8kJ5zcsFTJWvs8tHYlNMAGOnsKsjlV2g22Nm
-         kJUIPWLMgytGXorUmMLN8noQHdtNmS9CoWqzcbFdWS482dpBBaBnnG0ksrLlniRTEY0J
-         zRfw==
-X-Gm-Message-State: APjAAAUfMBXG2q3iQBue+3qAAZmb1aXwHenMeOVfd5eJbYBJoEKCnSdt
-        bsbdsyfqoMS7dv41tgMlrLUC23OKAOKZi9YWw+eDMaY161E=
-X-Google-Smtp-Source: APXvYqzriltBqe9R7oQnUm+t1kiD/JXfO+P5w1S5DjKPm1jZ3LxfH1T50G3V+2i3+aAxPMfHqfVYaccEHxDlHv7SpJE=
-X-Received: by 2002:ac2:4466:: with SMTP id y6mr6082599lfl.0.1561997648899;
- Mon, 01 Jul 2019 09:14:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190701160805.32404-1-mcroce@redhat.com> <42624f83da71354a5daef959a4749cb75516d37f.camel@perches.com>
-In-Reply-To: <42624f83da71354a5daef959a4749cb75516d37f.camel@perches.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Mon, 1 Jul 2019 18:13:32 +0200
-Message-ID: <CAGnkfhx9F1G8K6PjBdUnkCO07GR=ktWAnqOLTcOvg7VGwWb69Q@mail.gmail.com>
-Subject: Re: [PATCH net] ipv4: don't set IPv6 only flags to IPv4 addresses
-To:     Joe Perches <joe@perches.com>
-Cc:     netdev <netdev@vger.kernel.org>,
+        Mon, 1 Jul 2019 12:15:56 -0400
+Received: from mga06.intel.com ([134.134.136.31]:41527 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726863AbfGAQP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 12:15:56 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 09:15:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,440,1557212400"; 
+   d="scan'208";a="184279656"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 01 Jul 2019 09:15:50 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 01 Jul 2019 19:15:50 +0300
+Date:   Mon, 1 Jul 2019 19:15:50 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Content-Type: text/plain; charset="UTF-8"
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        "Robert R. Howell" <RHowell@uwyo.edu>
+Subject: Re: [PATCH v2 1/5] PM: ACPI/PCI: Resume all devices during
+ hibernation
+Message-ID: <20190701161550.GA2640@lahna.fi.intel.com>
+References: <4976412.ihyb9sT5jY@kreacher>
+ <6191578.xJk2HsE5MX@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6191578.xJk2HsE5MX@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 6:10 PM Joe Perches <joe@perches.com> wrote:
->
-> On Mon, 2019-07-01 at 18:08 +0200, Matteo Croce wrote:
-> > Avoid the situation where an IPV6 only flag is applied to an IPv4 address:
-> []
-> > diff --git a/net/ipv4/devinet.c b/net/ipv4/devinet.c
-> []
-> > @@ -468,6 +473,9 @@ static int __inet_insert_ifa(struct in_ifaddr *ifa, struct nlmsghdr *nlh,
-> >       ifa->ifa_flags &= ~IFA_F_SECONDARY;
-> >       last_primary = &in_dev->ifa_list;
-> >
-> > +     /* Don't set IPv6 only flags to IPv6 addresses */
->
-> umm, IPv4 addresses?
->
->
+On Mon, Jul 01, 2019 at 12:44:25PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Both the PCI bus type and the ACPI PM domain avoid resuming
+> runtime-suspended devices with DPM_FLAG_SMART_SUSPEND set during
+> hibernation (before creating the snapshot image of system memory),
+> but that turns out to be a mistake.  It leads to functional issues
+> and adds complexity that's hard to justify.
+> 
+> For this reason, resume all runtime-suspended PCI devices and all
+> devices in the ACPI PM domains before creating a snapshot image of
+> system memory during hibernation.
+> 
+> Fixes: 05087360fd7a (ACPI / PM: Take SMART_SUSPEND driver flag into account)
+> Fixes: c4b65157aeef (PCI / PM: Take SMART_SUSPEND driver flag into account)
+> Link: https://lore.kernel.org/linux-acpi/917d4399-2e22-67b1-9d54-808561f9083f@uwyo.edu/T/#maf065fe6e4974f2a9d79f332ab99dfaba635f64c
+> Reported-by: Robert R. Howell <RHowell@uwyo.edu>
+> Tested-by: Robert R. Howell <RHowell@uwyo.edu>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> -> v2: No changes.
+> 
+> ---
+>  drivers/acpi/device_pm.c |   13 +++++++------
+>  drivers/pci/pci-driver.c |   16 ++++++++--------
+>  2 files changed, 15 insertions(+), 14 deletions(-)
+> 
+> Index: linux-pm/drivers/acpi/device_pm.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/device_pm.c
+> +++ linux-pm/drivers/acpi/device_pm.c
+> @@ -1155,13 +1155,14 @@ EXPORT_SYMBOL_GPL(acpi_subsys_resume_ear
+>  int acpi_subsys_freeze(struct device *dev)
+>  {
+>  	/*
+> -	 * This used to be done in acpi_subsys_prepare() for all devices and
+> -	 * some drivers may depend on it, so do it here.  Ideally, however,
+> -	 * runtime-suspended devices should not be touched during freeze/thaw
+> -	 * transitions.
+> +	 * Resume all runtime-suspended devices before creating a snapshot
+> +	 * image of system memory, because the restore kernel generally cannot
+> +	 * be expected to always handle them consistently and they need to be
+> +	 * put into the runtime-active metastate during system resume anyway,
+> +	 * so it is better to ensure that the state saved in the image will be
+> +	 * alwyas consistent with that.
 
-Ouch, right.
+alwyas -> always
 
-/* Don't set IPv6 only flags to IPv4 addresses */
+>  	 */
+> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
+> -		pm_runtime_resume(dev);
+> +	pm_runtime_resume(dev);
+>  
+>  	return pm_generic_freeze(dev);
+>  }
+> Index: linux-pm/drivers/pci/pci-driver.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/pci-driver.c
+> +++ linux-pm/drivers/pci/pci-driver.c
+> @@ -1012,15 +1012,15 @@ static int pci_pm_freeze(struct device *
+>  	}
+>  
+>  	/*
+> -	 * This used to be done in pci_pm_prepare() for all devices and some
+> -	 * drivers may depend on it, so do it here.  Ideally, runtime-suspended
+> -	 * devices should not be touched during freeze/thaw transitions,
+> -	 * however.
+> +	 * Resume all runtime-suspended devices before creating a snapshot
+> +	 * image of system memory, because the restore kernel generally cannot
+> +	 * be expected to always handle them consistently and they need to be
+> +	 * put into the runtime-active metastate during system resume anyway,
+> +	 * so it is better to ensure that the state saved in the image will be
+> +	 * alwyas consistent with that.
 
-Can this be edidet on patchwork instead of spamming with a v2?
+ditto
 
--- 
-Matteo Croce
-per aspera ad upstream
+>  	 */
+> -	if (!dev_pm_smart_suspend_and_suspended(dev)) {
+> -		pm_runtime_resume(dev);
+> -		pci_dev->state_saved = false;
+> -	}
+> +	pm_runtime_resume(dev);
+> +	pci_dev->state_saved = false;
+>  
+>  	if (pm->freeze) {
+>  		int error;
+> 
+> 
+> 
