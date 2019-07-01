@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67574C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A779C06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA1A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3A3220B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561966990;
-	bh=1GJKODxkEAllkaE7gTr5n2GIck/IUQ9Z8gFNl/0ezJk=;
+	s=default; t=1561967108;
+	bh=sSj+HBqNEa3o1VWt40vpIy462cR5/BZd/O5Msa+HbDw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u1hUt1E11nwArrk/pF7NQjQ8POpqqR/RLZhrkhWK48+BtTl9W2P61E3qjQttw8BF+
-	 3yq++/2EZ4QqTzJdFraezvStDpnRF9NKTOSiEO4r2l8mkcRnu4xM0pg0bfrRwCb3SY
-	 tdE0USmezWKy9ez+f4Ngt9Hhjw72eQ33VLyNVJIY=
+	b=GHc+zQGXMIH2XybhstC0QfPcl9Rtnhwx69WI72nMKRlv3M4VGg4JY0dsjrD8dx0xR
+	 3R2RegN4NYUFbzQTpdoJmIX9hTb+Ax7mRP4TBDMGoA3tY+kaVi9oNiwec6Xwy+5NJs
+	 gzWM2MJp421OsnWA7RI6tnwCB1Ar0GPfrOVCqm2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbfGAHnJ (ORCPT
+        id S1727964AbfGAHpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 03:43:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50338 "EHLO mx1.suse.de"
+        Mon, 1 Jul 2019 03:45:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50864 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726036AbfGAHnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 03:43:08 -0400
+        id S1726036AbfGAHpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 03:45:06 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C7434AFFA;
-        Mon,  1 Jul 2019 07:43:06 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 09:43:06 +0200
+        by mx1.suse.de (Postfix) with ESMTP id 9C66EAE48;
+        Mon,  1 Jul 2019 07:45:04 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 09:45:03 +0200
 From:   Michal Hocko <mhocko@kernel.org>
 To:     David Hildenbrand <david@redhat.com>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
@@ -46,29 +46,26 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Mike Rapoport <rppt@linux.vnet.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Oscar Salvador <osalvador@suse.com>
-Subject: Re: [PATCH v3 02/11] s390x/mm: Fail when an altmap is used for
- arch_add_memory()
-Message-ID: <20190701074306.GC6376@dhcp22.suse.cz>
+Subject: Re: [PATCH v3 03/11] s390x/mm: Implement arch_remove_memory()
+Message-ID: <20190701074503.GD6376@dhcp22.suse.cz>
 References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-3-david@redhat.com>
+ <20190527111152.16324-4-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190527111152.16324-3-david@redhat.com>
+In-Reply-To: <20190527111152.16324-4-david@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 27-05-19 13:11:43, David Hildenbrand wrote:
-> ZONE_DEVICE is not yet supported, fail if an altmap is passed, so we
-> don't forget arch_add_memory()/arch_remove_memory() when unlocking
-> support.
+On Mon 27-05-19 13:11:44, David Hildenbrand wrote:
+> Will come in handy when wanting to handle errors after
+> arch_add_memory().
 
-Why do we need this? Sure ZONE_DEVICE is not supported for s390 and so
-might be the case for other arches which support hotplug. I do not see
-much point in adding warning to each of them.
+I do not understand this. Why do you add a code for something that is
+not possible on this HW (based on the comment - is it still valid btw?)
 
 > Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
 > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
@@ -78,26 +75,35 @@ much point in adding warning to each of them.
 > Cc: David Hildenbrand <david@redhat.com>
 > Cc: Vasily Gorbik <gor@linux.ibm.com>
 > Cc: Oscar Salvador <osalvador@suse.com>
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
->  arch/s390/mm/init.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  arch/s390/mm/init.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
 > 
 > diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index 14d1eae9fe43..d552e330fbcc 100644
+> index d552e330fbcc..14955e0a9fcf 100644
 > --- a/arch/s390/mm/init.c
 > +++ b/arch/s390/mm/init.c
-> @@ -226,6 +226,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
->  	unsigned long size_pages = PFN_DOWN(size);
->  	int rc;
->  
-> +	if (WARN_ON_ONCE(restrictions->altmap))
-> +		return -EINVAL;
+> @@ -243,12 +243,13 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  void arch_remove_memory(int nid, u64 start, u64 size,
+>  			struct vmem_altmap *altmap)
+>  {
+> -	/*
+> -	 * There is no hardware or firmware interface which could trigger a
+> -	 * hot memory remove on s390. So there is nothing that needs to be
+> -	 * implemented.
+> -	 */
+> -	BUG();
+> +	unsigned long start_pfn = start >> PAGE_SHIFT;
+> +	unsigned long nr_pages = size >> PAGE_SHIFT;
+> +	struct zone *zone;
 > +
->  	rc = vmem_add_mapping(start, size);
->  	if (rc)
->  		return rc;
+> +	zone = page_zone(pfn_to_page(start_pfn));
+> +	__remove_pages(zone, start_pfn, nr_pages, altmap);
+> +	vmem_remove_mapping(start, size);
+>  }
+>  #endif
+>  #endif /* CONFIG_MEMORY_HOTPLUG */
 > -- 
 > 2.20.1
 > 
