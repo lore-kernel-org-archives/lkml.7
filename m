@@ -2,113 +2,139 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8A5C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C23C46478
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E718E21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:18:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Qh2SanT6"
+	by mail.kernel.org (Postfix) with ESMTP id 0B21A2146F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbfGAQSN (ORCPT
+        id S1730303AbfGAQTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 12:18:13 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52291 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbfGAQSN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 12:18:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s3so120024wms.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 09:18:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=d0HyjLFqpz9AWkWYsHlacSFouR7h8Dt4U9XzrYCAXZE=;
-        b=Qh2SanT69fpWH1FNwV6NxjULLL62fZus+usRyKBaUUJzNzFKpmMEXwMt5zzc9RSJKD
-         3n2bXJXXyrhjMZIXfoPY89kgo+PoHfvu/hvO9nVWO37nyy9fkxzmkjqBHTEURuIpYYDh
-         kR4iYMY8z8iGI53pELnISjRyZb/sm1y+vscKtR8nQi071MfHTA5hi54raAbQmL0kMnlP
-         OB2hfHjFCk9cfqKp1ebNAlqdE0w+hcZN3NEvmVrda7HKcOorECeHpn1TUI+BDCe0pN4C
-         mHqK3M2W/x4s5DQ1YiyZsYQ3w3sPg0tixaxGw73NjwjYyf+GqzGyEpbMo8Fr94dKfDgr
-         upKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=d0HyjLFqpz9AWkWYsHlacSFouR7h8Dt4U9XzrYCAXZE=;
-        b=XImT/QVL4c/cU4DPcBZ7LRctuGEw0UyN1mt0tWeOsukdVGPyTSNnohFQ4feSMJHEyg
-         qSxcH60tSxPs7B8S2Is4VIeq3TRY1tM9pU6u1wNR4R4vtE5jC4BpVaTBhIodwqx4jj5C
-         QP7TAcvM58xGP4QnU7zwUx9xJ75htMrwLpmaMik3OOQt9Mp1M64LzRF456GZw9BsHu3s
-         GUyiYzQnOX6Zy9CpV4O7lK8LhkZq13bcqaF2nLAOMX2EYBonYNtuSbax0+6ITcjs4dc5
-         XM1pFFZg35sVg7xhXMDriPozAYitje/462GCcx+KjchzauanGx2ndnmFeGlPXLzDwePF
-         FHVA==
-X-Gm-Message-State: APjAAAUNpO4/z64KTquqDBtwUuYk0/UFQJ1dGyl/mV1Qs/G1Bx2V2URm
-        Vtd0GfhZYfFGP+96B/7Lm2fRsz6K4aVLwg==
-X-Google-Smtp-Source: APXvYqwjZbygo/2eQXfFWZsv3F+zfUyNoYq5phRnXb/qN3ixWwBICZ+TP81jcRVApe/jSIiw1QxsnQ==
-X-Received: by 2002:a1c:e109:: with SMTP id y9mr61578wmg.35.1561997889946;
-        Mon, 01 Jul 2019 09:18:09 -0700 (PDT)
-Received: from localhost.localdomain (p4FC0A2B8.dip0.t-ipconnect.de. [79.192.162.184])
-        by smtp.gmail.com with ESMTPSA id f7sm13654776wrv.38.2019.07.01.09.18.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 09:18:09 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        jannh@google.com
-Subject: [GIT PULL] fixes for v5.2-rc8
-Date:   Mon,  1 Jul 2019 18:15:03 +0200
-Message-Id: <20190701161503.15254-1-christian@brauner.io>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <000000000000e0dc0d058c9e7142@google.com>
-References: 
+        Mon, 1 Jul 2019 12:19:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38878 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726863AbfGAQTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 12:19:21 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A2F885546;
+        Mon,  1 Jul 2019 16:19:10 +0000 (UTC)
+Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9855C2D34F;
+        Mon,  1 Jul 2019 16:19:03 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 18:19:01 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, brouer@redhat.com
+Subject: Re: [PATCH v5 net-next 6/6] net: ethernet: ti: cpsw: add XDP
+ support
+Message-ID: <20190701181901.150c0b71@carbon>
+In-Reply-To: <20190630172348.5692-7-ivan.khoronzhuk@linaro.org>
+References: <20190630172348.5692-1-ivan.khoronzhuk@linaro.org>
+        <20190630172348.5692-7-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 01 Jul 2019 16:19:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sun, 30 Jun 2019 20:23:48 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-This contains a single urgent fix for copy_process() in kernel/fork.c:
+> +static int cpsw_ndev_create_xdp_rxq(struct cpsw_priv *priv, int ch)
+> +{
+> +	struct cpsw_common *cpsw = priv->cpsw;
+> +	int ret, new_pool = false;
+> +	struct xdp_rxq_info *rxq;
+> +
+> +	rxq = &priv->xdp_rxq[ch];
+> +
+> +	ret = xdp_rxq_info_reg(rxq, priv->ndev, ch);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!cpsw->page_pool[ch]) {
+> +		ret =  cpsw_create_rx_pool(cpsw, ch);
+> +		if (ret)
+> +			goto err_rxq;
+> +
+> +		new_pool = true;
+> +	}
+> +
+> +	ret = xdp_rxq_info_reg_mem_model(rxq, MEM_TYPE_PAGE_POOL,
+> +					 cpsw->page_pool[ch]);
+> +	if (!ret)
+> +		return 0;
+> +
+> +	if (new_pool) {
+> +		page_pool_free(cpsw->page_pool[ch]);
+> +		cpsw->page_pool[ch] = NULL;
+> +	}
+> +
+> +err_rxq:
+> +	xdp_rxq_info_unreg(rxq);
+> +	return ret;
+> +}
 
-The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
+Looking at this, and Ilias'es XDP-netsec error handling path, it might
+be a mistake that I removed page_pool_destroy() and instead put the
+responsibility on xdp_rxq_info_unreg().
 
-  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
+As here, we have to detect if page_pool_create() was a success, and then
+if xdp_rxq_info_reg_mem_model() was a failure, explicitly call
+page_pool_free() because the xdp_rxq_info_unreg() call cannot "free"
+the page_pool object given it was not registered.  
 
-are available in the Git repository at:
+Ivan's patch in[1], might be a better approach, which forced all
+drivers to explicitly call page_pool_free(), even-though it just
+dec-refcnt and the real call to page_pool_free() happened via
+xdp_rxq_info_unreg().
 
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-20190701
+To better handle error path, I would re-introduce page_pool_destroy(),
+as a driver API, that would gracefully handle NULL-pointer case, and
+then call page_pool_free() with the atomic_dec_and_test().  (It should
+hopefully simplify the error handling code a bit)
 
-for you to fetch changes up to 28dd29c06d0dede4b32b2c559cff21955a830928:
+[1] https://lore.kernel.org/netdev/20190625175948.24771-2-ivan.khoronzhuk@linaro.org/
 
-  fork: return proper negative error code (2019-07-01 16:43:30 +0200)
 
-With Al's removal of ksys_close() from cleanup paths in copy_process() a
-bug was introduced. When anon_inode_getfile() failed the cleanup was
-correctly performed but the error code was not propagated to callers of
-copy_process() causing them to operate on a nonsensical pointer. The fix is
-a simple on-liner which makes sure that a proper negative error code is
-returned from copy_process().
-syzkaller has also verified that the bug is not reproducible with the patch
-in this branch.
+> +void cpsw_ndev_destroy_xdp_rxqs(struct cpsw_priv *priv)
+> +{
+> +	struct cpsw_common *cpsw = priv->cpsw;
+> +	struct xdp_rxq_info *rxq;
+> +	int i;
+> +
+> +	for (i = 0; i < cpsw->rx_ch_num; i++) {
+> +		rxq = &priv->xdp_rxq[i];
+> +		if (xdp_rxq_info_is_reg(rxq))
+> +			xdp_rxq_info_unreg(rxq);
+> +	}
+> +}
 
-Please consider pulling these changes from the signed for-linus-20190701 tag.
+Are you sure you need to test xdp_rxq_info_is_reg() here?
 
-Thanks!
-Christian
+You should just call xdp_rxq_info_unreg(rxq), if you know that this rxq
+should be registered.  If your assumption failed, you will get a
+WARNing, and discover your driver level bug.  This is one of the ways
+the API is designed to "detect" misuse of the API.  (I found this
+rather useful, when I converted the approx 12 drivers using this
+xdp_rxq_info API).
 
-----------------------------------------------------------------
-for-linus-20190701
-
-----------------------------------------------------------------
-Christian Brauner (1):
-      fork: return proper negative error code
-
- kernel/fork.c | 1 +
- 1 file changed, 1 insertion(+)
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
