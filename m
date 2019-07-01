@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33D8C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E26DC06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E6220881
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3152177E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jqjOqKl5"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y/IfQwKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfGANMD (ORCPT
+        id S1728957AbfGANMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 09:12:03 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:49189 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728643AbfGANL4 (ORCPT
+        Mon, 1 Jul 2019 09:12:06 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:58001 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728822AbfGANMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 09:11:56 -0400
+        Mon, 1 Jul 2019 09:12:00 -0400
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190701131155euoutp0201caba7008cf224b34fdbce1d1e6c4b3~tSqQ9PgyQ1217412174euoutp02E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2019 13:11:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190701131155euoutp0201caba7008cf224b34fdbce1d1e6c4b3~tSqQ9PgyQ1217412174euoutp02E
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190701131158euoutp01ee7eaf5f3b960e7859a917d79e4ebfc1~tSqUlcl4b2481624816euoutp01K
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2019 13:11:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190701131158euoutp01ee7eaf5f3b960e7859a917d79e4ebfc1~tSqUlcl4b2481624816euoutp01K
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561986715;
-        bh=PSpbcy1xgNd8/2kjxf5bZqTrKbNFeF3rhjwBcmGppfk=;
+        s=mail20170921; t=1561986718;
+        bh=rYJkkCMUDQzLMRwM3+Cmq3HZXco9QSEYJGZXrRgmzNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jqjOqKl56R69AwKwjHKddD119ZJfkgbu6NFph4wTyg8S3AlVoOYxfimakSS5vgmG8
-         cdyB0JWMiepoc5QbuNNkKtaUUt148fgVSQiEuK+Ag9jtOl4ES9dyzmem17V63pLeZ/
-         VQam3F+GzCvIQXmeyoNU+MeYLbO3SiBfr5a+38ec=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        b=Y/IfQwKVGLvJsQuTAnmBMCVeRBhPCN9asLC8mKXxtttq/tOEmXlP4G5akb6qMyb3L
+         shFKcdGLJ7zq2fEykx4EvV3n8KuPVuMG5cYqf/cQs4si683epsDmfQJGtY02S3bBwJ
+         Ga1dunMoBfkB3lGIb5PiTCzFIhaZeBsUwwSysaSY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190701131154eucas1p1d856e4aa3d99362836813b855d51223f~tSqQK43GQ1002510025eucas1p1J;
-        Mon,  1 Jul 2019 13:11:54 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id E1.87.04325.9960A1D5; Mon,  1
-        Jul 2019 14:11:53 +0100 (BST)
+        20190701131157eucas1p1746cb551ba17790a0f3af5918b765b1d~tSqTfk8NI1003910039eucas1p1B;
+        Mon,  1 Jul 2019 13:11:57 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 45.2B.04298.D960A1D5; Mon,  1
+        Jul 2019 14:11:57 +0100 (BST)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190701131153eucas1p100567483c17b63e4707c21c63f780437~tSqPYZlIQ0134601346eucas1p11;
-        Mon,  1 Jul 2019 13:11:53 +0000 (GMT)
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190701131156eucas1p22e9d3919bd70875cabd410c925c3a52c~tSqSwx-eW1085610856eucas1p2T;
+        Mon,  1 Jul 2019 13:11:56 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190701131153eusmtrp2dd94184e2a7ee1c1b19ae8039a35f791~tSqPKEcRL0788807888eusmtrp2-;
-        Mon,  1 Jul 2019 13:11:53 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-d9-5d1a0699685e
+        20190701131156eusmtrp23a4d0ad258d09d129b899d981366d7c5~tSqSwGW5H0788807888eusmtrp2Q;
+        Mon,  1 Jul 2019 13:11:56 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-a9-5d1a069d7fb1
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 24.02.04146.8960A1D5; Mon,  1
-        Jul 2019 14:11:52 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 19.02.04146.C960A1D5; Mon,  1
+        Jul 2019 14:11:56 +0100 (BST)
 Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190701131152eusmtip12b4905b4626ca5c68cb41734513ac3b7~tSqONp5Ch2677926779eusmtip10;
-        Mon,  1 Jul 2019 13:11:52 +0000 (GMT)
+        20190701131155eusmtip118a0dca13c6b1fdac664ebab4baa4f6a~tSqR0ZByw2623726237eusmtip1f;
+        Mon,  1 Jul 2019 13:11:55 +0000 (GMT)
 From:   Lukasz Luba <l.luba@partner.samsung.com>
 To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
@@ -69,145 +69,296 @@ Cc:     mturquette@baylibre.com, sboyd@kernel.org,
         jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
         gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com,
         Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v11 4/9] dt-bindings: memory-controllers: add Exynos5422 DMC
- device description
-Date:   Mon,  1 Jul 2019 15:11:33 +0200
-Message-Id: <20190701131138.22666-5-l.luba@partner.samsung.com>
+Subject: [PATCH v11 8/9] ARM: dts: exynos: add DMC device for exynos5422
+Date:   Mon,  1 Jul 2019 15:11:37 +0200
+Message-Id: <20190701131138.22666-9-l.luba@partner.samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190701131138.22666-1-l.luba@partner.samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSaUwTURSFfZ2lA1IdC5EnopBGEpWwRX88g1EUMeNuYoJGJTLCBIi0aIe6
-        JxaIyC4B1II0gGLEFlLAqiCEpUVZqiIqLiDEiAkuBUUEY8SFcar+O+/e79xzc/MoTD5IeFBx
-        qkROrWLjFaQzfvPut26/QtIjItCYhlCNzkSgZ1+GCVTS9oBAxrEhgFIum0iU36WXoHuZSnR2
-        6AOGururpeh+sl2K+rSeaCxrkECPbxeTaDy7DSBdd5MEVbUNSFFPVxjqT6ogkdV+hkA/n9bg
-        qPnJRtT/fRaa7HgNQtyZyYk8nPn4/LSUuajtwZn6ogEpU2tIJ5lmfaWUyU4ZJZnW0UYJk2M2
-        AOa67QQzXrtw+8zdziujufi4w5w6YFWkc6w5KfpgjtfR+mu9hBYMz8sAFAXp5bChjskATpSc
-        rgCwZVKVAZyn9RcAK1MaCPExDmBSfodUoARDr6kWFxtXATSNNpL/LMnDLzBhLEn7wzrDIcHg
-        RusAvPh2h8Bg9C0MjvS/BALjSrNwyLpXkDjtA78aTwq4jF4NizsNjiwvaKxuwQTtRIfARxMD
-        f6IgnU3BfPsIEKF10PI0lxS1K3zfbnaYPeGv+hKJqHmozS5z8Cfh0Fm9gwmG1vYeQtgBo5dA
-        0+0AsbwG5nVacPFAs+DzkTlCGZuWeTcvYGJZBtNS5SK9GJqzHjqC5sKrlecdwxlYYLMD8Tj5
-        AKb2ppO5wKvof1gpAAbgzml4ZQzHL1NxR/x5VslrVDH+UQnKWjD962w/2yfqQNPUfgugKaBw
-        kWlfwgg5wR7mjyktAFKYwk3WXDEvQi6LZo8d59QJ+9SaeI63gPkUrnCXnZjxao+cjmETuQMc
-        d5BT/+1KKCcPLQj3cOFLw6+UKx82jCFb5JFQPq0v6p1LyXvdjZ15vuUXYkL0pTxahBK2jfho
-        2LJG+dY7p3LX+wXbQk8fqnq1IPBc2Ir9rde4tVN8s2ITferzmy0uPzRmb/9dn4ILOyKswd+C
-        CjIvbejZPJvwHlMYY6s1R61PPPU+urjXKXa97+AWBc7HskFLMTXP/gZzYVR3cQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsVy+t/xu7oz2KRiDaZctLHYOGM9q8X1L89Z
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSaUwTYRD163a322rNWhCmeGAajUoCheiPL4EIRk02/iJqjEeIVtkgkRbs
+        CqLyo0rwxgM8agFBDdIUSIWiCLFyHwJaQSOkHB4YFYsHQolHAtJu1X9v3rx5bzIZmlC8IYPo
+        RN1BTq/TJKkomfh+68+noQVUUFz4B+ciXGG0krh34gOJC5ufkrh0bBjhzNtWCud2FIhw11kt
+        vjDsIrDDcVeCnxwflWCnYSEeOzdE4ue1+RQez25G2Oh4JMLlzYMS3N2xAfcfM1O4afQkiade
+        Vohx3YuNuP/3XDzZ/hbFBLKT7hwx+7UvS8LmGbrFbI1pUMJWWk5TbF1BmYTNzvxCsQ1fHorY
+        81UWxNo6j7LjlYtjZ++QRcVzSYlpnF69Zrdsnz1TmfJOnd7iqCcMKHvpGSSlgVkNV+x20Rkk
+        oxWMGUHVSC8pFBMIrOVGSijGEYzXFBN/R4ZfVftUJQgKrUOifyOuruKZgqYpJgweWA54BvwZ
+        I4K8j5s9GoKpJuBz/wDyNPwYFq5b8r2uYmYZNExPe7GciQbXHatISAuG0rv1Xl7KxECPe9C7
+        EjCnaXDebPaGAbMeit2+7fzgU1uVRMALYbqm0OfDgyH7JhJwBgxfKPBpIqGprZv02BDMSrDW
+        qgV6LWRdy0WC+1zo+zzPQxMzMOf+NUKg5XDqhEJQr4Cqc898QQFQUnbVZ85CxZuXvuvkIrht
+        Oi65iIJN/8OKELKgQC6V1yZwfISOOxTGa7R8qi4hbG+ythLNPF7nVNv3B8jds6cRMTRSzZEb
+        BiBOQWrS+MPaRgQ0ofKX15mVcQp5vObwEU6fvEufmsTxjWgBLVYFyo/Oer1TwSRoDnL7OS6F
+        0//timhp0MwXSO2LK7Q2AyQt+TEGRoezZY8yqlA6tNSkIZV3lseczY31d66LzVsecNVtVubn
+        tD8skkcFv92wVnwguu995/bMX/D1Ul/1DbrTZLqluDzR5Jr+tmWbq0M9v9VmVwfZzt+yhQdv
+        yUCV5hHZJt2CkLR+51YqMl2bHrrq8b2wtliVmN+niQgh9LzmDy6lFw90AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsVy+t/xu7pz2KRiDV4fNrHYOGM9q8X1L89Z
         LeYfOcdqsfrjY0aL5sXr2Swmn5rLZHGmO9ei//FrZovz5zewW5xtesNucatBxuJjzz1Wi8u7
         5rBZfO49wmgx4/w+Jou1R+6yW1w85Wpxu3EFm8XhN+2sFv+ubWSx2H/Fy+L2bz6LbyceMTqI
         e3z7OonF4/2NVnaP2Q0XWTx2zrrL7rFpVSebx/65a9g9epvfsXkcfLeHyaNvyypGj82nqz0+
         b5IL4I7SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQ
-        y9jSmFLQJ1+xc+VV1gbG55JdjJwcEgImElfXb2LpYuTiEBJYyihx6d1RdoiEmMSkfduhbGGJ
-        P9e62CCKPjFKfFl0i7WLkYODTUBPYseqQpC4iMAcRomfXdsYQRxmgbPMErtXvGEC6RYWiJfo
-        /r6PBaSBRUBV4vvqGpAwr4C9xJyTq6AWyEus3nCAGcTmFHCQuPT1LhuILQRUs27xDcYJjHwL
-        GBlWMYqklhbnpucWG+oVJ+YWl+al6yXn525iBMbgtmM/N+9gvLQx+BCjAAejEg+vxi2JWCHW
-        xLLiytxDjBIczEoivPtXSMYK8aYkVlalFuXHF5XmpBYfYjQFumkis5Rocj4wPeSVxBuaGppb
-        WBqaG5sbm1koifN2CByMERJITyxJzU5NLUgtgulj4uCUamCMe3xB8OwK1brgY5fv+L0TVF82
-        bapDj7+Kyfo8lyZLhoO7FnO+i8kuK3J92SzBX/Pw4tuXgZLX0suu/ozz5OW0q5znJHnf7O37
-        kEfSjEGdC8UFeIP3nk69toLN51vNlqJPFpyKl7X1DBz3fHzF1vJocu7yTW+2BQv66Xnf+Lcu
-        5PxMq9fC9o5KLMUZiYZazEXFiQDR1YUA1wIAAA==
-X-CMS-MailID: 20190701131153eucas1p100567483c17b63e4707c21c63f780437
+        y9jbLFnwRL/i6PkDzA2MvSpdjJwcEgImEo/vb2ftYuTiEBJYyihx7cNLJoiEmMSkfdvZIWxh
+        iT/Xutggij4xSqzr7AIq4uBgE9CT2LGqECQuIjCHUeJn1zZGEIdZ4CyzxO4Vb8AmCQt4SMxc
+        NYcZxGYRUJU4+P8/mM0rYC/xetl6qG3yEqs3HACLcwo4SFz6epcNxBYCqlm3+AbjBEa+BYwM
+        qxhFUkuLc9Nziw31ihNzi0vz0vWS83M3MQKjcNuxn5t3MF7aGHyIUYCDUYmHV+OWRKwQa2JZ
+        cWXuIUYJDmYlEd79KyRjhXhTEiurUovy44tKc1KLDzGaAh01kVlKNDkfmCDySuINTQ3NLSwN
+        zY3Njc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUwzsmc5l7Z8UP66aeS0h37pZ1Wv7ht
+        8tA8LoSjtv9Oinqlg3Ht7VmBz1zOnbj1cLeuwdbbG7jZFOw2bvzxU+h9xhfmSdOdQ86Y97T0
+        tHusyW7PmtPN6HchR/jmFsebz59kcvT15QU0ZLIw7BOLYkqdECPJXX2isEnv5UKPk8oyDHGL
+        reRiHz5VYinOSDTUYi4qTgQA6nIDVNgCAAA=
+X-CMS-MailID: 20190701131156eucas1p22e9d3919bd70875cabd410c925c3a52c
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190701131153eucas1p100567483c17b63e4707c21c63f780437
+X-RootMTR: 20190701131156eucas1p22e9d3919bd70875cabd410c925c3a52c
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190701131153eucas1p100567483c17b63e4707c21c63f780437
+X-CMS-RootMailID: 20190701131156eucas1p22e9d3919bd70875cabd410c925c3a52c
 References: <20190701131138.22666-1-l.luba@partner.samsung.com>
-        <CGME20190701131153eucas1p100567483c17b63e4707c21c63f780437@eucas1p1.samsung.com>
+        <CGME20190701131156eucas1p22e9d3919bd70875cabd410c925c3a52c@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch adds description for DT binding for a new Exynos5422 Dynamic
-Memory Controller device.
+Add description of Dynamic Memory Controller and PPMU counters.
+They are used by exynos5422-dmc driver.
+There is a definition of the memory chip, which is then used during
+calculation of timings for each OPP.
+The algorithm in the driver needs these two sets to bound the timings.
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 ---
- .../memory-controllers/exynos5422-dmc.txt     | 73 +++++++++++++++++++
- 1 file changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+ arch/arm/boot/dts/exynos5420.dtsi             |  71 +++++++++++
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 116 ++++++++++++++++++
+ 2 files changed, 187 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-new file mode 100644
-index 000000000000..02aeb3b5a820
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-@@ -0,0 +1,73 @@
-+* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index d153617ff1a3..9dbfe400cdd2 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -235,6 +235,29 @@
+ 			status = "disabled";
+ 		};
+ 
++		dmc: memory-controller@10c20000 {
++			compatible = "samsung,exynos5422-dmc";
++			reg = <0x10c20000 0x100>, <0x10c30000 0x100>;
++			clocks = <&clock CLK_FOUT_SPLL>,
++				 <&clock CLK_MOUT_SCLK_SPLL>,
++				 <&clock CLK_FF_DOUT_SPLL2>,
++				 <&clock CLK_FOUT_BPLL>,
++				 <&clock CLK_MOUT_BPLL>,
++				 <&clock CLK_SCLK_BPLL>,
++				 <&clock CLK_MOUT_MX_MSPLL_CCORE>,
++				 <&clock CLK_MOUT_MCLK_CDREX>;
++			clock-names = "fout_spll",
++				      "mout_sclk_spll",
++				      "ff_dout_spll2",
++				      "fout_bpll",
++				      "mout_bpll",
++				      "sclk_bpll",
++				      "mout_mx_mspll_ccore",
++				      "mout_mclk_cdrex";
++			samsung,syscon-clk = <&clock>;
++			status = "disabled";
++		};
 +
-+The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
-+memory chips are connected. The driver is to monitor the controller in runtime
-+and switch frequency and voltage. To monitor the usage of the controller in
-+runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
-+is able to measure the current load of the memory.
-+When 'userspace' governor is used for the driver, an application is able to
-+switch the DMC and memory frequency.
-+
-+Required properties for DMC device for Exynos5422:
-+- compatible: Should be "samsung,exynos5422-dmc".
-+- clocks : list of clock specifiers, must contain an entry for each
-+  required entry in clock-names for CLK_FOUT_SPLL, CLK_MOUT_SCLK_SPLL,
-+  CLK_FF_DOUT_SPLL2, CLK_FOUT_BPLL, CLK_MOUT_BPLL, CLK_SCLK_BPLL,
-+  CLK_MOUT_MX_MSPLL_CCORE, CLK_MOUT_MX_MSPLL_CCORE_PHY, CLK_MOUT_MCLK_CDREX,
-+- clock-names : should include "fout_spll", "mout_sclk_spll", "ff_dout_spll2",
-+  "fout_bpll", "mout_bpll", "sclk_bpll", "mout_mx_mspll_ccore",
-+  "mout_mclk_cdrex"  entries
-+- devfreq-events : phandles for PPMU devices connected to this DMC.
-+- vdd-supply : phandle for voltage regulator which is connected.
-+- reg : registers of two CDREX controllers.
-+- operating-points-v2 : phandle for OPPs described in v2 definition.
-+- device-handle : phandle of the connected DRAM memory device. For more
-+	information please refer to documentation file:
-+	Documentation/devicetree/bindings/ddr/lpddr3.txt
-+- devfreq-events : phandles of the PPMU events used by the controller.
-+- samsung,syscon-clk : phandle of the clock register set used by the controller,
-+	these registers are used for enabling a 'pause' feature and are not
-+	exposed by clock framework but they must be used in a safe way.
-+	The register offsets are in the driver code and specyfic for this SoC
-+	type.
-+
-+Example:
-+
-+	ppmu_dmc0_0: ppmu@10d00000 {
-+		compatible = "samsung,exynos-ppmu";
-+		reg = <0x10d00000 0x2000>;
-+		clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
-+		clock-names = "ppmu";
-+		events {
-+			ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
-+				event-name = "ppmu-event3-dmc0_0";
+ 		nocp_mem0_0: nocp@10ca1000 {
+ 			compatible = "samsung,exynos5420-nocp";
+ 			reg = <0x10CA1000 0x200>;
+@@ -271,6 +294,54 @@
+ 			status = "disabled";
+ 		};
+ 
++		ppmu_dmc0_0: ppmu@10d00000 {
++			compatible = "samsung,exynos-ppmu";
++			reg = <0x10d00000 0x2000>;
++			clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
++			clock-names = "ppmu";
++			events {
++				ppmu_event3_dmc0_0: ppmu-event3-dmc0_0 {
++					event-name = "ppmu-event3-dmc0_0";
++				};
 +			};
++		};
++
++		ppmu_dmc0_1: ppmu@10d10000 {
++			compatible = "samsung,exynos-ppmu";
++			reg = <0x10d10000 0x2000>;
++			clocks = <&clock CLK_PCLK_PPMU_DREX0_1>;
++			clock-names = "ppmu";
++			events {
++				ppmu_event3_dmc0_1: ppmu-event3-dmc0_1 {
++					event-name = "ppmu-event3-dmc0_1";
++				};
++			};
++		};
++
++		ppmu_dmc1_0: ppmu@10d60000 {
++			compatible = "samsung,exynos-ppmu";
++			reg = <0x10d60000 0x2000>;
++			clocks = <&clock CLK_PCLK_PPMU_DREX1_0>;
++			clock-names = "ppmu";
++			events {
++				ppmu_event3_dmc1_0: ppmu-event3-dmc1_0 {
++					event-name = "ppmu-event3-dmc1_0";
++				};
++			};
++		};
++
++		ppmu_dmc1_1: ppmu@10d70000 {
++			compatible = "samsung,exynos-ppmu";
++			reg = <0x10d70000 0x2000>;
++			clocks = <&clock CLK_PCLK_PPMU_DREX1_1>;
++			clock-names = "ppmu";
++			events {
++				ppmu_event3_dmc1_1: ppmu-event3-dmc1_1 {
++					event-name = "ppmu-event3-dmc1_1";
++				};
++			};
++		};
++
+ 		gsc_pd: power-domain@10044000 {
+ 			compatible = "samsung,exynos4210-pd";
+ 			reg = <0x10044000 0x20>;
+diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+index 25d95de15c9b..30e569c13ee7 100644
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -34,6 +34,97 @@
+ 			clock-frequency = <24000000>;
+ 		};
+ 	};
++
++	dmc_opp_table: opp_table2 {
++		compatible = "operating-points-v2";
++
++		opp00 {
++			opp-hz = /bits/ 64 <165000000>;
++			opp-microvolt = <875000>;
++		};
++		opp01 {
++			opp-hz = /bits/ 64 <206000000>;
++			opp-microvolt = <875000>;
++		};
++		opp02 {
++			opp-hz = /bits/ 64 <275000000>;
++			opp-microvolt = <875000>;
++		};
++		opp03 {
++			opp-hz = /bits/ 64 <413000000>;
++			opp-microvolt = <887500>;
++		};
++		opp04 {
++			opp-hz = /bits/ 64 <543000000>;
++			opp-microvolt = <937500>;
++		};
++		opp05 {
++			opp-hz = /bits/ 64 <633000000>;
++			opp-microvolt = <1012500>;
++		};
++		opp06 {
++			opp-hz = /bits/ 64 <728000000>;
++			opp-microvolt = <1037500>;
++		};
++		opp07 {
++			opp-hz = /bits/ 64 <825000000>;
++			opp-microvolt = <1050000>;
 +		};
 +	};
 +
-+	dmc: memory-controller@10c20000 {
-+		compatible = "samsung,exynos5422-dmc";
-+		reg = <0x10c20000 0x100>, <0x10c30000 0x100>,
-+		clocks = <&clock CLK_FOUT_SPLL>,
-+			 <&clock CLK_MOUT_SCLK_SPLL>,
-+			 <&clock CLK_FF_DOUT_SPLL2>,
-+			 <&clock CLK_FOUT_BPLL>,
-+			 <&clock CLK_MOUT_BPLL>,
-+			 <&clock CLK_SCLK_BPLL>,
-+			 <&clock CLK_MOUT_MX_MSPLL_CCORE>,
-+			 <&clock CLK_MOUT_MCLK_CDREX>,
-+		clock-names = "fout_spll",
-+			      "mout_sclk_spll",
-+			      "ff_dout_spll2",
-+			      "fout_bpll",
-+			      "mout_bpll",
-+			      "sclk_bpll",
-+			      "mout_mx_mspll_ccore",
-+			      "mout_mclk_cdrex",
-+		operating-points-v2 = <&dmc_opp_table>;
-+		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
-+				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
-+		device-handle = <&samsung_K3QF2F20DB>;
-+		vdd-supply = <&buck1_reg>;
-+		samsung,syscon-clk = <&clock>;
++	samsung_K3QF2F20DB: lpddr3 {
++		compatible	= "samsung,K3QF2F20DB", "jedec,lpddr3";
++		density		= <16384>;
++		io-width	= <32>;
++		#address-cells  = <1>;
++		#size-cells     = <0>;
++
++		tRFC-min-tck		= <17>;
++		tRRD-min-tck		= <2>;
++		tRPab-min-tck		= <2>;
++		tRPpb-min-tck		= <2>;
++		tRCD-min-tck		= <3>;
++		tRC-min-tck		= <6>;
++		tRAS-min-tck		= <5>;
++		tWTR-min-tck		= <2>;
++		tWR-min-tck		= <7>;
++		tRTP-min-tck		= <2>;
++		tW2W-C2C-min-tck	= <0>;
++		tR2R-C2C-min-tck	= <0>;
++		tWL-min-tck		= <8>;
++		tDQSCK-min-tck		= <5>;
++		tRL-min-tck		= <14>;
++		tFAW-min-tck		= <5>;
++		tXSR-min-tck		= <12>;
++		tXP-min-tck		= <2>;
++		tCKE-min-tck		= <2>;
++		tCKESR-min-tck		= <2>;
++		tMRD-min-tck		= <5>;
++
++		timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@800000000 {
++			compatible	= "jedec,lpddr3-timings";
++			reg		= <800000000>; /* workaround: it shows max-freq */
++			min-freq	= <100000000>;
++			tRFC		= <65000>;
++			tRRD		= <6000>;
++			tRPab		= <12000>;
++			tRPpb		= <12000>;
++			tRCD		= <10000>;
++			tRC		= <33750>;
++			tRAS		= <23000>;
++			tWTR		= <3750>;
++			tWR		= <7500>;
++			tRTP		= <3750>;
++			tW2W-C2C	= <0>;
++			tR2R-C2C	= <0>;
++			tFAW		= <25000>;
++			tXSR		= <70000>;
++			tXP		= <3750>;
++			tCKE		= <3750>;
++			tCKESR		= <3750>;
++			tMRD		= <7000>;
++		};
 +	};
+ };
+ 
+ &adc {
+@@ -132,6 +223,15 @@
+ 	cpu-supply = <&buck2_reg>;
+ };
+ 
++&dmc {
++	devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
++			<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
++	device-handle = <&samsung_K3QF2F20DB>;
++	operating-points-v2 = <&dmc_opp_table>;
++	vdd-supply = <&buck1_reg>;
++	status = "okay";
++};
++
+ &hsi2c_4 {
+ 	status = "okay";
+ 
+@@ -540,6 +640,22 @@
+ 	};
+ };
+ 
++&ppmu_dmc0_0 {
++	status = "okay";
++};
++
++&ppmu_dmc0_1 {
++	status = "okay";
++};
++
++&ppmu_dmc1_0 {
++	status = "okay";
++};
++
++&ppmu_dmc1_1 {
++	status = "okay";
++};
++
+ &tmu_cpu0 {
+ 	vtmu-supply = <&ldo7_reg>;
+ };
 -- 
 2.17.1
 
