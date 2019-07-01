@@ -2,96 +2,282 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAC2C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F939C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D391A206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hrifr9KC"
+	by mail.kernel.org (Postfix) with ESMTP id 740C8206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:35:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfGAJ3z (ORCPT
+        id S1728410AbfGAJfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 05:29:55 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40931 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728446AbfGAJ3z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 05:29:55 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so7057790pla.7
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 02:29:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wTpybW3v/xSeIVUOgP3xPSGBMKgC2isVToS27b1nrP0=;
-        b=Hrifr9KCPcs9MJqBNytC0e17vIcaOZwYLT0urhPweI/rFb5d03mJHFiFkNSM2nDw0y
-         HwFr53coaLGoVhvJk6G5fbnqIJWNWEqrOzC1rRfNtC6K0+9fQW4SDItKGnb7jUCp/QDx
-         vXFoWE7/6gn1siLyZyE5TjRDGfBfbzJt5G8TKNksKFzzEUkFm+3WzB27NGBcvCpJJclW
-         FRa9ClkXxzYNHq/m+Ycijy1n2cMx8H+oEs9uu8r7rfBmDaYXWn+uRLgTDRgCHyuxyNTU
-         6Niu+GY8uPemFkLgYmaugqnqYQl+8GVm90YmuGSw8nyg6D/HOtDoJyQx2QRVQL+n6YGG
-         9KoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wTpybW3v/xSeIVUOgP3xPSGBMKgC2isVToS27b1nrP0=;
-        b=kTxhyyZNYv/vO7pY3PCc3ZBQHWH61HTuqJv2e81zLHVgKVirojY5H3+PLYjbQZpC8j
-         9mr3jf6AXqTYyAtvve23viD+o/rL+fntVMNlIbzEW8cS4jUL9/XmwnX2xwf1MzZOJQVy
-         21/Ja8bBJdz+IvdIfuamZdsvLSOmtUlbftMIapRL07pWO8ZH4/qtoKQLw0waOvq3WGel
-         rntoSayi+eRX8e5oCL4j8mopDBiOIZQdqlIpnywyNpEIb2ZWg2uvZ05MzgGOzJsvnky9
-         prYRtmCMzTJC4+JQGJg0Ol+7wa8NLqylmGnIMKTBcss2XELxuqtCq3kznQANTnGDdpGW
-         NpBw==
-X-Gm-Message-State: APjAAAX1kc7Zw8BaVbpwj3E5IVYupfDi7H3ExNFwD5lkj5fw2xqHehld
-        pd7Wjp6AqAghUK2aT6Ud72glwg==
-X-Google-Smtp-Source: APXvYqwSOfR6QHR0UL7PgnA+YTmHps/hUxB+aNpzGmjf2aDbrrgUmI4XIBC48UKymMy56brsDy0qmA==
-X-Received: by 2002:a17:902:7247:: with SMTP id c7mr27711408pll.202.1561973394285;
-        Mon, 01 Jul 2019 02:29:54 -0700 (PDT)
-Received: from localhost ([122.172.21.205])
-        by smtp.gmail.com with ESMTPSA id d123sm10786486pfc.144.2019.07.01.02.29.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 02:29:52 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 14:59:49 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org,
-        agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        saravanak@google.com
-Subject: Re: [PATCH RFC 0/4] DDR/L3 Scaling support on SDM845 SoCs
-Message-ID: <20190701092949.afenn2et2qexostt@vireshk-i7>
-References: <20190627133424.4980-1-sibis@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627133424.4980-1-sibis@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+        Mon, 1 Jul 2019 05:35:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:58710 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728035AbfGAJfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 05:35:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E13352B;
+        Mon,  1 Jul 2019 02:35:34 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 18BE23F718;
+        Mon,  1 Jul 2019 02:35:32 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org, linux@roeck-us.net
+Subject: [DRAFT] mm/kprobes: Add generic kprobe_fault_handler() fallback definition
+Date:   Mon,  1 Jul 2019 15:05:57 +0530
+Message-Id: <1561973757-5445-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <78863cd0-8cb5-c4fd-ed06-b1136bdbb6ef@arm.com>
+References: <78863cd0-8cb5-c4fd-ed06-b1136bdbb6ef@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-06-19, 19:04, Sibi Sankar wrote:
-> This RFC series aims to extend cpu based scaling support to L3/DDR on
-> SDM845 SoCs. The patch series depends on "Introduce OPP bandwidth bindings"
-> series (https://patchwork.kernel.org/cover/10912993/). A part of the
-> series will still be applicable if we decide to go ahead with the proposal
-> from Saravana as well so I decided to post this out.
-> 
-> v2:
-> * Incorporated Viresh's comments from:
-> [1]https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
-> [2]https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+Architectures like parisc enable CONFIG_KROBES without having a definition
+for kprobe_fault_handler() which results in a build failure. Arch needs to
+provide kprobe_fault_handler() as it is platform specific and cannot have
+a generic working alternative. But in the event when platform lacks such a
+definition there needs to be a fallback.
 
-Did you get a chance to look at this ?
+This adds a stub kprobe_fault_handler() definition which not only prevents
+a build failure but also makes sure that kprobe_page_fault() if called will
+always return negative in absence of a sane platform specific alternative.
 
-lore.kernel.org/lkml/20190622003449.33707-1-saravanak@google.com
+While here wrap kprobe_page_fault() in CONFIG_KPROBES. This enables stud
+definitions for generic kporbe_fault_handler() and kprobes_built_in() can
+just be dropped. Only on x86 it needs to be added back locally as it gets
+used in a !CONFIG_KPROBES function do_general_protection().
 
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+I am planning to go with approach unless we just want to implement a stub
+definition for parisc to get around the build problem for now.
+
+Hello Guenter,
+
+Could you please test this in your parisc setup. Thank you.
+
+- Anshuman
+
+ arch/arc/include/asm/kprobes.h     |  1 +
+ arch/arm/include/asm/kprobes.h     |  1 +
+ arch/arm64/include/asm/kprobes.h   |  1 +
+ arch/ia64/include/asm/kprobes.h    |  1 +
+ arch/mips/include/asm/kprobes.h    |  1 +
+ arch/powerpc/include/asm/kprobes.h |  1 +
+ arch/s390/include/asm/kprobes.h    |  1 +
+ arch/sh/include/asm/kprobes.h      |  1 +
+ arch/sparc/include/asm/kprobes.h   |  1 +
+ arch/x86/include/asm/kprobes.h     |  6 ++++++
+ include/linux/kprobes.h            | 32 ++++++++++++++++++------------
+ 11 files changed, 34 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arc/include/asm/kprobes.h b/arch/arc/include/asm/kprobes.h
+index 2134721dce44..ee8efe256675 100644
+--- a/arch/arc/include/asm/kprobes.h
++++ b/arch/arc/include/asm/kprobes.h
+@@ -45,6 +45,7 @@ struct kprobe_ctlblk {
+ 	struct prev_kprobe prev_kprobe;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ int kprobe_fault_handler(struct pt_regs *regs, unsigned long cause);
+ void kretprobe_trampoline(void);
+ void trap_is_kprobe(unsigned long address, struct pt_regs *regs);
+diff --git a/arch/arm/include/asm/kprobes.h b/arch/arm/include/asm/kprobes.h
+index 213607a1f45c..660f877b989f 100644
+--- a/arch/arm/include/asm/kprobes.h
++++ b/arch/arm/include/asm/kprobes.h
+@@ -38,6 +38,7 @@ struct kprobe_ctlblk {
+ 	struct prev_kprobe prev_kprobe;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ void arch_remove_kprobe(struct kprobe *);
+ int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
+ int kprobe_exceptions_notify(struct notifier_block *self,
+diff --git a/arch/arm64/include/asm/kprobes.h b/arch/arm64/include/asm/kprobes.h
+index 97e511d645a2..667773f75616 100644
+--- a/arch/arm64/include/asm/kprobes.h
++++ b/arch/arm64/include/asm/kprobes.h
+@@ -42,6 +42,7 @@ struct kprobe_ctlblk {
+ 	struct kprobe_step_ctx ss_ctx;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ void arch_remove_kprobe(struct kprobe *);
+ int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
+ int kprobe_exceptions_notify(struct notifier_block *self,
+diff --git a/arch/ia64/include/asm/kprobes.h b/arch/ia64/include/asm/kprobes.h
+index c5cf5e4fb338..c321e8585089 100644
+--- a/arch/ia64/include/asm/kprobes.h
++++ b/arch/ia64/include/asm/kprobes.h
+@@ -106,6 +106,7 @@ struct arch_specific_insn {
+ 	unsigned short slot;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ extern int kprobe_exceptions_notify(struct notifier_block *self,
+ 				    unsigned long val, void *data);
+diff --git a/arch/mips/include/asm/kprobes.h b/arch/mips/include/asm/kprobes.h
+index 68b1e5d458cf..d1efe991ea22 100644
+--- a/arch/mips/include/asm/kprobes.h
++++ b/arch/mips/include/asm/kprobes.h
+@@ -40,6 +40,7 @@ do {									\
+ 
+ #define kretprobe_blacklist_size 0
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ void arch_remove_kprobe(struct kprobe *p);
+ int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ 
+diff --git a/arch/powerpc/include/asm/kprobes.h b/arch/powerpc/include/asm/kprobes.h
+index 66b3f2983b22..c94f375ec957 100644
+--- a/arch/powerpc/include/asm/kprobes.h
++++ b/arch/powerpc/include/asm/kprobes.h
+@@ -84,6 +84,7 @@ struct arch_optimized_insn {
+ 	kprobe_opcode_t *insn;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ extern int kprobe_exceptions_notify(struct notifier_block *self,
+ 					unsigned long val, void *data);
+ extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+diff --git a/arch/s390/include/asm/kprobes.h b/arch/s390/include/asm/kprobes.h
+index b106aa29bf55..0ecaebb78092 100644
+--- a/arch/s390/include/asm/kprobes.h
++++ b/arch/s390/include/asm/kprobes.h
+@@ -73,6 +73,7 @@ struct kprobe_ctlblk {
+ void arch_remove_kprobe(struct kprobe *p);
+ void kretprobe_trampoline(void);
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ int kprobe_exceptions_notify(struct notifier_block *self,
+ 	unsigned long val, void *data);
+diff --git a/arch/sh/include/asm/kprobes.h b/arch/sh/include/asm/kprobes.h
+index 6171682f7798..637a698393c0 100644
+--- a/arch/sh/include/asm/kprobes.h
++++ b/arch/sh/include/asm/kprobes.h
+@@ -45,6 +45,7 @@ struct kprobe_ctlblk {
+ 	struct prev_kprobe prev_kprobe;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ extern int kprobe_exceptions_notify(struct notifier_block *self,
+ 				    unsigned long val, void *data);
+diff --git a/arch/sparc/include/asm/kprobes.h b/arch/sparc/include/asm/kprobes.h
+index bfcaa6326c20..9aa4d25a45a8 100644
+--- a/arch/sparc/include/asm/kprobes.h
++++ b/arch/sparc/include/asm/kprobes.h
+@@ -47,6 +47,7 @@ struct kprobe_ctlblk {
+ 	struct prev_kprobe prev_kprobe;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ int kprobe_exceptions_notify(struct notifier_block *self,
+ 			     unsigned long val, void *data);
+ int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+diff --git a/arch/x86/include/asm/kprobes.h b/arch/x86/include/asm/kprobes.h
+index 5dc909d9ad81..1af2b6db13bd 100644
+--- a/arch/x86/include/asm/kprobes.h
++++ b/arch/x86/include/asm/kprobes.h
+@@ -101,11 +101,17 @@ struct kprobe_ctlblk {
+ 	struct prev_kprobe prev_kprobe;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ extern int kprobe_exceptions_notify(struct notifier_block *self,
+ 				    unsigned long val, void *data);
+ extern int kprobe_int3_handler(struct pt_regs *regs);
+ extern int kprobe_debug_handler(struct pt_regs *regs);
++#else
++static inline int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
++{
++	return 0;
++}
+ 
+ #endif /* CONFIG_KPROBES */
+ #endif /* _ASM_X86_KPROBES_H */
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 04bdaf01112c..e106f3018804 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -182,11 +182,19 @@ DECLARE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+ /*
+  * For #ifdef avoidance:
+  */
+-static inline int kprobes_built_in(void)
++
++/*
++ * Architectures need to override this with their own implementation
++ * if they care to call kprobe_page_fault(). This will just ensure
++ * that kprobe_page_fault() returns false when called without having
++ * a proper platform specific definition for kprobe_fault_handler().
++ */
++#ifndef kprobe_fault_handler
++static inline int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+ {
+-	return 1;
++	return 0;
+ }
+-
++#endif
+ #ifdef CONFIG_KRETPROBES
+ extern void arch_prepare_kretprobe(struct kretprobe_instance *ri,
+ 				   struct pt_regs *regs);
+@@ -375,14 +383,6 @@ void free_insn_page(void *page);
+ 
+ #else /* !CONFIG_KPROBES: */
+ 
+-static inline int kprobes_built_in(void)
+-{
+-	return 0;
+-}
+-static inline int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+-{
+-	return 0;
+-}
+ static inline struct kprobe *get_kprobe(void *addr)
+ {
+ 	return NULL;
+@@ -458,12 +458,11 @@ static inline bool is_kprobe_optinsn_slot(unsigned long addr)
+ }
+ #endif
+ 
++#ifdef CONFIG_KPROBES
+ /* Returns true if kprobes handled the fault */
+ static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+ 					      unsigned int trap)
+ {
+-	if (!kprobes_built_in())
+-		return false;
+ 	if (user_mode(regs))
+ 		return false;
+ 	/*
+@@ -476,5 +475,12 @@ static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+ 		return false;
+ 	return kprobe_fault_handler(regs, trap);
+ }
++#else
++static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
++					      unsigned int trap)
++{
++	return false;
++}
++#endif
+ 
+ #endif /* _LINUX_KPROBES_H */
 -- 
-viresh
+2.20.1
+
