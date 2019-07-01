@@ -2,197 +2,667 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ACFC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38971C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11E8A20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:48:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Rza8+7Q0"
+	by mail.kernel.org (Postfix) with ESMTP id E2587208C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561956554;
+	bh=MeibqhTdDfCAsqbjKRdLjxNC4WKCBVBalhxKXZkM3xA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=etFvd+yaGdYmF/DQZxA3eN9lHZNFMYUrli3Ac9qnDMZ0+H+nEDFprLqViRyK7Cbxn
+	 il5Urz+u/GrfHN2IKNYR5rx5zmOt2JtShmjOgjlDFFqDlX897Uy8fFaGrYBsGIjauz
+	 7v4k6fcsLoq+dJXvMQCHO6PZUbGECbU1/Bstjae0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfGAEr7 (ORCPT
+        id S1727454AbfGAEtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 00:47:59 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40203 "EHLO ozlabs.org"
+        Mon, 1 Jul 2019 00:49:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbfGAEr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 00:47:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726869AbfGAEtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 00:49:12 -0400
+Received: from localhost (unknown [122.167.76.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cZcT4vxfz9s4V;
-        Mon,  1 Jul 2019 14:47:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561956474;
-        bh=NfR2zA85E3BqlOmSYIkyE2Hsp9EpOLv9gwews667qBI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Rza8+7Q0mjafQKfBF3Zjm/jt/IAyXTzLCawyQovXgXBvcfgCci6QZqfkwXzPGSDk/
-         MknW8FJbUaXwQRLG3wHBXcPF1aX6f7xIHBxWewjjJR3xhrPAm1cCo1uhZN8gJ0bDS1
-         qTluX4pNMb8tt1O7WUrSWpdNtYr0yAMP1T2LY7P20OjuyAoxTj1TeFx4ewSvjH3c6g
-         CiD8d+GHNaEUS7CnbwaIXJJ7Y932rEChUO+DQyY42WEdAndqoFoTQrl6UodiTO14ad
-         2CJd20Tim9wAgymDa22R3/3i2bc+xUQc/+TRUu4ZsUO09KdTEdSX0NzMWEW4K+KBu/
-         OmiZCwalmehXw==
-Date:   Mon, 1 Jul 2019 14:47:52 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Tal Gilboa <talgi@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: linux-next: manual merge of the bpf-next tree with the net-next
- tree
-Message-ID: <20190701144752.1f954385@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id C86A2208C4;
+        Mon,  1 Jul 2019 04:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561956550;
+        bh=MeibqhTdDfCAsqbjKRdLjxNC4WKCBVBalhxKXZkM3xA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uxcgjBa53h6MnwAqx+DpOxr8zzl8zZKgza8Qz6oMV0g8bkC6akU+d09GsjUwpO/kE
+         fSKYuFXI0Fc7yjLP4uvmrXZjihr/ICtTN/uui1N60RQENzn4+GGB1P3UoqWPfPHlTM
+         BcT4eTweWb2BygsIn5tq6qqa6eYanbakRry1OecA=
+Date:   Mon, 1 Jul 2019 10:15:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christian Lamparter <chunkeey@gmail.com>
+Subject: Re: [PATCH v4 1/4] usb: xhci: add firmware loader for uPD720201 and
+ uPD720202 w/o ROM
+Message-ID: <20190701044556.GG2911@vkoul-mobl>
+References: <20190626075509.20445-1-vkoul@kernel.org>
+ <20190626075509.20445-2-vkoul@kernel.org>
+ <77f83bc3-f265-14f7-716b-695560c9ef4e@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/dy72frjPYLGHPzpsoZqgEE3"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77f83bc3-f265-14f7-716b-695560c9ef4e@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/dy72frjPYLGHPzpsoZqgEE3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 29-06-19, 00:40, Mathias Nyman wrote:
+> On 26.6.2019 10.55, Vinod Koul wrote:
+> > From: Christian Lamparter <chunkeey@googlemail.com>
+> > 
+> > This patch adds a firmware loader for the uPD720201K8-711-BAC-A
+> > and uPD720202K8-711-BAA-A variant. Both of these chips are listed
+> > in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
+> > devices which need the firmware loader on page 2 in order to
+> > work as they "do not support the External ROM".
+> > 
+> > The "Firmware Download Sequence" is describe in chapter
+> > "7.1 FW Download Interface" R19UH0078EJ0500 Rev.5.00 page 131.
+> > 
+> > The firmware "K2013080.mem" is available from a USB3.0 Host to
+> > PCIe Adapter (PP2U-E card) "Firmware download" archive. An
+> > alternative version can be sourced from Netgear's WNDR4700 GPL
+> > archives.
+> > 
+> > The release notes of the PP2U-E's "Firmware Download" ver 2.0.1.3
+> > (2012-06-15) state that the firmware is for the following devices:
+> >   - uPD720201 ES 2.0 sample whose revision ID is 2.
+> >   - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
+> >   - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
+> > 
+> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > [vkoul: fixed comments:
+> > 	used macros for timeout count and delay
+> > 	removed renesas_fw_alive_check
+> > 	cleaned renesas_fw_callback
+> > 	removed recurion for renesas_fw_download
+> > 	added MODULE_FIRMWARE]
+> > Tested-by: Christian Lamparter <chunkeey@gmail.com>
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >   drivers/usb/host/xhci-pci.c | 454 ++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 454 insertions(+)
+> > 
+> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> > index c2fe218e051f..237df5c47fca 100644
+> > --- a/drivers/usb/host/xhci-pci.c
+> > +++ b/drivers/usb/host/xhci-pci.c
+> > @@ -12,6 +12,8 @@
+> >   #include <linux/slab.h>
+> >   #include <linux/module.h>
+> >   #include <linux/acpi.h>
+> > +#include <linux/firmware.h>
+> > +#include <linux/unaligned/access_ok.h>
+> >   #include "xhci.h"
+> >   #include "xhci-trace.h"
+> > @@ -55,6 +57,9 @@
+> >   #define PCI_DEVICE_ID_AMD_PROMONTORYA_1			0x43bc
+> >   #define PCI_DEVICE_ID_ASMEDIA_1042A_XHCI		0x1142
+> > +#define RENESAS_RETRY	10000
+> > +#define RENESAS_DELAY	10
+> > +
+> >   static const char hcd_name[] = "xhci_hcd";
+> >   static struct hc_driver __read_mostly xhci_pci_hc_driver;
+> > @@ -279,6 +284,429 @@ static void xhci_pme_acpi_rtd3_enable(struct pci_dev *dev)
+> >   static void xhci_pme_acpi_rtd3_enable(struct pci_dev *dev) { }
+> >   #endif /* CONFIG_ACPI */
+> > +static const struct renesas_fw_entry {
+> > +	const char *firmware_name;
+> > +	u16 device;
+> > +	u8 revision;
+> > +	u16 expected_version;
+> > +} renesas_fw_table[] = {
+> > +	/*
+> > +	 * Only the uPD720201K8-711-BAC-A or uPD720202K8-711-BAA-A
+> > +	 * are listed in R19UH0078EJ0500 Rev.5.00 as devices which
+> > +	 * need the software loader.
+> > +	 *
+> > +	 * PP2U/ReleaseNote_USB3-201-202-FW.txt:
+> > +	 *
+> > +	 * Note: This firmware is for the following devices.
+> > +	 *  - uPD720201 ES 2.0 sample whose revision ID is 2.
+> > +	 *  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
+> > +	 *  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
+> > +	 */
+> > +	{ "K2013080.mem", 0x0014, 0x02, 0x2013 },
+> > +	{ "K2013080.mem", 0x0014, 0x03, 0x2013 },
+> > +	{ "K2013080.mem", 0x0015, 0x02, 0x2013 },
+> > +};
+> > +
+> > +MODULE_FIRMWARE("K2013080.mem");
+> > +
+> > +static const struct renesas_fw_entry *renesas_needs_fw_dl(struct pci_dev *dev)
+> > +{
+> > +	const struct renesas_fw_entry *entry;
+> > +	size_t i;
+> > +
+> > +	/* This loader will only work with a RENESAS device. */
+> > +	if (!(dev->vendor == PCI_VENDOR_ID_RENESAS))
+> > +		return NULL;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(renesas_fw_table); i++) {
+> > +		entry = &renesas_fw_table[i];
+> > +		if (entry->device == dev->device &&
+> > +		    entry->revision == dev->revision)
+> > +			return entry;
+> > +	}
+> > +
+> > +	return NULL;
+> > +}
+> > +
+> > +static int renesas_fw_download_image(struct pci_dev *dev,
+> > +				     const u32 *fw,
+> > +				     size_t step)
+> > +{
+> > +	size_t i;
+> > +	int err;
+> > +	u8 fw_status;
+> > +	bool data0_or_data1;
+> > +
+> > +	/*
+> > +	 * The hardware does alternate between two 32-bit pages.
+> > +	 * (This is because each row of the firmware is 8 bytes).
+> > +	 *
+> > +	 * for even steps we use DATA0, for odd steps DATA1.
+> > +	 */
+> > +	data0_or_data1 = (step & 1) == 1;
+> > +
+> > +	/* step+1. Read "Set DATAX" and confirm it is cleared. */
+> > +	for (i = 0; i < RENESAS_RETRY; i++) {
+> > +		err = pci_read_config_byte(dev, 0xF5, &fw_status);
+> > +		if (err)
+> > +			return pcibios_err_to_errno(err);
+> > +		if (!(fw_status & BIT(data0_or_data1)))
+> > +			break;
+> > +
+> > +		udelay(RENESAS_DELAY);
+> > +	}
+> > +	if (i == RENESAS_RETRY)
+> > +		return -ETIMEDOUT;
+> > +
+> > +	/*
+> > +	 * step+2. Write FW data to "DATAX".
+> > +	 * "LSB is left" => force little endian
+> > +	 */
+> > +	err = pci_write_config_dword(dev, data0_or_data1 ? 0xFC : 0xF8,
+> > +				     (__force u32)cpu_to_le32(fw[step]));
+> > +	if (err)
+> > +		return pcibios_err_to_errno(err);
+> > +
+> > +	udelay(100);
+> > +
+> > +	/* step+3. Set "Set DATAX". */
+> > +	err = pci_write_config_byte(dev, 0xF5, BIT(data0_or_data1));
+> > +	if (err)
+> > +		return pcibios_err_to_errno(err);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int renesas_fw_verify(struct pci_dev *dev,
+> > +			     const void *fw_data,
+> > +			     size_t length)
+> > +{
+> > +	const struct renesas_fw_entry *entry = renesas_needs_fw_dl(dev);
+> > +	u16 fw_version_pointer;
+> > +	u16 fw_version;
+> > +
+> > +	if (!entry)
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * The Firmware's Data Format is describe in
+> > +	 * "6.3 Data Format" R19UH0078EJ0500 Rev.5.00 page 124
+> > +	 */
+> > +
+> > +	/*
+> > +	 * The bootrom chips of the big brother have sizes up to 64k, let's
+> > +	 * assume that's the biggest the firmware can get.
+> > +	 */
+> > +	if (length < 0x1000 || length >= 0x10000) {
+> > +		dev_err(&dev->dev, "firmware is size %zd is not (4k - 64k).",
+> > +			length);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	/* The First 2 bytes are fixed value (55aa). "LSB on Left" */
+> > +	if (get_unaligned_le16(fw_data) != 0x55aa) {
+> > +		dev_err(&dev->dev, "no valid firmware header found.");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	/* verify the firmware version position and print it. */
+> > +	fw_version_pointer = get_unaligned_le16(fw_data + 4);
+> > +	if (fw_version_pointer + 2 >= length) {
+> > +		dev_err(&dev->dev,
+> > +			"firmware version pointer is outside of the firmware image.");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	fw_version = get_unaligned_le16(fw_data + fw_version_pointer);
+> > +	dev_dbg(&dev->dev, "got firmware version: %02x.", fw_version);
+> > +
+> > +	if (fw_version != entry->expected_version) {
+> > +		dev_err(&dev->dev,
+> > +			"firmware version mismatch, expected version: %02x.",
+> > +			entry->expected_version);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int renesas_fw_check_running(struct pci_dev *pdev)
+> > +{
+> > +	int err;
+> > +	u8 fw_state;
+> > +
+> > +	/*
+> > +	 * Test if the device is actually needing the firmware. As most
+> > +	 * BIOSes will initialize the device for us. If the device is
+> > +	 * initialized.
+> > +	 */
+> > +	err = pci_read_config_byte(pdev, 0xF4, &fw_state);
+> > +	if (err)
+> > +		return pcibios_err_to_errno(err);
+> > +
+> > +	/*
+> > +	 * Check if "FW Download Lock" is locked. If it is and the FW is
+> > +	 * ready we can simply continue. If the FW is not ready, we have
+> > +	 * to give up.
+> > +	 */
+> > +	if (fw_state & BIT(1)) {
+> > +		dev_dbg(&pdev->dev, "FW Download Lock is engaged.");
+> > +
+> > +		if (fw_state & BIT(4))
+> > +			return 0;
+> > +
+> > +		dev_err(&pdev->dev,
+> > +			"FW Download Lock is set and FW is not ready. Giving Up.");
+> > +		return -EIO;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Check if "FW Download Enable" is set. If someone (us?) tampered
+> > +	 * with it and it can't be resetted, we have to give up too... and
+> > +	 * ask for a forgiveness and a reboot.
+> > +	 */
+> > +	if (fw_state & BIT(0)) {
+> > +		dev_err(&pdev->dev,
+> > +			"FW Download Enable is stale. Giving Up (poweroff/reboot needed).");
+> > +		return -EIO;
+> > +	}
+> > +
+> > +	/* Otherwise, Check the "Result Code" Bits (6:4) and act accordingly */
+> > +	switch ((fw_state & 0x70)) {
+> > +	case 0: /* No result yet */
+> > +		dev_dbg(&pdev->dev, "FW is not ready/loaded yet.");
+> > +
+> > +		/* tell the caller, that this device needs the firmware. */
+> > +		return 1;
+> > +
+> > +	case BIT(4): /* Success, device should be working. */
+> > +		dev_dbg(&pdev->dev, "FW is ready.");
+> > +		return 0;
+> > +
+> > +	case BIT(5): /* Error State */
+> > +		dev_err(&pdev->dev,
+> > +			"hardware is in an error state. Giving up (poweroff/reboot needed).");
+> > +		return -ENODEV;
+> > +
+> > +	default: /* All other states are marked as "Reserved states" */
+> > +		dev_err(&pdev->dev,
+> > +			"hardware is in an invalid state %x. Giving up (poweroff/reboot needed).",
+> > +			(fw_state & 0x70) >> 4);
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> > +
+> > +static int renesas_fw_download(struct pci_dev *pdev,
+> > +			       const struct firmware *fw)
+> > +{
+> > +	const u32 *fw_data = (const u32 *)fw->data;
+> > +	size_t i;
+> > +	int err;
+> > +	u8 fw_status;
+> > +
+> > +	/*
+> > +	 * For more information and the big picture: please look at the
+> > +	 * "Firmware Download Sequence" in "7.1 FW Download Interface"
+> > +	 * of R19UH0078EJ0500 Rev.5.00 page 131
+> > +	 */
+> > +
+> > +	/*
+> > +	 * 0. Set "FW Download Enable" bit in the
+> > +	 * "FW Download Control & Status Register" at 0xF4
+> > +	 */
+> > +	err = pci_write_config_byte(pdev, 0xF4, BIT(0));
+> > +	if (err)
+> > +		return pcibios_err_to_errno(err);
+> > +
+> > +	/* 1 - 10 follow one step after the other. */
+> > +	for (i = 0; i < fw->size / 4; i++) {
+> > +		err = renesas_fw_download_image(pdev, fw_data, i);
+> > +		if (err) {
+> > +			dev_err(&pdev->dev,
+> > +				"Firmware Download Step %zd failed at position %zd bytes with (%d).",
+> > +				i, i * 4, err);
+> > +			return err;
+> > +		}
+> > +	}
+> > +
+> > +	/*
+> > +	 * This sequence continues until the last data is written to
+> > +	 * "DATA0" or "DATA1". Naturally, we wait until "SET DATA0/1"
+> > +	 * is cleared by the hardware beforehand.
+> > +	 */
+> > +	for (i = 0; i < RENESAS_RETRY; i++) {
+> > +		err = pci_read_config_byte(pdev, 0xF5, &fw_status);
+> 
+> RENESAS_RETRY is 10000 (ten thousand),
+> 
+> wasn't there a discussion in the previous revision to have and a longer delay
+> and fewer retries instead?
 
-Hi all,
+Yes and I reduced and posted that on v3 but then we started to see device
+failures and timeout while loading. So yes it take a while sometime to
+load the data on ram and rom for these devices, that why v4 goes back to
+older values
 
-Today's linux-next merge of the bpf-next tree got a conflict in:
+> 
+> > +		if (err)
+> > +			return pcibios_err_to_errno(err);
+> > +		if (!(fw_status & (BIT(0) | BIT(1))))
+> > +			break;
+> > +
+> > +		udelay(RENESAS_DELAY);
+> > +	}
+> > +	if (i == RENESAS_RETRY)
+> > +		dev_warn(&pdev->dev, "Final Firmware Download step timed out.");
+> > +
+> > +	/*
+> > +	 * 11. After finishing writing the last data of FW, the
+> > +	 * System Software must clear "FW Download Enable"
+> > +	 */
+> > +	err = pci_write_config_byte(pdev, 0xF4, 0);
+> > +	if (err)
+> > +		return pcibios_err_to_errno(err);
+> > +
+> > +	/* 12. Read "Result Code" and confirm it is good. */
+> > +	for (i = 0; i < RENESAS_RETRY; i++) {
+> > +		err = pci_read_config_byte(pdev, 0xF4, &fw_status);
+> > +		if (err)
+> > +			return pcibios_err_to_errno(err);
+> > +		if (fw_status & BIT(4))
+> > +			break;
+> > +
+> > +		udelay(RENESAS_DELAY);
+> > +	}
+> > +	if (i == RENESAS_RETRY) {
+> > +		/* Timed out / Error - let's see if we can fix this */
+> > +		err = renesas_fw_check_running(pdev);
+> > +		switch (err) {
+> > +		case 0: /*
+> > +			 * we shouldn't end up here.
+> > +			 * maybe it took a little bit longer.
+> > +			 * But all should be well?
+> > +			 */
+> > +			break;
+> > +
+> > +		case 1: /* (No result yet! */
+> > +			return -ETIMEDOUT;
+> > +
+> > +		default:
+> > +			return err;
+> > +		}
+> > +	}
+> > +	/*
+> > +	 * Optional last step: Engage Firmware Lock
+> > +	 *
+> > +	 * err = pci_write_config_byte(pdev, 0xF4, BIT(2));
+> > +	 * if (err)
+> > +	 *	return pcibios_err_to_errno(err);
+> > +	 */
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +struct renesas_fw_ctx {
+> > +	struct pci_dev *pdev;
+> > +	const struct pci_device_id *id;
+> > +	bool resume;
+> > +};
+> > +
+> > +static int xhci_pci_probe(struct pci_dev *pdev,
+> > +			  const struct pci_device_id *id);
+> > +
+> > +static void renesas_fw_callback(const struct firmware *fw,
+> > +				void *context)
+> > +{
+> > +	struct renesas_fw_ctx *ctx = context;
+> > +	struct pci_dev *pdev = ctx->pdev;
+> > +	struct device *parent = pdev->dev.parent;
+> > +	int err;
+> > +
+> > +	if (!fw) {
+> > +		dev_err(&pdev->dev, "firmware failed to load\n");
+> > +
+> > +		goto cleanup;
+> > +	}
+> > +
+> > +	err = renesas_fw_verify(pdev, fw->data, fw->size);
+> > +	if (err)
+> > +		goto cleanup;
+> > +
+> > +	err = renesas_fw_download(pdev, fw);
+> > +	release_firmware(fw);
+> > +	if (err) {
+> > +		dev_err(&pdev->dev, "firmware failed to download (%d).", err);
+> > +		goto cleanup;
+> > +	}
+> > +	if (ctx->resume)
+> > +		return;
+> > +
+> > +	err = xhci_pci_probe(pdev, ctx->id);
+> 
+> hmm, so xhci_pci_probe() calls request_firmware_nowait(callback), and the request firmware callback
+> calls xhci_pci_probe()
+> 
+> Could there be some other design option than this recursive probe calling?
+> maybe splitting the probe function into two parts could work?
 
-  drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+Well we do not complete the probe for Renesas devices and wait for
+firmware to be available. Once firmware is loaded (callback), we
+continue probe,. I think this is simpler design and ensure device is
+initialized only when the required firmware is available.
 
-between commit:
+Btw for devices with ROM (patch 3) we check if ROM load and skip
+request_firmware and continue.
+> 
+> 
+> > +	if (!err) {
+> > +		/* everything worked */
+> > +		devm_kfree(&pdev->dev, ctx);
+> > +		return;
+> > +	}
+> > +
+> > +cleanup:
+> > +	/* in case of an error - fall through */
+> > +	dev_info(&pdev->dev, "Unloading driver");
+> > +
+> > +	if (parent)
+> > +		device_lock(parent);
+> > +
+> > +	device_release_driver(&pdev->dev);
+> > +
+> > +	if (parent)
+> > +		device_unlock(parent);
+> > +
+> > +	pci_dev_put(pdev);
+> > +}
+> > +
+> > +static int renesas_fw_alive_check(struct pci_dev *pdev)
+> > +{
+> > +	const struct renesas_fw_entry *entry;
+> > +
+> > +	/* check if we have a eligible RENESAS' uPD720201/2 w/o FW. */
+> > +	entry = renesas_needs_fw_dl(pdev);
+> > +	if (!entry)
+> > +		return 0;
+> > +
+> > +	return renesas_fw_check_running(pdev);
+> > +}
+> > +
+> > +static int renesas_fw_download_to_hw(struct pci_dev *pdev,
+> > +				     const struct pci_device_id *id,
+> > +				     bool do_resume)
+> > +{
+> > +	const struct renesas_fw_entry *entry;
+> > +	struct renesas_fw_ctx *ctx;
+> > +	int err;
+> > +
+> > +	/* check if we have a eligible RENESAS' uPD720201/2 w/o FW. */
+> > +	entry = renesas_needs_fw_dl(pdev);
+> > +	if (!entry)
+> > +		return 0;
+> > +
+> > +	err = renesas_fw_check_running(pdev);
+> > +	/* Continue ahead, if the firmware is already running. */
+> > +	if (err == 0)
+> > +		return 0;
+> > +
+> > +	if (err != 1)
+> > +		return err;
+> > +
+> > +	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
+> > +	if (!ctx)
+> > +		return -ENOMEM;
+> > +	ctx->pdev = pdev;
+> > +	ctx->resume = do_resume;
+> > +	ctx->id = id;
+> > +
+> > +	pci_dev_get(pdev);
+> > +	err = request_firmware_nowait(THIS_MODULE, 1, entry->firmware_name,
+> > +				      &pdev->dev, GFP_KERNEL,
+> > +				      ctx, renesas_fw_callback);
+> > +	if (err) {
+> > +		pci_dev_put(pdev);
+> > +		return err;
+> > +	}
+> > +
+> > +	/*
+> > +	 * The renesas_fw_callback() callback will continue the probe
+> > +	 * process, once it aquires the firmware.
+> > +	 */
+> > +	return 1;
+> > +}
+> > +
+> >   /* called during probe() after chip reset completes */
+> >   static int xhci_pci_setup(struct usb_hcd *hcd)
+> >   {
+> > @@ -317,6 +745,22 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+> >   	struct hc_driver *driver;
+> >   	struct usb_hcd *hcd;
+> > +	/*
+> > +	 * Check if this device is a RENESAS uPD720201/2 device.
+> > +	 * Otherwise, we can continue with xhci_pci_probe as usual.
+> > +	 */
+> > +	retval = renesas_fw_download_to_hw(dev, id, false);
+> > +	switch (retval) {
+> > +	case 0:
+> > +		break;
+> > +
+> > +	case 1: /* let it load the firmware and recontinue the probe. */
+> > +		return 0;
+> > +
+> > +	default:
+> > +		return retval;
+> > +	};
+> > +
+> 
+> Downloading firmware to Renesas xHCI controllers should be a special case, but this
+> makes it looks like its the normal procedure for probing PCI xHCI controllers.
 
-  8960b38932be ("linux/dim: Rename externally used net_dim members")
+These devices cannot work without firmware so it is a must have. Only
+after the  firmware is loaded and initialized we can continue device
+initialization.
 
-from the net-next tree and commits:
+> I might be missing some bigger picture but could the whole struct renesas_fw_entry array
+> and constantly walking and matching it be skipped?
+> There didn't seem to be that many firmware options.
+> 
+> Wouldn't it be enough to store the firmware name once?
 
-  db05815b36cb ("net/mlx5e: Add XSK zero-copy support")
-  0a06382fa406 ("net/mlx5e: Encapsulate open/close queues into a function")
+Typically yes, but we have multiple versions (patch 4) for same device
+and different names provided by the vendor.
 
-from the bpf-next tree.
+So the table finds the name using device id, revision etc.
+> 
+> pseudo idea:
+> 
+> xhci_pci_probe()
+> {
+>   if (pdev->vendor == PCI_VENDOR_ID_RENESAS)
+>     return renesas_load_fw();
+>   else
+>     return xhci_pci_probe_continue();
+> }
+> 
+> renesas_load_fw()
+>   switch(pdev->device) {
+>   case 0x0014:
+>     fw_name = "K20130xx.mem"
+>   case 0x0015:
+>     if (pdev->revision == yy)
+>       fw_name = "K20130yy.mem"
+>     else if (pdev->revision == zz)
+>       fw_name = "K20130zz.mem"
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+problem is this doesnt scale (patch 4) when we add new version and in
+future if we get newer versions from vendor. Table scales nicely that
+way
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 1085040675ae,67b562c7f8a1..000000000000
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@@ -1567,10 -1602,8 +1602,8 @@@ static void mlx5e_destroy_cq(struct mlx
-  	mlx5_core_destroy_cq(cq->mdev, &cq->mcq);
-  }
- =20
-- static int mlx5e_open_cq(struct mlx5e_channel *c,
-- 			 struct dim_cq_moder moder,
-- 			 struct mlx5e_cq_param *param,
-- 			 struct mlx5e_cq *cq)
- -int mlx5e_open_cq(struct mlx5e_channel *c, struct net_dim_cq_moder moder,
-++int mlx5e_open_cq(struct mlx5e_channel *c, struct dim_cq_moder moder,
-+ 		  struct mlx5e_cq_param *param, struct mlx5e_cq *cq)
-  {
-  	struct mlx5_core_dev *mdev =3D c->mdev;
-  	int err;
-@@@ -1767,45 -1800,12 +1800,12 @@@ static void mlx5e_free_xps_cpumask(stru
-  	free_cpumask_var(c->xps_cpumask);
-  }
- =20
-- static int mlx5e_open_channel(struct mlx5e_priv *priv, int ix,
-- 			      struct mlx5e_params *params,
-- 			      struct mlx5e_channel_param *cparam,
-- 			      struct mlx5e_channel **cp)
-+ static int mlx5e_open_queues(struct mlx5e_channel *c,
-+ 			     struct mlx5e_params *params,
-+ 			     struct mlx5e_channel_param *cparam)
-  {
-- 	int cpu =3D cpumask_first(mlx5_comp_irq_get_affinity_mask(priv->mdev, ix=
-));
- -	struct net_dim_cq_moder icocq_moder =3D {0, 0};
- +	struct dim_cq_moder icocq_moder =3D {0, 0};
-- 	struct net_device *netdev =3D priv->netdev;
-- 	struct mlx5e_channel *c;
-- 	unsigned int irq;
-  	int err;
-- 	int eqn;
--=20
-- 	err =3D mlx5_vector2eqn(priv->mdev, ix, &eqn, &irq);
-- 	if (err)
-- 		return err;
--=20
-- 	c =3D kvzalloc_node(sizeof(*c), GFP_KERNEL, cpu_to_node(cpu));
-- 	if (!c)
-- 		return -ENOMEM;
--=20
-- 	c->priv     =3D priv;
-- 	c->mdev     =3D priv->mdev;
-- 	c->tstamp   =3D &priv->tstamp;
-- 	c->ix       =3D ix;
-- 	c->cpu      =3D cpu;
-- 	c->pdev     =3D priv->mdev->device;
-- 	c->netdev   =3D priv->netdev;
-- 	c->mkey_be  =3D cpu_to_be32(priv->mdev->mlx5e_res.mkey.key);
-- 	c->num_tc   =3D params->num_tc;
-- 	c->xdp      =3D !!params->xdp_prog;
-- 	c->stats    =3D &priv->channel_stats[ix].ch;
-- 	c->irq_desc =3D irq_to_desc(irq);
--=20
-- 	err =3D mlx5e_alloc_xps_cpumask(c, params);
-- 	if (err)
-- 		goto err_free_channel;
--=20
-- 	netif_napi_add(netdev, &c->napi, mlx5e_napi_poll, 64);
- =20
-  	err =3D mlx5e_open_cq(c, icocq_moder, &cparam->icosq_cq, &c->icosq.cq);
-  	if (err)
-@@@ -2150,12 -2230,12 +2230,12 @@@ void mlx5e_build_ico_cq_param(struct ml
- =20
-  	mlx5e_build_common_cq_param(priv, param);
- =20
- -	param->cq_period_mode =3D NET_DIM_CQ_PERIOD_MODE_START_FROM_EQE;
- +	param->cq_period_mode =3D DIM_CQ_PERIOD_MODE_START_FROM_EQE;
-  }
- =20
-- static void mlx5e_build_icosq_param(struct mlx5e_priv *priv,
-- 				    u8 log_wq_size,
-- 				    struct mlx5e_sq_param *param)
-+ void mlx5e_build_icosq_param(struct mlx5e_priv *priv,
-+ 			     u8 log_wq_size,
-+ 			     struct mlx5e_sq_param *param)
-  {
-  	void *sqc =3D param->sqc;
-  	void *wq =3D MLX5_ADDR_OF(sqc, sqc, wq);
-
---Sig_/dy72frjPYLGHPzpsoZqgEE3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ZkHgACgkQAVBC80lX
-0GwJ4wf/fetCtKbtMU1ik1P9kSLTty0RLn58NNZG8VZpjqA0UHYweKdzigPNbC5i
-Pp+EyUNfVJM0Rc7VHoJsflS6BUMNy3lfItUcTReDhwybttWb5XorZrbxoqaOlBn+
-7cOMa9RPghjlDCHG41sC4yiysLO6OskRP+kRf8DK/O5RxB6OS5ViM0NsHhpyBFeY
-cGqEv04vBraqMhAdw8ifysE7QO5+q23XuVALsgz0UArAuKf9A6/MPopkhbADGZ2r
-RQAM26hXE5j5xkssrkgKNjCyglhTOxFerrFyDQytPrzrJVIoSidPGuCUUtbWPxTC
-TMPTrN5NIf4wQlApgYyIxHdPmuBLqg==
-=Y+bT
------END PGP SIGNATURE-----
-
---Sig_/dy72frjPYLGHPzpsoZqgEE3--
+>   default: /* no need to load firmware */
+>     return xhci_pci_probe_continue()
+>   }
+>   if (firmware_already_loaded())
+>     return xhci_pci_probe_continue()
+>   request_firmware_nowait(..., fw_name, renesas_fw_cb)
+> }
+> 
+> renesas_fw_cb()
+> {
+>   if (firmware_load_error())
+>     return -ERROR
+>   return xhci_pci_probe_continue()
+> }
+> 
+> 
+> I'll be away on vacation the next 3 weeks, so my
+> response time is really slow
+> 
+> -Mathias
+-- 
+~Vinod
