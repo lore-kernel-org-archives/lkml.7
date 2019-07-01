@@ -2,106 +2,118 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46702C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF06CC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D30921721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A8F21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="H+xqiH5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfGAPWH (ORCPT
+        id S1728668AbfGAPYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:22:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33292 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbfGAPWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:22:07 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C19483082A9A;
-        Mon,  1 Jul 2019 15:21:54 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 268386F947;
-        Mon,  1 Jul 2019 15:21:49 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 16:21:48 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: virtio_scsi: Use struct_size() helper
-Message-ID: <20190701152148.GG11900@stefanha-x1.localdomain>
-References: <20190619192833.GA825@embeddedor>
+        Mon, 1 Jul 2019 11:24:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42573 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728575AbfGAPYT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 11:24:19 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x17so14304725wrl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 08:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=og76osagZkW1HyYwuJ93MYzDpl1HEiuEE5P8qHSHdLE=;
+        b=H+xqiH5PfginiAgTwhUbH9wCmLV1UFNM1AruiHCLnLNEOxsj90mjn1WOyemsl0OcGQ
+         H5pCZ+IBPULsoB6YbcAutjgEngJbEJRyAHJ3ChMgibw9l9hMjgVDm4vb08T05suVNfX6
+         GRiOSf0+pKhaXJc0FN2vBz6acALVhU9sscRqttb+EOIPooENpSOsqMQXAq3tpb6KmJSK
+         bPlxFsGLndTC7vMqZJ9eshhHQbcywOp/wbW9hgZREhhTwxzsP14QCcc2t+HhPgQbN247
+         CLH9ZhqDLDWXDDQVV3t3F57Hy4Rllw/T56Vp9nekZ6EYNS9U/rBlQUElLD3uwhaGBYiQ
+         sevw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=og76osagZkW1HyYwuJ93MYzDpl1HEiuEE5P8qHSHdLE=;
+        b=HYkPkZkZdDT9EH3+OZLFFPP0K7VHq6xJ0YFEOfSKlZTKE3Yco43MFZHQjQZmNPqHwN
+         qgFh8/qGzbqtr0imv0HJDevSf5DU3lVfaEP6W97ew3uQNLBJkE4qtKrj7QqiOb5LmZm3
+         m3pWtcbJvaURl54JUQD5lt5N8PmzPDq2GxGhdueJDW/fZYknHQMFWG/gS+bUCiwwvEH2
+         3KTccEX5UmELAIpRj4qF+SjAqQ+lNV8qrdcuhSys9MTDEn8f27616h8bQK733sPVwzAK
+         G7XsA1V4cuzkuut6a5uAcRvOmNCsANMRf7Cv2KG5atWr0rSE5ijiH9VZKXzxOXWTE6VN
+         kW6A==
+X-Gm-Message-State: APjAAAUNrgZ9Nn6PZ3OMhR9oQVOLlmWqUK0yMhpafzXwrVjXmwtk4xeD
+        +SblLnBPKTsrZK6z2ndpzHA49g==
+X-Google-Smtp-Source: APXvYqy861d3WDBNflH8j6EQtsx9tZtxwBE6L3gfYqvrwNliI8KUrcX+yDQcDkn3n3Zvqx07g+7tEg==
+X-Received: by 2002:a5d:6b90:: with SMTP id n16mr8744868wrx.206.1561994657545;
+        Mon, 01 Jul 2019 08:24:17 -0700 (PDT)
+Received: from brauner.io (p4FC0A2B8.dip0.t-ipconnect.de. [79.192.162.184])
+        by smtp.gmail.com with ESMTPSA id f1sm9038727wml.28.2019.07.01.08.24.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 08:24:16 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 17:24:14 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Ley Foon Tan <lftan@altera.com>,
+        "moderated list:NIOS2 ARCHITECTURE" 
+        <nios2-dev@lists.rocketboards.org>
+Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
+Message-ID: <20190701152413.zfwsxwtgeqtveie6@brauner.io>
+References: <20190604160944.4058-1-christian@brauner.io>
+ <20190604160944.4058-2-christian@brauner.io>
+ <20190620184451.GA28543@roeck-us.net>
+ <20190620221003.ciuov5fzqxrcaykp@brauner.io>
+ <CAK8P3a2iV7=HkHBVL_puvCQN0DmdKEnVs2aG9MQV_8Q58JSfTA@mail.gmail.com>
+ <20190621111839.v5yqlws6iw7mx4aa@brauner.io>
+ <CAK8P3a0T1=eg5ONbMFhHi=vmk1K5uogZ+5=wpsXvjVDzn6vS=Q@mail.gmail.com>
+ <20190621153012.fxwhx25mzmzueqh7@brauner.io>
+ <CAK8P3a0f_=q88JB=t7fbmweAbZ2E2_uCMt+2JoBYx3od_M6fHQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+sHJum3is6Tsg7/J"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190619192833.GA825@embeddedor>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 01 Jul 2019 15:22:07 +0000 (UTC)
+In-Reply-To: <CAK8P3a0f_=q88JB=t7fbmweAbZ2E2_uCMt+2JoBYx3od_M6fHQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 01, 2019 at 05:14:51PM +0200, Arnd Bergmann wrote:
+> On Fri, Jun 21, 2019 at 5:30 PM Christian Brauner <christian@brauner.io> wrote:
+> > On Fri, Jun 21, 2019 at 04:20:15PM +0200, Arnd Bergmann wrote:
+> > > On Fri, Jun 21, 2019 at 1:18 PM Christian Brauner <christian@brauner.io> wrote:
+> > Hm, if you believe that this is fine and want to "vouch" for it by
+> > whipping up a patch that replaces the wiring up done in [1] I'm happy to
+> > take it. :) Otherwise I'd feel more comfortable not adding all arches at
+> > once.
+> >
+> > [1]: https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=clone
+> 
+> Sorry for my late reply. I had actually looked at the implementations
+> in a little
+> more detail and I think you are right that adding these are better
+> left to the arch
+> maintainers in case of clone3.
 
---+sHJum3is6Tsg7/J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Perfect, thanks!
 
-On Wed, Jun 19, 2019 at 02:28:33PM -0500, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
->=20
-> struct virtio_scsi {
-> 	...
->         struct virtio_scsi_vq req_vqs[];
-> };
->=20
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
->=20
-> So, replace the following form:
->=20
-> sizeof(*vscsi) + sizeof(vscsi->req_vqs[0]) * num_queues
->=20
-> with:
->=20
-> struct_size(vscsi, req_vqs, num_queues)
->=20
-> This code was detected with the help of Coccinelle.
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/scsi/virtio_scsi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---+sHJum3is6Tsg7/J
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl0aJQwACgkQnKSrs4Gr
-c8hU0wf/SEM8YCmD62jJAJNbhuuxbgPPdSmJV/Oh3RzqiM/ujaeDjX1Msi+8fFbR
-NlE7Cr9xEkGuEacjWbl+MNio761nAUo5Ibln9uws3BTpnHClVohmaat2RfuRyoB5
-0O1FC55L1Gj8+/RaRoZAO3gld6TM5+KFuptuYN4kOl9/DJDSbjoGX11dFtyL6Jut
-mSdjs07Koh+Uxt+2/gIEoflBy6tr8nbOIpIb0qI9Y+4iYXUFPvRqDhqnZ1TezcWE
-T4lWINqg4FuT+MMmCAyk8KLhj9FVKLMG7mCRT/R+emhi2yTwyMwvKLYeMW0uikUQ
-2NfsNT8OZBYFNEdUzjeCiw4Mg8f99A==
-=FseJ
------END PGP SIGNATURE-----
-
---+sHJum3is6Tsg7/J--
+Christian
