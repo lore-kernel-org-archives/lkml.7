@@ -2,161 +2,174 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4F0C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7D6C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D422184C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:22:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hanCNMW6"
+	by mail.kernel.org (Postfix) with ESMTP id 159C1214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbfGAOWg (ORCPT
+        id S1729547AbfGAOWu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:22:36 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41208 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfGAOWg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:22:36 -0400
-Received: by mail-io1-f65.google.com with SMTP id w25so29175807ioc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 07:22:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=btB19IKd1k8U8AFXegKGIuJCLiqvpxzyOkY8GOJfQnQ=;
-        b=hanCNMW6XBQ9ko0So04XIcjf8oRLewRZVmW9+7bcPtobH+yCIR2NkbuTQwq3XoVPUe
-         L/bcXt7K5MxSM0o+nEwVyEspze7MxmsxVl3F54sn5FH4QYXfL4W2duJ6JixaMCo5j963
-         sqfhZwq2EWLsJSwho7hJPy5VUvnyPRpDnLCvGxpI0Hpocf7NdOjZFcNuOJiiTkVPRAsL
-         iTfzBsqM3PRdettAwvdJwz9tYgQd8V214v6BS5UFlSd9pzGDFjBQ+kONre+m94D5wbdR
-         nvFOF5FdBUGblmAA6UFbWB335aso2amFqL+WWr2z3FMMuhG3YBgv0qerKRmLT82zT+KZ
-         HJ4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=btB19IKd1k8U8AFXegKGIuJCLiqvpxzyOkY8GOJfQnQ=;
-        b=WHledQs6B9yAAFihPc/bX0VIEv4k8uhsW964FIJIaPM/6OlSJrFj0cGR8e2jVDo1L9
-         WvPlCj4+dGcDHTegl7sc/nWjhX6JCNryqQBpGKYEIeL0R9UXow08/KjJnWxt0e2dMK2g
-         AXVgRev/c4Sviwlp7sXepfqS2ouo88gUICai1xoBbtHHKoAmuJ1UdfvyK6l3KG5maQG4
-         7QuWq9hhtFPiFcF51P/Uk1P7ou5lxkf2OVYt1MnADJs9UX/P6CIaXFaNQaQNhIu0/mFp
-         vplFRC9FFdtq8MevMzD26sOzyQNHUsqkMBfdGYCEP3WEnJmzLdy4acxA+RIQChn2hraT
-         UT5A==
-X-Gm-Message-State: APjAAAWL30MHBY3nsSwkdACq8U5atHfdufy5OtKQcAq/GeFrALb/jEGF
-        xbd1Af0V6rGOOzpPJqGxKyapIigUFiErQEOl
-X-Google-Smtp-Source: APXvYqzWSCyKremeC+uWScZlpj90RzZsz6orOU/jtDmTV5iUCLcQrENtk3Y2DtKHKviMqHbGkTVi0Q==
-X-Received: by 2002:a6b:ce19:: with SMTP id p25mr27241142iob.201.1561990954936;
-        Mon, 01 Jul 2019 07:22:34 -0700 (PDT)
-Received: from [192.168.1.158] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id q15sm10426451ioi.15.2019.07.01.07.22.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 07:22:33 -0700 (PDT)
-Subject: Re: [PATCH] block: fix a crash in do_task_dead()
-To:     Hugh Dickins <hughd@google.com>, Oleg Nesterov <oleg@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
-        akpm@linux-foundation.org, hch@lst.de, gkohli@codeaurora.org,
-        mingo@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1559161526-618-1-git-send-email-cai@lca.pw>
- <20190530080358.GG2623@hirez.programming.kicks-ass.net>
- <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
- <20190603123705.GB3419@hirez.programming.kicks-ass.net>
- <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
- <alpine.LSU.2.11.1906301542410.1105@eggly.anvils>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <97d2f5cc-fe98-f28e-86ce-6fbdeb8b67bd@kernel.dk>
-Date:   Mon, 1 Jul 2019 08:22:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.1906301542410.1105@eggly.anvils>
-Content-Type: text/plain; charset=utf-8
+        Mon, 1 Jul 2019 10:22:50 -0400
+Received: from mail-oln040092253101.outbound.protection.outlook.com ([40.92.253.101]:29710
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727064AbfGAOWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 10:22:50 -0400
+Received: from PU1APC01FT027.eop-APC01.prod.protection.outlook.com
+ (10.152.252.59) by PU1APC01HT071.eop-APC01.prod.protection.outlook.com
+ (10.152.253.141) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2032.15; Mon, 1 Jul
+ 2019 14:22:43 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.60) by
+ PU1APC01FT027.mail.protection.outlook.com (10.152.252.232) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2032.15 via Frontend Transport; Mon, 1 Jul 2019 14:22:43 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9d2d:391f:5f49:c806]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9d2d:391f:5f49:c806%6]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
+ 14:22:43 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: [PATCH v7 1/8] PCI: Simplify pci_bus_distribute_available_resources()
+Thread-Topic: [PATCH v7 1/8] PCI: Simplify
+ pci_bus_distribute_available_resources()
+Thread-Index: AQHVMBhy/j20QAW14Ea8AXyV6YBqSg==
+Date:   Mon, 1 Jul 2019 14:22:43 +0000
+Message-ID: <SL2P216MB01872FED744839B3F42ED38380F90@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SYXPR01CA0145.ausprd01.prod.outlook.com
+ (2603:10c6:0:30::30) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:22::19)
+x-incomingtopheadermarker: OriginalChecksum:B230098E27C8EDA92CC7E2DBE1387CD9CC8D631EA0F50958B205DE44B3456819;UpperCasedChecksum:41E9E1A05564A214069764DF0052BE4F90A6BD480842D23F50CB52839FD60D45;SizeAsReceived:7687;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [kdAE7IwH8mYXH30fIrStVqN88iK95+Oa20R+Wx5L8ge+FEYn+KAqewpZZqMQ3NLDOWOKNAC7nXI=]
+x-microsoft-original-message-id: <20190701142227.GA5156@nicholas-usb>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:PU1APC01HT071;
+x-ms-traffictypediagnostic: PU1APC01HT071:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-message-info: hYHyYsxG0xfjs6MVFuZN62th1RBTazy/a9++SSayg/dhx2bfZSY6J0H5rz0pNB+siFmDMRQlthFD1M5F4LaJ3Wf/pgqJrta9f3axUTyjnjBs1WOkSk/JX3Kj711F6gGEuHd+eTnJTnEDurRWUoshPdwkKWNPfkY28xDwXHnKj21YrNk5tLDxa/tftoltGAMH
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <058E6F501B00A346BF0D296F2597AF77@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82559e89-cf13-4106-de24-08d6fe2f948a
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 14:22:43.1713
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/30/19 5:06 PM, Hugh Dickins wrote:
-> On Wed, 5 Jun 2019, Jens Axboe wrote:
->>
->> How about the following plan - if folks are happy with this sched patch,
->> we can queue it up for 5.3. Once that is in, I'll kill the block change
->> that special cases the polled task wakeup. For 5.2, we go with Oleg's
->> patch for the swap case.
-> 
-> I just hit the do_task_dead() kernel BUG at kernel/sched/core.c:3463!
-> while heavy swapping on 5.2-rc7: it looks like Oleg's patch intended
-> for 5.2 was not signed off, and got forgotten.
-> 
-> I did hit the do_task_dead() BUG (but not at all easily) on early -rcs
-> before seeing Oleg's patch, then folded it in and and didn't hit the BUG
-> again; then just tried again without it, and luckily hit in a few hours.
-> 
-> So I can give it an enthusiastic
-> Acked-by: Hugh Dickins <hughd@google.com>
-> because it makes good sense to avoid the get/blk_wake/put overhead on
-> the asynch path anyway, even if it didn't work around a bug; but only
-> Half-Tested-by: Hugh Dickins <hughd@google.com>
-> since I have not been exercising the synchronous path at all.
+Reorder pci_bus_distribute_available_resources() to group related code
+together.  No functional change intended.
 
-I'll take the blame for that, went away on vacation for 3 weeks...
-But yes, for 5.2, the patch from Oleg looks fine. Once Peter's other
-change is in mainline, I'll go through and remove these special cases.
+Link: https://lore.kernel.org/r/PS2P216MB0642C7A485649D2D787A1C6F80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
+Based-on-patch-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+[bhelgaas: extracted from larger patch]
 
-Andrew, can you queue Oleg's patch for 5.2? You can also add my:
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+---
+ drivers/pci/setup-bus.c | 50 ++++++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
-
-to it.
-
-> 
-> Hugh, requoting Oleg:
-> 
->>
->> I don't understand this code at all but I am just curious, can we do
->> something like incomplete patch below ?
->>
->> Oleg.
->>
->> --- x/mm/page_io.c
->> +++ x/mm/page_io.c
->> @@ -140,8 +140,10 @@ int swap_readpage(struct page *page, bool synchronous)
->>   	unlock_page(page);
->>   	WRITE_ONCE(bio->bi_private, NULL);
->>   	bio_put(bio);
->> -	blk_wake_io_task(waiter);
->> -	put_task_struct(waiter);
->> +	if (waiter) {
->> +		blk_wake_io_task(waiter);
->> +		put_task_struct(waiter);
->> +	}
->>   }
->>   
->>   int generic_swapfile_activate(struct swap_info_struct *sis,
->> @@ -398,11 +400,12 @@ int swap_readpage(struct page *page, boo
->>   	 * Keep this task valid during swap readpage because the oom killer may
->>   	 * attempt to access it in the page fault retry time check.
->>   	 */
->> -	get_task_struct(current);
->> -	bio->bi_private = current;
->>   	bio_set_op_attrs(bio, REQ_OP_READ, 0);
->> -	if (synchronous)
->> +	if (synchronous) {
->>   		bio->bi_opf |= REQ_HIPRI;
->> +		get_task_struct(current);
->> +		bio->bi_private = current;
->> +	}
->>   	count_vm_event(PSWPIN);
->>   	bio_get(bio);
->>   	qc = submit_bio(bio);
-
-
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 0cdd5ff38..af28af898 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1860,16 +1860,6 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 	extend_bridge_window(bridge, mmio_pref_res, add_list,
+ 			     available_mmio_pref);
+ 
+-	/*
+-	 * Calculate the total amount of extra resource space we can
+-	 * pass to bridges below this one.  This is basically the
+-	 * extra space reduced by the minimal required space for the
+-	 * non-hotplug bridges.
+-	 */
+-	remaining_io = available_io;
+-	remaining_mmio = available_mmio;
+-	remaining_mmio_pref = available_mmio_pref;
+-
+ 	/*
+ 	 * Calculate how many hotplug bridges and normal bridges there
+ 	 * are on this bus.  We will distribute the additional available
+@@ -1882,6 +1872,31 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 			normal_bridges++;
+ 	}
+ 
++	/*
++	 * There is only one bridge on the bus so it gets all available
++	 * resources which it can then distribute to the possible hotplug
++	 * bridges below.
++	 */
++	if (hotplug_bridges + normal_bridges == 1) {
++		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
++		if (dev->subordinate) {
++			pci_bus_distribute_available_resources(dev->subordinate,
++				add_list, available_io, available_mmio,
++				available_mmio_pref);
++		}
++		return;
++	}
++
++	/*
++	 * Calculate the total amount of extra resource space we can
++	 * pass to bridges below this one.  This is basically the
++	 * extra space reduced by the minimal required space for the
++	 * non-hotplug bridges.
++	 */
++	remaining_io = available_io;
++	remaining_mmio = available_mmio;
++	remaining_mmio_pref = available_mmio_pref;
++
+ 	for_each_pci_bridge(dev, bus) {
+ 		const struct resource *res;
+ 
+@@ -1905,21 +1920,6 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 			remaining_mmio_pref -= resource_size(res);
+ 	}
+ 
+-	/*
+-	 * There is only one bridge on the bus so it gets all available
+-	 * resources which it can then distribute to the possible hotplug
+-	 * bridges below.
+-	 */
+-	if (hotplug_bridges + normal_bridges == 1) {
+-		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+-		if (dev->subordinate) {
+-			pci_bus_distribute_available_resources(dev->subordinate,
+-				add_list, available_io, available_mmio,
+-				available_mmio_pref);
+-		}
+-		return;
+-	}
+-
+ 	/*
+ 	 * Go over devices on this bus and distribute the remaining
+ 	 * resource space between hotplug bridges.
 -- 
-Jens Axboe
+2.20.1
 
