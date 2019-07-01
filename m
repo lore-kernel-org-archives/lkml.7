@@ -2,270 +2,198 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 174D8C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BA9C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3869213F2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5B520659
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:36:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="Jr6IrngZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbfGAIdu (ORCPT
+        id S1727864AbfGAIgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:33:50 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:4068 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727176AbfGAIdu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:33:50 -0400
-X-IronPort-AV: E=Sophos;i="5.63,438,1557180000"; 
-   d="scan'208";a="389828722"
-Received: from unknown (HELO [193.50.110.202]) ([193.50.110.202])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA; 01 Jul 2019 10:33:47 +0200
-Subject: Re: [PATCHv2 1/2] hmat: Register memory-side cache after parsing
-To:     Keith Busch <keith.busch@intel.com>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Rafael Wysocki <rafael@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>
-References: <20190515215444.22256-1-keith.busch@intel.com>
-From:   Brice Goglin <Brice.Goglin@inria.fr>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Brice.Goglin@inria.fr; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1a53c087-8210-b344-ef70-06e90c1a88b8@inria.fr>
-Date:   Mon, 1 Jul 2019 10:33:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190515215444.22256-1-keith.busch@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+        Mon, 1 Jul 2019 04:36:52 -0400
+Received: from mail-eopbgr70113.outbound.protection.outlook.com ([40.107.7.113]:6044
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727128AbfGAIgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 04:36:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=uT+DrDtfWxUN63T4x++zkI1gYhMKDhLmJ9au+pHdn+LI9cr1+DspHDwpqX4p6qNa/yGYvv+C6Adla7+WBFZcJUqr5FYLC8NLUbxx5cqYJXeXTla+RoYvHn4US4HvOGhjy8534EJcwvUxqAlQuX/kU8BdNCXLQ0qdUYy0kLumhV0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8fa2s8YAFQOdT4rQMDCFbBrfg7QkLY1PR+iR7QTZV28=;
+ b=qBuf5aGdJQIdMvCdxvls3a0zj4cbb9WjBf2yUga25c9yNQes7F1vfWsnVYV3LXEZhGd8+5hrk3WIlq9PReMKGmEYYvrlKCY90COYjO5/o7MobC6dRma3+EtLI7MH0/jQzW2SyQvBf3z1aCsBDVsgoH1kDjVFDzl2dCI6BVTBbkY=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=habanalabs.onmicrosoft.com; s=selector1-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8fa2s8YAFQOdT4rQMDCFbBrfg7QkLY1PR+iR7QTZV28=;
+ b=Jr6IrngZqIkw3uymDo5bBS6FjslZCWnojq9ESH177pPA5CxVnYGDAnMTD9yO66cJNn+8eptNSf3I5WnhNZ3g7uB/Tnov4Nk4HweuA4XKt3/bT0FA1YQspittbu3MKZ70MUyPdfg8ho/N7R7cRkDiRpHlHu0VGW1sxn5e7S+HgvQ=
+Received: from VI1PR02MB3054.eurprd02.prod.outlook.com (10.170.235.155) by
+ VI1PR02MB3903.eurprd02.prod.outlook.com (20.177.58.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.15; Mon, 1 Jul 2019 08:36:18 +0000
+Received: from VI1PR02MB3054.eurprd02.prod.outlook.com
+ ([fe80::f92b:de76:1404:8783]) by VI1PR02MB3054.eurprd02.prod.outlook.com
+ ([fe80::f92b:de76:1404:8783%7]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
+ 08:36:18 +0000
+From:   Tomer Tayar <ttayar@habana.ai>
+To:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/2] habanalabs: Add busy engines bitmask to HW idle IOCTL
+Thread-Topic: [PATCH 2/2] habanalabs: Add busy engines bitmask to HW idle
+ IOCTL
+Thread-Index: AQHVL+gN6+FoxezCeUig5OXrhCvIlQ==
+Date:   Mon, 1 Jul 2019 08:36:17 +0000
+Message-ID: <20190701083604.24528-2-ttayar@habana.ai>
+References: <20190701083604.24528-1-ttayar@habana.ai>
+In-Reply-To: <20190701083604.24528-1-ttayar@habana.ai>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR2P264CA0021.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::33)
+ To VI1PR02MB3054.eurprd02.prod.outlook.com (2603:10a6:802:17::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ttayar@habana.ai; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [31.154.190.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f16f00a2-f5a5-4fd6-d0f2-08d6fdff2f48
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR02MB3903;
+x-ms-traffictypediagnostic: VI1PR02MB3903:
+x-microsoft-antispam-prvs: <VI1PR02MB39034A9ED51EEA1B6F21A208D2F90@VI1PR02MB3903.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2089;
+x-forefront-prvs: 00851CA28B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(39840400004)(136003)(366004)(396003)(199004)(189003)(1076003)(2351001)(5660300002)(4326008)(14444005)(256004)(66066001)(2906002)(76176011)(36756003)(52116002)(102836004)(25786009)(478600001)(186003)(99286004)(26005)(68736007)(14454004)(86362001)(386003)(66446008)(64756008)(316002)(66476007)(1361003)(8676002)(66556008)(6116002)(6916009)(66946007)(6436002)(73956011)(50226002)(8936002)(81156014)(476003)(6512007)(6486002)(11346002)(53936002)(446003)(7736002)(5640700003)(3846002)(71190400001)(71200400001)(74482002)(2501003)(2616005)(305945005)(81166006)(6506007)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR02MB3903;H:VI1PR02MB3054.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: habana.ai does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IoCjeG78sMy07kx76OeKEGEXq584uGPa0u7kss+fMlwewgtK5uoOicZCxS1kfKLVE16uuQfRFJVrXXsH8RQ/1jD6d3bHi3r9Ejtt34gAiqGGQRj2pqs3KYtDSrKab7gZEIAQbLCulXiwdr6kMWrd2JiG4XnJXgNuIF+tWMkN4AATYzzFIBsV8P3sYQmQm5zq3PAsA80KcN4mqiqmH3MNCC3dCNs+RHxhAd7EgK1xGp7m9HbY48VT3A4/kMyUm5Ghi/QQA19+w3hKvObZRhVEpPzROtA+z3VejhXEiAqNBKhndAPCVE6f0fcIIUG46m6VT/b3+upt6iGyiSShY1I1EHsisBc87GXV7zpOR23pzR6VwZ0wicZo7Q41ZLlrCcSQMzj+0Fcbp3nUEjUc3VWsHxzvTeIn2a1OJEX1A4Iglik=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: f16f00a2-f5a5-4fd6-d0f2-08d6fdff2f48
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 08:36:17.9828
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ttayar@habana.ai
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB3903
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 15/05/2019 à 23:54, Keith Busch a écrit :
-> Instead of registering the hmat cache attributes in line with parsing
-> the table, save the attributes in the memory target and register them
-> after parsing completes. This will make it easier to register the
-> attributes later when hot add is supported.
->
-> Signed-off-by: Keith Busch <keith.busch@intel.com>
-
-
-Sorry for the delay, I finally manage these two patches, they work fine
-(tested with a fake HMAT saying that a kmem-hotplug NVDIMM node is local
-to 2 initiators among 4 total, and saying that there are 2 memory-side
-caches in front of that NVDIMM node).
-
-Tested-by: Brice Goglin <Brice.Goglin@inria.fr>
-
-
-> ---
-> v1 -> v2:
->
->   Fixed multi-level caches, and no caches. v1 incorrectly assumed only a level
->   1 always existed (Brice).
->
->  drivers/acpi/hmat/hmat.c | 70 +++++++++++++++++++++++++++++++++++++-----------
->  1 file changed, 55 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-> index 96b7d39a97c6..bf23c9a27958 100644
-> --- a/drivers/acpi/hmat/hmat.c
-> +++ b/drivers/acpi/hmat/hmat.c
-> @@ -36,11 +36,17 @@ enum locality_types {
->  
->  static struct memory_locality *localities_types[4];
->  
-> +struct target_cache {
-> +	struct list_head node;
-> +	struct node_cache_attrs cache_attrs;
-> +};
-> +
->  struct memory_target {
->  	struct list_head node;
->  	unsigned int memory_pxm;
->  	unsigned int processor_pxm;
->  	struct node_hmem_attrs hmem_attrs;
-> +	struct list_head caches;
->  };
->  
->  struct memory_initiator {
-> @@ -110,6 +116,7 @@ static __init void alloc_memory_target(unsigned int mem_pxm)
->  	target->memory_pxm = mem_pxm;
->  	target->processor_pxm = PXM_INVAL;
->  	list_add_tail(&target->node, &targets);
-> +	INIT_LIST_HEAD(&target->caches);
->  }
->  
->  static __init const char *hmat_data_type(u8 type)
-> @@ -314,7 +321,8 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
->  				   const unsigned long end)
->  {
->  	struct acpi_hmat_cache *cache = (void *)header;
-> -	struct node_cache_attrs cache_attrs;
-> +	struct memory_target *target;
-> +	struct target_cache *tcache;
->  	u32 attrs;
->  
->  	if (cache->header.length < sizeof(*cache)) {
-> @@ -328,37 +336,47 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
->  		cache->memory_PD, cache->cache_size, attrs,
->  		cache->number_of_SMBIOShandles);
->  
-> -	cache_attrs.size = cache->cache_size;
-> -	cache_attrs.level = (attrs & ACPI_HMAT_CACHE_LEVEL) >> 4;
-> -	cache_attrs.line_size = (attrs & ACPI_HMAT_CACHE_LINE_SIZE) >> 16;
-> +	target = find_mem_target(cache->memory_PD);
-> +	if (!target)
-> +		return 0;
-> +
-> +	tcache = kzalloc(sizeof(*tcache), GFP_KERNEL);
-> +	if (!tcache) {
-> +		pr_notice_once("Failed to allocate HMAT cache info\n");
-> +		return 0;
-> +	}
-> +
-> +	tcache->cache_attrs.size = cache->cache_size;
-> +	tcache->cache_attrs.level = (attrs & ACPI_HMAT_CACHE_LEVEL) >> 4;
-> +	tcache->cache_attrs.line_size = (attrs & ACPI_HMAT_CACHE_LINE_SIZE) >> 16;
->  
->  	switch ((attrs & ACPI_HMAT_CACHE_ASSOCIATIVITY) >> 8) {
->  	case ACPI_HMAT_CA_DIRECT_MAPPED:
-> -		cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
-> +		tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
->  		break;
->  	case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
-> -		cache_attrs.indexing = NODE_CACHE_INDEXED;
-> +		tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
->  		break;
->  	case ACPI_HMAT_CA_NONE:
->  	default:
-> -		cache_attrs.indexing = NODE_CACHE_OTHER;
-> +		tcache->cache_attrs.indexing = NODE_CACHE_OTHER;
->  		break;
->  	}
->  
->  	switch ((attrs & ACPI_HMAT_WRITE_POLICY) >> 12) {
->  	case ACPI_HMAT_CP_WB:
-> -		cache_attrs.write_policy = NODE_CACHE_WRITE_BACK;
-> +		tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_BACK;
->  		break;
->  	case ACPI_HMAT_CP_WT:
-> -		cache_attrs.write_policy = NODE_CACHE_WRITE_THROUGH;
-> +		tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_THROUGH;
->  		break;
->  	case ACPI_HMAT_CP_NONE:
->  	default:
-> -		cache_attrs.write_policy = NODE_CACHE_WRITE_OTHER;
-> +		tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_OTHER;
->  		break;
->  	}
-> +	list_add_tail(&tcache->node, &target->caches);
->  
-> -	node_add_cache(pxm_to_node(cache->memory_PD), &cache_attrs);
->  	return 0;
->  }
->  
-> @@ -577,20 +595,37 @@ static __init void hmat_register_target_initiators(struct memory_target *target)
->  	}
->  }
->  
-> +static __init void hmat_register_target_cache(struct memory_target *target)
-> +{
-> +	unsigned mem_nid = pxm_to_node(target->memory_pxm);
-> +	struct target_cache *tcache;
-> +
-> +	list_for_each_entry(tcache, &target->caches, node)
-> +		node_add_cache(mem_nid, &tcache->cache_attrs);
-> +}
-> +
->  static __init void hmat_register_target_perf(struct memory_target *target)
->  {
->  	unsigned mem_nid = pxm_to_node(target->memory_pxm);
->  	node_set_perf_attrs(mem_nid, &target->hmem_attrs, 0);
->  }
->  
-> +static __init void hmat_register_target(struct memory_target *target)
-> +{
-> +	if (!node_online(pxm_to_node(target->memory_pxm)))
-> +		return;
-> +
-> +	hmat_register_target_initiators(target);
-> +	hmat_register_target_cache(target);
-> +	hmat_register_target_perf(target);
-> +}
-> +
->  static __init void hmat_register_targets(void)
->  {
->  	struct memory_target *target;
->  
-> -	list_for_each_entry(target, &targets, node) {
-> -		hmat_register_target_initiators(target);
-> -		hmat_register_target_perf(target);
-> -	}
-> +	list_for_each_entry(target, &targets, node)
-> +		hmat_register_target(target);
->  }
->  
->  static __init void hmat_free_structures(void)
-> @@ -598,8 +633,13 @@ static __init void hmat_free_structures(void)
->  	struct memory_target *target, *tnext;
->  	struct memory_locality *loc, *lnext;
->  	struct memory_initiator *initiator, *inext;
-> +	struct target_cache *tcache, *cnext;
->  
->  	list_for_each_entry_safe(target, tnext, &targets, node) {
-> +		list_for_each_entry_safe(tcache, cnext, &target->caches, node) {
-> +			list_del(&tcache->node);
-> +			kfree(tcache);
-> +		}
->  		list_del(&target->node);
->  		kfree(target);
->  	}
+VGhlIGluZm9ybWF0aW9uIHdoaWNoIGlzIGN1cnJlbnRseSBwcm92aWRlZCBhcyBhIHJlc3BvbnNl
+IHRvIHRoZQ0KIkhMX0lORk9fSFdfSURMRSIgSU9DVEwgaXMgbWVyZWx5IGEgZ2VuZXJhbCBib29s
+ZWFuIHZhbHVlLg0KVGhpcyBwYXRjaCBleHRlbmRzIGl0IGFuZCBwcm92aWRlcyBhbHNvIGEgYml0
+bWFzayB0aGF0IGluZGljYXRlcyB3aGljaA0Kb2YgdGhlIGRldmljZSBlbmdpbmVzIGFyZSBidXN5
+Lg0KDQpTaWduZWQtb2ZmLWJ5OiBUb21lciBUYXlhciA8dHRheWFyQGhhYmFuYS5haT4NCi0tLQ0K
+IGRyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2RlYnVnZnMuYyAgICAgICAgICB8ICAyICstDQogZHJp
+dmVycy9taXNjL2hhYmFuYWxhYnMvZ295YS9nb3lhLmMgICAgICAgIHwgMTEgKysrKysrLS0NCiBk
+cml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzLmggICAgICAgfCAgMyArKy0NCiBkcml2
+ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzX2lvY3RsLmMgfCAgMyArKy0NCiBpbmNsdWRl
+L3VhcGkvbWlzYy9oYWJhbmFsYWJzLmggICAgICAgICAgICAgfCAzMCArKysrKysrKysrKysrKysr
+KysrKystDQogNSBmaWxlcyBjaGFuZ2VkLCA0MyBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygt
+KQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMvZGVidWdmcy5jIGIvZHJp
+dmVycy9taXNjL2hhYmFuYWxhYnMvZGVidWdmcy5jDQppbmRleCA2YTVkZmIxNGVjYTEuLjE4ZTQ5
+OWM5MDBjNyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2RlYnVnZnMuYw0K
+KysrIGIvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMvZGVidWdmcy5jDQpAQCAtNTA2LDcgKzUwNiw3
+IEBAIHN0YXRpYyBpbnQgZW5naW5lc19zaG93KHN0cnVjdCBzZXFfZmlsZSAqcywgdm9pZCAqZGF0
+YSkNCiAJc3RydWN0IGhsX2RiZ19kZXZpY2VfZW50cnkgKmRldl9lbnRyeSA9IGVudHJ5LT5kZXZf
+ZW50cnk7DQogCXN0cnVjdCBobF9kZXZpY2UgKmhkZXYgPSBkZXZfZW50cnktPmhkZXY7DQogDQot
+CWhkZXYtPmFzaWNfZnVuY3MtPmlzX2RldmljZV9pZGxlKGhkZXYsIHMpOw0KKwloZGV2LT5hc2lj
+X2Z1bmNzLT5pc19kZXZpY2VfaWRsZShoZGV2LCBOVUxMLCBzKTsNCiANCiAJcmV0dXJuIDA7DQog
+fQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2dveWEvZ295YS5jIGIvZHJp
+dmVycy9taXNjL2hhYmFuYWxhYnMvZ295YS9nb3lhLmMNCmluZGV4IDQxZTk3NTMxZjMwMC4uNzUy
+OTRlYzY1MjU3IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMvZ295YS9nb3lh
+LmMNCisrKyBiL2RyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2dveWEvZ295YS5jDQpAQCAtMjgyOCw3
+ICsyODI4LDcgQEAgc3RhdGljIGludCBnb3lhX3NlbmRfam9iX29uX3FtYW4wKHN0cnVjdCBobF9k
+ZXZpY2UgKmhkZXYsIHN0cnVjdCBobF9jc19qb2IgKmpvYikNCiAJZWxzZQ0KIAkJdGltZW91dCA9
+IEhMX0RFVklDRV9USU1FT1VUX1VTRUM7DQogDQotCWlmICghaGRldi0+YXNpY19mdW5jcy0+aXNf
+ZGV2aWNlX2lkbGUoaGRldiwgTlVMTCkpIHsNCisJaWYgKCFoZGV2LT5hc2ljX2Z1bmNzLT5pc19k
+ZXZpY2VfaWRsZShoZGV2LCBOVUxMLCBOVUxMKSkgew0KIAkJZGV2X2Vycl9yYXRlbGltaXRlZCho
+ZGV2LT5kZXYsDQogCQkJIkNhbid0IHNlbmQgS01EIGpvYiBvbiBRTUFOMCBiZWNhdXNlIHRoZSBk
+ZXZpY2UgaXMgbm90IGlkbGVcbiIpOw0KIAkJcmV0dXJuIC1FQlVTWTsNCkBAIC00OTE0LDcgKzQ5
+MTQsOCBAQCBpbnQgZ295YV9hcm1jcF9pbmZvX2dldChzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2KQ0K
+IAlyZXR1cm4gMDsNCiB9DQogDQotc3RhdGljIGJvb2wgZ295YV9pc19kZXZpY2VfaWRsZShzdHJ1
+Y3QgaGxfZGV2aWNlICpoZGV2LCBzdHJ1Y3Qgc2VxX2ZpbGUgKnMpDQorc3RhdGljIGJvb2wgZ295
+YV9pc19kZXZpY2VfaWRsZShzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2LCB1MzIgKm1hc2ssDQorCQkJ
+CXN0cnVjdCBzZXFfZmlsZSAqcykNCiB7DQogCWNvbnN0IGNoYXIgKmZtdCA9ICIlLTVkJS05cyUj
+LTE0eCUjLTE2eCUjeFxuIjsNCiAJY29uc3QgY2hhciAqZG1hX2ZtdCA9ICIlLTVkJS05cyUjLTE0
+eCUjeFxuIjsNCkBAIC00OTM3LDYgKzQ5MzgsOCBAQCBzdGF0aWMgYm9vbCBnb3lhX2lzX2Rldmlj
+ZV9pZGxlKHN0cnVjdCBobF9kZXZpY2UgKmhkZXYsIHN0cnVjdCBzZXFfZmlsZSAqcykNCiAJCQkJ
+SVNfRE1BX0lETEUoZG1hX2NvcmVfc3RzMCk7DQogCQlpc19pZGxlICY9IGlzX2VuZ19pZGxlOw0K
+IA0KKwkJaWYgKG1hc2spDQorCQkJKm1hc2sgfD0gIWlzX2VuZ19pZGxlIDw8IChHT1lBX0VOR0lO
+RV9JRF9ETUFfMCArIGkpOw0KIAkJaWYgKHMpDQogCQkJc2VxX3ByaW50ZihzLCBkbWFfZm10LCBp
+LCBpc19lbmdfaWRsZSA/ICJZIiA6ICJOIiwNCiAJCQkJCXFtX2dsYmxfc3RzMCwgZG1hX2NvcmVf
+c3RzMCk7DQpAQCAtNDk1OCw2ICs0OTYxLDggQEAgc3RhdGljIGJvb2wgZ295YV9pc19kZXZpY2Vf
+aWRsZShzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2LCBzdHJ1Y3Qgc2VxX2ZpbGUgKnMpDQogCQkJCUlT
+X1RQQ19JRExFKHRwY19jZmdfc3RzKTsNCiAJCWlzX2lkbGUgJj0gaXNfZW5nX2lkbGU7DQogDQor
+CQlpZiAobWFzaykNCisJCQkqbWFzayB8PSAhaXNfZW5nX2lkbGUgPDwgKEdPWUFfRU5HSU5FX0lE
+X1RQQ18wICsgaSk7DQogCQlpZiAocykNCiAJCQlzZXFfcHJpbnRmKHMsIGZtdCwgaSwgaXNfZW5n
+X2lkbGUgPyAiWSIgOiAiTiIsDQogCQkJCXFtX2dsYmxfc3RzMCwgY21kcV9nbGJsX3N0czAsIHRw
+Y19jZmdfc3RzKTsNCkBAIC00OTc2LDYgKzQ5ODEsOCBAQCBzdGF0aWMgYm9vbCBnb3lhX2lzX2Rl
+dmljZV9pZGxlKHN0cnVjdCBobF9kZXZpY2UgKmhkZXYsIHN0cnVjdCBzZXFfZmlsZSAqcykNCiAJ
+CQlJU19NTUVfSURMRShtbWVfYXJjaF9zdHMpOw0KIAlpc19pZGxlICY9IGlzX2VuZ19pZGxlOw0K
+IA0KKwlpZiAobWFzaykNCisJCSptYXNrIHw9ICFpc19lbmdfaWRsZSA8PCBHT1lBX0VOR0lORV9J
+RF9NTUVfMDsNCiAJaWYgKHMpIHsNCiAJCXNlcV9wcmludGYocywgZm10LCAwLCBpc19lbmdfaWRs
+ZSA/ICJZIiA6ICJOIiwgcW1fZ2xibF9zdHMwLA0KIAkJCQljbWRxX2dsYmxfc3RzMCwgbW1lX2Fy
+Y2hfc3RzKTsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJz
+LmggYi9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzLmgNCmluZGV4IDJjOWVhNjEw
+OTliNC4uMTBkYTk5NDBlZTBkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMv
+aGFiYW5hbGFicy5oDQorKysgYi9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzLmgN
+CkBAIC01NTcsNyArNTU3LDggQEAgc3RydWN0IGhsX2FzaWNfZnVuY3Mgew0KIAkJCXUzMiBhc2lk
+LCB1NjQgdmEsIHU2NCBzaXplKTsNCiAJaW50ICgqc2VuZF9oZWFydGJlYXQpKHN0cnVjdCBobF9k
+ZXZpY2UgKmhkZXYpOw0KIAlpbnQgKCpkZWJ1Z19jb3Jlc2lnaHQpKHN0cnVjdCBobF9kZXZpY2Ug
+KmhkZXYsIHZvaWQgKmRhdGEpOw0KLQlib29sICgqaXNfZGV2aWNlX2lkbGUpKHN0cnVjdCBobF9k
+ZXZpY2UgKmhkZXYsIHN0cnVjdCBzZXFfZmlsZSAqcyk7DQorCWJvb2wgKCppc19kZXZpY2VfaWRs
+ZSkoc3RydWN0IGhsX2RldmljZSAqaGRldiwgdTMyICptYXNrLA0KKwkJCQlzdHJ1Y3Qgc2VxX2Zp
+bGUgKnMpOw0KIAlpbnQgKCpzb2Z0X3Jlc2V0X2xhdGVfaW5pdCkoc3RydWN0IGhsX2RldmljZSAq
+aGRldik7DQogCXZvaWQgKCpod19xdWV1ZXNfbG9jaykoc3RydWN0IGhsX2RldmljZSAqaGRldik7
+DQogCXZvaWQgKCpod19xdWV1ZXNfdW5sb2NrKShzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2KTsNCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzX2lvY3RsLmMgYi9k
+cml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFsYWJzX2lvY3RsLmMNCmluZGV4IGIwNDU4NWFm
+MjdhZC4uMDcxMjc1NzZiM2U4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMv
+aGFiYW5hbGFic19pb2N0bC5jDQorKysgYi9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9oYWJhbmFs
+YWJzX2lvY3RsLmMNCkBAIC0xMTksNyArMTE5LDggQEAgc3RhdGljIGludCBod19pZGxlKHN0cnVj
+dCBobF9kZXZpY2UgKmhkZXYsIHN0cnVjdCBobF9pbmZvX2FyZ3MgKmFyZ3MpDQogCWlmICgoIW1h
+eF9zaXplKSB8fCAoIW91dCkpDQogCQlyZXR1cm4gLUVJTlZBTDsNCiANCi0JaHdfaWRsZS5pc19p
+ZGxlID0gaGRldi0+YXNpY19mdW5jcy0+aXNfZGV2aWNlX2lkbGUoaGRldiwgTlVMTCk7DQorCWh3
+X2lkbGUuaXNfaWRsZSA9IGhkZXYtPmFzaWNfZnVuY3MtPmlzX2RldmljZV9pZGxlKGhkZXYsDQor
+CQkJCQkmaHdfaWRsZS5idXN5X2VuZ2luZXNfbWFzaywgTlVMTCk7DQogDQogCXJldHVybiBjb3B5
+X3RvX3VzZXIob3V0LCAmaHdfaWRsZSwNCiAJCW1pbigoc2l6ZV90KSBtYXhfc2l6ZSwgc2l6ZW9m
+KGh3X2lkbGUpKSkgPyAtRUZBVUxUIDogMDsNCmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbWlz
+Yy9oYWJhbmFsYWJzLmggYi9pbmNsdWRlL3VhcGkvbWlzYy9oYWJhbmFsYWJzLmgNCmluZGV4IDIw
+NGFiOWI0YWU2Ny4uMzk1NmMyMjZjYTM1IDEwMDY0NA0KLS0tIGEvaW5jbHVkZS91YXBpL21pc2Mv
+aGFiYW5hbGFicy5oDQorKysgYi9pbmNsdWRlL3VhcGkvbWlzYy9oYWJhbmFsYWJzLmgNCkBAIC00
+NSw2ICs0NSwzMCBAQCBlbnVtIGdveWFfcXVldWVfaWQgew0KIAlHT1lBX1FVRVVFX0lEX1NJWkUN
+CiB9Ow0KIA0KKy8qDQorICogRW5naW5lIE51bWJlcmluZw0KKyAqDQorICogVXNlZCBpbiB0aGUg
+ImJ1c3lfZW5naW5lc19tYXNrIiBmaWVsZCBpbiBgc3RydWN0IGhsX2luZm9faHdfaWRsZScNCisg
+Ki8NCisNCitlbnVtIGdveWFfZW5naW5lX2lkIHsNCisJR09ZQV9FTkdJTkVfSURfRE1BXzAgPSAw
+LA0KKwlHT1lBX0VOR0lORV9JRF9ETUFfMSwNCisJR09ZQV9FTkdJTkVfSURfRE1BXzIsDQorCUdP
+WUFfRU5HSU5FX0lEX0RNQV8zLA0KKwlHT1lBX0VOR0lORV9JRF9ETUFfNCwNCisJR09ZQV9FTkdJ
+TkVfSURfTU1FXzAsDQorCUdPWUFfRU5HSU5FX0lEX1RQQ18wLA0KKwlHT1lBX0VOR0lORV9JRF9U
+UENfMSwNCisJR09ZQV9FTkdJTkVfSURfVFBDXzIsDQorCUdPWUFfRU5HSU5FX0lEX1RQQ18zLA0K
+KwlHT1lBX0VOR0lORV9JRF9UUENfNCwNCisJR09ZQV9FTkdJTkVfSURfVFBDXzUsDQorCUdPWUFf
+RU5HSU5FX0lEX1RQQ182LA0KKwlHT1lBX0VOR0lORV9JRF9UUENfNywNCisJR09ZQV9FTkdJTkVf
+SURfU0laRQ0KK307DQorDQogZW51bSBobF9kZXZpY2Vfc3RhdHVzIHsNCiAJSExfREVWSUNFX1NU
+QVRVU19PUEVSQVRJT05BTCwNCiAJSExfREVWSUNFX1NUQVRVU19JTl9SRVNFVCwNCkBAIC04Niw3
+ICsxMTAsMTEgQEAgc3RydWN0IGhsX2luZm9fZHJhbV91c2FnZSB7DQogDQogc3RydWN0IGhsX2lu
+Zm9faHdfaWRsZSB7DQogCV9fdTMyIGlzX2lkbGU7DQotCV9fdTMyIHBhZDsNCisJLyoNCisJICog
+Qml0bWFzayBvZiBidXN5IGVuZ2luZXMuDQorCSAqIEJpdHMgZGVmaW5pdGlvbiBpcyBhY2NvcmRp
+bmcgdG8gYGVudW0gPGNoaXA+X2VuZ2luZ19pZCcuDQorCSAqLw0KKwlfX3UzMiBidXN5X2VuZ2lu
+ZXNfbWFzazsNCiB9Ow0KIA0KIHN0cnVjdCBobF9pbmZvX2RldmljZV9zdGF0dXMgew0KLS0gDQoy
+LjE3LjENCg0K
