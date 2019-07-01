@@ -2,99 +2,133 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B26C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A92BC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB2E2184B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 196922146F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NPoQA7t5"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Ehn/I4B4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfGASXQ (ORCPT
+        id S1726587AbfGASZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 14:23:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44248 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfGASXP (ORCPT
+        Mon, 1 Jul 2019 14:25:22 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36991 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfGASZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 14:23:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2+u+Cc7eowehJoJEy3M8QpwEakJMHDd3AEighBeayWY=; b=NPoQA7t5AwxU+LhTLu2gWOG+9
-        6/iAbCCWhaBJp83HLnSZrB6YVFr+/gHxsiFe0Zl+vUuyrj9VXYKOEiszM7ojN8e0DtWa43CEdaw4X
-        JZPaZAM6xO/fjuZGaGrZyGPFRaNjrNAf0/HGEEz3QWliceTYj3LEhtPlVmaOZaX0G9zRgQswGpLLg
-        KWL7hKvXZOTeFln1iJ5oBkuVuAelhFJvqA3IRQC7qVHipPMbBcmX8KvmlnxVOtBWqeMhnhi74k1xc
-        d+0oqYSUxukHcM77RJP8oA2zGGAjRZzn2ftQ4EFulTW0JSMIlzGoXHXXwNRXMBdv69TBszWhwcQZ1
-        dhgDTng1A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hi0xN-0000Tu-BP; Mon, 01 Jul 2019 18:23:13 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3472E20A31C67; Mon,  1 Jul 2019 20:23:11 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 20:23:11 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [patch V2 2/6] genirq: Fix misleading synchronize_irq()
- documentation
-Message-ID: <20190701182311.GV3419@hirez.programming.kicks-ass.net>
-References: <20190628111148.828731433@linutronix.de>
- <20190628111440.189241552@linutronix.de>
- <20190701145340.GB3402@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1907011959410.1802@nanos.tec.linutronix.de>
+        Mon, 1 Jul 2019 14:25:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id g15so4525299pgi.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 11:25:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=727aBBfWqYrKy3zdRdkTXxLgWwNQre9utWIB8UaiK2g=;
+        b=Ehn/I4B4HkIjvHy6V9HxTRXh3F8YWylu8ympYyLVqIQxwF/qtaM/RDmkvNnTNQbdoQ
+         MOFe3neeigVp0ZlIqijol7rr9IKmlQzgxVUOy++18cE2QEElAiMYSoOcKxqTNtyQ1PG0
+         z6axRHN3bwo8z7KVbfu0m/73XA9Bx+wc8BqyI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=727aBBfWqYrKy3zdRdkTXxLgWwNQre9utWIB8UaiK2g=;
+        b=pMRTCgRN8JFwMh0V3KgB8OCxOG7OHR8hVRFB5jzR/mARZnK8OlSFAwqEfdA0dPQXAm
+         pG1eAZzOgFi4aasGEg3v+NmLtFpWDL2sk+aL9lvpdXNF0hyeBpC/XiKZbMvD4u737f1F
+         LrVy+4P0PckUxksUwZxwjRdyOAkTi2mJ7eLLoW/qVyziItWL6EcDnEs/6XGk7jsRdfHT
+         euPRaEMthhBJXc9440WV1Ni+TodZbWXdbo5vaZ3uCdxfbSFjA731a4NLQkamvJkR36Xj
+         3Xxbas4sYYeV4omJKl9zBE7vy/oEt9IU9KcgWu+c8/ZPgCK3MuoXIYxm2bLvMNhfBp6j
+         vAlA==
+X-Gm-Message-State: APjAAAXx154qPG3r3vfqVGDWwRwxm2HReWEZwyuHD0THVNIzJSFL5OWX
+        ieLe4JhTaz/6J6Nk74zVKXpYxw==
+X-Google-Smtp-Source: APXvYqxbjX3RJLpO0anArjOh5JUBRzWK/fY7e05ZbhUnH9NIahw6rvOQWHz+4F/sxkMdBuuda3lNGg==
+X-Received: by 2002:a63:7b18:: with SMTP id w24mr22771702pgc.328.1562005521251;
+        Mon, 01 Jul 2019 11:25:21 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id y68sm12576238pfy.164.2019.07.01.11.25.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 11:25:20 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 14:25:19 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        kernel-team <kernel-team@android.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v2] Convert struct pid count to refcount_t
+Message-ID: <20190701182519.GA125555@google.com>
+References: <20190628193442.94745-1-joel@joelfernandes.org>
+ <CAG48ez11aCEBmO=DM58+Rk7cthW1VWK2O35GWsSJWwQ_fQJ6Fg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907011959410.1802@nanos.tec.linutronix.de>
+In-Reply-To: <CAG48ez11aCEBmO=DM58+Rk7cthW1VWK2O35GWsSJWwQ_fQJ6Fg@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 08:01:24PM +0200, Thomas Gleixner wrote:
-> On Mon, 1 Jul 2019, Peter Zijlstra wrote:
+On Mon, Jul 01, 2019 at 07:48:26PM +0200, Jann Horn wrote:
+> On Fri, Jun 28, 2019 at 9:35 PM Joel Fernandes (Google)
+> <joel@joelfernandes.org> wrote:
+> > struct pid's count is an atomic_t field used as a refcount. Use
+> > refcount_t for it which is basically atomic_t but does additional
+> > checking to prevent use-after-free bugs.
+> [...]
+> >  struct pid
+> >  {
+> > -       atomic_t count;
+> > +       refcount_t count;
+> [...]
+> > diff --git a/kernel/pid.c b/kernel/pid.c
+> > index 20881598bdfa..89c4849fab5d 100644
+> > --- a/kernel/pid.c
+> > +++ b/kernel/pid.c
+> > @@ -37,7 +37,7 @@
+> >  #include <linux/init_task.h>
+> >  #include <linux/syscalls.h>
+> >  #include <linux/proc_ns.h>
+> > -#include <linux/proc_fs.h>
+> > +#include <linux/refcount.h>
+> >  #include <linux/sched/task.h>
+> >  #include <linux/idr.h>
+> >
+> > @@ -106,8 +106,7 @@ void put_pid(struct pid *pid)
 > 
-> > On Fri, Jun 28, 2019 at 01:11:50PM +0200, Thomas Gleixner wrote:
-> > > The function might sleep, so it cannot be called from interrupt
-> > > context. Not even with care.
-> > > 
-> > > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > > ---
-> > >  kernel/irq/manage.c |    3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > --- a/kernel/irq/manage.c
-> > > +++ b/kernel/irq/manage.c
-> > > @@ -96,7 +96,8 @@ EXPORT_SYMBOL(synchronize_hardirq);
-> > >   *	to complete before returning. If you use this function while
-> > >   *	holding a resource the IRQ handler may need you will deadlock.
-> > >   *
-> > > - *	This function may be called - with care - from IRQ context.
-> > > + *	Can only be called from preemptible code as it might sleep when
-> > > + *	an interrupt thread is associated to @irq.
-> > >   */
-> > >  void synchronize_irq(unsigned int irq)
-> > >  {
-> > 
-> > +	might_sleep();
-> > 
-> > ?
+> init_struct_pid is defined as follows:
 > 
->   ....
+> struct pid init_struct_pid = {
+>         .count          = ATOMIC_INIT(1),
+> [...]
+> };
 > 
-> 	wait_event()
-> 	  might_sleep() ...
+> This should be changed to REFCOUNT_INIT(1).
 > 
+> You should have received a compiler warning about this; I get the
+> following when trying to build with your patch applied:
 
-That's conditional on desc, but sure, that should work in most sane
-cases.
+Thanks. Andrew had fixed this in patch v1 but Linus dropped it for other
+reasons. Anyway, I should have fixed this in my resubmit.
+
+Sorry, I'll fix and resend!
+
+ - Joel
+
+
