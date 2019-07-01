@@ -2,269 +2,157 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A4CC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0F4C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF052133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959CF21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:11:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XShNbisf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbfGAKLS (ORCPT
+        id S1728731AbfGAKLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 06:11:18 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47622 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbfGAKLR (ORCPT
+        Mon, 1 Jul 2019 06:11:34 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43238 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfGAKLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 06:11:17 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 5418826395F
-Subject: Re: [PATCH v2] phy: rockchip-inno-usb2: allow to force the B-Device
- Session Valid bit.
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     kernel@collabora.com,
-        =?UTF-8?Q?Ga=c3=abl_PORTAY?= <gael.portay@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-References: <20190515222050.15075-1-gael.portay@collabora.com>
- <7a205885f0599f04da067a7f41a14ee0b0d759f5.camel@collabora.com>
- <f8f3565c18cc0c1ede107311dbe41df1a07da07b.camel@collabora.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <f32877d0-6d36-73ec-599d-740ed98b27dc@collabora.com>
-Date:   Mon, 1 Jul 2019 12:11:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 1 Jul 2019 06:11:34 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j29so8358701lfk.10
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 03:11:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N7LB99b1qzJUqx9SmCRa+EsWNHIydh4ATXZtXVbwfnQ=;
+        b=XShNbisfpbRo+ipmO1lFLAt44cpIs6OV3XEjkyB4LWB5d9CXKYMgR/cfL/ZbGzB2D3
+         5NY4e4L+juq3egHqXrmn6gkO9p0s6EEhbd+f4M0l3pTspJmfyPyC2CV5q44g8NBpSLT/
+         mkHl1KFrzH+nDkpKXxBbrMF5dtyXsFff9heHYAnRqcQN8LynZ2yOjDJYcPDINxra0sbf
+         M9hF8n3Ja7XFK0qsbKKBSZMszK7fZQv2pM3Eoq/6tt8oUsxgteUa8iQ3VCHHUgqiUZOt
+         YlhWOza1dIMag9/ajlN+Ioo3gAbP8JalhGidMIPsvUUW3yoVZAkUwJll1tbCqxNWjfKc
+         KE2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N7LB99b1qzJUqx9SmCRa+EsWNHIydh4ATXZtXVbwfnQ=;
+        b=MGowK8JKAArwda07F0tunNq3v7JmzG2yyiIRr6O7CsY642BL/xHGq6tveFx3Gzm+In
+         BC91MdbmdQ9p6pi3t26T6ZRZLDYUBDMgeHZvdj5fkGpndnY8aglx1HbEwIxQSEG/JnXd
+         ERLRwriXfRU/2i1/5vAcXmhObeSqscpWJ3kZ8khld5z4CUMheNOf2CqxzJotXMBPfiyw
+         POjDEnAi6ODBcGN084Mw962hDAcp3VK0LC13e/Kxv5q0HQ26/gq+i7/8b4gw47HrAckW
+         ThKMrcGfsJ65aEqhUcIakENzesgfTIlj7vTSpZb/AEq6M79VBkXmWjt6zPipruAKyvws
+         1dZA==
+X-Gm-Message-State: APjAAAXp0GwFoPW/vbs9o1Dh+Ecq+tAY93lXHZ7wcBqgVcDwnMMQs6+p
+        ELwdhnVl3DV9NIyktm8x7fM=
+X-Google-Smtp-Source: APXvYqxGMSKGWwcnh0QtFlSYyKGfsaUplzIpRiz8atO/XLiTZSSU6i+tSZ6IyKASWltGYakGfSYNBg==
+X-Received: by 2002:ac2:5e9b:: with SMTP id b27mr10418308lfq.45.1561975891456;
+        Mon, 01 Jul 2019 03:11:31 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id j7sm3536968lji.27.2019.07.01.03.11.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 01 Jul 2019 03:11:30 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 1 Jul 2019 12:11:21 +0200
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Pengfei Li <lpf.vector@gmail.com>, akpm@linux-foundation.org,
+        peterz@infradead.org, urezki@gmail.com, rpenyaev@suse.de,
+        guro@fb.com, aryabinin@virtuozzo.com, rppt@linux.ibm.com,
+        mingo@kernel.org, rick.p.edgecombe@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] mm/vmalloc.c: improve readability and rewrite
+ vmap_area
+Message-ID: <20190701101121.kyg65fbcd7reszk7@pc636>
+References: <20190630075650.8516-1-lpf.vector@gmail.com>
+ <20190701092037.GL6376@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <f8f3565c18cc0c1ede107311dbe41df1a07da07b.camel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701092037.GL6376@dhcp22.suse.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ezequiel,
-
-Thanks for reviewing these patches.
-
-On 29/6/19 2:38, Ezequiel Garcia wrote:
-> Hi Heiko, Kishon,
+On Mon, Jul 01, 2019 at 11:20:37AM +0200, Michal Hocko wrote:
+> On Sun 30-06-19 15:56:45, Pengfei Li wrote:
+> > Hi,
+> > 
+> > This series of patches is to reduce the size of struct vmap_area.
+> > 
+> > Since the members of struct vmap_area are not being used at the same time,
+> > it is possible to reduce its size by placing several members that are not
+> > used at the same time in a union.
+> > 
+> > The first 4 patches did some preparatory work for this and improved
+> > readability.
+> > 
+> > The fifth patch is the main patch, it did the work of rewriting vmap_area.
+> > 
+> > More details can be obtained from the commit message.
 > 
-> I'll try to pick up this patch.
-> Some comments below, just for self-reference.
+> None of the commit messages talk about the motivation. Why do we want to
+> add quite some code to achieve this? How much do we save? This all
+> should be a part of the cover letter.
 > 
-> On Wed, 2019-06-26 at 12:32 -0300, Ezequiel Garcia wrote:
->> On Wed, 2019-05-15 at 18:20 -0400, Gaël PORTAY wrote:
->>> From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>>
->>> The OTG disconnection event is generated after the presence/absence of
->>> an ID connection, but some platforms don't have the ID pin connected, so
->>> the event is not generated. In such case, for detecting the
->>> disconnection event, we can get the cable state from an extcon driver.
->>> We need, though, to force to set the B-Device Session Valid bit on the
->>> PHY to have the device respond to the setup address. Otherwise, the
->>> following error is shown:
->>>
->>>     usb 2-2: Device not responding to setup address.
->>>     usb 2-2: device not accepting address 14, error -71
->>>     usb usb2-port2: unable to enumerate USB device
->>>
->>> The patch tells the PHY to force the B-Device Session Valid bit when the
->>> OTG role is device and clear that bit if the OTG role is host, when an
->>> extcon is available.
->>>
->>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>> Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
->>> ---
->>>
->>> Hi all,
->>>
->>> The main purpose of this patch is have the Type-C port on the Samsung
->>> Chromebook Plus work as a device or in OTG mode.
->>>
->>> That patch was originally a part of that patchset[1]; all other patches
->>> was merged recently in master.
->>>
->>> The patch was tested on a Samsung Chromebook Plus by configuring one
->>> port to work as device, configure a cdc ethernet gadget and communicate
->>> via ethernet gadget my workstation with the chromebook through a usb-a
->>> to type-c cable.
->>>
->>> Best regards,
->>> Gaël
->>>
->>> [1]: https://lkml.org/lkml/2018/8/15/141
->>>
-> 
-> We still need the above devicetree changes.
-> 
->>> Changes since v1:
->>>  - [PATCH 3/4] Remove introduction of dt property "rockchip,force-bvalid"
->>>                and replace cable state using extcon instead (if set).
->>>
->>>  drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 51 +++++++++++++++++++
->>>  1 file changed, 51 insertions(+)
->>>
->>> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
->>> index ba07121c3eff..5e9d50b5ae16 100644
->>> --- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
->>> +++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
->>> @@ -125,6 +125,7 @@ struct rockchip_chg_det_reg {
->>>   * @bvalid_det_en: vbus valid rise detection enable register.
->>>   * @bvalid_det_st: vbus valid rise detection status register.
->>>   * @bvalid_det_clr: vbus valid rise detection clear register.
->>> + * @bvalid_session: force B-device session valid register.
->>>   * @ls_det_en: linestate detection enable register.
->>>   * @ls_det_st: linestate detection state register.
->>>   * @ls_det_clr: linestate detection clear register.
->>> @@ -138,6 +139,7 @@ struct rockchip_usb2phy_port_cfg {
->>>  	struct usb2phy_reg	bvalid_det_en;
->>>  	struct usb2phy_reg	bvalid_det_st;
->>>  	struct usb2phy_reg	bvalid_det_clr;
->>> +	struct usb2phy_reg	bvalid_session;
->>>  	struct usb2phy_reg	ls_det_en;
->>>  	struct usb2phy_reg	ls_det_st;
->>>  	struct usb2phy_reg	ls_det_clr;
->>> @@ -169,6 +171,7 @@ struct rockchip_usb2phy_cfg {
->>>   * @port_id: flag for otg port or host port.
->>>   * @suspended: phy suspended flag.
->>>   * @vbus_attached: otg device vbus status.
->>> + * @force_bvalid: force the control of the B-device session valid bit.
->>>   * @bvalid_irq: IRQ number assigned for vbus valid rise detection.
->>>   * @ls_irq: IRQ number assigned for linestate detection.
->>>   * @otg_mux_irq: IRQ number which multiplex otg-id/otg-bvalid/linestate
->>> @@ -187,6 +190,7 @@ struct rockchip_usb2phy_port {
->>>  	unsigned int	port_id;
->>>  	bool		suspended;
->>>  	bool		vbus_attached;
->>> +	bool		force_bvalid;
->>>  	int		bvalid_irq;
->>>  	int		ls_irq;
->>>  	int		otg_mux_irq;
->>> @@ -553,6 +557,13 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
->>>  	switch (rport->state) {
->>>  	case OTG_STATE_UNDEFINED:
->>>  		rport->state = OTG_STATE_B_IDLE;
->>> +		if (rport->force_bvalid) {
->>> +			property_enable(rphy->grf,
->>> +					&rport->port_cfg->bvalid_session,
->>> +					true);
->>> +			dev_dbg(&rport->phy->dev,
->>> +				"set the B-Device Session Valid\n");
->>> +		}
->>>  		if (!vbus_attach)
->>>  			rockchip_usb2phy_power_off(rport->phy);
->>>  		/* fall through */
->>> @@ -560,6 +571,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
->>>  		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) > 0) {
->>>  			dev_dbg(&rport->phy->dev, "usb otg host connect\n");
->>>  			rport->state = OTG_STATE_A_HOST;
->>> +			/* When leaving device mode force end the session */
->>> +			if (rport->force_bvalid) {
->>> +				property_enable(rphy->grf,
->>> +					&rport->port_cfg->bvalid_session,
->>> +					false);
->>> +				dev_dbg(&rport->phy->dev,
->>> +					"clear the B-Device Session Valid\n");
->>> +			}
->>>  			rockchip_usb2phy_power_on(rport->phy);
->>>  			return;
->>>  		} else if (vbus_attach) {
->>> @@ -634,6 +653,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
->>>  		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) == 0) {
->>>  			dev_dbg(&rport->phy->dev, "usb otg host disconnect\n");
->>>  			rport->state = OTG_STATE_B_IDLE;
->>> +			/* When leaving host mode force start the session */
->>> +			if (rport->force_bvalid) {
->>> +				property_enable(rphy->grf,
->>> +					&rport->port_cfg->bvalid_session,
->>> +					true);
->>> +				dev_dbg(&rport->phy->dev,
->>> +					"set the B-Device Session Valid\n");
->>> +			}
->>>  			rockchip_usb2phy_power_off(rport->phy);
->>>  		}
->>>  		break;
->>> @@ -1016,6 +1043,28 @@ static int rockchip_usb2phy_otg_port_init(struct rockchip_usb2phy *rphy,
->>>  	INIT_DELAYED_WORK(&rport->chg_work, rockchip_chg_detect_work);
->>>  	INIT_DELAYED_WORK(&rport->otg_sm_work, rockchip_usb2phy_otg_sm_work);
->>>  
->>> +	/*
->>> +	 * Some platforms doesn't have the ID pin connected to the phy, hence
->>> +	 * the OTD ID event is not generated, but in some cases we can get the
->>> +	 * cable state from an extcon driver. In such case we can force to set
->>> +	 * the B-Device Session Valid bit on the PHY to have the device working
->>> +	 * as a OTG.
->>> +	 */
->>> +	if (rphy->edev) {
-> 
-> I might be missing something, but this check seems bogus.
-> 
-> edev can't be NULL as the driver creates an extcon if
-> there is none assigned in the devicetree.
-> 
+> > Thanks,
+> > 
+> > Pengfei
+> > 
+> > Pengfei Li (5):
+> >   mm/vmalloc.c: Introduce a wrapper function of insert_vmap_area()
+> >   mm/vmalloc.c: Introduce a wrapper function of
+> >     insert_vmap_area_augment()
+> >   mm/vmalloc.c: Rename function __find_vmap_area() for readability
+> >   mm/vmalloc.c: Modify function merge_or_add_vmap_area() for readability
+> >   mm/vmalloc.c: Rewrite struct vmap_area to reduce its size
+> > 
+> >  include/linux/vmalloc.h |  28 +++++---
+> >  mm/vmalloc.c            | 144 +++++++++++++++++++++++++++-------------
+> >  2 files changed, 117 insertions(+), 55 deletions(-)
+> > 
+> > -- 
+> > 2.21.0
 
-Right, I also don't see why this is needed.
+> > Pengfei Li (5):
+> >   mm/vmalloc.c: Introduce a wrapper function of insert_vmap_area()
+> >   mm/vmalloc.c: Introduce a wrapper function of
+> >     insert_vmap_area_augment()
+> >   mm/vmalloc.c: Rename function __find_vmap_area() for readability
+> >   mm/vmalloc.c: Modify function merge_or_add_vmap_area() for readability
+> >   mm/vmalloc.c: Rewrite struct vmap_area to reduce its size
+Fitting vmap_area to 1 cacheline boundary makes sense to me. I was thinking about
+that and i have patches in my pipeline to send out but implementation is different.
 
-For extra points, there is another place ;-)
+I had a look at all 5 patches. What you are doing is reasonable to me, i mean when
+it comes to the idea of reducing the size to L1 cache line. 
 
-drivers/phy/rockchip/phy-rockchip-inno-usb2.c:1049:     if (!IS_ERR(rphy->edev))
+I have a concern about implementation and all logic around when we can use va_start
+and when it is something else. It is not optimal at least to me, from performance point
+of view and complexity. All hot paths and tree traversal are affected by that.
 
+For example running the vmalloc test driver against this series shows the following
+delta:
 
->>> +		/*
->>> +		 * Check if bvalid_session register is set in the structure
->>> +		 * rockchip_usb2phy_cfg for this SoC.
->>> +		 */
->>> +		if (rport->port_cfg->bvalid_session.offset == 0x0) {
->>> +			rport->force_bvalid = false;
->>> +			dev_err(rphy->dev,
->>> +				"cannot force B-device session, the register is not set for that SoC\n");
->>> +		} else {
->>> +			rport->force_bvalid = true;
->>> +			dev_info(rphy->dev, "force B-device session enabled\n");
->>> +		}
-> 
-> I think we should be doing something more like:
-> 
-> if (HAS_REG(rport->port_cfg->bvalid_session)) {
-> 	rport->force_bvalid = true;
-> 	dev_info(rphy->dev, "force B-device session enabled\n");
-> }
-> 
-> And not error verbosely on platforms that don't
-> care about this.
+<5.2.0-rc6+>
+Summary: fix_size_alloc_test passed: loops: 1000000 avg: 969370 usec
+Summary: full_fit_alloc_test passed: loops: 1000000 avg: 989619 usec
+Summary: long_busy_list_alloc_test loops: 1000000 avg: 12895813 usec
+<5.2.0-rc6+>
 
-I tried to do some memory exercice about this and seemed that all platforms care
-about it. But a second check would be nice.
+<this series>
+Summary: fix_size_alloc_test passed: loops: 1000000 avg: 1098372 usec
+Summary: full_fit_alloc_test passed: loops: 1000000 avg: 1167260 usec
+Summary: long_busy_list_alloc_test passed: loops: 1000000 avg: 12934286 usec
+<this series>
 
->  
+For example, the degrade in second test is ~15%.
 
-The rockchip_usb2phy_otg_sm_work is only called on those that the port is
-configured as OTG. It makes sense trigger an error on those platforms that try
-to configure the port as OTG but doesn't have an bvalid_session register
-defined, otherwise will not work.
-
-Said that, the question is, if all the supported SoCs have left unused the OTG
-Port ID. I'm pretty sure that is the case for the RK3399 and I remember check
-other SoCs, but not all, because I didn't find the datasheet or were really vague.
-
-Maybe you can do a second round to double check?
-
-If we discover that this is not SoC specific maybe we should go back to the
-first proposal and use a DT property instead.
-
-Thanks,
-~ Enric
-
-
-> Thanks,
-> Ezequiel
-> 
+--
+Vlad Rezki
