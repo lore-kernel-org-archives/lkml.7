@@ -6,105 +6,66 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A274C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E32BC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549CE208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5182B208C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfGAIxz (ORCPT
+        id S1728185AbfGAI4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:53:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:57808 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbfGAIxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:53:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 025172B;
-        Mon,  1 Jul 2019 01:53:54 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 84D1C3F718;
-        Mon,  1 Jul 2019 01:53:52 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 09:53:50 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Douglas Raillard <douglas.raillard@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH] sched/fair: util_est: fast ramp-up EWMA on utilization
- increases
-Message-ID: <20190701085350.y5wrnatm3tscifkn@e110439-lin>
-References: <20190620150555.15717-1-patrick.bellasi@arm.com>
- <CAKfTPtDTfyBvfwE6_gtjxJoPNS6YGQ7rrLcjg_M-jr=YSc+FNA@mail.gmail.com>
- <20190628100751.lpcwsouacsi2swkm@e110439-lin>
- <20190628123800.GS3419@hirez.programming.kicks-ass.net>
- <CAKfTPtCyC5R40xjzQjp8qJchay9WzucuE4E-CduR46tNBh0uRg@mail.gmail.com>
- <20190628141011.d4oo5ezp4kxgrfnn@e110439-lin>
- <CAKfTPtDeR7+-ah4KiQVu7SQAns0yvumr4_mqGiVsVGhSs+v34A@mail.gmail.com>
+        Mon, 1 Jul 2019 04:56:03 -0400
+Received: from mail.steuer-voss.de ([85.183.69.95]:50126 "EHLO
+        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfGAI4C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 04:56:02 -0400
+X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
+Received: by mail.steuer-voss.de (Postfix, from userid 1000)
+        id EB700440A7; Mon,  1 Jul 2019 10:55:59 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.steuer-voss.de (Postfix) with ESMTP id E3B7F42021;
+        Mon,  1 Jul 2019 10:55:59 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 10:55:59 +0200 (CEST)
+From:   Nikolaus Voss <nv@vosn.de>
+X-X-Sender: nv@fox.voss.local
+To:     Mark Brown <broonie@kernel.org>
+cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] sound/soc/codecs/tas5720.c: add ACPI support
+In-Reply-To: <20190628143037.GH5379@sirena.org.uk>
+Message-ID: <alpine.DEB.2.20.1907011055090.2390@fox.voss.local>
+References: <20190628123416.16298-1-nikolaus.voss@loewensteinmedical.de> <20190628143037.GH5379@sirena.org.uk>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtDeR7+-ah4KiQVu7SQAns0yvumr4_mqGiVsVGhSs+v34A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-Jun 10:43, Vincent Guittot wrote:
-> On Fri, 28 Jun 2019 at 16:10, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-> > On 28-Jun 15:51, Vincent Guittot wrote:
-> > > On Fri, 28 Jun 2019 at 14:38, Peter Zijlstra <peterz@infradead.org> wrote:
-> > > > On Fri, Jun 28, 2019 at 11:08:14AM +0100, Patrick Bellasi wrote:
-> > > > > On 26-Jun 13:40, Vincent Guittot wrote:
+On Fri, 28 Jun 2019, Mark Brown wrote:
+> On Fri, Jun 28, 2019 at 02:34:16PM +0200, Nikolaus Voss wrote:
+>> Add support for ACPI enumeration for tas5720 and tas5722.
+>> Use device_match API to unify access to driver data for DT and ACPI.
+>> Aggregate variant stuff into its own struct and directly reference
+>> it in variant data for i2c/of/acpi_device_id.
+>
+> Please use subject lines matching the style for the subsystem.  This
+> makes it easier for people to identify relevant patches.
+>
+> There's a huge amount of refactoring in here as well as the enumeration
+> changes, please split this up into a patch series as covered in
+> submitting-patches.rst for review.
+>
 
-Hi Vincent,
+Ok, thanks for the feedback, I'll prepare a series.
 
-[...]
+Nikolaus
 
-> > > AFAICT, it's not related to the time-scaling
-> > >
-> > > In fact the big 1st activation happens because task runs at low OPP
-> > > and hasn't enough time to finish its running phase before the time to
-> > > begin the next one happens. This means that the task will run several
-> > > computations phase in one go which is no more a 75% task.
-> >
-> > But in that case, running multiple activations back to back, should we
-> > not expect the util_avg to exceed the 75% mark?
-> 
-> But task starts with a very low value and Pelt needs time to ramp up.
-
-Of course...
-
-[...]
-
-> > > Once cpu reaches a high enough OPP that enable to have sleep phase
-> > > between each running phases, the task load tracking comes back to the
-> > > normal slope increase (the one that would have happen if task would
-> > > have jump from 5% to 75% but already running at max OPP)
-> >
-> >
-> > Indeed, I can see from the plots a change in slope. But there is also
-> > that big drop after the first big activation: 375 units in 1.1ms.
-> >
-> > Is that expected? I guess yes, since we fix the clock_pelt with the
-> > lost_idle_time.
-
-... but, I guess Peter was mainly asking about the point above: is
-that "big" drop after the first activation related to time-scaling or
-not?
-
-Cheers,
-Patrick
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
