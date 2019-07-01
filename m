@@ -2,86 +2,71 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04133C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A801C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04CC20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:20:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MbbSSbaZ"
+	by mail.kernel.org (Postfix) with ESMTP id 6E54B21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfGASUM (ORCPT
+        id S1727236AbfGASUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 14:20:12 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37431 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbfGASUL (ORCPT
+        Mon, 1 Jul 2019 14:20:19 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:42222 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfGASUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 14:20:11 -0400
-Received: by mail-io1-f68.google.com with SMTP id e5so30987042iok.4;
-        Mon, 01 Jul 2019 11:20:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hsjfJFtXIc876oA6kbyjhF6TaAGhe5n/zUVcDCGFCBA=;
-        b=MbbSSbaZuJ4ZksgU1YmbHop1HrlARCU+BRELQFsae+Da/z+8Cyk8LOHDXiBrbcc0I2
-         xdJphRwekKsFouuPzwmXTQrtGeDleRLUDeoDuGhuOJ3uFZg1W+nW4WKrXXnMOjGY8NVU
-         59u07k+5rq9mLpNc9P5JkESuM/px1EImjv/EiGLh5qZcMtsEZXfrKZzq3t2cZU0aooEx
-         bflZlMadd45a1vyhdL6hFe8RHwpfBSga1FwCevz7bXCgTPMLKA3qEE31+85rZdzLOal0
-         w1lcZyxKGEFzCo5KoIq0F4eL4tX4v1nmEiQTGEBsPFg2k/VQrM7Va67Y/vTubuzV6RuC
-         0qug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hsjfJFtXIc876oA6kbyjhF6TaAGhe5n/zUVcDCGFCBA=;
-        b=cL6OEQVRBKpTxfCBIiZCxgQf4boHJiOInTmW+6jn8OpED5WWQcFx3I+JE9wcBpy1UL
-         VFZDbugM/9g9yjEeKf/iiDTY78b3WT66RIcXFdKH0xWAmhFHGG1Dk0htc61tRvd/JQZT
-         /j5Z0+6XeI6sD0o3i8Y92/GlQuCxzzYOtcvj0BEWwXvhw2x3wijsM6uEeP7Q+nA1iWqt
-         2DK+fv1F//r4M69Fs4yacVlcEYkMkXZJUofeRcWdBz31SSm/kErYH2TS3kWQ1vHIO20n
-         mDv4YtxIW3d7c3b7R4DseAuxvA3D3+k8+OYB+ui0ByzcAfX+llebohNn4xYpEr0Tl85u
-         ybUg==
-X-Gm-Message-State: APjAAAX0w/OQbCs0IXiTGia4QYHsTfwdEeGZNbxgOMifAoJz7qrfRGt8
-        sz5lNnqNGQVUxsJuZ51v4xk=
-X-Google-Smtp-Source: APXvYqw3Din4wvxfk4QaVEIEM27/5WZC4/u2nLVeZAhuBD6dLmBFItt4JO4en3d51uvHf+IEXQDZBw==
-X-Received: by 2002:a5e:c241:: with SMTP id w1mr6151368iop.58.1562005210771;
-        Mon, 01 Jul 2019 11:20:10 -0700 (PDT)
-Received: from ?IPv6:2601:282:800:fd80:f191:fe61:9293:d1ca? ([2601:282:800:fd80:f191:fe61:9293:d1ca])
-        by smtp.googlemail.com with ESMTPSA id j23sm12048683ioo.6.2019.07.01.11.20.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 11:20:10 -0700 (PDT)
-Subject: Re: [PATCH net v2] ipv4: don't set IPv6 only flags to IPv4 addresses
-To:     Matteo Croce <mcroce@redhat.com>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-References: <20190701170155.1967-1-mcroce@redhat.com>
- <c8fac6db-6455-b138-aca9-2f54d782a0b6@gmail.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <6bd2b840-41eb-c3c5-2405-adc104066617@gmail.com>
-Date:   Mon, 1 Jul 2019 12:20:05 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <c8fac6db-6455-b138-aca9-2f54d782a0b6@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 1 Jul 2019 14:20:18 -0400
+Received: from jaskaran-Intel-Server-Board-S1200V3RPS-UEFI-Development-Kit.corp.microsoft.com (unknown [131.107.160.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 28A9620425FF;
+        Mon,  1 Jul 2019 11:20:18 -0700 (PDT)
+From:   Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
+To:     gmazyland@gmail.com, ebiggers@google.com
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com,
+        mdsakib@microsoft.com, mpatocka@redhat.com
+Subject: [RFC PATCH v6 0/1] Add dm verity root hash pkcs7 sig validation.
+Date:   Mon,  1 Jul 2019 11:19:57 -0700
+Message-Id: <20190701181958.6493-1-jaskarankhurana@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/19 11:19 AM, David Ahern wrote:
-> I guess at this point we can fail the address add, so this is the best
-> option. 
+Changes in v6:
 
-bleh, that should be 'can not'
+Address comments from Milan Broz and Eric Biggers on v5.
+
+-Keep the verification code under config DM_VERITY_VERIFY_ROOTHASH_SIG.
+
+-Change the command line parameter to requires_signatures(bool) which will
+force root hash to be signed and trusted if specified.
+
+-Fix the signature not being present in verity_status. Merged the
+https://git.kernel.org/pub/scm/linux/kernel/git/mbroz/linux.git/commit/?h=dm-cryptsetup&id=a26c10806f5257e255b6a436713127e762935ad3
+made by Milan Broz and tested it.
+
+
+Jaskaran Khurana (1):
+  Add dm verity root hash pkcs7 sig validation.
+
+ Documentation/device-mapper/verity.txt |   7 ++
+ drivers/md/Kconfig                     |  12 +++
+ drivers/md/Makefile                    |   5 +
+ drivers/md/dm-verity-target.c          |  43 +++++++-
+ drivers/md/dm-verity-verify-sig.c      | 133 +++++++++++++++++++++++++
+ drivers/md/dm-verity-verify-sig.h      |  60 +++++++++++
+ drivers/md/dm-verity.h                 |   2 +
+ 7 files changed, 257 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/md/dm-verity-verify-sig.c
+ create mode 100644 drivers/md/dm-verity-verify-sig.h
+
+-- 
+2.17.1
+
