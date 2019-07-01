@@ -2,98 +2,88 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8C4C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF007C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EAD2145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561962381;
-	bh=Z6vFclLDtr2AoU8Vp/xJdqBe4Z3jocZDSO6y16utDDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yv/jTzLjcNTfoyzJAr3PNfZbgnhRfGzG/vX7AhPXyI496M83kmK2XT5Xduw4SlDyz
-	 z4atr4gh9TZaQT4zi2m4vSLIuzftePSTeWMGDazvQdgO1boKwZhToF3AJSvz1lvgu3
-	 OJZ9RKW7DY7V5Nm/vtkQ1LX/w2VKYDVYII3iFFus=
+	by mail.kernel.org (Postfix) with ESMTP id 95BDA2145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:39:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfGAG0T (ORCPT
+        id S1727331AbfGAGjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:26:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59564 "EHLO mail.kernel.org"
+        Mon, 1 Jul 2019 02:39:47 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:53544 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfGAG0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 02:26:19 -0400
-Received: from localhost (unknown [122.167.76.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D294208E4;
-        Mon,  1 Jul 2019 06:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561962378;
-        bh=Z6vFclLDtr2AoU8Vp/xJdqBe4Z3jocZDSO6y16utDDM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZIPCW9Z+lUgyeWItAJlvT0JsYrb1wgnMKoM3MFZTwidBNPr9O3AOh9rzBzlEfGeBG
-         cg6N8LltVJu42futYsOGC9duSKK01q1ykbjoAyN6zy06EJ/jUz/KEn6ejCE5TYvEg3
-         u7BesR045CuWo20adDyD1Mih+wylLxE+JpTKU9y8=
-Date:   Mon, 1 Jul 2019 11:53:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        bgoswami@quicinc.com
-Subject: Re: [RFC PATCH 3/5] soundwire: add module_sdw_driver helper macro
-Message-ID: <20190701062304.GL2911@vkoul-mobl>
-References: <20190611104043.22181-1-srinivas.kandagatla@linaro.org>
- <20190611104043.22181-4-srinivas.kandagatla@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611104043.22181-4-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        id S1725616AbfGAGjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 02:39:46 -0400
+X-Greylist: delayed 934 seconds by postgrey-1.27 at vger.kernel.org; Mon, 01 Jul 2019 02:39:45 EDT
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 9393B81F830A4B267BC5;
+        Mon,  1 Jul 2019 14:24:07 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x616MhkX033824;
+        Mon, 1 Jul 2019 14:22:43 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070114224481-1995713 ;
+          Mon, 1 Jul 2019 14:22:44 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     pbonzini@redhat.com
+Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
+Subject: [PATCH 1/4] kvm: x86: Add CONFIG_KVM_DEBUG
+Date:   Mon, 1 Jul 2019 14:21:08 +0800
+Message-Id: <1561962071-25974-2-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1561962071-25974-1-git-send-email-wang.yi59@zte.com.cn>
+References: <1561962071-25974-1-git-send-email-wang.yi59@zte.com.cn>
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-01 14:22:44,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-01 14:22:44,
+        Serialize complete at 2019-07-01 14:22:44
+X-MAIL: mse-fl1.zte.com.cn x616MhkX033824
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-06-19, 11:40, Srinivas Kandagatla wrote:
-> This Helper macro is for SoundWire drivers which do not do anything special in
-> module init/exit. This eliminates a lot of boilerplate. Each module may only
-> use this macro once, and calling it replaces module_init() and module_exit()
+There are some *_debug functions in KVM, it may be
+better to introduce CONFIG_DEBUG_KVM to replace the
+*_debug macro, which can avoid bloating and slowing KVM,
+as Sean suggested.
 
-Applied, thanks
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ arch/x86/kvm/Kconfig | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  include/linux/soundwire/sdw_type.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/include/linux/soundwire/sdw_type.h b/include/linux/soundwire/sdw_type.h
-> index 9c756b5a0dfe..aaa7f4267c14 100644
-> --- a/include/linux/soundwire/sdw_type.h
-> +++ b/include/linux/soundwire/sdw_type.h
-> @@ -16,4 +16,15 @@ void sdw_unregister_driver(struct sdw_driver *drv);
->  
->  int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size);
->  
-> +/**
-> + * module_sdw_driver() - Helper macro for registering a Soundwire driver
-> + * @__sdw_driver: soundwire slave driver struct
-> + *
-> + * Helper macro for Soundwire drivers which do not do anything special in
-> + * module init/exit. This eliminates a lot of boilerplate. Each module may only
-> + * use this macro once, and calling it replaces module_init() and module_exit()
-> + */
-> +#define module_sdw_driver(__sdw_driver) \
-> +	module_driver(__sdw_driver, sdw_register_driver, \
-> +			sdw_unregister_driver)
->  #endif /* __SOUNDWIRE_TYPES_H */
-> -- 
-> 2.21.0
-
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index fc04241..7e76eb2 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -95,6 +95,14 @@ config KVM_MMU_AUDIT
+ 	 This option adds a R/W kVM module parameter 'mmu_audit', which allows
+ 	 auditing of KVM MMU events at runtime.
+ 
++config KVM_DEBUG
++	bool "Enable KVM debugging"
++	default n
++	depends on KVM
++	---help---
++	Say Y here if you want to enable verbose KVM debug output.
++
++
+ # OK, it's a little counter-intuitive to do this, but it puts it neatly under
+ # the virtualization menu.
+ source "drivers/vhost/Kconfig"
 -- 
-~Vinod
+1.8.3.1
+
