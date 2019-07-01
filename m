@@ -2,108 +2,102 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14814C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E518C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E722D206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:41:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSKsvOp5"
+	by mail.kernel.org (Postfix) with ESMTP id 42642206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbfGARlZ (ORCPT
+        id S1729446AbfGARlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 13:41:25 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46441 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727130AbfGARlY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 13:41:24 -0400
-Received: by mail-pl1-f195.google.com with SMTP id e5so7681574pls.13;
-        Mon, 01 Jul 2019 10:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=qfHKa8BqHMDnuFbtDUNFkRDEdtrHApiPbbm6bpwlG/o=;
-        b=RSKsvOp5BZsE7wrDhSLHlO1ODKoS6O6Lzkil/k/T3EZ/DWonCVjfd1ALSgqEOk4kYV
-         K4rl5RR2zsO0GC95uXYX4vXzZ7w2+Dl9MIcPP4BOXTpWXoZY0gcxsoG9zjlriucRe7Wf
-         /BnPIarTgdRQLcnaJ7RakOLhBcV36Q/6INxvmvUUIKVNsuKWfE1fCjGsEOwf+jpcNJET
-         rxNUaMShvRv2XJyyd/ibb6N9U+sLPI9oAg9TZClEvnqi/NyPbE08JgSEN8HoJh6OtEvW
-         ajeZ+5Tyk6AQrmw7YcFqprNbCGBwzUNW/lUtvwaOpqK/7BGjZjz2tlMHgry9qMWVtAwW
-         bU9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qfHKa8BqHMDnuFbtDUNFkRDEdtrHApiPbbm6bpwlG/o=;
-        b=TJEZ/WZrj3VNQhHh5uzJh9trrJX/xr7FmhbEA71LrIxGJ6euALE4MhAWn3vKuhX03x
-         Hb8/k/UjWwR5a19gBJKWph7anpH+ks1CXAqGhmMMKOQLXgqkSMpBjrIPvv08cISrbzdk
-         CamlegasqFarrKLPNdKIwBTu6eNVdLdj6jpUlUDdvzvw2FMzvL1KsLA8KrV9JAvlB+rg
-         B9Hs0cQ9bU49laeOrl55T3q+j9g/WdRh/ZcGW2RaBYNDBs9NeEYxvyfPaI//h9Ak/0gJ
-         vlNsrgoMq7UjKlD3TCGh+5H+TSNgeAvArNb45sdZhmsipP0q7SUuLsYiRrW1ce78/f+J
-         q1aw==
-X-Gm-Message-State: APjAAAUvDFyG+eD6JeVPCYXhCxOei4Hb35P1SHbC5l3z8ryoyAbneVQg
-        HzEz815P6Sb+/RMUiMDJlXI=
-X-Google-Smtp-Source: APXvYqz8f+1e+Yn1edBsyRWCJm32Uaij3RqX4JbIUWQYMT+4dYhjokw9dsiuZuKXqpw2baJNUbv65A==
-X-Received: by 2002:a17:902:6ac6:: with SMTP id i6mr30312230plt.233.1562002884230;
-        Mon, 01 Jul 2019 10:41:24 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id s17sm166650pjp.7.2019.07.01.10.41.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 10:41:23 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch
-Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] drm/msm/mdp5: Use eariler mixers when possible
-Date:   Mon,  1 Jul 2019 10:41:20 -0700
-Message-Id: <20190701174120.15551-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 1 Jul 2019 13:41:40 -0400
+Received: from mga17.intel.com ([192.55.52.151]:11112 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727130AbfGARlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 13:41:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 10:41:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,440,1557212400"; 
+   d="scan'208";a="246988339"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 01 Jul 2019 10:41:37 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hi0J6-0009f4-Fc; Tue, 02 Jul 2019 01:41:36 +0800
+Date:   Tue, 2 Jul 2019 01:40:50 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Gabriel Beauchamp <beauchampgabriel@gmail.com>
+Cc:     kbuild-all@01.org, gregkh@linuxfoundation.org,
+        christian.gromm@microchip.com, colin.king@canonical.com,
+        gustavo@embeddedor.com, joe@perches.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Gabriel Beauchamp <beauchampgabriel@gmail.com>
+Subject: Re: [PATCH v3] Staging: most: fix coding style issues
+Message-ID: <201907020151.4hvM1eTo%lkp@intel.com>
+References: <20190630165604.2452-1-beauchampgabriel@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190630165604.2452-1-beauchampgabriel@gmail.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When assigning a mixer, we will iterate through the entire list looking for
-a suitable match.  This results in selecting the last match.  We should
-stop at the first match, since lower numbered mixers will typically have
-more capabilities, and are likely to be what the bootloader used, if we
-are looking to reuse the bootloader config in future.
+Hi Gabriel,
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on staging/staging-testing]
+[also build test WARNING on v5.2-rc6 next-20190625]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Gabriel-Beauchamp/Staging-most-fix-coding-style-issues/20190701-203804
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+
+vim +308 drivers/staging/most/core.c
+
+   296	
+   297	static ssize_t set_datatype_show(struct device *dev,
+   298					 struct device_attribute *attr,
+   299					 char *buf)
+   300	{
+   301		int i;
+   302		char *type = "unconfigured\n";
+   303	
+   304		struct most_channel *c = to_channel(dev);
+   305	
+   306		for (i = 0; i < ARRAY_SIZE(ch_data_type); i++) {
+   307			if (c->cfg.data_type & ch_data_type[i].most_ch_data_type) {
+ > 308				type = ch_data_type[i].name;
+   309				break;
+   310			}
+   311		}
+   312		return snprintf(buf, PAGE_SIZE, "%s", type);
+   313	}
+   314	
+
 ---
- drivers/gpu/drm/msm/disp/mdp5/mdp5_mixer.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_mixer.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_mixer.c
-index 954db683ae44..1638042ad974 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_mixer.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_mixer.c
-@@ -96,6 +96,17 @@ int mdp5_mixer_assign(struct drm_atomic_state *s, struct drm_crtc *crtc,
- 		 */
- 		if (!(*mixer) || cur->caps & MDP_LM_CAP_PAIR)
- 			*mixer = cur;
-+
-+		/*
-+		 * We have everything we could want, exit early.
-+		 * We have a valid mixer, that mixer pairs with another if we
-+		 * need that ability in future, and we have a right mixer if
-+		 * needed.
-+		 * Later LMs could be less optimal
-+		 */
-+		if (*mixer && (*mixer)->caps & MDP_LM_CAP_PAIR &&
-+		    ((r_mixer && *r_mixer) || !r_mixer))
-+			break;
- 	}
- 
- 	if (!(*mixer))
--- 
-2.17.1
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
