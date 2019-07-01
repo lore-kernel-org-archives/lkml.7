@@ -2,150 +2,153 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBD6C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A37C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B272089C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:46:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="h56oJXfR"
+	by mail.kernel.org (Postfix) with ESMTP id 3559D208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbfGAIqF (ORCPT
+        id S1728032AbfGAIsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:46:05 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35370 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727915AbfGAIqF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:46:05 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so27004211ioo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 01:46:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IYVjMNAPDPB3g4UgnPc8UGgFEx9QPCSimigO/GLHsBU=;
-        b=h56oJXfRQo/o4lu+WGdXLsKdrbfT1gg0IRUA/DzTERPW1P4dBV2yyruiDQL8BTav47
-         wrOiecYdejVIJq5nAQI7edyf0fimOhblJ3hRv4LkqJJDlzClAhfhYf6aHQ5by9ULg/Q2
-         cKxSCxYgH5i4XaOHfEv0esDJwMFejLa49HSWo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IYVjMNAPDPB3g4UgnPc8UGgFEx9QPCSimigO/GLHsBU=;
-        b=e23KPUGM5sPV8L1O/+Vd4B+xKYsvP+cGHUk4Q9oqAsk75URq6Rabdb7NM6EhJ8nAvr
-         LkB11mSdOD1H/eKK5+R0hs5BQh62Qn4WO7GO6R+deuvj212rW88AMRkmYq/QY3n4Fau9
-         3TJ+nupht7qMdEh2TNL+acs21K4bCr8iT7WKVw290Jj16FvYtlFFEwtPCaAQ9u30iBNN
-         SHCVlslShoeqziNhKrEnHqXCWTgTPTaPXK/ZPScUJIUcWlWm3B5GcvJ0CGUxgIVBakpa
-         7DmhsFQjHozahpBBdhE1meHBrB1/tNfX7MmOft5Q7GA7gr2wECFz5UI9RXtafxN2Gmyo
-         o41A==
-X-Gm-Message-State: APjAAAX51o2KJM+JL299jDYCZX6DzeIhrQdJhZCbfVwlD8Qk/7dp62Vv
-        bU2Z3ARX8SN3jcE7qcxRIDzWLXtltylOOg/iXpRSow==
-X-Google-Smtp-Source: APXvYqxxiZw+bGnK8YPjYZcf2sGoK8aDASylIc273wEuR0ihID6ic3gJk3WyoL35wKxKGn5mqfaNZ2WBpzy8GmFOi+4=
-X-Received: by 2002:a5e:cb43:: with SMTP id h3mr23250663iok.252.1561970764796;
- Mon, 01 Jul 2019 01:46:04 -0700 (PDT)
+        Mon, 1 Jul 2019 04:48:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:57688 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727972AbfGAIsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 04:48:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A88612B;
+        Mon,  1 Jul 2019 01:48:10 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BAD33F718;
+        Mon,  1 Jul 2019 01:48:09 -0700 (PDT)
+Subject: Re: [patch V2 3/6] genirq: Add optional hardware synchronization for
+ shutdown
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Robert Hodaszi <Robert.Hodaszi@digi.com>
+References: <20190628111148.828731433@linutronix.de>
+ <20190628111440.279463375@linutronix.de>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <f516fe3a-39de-698b-eb15-c52d88c8f0c6@arm.com>
+Date:   Mon, 1 Jul 2019 09:48:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190619123019.30032-1-mszeredi@redhat.com>
-In-Reply-To: <20190619123019.30032-1-mszeredi@redhat.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Mon, 1 Jul 2019 10:45:53 +0200
-Message-ID: <CAJfpegv_ezsXOLV2f7yd07=T3MenJoMKhu=MBac1-80s0BFg9A@mail.gmail.com>
-Subject: Re: [PATCH 01/13] vfs: verify param type in vfs_parse_sb_flag()
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190628111440.279463375@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On 28/06/2019 12:11, Thomas Gleixner wrote:
+> free_irq() ensures that no hardware interrupt handler is executing on a
+> different CPU before actually releasing resources and deactivating the
+> interrupt completely in a domain hierarchy.
+> 
+> But that does not catch the case where the interrupt is on flight at the
+> hardware level but not yet serviced by the target CPU. That creates an
+> interesing race condition:
+> 
+>    CPU 0                  CPU 1               IRQ CHIP
+> 
+>                                               interrupt is raised
+>                                               sent to CPU1
+> 			  Unable to handle
+> 			  immediately
+> 			  (interrupts off,
+> 			   deep idle delay)
+>    mask()
+>    ...
+>    free()
+>      shutdown()
+>      synchronize_irq()
+>      release_resources()
+>                           do_IRQ()
+>                             -> resources are not available
+> 
+> That might be harmless and just trigger a spurious interrupt warning, but
+> some interrupt chips might get into a wedged state.
+> 
+> Utilize the existing irq_get_irqchip_state() callback for the
+> synchronization in free_irq().
+> 
+> synchronize_hardirq() is not using this mechanism as it might actually
+> deadlock unter certain conditions, e.g. when called with interrupts
+> disabled and the target CPU is the one on which the synchronization is
+> invoked. synchronize_irq() uses it because that function cannot be called
+> from non preemtible contexts as it might sleep.
+> 
+> No functional change intended and according to Marc the existing GIC
+> implementations where the driver supports the callback should be able
+> to cope with that core change. Famous last words.
 
-Ping?  Have you had a chance of looking at this series?
+I still stand by what I've said! I gave it a go on a small sample of my
+ home zoo, and nothing caught fire (although it is not exactly easy to
+trigger a situation where the additional synchronization would be useful).
 
-K=C3=B6szi,
-Miklos
+> 
+> Fixes: 464d12309e1b ("x86/vector: Switch IOAPIC to global reservation mode")
+> Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-On Wed, Jun 19, 2019 at 2:30 PM Miklos Szeredi <mszeredi@redhat.com> wrote:
->
-> vfs_parse_sb_flag() accepted any kind of param with a matching key, not
-> just a flag.  This is wrong, only allow flag type and return -EINVAL
-> otherwise.
->
-> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-> ---
->  fs/fs_context.c | 31 +++++++++++++++----------------
->  1 file changed, 15 insertions(+), 16 deletions(-)
->
-> diff --git a/fs/fs_context.c b/fs/fs_context.c
-> index 103643c68e3f..e56310fd8c75 100644
-> --- a/fs/fs_context.c
-> +++ b/fs/fs_context.c
-> @@ -81,30 +81,29 @@ static const char *const forbidden_sb_flag[] =3D {
->  /*
->   * Check for a common mount option that manipulates s_flags.
->   */
-> -static int vfs_parse_sb_flag(struct fs_context *fc, const char *key)
-> +static int vfs_parse_sb_flag(struct fs_context *fc, struct fs_parameter =
-*param)
->  {
-> -       unsigned int token;
-> +       const char *key =3D param->key;
-> +       unsigned int set, clear;
->         unsigned int i;
->
->         for (i =3D 0; i < ARRAY_SIZE(forbidden_sb_flag); i++)
->                 if (strcmp(key, forbidden_sb_flag[i]) =3D=3D 0)
->                         return -EINVAL;
->
-> -       token =3D lookup_constant(common_set_sb_flag, key, 0);
-> -       if (token) {
-> -               fc->sb_flags |=3D token;
-> -               fc->sb_flags_mask |=3D token;
-> -               return 0;
-> -       }
-> +       set =3D lookup_constant(common_set_sb_flag, key, 0);
-> +       clear =3D lookup_constant(common_clear_sb_flag, key, 0);
-> +       if (!set && !clear)
-> +               return -ENOPARAM;
->
-> -       token =3D lookup_constant(common_clear_sb_flag, key, 0);
-> -       if (token) {
-> -               fc->sb_flags &=3D ~token;
-> -               fc->sb_flags_mask |=3D token;
-> -               return 0;
-> -       }
-> +       if (param->type !=3D fs_value_is_flag)
-> +               return invalf(fc, "%s: Unexpected value for '%s'",
-> +                             fc->fs_type->name, param->key);
->
-> -       return -ENOPARAM;
-> +       fc->sb_flags |=3D set;
-> +       fc->sb_flags &=3D ~clear;
-> +       fc->sb_flags_mask |=3D set | clear;
-> +       return 0;
->  }
->
->  /**
-> @@ -130,7 +129,7 @@ int vfs_parse_fs_param(struct fs_context *fc, struct =
-fs_parameter *param)
->         if (!param->key)
->                 return invalf(fc, "Unnamed parameter\n");
->
-> -       ret =3D vfs_parse_sb_flag(fc, param->key);
-> +       ret =3D vfs_parse_sb_flag(fc, param);
->         if (ret !=3D -ENOPARAM)
->                 return ret;
->
-> --
-> 2.21.0
->
+FWIW:
+
+Reviewed-and-tested-by: Marc Zyngier <marc.zyngier@arm.com>
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
