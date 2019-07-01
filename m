@@ -2,117 +2,119 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7093BC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE166C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425382173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:56:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561989368;
-	bh=xHYHwRu047LRNEZ0hfMwddr1wPSrP4HvmOSYmeKOh4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VwHcUkzSY1Fh45mt46M/Q8jPtBt3wOuiNWmLKrQgU+MPFkm69DBDHsr3+Lt7C4nBV
-	 3zxQye6NIxnEQYkftabWAkAzzBHej+DhfBPd/15j/LREBwW2JbTi51+h2bg/gdvhmw
-	 c+v5BIAd9LN+gNBOywylvfbvu6T4VnCE4P8+/Ark=
+	by mail.kernel.org (Postfix) with ESMTP id AC89421721
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfGAN4G (ORCPT
+        id S1729249AbfGAN40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 09:56:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727736AbfGAN4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 09:56:06 -0400
-Received: from linux-8ccs (ip5f5ade8b.dynamic.kabel-deutschland.de [95.90.222.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 427A121721;
-        Mon,  1 Jul 2019 13:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561989365;
-        bh=xHYHwRu047LRNEZ0hfMwddr1wPSrP4HvmOSYmeKOh4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EtFpnG8aR9TUgbf3xWCGa+vcjbnRi9F7wLPxpliR0Uykt9ylLqESGePaDuWpziwMo
-         1QCuzZ//4Ky5kK6uFgas+Fiu+sY8JZzp2VP69nSJHNfGIzXuH1dhhWdwlXPi7UGdSU
-         8zlznE8M173BcsQ2phPhvWoUG6q/7wwLC2tBl4Ss=
-Date:   Mon, 1 Jul 2019 15:55:57 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Cc:     rusty@rustcorp.com.au, kay.sievers@vrfy.org,
-        clabbe.montjoie@gmail.com, linux-kernel@vger.kernel.org,
-        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
-        "Zhoukang (A)" <zhoukang7@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>
-Subject: Re: [PATCH] module: add usage links when calling ref_module func
-Message-ID: <20190701135556.GA25484@linux-8ccs>
-References: <8d7aa8b1-73a2-db7a-82c8-06917eddf235@huawei.com>
+        Mon, 1 Jul 2019 09:56:26 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:53998 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727707AbfGAN4Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 09:56:25 -0400
+Received: from callcc.thunk.org ([66.31.38.53])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x61Du7fg031890
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 1 Jul 2019 09:56:08 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 6F9CB42002E; Mon,  1 Jul 2019 09:56:07 -0400 (EDT)
+Date:   Mon, 1 Jul 2019 09:56:07 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Arthur Marsh <arthur.marsh@internode.on.net>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
+Subject: Re: ext3/ext4 filesystem corruption under post 5.1.0 kernels
+Message-ID: <20190701135607.GB6549@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
+References: <48BA4A6E-5E2A-478E-A96E-A31FA959964C@internode.on.net>
+ <CAFLxGvwnKKHOnM2w8i9hn7LTVYKh5PQP2zYMBmma2k9z7HBpzw@mail.gmail.com>
+ <20190511220659.GB8507@mit.edu>
+ <09D87554-6795-4AEA-B8D0-FEBCB45673A9@internode.on.net>
+ <850EDDE2-5B82-4354-AF1C-A2D0B8571093@internode.on.net>
+ <17C30FA3-1AB3-4DAD-9B86-9FA9088F11C9@internode.on.net>
+ <20190515045717.GB5394@mit.edu>
+ <CAMuHMdV=63MwLdOB2kcX0=23itHg+_q22wXCycTvH3yn4zsfWw@mail.gmail.com>
+ <CAMuHMdU-vfWjomDpttYTqgp4YzBu7z__p48r7rq6TSUwx7uFqQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8d7aa8b1-73a2-db7a-82c8-06917eddf235@huawei.com>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+In-Reply-To: <CAMuHMdU-vfWjomDpttYTqgp4YzBu7z__p48r7rq6TSUwx7uFqQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Zhiqiang Liu [28/06/19 20:32 +0800]:
->From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
->
->Problem: Users can call ref_module func in their modules to construct
->relationships with other modules. However, the holders
->'/sys/module/<mod-name>/holders' of the target module donot include
->the users` module. So lsmod command misses detailed info of 'Used by'.
->
->When load module, the process is given as follows,
->load_module()
->	-> mod_sysfs_setup()
->		-> add_usage_links
->	-> do_init_module
->		-> mod->init()
->
->add_usage_links func creates holders of target modules linking to
->this module. If ref_module is called in mod->init() func, the usage
->links cannot be added.
->
->Here, we will add usage link of a to b's holder_dir.
->
->Fixes: 9bea7f239 ("module: fix bne2 "gave up waiting for init of module libcrc32c")
+On Mon, Jul 01, 2019 at 02:43:14PM +0200, Geert Uytterhoeven wrote:
+> Hi Ted,
+> 
+> Despite this fix having been applied upstream,  the kernel prints from
+> time to time:
+> 
+>     EXT4-fs (sda1): error count since last fsck: 5
+>     EXT4-fs (sda1): initial error at time 1557931133:
+> ext4_get_branch:171: inode 1980: block 27550
+>     EXT4-fs (sda1): last error at time 1558114349:
+> ext4_get_branch:171: inode 1980: block 27550
+> 
+> This happens even after a manual run of "e2fsck -f" (while it's mounted
+> RO), which reports a clean file system.
 
-I think we can drop this tag; it doesn't fix a bug specifically
-introduced by that particular commit.
+What's happening is this.  When the kernel detects a corruption, newer
+kernels will set these superblock fields:
 
->Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
->---
-> kernel/module.c | 5 +++++
-> 1 file changed, 5 insertions(+)
->
->diff --git a/kernel/module.c b/kernel/module.c
->index 80c7c09584cf..11c6aff37b1f 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -871,6 +871,11 @@ int ref_module(struct module *a, struct module *b)
-> 		module_put(b);
-> 		return err;
-> 	}
->+
->+	err = sysfs_create_link(b->holders_dir, &a->mkobj.kobj, a->name);
->+	if (err)
->+		return err;
+	__le32	s_error_count;		/* number of fs errors */
+	__le32	s_first_error_time;	/* first time an error happened */
+	__le32	s_first_error_ino;	/* inode involved in first error */
+	__le64	s_first_error_block;	/* block involved of first error */
+	__u8	s_first_error_func[32] __nonstring;	/* function where the error happened */
+	__le32	s_first_error_line;	/* line number where error happened */
+	__le32	s_last_error_time;	/* most recent time of an error */
+	__le32	s_last_error_ino;	/* inode involved in last error */
+	__le32	s_last_error_line;	/* line number where error happened */
+	__le64	s_last_error_block;	/* block involved of last error */
+	__u8	s_last_error_func[32] __nonstring;	/* function where the error happened */
 
-We need to fix the error handling here - the module_use struct
-allocated in the call to add_module_usage() needs to be freed (you
-could just modify add_module_usage() to return the use pointer so that
-it's easier to free from within ref_module()), module_put() needs to
-be called, and the use struct should be removed from its respective
-lists (see module_unload_free()).
+When newer versions of e2fsck *fix* the corruption, it will clear
+these fields.  It's basically a safety check because *way* too many
+ext4 users run with errors=continue (aka, "don't worry, be happy"
+mode), and so this is a poke in the system logs that the file system
+is corrupted, and they, really, *REALLY* should fix it before they
+lose (more) data.
 
-Thanks,
+> The inode and block numbers match the numbers printed due to the
+> previous bug.
 
-Jessica
+You can also see when the last file system error was detected via:
 
+% date -d @1558114349
+Fri 17 May 2019 01:32:29 PM EDT
+
+> Do you have an idea what's wrong?
+> Note that I run a very old version of e2fsck (from a decade ago).
+
+... and that's the problem.  If you're going to be using newer
+versions of the kernel, you really should be using newer versions of
+e2fsprogs.
+
+There have been a lot of bug fixes in the last 10 years, and some of
+them can be data corruption bugs....
+
+					- Ted
