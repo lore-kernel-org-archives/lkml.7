@@ -2,227 +2,290 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEF1C06508
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24141C06508
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F6020881
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:38:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QOtDhaS/"
+	by mail.kernel.org (Postfix) with ESMTP id E7225208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfGABiA (ORCPT
+        id S1727284AbfGABnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 21:38:00 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:33335 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbfGABh7 (ORCPT
+        Sun, 30 Jun 2019 21:43:32 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:18008 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727254AbfGABnc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 21:37:59 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190701013756epoutp03ec3ff9a89593fdd520ffcadaccbf5ffe~tJMWZblYG3189431894epoutp03T
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2019 01:37:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190701013756epoutp03ec3ff9a89593fdd520ffcadaccbf5ffe~tJMWZblYG3189431894epoutp03T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561945076;
-        bh=I6yDit6hDl9CUc82epoNHbW07NKafEsEnHWMJA3FK9o=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=QOtDhaS/+bqlbh6TIUQlRbgvW5/V4CgCilhvnzQNkoYWyPS826IjAraipuOUrAEFb
-         d2AdkEl00VUZXfg1yJSFce7Gkjiv/fYpCVXpsbZqG/jVLf7yc1jnfl3efroJslK4Mi
-         Ez4LraAe9k9GOK/w7cjXmp7JTSgZY0mmT8biFOM4=
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.157]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190701013753epcas1p31b5728e396a67b8ea09b7c10dc9dccb4~tJMTcuWIi1608616086epcas1p3Z;
-        Mon,  1 Jul 2019 01:37:53 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3C.C8.04143.BE3691D5; Mon,  1 Jul 2019 10:37:48 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190701013747epcas1p461980512af566420e1318c9d2d51e784~tJMN06tCG0332803328epcas1p4K;
-        Mon,  1 Jul 2019 01:37:47 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190701013747epsmtrp2249004d149bc3c74e3d594ac9480ea13~tJMNz-p4_0833908339epsmtrp2W;
-        Mon,  1 Jul 2019 01:37:47 +0000 (GMT)
-X-AuditID: b6c32a37-f31ff7000000102f-7d-5d1963ebd05c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        38.1D.03692.BE3691D5; Mon,  1 Jul 2019 10:37:47 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190701013747epsmtip26605b414f56a5f0fdab066e06a41776f~tJMNmLaWX2446024460epsmtip2Y;
-        Mon,  1 Jul 2019 01:37:47 +0000 (GMT)
-Subject: Re: [PATCH 41/43] docs: extcon: convert it to ReST and move to acpi
- dir
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <9abe1885-2252-82c3-caaa-1f7f09191399@samsung.com>
-Date:   Mon, 1 Jul 2019 10:40:33 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Sun, 30 Jun 2019 21:43:32 -0400
+X-UUID: 97e9298511544f678217b87340050466-20190701
+X-UUID: 97e9298511544f678217b87340050466-20190701
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1285107656; Mon, 01 Jul 2019 09:43:25 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS33N2.mediatek.inc (172.27.4.76) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 1 Jul 2019 09:43:18 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 1 Jul 2019 09:43:07 +0800
+Message-ID: <1561945387.17120.4.camel@mtksdaap41>
+Subject: Re: [v5 6/7] drm/mediatek: change the dsi phytiming calculate method
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Thierry Reding" <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        "Inki Dae" <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        "Sean Paul" <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        "Andy Yan" <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>, "Ryan Case" <ryandcase@chromium.org>
+Date:   Mon, 1 Jul 2019 09:43:07 +0800
+In-Reply-To: <20190627080116.40264-7-jitao.shi@mediatek.com>
+References: <20190627080116.40264-1-jitao.shi@mediatek.com>
+         <20190627080116.40264-7-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <bce6d8c98a188ec5f0efe78962aa12839c7442e9.1561723980.git.mchehab+samsung@kernel.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMJsWRmVeSWpSXmKPExsWy7bCmnu6bZMlYgw/fmCyeHGhntNj58C2b
-        xfJ9/YwWC9uWsFhc3jWHzeL9p04mix2nFjFb3G5cwWZx5vQlVgdOj80rtDw2repk81jcN5nV
-        Y8vVdhaPvi2rGD0+b5ILYIvKtslITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshL
-        zE21VXLxCdB1y8wBOkpJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BZoFecmFtc
-        mpeul5yfa2VoYGBkClSYkJ3RfU2qYKpSxdSPG5kaGJ9JdzFyckgImEicbH7C0sXIxSEksINR
-        4sXqa4wQzidGiTP/f7FCON8YJT5P+84M0zL1/Qk2iMReRol3R9+zgiSEBN4zSjSd5wWxhQWC
-        JBYf+cAGYosI5EjsXt/CDNLALNDEJDGt+SJYgk1AS2L/ixtgNr+AosTVH48ZQWxeATuJ6a/+
-        MIHYLAIqEo+frmcBsUUFIiQub9kFVSMocXLmE7A4p0CixLKrR8DizALiEreezGeCsOUlmrfO
-        BlssIdDOLvGudSoTxAsuEo8enWOBsIUlXh3fwg5hS0l8freXDcKullh58ggbRHMHo8SW/RdY
-        IRLGEvuXTgYaxAG0QVNi/S59iLCixM7fc6GO4JN497WHFaREQoBXoqNNCKJEWeLyg7tQJ0hK
-        LG7vZJvAqDQLyTuzkLwwC8kLsxCWLWBkWcUollpQnJueWmxYYIwc25sYwQlWy3wH44ZzPocY
-        BTgYlXh4G+5IxAqxJpYVV+YeYpTgYFYS4Z17GCjEm5JYWZValB9fVJqTWnyI0RQY2hOZpUST
-        84HJP68k3tDUyNjY2MLE0MzU0FBJnDee+2aMkEB6YklqdmpqQWoRTB8TB6dUA6NE2tGj9rcs
-        9wb8mmic+0xT0WStjMFE03p2X8tVIvK7+Y8VX4hw31P5qXhB3T/hiu8vUtKdngV3s7NL7Ndc
-        Zyt7RyP6ZN4vuZpderN8e0ss+i9JZ66/FbXvwcdNVgUTFh4K+SNeYJc7/TaXVNJurcQfu/x7
-        Z/fKtt49nH3DpV/SduPx6NLnRUosxRmJhlrMRcWJANdbhDXGAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsWy7bCSvO7rZMlYg43HVCyeHGhntNj58C2b
-        xfJ9/YwWC9uWsFhc3jWHzeL9p04mix2nFjFb3G5cwWZx5vQlVgdOj80rtDw2repk81jcN5nV
-        Y8vVdhaPvi2rGD0+b5ILYIvisklJzcksSy3St0vgyui+JlUwVali6seNTA2Mz6S7GDk5JARM
-        JKa+P8HWxcjFISSwm1Hi4/Vp7BAJSYlpF48ydzFyANnCEocPF0PUvGWU+NHawwxSIywQJLH4
-        yAc2EFtEIEei7dx3VpAiZoEWJollXXcZITpeMErM+P2GBaSKTUBLYv+LG2Ad/AKKEld/PGYE
-        sXkF7CSmv/rDBGKzCKhIPH66HqxeVCBCoq9tNhtEjaDEyZlPwOKcAokSy64eAetlFlCX+DPv
-        EjOELS5x68l8JghbXqJ562zmCYzCs5C0z0LSMgtJyywkLQsYWVYxSqYWFOem5xYbFhjmpZbr
-        FSfmFpfmpesl5+duYgTHmpbmDsbLS+IPMQpwMCrx8DbckYgVYk0sK67MPcQowcGsJMI79zBQ
-        iDclsbIqtSg/vqg0J7X4EKM0B4uSOO/TvGORQgLpiSWp2ampBalFMFkmDk6pBsYc7Y8RE0rM
-        2AUmcHctabViPG//kTv7/3QdrT0XdV8fXi6T/WSjypnAihcXN2jylDw7Nefctry+Y+ZVb492
-        6YtsPn5fK7B9uY4um86SSpOTuZ8mzXvjOTevPsLxf9Eti4T7osU2MrsN+TYs7uxme/So+lbt
-        RHWVcycOfM9T7Zvw4nPu3I95168qsRRnJBpqMRcVJwIAhz02vrECAAA=
-X-CMS-MailID: 20190701013747epcas1p461980512af566420e1318c9d2d51e784
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190628122052epcas4p4a7ca381ae6c3bb7c83c09db3057728ec
-References: <cover.1561723979.git.mchehab+samsung@kernel.org>
-        <CGME20190628122052epcas4p4a7ca381ae6c3bb7c83c09db3057728ec@epcas4p4.samsung.com>
-        <bce6d8c98a188ec5f0efe78962aa12839c7442e9.1561723980.git.mchehab+samsung@kernel.org>
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 7D73A884143A183CC5055765D067BC0CCD0AF259C8AD423183E83DE5433058D82000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
+Hi, Jitao:
 
-On 19. 6. 28. 오후 9:20, Mauro Carvalho Chehab wrote:
-> The intel-int3496.txt file is a documentation for an ACPI driver.
+On Thu, 2019-06-27 at 16:01 +0800, Jitao Shi wrote:
+> Change the method of frame rate calc which can get more accurate
+> frame rate.
 > 
-> There's no reason to keep it on a separate directory.
+> data rate = pixel_clock * bit_per_pixel / lanes
+> Adjust hfp_wc to adapt the additional phy_data
 > 
-> So, instead of keeping it on some random location, move it
-> to a sub-directory inside the ACPI documentation dir,
-> renaming it to .rst.
+> if MIPI_DSI_MODE_VIDEO_BURST
+> 	hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12 - 6;
+> else
+> 	hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12;
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Note:
+> //(2: 1 for sync, 1 for phy idle)
+> data_phy_cycles = T_hs_exit + T_lpx + T_hs_prepare + T_hs_zero + 2;
+> 
+> bpp: bit per pixel
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Tested-by: Ryan Case <ryandcase@chromium.org>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+This version is different than previous version, so you should remove
+Reviewed-by tag. For this version, I still give you a
+
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
 > ---
->  .../acpi/extcon-intel-int3496.rst}                 | 14 ++++++++++----
->  Documentation/firmware-guide/acpi/index.rst        |  1 +
->  MAINTAINERS                                        |  6 +++---
->  3 files changed, 14 insertions(+), 7 deletions(-)
->  rename Documentation/{extcon/intel-int3496.txt => firmware-guide/acpi/extcon-intel-int3496.rst} (66%)
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 117 ++++++++++++++++++++---------
+>  1 file changed, 80 insertions(+), 37 deletions(-)
 > 
-> diff --git a/Documentation/extcon/intel-int3496.txt b/Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
-> similarity index 66%
-> rename from Documentation/extcon/intel-int3496.txt
-> rename to Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
-> index 8155dbc7fad3..5137ca834b54 100644
-> --- a/Documentation/extcon/intel-int3496.txt
-> +++ b/Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
-> @@ -1,5 +1,6 @@
-> +=====================================================
->  Intel INT3496 ACPI device extcon driver documentation
-> ------------------------------------------------------
-> +=====================================================
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index 1621e8cdacc2..cefdcb1509cb 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -144,12 +144,6 @@
+>  #define DATA_0				(0xff << 16)
+>  #define DATA_1				(0xff << 24)
 >  
->  The Intel INT3496 ACPI device extcon driver is a driver for ACPI
->  devices with an acpi-id of INT3496, such as found for example on
-> @@ -13,15 +14,20 @@ between an USB host and an USB peripheral controller.
->  The ACPI devices exposes this functionality by returning an array with up
->  to 3 gpio descriptors from its ACPI _CRS (Current Resource Settings) call:
+> -#define T_LPX		5
+> -#define T_HS_PREP	6
+> -#define T_HS_TRAIL	8
+> -#define T_HS_EXIT	7
+> -#define T_HS_ZERO	10
+> -
+>  #define NS_TO_CYCLE(n, c)    ((n) / (c) + (((n) % (c)) ? 1 : 0))
 >  
-> -Index 0: The input gpio for the id-pin, this is always present and valid
-> -Index 1: The output gpio for enabling Vbus output from the device to the otg
-> +=======  =====================================================================
-> +Index 0  The input gpio for the id-pin, this is always present and valid
-> +Index 1  The output gpio for enabling Vbus output from the device to the otg
->           port, write 1 to enable the Vbus output (this gpio descriptor may
->           be absent or invalid)
-> -Index 2: The output gpio for muxing of the data pins between the USB host and
-> +Index 2  The output gpio for muxing of the data pins between the USB host and
->           the USB peripheral controller, write 1 to mux to the peripheral
->           controller
-> +=======  =====================================================================
+>  #define MTK_DSI_HOST_IS_READ(type) \
+> @@ -158,6 +152,25 @@
+>  	(type == MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM) || \
+>  	(type == MIPI_DSI_DCS_READ))
 >  
->  There is a mapping between indices and GPIO connection IDs as follows
+> +struct mtk_phy_timing {
+> +	u32 lpx;
+> +	u32 da_hs_prepare;
+> +	u32 da_hs_zero;
+> +	u32 da_hs_trail;
 > +
-> +	======= =======
->  	id	index 0
->  	vbus	index 1
->  	mux	index 2
-> +	======= =======
-> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-> index ae609eec4679..90c90d42d9ad 100644
-> --- a/Documentation/firmware-guide/acpi/index.rst
-> +++ b/Documentation/firmware-guide/acpi/index.rst
-> @@ -24,3 +24,4 @@ ACPI Support
->     acpi-lid
->     lpit
->     video_extension
-> +   extcon-intel-int3496
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index fd6fab0dec77..2cf8abf6d48e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -321,7 +321,7 @@ F:	drivers/pnp/pnpacpi/
->  F:	include/linux/acpi.h
->  F:	include/linux/fwnode.h
->  F:	include/acpi/
-> -F:	Documentation/acpi/
-> +F:	Documentation/firmware-guide/acpi/
->  F:	Documentation/ABI/testing/sysfs-bus-acpi
->  F:	Documentation/ABI/testing/configfs-acpi
->  F:	drivers/pci/*acpi*
-> @@ -4896,7 +4896,7 @@ S:	Maintained
->  F:	Documentation/
->  F:	scripts/kernel-doc
->  X:	Documentation/ABI/
-> -X:	Documentation/acpi/
-> +X:	Documentation/firmware-guide/acpi/
->  X:	Documentation/devicetree/
->  X:	Documentation/i2c/
->  X:	Documentation/media/
-> @@ -6073,7 +6073,7 @@ S:	Maintained
->  F:	drivers/extcon/
->  F:	include/linux/extcon/
->  F:	include/linux/extcon.h
-> -F:	Documentation/extcon/
-> +F:	Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
->  F:	Documentation/devicetree/bindings/extcon/
+> +	u32 ta_go;
+> +	u32 ta_sure;
+> +	u32 ta_get;
+> +	u32 da_hs_exit;
+> +
+> +	u32 clk_hs_zero;
+> +	u32 clk_hs_trail;
+> +
+> +	u32 clk_hs_prepare;
+> +	u32 clk_hs_post;
+> +	u32 clk_hs_exit;
+> +};
+> +
+>  struct phy;
 >  
->  EXYNOS DP DRIVER
-> 
+>  struct mtk_dsi_driver_data {
+> @@ -188,6 +201,7 @@ struct mtk_dsi {
+>  	enum mipi_dsi_pixel_format format;
+>  	unsigned int lanes;
+>  	struct videomode vm;
+> +	struct mtk_phy_timing phy_timing;
+>  	int refcount;
+>  	bool enabled;
+>  	u32 irq_data;
+> @@ -221,17 +235,36 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
+>  {
+>  	u32 timcon0, timcon1, timcon2, timcon3;
+>  	u32 ui, cycle_time;
+> +	struct mtk_phy_timing *timing = &dsi->phy_timing;
+> +
+> +	ui = 1000000000 / dsi->data_rate;
+> +	cycle_time = div_u64(8000000000ULL, dsi->data_rate);
+> +
+> +	timing->lpx = NS_TO_CYCLE(60, cycle_time);
+> +	timing->da_hs_prepare = NS_TO_CYCLE(40 + 5 * ui, cycle_time);
+> +	timing->da_hs_zero = NS_TO_CYCLE(110 + 6 * ui, cycle_time);
+> +	timing->da_hs_trail = NS_TO_CYCLE(80 + 4 * ui, cycle_time);
+>  
+> -	ui = 1000 / dsi->data_rate + 0x01;
+> -	cycle_time = 8000 / dsi->data_rate + 0x01;
+> +	timing->ta_go = 4 * timing->lpx;
+> +	timing->ta_sure = 3 * timing->lpx / 2;
+> +	timing->ta_get = 5 * timing->lpx;
+> +	timing->da_hs_exit = 2 * timing->lpx;
+>  
+> -	timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
+> -	timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
+> -		  T_HS_EXIT << 24;
+> -	timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
+> -		  (NS_TO_CYCLE(0x150, cycle_time) << 16);
+> -	timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
+> -		  NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
+> +	timing->clk_hs_zero = NS_TO_CYCLE(336, cycle_time);
+> +	timing->clk_hs_trail = NS_TO_CYCLE(100, cycle_time) + 10;
+> +
+> +	timing->clk_hs_prepare = NS_TO_CYCLE(64, cycle_time);
+> +	timing->clk_hs_post = NS_TO_CYCLE(80 + 52 * ui, cycle_time);
+> +	timing->clk_hs_exit = 2 * timing->lpx;
+> +
+> +	timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
+> +		  timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
+> +	timcon1 = timing->ta_go | timing->ta_sure << 8 |
+> +		  timing->ta_get << 16 | timing->da_hs_exit << 24;
+> +	timcon2 = 1 << 8 | timing->clk_hs_zero << 16 |
+> +		  timing->clk_hs_trail << 24;
+> +	timcon3 = timing->clk_hs_prepare | timing->clk_hs_post << 8 |
+> +		  timing->clk_hs_exit << 16;
+>  
+>  	writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
+>  	writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
+> @@ -418,7 +451,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+>  	u32 horizontal_sync_active_byte;
+>  	u32 horizontal_backporch_byte;
+>  	u32 horizontal_frontporch_byte;
+> -	u32 dsi_tmp_buf_bpp;
+> +	u32 dsi_tmp_buf_bpp, data_phy_cycles;
+> +	struct mtk_phy_timing *timing = &dsi->phy_timing;
+>  
+>  	struct videomode *vm = &dsi->vm;
+>  
+> @@ -445,7 +479,34 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+>  		horizontal_backporch_byte = ((vm->hback_porch + vm->hsync_len) *
+>  			dsi_tmp_buf_bpp - 10);
+>  
+> -	horizontal_frontporch_byte = (vm->hfront_porch * dsi_tmp_buf_bpp - 12);
+> +	data_phy_cycles = timing->lpx + timing->da_hs_prepare +
+> +				  timing->da_hs_zero + timing->da_hs_exit + 2;
+> +
+> +	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
+> +		if (vm->hfront_porch * dsi_tmp_buf_bpp >
+> +		    data_phy_cycles * dsi->lanes + 18) {
+> +			horizontal_frontporch_byte = vm->hfront_porch *
+> +						     dsi_tmp_buf_bpp -
+> +						     data_phy_cycles *
+> +						     dsi->lanes - 18;
+> +		} else {
+> +			DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
+> +			horizontal_frontporch_byte = vm->hfront_porch *
+> +						     dsi_tmp_buf_bpp;
+> +		}
+> +	} else {
+> +		if (vm->hfront_porch * dsi_tmp_buf_bpp >
+> +		    data_phy_cycles * dsi->lanes + 12) {
+> +			horizontal_frontporch_byte = vm->hfront_porch *
+> +						     dsi_tmp_buf_bpp -
+> +						     data_phy_cycles *
+> +						     dsi->lanes - 12;
+> +		} else {
+> +			DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
+> +			horizontal_frontporch_byte = vm->hfront_porch *
+> +						     dsi_tmp_buf_bpp;
+> +		}
+> +	}
+>  
+>  	writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
+>  	writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
+> @@ -545,8 +606,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+>  {
+>  	struct device *dev = dsi->->host.dev;
+>  	int ret;
+> -	u64 pixel_clock, total_bits;
+> -	u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
+> +	u32 bit_per_pixel;
+>  
+>  	if (++dsi->refcount != 1)
+>  		return 0;
+> @@ -565,24 +625,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+>  		break;
+>  	}
+>  
+> -	/**
+> -	 * htotal_time = htotal * byte_per_pixel / num_lanes
+> -	 * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
+> -	 * mipi_ratio = (htotal_time + overhead_time) / htotal_time
+> -	 * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
+> -	 */
+> -	pixel_clock = dsi->vm.pixelclock;
+> -	htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
+> -			dsi->vm.hsync_len;
+> -	htotal_bits = htotal * bit_per_pixel;
+> -
+> -	overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
+> -			T_HS_EXIT;
+> -	overhead_bits = overhead_cycles * dsi->lanes * 8;
+> -	total_bits = htotal_bits + overhead_bits;
+> -
+> -	dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
+> -					  htotal * dsi->lanes);
+> +	dsi->data_rate = DIV_ROUND_UP_ULL(dsi->vm.pixelclock * bit_per_pixel, dsi->lanes);
+>  
+>  	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
+>  	if (ret < 0) {
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
