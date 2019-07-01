@@ -2,273 +2,225 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45430C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDEFC06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9D7214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:26:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eVpIGSj9"
+	by mail.kernel.org (Postfix) with ESMTP id 549572184E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729649AbfGAOZ6 (ORCPT
+        id S1729658AbfGAO0V convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:25:58 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52532 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729532AbfGAOZ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:25:56 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x61EP5sx120080;
-        Mon, 1 Jul 2019 09:25:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561991105;
-        bh=suqhGlKu09i4bHSG5nwK6itb8XxQsF0NeEzzxpNaGkA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eVpIGSj98fC4TDHIu49z+fkYkfsd0RcXPbecRkhAswRSnDlkkfUwkaaQ4MjMqF5zw
-         1OFfE3FtS16XYpv2/bXmnlqACRozPWWLsVxIPjyjv/cakmsIyLnXa2OU29iYrRR7x8
-         KQvFkOBKtEDRC2HsU4rmoqJ8youpxAE3OUtqVcqs=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x61EP53W046247
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 1 Jul 2019 09:25:05 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Jul
- 2019 09:25:05 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 1 Jul 2019 09:25:05 -0500
-Received: from [10.250.68.219] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x61EP4Qh124077;
-        Mon, 1 Jul 2019 09:25:04 -0500
-Subject: Re: [PATCH v2 1/2] ASoC: tas5720.c: cleanup variant management
-To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <nv@vosn.de>
-References: <20190628143037.GH5379@sirena.org.uk>
- <cover.1561988282.git.nikolaus.voss@loewensteinmedical.de>
- <c79df50175d59265a37c5e7c8a0cfbf8119bcf78.1561988282.git.nikolaus.voss@loewensteinmedical.de>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <80af3fca-f71b-c118-e5d8-fde8b7d21705@ti.com>
-Date:   Mon, 1 Jul 2019 10:25:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <c79df50175d59265a37c5e7c8a0cfbf8119bcf78.1561988282.git.nikolaus.voss@loewensteinmedical.de>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 1 Jul 2019 10:26:21 -0400
+Received: from mail-oln040092254057.outbound.protection.outlook.com ([40.92.254.57]:39968
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728090AbfGAO0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 10:26:20 -0400
+Received: from PU1APC01FT027.eop-APC01.prod.protection.outlook.com
+ (10.152.252.53) by PU1APC01HT229.eop-APC01.prod.protection.outlook.com
+ (10.152.252.198) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2032.15; Mon, 1 Jul
+ 2019 14:26:13 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.60) by
+ PU1APC01FT027.mail.protection.outlook.com (10.152.252.232) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2032.15 via Frontend Transport; Mon, 1 Jul 2019 14:26:13 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9d2d:391f:5f49:c806]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9d2d:391f:5f49:c806%6]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
+ 14:26:13 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: [PATCH v7 8/8] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Thread-Topic: [PATCH v7 8/8] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Thread-Index: AQHVMBjvqV0RKtw8Ak6fj/QX5/LnSQ==
+Date:   Mon, 1 Jul 2019 14:26:13 +0000
+Message-ID: <SL2P216MB01875E7B53742E46B53F820280F90@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SYBPR01CA0114.ausprd01.prod.outlook.com
+ (2603:10c6:10:1::30) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:22::19)
+x-incomingtopheadermarker: OriginalChecksum:0491EC7E998529029537C9166345947E22827050F8FE0A7ABA42EE12E0661AB2;UpperCasedChecksum:7F834409EF0D15F526E804CCEF51FAA354189B661292B6015E0A66B2237F2177;SizeAsReceived:7740;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [qOTMwuQhe05QBO2JJaiCjQbv6eU213CbqdrqmtJJ+k2hCE8Gal/GVr64Sjyi0r9KFq4wsC+pcL4=]
+x-microsoft-original-message-id: <20190701142558.GA5338@nicholas-usb>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:PU1APC01HT229;
+x-ms-traffictypediagnostic: PU1APC01HT229:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-message-info: ytnBVmlXWhAwbeHYbRAvaR/da1tEG0nSV388QAd6mwmywHdL3WzqEeq/aAvfiLjRwwVBa3p18VOEWgzimb0HKj8uu2YiDXdwAqjANTI1SAL+R02/nbzH0xmhI7LTWU9KXz4WwN0sgXoBQd5ow1QvXIkUKavQ/aWb4AvERRa/ZGN+Sm1sbydJ24OIMqQysukA
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <955A3DC6DF62EE4E8C686282AA5D1281@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 156990db-d3ff-45aa-22a7-08d6fe30120e
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 14:26:13.7738
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT229
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/19 9:42 AM, Nikolaus Voss wrote:
-> Replace enum tas572x_type with struct tas5720_variant which aggregates
-> variant specific stuff and can be directly referenced from an id table.
-> 
-> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-> ---
->  sound/soc/codecs/tas5720.c | 98 +++++++++++++-------------------------
->  1 file changed, 33 insertions(+), 65 deletions(-)
-> 
-> diff --git a/sound/soc/codecs/tas5720.c b/sound/soc/codecs/tas5720.c
-> index 37fab8f22800..b2e897f094b4 100644
-> --- a/sound/soc/codecs/tas5720.c
-> +++ b/sound/soc/codecs/tas5720.c
-> @@ -28,9 +28,10 @@
->  /* Define how often to check (and clear) the fault status register (in ms) */
->  #define TAS5720_FAULT_CHECK_INTERVAL		200
->  
-> -enum tas572x_type {
-> -	TAS5720,
-> -	TAS5722,
-> +struct tas5720_variant {
-> +	const int device_id;
-> +	const struct regmap_config *reg_config;
-> +	const struct snd_soc_component_driver *comp_drv;
->  };
->  
->  static const char * const tas5720_supply_names[] = {
-> @@ -44,7 +45,7 @@ struct tas5720_data {
->  	struct snd_soc_component *component;
->  	struct regmap *regmap;
->  	struct i2c_client *tas5720_client;
-> -	enum tas572x_type devtype;
-> +	const struct tas5720_variant *variant;
+Background
+==========================================================================
 
-Why add a new struct? Actually I don't see the need for this patch at
-all, the commit message only explains the 'what' not the 'why'. We can
-and do already build this info from the tas572x_type.
+Currently, the kernel can sometimes assign the MMIO_PREF window
+additional size into the MMIO window, resulting in double the MMIO
+additional size, even if the MMIO_PREF window was successful.
 
-Also below are several functional changes, the cover letter says this is
-not a functional change, yet the driver behaves differently now.
+This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
+fails. In the next pass, because MMIO_PREF is already assigned, the
+attempt to assign MMIO_PREF returns an error code instead of success
+(nothing more to do, already allocated).
 
-Andrew
+Example of problem (more context can be found in the bug report URL):
 
->  	struct regulator_bulk_data supplies[TAS5720_NUM_SUPPLIES];
->  	struct delayed_work fault_check_work;
->  	unsigned int last_fault;
-> @@ -179,17 +180,13 @@ static int tas5720_set_dai_tdm_slot(struct snd_soc_dai *dai,
->  		goto error_snd_soc_component_update_bits;
->  
->  	/* Configure TDM slot width. This is only applicable to TAS5722. */
-> -	switch (tas5720->devtype) {
-> -	case TAS5722:
-> +	if (tas5720->variant->device_id == TAS5722_DEVICE_ID) {
->  		ret = snd_soc_component_update_bits(component, TAS5722_DIGITAL_CTRL2_REG,
->  						    TAS5722_TDM_SLOT_16B,
->  						    slot_width == 16 ?
->  						    TAS5722_TDM_SLOT_16B : 0);
->  		if (ret < 0)
->  			goto error_snd_soc_component_update_bits;
-> -		break;
-> -	default:
-> -		break;
->  	}
->  
->  	return 0;
-> @@ -277,7 +274,7 @@ static void tas5720_fault_check_work(struct work_struct *work)
->  static int tas5720_codec_probe(struct snd_soc_component *component)
->  {
->  	struct tas5720_data *tas5720 = snd_soc_component_get_drvdata(component);
-> -	unsigned int device_id, expected_device_id;
-> +	unsigned int device_id;
->  	int ret;
->  
->  	tas5720->component = component;
-> @@ -301,21 +298,9 @@ static int tas5720_codec_probe(struct snd_soc_component *component)
->  		goto probe_fail;
->  	}
->  
-> -	switch (tas5720->devtype) {
-> -	case TAS5720:
-> -		expected_device_id = TAS5720_DEVICE_ID;
-> -		break;
-> -	case TAS5722:
-> -		expected_device_id = TAS5722_DEVICE_ID;
-> -		break;
-> -	default:
-> -		dev_err(component->dev, "unexpected private driver data\n");
-> -		return -EINVAL;
-> -	}
-> -
-> -	if (device_id != expected_device_id)
-> +	if (device_id != tas5720->variant->device_id)
->  		dev_warn(component->dev, "wrong device ID. expected: %u read: %u\n",
-> -			 expected_device_id, device_id);
-> +			 tas5720->variant->device_id, device_id);
->  
->  	/* Set device to mute */
->  	ret = snd_soc_component_update_bits(component, TAS5720_DIGITAL_CTRL2_REG,
-> @@ -637,7 +622,6 @@ static int tas5720_probe(struct i2c_client *client,
->  {
->  	struct device *dev = &client->dev;
->  	struct tas5720_data *data;
-> -	const struct regmap_config *regmap_config;
->  	int ret;
->  	int i;
->  
-> @@ -646,20 +630,10 @@ static int tas5720_probe(struct i2c_client *client,
->  		return -ENOMEM;
->  
->  	data->tas5720_client = client;
-> -	data->devtype = id->driver_data;
->  
-> -	switch (id->driver_data) {
-> -	case TAS5720:
-> -		regmap_config = &tas5720_regmap_config;
-> -		break;
-> -	case TAS5722:
-> -		regmap_config = &tas5722_regmap_config;
-> -		break;
-> -	default:
-> -		dev_err(dev, "unexpected private driver data\n");
-> -		return -EINVAL;
-> -	}
-> -	data->regmap = devm_regmap_init_i2c(client, regmap_config);
-> +	data->variant = (const struct tas5720_variant *)id->driver_data;
-> +
-> +	data->regmap = devm_regmap_init_i2c(client, data->variant->reg_config);
->  	if (IS_ERR(data->regmap)) {
->  		ret = PTR_ERR(data->regmap);
->  		dev_err(dev, "failed to allocate register map: %d\n", ret);
-> @@ -678,42 +652,36 @@ static int tas5720_probe(struct i2c_client *client,
->  
->  	dev_set_drvdata(dev, data);
->  
-> -	switch (id->driver_data) {
-> -	case TAS5720:
-> -		ret = devm_snd_soc_register_component(&client->dev,
-> -					&soc_component_dev_tas5720,
-> -					tas5720_dai,
-> -					ARRAY_SIZE(tas5720_dai));
-> -		break;
-> -	case TAS5722:
-> -		ret = devm_snd_soc_register_component(&client->dev,
-> -					&soc_component_dev_tas5722,
-> -					tas5720_dai,
-> -					ARRAY_SIZE(tas5720_dai));
-> -		break;
-> -	default:
-> -		dev_err(dev, "unexpected private driver data\n");
-> -		return -EINVAL;
-> -	}
-> -	if (ret < 0) {
-> -		dev_err(dev, "failed to register component: %d\n", ret);
-> -		return ret;
-> -	}
-> -
-> -	return 0;
-> +	ret = devm_snd_soc_register_component(&client->dev,
-> +					      data->variant->comp_drv,
-> +					      tas5720_dai,
-> +					      ARRAY_SIZE(tas5720_dai));
-> +	return ret;
->  }
->  
-> +static const struct tas5720_variant tas5720 = {
-> +	.device_id = TAS5720_DEVICE_ID,
-> +	.reg_config = &tas5720_regmap_config,
-> +	.comp_drv = &soc_component_dev_tas5720,
-> +};
-> +
-> +static const struct tas5720_variant tas5722 = {
-> +	.device_id = TAS5722_DEVICE_ID,
-> +	.reg_config = &tas5722_regmap_config,
-> +	.comp_drv = &soc_component_dev_tas5722,
-> +};
-> +
->  static const struct i2c_device_id tas5720_id[] = {
-> -	{ "tas5720", TAS5720 },
-> -	{ "tas5722", TAS5722 },
-> +	{ "tas5720", (kernel_ulong_t)&tas5720 },
-> +	{ "tas5722", (kernel_ulong_t)&tas5722 },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(i2c, tas5720_id);
->  
->  #if IS_ENABLED(CONFIG_OF)
->  static const struct of_device_id tas5720_of_match[] = {
-> -	{ .compatible = "ti,tas5720", },
-> -	{ .compatible = "ti,tas5722", },
-> +	{ .compatible = "ti,tas5720", .data = &tas5720, },
-> +	{ .compatible = "ti,tas5722", .data = &tas5722, },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, tas5720_of_match);
-> 
+Mainline kernel:
+pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
+pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
+
+Patched kernel:
+pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
+pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
+
+This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
+with the same configuration, with a Ubuntu mainline kernel and a kernel
+patched with this patch series.
+
+This patch is vital for the next patch in the series. The next patch
+allows the user to specify MMIO and MMIO_PREF independently. If the
+MMIO_PREF is set to be very large, this bug will end up more than
+doubling the MMIO size. The bug results in the MMIO_PREF being added to
+the MMIO window, which means doubling if MMIO_PREF size == MMIO size.
+With a large MMIO_PREF, without this patch, the MMIO window will likely
+fail to be assigned altogether due to lack of 32-bit address space.
+
+Patch notes
+==========================================================================
+
+Change find_free_bus_resource() to not skip assigned resources with
+non-null parent.
+
+Add checks in pbus_size_io() and pbus_size_mem() to return success if
+resource returned from find_free_bus_resource() is already allocated.
+
+This avoids pbus_size_io() and pbus_size_mem() returning error code to
+__pci_bus_size_bridges() when a resource has been successfully assigned
+in a previous pass. This fixes the existing behaviour where space for a
+resource could be reserved multiple times in different parent bridge
+windows. This also greatly reduces the number of failed BAR messages in
+dmesg when Linux assigns resources.
+
+See related from Logan Gunthorpe (same problem, different solution):
+https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
+
+Solves bug report: https://bugzilla.kernel.org/show_bug.cgi?id=203243
+
+Reported-by: Kit Chow <kchow@gigaio.com>
+Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+---
+ drivers/pci/setup-bus.c | 29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 873df5482..df4bf43b5 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -752,13 +752,18 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
+ }
+ 
+ /*
+- * Helper function for sizing routines: find first available bus resource
+- * of a given type.  Note: we intentionally skip the bus resources which
+- * have already been assigned (that is, have non-NULL parent resource).
++ * Helper function for sizing routines: find first bus resource of a given
++ * type. Note: we do not skip the bus resources which have already been
++ * assigned (r->parent != NULL). This is because a resource that is already
++ * assigned (nothing more to be done) will be indistinguishable from one that
++ * failed due to lack of space if we skip assigned resources. If the caller
++ * function cannot tell the difference then it might try to place the
++ * resources in a different window, doubling up on resources or causing
++ * unforeseeable issues.
+  */
+-static struct resource *find_free_bus_resource(struct pci_bus *bus,
+-					       unsigned long type_mask,
+-					       unsigned long type)
++static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
++						   unsigned long type_mask,
++						   unsigned long type)
+ {
+ 	int i;
+ 	struct resource *r;
+@@ -766,7 +771,7 @@ static struct resource *find_free_bus_resource(struct pci_bus *bus,
+ 	pci_bus_for_each_resource(bus, r, i) {
+ 		if (r == &ioport_resource || r == &iomem_resource)
+ 			continue;
+-		if (r && (r->flags & type_mask) == type && !r->parent)
++		if (r && (r->flags & type_mask) == type)
+ 			return r;
+ 	}
+ 	return NULL;
+@@ -866,14 +871,16 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
+ 			 struct list_head *realloc_head)
+ {
+ 	struct pci_dev *dev;
+-	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
+-							IORESOURCE_IO);
++	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
++							   IORESOURCE_IO);
+ 	resource_size_t size = 0, size0 = 0, size1 = 0;
+ 	resource_size_t children_add_size = 0;
+ 	resource_size_t min_align, align;
+ 
+ 	if (!b_res)
+ 		return;
++	if (b_res->parent)
++		return;
+ 
+ 	min_align = window_alignment(bus, IORESOURCE_IO);
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+@@ -978,7 +985,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 	resource_size_t min_align, align, size, size0, size1;
+ 	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
+ 	int order, max_order;
+-	struct resource *b_res = find_free_bus_resource(bus,
++	struct resource *b_res = find_bus_resource_of_type(bus,
+ 					mask | IORESOURCE_PREFETCH, type);
+ 	resource_size_t children_add_size = 0;
+ 	resource_size_t children_add_align = 0;
+@@ -986,6 +993,8 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 
+ 	if (!b_res)
+ 		return -ENOSPC;
++	if (b_res->parent)
++		return 0;
+ 
+ 	memset(aligns, 0, sizeof(aligns));
+ 	max_order = 0;
+-- 
+2.20.1
+
