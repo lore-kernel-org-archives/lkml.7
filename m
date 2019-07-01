@@ -2,118 +2,150 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89523C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BC6C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2A720652
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:53:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKBIvdtp"
+	by mail.kernel.org (Postfix) with ESMTP id 830F220B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:53:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfGAHw7 (ORCPT
+        id S1727481AbfGAHxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 03:52:59 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36181 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbfGAHw7 (ORCPT
+        Mon, 1 Jul 2019 03:53:47 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:33209 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfGAHxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 03:52:59 -0400
-Received: by mail-pg1-f195.google.com with SMTP id c13so5617610pgg.3;
-        Mon, 01 Jul 2019 00:52:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rdcIi2cumO41Y4zgqEx+RI7IBrTExhB5mGxaS338vMg=;
-        b=EKBIvdtpU4JjTSu+btioEx6SVuPsS2YcCGeGEzSHD8Mqpbt3QjFzV01J0HGdAsZMxA
-         miNJP3pvKvK5Vv+QBePJUFMAkF288+oNkNeqoj4C/DTPSCZQdZjVWd0S6PUHXogRcXUA
-         LkI1bUyYnk4xpBuAeWcTqic5UQ5H/XSi+WrjJofVuO+MJwUy7qq5bH2UnIZDLsheczc/
-         X2ynD5HruKB9PzJ8PJTO4+YJymag+fizsW1DpLODc4NNbZ/dfa3eAbp56Yy9ogNwHlIV
-         UE7clsbPccJZVbnCX4wiWFeH+PNqnTE4xtfPm/R6metV6iITyl/Gz0sBO8kHFuSdzR0V
-         VhMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rdcIi2cumO41Y4zgqEx+RI7IBrTExhB5mGxaS338vMg=;
-        b=kx6g0YwVHg+9vNJA+409opAoIaSyateStgrqgQgLiGOEOiZsW6MP5TSQu7u0mYiTZ1
-         myal7tgHJBjqR/9lNjfX9GDGpYf3zSPuIdmReDJ+gZY4R0bklVrQuNhAp1j4F/544gan
-         nOf7Zl5kj8VWEVfI7d9Wi7GmLeFBQ66K8vZ2ecjJ6gklBnVAy/AhdUhMVW4PYia2v/k4
-         JRcbZjgJIE0yQusr9u6UjEbfs3SnwpCyEmsXGi4B65tjB6dHS+7OCkIcp8c90Qe+nIo4
-         /aCX9O/u4Qmg/FabF0tndgWs+i1XmYca/syKUSu4aePFzimtJChEbUjFPlHM9L/Br5vH
-         7muQ==
-X-Gm-Message-State: APjAAAX0Z6XUSxmlbOvSxn5/1xujZ+XUqzVJ7JvuJBCd4ZT1b9tvKOen
-        tGwHMKDXiNybqh6Mb9ncW7E=
-X-Google-Smtp-Source: APXvYqz+5OQaUvqEiswzedP1HrM6edG/iaiLW0IB1Z0Zqu6vyMD+jY20kS9fCmT0tw3iTMQujMtKbQ==
-X-Received: by 2002:a17:90a:3585:: with SMTP id r5mr30793616pjb.15.1561967578351;
-        Mon, 01 Jul 2019 00:52:58 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id t96sm8530996pjb.1.2019.07.01.00.52.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 00:52:57 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 00:52:55 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Olof Johansson <olof@lixom.net>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Arnd Bergmann <arnd@arndb.de>, Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Christian Hoff <christian_hoff@gmx.net>,
-        Tony Lindgren <tony@atomide.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Gabriel Fernandez <gabriel.fernandez@st.com>,
-        Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 2/4] input: keyboard/mouse/touchscreen/misc: Use
- dev_get_drvdata()
-Message-ID: <20190701075255.GD172968@dtor-ws>
-References: <20190701032342.25971-1-huangfq.daxian@gmail.com>
+        Mon, 1 Jul 2019 03:53:46 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x617rh0D004617, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x617rh0D004617
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 1 Jul 2019 15:53:43 +0800
+Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
+ (172.21.6.18) with Microsoft SMTP Server id 14.3.439.0; Mon, 1 Jul 2019
+ 15:53:42 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     <netdev@vger.kernel.org>
+CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, Hayes Wang <hayeswang@realtek.com>
+Subject: [PATCH net] r8152: fix the setting of detecting the linking change for runtime suspend
+Date:   Mon, 1 Jul 2019 15:53:19 +0800
+Message-ID: <1394712342-15778-286-albertk@realtek.com>
+X-Mailer: Microsoft Office Outlook 11
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701032342.25971-1-huangfq.daxian@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [172.21.177.138]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fuqian,
+1. Rename r8153b_queue_wake() to r8153_queue_wake().
 
-On Mon, Jul 01, 2019 at 11:23:12AM +0800, Fuqian Huang wrote:
-> Using dev_get_drvdata directly.
-> 
+2. Correct the setting. The enable bit should be 0xd38c bit 0. Besides,
+   the 0xd38a bit 0 and 0xd398 bit 8 have to be cleared for both enabled
+   and disabled.
 
-I prefer using proper bus accessors.
+Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+---
+ drivers/net/usb/r8152.c | 38 +++++++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
 
-Thanks.
-
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index e0dcb681cfe5..101d1325f3f1 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -53,6 +53,9 @@
+ #define PAL_BDC_CR		0xd1a0
+ #define PLA_TEREDO_TIMER	0xd2cc
+ #define PLA_REALWOW_TIMER	0xd2e8
++#define PLA_SUSPEND_FLAG	0xd38a
++#define PLA_INDICATE_FALG	0xd38c
++#define PLA_EXTRA_STATUS	0xd398
+ #define PLA_EFUSE_DATA		0xdd00
+ #define PLA_EFUSE_CMD		0xdd02
+ #define PLA_LEDSEL		0xdd90
+@@ -336,6 +339,15 @@
+ /* PLA_BOOT_CTRL */
+ #define AUTOLOAD_DONE		0x0002
+ 
++/* PLA_SUSPEND_FLAG */
++#define LINK_CHG_EVENT		BIT(0)
++
++/* PLA_INDICATE_FALG */
++#define UPCOMING_RUNTIME_D3	BIT(0)
++
++/* PLA_EXTRA_STATUS */
++#define LINK_CHANGE_FLAG	BIT(8)
++
+ /* USB_USB2PHY */
+ #define USB2PHY_SUSPEND		0x0001
+ #define USB2PHY_L1		0x0002
+@@ -2806,20 +2818,24 @@ static void r8153b_power_cut_en(struct r8152 *tp, bool enable)
+ 	ocp_write_word(tp, MCU_TYPE_USB, USB_MISC_0, ocp_data);
+ }
+ 
+-static void r8153b_queue_wake(struct r8152 *tp, bool enable)
++static void r8153_queue_wake(struct r8152 *tp, bool enable)
+ {
+ 	u32 ocp_data;
+ 
+-	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, 0xd38a);
++	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_INDICATE_FALG);
+ 	if (enable)
+-		ocp_data |= BIT(0);
++		ocp_data |= UPCOMING_RUNTIME_D3;
+ 	else
+-		ocp_data &= ~BIT(0);
+-	ocp_write_byte(tp, MCU_TYPE_PLA, 0xd38a, ocp_data);
++		ocp_data &= ~UPCOMING_RUNTIME_D3;
++	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_INDICATE_FALG, ocp_data);
++
++	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_SUSPEND_FLAG);
++	ocp_data &= ~LINK_CHG_EVENT;
++	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_SUSPEND_FLAG, ocp_data);
+ 
+-	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, 0xd38c);
+-	ocp_data &= ~BIT(0);
+-	ocp_write_byte(tp, MCU_TYPE_PLA, 0xd38c, ocp_data);
++	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_EXTRA_STATUS);
++	ocp_data &= ~LINK_CHANGE_FLAG;
++	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EXTRA_STATUS, ocp_data);
+ }
+ 
+ static bool rtl_can_wakeup(struct r8152 *tp)
+@@ -2887,14 +2903,14 @@ static void rtl8153_runtime_enable(struct r8152 *tp, bool enable)
+ static void rtl8153b_runtime_enable(struct r8152 *tp, bool enable)
+ {
+ 	if (enable) {
+-		r8153b_queue_wake(tp, true);
++		r8153_queue_wake(tp, true);
+ 		r8153b_u1u2en(tp, false);
+ 		r8153_u2p3en(tp, false);
+ 		rtl_runtime_suspend_enable(tp, true);
+ 		r8153b_ups_en(tp, true);
+ 	} else {
+ 		r8153b_ups_en(tp, false);
+-		r8153b_queue_wake(tp, false);
++		r8153_queue_wake(tp, false);
+ 		rtl_runtime_suspend_enable(tp, false);
+ 		r8153_u2p3en(tp, true);
+ 		r8153b_u1u2en(tp, true);
+@@ -4221,7 +4237,7 @@ static void r8153b_init(struct r8152 *tp)
+ 
+ 	r8153b_power_cut_en(tp, false);
+ 	r8153b_ups_en(tp, false);
+-	r8153b_queue_wake(tp, false);
++	r8153_queue_wake(tp, false);
+ 	rtl_runtime_suspend_enable(tp, false);
+ 	r8153b_u1u2en(tp, true);
+ 	usb_enable_lpm(tp->udev);
 -- 
-Dmitry
+2.21.0
+
