@@ -2,34 +2,35 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57ADC06508
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 00:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69AFC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 00:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB8472145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 00:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8DB32145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 00:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfGAAne (ORCPT
+        id S1727121AbfGAAni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 20:43:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53028 "EHLO mx1.suse.de"
+        Sun, 30 Jun 2019 20:43:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53048 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726472AbfGAAne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 20:43:34 -0400
+        id S1726472AbfGAAni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 20:43:38 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F1F4CADE6;
-        Mon,  1 Jul 2019 00:43:31 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 2396EAE07;
+        Mon,  1 Jul 2019 00:43:37 +0000 (UTC)
 From:   NeilBrown <neil@brown.name>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Date:   Mon, 01 Jul 2019 10:43:07 +1000
-Subject: [PATCH 0/2] staging: update mt7621 dts for some recent driver
- changes
+Subject: [PATCH 1/2] staging: mt7621-dts: update sdhci config.
 Cc:     devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>
-Message-ID: <156194175140.1430.2478988354194078582.stgit@noble.brown>
+Message-ID: <156194178761.1430.1625105851941268306.stgit@noble.brown>
+In-Reply-To: <156194175140.1430.2478988354194078582.stgit@noble.brown>
+References: <156194175140.1430.2478988354194078582.stgit@noble.brown>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -39,35 +40,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mt7621 MMC driver was recently removed from staging due to
-copyright concerns.  Since then drivers/mmc/host/mtk-sd.c has been
-enhanced to work with the mt7621 IP.  The first patch updates
-the dts file to match this driver.
+The mtk-sd driver has been updated to support
+the IP in the mt7621, so update our configuration
+to work with it.
 
-Earlier, the drivers/net/ethernet/mediatek/ driver was enhanced
-to work with mt7621 hardware and the mt7621-eth driver was removed
-from staging.  The second patch enhances the mt7621.dtsi to better
-support this driver and particularly to allow the second network port
-to be used in at least one of its possible configurations.
-
-Thanks,
-NeilBrown
-
+Signed-off-by: NeilBrown <neil@brown.name>
 ---
+ drivers/staging/mt7621-dts/mt7621.dtsi |   41 +++++++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
-NeilBrown (2):
-      staging: mt7621-dts: update sdhci config.
-      staging: mt7621-dts: add support for second network interface
+diff --git a/drivers/staging/mt7621-dts/mt7621.dtsi b/drivers/staging/mt7621-dts/mt7621.dtsi
+index 9c90cac82efc..549ff5a0699e 100644
+--- a/drivers/staging/mt7621-dts/mt7621.dtsi
++++ b/drivers/staging/mt7621-dts/mt7621.dtsi
+@@ -43,6 +43,30 @@
+ 		clock-frequency = <220000000>;
+ 	};
+ 
++	mmc_clock: mmc_clock@0 {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <48000000>;
++	};
++
++	mmc_fixed_3v3: fixedregulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "mmc_power";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		enable-active-high;
++		regulator-always-on;
++	  };
++
++	  mmc_fixed_1v8_io: fixedregulator@1 {
++		compatible = "regulator-fixed";
++		regulator-name = "mmc_io";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		enable-active-high;
++		regulator-always-on;
++	};
++
+ 	palmbus: palmbus@1E000000 {
+ 		compatible = "palmbus";
+ 		reg = <0x1E000000 0x100000>;
+@@ -299,9 +323,24 @@
+ 	sdhci: sdhci@1E130000 {
+ 		status = "disabled";
+ 
+-		compatible = "ralink,mt7620-sdhci";
++		compatible = "mediatek,mt7620-mmc";
+ 		reg = <0x1E130000 0x4000>;
+ 
++		bus-width = <4>;
++		max-frequency = <48000000>;
++		cap-sd-highspeed;
++		cap-mmc-highspeed;
++		vmmc-supply = <&mmc_fixed_3v3>;
++		vqmmc-supply = <&mmc_fixed_1v8_io>;
++		disable-wp;
++
++		pinctrl-names = "default", "state_uhs";
++		pinctrl-0 = <&sdhci_pins>;
++		pinctrl-1 = <&sdhci_pins>;
++
++		clocks = <&mmc_clock &mmc_clock>;
++		clock-names = "source", "hclk";
++
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <GIC_SHARED 20 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
 
-
- drivers/staging/mt7621-dts/Kconfig     |    7 ++++
- drivers/staging/mt7621-dts/Makefile    |    1 +
- drivers/staging/mt7621-dts/gbpc1.dts   |    2 +
- drivers/staging/mt7621-dts/gbpc2.dts   |   21 +++++++++++++
- drivers/staging/mt7621-dts/mt7621.dtsi |   53 +++++++++++++++++++++++++++++---
- 5 files changed, 77 insertions(+), 7 deletions(-)
- create mode 100644 drivers/staging/mt7621-dts/gbpc2.dts
-
---
-Signature
 
