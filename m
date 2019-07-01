@@ -2,101 +2,70 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233E4C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D32C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF96B206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:54:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="aXdwDTzL"
+	by mail.kernel.org (Postfix) with ESMTP id 7D68F21841
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730258AbfGARy1 (ORCPT
+        id S1730310AbfGARyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 13:54:27 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33950 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727700AbfGARy1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 13:54:27 -0400
-Received: by mail-oi1-f196.google.com with SMTP id l12so10680851oil.1;
-        Mon, 01 Jul 2019 10:54:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cz+aP0Ec5W7R8dkKPE9rRkbojDWe1GP+xoyo98aB624=;
-        b=aXdwDTzLcSPbI2Lrr8dU7FM1m4VFK1T1c/k30ysqQbij/rr8UirpNLFPsmhhefWVww
-         EU2HLTeyyt0MxCJpyBAkP0jV7numoiQaVKUDKwMwaFn4ty/pkBbHzGiAWa+TVpZXRTiu
-         yyqFRaYaDA/IMLAkMq7GFIYr9ahiqb9X6ejDchJS1S7z87p8fTf6rNOO0Ry7zZtHGWGf
-         8xrWjfXPfSioLgNokSRXnJTaSW6hed2PDPOjs6Qf0NVIdFTGxzx5EV2YPV5Ec6Fvdrvr
-         PLA3TCqKau+kGLlfAY6Tsnjs3JLSFxnHq7bK/1L7Yu6vX0k/urwLFBceyeOOMUwTej/U
-         BfBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cz+aP0Ec5W7R8dkKPE9rRkbojDWe1GP+xoyo98aB624=;
-        b=eEyWmUA01zVqcS4i7SnpIsJuHzxepLENBv59JOjU1XTGYlg8akt/VLL6PBCNChRzmC
-         jN2AGceynwNl6WqqCJpNE5Vz57TJl8de/bsbJW+2WX2hFBqVvpgpR+x2of5Ae2LUXkeg
-         nUKBEYQsIqKaqQnzjj0Fze0AcmPm0ZTalMK2U6z4f2dIQZluE9XGI0wAneAFMfVWnQU0
-         JnUogYE+A3duXgNkDceR1aChKm7Pgrt8FSqnNZ4SHgrAsvak9qo+w5b2dvNXmqolyf6s
-         QaTGpni6cpBkoP0CLcb3ItcXQ3nfKrg3N76U8UolhkmJFScp2MGZEtJPt2VowpliTCbv
-         As5w==
-X-Gm-Message-State: APjAAAXAoORLfG0Fl/RWl4+g6Phv4yq4KG2NNEespOPiXEyL8HgV6eTY
-        5l2PVMt/ZUGAYVQBzH5JjPckauiBRFa6xJwGqqdX1w==
-X-Google-Smtp-Source: APXvYqyEauAoV4qo/po0ya18tTktkLvsFYl7paAkp55icsJikdBjZ8AIiKm0nhrTKHEu0ccb1YyGdzYFFMLFrU/XgLQ=
-X-Received: by 2002:a05:6808:3d6:: with SMTP id o22mr330425oie.140.1562003666003;
- Mon, 01 Jul 2019 10:54:26 -0700 (PDT)
+        Mon, 1 Jul 2019 13:54:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:37980 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727700AbfGARyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 13:54:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7331228;
+        Mon,  1 Jul 2019 10:54:49 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 890D63F703;
+        Mon,  1 Jul 2019 10:54:48 -0700 (PDT)
+Subject: Re: DMA-API attr - DMA_ATTR_NO_KERNEL_MAPPING
+To:     Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>
+References: <CACDBo564RoWpi8y2pOxoddnn0s3f3sA-fmNxpiXuxebV5TFBJA@mail.gmail.com>
+ <CACDBo55GfomD4yAJ1qaOvdm8EQaD-28=etsRHb39goh+5VAeqw@mail.gmail.com>
+ <20190626175131.GA17250@infradead.org>
+ <CACDBo56fNVxVyNEGtKM+2R0X7DyZrrHMQr6Yw4NwJ6USjD5Png@mail.gmail.com>
+ <c9fe4253-5698-a226-c643-32a21df8520a@arm.com>
+ <CACDBo57CcYQmNrsTdMbax27nbLyeMQu4kfKZOzNczNcnde9g3Q@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <0725b9aa-0523-daef-b4ff-7e2dd910cf3c@arm.com>
+Date:   Mon, 1 Jul 2019 18:54:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190620175022.29348-1-martin.blumenstingl@googlemail.com> <a7647aea-b3e6-b785-8476-1851f50beff1@synopsys.com>
-In-Reply-To: <a7647aea-b3e6-b785-8476-1851f50beff1@synopsys.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 1 Jul 2019 19:54:15 +0200
-Message-ID: <CAFBinCDDyG_CxW+PB_OrUXfy-aDKSoewC2OyCfGh18N=omSgcQ@mail.gmail.com>
-Subject: Re: [PATCH] usb: dwc2: use a longer AHB idle timeout in dwc2_core_reset()
-To:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACDBo57CcYQmNrsTdMbax27nbLyeMQu4kfKZOzNczNcnde9g3Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 7:41 AM Minas Harutyunyan
-<Minas.Harutyunyan@synopsys.com> wrote:
->
-> On 6/20/2019 9:51 PM, Martin Blumenstingl wrote:
-> > Use a 10000us AHB idle timeout in dwc2_core_reset() and make it
-> > consistent with the other "wait for AHB master IDLE state" ocurrences.
-> >
-> > This fixes a problem for me where dwc2 would not want to initialize when
-> > updating to 4.19 on a MIPS Lantiq VRX200 SoC. dwc2 worked fine with
-> > 4.14.
-> > Testing on my board shows that it takes 180us until AHB master IDLE
-> > state is signalled. The very old vendor driver for this SoC (ifxhcd)
-> > used a 1 second timeout.
-> > Use the same timeout that is used everywhere when polling for
-> > GRSTCTL_AHBIDLE instead of using a timeout that "works for one board"
-> > (180us in my case) to have consistent behavior across the dwc2 driver.
-> >
-> > Cc: linux-stable <stable@vger.kernel.org> # 4.19+
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
->
-> Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-thank you for reviewing this!
+On 01/07/2019 18:47, Pankaj Suryawanshi wrote:
+>> If you want a kernel mapping, *don't* explicitly request not to have a
+>> kernel mapping in the first place. It's that simple.
+>>
+> 
+> Do you mean do not use dma-api ? because if i used dma-api it will give you
+> mapped virtual address.
+> or i have to use directly cma_alloc() in my driver. // if i used this
+> approach i need to reserved more vmalloc area.
 
-is there any chance we can get this fix into Linux 5.3? I know that
-it's too late for 5.2 so I'm fine with skipping that.
+No, I mean just call dma_alloc_attrs() normally *without* adding the 
+DMA_ATTR_NO_KERNEL_MAPPING flag. That flag means "I never ever want to 
+make CPU accesses to this buffer from the kernel" - that is clearly not 
+the case for your code, so it is utterly nonsensical to still pass the 
+flag but try to hack around it later.
 
-
-Martin
+Robin.
