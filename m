@@ -2,70 +2,79 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A72C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093A8C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8DF2064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F402064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:56:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wpyU7ZyF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbfGAOy4 (ORCPT
+        id S1729970AbfGAO4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:54:56 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38018 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729954AbfGAOyz (ORCPT
+        Mon, 1 Jul 2019 10:56:35 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35992 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbfGAO4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:54:55 -0400
-Received: by mail-qt1-f193.google.com with SMTP id n11so14937243qtl.5
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 07:54:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bQADhpdv0AdcGJ5CxSSj7Vw+/Bpl7IHt15JAe9Y6HL4=;
-        b=qe4EYd51ZlH8l0rQjTBKgjVaGm9r8Ucid2V9O739mvdhW/Oh11+Q5JL1l2dPiwyJBd
-         eTY0BEqepQyUXP5DzUTXC9pGG+Z6jTHKJBCzDAT6CeH/9k7bICo8HAZrXMWLWtudogR5
-         TqWrS/IdBwTEswyF2Ewny6izSduyCbyRJ59H45gn1WEnXj38utzNhgWo2tASX3HaIta5
-         +jMe0aFu/zUxD7RqjQv6zus4N9m7v3OJTjLVz6bFyDaVaRJhK4gTkVVXfbp0eQuD6mxy
-         kdOsA6qJoOj7Ke6EqkWPur8tIVxHNfbp/lNmz7G/HMqUza2kavpXIuF0pS0VW1bATyvy
-         B3PA==
-X-Gm-Message-State: APjAAAVw0MpSZczAHUZC38Cus9Y6WaKfN7B+mQ0H34/1b51dVQHb7Hmm
-        hZR54T/wEXJQ82fLP1dMmKrDdMoozjosDW+udl8=
-X-Google-Smtp-Source: APXvYqx4jXql4g92uWjBRrGcOulzgb4ho0B27u92U6CQir5dPriC+ckt+BJrI8qUUAGd8rINuInxBQyW2plUqW4nLbw=
-X-Received: by 2002:ac8:5311:: with SMTP id t17mr20326781qtn.304.1561992895019;
- Mon, 01 Jul 2019 07:54:55 -0700 (PDT)
+        Mon, 1 Jul 2019 10:56:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hH6jNFENnD1LOcCIYolxBITdKkbyMQAr2N8/Y9mEPXs=; b=wpyU7ZyFih+mQv/d+Qx2SpXjY
+        dNVs++V4S62hX2lmLCbekaCwfbjACDQp3THiVEkH5/R0PCtaNU0mAuLKQ7/M9ir0XfLqz/OsKedft
+        8SlNJY/K1YPzDJXYnA7fJWDjJCs+0pszYeMW3mRa8rrzSTaloiQqFda7ivtla9PFov3LkB3dENRP4
+        OWrPNRlbxB9GbafIwVqJ1kP0i5mrU//La0Ll98cVE87b9i+KynIouUYf96eRRiSHnDcT5gOmxp70e
+        nwrVIyfMyjocB/ylnIg1kC2ZJTcyF33yOmiXlIgigIoWrGHNU8CeKim/sklHpeX0RnJ5E4qw0I7BG
+        olU09cWpA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hhxjJ-0000ET-Tu; Mon, 01 Jul 2019 14:56:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 984F0209C957E; Mon,  1 Jul 2019 16:56:28 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 16:56:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Robert Hodaszi <Robert.Hodaszi@digi.com>
+Subject: Re: [patch V2 3/6] genirq: Add optional hardware synchronization for
+ shutdown
+Message-ID: <20190701145628.GC3402@hirez.programming.kicks-ass.net>
+References: <20190628111148.828731433@linutronix.de>
+ <20190628111440.279463375@linutronix.de>
 MIME-Version: 1.0
-References: <20190628104007.2721479-1-arnd@arndb.de> <20190628155956.GB27114@jaegeuk-macbookpro.roam.corp.google.com>
-In-Reply-To: <20190628155956.GB27114@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 1 Jul 2019 16:54:38 +0200
-Message-ID: <CAK8P3a3c_=3NggcqUBy87ytLVtvGxZiGWmipkgCCGdodYETs9A@mail.gmail.com>
-Subject: Re: [PATCH] f2fs: fix 32-bit linking
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Chao Yu <yuchao0@huawei.com>, Qiuyang Sun <sunqiuyang@huawei.com>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Wang Shilong <wangshilong1991@gmail.com>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628111440.279463375@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 5:59 PM Jaegeuk Kim <jaegeuk@kernel.org> wrote:
->
-> Hi Arnd,
->
-> If you don't mind, can I integrate this into the original patch in the queue?
+On Fri, Jun 28, 2019 at 01:11:51PM +0200, Thomas Gleixner wrote:
+> But that does not catch the case where the interrupt is on flight at the
+> hardware level but not yet serviced by the target CPU. That creates an
+> interesing race condition:
 
-Yes, I think that would be good anyway, it may take a little longer to fix all
-the architectures.
+> + *	It does not check whether there is an interrupt on flight at the
+> + *	hardware level, but not serviced yet, as this might deadlock when
+> + *	called with interrupts disabled and the target CPU of the interrupt
+> + *	is the current CPU.
 
-        Arnd
+> +	/*
+> +	 * Make sure it's not being used on another CPU and if the chip
+> +	 * supports it also make sure that there is no (not yet serviced)
+> +	 * interrupt on flight at the hardware level.
+> +	 */
+> +	__synchronize_hardirq(desc, true);
+
+s/on flight/in flight/ ?
