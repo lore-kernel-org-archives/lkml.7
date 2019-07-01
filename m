@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A92C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE79EC46478
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E33213F2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6FFB208C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561971109;
-	bh=5e7HmxMIundGOp6m2M9rxns5Oj7O0RYJ8pMxWxoM/+A=;
+	s=default; t=1561971154;
+	bh=c27CKqOc16mlMGXnKK5D70qK+oD98EbgIRZ3DSOnI2s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dpNuQ2JS2D+nM8v/wYvWFz+t1R7V7GL/TOMPv0tY7TgSvTlsjYBygivhlygG5kcY1
-	 kjc8IQPj6r+t+hMefA4hOySgravH+44s4Q8Ht7ViHGH7elG53Ouf5detm7olZ5sC8M
-	 ml9nImUA7cU2iXn5weuAy3NMpAn+CRhEIdXQ5ASE=
+	b=Z0d522j/DNB6xDbcIntTX0wQvzNjoa2z390/Z4tqhaack6F5yKSofNEL3+rgJ9HrI
+	 xpuQNXDmLoICYniCg5wzfQZ6quy4VqQCJavBCDPJiJOo9kEhQ5eL/rse32c5W3DNJV
+	 BmitfheEbPcaKNDBcFZytC45p6Zj0EMI8aDiTNuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfGAIvs (ORCPT
+        id S1728153AbfGAIwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:51:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41720 "EHLO mx1.suse.de"
+        Mon, 1 Jul 2019 04:52:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41964 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726442AbfGAIvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:51:48 -0400
+        id S1726442AbfGAIwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 04:52:33 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6455EAD23;
-        Mon,  1 Jul 2019 08:51:45 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 10:51:44 +0200
+        by mx1.suse.de (Postfix) with ESMTP id AE529AD23;
+        Mon,  1 Jul 2019 08:52:31 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 10:52:31 +0200
 From:   Michal Hocko <mhocko@kernel.org>
 To:     David Hildenbrand <david@redhat.com>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
@@ -40,142 +40,79 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
         Dan Williams <dan.j.williams@intel.com>,
         Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Brown <broonie@kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Oscar Salvador <osalvador@suse.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v3 10/11] mm/memory_hotplug: Make
- unregister_memory_block_under_nodes() never fail
-Message-ID: <20190701085144.GJ6376@dhcp22.suse.cz>
+        Igor Mammedov <imammedo@redhat.com>
+Subject: Re: [PATCH v3 11/11] mm/memory_hotplug: Remove "zone" parameter from
+ sparse_remove_one_section
+Message-ID: <20190701085231.GK6376@dhcp22.suse.cz>
 References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-11-david@redhat.com>
+ <20190527111152.16324-12-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190527111152.16324-11-david@redhat.com>
+In-Reply-To: <20190527111152.16324-12-david@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 27-05-19 13:11:51, David Hildenbrand wrote:
-> We really don't want anything during memory hotunplug to fail.
-> We always pass a valid memory block device, that check can go. Avoid
-> allocating memory and eventually failing. As we are always called under
-> lock, we can use a static piece of memory. This avoids having to put
-> the structure onto the stack, having to guess about the stack size
-> of callers.
+On Mon 27-05-19 13:11:52, David Hildenbrand wrote:
+> The parameter is unused, so let's drop it. Memory removal paths should
+> never care about zones. This is the job of memory offlining and will
+> require more refactorings.
 > 
-> Patch inspired by a patch from Oscar Salvador.
-> 
-> In the future, there might be no need to iterate over nodes at all.
-> mem->nid should tell us exactly what to remove. Memory block devices
-> with mixed nodes (added during boot) should properly fenced off and never
-> removed.
-
-Yeah, we do not allow to offline multi zone (node) ranges so the current
-code seems to be over engineered.
-
-Anyway, I am wondering why do we have to strictly check for already
-removed nodes links. Is the sysfs code going to complain we we try to
-remove again?
- 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Anyway
 Acked-by: Michal Hocko <mhocko@suse.com>
 
 > ---
->  drivers/base/node.c  | 18 +++++-------------
->  include/linux/node.h |  5 ++---
->  2 files changed, 7 insertions(+), 16 deletions(-)
+>  include/linux/memory_hotplug.h | 2 +-
+>  mm/memory_hotplug.c            | 2 +-
+>  mm/sparse.c                    | 4 ++--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 04fdfa99b8bc..9be88fd05147 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -803,20 +803,14 @@ int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 2f1f87e13baa..1a4257c5f74c 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -346,7 +346,7 @@ extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
+>  extern bool is_memblock_offlined(struct memory_block *mem);
+>  extern int sparse_add_one_section(int nid, unsigned long start_pfn,
+>  				  struct vmem_altmap *altmap);
+> -extern void sparse_remove_one_section(struct zone *zone, struct mem_section *ms,
+> +extern void sparse_remove_one_section(struct mem_section *ms,
+>  		unsigned long map_offset, struct vmem_altmap *altmap);
+>  extern struct page *sparse_decode_mem_map(unsigned long coded_mem_map,
+>  					  unsigned long pnum);
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 82136c5b4c5f..e48ec7b9dee2 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -524,7 +524,7 @@ static void __remove_section(struct zone *zone, struct mem_section *ms,
+>  	start_pfn = section_nr_to_pfn((unsigned long)scn_nr);
+>  	__remove_zone(zone, start_pfn);
 >  
->  /*
->   * Unregister memory block device under all nodes that it spans.
-> + * Has to be called with mem_sysfs_mutex held (due to unlinked_nodes).
->   */
-> -int unregister_memory_block_under_nodes(struct memory_block *mem_blk)
-> +void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
->  {
-> -	NODEMASK_ALLOC(nodemask_t, unlinked_nodes, GFP_KERNEL);
->  	unsigned long pfn, sect_start_pfn, sect_end_pfn;
-> +	static nodemask_t unlinked_nodes;
->  
-> -	if (!mem_blk) {
-> -		NODEMASK_FREE(unlinked_nodes);
-> -		return -EFAULT;
-> -	}
-> -	if (!unlinked_nodes)
-> -		return -ENOMEM;
-> -	nodes_clear(*unlinked_nodes);
-> -
-> +	nodes_clear(unlinked_nodes);
->  	sect_start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
->  	sect_end_pfn = section_nr_to_pfn(mem_blk->end_section_nr);
->  	for (pfn = sect_start_pfn; pfn <= sect_end_pfn; pfn++) {
-> @@ -827,15 +821,13 @@ int unregister_memory_block_under_nodes(struct memory_block *mem_blk)
->  			continue;
->  		if (!node_online(nid))
->  			continue;
-> -		if (node_test_and_set(nid, *unlinked_nodes))
-> +		if (node_test_and_set(nid, unlinked_nodes))
->  			continue;
->  		sysfs_remove_link(&node_devices[nid]->dev.kobj,
->  			 kobject_name(&mem_blk->dev.kobj));
->  		sysfs_remove_link(&mem_blk->dev.kobj,
->  			 kobject_name(&node_devices[nid]->dev.kobj));
->  	}
-> -	NODEMASK_FREE(unlinked_nodes);
-> -	return 0;
+> -	sparse_remove_one_section(zone, ms, map_offset, altmap);
+> +	sparse_remove_one_section(ms, map_offset, altmap);
 >  }
 >  
->  int link_mem_sections(int nid, unsigned long start_pfn, unsigned long end_pfn)
-> diff --git a/include/linux/node.h b/include/linux/node.h
-> index 02a29e71b175..548c226966a2 100644
-> --- a/include/linux/node.h
-> +++ b/include/linux/node.h
-> @@ -139,7 +139,7 @@ extern int register_cpu_under_node(unsigned int cpu, unsigned int nid);
->  extern int unregister_cpu_under_node(unsigned int cpu, unsigned int nid);
->  extern int register_mem_sect_under_node(struct memory_block *mem_blk,
->  						void *arg);
-> -extern int unregister_memory_block_under_nodes(struct memory_block *mem_blk);
-> +extern void unregister_memory_block_under_nodes(struct memory_block *mem_blk);
->  
->  extern int register_memory_node_under_compute_node(unsigned int mem_nid,
->  						   unsigned int cpu_nid,
-> @@ -175,9 +175,8 @@ static inline int register_mem_sect_under_node(struct memory_block *mem_blk,
->  {
->  	return 0;
->  }
-> -static inline int unregister_memory_block_under_nodes(struct memory_block *mem_blk)
-> +static inline void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
->  {
-> -	return 0;
+>  /**
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index d1d5e05f5b8d..1552c855d62a 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -800,8 +800,8 @@ static void free_section_usemap(struct page *memmap, unsigned long *usemap,
+>  		free_map_bootmem(memmap);
 >  }
 >  
->  static inline void register_hugetlbfs_with_node(node_registration_func_t reg,
+> -void sparse_remove_one_section(struct zone *zone, struct mem_section *ms,
+> -		unsigned long map_offset, struct vmem_altmap *altmap)
+> +void sparse_remove_one_section(struct mem_section *ms, unsigned long map_offset,
+> +			       struct vmem_altmap *altmap)
+>  {
+>  	struct page *memmap = NULL;
+>  	unsigned long *usemap = NULL;
 > -- 
 > 2.20.1
 
