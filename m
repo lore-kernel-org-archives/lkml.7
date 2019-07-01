@@ -2,112 +2,89 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A779C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B844C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A3220B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561967108;
-	bh=sSj+HBqNEa3o1VWt40vpIy462cR5/BZd/O5Msa+HbDw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GHc+zQGXMIH2XybhstC0QfPcl9Rtnhwx69WI72nMKRlv3M4VGg4JY0dsjrD8dx0xR
-	 3R2RegN4NYUFbzQTpdoJmIX9hTb+Ax7mRP4TBDMGoA3tY+kaVi9oNiwec6Xwy+5NJs
-	 gzWM2MJp421OsnWA7RI6tnwCB1Ar0GPfrOVCqm2A=
+	by mail.kernel.org (Postfix) with ESMTP id 00F22217D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:45:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="UdrWy5ns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfGAHpG (ORCPT
+        id S1727973AbfGAHpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 03:45:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50864 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726036AbfGAHpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 03:45:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9C66EAE48;
-        Mon,  1 Jul 2019 07:45:04 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 09:45:03 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>
-Subject: Re: [PATCH v3 03/11] s390x/mm: Implement arch_remove_memory()
-Message-ID: <20190701074503.GD6376@dhcp22.suse.cz>
-References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-4-david@redhat.com>
+        Mon, 1 Jul 2019 03:45:50 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33329 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfGAHpu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 03:45:50 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r6so10281818qkc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 00:45:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+o+3A6MehkTrwlHzPltAkDqnU8gp0GmaahhvYz3RFyM=;
+        b=UdrWy5ns7RKotFmMefez/oD/AycEJAzAu1LjvzFxXzIV4kW8lF6C5E/yvkt5ySrF2j
+         VZDVpG1ExkBJNYT4TPy37N15aHPWJOKrG0nY9m4OjJLRSTfTGqcpMiJnTdMJsEmz+Wvp
+         k9akBzRMejSTu+YvWpnerRXCUEi7t8r6qcHD8BX0XETVMQXi0yDhP7wJf3HiIxA7M11z
+         l/qTa/6tXlTHU7hBV6uY0/UktA+siFSqUlbatFBKeu7DEyO7kMrEUwX12d0HM0dHm0MB
+         Qe+bwPd7IUi30U/ZSU50pUaYEzBaHpIS4/QJE/CAxYsfIeyBM4LDj9P1KUP01THV2dp7
+         pnFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+o+3A6MehkTrwlHzPltAkDqnU8gp0GmaahhvYz3RFyM=;
+        b=tAjSKTSw9ocU3IOS/TMaQrY29bSPVsKsUg13aoAF5yORgZ4Qx/evqlhju4PnTCccMa
+         EiQnUCYPRr1B5Kcud1fVjGspITUIrBt7AthqMdgZHvzT4JLYjtDHlWzVpWxGL7GF7BKL
+         fFhz1IfvBzXYPKqtNIjLcoa9FYxm7k1jtrA+sCjzylmgWj2zQKKLQjsSJhyFv9eCTafQ
+         +4N3LU2XrFcuxRfbp7v11T/OpB8TbGX7OuZv67b6ndRQ+9aDZYakaZPpnFlhM1EzeJ6e
+         PYzWIM1lVEvwNADNfVmS+2dyXK9oD0sl63mpWgcM49sADNn5oWGXom6ZzFtjJEAhYhuR
+         iU/A==
+X-Gm-Message-State: APjAAAUz60O8z+RhwhUS0frsbmLkjOUBZ2e3LYgyO6bNtxUPRCu2YJzo
+        aszWjyJYVYjc5N1YfRN1jkV2xDpbXnuUu9MKUiVkFQ==
+X-Google-Smtp-Source: APXvYqyXMdwt3gy6gqvDfkjOmeiiPp0dk+UezJGobEGYLzx6o98gaaTwQAzlig0mzlY7lUACwRRaawq+a4PtpXv8WBg=
+X-Received: by 2002:a37:6808:: with SMTP id d8mr18821969qkc.478.1561967149291;
+ Mon, 01 Jul 2019 00:45:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527111152.16324-4-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <B8AD29F1-444A-4BB7-8C12-9C31EB974D11@holtmann.org> <20190625083051.7525-1-jian-hong@endlessm.com>
+In-Reply-To: <20190625083051.7525-1-jian-hong@endlessm.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Mon, 1 Jul 2019 15:45:38 +0800
+Message-ID: <CAD8Lp44ZZZGf58XKZ1PFJrC5UqdQ17v17-nnEYC-Ro0-G_u1=Q@mail.gmail.com>
+Subject: Re: [PATCH v3] Bluetooth: btrtl: HCI reset on close for Realtek BT chip
+To:     Jian-Hong Pan <jian-hong@endlessm.com>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Linux Bluetooth mailing list 
+        <linux-bluetooth@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 27-05-19 13:11:44, David Hildenbrand wrote:
-> Will come in handy when wanting to handle errors after
-> arch_add_memory().
+On Tue, Jun 25, 2019 at 4:32 PM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
+> Realtek RTL8822BE BT chip on ASUS X420FA cannot be turned on correctly
+> after on-off several times. Bluetooth daemon sets BT mode failed when
+> this issue happens. Scanning must be active while turning off for this
+> bug to be hit.
+>
+> bluetoothd[1576]: Failed to set mode: Failed (0x03)
+>
+> If BT is turned off, then turned on again, it works correctly again.
+>
+> According to the vendor driver, the HCI_QUIRK_RESET_ON_CLOSE flag is set
+> during probing. So, this patch makes Realtek's BT reset on close to fix
+> this issue.
+>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203429
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
 
-I do not understand this. Why do you add a code for something that is
-not possible on this HW (based on the comment - is it still valid btw?)
-
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Oscar Salvador <osalvador@suse.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  arch/s390/mm/init.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index d552e330fbcc..14955e0a9fcf 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -243,12 +243,13 @@ int arch_add_memory(int nid, u64 start, u64 size,
->  void arch_remove_memory(int nid, u64 start, u64 size,
->  			struct vmem_altmap *altmap)
->  {
-> -	/*
-> -	 * There is no hardware or firmware interface which could trigger a
-> -	 * hot memory remove on s390. So there is nothing that needs to be
-> -	 * implemented.
-> -	 */
-> -	BUG();
-> +	unsigned long start_pfn = start >> PAGE_SHIFT;
-> +	unsigned long nr_pages = size >> PAGE_SHIFT;
-> +	struct zone *zone;
-> +
-> +	zone = page_zone(pfn_to_page(start_pfn));
-> +	__remove_pages(zone, start_pfn, nr_pages, altmap);
-> +	vmem_remove_mapping(start, size);
->  }
->  #endif
->  #endif /* CONFIG_MEMORY_HOTPLUG */
-> -- 
-> 2.20.1
-> 
-
--- 
-Michal Hocko
-SUSE Labs
+Reviewed-by: Daniel Drake <drake@endlessm.com>
