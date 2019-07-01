@@ -1,4 +1,4 @@
-Return-Path: <SRS0=9eWV=U5=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
@@ -6,88 +6,101 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13CDC0650F
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 23:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9ACC06508
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 00:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38E8214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Jun 2019 23:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CFBE214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 00:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfF3X4M (ORCPT
+        id S1727290AbfGAACB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 19:56:12 -0400
-Received: from lgeamrelo11.lge.com ([156.147.23.51]:34181 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727265AbfF3X4M (ORCPT
+        Sun, 30 Jun 2019 20:02:01 -0400
+Received: from lgeamrelo13.lge.com ([156.147.23.53]:48319 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726759AbfGAACB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 19:56:12 -0400
+        Sun, 30 Jun 2019 20:02:01 -0400
 Received: from unknown (HELO lgemrelse7q.lge.com) (156.147.1.151)
-        by 156.147.23.51 with ESMTP; 1 Jul 2019 08:56:10 +0900
+        by 156.147.23.53 with ESMTP; 1 Jul 2019 09:01:59 +0900
 X-Original-SENDERIP: 156.147.1.151
 X-Original-MAILFROM: byungchul.park@lge.com
 Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.151 with ESMTP; 1 Jul 2019 08:56:10 +0900
+        by 156.147.1.151 with ESMTP; 1 Jul 2019 09:01:59 +0900
 X-Original-SENDERIP: 10.177.222.33
 X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Mon, 1 Jul 2019 08:55:25 +0900
+Date:   Mon, 1 Jul 2019 09:01:14 +0900
 From:   Byungchul Park <byungchul.park@lge.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Scott Wood <swood@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Message-ID: <20190630235525.GA23795@X58A-UD3R>
-References: <20190627155506.GU26519@linux.ibm.com>
- <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
- <20190627203612.GD26519@linux.ibm.com>
- <20190628073138.GB13650@X58A-UD3R>
- <20190628104045.GA8394@X58A-UD3R>
- <20190628114411.5d9ab351@gandalf.local.home>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: Re: [PATCH v2] rcu: Change return type of
+ rcu_spawn_one_boost_kthread()
+Message-ID: <20190701000114.GB23795@X58A-UD3R>
+References: <1561619266-8850-1-git-send-email-byungchul.park@lge.com>
+ <20190627134240.GB215968@google.com>
+ <20190627205703.GF26519@linux.ibm.com>
+ <20190628024339.GA13650@X58A-UD3R>
+ <20190630193834.GU26519@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190628114411.5d9ab351@gandalf.local.home>
+In-Reply-To: <20190630193834.GU26519@linux.ibm.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 11:44:11AM -0400, Steven Rostedt wrote:
-> On Fri, 28 Jun 2019 19:40:45 +0900
-> Byungchul Park <byungchul.park@lge.com> wrote:
-> 
-> > Wait.. I got a little bit confused on recordering.
+On Sun, Jun 30, 2019 at 12:38:34PM -0700, Paul E. McKenney wrote:
+> On Fri, Jun 28, 2019 at 11:43:39AM +0900, Byungchul Park wrote:
+> > On Thu, Jun 27, 2019 at 01:57:03PM -0700, Paul E. McKenney wrote:
+> > > On Thu, Jun 27, 2019 at 09:42:40AM -0400, Joel Fernandes wrote:
+> > > > On Thu, Jun 27, 2019 at 04:07:46PM +0900, Byungchul Park wrote:
+> > > > > Hello,
+> > > > > 
+> > > > > I tested if the WARN_ON_ONCE() is fired with my box and it was ok.
+> > > > 
+> > > > Looks pretty safe to me and nice clean up!
+> > > > 
+> > > > Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > 
+> > > Agreed, but I still cannot find where this applies.  I did try rcu/next,
+> > > which is currently here:
+> > > 
+> > > commit b989ff070574ad8b8621d866de0a8e9a65d42c80 (rcu/rcu/next, rcu/next)
+> > > Merge: 4289ee7d5a83 11ca7a9d541d
+> > > Author: Paul E. McKenney <paulmck@linux.ibm.com>
+> > > Date:   Mon Jun 24 09:12:39 2019 -0700
+> > > 
+> > >     Merge LKMM and RCU commits
+> > > 
+> > > Help?
 > > 
-> > This 'STORE rcu_read_lock_nesting = 0' can happen before
-> > 'STORE rcu_read_unlock_special.b.exp_hint = false' regardless of the
-> > order a compiler generated to by the barrier(), because anyway they
-> > are independent so it's within an arch's right.
+> > commit 204d7a60670f3f6399a4d0826667ab7863b3e429
 > > 
-> > Then.. is this scenario possible? Or all archs properly deal with
-> > interrupts across this kind of reordering?
+> >      Merge LKMM and RCU commits
+> > 
+> > I made it on top of the above. And could you tell me which branch I'd
+> > better use when developing. I think it's been changing sometimes.
 > 
-> As Paul stated, interrupts are synchronization points. Archs can only
-> play games with ordering when dealing with entities outside the CPU
-> (devices and other CPUs). But if you have assembly that has two stores,
-> and an interrupt comes in, the arch must guarantee that the stores are
-> done in that order as the interrupt sees it.
+> That would be because idiot here took so much care to avoid risking
+> pushing some early development commits into the upcoming merge window
+> that he managed to misplace them entirely.  The -rcu tree's "dev" branch
+> now includes them.  Could you please port to it?
+
+Of course, I can.
+
+> a1af11a24cb0 ("rcu/nocb: Make __call_rcu_nocb_wake() safe for many callbacks")
 > 
-> If this is not the case, there's a hell of a lot more broken in the
-> kernel than just this, and "barrier()" would also be meaningless, as
-> that is used mostly to deal with interrupts.
+> > Thank you for the answer in advance!
+> 
+> And please accept my apologies for the very confusing tree layout this
+> time around!
 
-Clear. Dear Paul and Steve, Thank you.
+It would be totally OK if you give me the answer when I feel confused
+with branch for development. :)
 
-> -- Steve
+> 
+> 							Thanx, Paul
