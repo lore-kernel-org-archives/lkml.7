@@ -2,170 +2,78 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5460C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 23:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A5CC06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 23:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8448921852
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 23:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD76D21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 23:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfGAXKs (ORCPT
+        id S1726966AbfGAX1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 19:10:48 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:54707 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726486AbfGAXKp (ORCPT
+        Mon, 1 Jul 2019 19:27:02 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:41574 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfGAX1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 19:10:45 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 811A01ACDC1;
-        Tue,  2 Jul 2019 09:10:40 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hi5QS-00040R-OE; Tue, 02 Jul 2019 09:09:32 +1000
-Date:   Tue, 2 Jul 2019 09:09:32 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/12] iomap: move the xfs writeback code to iomap.c
-Message-ID: <20190701230932.GN7777@dread.disaster.area>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-12-hch@lst.de>
- <20190624234304.GD7777@dread.disaster.area>
- <20190625101020.GI1462@lst.de>
- <20190628004542.GJ7777@dread.disaster.area>
- <20190628053320.GA26902@lst.de>
- <20190701000859.GL7777@dread.disaster.area>
- <20190701064333.GA20778@lst.de>
+        Mon, 1 Jul 2019 19:27:02 -0400
+Received: by mail-io1-f70.google.com with SMTP id x17so16675673iog.8
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 16:27:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=16MzlxsLoFahnav4RXFf2V4QcAW527kx82O9tJkyXRY=;
+        b=U7vt/jv3zvyWPuyQCGubu9s7XltzcKn2WZbAZUybyB5kbZ8xucHNiXOyI+QTKm919r
+         oMq6Qca1x5myIjMKhYM/n38BZtVAcsMLHWsU36KyH7pqVxYFw53gZ4VAHr59+O63cdou
+         PnrPTQEJ0YxczHuvaDm/OwVwDcvvJGHTLuF/D9T1AxZv7aKfRgjbqde+O5S3CrL434rI
+         oCPmdYoXaeX/FjZ9qf0ETef1mK2h57y1m0xFL8d9QGHy8s57pyOfToiMiQT7tA/rpUiS
+         qWhKWaKXcIqdeUbKXZky0ST1cFUjp/LX0OmgaDWgnwi/8tHDu6uL+sfSVhvxd81b3t5y
+         edeg==
+X-Gm-Message-State: APjAAAWpljlupYkgjFh56l4Wn2kjW6nu+El3u2OfI4PvkXj3sqUrCnRy
+        2qfFjEGzN0+zXo4NO1dDJ+F56aD4L+IRP5a+n/zcZN/776rS
+X-Google-Smtp-Source: APXvYqw4/1btu4o4HeW4FhB45ddTChwJ7CLo1NPm8Ve4SzwndfeUaP71iUs3Tpz6mTqCEklpBP5PaEjdpGiQZAFQK7+3PA6sx7zE
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701064333.GA20778@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=EmmQ-hcxAAAA:8 a=7-415B0cAAAA:8 a=Qa3Qb0k2LGP6046GbCIA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+X-Received: by 2002:a6b:6f09:: with SMTP id k9mr5684537ioc.223.1562023621055;
+ Mon, 01 Jul 2019 16:27:01 -0700 (PDT)
+Date:   Mon, 01 Jul 2019 16:27:01 -0700
+In-Reply-To: <0000000000009b1944058ca3e4a8@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000106b11058ca6f7f2@google.com>
+Subject: Re: WARNING: refcount bug in kobject_add_internal
+From:   syzbot <syzbot+32259bb9bc1a487ad206@syzkaller.appspotmail.com>
+To:     benh@kernel.crashing.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, rafael@kernel.org,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 08:43:33AM +0200, Christoph Hellwig wrote:
-> On Mon, Jul 01, 2019 at 10:08:59AM +1000, Dave Chinner wrote:
-> > > Why do you assume you have to test it?  Back when we shared
-> > > generic_file_read with everyone you also didn't test odd change to
-> > > it with every possible fs.
-> > 
-> > I'm not sure what function you are referring to here. Can you
-> > clarify?
-> 
-> Right now it is generic_file_read_iter(), but before iter it was
-> generic_file_readv, generic_file_read, etc.
+syzbot has bisected this bug to:
 
-This generic code never came from XFS, so I'm still not sure what
-you are refering to here? Some pointers to commits would help me
-remember. :/
+commit 726e41097920a73e4c7c33385dcc0debb1281e18
+Author: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Date:   Tue Jul 10 00:29:10 2018 +0000
 
-> > > If you change iomap.c, you'll test it
-> > > with XFS, and Cc other maintainers so that they get a chance to
-> > > also test it and comment on it, just like we do with other shared
-> > > code in the kernel.
-> > 
-> > Which is why we've had problems with the generic code paths in the
-> > past and other filesystems just copy and paste then before making
-> > signficant modifications. e.g. both ext4 and btrfs re-implement
-> > write_cache_pages() rather than use the generic writeback code
-> > because they have slightly different requirements and those
-> > developers don't want to have to worry about other filesystems every
-> > time there is an internal filesystem change that affects their
-> > writeback constraints...
-> > 
-> > That's kinda what I'm getting at here: writeback isn't being shared
-> > by any of the major filesystems for good reasons...
-> 
-> I very fundamentally disagree.  It is not shared for a bad reasons,
-> and that is people not understanding the mess that the buffer head
-> based code is, and not wanting to understand it. 
+     drivers: core: Remove glue dirs from sysfs earlier
 
-The problem with heavily shared code is that it requires far more
-expertise, knowledge, capability and time to modify it. The code
-essentially ossifies, because changing something fundamental risks
-breaking other stuff that nobody actually understands anymore and is
-unwilling to risk changing.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=140d6739a00000
+start commit:   6fbc7275 Linux 5.2-rc7
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=160d6739a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=120d6739a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bff6583efcfaed3f
+dashboard link: https://syzkaller.appspot.com/bug?extid=32259bb9bc1a487ad206
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=115bad39a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1241bdd5a00000
 
-That's not a problem with bufferheads - that's a problem of widely
-shared code that has been slowly hacked to pieces to "fix' random
-problems that show up from different users of the shared code.
+Reported-by: syzbot+32259bb9bc1a487ad206@syzkaller.appspotmail.com
+Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
 
-When the shared code ossifies like this, the only way to make
-progress is to either copy it and do whatever you need privately,
-or re-implement it completely. ext4 and btrfs have taken the route
-of "copy and modify privately", whereas XFS has taken the
-"re-implement it completely" path.
-
-We're now starting down the "share the XFS re-implementation" and
-we're slowly adding more complexity to the iomap code to handle the
-different things each filesystem that is converted needs. With each
-new fs adding their own little quirks, it gets harder to make
-significant modifications without unknowingly breaking something in
-some other filesystem.
-
-It takes highly capable developers to make serious modifications
-across highly shared code and the reality is that there are very few
-of them around. most developers simply aren't capable of taking on
-such a task, especially given that they see capable, experienced
-developers who won't even try because of past experiences akin to
-a game of Running Man(*)....
-
-Shared code is good, up to the point where the sharing gets so
-complex that even people with the capability are not willing to
-touch/fix the code. That's what happened to bufferheads and it's a
-pattern repeated across lots of kernel infrastructure code. Just
-because you can handle these modifications doesn't mean everyone
-else can or even wants to.
-
-> And I'd much rather fix this than going down the copy an paste and
-> slightly tweak it while fucking up something else route.
-
-The copy-n-paste is a result of developers who have little knowledge
-of things outside their domain of interest/expertise making the sane
-decision to minimise risk of breaking something they know nothing
-about. From an individual subsystem perspective, that's a -good
-decision- to make, and that's the point I was trying to make.
-
-You see that as a bad decision, because you equating "shared code"
-with "high quality" code. The reality is that shared code is often
-poor quality because people get too scared to touch it. That's
-exactly the situation I don't want us to get stuck with, and why I
-want to see how multiple implementations of this abstracted writeback
-path change what we have now before we start moving code about...
-
-i.e. I'm not saying "we shouldn't do this", I'm just saying that "we
-should do this because shared code is good" fundamentally conflicts
-with the fact we've just re-implemented a bunch of stuff because
-the *shared code was really bad*. And taking the same path that lead
-to really bad shared code (i.e. organic growth without planning or
-design) is likely to end up in the same place....
-
-Cheers,
-
-Dave.
-
-(*) https://www.imdb.com/title/tt0093894/
-
-"A wrongly convicted man must try to survive a public execution
-gauntlet staged as a game show."
-
--- 
-Dave Chinner
-david@fromorbit.com
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
