@@ -2,139 +2,105 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C60BC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1308CC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50916213F2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D55492133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NwYmYqiH"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zPBzDYcj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfGAKrN (ORCPT
+        id S1727376AbfGAKr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 06:47:13 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49072 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfGAKrM (ORCPT
+        Mon, 1 Jul 2019 06:47:27 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34706 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfGAKr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 06:47:12 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x61AktDf015680;
-        Mon, 1 Jul 2019 05:46:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561978015;
-        bh=xkl2YSQgyzqKuqbU89N6vJgSH9uVy5rur2a274LLpx8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NwYmYqiH3UgHKJrXq/7XQnNew6YC+zoaqBdgWzE1BIesddbvTKMp7Gc9uxzEOtfx3
-         cTDmboPaQf6L6xXhEVEIDuNr3X2GB3oy0Cn6okCurZj5oRn9CJtXIZ7W8fUmbQ9Olc
-         O7jdhIMbKfFxkUg2zuDQ4dWstSyQjW0whzxaqTKs=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x61AktWn101270
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 1 Jul 2019 05:46:55 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Jul
- 2019 05:46:54 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 1 Jul 2019 05:46:54 -0500
-Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x61Akp51022662;
-        Mon, 1 Jul 2019 05:46:52 -0500
-Subject: Re: [PATCH] soc: ti: fix irq-ti-sci link error
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     Marc Zyngier <marc.zyngier@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190617130149.1782930-1-arnd@arndb.de>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <2974ac02-287a-ab46-6716-2b768cca47c3@ti.com>
-Date:   Mon, 1 Jul 2019 16:16:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 1 Jul 2019 06:47:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id w9so14270488wmd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 03:47:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wfgjAQ3M5HY2NtkjVQDzRJpLev5yRfzCJhptr2owUzY=;
+        b=zPBzDYcjDqHiHXy9jMFQwxCKaAAzbtCKZS+bwK61KcgKKpDtVjmshT4h915qhXcnxN
+         GvwfCIK4DBZEZ4s2JPKlmLDWsh/l7icG41GIM20ZorILqhFXmjfYjLllTB8xnsfodCps
+         Zt+QSHs1sZfGVGgZZgtsDLCQcMfhzB1vBZArWhJ6b3MIfCOM38RuEI6qunfj61p08z17
+         x0U0vbKHjuPy4nXo3/46YLS53egemjbBMuCI4TRDKO/+a6HKHDCsWM05WohCj+QuxeRj
+         3bDhWP5je88qRmMmnqCYb1z3f8ld5CRz3z04Rx50kwxO3V4eR8c42qaac+j76eVocv7Z
+         QwQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wfgjAQ3M5HY2NtkjVQDzRJpLev5yRfzCJhptr2owUzY=;
+        b=DzbqQwXC4DASgApp+xW00r9a1aN5YiFWm772AwiF4N5dWWedh/nzrW3NOk6c7pGJlF
+         Fm50Qrkk90rL4qTJuvRMpk2J+YJxCVjaXzH8UV77eVEkyeDpahSWhvAQ49fqCzQaRxQJ
+         oN6/372t/7XMBPjfb4ftr0waYubHWlC+vqnWJJ8trD3HgnIEDGle7UoMlkcqScn//Q1v
+         UXWus/258i/mZDxxzO8QIcQ3wkIvs2yQW++gd4XrJzvd+TkhqOn8+gMx7potREsyUtQ5
+         Pf/i0Vk/049zRo9IE2Hjq4yBluIBqk3PhMhnPEqFFiF8QV0XLSbsvkEaqBFwryFAvFel
+         KHeA==
+X-Gm-Message-State: APjAAAWdHZQXlKhVB/DpZME8I+XP0R7qhiiKVcjwqdAZRtZqiszoxsRy
+        X3aIg6GoiUUWNfqNtn4fELpbiA==
+X-Google-Smtp-Source: APXvYqzrQnQF/+v+bIQvryP/j5lpMQ4UpR0oBp9qdOxkvujlAZoajK57bDQABJ8zj0Dn/XghUa8Djw==
+X-Received: by 2002:a05:600c:1150:: with SMTP id z16mr16105586wmz.168.1561978044919;
+        Mon, 01 Jul 2019 03:47:24 -0700 (PDT)
+Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id d24sm11658802wra.43.2019.07.01.03.47.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 01 Jul 2019 03:47:24 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     jbrunet@baylibre.com, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RFC 01/11] soc: amlogic: meson-gx-socinfo: Add SM1 and S905X3 IDs
+Date:   Mon,  1 Jul 2019 12:46:55 +0200
+Message-Id: <20190701104705.18271-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190701104705.18271-1-narmstrong@baylibre.com>
+References: <20190701104705.18271-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20190617130149.1782930-1-arnd@arndb.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the SoC IDs for the S905X3 Amlogic SM1 SoC.
 
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/soc/amlogic/meson-gx-socinfo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On 17/06/19 6:31 PM, Arnd Bergmann wrote:
-> The irqchip driver depends on the SoC specific driver, but we want
-> to be able to compile-test it elsewhere:
-> 
-> WARNING: unmet direct dependencies detected for TI_SCI_INTA_MSI_DOMAIN
->   Depends on [n]: SOC_TI [=n]
->   Selected by [y]:
->   - TI_SCI_INTA_IRQCHIP [=y] && TI_SCI_PROTOCOL [=y]
-> 
-> drivers/irqchip/irq-ti-sci-inta.o: In function `ti_sci_inta_irq_domain_probe':
-> irq-ti-sci-inta.c:(.text+0x204): undefined reference to `ti_sci_inta_msi_create_irq_domain'
-> 
-> Rearrange the Kconfig and Makefile so we build the soc driver whenever
-> its users are there, regardless of the SOC_TI option.
-> 
-> Fixes: 49b323157bf1 ("soc: ti: Add MSI domain bus support for Interrupt Aggregator")
-> Fixes: f011df6179bd ("irqchip/ti-sci-inta: Add msi domain support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+index bca34954518e..eb81d391b620 100644
+--- a/drivers/soc/amlogic/meson-gx-socinfo.c
++++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+@@ -39,6 +39,7 @@ static const struct meson_gx_soc_id {
+ 	{ "TXHD", 0x27 },
+ 	{ "G12A", 0x28 },
+ 	{ "G12B", 0x29 },
++	{ "SM1", 0x2b },
+ };
+ 
+ static const struct meson_gx_package_id {
+@@ -65,6 +66,7 @@ static const struct meson_gx_package_id {
+ 	{ "S905D2", 0x28, 0x10, 0xf0 },
+ 	{ "S905X2", 0x28, 0x40, 0xf0 },
+ 	{ "S922X", 0x29, 0x40, 0xf0 },
++	{ "S905X3", 0x2b, 0x50, 0xf0 },
+ };
+ 
+ static inline unsigned int socinfo_to_major(u32 socinfo)
+-- 
+2.21.0
 
-Looks like this is a side effect of the patch  a6b112b04355b ("arm64: arch_k3:
-Fix kconfig dependency warning"). $Patch looks good to me.
-
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-
-Thanks and regards,
-Lokesh
-
-> ---
->  drivers/soc/Makefile   | 2 +-
->  drivers/soc/ti/Kconfig | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> index 524ecdc2a9bb..2ec355003524 100644
-> --- a/drivers/soc/Makefile
-> +++ b/drivers/soc/Makefile
-> @@ -22,7 +22,7 @@ obj-$(CONFIG_ARCH_ROCKCHIP)	+= rockchip/
->  obj-$(CONFIG_SOC_SAMSUNG)	+= samsung/
->  obj-y				+= sunxi/
->  obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
-> -obj-$(CONFIG_SOC_TI)		+= ti/
-> +obj-y				+= ti/
->  obj-$(CONFIG_ARCH_U8500)	+= ux500/
->  obj-$(CONFIG_PLAT_VERSATILE)	+= versatile/
->  obj-y				+= xilinx/
-> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-> index ea0859f7b185..d7d50d48d05d 100644
-> --- a/drivers/soc/ti/Kconfig
-> +++ b/drivers/soc/ti/Kconfig
-> @@ -75,10 +75,10 @@ config TI_SCI_PM_DOMAINS
->  	  called ti_sci_pm_domains. Note this is needed early in boot before
->  	  rootfs may be available.
->  
-> +endif # SOC_TI
-> +
->  config TI_SCI_INTA_MSI_DOMAIN
->  	bool
->  	select GENERIC_MSI_IRQ_DOMAIN
->  	help
->  	  Driver to enable Interrupt Aggregator specific MSI Domain.
-> -
-> -endif # SOC_TI
-> 
