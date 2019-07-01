@@ -2,88 +2,67 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 946D6C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00C5C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691F3206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B20E206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbfGAPEI (ORCPT
+        id S1730009AbfGAPGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:04:08 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40245 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbfGAPEI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:04:08 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c70so11228021qkg.7;
-        Mon, 01 Jul 2019 08:04:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9+VrEp0J9K+HfaNVqcJSqEqg3MQ2AUENDamu/jtKp1Q=;
-        b=buTr7AAdHBk+m/FmUzWWNQEVps/jscWgdX75phHj/YPqWAUTI4JKBZlT/unEZocFZR
-         I9p8rd2aiTbDoFmYiOecvRalN8hTBu5lKZVBWZeZ4FU8tuPI/sInMjKIHrCkvliNye7R
-         wwQPm6AbId0OrOk/djfbV3Fo2vYkciTxsDTlfJhg6W3B7Ozhc126JzCbpQ2kyigA4nUQ
-         2sq+6d31okhHr8djsAGwQTK9P2sjVtj/FqQUzdN4Paru21x0gTuhuSB2v+I743x2/S+X
-         c6UcnKPbRgu6lnYvqfJHpRcZVdXCrNR30u4A6wLAhNoqfHqXmyFz5EBwwna44zCB0FrO
-         ehxA==
-X-Gm-Message-State: APjAAAUevNI19yr3Xh0zwNzS5F0cwgtDzCGJ1RoftL5dm2janIVut1j6
-        bKlS9+ax3oZcPRYXia60Gv1DDmyf1UnVNpTbvtU=
-X-Google-Smtp-Source: APXvYqwqcSPBj+y3Ek3wEnw9sJPkLJyXKkIOZdqZJPHOppZrs17NHOoh+6neHpAZWB/TTwdU8S2a6KLC0v5EWPbWwVA=
-X-Received: by 2002:a37:4ac3:: with SMTP id x186mr20270454qka.138.1561993446857;
- Mon, 01 Jul 2019 08:04:06 -0700 (PDT)
+        Mon, 1 Jul 2019 11:06:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38742 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727568AbfGAPGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 11:06:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 95587AFFC;
+        Mon,  1 Jul 2019 15:06:40 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 17:06:38 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matt Sickler <Matt.Sickler@daktronics.com>,
+        devel@driverdev.osuosl.org
+Subject: [PATCH] staging: kpc2000: drop useless softdep statement
+Message-ID: <20190701170638.68bd414d@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-References: <20190628103158.2446356-1-arnd@arndb.de> <20190628.093215.173840298920978641.davem@davemloft.net>
-In-Reply-To: <20190628.093215.173840298920978641.davem@davemloft.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 1 Jul 2019 17:03:50 +0200
-Message-ID: <CAK8P3a1gunW+R16=GDG+NJ_eaYyiVCDisOa+w5F7tzSGkE2qHQ@mail.gmail.com>
-Subject: Re: [PATCH] hinic: reduce rss_init stack usage
-To:     David Miller <davem@davemloft.net>
-Cc:     Aviad Krawczyk <aviad.krawczyk@huawei.com>, xuechaojing@huawei.com,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        zhaochen6@huawei.com, Eric Dumazet <edumazet@google.com>,
-        Dann Frazier <dann.frazier@canonical.com>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 6:32 PM David Miller <davem@davemloft.net> wrote:
->
-> From: Arnd Bergmann <arnd@arndb.de>
-> Date: Fri, 28 Jun 2019 12:31:44 +0200
->
-> > On 32-bit architectures, putting an array of 256 u32 values on the
-> > stack uses more space than the warning limit:
-> >
-> > drivers/net/ethernet/huawei/hinic/hinic_main.c: In function 'hinic_rss_init':
-> > drivers/net/ethernet/huawei/hinic/hinic_main.c:286:1: error: the frame size of 1068 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-> >
-> > I considered changing the code to use u8 values here, since that's
-> > all the hardware supports, but dynamically allocating the array is
-> > a more isolated fix here.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Applied to net-next.
+The i2c-dev module is for access to I2C buses from user-space.
+Kernel drivers do not care about its presence.
 
-Thanks
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: Matt Sickler <Matt.Sickler@daktronics.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/staging/kpc2000/kpc_i2c/i2c_driver.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-> Arnd, please make it clear what tree you are targetting in the
-> future.
+--- linux-5.2-rc7.orig/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c	2019-06-30 05:25:36.000000000 +0200
++++ linux-5.2-rc7/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c	2019-07-01 11:33:17.336697545 +0200
+@@ -26,7 +26,6 @@
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Matt.Sickler@Daktronics.com");
+-MODULE_SOFTDEP("pre: i2c-dev");
+ 
+ struct i2c_device {
+     unsigned long           smba;
 
-Sorry about missing this again. I usually remember but sometimes
-one slips through when I send a lot of patches for different subsystems
-at once.
 
-      Arnd
+-- 
+Jean Delvare
+SUSE L3 Support
