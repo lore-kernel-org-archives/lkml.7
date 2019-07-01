@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB1EC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3297C4646D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F8920B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E7B21743
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:20:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VeakI5P9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gSbk2W6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfGAGUp (ORCPT
+        id S1727633AbfGAGUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:20:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48246 "EHLO
+        Mon, 1 Jul 2019 02:20:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48336 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727526AbfGAGUk (ORCPT
+        with ESMTP id S1727602AbfGAGUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 02:20:40 -0400
+        Mon, 1 Jul 2019 02:20:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jmOMWk7PIhlkuWmnGeQ5B09Y2pWhYhYuU69m57P7xOY=; b=VeakI5P9w+GmafWP63j4toaMHW
-        VtQ719iF507yMzRYvJH0O7ViWtHiRqxBzk4XV1VWHJuDRmKATRqv5uGO1bPQ/HjcmlnGj7Hmo8iiO
-        1Jaor2NciDsSBC5DuE2m4oqWrc6z9Q0LAYh8TJTLsIGN6X/B4UbOGhJ+wyuNhBwFIbIedO/YeaHx+
-        +7FXU5AlPz98ULQTY91XtdepAVFhjM6WLqNvX1tjPU1WEnad36P3axRqnJ94+cx8eGn3NV1QCwU4H
-        CUo3rFW7bBw/VsDVLa9ixH7iz3Sd/EzrpcPBK027xnR2Ky3UcG4pmQOE9WaaDPVU5IIK0HRwIAjrl
-        Dky3elEw==;
+        bh=APKBQWkk9iHwyQHEt2C0MEBOgtO6KbM8T5bZXthkZZI=; b=gSbk2W6E84lf5FtDNmA7UbJzV8
+        /YpjENtceLBi7lcdSkKI3hddigiEEfPq448QumXbzCmOvF+HQ4eGiOVwzgEgTxo59mprNYGLlbRal
+        pFad60P91vtTjcQCJM33sMokpMT0eR115j8oJP1AFdexcCZJzIE+KPqTW59nqSqC58f1njztm+KLt
+        nDzWjqQ54DQdSWM+FGXGX7f9sA7DlL6G91SyOHzqRMJtGs2Vw3Ec9RA8nXlpy5RPimyAnOMxTBWv8
+        scgz4P+mEmSq7QkjP1YKS3IDhkGZzrRmUCpak5IqWHEFnT7ZLMR6eXSwhpA9HpzzWOMtkhjLVW6wl
+        FwufaIVQ==;
 Received: from [46.140.178.35] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhpg3-0002uL-My; Mon, 01 Jul 2019 06:20:36 +0000
+        id 1hhpgA-0002y7-L6; Mon, 01 Jul 2019 06:20:43 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -49,9 +49,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
         Ralph Campbell <rcampbell@nvidia.com>,
         Philip Yang <Philip.Yang@amd.com>
-Subject: [PATCH 06/22] mm/hmm: fix use after free with struct hmm in the mmu notifiers
-Date:   Mon,  1 Jul 2019 08:20:04 +0200
-Message-Id: <20190701062020.19239-7-hch@lst.de>
+Subject: [PATCH 09/22] mm/hmm: Simplify hmm_get_or_create and make it reliable
+Date:   Mon,  1 Jul 2019 08:20:07 +0200
+Message-Id: <20190701062020.19239-10-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190701062020.19239-1-hch@lst.de>
 References: <20190701062020.19239-1-hch@lst.de>
@@ -65,126 +65,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jason Gunthorpe <jgg@mellanox.com>
 
-mmu_notifier_unregister_no_release() is not a fence and the mmu_notifier
-system will continue to reference hmm->mn until the srcu grace period
-expires.
+As coded this function can false-fail in various racy situations. Make it
+reliable and simpler by running under the write side of the mmap_sem and
+avoiding the false-failing compare/exchange pattern. Due to the mmap_sem
+this no longer has to avoid racing with a 2nd parallel
+hmm_get_or_create().
 
-Resulting in use after free races like this:
-
-         CPU0                                     CPU1
-                                               __mmu_notifier_invalidate_range_start()
-                                                 srcu_read_lock
-                                                 hlist_for_each ()
-                                                   // mn == hmm->mn
-hmm_mirror_unregister()
-  hmm_put()
-    hmm_free()
-      mmu_notifier_unregister_no_release()
-         hlist_del_init_rcu(hmm-mn->list)
-			                           mn->ops->invalidate_range_start(mn, range);
-					             mm_get_hmm()
-      mm->hmm = NULL;
-      kfree(hmm)
-                                                     mutex_lock(&hmm->lock);
-
-Use SRCU to kfree the hmm memory so that the notifiers can rely on hmm
-existing. Get the now-safe hmm struct through container_of and directly
-check kref_get_unless_zero to lock it against free.
+Unfortunately this still has to use the page_table_lock as the
+non-sleeping lock protecting mm->hmm, since the contexts where we free the
+hmm are incompatible with mmap_sem.
 
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Tested-by: Philip Yang <Philip.Yang@amd.com>
 ---
- include/linux/hmm.h |  1 +
- mm/hmm.c            | 23 +++++++++++++++++------
- 2 files changed, 18 insertions(+), 6 deletions(-)
+ mm/hmm.c | 77 ++++++++++++++++++++++----------------------------------
+ 1 file changed, 30 insertions(+), 47 deletions(-)
 
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 7007123842ba..cb01cf1fa3c0 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -93,6 +93,7 @@ struct hmm {
- 	struct mmu_notifier	mmu_notifier;
- 	struct rw_semaphore	mirrors_sem;
- 	wait_queue_head_t	wq;
-+	struct rcu_head		rcu;
- 	long			notifiers;
- 	bool			dead;
- };
 diff --git a/mm/hmm.c b/mm/hmm.c
-index 826816ab2377..f6956d78e3cb 100644
+index 080b17a2e87e..0423f4ca3a7e 100644
 --- a/mm/hmm.c
 +++ b/mm/hmm.c
-@@ -104,6 +104,11 @@ static struct hmm *hmm_get_or_create(struct mm_struct *mm)
- 	return NULL;
+@@ -31,16 +31,6 @@
+ #if IS_ENABLED(CONFIG_HMM_MIRROR)
+ static const struct mmu_notifier_ops hmm_mmu_notifier_ops;
+ 
+-static inline struct hmm *mm_get_hmm(struct mm_struct *mm)
+-{
+-	struct hmm *hmm = READ_ONCE(mm->hmm);
+-
+-	if (hmm && kref_get_unless_zero(&hmm->kref))
+-		return hmm;
+-
+-	return NULL;
+-}
+-
+ /**
+  * hmm_get_or_create - register HMM against an mm (HMM internal)
+  *
+@@ -55,11 +45,16 @@ static inline struct hmm *mm_get_hmm(struct mm_struct *mm)
+  */
+ static struct hmm *hmm_get_or_create(struct mm_struct *mm)
+ {
+-	struct hmm *hmm = mm_get_hmm(mm);
+-	bool cleanup = false;
++	struct hmm *hmm;
++
++	lockdep_assert_held_exclusive(&mm->mmap_sem);
+ 
+-	if (hmm)
+-		return hmm;
++	/* Abuse the page_table_lock to also protect mm->hmm. */
++	spin_lock(&mm->page_table_lock);
++	hmm = mm->hmm;
++	if (mm->hmm && kref_get_unless_zero(&mm->hmm->kref))
++		goto out_unlock;
++	spin_unlock(&mm->page_table_lock);
+ 
+ 	hmm = kmalloc(sizeof(*hmm), GFP_KERNEL);
+ 	if (!hmm)
+@@ -74,57 +69,45 @@ static struct hmm *hmm_get_or_create(struct mm_struct *mm)
+ 	hmm->notifiers = 0;
+ 	hmm->dead = false;
+ 	hmm->mm = mm;
+-	mmgrab(hmm->mm);
+ 
+-	spin_lock(&mm->page_table_lock);
+-	if (!mm->hmm)
+-		mm->hmm = hmm;
+-	else
+-		cleanup = true;
+-	spin_unlock(&mm->page_table_lock);
++	hmm->mmu_notifier.ops = &hmm_mmu_notifier_ops;
++	if (__mmu_notifier_register(&hmm->mmu_notifier, mm)) {
++		kfree(hmm);
++		return NULL;
++	}
+ 
+-	if (cleanup)
+-		goto error;
++	mmgrab(hmm->mm);
+ 
+ 	/*
+-	 * We should only get here if hold the mmap_sem in write mode ie on
+-	 * registration of first mirror through hmm_mirror_register()
++	 * We hold the exclusive mmap_sem here so we know that mm->hmm is
++	 * still NULL or 0 kref, and is safe to update.
+ 	 */
+-	hmm->mmu_notifier.ops = &hmm_mmu_notifier_ops;
+-	if (__mmu_notifier_register(&hmm->mmu_notifier, mm))
+-		goto error_mm;
+-
+-	return hmm;
+-
+-error_mm:
+ 	spin_lock(&mm->page_table_lock);
+-	if (mm->hmm == hmm)
+-		mm->hmm = NULL;
++	mm->hmm = hmm;
++
++out_unlock:
+ 	spin_unlock(&mm->page_table_lock);
+-error:
+-	mmdrop(hmm->mm);
+-	kfree(hmm);
+-	return NULL;
++	return hmm;
  }
  
-+static void hmm_free_rcu(struct rcu_head *rcu)
-+{
-+	kfree(container_of(rcu, struct hmm, rcu));
-+}
+ static void hmm_free_rcu(struct rcu_head *rcu)
+ {
+-	kfree(container_of(rcu, struct hmm, rcu));
++	struct hmm *hmm = container_of(rcu, struct hmm, rcu);
 +
++	mmdrop(hmm->mm);
++	kfree(hmm);
+ }
+ 
  static void hmm_free(struct kref *kref)
  {
  	struct hmm *hmm = container_of(kref, struct hmm, kref);
-@@ -116,7 +121,7 @@ static void hmm_free(struct kref *kref)
- 		mm->hmm = NULL;
- 	spin_unlock(&mm->page_table_lock);
+-	struct mm_struct *mm = hmm->mm;
  
--	kfree(hmm);
-+	mmu_notifier_call_srcu(&hmm->rcu, hmm_free_rcu);
+-	mmu_notifier_unregister_no_release(&hmm->mmu_notifier, mm);
++	spin_lock(&hmm->mm->page_table_lock);
++	if (hmm->mm->hmm == hmm)
++		hmm->mm->hmm = NULL;
++	spin_unlock(&hmm->mm->page_table_lock);
+ 
+-	spin_lock(&mm->page_table_lock);
+-	if (mm->hmm == hmm)
+-		mm->hmm = NULL;
+-	spin_unlock(&mm->page_table_lock);
+-
+-	mmdrop(hmm->mm);
++	mmu_notifier_unregister_no_release(&hmm->mmu_notifier, hmm->mm);
+ 	mmu_notifier_call_srcu(&hmm->rcu, hmm_free_rcu);
  }
  
- static inline void hmm_put(struct hmm *hmm)
-@@ -144,10 +149,14 @@ void hmm_mm_destroy(struct mm_struct *mm)
- 
- static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- {
--	struct hmm *hmm = mm_get_hmm(mm);
-+	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
- 	struct hmm_mirror *mirror;
- 	struct hmm_range *range;
- 
-+	/* Bail out if hmm is in the process of being freed */
-+	if (!kref_get_unless_zero(&hmm->kref))
-+		return;
-+
- 	/* Report this HMM as dying. */
- 	hmm->dead = true;
- 
-@@ -185,13 +194,14 @@ static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- static int hmm_invalidate_range_start(struct mmu_notifier *mn,
- 			const struct mmu_notifier_range *nrange)
- {
--	struct hmm *hmm = mm_get_hmm(nrange->mm);
-+	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
- 	struct hmm_mirror *mirror;
- 	struct hmm_update update;
- 	struct hmm_range *range;
- 	int ret = 0;
- 
--	VM_BUG_ON(!hmm);
-+	if (!kref_get_unless_zero(&hmm->kref))
-+		return 0;
- 
- 	update.start = nrange->start;
- 	update.end = nrange->end;
-@@ -236,9 +246,10 @@ static int hmm_invalidate_range_start(struct mmu_notifier *mn,
- static void hmm_invalidate_range_end(struct mmu_notifier *mn,
- 			const struct mmu_notifier_range *nrange)
- {
--	struct hmm *hmm = mm_get_hmm(nrange->mm);
-+	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
- 
--	VM_BUG_ON(!hmm);
-+	if (!kref_get_unless_zero(&hmm->kref))
-+		return;
- 
- 	mutex_lock(&hmm->lock);
- 	hmm->notifiers--;
 -- 
 2.20.1
 
