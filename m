@@ -6,46 +6,82 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8784EC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05E6C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65601208CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CF9208CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbfGALy6 (ORCPT
+        id S1728763AbfGALzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 07:54:58 -0400
-Received: from 8bytes.org ([81.169.241.247]:33612 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728075AbfGALy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 07:54:57 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 6E2E3229; Mon,  1 Jul 2019 13:54:56 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 13:54:55 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Kevin Mitchell <kevmitch@arista.com>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] handle init errors more gracefully in amd_iommu
-Message-ID: <20190701115454.GB8166@8bytes.org>
-References: <20190612215203.12711-1-kevmitch@arista.com>
+        Mon, 1 Jul 2019 07:55:09 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:43321 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728388AbfGALzI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 07:55:08 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 7BB763001531F;
+        Mon,  1 Jul 2019 13:55:06 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 3BE7E23EF52; Mon,  1 Jul 2019 13:55:06 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 13:55:06 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     "wahrenst@gmx.net" <wahrenst@gmx.net>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "kernel@martin.sperl.org" <kernel@martin.sperl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linux-rpi-kernel@lists.infradead.org" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "eric@anholt.net" <eric@anholt.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] spi: spi-bcm2835.c: Fix 3-wire mode
+Message-ID: <20190701115506.42rr4o4hbuvwytjc@wunner.de>
+References: <20190628123023.4696-1-nuno.sa@analog.com>
+ <1b932c61-982b-aae0-1fef-3c574e7d17eb@gmx.net>
+ <20190628190022.vya4h2lihm6x2xpb@wunner.de>
+ <54323339606a36febc6a8633a8d3a7db84b975c4.camel@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190612215203.12711-1-kevmitch@arista.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <54323339606a36febc6a8633a8d3a7db84b975c4.camel@analog.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+On Mon, Jul 01, 2019 at 07:24:23AM +0000, Sa, Nuno wrote:
+> The problem is in spi_map_msg() which
+> allocates dummy buffers (because of the ctrl flags). As a result, in
+> bcm2835_spi_transfer_one() we set "cs |= BCM2835_SPI_CS_REN;" when we
+> want to do tx only. I believe this was the actual problem...
 
-On Wed, Jun 12, 2019 at 02:52:01PM -0700, Kevin Mitchell wrote:
-> I have tested this series on a variety of AMD CPUs with firmware
-> exhibiting the issue. I have additionally tested on platforms where the
-> firmware has been fixed. I tried both with and without amd_iommu=off. I
-> have also tested on older CPUs where no IOMMU is detected and even one
-> where the GART driver ends up running.
+I see.  In that case, try:
 
-Thanks for the fixes, applied them all.
+ 	/* handle all the 3-wire mode */
+-	if ((spi->mode & SPI_3WIRE) && (tfr->rx_buf))
++	if ((spi->mode & SPI_3WIRE) && (tfr->rx_buf != ctlr->dummy_rx))
+ 		cs |= BCM2835_SPI_CS_REN;
+ 	else
+ 		cs &= ~BCM2835_SPI_CS_REN;
 
+Use master->dummy_rx instead of ctlr->dummy_rx prior to commit
+5f336ea53b6b ("spi: bcm2835: Replace spi_master by spi_controller").
+
+This could be something that users of your cape might use on older
+kernels in lieu of my upcoming patch set to drop MUST_RX / MUST_TX.
+
+Thanks,
+
+Lukas
