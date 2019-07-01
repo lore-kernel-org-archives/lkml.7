@@ -2,100 +2,95 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D05C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C06C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B230D208CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D4E2184C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:56:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="w90nqpfy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Od037p+A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbfGALz6 (ORCPT
+        id S1728773AbfGALz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 07:55:58 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35301 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727448AbfGALz5 (ORCPT
+        Mon, 1 Jul 2019 07:55:57 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44630 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727511AbfGALz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Jul 2019 07:55:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c27so5816171wrb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 04:55:56 -0700 (PDT)
+Received: by mail-pl1-f196.google.com with SMTP id t7so7239463plr.11;
+        Mon, 01 Jul 2019 04:55:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qmqH9rUtyBqQ8/Pqi8TtxfD5jhJ2Pj45pX1IFFE+c74=;
-        b=w90nqpfyUXLoK9HwqQjWvkFBF8kUXPM70Ljq5G3iO0MB/FMV92bgziq8XMCA/p6iTI
-         /hXFLYZloGuyJURQm5gfYucvWpGNbSG5hyWaffs0p6+RA6uF27U5vS4F4oxB+CmwEPjX
-         Dr0etGwOOqXg08MIYcnKDxgiPhaMJblYiTyg7ymIyM3QtAnxqBSldgKKB8+fnWlXQ9pP
-         fZzR1YHzA9xIqoQYSSSXM+6jxOXusnNBrf6MhSM1/gCNCyrcKWcKkiu4bJWaRP13KNX0
-         SjsnqJFGw90WL3HMYiZ1FVH0yMFj6RYOmAMhQZrF8oU+WobbyLQJB3XlazBbRxdki0N9
-         1c4A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UaeHZEzlrR9kAMRXI78vFSQh8YT14mqYT2wzHuKrFzw=;
+        b=Od037p+ADw3o0cfxwcMuZ9ltWKx3H17JLKGYj5S+Ax7EM1BASJ/Rjg1Xe8164BExKQ
+         BR9xpOllLNQs1XlJewAZRcoIt/4PlUkUqO0TyUumSKk8VRPQaCIw5ubUE6igRuwHIQk9
+         Whz5xaxTTC6ebW1pm5xIhjFcFMFTO/kF9thdfZhMCo7BudsNrKNIcOlO8SUVdWthlVFL
+         ATTNebVrJcG53Vnji8pq+0AKzmYTMqSh5y2tNMhiXmmwKx6C4ovfFwInmsLgZ+vI47uc
+         NtCCNmkhiLUlpibLKuB+HAfcDXzSi09f+ssb2OP+68CE94RBpiyKrs2Cqwk6SDSqZY7E
+         mxCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qmqH9rUtyBqQ8/Pqi8TtxfD5jhJ2Pj45pX1IFFE+c74=;
-        b=VuBCrGTVYFn/0ZCSv2cmVwzCnVIfGrddJVZo1zx0iYmH7fixH0aBIpn5SG9FgR1q1b
-         xGj/HcyXxkZq2NiHaCZ5HA9ZvueadLwBwaW070Xo0qrChBFuhPKOSJw8sp7W62x1W9AC
-         zKioGxTMsLlwq1CPQhDxNIVE7bl7oqC77LY0406J3xN1BknJGEPSPOO5M2d5fbfLAEfZ
-         DfiVD7PEqddO/6uy9pWHFUxx9CIF0IFIpepov/+1DwHqoIvzNS2fzlcF69h2sXtSQx3V
-         wvyAYOLZIWPCsadJo+5RjxeqU1Fky+0FCQ9hj5fvYYX0UvMod/qNq1Z58QINDr+kIgmA
-         EgDw==
-X-Gm-Message-State: APjAAAW0DS7I24TFvdAKexlXmd2Myp4zboqLDiJR+6n1TZRGE6FNT83s
-        dmDDXJL9MBoiBsAEDgR2s40zcw==
-X-Google-Smtp-Source: APXvYqyYKsCFPZS7MzmobncNQun9FRifaopq+RvFcsPDvQx+xuv/xlBF4qmqiCBuSt75XoHIYUdXzA==
-X-Received: by 2002:a5d:6508:: with SMTP id x8mr20035348wru.310.1561982155268;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UaeHZEzlrR9kAMRXI78vFSQh8YT14mqYT2wzHuKrFzw=;
+        b=PdqK38VvHP4PfoINnpJJBPh1xPDNkOJpPn/RmHZokD+6HPJIaYtf1LRgL27SMp88U9
+         gIZfi3raf5vfb8pi8n/YSIWD/Cz62NzBPfKwcOkwwNUHa08KdTIuqyjD+V/rqxEYf+3B
+         E/vJmX9GxE4CV3cygTOHYETe9XLxH2GQUUCRHpENY2dohGHzfRK/2SYdylPFfk8mCsLV
+         JrBWldlzOGYfR33AwfA4VJFtr4OoHncP4HYu6IyzjHOcqPJMDfrKgYKVJbDiiB1PZOJ+
+         tAbxBh3VY0zU6Tt4fh7CQ2YGBmW2A2xqbvYO0ZzEdhJPOtw2bf79xCchJTT7i7TDzHqh
+         1EAg==
+X-Gm-Message-State: APjAAAWEEr6emx4V78NF3rKGlzvU7iwxd4fTpeFihdjCIlErO99korG4
+        VoMnfWf07Wwzn6wrmgdwkJi7Dl+TjhtgWw==
+X-Google-Smtp-Source: APXvYqx0RyyVK/QP2SE2IyWjE6GYVCmtJmWvH97NmM5MoRqqACenrNvpBcuGFQYf5n7tmfQPhrKaPg==
+X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr26774235plb.164.1561982156439;
+        Mon, 01 Jul 2019 04:55:56 -0700 (PDT)
+Received: from bnva-HP-Pavilion-g6-Notebook-PC.domain.name ([117.248.64.59])
+        by smtp.gmail.com with ESMTPSA id a64sm8601886pgc.53.2019.07.01.04.55.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
         Mon, 01 Jul 2019 04:55:55 -0700 (PDT)
-Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id j7sm14210686wru.54.2019.07.01.04.55.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 01 Jul 2019 04:55:54 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] arm64: dts: meson-g12a-sei510: enable IR controller
-Date:   Mon,  1 Jul 2019 13:55:51 +0200
-Message-Id: <20190701115551.15618-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Vandana BN <bnvandana@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Vandana BN <bnvandana@gmail.com>
+Subject: [PATCH] net: dst.h: Fix shifting signed 32-bit value by 31 bits problem
+Date:   Mon,  1 Jul 2019 17:25:39 +0530
+Message-Id: <20190701115539.6738-1-bnvandana@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable IR receiver controllera on the SEI510 board.
+Fix DST_FEATURE_ECN_CA to use "U" cast to avoid shifting signed
+32-bit value by 31 bits problem.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/net/dst.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-index c7a87368850b..12aa7eaeaf68 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-@@ -339,6 +339,12 @@
- 	pinctrl-names = "default";
- };
- 
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
- &pwm_ef {
- 	status = "okay";
- 	pinctrl-0 = <&pwm_e_pins>;
--- 
-2.21.0
+diff --git a/include/net/dst.h b/include/net/dst.h
+index 12b31c602cb0..095c5daf9403 100644
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -183,7 +183,7 @@ static inline void dst_metric_set(struct dst_entry *dst, int metric, u32 val)
+ }
+
+ /* Kernel-internal feature bits that are unallocated in user space. */
+-#define DST_FEATURE_ECN_CA	(1 << 31)
++#define DST_FEATURE_ECN_CA	(1U << 31)
+
+ #define DST_FEATURE_MASK	(DST_FEATURE_ECN_CA)
+ #define DST_FEATURE_ECN_MASK	(DST_FEATURE_ECN_CA | RTAX_FEATURE_ECN)
+--
+2.17.1
 
