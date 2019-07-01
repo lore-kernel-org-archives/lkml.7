@@ -2,111 +2,100 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F03C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DA6C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1254120B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A252146F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:22:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DH6GkKqO"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="e77hRdek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfGASUi (ORCPT
+        id S1727283AbfGASWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 14:20:38 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42723 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbfGASUi (ORCPT
+        Mon, 1 Jul 2019 14:22:15 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45115 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfGASWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 14:20:38 -0400
-Received: by mail-pl1-f195.google.com with SMTP id ay6so7716151plb.9;
-        Mon, 01 Jul 2019 11:20:37 -0700 (PDT)
+        Mon, 1 Jul 2019 14:22:14 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u10so9415192lfm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 11:22:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=xv1X++7+CI+KR+tJVwJzAPl/RmtdeOQuhyVLw8iciNU=;
-        b=DH6GkKqOT5YLbrfoJIxW4QbU0VIhZpjq3lUNJkf3qYJHheK+Qw3FFiHXqqj/QObvjI
-         ymZ8SAbIPtGCmSfLr92WLx+ve5/g1+HQmanI0flHh5YVfZWkdw77ZdB1lnVkodbJZIyo
-         Q65JksjK0jc21mhT4hheYRLD0y9LU+cSxSnXTFQKx9uteHPsGPZ6iT+Ncdc5QKRw23mN
-         O+BDoQV9YhR81uKWlVuVWrpkmW+myvwc87eRSDC5yRfk5a7yrgc4d8Y6W6T0eCPWJGL/
-         pLuwYMkeS+74LrUzoI65KO0UwyN6sjQtTYWKkL8QxDojJfjaHOcslgma1dqG4qykDHJ9
-         g7eg==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:organization:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lSeGwgb7OCHIZ0lDpAKilpMUUcD2EKTAejOKK6LikFQ=;
+        b=e77hRdekb5Ksd1Rsj0fXd4QUcYSQWip33lsHjZwlobtp8hSu+bdm8BuUoQZg2SmIuJ
+         HcgNgRizUQQRYmcssGQ0o5S8HyGblr9QKslVYYOZYOWRleFBchsDhgMg6/uztcIKPHyD
+         Zrqsxt2BdK9G6bp0t5QftvWtOn650n+KpKpZtRUrmueqjheTJ+yOQqxddQGG4Z/60lKF
+         45EIuSgi3v65Olqm0cCe4f3EkrSXZ+BedxDj4YNnubY8xsSOhrSrBw916twRg8mw7pt0
+         ppKZCyVm1FZ9ojqssfg/Lup17kvQnUIdyqzVF+2oT3ZB4rQUK9TvIhbX4HarDNW+6t/D
+         duYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=xv1X++7+CI+KR+tJVwJzAPl/RmtdeOQuhyVLw8iciNU=;
-        b=PD+W61gbhA99X2kDeDJ3DWO4qc5+VhKpDC7S7OkaIs0Stx3+PeRBoD9On9sSdQ7zHU
-         T0KBQD3BXcavrA5RFzeoDOJdMLRAH9XPwtM2dOSl3MM9sQB1a0QXUVjFDYwi5Gcgb+Dt
-         6IiViRaH0JISYxo5OuFeEDwoDxPs3Ju/7g1FMirAhCb2+kO43+Q90SavJ6nFcvjlSRGM
-         3iCQIZh/ZLO9dLMprzEX2FRkScuFW+G987rL5m9uilzraJOO6GHOfsXkc3qhlzUk40Si
-         Iban1zlVYYfVEVw4+nDbL5P1BOY+EiBQFxiZzWlo2HLhN5Am0jBGyhHMOoSEp1pad/z/
-         Hi1g==
-X-Gm-Message-State: APjAAAWr8vyCdKBlSSHf4Ef+Nfh3jK3dtRhglfYQ2Eke293FNwI/aBLk
-        XrW77nG/L4WYcKGVNaGq/eU=
-X-Google-Smtp-Source: APXvYqxcU5U+26T5lSP0rjHxG79pMm5IesRkIebm+bNQ7eNH6Kq5UKowQ1/FObBgGSwo8HC+h/fTXQ==
-X-Received: by 2002:a17:902:b612:: with SMTP id b18mr14279395pls.8.1562005237182;
-        Mon, 01 Jul 2019 11:20:37 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id v131sm10791495pgb.87.2019.07.01.11.20.34
+        h=x-gm-message-state:subject:to:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=lSeGwgb7OCHIZ0lDpAKilpMUUcD2EKTAejOKK6LikFQ=;
+        b=fUE2xSeDlMAqDrOd21ROGrCqj5LinuJ0hqG7VH1crmkMwj6cP1i2ThY2WozE2aXJef
+         86sS/fin+HfX5DKqlAywv3cEXWeppLPJTBJNDG5VQb5OoJfIVQN9RdGOVvrztoUZB1as
+         nDwMlFg3q4BrAOIHntuTBG/VLHi43x94VghWc6K0GB4WINJtYyfCbVAmWHRhQOHOAZNr
+         hBMU3Auc0ceA9U0xFWWkoIaOmZtgcst9F5tAUTrgXu/8o48GuPrtt3wXTFLxs6U2ly9q
+         y2ZF80KyKoXa2mSk+Vbifu03rQf0Se6w+vVgSqYFQksMdQ/jU2t+2G3T4eibojhrfAfi
+         n9Ww==
+X-Gm-Message-State: APjAAAX6/HDJc/ko2GvohNaYUjofg2Dkh77Ya7rDv0DZ6nd2uOave4OQ
+        3aTdYytXnaJma3cp1Xb8P0Vr51idP5I=
+X-Google-Smtp-Source: APXvYqyfow0Cz9tRTvKd2g5VEUBaB2/RuakhGwviPW+ATrJ/ednC/dTkBxSiPl5lPrmuWhtNA+nY8Q==
+X-Received: by 2002:ac2:482d:: with SMTP id 13mr12078669lft.132.1562005332513;
+        Mon, 01 Jul 2019 11:22:12 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:87f:4d67:ad95:f728:cfaa:94d0])
+        by smtp.gmail.com with ESMTPSA id p15sm3440617lji.80.2019.07.01.11.22.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 11:20:36 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 23:50:31 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Felipe Balbi <balbi@kernel.org>,
+        Mon, 01 Jul 2019 11:22:11 -0700 (PDT)
+Subject: Re: [PATCH] USB: gadget: function: fix issue Unneeded variable:
+ "value"
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] USB: gadget: function: fix issue Unneeded variable: "value"
-Message-ID: <20190701182031.GA10455@hari-Inspiron-1545>
+References: <20190701182031.GA10455@hari-Inspiron-1545>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <746df16a-0e8d-bae7-36ff-5827610dfd99@cogentembedded.com>
+Date:   Mon, 1 Jul 2019 21:22:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190701182031.GA10455@hari-Inspiron-1545>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below issue reported by coccicheck
-drivers/usb/gadget/function/f_eem.c:169:7-12: Unneeded variable:
-"value". Return "- EOPNOTSUPP" on line 179
+Hello!
 
-We can not change return type of eem_setup as its registed with callback
-function
+On 07/01/2019 09:20 PM, Hariprasad Kelam wrote:
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/usb/gadget/function/f_eem.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> fix below issue reported by coccicheck
+> drivers/usb/gadget/function/f_eem.c:169:7-12: Unneeded variable:
+> "value". Return "- EOPNOTSUPP" on line 179
+> 
+> We can not change return type of eem_setup as its registed with callback
 
-diff --git a/drivers/usb/gadget/function/f_eem.c b/drivers/usb/gadget/function/f_eem.c
-index c13befa..b81a91d 100644
---- a/drivers/usb/gadget/function/f_eem.c
-+++ b/drivers/usb/gadget/function/f_eem.c
-@@ -166,7 +166,6 @@ static struct usb_gadget_strings *eem_strings[] = {
- static int eem_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
- {
- 	struct usb_composite_dev *cdev = f->config->cdev;
--	int			value = -EOPNOTSUPP;
- 	u16			w_index = le16_to_cpu(ctrl->wIndex);
- 	u16			w_value = le16_to_cpu(ctrl->wValue);
- 	u16			w_length = le16_to_cpu(ctrl->wLength);
-@@ -176,7 +175,7 @@ static int eem_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
- 		w_value, w_index, w_length);
- 
- 	/* device either stalls (value < 0) or reports success */
--	return value;
-+	return -EOPNOTSUPP;
- }
- 
- 
--- 
-2.7.4
+   Registered.
+
+> function
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+[...]
+
+MBR, Sergei
 
