@@ -2,132 +2,107 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5834C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F65EC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A1221479
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:55:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U9nn1Kg5"
+	by mail.kernel.org (Postfix) with ESMTP id 103CA21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:57:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfGATzX (ORCPT
+        id S1726939AbfGAT5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 15:55:23 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38547 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfGATzX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 15:55:23 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r12so24974958edo.5;
-        Mon, 01 Jul 2019 12:55:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aDvBdz4CIhUwGc+WxUTMAssQu59DUKrshXV4PJF0Vqo=;
-        b=U9nn1Kg5IOugwawL1Z7TRIycorfaFuo8YkKcLYXI8vSjK0RBsXQUXEaWn2POhWqroI
-         5ba+6tR7izhRX8RE1nPTzlKMBGmcSGLyLzTDZneyOzk9wJNv04HC1Jv0jYtZTh8m0Eg1
-         wbbYzRLKsxGX56VZhlzAKMJSw3SpqR3dzl0pBWNeGtohgc+g8lMql84ZmlSYTdq9OhQi
-         seQQbAmYn0XgUX64pl2k7tGpBtPQwT08SMkLZm5SjcIRLk6qlXKFFulJqrF38P7xywlG
-         e3JFe8zOpwYgr8EtnvmVuMs0P6U/pcNbv6WBtfdzQW/eKUKqDyva8Zb91ru3ewVtFPxC
-         sEyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aDvBdz4CIhUwGc+WxUTMAssQu59DUKrshXV4PJF0Vqo=;
-        b=Q1GrPdmx+n2JTQrqevsA5UKBCh7VrbYjeRkEb5DL0GlsguaUQqiujWTS0wkFAYTY1H
-         3R+QjrUQuMg9dt2qa6gfPehAVmgfIeVMVMntkYZp4mC16jpwhGV0s4RvWkkVmWOVDodo
-         7aMC6e4My7/jRN8Y9uGrchivzxCX0pIvu139tjirYy5EshfIYW2eGqBPmuQwa+sbV93f
-         +U8QtJkrmmAped6ie/D/VAFDkapU70oOA6YzVDzhYhzrIM+0Ym9pnI5AxS3D6Wl0ZkZq
-         MAAZuCjQPdj7Kk5RcUaLrZ49ug+D5TTFhCmKO5ciABzgNbUziuLurjnUfRWula9IiJ3o
-         769g==
-X-Gm-Message-State: APjAAAX4V+ZYGeC3W5SfeOaA20IhZVXuvwi6l0GeF4K1SPmbEplN7SpJ
-        zmYcZP5gqbuvAMTv41WTei6+SCsGGJD4350qXE4=
-X-Google-Smtp-Source: APXvYqxRkskgrX6ttwwTzfZWxYIUz7bV7uQgkLArcijalzyyJWLD/+AWOAPLPdaO2F7CFX7FQozjAXt7BLsZ79S0Xj8=
-X-Received: by 2002:a50:9468:: with SMTP id q37mr31076816eda.163.1562010921237;
- Mon, 01 Jul 2019 12:55:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190701174120.15551-1-jeffrey.l.hugo@gmail.com>
-In-Reply-To: <20190701174120.15551-1-jeffrey.l.hugo@gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 1 Jul 2019 12:55:05 -0700
-Message-ID: <CAF6AEGsGRcuk3xnWG8KspW4wzG38o-Xg8tybnND9Lb24PWP5dw@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/mdp5: Use eariler mixers when possible
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Mon, 1 Jul 2019 15:57:16 -0400
+Received: from mga09.intel.com ([134.134.136.24]:12848 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726686AbfGAT5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 15:57:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 12:57:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,440,1557212400"; 
+   d="scan'208";a="361947326"
+Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Jul 2019 12:57:15 -0700
+Message-ID: <c99aa450d6cc9a0d23d24734a165e5ffbd9ecc7a.camel@intel.com>
+Subject: Re: [RFC PATCH 3/3] Prevent user from writing to IBT bitmap.
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Mon, 01 Jul 2019 12:48:56 -0700
+In-Reply-To: <CALCETrXsXXJWTSJxUO8YxHUo=QJKmHyJa7iz+jOBjWMRhno4rA@mail.gmail.com>
+References: <20190628194158.2431-1-yu-cheng.yu@intel.com>
+         <20190628194158.2431-3-yu-cheng.yu@intel.com>
+         <CALCETrXsXXJWTSJxUO8YxHUo=QJKmHyJa7iz+jOBjWMRhno4rA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 10:41 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> When assigning a mixer, we will iterate through the entire list looking for
-> a suitable match.  This results in selecting the last match.  We should
-> stop at the first match, since lower numbered mixers will typically have
-> more capabilities, and are likely to be what the bootloader used, if we
-> are looking to reuse the bootloader config in future.
+On Sat, 2019-06-29 at 16:44 -0700, Andy Lutomirski wrote:
+> On Fri, Jun 28, 2019 at 12:50 PM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+> > 
+> > The IBT bitmap is visiable from user-mode, but not writable.
+> > 
+> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> > 
+> > ---
+> >  arch/x86/mm/fault.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> > index 59f4f66e4f2e..231196abb62e 100644
+> > --- a/arch/x86/mm/fault.c
+> > +++ b/arch/x86/mm/fault.c
+> > @@ -1454,6 +1454,13 @@ void do_user_addr_fault(struct pt_regs *regs,
+> >          * we can handle it..
+> >          */
+> >  good_area:
+> > +#define USER_MODE_WRITE (FAULT_FLAG_WRITE | FAULT_FLAG_USER)
+> > +       if (((flags & USER_MODE_WRITE)  == USER_MODE_WRITE) &&
+> > +           (vma->vm_flags & VM_IBT)) {
+> > +               bad_area_access_error(regs, hw_error_code, address, vma);
+> > +               return;
+> > +       }
+> > +
+> 
+> Just make the VMA have VM_WRITE and VM_MAYWRITE clear.  No new code
+> like this should be required.
 
-I think for matching bootloader config, we need to read it out of the
-hw and do it the hard way, rather than making assumptions.
+Ok, I will work on that.
 
-For picking hwpipe for a plane, I made an effort to pick the available
-hwpipe w/ the *least* capabilities that fit the requirements (ie.
-scaling/yuv/etc) in order to leave the more capable hwpipe available
-for future use.  Not sure if same approach would make sense for
-mixers?  But not sure if picking something that bootloader probably
-also would have picked is a great argument.
-
-I do have some (now ancient) code from db410/mdp5 to read out he hw
-state.. I *think* that might have post-dated dynamically picking
-mixers.  (The older mdp5 on db410c also had to deal with figuring out
-SMP block config, iirc.. thankfully newer mdp5 doesn't have to deal
-with that.)
-
-BR,
--R
-
->
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_mixer.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_mixer.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_mixer.c
-> index 954db683ae44..1638042ad974 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_mixer.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_mixer.c
-> @@ -96,6 +96,17 @@ int mdp5_mixer_assign(struct drm_atomic_state *s, struct drm_crtc *crtc,
->                  */
->                 if (!(*mixer) || cur->caps & MDP_LM_CAP_PAIR)
->                         *mixer = cur;
-> +
-> +               /*
-> +                * We have everything we could want, exit early.
-> +                * We have a valid mixer, that mixer pairs with another if we
-> +                * need that ability in future, and we have a right mixer if
-> +                * needed.
-> +                * Later LMs could be less optimal
-> +                */
-> +               if (*mixer && (*mixer)->caps & MDP_LM_CAP_PAIR &&
-> +                   ((r_mixer && *r_mixer) || !r_mixer))
-> +                       break;
->         }
->
->         if (!(*mixer))
-> --
-> 2.17.1
->
+Thanks,
+Yu-cheng
