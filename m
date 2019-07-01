@@ -2,144 +2,141 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B87C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7399EC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8AFB21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:28:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gll/V/7K"
+	by mail.kernel.org (Postfix) with ESMTP id 4D0F321721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbfGBH2m (ORCPT
+        id S1726767AbfGBHaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 03:28:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50544 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbfGBH2m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 03:28:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=K8QOsQqzfq5CPRmQump69XRimOndfchhan89rRQjWSk=; b=gll/V/7KHwt/whSmEKez1Ymgm
-        t4o2zf9HhgQX4x+P7F++xQWfer/TAPPWm/QfuSmpkFrh7GifmvXs+HmmugEERdaeaJaVQGmmkr92D
-        dUtyhxEqVpId+CwKcfFq2+BUHi/NDwfQGsCnlVCimhzaEZxrbAqmUehzpCXgCYUjBht32XY9kL5U/
-        B0fDa8Y0gjaQ5Ye5X1+txfLCLx2It1C24/C791EpCRyedlwnoPU3kT2jwz4uoVMDTuWl2Xx1OCKKm
-        Y+n0IH6WHHLC+Gu4oY0s9pi+BZn003BCpwnV0XtyoROcB7zScgvXKh0x/VxdPiNJpebDMfyRDmyjh
-        iFD7kyrxg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiDDE-0002Be-D1; Tue, 02 Jul 2019 07:28:24 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0A60720245BD9; Tue,  2 Jul 2019 09:28:22 +0200 (CEST)
-Date:   Tue, 2 Jul 2019 09:28:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Eiichi Tsukata <devel@etsukata.com>
-Cc:     rostedt@goodmis.org, edwintorok@gmail.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH] x86/stacktrace: Do not access user space memory
- unnecessarily
-Message-ID: <20190702072821.GX3419@hirez.programming.kicks-ass.net>
-References: <20190702053151.26922-1-devel@etsukata.com>
+        Tue, 2 Jul 2019 03:30:12 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35052 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725845AbfGBHaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 03:30:12 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D5C8F26AC966FD5D207D;
+        Tue,  2 Jul 2019 15:30:08 +0800 (CST)
+Received: from localhost.localdomain (10.175.34.53) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 2 Jul 2019 15:29:57 +0800
+From:   Xue Chaojing <xuechaojing@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoshaokai@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
+        <xuechaojing@huawei.com>, <chiqijun@huawei.com>,
+        <wulike1@huawei.com>
+Subject: [PATCH net-next] hinic: remove standard netdev stats
+Date:   Mon, 1 Jul 2019 23:40:00 +0000
+Message-ID: <20190701234000.31738-1-xuechaojing@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702053151.26922-1-devel@etsukata.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.175.34.53]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 02:31:51PM +0900, Eiichi Tsukata wrote:
-> Put the boundary check before it accesses user space to prevent unnecessary
-> access which might crash the machine.
-> 
-> Especially, ftrace preemptirq/irq_disable event with user stack trace
-> option can trigger SEGV in pid 1 which leads to panic.
-> 
-> Reproducer:
-> 
->   CONFIG_PREEMPTIRQ_TRACEPOINTS=y
->   # echo 1 > events/preemptirq/enable
->   # echo userstacktrace > trace_options
-> 
-> Output:
-> 
->   Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
->   CPU: 1 PID: 1 Comm: systemd Not tainted 5.2.0-rc7+ #10
+This patch removes standard netdev stats in ethtool -S.
 
-Killing systemd is a feature :-)
+Suggested-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
+---
+ .../net/ethernet/huawei/hinic/hinic_ethtool.c | 47 +------------------
+ 1 file changed, 1 insertion(+), 46 deletions(-)
 
->   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
->   Call Trace:
->    dump_stack+0x67/0x90
->    panic+0x100/0x2c6
->    do_exit.cold+0x4e/0x101
->    do_group_exit+0x3a/0xa0
->    get_signal+0x14a/0x8e0
->    do_signal+0x36/0x650
->    exit_to_usermode_loop+0x92/0xb0
->    prepare_exit_to_usermode+0x6f/0xb0
->    retint_user+0x8/0x18
->   RIP: 0033:0x55be7ad1c89f
->   Code: Bad RIP value.
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+index 8d98f37c88a8..73a20f01ad4c 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+@@ -440,35 +440,6 @@ static u32 hinic_get_rxfh_indir_size(struct net_device *netdev)
+ 
+ #define ARRAY_LEN(arr) ((int)((int)sizeof(arr) / (int)sizeof(arr[0])))
+ 
+-#define HINIC_NETDEV_STAT(_stat_item) { \
+-	.name = #_stat_item, \
+-	.size = FIELD_SIZEOF(struct rtnl_link_stats64, _stat_item), \
+-	.offset = offsetof(struct rtnl_link_stats64, _stat_item) \
+-}
+-
+-static struct hinic_stats hinic_netdev_stats[] = {
+-	HINIC_NETDEV_STAT(rx_packets),
+-	HINIC_NETDEV_STAT(tx_packets),
+-	HINIC_NETDEV_STAT(rx_bytes),
+-	HINIC_NETDEV_STAT(tx_bytes),
+-	HINIC_NETDEV_STAT(rx_errors),
+-	HINIC_NETDEV_STAT(tx_errors),
+-	HINIC_NETDEV_STAT(rx_dropped),
+-	HINIC_NETDEV_STAT(tx_dropped),
+-	HINIC_NETDEV_STAT(multicast),
+-	HINIC_NETDEV_STAT(collisions),
+-	HINIC_NETDEV_STAT(rx_length_errors),
+-	HINIC_NETDEV_STAT(rx_over_errors),
+-	HINIC_NETDEV_STAT(rx_crc_errors),
+-	HINIC_NETDEV_STAT(rx_frame_errors),
+-	HINIC_NETDEV_STAT(rx_fifo_errors),
+-	HINIC_NETDEV_STAT(rx_missed_errors),
+-	HINIC_NETDEV_STAT(tx_aborted_errors),
+-	HINIC_NETDEV_STAT(tx_carrier_errors),
+-	HINIC_NETDEV_STAT(tx_fifo_errors),
+-	HINIC_NETDEV_STAT(tx_heartbeat_errors),
+-};
+-
+ #define HINIC_FUNC_STAT(_stat_item) {	\
+ 	.name = #_stat_item, \
+ 	.size = FIELD_SIZEOF(struct hinic_vport_stats, _stat_item), \
+@@ -658,20 +629,11 @@ static void hinic_get_ethtool_stats(struct net_device *netdev,
+ {
+ 	struct hinic_dev *nic_dev = netdev_priv(netdev);
+ 	struct hinic_vport_stats vport_stats = {0};
+-	const struct rtnl_link_stats64 *net_stats;
+ 	struct hinic_phy_port_stats *port_stats;
+-	struct rtnl_link_stats64 temp;
+ 	u16 i = 0, j = 0;
+ 	char *p;
+ 	int err;
+ 
+-	net_stats = dev_get_stats(netdev, &temp);
+-	for (j = 0; j < ARRAY_LEN(hinic_netdev_stats); j++, i++) {
+-		p = (char *)net_stats + hinic_netdev_stats[j].offset;
+-		data[i] = (hinic_netdev_stats[j].size ==
+-				sizeof(u64)) ? *(u64 *)p : *(u32 *)p;
+-	}
+-
+ 	err = hinic_get_vport_stats(nic_dev, &vport_stats);
+ 	if (err)
+ 		netif_err(nic_dev, drv, netdev,
+@@ -716,8 +678,7 @@ static int hinic_get_sset_count(struct net_device *netdev, int sset)
+ 	switch (sset) {
+ 	case ETH_SS_STATS:
+ 		q_num = nic_dev->num_qps;
+-		count = ARRAY_LEN(hinic_netdev_stats) +
+-			ARRAY_LEN(hinic_function_stats) +
++		count = ARRAY_LEN(hinic_function_stats) +
+ 			(ARRAY_LEN(hinic_tx_queue_stats) +
+ 			ARRAY_LEN(hinic_rx_queue_stats)) * q_num;
+ 
+@@ -738,12 +699,6 @@ static void hinic_get_strings(struct net_device *netdev,
+ 
+ 	switch (stringset) {
+ 	case ETH_SS_STATS:
+-		for (i = 0; i < ARRAY_LEN(hinic_netdev_stats); i++) {
+-			memcpy(p, hinic_netdev_stats[i].name,
+-			       ETH_GSTRING_LEN);
+-			p += ETH_GSTRING_LEN;
+-		}
+-
+ 		for (i = 0; i < ARRAY_LEN(hinic_function_stats); i++) {
+ 			memcpy(p, hinic_function_stats[i].name,
+ 			       ETH_GSTRING_LEN);
+-- 
+2.17.1
 
-^^^ that's weird, no amount of unwinding should affect regs->ip.
-
->   RSP: 002b:00007ffe329a4b00 EFLAGS: 00010202
->   RAX: 0000000000000768 RBX: 00007ffe329a4ba0 RCX: 00007ff0063aa469
->   RDX: 00007ff0066761de RSI: 00007ffe329a4b20 RDI: 0000000000000768
->   RBP: 000000000000000b R08: 0000000000000000 R09: 00007ffe329a4e2f
->   R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000768
->   R13: 0000000000000000 R14: 0000000000000004 R15: 000055be7b3d3560
->   Kernel Offset: 0x2a000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> 
-> Fixes: 02b67518e2b1 ("tracing: add support for userspace stacktraces in tracing/iter_ctrl")
-> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-> ---
->  arch/x86/kernel/stacktrace.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-> index 2abf27d7df6b..6d0c608ffe34 100644
-> --- a/arch/x86/kernel/stacktrace.c
-> +++ b/arch/x86/kernel/stacktrace.c
-> @@ -123,12 +123,12 @@ void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
->  	while (1) {
->  		struct stack_frame_user frame;
->  
-> +		if ((unsigned long)fp < regs->sp)
-> +			break;
->  		frame.next_fp = NULL;
->  		frame.ret_addr = 0;
->  		if (!copy_stack_frame(fp, &frame))
->  			break;
-> -		if ((unsigned long)fp < regs->sp)
-> -			break;
-
-Aside of which, that doesn't make sense, even if copy_stack_frame() was
-fed utter garbage it should never result in the user process being
-affected.
-
-It does: "pagefault_disable(); __copy_from_user_inatomic()", which
-should take the fault and catch it in an extable and have it return
--EFAULT.
-
-Something is really fishy here, maybe Josh has an idea?
-
->  		if (frame.ret_addr) {
->  			if (!consume_entry(cookie, frame.ret_addr, false))
->  				return;
-> -- 
-> 2.21.0
-> 
