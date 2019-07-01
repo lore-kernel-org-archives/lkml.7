@@ -2,123 +2,112 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE97EC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 015EFC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9746A20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB961208C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Hl//A+Q+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LzwbbBQ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfGAPvw (ORCPT
+        id S1730052AbfGAPwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:51:52 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:34540 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728053AbfGAPvv (ORCPT
+        Mon, 1 Jul 2019 11:52:22 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37308 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728626AbfGAPwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:51:51 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61FnOW5041009;
-        Mon, 1 Jul 2019 15:51:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=v58nZ4sOVzUxsIgxzLPHYMiDCb/PQf8nA8zBdMZYPrM=;
- b=Hl//A+Q++nOy6N2C6J/YeboBCJa9RqC3jBie72QOtCUy1Ovr8FbsyqQLSRdm1hmgZCtm
- KG6N38+KyRFnzqWEMu9ezz4KwaDoq2/uOZHuXolks2GYCt7LXiHxBjVccLLk/FpeVZIw
- mY2nNkDvTbQpAXpAFy9eKfTl3nM0wK9tc6XP3S8hcxZHMon3GiTI7y7x5kLfAPYc4A8b
- yBEdelu0iS6f+r5McYvVvsNZyvmGr6Th8xHBYNcemBWSI5RW2zPnRixPwuOSjs8QZX20
- hWFHGWtAV0QwgNGaXeQgBF0e+wsfHY/JExgfIak7JLoxjvf5SYbYP8D45PZThHaN8SZQ mg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2te5tbehd4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Jul 2019 15:51:46 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61FmBc2126248;
-        Mon, 1 Jul 2019 15:49:46 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2tebak8gvv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Jul 2019 15:49:46 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x61Fnjx4014393;
-        Mon, 1 Jul 2019 15:49:45 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Jul 2019 08:49:45 -0700
-Date:   Mon, 1 Jul 2019 08:49:44 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     linux-xfs@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Adding some trees to linux-next?
-Message-ID: <20190701154944.GL1404256@magnolia>
-References: <20190701110603.5abcbb2c@canb.auug.org.au>
- <20190701153552.GJ1404256@magnolia>
- <20190702014210.1c95f9f1@canb.auug.org.au>
+        Mon, 1 Jul 2019 11:52:22 -0400
+Received: by mail-io1-f67.google.com with SMTP id e5so29939821iok.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 08:52:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ljuESl5eqxUihWHOzj/6lzShmRXZDNI/SwprEvqSgi8=;
+        b=LzwbbBQ0gRBhhYkuMgF89Uv+5nF6LufoX3jkv984WIcb2X1nlh16MtlHvMTKeM0Q3B
+         bKd8T+OkCYWmO4sMkmlmKhlR44ET30TC/mzO87QqrXvo4YFhp7oLYYiJ4vHHocSm1bUM
+         mqRhrv9RxXrpP3O4vmYmy14X3dyIhGnlVq8gg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ljuESl5eqxUihWHOzj/6lzShmRXZDNI/SwprEvqSgi8=;
+        b=RHfXfjGHamdHOzmSp8sz9DX7bTmXbGpaSAza15JiNz1h70AFaD9Etfx4cOVbDzX+0K
+         zKcb7ifhIDZbPKQ648JOgwGbtQfhulVUH3w+HcU4i76PUimBAQVU/kNx/NOU8Q0DgM4f
+         8yGDEnHWUKXjfpoD8Z3CZcD4iyV8ijvwjVZ3QL5V8DfRT+KwLNJZ3oBy2VETgbaXqoBL
+         yPr6bYRLZOs4DIYMCYkjiAPDAiDYvzjDySuG6N+oLSdDfwooZbGTXJewFr3UfjLZe5If
+         U2TIwt4EohM4g/fTaDZWG3uLeKSZw0y3e/EH49II+0MSTKx86MwzblxK1HTcNIyYDLLp
+         kURA==
+X-Gm-Message-State: APjAAAVmQZcKFtdZvrprexkfuE/5IWfUpiCI+4948F9fDI4CnX+fN65C
+        WUWfaANnlUKlvtkYjJk9oXeLdi8aC6A=
+X-Google-Smtp-Source: APXvYqyfFblBR0Kj1Belq6sAPmcykm9CPNFTjeydqt9mnH/MtE9y5chC1j/e8ZgbzbBiRDGYiyRaUQ==
+X-Received: by 2002:a6b:14c2:: with SMTP id 185mr28517852iou.69.1561996341165;
+        Mon, 01 Jul 2019 08:52:21 -0700 (PDT)
+Received: from localhost ([2620:15c:183:200:855f:8919:84a7:4794])
+        by smtp.gmail.com with ESMTPSA id c23sm10332157iod.11.2019.07.01.08.52.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 08:52:20 -0700 (PDT)
+From:   Ross Zwisler <zwisler@chromium.org>
+X-Google-Original-From: Ross Zwisler <zwisler@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ross Zwisler <zwisler@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Hirte <johannes.hirte@datenkhaos.de>,
+        Klaus Kusche <klaus.kusche@computerix.info>,
+        samitolvanen@google.com, Guenter Roeck <groeck@google.com>
+Subject: [PATCH] Revert "x86/build: Move _etext to actual end of .text"
+Date:   Mon,  1 Jul 2019 09:52:08 -0600
+Message-Id: <20190701155208.211815-1-zwisler@google.com>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702014210.1c95f9f1@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907010190
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907010191
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 01:42:10AM +1000, Stephen Rothwell wrote:
-> Hi Darrick,
-> 
-> On Mon, 1 Jul 2019 08:35:52 -0700 "Darrick J. Wong" <darrick.wong@oracle.com> wrote:
-> >
-> > Could you add my iomap-for-next and vfs-for-next branches to linux-next,
-> > please?  They can be found here:
-> > 
-> > git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git#iomap-for-next
-> > git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git#vfs-for-next
-> > 
-> > I've decided that trying to munge all that through the xfs for-next
-> > branch is too much insanity and splitting them up will help me prevent
-> > my head from falling off.
-> 
-> Just out of interest, do you intend to send these directly to Linus, or
-> via another tree?
+This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
 
-The iomap stuff I'd definitely send directly to Linus.
+Per the discussion here:
 
-For vfs stuff, it depends.  For work in the core vfs I'll probably just
-keep sending patches through Al, but for treewide things like ioctl
-cleanups I suspect it'll be easier to let them soak in -next and then
-send them directly.
+https://lkml.org/lkml/2019/6/20/830
 
-I also dropped the f2fs parts of the setflags/fssetxattr patches because
-while I think your fix from yesterday's for-next is correct, I prefer to
-let Eric Biggers' cleanup land through the f2fs tree before I try to
-clean up f2fs again.  There shouldn't be any harm in letting that lag a
-little while longer.
+the above referenced commit breaks kernel compilation with old GCC
+toolchains as well as current versions of the Gold linker.  Revert it so
+we don't regress and lose the ability to compile the kernel with these
+tools.
 
---D
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+---
+ arch/x86/kernel/vmlinux.lds.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> -- 
-> Cheers,
-> Stephen Rothwell
-
-
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 0850b5149345..4d1517022a14 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -141,10 +141,10 @@ SECTIONS
+ 		*(.text.__x86.indirect_thunk)
+ 		__indirect_thunk_end = .;
+ #endif
+-	} :text = 0x9090
+ 
+-	/* End of text section */
+-	_etext = .;
++		/* End of text section */
++		_etext = .;
++	} :text = 0x9090
+ 
+ 	NOTES :text :note
+ 
+-- 
+2.20.1
