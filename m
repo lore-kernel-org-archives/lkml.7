@@ -2,208 +2,207 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFDEC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03ACAC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C16205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:34:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRVv9IsC"
+	by mail.kernel.org (Postfix) with ESMTP id C9CED20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:39:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfGAVew (ORCPT
+        id S1727039AbfGAVjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 17:34:52 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35657 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbfGAVev (ORCPT
+        Mon, 1 Jul 2019 17:39:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44932 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726586AbfGAVjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 17:34:51 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a127so11227099oii.2;
-        Mon, 01 Jul 2019 14:34:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/xhAafXt+IxBm68ncbRDSjF5LGtfIcqGl8aIPkNVDLg=;
-        b=QRVv9IsC8ZFWubDDJE73WMYjHjcq4/qn4/4bKOIgzEeNNGaL/bn+Wue04fW7EOGMO+
-         GzbkXqPZyZ5jLm0rhsbSW1lX/dokKTEmzVXslw4vqRl2Y7nt5V8Ch1N8K8jwYfw7EE69
-         lNlkFChn2Y7NrT6lk/QICWyid1hXaUrAg2TNxFPT9229qyh+DbQGWIwKvozsh4uwCED3
-         N+ER/ohj+RygUnhbacHtoGAMOPETwKnLzWU6V8kM4cN62rK0fpCPC5RL82HctNTDVERx
-         E7D94PudaANSXVoUmnajTG/aFV0eXOM4pWA3nurlzcTfonBeLhJd2HsibSYmJ8MSty+1
-         Y04A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=/xhAafXt+IxBm68ncbRDSjF5LGtfIcqGl8aIPkNVDLg=;
-        b=tk/ig68I1AkUXXbUeVsyRaZWByRz1VIk4jC281/xldbn39Rmhu8qoa8iQQ86Rk5FUI
-         JSooAwCNyRHXRJXYzk58auUyhdnxuJQOv9AAaulRCa92Hx6440I+L0C/m+mUYN+4z8hU
-         XwyCEROIcn8ACal9VEjXDxoUYRnrQl9TO/5NTq3ipGbgX4kqAJdemSp6BxbBzyXt7BvP
-         i8BcGB1e7FFFWgiVStarwgS5nBaVnlL9+vVRj6tevcTyfuXOSmeBO/kddtLTs3PVevC6
-         czgELFqgzLCnJM3aR3U8ZjRs3okHjtlNhW3XknSbN7vUFkP3J3SlxaCVqWL+eDSztp9f
-         6CqQ==
-X-Gm-Message-State: APjAAAWztYyoIbTmtON3rjpcZyEk6qiRN13pu0G6DF/jdk7tJEcPIlGV
-        vtl8HC55H5UJekAxIVYzDw==
-X-Google-Smtp-Source: APXvYqxDyMTDotRySwO9Uv2LcUfCYZ2/L2tvak+dufB2yUyP0pR6Q0oubvE2hRyJQaajIEY3C6irPQ==
-X-Received: by 2002:aca:eb57:: with SMTP id j84mr917136oih.17.1562016890538;
-        Mon, 01 Jul 2019 14:34:50 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id z69sm4303924oia.48.2019.07.01.14.34.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 14:34:50 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:9575:16b6:1dd6:2173])
-        by serve.minyard.net (Postfix) with ESMTPSA id 6CE221800D1;
-        Mon,  1 Jul 2019 21:34:49 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 16:34:48 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Corey Minyard <cminyard@mvista.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de
-Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
-Message-ID: <20190701213448.GC4336@minyard.net>
-Reply-To: minyard@acm.org
-References: <20190509193320.21105-1-minyard@acm.org>
- <20190510103318.6cieoifz27eph4n5@linutronix.de>
- <20190628214903.6f92a9ea@oasis.local.home>
- <20190701190949.GB4336@minyard.net>
- <20190701161840.1a53c9e4@gandalf.local.home>
- <20190701204325.GD5041@minyard.net>
- <20190701170602.2fdb35c2@gandalf.local.home>
- <20190701171333.37cc0567@gandalf.local.home>
- <20190701172825.7d861e85@gandalf.local.home>
+        Mon, 1 Jul 2019 17:39:35 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61LbA0J150173;
+        Mon, 1 Jul 2019 17:39:29 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tfsb7t4gx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 01 Jul 2019 17:39:29 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x61LZ4X9005465;
+        Mon, 1 Jul 2019 21:39:28 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma03dal.us.ibm.com with ESMTP id 2tdym6smhy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 01 Jul 2019 21:39:28 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61LdSBD33030598
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 1 Jul 2019 21:39:28 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 131D5B205F;
+        Mon,  1 Jul 2019 21:39:28 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA092B2066;
+        Mon,  1 Jul 2019 21:39:27 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  1 Jul 2019 21:39:27 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1199716C2BD7; Mon,  1 Jul 2019 14:39:31 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 14:39:31 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Signed-off-by for the fix-late-interrupts patch?
+Message-ID: <20190701213930.GA25736@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190701172825.7d861e85@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907010250
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 05:28:25PM -0400, Steven Rostedt wrote:
-> On Mon, 1 Jul 2019 17:13:33 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Mon, 1 Jul 2019 17:06:02 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > > On Mon, 1 Jul 2019 15:43:25 -0500
-> > > Corey Minyard <cminyard@mvista.com> wrote:
-> > > 
-> > >   
-> > > > I show that patch is already applied at
-> > > > 
-> > > >     1921ea799b7dc561c97185538100271d88ee47db
-> > > >     sched/completion: Fix a lockup in wait_for_completion()
-> > > > 
-> > > > git describe --contains 1921ea799b7dc561c97185538100271d88ee47db
-> > > > v4.19.37-rt20~1
-> > > > 
-> > > > So I'm not sure what is going on.    
-> > > 
-> > > Bah, I'm replying to the wrong commit that I'm having issues with.
-> > > 
-> > > I searched your name to find the patch that is of trouble, and picked
-> > > this one.
-> > > 
-> > > I'll go find the problem patch, sorry for the noise on this one.
-> > >   
-> > 
-> > No, I did reply to the right email, but it wasn't the top patch I was
-> > having issues with. It was the patch I replied to:
-> > 
-> > This change below that Sebastian marked as stable-rt is what is causing
-> > me an issue. Not the patch that started the thread.
-> > 
-> 
-> In fact, my system doesn't boot with this commit in 5.0-rt.
-> 
-> If I revert 90e1b18eba2ae4a729 ("swait: Delete the task from after a
-> wakeup occured") the machine boots again.
-> 
-> Sebastian, I think that's a bad commit, please revert it.
+Hello, Peter,
 
-Yeah.  d_wait_lookup() does not use __SWAITQUEUE_INITIALIZER() to
-intitialize it's queue item, but uses swake_up_all(), so it goes
-into an infinite loop since it won't remove the item because remove
-isn't set.
+The patch below from your earlier email is doing fine in my testing.
+May I please add your Signed-of-by and designate you as author?
 
-I'd suspect there are other places this is the case.
+							Thanx, Paul
 
--corey
+------------------------------------------------------------------------
 
-> 
-> Thanks!
-> 
-> -- Steve
-> 
-> > 
-> > 
-> > > Now.. that will fix it, but I think it is also wrong.
-> > > 
-> > > The problem being that it violates FIFO, something that might be more
-> > > important on -RT than elsewhere.
-> > > 
-> > > The regular wait API seems confused/inconsistent when it uses
-> > > autoremove_wake_function and default_wake_function, which doesn't help,
-> > > but we can easily support this with swait -- the problematic thing is
-> > > the custom wake functions, we musn't do that.
-> > > 
-> > > (also, mingo went and renamed a whole bunch of wait_* crap and didn't do
-> > > the same to swait_ so now its named all different :/)
-> > > 
-> > > Something like the below perhaps.
-> > > 
-> > > ---
-> > > diff --git a/include/linux/swait.h b/include/linux/swait.h
-> > > index 73e06e9986d4..f194437ae7d2 100644
-> > > --- a/include/linux/swait.h
-> > > +++ b/include/linux/swait.h
-> > > @@ -61,11 +61,13 @@ struct swait_queue_head {
-> > >  struct swait_queue {
-> > >  	struct task_struct	*task;
-> > >  	struct list_head	task_list;
-> > > +	unsigned int		remove;
-> > >  };
-> > >  
-> > >  #define __SWAITQUEUE_INITIALIZER(name) {				\
-> > >  	.task		= current,					\
-> > >  	.task_list	= LIST_HEAD_INIT((name).task_list),		\
-> > > +	.remove		= 1,						\
-> > >  }
-> > >  
-> > >  #define DECLARE_SWAITQUEUE(name)					\
-> > > diff --git a/kernel/sched/swait.c b/kernel/sched/swait.c
-> > > index e83a3f8449f6..86974ecbabfc 100644
-> > > --- a/kernel/sched/swait.c
-> > > +++ b/kernel/sched/swait.c
-> > > @@ -28,7 +28,8 @@ void swake_up_locked(struct swait_queue_head *q)
-> > >  
-> > >  	curr = list_first_entry(&q->task_list, typeof(*curr), task_list);
-> > >  	wake_up_process(curr->task);
-> > > -	list_del_init(&curr->task_list);
-> > > +	if (curr->remove)
-> > > +		list_del_init(&curr->task_list);
-> > >  }
-> > >  EXPORT_SYMBOL(swake_up_locked);
-> > >  
-> > > @@ -57,7 +58,8 @@ void swake_up_all(struct swait_queue_head *q)
-> > >  		curr = list_first_entry(&tmp, typeof(*curr), task_list);
-> > >  
-> > >  		wake_up_state(curr->task, TASK_NORMAL);
-> > > -		list_del_init(&curr->task_list);
-> > > +		if (curr->remove)
-> > > +			list_del_init(&curr->task_list);
-> > >  
-> > >  		if (list_empty(&tmp))
-> > >  			break;  
-> > 
-> 
+commit 007b6627e45a47d12d79791e73747c5aa59f90a2
+Author: Paul E. McKenney <paulmck@linux.ibm.com>
+Date:   Wed Jun 5 07:46:43 2019 -0700
+
+    EXP idle: Prevent late-arriving interrupts from disrupting offline
+    
+    Scheduling-clock interrupts can arrive late in the CPU-offline process,
+    after idle entry and the subsequent call to cpuhp_report_idle_dead().
+    Once execution passes the call to rcu_report_dead(), RCU is ignoring
+    the CPU, which results in lockdep complaints when the interrupt handler
+    uses RCU:
+    
+    ------------------------------------------------------------------------
+    
+    =============================
+    WARNING: suspicious RCU usage
+    5.2.0-rc1+ #681 Not tainted
+    -----------------------------
+    kernel/sched/fair.c:9542 suspicious rcu_dereference_check() usage!
+    
+    other info that might help us debug this:
+    
+    RCU used illegally from offline CPU!
+    rcu_scheduler_active = 2, debug_locks = 1
+    no locks held by swapper/5/0.
+    
+    stack backtrace:
+    CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.2.0-rc1+ #681
+    Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS Bochs 01/01/2011
+    Call Trace:
+     <IRQ>
+     dump_stack+0x5e/0x8b
+     trigger_load_balance+0xa8/0x390
+     ? tick_sched_do_timer+0x60/0x60
+     update_process_times+0x3b/0x50
+     tick_sched_handle+0x2f/0x40
+     tick_sched_timer+0x32/0x70
+     __hrtimer_run_queues+0xd3/0x3b0
+     hrtimer_interrupt+0x11d/0x270
+     ? sched_clock_local+0xc/0x74
+     smp_apic_timer_interrupt+0x79/0x200
+     apic_timer_interrupt+0xf/0x20
+     </IRQ>
+    RIP: 0010:delay_tsc+0x22/0x50
+    Code: ff 0f 1f 80 00 00 00 00 65 44 8b 05 18 a7 11 48 0f ae e8 0f 31 48 89 d6 48 c1 e6 20 48 09 c6 eb 0e f3 90 65 8b 05 fe a6 11 48 <41> 39 c0 75 18 0f ae e8 0f 31 48 c1 e2 20 48 09 c2 48 89 d0 48 29
+    RSP: 0000:ffff8f92c0157ed0 EFLAGS: 00000212 ORIG_RAX: ffffffffffffff13
+    RAX: 0000000000000005 RBX: ffff8c861f356400 RCX: ffff8f92c0157e64
+    RDX: 000000321214c8cc RSI: 00000032120daa7f RDI: 0000000000260f15
+    RBP: 0000000000000005 R08: 0000000000000005 R09: 0000000000000000
+    R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000000
+    R13: 0000000000000000 R14: ffff8c861ee18000 R15: ffff8c861ee18000
+     cpuhp_report_idle_dead+0x31/0x60
+     do_idle+0x1d5/0x200
+     ? _raw_spin_unlock_irqrestore+0x2d/0x40
+     cpu_startup_entry+0x14/0x20
+     start_secondary+0x151/0x170
+     secondary_startup_64+0xa4/0xb0
+    
+    ------------------------------------------------------------------------
+    
+    This happens rarely, but can be forced by happen more often by
+    placing delays in cpuhp_report_idle_dead() following the call to
+    rcu_report_dead().  With this in place, the folloiwng rcutorture
+    scenario reproduces the problem within a few minute:
+    
+    tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 5 --kconfig "CONFIG_DEBUG_LOCK_ALLOC=y CONFIG_PROVE_LOCKING=y" --configs "TREE04"
+    
+    This commit uses the crude by effective expedient of moving the
+    disabling of interrupts within the idle loop to precede the
+    cpu_is_offline() check.  It also invokes tick_nohz_idle_stop_tick()
+    instead of tick_nohz_idle_stop_tick_protected(), and removes the
+    latter because there are no other callers.
+    
+    (Unsigned email from Peter Zijlstra.)
+
+diff --git a/include/linux/tick.h b/include/linux/tick.h
+index f92a10b5e112..196a0a7bfc4f 100644
+--- a/include/linux/tick.h
++++ b/include/linux/tick.h
+@@ -134,14 +134,6 @@ extern unsigned long tick_nohz_get_idle_calls(void);
+ extern unsigned long tick_nohz_get_idle_calls_cpu(int cpu);
+ extern u64 get_cpu_idle_time_us(int cpu, u64 *last_update_time);
+ extern u64 get_cpu_iowait_time_us(int cpu, u64 *last_update_time);
+-
+-static inline void tick_nohz_idle_stop_tick_protected(void)
+-{
+-	local_irq_disable();
+-	tick_nohz_idle_stop_tick();
+-	local_irq_enable();
+-}
+-
+ #else /* !CONFIG_NO_HZ_COMMON */
+ #define tick_nohz_enabled (0)
+ static inline int tick_nohz_tick_stopped(void) { return 0; }
+@@ -164,8 +156,6 @@ static inline ktime_t tick_nohz_get_sleep_length(ktime_t *delta_next)
+ }
+ static inline u64 get_cpu_idle_time_us(int cpu, u64 *unused) { return -1; }
+ static inline u64 get_cpu_iowait_time_us(int cpu, u64 *unused) { return -1; }
+-
+-static inline void tick_nohz_idle_stop_tick_protected(void) { }
+ #endif /* !CONFIG_NO_HZ_COMMON */
+ 
+ #ifdef CONFIG_NO_HZ_FULL
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index f5516bae0c1b..42270ca90d94 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -240,13 +240,14 @@ static void do_idle(void)
+ 		check_pgt_cache();
+ 		rmb();
+ 
++		local_irq_disable();
++
+ 		if (cpu_is_offline(cpu)) {
+-			tick_nohz_idle_stop_tick_protected();
++			tick_nohz_idle_stop_tick();
+ 			cpuhp_report_idle_dead();
+ 			arch_cpu_idle_dead();
+ 		}
+ 
+-		local_irq_disable();
+ 		arch_cpu_idle_enter();
+ 
+ 		/*
