@@ -2,406 +2,265 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F60FC06508
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8356BC0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD1A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526C9208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JzzYNO6M"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bRrTSGWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfGADYl (ORCPT
+        id S1727370AbfGADZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 23:24:41 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43801 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfGADYl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 23:24:41 -0400
-Received: by mail-qt1-f196.google.com with SMTP id w17so13138956qto.10
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 20:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TBkGIpZDTRWUqhge/wC7uC1qGZRr0i17gzx2p4IYZwY=;
-        b=JzzYNO6MunIO3mqHv0ndJxirDJcdQSSuFy9YMsqQ/p0d88m+Jx3kE6huuOS0bPQqCK
-         Tc0oTqzZ8bf/By2K9MFrBZ4119RgZRvIPe7Ynk9jq/wNgYeV3SqqM14z+BjeqbEnqOCL
-         DiAHD3aLJVxmRdzSVdvMFPJKaPWRtgQyaNELNte+fDfGr+V0+i2PgnNHqde7GMykF0J5
-         QFrp3oh/qCy30tElf9dXyswsUbOyZyP4AIRtLx89hgBtsfbOjLubvZhTdRw+LZICHJpY
-         B+pWWQol1kQbuVNsgEE1S72iMIqqeT4U8pIy7nZiXRcN7q8UOLg9E8HtfzyboaFuIzSP
-         vCDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TBkGIpZDTRWUqhge/wC7uC1qGZRr0i17gzx2p4IYZwY=;
-        b=DTRUgHCliHylq6AjDN79D2nw7tX5Gz5dK40cD8FRdo0G40tX17VcXBKW8DlFoismJt
-         I/N/nSb5QKGAJ0D5iUkHCtcawZISnZQ6Qal9hdlHZGd94hOixlJwqR4u/FGgM+T/H3zv
-         7VW5wQUMMGE56dlodHVC7Az3aLShBZKdcHBZq1GAxbqYzdyKkQNtrjGcHtIFLUmWMVHk
-         YpGSYo7DM5d5eCguyvdD6KSilCq0ABQ3eD6HksF76MpX3J0MNLtOocxcVCtYM5BbleQO
-         bSnPCvQ8n1+4ISktcjF6c7Q/L/wCRvGIpjyTVnRSavrlSQXg1+hxMdSMDqEsrNh6rK0W
-         32Jg==
-X-Gm-Message-State: APjAAAVw7pOTyjD2FRg8VTJPlfaqqQB+EfUyUPP4bC6ObClXYnlTRzLt
-        TfGG/4cop/TYvBUTMeiv6Wo=
-X-Google-Smtp-Source: APXvYqzTygIW3Zvf1UugDAWJd6BU2aigSwWo22zGT0E2LGG8WIzpV5rgihga//zrTeHm6VlkC7OdVw==
-X-Received: by 2002:ad4:5283:: with SMTP id v3mr19343701qvr.207.1561951480157;
-        Sun, 30 Jun 2019 20:24:40 -0700 (PDT)
-Received: from smtp.gmail.com ([187.121.151.22])
-        by smtp.gmail.com with ESMTPSA id g53sm5172840qtk.65.2019.06.30.20.24.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 30 Jun 2019 20:24:39 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 00:24:35 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Daniel Vetter <daniel@ffwll.ch>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Simon Ser <contact@emersion.fr>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm/vkms: Introduce configfs for enabling/disabling
- connectors
-Message-ID: <b7a3fbf4ddab54965bf2dc3c0aab843e2f66dd10.1561950553.git.rodrigosiqueiramelo@gmail.com>
-References: <cover.1561950553.git.rodrigosiqueiramelo@gmail.com>
+        Sun, 30 Jun 2019 23:25:02 -0400
+Received: from ozlabs.org ([203.11.71.1]:38307 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726472AbfGADZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 23:25:01 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cXmp4vsZz9s3Z;
+        Mon,  1 Jul 2019 13:24:58 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561951498;
+        bh=/kMAiQZs0gnpj1DnNcPae61KsnoPRPeOYgjHpvjXupM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=bRrTSGWonN3kpdBRBwBqqCDX4Ll8+WM2X34cjYtePXfAIZBmnyU/Jn2m/IIYJg1s5
+         VbZNzKgCZZ1afVqTJKJWmxRLfyxDqB4+Apj6WHkBzA8xrx8W+bFVMBlPfDPPnKXusg
+         VJbDThxV7DK/qIf3sNtq6wKHYKsLp8WtnAHmOdmp7lKlU9gFOPXLaeLtgqz6gtgZw5
+         ecrrNkFh7aqEszsVszhqMzw+g/fjQalu1GPOqxoHXjit51aHFV6dXIpQnb83KLkqZu
+         Ltko10V7EHFLFhlghIykSxxbLRRVZu8INeGkeIus95gI6EBVsnGXE7QMGL1ebc5vhL
+         lK4+Es+NY3d9w==
+Date:   Mon, 1 Jul 2019 13:24:57 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: linux-next: manual merge of the pm tree with the pci tree
+Message-ID: <20190701132457.3512acdd@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1561950553.git.rodrigosiqueiramelo@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/jw.saVJMwjH/513wz=4yNAZ"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces an implementation of vkms subsystems through
-configfs; we want to be able to reconfigure vkms instance without having
-to reload the module. This commit adds the primary support for configfs
-by allowing vkms to expose the ability to enable/disable its connectors.
+--Sig_/jw.saVJMwjH/513wz=4yNAZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
----
- drivers/gpu/drm/vkms/Makefile        |   3 +-
- drivers/gpu/drm/vkms/vkms_configfs.c | 229 +++++++++++++++++++++++++++
- drivers/gpu/drm/vkms/vkms_drv.c      |   6 +
- drivers/gpu/drm/vkms/vkms_drv.h      |  12 ++
- 4 files changed, 249 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/vkms/vkms_configfs.c
+Hi all,
 
-diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
-index 333d3cead0e3..f90c016cd9fe 100644
---- a/drivers/gpu/drm/vkms/Makefile
-+++ b/drivers/gpu/drm/vkms/Makefile
-@@ -6,6 +6,7 @@ vkms-y := \
- 	vkms_crtc.o \
- 	vkms_gem.o \
- 	vkms_composer.o \
--	vkms_writeback.o
-+	vkms_writeback.o \
-+	vkms_configfs.o
- 
- obj-$(CONFIG_DRM_VKMS) += vkms.o
-diff --git a/drivers/gpu/drm/vkms/vkms_configfs.c b/drivers/gpu/drm/vkms/vkms_configfs.c
-new file mode 100644
-index 000000000000..5d1a30517cca
---- /dev/null
-+++ b/drivers/gpu/drm/vkms/vkms_configfs.c
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#include "vkms_drv.h"
-+
-+static struct config_group *connector_group;
-+static struct vkms_device *vkms_device;
-+
-+static char *available_connectors[] = {
-+	"Virtual",
-+	"Writeback",
-+};
-+
-+struct connectors_fs {
-+	struct config_item item;
-+	bool enable;
-+};
-+
-+static int enable_connector(const char *name)
-+{
-+	int ret = 0;
-+
-+	if (!strcmp(name, "Writeback"))
-+		ret = enable_writeback_connector(vkms_device);
-+	else if (!strcmp(name, "Virtual"))
-+		ret = enable_virtual_connector(vkms_device);
-+
-+	if (ret)
-+		return ret;
-+
-+	drm_mode_config_reset(&vkms_device->drm);
-+	return 0;
-+}
-+
-+static void disable_connector(const char *name)
-+{
-+	if (!strcmp(name, "Writeback"))
-+		disable_writeback_connector(vkms_device);
-+	else if (!strcmp(name, "Virtual"))
-+		disable_virtual_connector(vkms_device);
-+}
-+
-+static inline struct connectors_fs *to_conn_item(struct config_item *item)
-+{
-+	return item ? container_of(item, struct connectors_fs, item) : NULL;
-+}
-+
-+static ssize_t conn_fs_enable_show(struct config_item *item, char *page)
-+{
-+	struct connectors_fs *conn_item = to_conn_item(item);
-+
-+	return sprintf(page, "%d\n", conn_item->enable);
-+}
-+
-+static ssize_t conn_fs_enable_store(struct config_item *item,
-+				    const char *page, size_t count)
-+{
-+	struct connectors_fs *conn_item = to_conn_item(item);
-+	char *p = (char *)page;
-+	unsigned int enable;
-+	int ret;
-+
-+	ret = kstrtouint(p, 10, &enable);
-+	if (ret)
-+		return -EINVAL;
-+
-+	if (enable > 1)
-+		return -EINVAL;
-+
-+	if (enable == conn_item->enable)
-+		return count;
-+
-+	if (enable) {
-+		ret = enable_connector(item->ci_name);
-+		if (ret)
-+			return ret;
-+	} else {
-+		disable_connector(item->ci_name);
-+	}
-+
-+	conn_item->enable = enable ? true : false;
-+	return count;
-+}
-+
-+CONFIGFS_ATTR(conn_fs_, enable);
-+
-+static struct configfs_attribute *connectors_fs_attrs[] = {
-+	&conn_fs_attr_enable,
-+	NULL,
-+};
-+
-+static void connectors_fs_release(struct config_item *item)
-+{
-+	kfree(to_conn_item(item));
-+}
-+
-+static struct configfs_item_operations connectors_fs_ops = {
-+	.release = connectors_fs_release,
-+};
-+
-+static const struct config_item_type connectors_fs_type = {
-+	.ct_item_ops	= &connectors_fs_ops,
-+	.ct_attrs	= connectors_fs_attrs,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct config_item *make_connector_item(struct config_group *group,
-+					       const char *name)
-+{
-+	struct connectors_fs *conn_item;
-+	int i, ret, total_conn = ARRAY_SIZE(available_connectors);
-+
-+	for (i = 0; i < total_conn; i++)
-+		if (!strcmp(name, available_connectors[i]))
-+			break;
-+
-+	if (i == total_conn)
-+		return ERR_PTR(-EINVAL);
-+
-+	ret = enable_connector(name);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	conn_item = kzalloc(sizeof(*conn_item), GFP_KERNEL);
-+	if (!conn_item)
-+		return ERR_PTR(-ENOMEM);
-+
-+	config_item_init_type_name(&conn_item->item, name,
-+				   &connectors_fs_type);
-+
-+	conn_item->enable = true;
-+
-+	return &conn_item->item;
-+}
-+
-+static void drop_connector_item(struct config_group *group,
-+				struct config_item *item)
-+{
-+	char *name = item->ci_name;
-+
-+	disable_connector(name);
-+
-+	config_item_put(item);
-+}
-+
-+static struct configfs_group_operations connector_group_ops = {
-+	.make_item	= make_connector_item,
-+	.drop_item	= drop_connector_item,
-+};
-+
-+static const struct config_item_type connector_type = {
-+	.ct_group_ops	= &connector_group_ops,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static const struct config_item_type vkms_subsystem_type = {
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct configfs_subsystem vkms_subsystem = {
-+	.su_group = {
-+		.cg_item = {
-+			.ci_namebuf = "vkms",
-+			.ci_type = &vkms_subsystem_type,
-+		},
-+	},
-+	.su_mutex = __MUTEX_INITIALIZER(vkms_subsystem.su_mutex),
-+};
-+
-+static void init_default_conn_configfs(struct config_group *root)
-+{
-+	struct vkms_config_state *config_state = &vkms_device->config_state;
-+	int i, ret;
-+
-+	connector_group = configfs_register_default_group(root, "connectors",
-+							  &connector_type);
-+	if (IS_ERR(connector_group)) {
-+		ret = PTR_ERR(connector_group);
-+		pr_err("Error %d while registering functions group\n", ret);
-+		return;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(available_connectors); i++) {
-+		struct config_group *group = config_state->connectors[i];
-+
-+		if (!strcmp(available_connectors[i], "Writeback") &&
-+		    !enable_writeback)
-+			continue;
-+
-+		group = configfs_register_default_group(connector_group,
-+							available_connectors[i],
-+							&connectors_fs_type);
-+		if (IS_ERR(connector_group)) {
-+			ret = PTR_ERR(config_state->connectors[i]);
-+			DRM_ERROR("Error %d while trying to register %s\n",
-+				  ret, available_connectors[i]);
-+			continue;
-+		}
-+
-+		to_conn_item(&group->cg_item)->enable = true;
-+	}
-+}
-+
-+int vkms_configfs_init(struct vkms_device *vkmsdev)
-+{
-+	struct config_group *root = &vkms_subsystem.su_group;
-+	int ret;
-+
-+	vkms_device = vkmsdev;
-+
-+	config_group_init(root);
-+	ret = configfs_register_subsystem(&vkms_subsystem);
-+	if (ret) {
-+		pr_err("Error %d while registering subsystem %s\n", ret,
-+		       root->cg_item.ci_namebuf);
-+		goto err;
-+	}
-+
-+	init_default_conn_configfs(root);
-+
-+	return 0;
-+
-+err:
-+	return ret;
-+}
-+
-+void vkms_configfs_exit(void)
-+{
-+	configfs_unregister_subsystem(&vkms_subsystem);
-+}
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index 152d7de24a76..a930a5a52ce4 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -166,6 +166,10 @@ static int __init vkms_init(void)
- 	if (ret)
- 		goto out_fini;
- 
-+	ret = vkms_configfs_init(vkms_device);
-+	if (ret)
-+		DRM_ERROR("Could not initialize configfs");
-+
- 	ret = drm_dev_register(&vkms_device->drm, 0);
- 	if (ret)
- 		goto out_fini;
-@@ -194,6 +198,8 @@ static void __exit vkms_exit(void)
- 	drm_dev_put(&vkms_device->drm);
- 
- 	kfree(vkms_device);
-+
-+	vkms_configfs_exit();
- }
- 
- module_init(vkms_init);
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index a1ca5c658355..c811bc192606 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -9,6 +9,7 @@
- #include <drm/drm_encoder.h>
- #include <drm/drm_writeback.h>
- #include <linux/hrtimer.h>
-+#include <linux/configfs.h>
- 
- #define XRES_MIN    20
- #define YRES_MIN    20
-@@ -83,10 +84,17 @@ struct vkms_output {
- 	spinlock_t composer_lock;
- };
- 
-+#define MAX_CONN_CONFIGFS 10
-+
-+struct vkms_config_state {
-+	struct config_group *connectors[MAX_CONN_CONFIGFS];
-+};
-+
- struct vkms_device {
- 	struct drm_device drm;
- 	struct platform_device *platform;
- 	struct vkms_output output;
-+	struct vkms_config_state config_state;
- };
- 
- struct vkms_gem_object {
-@@ -160,4 +168,8 @@ void disable_virtual_connector(struct vkms_device *vkmsdev);
- int enable_writeback_connector(struct vkms_device *vkmsdev);
- void disable_writeback_connector(struct vkms_device *connector);
- 
-+/* Configfs */
-+int vkms_configfs_init(struct vkms_device *vkmsdev);
-+void vkms_configfs_exit(void);
-+
- #endif /* _VKMS_DRV_H_ */
--- 
-2.21.0
+Today's linux-next merge of the pm tree got a conflict in:
+
+  Documentation/power/pm_qos_interface.rst
+
+between commits:
+
+  151f4e2bdc7a ("docs: power: convert docs to ReST and rename to *.rst")
+  562fe2ef1a21 ("PM / QOS: Pass request type to dev_pm_qos_read_value()")
+
+from the pci tree and commit:
+
+  0c4899702720 ("PM / QOS: Pass request type to dev_pm_qos_{add|remove}_not=
+ifier()")
+
+from the pm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/power/pm_qos_interface.rst
+index 945fc6d760c9,cfcb1df39799..000000000000
+--- a/Documentation/power/pm_qos_interface.rst
++++ b/Documentation/power/pm_qos_interface.rst
+@@@ -113,76 -107,72 +113,78 @@@ the aggregated value does not require a
+  From kernel mode the use of this interface is the following:
+ =20
+  int dev_pm_qos_add_request(device, handle, type, value):
+ -Will insert an element into the list for that identified device with the
+ -target value.  Upon change to this list the new target is recomputed and =
+any
+ -registered notifiers are called only if the target value is now different.
+ -Clients of dev_pm_qos need to save the handle for future use in other
+ -dev_pm_qos API functions.
+ +  Will insert an element into the list for that identified device with the
+ +  target value.  Upon change to this list the new target is recomputed an=
+d any
+ +  registered notifiers are called only if the target value is now differe=
+nt.
+ +  Clients of dev_pm_qos need to save the handle for future use in other
+ +  dev_pm_qos API functions.
+ =20
+  int dev_pm_qos_update_request(handle, new_value):
+ -Will update the list element pointed to by the handle with the new target=
+ value
+ -and recompute the new aggregated target, calling the notification trees i=
+f the
+ -target is changed.
+ +  Will update the list element pointed to by the handle with the new targ=
+et
+ +  value and recompute the new aggregated target, calling the notification
+ +  trees if the target is changed.
+ =20
+  int dev_pm_qos_remove_request(handle):
+ -Will remove the element.  After removal it will update the aggregate targ=
+et and
+ -call the notification trees if the target was changed as a result of remo=
+ving
+ -the request.
+ +  Will remove the element.  After removal it will update the aggregate ta=
+rget
+ +  and call the notification trees if the target was changed as a result of
+ +  removing the request.
+ =20
+- s32 dev_pm_qos_read_value(device):
++ s32 dev_pm_qos_read_value(device, type):
+ -Returns the aggregated value for a given device's constraints list.
+ +  Returns the aggregated value for a given device's constraints list.
+ =20
+  enum pm_qos_flags_status dev_pm_qos_flags(device, mask)
+ -Check PM QoS flags of the given device against the given mask of flags.
+ -The meaning of the return values is as follows:
+ -	PM_QOS_FLAGS_ALL: All flags from the mask are set
+ -	PM_QOS_FLAGS_SOME: Some flags from the mask are set
+ -	PM_QOS_FLAGS_NONE: No flags from the mask are set
+ -	PM_QOS_FLAGS_UNDEFINED: The device's PM QoS structure has not been
+ -			initialized or the list of requests is empty.
+ +  Check PM QoS flags of the given device against the given mask of flags.
+ +  The meaning of the return values is as follows:
+ +
+ +	PM_QOS_FLAGS_ALL:
+ +		All flags from the mask are set
+ +	PM_QOS_FLAGS_SOME:
+ +		Some flags from the mask are set
+ +	PM_QOS_FLAGS_NONE:
+ +		No flags from the mask are set
+ +	PM_QOS_FLAGS_UNDEFINED:
+ +		The device's PM QoS structure has not been initialized
+ +		or the list of requests is empty.
+ =20
+  int dev_pm_qos_add_ancestor_request(dev, handle, type, value)
+ -Add a PM QoS request for the first direct ancestor of the given device wh=
+ose
+ -power.ignore_children flag is unset (for DEV_PM_QOS_RESUME_LATENCY reques=
+ts)
+ -or whose power.set_latency_tolerance callback pointer is not NULL (for
+ -DEV_PM_QOS_LATENCY_TOLERANCE requests).
+ +  Add a PM QoS request for the first direct ancestor of the given device =
+whose
+ +  power.ignore_children flag is unset (for DEV_PM_QOS_RESUME_LATENCY requ=
+ests)
+ +  or whose power.set_latency_tolerance callback pointer is not NULL (for
+ +  DEV_PM_QOS_LATENCY_TOLERANCE requests).
+ =20
+  int dev_pm_qos_expose_latency_limit(device, value)
+ -Add a request to the device's PM QoS list of resume latency constraints a=
+nd
+ -create a sysfs attribute pm_qos_resume_latency_us under the device's power
+ -directory allowing user space to manipulate that request.
+ +  Add a request to the device's PM QoS list of resume latency constraints=
+ and
+ +  create a sysfs attribute pm_qos_resume_latency_us under the device's po=
+wer
+ +  directory allowing user space to manipulate that request.
+ =20
+  void dev_pm_qos_hide_latency_limit(device)
+ -Drop the request added by dev_pm_qos_expose_latency_limit() from the devi=
+ce's
+ -PM QoS list of resume latency constraints and remove sysfs attribute
+ -pm_qos_resume_latency_us from the device's power directory.
+ +  Drop the request added by dev_pm_qos_expose_latency_limit() from the de=
+vice's
+ +  PM QoS list of resume latency constraints and remove sysfs attribute
+ +  pm_qos_resume_latency_us from the device's power directory.
+ =20
+  int dev_pm_qos_expose_flags(device, value)
+ -Add a request to the device's PM QoS list of flags and create sysfs attri=
+bute
+ -pm_qos_no_power_off under the device's power directory allowing user spac=
+e to
+ -change the value of the PM_QOS_FLAG_NO_POWER_OFF flag.
+ +  Add a request to the device's PM QoS list of flags and create sysfs att=
+ribute
+ +  pm_qos_no_power_off under the device's power directory allowing user sp=
+ace to
+ +  change the value of the PM_QOS_FLAG_NO_POWER_OFF flag.
+ =20
+  void dev_pm_qos_hide_flags(device)
+ -Drop the request added by dev_pm_qos_expose_flags() from the device's PM =
+QoS list
+ -of flags and remove sysfs attribute pm_qos_no_power_off from the device's=
+ power
+ -directory.
+ +  Drop the request added by dev_pm_qos_expose_flags() from the device's P=
+M QoS list
+ +  of flags and remove sysfs attribute pm_qos_no_power_off from the device=
+'s power
+ +  directory.
+ =20
+  Notification mechanisms:
+ +
+  The per-device PM QoS framework has a per-device notification tree.
+ =20
+- int dev_pm_qos_add_notifier(device, notifier):
+-   Adds a notification callback function for the device.
++ int dev_pm_qos_add_notifier(device, notifier, type):
+ -Adds a notification callback function for the device for a particular req=
+uest
+ -type.
+++  Adds a notification callback function for the device for a particular r=
+equest
+++  type.
++=20
+ -The callback is called when the aggregated value of the device constraint=
+s list
+ -is changed.
+ +  The callback is called when the aggregated value of the device constrai=
+nts list
+-   is changed (for resume latency device PM QoS only).
+++  is changed.
+ =20
+- int dev_pm_qos_remove_notifier(device, notifier):
++ int dev_pm_qos_remove_notifier(device, notifier, type):
+ -Removes the notification callback function for the device.
+ +  Removes the notification callback function for the device.
+ =20
+ =20
+  Active state latency tolerance
+
+--Sig_/jw.saVJMwjH/513wz=4yNAZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ZfQkACgkQAVBC80lX
+0GzHXgf/eRMvJHVTZPoMOzBllCm88iSJnQM1H/KWd9T2DeUiNAdCWz76lAve7QnL
+uzhb2WddUKTT92hGsnnhTf8iFf1UToLmu6jWm4T4BUJ42By5RgurUqOTD9x2ZHHM
+52mQv47tj7ibCCIlC9KrPMmWrGUOSD9O4HmUrjxDpZzLVzpOgh1saTUsLQLOfici
+p5zyfY6cmSG5ZEXu99INV7Py5UOXKDL5WGOs8r4h+rWyIQhV+G6rVRkHVynKfdjW
+sdP90hvlI8saJOrPRHBJKNWwV8lKxqu6OO2Yi4xh7RpexMBHCCIgXsDTyTaVpygp
+EyvT1d2qQAUZMl8ZkerHKosDpDwVJw==
+=MWSx
+-----END PGP SIGNATURE-----
+
+--Sig_/jw.saVJMwjH/513wz=4yNAZ--
