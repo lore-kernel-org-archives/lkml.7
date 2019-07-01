@@ -2,74 +2,141 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7294FC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ED7C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B10620B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561956714;
-	bh=4qYmvxymduxWR/PQGIROhr12RIo2szXi4uFclExfwFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RV6CUwNxPanMKOfBAuZrCGoa3/TfFfXyivwJhnp1kMkdta0gxYAG9YR0eqtcYuLhk
-	 5p+am5Q7E8pmycidmIKkgLrhBsXcfxNdmnlJuTU2a4HSX7lsbi9mUieevl6yZcx3Oj
-	 cqT/mdJcEZn4mcEaVtSvM9ozILVQd8O2CdcR7RSg=
+	by mail.kernel.org (Postfix) with ESMTP id 60EF5208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:57:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gzq3pRKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfGAEvx (ORCPT
+        id S1727478AbfGAE50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 00:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49130 "EHLO mail.kernel.org"
+        Mon, 1 Jul 2019 00:57:26 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42799 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbfGAEvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 00:51:53 -0400
-Received: from localhost (unknown [122.167.76.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726983AbfGAE5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 00:57:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 733B7208C4;
-        Mon,  1 Jul 2019 04:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561956712;
-        bh=4qYmvxymduxWR/PQGIROhr12RIo2szXi4uFclExfwFc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nV2VunIAbwWpbkA61wBepFjx84PhADcwpEG+DdKsRWkzOHPMSAPht9WoI0aWTKUHB
-         0opKS73PW3U2a8BvgKXJzIRj2dT3351qc3IW4qrW8ucoOTlpS+d6gdOiqe0aTfqIdA
-         H2b1skBoDoPQ68kksmzdNJDHwC7Op4OV7pF1wZlc=
-Date:   Mon, 1 Jul 2019 10:18:43 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>
-Subject: Re: [PATCH v4 2/4] usb: xhci: Use register defined and field names
-Message-ID: <20190701044843.GH2911@vkoul-mobl>
-References: <20190626075509.20445-1-vkoul@kernel.org>
- <20190626075509.20445-3-vkoul@kernel.org>
- <39d63d20-0fa9-9e66-a7b6-37a0f16f5925@linux.intel.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cZqQ4z9Pz9s4Y;
+        Mon,  1 Jul 2019 14:57:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561957042;
+        bh=aJhznYD09gmkcI072a1qGBoSumfqEWCa0EM8G+nOhew=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gzq3pRKH84xqBVNoZqlfTCXXhhPwa2HQawTOv6vIC2MTv4NKOfGiRX40XdAQzhNHG
+         l81Asu4y5j1wd5D0xTx/LJTrDdKZp4TlD0g4UTm5877s3S+Te9N0kqRapvWeUy4aEX
+         D00Ig05KPOgTVfOyG+0DK+qZ1TeLd0BZWpKeB0j5ytVvm0g/qNFyJNtAmGd97IPvGe
+         UtZU2iqBRUXauxqsUAm7Om1QyuuPSrjZ7QOzWqAmD3bLAs+2o71goDFHTGb3VXweIm
+         okLao0O936SYbgcDr0fEx7VW44KRWORL3EwRqoWt1/ee+p2q3nFC1i/w3a5b8BlQ/t
+         QEVUBtBDqmngA==
+Date:   Mon, 1 Jul 2019 14:57:22 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Tal Gilboa <talgi@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: linux-next: build failure after merge of the bpf-next tree
+Message-ID: <20190701145722.5809cb2c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <39d63d20-0fa9-9e66-a7b6-37a0f16f5925@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/E/t5jHQdsPT1e_p4jbZy_PN"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-06-19, 00:42, Mathias Nyman wrote:
+--Sig_/E/t5jHQdsPT1e_p4jbZy_PN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Most of this patch should probably be squashed together with the previous patch
+Hi all,
 
-Will do
+After merging the bpf-next tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
--- 
-~Vinod
+drivers/net/ethernet/mellanox/mlx5/core/en_main.c:1605:5: error: conflictin=
+g types for 'mlx5e_open_cq'
+ int mlx5e_open_cq(struct mlx5e_channel *c, struct dim_cq_moder moder,
+     ^~~~~~~~~~~~~
+In file included from drivers/net/ethernet/mellanox/mlx5/core/en_main.c:43:
+drivers/net/ethernet/mellanox/mlx5/core/en.h:977:5: note: previous declarat=
+ion of 'mlx5e_open_cq' was here
+ int mlx5e_open_cq(struct mlx5e_channel *c, struct net_dim_cq_moder moder,
+     ^~~~~~~~~~~~~
+
+Caused by commit
+
+  8960b38932be ("linux/dim: Rename externally used net_dim members")
+
+from the net-next tree interacting with commit
+
+  db05815b36cb ("net/mlx5e: Add XSK zero-copy support")
+
+I have applied the following merge fix patch.
+
+=46rom 8e92dbee0daa6bac412daebd08073ba9ca31c7a6 Mon Sep 17 00:00:00 2001
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 1 Jul 2019 14:55:02 +1000
+Subject: [PATCH] net/mlx5e: fix up for "linux/dim: Rename externally used
+ net_dim members"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/eth=
+ernet/mellanox/mlx5/core/en.h
+index 9cebaa642727..f0d77eb66acf 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -974,7 +974,7 @@ int mlx5e_open_xdpsq(struct mlx5e_channel *c, struct ml=
+x5e_params *params,
+ void mlx5e_close_xdpsq(struct mlx5e_xdpsq *sq);
+=20
+ struct mlx5e_cq_param;
+-int mlx5e_open_cq(struct mlx5e_channel *c, struct net_dim_cq_moder moder,
++int mlx5e_open_cq(struct mlx5e_channel *c, struct dim_cq_moder moder,
+ 		  struct mlx5e_cq_param *param, struct mlx5e_cq *cq);
+ void mlx5e_close_cq(struct mlx5e_cq *cq);
+=20
+--=20
+2.20.1
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/E/t5jHQdsPT1e_p4jbZy_PN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ZkrIACgkQAVBC80lX
+0GwdUgf/WFxURktkQ07mAnwoeff013wv95gP5CV7yZ5yD58oMh69qel/QwhSQ36S
+h15vNBHltbhjqGjkarbQG3bzOA8NaglQ7AE0t4HABjfBnGkapjMjBrh8/w80pOjN
+moNMt5thM5WJQ0r2vwaJa/m05QeVI1KsaOojpufVlD7yM2nzpMehrVhRJ373yu6s
+zJSWn9838G9B6IRnCTGaTbZ+9EZQqIuD3selMY4bToAEJhVia3wb/Lv44j5xpBs4
+e4vcy8NMAoO4TbfCVOx6xhr/HC4GJ0LZjJpcXnIYEbqJfj+auhHv1w9dKYXmwlLO
+bsrfkaWQaE5ztu0PggvdInrWu75xAA==
+=A7DW
+-----END PGP SIGNATURE-----
+
+--Sig_/E/t5jHQdsPT1e_p4jbZy_PN--
