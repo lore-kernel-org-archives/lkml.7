@@ -2,296 +2,95 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E16EC0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F9BC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25DCF20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0A42086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:39:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gJ5IUVQX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qn7AHdhR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfGADhW (ORCPT
+        id S1727317AbfGADj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 23:37:22 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50795 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbfGADhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 23:37:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cY302F34z9s3Z;
-        Mon,  1 Jul 2019 13:37:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561952236;
-        bh=ryYrZ8daQ3imDGjLIA1MGy3CqYI88ot5Nnx16IqqlfQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gJ5IUVQXRBN4st/prb2KocgbDnym84jRfBsbV50+9diWei6RX2YcURkJekO5tMfec
-         PMLAqD8vtsPqvx4V2PdKQS+GG6LnhISVoNEIOY1P+xhjH7nPwzSTBS8i1H17dg5n49
-         VDlB04llkxpvYVmdh11PqoWCbxEo4LFDTStQbpcGUiFsMRJddpRS0Ee30CoGcCfV2O
-         i18rCXhEqqPtD8/5ekSKyjkl4p62rz4gEgiJ5B350ESmDqCeXqFwNNkTkOqbLuDhnP
-         wsibWROzjdgvftx9YMBk0IZjt1suYMkTI+sPrvDgd8jfbWNBtohgYk5y8pgV4PQJWh
-         XonBD9Aveeb+w==
-Date:   Mon, 1 Jul 2019 13:37:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: linux-next: build failure after merge of the pm tree
-Message-ID: <20190701133715.702d4b57@canb.auug.org.au>
+        Sun, 30 Jun 2019 23:39:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60172 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfGADj1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 23:39:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WmShzI9iFuKGxmB8xLb0p4KOmNmec9AETrO7/tG34T0=; b=Qn7AHdhRQFyigFqNMTVizzZAh
+        Hj1RMvU2sMlXLkyWgMj2cs6q9Szx7vdGU9yu9gioYef22lNmR+J/sSdAGE/a9kJ7jDVEzh2TvlX8S
+        w4lQZqPLfIN9OrKs1wcdZfEtFVlS/qKdMDbabY8NP11WGPzugE6MPTCKjQPvvw2gTOlJu0Cd4fbC5
+        28HpYaANDX9JJyU5Z06cEFF4awRRUdiBd3rPlAG7ywv4wyFkgMZM2N2bs2qf2N540acZkpYW06R5/
+        12BcK9+TFp3iMWKrw0cJtcEMk/4LllcBxMcUJ6NURE27oul16kBfEmLW+tR6bf8MIdwPT59iYyqwu
+        2+Pw6KL3Q==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hhnA2-0005HP-JY; Mon, 01 Jul 2019 03:39:22 +0000
+To:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Inki Dae <inki.dae@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] drm: bridge: DRM_SIL_SII8620 should depend on, not select
+ INPUT
+Message-ID: <8baa25c0-498b-d321-4e6a-fe987a4989ba@infradead.org>
+Date:   Sun, 30 Jun 2019 20:39:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/s1qXaYoyzgP+.ueeYt=QfH0"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/s1qXaYoyzgP+.ueeYt=QfH0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Hi all,
+A single driver should not enable (select) an entire subsystem,
+such as INPUT, so change the 'select' to "depends on".
 
-After merging the pm tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
+Fixes: d6abe6df706c ("drm/bridge: sil_sii8620: do not have a dependency of RC_CORE")
 
-In file included from drivers/cpufreq/intel_pstate.c:11:
-drivers/cpufreq/intel_pstate.c: In function 'intel_pstate_update_max_freq':
-drivers/cpufreq/intel_pstate.c:912:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:819:22: note: in definition of macro '__typecheck'
-   (!!(sizeof((typeof(x) *)1 =3D=3D (typeof(y) *)1)))
-                      ^
-include/linux/kernel.h:843:24: note: in expansion of macro '__safe_cmp'
-  __builtin_choose_expr(__safe_cmp(x, y), \
-                        ^~~~~~~~~~
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:912:19: note: in expansion of macro 'min'
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                   ^~~
-drivers/cpufreq/intel_pstate.c:912:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:827:48: note: in definition of macro '__is_constexpr'
-  (sizeof(int) =3D=3D sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
-                                                ^
-include/linux/kernel.h:833:25: note: in expansion of macro '__no_side_effec=
-ts'
-   (__typecheck(x, y) && __no_side_effects(x, y))
-                         ^~~~~~~~~~~~~~~~~
-include/linux/kernel.h:843:24: note: in expansion of macro '__safe_cmp'
-  __builtin_choose_expr(__safe_cmp(x, y), \
-                        ^~~~~~~~~~
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:912:19: note: in expansion of macro 'min'
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                   ^~~
-drivers/cpufreq/intel_pstate.c:912:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:835:27: note: in definition of macro '__cmp'
- #define __cmp(x, y, op) ((x) op (y) ? (x) : (y))
-                           ^
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:912:19: note: in expansion of macro 'min'
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                   ^~~
-drivers/cpufreq/intel_pstate.c:912:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:835:40: note: in definition of macro '__cmp'
- #define __cmp(x, y, op) ((x) op (y) ? (x) : (y))
-                                        ^
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:912:19: note: in expansion of macro 'min'
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                   ^~~
-drivers/cpufreq/intel_pstate.c:912:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:838:10: note: in definition of macro '__cmp_once'
-   typeof(x) unique_x =3D (x);  \
-          ^
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:912:19: note: in expansion of macro 'min'
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                   ^~~
-drivers/cpufreq/intel_pstate.c:912:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:838:25: note: in definition of macro '__cmp_once'
-   typeof(x) unique_x =3D (x);  \
-                         ^
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:912:19: note: in expansion of macro 'min'
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                   ^~~
-include/linux/kernel.h:843:2: error: first argument to '__builtin_choose_ex=
-pr' not a constant
-  __builtin_choose_expr(__safe_cmp(x, y), \
-  ^~~~~~~~~~~~~~~~~~~~~
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:912:19: note: in expansion of macro 'min'
-  new_policy.max =3D min(policy->user_policy.max, policy->cpuinfo.max_freq);
-                   ^~~
-drivers/cpufreq/intel_pstate.c:913:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:819:22: note: in definition of macro '__typecheck'
-   (!!(sizeof((typeof(x) *)1 =3D=3D (typeof(y) *)1)))
-                      ^
-include/linux/kernel.h:843:24: note: in expansion of macro '__safe_cmp'
-  __builtin_choose_expr(__safe_cmp(x, y), \
-                        ^~~~~~~~~~
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:913:19: note: in expansion of macro 'min'
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                   ^~~
-drivers/cpufreq/intel_pstate.c:913:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:827:48: note: in definition of macro '__is_constexpr'
-  (sizeof(int) =3D=3D sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
-                                                ^
-include/linux/kernel.h:833:25: note: in expansion of macro '__no_side_effec=
-ts'
-   (__typecheck(x, y) && __no_side_effects(x, y))
-                         ^~~~~~~~~~~~~~~~~
-include/linux/kernel.h:843:24: note: in expansion of macro '__safe_cmp'
-  __builtin_choose_expr(__safe_cmp(x, y), \
-                        ^~~~~~~~~~
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:913:19: note: in expansion of macro 'min'
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                   ^~~
-drivers/cpufreq/intel_pstate.c:913:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:835:27: note: in definition of macro '__cmp'
- #define __cmp(x, y, op) ((x) op (y) ? (x) : (y))
-                           ^
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:913:19: note: in expansion of macro 'min'
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                   ^~~
-drivers/cpufreq/intel_pstate.c:913:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:835:40: note: in definition of macro '__cmp'
- #define __cmp(x, y, op) ((x) op (y) ? (x) : (y))
-                                        ^
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:913:19: note: in expansion of macro 'min'
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                   ^~~
-drivers/cpufreq/intel_pstate.c:913:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:838:10: note: in definition of macro '__cmp_once'
-   typeof(x) unique_x =3D (x);  \
-          ^
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:913:19: note: in expansion of macro 'min'
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                   ^~~
-drivers/cpufreq/intel_pstate.c:913:31: error: 'struct cpufreq_policy' has n=
-o member named 'user_policy'; did you mean 'last_policy'?
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                               ^~~~~~~~~~~
-include/linux/kernel.h:838:25: note: in definition of macro '__cmp_once'
-   typeof(x) unique_x =3D (x);  \
-                         ^
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:913:19: note: in expansion of macro 'min'
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                   ^~~
-include/linux/kernel.h:843:2: error: first argument to '__builtin_choose_ex=
-pr' not a constant
-  __builtin_choose_expr(__safe_cmp(x, y), \
-  ^~~~~~~~~~~~~~~~~~~~~
-include/linux/kernel.h:852:19: note: in expansion of macro '__careful_cmp'
- #define min(x, y) __careful_cmp(x, y, <)
-                   ^~~~~~~~~~~~~
-drivers/cpufreq/intel_pstate.c:913:19: note: in expansion of macro 'min'
-  new_policy.min =3D min(policy->user_policy.min, new_policy.max);
-                   ^~~
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Inki Dae <inki.dae@samsung.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
+---
+Linus has written this a couple of times in the last 15 years or so,
+but my search fu cannot find it.  And there are a few drivers in the
+kernel tree that do this, but we shouldn't be adding more that do so.
 
-Caused by commit
+ drivers/gpu/drm/bridge/Kconfig |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-  218208538ffe ("cpufreq: Add QoS requests for userspace constraints")
+--- lnx-52-rc7.orig/drivers/gpu/drm/bridge/Kconfig
++++ lnx-52-rc7/drivers/gpu/drm/bridge/Kconfig
+@@ -83,10 +83,9 @@ config DRM_PARADE_PS8622
+ 
+ config DRM_SIL_SII8620
+ 	tristate "Silicon Image SII8620 HDMI/MHL bridge"
+-	depends on OF
++	depends on OF && INPUT
+ 	select DRM_KMS_HELPER
+ 	imply EXTCON
+-	select INPUT
+ 	select RC_CORE
+ 	help
+ 	  Silicon Image SII8620 HDMI/MHL bridge chip driver.
 
-from the pm tree interacting with commit
 
-  9083e4986124 ("cpufreq: intel_pstate: Update max frequency on global turb=
-o changes")
-
-from Linus' tree.
-
-I have used the pm tree from next-20190628 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/s1qXaYoyzgP+.ueeYt=QfH0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0Zf+sACgkQAVBC80lX
-0GzwQgf/b26tD0r2/9TwwIjT0Ed+NEUScayE1gsviO4z/7P1xWn+7o2lFt1TUDx6
-njvyrp6MW7e5SJISFpgi91Eg9TEp1mebsEl7mChrTNYEMOE3lRoHHqep7s+aHtak
-c/Jp3iR3idh1DpzTVcr6o8TXaxrzIiU+0gLHHAvgpGWMTmTOE+zGal1tXG+ayQOT
-NE+S2+pQ+CELU/lAnFXjRCEjDgMAGYXjmvU09SiaOwL6Ifj1nuGGKcgOA0r1A30O
-cGXQmg/Ecraxs5o8Pl8uUYWgP4tsfXSrtlFpAQYieytElhvg5RYE7RbH4STcrXul
-9hSkveVSuJHJ8ksowf5FuHyN3bRpBA==
-=HOv/
------END PGP SIGNATURE-----
-
---Sig_/s1qXaYoyzgP+.ueeYt=QfH0--
