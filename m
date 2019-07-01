@@ -2,192 +2,151 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D63BC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3380CC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2008321721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:30:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="prz9JSr0"
+	by mail.kernel.org (Postfix) with ESMTP id 16088206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfGATaV (ORCPT
+        id S1726786AbfGATcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 15:30:21 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39762 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfGATaV (ORCPT
+        Mon, 1 Jul 2019 15:32:50 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:45972 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfGATct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 15:30:21 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v18so14400790ljh.6;
-        Mon, 01 Jul 2019 12:30:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c2eFfHmfd9U9AMnKFnD7g9eg9q57yzBinw/q4+GoLBk=;
-        b=prz9JSr0Ix/WEdo4cL4SdYm7c5EuCT+Kyz0mYTOybz6lg9vOtPNg0KBN36C+D7A+95
-         pVxPfXyCS9zSpZ6W40JayIh0zBBAU4KZ5/P2M71D96mxyMyVnooItQXuadtMCJKUNf6q
-         9xVN9KI872oKfQyBGV2HpNrjMVnPCzfWNcixCp5s/42qk/AHIkBGxq77H8nBlpCeTcU6
-         kqeSOAjzzN9PSAddCq9fFyrLSNYhzFB+gUQT4aZqbln4aS2zOQ0EZNjcDuFlf5nOK1Sc
-         tA1fzcbbC12A3APOFXZDkPZR/V3023ZoVSgKHtlMaYNsc1Ye/qh+LCgtFS/cTdXnZVx2
-         S6Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c2eFfHmfd9U9AMnKFnD7g9eg9q57yzBinw/q4+GoLBk=;
-        b=HuZo0TIQc74oEbt3gVbMDmXYNV/j2knojVVhqEVt3Ezg8xcU+tRHf+0LTQ1qLLTos1
-         HW0W/rrntYXgFPocTl2G91/rtKjUhvZ+/3FyFjJ3OdnBDEz9p7XgLomAfUsH4ivTcGQq
-         oM+20H4MTeiHjirIgnjzJKQYwuCWkqtJmO8VCBDtKIWIAbZHbkDPhajdbh/9ORxK/dI7
-         Qm/Xqv2Rwe5pWYohbcIwOAdNN9cg+YCajl2BjKEQdstG89SmV8x29XhmTZKzH/TxHUwv
-         hgwx6KjJVQtfpF5fl5dhU4h4fIl1tAMVw1Z1eegofACny0gmGIgEzdnnqPTKsHIiymOt
-         DsGw==
-X-Gm-Message-State: APjAAAWh3dFBhF6qcjFQWsjpXmcN+hchnN8qMwTLl5z1e51OkFg5XPt9
-        kVbvDYjWcrPVX/U+Urd0Z8Ql13mP
-X-Google-Smtp-Source: APXvYqyt7pIhGs2lNgfb9Ej2qDR5BG2Vm8qXWoVDPEMZd8CXonitUT2Jb1OUibTRNSj7RCOuN90Yaw==
-X-Received: by 2002:a2e:96d5:: with SMTP id d21mr3513670ljj.170.1562009418517;
-        Mon, 01 Jul 2019 12:30:18 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id u18sm2582661lfe.65.2019.07.01.12.30.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 12:30:17 -0700 (PDT)
-Subject: Re: [PATCH v6 07/15] dt-bindings: memory: tegra30: Convert to
- Tegra124 YAML
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190630210019.26914-1-digetx@gmail.com>
- <20190630210019.26914-8-digetx@gmail.com>
- <CAL_JsqJq5iwQcbUixMWK819OTof8DzrZ3UMhByc1pTAFTdwnjg@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ba299725-b65b-ce7d-6376-a26918cc985b@gmail.com>
-Date:   Mon, 1 Jul 2019 22:30:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 1 Jul 2019 15:32:49 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hi22h-00006O-IZ; Mon, 01 Jul 2019 15:32:47 -0400
+Message-ID: <4bf9c6e1eeec9b52aa9c10b9149384cb99399b04.camel@surriel.com>
+Subject: Re: [PATCH 03/10] sched,fair: redefine runnable_load_avg as the sum
+ of task_h_load
+From:   Rik van Riel <riel@surriel.com>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, pjt@google.com,
+        dietmar.eggemann@arm.com, peterz@infradead.org, mingo@redhat.com,
+        morten.rasmussen@arm.com, tglx@linutronix.de,
+        mgorman@techsingularity.net, vincent.guittot@linaro.org
+Date:   Mon, 01 Jul 2019 15:32:47 -0400
+In-Reply-To: <20190701192234.5oxkuysimi437utz@macbook-pro-91.dhcp.thefacebook.com>
+References: <20190628204913.10287-1-riel@surriel.com>
+         <20190628204913.10287-4-riel@surriel.com>
+         <20190701162949.vhxjndychoamhkbq@MacBook-Pro-91.local.dhcp.thefacebook.com>
+         <757e0af14b714b596417b31c45098fc314ed7c8a.camel@surriel.com>
+         <20190701192234.5oxkuysimi437utz@macbook-pro-91.dhcp.thefacebook.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-G0E3IlZFVcKl+naxuyrr"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJq5iwQcbUixMWK819OTof8DzrZ3UMhByc1pTAFTdwnjg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.07.2019 22:11, Rob Herring пишет:
-> On Sun, Jun 30, 2019 at 3:04 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
-> 
-> "Convert" implies you delete the old binding doc.
 
-Yes, unfortunately the deletion got lost by accident after rebase and it was already
-too late when I noticed that. Will be fixed in the next revision.
+--=-G0E3IlZFVcKl+naxuyrr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->> The Tegra30 binding will actually differ from the Tegra124 a tad, in
->> particular the EMEM configuration description. Hence rename the binding
->> to Tegra124 during of the conversion to YAML.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  .../nvidia,tegra124-mc.yaml                   | 149 ++++++++++++++++++
->>  1 file changed, 149 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->> new file mode 100644
->> index 000000000000..d18242510295
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->> @@ -0,0 +1,149 @@
->> +# SPDX-License-Identifier: (GPL-2.0)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/memory-controllers/nvidia,tegra124-mc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title:
->> +  NVIDIA Tegra124 SoC Memory Controller
->> +
->> +maintainers:
->> +  - Jon Hunter <jonathanh@nvidia.com>
->> +  - Thierry Reding <thierry.reding@gmail.com>
->> +
->> +description: |
->> +  Tegra124 SoC features a hybrid 2x32-bit / 1x64-bit memory controller.
->> +  These are interleaved to provide high performance with the load shared across
->> +  two memory channels. The Tegra124 Memory Controller handles memory requests
->> +  from internal clients and arbitrates among them to allocate memory bandwidth
->> +  for DDR3L and LPDDR3 SDRAMs.
->> +
->> +properties:
->> +  compatible:
->> +    const: nvidia,tegra124-mc
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description:
->> +      Physical base address.
->> +
->> +  clocks:
->> +    maxItems: 1
->> +    description:
->> +      Memory Controller clock.
->> +
->> +  clock-names:
->> +    items:
->> +      - const: mc
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +    description:
->> +      Memory Controller interrupt.
->> +
->> +  "#reset-cells":
->> +    const: 1
->> +
->> +  "#iommu-cells":
->> +    const: 1
->> +
->> +patternProperties:
->> +  ".*":
-> 
-> Please define a node name or pattern for node names.
+On Mon, 2019-07-01 at 15:22 -0400, Josef Bacik wrote:
+> On Mon, Jul 01, 2019 at 12:47:35PM -0400, Rik van Riel wrote:
+> > On Mon, 2019-07-01 at 12:29 -0400, Josef Bacik wrote:
+> > >=20
+> > > My memory on this stuff is very hazy, but IIRC we had the
+> > > runnable_sum and the
+> > > runnable_avg separated out because you could have the avg lag
+> > > behind
+> > > the sum.
+> > > So like you enqueue a bunch of new entities who's avg may have
+> > > decayed a bunch
+> > > and so their overall load is not felt on the CPU until they start
+> > > running, and
+> > > now you've overloaded that CPU.  The sum was there to make sure
+> > > new
+> > > things
+> > > coming onto the CPU added actual load to the queue instead of
+> > > looking
+> > > like there
+> > > was no load.
+> > >=20
+> > > Is this going to be a problem now with this new code?
+> >=20
+> > That is a good question!
+> >=20
+> > On the one hand, you may well be right.
+> >=20
+> > On the other hand, while I see the old code calculating
+> > runnable_sum, I don't really see it _using_ it to drive
+> > scheduling decisions.
+> >=20
+> > It would be easy to define the CPU cfs_rq->runnable_load_sum
+> > as being the sum of task_se_h_weight() of each runnable task
+> > on the CPU (for example), but what would we use it for?
+> >=20
+> > What am I missing?
+>=20
+> It's suuuuuper sublte, but you're right in that we don't really need
+> the
+> runnable_avg per-se, but what you do is you kill calc_group_runnable,
+> which used
+> to do this
+>=20
+> load_avg =3D max(cfs_rq->avg.load_avg,
+>                scale_load_down(cfs_rq->load.weight));
+>=20
+> runnable =3D max(cfs_rq->avg.runnable_load_avg,
+>                scale_load_down(cfs_rq->runnable_weight));
+>=20
+> so we'd account for this weirdness of adding a previously idle
+> process to a new
+> CPU and overloading the CPU because we'd add a bunch of these 0
+> weight looking
+> tasks that suddenly all wake up and are on the same CPU.  So we used
+> the
+> runnable_weight to account for what was actually happening, and the
+> max of
+> load_avg and the weight to figure out what the potential load would
+> be.
+>=20
+> What you've done here is change the weighting stuff to be completely
+> based on
+> load avg, which is problematic for the reasons above.  Did you fix
+> this later on
+> in your patches?  If so then just tell me to keep reading and I'll do
+> that ;).
 
-There was no pattern specified in the original binding. But I guess the existing
-upstream device-trees could be used as the source for the pattern.
+No, I have not fixed that later in the code.
 
->> +    properties:
->> +      nvidia,ram-code:
->> +        $ref: /schemas/types.yaml#/definitions/uint32
->> +        description:
->> +          Value of RAM_CODE this timing set is used for.
->> +
->> +    patternProperties:
->> +      ".*":
-> 
-> Same here.
-> 
->> +        properties:
->> +          clock-frequency:
->> +            description:
->> +              Memory clock rate in Hz.
-> 
-> No constraints? Anything from 0 to 4GHz works?
+I am not entirely sure how I could do that, without
+reintroducing walking the hierarchy at task enqueue
+and dequeue, but maybe you have some idea...
 
-Okay, will add the min/max. I'm not sure what is the exact upper freq limit, probably
-~1GHz.
+--=20
+All Rights Reversed.
+
+--=-G0E3IlZFVcKl+naxuyrr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl0aX98ACgkQznnekoTE
+3oOQLwf/V7laRZB80HojKDUBvWPexAXiERPG6bdrZTlssrh8dnwDYtmnSHAibtqd
+UzoMDXpZRe455omNpUB4F7tyBlrds3jbDJmaoOaVDJnPQTaJRVBGddfIn7QRYdkF
+MGuQqodBHwjwiKX4m2Lh0gJE/msyNd3tbDYH58yRf4m/N6Sty2dOCBwuP5QGbB3v
+iCsTMs3LJOQifwIVZlyNEMvHwlGJBHXrB2Uuv0Ya5e9SQHTooqTAj9ZjpQgQ4nQj
+AImBeflH3cD17Msk6JuCRTMaFiuhsUOMUHGiHFB+VSQnAPZ83Y3e1jLgr3ekLw2n
+gwSIHBh+vb5zsRsmkCeSIISwupydLg==
+=7Xe7
+-----END PGP SIGNATURE-----
+
+--=-G0E3IlZFVcKl+naxuyrr--
+
