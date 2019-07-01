@@ -4,222 +4,217 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5F4C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C29C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EEA320B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95EEB20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfGAVkA (ORCPT
+        id S1727023AbfGAVmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 17:40:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49812 "EHLO
+        Mon, 1 Jul 2019 17:42:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36828 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726678AbfGAVj7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726678AbfGAVms (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 17:39:59 -0400
+        Mon, 1 Jul 2019 17:42:48 -0400
 Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61Lb1Gi090739
-        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 17:39:58 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tfry0b374-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 17:39:58 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 1 Jul 2019 22:39:57 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Jul 2019 22:39:54 +0100
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61LfoQS100493;
+        Mon, 1 Jul 2019 17:42:11 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tfry0b5au-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 01 Jul 2019 17:42:11 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x61Lg61f101132;
+        Mon, 1 Jul 2019 17:42:10 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tfry0b5ae-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 01 Jul 2019 17:42:10 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x61Le3Um013715;
+        Mon, 1 Jul 2019 21:42:09 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04dal.us.ibm.com with ESMTP id 2tdym6hp84-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 01 Jul 2019 21:42:09 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61LdrWK13566520
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61Lg8r451773744
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 21:39:53 GMT
+        Mon, 1 Jul 2019 21:42:08 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4D99AB2065;
-        Mon,  1 Jul 2019 21:39:53 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id CEB38B205F;
+        Mon,  1 Jul 2019 21:42:08 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 15994B205F;
-        Mon,  1 Jul 2019 21:39:53 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id A10B6B2066;
+        Mon,  1 Jul 2019 21:42:08 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Jul 2019 21:39:53 +0000 (GMT)
+        Mon,  1 Jul 2019 21:42:08 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 4713A16C2BD7; Mon,  1 Jul 2019 14:39:56 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 14:39:56 -0700
+        id D4F0416C2BD7; Mon,  1 Jul 2019 14:42:11 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 14:42:11 -0700
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>
-Subject: Re: [PATCH] tools/memory-model: Update the informal documentation
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        kernel-team@android.com, Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-kselftest@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC 2/3] rcu: Simplify rcu_note_context_switch exit from
+ critical section
+Message-ID: <20190701214211.GV26519@linux.ibm.com>
 Reply-To: paulmck@linux.ibm.com
-References: <1561842644-5354-1-git-send-email-andrea.parri@amarulasolutions.com>
- <Pine.LNX.4.44L0.1907011012230.1536-100000@iolanthe.rowland.org>
+References: <20190701040415.219001-1-joel@joelfernandes.org>
+ <20190701040415.219001-2-joel@joelfernandes.org>
+ <20190701200310.GP26519@linux.ibm.com>
+ <20190701213328.GB240327@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1907011012230.1536-100000@iolanthe.rowland.org>
+In-Reply-To: <20190701213328.GB240327@google.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
-x-cbid: 19070121-0072-0000-0000-0000044331C0
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011362; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01226073; UDB=6.00645444; IPR=6.01007285;
- MB=3.00027543; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-01 21:39:57
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070121-0073-0000-0000-00004CB368EC
-Message-Id: <20190701213956.GU26519@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_13:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010250
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907010251
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 10:12:45AM -0400, Alan Stern wrote:
-> On Sat, 29 Jun 2019, Andrea Parri wrote:
-> 
-> > The formal memory consistency model has added support for plain accesses
-> > (and data races).  While updating the informal documentation to describe
-> > this addition to the model is highly desirable and important future work,
-> > update the informal documentation to at least acknowledge such addition.
+On Mon, Jul 01, 2019 at 05:33:28PM -0400, Joel Fernandes wrote:
+> On Mon, Jul 01, 2019 at 01:03:10PM -0700, Paul E. McKenney wrote:
+> > On Mon, Jul 01, 2019 at 12:04:14AM -0400, Joel Fernandes (Google) wrote:
+> > > The rcu_preempt_note_context_switch() tries to handle cases where
+> > > __rcu_read_unlock() got preempted and then the context switch path does
+> > > the reporting of the quiscent state along with clearing any bits in the
+> > > rcu_read_unlock_special union.
+> > > 
+> > > This can be handled by just calling rcu_deferred_qs() which was added
+> > > during the RCU consolidation work and already does these checks.
+> > > 
+> > > Tested RCU config TREE03 for an hour which succeeds.
+> > > 
+> > > Cc: rcu@vger.kernel.org
+> > > Cc: kernel-team@android.com
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > > 
-> > Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> > Cc: Alan Stern <stern@rowland.harvard.edu>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Boqun Feng <boqun.feng@gmail.com>
-> > Cc: Nicholas Piggin <npiggin@gmail.com>
-> > Cc: David Howells <dhowells@redhat.com>
-> > Cc: Jade Alglave <j.alglave@ucl.ac.uk>
-> > Cc: Luc Maranget <luc.maranget@inria.fr>
-> > Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> > Cc: Akira Yokosawa <akiyks@gmail.com>
-> > Cc: Daniel Lustig <dlustig@nvidia.com>
-> > ---
+> > My first reaction was "that cannot possibly work", but after a bit of
+> > digging, it really does appear to work just fine.  I therefore expanded
+> > the commit log a bit, so please check it to catch any messups on my part.
+> > 
+> > Very cool, thank you very much!  ;-)
 > 
-> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+> Awesome! Thanks. I am glad you agree with the change and I agree with your
+> changes to the commit log.
 
-Applied, thank you both!
+Very good, I will push it to -rcu shortly.
 
 							Thanx, Paul
 
-> >  tools/memory-model/Documentation/explanation.txt | 47 +++++++++++-------------
-> >  tools/memory-model/README                        | 18 ++++-----
-> >  2 files changed, 30 insertions(+), 35 deletions(-)
+> thanks,
+> 
+>  - Joel
+> 
+> 
 > > 
-> > diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-> > index 68caa9a976d0c..b42f7cd718242 100644
-> > --- a/tools/memory-model/Documentation/explanation.txt
-> > +++ b/tools/memory-model/Documentation/explanation.txt
-> > @@ -42,7 +42,8 @@ linux-kernel.bell and linux-kernel.cat files that make up the formal
-> >  version of the model; they are extremely terse and their meanings are
-> >  far from clear.
-> >  
-> > -This document describes the ideas underlying the LKMM.  It is meant
-> > +This document describes the ideas underlying the LKMM, but excluding
-> > +the modeling of bare C (or plain) shared memory accesses.  It is meant
-> >  for people who want to understand how the model was designed.  It does
-> >  not go into the details of the code in the .bell and .cat files;
-> >  rather, it explains in English what the code expresses symbolically.
-> > @@ -354,31 +355,25 @@ be extremely complex.
-> >  Optimizing compilers have great freedom in the way they translate
-> >  source code to object code.  They are allowed to apply transformations
-> >  that add memory accesses, eliminate accesses, combine them, split them
-> > -into pieces, or move them around.  Faced with all these possibilities,
-> > -the LKMM basically gives up.  It insists that the code it analyzes
-> > -must contain no ordinary accesses to shared memory; all accesses must
-> > -be performed using READ_ONCE(), WRITE_ONCE(), or one of the other
-> > -atomic or synchronization primitives.  These primitives prevent a
-> > -large number of compiler optimizations.  In particular, it is
-> > -guaranteed that the compiler will not remove such accesses from the
-> > -generated code (unless it can prove the accesses will never be
-> > -executed), it will not change the order in which they occur in the
-> > -code (within limits imposed by the C standard), and it will not
-> > -introduce extraneous accesses.
+> > 							Thanx, Paul
+> > 
+> > ------------------------------------------------------------------------
+> > 
+> > commit ce547cb41ed7662f70d0b07d4c7f7555ba130c61
+> > Author: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Date:   Mon Jul 1 00:04:14 2019 -0400
+> > 
+> >     rcu: Simplify rcu_note_context_switch exit from critical section
+> >     
+> >     Because __rcu_read_unlock() can be preempted just before the call to
+> >     rcu_read_unlock_special(), it is possible for a task to be preempted just
+> >     before it would have fully exited its RCU read-side critical section.
+> >     This would result in a needless extension of that critical section until
+> >     that task was resumed, which might in turn result in a needlessly
+> >     long grace period, needless RCU priority boosting, and needless
+> >     force-quiescent-state actions.  Therefore, rcu_note_context_switch()
+> >     invokes __rcu_read_unlock() followed by rcu_preempt_deferred_qs() when
+> >     it detects this situation.  This action by rcu_note_context_switch()
+> >     ends the RCU read-side critical section immediately.
+> >     
+> >     Of course, once the task resumes, it will invoke rcu_read_unlock_special()
+> >     redundantly.  This is harmless because the fact that a preemption
+> >     happened means that interrupts, preemption, and softirqs cannot
+> >     have been disabled, so there would be no deferred quiescent state.
+> >     While ->rcu_read_lock_nesting remains less than zero, none of the
+> >     ->rcu_read_unlock_special.b bits can be set, and they were all zeroed by
+> >     the call to rcu_note_context_switch() at task-preemption time.  Therefore,
+> >     setting ->rcu_read_unlock_special.b.exp_hint to false has no effect.
+> >     
+> >     Therefore, the extra call to rcu_preempt_deferred_qs_irqrestore()
+> >     would return immediately.  With one possible exception, which is
+> >     if an expedited grace period started just as the task was being
+> >     resumed, which could leave ->exp_deferred_qs set.  This will cause
+> >     rcu_preempt_deferred_qs_irqrestore() to invoke rcu_report_exp_rdp(),
+> >     reporting the quiescent state, just as it should.  (Such an expedited
+> >     grace period won't affect the preemption code path due to interrupts
+> >     having already been disabled.)
+> >     
+> >     But when rcu_note_context_switch() invokes __rcu_read_unlock(), it
+> >     is doing so with preemption disabled, hence __rcu_read_unlock() will
+> >     unconditionally defer the quiescent state, only to immediately invoke
+> >     rcu_preempt_deferred_qs(), thus immediately reporting the deferred
+> >     quiescent state.  It turns out to be safe (and faster) to instead
+> >     just invoke rcu_preempt_deferred_qs() without the __rcu_read_unlock()
+> >     middleman.
+> >     
+> >     Because this is the invocation during the preemption (as opposed to
+> >     the invocation just after the resume), at least one of the bits in
+> >     ->rcu_read_unlock_special.b must be set and ->rcu_read_lock_nesting
+> >     must be negative.  This means that rcu_preempt_need_deferred_qs() must
+> >     return true, avoiding the early exit from rcu_preempt_deferred_qs().
+> >     Thus, rcu_preempt_deferred_qs_irqrestore() will be invoked immediately,
+> >     as required.
+> >     
+> >     This commit therefore simplifies the CONFIG_PREEMPT=y version of
+> >     rcu_note_context_switch() by removing the "else if" branch of its
+> >     "if" statement.  This change means that all callers that would have
+> >     invoked rcu_read_unlock_special() followed by rcu_preempt_deferred_qs()
+> >     will now simply invoke rcu_preempt_deferred_qs(), thus avoiding the
+> >     rcu_read_unlock_special() middleman when __rcu_read_unlock() is preempted.
+> >     
+> >     Cc: rcu@vger.kernel.org
+> >     Cc: kernel-team@android.com
+> >     Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> >     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> > 
+> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > index 187dc076c497..214e4689c29d 100644
+> > --- a/kernel/rcu/tree_plugin.h
+> > +++ b/kernel/rcu/tree_plugin.h
+> > @@ -313,15 +313,6 @@ void rcu_note_context_switch(bool preempt)
+> >  				       ? rnp->gp_seq
+> >  				       : rcu_seq_snap(&rnp->gp_seq));
+> >  		rcu_preempt_ctxt_queue(rnp, rdp);
+> > -	} else if (t->rcu_read_lock_nesting < 0 &&
+> > -		   t->rcu_read_unlock_special.s) {
 > > -
-> > -This explains why the MP and SB examples above used READ_ONCE() and
-> > -WRITE_ONCE() rather than ordinary memory accesses.  Thanks to this
-> > -usage, we can be certain that in the MP example, P0's write event to
-> > -buf really is po-before its write event to flag, and similarly for the
-> > -other shared memory accesses in the examples.
-> > -
-> > -Private variables are not subject to this restriction.  Since they are
-> > -not shared between CPUs, they can be accessed normally without
-> > -READ_ONCE() or WRITE_ONCE(), and there will be no ill effects.  In
-> > -fact, they need not even be stored in normal memory at all -- in
-> > -principle a private variable could be stored in a CPU register (hence
-> > -the convention that these variables have names starting with the
-> > -letter 'r').
-> > +into pieces, or move them around.  The use of READ_ONCE(), WRITE_ONCE(),
-> > +or one of the other atomic or synchronization primitives prevents a
-> > +large number of compiler optimizations.  In particular, it is guaranteed
-> > +that the compiler will not remove such accesses from the generated code
-> > +(unless it can prove the accesses will never be executed), it will not
-> > +change the order in which they occur in the code (within limits imposed
-> > +by the C standard), and it will not introduce extraneous accesses.
-> > +
-> > +The MP and SB examples above used READ_ONCE() and WRITE_ONCE() rather
-> > +than ordinary memory accesses.  Thanks to this usage, we can be certain
-> > +that in the MP example, the compiler won't reorder P0's write event to
-> > +buf and P0's write event to flag, and similarly for the other shared
-> > +memory accesses in the examples.
-> > +
-> > +Since private variables are not shared between CPUs, they can be
-> > +accessed normally without READ_ONCE() or WRITE_ONCE().  In fact, they
-> > +need not even be stored in normal memory at all -- in principle a
-> > +private variable could be stored in a CPU register (hence the convention
-> > +that these variables have names starting with the letter 'r').
-> >  
-> >  
-> >  A WARNING
-> > diff --git a/tools/memory-model/README b/tools/memory-model/README
-> > index 2b87f3971548c..fc07b52f20286 100644
-> > --- a/tools/memory-model/README
-> > +++ b/tools/memory-model/README
-> > @@ -167,15 +167,15 @@ scripts	Various scripts, see scripts/README.
-> >  LIMITATIONS
-> >  ===========
-> >  
-> > -The Linux-kernel memory model has the following limitations:
-> > -
-> > -1.	Compiler optimizations are not modeled.  Of course, the use
-> > -	of READ_ONCE() and WRITE_ONCE() limits the compiler's ability
-> > -	to optimize, but there is Linux-kernel code that uses bare C
-> > -	memory accesses.  Handling this code is on the to-do list.
-> > -	For more information, see Documentation/explanation.txt (in
-> > -	particular, the "THE PROGRAM ORDER RELATION: po AND po-loc"
-> > -	and "A WARNING" sections).
-> > +The Linux-kernel memory model (LKMM) has the following limitations:
-> > +
-> > +1.	Compiler optimizations are not accurately modeled.  Of course,
-> > +	the use of READ_ONCE() and WRITE_ONCE() limits the compiler's
-> > +	ability to optimize, but under some circumstances it is possible
-> > +	for the compiler to undermine the memory model.  For more
-> > +	information, see Documentation/explanation.txt (in particular,
-> > +	the "THE PROGRAM ORDER RELATION: po AND po-loc" and "A WARNING"
-> > +	sections).
-> >  
-> >  	Note that this limitation in turn limits LKMM's ability to
-> >  	accurately model address, control, and data dependencies.
+> > -		/*
+> > -		 * Complete exit from RCU read-side critical section on
+> > -		 * behalf of preempted instance of __rcu_read_unlock().
+> > -		 */
+> > -		rcu_read_unlock_special(t);
+> > -		rcu_preempt_deferred_qs(t);
+> >  	} else {
+> >  		rcu_preempt_deferred_qs(t);
+> >  	}
 > > 
 > 
-
