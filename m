@@ -2,59 +2,79 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A09FC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EFBC06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C03B206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D496F206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbfGALX4 (ORCPT
+        id S1728387AbfGALYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 07:23:56 -0400
-Received: from mga18.intel.com ([134.134.136.126]:7164 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727239AbfGALX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 07:23:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 04:09:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,439,1557212400"; 
-   d="scan'208";a="154047824"
-Received: from um.fi.intel.com (HELO localhost) ([10.237.72.63])
-  by orsmga007.jf.intel.com with ESMTP; 01 Jul 2019 04:09:04 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        mathieu.poirier@linaro.org, will.deacon@arm.com,
-        alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH v1] perf: Fix exclusive events' grouping
-In-Reply-To: <20190701110053.23761-1-alexander.shishkin@linux.intel.com>
-References: <20190701110053.23761-1-alexander.shishkin@linux.intel.com>
-Date:   Mon, 01 Jul 2019 14:09:04 +0300
-Message-ID: <87y31it3jj.fsf@ashishki-desk.ger.corp.intel.com>
+        Mon, 1 Jul 2019 07:24:32 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:60107 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727239AbfGALYc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 07:24:32 -0400
+X-Originating-IP: 86.250.200.211
+Received: from bootlin.com (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 434A124000D;
+        Mon,  1 Jul 2019 11:24:28 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 13:24:39 +0200
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        David Miller <davem@davemloft.net>, brian.brooks@linaro.org,
+        linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        nadavh@marvell.com, stefanc@marvell.com,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: Re: [PATCH] driver core: platform: Allow using a dedicated dma_mask
+ for platform_device
+Message-ID: <20190701132340.21123dee@bootlin.com>
+In-Reply-To: <20190628155946.GA16956@infradead.org>
+References: <20190628141550.22938-1-maxime.chevallier@bootlin.com>
+ <20190628155946.GA16956@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexander Shishkin <alexander.shishkin@linux.intel.com> writes:
+Hi Christoph,
 
-> So far, we tried to disallow grouping exclusive events for the fear of
-> complications they would cause with moving between contexts. Specifically,
-> moving a software group to a hardware context would violate the exclusivity
-> rules if both groups contain matching exclusive events.
+On Fri, 28 Jun 2019 08:59:46 -0700
+Christoph Hellwig <hch@infradead.org> wrote:
 
-This one is bad, please disregard. v2 incoming.
+>I'd much rather bite the bullet and make dev->dma_mask a scalar
+>instead of a pointer.  The pointer causes way to much boiler plate code,
+>and the semantics are way to subtile.
 
-Regards,
---
-Alex
+I agree that this the real solution, it just seemed a bit overwhelming
+to me. I'll be happy to help with this though, now that you took a big
+first step.
+
+> Below is a POV patch that
+>compiles and boots with my usual x86 test config, and at least compiles
+>with the arm and pmac32 defconfigs.  It probably breaks just about
+>everything else, but should give us an idea what is involve in the
+>switch:
+
+I'll test that on my boards too.
+
+Thanks,
+
+Maxime
