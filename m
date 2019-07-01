@@ -2,129 +2,145 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FFAC06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA75EC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78CD2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="r81XUdll"
+	by mail.kernel.org (Postfix) with ESMTP id 892E52184C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbfGAJNP (ORCPT
+        id S1728347AbfGAJRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 05:13:15 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54896 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728327AbfGAJNO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 05:13:14 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g135so15013942wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 02:13:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qYJwtVX2r7KnFTDIFCTGswCpHKhjGFZMmXuYYyexqis=;
-        b=r81XUdllxw5uXCyKEsvqIiwFjD4+Lrm0Imlfz2u7g/nBUVEQ/H/q2CcOkbeh1IoekK
-         XqmukpLUNFQgaTn4IzOvgmZdqpd98YvfrZ7VM1YVyM7O5eDofTXxiSS1mEh+NDA/Dbr/
-         Z3rI9N48FtEgbYu/2B2DhrOANpStsKc6vG9zfUvuIwAIhkKO792IlVEEN/ne/3TDpBV2
-         UMhi4YZeH4ltR34+Y1erlZG1nyZ5RNqBMezdYHN4zSt9QqeyPrjfBFHM9wEpAnv1QO1z
-         /3GabGCSPZoKQPdlx6VzaT707o+ONkoZ9Yy3YgxKcPSkOCS95zyEqQqYpKHXjSJMRrcy
-         iJ+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qYJwtVX2r7KnFTDIFCTGswCpHKhjGFZMmXuYYyexqis=;
-        b=RjjB03EN6a3gaOWzD3Alx7JXLyx1MrYf4O7AWoJf0NrgCcKnJoFhasP7ylgx2ra8bC
-         RCsif/vMGuMb/hZO9wZEj5Oz9M/0JPyqO3fAmW1Pxc9gtk/JY9u3bNMzfSZuvVYLgwzi
-         b5Tlr4PaHDtUe4DZ81aWPO1XPB8+PRN2FVcLWNO+osu3MkO9KKksuaNpyrnuMrjG7hVR
-         oImg3cL1stDVJ01Nx2zx4kXfkIL5o+knOya4ecwtiu46/9AOq05i0JIUlt4hXouyNay5
-         ybUqOdqCl+aiTVMOzm86nYoVwflI/GPw5uBvKdMuLBQVuphxpxzEFnWXAbE32yz2i/2m
-         ngfQ==
-X-Gm-Message-State: APjAAAXjsvZDSCo+RLLQYEOMyHPZHtCNqoMj50t1wBWPDdklCCWbmAqV
-        u8vGqQ+USDvophYCxqzldIL/2nTLgn8=
-X-Google-Smtp-Source: APXvYqyKAKMyxCAc6vR2xD8svMCql407vi8e1s9D1IiPlHCg1OCzLfGcgLf5UyySc+lgVIZBWOUuTA==
-X-Received: by 2002:a05:600c:303:: with SMTP id q3mr16802095wmd.130.1561972391870;
-        Mon, 01 Jul 2019 02:13:11 -0700 (PDT)
-Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id i16sm6305659wrm.37.2019.07.01.02.13.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 01 Jul 2019 02:13:11 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     jbrunet@baylibre.com, khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
-        linux-gpio@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC/RFT v3 01/14] pinctrl: meson-g12a: add pwm_a on GPIOE_2 pinmux
-Date:   Mon,  1 Jul 2019 11:12:45 +0200
-Message-Id: <20190701091258.3870-2-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190701091258.3870-1-narmstrong@baylibre.com>
-References: <20190701091258.3870-1-narmstrong@baylibre.com>
+        Mon, 1 Jul 2019 05:17:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:58256 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728073AbfGAJRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 05:17:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1A8BCFC;
+        Mon,  1 Jul 2019 02:17:16 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62CC23F718;
+        Mon,  1 Jul 2019 02:17:14 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 10:17:12 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Julien Grall <julien.grall@arm.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        aou@eecs.berkeley.edu, gary@garyguo.net,
+        Atish Patra <Atish.Patra@wdc.com>, hch@infradead.org,
+        paul.walmsley@sifive.com, rppt@linux.ibm.com,
+        linux-riscv@lists.infradead.org, Anup Patel <anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>, suzuki.poulose@arm.com,
+        Marc Zyngier <marc.zyngier@arm.com>, julien.thierry@arm.com,
+        Will Deacon <will.deacon@arm.com>, christoffer.dall@arm.com,
+        james.morse@arm.com
+Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
+ separate file
+Message-ID: <20190701091711.GA21774@arrakis.emea.arm.com>
+References: <20190321163623.20219-1-julien.grall@arm.com>
+ <20190321163623.20219-12-julien.grall@arm.com>
+ <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
+ <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
+ <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com>
+ <CAJF2gTStSR7Jmu7=HaO5Wxz=Zn8A5-RD8ktori3oKEhM9vozAA@mail.gmail.com>
+ <20190621141606.GF18954@arrakis.emea.arm.com>
+ <CAJF2gTTVUToRkRtxTmtWDotMGXy5YQCpL1h_2neTBuN3e6oz1w@mail.gmail.com>
+ <20190624153820.GH29120@arrakis.emea.arm.com>
+ <CAJF2gTRUzHUNV+nzECUp5n2L1akdy=Aovb6tSd+PNVnpasBrqw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJF2gTRUzHUNV+nzECUp5n2L1akdy=Aovb6tSd+PNVnpasBrqw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the missing pinmux for the pwm_a function on the GPIOE_2 pin.
+On Sun, Jun 30, 2019 at 12:29:46PM +0800, Guo Ren wrote:
+> On Mon, Jun 24, 2019 at 11:38 PM Catalin Marinas
+> <catalin.marinas@arm.com> wrote:
+> > On Mon, Jun 24, 2019 at 12:35:35AM +0800, Guo Ren wrote:
+> > > On Fri, Jun 21, 2019 at 10:16 PM Catalin Marinas
+> > > <catalin.marinas@arm.com> wrote:
+> > > > BTW, if you find the algorithm fairly straightforward ;), see this
+> > > > bug-fix which took a formal model to identify: a8ffaaa060b8 ("arm64:
+> > > > asid: Do not replace active_asids if already 0").
+> > [...]
+> > > Btw, Is this detected by arm's aisd allocator TLA+ model ? Or a real
+> > > bug report ?
+> >
+> > This specific bug was found by the TLA+ model checker (at the time we
+> > were actually tracking down another bug with multi-threaded CPU sharing
+> > the TLB, bug also confirmed by the formal model).
+> 
+> Could you tell me the ref-link about "another bug with multi-threaded
+> CPU sharing the TLB" ?
+> 
+> In my concept, the multi-core asid mechanism is also applicable to
+> multi-thread shared TLB, but it will generate redundant tlbflush. From
+> the software design logic, multi-threaded is treated as multi-cores
+> without error, but performance is not optimized.
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/pinctrl/meson/pinctrl-meson-g12a.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+From the ASID reservation/allocation perspective, the mechanism is the
+same between multi-threaded with a shared TLB and multi-core. On arm64,
+a local_flush_tlb_all() on a thread invalidates the TLB for the other
+threads of the same core.
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-index d494492e98e9..f69af4fa7cf8 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-@@ -801,6 +801,9 @@ static const unsigned int remote_ao_input_pins[]	= { GPIOAO_5 };
- /* ir_out */
- static const unsigned int remote_ao_out_pins[]		= { GPIOAO_4 };
- 
-+/* pwm_a_e */
-+static const unsigned int pwm_a_e_pins[]		= { GPIOE_2 };
-+
- /* pwm_ao_a */
- static const unsigned int pwm_ao_a_pins[]		= { GPIOAO_11 };
- static const unsigned int pwm_ao_a_hiz_pins[]		= { GPIOAO_11 };
-@@ -888,6 +891,7 @@ static struct meson_pmx_group meson_g12a_aobus_groups[] = {
- 	GROUP(i2c_ao_slave_sda,		3),
- 	GROUP(remote_ao_input,		1),
- 	GROUP(remote_ao_out,		1),
-+	GROUP(pwm_a_e,			3),
- 	GROUP(pwm_ao_a,			3),
- 	GROUP(pwm_ao_a_hiz,		2),
- 	GROUP(pwm_ao_b,			3),
-@@ -1192,6 +1196,10 @@ static const char * const remote_ao_out_groups[] = {
- 	"remote_ao_out",
- };
- 
-+static const char * const pwm_a_e_groups[] = {
-+	"pwm_a_e",
-+};
-+
- static const char * const pwm_ao_a_groups[] = {
- 	"pwm_ao_a", "pwm_ao_a_hiz",
- };
-@@ -1290,6 +1298,7 @@ static struct meson_pmx_func meson_g12a_aobus_functions[] = {
- 	FUNCTION(i2c_ao_slave),
- 	FUNCTION(remote_ao_input),
- 	FUNCTION(remote_ao_out),
-+	FUNCTION(pwm_a_e),
- 	FUNCTION(pwm_ao_a),
- 	FUNCTION(pwm_ao_b),
- 	FUNCTION(pwm_ao_c),
+The actual problem with multi-threaded CPUs is a lot more subtle.
+Digging some internal email from 1.5 years ago and pasting it below
+(where "current ASID algorithm" refers to the one prior to the fix and
+CnP - Common Not Private - means shared TLBs on a multi-threaded CPU):
+
+
+The current ASID roll-over algorithm allows for a small window where
+active_asids for a CPU (P1) is different from the actual ASID in TTBR0.
+This can lead to a roll-over on a different CPU (P2) allocating an ASID
+(for a different task) which is still hardware-active on P1.
+
+A TLBI on a CPU (or a peer CPU with CnP) does not guarantee that all the
+entries corresponding to a valid TTBRx are removed as they can still be
+speculatively loaded immediately after TLBI.
+
+While having two different page tables with the same ASID on different
+CPUs should be fine without CnP, it becomes problematic when CnP is
+enabled:
+
+P1                                      P2
+--                                      --
+TTBR0.BADDR = T1
+TTBR0.ASID = A1
+check_and_switch_context(T2,A2)
+  asid_maps[P1] = A2
+  goto fastpath
+                                        check_and_switch_context(T3,A0)
+                                          new_context
+                                            ASID roll-over allocates A1
+                                              since it is not active
+                                          TLBI ALL
+speculate TTBR0.ASID = A1 entry
+                                          TTBR0.BADDR = T3
+                                          TTBR0.ASID = A1
+  TTBR0.BADDR = T2
+  TTBR0.ASID = A2
+
+After this, the common TLB on P1 and P2 (CnP) contains entries
+corresponding to the old T1 and A1. Task T3 using the same ASID A1 can
+hit such entries. (T1,A1) will eventually be removed from the TLB on the
+next context switch on P1 since tlb_flush_pending was set but this is
+not guaranteed to happen.
+
+
+The fix on arm64 (as part of 5ffdfaedfa0a - "arm64: mm: Support Common
+Not Private translations") was to set the reserved TTBR0 in
+check_and_switch_context(), preventing speculative loads into the TLB
+being tagged with the wrong ASID. So this is specific to the ARM CPUs
+behaviour w.r.t. speculative TLB loads, it may not be the case (yet) for
+your architecture.
+
 -- 
-2.21.0
-
+Catalin
