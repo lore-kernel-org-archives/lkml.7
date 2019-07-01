@@ -2,97 +2,337 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C84FC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEC1C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8143208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB1F20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GHW6645O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dd364buB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbfGAIPQ (ORCPT
+        id S1727885AbfGAITG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:15:16 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37786 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727138AbfGAIPO (ORCPT
+        Mon, 1 Jul 2019 04:19:06 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37820 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfGAITF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:15:14 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x618AURR004719;
-        Mon, 1 Jul 2019 10:15:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=4HCnvTeET6w7JHg2LO1bt6ZsiU0ocB/xdZVHYiG9rFI=;
- b=GHW6645O6fXZFwxeACFbUizFjN2xzSQ/fT1WP22K35T2QBWXIxRswFIbY/Gicog7yd9+
- MipX/Kz8DePJL5H40MejpIksdnXf1VxftXIgbNpJNwuuujLjuv/R2cPnSAIFvLD5XXDt
- PgRsTg4V6FOUkilsbNhyObODsNAk/zWROs4Iw4+gmmwLx7naRBdxmQy+t4MMZPaZkn+Y
- 8yYPEDrj8k9245W4SCXEsw0SQY7cNSRX24iQjYiJrSlv8+Kp7ZgXoTv+6O5aXzmdUBzb
- 1Dnt80cUK6MysfLVm0UJ2eGMJIlkAS4A67jx931w5OY9X+ZDYUZ3QHQUHQ5pmgmfNYhD Iw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2tdxvhkefh-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 01 Jul 2019 10:15:02 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DBAC134;
-        Mon,  1 Jul 2019 08:14:35 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B47AA191D;
-        Mon,  1 Jul 2019 08:14:35 +0000 (GMT)
-Received: from localhost (10.75.127.49) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jul 2019 10:14:35
- +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <robh+dt@kernel.org>,
-        <alexandre.torgue@st.com>
-CC:     <mcoquelin.stm32@gmail.com>, <fabrice.gasnier@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCH v2 3/4] ARM: multi_v7_defconfig: enable STM32 booster regulator
-Date:   Mon, 1 Jul 2019 10:14:24 +0200
-Message-ID: <1561968865-22037-4-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561968865-22037-1-git-send-email-fabrice.gasnier@st.com>
-References: <1561968865-22037-1-git-send-email-fabrice.gasnier@st.com>
+        Mon, 1 Jul 2019 04:19:05 -0400
+Received: by mail-pg1-f195.google.com with SMTP id g15so3760649pgi.4;
+        Mon, 01 Jul 2019 01:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ENqNJlovAzbtIMDMyEuT6YxQGdhBBs3Nh+LrxQq4GI0=;
+        b=dd364buBd+ouEhxHpqNpPkomOOMHJ+9u0FMaw5me+OPu3CSiY0QuGa5VmUQdZLk+Z4
+         IB0Svr4Mc6vcovCTBLVAfL6Qr4KBywUL9p3DWssGoc4UjB9mVpKCdIYUFvPMunx21fvm
+         Qr06rmuD+1IGJ2j5i2LAqds1F5V9kqxeKsinCdFzpmH9EhHPfDA+Ndug3Qzv2jiYvZuv
+         dn0iw1qqwQUxqMIa6B2Uar0Td9ar9Rr0NkNTAOMla8XwX5ryC6AVDIaeOnYCSjR5J7zA
+         AihSwjl96Qazoc0DJh4MJtEQOTuUlFH15SC1nmsDYfuu84secHKIsgBE1ljt10uaSj4X
+         tGDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ENqNJlovAzbtIMDMyEuT6YxQGdhBBs3Nh+LrxQq4GI0=;
+        b=YPnQvt46YVFAqLqE1bI4f3wwge56ixBFJdlEHm8qggJbfSXzoeTHv1t5j8Gj/EkP86
+         aGFe3o3ool/gFJN7tTU5weff9UhpgqW0HguYjkX3DQ817uaqw4t+ywsfHaPfYQsagWKm
+         zqzUBp3cMfi9riQLW8sGD03c7Gd1c3AcmvqOzEkvRuTiOEIsxlcMLB9MR+UV0NTkOOVG
+         XrF1A5qn5K0eiwH+U9w+fQqplh1q2ap3aN9K1b3mc30z9Qy4w/gyADpGllV8LRyiutio
+         RXahbYG+7K4MHSO6JVxN0indD6eBujb3qcksQ3dVLD94o/CdPSLn/i2fDaqk1a4uqgja
+         ZKmA==
+X-Gm-Message-State: APjAAAX7BPHu+bxmJELuqtBQUWkrjLa2rSsoWtNq5Qt8POUKdpvcBdaf
+        bTAylra2krNvarY6Y1esjbw=
+X-Google-Smtp-Source: APXvYqwAiKcJFocYrpTbgg3ZSDAgSgjwkR5cm1zwQU0lsdiTbx4wO0ymCAizzUs48BCIsgtyNwsN0Q==
+X-Received: by 2002:a17:90a:c596:: with SMTP id l22mr30069932pjt.46.1561969144292;
+        Mon, 01 Jul 2019 01:19:04 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id r188sm12219235pfr.16.2019.07.01.01.19.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 01:19:03 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 01:19:01 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] Input: add IOC3 serio driver
+Message-ID: <20190701081901.GE172968@dtor-ws>
+References: <20190613170636.6647-1-tbogendoerfer@suse.de>
+ <20190613170636.6647-8-tbogendoerfer@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_05:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613170636.6647-8-tbogendoerfer@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables the driver for STM32 booster regulator found on stm32mp1.
+Hi Thomas,
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Thu, Jun 13, 2019 at 07:06:33PM +0200, Thomas Bogendoerfer wrote:
+> This patch adds a platform driver for supporting keyboard and mouse
+> interface of SGI IOC3 chips.
+> 
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> ---
+>  drivers/input/serio/Kconfig   |  10 +++
+>  drivers/input/serio/Makefile  |   1 +
+>  drivers/input/serio/ioc3kbd.c | 158 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 169 insertions(+)
+>  create mode 100644 drivers/input/serio/ioc3kbd.c
+> 
+> diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
+> index f3e18f8ef9ca..373a1646019e 100644
+> --- a/drivers/input/serio/Kconfig
+> +++ b/drivers/input/serio/Kconfig
+> @@ -165,6 +165,16 @@ config SERIO_MACEPS2
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called maceps2.
+>  
+> +config SERIO_SGI_IOC3
+> +	tristate "SGI IOC3 PS/2 controller"
+> +	depends on SGI_MFD_IOC3
+> +	help
+> +	  Say Y here if you have an SGI Onyx2, SGI Octane or IOC3 PCI card
+> +	  and you want to attach and use a keyboard, mouse, or both.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called ioc3kbd.
+> +
+>  config SERIO_LIBPS2
+>  	tristate "PS/2 driver library"
+>  	depends on SERIO_I8042 || SERIO_I8042=n
+> diff --git a/drivers/input/serio/Makefile b/drivers/input/serio/Makefile
+> index 67950a5ccb3f..6d97bad7b844 100644
+> --- a/drivers/input/serio/Makefile
+> +++ b/drivers/input/serio/Makefile
+> @@ -20,6 +20,7 @@ obj-$(CONFIG_HIL_MLC)		+= hp_sdc_mlc.o hil_mlc.o
+>  obj-$(CONFIG_SERIO_PCIPS2)	+= pcips2.o
+>  obj-$(CONFIG_SERIO_PS2MULT)	+= ps2mult.o
+>  obj-$(CONFIG_SERIO_MACEPS2)	+= maceps2.o
+> +obj-$(CONFIG_SERIO_SGI_IOC3)	+= ioc3kbd.o
+>  obj-$(CONFIG_SERIO_LIBPS2)	+= libps2.o
+>  obj-$(CONFIG_SERIO_RAW)		+= serio_raw.o
+>  obj-$(CONFIG_SERIO_AMS_DELTA)	+= ams_delta_serio.o
+> diff --git a/drivers/input/serio/ioc3kbd.c b/drivers/input/serio/ioc3kbd.c
+> new file mode 100644
+> index 000000000000..26fcf57465d6
+> --- /dev/null
+> +++ b/drivers/input/serio/ioc3kbd.c
+> @@ -0,0 +1,158 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * SGI IOC3 PS/2 controller driver for linux
+> + *
+> + * Copyright (C) 2019 Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> + *
+> + * Based on code Copyright (C) 2005 Stanislaw Skowronek <skylark@unaligned.org>
+> + *               Copyright (C) 2009 Johannes Dickgreber <tanzy@gmx.de>
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/serio.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <asm/sn/ioc3.h>
+> +
+> +struct ioc3kbd_data {
+> +	struct ioc3_serioregs __iomem *regs;
+> +	struct serio *kbd, *aux;
+> +};
+> +
+> +static int ioc3kbd_write(struct serio *dev, u8 val)
+> +{
+> +	struct ioc3kbd_data *d = dev->port_data;
+> +	unsigned long timeout = 0;
+> +	u32 mask;
+> +
+> +	mask = (dev == d->aux) ? KM_CSR_M_WRT_PEND : KM_CSR_K_WRT_PEND;
+> +	while ((readl(&d->regs->km_csr) & mask) && (timeout < 1000)) {
+> +		udelay(100);
+> +		timeout++;
+> +	}
+> +
+> +	if (timeout >= 1000)
+> +		return -1;
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 6b748f2..230e7e0 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -568,6 +568,7 @@ CONFIG_REGULATOR_RK808=y
- CONFIG_REGULATOR_RN5T618=y
- CONFIG_REGULATOR_S2MPS11=y
- CONFIG_REGULATOR_S5M8767=y
-+CONFIG_REGULATOR_STM32_BOOSTER=m
- CONFIG_REGULATOR_STM32_VREFBUF=m
- CONFIG_REGULATOR_STPMIC1=y
- CONFIG_REGULATOR_TI_ABB=y
+-ETIMEDOUT?
+
+> +
+> +	writel(val, dev == d->aux ?  &d->regs->m_wd : &d->regs->k_wd);
+
+Nit: there are 2 spaces after ?, only one is needed.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t ioc3kbd_intr(int itq, void *dev_id)
+> +{
+> +	struct ioc3kbd_data *d = dev_id;
+> +	u32 data_k, data_m;
+> +
+> +	data_k = readl(&d->regs->k_rd);
+> +	data_m = readl(&d->regs->m_rd);
+> +
+> +	if (data_k & KM_RD_VALID_0)
+> +		serio_interrupt(d->kbd,
+> +		(data_k >> KM_RD_DATA_0_SHIFT) & 0xff, 0);
+
+This is weird formatting, you need one more tab here.
+
+> +	if (data_k & KM_RD_VALID_1)
+> +		serio_interrupt(d->kbd,
+> +		(data_k >> KM_RD_DATA_1_SHIFT) & 0xff, 0);
+> +	if (data_k & KM_RD_VALID_2)
+> +		serio_interrupt(d->kbd,
+> +		(data_k >> KM_RD_DATA_2_SHIFT) & 0xff, 0);
+> +	if (data_m & KM_RD_VALID_0)
+> +		serio_interrupt(d->aux,
+> +		(data_m >> KM_RD_DATA_0_SHIFT) & 0xff, 0);
+> +	if (data_m & KM_RD_VALID_1)
+> +		serio_interrupt(d->aux,
+> +		(data_m >> KM_RD_DATA_1_SHIFT) & 0xff, 0);
+> +	if (data_m & KM_RD_VALID_2)
+> +		serio_interrupt(d->aux,
+> +		(data_m >> KM_RD_DATA_2_SHIFT) & 0xff, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ioc3kbd_probe(struct platform_device *pdev)
+> +{
+> +	struct ioc3_serioregs __iomem *regs;
+> +	struct device *dev = &pdev->dev;
+> +	struct ioc3kbd_data *d;
+> +	struct serio *sk, *sa;
+> +	struct resource *mem;
+> +	int irq, ret;
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	regs = devm_ioremap_resource(&pdev->dev, mem);
+
+We have a brand new helper: devm_platform_ioremap_resource()
+
+> +	if (IS_ERR(regs))
+> +		return PTR_ERR(regs);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return -ENXIO;
+> +
+> +	d = devm_kzalloc(&pdev->dev, sizeof(struct ioc3kbd_data), GFP_KERNEL);
+
+I think we nor prefer deriving type from the pointer:
+
+	d = evm_kzalloc(&pdev->dev, sizeof(*d), GFP_KERNEL);
+
+> +	if (!d)
+> +		return -ENOMEM;
+> +
+> +	ret = devm_request_irq(&pdev->dev, irq, ioc3kbd_intr, IRQF_SHARED,
+> +			       "ioc3-kbd", d);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "could not request IRQ %d\n", irq);
+> +		return ret;
+> +	}
+
+You need to make sure that interrupt will not fire while serio ports are
+not yet allocated/registered. Is there a way to inhibit interrupt
+generation on controller side?
+
+> +
+> +	sk = kzalloc(sizeof(struct serio), GFP_KERNEL);
+
+	sk = kzalloc(sizeof(*sk), GFP_KERNEL);
+
+> +	if (!sk)
+> +		return -ENOMEM;
+> +
+> +	sa = kzalloc(sizeof(struct serio), GFP_KERNEL);
+
+	sa = kzalloc(sizeof(*sa), GFP_KERNEL);
+
+> +	if (!sa) {
+> +		kfree(sk);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	sk->id.type = SERIO_8042;
+> +	sk->write = ioc3kbd_write;
+> +	snprintf(sk->name, sizeof(sk->name), "IOC3 keyboard %d", pdev->id);
+> +	snprintf(sk->phys, sizeof(sk->phys), "ioc3/serio%dkbd", pdev->id);
+> +	sk->port_data = d;
+> +	sk->dev.parent = &pdev->dev;
+> +
+> +	sa->id.type = SERIO_8042;
+> +	sa->write = ioc3kbd_write;
+> +	snprintf(sa->name, sizeof(sa->name), "IOC3 auxiliary %d", pdev->id);
+> +	snprintf(sa->phys, sizeof(sa->phys), "ioc3/serio%daux", pdev->id);
+> +	sa->port_data = d;
+> +	sa->dev.parent = dev;
+> +
+> +	d->regs = regs;
+> +	d->kbd = sk;
+> +	d->aux = sa;
+> +
+> +	platform_set_drvdata(pdev, d);
+> +	serio_register_port(d->kbd);
+> +	serio_register_port(d->aux);
+> +	return 0;
+> +}
+> +
+> +static int ioc3kbd_remove(struct platform_device *pdev)
+> +{
+> +	struct ioc3kbd_data *d = platform_get_drvdata(pdev);
+> +
+> +	serio_unregister_port(d->kbd);
+> +	serio_unregister_port(d->aux);
+
+If you unregister ports while interrupt is registered/enabled you may
+get a crash.
+
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver ioc3kbd_driver = {
+> +	.probe          = ioc3kbd_probe,
+> +	.remove         = ioc3kbd_remove,
+> +	.driver = {
+> +		.name = "ioc3-kbd",
+> +	},
+> +};
+> +module_platform_driver(ioc3kbd_driver);
+> +
+> +MODULE_AUTHOR("Thomas Bogendoerfer <tbogendoerfer@suse.de>");
+> +MODULE_DESCRIPTION("SGI IOC3 serio driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.13.7
+> 
+
 -- 
-2.7.4
-
+Dmitry
