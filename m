@@ -2,269 +2,77 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECC9C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A921CC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D25F20881
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7827920881
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561970498;
-	bh=o/bDP4ilQvwUy8uoXi3czz3FEpKBLlwJGGxZLSOTotU=;
+	s=default; t=1561970564;
+	bh=bxRp0wzioxPO5LSZMl5y6eVW5avDuj3NK25QSOZQ8Uk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gFTLzcmVeC560aN2OhMkQ6Ps/gnpBrVVNKq2fk+I1tzEUMMxBIDRChwr+t0/bclUl
-	 hcE2/1Wx650sTc+H8XEYSYDIqpAbw+ZuisO0dchvcCbaAlsTwRSwWvmq3S+Bo5rUjD
-	 rB5YDUC4GcXdnmNPoArxGd8sQhoHFNqPN49LiFVA=
+	b=2aLByzzZyzCno7obEPs0/6+HxcjoN1kKBjfhPsMpX8zZkifzT4197e8UZmgOZ2jFT
+	 bug+O4cynxWKQUKmHtR89pZ9pTKqJxT6tfyAILDaVePZIgcEhLZqLJYTM5nPpGY0wj
+	 XAHmkl9EAj2kIS2+MvzWQfZhrqAb5pdaF5kpFlXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfGAIlg (ORCPT
+        id S1727965AbfGAImn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:41:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37448 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727128AbfGAIlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:41:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9A0E0AB7D;
-        Mon,  1 Jul 2019 08:41:31 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 10:41:29 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "mike.travis@hpe.com" <mike.travis@hpe.com>,
-        Andrew Banman <andrew.banman@hpe.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Brown <broonie@kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Oscar Salvador <osalvador@suse.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>
-Subject: Re: [PATCH v3 09/11] mm/memory_hotplug: Remove memory block devices
- before arch_remove_memory()
-Message-ID: <20190701084129.GI6376@dhcp22.suse.cz>
-References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-10-david@redhat.com>
+        Mon, 1 Jul 2019 04:42:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726442AbfGAImn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 04:42:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD16620881;
+        Mon,  1 Jul 2019 08:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561970562;
+        bh=bxRp0wzioxPO5LSZMl5y6eVW5avDuj3NK25QSOZQ8Uk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lq+qL62AE7ambKrarLmAT5KQ+YPxVtSGXMrqUAfisU18Vt5iwjNsHthJFBIiT5k7e
+         8GuCnThOV/MzC0mNYw5XqaMN+GyPLB+gTwXMDSDj6uVm6O8Lck6taA8G0V4b8G4H5M
+         rZKmNW1rXKzNuE8cvzUIJ0BuwXjWohfGIlHiPdjc=
+Date:   Mon, 1 Jul 2019 10:42:39 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
+Cc:     devel@driverdev.osuosl.org, gneukum1@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: kpc2000: fix brace issues in kpc2000_spi.c
+Message-ID: <20190701084239.GA20886@kroah.com>
+References: <20190627195323.28913-1-simon@nikanor.nu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190527111152.16324-10-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190627195323.28913-1-simon@nikanor.nu>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 27-05-19 13:11:50, David Hildenbrand wrote:
-> Let's factor out removing of memory block devices, which is only
-> necessary for memory added via add_memory() and friends that created
-> memory block devices. Remove the devices before calling
-> arch_remove_memory().
+On Thu, Jun 27, 2019 at 09:53:23PM +0200, Simon Sandström wrote:
+> Fixes issues found by checkpatch:
 > 
-> This finishes factoring out memory block device handling from
-> arch_add_memory() and arch_remove_memory().
-
-OK, this makes sense again. Just a nit. Calling find_memory_block_by_id
-for each memory block looks a bit suboptimal, especially when we are
-removing consequent physical memblocks. I have to confess that I do not
-know how expensive is the search and I also expect that there won't be
-that many memblocks in the removed range anyway as large setups have
-large memblocks.
-
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Andrew Banman <andrew.banman@hpe.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
-> Cc: Arun KS <arunks@codeaurora.org>
-> Cc: Mathieu Malaterre <malat@debian.org>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-
-Other than that looks good to me.
-Acked-by: Michal Hocko <mhocko@suse.com>
-
+> - "WARNING: braces {} are not necessary for single statement blocks"
+> - "WARNING: braces {} are not necessary for any arm of this statement"
+> 
+> Signed-off-by: Simon Sandström <simon@nikanor.nu>
 > ---
->  drivers/base/memory.c  | 37 ++++++++++++++++++-------------------
->  drivers/base/node.c    | 11 ++++++-----
->  include/linux/memory.h |  2 +-
->  include/linux/node.h   |  6 ++----
->  mm/memory_hotplug.c    |  5 +++--
->  5 files changed, 30 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 5a0370f0c506..f28efb0bf5c7 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -763,32 +763,31 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
->  	return ret;
->  }
->  
-> -void unregister_memory_section(struct mem_section *section)
-> +/*
-> + * Remove memory block devices for the given memory area. Start and size
-> + * have to be aligned to memory block granularity. Memory block devices
-> + * have to be offline.
-> + */
-> +void remove_memory_block_devices(unsigned long start, unsigned long size)
->  {
-> +	const int start_block_id = pfn_to_block_id(PFN_DOWN(start));
-> +	const int end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
->  	struct memory_block *mem;
-> +	int block_id;
->  
-> -	if (WARN_ON_ONCE(!present_section(section)))
-> +	if (WARN_ON_ONCE(!IS_ALIGNED(start, memory_block_size_bytes()) ||
-> +			 !IS_ALIGNED(size, memory_block_size_bytes())))
->  		return;
->  
->  	mutex_lock(&mem_sysfs_mutex);
-> -
-> -	/*
-> -	 * Some users of the memory hotplug do not want/need memblock to
-> -	 * track all sections. Skip over those.
-> -	 */
-> -	mem = find_memory_block(section);
-> -	if (!mem)
-> -		goto out_unlock;
-> -
-> -	unregister_mem_sect_under_nodes(mem, __section_nr(section));
-> -
-> -	mem->section_count--;
-> -	if (mem->section_count == 0)
-> +	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
-> +		mem = find_memory_block_by_id(block_id, NULL);
-> +		if (WARN_ON_ONCE(!mem))
-> +			continue;
-> +		mem->section_count = 0;
-> +		unregister_memory_block_under_nodes(mem);
->  		unregister_memory(mem);
-> -	else
-> -		put_device(&mem->dev);
-> -
-> -out_unlock:
-> +	}
->  	mutex_unlock(&mem_sysfs_mutex);
->  }
->  
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 8598fcbd2a17..04fdfa99b8bc 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -801,9 +801,10 @@ int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
->  	return 0;
->  }
->  
-> -/* unregister memory section under all nodes that it spans */
-> -int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
-> -				    unsigned long phys_index)
-> +/*
-> + * Unregister memory block device under all nodes that it spans.
-> + */
-> +int unregister_memory_block_under_nodes(struct memory_block *mem_blk)
->  {
->  	NODEMASK_ALLOC(nodemask_t, unlinked_nodes, GFP_KERNEL);
->  	unsigned long pfn, sect_start_pfn, sect_end_pfn;
-> @@ -816,8 +817,8 @@ int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
->  		return -ENOMEM;
->  	nodes_clear(*unlinked_nodes);
->  
-> -	sect_start_pfn = section_nr_to_pfn(phys_index);
-> -	sect_end_pfn = sect_start_pfn + PAGES_PER_SECTION - 1;
-> +	sect_start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
-> +	sect_end_pfn = section_nr_to_pfn(mem_blk->end_section_nr);
->  	for (pfn = sect_start_pfn; pfn <= sect_end_pfn; pfn++) {
->  		int nid;
->  
-> diff --git a/include/linux/memory.h b/include/linux/memory.h
-> index db3e8567f900..f26a5417ec5d 100644
-> --- a/include/linux/memory.h
-> +++ b/include/linux/memory.h
-> @@ -112,7 +112,7 @@ extern void unregister_memory_notifier(struct notifier_block *nb);
->  extern int register_memory_isolate_notifier(struct notifier_block *nb);
->  extern void unregister_memory_isolate_notifier(struct notifier_block *nb);
->  int create_memory_block_devices(unsigned long start, unsigned long size);
-> -extern void unregister_memory_section(struct mem_section *);
-> +void remove_memory_block_devices(unsigned long start, unsigned long size);
->  extern int memory_dev_init(void);
->  extern int memory_notify(unsigned long val, void *v);
->  extern int memory_isolate_notify(unsigned long val, void *v);
-> diff --git a/include/linux/node.h b/include/linux/node.h
-> index 1a557c589ecb..02a29e71b175 100644
-> --- a/include/linux/node.h
-> +++ b/include/linux/node.h
-> @@ -139,8 +139,7 @@ extern int register_cpu_under_node(unsigned int cpu, unsigned int nid);
->  extern int unregister_cpu_under_node(unsigned int cpu, unsigned int nid);
->  extern int register_mem_sect_under_node(struct memory_block *mem_blk,
->  						void *arg);
-> -extern int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
-> -					   unsigned long phys_index);
-> +extern int unregister_memory_block_under_nodes(struct memory_block *mem_blk);
->  
->  extern int register_memory_node_under_compute_node(unsigned int mem_nid,
->  						   unsigned int cpu_nid,
-> @@ -176,8 +175,7 @@ static inline int register_mem_sect_under_node(struct memory_block *mem_blk,
->  {
->  	return 0;
->  }
-> -static inline int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
-> -						  unsigned long phys_index)
-> +static inline int unregister_memory_block_under_nodes(struct memory_block *mem_blk)
->  {
->  	return 0;
->  }
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 9a92549ef23b..82136c5b4c5f 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -520,8 +520,6 @@ static void __remove_section(struct zone *zone, struct mem_section *ms,
->  	if (WARN_ON_ONCE(!valid_section(ms)))
->  		return;
->  
-> -	unregister_memory_section(ms);
-> -
->  	scn_nr = __section_nr(ms);
->  	start_pfn = section_nr_to_pfn((unsigned long)scn_nr);
->  	__remove_zone(zone, start_pfn);
-> @@ -1845,6 +1843,9 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
->  	memblock_free(start, size);
->  	memblock_remove(start, size);
->  
-> +	/* remove memory block devices before removing memory */
-> +	remove_memory_block_devices(start, size);
-> +
->  	arch_remove_memory(nid, start, size, NULL);
->  	__release_memory_resource(start, size);
->  
-> -- 
-> 2.20.1
-> 
+>  drivers/staging/kpc2000/kpc2000_spi.c | 39 ++++++++++-----------------
+>  1 file changed, 14 insertions(+), 25 deletions(-)
 
--- 
-Michal Hocko
-SUSE Labs
+Patch does not apply to my tree :(
+
+Please rebase it and resend.
+
+thanks,
+
+greg k-h
