@@ -2,150 +2,89 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC26C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9694BC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6427B20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:45:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="x/SdHBcY"
+	by mail.kernel.org (Postfix) with ESMTP id 7496C20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbfGAPpz (ORCPT
+        id S1729911AbfGAPq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:45:55 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38790 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727373AbfGAPpy (ORCPT
+        Mon, 1 Jul 2019 11:46:27 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46688 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727373AbfGAPq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:45:54 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61Fd1eX135390;
-        Mon, 1 Jul 2019 15:44:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=pYgOiYG9niz5w5j2Xs2uAj2RGhsP9dEqiFiqy+v2SHk=;
- b=x/SdHBcYO8s8zWcphUBtW0vaxMhmfi55Tc3O1uqVw5wFQoSV0TdcaQrd5DCa4/j3leVl
- afbReE/QG5U9d5RMDtBeMdXqUXH0ZjmvMBZR4Bqmxg/kAljEVFLfyeY/NtPkYHmHYr9X
- LYGxft84ZgeBGOpFpDLQVRFORBGkrIKz998fNMkSDSFhU9OkEimNW4ZMMNbmgLHWe6Wa
- H32awHJIcTvxMIApJV/pr3XFucA4iWiPO5eUtLjVkO8Vi1P6W9rEo/9vB6C/HmqfVy1z
- wSoSDGjT9hh0PbsVNlgPWgfY33Zl0N02nGKztDfgCPOv1W9YyXHHcQeRRazJE5zmpoPz vg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2te61ppf40-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Jul 2019 15:44:09 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61FcFES032310;
-        Mon, 1 Jul 2019 15:42:09 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 2tebbj8db7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 01 Jul 2019 15:42:09 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x61Fg9hp040678;
-        Mon, 1 Jul 2019 15:42:09 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2tebbj8dap-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Jul 2019 15:42:09 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x61Fg3SU026276;
-        Mon, 1 Jul 2019 15:42:04 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Jul 2019 08:42:02 -0700
-Date:   Mon, 1 Jul 2019 08:42:00 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, hch@infradead.org,
-        clm@fb.com, adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk,
-        jack@suse.com, dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org
-Cc:     reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: [PATCH v2 4/4] vfs: don't allow most setxattr to immutable files
-Message-ID: <20190701154200.GK1404256@magnolia>
-References: <156174687561.1557469.7505651950825460767.stgit@magnolia>
- <156174690758.1557469.9258105121276292687.stgit@magnolia>
+        Mon, 1 Jul 2019 11:46:27 -0400
+Received: by mail-qt1-f196.google.com with SMTP id h21so15098885qtn.13;
+        Mon, 01 Jul 2019 08:46:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IE22YG1kj16IknP7QlS/hcyZEqytvttQhTXFYfXjkWQ=;
+        b=JZv1F4YqJtPhAD7h1ykGuxlrCeOge9AiDu+iifDTSfkTBPL9kwDIlLEOaExrExZwrE
+         JSJs7s8+5EgzIoiK7UyTazIW9rW6WTBdlDRZnm3PE1p9km7iuK73hiR15701RUATuIEB
+         KLtiG7rtw/x5UzvWSDKdtIb0ewbmE9kLZnB5sECj6FK6WEwEvzChCIryBB4isI7npzOB
+         Zs/wNt83u6acDh3kESPeEsrcTRpaopbJmYIL/9QI9HwzPfGjNXrFLgp4F3fwiuiwRwJr
+         xqP+AcLYwRI+Gy7GYgUmqoBiiCtTmQQnBaTCoSATMY6XiXco0EzACgfIfgQb3aNIXOlE
+         MtYQ==
+X-Gm-Message-State: APjAAAXjPrtR7lylTVSlV0b2BJU3ezushxf5jFtDMigAO05eaWo9zkxp
+        3jBo074Q6J/gkR+gyU7RM6+ZFBatK1hbvRSufY8=
+X-Google-Smtp-Source: APXvYqzhz6wel8eAmEo0Rl5DHwP4U2CGItmP91pzq58M0NTwxUCzkZGOsPaq9nefB0EZ4xIpLiX+rlXeAW8kLRBehXg=
+X-Received: by 2002:ac8:5311:: with SMTP id t17mr20545556qtn.304.1561995986128;
+ Mon, 01 Jul 2019 08:46:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156174690758.1557469.9258105121276292687.stgit@magnolia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=991 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907010188
+References: <1561786601-19512-1-git-send-email-guoren@kernel.org>
+ <CAK8P3a0F5-wtJHbLvEwUXE8EnALMpQb5KeX4FK3S90Ce81oN-Q@mail.gmail.com> <CAJF2gTR7ooY=gxKW2zWK9MnuJ9YDm_1r6QTdJ=A=WqRDTuecRQ@mail.gmail.com>
+In-Reply-To: <CAJF2gTR7ooY=gxKW2zWK9MnuJ9YDm_1r6QTdJ=A=WqRDTuecRQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 1 Jul 2019 17:46:09 +0200
+Message-ID: <CAK8P3a1j+4u_xdP45rEX7H+m+ttd9AEjeL0ittRZjtKN5fApDw@mail.gmail.com>
+Subject: Re: [PATCH] csky: Improve abiv1 mem ops performance with glibc codes
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Mon, Jul 1, 2019 at 5:26 PM Guo Ren <guoren@kernel.org> wrote:
+> On Mon, Jul 1, 2019 at 10:52 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Sat, Jun 29, 2019 at 7:36 AM <guoren@kernel.org> wrote:
+> > >
+> > > From: Guo Ren <ren_guo@c-sky.com>
+> > >
+> > > These codes are copied from glibc/string directory, they are the generic
+> > > implementation for string operations. We may further optimize them with
+> > > assembly code in the future.
+> > >
+> > > In fact these code isn't tested enough for kernel, but we've tested them
+> > > on glibc and it seems good. We just trust them :)
+> >
+> > Are these files from the architecture independent portion of glibc or
+> > are they csky specific? If they are architecture independent, we might
+> > want to see if they make sense for other architectures as well, and
+> > add them to lib/ rather than arch/csky/lib/
+> They are just copied from glibc-2.28/string/*.c and they are generic.
+> OK, I'll try to add them to lib/.
 
-The chattr manpage has this to say about immutable files:
+Ok. Note that lib/string.c contains very basic versions of these already,
+so please see which of the functions you have actually make a
+difference in practice over those (if you haven't done that already).
 
-"A file with the 'i' attribute cannot be modified: it cannot be deleted
-or renamed, no link can be created to this file, most of the file's
-metadata can not be modified, and the file can not be opened in write
-mode."
+Otherwise you can probably follow the example of the libgcc functions
+in lib/ashldi3.c etc: add a Kconfig symbol like CONFIG_GENERIC_LIB_ASHLDI3
+for each function you had, put the glibc version into a new file, and allow
+architectures to select them individually, which in turn should
+replace the version from lib/string.c.
 
-However, we don't actually check the immutable flag in the setattr code,
-which means that we can update inode flags and project ids and extent
-size hints on supposedly immutable files.  Therefore, reject setflags
-and fssetxattr calls on an immutable file if the file is immutable and
-will remain that way.
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
-v2: use memcmp instead of open coding a bunch of checks
----
- fs/inode.c |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/fs/inode.c b/fs/inode.c
-index cf07378e5731..31f694e405fe 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -2214,6 +2214,14 @@ int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
- 	    !capable(CAP_LINUX_IMMUTABLE))
- 		return -EPERM;
- 
-+	/*
-+	 * We aren't allowed to change any other flags if the immutable flag is
-+	 * already set and is not being unset.
-+	 */
-+	if ((oldflags & FS_IMMUTABLE_FL) && (flags & FS_IMMUTABLE_FL) &&
-+	    oldflags != flags)
-+		return -EPERM;
-+
- 	/*
- 	 * Now that we're done checking the new flags, flush all pending IO and
- 	 * dirty mappings before setting S_IMMUTABLE on an inode via
-@@ -2284,6 +2292,15 @@ int vfs_ioc_fssetxattr_check(struct inode *inode, const struct fsxattr *old_fa,
- 	    !(S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode)))
- 		return -EINVAL;
- 
-+	/*
-+	 * We aren't allowed to change any fields if the immutable flag is
-+	 * already set and is not being unset.
-+	 */
-+	if ((old_fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
-+	    (fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
-+	    memcmp(fa, old_fa, offsetof(struct fsxattr, fsx_pad)))
-+		return -EPERM;
-+
- 	/* Extent size hints of zero turn off the flags. */
- 	if (fa->fsx_extsize == 0)
- 		fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
+       Arnd
