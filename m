@@ -2,135 +2,211 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC369C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9A1C06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC7FD20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F255B208CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:28:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lrgYOWob";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SthwBwae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbfGAO2O (ORCPT
+        id S1729691AbfGAO2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:28:14 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:53980 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728171AbfGAO2N (ORCPT
+        Mon, 1 Jul 2019 10:28:50 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43026 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728145AbfGAO2t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:28:13 -0400
-Received: from ramsan ([84.194.98.4])
-        by michel.telenet-ops.be with bizsmtp
-        id XSUA2000B05gfCL06SUAF7; Mon, 01 Jul 2019 16:28:10 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hhxHu-00089A-DN; Mon, 01 Jul 2019 16:28:10 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hhxHu-0006av-CH; Mon, 01 Jul 2019 16:28:10 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] gpiolib: Clarify use of non-sleeping functions
-Date:   Mon,  1 Jul 2019 16:28:09 +0200
-Message-Id: <20190701142809.25308-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Mon, 1 Jul 2019 10:28:49 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E173B6081E; Mon,  1 Jul 2019 14:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561991327;
+        bh=u0R2SfGKnaTI/lQP8v2+57GTBRdtXGY/4LgRzV/KLso=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=lrgYOWobMtniBi1gRY3XX4xCP/3y5QrW9TjwxbmT6+6mmAvVzHms16vCvBD+LvjGZ
+         m/7hzUw/jlO37dmm6frFNQ1PJOcQyNw66MmRkjcpFIRwSZohUPDTdQrQPcLs5fg0oj
+         P4iDNyzZKz6XtnqJG3TYAFzMA4qHdOqWxPdNkCt0=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D8DE5601D7;
+        Mon,  1 Jul 2019 14:28:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561991326;
+        bh=u0R2SfGKnaTI/lQP8v2+57GTBRdtXGY/4LgRzV/KLso=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SthwBwaeknA166KVZ2VvbXRXvgZYL2ZBCrHJFMYlBnNdrPu9rJwGZbvdTVr5Ry5GG
+         2hZsE0rBIHTmGfSBNbM29+qV39K/wY6zGJc5z8kT+wIwXgHlUWmRSrXzGqPGdOgDqP
+         AMusXqgHjMVe5jS+0F9Wc0GNwUl0GSGP+Y5hl3qs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D8DE5601D7
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH 1/4] dt-bindings: chosen: document panel-id binding
+To:     Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190630203614.5290-1-robdclark@gmail.com>
+ <20190630203614.5290-2-robdclark@gmail.com>
+ <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <a8af7d1d-f0f4-ae5c-b06b-5a8ec1debd7e@codeaurora.org>
+Date:   Mon, 1 Jul 2019 08:28:45 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Obviously functions that are safe to be called from atomic contexts, can
-be called from non-atomic contexts, too.
+On 7/1/2019 8:03 AM, Rob Herring wrote:
+> On Sun, Jun 30, 2019 at 2:36 PM Rob Clark <robdclark@gmail.com> wrote:
+>>
+>> From: Rob Clark <robdclark@chromium.org>
+>>
+>> The panel-id property in chosen can be used to communicate which panel,
+>> of multiple possibilities, is installed.
+>>
+>> Signed-off-by: Rob Clark <robdclark@chromium.org>
+>> ---
+>>   Documentation/devicetree/bindings/chosen.txt | 69 ++++++++++++++++++++
+>>   1 file changed, 69 insertions(+)
+> 
+> I need to update this file to say it's moved to the schema repository...
+> 
+> But I don't think that will matter...
+> 
+>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+>> index 45e79172a646..d502e6489b8b 100644
+>> --- a/Documentation/devicetree/bindings/chosen.txt
+>> +++ b/Documentation/devicetree/bindings/chosen.txt
+>> @@ -68,6 +68,75 @@ on PowerPC "stdout" if "stdout-path" is not found.  However, the
+>>   "linux,stdout-path" and "stdout" properties are deprecated. New platforms
+>>   should only use the "stdout-path" property.
+>>
+>> +panel-id
+>> +--------
+>> +
+>> +For devices that have multiple possible display panels (multi-sourcing the
+>> +display panels is common on laptops, phones, tablets), this allows the
+>> +bootloader to communicate which panel is installed, e.g.
+> 
+> How does the bootloader figure out which panel? Why can't the kernel
+> do the same thing?
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Do I need more coffee?
----
- drivers/gpio/gpiolib.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Its platform specific.  In the devices that Rob Clark seems interested
+in, there are multiple mechanisms in place - read a gpio, enable the
+DSI and send a specific command to the panel controller asking for its
+panel id, or read some efuses.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index a3fb9302e94eb310..906c9763b08511d8 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3031,7 +3031,7 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
-  * Return the GPIO's raw value, i.e. the value of the physical line disregarding
-  * its ACTIVE_LOW status, or negative errno on failure.
-  *
-- * This function should be called from contexts where we cannot sleep, and will
-+ * This function can be called from contexts where we cannot sleep, and will
-  * complain if the GPIO chip functions potentially sleep.
-  */
- int gpiod_get_raw_value(const struct gpio_desc *desc)
-@@ -3050,7 +3050,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_raw_value);
-  * Return the GPIO's logical value, i.e. taking the ACTIVE_LOW status into
-  * account, or negative errno on failure.
-  *
-- * This function should be called from contexts where we cannot sleep, and will
-+ * This function can be called from contexts where we cannot sleep, and will
-  * complain if the GPIO chip functions potentially sleep.
-  */
- int gpiod_get_value(const struct gpio_desc *desc)
-@@ -3083,7 +3083,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_value);
-  * without regard for their ACTIVE_LOW status.  Return 0 in case of success,
-  * else an error code.
-  *
-- * This function should be called from contexts where we cannot sleep,
-+ * This function can be called from contexts where we cannot sleep,
-  * and it will complain if the GPIO chip functions potentially sleep.
-  */
- int gpiod_get_raw_array_value(unsigned int array_size,
-@@ -3109,7 +3109,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_raw_array_value);
-  * Read the logical values of the GPIOs, i.e. taking their ACTIVE_LOW status
-  * into account.  Return 0 in case of success, else an error code.
-  *
-- * This function should be called from contexts where we cannot sleep,
-+ * This function can be called from contexts where we cannot sleep,
-  * and it will complain if the GPIO chip functions potentially sleep.
-  */
- int gpiod_get_array_value(unsigned int array_size,
-@@ -3323,7 +3323,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
-  * Set the raw value of the GPIO, i.e. the value of its physical line without
-  * regard for its ACTIVE_LOW status.
-  *
-- * This function should be called from contexts where we cannot sleep, and will
-+ * This function can be called from contexts where we cannot sleep, and will
-  * complain if the GPIO chip functions potentially sleep.
-  */
- void gpiod_set_raw_value(struct gpio_desc *desc, int value)
-@@ -3364,7 +3364,7 @@ static void gpiod_set_value_nocheck(struct gpio_desc *desc, int value)
-  * Set the logical value of the GPIO, i.e. taking its ACTIVE_LOW,
-  * OPEN_DRAIN and OPEN_SOURCE flags into account.
-  *
-- * This function should be called from contexts where we cannot sleep, and will
-+ * This function can be called from contexts where we cannot sleep, and will
-  * complain if the GPIO chip functions potentially sleep.
-  */
- void gpiod_set_value(struct gpio_desc *desc, int value)
-@@ -3386,7 +3386,7 @@ EXPORT_SYMBOL_GPL(gpiod_set_value);
-  * Set the raw values of the GPIOs, i.e. the values of the physical lines
-  * without regard for their ACTIVE_LOW status.
-  *
-- * This function should be called from contexts where we cannot sleep, and will
-+ * This function can be called from contexts where we cannot sleep, and will
-  * complain if the GPIO chip functions potentially sleep.
-  */
- int gpiod_set_raw_array_value(unsigned int array_size,
-@@ -3411,7 +3411,7 @@ EXPORT_SYMBOL_GPL(gpiod_set_raw_array_value);
-  * Set the logical values of the GPIOs, i.e. taking their ACTIVE_LOW status
-  * into account.
-  *
-- * This function should be called from contexts where we cannot sleep, and will
-+ * This function can be called from contexts where we cannot sleep, and will
-  * complain if the GPIO chip functions potentially sleep.
-  */
- int gpiod_set_array_value(unsigned int array_size,
+The efuses may not be accessible by Linux.
+
+The DSI solution is problematic because it causes a chicken and egg
+situation where linux needs the DT to probe the DSI driver to query
+the panel, in order to edit the DT to probe DSI/panel.
+
+In the systems Rob Clark is interested in, the FW already provides a
+specific EFI variable with the panel id encoded in it for HLOS to use
+(although this is broken on some of the devices), but this is a
+specific vendor's solution.
+
+The FW/bootloader has probably already figured out the panel details
+and brought up the display for a boot splash, bios menu, etc.  I'm not
+sure it makes a lot of sense to define N mechanisms for linux to
+figure out the same across every platform/vendor.
+
+> 
+>> +
+>> +/ {
+>> +       chosen {
+>> +               panel-id = <0xc4>;
+>> +       };
+>> +
+>> +       ivo_panel {
+>> +               compatible = "ivo,m133nwf4-r0";
+>> +               power-supply = <&vlcm_3v3>;
+>> +               no-hpd;
+>> +
+>> +               ports {
+>> +                       port {
+>> +                               ivo_panel_in_edp: endpoint {
+>> +                                       remote-endpoint = <&sn65dsi86_out_ivo>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       boe_panel {
+>> +               compatible = "boe,nv133fhm-n61";
+> 
+> Both panels are going to probe. So the bootloader needs to disable the
+> not populated panel setting 'status' (or delete the node). If you do
+> that, do you even need 'panel-id'?
+> 
+>> +               power-supply = <&vlcm_3v3>;
+>> +               no-hpd;
+>> +
+>> +               ports {
+>> +                       port {
+>> +                               boe_panel_in_edp: endpoint {
+>> +                                       remote-endpoint = <&sn65dsi86_out_boe>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       display_or_bridge_device {
+>> +
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       ...
+>> +
+>> +                       port@0 {
+>> +                               #address-cells = <1>;
+>> +                               #size-cells = <0>;
+>> +                               reg = <0>;
+>> +
+>> +                               endpoint@c4 {
+>> +                                       reg = <0xc4>;
+> 
+> What does this number represent? It is supposed to be defined by the
+> display_or_bridge_device, not a specific panel.
+
+Its the specific FW/bootloader defined panel id, that matches the
+above defined panel-id property.
+
+> 
+> We also need to consider how the DSI case with panels as children of
+> the DSI controller would work and how this would work with multiple
+> displays each having multiple panel options.
+> 
+> Rob
+> 
+
+
 -- 
-2.17.1
-
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
