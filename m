@@ -2,144 +2,119 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C055EC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318A1C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4D421479
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0603A21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:50:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="k5sA5zL3"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="deNzpoVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfGAWnd (ORCPT
+        id S1726688AbfGAWuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 18:43:33 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40029 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfGAWnd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 18:43:33 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e8so15151556otl.7;
-        Mon, 01 Jul 2019 15:43:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H+FNw+NOlut6naomTH3Jaosx9D2x6bZue6jd4dsjEec=;
-        b=k5sA5zL3ucaqPtCjjSF7aojXfe6ajpmsNM4fd0lVnKYEcKKoQPJe21C/a1CyVBdraN
-         db2pL5M85fQLAqZkff/n44BrT5YkOLFqfqDCw01JOB6Lukm2BAKlUboh1LgM3qvCVnTq
-         1C7pR8xk76zE0Pq/BrZmMTqC5UH6i2yJP3f1Pa/ow4t5NjrNQA3uhVxeFK7eAgDaryaY
-         V0UrQfn2yn9hISC34eOIgM7p/fRy2LeeaspKBC1mFCZ91lqQqPPzgZjyRlSRst1hkcI8
-         EVbUDjlR+DBjMb+lZZ/qOqJsra1/JKILag2e/Be5yBF+DbasnaBShlfMRYhN8L6mB04y
-         MVpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H+FNw+NOlut6naomTH3Jaosx9D2x6bZue6jd4dsjEec=;
-        b=H19Bs8nh/jok4t5TIRPUI+UOhpAUCcavPEukYpd6KTjEfoyGFEEJzQjuLrpUaZlfZH
-         U/+GY41g8ee00xgotg/9P5UFmF8hptWgg/hcrBX/SPjTPlm2AQy/VD3Dwyzn1B5PnjIs
-         Rfw8TWGXteDqpcwg2yRYXxmOgh0gIJvG3aw8vocJ/UAZVXSBuHkuxOocIM8ju4t6A+Yj
-         0VG1SPCceojtM+W7FO6Dlz2prc0YTDIPIHpzVbfOVw3ClNSWdCOpojpl/VGdZFWobZin
-         be+JgZpxDqalSNx9mmR7cZzi9uVIyAOBS+R/e/KKdWGV4QUyDw53VH2ztBzWT+JjMst2
-         Tafg==
-X-Gm-Message-State: APjAAAVdqKDWSY2FWpavj6MFhiEUlh4+dd0jfqmIkymI74ygcUplTzdr
-        vRSoWShQsCB9NFun3GxP0ybJcmPKSG1rXRYr3sA=
-X-Google-Smtp-Source: APXvYqwmovHM5voAuTylzInGXDPJ/PcyDtIGDZIX7k36UfXqOEDyHSTNd1MplXuOwNAuC5VUWb/c/0g8bRoj7Iou7SM=
-X-Received: by 2002:a9d:23ca:: with SMTP id t68mr21564574otb.98.1562021012050;
- Mon, 01 Jul 2019 15:43:32 -0700 (PDT)
+        Mon, 1 Jul 2019 18:50:00 -0400
+Received: from mail-eopbgr40085.outbound.protection.outlook.com ([40.107.4.85]:20965
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726362AbfGAWuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 18:50:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vxr9ve+pG365E35Pap88t0tzxc0hVMCk2wGueDeElqs=;
+ b=deNzpoVEKum3LKsJN2IlwfQ8aIMiO3ubcLpjpHG18+/9a2MG08pM6+jDdo+PI+4ZwIlJoyf9sqagut9FG7RUAIz7kygPuf/pGmRI0ixuIr2+lqFLytMCkIN3XTjukawAJ3uELfzYdAqegSSm+CBmepWmF6lGUcY1n8wgjwG1eAs=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6000.eurprd05.prod.outlook.com (20.178.127.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Mon, 1 Jul 2019 22:49:54 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
+ 22:49:54 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     wangxi <wangxi11@huawei.com>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Doug Ledford <dledford@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lijun Ou <oulijun@huawei.com>
+Subject: Re: linux-next: build failure after merge of the rdma tree
+Thread-Topic: linux-next: build failure after merge of the rdma tree
+Thread-Index: AQHVL8OActCQCeCYN0akJ9eSFAjYnKa1ZOUAgAD6KAA=
+Date:   Mon, 1 Jul 2019 22:49:54 +0000
+Message-ID: <20190701224950.GA23718@mellanox.com>
+References: <20190701141431.5cba95c3@canb.auug.org.au>
+ <bbd5fbc9-2dac-ae1b-7cae-68790b6ea878@huawei.com>
+In-Reply-To: <bbd5fbc9-2dac-ae1b-7cae-68790b6ea878@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BL0PR0102CA0020.prod.exchangelabs.com
+ (2603:10b6:207:18::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0386a983-3d83-4f11-753e-08d6fe766ed3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6000;
+x-ms-traffictypediagnostic: VI1PR05MB6000:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <VI1PR05MB600015DFAA12D6EBFFC53C8BCFF90@VI1PR05MB6000.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2276;
+x-forefront-prvs: 00851CA28B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(376002)(396003)(366004)(199004)(189003)(256004)(4326008)(81156014)(6506007)(8676002)(81166006)(25786009)(7736002)(478600001)(229853002)(102836004)(66946007)(71200400001)(5660300002)(386003)(6486002)(446003)(71190400001)(73956011)(305945005)(316002)(33656002)(76176011)(26005)(186003)(1076003)(54906003)(64756008)(66446008)(66476007)(2906002)(8936002)(66556008)(6246003)(6306002)(4744005)(11346002)(486006)(53936002)(36756003)(2616005)(6512007)(52116002)(99286004)(966005)(6436002)(6916009)(14454004)(66066001)(3846002)(68736007)(6116002)(476003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6000;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: SMrKB2lTma+NJAhViJPHup9cnr3v9+iGObH8cAUDaXoQADbHUXM/8ExXDfRze1E/yZ+gKO/NtbbdpBwNe6tcgY9JoVh7onjoK71Bc6ekEdhTCe6XfH6ejn5o1vS/1mL2dO6b0YKkJ12Tlt/TD7gf3hHwK9NHSnCrcI8/V3By7ruKTDLgbvfVHzdwdv6X8W8hol7wF4RZ/wSIloh+EKdh9e40f1rPamEFX9wIyPhUe2CDCf2q/+QAMSCEB+GVotzOQQ9CSrgXN4IMALzJkfygOWX1zB7FfiaXQQ5eNoL7/T4JtmxkgDIvO/CHoQdbQTscsD0X9qZgQn/6jaY17WGn678ANjP3fPw9aR91NxCcYQJgj+UMJxlmrlXkBSwlngVfg4q1MSrFEl8/et7w3SBXZIqi0mLHqhWA5cC4nLb8yQo=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DA77DEFE19AE89468A08F9AD106F07B2@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190617165836.4673-1-colin.king@canonical.com>
- <20190619051308.23582-1-martin.blumenstingl@googlemail.com>
- <92f9e5a6-d2a2-6bf2-ff8a-2430fe977f93@canonical.com> <CAFBinCDmYVPDMcwAAYhMfxxuTsG=xunduN58_8e20zE_Mhmb7Q@mail.gmail.com>
- <CAFBinCC-LLpfXQRFcKBbUpCfKc0S9Xtt60QrhEThsOFV-T7vFw@mail.gmail.com>
- <c46d2d17-c35b-46f0-0674-0c55bea3a272@canonical.com> <CAFBinCBk5aPVE+vq5px3QKS1T_R=WGXXxEJMC9X676KGvi9jdg@mail.gmail.com>
- <26646ff1-059f-fb2d-e05d-43009aeb2150@canonical.com> <CAFBinCAx5qrPK1z68bF-tGKpJQfKLnee65qBOxMS4nj8t381+Q@mail.gmail.com>
-In-Reply-To: <CAFBinCAx5qrPK1z68bF-tGKpJQfKLnee65qBOxMS4nj8t381+Q@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 2 Jul 2019 00:43:21 +0200
-Message-ID: <CAFBinCCpJLSQiUeqpQTKQDgjy7-ROgjYa913Xe1My_oc6miTzw@mail.gmail.com>
-Subject: Re: [PATCH] net: stmmac: add sanity check to device_property_read_u32_array
- call
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
-        kernel-janitors@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
-        peppe.cavallaro@st.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0386a983-3d83-4f11-753e-08d6fe766ed3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 22:49:54.1010
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 6:05 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Colin,
->
-> On Fri, Jun 28, 2019 at 10:32 AM Colin Ian King
-> <colin.king@canonical.com> wrote:
-> >
-> > On 28/06/2019 05:15, Martin Blumenstingl wrote:
-> > > On Tue, Jun 25, 2019 at 9:58 AM Colin Ian King <colin.king@canonical.com> wrote:
-> > >>
-> > >> On 25/06/2019 05:44, Martin Blumenstingl wrote:
-> > >>> Hi Colin,
-> > >>>
-> > >>> On Thu, Jun 20, 2019 at 3:34 AM Martin Blumenstingl
-> > >>> <martin.blumenstingl@googlemail.com> wrote:
-> > >>>>
-> > >>>> Hi Colin,
-> > >>>>
-> > >>>> On Wed, Jun 19, 2019 at 8:55 AM Colin Ian King <colin.king@canonical.com> wrote:
-> > >>>>>
-> > >>>>> On 19/06/2019 06:13, Martin Blumenstingl wrote:
-> > >>>>>> Hi Colin,
-> > >>>>>>
-> > >>>>>>> Currently the call to device_property_read_u32_array is not error checked
-> > >>>>>>> leading to potential garbage values in the delays array that are then used
-> > >>>>>>> in msleep delays.  Add a sanity check to the property fetching.
-> > >>>>>>>
-> > >>>>>>> Addresses-Coverity: ("Uninitialized scalar variable")
-> > >>>>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > >>>>>> I have also sent a patch [0] to fix initialize the array.
-> > >>>>>> can you please look at my patch so we can work out which one to use?
-> > >>>>>>
-> > >>>>>> my concern is that the "snps,reset-delays-us" property is optional,
-> > >>>>>> the current dt-bindings documentation states that it's a required
-> > >>>>>> property. in reality it isn't, there are boards (two examples are
-> > >>>>>> mentioned in my patch: [0]) without it.
-> > >>>>>>
-> > >>>>>> so I believe that the resulting behavior has to be:
-> > >>>>>> 1. don't delay if this property is missing (instead of delaying for
-> > >>>>>>    <garbage value> ms)
-> > >>>>>> 2. don't error out if this property is missing
-> > >>>>>>
-> > >>>>>> your patch covers #1, can you please check whether #2 is also covered?
-> > >>>>>> I tested case #2 when submitting my patch and it worked fine (even
-> > >>>>>> though I could not reproduce the garbage values which are being read
-> > >>>>>> on some boards)
-> > >>> in the meantime I have tested your patch.
-> > >>> when I don't set the "snps,reset-delays-us" property then I get the
-> > >>> following error:
-> > >>>   invalid property snps,reset-delays-us
-> > >>>
-> > >>> my patch has landed in the meantime: [0]
-> > >>> how should we proceed with your patch?
-> >
-> > Your fix is good, so I think we should just drop/forget about my fix.
-> thank you for looking at the situation
->
-> as far I understand the -net/-net-next tree all commits are immutable
-> so if we want to remove your patch we need to send a revert
-> do you want me to do that (I can do it on Monday) or will you take care of that?
-I just sent the patch: [0]
+On Mon, Jul 01, 2019 at 03:54:30PM +0800, wangxi wrote:
+> > Presumably caused by commit
+> >=20
+> >   e9816ddf2a33 ("RDMA/hns: Cleanup unnecessary exported symbols")
+>=20
+> I have confirmed the latest code in
+> https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git.  I
+> found that the changes to Makefile and Kconfig in the original patch
+> have been lost.
 
+What does that mean?
 
-[0] https://patchwork.ozlabs.org/patch/1125686/
+Commit e9816ddf2a33f3afdf3dfc35c21aafad389ee482 looks the same as=20
+https://patchwork.kernel.org/patch/11003547/
+
+To me
+
+Please send a fixup patch.
+
+This looks wrong:
+
+obj-$(CONFIG_INFINIBAND_HNS) +=3D hns-roce-hw-v1.o $(hns-roce-objs)
+
+Jason
