@@ -2,164 +2,115 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C010C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FFDC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A176208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B817C20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfGAIHu (ORCPT
+        id S1727700AbfGAIKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:07:50 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:55576 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726402AbfGAIHt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:07:49 -0400
-X-UUID: 45e0ed03ee754ba388e3c4726bc25420-20190701
-X-UUID: 45e0ed03ee754ba388e3c4726bc25420-20190701
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 633325689; Mon, 01 Jul 2019 16:07:28 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 1 Jul 2019 16:07:26 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 1 Jul 2019 16:07:26 +0800
-Message-ID: <1561968446.3524.1.camel@mtksdaap41>
-Subject: Re: [PATCH v10 11/12] soc: mediatek: cmdq: add
- cmdq_dev_get_client_reg function
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "YT Shen" <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>
-Date:   Mon, 1 Jul 2019 16:07:26 +0800
-In-Reply-To: <20190701074842.15401-12-bibby.hsieh@mediatek.com>
-References: <20190701074842.15401-1-bibby.hsieh@mediatek.com>
-         <20190701074842.15401-12-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 1 Jul 2019 04:10:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37372 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727138AbfGAIKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 04:10:22 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7251C307D90F;
+        Mon,  1 Jul 2019 08:10:21 +0000 (UTC)
+Received: from gondolin (ovpn-117-220.ams2.redhat.com [10.36.117.220])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 808357D580;
+        Mon,  1 Jul 2019 08:10:13 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 10:10:10 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Kirti Wankhede <kwankhede@nvidia.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mdev: Send uevents around parent device registration
+Message-ID: <20190701101010.7df050a2.cohuck@redhat.com>
+In-Reply-To: <107cbedf-6c66-a666-d26a-5842d8c24e83@nvidia.com>
+References: <156155924767.11505.11457229921502145577.stgit@gimli.home>
+        <1ea5c171-cd42-1c10-966e-1b82a27351d9@nvidia.com>
+        <20190626120551.788fa5ed@x1.home>
+        <a6c2ec9e-b949-4346-13bc-4d7f9c35ea8b@nvidia.com>
+        <20190627102107.3c7715d9.cohuck@redhat.com>
+        <107cbedf-6c66-a666-d26a-5842d8c24e83@nvidia.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-MTK:  N
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 01 Jul 2019 08:10:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bibby:
+On Thu, 27 Jun 2019 19:42:32 +0530
+Kirti Wankhede <kwankhede@nvidia.com> wrote:
 
-On Mon, 2019-07-01 at 15:48 +0800, Bibby Hsieh wrote:
-> GCE cannot know the register base address, this function
-> can help cmdq client to get the cmdq_client_reg structure.
+> On 6/27/2019 1:51 PM, Cornelia Huck wrote:
+> > On Thu, 27 Jun 2019 00:33:59 +0530
+> > Kirti Wankhede <kwankhede@nvidia.com> wrote:
+> >   
+> >> On 6/26/2019 11:35 PM, Alex Williamson wrote:  
+> >>> On Wed, 26 Jun 2019 23:23:00 +0530
+> >>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
+> >>>     
+> >>>> On 6/26/2019 7:57 PM, Alex Williamson wrote:    
+> >>>>> This allows udev to trigger rules when a parent device is registered
+> >>>>> or unregistered from mdev.
+> >>>>>
+> >>>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> >>>>> ---
+> >>>>>  drivers/vfio/mdev/mdev_core.c |   10 ++++++++--
+> >>>>>  1 file changed, 8 insertions(+), 2 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> >>>>> index ae23151442cb..ecec2a3b13cb 100644
+> >>>>> --- a/drivers/vfio/mdev/mdev_core.c
+> >>>>> +++ b/drivers/vfio/mdev/mdev_core.c
+> >>>>> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+> >>>>>  {
+> >>>>>  	int ret;
+> >>>>>  	struct mdev_parent *parent;
+> >>>>> +	char *env_string = "MDEV_STATE=registered";
+> >>>>> +	char *envp[] = { env_string, NULL };
+> >>>>>  
+> >>>>>  	/* check for mandatory ops */
+> >>>>>  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
+> >>>>> @@ -196,7 +198,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+> >>>>>  	list_add(&parent->next, &parent_list);
+> >>>>>  	mutex_unlock(&parent_list_lock);
+> >>>>>  
+> >>>>> -	dev_info(dev, "MDEV: Registered\n");
+> >>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+> >>>>> +      
+> >>>>
+> >>>> Its good to have udev event, but don't remove debug print from dmesg.
+> >>>> Same for unregister.    
+> >>>
+> >>> Who consumes these?  They seem noisy.  Thanks,
+> >>>     
+> >>
+> >> I don't think its noisy, its more of logging purpose. This is seen in
+> >> kernel log only when physical device is registered to mdev.  
+> > 
+> > Yes; but why do you want to log success? If you need to log it
+> > somewhere, wouldn't a trace event be a much better choice?
+> >   
 > 
+> Trace events are not always collected in production environment, there
+> kernel log helps.
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 28 ++++++++++++++++++++++++++
->  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
->  2 files changed, 49 insertions(+)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 70ad4d806fac..ad52ac3ccfbb 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -27,6 +27,34 @@ struct cmdq_instruction {
->  	u8 op;
->  };
->  
-> +int cmdq_dev_get_client_reg(struct device *dev,
-> +			    struct cmdq_client_reg *client_reg, int idx)
-> +{
-> +	struct of_phandle_args spec;
-> +	int err;
-> +
-> +	if (!client_reg)
-> +		return -ENOENT;
-> +
-> +	err = of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
-> +					 "#subsys-cells", idx, &spec);
-> +	if (err < 0) {
-> +		dev_err(dev,
-> +			"error %d can't parse gce-client-reg property (%d)",
-> +			err, idx);
-> +
-> +		return err;
-> +	}
-> +
-> +	client_reg->subsys = spec.args[0];
-> +	client_reg->offset = spec.args[1];
-> +	client_reg->size = spec.args[2];
-> +	of_node_put(spec.np);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index a345870a6d10..be402c4c740e 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -15,6 +15,12 @@
->  
->  struct cmdq_pkt;
->  
-> +struct cmdq_client_reg {
-> +	u8 subsys;
-> +	u16 offset;
-> +	u16 size;
-> +};
-> +
->  struct cmdq_client {
->  	spinlock_t lock;
->  	u32 pkt_cnt;
-> @@ -142,4 +148,19 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
->   */
->  int cmdq_pkt_flush(struct cmdq_pkt *pkt);
->  
-> +/**
-> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
-> + *			       node of CMDQ client
-> + * @dev:	device of CMDQ mailbox clienti
-> + * @client_reg: CMDQ client reg pointer
-> + * @idx:	the index of desired reg
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + *
-> + * Help CMDQ client pasing the cmdq client reg
-> + * from the device node of CMDQ client.
-> + */
-> +int cmdq_dev_get_client_reg(struct device *dev,
-> +			    struct cmdq_client_reg *client_reg, int idx);
-> +
->  #endif	/* __MTK_CMDQ_H__ */
-
-
+I'm with you for *errors*, but I'm not sure you should rely on
+*success* messages, though. If you want to be able to figure out the
+sequence of registering etc. in all cases, I think it makes more sense
+to invest in an infrastructure like tracing and make sure that is it
+turned on for any system that matters.
