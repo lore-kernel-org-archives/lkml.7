@@ -2,105 +2,76 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459F4C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B2EC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6F12064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:52:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tKAdlaBk"
+	by mail.kernel.org (Postfix) with ESMTP id A39E72064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbfGAOwG (ORCPT
+        id S1729886AbfGAOwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:52:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47448 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbfGAOwF (ORCPT
+        Mon, 1 Jul 2019 10:52:47 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35560 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbfGAOwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:52:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=iNgGMHAOMdwbYrGUW9dUANMTp/OnqfmLFCUXKRGNhqU=; b=tKAdlaBkc6+ZhWNkkzk5/6n+v
-        9FLtdiXQhfQnlRJPwhhhuN7r6QAfd7K2X5s5fBgSViAS+piJS1JIqKLf5tSXkUX7FiFrdWYlm9lJj
-        n3HotnqonJghfRMa66zYF+c+C7dhQ9LdhW2e6HSNiiYicixA9R9pBedgTX+fkOdHoXGm/GCUxVzAp
-        QoR1IcodhQcJLz8OwyX7ucYFio2hkDTxx9SilsZ+OYRaq1W+3vt3E5/K8meT3t3JW7Zf8Q8YtxMzO
-        1/eSFB0FTnl950+jA4eE2B+XQW27I0BXn10RSPUY+W144d/BPUjMMLME8n2VoMPHixcfv0MJvtVUs
-        rf9M2wc9Q==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhxf1-0008LD-9H; Mon, 01 Jul 2019 14:52:03 +0000
-Subject: Re: [PATCH 2/6] Adjust watch_queue documentation to mention mount and
- superblock watches. [ver #5]
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <7a288c2c-11a1-87df-9550-b247d6ce3010@infradead.org>
- <156173701358.15650.8735203424342507015.stgit@warthog.procyon.org.uk>
- <156173703546.15650.14319137940607993268.stgit@warthog.procyon.org.uk>
- <8212.1561971170@warthog.procyon.org.uk>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <90d07cf5-5ba4-1fb6-72b3-f120423a7726@infradead.org>
-Date:   Mon, 1 Jul 2019 07:52:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 1 Jul 2019 10:52:46 -0400
+Received: by mail-qk1-f193.google.com with SMTP id l128so11201955qke.2;
+        Mon, 01 Jul 2019 07:52:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b8vmjDkKg4IO+8ZBKSp4zM+NgMMD++q8FkxpBsbCpHA=;
+        b=j4xH4CAu5xGO+AZyyrmksvTACmb22FpmkabHdf7ctqbJHHH0MyxfatqxIIwO8RPDjw
+         QzeDTDeLpFiQkUmQKIB2M6+AiTsxPsrMFrQ+UcD84Rw5EZY/o53H430Z2Osm5+JuSMVI
+         C29IIO9CRaJEpRPzzdnrNl43TfCJk+4yIfI8vY2SIe7B4HFzNkNs2o33WxKGYvURZumz
+         /8IjicnRpl4prtP01P1qXCrPYkDb0J08Thg6K8aLIklQ4w+ynqd6CBgaIEOdBwbV/uih
+         qr+kLKRR7lfe4lgtj26zWoUlbqEq2B4xWZgojcCss8VNJOekub+Xuql8VLz6yE/HHwzb
+         wlJQ==
+X-Gm-Message-State: APjAAAXWRmkP3TD+pPiACC/Gi4DrfGcqJSxHinz6YOmdPX6r4yczxnn0
+        4WrN/Z9nDbDu/wwGixyqlAq/4LHDF1y7YhAjnuoAUOtQ
+X-Google-Smtp-Source: APXvYqyiqLQH0FwzeWVQkplQlVrAvIzjMLfIwmR9uTToLvNIvv3bXEo3v/9IswaUESv3fV1Bm2DVGDnlusTREN9Aujo=
+X-Received: by 2002:a37:ad12:: with SMTP id f18mr20637160qkm.3.1561992765583;
+ Mon, 01 Jul 2019 07:52:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8212.1561971170@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1561786601-19512-1-git-send-email-guoren@kernel.org>
+In-Reply-To: <1561786601-19512-1-git-send-email-guoren@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 1 Jul 2019 16:52:29 +0200
+Message-ID: <CAK8P3a0F5-wtJHbLvEwUXE8EnALMpQb5KeX4FK3S90Ce81oN-Q@mail.gmail.com>
+Subject: Re: [PATCH] csky: Improve abiv1 mem ops performance with glibc codes
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/19 1:52 AM, David Howells wrote:
-> Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
->> I'm having a little trouble parsing that sentence.
->> Could you clarify it or maybe rewrite/modify it?
->> Thanks.
-> 
-> How about:
-> 
->   * ``info_filter`` and ``info_mask`` act as a filter on the info field of the
->     notification record.  The notification is only written into the buffer if::
-> 
-> 	(watch.info & info_mask) == info_filter
-> 
->     This could be used, for example, to ignore events that are not exactly on
->     the watched point in a mount tree by specifying NOTIFY_MOUNT_IN_SUBTREE
->     must not be set, e.g.::
-> 
-> 	{
-> 		.type = WATCH_TYPE_MOUNT_NOTIFY,
-> 		.info_filter = 0,
-> 		.info_mask = NOTIFY_MOUNT_IN_SUBTREE,
-> 		.subtype_filter = ...,
-> 	}
-> 
->     as an event would be only permissible with this filter if::
-> 
->     	(watch.info & NOTIFY_MOUNT_IN_SUBTREE) == 0
-> 
-> David
-> 
+On Sat, Jun 29, 2019 at 7:36 AM <guoren@kernel.org> wrote:
+>
+> From: Guo Ren <ren_guo@c-sky.com>
+>
+> These codes are copied from glibc/string directory, they are the generic
+> implementation for string operations. We may further optimize them with
+> assembly code in the future.
+>
+> In fact these code isn't tested enough for kernel, but we've tested them
+> on glibc and it seems good. We just trust them :)
 
-Yes, better.  Thanks.
+Are these files from the architecture independent portion of glibc or
+are they csky specific? If they are architecture independent, we might
+want to see if they make sense for other architectures as well, and
+add them to lib/ rather than arch/csky/lib/
 
--- 
-~Randy
+Should the SPDX identifier list the original LGPL-2.1 license instead
+of GPL-2.0?
+
+       Arnd
