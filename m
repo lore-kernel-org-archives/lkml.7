@@ -2,430 +2,147 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BA8C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6147C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 990892089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB4B21530
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lO6GFAb2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbfGAKPZ (ORCPT
+        id S1728784AbfGAKTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 06:15:25 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33979 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727372AbfGAKPW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 06:15:22 -0400
-Received: by mail-qk1-f195.google.com with SMTP id t8so10511560qkt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 03:15:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R3EYOZ7BBmZc7JnhVLyk/uZazNz+DJ1R9RyLFcgD/Y0=;
-        b=gcso1YbLs6Fv+ZGr8NaPJAU+qW0Zhvtwo8u4ndGI5QKwmPofdyCtnNReuB4s93RzqF
-         Fbal65kR+nWICVNDlkIQWwCpS8OGqK+ChMTbKMSynrkweNoy08y9pooOjvnesa0+Mm0K
-         DKZSskEpxaCxRoAF+Ax0JcFVgrZtFIvv5W/aqGG/VkpbhpNPy7acPR4K+GjNv6QVjtWF
-         X+Xh5C2Im1MkNXBllmwK29FHkjnk778W+cVKcSFI1spUJLnq5RBjT6Sh6vcnjJtzYHdq
-         SW2t6EuU/0PfM2z9NP7JJGJ03fa4Fn28ybDceFOyWsj88xr4wwKAiaoNDbqCkhImkAMw
-         GkjQ==
-X-Gm-Message-State: APjAAAW7av8Iy1oPdvIpqG6WNCWotlFQ+Vq5t66DIUiG9+TEtrdYOXMb
-        Y0c04tbzxlLtxnohqg6PQEBWW789ejUPuwsGBBGsAA==
-X-Google-Smtp-Source: APXvYqxzhWzMgbR9dlQfs962hV+d+rRiHyczvNAIi3W6uld8U/nunm26SGQR2f5TP6Dnq8TJ/1GoKQZ9vfxd3KVD8K0=
-X-Received: by 2002:a37:a86:: with SMTP id 128mr20208521qkk.169.1561976120978;
- Mon, 01 Jul 2019 03:15:20 -0700 (PDT)
+        Mon, 1 Jul 2019 06:19:20 -0400
+Received: from mail-eopbgr40089.outbound.protection.outlook.com ([40.107.4.89]:15171
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726076AbfGAKTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 06:19:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0XhAfId3MqzHmx1ScgWqLCuRLGCj68DTrsNvi+P5H/I=;
+ b=lO6GFAb2medFcbTUsWXH+Of4/3XurUTtXbby/M39bODXHWvCHDhRpmBu0oYXBTiO3GVGDfTjdiYq15qzhnBPoTC2ertXCNMJ8Vx6WFWuuzbhiwxKuhAwK5Mk5tgfGMAKyhWy4+pe6u1VfNZLiyukhadQ1SlnnXV9Dqi94IRTICM=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6348.eurprd04.prod.outlook.com (10.255.170.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Mon, 1 Jul 2019 10:18:35 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::93a:4344:1120:4ca0]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::93a:4344:1120:4ca0%6]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
+ 10:18:35 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv5 08/20] PCI: mobiveil: Use the 1st inbound window for MEM
+ inbound transactions
+Thread-Topic: [PATCHv5 08/20] PCI: mobiveil: Use the 1st inbound window for
+ MEM inbound transactions
+Thread-Index: AQHU8QrC2oaNOTxwc0KYfHKro/AvVaaxs5sAgARUBCA=
+Date:   Mon, 1 Jul 2019 10:18:35 +0000
+Message-ID: <DB8PR04MB67476D1CB2BC5C6C1779012284F90@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-9-Zhiqiang.Hou@nxp.com>
+ <20190628160212.GB21829@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190628160212.GB21829@e121166-lin.cambridge.arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7e2cd95a-40ca-4b93-9f42-08d6fe0d79fd
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB6348;
+x-ms-traffictypediagnostic: DB8PR04MB6348:
+x-microsoft-antispam-prvs: <DB8PR04MB63484FAB4D0C9D6AB72EF8C584F90@DB8PR04MB6348.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2043;
+x-forefront-prvs: 00851CA28B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(346002)(376002)(396003)(366004)(189003)(199004)(40224003)(13464003)(54534003)(14444005)(33656002)(305945005)(99286004)(86362001)(55016002)(229853002)(316002)(66946007)(66476007)(4326008)(66446008)(64756008)(66556008)(68736007)(2906002)(7696005)(71190400001)(6436002)(102836004)(6506007)(73956011)(81156014)(74316002)(8936002)(53936002)(53546011)(71200400001)(6116002)(6916009)(486006)(8676002)(3846002)(256004)(66066001)(81166006)(54906003)(5660300002)(26005)(25786009)(478600001)(76176011)(6246003)(186003)(52536014)(7416002)(9686003)(76116006)(476003)(11346002)(7736002)(446003)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6348;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: llmTq5Joe2SGhANHv6rvnqsvSbbAFdUk2//toW0sW6hzdLLyrUOUUIo08+uuKHmEY66wZ6YJcHNDP5WXt7fsVFr+492xf02pm2vlmZHdksfBomIElo39O5g6gI5PWdvjadE8bbnHOp+7u6qEtK+jZvlRzNpFhWwd/kn0VKBK5+0jpiBcIWLOToJtdzQG9DgXntNdGOWcNdJS5CAxv/jPok605JSDjXsinKNIAa5u+e5KAcwf1TiMvqQiJiHY4hJ1Lpk9h/R/V8qK30qdpLY1kSXLhAHXWI6oKV1LJPX12BNNoJiafMFGZDbh1+UIgMzaUltn3ETGBbYiH2TvwgxnSaiyqAqaOWtAcVNaAihaUPYhFPrupZ35c2uMvHfWHBBAqD5BWDUOKp0nwoj4jdotNSQfB74CTzmTRGMgPmqYhyI=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190701100819.6032-1-hadess@hadess.net>
-In-Reply-To: <20190701100819.6032-1-hadess@hadess.net>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Mon, 1 Jul 2019 12:15:09 +0200
-Message-ID: <CAO-hwJJaj6f216_H=UFO0CEp+ZHRWwvhTO9FCPqdeimEwE6p0Q@mail.gmail.com>
-Subject: Re: [PATCH v4] HID: sb0540: add support for Creative SB0540 IR receivers
-To:     Bastien Nocera <hadess@hadess.net>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Bastien Nocera <bnocera@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e2cd95a-40ca-4b93-9f42-08d6fe0d79fd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 10:18:35.3029
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zhiqiang.hou@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6348
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 12:08 PM Bastien Nocera <hadess@hadess.net> wrote:
->
-> From: Bastien Nocera <bnocera@redhat.com>
->
-> Add a new hid driver for the Creative SB0540 IR receiver. This receiver
-> is usually coupled with an RM-1500 or an RM-1800 remote control.
->
-> The scrollwheels on the RM-1800 remote are not bound, as they are
-> labelled for specific audio controls that don't usually exist on most
-> systems. They can be remapped using standard Linux keyboard
-> remapping tools.
->
-> Signed-off-by: Bastien Nocera <bnocera@redhat.com>
-> ---
->  MAINTAINERS                       |   6 +
->  drivers/hid/Kconfig               |   9 +
->  drivers/hid/Makefile              |   1 +
->  drivers/hid/hid-creative-sb0540.c | 268 ++++++++++++++++++++++++++++++
->  drivers/hid/hid-ids.h             |   1 +
->  5 files changed, 285 insertions(+)
->  create mode 100644 drivers/hid/hid-creative-sb0540.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d0ed735994a5..6fc022d152c8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4227,6 +4227,12 @@ S:       Maintained
->  F:     Documentation/filesystems/cramfs.txt
->  F:     fs/cramfs/
->
-> +CREATIVE SB0540
-> +M:     Bastien Nocera <hadess@hadess.net>
-> +L:     linux-input@vger.kernel.org
-> +S:     Maintained
-> +F:     drivers/hid/hid-creative-sb0540.c
-> +
->  CRYPTO API
->  M:     Herbert Xu <herbert@gondor.apana.org.au>
->  M:     "David S. Miller" <davem@davemloft.net>
-> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-> index 3872e03d9a59..a70999f9c639 100644
-> --- a/drivers/hid/Kconfig
-> +++ b/drivers/hid/Kconfig
-> @@ -273,6 +273,15 @@ config HID_CP2112
->         and gpiochip to expose these functions of the CP2112. The
->         customizable USB descriptor fields are exposed as sysfs attributes.
->
-> +config HID_CREATIVE_SB0540
-> +       tristate "Creative SB0540 infrared receiver"
-> +       depends on USB_HID
-> +       help
-> +       Support for Creative infrared SB0540-compatible remote controls, such
-> +       as the RM-1500 and RM-1800 remotes.
-> +
-> +       Say Y here if you want support for Creative SB0540 infrared receiver.
-> +
->  config HID_CYPRESS
->         tristate "Cypress mouse and barcode readers"
->         depends on HID
-> diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
-> index cc5d827c9164..1ad662fe37b6 100644
-> --- a/drivers/hid/Makefile
-> +++ b/drivers/hid/Makefile
-> @@ -27,6 +27,7 @@ obj-$(CONFIG_HID_ALPS)                += hid-alps.o
->  obj-$(CONFIG_HID_ACRUX)                += hid-axff.o
->  obj-$(CONFIG_HID_APPLE)                += hid-apple.o
->  obj-$(CONFIG_HID_APPLEIR)      += hid-appleir.o
-> +obj-$(CONFIG_HID_CREATIVE_SB0540)      += hid-creative-sb0540.c
-
-I forgot to mention that sparse was complaining about:
-
-scripts/Makefile.build:283: target 'drivers/hid/hid-creative-sb0540.c'
-doesn't match the target pattern
-
-And it turns out your line should read `hid-creative-sb0540.o` not
-`hid-creative-sb0540.c`
-
-Cheers,
-Benjamin
-
-
->  obj-$(CONFIG_HID_ASUS)         += hid-asus.o
->  obj-$(CONFIG_HID_AUREAL)       += hid-aureal.o
->  obj-$(CONFIG_HID_BELKIN)       += hid-belkin.o
-> diff --git a/drivers/hid/hid-creative-sb0540.c b/drivers/hid/hid-creative-sb0540.c
-> new file mode 100644
-> index 000000000000..6b7c81ccf310
-> --- /dev/null
-> +++ b/drivers/hid/hid-creative-sb0540.c
-> @@ -0,0 +1,268 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * HID driver for the Creative SB0540 receiver
-> + *
-> + * Copyright (C) 2019 Red Hat Inc. All Rights Reserved
-> + *
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/hid.h>
-> +#include <linux/module.h>
-> +#include "hid-ids.h"
-> +
-> +MODULE_AUTHOR("Bastien Nocera <hadess@hadess.net>");
-> +MODULE_DESCRIPTION("HID Creative SB0540 receiver");
-> +MODULE_LICENSE("GPL");
-> +
-> +static const unsigned short creative_sb0540_key_table[] = {
-> +       KEY_POWER,
-> +       KEY_RESERVED,           /* text: 24bit */
-> +       KEY_RESERVED,           /* 24bit wheel up */
-> +       KEY_RESERVED,           /* 24bit wheel down */
-> +       KEY_RESERVED,           /* text: CMSS */
-> +       KEY_RESERVED,           /* CMSS wheel Up */
-> +       KEY_RESERVED,           /* CMSS wheel Down */
-> +       KEY_RESERVED,           /* text: EAX */
-> +       KEY_RESERVED,           /* EAX wheel up */
-> +       KEY_RESERVED,           /* EAX wheel down */
-> +       KEY_RESERVED,           /* text: 3D Midi */
-> +       KEY_RESERVED,           /* 3D Midi wheel up */
-> +       KEY_RESERVED,           /* 3D Midi wheel down */
-> +       KEY_MUTE,
-> +       KEY_VOLUMEUP,
-> +       KEY_VOLUMEDOWN,
-> +       KEY_UP,
-> +       KEY_LEFT,
-> +       KEY_RIGHT,
-> +       KEY_REWIND,
-> +       KEY_OK,
-> +       KEY_FASTFORWARD,
-> +       KEY_DOWN,
-> +       KEY_AGAIN,              /* text: Return, symbol: Jump to */
-> +       KEY_PLAY,               /* text: Start */
-> +       KEY_ESC,                /* text: Cancel */
-> +       KEY_RECORD,
-> +       KEY_OPTION,
-> +       KEY_MENU,               /* text: Display */
-> +       KEY_PREVIOUS,
-> +       KEY_PLAYPAUSE,
-> +       KEY_NEXT,
-> +       KEY_SLOW,
-> +       KEY_STOP,
-> +       KEY_NUMERIC_1,
-> +       KEY_NUMERIC_2,
-> +       KEY_NUMERIC_3,
-> +       KEY_NUMERIC_4,
-> +       KEY_NUMERIC_5,
-> +       KEY_NUMERIC_6,
-> +       KEY_NUMERIC_7,
-> +       KEY_NUMERIC_8,
-> +       KEY_NUMERIC_9,
-> +       KEY_NUMERIC_0
-> +};
-> +
-> +/*
-> + * Codes and keys from lirc's
-> + * remotes/creative/lircd.conf.alsa_usb
-> + * order and size must match creative_sb0540_key_table[] above
-> + */
-> +static const unsigned short creative_sb0540_codes[] = {
-> +       0x619E,
-> +       0x916E,
-> +       0x926D,
-> +       0x936C,
-> +       0x718E,
-> +       0x946B,
-> +       0x956A,
-> +       0x8C73,
-> +       0x9669,
-> +       0x9768,
-> +       0x9867,
-> +       0x9966,
-> +       0x9A65,
-> +       0x6E91,
-> +       0x629D,
-> +       0x639C,
-> +       0x7B84,
-> +       0x6B94,
-> +       0x728D,
-> +       0x8778,
-> +       0x817E,
-> +       0x758A,
-> +       0x8D72,
-> +       0x8E71,
-> +       0x8877,
-> +       0x7C83,
-> +       0x738C,
-> +       0x827D,
-> +       0x7689,
-> +       0x7F80,
-> +       0x7986,
-> +       0x7A85,
-> +       0x7D82,
-> +       0x857A,
-> +       0x8B74,
-> +       0x8F70,
-> +       0x906F,
-> +       0x8A75,
-> +       0x847B,
-> +       0x7887,
-> +       0x8976,
-> +       0x837C,
-> +       0x7788,
-> +       0x807F
-> +};
-> +
-> +struct creative_sb0540 {
-> +       struct input_dev *input_dev;
-> +       struct hid_device *hid;
-> +       unsigned short keymap[ARRAY_SIZE(creative_sb0540_key_table)];
-> +};
-> +
-> +static inline u64 reverse(u64 data, int bits)
-> +{
-> +       int i;
-> +       u64 c;
-> +
-> +       c = 0;
-> +       for (i = 0; i < bits; i++) {
-> +               c |= (u64) (((data & (((u64) 1) << i)) ? 1 : 0))
-> +                       << (bits - 1 - i);
-> +       }
-> +       return (c);
-> +}
-> +
-> +static int get_key(struct creative_sb0540 *creative_sb0540, u64 keycode)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(creative_sb0540_codes); i++) {
-> +               if (creative_sb0540_codes[i] == keycode)
-> +                       return creative_sb0540->keymap[i];
-> +       }
-> +
-> +       return 0;
-> +
-> +}
-> +
-> +static int creative_sb0540_raw_event(struct hid_device *hid,
-> +       struct hid_report *report, u8 *data, int len)
-> +{
-> +       struct creative_sb0540 *creative_sb0540 = hid_get_drvdata(hid);
-> +       u64 code, main_code;
-> +       int key;
-> +
-> +       if (len != 6)
-> +               goto out;
-> +
-> +       /* From daemons/hw_hiddev.c sb0540_rec() in lirc */
-> +       code = reverse(data[5], 8);
-> +       main_code = (code << 8) + ((~code) & 0xff);
-> +
-> +       /*
-> +        * Flip to get values in the same format as
-> +        * remotes/creative/lircd.conf.alsa_usb in lirc
-> +        */
-> +       main_code = ((main_code & 0xff) << 8) +
-> +               ((main_code & 0xff00) >> 8);
-> +
-> +       key = get_key(creative_sb0540, main_code);
-> +       if (key == 0 || key == KEY_RESERVED) {
-> +               hid_err(hid, "Could not get a key for main_code %llX\n",
-> +                       main_code);
-> +               return 0;
-> +       }
-> +
-> +       input_report_key(creative_sb0540->input_dev, key, 1);
-> +       input_report_key(creative_sb0540->input_dev, key, 0);
-> +       input_sync(creative_sb0540->input_dev);
-> +
-> +       /* let hidraw and hiddev handle the report */
-> +       return 0;
-> +}
-> +
-> +static int creative_sb0540_input_configured(struct hid_device *hid,
-> +               struct hid_input *hidinput)
-> +{
-> +       struct input_dev *input_dev = hidinput->input;
-> +       struct creative_sb0540 *creative_sb0540 = hid_get_drvdata(hid);
-> +       int i;
-> +
-> +       creative_sb0540->input_dev = input_dev;
-> +
-> +       input_dev->keycode = creative_sb0540->keymap;
-> +       input_dev->keycodesize = sizeof(unsigned short);
-> +       input_dev->keycodemax = ARRAY_SIZE(creative_sb0540->keymap);
-> +
-> +       input_dev->evbit[0] = BIT(EV_KEY) | BIT(EV_REP);
-> +
-> +       memcpy(creative_sb0540->keymap, creative_sb0540_key_table,
-> +               sizeof(creative_sb0540->keymap));
-> +       for (i = 0; i < ARRAY_SIZE(creative_sb0540_key_table); i++)
-> +               set_bit(creative_sb0540->keymap[i], input_dev->keybit);
-> +       clear_bit(KEY_RESERVED, input_dev->keybit);
-> +
-> +       return 0;
-> +}
-> +
-> +static int creative_sb0540_input_mapping(struct hid_device *hid,
-> +               struct hid_input *hi, struct hid_field *field,
-> +               struct hid_usage *usage, unsigned long **bit, int *max)
-> +{
-> +       /*
-> +        * We are remapping the keys ourselves, so ignore the hid-input
-> +        * keymap processing.
-> +        */
-> +       return -1;
-> +}
-> +
-> +static int creative_sb0540_probe(struct hid_device *hid,
-> +               const struct hid_device_id *id)
-> +{
-> +       int ret;
-> +       struct creative_sb0540 *creative_sb0540;
-> +
-> +       creative_sb0540 = devm_kzalloc(&hid->dev,
-> +               sizeof(struct creative_sb0540), GFP_KERNEL);
-> +
-> +       if (!creative_sb0540)
-> +               return -ENOMEM;
-> +
-> +       creative_sb0540->hid = hid;
-> +
-> +       /* force input as some remotes bypass the input registration */
-> +       hid->quirks |= HID_QUIRK_HIDINPUT_FORCE;
-> +
-> +       hid_set_drvdata(hid, creative_sb0540);
-> +
-> +       ret = hid_parse(hid);
-> +       if (ret) {
-> +               hid_err(hid, "parse failed\n");
-> +               return ret;
-> +       }
-> +
-> +       ret = hid_hw_start(hid, HID_CONNECT_DEFAULT);
-> +       if (ret) {
-> +               hid_err(hid, "hw start failed\n");
-> +               return ret;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct hid_device_id creative_sb0540_devices[] = {
-> +       { HID_USB_DEVICE(USB_VENDOR_ID_CREATIVELABS, USB_DEVICE_ID_CREATIVE_SB0540) },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(hid, creative_sb0540_devices);
-> +
-> +static struct hid_driver creative_sb0540_driver = {
-> +       .name = "creative-sb0540",
-> +       .id_table = creative_sb0540_devices,
-> +       .raw_event = creative_sb0540_raw_event,
-> +       .input_configured = creative_sb0540_input_configured,
-> +       .probe = creative_sb0540_probe,
-> +       .input_mapping = creative_sb0540_input_mapping,
-> +};
-> +module_hid_driver(creative_sb0540_driver);
-> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-> index 826324997686..206b7065da86 100644
-> --- a/drivers/hid/hid-ids.h
-> +++ b/drivers/hid/hid-ids.h
-> @@ -312,6 +312,7 @@
->  #define USB_VENDOR_ID_CREATIVELABS     0x041e
->  #define USB_DEVICE_ID_CREATIVE_SB_OMNI_SURROUND_51     0x322c
->  #define USB_DEVICE_ID_PRODIKEYS_PCMIDI 0x2801
-> +#define USB_DEVICE_ID_CREATIVE_SB0540  0x3100
->
->  #define USB_VENDOR_ID_CVTOUCH          0x1ff7
->  #define USB_DEVICE_ID_CVTOUCH_SCREEN   0x0013
-> --
-> 2.21.0
->
+SGkgTG9yZW56bywNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3Jlbnpv
+LnBpZXJhbGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo21MIyOcjVIDA6MDINCj4gVG86IFou
+cS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxn
+YWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207
+DQo+IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExl
+byBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdp
+bGwuZGVhY29uQGFybS5jb207DQo+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0u
+aC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsNCj4gWGlhb3dlaSBCYW8gPHhpYW93ZWku
+YmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NSAwOC8yMF0gUENJOiBtb2JpdmVp
+bDogVXNlIHRoZSAxc3QgaW5ib3VuZCB3aW5kb3cgZm9yDQo+IE1FTSBpbmJvdW5kIHRyYW5zYWN0
+aW9ucw0KPiANCj4gT24gRnJpLCBBcHIgMTIsIDIwMTkgYXQgMDg6MzY6MDBBTSArMDAwMCwgWi5x
+LiBIb3Ugd3JvdGU6DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNv
+bT4NCj4gPg0KPiA+IFRoZSBpbmJvdW5kIHdpbmRvd3MgaGF2ZSBpbmRlcGVuZGVudCByZWdpc3Rl
+ciBzZXQgYWdhaW5zdCBvdXRib3VuZA0KPiB3aW5kb3dzLg0KPiA+IFRoaXMgcGF0Y2ggY2hhbmdl
+IHRoZSBNRU0gaW5ib3VuZCB3aW5kb3cgdG8gdGhlIGZpcnN0IG9uZS4NCj4gDQo+IFlvdSBtZWFu
+IHRoYXQgd2luZG93cyAwIGNhbiBiZSB1c2VkIGFzIHdlbGwgYXMgd2luZG93IDEgZm9yIGluYm91
+bmQNCj4gd2luZG93cyBzbyBpdCBpcyBiZXR0ZXIgdG8gb3B0IGZvciB3aW5kb3cgMCBmb3IgY29u
+c2lzdGVuY3kgPw0KDQpJIG1lYW4gdGhlIGluYm91bmQgd2luZG93cyBhbmQgb3V0Ym91bmQgd2lu
+ZG93cyBhcmUgaW5kZXBlbmRlbnQsIHRoZXkNCmhhdmUgdGhlbXNlbHZlcycgcmVnaXN0ZXJzLCBh
+bmQgYm90aCBzZXJpYWwgbnVtYmVyIHN0YXJ0cyBmcm9tIDA6DQpJbmJvdW5kIHdpbmRvd3M6ICMw
+LCAjMSwgIzIuLi4NCk91dGJvdW5kIHdpbmRvd3M6ICMwLCAjMSwgIzIuLi4gDQoNClRoYW5rcywN
+ClpoaXFpYW5nDQoNCj4gTG9yZW56bw0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlh
+bmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBNaW5naHVhbiBMaWFu
+IDxNaW5naHVhbi5MaWFuQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFN1YnJhaG1hbnlhIExp
+bmdhcHBhIDxsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluPg0KPiA+IC0tLQ0KPiA+IFY1Og0K
+PiA+ICAtIENvcnJlY3RlZCBhbmQgcmV0b3VjaGVkIHRoZSBzdWJqZWN0IGFuZCBjaGFuZ2Vsb2cu
+DQo+ID4NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMgfCAyICst
+DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+
+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5j
+DQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+IGluZGV4
+IGRmNzFjMTFiNDgxMC4uZTg4YWZjNzkyYTVjIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNp
+L2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJv
+bGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiBAQCAtNjE2LDcgKzYxNiw3IEBAIHN0YXRpYyBpbnQg
+bW9iaXZlaWxfaG9zdF9pbml0KHN0cnVjdCBtb2JpdmVpbF9wY2llDQo+ICpwY2llKQ0KPiA+ICAJ
+CQkgICBDRkdfV0lORE9XX1RZUEUsIHJlc291cmNlX3NpemUocGNpZS0+b2JfaW9fcmVzKSk7DQo+
+ID4NCj4gPiAgCS8qIG1lbW9yeSBpbmJvdW5kIHRyYW5zbGF0aW9uIHdpbmRvdyAqLw0KPiA+IC0J
+cHJvZ3JhbV9pYl93aW5kb3dzKHBjaWUsIFdJTl9OVU1fMSwgMCwgTUVNX1dJTkRPV19UWVBFLA0K
+PiBJQl9XSU5fU0laRSk7DQo+ID4gKwlwcm9ncmFtX2liX3dpbmRvd3MocGNpZSwgV0lOX05VTV8w
+LCAwLCBNRU1fV0lORE9XX1RZUEUsDQo+ID4gK0lCX1dJTl9TSVpFKTsNCj4gPg0KPiA+ICAJLyog
+R2V0IHRoZSBJL08gYW5kIG1lbW9yeSByYW5nZXMgZnJvbSBEVCAqLw0KPiA+ICAJcmVzb3VyY2Vf
+bGlzdF9mb3JfZWFjaF9lbnRyeSh3aW4sICZwY2llLT5yZXNvdXJjZXMpIHsNCj4gPiAtLQ0KPiA+
+IDIuMTcuMQ0KPiA+DQo=
