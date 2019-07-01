@@ -2,98 +2,126 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5EBC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7547C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90936208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 953EE2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FrxEHL1Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqCGWxP0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbfGAJmw (ORCPT
+        id S1728488AbfGAJoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 05:42:52 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:33704 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbfGAJmv (ORCPT
+        Mon, 1 Jul 2019 05:44:13 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34966 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbfGAJoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 05:42:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=l8mrCiCp/0xRvJWtJijHHG/E/g8+XGDQbgPrBgivMT8=; b=FrxEHL1Z5IWGkU/zpXIKtrltQ
-        7qDc2lmCOtOVGTRBysa9LaTqTjAf5CSuwuJHTiyxTtTE2ZBnyY5GTjfOMZMhZ5sBzNenKvu0TaU7n
-        EaVGPR+JYI3PfdY/mskcKxrIXJD14ehMylRny7jvrbLyyL7+0aRWiS9/6TZp1B/dHtUmXpLFk1kg0
-        e19275DQT6SxinPN4x1yHkBg3Uj18tPs50RFbjXsOL3yZpTmC34Aw6GZnP32hK7aFutcCLgwubTSR
-        y/IyLp3ukjIv4w/vKJUdHKU++wtqe5f3JcQ/53AUvTNFrKwSvJjzAhnGmjpCzYRQBJqpzghcrhPKQ
-        6RXVmO1jA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhspF-0005HO-Ls; Mon, 01 Jul 2019 09:42:17 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 38D4F20A710F7; Mon,  1 Jul 2019 11:42:15 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 11:42:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Scott Wood <swood@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Message-ID: <20190701094215.GR3402@hirez.programming.kicks-ass.net>
-References: <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
- <20190627203612.GD26519@linux.ibm.com>
- <20190628141522.GF3402@hirez.programming.kicks-ass.net>
- <20190628155404.GV26519@linux.ibm.com>
- <20190628160408.GH32547@worktop.programming.kicks-ass.net>
- <20190628172056.GW26519@linux.ibm.com>
+        Mon, 1 Jul 2019 05:44:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c6so15161423wml.0;
+        Mon, 01 Jul 2019 02:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=Wpl34t7pEEK79q3TGA4TYVX4j5sGst2FWPYV+cG9ZgQ=;
+        b=FqCGWxP07Zk0mb9fi11yD9qbrg46ZxDMf6TAAhLTryUorNkAmjegD69qSKZQzKeIAn
+         0s89ug6dEwg8L0+BEBBSAbCf3g7qTgsCUBh9aAp/nvNjGM8ZrPGOJ280HS1mn3PPt6Z7
+         FkiCK9ryGXe48hSKSavf2BCdkAKZu00flMMqEcqN/jFRxbVO3clzXy/B8lAGQZUlUVDO
+         n1l1VBVNK+FV3ZQJub7OuYXT9EBfLgwg2wubv9lMt4KR4F4cylnh2M6SjInEyoyQCXKW
+         kc8jNbl3hlbq5zuOc2yJ9EOknAXMTPdnQNsJSJxTTDIFVtpvdh3rG4ZzuKYfGwhpSLPD
+         afbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=Wpl34t7pEEK79q3TGA4TYVX4j5sGst2FWPYV+cG9ZgQ=;
+        b=j4HCLTnyg2ak2PqR5owt4JgNcxU4iNo7Ix6QVAS7OVSSaLOQOK4sz+bVo2UJ//QcJj
+         j3+SMoam8dqSyg03PWDa17FLdFaqRccqKAAjwsEJIKRpeuyvLpn1zaLZLsxxCJZG1D5R
+         deECgEK0OPeSS1rEizWuO6yitjBb3VymI3BXF7wke1ycbyp6NXoYmkVMphEcPpFh4ruG
+         forTCuwdinihQn700P2+hF6Ri//qSaqg76DVlHGDoedY95/gDp5710QcNTZG2c7XJOU5
+         05HMBTXXBt8di3WEy3giSa+kp5iKWnEtyDia1pqWuPhwk5Ea4Em6lx8L/Ww9w9NfFb31
+         /Zng==
+X-Gm-Message-State: APjAAAVHK20rQnuWOc2MrQzcN7HOMVLnSgRSqIicMDJySSb5wIprGCdd
+        vpzNCMUegFUriIkTsJIhLevLLF7UUD8=
+X-Google-Smtp-Source: APXvYqwE+Q7AnLDk4oMLFL/k5V2IsWF4NCm7kbDDvvTbUOZGjDlQHcN8+h+kh/QLkteSGPRbtaW/5w==
+X-Received: by 2002:a1c:9d86:: with SMTP id g128mr17778545wme.51.1561974250603;
+        Mon, 01 Jul 2019 02:44:10 -0700 (PDT)
+Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
+        by smtp.gmail.com with ESMTPSA id f21sm9951878wmb.2.2019.07.01.02.44.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 02:44:09 -0700 (PDT)
+References: <20190630034905.7124-1-chinmaya.mahesh@disroot.org>
+User-agent: mu4e 1.2.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     Chinmaya Krishnan Mahesh <chinmaya.mahesh@disroot.org>
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: imx7-media-csi: Remove unneeded break after return
+In-reply-to: <20190630034905.7124-1-chinmaya.mahesh@disroot.org>
+Date:   Mon, 01 Jul 2019 10:44:07 +0100
+Message-ID: <m3o92egkd4.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190628172056.GW26519@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 10:20:56AM -0700, Paul E. McKenney wrote:
-> On Fri, Jun 28, 2019 at 06:04:08PM +0200, Peter Zijlstra wrote:
-> > On Fri, Jun 28, 2019 at 08:54:04AM -0700, Paul E. McKenney wrote:
-> > > Thank you!  Plus it looks like scheduler_ipi() takes an early exit if
-> > > ->wake_list is empty, regardless of TIF_NEED_RESCHED, right?
-> > 
-> > Yes, TIF_NEED_RESCHED is checked in the interrupt return path.
-> 
-> OK, got it.  So the following sequence would be a valid way to get the
-> scheduler's attention on the current CPU shortly after interrupts
-> are re-enabled, even if the current CPU is already holding some
-> rq or pi locks, correct?
-> 
-> 	set_tsk_need_resched(current);
-> 	set_preempt_need_resched();
-> 	smp_send_reschedule(smp_processor_id());
+Hi Chinmaya,
+Thanks for your patch.
 
-I'm not sure if smp_send_reschedule() can be used as self-IPI, some
-hardware doesn't particularly like that IIRC. That is, hardware might
-only have interfaces to IPI _other_ CPUs, but not self.
+On Sun 30 Jun 2019 at 04:49, Chinmaya Krishnan Mahesh wrote:
+> This patch fixes the checkpatch.pl warning:
+>
+> WARNING: break is not useful after a goto or return
 
-The normal scheduler code takes care to not call smp_send_reschedule()
-to self.
+but this is already fixed in the media subsystem tree, by a patch
+from Fabio:
+
+964fcacddf media: imx7-media-csi: Remove unneeded break
+
+It is better to use that tree as reference for media fixes,
+sometimes some are already fixed there.
+
+Nevertheless many thanks for the patch.
+
+---
+Cheers,
+	Rui
+
+
+>
+> Signed-off-by: Chinmaya Krishnan Mahesh <chinmaya.mahesh@disroot.org>
+> ---
+>  drivers/staging/media/imx/imx7-media-csi.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+> index a708a0340eb1..c15acca1dc0d 100644
+> --- a/drivers/staging/media/imx/imx7-media-csi.c
+> +++ b/drivers/staging/media/imx/imx7-media-csi.c
+> @@ -1021,7 +1021,6 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
+>  		break;
+>  	default:
+>  		return -EINVAL;
+> -		break;
+>  	}
+>  	return 0;
+>  }
+
