@@ -2,101 +2,81 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE33C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35953C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993712146F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:42:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eVvt+xIP"
+	by mail.kernel.org (Postfix) with ESMTP id 057C420B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561995802;
+	bh=+m8Ocelpq6IIEdvehzEZ7RfzLRSFhV0Ix0maHlwbSlI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P02SaussnMOFa1i2D7Y/jKksjANy4kvYYH2taloYPdnr4PDIAewe+gV6VZqqr22PC
+	 tJ/nXSmurL4+sVhQiWcdTMpeH9AffB/7cMOHdYPxyUpi8UnkXLSbUHbU5E521KQteQ
+	 c3Kh3KDBhBMtXom+X5L8xd+jGGfNaXGKystSiNoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbfGAPmV (ORCPT
+        id S1729815AbfGAPnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:42:21 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58993 "EHLO ozlabs.org"
+        Mon, 1 Jul 2019 11:43:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbfGAPmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:42:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727640AbfGAPnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 11:43:20 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cs7Z1L7nz9s3Z;
-        Tue,  2 Jul 2019 01:42:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561995738;
-        bh=cKjt+D7w0RIO3MeUeoCcq1c6qBlW5HWwqMuUlp3y4L0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eVvt+xIPMTC0Js9hFSPelJefZgdDyGTKOkuwzP4PTY+yqVocSd+WJfGJWnPDTCHqg
-         FLIcztyZFcBowSo9vHY9Oh5CiEV6mS2YwdU4xEGITjezfLSWlpHqYn2gQsv5CdVhgL
-         fhKbD7kxkGno9eqm/IEJ2UlvRLVDgmIsp+BDHVZw/Du1zDdGtPPtfzY6y5IWzm78/v
-         aq1M0BYfK9nzZepsLZjwEu/TBMRadaKIz4/jWIKfOVuIcKS93TBmT8ze61MdsdiPOl
-         Ip50JnLaPO09+1lE3qfBpEiCeGoA7gZKus4diqlJFLHuJd6Hv2W9SopzDPGRhYjgAB
-         1S2B6s4BgFQeA==
-Date:   Tue, 2 Jul 2019 01:42:10 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Adding some trees to linux-next?
-Message-ID: <20190702014210.1c95f9f1@canb.auug.org.au>
-In-Reply-To: <20190701153552.GJ1404256@magnolia>
-References: <20190701110603.5abcbb2c@canb.auug.org.au>
-        <20190701153552.GJ1404256@magnolia>
+        by mail.kernel.org (Postfix) with ESMTPSA id 428EC205C9;
+        Mon,  1 Jul 2019 15:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561995799;
+        bh=+m8Ocelpq6IIEdvehzEZ7RfzLRSFhV0Ix0maHlwbSlI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I3WXaZ/toRpBKp2h1GgJ2CKzOjeyx7woYnDHIKnJE93FDeYQs3Q7TMmTdQddUCdG6
+         l5QQzWkGSFwppS0ZtBwytsfPTWxaVHs3oxNOOPViOCbYfYW3hS2BW7DOtKwBGmSM+X
+         IDbCt+3HYx0fCQ1Z5jZIY++u2tTyWCVWi85bur/8=
+Date:   Mon, 1 Jul 2019 08:43:17 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] vfs: move_mount: reject moving kernel internal mounts
+Message-ID: <20190701154317.GB790@sol.localdomain>
+References: <CACT4Y+ZN8CZq7L1GQANr25extEqPASRERGVh+sD4-55cvWPOSg@mail.gmail.com>
+ <20190629202744.12396-1-ebiggers@kernel.org>
+ <20190629203916.GV17978@ZenIV.linux.org.uk>
+ <20190701010847.GA23778@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/UN5Vxl1AFy.bml=FS8LPM8+"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701010847.GA23778@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UN5Vxl1AFy.bml=FS8LPM8+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 01, 2019 at 02:08:48AM +0100, Al Viro wrote:
+> 
+> Let's reorder that a bit:
+>         /* The mountpoint must be in our namespace. */
+>         if (!check_mnt(p))
+>                 goto out;
+> 
+> 	/* The thing moved must be mounted... */
+> 	if (!is_mounted(old_path->mnt))
+> 		goto out;
+> 
+>         /* ... and either ours or the root of anon namespace */
+> 	if (!(attached ? check_mnt(old) : is_anon_ns(ns)))
+> 		goto out;
+> 
+> IMO that looks saner and all it costs us is a redundant check
+> in attached case.  Objections?
 
-Hi Darrick,
+Looks good to me.
 
-On Mon, 1 Jul 2019 08:35:52 -0700 "Darrick J. Wong" <darrick.wong@oracle.co=
-m> wrote:
->
-> Could you add my iomap-for-next and vfs-for-next branches to linux-next,
-> please?  They can be found here:
->=20
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git#iomap-for-next
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git#vfs-for-next
->=20
-> I've decided that trying to munge all that through the xfs for-next
-> branch is too much insanity and splitting them up will help me prevent
-> my head from falling off.
-
-Just out of interest, do you intend to send these directly to Linus, or
-via another tree?
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/UN5Vxl1AFy.bml=FS8LPM8+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0aKdIACgkQAVBC80lX
-0Gznawf9HG3yAIa9ql5EEFzHWdjd0niap4Jw2Djgfi/AQ028W2dQ/j1Q86Vqw8Yi
-enXmApWWoNL+SACY4chSua3MBE3s5VvZaaFbljtZVtUb7q7zAeDQCTG2SKBC99jW
-4NB5XYMQKakDk1cPqmil6i+RrKQVolPPIH5AL/TunugCZ2dBcDPFk1RW4QO/8Vo+
-DpIk1Bg3kWePgnmnmiyA8bx7PRuv9ftL35G/GCjdl2iGxySx/tpVkZONZ+QketqE
-9bJSC5DMEpYE7opI/JBs9R8OSQmGNx0m2aYYaU5GCon60oQChZ97ebga9YME6zjZ
-CSOaZHOZWut8qZSWDlT6HZxOkTkd8Q==
-=cb/6
------END PGP SIGNATURE-----
-
---Sig_/UN5Vxl1AFy.bml=FS8LPM8+--
+- Eric
