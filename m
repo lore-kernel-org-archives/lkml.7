@@ -2,111 +2,91 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAB7C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0948EC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E69208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:15:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="EBVk76T1"
+	by mail.kernel.org (Postfix) with ESMTP id E104721473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbfGAPPI (ORCPT
+        id S1730303AbfGAPPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:15:08 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:57492 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730193AbfGAPOl (ORCPT
+        Mon, 1 Jul 2019 11:15:11 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:32821 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728764AbfGAPPI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:14:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1561994078; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5k663RvXyxUJMFUdc4qEICms89I/B9a+iLQhVds8R8I=;
-        b=EBVk76T1p8RNvOmOm6ibn4E+spcYS/JKBFhZLtApGybdAaQhq4i109eIhZbmVBujYvNZKZ
-        cbLGLTjX+aEJk3SFmBlHQbr5QByzl7SfLyrmfk/EpgKC2VasQL+xFTWPJtGO2582gh40oM
-        q9iOeJXJz9jMiPDV7OCSMqc7j4TMS8E=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v14 11/13] MIPS: CI20: Reduce system timer and clocksource to 3 MHz
-Date:   Mon,  1 Jul 2019 17:14:08 +0200
-Message-Id: <20190701151410.23127-12-paul@crapouillou.net>
-In-Reply-To: <20190701151410.23127-1-paul@crapouillou.net>
-References: <20190701151410.23127-1-paul@crapouillou.net>
+        Mon, 1 Jul 2019 11:15:08 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h24so11993362qto.0;
+        Mon, 01 Jul 2019 08:15:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SWzGaJ3K1m5MITaG47DyN8fuDrDuFeO4EBg8cfltv6A=;
+        b=hQ5leNLM8zxOlu0xsEq+CpBBF+yONRHMazzmXgQLZJgzPUrIhv3SqKdZHn0TthjDRf
+         2+EZ1PV5SayL37HNJkFiSF3YChEPRaieqPDrGtd2+1zr9pI4nnrE/MbO5pNjg3zWcvSH
+         jS3d4lRakpMjcM0E3GH3ok6qBYtARCJ4NdSDzkZ5N9l+oPaSAr+1tlrg8YMKA95YGYPy
+         zTyInKt2ata0phwGhrq4uNQUTSYImaZNouGYToCVA/YoDXppDdz7sz7zfnwODOUB7Wtq
+         HgsJn4yXw8q+mLwRnI8umKsBZFBVhkdnuuTPIS0IMbHX/osrvVAKzbUq0y1cCew6Hq4I
+         QkGA==
+X-Gm-Message-State: APjAAAVUP0vb2G8h1jSw9Rk6s1rRnBeWm5ruBHyutSGuIWrx+Vcd8+YT
+        KgPHFLDm+L09OMH/Wi6uiAL4hfiLaVLbA9igh02wV5bE
+X-Google-Smtp-Source: APXvYqx2fcdlEPw8crNsDt0x8PrIMzIH0ySrWp/sigjo3EdA1jcH64351orRTGa3HS4+P7B9/E6V6IaUYuj0wxQf3YU=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr20640020qtd.18.1561994107714;
+ Mon, 01 Jul 2019 08:15:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190604160944.4058-1-christian@brauner.io> <20190604160944.4058-2-christian@brauner.io>
+ <20190620184451.GA28543@roeck-us.net> <20190620221003.ciuov5fzqxrcaykp@brauner.io>
+ <CAK8P3a2iV7=HkHBVL_puvCQN0DmdKEnVs2aG9MQV_8Q58JSfTA@mail.gmail.com>
+ <20190621111839.v5yqlws6iw7mx4aa@brauner.io> <CAK8P3a0T1=eg5ONbMFhHi=vmk1K5uogZ+5=wpsXvjVDzn6vS=Q@mail.gmail.com>
+ <20190621153012.fxwhx25mzmzueqh7@brauner.io>
+In-Reply-To: <20190621153012.fxwhx25mzmzueqh7@brauner.io>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 1 Jul 2019 17:14:51 +0200
+Message-ID: <CAK8P3a0f_=q88JB=t7fbmweAbZ2E2_uCMt+2JoBYx3od_M6fHQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Ley Foon Tan <lftan@altera.com>,
+        "moderated list:NIOS2 ARCHITECTURE" 
+        <nios2-dev@lists.rocketboards.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default clock (48 MHz) is too fast for the system timer.
+On Fri, Jun 21, 2019 at 5:30 PM Christian Brauner <christian@brauner.io> wrote:
+> On Fri, Jun 21, 2019 at 04:20:15PM +0200, Arnd Bergmann wrote:
+> > On Fri, Jun 21, 2019 at 1:18 PM Christian Brauner <christian@brauner.io> wrote:
+> Hm, if you believe that this is fine and want to "vouch" for it by
+> whipping up a patch that replaces the wiring up done in [1] I'm happy to
+> take it. :) Otherwise I'd feel more comfortable not adding all arches at
+> once.
+>
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=clone
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
----
+Sorry for my late reply. I had actually looked at the implementations
+in a little
+more detail and I think you are right that adding these are better
+left to the arch
+maintainers in case of clone3.
 
-Notes:
-    v5: New patch
-    
-    v6: Set also the rate for the clocksource channel's clock
-    
-    v7: No change
-    
-    v8: No change
-    
-    v9: Don't configure clock timer1, as the OS Timer is used as
-    	clocksource on this SoC
-    
-    v10: Revert back to v8 bahaviour. Let the user choose what
-    	 clocksource should be used.
-    
-    v11-v14: No change
-
- arch/mips/boot/dts/ingenic/ci20.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 4f7b1fa31cf5..2e9952311ecd 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -2,6 +2,7 @@
- /dts-v1/;
- 
- #include "jz4780.dtsi"
-+#include <dt-bindings/clock/ingenic,tcu.h>
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
-@@ -238,3 +239,9 @@
- 		bias-disable;
- 	};
- };
-+
-+&tcu {
-+	/* 3 MHz for the system timer and clocksource */
-+	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>;
-+	assigned-clock-rates = <3000000>, <3000000>;
-+};
--- 
-2.21.0.593.g511ec345e18
-
+      Arnd
