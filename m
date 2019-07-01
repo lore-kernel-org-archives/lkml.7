@@ -2,113 +2,147 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF269C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C5BC06508
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809F220B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:12:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fun4ppSr"
+	by mail.kernel.org (Postfix) with ESMTP id 89E972145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfGABMM (ORCPT
+        id S1727130AbfGABWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 21:12:12 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49557 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbfGABMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 21:12:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Sun, 30 Jun 2019 21:22:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7376 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726040AbfGABWO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 21:22:14 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x611Lpoj092066
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 21:22:12 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tf6h5u6ty-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 21:22:12 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Mon, 1 Jul 2019 02:22:11 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 1 Jul 2019 02:22:08 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x611M7fK56492262
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 1 Jul 2019 01:22:07 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C580B4203F;
+        Mon,  1 Jul 2019 01:22:07 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7190D42049;
+        Mon,  1 Jul 2019 01:22:07 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  1 Jul 2019 01:22:07 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cTqY4Wc9z9s00;
-        Mon,  1 Jul 2019 11:12:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561943529;
-        bh=o6gd4NLWj/EtzaylEp5ED6sPC4TTEDVm/KOCAb3wtoY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fun4ppSre3K3LV3/4xj7PXIfux9LZBh6FujyY1LYX0X0DKEyNvHahvZc3xIPWBC4P
-         32tCk0a58cPCZ8tem7XkTR63KVuZ+WP9xrNduwnk0oMg6Ag+X5fw47upO9datbLCHm
-         vkYn8ic+GsyPtV8L5vjpbRyye01MPrKwcAmrE7B0rxvce7geKYeJUEiQKM1J0RYgpN
-         3r7q9lEFjUl190A+Gof7kYI6x88IgO9DYGyX5X0P4gbHcB9Rv5pdlxwY1CrzVKhODB
-         H7hxfGKh0tm4RZ7b+2hQP0bGpJClTbZBDfB2KRK5BjWZF72mM81+mLVeFAhtSI9fyz
-         qFWV9o0T60uWA==
-Date:   Mon, 1 Jul 2019 11:12:09 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the xfs tree
-Message-ID: <20190701111209.699082b7@canb.auug.org.au>
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2FDB1A0194;
+        Mon,  1 Jul 2019 11:22:06 +1000 (AEST)
+Subject: Re: [PATCH 22/39] docs: ocxl.rst: add it to the uAPI book
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+References: <cover.1561724493.git.mchehab+samsung@kernel.org>
+ <ee63ec4412f2f8c87da877f67f693f2cd85c1a37.1561724493.git.mchehab+samsung@kernel.org>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Mon, 1 Jul 2019 11:21:58 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/GiBgqkQeV_Fn=xa4769+.=9"; protocol="application/pgp-signature"
+In-Reply-To: <ee63ec4412f2f8c87da877f67f693f2cd85c1a37.1561724493.git.mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070101-0028-0000-0000-0000037F25DE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070101-0029-0000-0000-0000243F590A
+Message-Id: <7ac03678-3395-cdcf-6401-7856da4287c7@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-30_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907010016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/GiBgqkQeV_Fn=xa4769+.=9
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 28/6/19 10:30 pm, Mauro Carvalho Chehab wrote:
+> The content of this file is user-faced.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-Hi all,
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-After merging the xfs tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
+> ---
+>   Documentation/{ => userspace-api}/accelerators/ocxl.rst | 2 --
+>   Documentation/userspace-api/index.rst                   | 1 +
+>   MAINTAINERS                                             | 2 +-
+>   3 files changed, 2 insertions(+), 3 deletions(-)
+>   rename Documentation/{ => userspace-api}/accelerators/ocxl.rst (99%)
+> 
+> diff --git a/Documentation/accelerators/ocxl.rst b/Documentation/userspace-api/accelerators/ocxl.rst
+> similarity index 99%
+> rename from Documentation/accelerators/ocxl.rst
+> rename to Documentation/userspace-api/accelerators/ocxl.rst
+> index b1cea19a90f5..14cefc020e2d 100644
+> --- a/Documentation/accelerators/ocxl.rst
+> +++ b/Documentation/userspace-api/accelerators/ocxl.rst
+> @@ -1,5 +1,3 @@
+> -:orphan:
+> -
+>   ========================================================
+>   OpenCAPI (Open Coherent Accelerator Processor Interface)
+>   ========================================================
+> diff --git a/Documentation/userspace-api/index.rst b/Documentation/userspace-api/index.rst
+> index a3233da7fa88..ad494da40009 100644
+> --- a/Documentation/userspace-api/index.rst
+> +++ b/Documentation/userspace-api/index.rst
+> @@ -20,6 +20,7 @@ place where this information is gathered.
+>      seccomp_filter
+>      unshare
+>      spec_ctrl
+> +   accelerators/ocxl
+>   
+>   .. only::  subproject and html
+>   
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 29d1498ad39d..f723371dccd0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11483,7 +11483,7 @@ F:	arch/powerpc/include/asm/pnv-ocxl.h
+>   F:	drivers/misc/ocxl/
+>   F:	include/misc/ocxl*
+>   F:	include/uapi/misc/ocxl.h
+> -F:	Documentation/accelerators/ocxl.rst
+> +F:	Documentation/userspace-api/accelerators/ocxl.rst
+>   
+>   OMAP AUDIO SUPPORT
+>   M:	Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
 
-fs/orangefs/file.c: In function 'orangefs_getflags':
-fs/orangefs/file.c:372:7: warning: assignment to 'long unsigned int *' from=
- '__u64' {aka 'long long unsigned int'} makes pointer from integer without =
-a cast [-Wint-conversion]
-  uval =3D val;
-       ^
-fs/orangefs/file.c: In function 'orangefs_ioctl':
-fs/orangefs/file.c:381:24: error: implicit declaration of function 'file_io=
-ctl'; did you mean 'file_path'? [-Werror=3Dimplicit-function-declaration]
-  struct inode *inode =3D file_ioctl(file);
-                        ^~~~~~~~~~
-                        file_path
-fs/orangefs/file.c:381:24: warning: initialization of 'struct inode *' from=
- 'int' makes pointer from integer without a cast [-Wint-conversion]
-fs/orangefs/file.c:418:35: error: 'old_uval' undeclared (first use in this =
-function); did you mean 'p4d_val'?
-   ret =3D orangefs_getflags(inode, &old_uval);
-                                   ^~~~~~~~
-                                   p4d_val
-fs/orangefs/file.c:418:35: note: each undeclared identifier is reported onl=
-y once for each function it appears in
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
-Caused by commit
-
-  de2baa49bbae ("vfs: create a generic checking and prep function for FS_IO=
-C_SETFLAGS")
-
-I have used the xfs tree from next-20190628 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/GiBgqkQeV_Fn=xa4769+.=9
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ZXekACgkQAVBC80lX
-0GwDoAf+ORrfhB4XavC2KJUhXgoqhs75kuRhvoxtnUb0j15p++q00JVuAoKXDF0e
-AGuNMqTt0+nWCBwe0Ds6Vky/m20YsdT0PccVl2V3UXEDUiNShsNSVtEGuaFkqrIW
-4bJUVNji3kU95lox7L8Rm6wMo1xZazCHvaeAMMMi4MmeoP4Y8oZT63MNJE0je21j
-YOq9QEZiZIdeQ/hud8icxUapL8UMPLgpsOLrcV15NqTM9z+vurqRpKLJlFR9421c
-XAbSX5WIlMBIfWbFCPqP2zuSng/fRJwA6/dSvNiFPDOjG8LNXIb1agCfhk/kqZdM
-aNVbi57y4KdLYYHAo9skpCaHbr91AA==
-=NGNr
------END PGP SIGNATURE-----
-
---Sig_/GiBgqkQeV_Fn=xa4769+.=9--
