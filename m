@@ -4,86 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF007C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33BDC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95BDA2145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B522145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfGAGjr (ORCPT
+        id S1727397AbfGAGmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:39:47 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:53544 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfGAGjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 02:39:46 -0400
-X-Greylist: delayed 934 seconds by postgrey-1.27 at vger.kernel.org; Mon, 01 Jul 2019 02:39:45 EDT
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 9393B81F830A4B267BC5;
-        Mon,  1 Jul 2019 14:24:07 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x616MhkX033824;
-        Mon, 1 Jul 2019 14:22:43 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019070114224481-1995713 ;
-          Mon, 1 Jul 2019 14:22:44 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     pbonzini@redhat.com
-Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
-Subject: [PATCH 1/4] kvm: x86: Add CONFIG_KVM_DEBUG
-Date:   Mon, 1 Jul 2019 14:21:08 +0800
-Message-Id: <1561962071-25974-2-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1561962071-25974-1-git-send-email-wang.yi59@zte.com.cn>
-References: <1561962071-25974-1-git-send-email-wang.yi59@zte.com.cn>
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-01 14:22:44,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-01 14:22:44,
-        Serialize complete at 2019-07-01 14:22:44
-X-MAIL: mse-fl1.zte.com.cn x616MhkX033824
+        Mon, 1 Jul 2019 02:42:13 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:10379 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725616AbfGAGmM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 02:42:12 -0400
+X-UUID: 9dafeb1bcff74413b6d2fe727a7d3b41-20190701
+X-UUID: 9dafeb1bcff74413b6d2fe727a7d3b41-20190701
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 361156208; Mon, 01 Jul 2019 14:42:06 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 1 Jul 2019 14:42:05 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 1 Jul 2019 14:42:04 +0800
+From:   <qii.wang@mediatek.com>
+To:     <bbrezillon@kernel.org>
+CC:     <robh+dt@kernel.org>, <linux-i3c@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <qii.wang@mediatek.com>,
+        <matthias.bgg@gmail.com>
+Subject: [PATCH] dt-bindings: i3c: cdns: Use correct cells for I2C device
+Date:   Mon, 1 Jul 2019 14:42:02 +0800
+Message-ID: <1561963322-11513-1-git-send-email-qii.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some *_debug functions in KVM, it may be
-better to introduce CONFIG_DEBUG_KVM to replace the
-*_debug macro, which can avoid bloating and slowing KVM,
-as Sean suggested.
+From: Qii Wang <qii.wang@mediatek.com>
 
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+I2C device reg should be "reg = <0x52 0x0 0x10>;"
+
+Signed-off-by: Qii Wang <qii.wang@mediatek.com>
 ---
- arch/x86/kvm/Kconfig | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../devicetree/bindings/i3c/cdns,i3c-master.txt    |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index fc04241..7e76eb2 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -95,6 +95,14 @@ config KVM_MMU_AUDIT
- 	 This option adds a R/W kVM module parameter 'mmu_audit', which allows
- 	 auditing of KVM MMU events at runtime.
+diff --git a/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt b/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
+index 69da211..1cf6182 100644
+--- a/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
++++ b/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
+@@ -38,6 +38,6 @@ Example:
  
-+config KVM_DEBUG
-+	bool "Enable KVM debugging"
-+	default n
-+	depends on KVM
-+	---help---
-+	Say Y here if you want to enable verbose KVM debug output.
-+
-+
- # OK, it's a little counter-intuitive to do this, but it puts it neatly under
- # the virtualization menu.
- source "drivers/vhost/Kconfig"
+ 		nunchuk: nunchuk@52 {
+ 			compatible = "nintendo,nunchuk";
+-			reg = <0x52 0x80000010 0>;
++			reg = <0x52 0x0 0x10>;
+ 		};
+ 	};
 -- 
-1.8.3.1
+1.7.9.5
 
