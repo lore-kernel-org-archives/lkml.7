@@ -2,119 +2,129 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA678C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F67FC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC08E20881
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4931820881
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:23:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SL8qpN87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfGAMXJ (ORCPT
+        id S1728584AbfGAMXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 08:23:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39584 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727820AbfGAMXJ (ORCPT
+        Mon, 1 Jul 2019 08:23:42 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38700 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbfGAMXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 08:23:09 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61CIYfv145254
-        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 08:23:07 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tfhnmt0kw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 08:23:07 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 1 Jul 2019 13:23:07 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Jul 2019 13:23:03 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61CN2YM13304396
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 12:23:02 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8F104B2064;
-        Mon,  1 Jul 2019 12:23:02 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6DD10B205F;
-        Mon,  1 Jul 2019 12:23:02 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.128.230])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Jul 2019 12:23:02 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id E411A16C5D9E; Mon,  1 Jul 2019 05:23:05 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 05:23:05 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Scott Wood <swood@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Reply-To: paulmck@linux.ibm.com
-References: <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
- <20190627203612.GD26519@linux.ibm.com>
- <20190628141522.GF3402@hirez.programming.kicks-ass.net>
- <20190628155404.GV26519@linux.ibm.com>
- <20190628160408.GH32547@worktop.programming.kicks-ass.net>
- <20190628172056.GW26519@linux.ibm.com>
- <20190701094215.GR3402@hirez.programming.kicks-ass.net>
- <20190701102442.35grdpcsbrwyyaco@linutronix.de>
+        Mon, 1 Jul 2019 08:23:42 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r12so23209397edo.5;
+        Mon, 01 Jul 2019 05:23:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TqJ5FwFb7YyscLWlQXilVsOJTgQDq/FFV13jnAzIBSA=;
+        b=SL8qpN87+0x+YgiO7CxEarJHROlGcqh2Hz8kq2O/Xcy6RIT4sMzzDVbyxuLHskKkDY
+         KTR6ri9py2vcxPGxcQ9KPtHJiIY17F0lAo8lR/9D61FOc1d7Q1obGl7/Zj4MIgfHbtRn
+         Q2Zmfpi3HMGX6MhOYPUiKGs43PAQHMY2/dAoJTW8ZFWvXNCyYfk7Cj9an6Jm7d6MrPpr
+         rLtyKyfErpdU6wyepGoCK2aYLJiJ4lRy+rjFfjhUF5HBIq6NQGdrjbybSdJhCl8bkz1E
+         o5xnFH/dBkK7IVDvqJvAuldVd2ZlLpawCbJa9vsX2yby7HzP+F3SITT+gc2HobR54ZlQ
+         6A0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TqJ5FwFb7YyscLWlQXilVsOJTgQDq/FFV13jnAzIBSA=;
+        b=dUIWWD9DRQuyp3V7G8ATh6HdkFdPDOq+DXNDA8w2tLMfCRGWeIWdp3ly7BKXC/8GIp
+         VeEHskBSdoDUfHfExvALoUe1ThEEtnlbQH/3Gfb16UQ0sBE926RbaMqKflJjpEbh/iG3
+         1Ysco/0gQ9di784HDlC7f4RBb5Wu9QdbExpV3tb3C+CzKleAbAdbHaRlLMbtKXrDXY0g
+         RIHBNPjSrruJ03qmnBC2uXs2JXxAbNjAu31z4lbBwEp140ZLo3ihg3+LEvlgBmj2fqf6
+         0/fEikvKz3Zvvxjgds3cRN6+d2boJhgKjTm+8nC2+rxW8Zz9tr6vxgRisxad71ZpRuW/
+         4LwA==
+X-Gm-Message-State: APjAAAUMuqX0UF0W1gAV8IW5hGoWRlF95oqcqddaWHzALzhzc/Z2unkH
+        zK6ISLBq3BlCMtmLME7VYgwF/Y5sYGG2jEMTdm8=
+X-Google-Smtp-Source: APXvYqx0HFUnYm5/0uR+9Qh51tm1qPSRjeb5pdf0KaghBF5O1NR0L3wpZtjTEGFSRaNosFZa0Miceq4KmgZoL2uihCk=
+X-Received: by 2002:a50:bdc2:: with SMTP id z2mr28517471edh.245.1561983820432;
+ Mon, 01 Jul 2019 05:23:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701102442.35grdpcsbrwyyaco@linutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19070112-0072-0000-0000-000004430B4F
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011359; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01225887; UDB=6.00645332; IPR=6.01007099;
- MB=3.00027534; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-01 12:23:06
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070112-0073-0000-0000-00004CB34210
-Message-Id: <20190701122305.GB26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=833 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010154
+References: <cover.1561706800.git.joabreu@synopsys.com> <e4e9ee4cb9c3e7957fe0a09f88b20bc011e2bd4c.1561706801.git.joabreu@synopsys.com>
+ <CA+FuTSc4MFfjBNpvN2hRh9_MRmxSYw2xY6wp32Hsbw0E=pqUdw@mail.gmail.com> <BN8PR12MB326638B0BA74DA762C89DF54D3F90@BN8PR12MB3266.namprd12.prod.outlook.com>
+In-Reply-To: <BN8PR12MB326638B0BA74DA762C89DF54D3F90@BN8PR12MB3266.namprd12.prod.outlook.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Mon, 1 Jul 2019 08:23:03 -0400
+Message-ID: <CAF=yD-+55uqYawF9oUFVT5T_cyxso4s5r+vxFrcxBTXuieNVRA@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 06/10] net: stmmac: Do not disable interrupts
+ when cleaning TX
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 12:24:42PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-07-01 11:42:15 [+0200], Peter Zijlstra wrote:
-> > I'm not sure if smp_send_reschedule() can be used as self-IPI, some
-> > hardware doesn't particularly like that IIRC. That is, hardware might
-> > only have interfaces to IPI _other_ CPUs, but not self.
-> > 
-> > The normal scheduler code takes care to not call smp_send_reschedule()
-> > to self.
-> 
-> and irq_work:
->   471ba0e686cb1 ("irq_work: Do not raise an IPI when queueing work on the local CPU")
+On Mon, Jul 1, 2019 at 6:15 AM Jose Abreu <Jose.Abreu@synopsys.com> wrote:
+>
+> From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+>
+> > By the
+> >
+> >         if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
+> >                 stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
+> >                 napi_schedule_irqoff(&ch->rx_napi);
+> >         }
+> >
+> > branch directly above? If so, is it possible to have fewer rx than tx
+> > queues and miss this?
+>
+> Yes, it is possible.
 
-OK, so it looks like I will need to use something else.  But thank you
-for calling my attention to this commit.
+And that is not a problem?
 
-							Thanx, Paul
+>
+> > this logic seems more complex than needed?
+> >
+> >         if (status)
+> >                 status |= handle_rx | handle_tx;
+> >
+> >         if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
+> >
+> >         }
+> >
+> >         if ((status & handle_tx) && (chan < priv->plat->tx_queues_to_use)) {
+> >
+> >         }
+> >
+> > status & handle_rx implies status & handle_tx and vice versa.
+>
+> This is removed in patch 09/10.
+>
+> > > -       if (work_done < budget && napi_complete_done(napi, work_done))
+> > > -               stmmac_enable_dma_irq(priv, priv->ioaddr, chan);
+> > > +       if (work_done < budget)
+> > > +               napi_complete_done(napi, work_done);
+> >
+> > It does seem odd that stmmac_napi_poll_rx and stmmac_napi_poll_tx both
+> > call stmmac_enable_dma_irq(..) independent of the other. Shouldn't the
+> > IRQ remain masked while either is active or scheduled? That is almost
+> > what this patch does, though not exactly.
+>
+> After patch 09/10 the interrupts will only be disabled by RX NAPI and
+> re-enabled by it again. I can do some tests on whether disabling
+> interrupts independently gives more performance but I wouldn't expect so
+> because the real bottleneck when I do iperf3 tests is the RX path ...
 
+Sharing the IRQ sounds fine. My only concern was TX-only IRQs in case
+more TX than RX queues are configured. If that is possible with this
+driver.
