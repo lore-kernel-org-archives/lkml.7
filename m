@@ -2,401 +2,201 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911ECC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B94C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1782133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4782089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:10:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="N+2gX9Uf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbfGAKIY (ORCPT
+        id S1728695AbfGAKKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 06:08:24 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:43669 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbfGAKIX (ORCPT
+        Mon, 1 Jul 2019 06:10:13 -0400
+Received: from zimbra2.kalray.eu ([92.103.151.219]:59440 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfGAKKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 06:08:23 -0400
-X-Originating-IP: 83.155.44.161
-Received: from classic.redhat.com (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
-        (Authenticated sender: hadess@hadess.net)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 5E0C7FF803;
-        Mon,  1 Jul 2019 10:08:20 +0000 (UTC)
-From:   Bastien Nocera <hadess@hadess.net>
-To:     linux-input@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Bastien Nocera <bnocera@redhat.com>
-Subject: [PATCH v4] HID: sb0540: add support for Creative SB0540 IR receivers
-Date:   Mon,  1 Jul 2019 12:08:19 +0200
-Message-Id: <20190701100819.6032-1-hadess@hadess.net>
-X-Mailer: git-send-email 2.21.0
+        Mon, 1 Jul 2019 06:10:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 0C40427E726A;
+        Mon,  1 Jul 2019 12:10:12 +0200 (CEST)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id N-4POhMpfghM; Mon,  1 Jul 2019 12:10:11 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 741BF27F12AC;
+        Mon,  1 Jul 2019 12:10:11 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 741BF27F12AC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1561975811;
+        bh=m4QWKjx8wN1q/Vwu5YpAP5qWJn0qhGKrOcLDMO1GSPs=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=N+2gX9UfRLROXuuPy3f7psjy7zuIVKeOmNdn87ayob44Bv9lKmwmvkK5iur4N8uBF
+         6HlhXqao2DUwzDrlLltw+oOcYJcV1zN89pG6Ijx6cX5vXs7m2aFIWSG5D+lp2GsKNr
+         FtW+J764ij+xjRSeXnHrsYGD417RyKBpRLlvxipQ=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id o70wfnXnXN-u; Mon,  1 Jul 2019 12:10:11 +0200 (CEST)
+Received: from zimbra2.kalray.eu (zimbra2.kalray.eu [192.168.40.202])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 5B80027E726A;
+        Mon,  1 Jul 2019 12:10:11 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 12:10:11 +0200 (CEST)
+From:   Marta Rybczynska <mrybczyn@kalray.eu>
+To:     kbusch@kernel.org, axboe@fb.com, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Jean-Baptiste Riaux <jbriaux@kalray.eu>,
+        Samuel Jones <sjones@kalray.eu>
+Message-ID: <708068303.29979589.1561975811341.JavaMail.zimbra@kalray.eu>
+Subject: [PATCH] nvme: fix multipath crash when ANA deactivated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3794)
+Thread-Index: 0Nc/QRZn3cXa+OdMMeYxN+j2FQCwJg==
+Thread-Topic: nvme: fix multipath crash when ANA deactivated
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bastien Nocera <bnocera@redhat.com>
+Fix a crash with multipath activated. It happends when ANA log
+page is larger than MDTS and because of that ANA is disabled.
+When connecting the target, the driver in nvme_parse_ana_log
+then tries to access nvme_mpath_init.ctrl->ana_log_buf that is
+unallocated. The signature is as follows:
 
-Add a new hid driver for the Creative SB0540 IR receiver. This receiver
-is usually coupled with an RM-1500 or an RM-1800 remote control.
+[  300.433586] nvme nvme0: ANA log page size (8208) larger than MDTS (8192).
+[  300.435387] nvme nvme0: disabling ANA support.
+[  300.437835] nvme nvme0: creating 4 I/O queues.
+[  300.459132] nvme nvme0: new ctrl: NQN "nqn.0.0.0", addr 10.91.0.1:8009
+[  300.464609] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+[  300.466342] #PF error: [normal kernel read fault]
+[  300.467385] PGD 0 P4D 0
+[  300.467987] Oops: 0000 [#1] SMP PTI
+[  300.468787] CPU: 3 PID: 50 Comm: kworker/u8:1 Not tainted 5.0.20kalray+ #4
+[  300.470264] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+[  300.471532] Workqueue: nvme-wq nvme_scan_work [nvme_core]
+[  300.472724] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
+[  300.474038] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
+[  300.477374] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
+[  300.478334] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
+[  300.479784] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
+[  300.481488] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
+[  300.483203] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
+[  300.484928] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
+[  300.486626] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
+[  300.488538] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  300.489907] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
+[  300.491612] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  300.493303] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  300.494991] Call Trace:
+[  300.495645]  nvme_mpath_add_disk+0x5c/0xb0 [nvme_core]
+[  300.496880]  nvme_validate_ns+0x2ef/0x550 [nvme_core]
+[  300.498105]  ? nvme_identify_ctrl.isra.45+0x6a/0xb0 [nvme_core]
+[  300.499539]  nvme_scan_work+0x2b4/0x370 [nvme_core]
+[  300.500717]  ? __switch_to_asm+0x35/0x70
+[  300.501663]  process_one_work+0x171/0x380
+[  300.502340]  worker_thread+0x49/0x3f0
+[  300.503079]  kthread+0xf8/0x130
+[  300.503795]  ? max_active_store+0x80/0x80
+[  300.504690]  ? kthread_bind+0x10/0x10
+[  300.505502]  ret_from_fork+0x35/0x40
+[  300.506280] Modules linked in: nvme_tcp nvme_rdma rdma_cm iw_cm ib_cm ib_core nvme_fabrics nvme_core xt_physdev ip6table_raw ip6table_mangle ip6table_filter ip6_tables xt_comment iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xt_CHECKSUM iptable_mangle iptable_filter veth ebtable_filter ebtable_nat ebtables iptable_raw vxlan ip6_udp_tunnel udp_tunnel sunrpc joydev pcspkr virtio_balloon br_netfilter bridge stp llc ip_tables xfs libcrc32c ata_generic pata_acpi virtio_net virtio_console net_failover virtio_blk failover ata_piix serio_raw libata virtio_pci virtio_ring virtio
+[  300.514984] CR2: 0000000000000008
+[  300.515569] ---[ end trace faa2eefad7e7f218 ]---
+[  300.516354] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
+[  300.517330] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
+[  300.520353] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
+[  300.521229] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
+[  300.522399] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
+[  300.523560] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
+[  300.524734] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
+[  300.525915] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
+[  300.527084] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
+[  300.528396] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  300.529440] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
+[  300.530739] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  300.531989] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  300.533264] Kernel panic - not syncing: Fatal exception
+[  300.534338] Kernel Offset: 0x17c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[  300.536227] ---[ end Kernel panic - not syncing: Fatal exception ]---
 
-The scrollwheels on the RM-1800 remote are not bound, as they are
-labelled for specific audio controls that don't usually exist on most
-systems. They can be remapped using standard Linux keyboard
-remapping tools.
-
-Signed-off-by: Bastien Nocera <bnocera@redhat.com>
+Signed-off-by: Marta Rybczynska <marta.rybczynska@kalray.eu>
+Tested-by: Jean-Baptiste Riaux <jbriaux@kalray.eu>
 ---
- MAINTAINERS                       |   6 +
- drivers/hid/Kconfig               |   9 +
- drivers/hid/Makefile              |   1 +
- drivers/hid/hid-creative-sb0540.c | 268 ++++++++++++++++++++++++++++++
- drivers/hid/hid-ids.h             |   1 +
- 5 files changed, 285 insertions(+)
- create mode 100644 drivers/hid/hid-creative-sb0540.c
+ drivers/nvme/host/multipath.c | 12 ++++++++++--
+ drivers/nvme/host/nvme.h      |  1 +
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d0ed735994a5..6fc022d152c8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4227,6 +4227,12 @@ S:	Maintained
- F:	Documentation/filesystems/cramfs.txt
- F:	fs/cramfs/
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 499acf0..61dae87 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -12,11 +12,16 @@
+ MODULE_PARM_DESC(multipath,
+ 	"turn on native support for multiple controllers per subsystem");
  
-+CREATIVE SB0540
-+M:	Bastien Nocera <hadess@hadess.net>
-+L:	linux-input@vger.kernel.org
-+S:	Maintained
-+F:	drivers/hid/hid-creative-sb0540.c
-+
- CRYPTO API
- M:	Herbert Xu <herbert@gondor.apana.org.au>
- M:	"David S. Miller" <davem@davemloft.net>
-diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index 3872e03d9a59..a70999f9c639 100644
---- a/drivers/hid/Kconfig
-+++ b/drivers/hid/Kconfig
-@@ -273,6 +273,15 @@ config HID_CP2112
- 	and gpiochip to expose these functions of the CP2112. The
- 	customizable USB descriptor fields are exposed as sysfs attributes.
+-inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
++inline bool nvme_ctrl_has_ana_cap(struct nvme_ctrl *ctrl)
+ {
+ 	return multipath && ctrl->subsys && (ctrl->subsys->cmic & (1 << 3));
+ }
  
-+config HID_CREATIVE_SB0540
-+	tristate "Creative SB0540 infrared receiver"
-+	depends on USB_HID
-+	help
-+	Support for Creative infrared SB0540-compatible remote controls, such
-+	as the RM-1500 and RM-1800 remotes.
-+
-+	Say Y here if you want support for Creative SB0540 infrared receiver.
-+
- config HID_CYPRESS
- 	tristate "Cypress mouse and barcode readers"
- 	depends on HID
-diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
-index cc5d827c9164..1ad662fe37b6 100644
---- a/drivers/hid/Makefile
-+++ b/drivers/hid/Makefile
-@@ -27,6 +27,7 @@ obj-$(CONFIG_HID_ALPS)		+= hid-alps.o
- obj-$(CONFIG_HID_ACRUX)		+= hid-axff.o
- obj-$(CONFIG_HID_APPLE)		+= hid-apple.o
- obj-$(CONFIG_HID_APPLEIR)	+= hid-appleir.o
-+obj-$(CONFIG_HID_CREATIVE_SB0540)	+= hid-creative-sb0540.c
- obj-$(CONFIG_HID_ASUS)		+= hid-asus.o
- obj-$(CONFIG_HID_AUREAL)	+= hid-aureal.o
- obj-$(CONFIG_HID_BELKIN)	+= hid-belkin.o
-diff --git a/drivers/hid/hid-creative-sb0540.c b/drivers/hid/hid-creative-sb0540.c
-new file mode 100644
-index 000000000000..6b7c81ccf310
---- /dev/null
-+++ b/drivers/hid/hid-creative-sb0540.c
-@@ -0,0 +1,268 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * HID driver for the Creative SB0540 receiver
-+ *
-+ * Copyright (C) 2019 Red Hat Inc. All Rights Reserved
-+ *
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/hid.h>
-+#include <linux/module.h>
-+#include "hid-ids.h"
-+
-+MODULE_AUTHOR("Bastien Nocera <hadess@hadess.net>");
-+MODULE_DESCRIPTION("HID Creative SB0540 receiver");
-+MODULE_LICENSE("GPL");
-+
-+static const unsigned short creative_sb0540_key_table[] = {
-+	KEY_POWER,
-+	KEY_RESERVED,		/* text: 24bit */
-+	KEY_RESERVED,		/* 24bit wheel up */
-+	KEY_RESERVED,		/* 24bit wheel down */
-+	KEY_RESERVED,		/* text: CMSS */
-+	KEY_RESERVED,		/* CMSS wheel Up */
-+	KEY_RESERVED,		/* CMSS wheel Down */
-+	KEY_RESERVED,		/* text: EAX */
-+	KEY_RESERVED,		/* EAX wheel up */
-+	KEY_RESERVED,		/* EAX wheel down */
-+	KEY_RESERVED,		/* text: 3D Midi */
-+	KEY_RESERVED,		/* 3D Midi wheel up */
-+	KEY_RESERVED,		/* 3D Midi wheel down */
-+	KEY_MUTE,
-+	KEY_VOLUMEUP,
-+	KEY_VOLUMEDOWN,
-+	KEY_UP,
-+	KEY_LEFT,
-+	KEY_RIGHT,
-+	KEY_REWIND,
-+	KEY_OK,
-+	KEY_FASTFORWARD,
-+	KEY_DOWN,
-+	KEY_AGAIN,		/* text: Return, symbol: Jump to */
-+	KEY_PLAY,		/* text: Start */
-+	KEY_ESC,		/* text: Cancel */
-+	KEY_RECORD,
-+	KEY_OPTION,
-+	KEY_MENU,		/* text: Display */
-+	KEY_PREVIOUS,
-+	KEY_PLAYPAUSE,
-+	KEY_NEXT,
-+	KEY_SLOW,
-+	KEY_STOP,
-+	KEY_NUMERIC_1,
-+	KEY_NUMERIC_2,
-+	KEY_NUMERIC_3,
-+	KEY_NUMERIC_4,
-+	KEY_NUMERIC_5,
-+	KEY_NUMERIC_6,
-+	KEY_NUMERIC_7,
-+	KEY_NUMERIC_8,
-+	KEY_NUMERIC_9,
-+	KEY_NUMERIC_0
-+};
-+
-+/*
-+ * Codes and keys from lirc's
-+ * remotes/creative/lircd.conf.alsa_usb
-+ * order and size must match creative_sb0540_key_table[] above
-+ */
-+static const unsigned short creative_sb0540_codes[] = {
-+	0x619E,
-+	0x916E,
-+	0x926D,
-+	0x936C,
-+	0x718E,
-+	0x946B,
-+	0x956A,
-+	0x8C73,
-+	0x9669,
-+	0x9768,
-+	0x9867,
-+	0x9966,
-+	0x9A65,
-+	0x6E91,
-+	0x629D,
-+	0x639C,
-+	0x7B84,
-+	0x6B94,
-+	0x728D,
-+	0x8778,
-+	0x817E,
-+	0x758A,
-+	0x8D72,
-+	0x8E71,
-+	0x8877,
-+	0x7C83,
-+	0x738C,
-+	0x827D,
-+	0x7689,
-+	0x7F80,
-+	0x7986,
-+	0x7A85,
-+	0x7D82,
-+	0x857A,
-+	0x8B74,
-+	0x8F70,
-+	0x906F,
-+	0x8A75,
-+	0x847B,
-+	0x7887,
-+	0x8976,
-+	0x837C,
-+	0x7788,
-+	0x807F
-+};
-+
-+struct creative_sb0540 {
-+	struct input_dev *input_dev;
-+	struct hid_device *hid;
-+	unsigned short keymap[ARRAY_SIZE(creative_sb0540_key_table)];
-+};
-+
-+static inline u64 reverse(u64 data, int bits)
++inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
 +{
-+	int i;
-+	u64 c;
-+
-+	c = 0;
-+	for (i = 0; i < bits; i++) {
-+		c |= (u64) (((data & (((u64) 1) << i)) ? 1 : 0))
-+			<< (bits - 1 - i);
-+	}
-+	return (c);
++	return nvme_ctrl_has_ana_cap(ctrl) && ctrl->ana_enabled;
 +}
 +
-+static int get_key(struct creative_sb0540 *creative_sb0540, u64 keycode)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(creative_sb0540_codes); i++) {
-+		if (creative_sb0540_codes[i] == keycode)
-+			return creative_sb0540->keymap[i];
-+	}
-+
-+	return 0;
-+
-+}
-+
-+static int creative_sb0540_raw_event(struct hid_device *hid,
-+	struct hid_report *report, u8 *data, int len)
-+{
-+	struct creative_sb0540 *creative_sb0540 = hid_get_drvdata(hid);
-+	u64 code, main_code;
-+	int key;
-+
-+	if (len != 6)
-+		goto out;
-+
-+	/* From daemons/hw_hiddev.c sb0540_rec() in lirc */
-+	code = reverse(data[5], 8);
-+	main_code = (code << 8) + ((~code) & 0xff);
-+
-+	/*
-+	 * Flip to get values in the same format as
-+	 * remotes/creative/lircd.conf.alsa_usb in lirc
-+	 */
-+	main_code = ((main_code & 0xff) << 8) +
-+		((main_code & 0xff00) >> 8);
-+
-+	key = get_key(creative_sb0540, main_code);
-+	if (key == 0 || key == KEY_RESERVED) {
-+		hid_err(hid, "Could not get a key for main_code %llX\n",
-+			main_code);
-+		return 0;
-+	}
-+
-+	input_report_key(creative_sb0540->input_dev, key, 1);
-+	input_report_key(creative_sb0540->input_dev, key, 0);
-+	input_sync(creative_sb0540->input_dev);
-+
-+	/* let hidraw and hiddev handle the report */
-+	return 0;
-+}
-+
-+static int creative_sb0540_input_configured(struct hid_device *hid,
-+		struct hid_input *hidinput)
-+{
-+	struct input_dev *input_dev = hidinput->input;
-+	struct creative_sb0540 *creative_sb0540 = hid_get_drvdata(hid);
-+	int i;
-+
-+	creative_sb0540->input_dev = input_dev;
-+
-+	input_dev->keycode = creative_sb0540->keymap;
-+	input_dev->keycodesize = sizeof(unsigned short);
-+	input_dev->keycodemax = ARRAY_SIZE(creative_sb0540->keymap);
-+
-+	input_dev->evbit[0] = BIT(EV_KEY) | BIT(EV_REP);
-+
-+	memcpy(creative_sb0540->keymap, creative_sb0540_key_table,
-+		sizeof(creative_sb0540->keymap));
-+	for (i = 0; i < ARRAY_SIZE(creative_sb0540_key_table); i++)
-+		set_bit(creative_sb0540->keymap[i], input_dev->keybit);
-+	clear_bit(KEY_RESERVED, input_dev->keybit);
-+
-+	return 0;
-+}
-+
-+static int creative_sb0540_input_mapping(struct hid_device *hid,
-+		struct hid_input *hi, struct hid_field *field,
-+		struct hid_usage *usage, unsigned long **bit, int *max)
-+{
-+	/*
-+	 * We are remapping the keys ourselves, so ignore the hid-input
-+	 * keymap processing.
-+	 */
-+	return -1;
-+}
-+
-+static int creative_sb0540_probe(struct hid_device *hid,
-+		const struct hid_device_id *id)
-+{
-+	int ret;
-+	struct creative_sb0540 *creative_sb0540;
-+
-+	creative_sb0540 = devm_kzalloc(&hid->dev,
-+		sizeof(struct creative_sb0540), GFP_KERNEL);
-+
-+	if (!creative_sb0540)
-+		return -ENOMEM;
-+
-+	creative_sb0540->hid = hid;
-+
-+	/* force input as some remotes bypass the input registration */
-+	hid->quirks |= HID_QUIRK_HIDINPUT_FORCE;
-+
-+	hid_set_drvdata(hid, creative_sb0540);
-+
-+	ret = hid_parse(hid);
-+	if (ret) {
-+		hid_err(hid, "parse failed\n");
-+		return ret;
-+	}
-+
-+	ret = hid_hw_start(hid, HID_CONNECT_DEFAULT);
-+	if (ret) {
-+		hid_err(hid, "hw start failed\n");
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct hid_device_id creative_sb0540_devices[] = {
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_CREATIVELABS, USB_DEVICE_ID_CREATIVE_SB0540) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(hid, creative_sb0540_devices);
-+
-+static struct hid_driver creative_sb0540_driver = {
-+	.name = "creative-sb0540",
-+	.id_table = creative_sb0540_devices,
-+	.raw_event = creative_sb0540_raw_event,
-+	.input_configured = creative_sb0540_input_configured,
-+	.probe = creative_sb0540_probe,
-+	.input_mapping = creative_sb0540_input_mapping,
-+};
-+module_hid_driver(creative_sb0540_driver);
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 826324997686..206b7065da86 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -312,6 +312,7 @@
- #define USB_VENDOR_ID_CREATIVELABS	0x041e
- #define USB_DEVICE_ID_CREATIVE_SB_OMNI_SURROUND_51	0x322c
- #define USB_DEVICE_ID_PRODIKEYS_PCMIDI	0x2801
-+#define USB_DEVICE_ID_CREATIVE_SB0540	0x3100
+ /*
+  * If multipathing is enabled we need to always use the subsystem instance
+  * number for numbering our devices to avoid conflicts between subsystems that
+@@ -614,7 +619,7 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ {
+ 	int error;
  
- #define USB_VENDOR_ID_CVTOUCH		0x1ff7
- #define USB_DEVICE_ID_CVTOUCH_SCREEN	0x0013
+-	if (!nvme_ctrl_use_ana(ctrl))
++	if (!nvme_ctrl_has_ana_cap(ctrl))
+ 		return 0;
+ 
+ 	ctrl->anacap = id->anacap;
+@@ -647,6 +652,8 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 	error = nvme_read_ana_log(ctrl, true);
+ 	if (error)
+ 		goto out_free_ana_log_buf;
++
++	ctrl->ana_enabled = true;
+ 	return 0;
+ out_free_ana_log_buf:
+ 	kfree(ctrl->ana_log_buf);
+@@ -659,5 +666,6 @@ void nvme_mpath_uninit(struct nvme_ctrl *ctrl)
+ {
+ 	kfree(ctrl->ana_log_buf);
+ 	ctrl->ana_log_buf = NULL;
++	ctrl->ana_enabled = false;
+ }
+ 
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 55553d2..8daefeb 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -219,6 +219,7 @@ struct nvme_ctrl {
+ 	u8 anatt;
+ 	u32 anagrpmax;
+ 	u32 nanagrpid;
++	bool ana_enabled;
+ 	struct mutex ana_lock;
+ 	struct nvme_ana_rsp_hdr *ana_log_buf;
+ 	size_t ana_log_size;
 -- 
-2.21.0
+1.8.3.1
 
