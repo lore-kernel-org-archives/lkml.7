@@ -7,154 +7,135 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A97CC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BF9C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 369AA205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4846721479
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:14:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JKagJn6S"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="riEb/0iH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfGAWLH (ORCPT
+        id S1726793AbfGAWOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 18:11:07 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34959 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfGAWLH (ORCPT
+        Mon, 1 Jul 2019 18:14:47 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:58708 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfGAWOr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 18:11:07 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so8018994plp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 15:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HdrP+5n5nJbtYjgIlEc+YGa9TEsVBxE5SMpV5kWYO54=;
-        b=JKagJn6S47sY856SpNzPiGzHVpWjDL+ebHQwSACOzykVzvXyzGHcQLHUTqVHawCix6
-         rC4s3KAQVm18SbrOWBSC3X9VYjPifrRstjmJTWP9cu/pkojCW18IHa1i3L+PVr88Nz6Z
-         +eZelq7nzPP1TUKGOqtyd52Cd+CJlZF3kgPxE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HdrP+5n5nJbtYjgIlEc+YGa9TEsVBxE5SMpV5kWYO54=;
-        b=KD2IeyWXDCL6jVbnYdXJ3YWlnoGFlAFHSgHX34CDttoFb+Xar0qTCYTc2VYzEnsOJx
-         EUq6Mwuxo1OjrStf21tgZibpk7MDIl8ur4wT1y9Fkjehs+qTiKOSQpn3q3trZWzLjw6U
-         vcPbdD6I+p1jZQmB/SJWVt//fCVmh8MZ/Iv4PNrdvQ1q/CuIxEEqiOzqOTwnGSzdJ+m0
-         fBftKIb05aWfwk7o3jYAc0auGqaHFatvzqoq/CkKSZj4ZAmGK5qQxGx/GTh7fKMsRG7e
-         OPCqXm+HMiDVpzNR55v7iwkWYq+mChkxzJtcW3P1MLeX2EY7qq5SIncULBBBOlqjEXeW
-         ZVFA==
-X-Gm-Message-State: APjAAAUv6OH4tk8CQjrWlo8q1jHA7/cjH1nD2QAe+0GHFxzQjhaF8Cuw
-        JvwAmwgzUX+gWD/FV9pkVLskMQ==
-X-Google-Smtp-Source: APXvYqz06zuULBLTFE1ez0fbfhzDyTWB/DJY0xO9Mb6EE/MT2PdTDwBE7MPtcjYDNo22x5YKVDkx7A==
-X-Received: by 2002:a17:902:704c:: with SMTP id h12mr31681479plt.214.1562019066802;
-        Mon, 01 Jul 2019 15:11:06 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id y68sm12874496pfy.164.2019.07.01.15.11.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 15:11:05 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 15:11:04 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        Mon, 1 Jul 2019 18:14:47 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61M90wO042017;
+        Mon, 1 Jul 2019 22:14:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=en4SXX022hwvX0x9G0+SnC+PnaP8ULXzHBhOeJ5wAfo=;
+ b=riEb/0iHU4DXypD8J+7SMIGCa9AdG//i4jdeiMmo8To4sgCcO28Ik0Lz0JZrZ4KqsGCM
+ QGIy/DNuQqpDiFO0txlZkRqg06IZxFWAd0zbK+Wg30lyVmcU8uPUpcExXuReeoDh5R5g
+ AXVDJPLa9eZ+kDJCFsheVK19WeAAkKQyPRg4m8GX1M8yN1twpXWwW0u4zL9N9XOPEAFW
+ 13CXQrCbkKzGVxzguEpOUNqcOgDvv+5leNHbImAF4ImYvqohkaRFim43Hl0eVytTEzJ6
+ 8x4nk/qgYU7aLhM1NByhw9tgKHCfRBrWq4ep2GBEDkJHRmx2oIxiasPB7aUxsqsvbkIj 3A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2te61e050p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 22:14:00 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61MCxh2098486;
+        Mon, 1 Jul 2019 22:13:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2tebqg5w2n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 22:13:59 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x61MDwgS024959;
+        Mon, 1 Jul 2019 22:13:58 GMT
+Received: from [10.132.91.175] (/10.132.91.175)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 01 Jul 2019 15:13:58 -0700
+Subject: Re: [PATCH V3 2/2] sched/fair: Fallback to sched-idle CPU if idle CPU
+ isn't found
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 3/3] net: phy: realtek: Support SSC for the RTL8211E
-Message-ID: <20190701221104.GC250418@google.com>
-References: <20190701195225.120808-1-mka@chromium.org>
- <20190701195225.120808-3-mka@chromium.org>
- <8adbb2b8-6747-b876-f85d-75e54f1978cb@gmail.com>
+        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        quentin.perret@linaro.org, chris.redpath@arm.com,
+        steven.sistare@oracle.com, songliubraving@fb.com
+References: <cover.1561523542.git.viresh.kumar@linaro.org>
+ <eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org>
+ <32bd769c-b692-8896-5cc9-d19ab0a23abb@oracle.com>
+ <20190701080349.homlsgia4fuaitek@vireshk-i7>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <aeaa0dd5-8512-1b60-eb10-6a4aecfaaca3@oracle.com>
+Date:   Mon, 1 Jul 2019 15:08:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8adbb2b8-6747-b876-f85d-75e54f1978cb@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190701080349.homlsgia4fuaitek@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907010258
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907010257
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 10:49:45PM +0200, Heiner Kallweit wrote:
-> On 01.07.2019 21:52, Matthias Kaehlcke wrote:
-> > By default Spread-Spectrum Clocking (SSC) is disabled on the RTL8211E.
-> > Enable it if the device tree property 'realtek,enable-ssc' exists.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> >  drivers/net/phy/realtek.c | 27 ++++++++++++++++++++++++---
-> >  1 file changed, 24 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-> > index dfc2e20ef335..b617169ccc8c 100644
-> > --- a/drivers/net/phy/realtek.c
-> > +++ b/drivers/net/phy/realtek.c
-> > @@ -9,8 +9,10 @@
-> >   * Copyright (c) 2004 Freescale Semiconductor, Inc.
-> >   */
-> >  #include <linux/bitops.h>
-> > -#include <linux/phy.h>
-> > +#include <linux/device.h>
-> > +#include <linux/of.h>
-> >  #include <linux/module.h>
-> > +#include <linux/phy.h>
-> >  
-> >  #define RTL821x_PHYSR				0x11
-> >  #define RTL821x_PHYSR_DUPLEX			BIT(13)
-> > @@ -28,6 +30,8 @@
-> >  
-> >  #define RTL8211E_EXT_PAGE			7
-> >  #define RTL8211E_EPAGSR				0x1e
-> > +#define RTL8211E_SCR				0x1a
-> > +#define RTL8211E_SCR_DISABLE_RXC_SSC		BIT(2)
-> >  
-> >  #define RTL8211F_INSR				0x1d
-> >  
-> > @@ -87,8 +91,8 @@ static int rtl821e_restore_page(struct phy_device *phydev, int oldpage, int ret)
-> >  	return ret;
-> >  }
-> >  
-> > -static int __maybe_unused rtl8211e_modify_ext_paged(struct phy_device *phydev,
-> > -				    int page, u32 regnum, u16 mask, u16 set)
-> > +static int rtl8211e_modify_ext_paged(struct phy_device *phydev, int page,
-> > +				     u32 regnum, u16 mask, u16 set)
-> >  {
-> >  	int ret = 0;
-> >  	int oldpage;
-> > @@ -114,6 +118,22 @@ static int __maybe_unused rtl8211e_modify_ext_paged(struct phy_device *phydev,
-> >  	return rtl821e_restore_page(phydev, oldpage, ret);
-> >  }
-> >  
-> > +static int rtl8211e_probe(struct phy_device *phydev)
-> > +{
-> > +	struct device *dev = &phydev->mdio.dev;
-> > +	int err;
-> > +
-> > +	if (of_property_read_bool(dev->of_node, "realtek,enable-ssc")) {
-> > +		err = rtl8211e_modify_ext_paged(phydev, 0xa0, RTL8211E_SCR,
-> > +						RTL8211E_SCR_DISABLE_RXC_SSC,
-> > +						0);
-> > +		if (err)
-> > +			dev_err(dev, "failed to enable SSC on RXC: %d\n", err);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int rtl8201_ack_interrupt(struct phy_device *phydev)
-> >  {
-> >  	int err;
-> > @@ -372,6 +392,7 @@ static struct phy_driver realtek_drvs[] = {
-> >  		.config_init	= &rtl8211e_config_init,
-> >  		.ack_interrupt	= &rtl821x_ack_interrupt,
-> >  		.config_intr	= &rtl8211e_config_intr,
-> > +		.probe          = rtl8211e_probe,
-> 
-> I'm not sure whether this setting survives soft reset and power-down.
-> Maybe it should be better applied in the config_init callback.
 
-Sounds reasonable, I'll change it in the next revision, thanks!
+On 7/1/19 1:03 AM, Viresh Kumar wrote:
+> On 28-06-19, 18:16, Subhra Mazumdar wrote:
+>> On 6/25/19 10:06 PM, Viresh Kumar wrote:
+>>> We try to find an idle CPU to run the next task, but in case we don't
+>>> find an idle CPU it is better to pick a CPU which will run the task the
+>>> soonest, for performance reason.
+>>>
+>>> A CPU which isn't idle but has only SCHED_IDLE activity queued on it
+>>> should be a good target based on this criteria as any normal fair task
+>>> will most likely preempt the currently running SCHED_IDLE task
+>>> immediately. In fact, choosing a SCHED_IDLE CPU over a fully idle one
+>>> shall give better results as it should be able to run the task sooner
+>>> than an idle CPU (which requires to be woken up from an idle state).
+>>>
+>>> This patch updates both fast and slow paths with this optimization.
+>>>
+>>> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>>> ---
+>>>    kernel/sched/fair.c | 43 +++++++++++++++++++++++++++++++++----------
+>>>    1 file changed, 33 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>>> index 1277adc3e7ed..2e0527fd468c 100644
+>>> --- a/kernel/sched/fair.c
+>>> +++ b/kernel/sched/fair.c
+>>> @@ -5376,6 +5376,15 @@ static struct {
+>>>    #endif /* CONFIG_NO_HZ_COMMON */
+>>> +/* CPU only has SCHED_IDLE tasks enqueued */
+>>> +static int sched_idle_cpu(int cpu)
+>>> +{
+>>> +	struct rq *rq = cpu_rq(cpu);
+>>> +
+>>> +	return unlikely(rq->nr_running == rq->cfs.idle_h_nr_running &&
+>>> +			rq->nr_running);
+>>> +}
+>>> +
+>> Shouldn't this check if rq->curr is also sched idle?
+> Why wouldn't the current set of checks be enough to guarantee that ?
+I thought nr_running does not include the on-cpu thread.
+>
+>> And why not drop the rq->nr_running non zero check?
+> Because CPU isn't sched-idle if nr_running and idle_h_nr_running are both 0,
+> i.e. it is an IDLE cpu in that case. And so I thought it is important to have
+> this check as well.
+>
+idle_cpu() not only checks nr_running is 0 but also rq->curr == rq->idle
