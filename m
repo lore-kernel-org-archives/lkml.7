@@ -2,151 +2,150 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3380CC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481A8C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16088206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DEBB206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:34:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u7jbcH+p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfGATcu (ORCPT
+        id S1726780AbfGATeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 15:32:50 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:45972 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfGATct (ORCPT
+        Mon, 1 Jul 2019 15:34:44 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38146 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfGATeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 15:32:49 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1hi22h-00006O-IZ; Mon, 01 Jul 2019 15:32:47 -0400
-Message-ID: <4bf9c6e1eeec9b52aa9c10b9149384cb99399b04.camel@surriel.com>
-Subject: Re: [PATCH 03/10] sched,fair: redefine runnable_load_avg as the sum
- of task_h_load
-From:   Rik van Riel <riel@surriel.com>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, pjt@google.com,
-        dietmar.eggemann@arm.com, peterz@infradead.org, mingo@redhat.com,
-        morten.rasmussen@arm.com, tglx@linutronix.de,
-        mgorman@techsingularity.net, vincent.guittot@linaro.org
-Date:   Mon, 01 Jul 2019 15:32:47 -0400
-In-Reply-To: <20190701192234.5oxkuysimi437utz@macbook-pro-91.dhcp.thefacebook.com>
-References: <20190628204913.10287-1-riel@surriel.com>
-         <20190628204913.10287-4-riel@surriel.com>
-         <20190701162949.vhxjndychoamhkbq@MacBook-Pro-91.local.dhcp.thefacebook.com>
-         <757e0af14b714b596417b31c45098fc314ed7c8a.camel@surriel.com>
-         <20190701192234.5oxkuysimi437utz@macbook-pro-91.dhcp.thefacebook.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-G0E3IlZFVcKl+naxuyrr"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 1 Jul 2019 15:34:44 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r12so24912371edo.5;
+        Mon, 01 Jul 2019 12:34:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dH5otBSqw0uMng1APE66eD1anh4AuRLCKS7/pcECOGs=;
+        b=u7jbcH+p2X/tuzpDREWK/E3T+1TETi5H4y9z15tTyth0yWW8unULF7SDv5GKf3DXu/
+         iKw7O+9OOt+LVWTreNgtYn6G1fnh0saB/4NfUK3j5hdjCeNYneqIY75sSwgyrvjasHg6
+         h2cei3CapWFLk5ZciJnKCkVHXP9xry8BglnSjQiB2VZBFVX1C/0BPsSp9wgQsuI4ZnYi
+         pU2qxJByqB0lSFIV+06rZQIsmOCfK9NORvwIUQeB06OihVkVQ/HAsH5ljUoUczHA3QJr
+         vHqtyckhkailRVUQCShN2cEVVY1zOQ5fC4mk2zqIMVv0ZpmH27vwVTt/T+LlrtykT4s4
+         ZV7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dH5otBSqw0uMng1APE66eD1anh4AuRLCKS7/pcECOGs=;
+        b=fZO5KOQvI1cVcuOqg3E2B6Q456Fd9xaoG9NwJPt86bJeTGA4IFEzyoXeKsANih+/uq
+         4xBoBGBK3/zTVEggXQlf8biCrKeFF0S3yoC7xBAFZ915+Ly7Xgquqd0FpG94oGIxduiI
+         mqHBNdXoY4u69fBHJJKPjyc4vBq9vVLvBvbBC0xP2CfVSaTUx3+8Vvrn+0CqBLFYyOfG
+         oaC2ORsSZPHkSqGTyYGygweVlifkLwjaejzuzuxN72Gq19xaqVpRLqwqNCu4YIB6pi8r
+         8ss/3WvMEEtFMxk8vmm48uC3O3K2lrTmmNstUIxkFYAvk8m0U8b/TmcbF8yVUvX9Fa0A
+         6zBg==
+X-Gm-Message-State: APjAAAWzplExREbVdm60zxgeAE/IPoKRlA8YG4IfJ8HiYTRB+4TrBdtT
+        BCx9e+hKIiFBUKL1SQzb/tMJB222RKos1SiKgzg=
+X-Google-Smtp-Source: APXvYqysxgbCV5yDkdPFITNx3D9f1KGE0bjCekTf0dCIujzKvdxbtbeNQl49lrfoNKh2HZcftMIfUkLE0X4i8q1MDys=
+X-Received: by 2002:a50:9203:: with SMTP id i3mr31774148eda.302.1562009681812;
+ Mon, 01 Jul 2019 12:34:41 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190630150230.7878-1-robdclark@gmail.com> <20190630150230.7878-5-robdclark@gmail.com>
+ <75a2921d-bf1a-c4c1-6d9a-122474eface4@codeaurora.org> <CAF6AEGufiSU_sFZFdLH=KT5iCQGwccszURqAQCHd=dhuZafvZg@mail.gmail.com>
+ <9fbf9226-578a-90aa-693d-9ea4fcda8281@codeaurora.org>
+In-Reply-To: <9fbf9226-578a-90aa-693d-9ea4fcda8281@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 1 Jul 2019 12:34:25 -0700
+Message-ID: <CAF6AEGtcyvhpAwsD+ykn5HYhBeHtW2kSgE6OA+d142O9AKx+CQ@mail.gmail.com>
+Subject: Re: [PATCH 4/5] drm/msm/dsi: get the clocks into OFF state at init
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Archit Taneja <architt@codeaurora.org>,
+        Rajesh Yadav <ryadav@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 1, 2019 at 12:07 PM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>
+> On 7/1/2019 12:58 PM, Rob Clark wrote:
+> > On Mon, Jul 1, 2019 at 11:37 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+> >>
+> >> On 6/30/2019 9:01 AM, Rob Clark wrote:
+> >>> From: Rob Clark <robdclark@chromium.org>
+> >>>
+> >>> Do an extra enable/disable cycle at init, to get the clks into disabled
+> >>> state in case bootloader left them enabled.
+> >>>
+> >>> In case they were already enabled, the clk_prepare_enable() has no real
+> >>> effect, other than getting the enable_count/prepare_count into the right
+> >>> state so that we can disable clocks in the correct order.  This way we
+> >>> avoid having stuck clocks when we later want to do a modeset and set the
+> >>> clock rates.
+> >>>
+> >>> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> >>> ---
+> >>>    drivers/gpu/drm/msm/dsi/dsi_host.c         | 18 +++++++++++++++---
+> >>>    drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c |  1 +
+> >>>    2 files changed, 16 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+> >>> index aabab6311043..d0172d8db882 100644
+> >>> --- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+> >>> +++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+> >>> @@ -354,6 +354,7 @@ static int dsi_pll_10nm_lock_status(struct dsi_pll_10nm *pll)
+> >>>        if (rc)
+> >>>                pr_err("DSI PLL(%d) lock failed, status=0x%08x\n",
+> >>>                       pll->id, status);
+> >>> +rc = 0; // HACK, this will fail if PLL already running..
+> >>
+> >> Umm, why?  Is this intentional?
+> >>
+> >
+> > I need to sort out a proper solution for this.. but PLL lock will fail
+> > if the clk is already running (which, in that case, is fine since it
+> > is already running and locked), which will cause the clk_enable to
+> > fail..
+> >
+> > I guess there is some way that I can check that clk is already running
+> > and skip this check..
+>
+>
+> I'm sorry, but this makes no sense to me.  What clock are we talking
+> about here?
+>
+> If the pll is locked, the the lock check should just drop through.  If
+> the pll cannot lock, you have an issue.  I'm confused as to how any of
+> the downstream clocks can actually be running if the pll isn't locked.
+>
+> I feel like we are not yet on the same page about what situation you
+> seem to be in.  Can you describe in exacting detail?
 
---=-G0E3IlZFVcKl+naxuyrr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+yeah, I'd expect the lock bit to still be set (since the display is
+obviously running at that point)..  but I didn't really debug it yet,
+I just hacked that in so the clk_enable didn't fail, so that we could
+get correct enable/prepare_counts in order to do the
+clk_disable_unprepare()..
 
-On Mon, 2019-07-01 at 15:22 -0400, Josef Bacik wrote:
-> On Mon, Jul 01, 2019 at 12:47:35PM -0400, Rik van Riel wrote:
-> > On Mon, 2019-07-01 at 12:29 -0400, Josef Bacik wrote:
-> > >=20
-> > > My memory on this stuff is very hazy, but IIRC we had the
-> > > runnable_sum and the
-> > > runnable_avg separated out because you could have the avg lag
-> > > behind
-> > > the sum.
-> > > So like you enqueue a bunch of new entities who's avg may have
-> > > decayed a bunch
-> > > and so their overall load is not felt on the CPU until they start
-> > > running, and
-> > > now you've overloaded that CPU.  The sum was there to make sure
-> > > new
-> > > things
-> > > coming onto the CPU added actual load to the queue instead of
-> > > looking
-> > > like there
-> > > was no load.
-> > >=20
-> > > Is this going to be a problem now with this new code?
-> >=20
-> > That is a good question!
-> >=20
-> > On the one hand, you may well be right.
-> >=20
-> > On the other hand, while I see the old code calculating
-> > runnable_sum, I don't really see it _using_ it to drive
-> > scheduling decisions.
-> >=20
-> > It would be easy to define the CPU cfs_rq->runnable_load_sum
-> > as being the sum of task_se_h_weight() of each runnable task
-> > on the CPU (for example), but what would we use it for?
-> >=20
-> > What am I missing?
->=20
-> It's suuuuuper sublte, but you're right in that we don't really need
-> the
-> runnable_avg per-se, but what you do is you kill calc_group_runnable,
-> which used
-> to do this
->=20
-> load_avg =3D max(cfs_rq->avg.load_avg,
->                scale_load_down(cfs_rq->load.weight));
->=20
-> runnable =3D max(cfs_rq->avg.runnable_load_avg,
->                scale_load_down(cfs_rq->runnable_weight));
->=20
-> so we'd account for this weirdness of adding a previously idle
-> process to a new
-> CPU and overloading the CPU because we'd add a bunch of these 0
-> weight looking
-> tasks that suddenly all wake up and are on the same CPU.  So we used
-> the
-> runnable_weight to account for what was actually happening, and the
-> max of
-> load_avg and the weight to figure out what the potential load would
-> be.
->=20
-> What you've done here is change the weighting stuff to be completely
-> based on
-> load avg, which is problematic for the reasons above.  Did you fix
-> this later on
-> in your patches?  If so then just tell me to keep reading and I'll do
-> that ;).
-
-No, I have not fixed that later in the code.
-
-I am not entirely sure how I could do that, without
-reintroducing walking the hierarchy at task enqueue
-and dequeue, but maybe you have some idea...
-
---=20
-All Rights Reversed.
-
---=-G0E3IlZFVcKl+naxuyrr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl0aX98ACgkQznnekoTE
-3oOQLwf/V7laRZB80HojKDUBvWPexAXiERPG6bdrZTlssrh8dnwDYtmnSHAibtqd
-UzoMDXpZRe455omNpUB4F7tyBlrds3jbDJmaoOaVDJnPQTaJRVBGddfIn7QRYdkF
-MGuQqodBHwjwiKX4m2Lh0gJE/msyNd3tbDYH58yRf4m/N6Sty2dOCBwuP5QGbB3v
-iCsTMs3LJOQifwIVZlyNEMvHwlGJBHXrB2Uuv0Ya5e9SQHTooqTAj9ZjpQgQ4nQj
-AImBeflH3cD17Msk6JuCRTMaFiuhsUOMUHGiHFB+VSQnAPZ83Y3e1jLgr3ekLw2n
-gwSIHBh+vb5zsRsmkCeSIISwupydLg==
-=7Xe7
------END PGP SIGNATURE-----
-
---=-G0E3IlZFVcKl+naxuyrr--
-
+BR,
+-R
