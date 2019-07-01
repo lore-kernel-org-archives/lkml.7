@@ -2,75 +2,125 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB362C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E07C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB44206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD66208C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:41:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMrB1vsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfGAJgu (ORCPT
+        id S1728446AbfGAJlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 05:36:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52840 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728035AbfGAJgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 05:36:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6E628AB87;
-        Mon,  1 Jul 2019 09:36:48 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 11:36:44 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Brown <broonie@kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v3 10/11] mm/memory_hotplug: Make
- unregister_memory_block_under_nodes() never fail
-Message-ID: <20190701093640.GA17349@linux>
-References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-11-david@redhat.com>
- <20190701085144.GJ6376@dhcp22.suse.cz>
+        Mon, 1 Jul 2019 05:41:42 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54375 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728334AbfGAJll (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 05:41:41 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g135so15104200wme.4;
+        Mon, 01 Jul 2019 02:41:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6mj1GNCBlm5Kzl/Gv47qDDxI924Jr5t8ezQS95HGAxE=;
+        b=RMrB1vsX/2hK+on0/p7Z7GxznCyEy8+F457kddIrwKQwlCyrQQxmFpdyIB7KPTFSrI
+         1UEEwV35Lu1CwDmb2s+W4OV+NkzstIuw8Cc63+MTmhAkrLOTiGJ1qG16J4JvqTAEsrSs
+         uZnWKKrQgeqZdO/mh9YOy2EoWVT//ZMAZ8eHGu9m2sZo312GQ3vgDEcVGV8kekxPtJMN
+         rv0CFJjViOmLgWPsk0vUPM+G4Qtu0X7i8ze6FzUMeBgTwPapqt1nU/op3JD7L/rym6eB
+         LO9RSQlwXNBw4IS2pP/gIgz2ZEOQZYuk+kM5QZ6v7wLL6Ud/9JPtH+DTjO8Md5KsnlAx
+         l+pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6mj1GNCBlm5Kzl/Gv47qDDxI924Jr5t8ezQS95HGAxE=;
+        b=CNtxuFG0C+fodwzzq5WlRxI4eXG8u4oWNxdMbtgVH9eqvjg3qGe5BECdPnlRUwQHOl
+         5zPPffl0ZubCXhpFD+PP+biNgkSIrDyMEbgruvTLVtTQKAWiZplQgdS2dLMGR0KyHioL
+         0TesIpiz0CRrh47EEDomi3WbSdX2FX5ruq2nNlJHdl08YwgoWwCQP/Xjl6R9L0h3aIDX
+         rzzuHEZgXsEBXJCU2jnPN/HaiJK09JtABWgzPqi3JB/v4dD7z41EiAVtiNLRdbjr3c33
+         YR3fM0RwSsJaBAo0gmjf0z9OjJ0ohc2OjqwkF8BCyZN91V2yIUKbsjb91pvV2Noo1KrB
+         sCRA==
+X-Gm-Message-State: APjAAAUPpI1RUfTiCL2xC0BUakC47MacJo+h/dgw7tjbfOFjPCYRshky
+        BvC0niR5Pjy6mo1wcrJ6Wa0=
+X-Google-Smtp-Source: APXvYqw1GiG2c1p4SOty1AL+8QolpaF03Qeti32qNeBWi0z+owqwU83+3Kt9KKC6JMz4wuXTHDVY/A==
+X-Received: by 2002:a1c:3:: with SMTP id 3mr16735741wma.6.1561974098900;
+        Mon, 01 Jul 2019 02:41:38 -0700 (PDT)
+Received: from [172.22.36.64] (redhat-nat.vtp.fi.muni.cz. [78.128.215.6])
+        by smtp.gmail.com with ESMTPSA id 5sm5860353wmi.22.2019.07.01.02.41.37
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 02:41:38 -0700 (PDT)
+Subject: Re: [RFC PATCH v5 0/1] Add dm verity root hash pkcs7 sig validation.
+To:     James Morris <jmorris@namei.org>,
+        Eric Biggers <ebiggers@kernel.org>
+Cc:     Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, scottsh@microsoft.com, mpatocka@redhat.com
+References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com>
+ <20190628040041.GB673@sol.localdomain>
+ <alpine.LRH.2.21.1906282040490.15624@namei.org>
+From:   Milan Broz <gmazyland@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <749ddf56-3cb6-42c8-9ccc-71e09558400f@gmail.com>
+Date:   Mon, 1 Jul 2019 11:41:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701085144.GJ6376@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.LRH.2.21.1906282040490.15624@namei.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 10:51:44AM +0200, Michal Hocko wrote:
-> Yeah, we do not allow to offline multi zone (node) ranges so the current
-> code seems to be over engineered.
+On 29/06/2019 06:01, James Morris wrote:
+> On Thu, 27 Jun 2019, Eric Biggers wrote:
 > 
-> Anyway, I am wondering why do we have to strictly check for already
-> removed nodes links. Is the sysfs code going to complain we we try to
-> remove again?
+>> I don't understand your justification for this feature.
+>>
+>> If userspace has already been pwned severely enough for the attacker to be
+>> executing arbitrary code with CAP_SYS_ADMIN (which is what the device mapper
+>> ioctls need), what good are restrictions on loading more binaries from disk?
+>>
+>> Please explain your security model.
+> 
+> Let's say the system has a policy where all code must be signed with a 
+> valid key, and that one mechanism for enforcing this is via signed 
+> dm-verity volumes. Validating the signature within the kernel provides 
+> stronger assurance than userspace validation. The kernel validates and 
+> executes the code, using kernel-resident keys, and does not need to rely 
+> on validation which has occurred across a trust boundary.
 
-No, sysfs will silently "fail" if the symlink has already been removed.
-At least that is what I saw last time I played with it.
+Yes, but as it is implemented in this patch, a certificate is provided as
+a binary blob by the (super)user that activates the dm-verity device.
 
-I guess the question is what if sysfs handling changes in the future
-and starts dropping warnings when trying to remove a symlink is not there.
-Maybe that is unlikely to happen?
+Actually, I can put there anything that looks like a correct signature (self-signed
+or so), and dm-verity code is happy because the root hash is now signed.
 
--- 
-Oscar Salvador
-SUSE L3
+Maybe could this concept be extended to support in-kernel compiled certificates?
+
+I like the idea of signed root hash, but the truth is that if you have access
+to device activation, it brings nothing, you can just put any cert in the keyring
+and use it.
+
+Milan
+
+> 
+> You don't need arbitrary CAP_SYS_ADMIN code execution, you just need a 
+> flaw in the app (or its dependent libraries, or configuration) which 
+> allows signature validation to be bypassed.
+> 
+> The attacker now needs a kernel rather than a userspace vulnerability to 
+> bypass the signed code policy.
+> 
