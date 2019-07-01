@@ -2,209 +2,291 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFF4C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2282C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7FD206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87017206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:15:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="loyuPKYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfGAUMU (ORCPT
+        id S1726838AbfGAUPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 16:12:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54520 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726620AbfGAUMU (ORCPT
+        Mon, 1 Jul 2019 16:15:49 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35130 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfGAUPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 16:12:20 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61KBedP110465
-        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 16:12:19 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfp83f8p8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 16:12:18 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 1 Jul 2019 21:12:17 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Jul 2019 21:12:14 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61KCDIA47579440
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 20:12:13 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D4E5B2064;
-        Mon,  1 Jul 2019 20:12:13 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50BF1B205F;
-        Mon,  1 Jul 2019 20:12:13 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Jul 2019 20:12:13 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 6B41816C2BD7; Mon,  1 Jul 2019 13:12:16 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 13:12:16 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Byungchul Park <byungchul.park@lge.com>
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com
-Subject: Re: [PATCH v3] rcu: Change return type of
- rcu_spawn_one_boost_kthread()
-Reply-To: paulmck@linux.ibm.com
-References: <1561941639-14318-1-git-send-email-byungchul.park@lge.com>
+        Mon, 1 Jul 2019 16:15:48 -0400
+Received: by mail-pg1-f194.google.com with SMTP id s27so6542231pgl.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 13:15:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=pUF1T8YosBJ3xSBN/42gppxPrNAbk2wJaDAAwR8fY4o=;
+        b=loyuPKYLikazGc5HJLPsKrOh6SiuV2L2ADgtcqoTgA2KJrZ6hkNMReykxDO0Edw116
+         f2TsgRnGSFbOJwg7rCfZuGuBqr+bXFWCg0OhrZTUsY58zhaQpHbLQ2pJTWBOkSggUhEh
+         th/EXNtrbcsvXx7loxWS4sE1HCe4yQieZ4CHw6c+Gis8o2/AKIFykZ5BpzSfBRe5oABH
+         40+tiMfaiaT16ZrAzcGGQSZjrWxZMEYQRp0IP/q4G2NASX65BQqpgU1BTP5ZGPquwTdg
+         1+Ifd81E69xN0pCAwHkBjX2YvyyJfJGLdGYnORLxAGxI52t4+a+xsaEJxAJMtuRpd7YB
+         V7VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=pUF1T8YosBJ3xSBN/42gppxPrNAbk2wJaDAAwR8fY4o=;
+        b=MJW1SoRcwqqzalKxXMMUA31T0uB0rVDA4WRwnGAP6B/WypEX3zNn2DnWkS+Gaeocqi
+         v6ZNvPPd1w/JwbeoBXMI+lu4Yf8moteO84HqIdW9Di9mg7ZQJXMUlV1G36ZOX26XiQt4
+         A7hzyxA2SNziejClVvIA0HSlmwOOqZVNCE8gbxIqiVkKqrysa1qe1sLAUbxxpZ4wZVVC
+         TCkZsR6dfuBJGPaBviF1Bqrr7QIVNXn47neP/hGgJ4vcIUiYNQm38XAXSdtvbumv3/u8
+         4mf8mDgKZ8UiCJvnELoxmsBR7ZPyopQthNRk1ZINVoc43PL6YBaWBc4SRkCtIAOztgSq
+         Zf5A==
+X-Gm-Message-State: APjAAAU2at+p1mUd6n9SQe8O/BLUiYZtQkggsq0CFc8J/mxtpU5jlaDu
+        j+FVcLtXgdfGXfdKYVowGg/cxw==
+X-Google-Smtp-Source: APXvYqz/f5okR0/1uArrmL95QeBoc/0K9RJuEaqe9lJG32VRI0BmZ5htaBEYKSq6Ovvx9xCTCG2JVw==
+X-Received: by 2002:a63:b46:: with SMTP id a6mr212520pgl.235.1562012146904;
+        Mon, 01 Jul 2019 13:15:46 -0700 (PDT)
+Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
+        by smtp.gmail.com with ESMTPSA id q63sm21742450pfb.81.2019.07.01.13.15.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 13:15:45 -0700 (PDT)
+From:   bsegall@google.com
+To:     Dave Chiluk <chiluk+linux@indeed.com>
+Cc:     Pqhil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
+        Kyle Anderson <kwa@yelp.com>,
+        Gabriel Munos <gmunoz@netflix.com>,
+        John Hammond <jhammond@indeed.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Paul Turner <pjt@google.com>
+Subject: Re: [PATCH v5 1/1] sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices
+References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
+        <1561664970-1555-1-git-send-email-chiluk+linux@indeed.com>
+        <1561664970-1555-2-git-send-email-chiluk+linux@indeed.com>
+Date:   Mon, 01 Jul 2019 13:15:44 -0700
+In-Reply-To: <1561664970-1555-2-git-send-email-chiluk+linux@indeed.com> (Dave
+        Chiluk's message of "Thu, 27 Jun 2019 14:49:30 -0500")
+Message-ID: <xm26lfxhwlxr.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561941639-14318-1-git-send-email-byungchul.park@lge.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19070120-0072-0000-0000-000004432C59
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011361; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01226043; UDB=6.00645426; IPR=6.01007256;
- MB=3.00027541; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-01 20:12:17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070120-0073-0000-0000-00004CB36361
-Message-Id: <20190701201216.GQ26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010234
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 09:40:39AM +0900, Byungchul Park wrote:
-> Hello,
-> 
-> I tested again if the WARN_ON_ONCE() is fired with my box.
-> 
-> And it was OK.
-> 
-> Thanks,
-> Byungchul
+Alright, this prototype of "maybe we should just 100% avoid stranding
+runtime for a full period" appears to fix the fibtest synthetic example,
+and seems like a theoretically-reasonable approach.
 
-And it now applies just fine, so I have queued it, thank you!
+Things that may want improvement or at least thought (but it's a holiday
+week in the US and I wanted any opinions on the basic approach):
 
-In the future, could you please use something like "git send-email"
-to email a proper patch?  When you do it this way, after I do "git am",
-I have to hand-edit the commit to remove this preamble.
+- I don't like cfs_rq->slack_list, since logically it's mutually
+  exclusive with throttled_list, but we have to iterate without
+  locks, so I don't know that we can avoid it.
 
-But while I was doing the hand-editing, I updated the commit log as
-follows:
+- I previously was using _rcu for the slack list, like throttled, but
+  there is no list_for_each_entry_rcu_safe, so the list_del_init would
+  be invalid and we'd have to use another flag or opencode the
+  equivalent.
 
-	rcu: Change return type of rcu_spawn_one_boost_kthread()
+- (Actually, this just made me realize that distribute is sorta wrong if
+  the unthrottled task immediately runs and rethrottles; this would just
+  mean that we effectively restart the loop)
 
-	The return value of rcu_spawn_one_boost_kthread() is not used
-	any longer.  This commit therefore changes its return type from
-	int to void, and removes the cast to void from its callers.
+- We unconditionally start the slack timer, even if nothing is
+  throttled. We could instead have throttle start the timer in this case
+  (setting the timeout some definition of "appropriately"), but this
+  bookkeeping would be a big hassle.
 
-Does that work for you?
+- We could try to do better about deciding what cfs_rqs are idle than
+  "nr_running == 0", possibly requiring that to have been true for N<5
+  ms, and restarting the slack timer if we didn't clear everything.
 
-						Thanx, Paul
+- Taking up-to-every rq->lock is bad and expensive and 5ms may be too
+  short a delay for this. I haven't tried microbenchmarks on the cost of
+  this vs min_cfs_rq_runtime = 0 vs baseline.
 
-> Changes from v2
-> -. Port the patch to a1af11a24cb0 (Paul's request)
-> -. Add a few new lines for a better look
-> 
-> Changes from v1
-> -. WARN_ON_ONCE() on failing to create rcu_boost_kthread.
-> -. Changed title and commit message a bit.
-> 
-> ---8<---
-> >From 20c934c5657a7a0f13ebb050ffd350d4174965d0 Mon Sep 17 00:00:00 2001
-> From: Byungchul Park <byungchul.park@lge.com>
-> Date: Mon, 1 Jul 2019 09:27:15 +0900
-> Subject: [PATCH v3] rcu: Change return type of rcu_spawn_one_boost_kthread()
-> 
-> The return value of rcu_spawn_one_boost_kthread() is not used any
-> longer. Change return type of that function from int to void.
-> 
-> Signed-off-by: Byungchul Park <byungchul.park@lge.com>
-> ---
->  kernel/rcu/tree_plugin.h | 20 +++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index c588ef9..b8eea22 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -1119,7 +1119,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
->   * already exist.  We only create this kthread for preemptible RCU.
->   * Returns zero if all is well, a negated errno otherwise.
->   */
-> -static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> +static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
->  {
->  	int rnp_index = rnp - rcu_get_root();
->  	unsigned long flags;
-> @@ -1127,25 +1127,27 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
->  	struct task_struct *t;
->  
->  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
-> -		return 0;
-> +		return;
->  
->  	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
-> -		return 0;
-> +		return;
->  
->  	rcu_state.boost = 1;
-> +
->  	if (rnp->boost_kthread_task != NULL)
-> -		return 0;
-> +		return;
-> +
->  	t = kthread_create(rcu_boost_kthread, (void *)rnp,
->  			   "rcub/%d", rnp_index);
-> -	if (IS_ERR(t))
-> -		return PTR_ERR(t);
-> +	if (WARN_ON_ONCE(IS_ERR(t)))
-> +		return;
-> +
->  	raw_spin_lock_irqsave_rcu_node(rnp, flags);
->  	rnp->boost_kthread_task = t;
->  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
->  	sp.sched_priority = kthread_prio;
->  	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
->  	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
-> -	return 0;
->  }
->  
->  /*
-> @@ -1186,7 +1188,7 @@ static void __init rcu_spawn_boost_kthreads(void)
->  	struct rcu_node *rnp;
->  
->  	rcu_for_each_leaf_node(rnp)
-> -		(void)rcu_spawn_one_boost_kthread(rnp);
-> +		rcu_spawn_one_boost_kthread(rnp);
->  }
->  
->  static void rcu_prepare_kthreads(int cpu)
-> @@ -1196,7 +1198,7 @@ static void rcu_prepare_kthreads(int cpu)
->  
->  	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
->  	if (rcu_scheduler_fully_active)
-> -		(void)rcu_spawn_one_boost_kthread(rnp);
-> +		rcu_spawn_one_boost_kthread(rnp);
->  }
->  
->  #else /* #ifdef CONFIG_RCU_BOOST */
-> -- 
-> 1.9.1
-> 
+- runtime_expires vs expires_seq choice is basically rand(), much like
+  the existing code. (I think the most consistent with existing code
+  would be runtime_expires, since cfs_b lock is held; I think most
+  consistent in general would change most of the existing ones as well
+  to be seq)
+
+
+-- >8 --
+Subject: [PATCH] sched: avoid stranding cfs_bandwidth runtime
+
+We avoid contention on the per-tg cfs_b->lock by keeping 1ms of runtime on a
+cfs_rq even when all tasks in that cfs_rq dequeue. This way tasks doing frequent
+wake/sleep can't hit this cross-cpu lock more than once per ms. This however
+means that up to 1ms of runtime per cpu can be lost if no task does wake up on
+that cpu, which is leading to issues on cgroups with low quota, many available
+cpus, and a combination of threads that run for very little time and ones that
+want to run constantly.
+
+This was previously hidden by runtime expiration being broken, which allowed
+this stranded runtime to be kept indefinitely across period resets. Thus after
+an initial period or two any long-running tasks could use an appropriate portion
+of their group's quota. The issue was that the group could also potentially
+burst for 1ms * cpus more than their quota allowed, and in these situations this
+is a significant increase.
+
+Fix this by having the group's slack timer (which runs at most once per 5ms)
+remove all runtime from empty cfs_rqs, not just redistribute any runtime above
+that 1ms that was returned immediately.
+
+Signed-off-by: Ben Segall <bsegall@google.com>
+---
+ kernel/sched/fair.c  | 66 +++++++++++++++++++++++++++++++++++---------
+ kernel/sched/sched.h |  2 ++
+ 2 files changed, 55 insertions(+), 13 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 300f2c54dea5..80b2198d9b29 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4745,23 +4745,32 @@ static void __return_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ 	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
+ 	s64 slack_runtime = cfs_rq->runtime_remaining - min_cfs_rq_runtime;
+ 
+-	if (slack_runtime <= 0)
++	if (cfs_rq->runtime_remaining <= 0)
++		return;
++
++	if (slack_runtime <= 0 && !list_empty(&cfs_rq->slack_list))
+ 		return;
+ 
+ 	raw_spin_lock(&cfs_b->lock);
+ 	if (cfs_b->quota != RUNTIME_INF &&
+-	    cfs_rq->runtime_expires == cfs_b->runtime_expires) {
+-		cfs_b->runtime += slack_runtime;
++	    cfs_rq->expires_seq == cfs_b->expires_seq) {
++		if (slack_runtime > 0)
++			cfs_b->runtime += slack_runtime;
++		if (list_empty(&cfs_rq->slack_list))
++			list_add(&cfs_rq->slack_list, &cfs_b->slack_cfs_rq);
+ 
+-		/* we are under rq->lock, defer unthrottling using a timer */
+-		if (cfs_b->runtime > sched_cfs_bandwidth_slice() &&
+-		    !list_empty(&cfs_b->throttled_cfs_rq))
+-			start_cfs_slack_bandwidth(cfs_b);
++		/*
++		 * After a timeout, gather our remaining runtime so it can't get
++		 * stranded. We need a timer anyways to distribute any of the
++		 * runtime due to locking issues.
++		 */
++		start_cfs_slack_bandwidth(cfs_b);
+ 	}
+ 	raw_spin_unlock(&cfs_b->lock);
+ 
+-	/* even if it's not valid for return we don't want to try again */
+-	cfs_rq->runtime_remaining -= slack_runtime;
++	if (slack_runtime > 0)
++		/* even if it's not valid for return we don't want to try again */
++		cfs_rq->runtime_remaining -= slack_runtime;
+ }
+ 
+ static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+@@ -4781,12 +4790,41 @@ static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+  */
+ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+ {
+-	u64 runtime = 0, slice = sched_cfs_bandwidth_slice();
++	u64 runtime = 0;
+ 	unsigned long flags;
+ 	u64 expires;
++	struct cfs_rq *cfs_rq, *temp;
++	LIST_HEAD(temp_head);
++
++	local_irq_save(flags);
++
++	raw_spin_lock(&cfs_b->lock);
++	cfs_b->slack_started = false;
++	list_splice_init(&cfs_b->slack_cfs_rq, &temp_head);
++	raw_spin_unlock(&cfs_b->lock);
++
++
++	/* Gather all left over runtime from all rqs */
++	list_for_each_entry_safe(cfs_rq, temp, &temp_head, slack_list) {
++		struct rq *rq = rq_of(cfs_rq);
++		struct rq_flags rf;
++
++		rq_lock(rq, &rf);
++
++		raw_spin_lock(&cfs_b->lock);
++		list_del_init(&cfs_rq->slack_list);
++		if (!cfs_rq->nr_running && cfs_rq->runtime_remaining > 0 &&
++		    cfs_rq->runtime_expires == cfs_b->runtime_expires) {
++			cfs_b->runtime += cfs_rq->runtime_remaining;
++			cfs_rq->runtime_remaining = 0;
++		}
++		raw_spin_unlock(&cfs_b->lock);
++
++		rq_unlock(rq, &rf);
++	}
+ 
+ 	/* confirm we're still not at a refresh boundary */
+-	raw_spin_lock_irqsave(&cfs_b->lock, flags);
++	raw_spin_lock(&cfs_b->lock);
+ 	cfs_b->slack_started = false;
+ 	if (cfs_b->distribute_running) {
+ 		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+@@ -4798,7 +4836,7 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+ 		return;
+ 	}
+ 
+-	if (cfs_b->quota != RUNTIME_INF && cfs_b->runtime > slice)
++	if (cfs_b->quota != RUNTIME_INF)
+ 		runtime = cfs_b->runtime;
+ 
+ 	expires = cfs_b->runtime_expires;
+@@ -4946,6 +4984,7 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+ 	cfs_b->period = ns_to_ktime(default_cfs_period());
+ 
+ 	INIT_LIST_HEAD(&cfs_b->throttled_cfs_rq);
++	INIT_LIST_HEAD(&cfs_b->slack_cfs_rq);
+ 	hrtimer_init(&cfs_b->period_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
+ 	cfs_b->period_timer.function = sched_cfs_period_timer;
+ 	hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+@@ -4958,6 +4997,7 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ {
+ 	cfs_rq->runtime_enabled = 0;
+ 	INIT_LIST_HEAD(&cfs_rq->throttled_list);
++	INIT_LIST_HEAD(&cfs_rq->slack_list);
+ }
+ 
+ void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index b08dee29ef5e..3b272ee894fb 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -345,6 +345,7 @@ struct cfs_bandwidth {
+ 	struct hrtimer		period_timer;
+ 	struct hrtimer		slack_timer;
+ 	struct list_head	throttled_cfs_rq;
++	struct list_head	slack_cfs_rq;
+ 
+ 	/* Statistics: */
+ 	int			nr_periods;
+@@ -566,6 +567,7 @@ struct cfs_rq {
+ 	int			throttled;
+ 	int			throttle_count;
+ 	struct list_head	throttled_list;
++	struct list_head	slack_list;
+ #endif /* CONFIG_CFS_BANDWIDTH */
+ #endif /* CONFIG_FAIR_GROUP_SCHED */
+ };
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
