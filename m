@@ -2,74 +2,101 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A81C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8F6C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D462145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645BE2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfGAGXu (ORCPT
+        id S1727361AbfGAGX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:23:50 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:16898 "EHLO mxhk.zte.com.cn"
+        Mon, 1 Jul 2019 02:23:57 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:17002 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfGAGXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 02:23:50 -0400
+        id S1727268AbfGAGX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 02:23:56 -0400
 Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 3D5E5422633A9622B803;
-        Mon,  1 Jul 2019 14:23:48 +0800 (CST)
+        by Forcepoint Email with ESMTPS id 4D0E2E971D527331D1C4;
+        Mon,  1 Jul 2019 14:23:54 +0800 (CST)
 Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x616Merk061391;
-        Mon, 1 Jul 2019 14:22:40 +0800 (GMT-8)
+        by mse-fl2.zte.com.cn with ESMTP id x616Mhjw061468;
+        Mon, 1 Jul 2019 14:22:43 +0800 (GMT-8)
         (envelope-from wang.yi59@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019070114224387-1995712 ;
-          Mon, 1 Jul 2019 14:22:43 +0800 
+          with ESMTP id 2019070114224554-1995714 ;
+          Mon, 1 Jul 2019 14:22:45 +0800 
 From:   Yi Wang <wang.yi59@zte.com.cn>
 To:     pbonzini@redhat.com
 Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
         wang.yi59@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
-Subject: [PATCH 0/4] kvm: x86: introduce CONFIG_KVM_DEBUG
-Date:   Mon, 1 Jul 2019 14:21:07 +0800
-Message-Id: <1561962071-25974-1-git-send-email-wang.yi59@zte.com.cn>
+Subject: [PATCH 2/4] kvm: x86: allow set apic and ioapic debug dynamically
+Date:   Mon, 1 Jul 2019 14:21:09 +0800
+Message-Id: <1561962071-25974-3-git-send-email-wang.yi59@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1561962071-25974-1-git-send-email-wang.yi59@zte.com.cn>
+References: <1561962071-25974-1-git-send-email-wang.yi59@zte.com.cn>
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-01 14:22:44,
+ 21, 2013) at 2019-07-01 14:22:45,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-01 14:22:41,
-        Serialize complete at 2019-07-01 14:22:41
-X-MAIL: mse-fl2.zte.com.cn x616Merk061391
+ 2019-07-01 14:22:44,
+        Serialize complete at 2019-07-01 14:22:44
+X-MAIL: mse-fl2.zte.com.cn x616Mhjw061468
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series introduce CONFIG_KVM_DEBUG, using which we can make
-the invoking *_debug in KVM simly and uniform.
+There are two *_debug() macros in kvm apic source file:
+- ioapic_debug, which is disable using #if 0
+- apic_debug, which is commented
 
-FYI: the former discussion can been found in:
-https://www.spinics.net/lists/kvm/msg187026.html
+Maybe it's better to control these two macros using CONFIG_KVM_DEBUG,
+which can be set in make menuconfig.
 
-Yi Wang (4):
-  kvm: x86: Add CONFIG_KVM_DEBUG
-  kvm: x86: allow set apic and ioapic debug dynamically
-  kvm: x86: replace MMU_DEBUG with CONFIG_KVM_DEBUG
-  kvm: x86: convert TSC pr_debugs to be gated by CONFIG_KVM_DEBUG
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ arch/x86/kvm/ioapic.c | 2 +-
+ arch/x86/kvm/lapic.c  | 5 ++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
- arch/x86/kvm/Kconfig  |  8 ++++++++
- arch/x86/kvm/ioapic.c |  2 +-
- arch/x86/kvm/lapic.c  |  5 ++++-
- arch/x86/kvm/mmu.c    |  5 ++---
- arch/x86/kvm/x86.c    | 18 ++++++++++++------
- 5 files changed, 27 insertions(+), 11 deletions(-)
-
+diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+index 1add1bc..8099253 100644
+--- a/arch/x86/kvm/ioapic.c
++++ b/arch/x86/kvm/ioapic.c
+@@ -45,7 +45,7 @@
+ #include "lapic.h"
+ #include "irq.h"
+ 
+-#if 0
++#ifdef CONFIG_KVM_DEBUG
+ #define ioapic_debug(fmt,arg...) printk(KERN_WARNING fmt,##arg)
+ #else
+ #define ioapic_debug(fmt, arg...)
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 4924f83..dfff5c6 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -54,8 +54,11 @@
+ #define PRIu64 "u"
+ #define PRIo64 "o"
+ 
+-/* #define apic_debug(fmt,arg...) printk(KERN_WARNING fmt,##arg) */
++#ifdef CONFIG_KVM_DEBUG
++#define apic_debug(fmt,arg...) printk(KERN_WARNING fmt,##arg)
++#else
+ #define apic_debug(fmt, arg...) do {} while (0)
++#endif
+ 
+ /* 14 is the version for Xeon and Pentium 8.4.8*/
+ #define APIC_VERSION			(0x14UL | ((KVM_APIC_LVT_NUM - 1) << 16))
 -- 
 1.8.3.1
 
