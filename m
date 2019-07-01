@@ -4,109 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC464C06508
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFF8C06508
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EC7212F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161B9208CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfGAB6x (ORCPT
+        id S1727333AbfGAB73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 21:58:53 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7682 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726983AbfGAB6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 21:58:53 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1CFB8B58BBD1B7700B70;
-        Mon,  1 Jul 2019 09:58:50 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 1 Jul 2019
- 09:58:45 +0800
-Subject: Re: [PATCH REBASE v2 1/2] x86, arm64: Move ARCH_WANT_HUGE_PMD_SHARE
- config in arch/Kconfig
-To:     Alexandre Ghiti <alex@ghiti.fr>,
-        Christoph Hellwig <hch@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-riscv@lists.infradead.org>
-References: <20190526125038.8419-1-alex@ghiti.fr>
- <20190526125038.8419-2-alex@ghiti.fr>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <7bfe451b-3f6b-2a26-5d43-692dde891cc0@huawei.com>
-Date:   Mon, 1 Jul 2019 09:58:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Sun, 30 Jun 2019 21:59:29 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:32072 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726983AbfGAB73 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 21:59:29 -0400
+X-UUID: 32b51eec05e64d2289cc2cc4de833084-20190701
+X-UUID: 32b51eec05e64d2289cc2cc4de833084-20190701
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1811838344; Mon, 01 Jul 2019 09:59:21 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkexhb01.mediatek.inc
+ (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 1 Jul
+ 2019 09:59:20 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkcas07.mediatek.inc
+ (172.21.101.84) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 1 Jul
+ 2019 09:59:19 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 1 Jul 2019 09:59:19 +0800
+Message-ID: <1561946359.23228.0.camel@mtksdaap41>
+Subject: Re: [PATCH v4 4/4] drm/mtk: add panel orientation property
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Derek Basehore <dbasehore@chromium.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        <intel-gfx@lists.freedesktop.org>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        <linux-mediatek@lists.infradead.org>, Sean Paul <sean@poorly.run>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Mon, 1 Jul 2019 09:59:19 +0800
+In-Reply-To: <20190622034105.188454-5-dbasehore@chromium.org>
+References: <20190622034105.188454-1-dbasehore@chromium.org>
+         <20190622034105.188454-5-dbasehore@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20190526125038.8419-2-alex@ghiti.fr>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/26 20:50, Alexandre Ghiti wrote:
-> ARCH_WANT_HUGE_PMD_SHARE config was declared in both architectures:
-> move this declaration in arch/Kconfig and make those architectures
-> select it.
+Hi, Derek:
+
+On Fri, 2019-06-21 at 20:41 -0700, Derek Basehore wrote:
+> This inits the panel orientation property for the mediatek dsi driver
+> if the panel orientation (connector.display_info.panel_orientation) is
+> not DRM_MODE_PANEL_ORIENTATION_UNKNOWN.
 > 
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
 > ---
->  arch/Kconfig       | 3 +++
->  arch/arm64/Kconfig | 2 +-
->  arch/x86/Kconfig   | 4 +---
->  3 files changed, 5 insertions(+), 4 deletions(-)
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index c47b328eada0..d2f212dc8e72 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -577,6 +577,9 @@ config HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
->  config HAVE_ARCH_HUGE_VMAP
->  	bool
->  
-> +config ARCH_WANT_HUGE_PMD_SHARE
-> +	bool
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index 4a0b9150a7bb..08ffdc7526dd 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -782,10 +782,18 @@ static int mtk_dsi_create_connector(struct drm_device *drm, struct mtk_dsi *dsi)
+>  			DRM_ERROR("Failed to attach panel to drm\n");
+>  			goto err_connector_cleanup;
+>  		}
 > +
->  config HAVE_ARCH_SOFT_DIRTY
->  	bool
+> +		ret = drm_connector_init_panel_orientation_property(&dsi->conn);
+> +		if (ret) {
+> +			DRM_ERROR("Failed to init panel orientation\n");
+> +			goto err_panel_detach;
+> +		}
+>  	}
 >  
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 4780eb7af842..dee7f750c42f 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -70,6 +70,7 @@ config ARM64
->  	select ARCH_SUPPORTS_NUMA_BALANCING
->  	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION
->  	select ARCH_WANT_FRAME_POINTERS
-> +	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
->  	select ARCH_HAS_UBSAN_SANITIZE_ALL
->  	select ARM_AMBA
->  	select ARM_ARCH_TIMER
-> @@ -884,7 +885,6 @@ config SYS_SUPPORTS_HUGETLBFS
->  	def_bool y
+>  	return 0;
 >  
->  config ARCH_WANT_HUGE_PMD_SHARE
-> -	def_bool y if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
+> +err_panel_detach:
+> +	drm_panel_detach(dsi->panel);
+>  err_connector_cleanup:
+>  	drm_connector_cleanup(&dsi->conn);
+>  	return ret;
 
-Why not remove config ARCH_WANT_HUGE_PMD_SHARE as well?
-Did I miss something?
-
-Thanks
-Hanjun
 
