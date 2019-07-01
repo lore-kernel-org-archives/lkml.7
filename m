@@ -2,211 +2,170 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9A1C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E227C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F255B208CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lrgYOWob";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SthwBwae"
+	by mail.kernel.org (Postfix) with ESMTP id 7B901208CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:31:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbfGAO2u (ORCPT
+        id S1729622AbfGAObu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:28:50 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43026 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbfGAO2t (ORCPT
+        Mon, 1 Jul 2019 10:31:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32654 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728145AbfGAObt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:28:49 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E173B6081E; Mon,  1 Jul 2019 14:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561991327;
-        bh=u0R2SfGKnaTI/lQP8v2+57GTBRdtXGY/4LgRzV/KLso=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=lrgYOWobMtniBi1gRY3XX4xCP/3y5QrW9TjwxbmT6+6mmAvVzHms16vCvBD+LvjGZ
-         m/7hzUw/jlO37dmm6frFNQ1PJOcQyNw66MmRkjcpFIRwSZohUPDTdQrQPcLs5fg0oj
-         P4iDNyzZKz6XtnqJG3TYAFzMA4qHdOqWxPdNkCt0=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D8DE5601D7;
-        Mon,  1 Jul 2019 14:28:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561991326;
-        bh=u0R2SfGKnaTI/lQP8v2+57GTBRdtXGY/4LgRzV/KLso=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SthwBwaeknA166KVZ2VvbXRXvgZYL2ZBCrHJFMYlBnNdrPu9rJwGZbvdTVr5Ry5GG
-         2hZsE0rBIHTmGfSBNbM29+qV39K/wY6zGJc5z8kT+wIwXgHlUWmRSrXzGqPGdOgDqP
-         AMusXqgHjMVe5jS+0F9Wc0GNwUl0GSGP+Y5hl3qs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D8DE5601D7
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH 1/4] dt-bindings: chosen: document panel-id binding
-To:     Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        aarch64-laptops@lists.linaro.org,
-        Rob Clark <robdclark@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190630203614.5290-1-robdclark@gmail.com>
- <20190630203614.5290-2-robdclark@gmail.com>
- <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <a8af7d1d-f0f4-ae5c-b06b-5a8ec1debd7e@codeaurora.org>
-Date:   Mon, 1 Jul 2019 08:28:45 -0600
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Mon, 1 Jul 2019 10:31:49 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61ESsFO090735
+        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 10:31:48 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfjrevwbe-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 10:31:47 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 1 Jul 2019 15:31:45 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 1 Jul 2019 15:31:39 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61EVcOE23855312
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 1 Jul 2019 14:31:38 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C52E4C044;
+        Mon,  1 Jul 2019 14:31:38 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 81A394C058;
+        Mon,  1 Jul 2019 14:31:36 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.81.204])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  1 Jul 2019 14:31:36 +0000 (GMT)
+Subject: Re: [PATCH v4 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Rob Landley <rob@landley.net>, viro@zeniv.linux.org.uk
+Cc:     linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bug-cpio@gnu.org,
+        zohar@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com,
+        dmitry.kasatkin@huawei.com, takondra@cisco.com, kamensky@cisco.com,
+        hpa@zytor.com, arnd@arndb.de, james.w.mcmechan@gmail.com,
+        niveditas98@gmail.com
+Date:   Mon, 01 Jul 2019 10:31:25 -0400
+In-Reply-To: <45164486-782f-a442-e442-6f56f9299c66@huawei.com>
+References: <20190523121803.21638-1-roberto.sassu@huawei.com>
+         <cf9d08ca-74c7-c945-5bf9-7c3495907d1e@huawei.com>
+         <541e9ea1-024f-5c22-0b58-f8692e6c1eb1@landley.net>
+         <33cfb804-6a17-39f0-92b7-01d54e9c452d@huawei.com>
+         <1561909199.3985.33.camel@linux.ibm.com>
+         <45164486-782f-a442-e442-6f56f9299c66@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070114-0028-0000-0000-0000037F5E7C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070114-0029-0000-0000-0000243F94B0
+Message-Id: <1561991485.4067.14.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907010179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/2019 8:03 AM, Rob Herring wrote:
-> On Sun, Jun 30, 2019 at 2:36 PM Rob Clark <robdclark@gmail.com> wrote:
->>
->> From: Rob Clark <robdclark@chromium.org>
->>
->> The panel-id property in chosen can be used to communicate which panel,
->> of multiple possibilities, is installed.
->>
->> Signed-off-by: Rob Clark <robdclark@chromium.org>
->> ---
->>   Documentation/devicetree/bindings/chosen.txt | 69 ++++++++++++++++++++
->>   1 file changed, 69 insertions(+)
+On Mon, 2019-07-01 at 16:42 +0300, Roberto Sassu wrote:
+> On 6/30/2019 6:39 PM, Mimi Zohar wrote:
+> > On Wed, 2019-06-26 at 10:15 +0200, Roberto Sassu wrote:
+> >> On 6/3/2019 8:32 PM, Rob Landley wrote:
+> >>> On 6/3/19 4:31 AM, Roberto Sassu wrote:
+> >>>>> This patch set aims at solving the following use case: appraise files from
+> >>>>> the initial ram disk. To do that, IMA checks the signature/hash from the
+> >>>>> security.ima xattr. Unfortunately, this use case cannot be implemented
+> >>>>> currently, as the CPIO format does not support xattrs.
+> >>>>>
+> >>>>> This proposal consists in including file metadata as additional files named
+> >>>>> METADATA!!!, for each file added to the ram disk. The CPIO parser in the
+> >>>>> kernel recognizes these special files from the file name, and calls the
+> >>>>> appropriate parser to add metadata to the previously extracted file. It has
+> >>>>> been proposed to use bit 17:16 of the file mode as a way to recognize files
+> >>>>> with metadata, but both the kernel and the cpio tool declare the file mode
+> >>>>> as unsigned short.
+> >>>>
+> >>>> Any opinion on this patch set?
+> >>>>
+> >>>> Thanks
+> >>>>
+> >>>> Roberto
+> >>>
+> >>> Sorry, I've had the window open since you posted it but haven't gotten around to
+> >>> it. I'll try to build it later today.
+> >>>
+> >>> It does look interesting, and I have no objections to the basic approach. I
+> >>> should be able to add support to toybox cpio over a weekend once I've got the
+> >>> kernel doing it to test against.
+> >>
+> >> Ok.
+> >>
+> >> Let me give some instructions so that people can test this patch set.
+> >>
+> >> To add xattrs to the ram disk embedded in the kernel it is sufficient
+> >> to set CONFIG_INITRAMFS_FILE_METADATA="xattr" and
+> >> CONFIG_INITRAMFS_SOURCE="<file with xattr>" in the kernel configuration.
+> >>
+> >> To add xattrs to the external ram disk, it is necessary to patch cpio:
+> >>
+> >> https://github.com/euleros/cpio/commit/531cabc88e9ecdc3231fad6e4856869baa9a91ef
+> >> (xattr-v1 branch)
+> >>
+> >> and dracut:
+> >>
+> >> https://github.com/euleros/dracut/commit/a2dee56ea80495c2c1871bc73186f7b00dc8bf3b
+> >> (digest-lists branch)
+> >>
+> >> The same modification can be done for mkinitramfs (add '-e xattr' to the
+> >> cpio command line).
+> >>
+> >> To simplify the test, it would be sufficient to replace only the cpio
+> >> binary and the dracut script with the modified versions. For dracut, the
+> >> patch should be applied to the local dracut (after it has been renamed
+> >> to dracut.sh).
+> >>
+> >> Then, run:
+> >>
+> >> dracut -e xattr -I <file with xattr> (add -f to overwrite the ram disk)
+> >>
+> >> Xattrs can be seen by stopping the boot process for example by adding
+> >> rd.break to the kernel command line.
+> > 
+> > A simple way of testing, without needing any changes other than the
+> > kernel patches, is to save the dracut temporary directory by supplying
+> > "--keep" on the dracut command line, calling
+> > usr/gen_initramfs_list.sh, followed by usr/gen_init_cpio with the "-e
+> > xattr" option.
 > 
-> I need to update this file to say it's moved to the schema repository...
-> 
-> But I don't think that will matter...
-> 
->> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
->> index 45e79172a646..d502e6489b8b 100644
->> --- a/Documentation/devicetree/bindings/chosen.txt
->> +++ b/Documentation/devicetree/bindings/chosen.txt
->> @@ -68,6 +68,75 @@ on PowerPC "stdout" if "stdout-path" is not found.  However, the
->>   "linux,stdout-path" and "stdout" properties are deprecated. New platforms
->>   should only use the "stdout-path" property.
->>
->> +panel-id
->> +--------
->> +
->> +For devices that have multiple possible display panels (multi-sourcing the
->> +display panels is common on laptops, phones, tablets), this allows the
->> +bootloader to communicate which panel is installed, e.g.
-> 
-> How does the bootloader figure out which panel? Why can't the kernel
-> do the same thing?
+> Alternatively, follow the instructions to create the embedded ram disk
+> with xattrs, and use the existing external ram disk created with dracut
+> to check if xattrs are created.
 
-Its platform specific.  In the devices that Rob Clark seems interested
-in, there are multiple mechanisms in place - read a gpio, enable the
-DSI and send a specific command to the panel controller asking for its
-panel id, or read some efuses.
+True, but this alternative is for those who normally use dracut to
+create an initramfs, but don't want to update cpio or dracut.
 
-The efuses may not be accessible by Linux.
+Mimi
 
-The DSI solution is problematic because it causes a chicken and egg
-situation where linux needs the DT to probe the DSI driver to query
-the panel, in order to edit the DT to probe DSI/panel.
-
-In the systems Rob Clark is interested in, the FW already provides a
-specific EFI variable with the panel id encoded in it for HLOS to use
-(although this is broken on some of the devices), but this is a
-specific vendor's solution.
-
-The FW/bootloader has probably already figured out the panel details
-and brought up the display for a boot splash, bios menu, etc.  I'm not
-sure it makes a lot of sense to define N mechanisms for linux to
-figure out the same across every platform/vendor.
-
-> 
->> +
->> +/ {
->> +       chosen {
->> +               panel-id = <0xc4>;
->> +       };
->> +
->> +       ivo_panel {
->> +               compatible = "ivo,m133nwf4-r0";
->> +               power-supply = <&vlcm_3v3>;
->> +               no-hpd;
->> +
->> +               ports {
->> +                       port {
->> +                               ivo_panel_in_edp: endpoint {
->> +                                       remote-endpoint = <&sn65dsi86_out_ivo>;
->> +                               };
->> +                       };
->> +               };
->> +       };
->> +
->> +       boe_panel {
->> +               compatible = "boe,nv133fhm-n61";
-> 
-> Both panels are going to probe. So the bootloader needs to disable the
-> not populated panel setting 'status' (or delete the node). If you do
-> that, do you even need 'panel-id'?
-> 
->> +               power-supply = <&vlcm_3v3>;
->> +               no-hpd;
->> +
->> +               ports {
->> +                       port {
->> +                               boe_panel_in_edp: endpoint {
->> +                                       remote-endpoint = <&sn65dsi86_out_boe>;
->> +                               };
->> +                       };
->> +               };
->> +       };
->> +
->> +       display_or_bridge_device {
->> +
->> +               ports {
->> +                       #address-cells = <1>;
->> +                       #size-cells = <0>;
->> +
->> +                       ...
->> +
->> +                       port@0 {
->> +                               #address-cells = <1>;
->> +                               #size-cells = <0>;
->> +                               reg = <0>;
->> +
->> +                               endpoint@c4 {
->> +                                       reg = <0xc4>;
-> 
-> What does this number represent? It is supposed to be defined by the
-> display_or_bridge_device, not a specific panel.
-
-Its the specific FW/bootloader defined panel id, that matches the
-above defined panel-id property.
-
-> 
-> We also need to consider how the DSI case with panels as children of
-> the DSI controller would work and how this would work with multiple
-> displays each having multiple panel options.
-> 
-> Rob
-> 
-
-
--- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
