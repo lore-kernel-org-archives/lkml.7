@@ -2,164 +2,114 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB9BC06508
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 00:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CE1C06508
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C87C2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 00:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB00A212F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:00:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="A208QQas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfGAAnp (ORCPT
+        id S1726695AbfGABAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 20:43:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53060 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726472AbfGAAno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 20:43:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C71F0AE21;
-        Mon,  1 Jul 2019 00:43:42 +0000 (UTC)
-From:   NeilBrown <neil@brown.name>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date:   Mon, 01 Jul 2019 10:43:07 +1000
-Subject: [PATCH 2/2] staging: mt7621-dts: add support for second network
- interface
-Cc:     devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>
-Message-ID: <156194178766.1430.12784163026696670896.stgit@noble.brown>
-In-Reply-To: <156194175140.1430.2478988354194078582.stgit@noble.brown>
-References: <156194175140.1430.2478988354194078582.stgit@noble.brown>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Sun, 30 Jun 2019 21:00:15 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:59957 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfGABAO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 21:00:14 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x610x4fw000634;
+        Mon, 1 Jul 2019 09:59:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x610x4fw000634
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561942750;
+        bh=rpeL0VIy/UIykKSqi/KZPVDb8+AGL27FhHoeS6eYDfM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=A208QQaso4Ua3Xv5StoEy7N1uTKOr3ov4gE6NKkSxARIu7tAZuEmCkclp9x8NjcJp
+         oFY/qVU3caS+6bbgTVAj1iLPi8Y0ETnU/wEhwR6cx00EaltEeEZqVP7L17Ey/gix/8
+         H5KfHmHVxPgj4gQl6bjXByCEHWvb2XPRyNCWXZC73o196m4uBTVEEGQONivak15yub
+         K6rBITpjIYIfyEOilus6E8Uq/6r8QTNOV/w3ODQ8twMeQOBt/m8AfzBi7LKY8OWTAO
+         hCxWp+9RySYVpeHTnBnhYbuBBfv1zIwep96sIk44AB135uXBgMD1Fr8Ij+99jgGtES
+         9kIQAx5rBMxXQ==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 5/7] kheaders: remove meaningless -R option of 'ls'
+Date:   Mon,  1 Jul 2019 09:58:43 +0900
+Message-Id: <20190701005845.12475-6-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190701005845.12475-1-yamada.masahiro@socionext.com>
+References: <20190701005845.12475-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mt7621 has two network interfaces, one that connects to an
-internal switch, and one that can connect to either that switch
-or an external phy, or possibly an internal phy.
+The -R option of 'ls' is supposed to be used for directories.
 
-The Gnubee-PC2 has an external phy for use with the second interface.
+       -R, --recursive
+              list subdirectories recursively
 
-This patch add some support for the second interface to mt7621.dtsi
-and add a gbpc2.dts which makes use of this.  This allows the second
-interface to be used.
+Since 'find ... -type f' only matches to regular files, we do not
+expect directories passed to the 'ls' command here.
 
-I don't fully understand how to configure this interface - the
-documentation is thin - so there could well be room for improvement
-here.
+Giving -R is harmless at least, but unneeded.
 
-Signed-off-by: NeilBrown <neil@brown.name>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- drivers/staging/mt7621-dts/Kconfig     |    7 ++++++-
- drivers/staging/mt7621-dts/Makefile    |    1 +
- drivers/staging/mt7621-dts/gbpc1.dts   |    2 +-
- drivers/staging/mt7621-dts/gbpc2.dts   |   21 +++++++++++++++++++++
- drivers/staging/mt7621-dts/mt7621.dtsi |   12 ++++++++----
- 5 files changed, 37 insertions(+), 6 deletions(-)
- create mode 100644 drivers/staging/mt7621-dts/gbpc2.dts
 
-diff --git a/drivers/staging/mt7621-dts/Kconfig b/drivers/staging/mt7621-dts/Kconfig
-index 3ea08ab9d0d3..6932ab7acadf 100644
---- a/drivers/staging/mt7621-dts/Kconfig
-+++ b/drivers/staging/mt7621-dts/Kconfig
-@@ -1,6 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0
- config DTB_GNUBEE1
--	bool "GnuBee1 NAS"
-+	bool "GnuBee1 2.5inch NAS"
-+	depends on SOC_MT7621 && DTB_RT_NONE
-+	select BUILTIN_DTB
-+
-+config DTB_GNUBEE2
-+	bool "GnuBee2 3.5inch NAS"
- 	depends on SOC_MT7621 && DTB_RT_NONE
- 	select BUILTIN_DTB
- 
-diff --git a/drivers/staging/mt7621-dts/Makefile b/drivers/staging/mt7621-dts/Makefile
-index aeec48a4edc7..b4ab99fed932 100644
---- a/drivers/staging/mt7621-dts/Makefile
-+++ b/drivers/staging/mt7621-dts/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_DTB_GNUBEE1)      += gbpc1.dtb
-+dtb-$(CONFIG_DTB_GNUBEE2)      += gbpc2.dtb
- 
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-diff --git a/drivers/staging/mt7621-dts/gbpc1.dts b/drivers/staging/mt7621-dts/gbpc1.dts
-index 250c15ace2a7..1fb560ff059c 100644
---- a/drivers/staging/mt7621-dts/gbpc1.dts
-+++ b/drivers/staging/mt7621-dts/gbpc1.dts
-@@ -119,7 +119,7 @@
- 
- &pinctrl {
- 	state_default: pinctrl0 {
--		gpio {
-+		default_gpio: gpio {
- 			groups = "wdt", "rgmii2", "uart3";
- 			function = "gpio";
- 		};
-diff --git a/drivers/staging/mt7621-dts/gbpc2.dts b/drivers/staging/mt7621-dts/gbpc2.dts
-new file mode 100644
-index 000000000000..52760e7351f6
---- /dev/null
-+++ b/drivers/staging/mt7621-dts/gbpc2.dts
-@@ -0,0 +1,21 @@
-+/dts-v1/;
-+
-+#include "gbpc1.dts"
-+
-+/ {
-+	compatible = "gnubee,gb-pc2", "mediatek,mt7621-soc";
-+	model = "GB-PC2";
-+};
-+
-+&default_gpio {
-+	groups = "wdt", "uart3";
-+	function = "gpio";
-+};
-+
-+&gmac1 {
-+	status = "ok";
-+};
-+
-+&phy_external {
-+	status = "ok";
-+};
-diff --git a/drivers/staging/mt7621-dts/mt7621.dtsi b/drivers/staging/mt7621-dts/mt7621.dtsi
-index 549ff5a0699e..a4c08110094b 100644
---- a/drivers/staging/mt7621-dts/mt7621.dtsi
-+++ b/drivers/staging/mt7621-dts/mt7621.dtsi
-@@ -427,16 +427,20 @@
- 			compatible = "mediatek,eth-mac";
- 			reg = <1>;
- 			status = "off";
--			phy-mode = "rgmii";
--			phy-handle = <&phy5>;
-+			phy-mode = "rgmii-rxid";
-+			phy-handle = <&phy_external>;
- 		};
- 		mdio-bus {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 
--			phy5: ethernet-phy@5 {
-+			phy_external: ethernet-phy@5 {
-+				status = "off";
- 				reg = <5>;
--				phy-mode = "rgmii";
-+				phy-mode = "rgmii-rxid";
-+
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&rgmii2_pins>;
- 			};
- 
- 			switch0: switch0@0 {
+Changes in v4:
+  - New patch
 
+Changes in v3: None
+Changes in v2: None
+
+ kernel/gen_kheaders.sh | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
+index 9a34e1d9bd7f..86a666f5cb17 100755
+--- a/kernel/gen_kheaders.sh
++++ b/kernel/gen_kheaders.sh
+@@ -33,8 +33,8 @@ arch/$SRCARCH/include/
+ # Uncomment it for debugging.
+ # if [ ! -f /tmp/iter ]; then iter=1; echo 1 > /tmp/iter;
+ # else iter=$(($(cat /tmp/iter) + 1)); echo $iter > /tmp/iter; fi
+-# find $src_file_list -type f | xargs ls -lR > /tmp/src-ls-$iter
+-# find $obj_file_list -type f | xargs ls -lR > /tmp/obj-ls-$iter
++# find $src_file_list -type f | xargs ls -l > /tmp/src-ls-$iter
++# find $obj_file_list -type f | xargs ls -l > /tmp/obj-ls-$iter
+ 
+ # include/generated/compile.h is ignored because it is touched even when none
+ # of the source files changed. This causes pointless regeneration, so let us
+@@ -46,7 +46,7 @@ src_files_md5="$(find $src_file_list -type f                       |
+ 		grep -v "include/config/auto.conf"		   |
+ 		grep -v "include/config/auto.conf.cmd"		   |
+ 		grep -v "include/config/tristate.conf"		   |
+-		xargs ls -lR | md5sum | cut -d ' ' -f1)"
++		xargs ls -l | md5sum | cut -d ' ' -f1)"
+ popd > /dev/null
+ obj_files_md5="$(find $obj_file_list -type f                       |
+ 		grep -v "include/generated/compile.h"		   |
+@@ -54,7 +54,7 @@ obj_files_md5="$(find $obj_file_list -type f                       |
+ 		grep -v "include/config/auto.conf"                 |
+ 		grep -v "include/config/auto.conf.cmd"		   |
+ 		grep -v "include/config/tristate.conf"		   |
+-		xargs ls -lR | md5sum | cut -d ' ' -f1)"
++		xargs ls -l | md5sum | cut -d ' ' -f1)"
+ 
+ if [ -f $tarfile ]; then tarfile_md5="$(md5sum $tarfile | cut -d ' ' -f1)"; fi
+ if [ -f kernel/kheaders.md5 ] &&
+-- 
+2.17.1
 
