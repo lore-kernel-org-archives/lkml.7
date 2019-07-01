@@ -2,145 +2,196 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA75EC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8317CC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892E52184C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EA120659
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:18:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="yACaMc4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbfGAJRS (ORCPT
+        id S1728365AbfGAJSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 05:17:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:58256 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728073AbfGAJRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 05:17:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1A8BCFC;
-        Mon,  1 Jul 2019 02:17:16 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62CC23F718;
-        Mon,  1 Jul 2019 02:17:14 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 10:17:12 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Guo Ren <guoren@kernel.org>
-Cc:     Julien Grall <julien.grall@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        aou@eecs.berkeley.edu, gary@garyguo.net,
-        Atish Patra <Atish.Patra@wdc.com>, hch@infradead.org,
-        paul.walmsley@sifive.com, rppt@linux.ibm.com,
-        linux-riscv@lists.infradead.org, Anup Patel <anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>, suzuki.poulose@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>, julien.thierry@arm.com,
-        Will Deacon <will.deacon@arm.com>, christoffer.dall@arm.com,
-        james.morse@arm.com
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-Message-ID: <20190701091711.GA21774@arrakis.emea.arm.com>
-References: <20190321163623.20219-1-julien.grall@arm.com>
- <20190321163623.20219-12-julien.grall@arm.com>
- <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
- <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
- <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com>
- <CAJF2gTStSR7Jmu7=HaO5Wxz=Zn8A5-RD8ktori3oKEhM9vozAA@mail.gmail.com>
- <20190621141606.GF18954@arrakis.emea.arm.com>
- <CAJF2gTTVUToRkRtxTmtWDotMGXy5YQCpL1h_2neTBuN3e6oz1w@mail.gmail.com>
- <20190624153820.GH29120@arrakis.emea.arm.com>
- <CAJF2gTRUzHUNV+nzECUp5n2L1akdy=Aovb6tSd+PNVnpasBrqw@mail.gmail.com>
+        Mon, 1 Jul 2019 05:18:25 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43280 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728073AbfGAJSY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 05:18:24 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 16so12310570ljv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 02:18:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xnGzpgrloPpecP5lmIfO2uWEIueLQKQHuqUdB5786nE=;
+        b=yACaMc4g8j3hx/NgX9T84gJhPdqw3OvWNan6U6E9stNXr9Sr4Adhmnz8YVybMIEsDX
+         9kV4n2dluX5DwV8vWFdAslmKxvvis4evgjQ0NDOu8gGqTVLrGSRnlVR+vvbFy+kmn1XP
+         fQVK17Y8S/cS59UTHp91/E5jAe3l9CCPccF3o/511ZnDPVC3SIj+IRFn1yT+TgAHFcZR
+         t5mRn+YhsEdGaODChO8WNlhj/8aMDYWAyMV70IdBTvoOHqCUuukniZlJPNTBRQ0psvot
+         RDy9dXoqbdGXTk4IJlzvIs53tyqt+YYgdHf6jamgqqRUDdFEp++5oXXL/ByhTxawtYop
+         oAxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xnGzpgrloPpecP5lmIfO2uWEIueLQKQHuqUdB5786nE=;
+        b=nQhQ7GSG6HF/rN4rEO4a30aHU8HrhoQzeEQbUGgZBxI7rIbnQRdK7q9Ur2bkE/mmuS
+         IewoqLyKYNj/xsFhuR+xo/drlD6HamRH/EUZbGAQWb21h4xAEurOSG5UKx4jlwomKFaG
+         dTaCBdnhAg1Fu0tJAp7XCFOmoJUMZ0j7ldfRJu/nWzn7UzoPkxiUgdimg6I/+W1poJZZ
+         +mSG5nzRvmF0UGd/OYDzsyNLB/I7PKBMrermyzRaibV+pYhSsIG/7p7vEIP09IDU1slS
+         tqzyYc0OXmW+fwknjWAF2abcdpyqMKjPQuoH/E97jBpq+IzKsXlvCpAueHBmXZxRt5qd
+         GYBg==
+X-Gm-Message-State: APjAAAU0HwBdtPNlUPf0rOa3BFWgl0I1kg7rEzkCXNYBbJkbVezUHwIS
+        HjO1IcDuMg5jyLISKVipu+/gQw==
+X-Google-Smtp-Source: APXvYqyPU7yNzZLFgu6Nh2z/u3nnbpMpnEUjP3Fk0MEn8WWnpZQSsQvJvuAt7/NvZogjBM3RZGMlkg==
+X-Received: by 2002:a2e:2b8f:: with SMTP id r15mr12915741ljr.210.1561972702306;
+        Mon, 01 Jul 2019 02:18:22 -0700 (PDT)
+Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
+        by smtp.gmail.com with ESMTPSA id i23sm3134821ljb.7.2019.07.01.02.18.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 02:18:21 -0700 (PDT)
+From:   =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
+To:     gregkh@linuxfoundation.org
+Cc:     gneukum1@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
+Subject: [PATCH v2] staging: kpc2000: fix brace issues in kpc2000_spi.c
+Date:   Mon,  1 Jul 2019 11:18:19 +0200
+Message-Id: <20190701091819.18528-1-simon@nikanor.nu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJF2gTRUzHUNV+nzECUp5n2L1akdy=Aovb6tSd+PNVnpasBrqw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 12:29:46PM +0800, Guo Ren wrote:
-> On Mon, Jun 24, 2019 at 11:38 PM Catalin Marinas
-> <catalin.marinas@arm.com> wrote:
-> > On Mon, Jun 24, 2019 at 12:35:35AM +0800, Guo Ren wrote:
-> > > On Fri, Jun 21, 2019 at 10:16 PM Catalin Marinas
-> > > <catalin.marinas@arm.com> wrote:
-> > > > BTW, if you find the algorithm fairly straightforward ;), see this
-> > > > bug-fix which took a formal model to identify: a8ffaaa060b8 ("arm64:
-> > > > asid: Do not replace active_asids if already 0").
-> > [...]
-> > > Btw, Is this detected by arm's aisd allocator TLA+ model ? Or a real
-> > > bug report ?
-> >
-> > This specific bug was found by the TLA+ model checker (at the time we
-> > were actually tracking down another bug with multi-threaded CPU sharing
-> > the TLB, bug also confirmed by the formal model).
-> 
-> Could you tell me the ref-link about "another bug with multi-threaded
-> CPU sharing the TLB" ?
-> 
-> In my concept, the multi-core asid mechanism is also applicable to
-> multi-thread shared TLB, but it will generate redundant tlbflush. From
-> the software design logic, multi-threaded is treated as multi-cores
-> without error, but performance is not optimized.
+Fixes issues found by checkpatch:
 
-From the ASID reservation/allocation perspective, the mechanism is the
-same between multi-threaded with a shared TLB and multi-core. On arm64,
-a local_flush_tlb_all() on a thread invalidates the TLB for the other
-threads of the same core.
+- "WARNING: braces {} are not necessary for single statement blocks"
+- "WARNING: braces {} are not necessary for any arm of this statement"
 
-The actual problem with multi-threaded CPUs is a lot more subtle.
-Digging some internal email from 1.5 years ago and pasting it below
-(where "current ASID algorithm" refers to the one prior to the fix and
-CnP - Common Not Private - means shared TLBs on a multi-threaded CPU):
+Signed-off-by: Simon Sandström <simon@nikanor.nu>
+---
 
+Changed in v2: rebased.
 
-The current ASID roll-over algorithm allows for a small window where
-active_asids for a CPU (P1) is different from the actual ASID in TTBR0.
-This can lead to a roll-over on a different CPU (P2) allocating an ASID
-(for a different task) which is still hardware-active on P1.
+ drivers/staging/kpc2000/kpc2000_spi.c | 33 ++++++++++-----------------
+ 1 file changed, 12 insertions(+), 21 deletions(-)
 
-A TLBI on a CPU (or a peer CPU with CnP) does not guarantee that all the
-entries corresponding to a valid TTBRx are removed as they can still be
-speculatively loaded immediately after TLBI.
-
-While having two different page tables with the same ASID on different
-CPUs should be fine without CnP, it becomes problematic when CnP is
-enabled:
-
-P1                                      P2
---                                      --
-TTBR0.BADDR = T1
-TTBR0.ASID = A1
-check_and_switch_context(T2,A2)
-  asid_maps[P1] = A2
-  goto fastpath
-                                        check_and_switch_context(T3,A0)
-                                          new_context
-                                            ASID roll-over allocates A1
-                                              since it is not active
-                                          TLBI ALL
-speculate TTBR0.ASID = A1 entry
-                                          TTBR0.BADDR = T3
-                                          TTBR0.ASID = A1
-  TTBR0.BADDR = T2
-  TTBR0.ASID = A2
-
-After this, the common TLB on P1 and P2 (CnP) contains entries
-corresponding to the old T1 and A1. Task T3 using the same ASID A1 can
-hit such entries. (T1,A1) will eventually be removed from the TLB on the
-next context switch on P1 since tlb_flush_pending was set but this is
-not guaranteed to happen.
-
-
-The fix on arm64 (as part of 5ffdfaedfa0a - "arm64: mm: Support Common
-Not Private translations") was to set the reserved TTBR0 in
-check_and_switch_context(), preventing speculative loads into the TLB
-being tagged with the wrong ASID. So this is specific to the ARM CPUs
-behaviour w.r.t. speculative TLB loads, it may not be the case (yet) for
-your architecture.
-
+diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
+index 021cc859feed..009dec2f4641 100644
+--- a/drivers/staging/kpc2000/kpc2000_spi.c
++++ b/drivers/staging/kpc2000/kpc2000_spi.c
+@@ -165,9 +165,9 @@ kp_spi_read_reg(struct kp_spi_controller_state *cs, int idx)
+ 	u64 val;
+ 
+ 	addr += idx;
+-	if ((idx == KP_SPI_REG_CONFIG) && (cs->conf_cache >= 0)) {
++	if ((idx == KP_SPI_REG_CONFIG) && (cs->conf_cache >= 0))
+ 		return cs->conf_cache;
+-	}
++
+ 	val = readq(addr);
+ 	return val;
+ }
+@@ -192,11 +192,10 @@ kp_spi_wait_for_reg_bit(struct kp_spi_controller_state *cs, int idx,
+ 	timeout = jiffies + msecs_to_jiffies(1000);
+ 	while (!(kp_spi_read_reg(cs, idx) & bit)) {
+ 		if (time_after(jiffies, timeout)) {
+-			if (!(kp_spi_read_reg(cs, idx) & bit)) {
++			if (!(kp_spi_read_reg(cs, idx) & bit))
+ 				return -ETIMEDOUT;
+-			} else {
++			else
+ 				return 0;
+-			}
+ 		}
+ 		cpu_relax();
+ 	}
+@@ -269,9 +268,8 @@ kp_spi_setup(struct spi_device *spidev)
+ 	cs = spidev->controller_state;
+ 	if (!cs) {
+ 		cs = kzalloc(sizeof(*cs), GFP_KERNEL);
+-		if (!cs) {
++		if (!cs)
+ 			return -ENOMEM;
+-		}
+ 		cs->base = kpspi->base;
+ 		cs->conf_cache = -1;
+ 		spidev->controller_state = cs;
+@@ -305,9 +303,8 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+ 	cs = spidev->controller_state;
+ 
+ 	/* reject invalid messages and transfers */
+-	if (list_empty(&m->transfers)) {
++	if (list_empty(&m->transfers))
+ 		return -EINVAL;
+-	}
+ 
+ 	/* validate input */
+ 	list_for_each_entry(transfer, &m->transfers, transfer_list) {
+@@ -365,17 +362,14 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+ 			sc.reg = kp_spi_read_reg(cs, KP_SPI_REG_CONFIG);
+ 
+ 			/* ...direction */
+-			if (transfer->tx_buf) {
++			if (transfer->tx_buf)
+ 				sc.bitfield.trm = KP_SPI_REG_CONFIG_TRM_TX;
+-			}
+-			else if (transfer->rx_buf) {
++			else if (transfer->rx_buf)
+ 				sc.bitfield.trm = KP_SPI_REG_CONFIG_TRM_RX;
+-			}
+ 
+ 			/* ...word length */
+-			if (transfer->bits_per_word) {
++			if (transfer->bits_per_word)
+ 				word_len = transfer->bits_per_word;
+-			}
+ 			sc.bitfield.wl = word_len - 1;
+ 
+ 			/* ...chip select */
+@@ -394,9 +388,8 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+ 			}
+ 		}
+ 
+-		if (transfer->delay_usecs) {
++		if (transfer->delay_usecs)
+ 			udelay(transfer->delay_usecs);
+-		}
+ 	}
+ 
+ 	/* de-assert chip select to end the sequence */
+@@ -419,9 +412,8 @@ kp_spi_cleanup(struct spi_device *spidev)
+ {
+ 	struct kp_spi_controller_state *cs = spidev->controller_state;
+ 
+-	if (cs) {
++	if (cs)
+ 		kfree(cs);
+-	}
+ }
+ 
+ /******************
+@@ -464,9 +456,8 @@ kp_spi_probe(struct platform_device *pldev)
+ 	kpspi->dev = &pldev->dev;
+ 
+ 	master->num_chipselect = 4;
+-	if (pldev->id != -1) {
++	if (pldev->id != -1)
+ 		master->bus_num = pldev->id;
+-	}
+ 
+ 	r = platform_get_resource(pldev, IORESOURCE_MEM, 0);
+ 	if (r == NULL) {
 -- 
-Catalin
+2.20.1
+
