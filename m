@@ -2,203 +2,103 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC87AC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC77C06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BAE20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:26:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JCjrgyDK"
+	by mail.kernel.org (Postfix) with ESMTP id E579320659
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561994785;
+	bh=Ih4bcw/JsMbYGyd0FqAHH4IJcHQtUXAcuIwTbsHMBi8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WOV9FpiA/qKUS/7aXn9+/tdc0cy8QuR411FbDb5FJX3MmSY92OoXd/jyDFc3+MbFz
+	 lj+DsjU45Ipp2oZ21mPcJ1cRent+mf0d62XjvUKCxNYxVwy7TlPpQU7Ya33ZBoB2oH
+	 q5C22cjNVFgVN4IqZ2D+WeyFbZp1YBHL2G4uShYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbfGAP0V (ORCPT
+        id S1729002AbfGAP0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:26:21 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:55206 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbfGAP0K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:26:10 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x61FQ79i087636;
-        Mon, 1 Jul 2019 10:26:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561994768;
-        bh=/vgLD8IK+OMCj7sRkzAlcRKtw3+F/xlc2ws1OdRcgUU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=JCjrgyDKuosrNWBB3IuDemaZwLqVitHPS1ajujzOE+NBvDGhJnOtW7uZTKWdB6FwT
-         8kwFHXt1A7LvUTDcEwokXtffV5ZgdxhNdrQnzyhpp9eFmq8O8G2U+Aubzm+shtkZjE
-         eQlrdLvDlGNgv1vtUAEaQ/ML3EUO7UmaO1AM6lfA=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x61FQ7qH032617
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 1 Jul 2019 10:26:07 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Jul
- 2019 10:26:07 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 1 Jul 2019 10:26:07 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x61FQ6vT084552;
-        Mon, 1 Jul 2019 10:26:07 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <dmurphy@ti.com>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH 1/2] leds: tlc591xx: simplify driver by using the managed led API
-Date:   Mon, 1 Jul 2019 17:26:01 +0200
-Message-ID: <20190701152602.31716-2-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190701152602.31716-1-jjhiblot@ti.com>
-References: <20190701152602.31716-1-jjhiblot@ti.com>
+        Mon, 1 Jul 2019 11:26:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728801AbfGAP0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 11:26:18 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0C4A20659;
+        Mon,  1 Jul 2019 15:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561994778;
+        bh=Ih4bcw/JsMbYGyd0FqAHH4IJcHQtUXAcuIwTbsHMBi8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Rap9HDjTN3kiMZW3uWkg9RRp1r1eusDUvq7f7Zh/AXDRWpF+q454b5kYP87HWiVc8
+         RPGzjidqVFOCb+ddi0SFqphR8bDA714hPs+ldZQ3uO3qX1P0cVHc9fc1yKD+aeTmmx
+         JfHSSRVNQXil2SE0+FbX8NflimVhmoBF8H1OP6zk=
+Received: by mail-wr1-f54.google.com with SMTP id n4so14294882wrw.13;
+        Mon, 01 Jul 2019 08:26:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAXPc2YfecpitiO58+peG3U/6wT0CHeO4eTLjlSg2tA1x6mKFVQJ
+        n1V7ek+UlHPJApRv/rnOsoz1HTJ1Fw0UJGBQdVo=
+X-Google-Smtp-Source: APXvYqxRGwhspokcFFFd0KmyPEF9ycQbXeC/CojSvkLBlXQBabadTY0izBxWydQ61ZC4++TSBGTX/OIMRWTQ46rWuKw=
+X-Received: by 2002:adf:9425:: with SMTP id 34mr12426100wrq.38.1561994776618;
+ Mon, 01 Jul 2019 08:26:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1561786601-19512-1-git-send-email-guoren@kernel.org> <CAK8P3a0F5-wtJHbLvEwUXE8EnALMpQb5KeX4FK3S90Ce81oN-Q@mail.gmail.com>
+In-Reply-To: <CAK8P3a0F5-wtJHbLvEwUXE8EnALMpQb5KeX4FK3S90Ce81oN-Q@mail.gmail.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Mon, 1 Jul 2019 23:26:05 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTR7ooY=gxKW2zWK9MnuJ9YDm_1r6QTdJ=A=WqRDTuecRQ@mail.gmail.com>
+Message-ID: <CAJF2gTR7ooY=gxKW2zWK9MnuJ9YDm_1r6QTdJ=A=WqRDTuecRQ@mail.gmail.com>
+Subject: Re: [PATCH] csky: Improve abiv1 mem ops performance with glibc codes
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the managed API of the LED class (devm_led_classdev_register()
-instead of led_classdev_register()).
-This allows us to remove the code used to track-and-destroy the LED devices
+Hi Arnd,
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
----
- drivers/leds/leds-tlc591xx.c | 81 ++++++++++--------------------------
- 1 file changed, 21 insertions(+), 60 deletions(-)
+On Mon, Jul 1, 2019 at 10:52 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Sat, Jun 29, 2019 at 7:36 AM <guoren@kernel.org> wrote:
+> >
+> > From: Guo Ren <ren_guo@c-sky.com>
+> >
+> > These codes are copied from glibc/string directory, they are the generic
+> > implementation for string operations. We may further optimize them with
+> > assembly code in the future.
+> >
+> > In fact these code isn't tested enough for kernel, but we've tested them
+> > on glibc and it seems good. We just trust them :)
+>
+> Are these files from the architecture independent portion of glibc or
+> are they csky specific? If they are architecture independent, we might
+> want to see if they make sense for other architectures as well, and
+> add them to lib/ rather than arch/csky/lib/
+They are just copied from glibc-2.28/string/*.c and they are generic.
+OK, I'll try to add them to lib/.
 
-diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
-index 59ff088c7d75..14e47ff44df5 100644
---- a/drivers/leds/leds-tlc591xx.c
-+++ b/drivers/leds/leds-tlc591xx.c
-@@ -128,51 +128,6 @@ tlc591xx_brightness_set(struct led_classdev *led_cdev,
- 	return err;
- }
- 
--static void
--tlc591xx_destroy_devices(struct tlc591xx_priv *priv, unsigned int j)
--{
--	int i = j;
--
--	while (--i >= 0) {
--		if (priv->leds[i].active)
--			led_classdev_unregister(&priv->leds[i].ldev);
--	}
--}
--
--static int
--tlc591xx_configure(struct device *dev,
--		   struct tlc591xx_priv *priv,
--		   const struct tlc591xx *tlc591xx)
--{
--	unsigned int i;
--	int err = 0;
--
--	tlc591xx_set_mode(priv->regmap, MODE2_DIM);
--	for (i = 0; i < TLC591XX_MAX_LEDS; i++) {
--		struct tlc591xx_led *led = &priv->leds[i];
--
--		if (!led->active)
--			continue;
--
--		led->priv = priv;
--		led->led_no = i;
--		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
--		led->ldev.max_brightness = LED_FULL;
--		err = led_classdev_register(dev, &led->ldev);
--		if (err < 0) {
--			dev_err(dev, "couldn't register LED %s\n",
--				led->ldev.name);
--			goto exit;
--		}
--	}
--
--	return 0;
--
--exit:
--	tlc591xx_destroy_devices(priv, i);
--	return err;
--}
--
- static const struct regmap_config tlc591xx_regmap = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
-@@ -197,7 +152,7 @@ tlc591xx_probe(struct i2c_client *client,
- 	const struct of_device_id *match;
- 	const struct tlc591xx *tlc591xx;
- 	struct tlc591xx_priv *priv;
--	int err, count, reg;
-+	int err, count, reg, idx = 0;
- 
- 	match = of_match_device(of_tlc591xx_leds_match, dev);
- 	if (!match)
-@@ -225,7 +180,11 @@ tlc591xx_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, priv);
- 
-+	tlc591xx_set_mode(priv->regmap, MODE2_DIM);
-+
- 	for_each_child_of_node(np, child) {
-+		struct tlc591xx_led *led;
-+
- 		err = of_property_read_u32(child, "reg", &reg);
- 		if (err) {
- 			of_node_put(child);
-@@ -236,22 +195,25 @@ tlc591xx_probe(struct i2c_client *client,
- 			of_node_put(child);
- 			return -EINVAL;
- 		}
--		priv->leds[reg].active = true;
--		priv->leds[reg].ldev.name =
-+		led = &priv->leds[reg];
-+
-+		led->active = true;
-+		led->ldev.name =
- 			of_get_property(child, "label", NULL) ? : child->name;
--		priv->leds[reg].ldev.default_trigger =
-+		led->ldev.default_trigger =
- 			of_get_property(child, "linux,default-trigger", NULL);
--	}
--	return tlc591xx_configure(dev, priv, tlc591xx);
--}
--
--static int
--tlc591xx_remove(struct i2c_client *client)
--{
--	struct tlc591xx_priv *priv = i2c_get_clientdata(client);
--
--	tlc591xx_destroy_devices(priv, TLC591XX_MAX_LEDS);
- 
-+		led->priv = priv;
-+		led->led_no = idx++;
-+		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
-+		led->ldev.max_brightness = LED_FULL;
-+		err = devm_led_classdev_register(dev, &led->ldev);
-+		if (err < 0) {
-+			dev_err(dev, "couldn't register LED %s\n",
-+				led->ldev.name);
-+			return err;
-+		}
-+	}
- 	return 0;
- }
- 
-@@ -268,7 +230,6 @@ static struct i2c_driver tlc591xx_driver = {
- 		.of_match_table = of_match_ptr(of_tlc591xx_leds_match),
- 	},
- 	.probe = tlc591xx_probe,
--	.remove = tlc591xx_remove,
- 	.id_table = tlc591xx_id,
- };
- 
+>
+> Should the SPDX identifier list the original LGPL-2.1 license instead
+> of GPL-2.0?
+Yes, I removed full Licenses' description:
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version
+
+I'll change it to:
+// SPDX-License-Identifier: LGPL-2.1
+
 -- 
-2.17.1
+Best Regards
+ Guo Ren
 
+ML: https://lore.kernel.org/linux-csky/
