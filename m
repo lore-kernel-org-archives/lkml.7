@@ -2,219 +2,192 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C29C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE61FC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95EEB20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AA0920B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 21:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfGAVmt (ORCPT
+        id S1726962AbfGAVpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 17:42:49 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36828 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726678AbfGAVms (ORCPT
+        Mon, 1 Jul 2019 17:45:23 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37755 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfGAVpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 17:42:48 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61LfoQS100493;
-        Mon, 1 Jul 2019 17:42:11 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tfry0b5au-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Jul 2019 17:42:11 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x61Lg61f101132;
-        Mon, 1 Jul 2019 17:42:10 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tfry0b5ae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Jul 2019 17:42:10 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x61Le3Um013715;
-        Mon, 1 Jul 2019 21:42:09 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma04dal.us.ibm.com with ESMTP id 2tdym6hp84-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Jul 2019 21:42:09 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61Lg8r451773744
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 21:42:08 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CEB38B205F;
-        Mon,  1 Jul 2019 21:42:08 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A10B6B2066;
-        Mon,  1 Jul 2019 21:42:08 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Jul 2019 21:42:08 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D4F0416C2BD7; Mon,  1 Jul 2019 14:42:11 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 14:42:11 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        kernel-team@android.com, Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kselftest@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC 2/3] rcu: Simplify rcu_note_context_switch exit from
- critical section
-Message-ID: <20190701214211.GV26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190701040415.219001-1-joel@joelfernandes.org>
- <20190701040415.219001-2-joel@joelfernandes.org>
- <20190701200310.GP26519@linux.ibm.com>
- <20190701213328.GB240327@google.com>
+        Mon, 1 Jul 2019 17:45:22 -0400
+Received: by mail-qk1-f193.google.com with SMTP id d15so12315903qkl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 14:45:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1qBRMJRV8Yo1wnFWyu6TaXxSgsCcog45RWGTZOE20y8=;
+        b=gZYBmH4fBds6gfRjY+VDo860xDB3uuGJyCjkVtjbY+Vk8ATr9J/X+95c1zryvFTCX3
+         M0f8+EyZFpuX2mxv3ATefWzvHn6a+E3imwfUWrIJTIR6gXi54yio7xFv4bnmJD1luRpb
+         Kk5lWXvjEwpXswsuUvtejOkrCLccdLa7UzKxF2R61azzYPtwbKiPFgLqSDLCAooK3Jnn
+         tbYP5Ug4DhU/7N6jdlYLFq1bVGW/0Glx4ttTnyQiOxoTHF4u5v4m+ziRcagib6ZlGA36
+         4000QmlXBRoMZ5x4dNL5i6cEV8mt+wMJsUwp3Xz6LBfFJqc2WNXRsT4Qc/e3jjoCDWxN
+         dHIw==
+X-Gm-Message-State: APjAAAX1T4sqacW8+Tfp/PucjB0DD8GjpAGeOinLW43m44Te+zRBghCu
+        dHkVkgAfkkdSxGApQMi8KQMOJw==
+X-Google-Smtp-Source: APXvYqxWeb2Amjv7FTKwjLmAisC7y6M5bySfO+cQ1FLIBpDRelRoUJZyO72G1BDW03KKh+aegnVJTw==
+X-Received: by 2002:a37:505:: with SMTP id 5mr22571376qkf.277.1562017521083;
+        Mon, 01 Jul 2019 14:45:21 -0700 (PDT)
+Received: from [192.168.1.157] (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id l6sm5055233qkc.89.2019.07.01.14.45.19
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 14:45:20 -0700 (PDT)
+Subject: Re: [PATCH v6 0/5] DMA-BUF Heaps (destaging ION)
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel@lists.freedesktop.org
+References: <20190624194908.121273-1-john.stultz@linaro.org>
+From:   Laura Abbott <labbott@redhat.com>
+Message-ID: <8e19047d-b0b0-506f-7c3d-cd09075b9da7@redhat.com>
+Date:   Mon, 1 Jul 2019 17:45:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701213328.GB240327@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010251
+In-Reply-To: <20190624194908.121273-1-john.stultz@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 05:33:28PM -0400, Joel Fernandes wrote:
-> On Mon, Jul 01, 2019 at 01:03:10PM -0700, Paul E. McKenney wrote:
-> > On Mon, Jul 01, 2019 at 12:04:14AM -0400, Joel Fernandes (Google) wrote:
-> > > The rcu_preempt_note_context_switch() tries to handle cases where
-> > > __rcu_read_unlock() got preempted and then the context switch path does
-> > > the reporting of the quiscent state along with clearing any bits in the
-> > > rcu_read_unlock_special union.
-> > > 
-> > > This can be handled by just calling rcu_deferred_qs() which was added
-> > > during the RCU consolidation work and already does these checks.
-> > > 
-> > > Tested RCU config TREE03 for an hour which succeeds.
-> > > 
-> > > Cc: rcu@vger.kernel.org
-> > > Cc: kernel-team@android.com
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > 
-> > My first reaction was "that cannot possibly work", but after a bit of
-> > digging, it really does appear to work just fine.  I therefore expanded
-> > the commit log a bit, so please check it to catch any messups on my part.
-> > 
-> > Very cool, thank you very much!  ;-)
+On 6/24/19 3:49 PM, John Stultz wrote:
+> Here is another pass at the dma-buf heaps patchset Andrew and I
+> have been working on which tries to destage a fair chunk of ION
+> functionality.
 > 
-> Awesome! Thanks. I am glad you agree with the change and I agree with your
-> changes to the commit log.
 
-Very good, I will push it to -rcu shortly.
+I've gotten bogged down with both work and personal tasks
+so I haven't had a chance to look too closely but, once again,
+I'm happy to see this continue to move forward.
 
-							Thanx, Paul
+> The patchset implements per-heap devices which can be opened
+> directly and then an ioctl is used to allocate a dmabuf from the
+> heap.
+> 
+> The interface is similar, but much simpler then IONs, only
+> providing an ALLOC ioctl.
+> 
+> Also, I've provided relatively simple system and cma heaps.
+> 
+> I've booted and tested these patches with AOSP on the HiKey960
+> using the kernel tree here:
+>    https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
+> 
+> And the userspace changes here:
+>    https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
+> 
+> Compared to ION, this patchset is missing the system-contig,
+> carveout and chunk heaps, as I don't have a device that uses
+> those, so I'm unable to do much useful validation there.
+> Additionally we have no upstream users of chunk or carveout,
+> and the system-contig has been deprecated in the common/andoid-*
+> kernels, so this should be ok.
+> 
+> I've also removed the stats accounting for now, since any such
+> accounting should be implemented by dma-buf core or the heaps
+> themselves.
+> 
+> 
+> New in v6:
+> * Number of cleanups and error path fixes suggested by Brian Starkey,
+>    many thanks for his close review and suggestions!
+> 
+> 
+> Outstanding concerns:
+> * Need to better understand various secure heap implementations.
+>    Some concern that heap private flags will be needed, but its
+>    also possible that dma-buf heaps can't solve everyone's needs,
+>    in which case, a vendor's secure buffer driver can implement
+>    their own dma-buf exporter. So I'm not too worried here.
+> 
 
-> thanks,
+syzbot found a DoS with Ion which I ACKed a fix for.
+https://lore.kernel.org/lkml/03763360-a7de-de87-eb90-ba7838143930@I-love.SAKURA.ne.jp/
+This series doesn't have the page pooling so that particular bug may
+not be applicable but given this is not the first time I've
+seen Ion used as a DoS mechanism, it would be good to think about
+putting in some basic checks.
+
+Thanks,
+Laura
+
+> Thoughts and feedback would be greatly appreciated!
 > 
->  - Joel
+> thanks
+> -john
 > 
+> Cc: Laura Abbott <labbott@redhat.com>
+> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: Liam Mark <lmark@codeaurora.org>
+> Cc: Pratik Patel <pratikp@codeaurora.org>
+> Cc: Brian Starkey <Brian.Starkey@arm.com>
+> Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
+> Cc: Sudipto Paul <Sudipto.Paul@arm.com>
+> Cc: Andrew F. Davis <afd@ti.com>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: Chenbo Feng <fengc@google.com>
+> Cc: Alistair Strachan <astrachan@google.com>
+> Cc: dri-devel@lists.freedesktop.org
 > 
-> > 
-> > 							Thanx, Paul
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > commit ce547cb41ed7662f70d0b07d4c7f7555ba130c61
-> > Author: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > Date:   Mon Jul 1 00:04:14 2019 -0400
-> > 
-> >     rcu: Simplify rcu_note_context_switch exit from critical section
-> >     
-> >     Because __rcu_read_unlock() can be preempted just before the call to
-> >     rcu_read_unlock_special(), it is possible for a task to be preempted just
-> >     before it would have fully exited its RCU read-side critical section.
-> >     This would result in a needless extension of that critical section until
-> >     that task was resumed, which might in turn result in a needlessly
-> >     long grace period, needless RCU priority boosting, and needless
-> >     force-quiescent-state actions.  Therefore, rcu_note_context_switch()
-> >     invokes __rcu_read_unlock() followed by rcu_preempt_deferred_qs() when
-> >     it detects this situation.  This action by rcu_note_context_switch()
-> >     ends the RCU read-side critical section immediately.
-> >     
-> >     Of course, once the task resumes, it will invoke rcu_read_unlock_special()
-> >     redundantly.  This is harmless because the fact that a preemption
-> >     happened means that interrupts, preemption, and softirqs cannot
-> >     have been disabled, so there would be no deferred quiescent state.
-> >     While ->rcu_read_lock_nesting remains less than zero, none of the
-> >     ->rcu_read_unlock_special.b bits can be set, and they were all zeroed by
-> >     the call to rcu_note_context_switch() at task-preemption time.  Therefore,
-> >     setting ->rcu_read_unlock_special.b.exp_hint to false has no effect.
-> >     
-> >     Therefore, the extra call to rcu_preempt_deferred_qs_irqrestore()
-> >     would return immediately.  With one possible exception, which is
-> >     if an expedited grace period started just as the task was being
-> >     resumed, which could leave ->exp_deferred_qs set.  This will cause
-> >     rcu_preempt_deferred_qs_irqrestore() to invoke rcu_report_exp_rdp(),
-> >     reporting the quiescent state, just as it should.  (Such an expedited
-> >     grace period won't affect the preemption code path due to interrupts
-> >     having already been disabled.)
-> >     
-> >     But when rcu_note_context_switch() invokes __rcu_read_unlock(), it
-> >     is doing so with preemption disabled, hence __rcu_read_unlock() will
-> >     unconditionally defer the quiescent state, only to immediately invoke
-> >     rcu_preempt_deferred_qs(), thus immediately reporting the deferred
-> >     quiescent state.  It turns out to be safe (and faster) to instead
-> >     just invoke rcu_preempt_deferred_qs() without the __rcu_read_unlock()
-> >     middleman.
-> >     
-> >     Because this is the invocation during the preemption (as opposed to
-> >     the invocation just after the resume), at least one of the bits in
-> >     ->rcu_read_unlock_special.b must be set and ->rcu_read_lock_nesting
-> >     must be negative.  This means that rcu_preempt_need_deferred_qs() must
-> >     return true, avoiding the early exit from rcu_preempt_deferred_qs().
-> >     Thus, rcu_preempt_deferred_qs_irqrestore() will be invoked immediately,
-> >     as required.
-> >     
-> >     This commit therefore simplifies the CONFIG_PREEMPT=y version of
-> >     rcu_note_context_switch() by removing the "else if" branch of its
-> >     "if" statement.  This change means that all callers that would have
-> >     invoked rcu_read_unlock_special() followed by rcu_preempt_deferred_qs()
-> >     will now simply invoke rcu_preempt_deferred_qs(), thus avoiding the
-> >     rcu_read_unlock_special() middleman when __rcu_read_unlock() is preempted.
-> >     
-> >     Cc: rcu@vger.kernel.org
-> >     Cc: kernel-team@android.com
-> >     Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> >     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> > 
-> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > index 187dc076c497..214e4689c29d 100644
-> > --- a/kernel/rcu/tree_plugin.h
-> > +++ b/kernel/rcu/tree_plugin.h
-> > @@ -313,15 +313,6 @@ void rcu_note_context_switch(bool preempt)
-> >  				       ? rnp->gp_seq
-> >  				       : rcu_seq_snap(&rnp->gp_seq));
-> >  		rcu_preempt_ctxt_queue(rnp, rdp);
-> > -	} else if (t->rcu_read_lock_nesting < 0 &&
-> > -		   t->rcu_read_unlock_special.s) {
-> > -
-> > -		/*
-> > -		 * Complete exit from RCU read-side critical section on
-> > -		 * behalf of preempted instance of __rcu_read_unlock().
-> > -		 */
-> > -		rcu_read_unlock_special(t);
-> > -		rcu_preempt_deferred_qs(t);
-> >  	} else {
-> >  		rcu_preempt_deferred_qs(t);
-> >  	}
-> > 
+> Andrew F. Davis (1):
+>    dma-buf: Add dma-buf heaps framework
 > 
+> John Stultz (4):
+>    dma-buf: heaps: Add heap helpers
+>    dma-buf: heaps: Add system heap to dmabuf heaps
+>    dma-buf: heaps: Add CMA heap to dmabuf heaps
+>    kselftests: Add dma-heap test
+> 
+>   MAINTAINERS                                   |  18 ++
+>   drivers/dma-buf/Kconfig                       |  10 +
+>   drivers/dma-buf/Makefile                      |   2 +
+>   drivers/dma-buf/dma-heap.c                    | 249 +++++++++++++++++
+>   drivers/dma-buf/heaps/Kconfig                 |  14 +
+>   drivers/dma-buf/heaps/Makefile                |   4 +
+>   drivers/dma-buf/heaps/cma_heap.c              | 169 +++++++++++
+>   drivers/dma-buf/heaps/heap-helpers.c          | 262 ++++++++++++++++++
+>   drivers/dma-buf/heaps/heap-helpers.h          |  54 ++++
+>   drivers/dma-buf/heaps/system_heap.c           | 121 ++++++++
+>   include/linux/dma-heap.h                      |  59 ++++
+>   include/uapi/linux/dma-heap.h                 |  55 ++++
+>   tools/testing/selftests/dmabuf-heaps/Makefile |   9 +
+>   .../selftests/dmabuf-heaps/dmabuf-heap.c      | 234 ++++++++++++++++
+>   14 files changed, 1260 insertions(+)
+>   create mode 100644 drivers/dma-buf/dma-heap.c
+>   create mode 100644 drivers/dma-buf/heaps/Kconfig
+>   create mode 100644 drivers/dma-buf/heaps/Makefile
+>   create mode 100644 drivers/dma-buf/heaps/cma_heap.c
+>   create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
+>   create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
+>   create mode 100644 drivers/dma-buf/heaps/system_heap.c
+>   create mode 100644 include/linux/dma-heap.h
+>   create mode 100644 include/uapi/linux/dma-heap.h
+>   create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
+>   create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> 
+
