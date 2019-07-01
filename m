@@ -2,139 +2,81 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C23C46478
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435A6C06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B21A2146F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5482146F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbfGAQTV (ORCPT
+        id S1728823AbfGAQUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 12:19:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38878 "EHLO mx1.redhat.com"
+        Mon, 1 Jul 2019 12:20:23 -0400
+Received: from mga06.intel.com ([134.134.136.31]:41787 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726863AbfGAQTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 12:19:21 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8A2F885546;
-        Mon,  1 Jul 2019 16:19:10 +0000 (UTC)
-Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9855C2D34F;
-        Mon,  1 Jul 2019 16:19:03 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 18:19:01 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, brouer@redhat.com
-Subject: Re: [PATCH v5 net-next 6/6] net: ethernet: ti: cpsw: add XDP
- support
-Message-ID: <20190701181901.150c0b71@carbon>
-In-Reply-To: <20190630172348.5692-7-ivan.khoronzhuk@linaro.org>
-References: <20190630172348.5692-1-ivan.khoronzhuk@linaro.org>
-        <20190630172348.5692-7-ivan.khoronzhuk@linaro.org>
+        id S1726646AbfGAQUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 12:20:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 09:20:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,440,1557212400"; 
+   d="scan'208";a="184280416"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 01 Jul 2019 09:20:18 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 01 Jul 2019 19:20:17 +0300
+Date:   Mon, 1 Jul 2019 19:20:17 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        "Robert R. Howell" <RHowell@uwyo.edu>
+Subject: Re: [PATCH v2 0/5] PM: PCI/ACPI: Hibernation handling fixes
+Message-ID: <20190701162017.GB2640@lahna.fi.intel.com>
+References: <4976412.ihyb9sT5jY@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 01 Jul 2019 16:19:21 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4976412.ihyb9sT5jY@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 30 Jun 2019 20:23:48 +0300
-Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+On Mon, Jul 01, 2019 at 12:42:14PM +0200, Rafael J. Wysocki wrote:
+> Hi All,
+> 
+> This series of patches addresses a few issues related to the handling of
+> hibernation in the PCI bus type and the ACPI PM domain and ACPI LPSS driver.
+> 
+> The v2 addresses Hans' concerns regarding the LPSS changes.
+> 
+> First of all, all of the runtime-suspended PCI devices and devices in the ACPI PM and LPSS
+> PM domains will be resumed during hibernation (first patch).  This appears to be the
+> only way to avoid weird corner cases and the benefit from avoiding to resume those
+> devices during hibernation is questionable.
+> 
+> That change allows the the hibernation callbacks in all of the involved subsystems to be
+> simplified (patches 2 and 3).
+> 
+> Moreover, reusing bus-level suspend callbacks for the "poweroff" transition during
+> hibernation (which is the case for the ACPI PM domain and LPSS) is incorrect, so patch 4
+> fixes that.
+> 
+> Finally, there are some leftover items in linux/acpi.h that can be dropped (patch 5).
 
-> +static int cpsw_ndev_create_xdp_rxq(struct cpsw_priv *priv, int ch)
-> +{
-> +	struct cpsw_common *cpsw = priv->cpsw;
-> +	int ret, new_pool = false;
-> +	struct xdp_rxq_info *rxq;
-> +
-> +	rxq = &priv->xdp_rxq[ch];
-> +
-> +	ret = xdp_rxq_info_reg(rxq, priv->ndev, ch);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!cpsw->page_pool[ch]) {
-> +		ret =  cpsw_create_rx_pool(cpsw, ch);
-> +		if (ret)
-> +			goto err_rxq;
-> +
-> +		new_pool = true;
-> +	}
-> +
-> +	ret = xdp_rxq_info_reg_mem_model(rxq, MEM_TYPE_PAGE_POOL,
-> +					 cpsw->page_pool[ch]);
-> +	if (!ret)
-> +		return 0;
-> +
-> +	if (new_pool) {
-> +		page_pool_free(cpsw->page_pool[ch]);
-> +		cpsw->page_pool[ch] = NULL;
-> +	}
-> +
-> +err_rxq:
-> +	xdp_rxq_info_unreg(rxq);
-> +	return ret;
-> +}
+For the whole series,
 
-Looking at this, and Ilias'es XDP-netsec error handling path, it might
-be a mistake that I removed page_pool_destroy() and instead put the
-responsibility on xdp_rxq_info_unreg().
-
-As here, we have to detect if page_pool_create() was a success, and then
-if xdp_rxq_info_reg_mem_model() was a failure, explicitly call
-page_pool_free() because the xdp_rxq_info_unreg() call cannot "free"
-the page_pool object given it was not registered.  
-
-Ivan's patch in[1], might be a better approach, which forced all
-drivers to explicitly call page_pool_free(), even-though it just
-dec-refcnt and the real call to page_pool_free() happened via
-xdp_rxq_info_unreg().
-
-To better handle error path, I would re-introduce page_pool_destroy(),
-as a driver API, that would gracefully handle NULL-pointer case, and
-then call page_pool_free() with the atomic_dec_and_test().  (It should
-hopefully simplify the error handling code a bit)
-
-[1] https://lore.kernel.org/netdev/20190625175948.24771-2-ivan.khoronzhuk@linaro.org/
-
-
-> +void cpsw_ndev_destroy_xdp_rxqs(struct cpsw_priv *priv)
-> +{
-> +	struct cpsw_common *cpsw = priv->cpsw;
-> +	struct xdp_rxq_info *rxq;
-> +	int i;
-> +
-> +	for (i = 0; i < cpsw->rx_ch_num; i++) {
-> +		rxq = &priv->xdp_rxq[i];
-> +		if (xdp_rxq_info_is_reg(rxq))
-> +			xdp_rxq_info_unreg(rxq);
-> +	}
-> +}
-
-Are you sure you need to test xdp_rxq_info_is_reg() here?
-
-You should just call xdp_rxq_info_unreg(rxq), if you know that this rxq
-should be registered.  If your assumption failed, you will get a
-WARNing, and discover your driver level bug.  This is one of the ways
-the API is designed to "detect" misuse of the API.  (I found this
-rather useful, when I converted the approx 12 drivers using this
-xdp_rxq_info API).
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
