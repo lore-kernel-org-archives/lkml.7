@@ -2,187 +2,106 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E41AC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4238EC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF91208CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2D9208CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 04:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="v/51NHIU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfGAEAk (ORCPT
+        id S1727287AbfGAEEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 00:00:40 -0400
-Received: from mailgw01.mediatek.com ([216.200.240.184]:53742 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfGAEAj (ORCPT
+        Mon, 1 Jul 2019 00:04:22 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38959 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfGAEEW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 00:00:39 -0400
-X-Greylist: delayed 300 seconds by postgrey-1.27 at vger.kernel.org; Mon, 01 Jul 2019 00:00:39 EDT
-X-UUID: e1d7852b40184f43b704b28d2b031933-20190630
-X-UUID: e1d7852b40184f43b704b28d2b031933-20190630
-Received: from mtkcas67.mediatek.inc [(172.29.193.45)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2113796546; Sun, 30 Jun 2019 19:55:34 -0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS62N2.mediatek.inc (172.29.193.42) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 30 Jun 2019 20:55:31 -0700
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 1 Jul 2019 11:55:17 +0800
-Message-ID: <1561953318.25914.9.camel@mtksdaap41>
-Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
- mmsys clocks
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Matthias Brugger <mbrugger@suse.com>
-CC:     Stephen Boyd <sboyd@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        "David Airlie" <airlied@linux.ie>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "Randy Dunlap" <rdunlap@infradead.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "matthias.bgg@kernel.org" <matthias.bgg@kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 1 Jul 2019 11:55:18 +0800
-In-Reply-To: <a229bfc7-683f-5b0d-7b71-54f934de6214@suse.com>
-References: <20181116125449.23581-1-matthias.bgg@kernel.org>
-         <20181116125449.23581-9-matthias.bgg@kernel.org>
-         <20181116231522.GA18006@bogus>
-         <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
-         <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
-         <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
-         <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
-         <154356023767.88331.18401188808548429052@swboyd.mtv.corp.google.com>
-         <a229bfc7-683f-5b0d-7b71-54f934de6214@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 1 Jul 2019 00:04:22 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b7so6598024pls.6
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 21:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qybcP71evSZ3Czn0uZ7CwmogDfy9EhMz13IGHYQ9cik=;
+        b=v/51NHIUki6YLjlvVPl3Jkfy7LUXWmK+iv3xk/Yp5JXZfN1742/jzEvBIYfRQKD8nZ
+         ZAoHAoVAOPwhteWQ+O8bq5IIwUuoqa5AaYkLo+24ZtRhoUoQkVBZADwqS64JFYX6WytD
+         X0ReoI/87B2gO5zL342T39V9EKj51eCT+uqLc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qybcP71evSZ3Czn0uZ7CwmogDfy9EhMz13IGHYQ9cik=;
+        b=kiUkbySgJ40Y/nEmENTaEqa9YQvVJdgDpM/eOr8NWEpLl9BCA/0vwkDIdXyi1ILKWZ
+         lnXcqDG+8rLqr/nxmJHPVAGRyz/jlKNHGJMOGFphXbvZhyMTRkhPEEheASAZY2kqZlsa
+         EVI02DdtNJm8oa/7CXGczj+UPwO6r+b7hizomRmfF+JG3ughIw0FBEcV97qA8hQqGRnH
+         Hx4oms+/5QPD7ZpIfDSeZVcfL345TLnUH0owgi55tXsmv4a6r2C5LTm3FveNSaV/J8m7
+         jDvdu/Y+8fRdwUUB5pGfroSMnp0Ex7LETPGOlx/+OPYsbrw4aHlp7ObijAg5iUMj+apx
+         NlpQ==
+X-Gm-Message-State: APjAAAUs2VvTlJx8z+LJlNv5DntOzTdAPKW7TQToC3wWaniKsnc8DPOl
+        s1bB0k6ujESMyXLzgCrGfh5vm7uSFd8=
+X-Google-Smtp-Source: APXvYqwR9FE1833UFgkphzpSnzxNBVxKDsrfEsL+IpRiKj6qQ2Q0E4uUpp8v0bAB1+jNqfjBrOsa5w==
+X-Received: by 2002:a17:902:70c3:: with SMTP id l3mr26445926plt.248.1561953860960;
+        Sun, 30 Jun 2019 21:04:20 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id w1sm10841305pjt.30.2019.06.30.21.04.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 30 Jun 2019 21:04:20 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-kselftest@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [RFC 1/3] rcu: Expedite the rcu quiescent state reporting if help needed
+Date:   Mon,  1 Jul 2019 00:04:13 -0400
+Message-Id: <20190701040415.219001-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Matthias:
+The t->rcu_read_unlock_special union's need_qs bit can be set by the
+scheduler tick (in rcu_flavor_sched_clock_irq) to indicate that help is
+needed from the rcu_read_unlock path. When this help arrives however, we
+can do better to speed up the quiescent state reporting which if
+rcu_read_unlock_special::need_qs is set might be quite urgent. Make use
+of this information in deciding when to do heavy-weight softirq raising
+where possible.
 
-On Fri, 2018-11-30 at 16:59 +0800, Matthias Brugger wrote:
-> 
-> On 30/11/2018 07:43, Stephen Boyd wrote:
-> > Quoting Matthias Brugger (2018-11-21 09:09:52)
-> >>
-> >>
-> >> On 21/11/2018 17:46, Stephen Boyd wrote:
-> >>> Quoting Rob Herring (2018-11-19 11:15:16)
-> >>>> On Sun, Nov 18, 2018 at 11:12 AM Matthias Brugger
-> >>>> <matthias.bgg@gmail.com> wrote:
-> >>>>> On 11/17/18 12:15 AM, Rob Herring wrote:
-> >>>>>> On Fri, Nov 16, 2018 at 01:54:45PM +0100, matthias.bgg@kernel.org wrote:
-> >>>>>>> -    #clock-cells = <1>;
-> >>>>>>> +
-> >>>>>>> +    mmsys_clk: clock-controller@14000000 {
-> >>>>>>> +            compatible = "mediatek,mt2712-mmsys-clk";
-> >>>>>>> +            #clock-cells = <1>;
-> >>>>>>
-> >>>>>> This goes against the general direction of not defining separate nodes
-> >>>>>> for providers with no resources.
-> >>>>>>
-> >>>>>> Why do you need this and what does it buy if you have to continue to
-> >>>>>> support the existing chips?
-> >>>>>>
-> >>>>>
-> >>>>> It would show explicitly that the mmsys block is used to probe two
-> >>>>> drivers, one for the gpu and one for the clocks. Otherwise that is
-> >>>>> hidden in the drm driver code. I think it is cleaner to describe that in
-> >>>>> the device tree.
-> >>>>
-> >>>> No, that's maybe cleaner for the driver implementation in the Linux
-> >>>> kernel. What about other OS's or when Linux drivers and subsystems
-> >>>> needs change? Cleaner for DT is design bindings that reflect the h/w.
-> >>>> Hardware is sometimes just messy.
-> >>>>
-> >>>
-> >>> I agree. I fail to see what this patch series is doing besides changing
-> >>> driver probe and device creation methods and making a backwards
-> >>> incompatible change to DT. Is there any other benefit here?
-> >>>
-> >>
-> >> You are referring whole series?
-> >> Citing the cover letter:
-> >> "MMSYS in Mediatek SoCs has some registers to control clock gates (which is
-> >> used in the clk driver) and some registers to set the routing and enable
-> >> the differnet (sic!) blocks of the display subsystem.
-> >>
-> >> Up to now both drivers, clock and drm are probed with the same device tree
-> >> compatible. But only the first driver get probed, which in effect breaks
-> >> graphics on mt8173 and mt2701.
-> > 
-> > Ouch!
-> > 
-> 
-> Yes :)
-> 
-> >>
-> >> This patch uses a platform device registration in the DRM driver, which
-> >> will trigger the probe of the corresponding clock driver. It was tested on the
-> >> bananapi-r2 and the Acer R13 Chromebook."
-> > 
-> > Alright, please don't add nodes in DT just to make device drivers probe.
-> > Instead, register clks from the drm driver or create a child platform
-> > device for the clk bits purely in the drm driver and have that probe the
-> > associated clk driver from there.
-> > 
-> 
-> I'll make the other SoCs probe via a child platform device from the drm driver,
-> as already done in 2/12 and 3/12.
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ kernel/rcu/tree_plugin.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-This series have been pending for half an year, would you keep going on
-this series? If you're busy, I could complete this series, but I need to
-know what you have plan to do.
-
-I guess that 1/12 ~ 5/12 is for MT2701/MT8173 and that patches meet this
-discussion. 6/12 ~ 12/12 is for MT2712/MT6797 but that patches does not
-meet this discussion. So the unfinished work is to make MT2712/MT6797 to
-align MT2701/MT8173, is this right?
-
-Regards,
-CK
-
-> 
-> Regards,
-> Matthias
-> 
-> >>
-> >> DT is broken right now, because two drivers rely on the same node, which gets
-> >> consumed just once. The new DT introduced does not break anything because it is
-> >> only used for boards that: "[..] are not available to the general public
-> >> (mt2712e) or only have the mmsys clock driver part implemented (mt6797)."
-> > 
-> > Ok, so backwards compatibility is irrelevant then. Sounds fine to me.
-> > 
-> > 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
-
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index c588ef98efd3..bff6410fac06 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -622,7 +622,8 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 		t->rcu_read_unlock_special.b.exp_hint = false;
+ 		exp = (t->rcu_blocked_node && t->rcu_blocked_node->exp_tasks) ||
+ 		      (rdp->grpmask & rnp->expmask) ||
+-		      tick_nohz_full_cpu(rdp->cpu);
++		      tick_nohz_full_cpu(rdp->cpu)  ||
++		      t->rcu_read_unlock_special.b.need_qs;
+ 		// Need to defer quiescent state until everything is enabled.
+ 		if (irqs_were_disabled && use_softirq &&
+ 		    (in_interrupt() ||
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
