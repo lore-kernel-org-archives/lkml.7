@@ -2,300 +2,192 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBD0C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B91C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2920E206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA6F206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:39:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHbxGEkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfGASjI (ORCPT
+        id S1726816AbfGASjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 14:39:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4890 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726658AbfGASjH (ORCPT
+        Mon, 1 Jul 2019 14:39:46 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41399 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfGASjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 14:39:07 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61IbarG004313
-        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 14:39:05 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfnn3dm5w-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 14:39:05 -0400
-Received: from localhost
-        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
-        Mon, 1 Jul 2019 19:39:04 +0100
-Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
-        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Jul 2019 19:39:00 +0100
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61IcxDG20644208
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 18:38:59 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41FBE78060;
-        Mon,  1 Jul 2019 18:38:59 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C802C7805E;
-        Mon,  1 Jul 2019 18:38:57 +0000 (GMT)
-Received: from [9.85.191.166] (unknown [9.85.191.166])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Jul 2019 18:38:57 +0000 (GMT)
-Subject: Re: [PATCH v3 5/8] drivers/soc: xdma: Add PCI device configuration
- sysfs
-To:     Eduardo Valentin <eduval@amazon.com>
-Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au
-References: <1559153408-31190-1-git-send-email-eajames@linux.ibm.com>
- <1559153408-31190-6-git-send-email-eajames@linux.ibm.com>
- <20190531034502.GH17772@u40b0340c692b58f6553c.ant.amazon.com>
-From:   Eddie James <eajames@linux.ibm.com>
-Date:   Mon, 1 Jul 2019 13:38:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 1 Jul 2019 14:39:46 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p15so24705860eds.8;
+        Mon, 01 Jul 2019 11:39:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hu0HTmKIn4QBUbDeu1PJZMoa50Wx+eTeneXb2QI48Sg=;
+        b=DHbxGEkq7PH+aNGvyJgwbs0vSW72Zcv76OLhOdPOSXO/w5ZOYGHZULrOP6Oh7TuKrs
+         bA/G0TkOMYAJRUCUOaeg3eOcBk59pSK2lwuAWTVgJXfWDqfHGcZf7hFjGn1S8TGvIhO9
+         hfg96WFsYBRtNf1Ax+vzg/r2iFHWTnRMbH+k3HUuZKwSWA4wAr+OkICZzIiM00dY/osi
+         INBRA89XyI65Z/vsePFmbz2zX2/24whUP3zNFPZU+9Tp8pFu9VXkXzy96FftxH4RMrnn
+         /Dxw55SpE54T+OWTk53pRcPizf9nZUFocIImLBpm/III601f+J5r3p36fSGB4oAN7Dxo
+         B3EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hu0HTmKIn4QBUbDeu1PJZMoa50Wx+eTeneXb2QI48Sg=;
+        b=fnqRHSa2LuRheUzPX9HppR3wnil0d6+ZQPxDsiiLeVthklu0NPPPZV2ZpBE7Lbxlfb
+         BO3BZ6DXuw9mWRnXgKVgttg7Z6Pf4ElAZ4MfsNN3PDrCRybpL4+phJHeFnxaJrYfRHnx
+         AL1lPpmptaZfWigkLyKKcclMl1aHZSsVb1GVN3vRjsEmJR6vo/nL5rHFQY9dslZYImLm
+         eS2pFYfx3VuEp2D1O1r8Ew9bw1pncBw4ihwQ5p6lFb+MkiEolmB7e6EL8bv9bAuQnTaZ
+         ll8H80LdOv3amX/vvhXpi3y6pz8fFxTM1AwNykSWdk2Q6UDa+pMqAI8T6aHNdFr2W/t/
+         f45g==
+X-Gm-Message-State: APjAAAU26yHogdy2e3M+nNh3mAjYtjc2EWyiMHQ0s8Pht4aEjDp0FOow
+        EtW0etYZk3K06u/vJqMqZkA=
+X-Google-Smtp-Source: APXvYqz0Rw7BldmAKuQMbC4OUAMYhRMUbs+3f7CurTumUuaQ4EqRIy8VprbmnZWA7UwiUNZ3jqh0/w==
+X-Received: by 2002:a50:9263:: with SMTP id j32mr30732951eda.121.1562006383316;
+        Mon, 01 Jul 2019 11:39:43 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id r12sm3907610eda.39.2019.07.01.11.39.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 11:39:42 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 11:39:40 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: linux-next: manual merge of the char-misc tree with the
+ driver-core tree
+Message-ID: <20190701183940.GA67767@archlinux-epyc>
+References: <20190701190940.7f23ac15@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190531034502.GH17772@u40b0340c692b58f6553c.ant.amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19070118-8235-0000-0000-00000EB115B9
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011361; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01226012; UDB=6.00645408; IPR=6.01007225;
- MB=3.00027540; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-01 18:39:03
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070118-8236-0000-0000-0000463BB197
-Message-Id: <358d0c5b-1473-bb6a-810d-45230b890a55@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010219
+Content-Type: multipart/mixed; boundary="1yeeQ81UyVL57Vl7"
+Content-Disposition: inline
+In-Reply-To: <20190701190940.7f23ac15@canb.auug.org.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 5/30/19 10:45 PM, Eduardo Valentin wrote:
-> On Wed, May 29, 2019 at 01:10:05PM -0500, Eddie James wrote:
->> The AST2500 has two PCI devices embedded. The XDMA engine can use either
->> device to perform DMA transfers. Users need the capability to choose
->> which device to use. This commit therefore adds two sysfs files that
->> toggle the AST2500 and XDMA engine between the two PCI devices.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->> ---
->>   drivers/soc/aspeed/aspeed-xdma.c | 103 +++++++++++++++++++++++++++++++++++++--
->>   1 file changed, 100 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
->> index 39f6545..ddd5e1e 100644
->> --- a/drivers/soc/aspeed/aspeed-xdma.c
->> +++ b/drivers/soc/aspeed/aspeed-xdma.c
->> @@ -143,6 +143,7 @@ struct aspeed_xdma {
->>   	void *cmdq_vga_virt;
->>   	struct gen_pool *vga_pool;
->>   
->> +	char pcidev[4];
->>   	struct miscdevice misc;
->>   };
->>   
->> @@ -165,6 +166,10 @@ struct aspeed_xdma_client {
->>   	SCU_PCIE_CONF_VGA_EN_IRQ | SCU_PCIE_CONF_VGA_EN_DMA |
->>   	SCU_PCIE_CONF_RSVD;
->>   
->> +static char *_pcidev = "vga";
->> +module_param_named(pcidev, _pcidev, charp, 0600);
->> +MODULE_PARM_DESC(pcidev, "Default PCI device used by XDMA engine for DMA ops");
->> +
->>   static void aspeed_scu_pcie_write(struct aspeed_xdma *ctx, u32 conf)
->>   {
->>   	u32 v = 0;
->> @@ -512,7 +517,7 @@ static int aspeed_xdma_release(struct inode *inode, struct file *file)
->>   	.release		= aspeed_xdma_release,
->>   };
->>   
->> -static int aspeed_xdma_init_mem(struct aspeed_xdma *ctx)
->> +static int aspeed_xdma_init_mem(struct aspeed_xdma *ctx, u32 conf)
->>   {
->>   	int rc;
->>   	u32 scu_conf = 0;
->> @@ -522,7 +527,7 @@ static int aspeed_xdma_init_mem(struct aspeed_xdma *ctx)
->>   	const u32 vga_sizes[4] = { 0x800000, 0x1000000, 0x2000000, 0x4000000 };
->>   	void __iomem *sdmc_base = ioremap(0x1e6e0000, 0x100);
->>   
->> -	aspeed_scu_pcie_write(ctx, aspeed_xdma_vga_pcie_conf);
->> +	aspeed_scu_pcie_write(ctx, conf);
->>   
->>   	regmap_read(ctx->scu, SCU_STRAP, &scu_conf);
->>   	ctx->vga_size = vga_sizes[FIELD_GET(SCU_STRAP_VGA_MEM, scu_conf)];
->> @@ -598,10 +603,91 @@ static int aspeed_xdma_init_mem(struct aspeed_xdma *ctx)
->>   	return rc;
->>   }
->>   
->> +static int aspeed_xdma_change_pcie_conf(struct aspeed_xdma *ctx, u32 conf)
->> +{
->> +	int rc;
->> +
->> +	mutex_lock(&ctx->start_lock);
->> +	rc = wait_event_interruptible_timeout(ctx->wait,
->> +					      !test_bit(XDMA_IN_PRG,
->> +							&ctx->flags),
->> +					      msecs_to_jiffies(1000));
->> +	if (rc < 0) {
->> +		mutex_unlock(&ctx->start_lock);
->> +		return -EINTR;
->> +	}
->> +
->> +	/* previous op didn't complete, wake up waiters anyway */
->> +	if (!rc)
->> +		wake_up_interruptible_all(&ctx->wait);
->> +
->> +	reset_control_assert(ctx->reset);
->> +	msleep(10);
->> +
->> +	aspeed_scu_pcie_write(ctx, conf);
->> +	msleep(10);
->> +
->> +	reset_control_deassert(ctx->reset);
->> +	msleep(10);
->> +
->> +	aspeed_xdma_init_eng(ctx);
->> +
->> +	mutex_unlock(&ctx->start_lock);
->> +
->> +	return 0;
->> +}
->> +
->> +static int aspeed_xdma_pcidev_to_conf(struct aspeed_xdma *ctx,
->> +				      const char *pcidev, u32 *conf)
->> +{
->> +	if (!strcasecmp(pcidev, "vga")) {
->> +		*conf = aspeed_xdma_vga_pcie_conf;
->> +		return 0;
->> +	}
->> +
->> +	if (!strcasecmp(pcidev, "bmc")) {
->> +		*conf = aspeed_xdma_bmc_pcie_conf;
->> +		return 0;
->> +	}
-> strncasecmp()?
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jul 01, 2019 at 07:09:40PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the char-misc tree got a conflict in:
+> 
+>   drivers/hwtracing/coresight/of_coresight.c
+> 
+> between commit:
+> 
+>   418e3ea157ef ("bus_find_device: Unify the match callback with class_find_device")
+> 
+> from the driver-core tree and commits:
+> 
+>   22aa495a6477 ("coresight: Rename of_coresight to coresight-platform")
+>   20961aea982e ("coresight: platform: Use fwnode handle for device search")
+> 
+> from the char-misc tree.
+> 
+> I fixed it up (I removed the file and added the following merge fix patch)
+> and can carry the fix as necessary. This is now fixed as far as linux-next
+> is concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the conflicting
+> tree to minimise any particularly complex conflicts.
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 1 Jul 2019 19:07:20 +1000
+> Subject: [PATCH] coresight: fix for "bus_find_device: Unify the match callback
+>  with class_find_device"
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/hwtracing/coresight/coresight-platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index 3c5ceda8db24..fc67f6ae0b3e 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -37,7 +37,7 @@ static int coresight_alloc_conns(struct device *dev,
+>  	return 0;
+>  }
+>  
+> -int coresight_device_fwnode_match(struct device *dev, void *fwnode)
+> +int coresight_device_fwnode_match(struct device *dev, const void *fwnode)
+>  {
+>  	return dev_fwnode(dev) == fwnode;
+>  }
+> -- 
+> 2.20.1
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+
+Hi Stephen,
+
+The attached patch is needed in addition to this to avoid a build error
+about incompatible pointer types (in the commit message).
+
+Cheers,
+Nathan
+
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-coresight-Make-the-coresight_device_fwnode_match-dec.patch"
+
+From 2b2dd836a7370d9b33fb0f70515ecd7bc8462c0a Mon Sep 17 00:00:00 2001
+From: Nathan Chancellor <natechancellor@gmail.com>
+Date: Mon, 1 Jul 2019 11:28:08 -0700
+Subject: [PATCH] coresight: Make the coresight_device_fwnode_match
+ declaration's fwnode parameter const
+
+drivers/hwtracing/coresight/coresight.c:1051:11: error: incompatible
+pointer types passing 'int (struct device *, void *)' to parameter of
+type 'int (*)(struct device *, const void *)'
+[-Werror,-Wincompatible-pointer-types]
+                                      coresight_device_fwnode_match);
+                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/linux/device.h:173:17: note: passing argument to parameter 'match' here
+                               int (*match)(struct device *dev, const void *data));
+                                     ^
+1 error generated.
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/hwtracing/coresight/coresight-priv.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+index 8b07fe55395a..7d401790dd7e 100644
+--- a/drivers/hwtracing/coresight/coresight-priv.h
++++ b/drivers/hwtracing/coresight/coresight-priv.h
+@@ -202,6 +202,6 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
+ 
+ void coresight_release_platform_data(struct coresight_platform_data *pdata);
+ 
+-int coresight_device_fwnode_match(struct device *dev, void *fwnode);
++int coresight_device_fwnode_match(struct device *dev, const void *fwnode);
+ 
+ #endif
+-- 
+2.22.0
 
 
-Yes, will change, and below.
-
-
->
->> +
->> +	return -EINVAL;
->> +}
->> +
->> +static ssize_t aspeed_xdma_show_pcidev(struct device *dev,
->> +				       struct device_attribute *attr,
->> +				       char *buf)
->> +{
->> +	struct aspeed_xdma *ctx = dev_get_drvdata(dev);
->> +
->> +	return snprintf(buf, PAGE_SIZE - 1, "%s", ctx->pcidev);
->> +}
->> +
->> +static ssize_t aspeed_xdma_store_pcidev(struct device *dev,
->> +					struct device_attribute *attr,
->> +					const char *buf, size_t count)
->> +{
->> +	u32 conf;
->> +	struct aspeed_xdma *ctx = dev_get_drvdata(dev);
->> +	int rc = aspeed_xdma_pcidev_to_conf(ctx, buf, &conf);
->> +
->> +	if (rc)
->> +		return rc;
->> +
->> +	rc = aspeed_xdma_change_pcie_conf(ctx, conf);
->> +	if (rc)
->> +		return rc;
->> +
->> +	strcpy(ctx->pcidev, buf);
-> should we use strncpy() instead?
->
->> +	return count;
->> +}
->> +static DEVICE_ATTR(pcidev, 0644, aspeed_xdma_show_pcidev,
->> +		   aspeed_xdma_store_pcidev);
->> +
->>   static int aspeed_xdma_probe(struct platform_device *pdev)
->>   {
->>   	int irq;
->>   	int rc;
->> +	u32 conf;
->>   	struct resource *res;
->>   	struct device *dev = &pdev->dev;
->>   	struct aspeed_xdma *ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
->> @@ -657,7 +743,14 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
->>   
->>   	msleep(10);
->>   
->> -	rc = aspeed_xdma_init_mem(ctx);
->> +	if (aspeed_xdma_pcidev_to_conf(ctx, _pcidev, &conf)) {
->> +		conf = aspeed_xdma_vga_pcie_conf;
->> +		strcpy(ctx->pcidev, "vga");
->> +	} else {
->> +		strcpy(ctx->pcidev, _pcidev);
->> +	}
-> same...
->
->> +
->> +	rc = aspeed_xdma_init_mem(ctx, conf);
->>   	if (rc) {
->>   		reset_control_assert(ctx->reset);
->>   		return rc;
->> @@ -682,6 +775,8 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
->>   		return rc;
->>   	}
->>   
->> +	device_create_file(dev, &dev_attr_pcidev);
-> Should we consider using one of the default attributes here instead of device_create_file()?
-> http://kroah.com/log/blog/2013/06/26/how-to-create-a-sysfs-file-correctly/
-
-
-Doesn't seem to be any way to create attributes per device with that 
-method. Setting the device->groups in probe() doesn't do it.
-
-
->
-> BTW, was this ABI documented? Is this the same file documented in patch 2?
-
-
-Patch 4, but yes.
-
-
->
->> +
->>   	return 0;
->>   }
->>   
->> @@ -689,6 +784,8 @@ static int aspeed_xdma_remove(struct platform_device *pdev)
->>   {
->>   	struct aspeed_xdma *ctx = platform_get_drvdata(pdev);
->>   
->> +	device_remove_file(ctx->dev, &dev_attr_pcidev);
->> +
->>   	misc_deregister(&ctx->misc);
->>   	gen_pool_free(ctx->vga_pool, (unsigned long)ctx->cmdq_vga_virt,
->>   		      XDMA_CMDQ_SIZE);
->> -- 
->> 1.8.3.1
->>
-
+--1yeeQ81UyVL57Vl7--
