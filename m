@@ -2,170 +2,166 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E227C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC59C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B901208CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D2120659
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbfGAObu (ORCPT
+        id S1729702AbfGAOdk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:31:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32654 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728145AbfGAObt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:31:49 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61ESsFO090735
-        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 10:31:48 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfjrevwbe-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 10:31:47 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 1 Jul 2019 15:31:45 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Jul 2019 15:31:39 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61EVcOE23855312
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 14:31:38 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8C52E4C044;
-        Mon,  1 Jul 2019 14:31:38 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 81A394C058;
-        Mon,  1 Jul 2019 14:31:36 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.81.204])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Jul 2019 14:31:36 +0000 (GMT)
-Subject: Re: [PATCH v4 0/3] initramfs: add support for xattrs in the initial
- ram disk
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        Rob Landley <rob@landley.net>, viro@zeniv.linux.org.uk
-Cc:     linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bug-cpio@gnu.org,
-        zohar@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com,
-        dmitry.kasatkin@huawei.com, takondra@cisco.com, kamensky@cisco.com,
-        hpa@zytor.com, arnd@arndb.de, james.w.mcmechan@gmail.com,
-        niveditas98@gmail.com
-Date:   Mon, 01 Jul 2019 10:31:25 -0400
-In-Reply-To: <45164486-782f-a442-e442-6f56f9299c66@huawei.com>
-References: <20190523121803.21638-1-roberto.sassu@huawei.com>
-         <cf9d08ca-74c7-c945-5bf9-7c3495907d1e@huawei.com>
-         <541e9ea1-024f-5c22-0b58-f8692e6c1eb1@landley.net>
-         <33cfb804-6a17-39f0-92b7-01d54e9c452d@huawei.com>
-         <1561909199.3985.33.camel@linux.ibm.com>
-         <45164486-782f-a442-e442-6f56f9299c66@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070114-0028-0000-0000-0000037F5E7C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070114-0029-0000-0000-0000243F94B0
-Message-Id: <1561991485.4067.14.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010179
+        Mon, 1 Jul 2019 10:33:40 -0400
+Received: from mail-oln040092255099.outbound.protection.outlook.com ([40.92.255.99]:55296
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727064AbfGAOdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 10:33:40 -0400
+Received: from SG2APC01FT116.eop-APC01.prod.protection.outlook.com
+ (10.152.250.58) by SG2APC01HT206.eop-APC01.prod.protection.outlook.com
+ (10.152.251.157) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2032.15; Mon, 1 Jul
+ 2019 14:33:34 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.250.59) by
+ SG2APC01FT116.mail.protection.outlook.com (10.152.250.216) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2032.15 via Frontend Transport; Mon, 1 Jul 2019 14:33:34 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9d2d:391f:5f49:c806]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9d2d:391f:5f49:c806%6]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
+ 14:33:34 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v6 0/4] PCI: Patch series to support Thunderbolt without
+ any BIOS support
+Thread-Topic: [PATCH v6 0/4] PCI: Patch series to support Thunderbolt without
+ any BIOS support
+Thread-Index: AQHVEKroekXmwO/8K0mZzVmJDM4t6aadR3aAgBjLFwA=
+Date:   Mon, 1 Jul 2019 14:33:34 +0000
+Message-ID: <SL2P216MB0187E8F8592C37936D074B0F80F90@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+References: <PS2P216MB0642AD5BCA377FDC5DCD8A7B80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+ <20190615195604.GW13533@google.com>
+In-Reply-To: <20190615195604.GW13533@google.com>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SY2PR01CA0015.ausprd01.prod.outlook.com
+ (2603:10c6:1:14::27) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:22::19)
+x-incomingtopheadermarker: OriginalChecksum:02F495DEDE9055371D4FF902BE9356D8A98945D611E9C3882DEC9BEB48EA05F6;UpperCasedChecksum:A685D2D3236C1CEBF2087A34EA8DFB59867388B2BFAD7A6FD613DCCA1F0BD0D1;SizeAsReceived:7891;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [GEFd3h9WTYzJFL1RIVZ02oOUp5ugg58pFsNtGi4cUGX67mOAbQfA1Uv5PZ/U0jb7yWpbcH6TRJs=]
+x-microsoft-original-message-id: <20190701143323.GA5356@nicholas-usb>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:SG2APC01HT206;
+x-ms-traffictypediagnostic: SG2APC01HT206:
+x-microsoft-antispam-message-info: MoJ3+bqS2Xns/n5LHjhN4yip3zJboiFzzdQYn0TiUtxse3CSd1Djv6J3ZAenjOmX9Ng3VRT2VDUJgSOpXawIIFPdN9cjzaYI4MQPpZbquwnXQUmsrtX6uDr9ZjexYULwi0xYjITmL8UouLe+fR7IiAJ4dJIy1cQrF29uCYVkaY4ZqbsaAD5C14ITed4ht276
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <249187F61F1CD342A915EDAD3DBD0A58@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12778708-7e96-4f8c-07a1-08d6fe3118d6
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 14:33:34.6278
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT206
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-01 at 16:42 +0300, Roberto Sassu wrote:
-> On 6/30/2019 6:39 PM, Mimi Zohar wrote:
-> > On Wed, 2019-06-26 at 10:15 +0200, Roberto Sassu wrote:
-> >> On 6/3/2019 8:32 PM, Rob Landley wrote:
-> >>> On 6/3/19 4:31 AM, Roberto Sassu wrote:
-> >>>>> This patch set aims at solving the following use case: appraise files from
-> >>>>> the initial ram disk. To do that, IMA checks the signature/hash from the
-> >>>>> security.ima xattr. Unfortunately, this use case cannot be implemented
-> >>>>> currently, as the CPIO format does not support xattrs.
-> >>>>>
-> >>>>> This proposal consists in including file metadata as additional files named
-> >>>>> METADATA!!!, for each file added to the ram disk. The CPIO parser in the
-> >>>>> kernel recognizes these special files from the file name, and calls the
-> >>>>> appropriate parser to add metadata to the previously extracted file. It has
-> >>>>> been proposed to use bit 17:16 of the file mode as a way to recognize files
-> >>>>> with metadata, but both the kernel and the cpio tool declare the file mode
-> >>>>> as unsigned short.
-> >>>>
-> >>>> Any opinion on this patch set?
-> >>>>
-> >>>> Thanks
-> >>>>
-> >>>> Roberto
-> >>>
-> >>> Sorry, I've had the window open since you posted it but haven't gotten around to
-> >>> it. I'll try to build it later today.
-> >>>
-> >>> It does look interesting, and I have no objections to the basic approach. I
-> >>> should be able to add support to toybox cpio over a weekend once I've got the
-> >>> kernel doing it to test against.
-> >>
-> >> Ok.
-> >>
-> >> Let me give some instructions so that people can test this patch set.
-> >>
-> >> To add xattrs to the ram disk embedded in the kernel it is sufficient
-> >> to set CONFIG_INITRAMFS_FILE_METADATA="xattr" and
-> >> CONFIG_INITRAMFS_SOURCE="<file with xattr>" in the kernel configuration.
-> >>
-> >> To add xattrs to the external ram disk, it is necessary to patch cpio:
-> >>
-> >> https://github.com/euleros/cpio/commit/531cabc88e9ecdc3231fad6e4856869baa9a91ef
-> >> (xattr-v1 branch)
-> >>
-> >> and dracut:
-> >>
-> >> https://github.com/euleros/dracut/commit/a2dee56ea80495c2c1871bc73186f7b00dc8bf3b
-> >> (digest-lists branch)
-> >>
-> >> The same modification can be done for mkinitramfs (add '-e xattr' to the
-> >> cpio command line).
-> >>
-> >> To simplify the test, it would be sufficient to replace only the cpio
-> >> binary and the dracut script with the modified versions. For dracut, the
-> >> patch should be applied to the local dracut (after it has been renamed
-> >> to dracut.sh).
-> >>
-> >> Then, run:
-> >>
-> >> dracut -e xattr -I <file with xattr> (add -f to overwrite the ram disk)
-> >>
-> >> Xattrs can be seen by stopping the boot process for example by adding
-> >> rd.break to the kernel command line.
-> > 
-> > A simple way of testing, without needing any changes other than the
-> > kernel patches, is to save the dracut temporary directory by supplying
-> > "--keep" on the dracut command line, calling
-> > usr/gen_initramfs_list.sh, followed by usr/gen_init_cpio with the "-e
-> > xattr" option.
+On Sun, Jun 16, 2019 at 03:56:19AM +0800, Bjorn Helgaas wrote:
+> [+cc Ben, Logan]
 > 
-> Alternatively, follow the instructions to create the embedded ram disk
-> with xattrs, and use the existing external ram disk created with dracut
-> to check if xattrs are created.
+> Ben, Logan, since you're looking at the resource code, maybe you'd be
+> interested in this as well?
+> 
+> On Wed, May 22, 2019 at 02:30:30PM +0000, Nicholas Johnson wrote:
+> > Rebase patches to apply cleanly to 5.2-rc1 source. Remove patch for 
+> > comment style cleanup as this has already been applied.
+> 
+> Thanks for rebasing these.
+> 
+> They do apply cleanly, but they seem to be base64-encoded MIME
+> attachments, and I don't know how to make mutt extract them easily.  I
+> had to save each patch attachment individually, apply it, insert the
+> commit log manually, etc.
+> 
+> Is there any chance you could send the next series as plain-text
+> patches?  That would be a lot easier for me.
+> 
+> > Anybody interested in testing, you can do so with:
+> > 
+> > a) Intel system with Thunderbolt 3 and native enumeration. The Gigabyte 
+> > Z390 Designare is one of the most perfect for this that I have never had 
+> > the opportunity to use - it does not even have the option for BIOS 
+> > assisted enumeration present in the BIOS.
+> > 
+> > b) Any system with PCIe and the Gigabyte GC-TITAN RIDGE add-in card, 
+> > jump the header as described and use kernel parameters like:
+> > 
+> > pci=assign-busses,hpbussize=0x33,realloc,hpmemsize=128M,hpmemprefsize=1G,nocrs 
+> > pcie_ports=native
+> > 
+> > [optional] pci.dyndbg
+> > 
+> >     ___
+> >  __/   \__
+> > |o o o o o| When looking into the receptacle on back of PCIe card.
+> > |_________| Jump pins 3 and 5.
+> > 
+> >  1 2 3 4 5
+> > 
+> > The Intel system is nice in that it should just work. The add-in card 
+> > setup is nice in that you can go nuts and assign copious amounts of 
+> > MMIO_PREF - can anybody show a Xeon Phi coprocessor with 16G BAR working 
+> > in an eGPU enclosure with these patches?
+> > 
+> > However, if you specify the above kernel parameters on the Intel system, 
+> > you should be able to override it to allocate more space.
+> > 
+> > Nicholas Johnson (4):
+> >   PCI: Consider alignment of hot-added bridges when distributing
+> >     available resources
+> >   PCI: Modify extend_bridge_window() to set resource size directly
+> >   PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
+> >     window
+> >   PCI: Add pci=hpmemprefsize parameter to set MMIO_PREF size
+> >     independently
+> > 
+> >  .../admin-guide/kernel-parameters.txt         |   7 +-
+> >  drivers/pci/pci.c                             |  18 +-
+> >  drivers/pci/setup-bus.c                       | 265 ++++++++++--------
+> >  include/linux/pci.h                           |   3 +-
+> >  4 files changed, 167 insertions(+), 126 deletions(-)
+> > 
+> > -- 
+> > 2.20.1
+> > 
+I posted PATCH v7, finally. I needed a place to announce that the 
+patches 1-2/8 which were made by Bjorn would not send with him as the 
+"from" which seems to attribute the author.
 
-True, but this alternative is for those who normally use dracut to
-create an initramfs, but don't want to update cpio or dracut.
+Credits go to Bjorn for PATCH v7 1-2/8 (the first two patches) but to
+send them I had to put myself in that field.
 
-Mimi
+When applying them, I guess you will have to modify that field, Bjorn. 
+My apologies if there was a way around it.
 
+Thanks for all the comments and feedback from everybody.
