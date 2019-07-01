@@ -2,149 +2,170 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AE7C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 23:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5460C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 23:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E12A20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 23:10:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="m3zHg+Xy"
+	by mail.kernel.org (Postfix) with ESMTP id 8448921852
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 23:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbfGAXKo (ORCPT
+        id S1727035AbfGAXKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 19:10:44 -0400
-Received: from mail-eopbgr140070.outbound.protection.outlook.com ([40.107.14.70]:37406
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726362AbfGAXKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 19:10:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vBQNw1wABUNAaUxOF7dAFZr3renLsUCBb/+lhNxWbcQ=;
- b=m3zHg+Xy0xSEkkqJo+SIYo9C8wy+nPsJNJyTKm9CSgUzvGFh4EQYVTwy2vzX0oSUrwa8AO65N2q78QJlW1M2O/OOZVX2gbKSgWS1Qaewb5PEFrW9GR/F4CQS0MLuhPgY6yf2gumnGQRmFYni9ZKV6s8c6yNzzulQBhum3Pdnps0=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5695.eurprd05.prod.outlook.com (20.178.121.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Mon, 1 Jul 2019 23:10:40 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
- 23:10:40 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Philip Yang <Philip.Yang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: linux-next: build failure after merge of the hmm tree
-Thread-Topic: linux-next: build failure after merge of the hmm tree
-Thread-Index: AQHVMADFlVCZuQtgG0K1dqA/V+XsLaa2ZF8A
-Date:   Mon, 1 Jul 2019 23:10:40 +0000
-Message-ID: <20190701231036.GC23718@mellanox.com>
-References: <20190701213304.34eeaef8@canb.auug.org.au>
-In-Reply-To: <20190701213304.34eeaef8@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR02CA0006.namprd02.prod.outlook.com
- (2603:10b6:208:fc::19) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2f86c71f-9989-4bfc-672a-08d6fe7955a8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5695;
-x-ms-traffictypediagnostic: VI1PR05MB5695:
-x-microsoft-antispam-prvs: <VI1PR05MB5695D45FB5894D118E6B6702CFF90@VI1PR05MB5695.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 00851CA28B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(366004)(346002)(189003)(199004)(53754006)(102836004)(386003)(6506007)(76176011)(25786009)(8936002)(4326008)(476003)(2616005)(486006)(186003)(5660300002)(14454004)(54906003)(316002)(11346002)(26005)(6116002)(2906002)(68736007)(3846002)(52116002)(99286004)(66476007)(73956011)(66556008)(33656002)(7736002)(8676002)(6246003)(64756008)(256004)(36756003)(478600001)(66946007)(86362001)(53936002)(6512007)(66446008)(81166006)(81156014)(71200400001)(6486002)(229853002)(71190400001)(6436002)(1076003)(305945005)(446003)(6916009)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5695;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lCOCP/963DaWTbtI+uY9+nj8dJ/ioTxDE5tMwx0eL8vVw0Lxx7vgoXN1elaG2+POxUKmuSDPbkhvB2oSCit3UejjmHs23GNdCJrhqxS5wrNK/qu5wiEyhdFuB3aWUv5t0lwcbSqmVcMbrITrlpRmbt5TT6YmftWyWL3N+vx4M7vyDvQ+jZGEkFUSycX8R+m9BCLv8enGmphYVWZvxFbiZPckslmBb5d/vtefULRTXxNdsXLSpX9vCnotKWAw48rQf0gJZ+SVEXF2xZxcI89BBIxzPSotjmEpCLCH3+ngC4r1kxdddZqWnvP6V3beXT5r6Egmdatl1ERrMaTu4TiN4m5xFJbiUozUCuSWTjy6t0EuSjqSbYoow9p4IkeSPh0kPIC9+qRTVE608CUvZLVPgybH8+ghwRbdSZwZX7Pbxo0=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <89A8AB12ACF07449851614D76275C3DA@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Jul 2019 19:10:48 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:54707 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726486AbfGAXKp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 19:10:45 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 811A01ACDC1;
+        Tue,  2 Jul 2019 09:10:40 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hi5QS-00040R-OE; Tue, 02 Jul 2019 09:09:32 +1000
+Date:   Tue, 2 Jul 2019 09:09:32 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/12] iomap: move the xfs writeback code to iomap.c
+Message-ID: <20190701230932.GN7777@dread.disaster.area>
+References: <20190624055253.31183-1-hch@lst.de>
+ <20190624055253.31183-12-hch@lst.de>
+ <20190624234304.GD7777@dread.disaster.area>
+ <20190625101020.GI1462@lst.de>
+ <20190628004542.GJ7777@dread.disaster.area>
+ <20190628053320.GA26902@lst.de>
+ <20190701000859.GL7777@dread.disaster.area>
+ <20190701064333.GA20778@lst.de>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f86c71f-9989-4bfc-672a-08d6fe7955a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 23:10:40.3440
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5695
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701064333.GA20778@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=EmmQ-hcxAAAA:8 a=7-415B0cAAAA:8 a=Qa3Qb0k2LGP6046GbCIA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 09:33:04PM +1000, Stephen Rothwell wrote:
-> Hi all,
->=20
-> After merging the hmm tree, today's linux-next build (x86_64 allmodconfig=
-)
-> failed like this:
->=20
-> mm/hmm.c: In function 'hmm_get_or_create':
-> mm/hmm.c:50:2: error: implicit declaration of function 'lockdep_assert_he=
-ld_exclusive'; did you mean 'lockdep_assert_held_once'? [-Werror=3Dimplicit=
--function-declaration]
->   lockdep_assert_held_exclusive(&mm->mmap_sem);
->   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   lockdep_assert_held_once
-> drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c: In function 'amdgpu_ttm_tt_get_u=
-ser_pages':
-> drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c:778:28: error: passing argument 2=
- of 'hmm_range_register' from incompatible pointer type [-Werror=3Dincompat=
-ible-pointer-types]
->   hmm_range_register(range, mm, start,
->                             ^~
-> In file included from drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c:35:
-> include/linux/hmm.h:464:29: note: expected 'struct hmm_mirror *' but argu=
-ment is of type 'struct mm_struct *'
->           struct hmm_mirror *mirror,
->           ~~~~~~~~~~~~~~~~~~~^~~~~~
->=20
-> Caused by commit
->=20
->   e36acfe6c86d ("mm/hmm: Use hmm_mirror not mm as an argument for hmm_ran=
-ge_register")
->=20
-> interacting with commit
->=20
->   66c45500bfdc ("drm/amdgpu: use new HMM APIs and helpers")
->=20
-> from the drm tree.
->=20
-> All I could do for now was to mark the AMDGPU driver broken.  Please
-> submit a merge for for me (and later Linus) to use.
+On Mon, Jul 01, 2019 at 08:43:33AM +0200, Christoph Hellwig wrote:
+> On Mon, Jul 01, 2019 at 10:08:59AM +1000, Dave Chinner wrote:
+> > > Why do you assume you have to test it?  Back when we shared
+> > > generic_file_read with everyone you also didn't test odd change to
+> > > it with every possible fs.
+> > 
+> > I'm not sure what function you are referring to here. Can you
+> > clarify?
+> 
+> Right now it is generic_file_read_iter(), but before iter it was
+> generic_file_readv, generic_file_read, etc.
 
-This is expected, the AMD guys have the resolution for this from when
-they tested hmm.git..
+This generic code never came from XFS, so I'm still not sure what
+you are refering to here? Some pointers to commits would help me
+remember. :/
 
-I think we are going to have to merge hmm.git into the amdgpu tree and
-push the resolution forward, as it looks kind of complicated to shift
-onto Linus or DRM.
+> > > If you change iomap.c, you'll test it
+> > > with XFS, and Cc other maintainers so that they get a chance to
+> > > also test it and comment on it, just like we do with other shared
+> > > code in the kernel.
+> > 
+> > Which is why we've had problems with the generic code paths in the
+> > past and other filesystems just copy and paste then before making
+> > signficant modifications. e.g. both ext4 and btrfs re-implement
+> > write_cache_pages() rather than use the generic writeback code
+> > because they have slightly different requirements and those
+> > developers don't want to have to worry about other filesystems every
+> > time there is an internal filesystem change that affects their
+> > writeback constraints...
+> > 
+> > That's kinda what I'm getting at here: writeback isn't being shared
+> > by any of the major filesystems for good reasons...
+> 
+> I very fundamentally disagree.  It is not shared for a bad reasons,
+> and that is people not understanding the mess that the buffer head
+> based code is, and not wanting to understand it. 
 
-Probably amdgpu needs to gain a few patches making the hmm_mirror
-visible to amdgpu_ttm.c and then the merge resolution will be simple?
+The problem with heavily shared code is that it requires far more
+expertise, knowledge, capability and time to modify it. The code
+essentially ossifies, because changing something fundamental risks
+breaking other stuff that nobody actually understands anymore and is
+unwilling to risk changing.
 
-AMD/DRM we have a few days left to decide on how best to handle the
-conflict, thanks.
+That's not a problem with bufferheads - that's a problem of widely
+shared code that has been slowly hacked to pieces to "fix' random
+problems that show up from different users of the shared code.
 
-Regards,
-Jason
+When the shared code ossifies like this, the only way to make
+progress is to either copy it and do whatever you need privately,
+or re-implement it completely. ext4 and btrfs have taken the route
+of "copy and modify privately", whereas XFS has taken the
+"re-implement it completely" path.
+
+We're now starting down the "share the XFS re-implementation" and
+we're slowly adding more complexity to the iomap code to handle the
+different things each filesystem that is converted needs. With each
+new fs adding their own little quirks, it gets harder to make
+significant modifications without unknowingly breaking something in
+some other filesystem.
+
+It takes highly capable developers to make serious modifications
+across highly shared code and the reality is that there are very few
+of them around. most developers simply aren't capable of taking on
+such a task, especially given that they see capable, experienced
+developers who won't even try because of past experiences akin to
+a game of Running Man(*)....
+
+Shared code is good, up to the point where the sharing gets so
+complex that even people with the capability are not willing to
+touch/fix the code. That's what happened to bufferheads and it's a
+pattern repeated across lots of kernel infrastructure code. Just
+because you can handle these modifications doesn't mean everyone
+else can or even wants to.
+
+> And I'd much rather fix this than going down the copy an paste and
+> slightly tweak it while fucking up something else route.
+
+The copy-n-paste is a result of developers who have little knowledge
+of things outside their domain of interest/expertise making the sane
+decision to minimise risk of breaking something they know nothing
+about. From an individual subsystem perspective, that's a -good
+decision- to make, and that's the point I was trying to make.
+
+You see that as a bad decision, because you equating "shared code"
+with "high quality" code. The reality is that shared code is often
+poor quality because people get too scared to touch it. That's
+exactly the situation I don't want us to get stuck with, and why I
+want to see how multiple implementations of this abstracted writeback
+path change what we have now before we start moving code about...
+
+i.e. I'm not saying "we shouldn't do this", I'm just saying that "we
+should do this because shared code is good" fundamentally conflicts
+with the fact we've just re-implemented a bunch of stuff because
+the *shared code was really bad*. And taking the same path that lead
+to really bad shared code (i.e. organic growth without planning or
+design) is likely to end up in the same place....
+
+Cheers,
+
+Dave.
+
+(*) https://www.imdb.com/title/tt0093894/
+
+"A wrongly convicted man must try to survive a public execution
+gauntlet staged as a game show."
+
+-- 
+Dave Chinner
+david@fromorbit.com
