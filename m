@@ -2,82 +2,172 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD65C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105EEC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB1C2175B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:11:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e0eQTdyp"
+	by mail.kernel.org (Postfix) with ESMTP id D48BE2175B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:12:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbfGAOLy (ORCPT
+        id S1729391AbfGAOMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:11:54 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35568 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729190AbfGAOLy (ORCPT
+        Mon, 1 Jul 2019 10:12:47 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:51254 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728061AbfGAOMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:11:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1VgSGVjpsEKQCpHjQPsE3k7/QPeWcXfFA1BNcMXYV+k=; b=e0eQTdypu+j4ID+vC5noLGjR8
-        hIdOqtE5Vhg4YXsOxyt9W8Hv+3ptW1lb78iDHgUP9l9RdAAKUUsvslOKH0gs55A4jLxSQkIT3cZlc
-        oWMIuung6+0CdxofzWYO6RM8/EEiala4WYHO8esaryRpat9KkXiJd++9MLx0O+XZJaFrX1Zl2O/04
-        ar6hftauRih1j9TBEGCol/nbK1CoyrjrBHboeq3lvjjH+KlWCJn7TOeqkFrAYqIu0seQ0rba7tfTZ
-        1MU4w3HrEk11TxIHL62NvW6UkzcPdG+AuBtAe8ZfY+yjM7E9AQU6BU3YNuZ5lejLTuOOMnMyw4bon
-        evJWDMoig==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhx21-0008JF-FH; Mon, 01 Jul 2019 14:11:46 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2E24820A18920; Mon,  1 Jul 2019 16:11:44 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 16:11:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer
- implementation
-Message-ID: <20190701141144.GZ3402@hirez.programming.kicks-ass.net>
-References: <20190607162349.18199-1-john.ogness@linutronix.de>
- <20190607162349.18199-2-john.ogness@linutronix.de>
- <20190618114747.GQ3436@hirez.programming.kicks-ass.net>
- <87k1df28x4.fsf@linutronix.de>
- <20190626224034.GK2490@worktop.programming.kicks-ass.net>
- <87mui2ujh2.fsf@linutronix.de>
- <20190628154435.GZ7905@worktop.programming.kicks-ass.net>
- <877e92f388.fsf@linutronix.de>
+        Mon, 1 Jul 2019 10:12:46 -0400
+Received: (qmail 1601 invoked by uid 2102); 1 Jul 2019 10:12:45 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 1 Jul 2019 10:12:45 -0400
+Date:   Mon, 1 Jul 2019 10:12:45 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+cc:     linux-kernel@vger.kernel.org, <linux-arch@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>
+Subject: Re: [PATCH] tools/memory-model: Update the informal documentation
+In-Reply-To: <1561842644-5354-1-git-send-email-andrea.parri@amarulasolutions.com>
+Message-ID: <Pine.LNX.4.44L0.1907011012230.1536-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877e92f388.fsf@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 12:39:35PM +0200, John Ogness wrote:
-> On 2019-06-28, Peter Zijlstra <peterz@infradead.org> wrote:
-> > (Note that the qspinlock has a queue not unlike this, but that again
-> > doesn't have to bother with NMIs)
-> 
-> Thank you for pointing this out! I will look to qspinlock for some
-> naming guidelines.
+On Sat, 29 Jun 2019, Andrea Parri wrote:
 
-Fair warning: qspinlock might hurt your brain; but if you do look and
-are unsure; let me know and I'll try and improve its comments.
+> The formal memory consistency model has added support for plain accesses
+> (and data races).  While updating the informal documentation to describe
+> this addition to the model is highly desirable and important future work,
+> update the informal documentation to at least acknowledge such addition.
+> 
+> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+> Cc: Alan Stern <stern@rowland.harvard.edu>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Jade Alglave <j.alglave@ucl.ac.uk>
+> Cc: Luc Maranget <luc.maranget@inria.fr>
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Cc: Akira Yokosawa <akiyks@gmail.com>
+> Cc: Daniel Lustig <dlustig@nvidia.com>
+> ---
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
+>  tools/memory-model/Documentation/explanation.txt | 47 +++++++++++-------------
+>  tools/memory-model/README                        | 18 ++++-----
+>  2 files changed, 30 insertions(+), 35 deletions(-)
+> 
+> diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
+> index 68caa9a976d0c..b42f7cd718242 100644
+> --- a/tools/memory-model/Documentation/explanation.txt
+> +++ b/tools/memory-model/Documentation/explanation.txt
+> @@ -42,7 +42,8 @@ linux-kernel.bell and linux-kernel.cat files that make up the formal
+>  version of the model; they are extremely terse and their meanings are
+>  far from clear.
+>  
+> -This document describes the ideas underlying the LKMM.  It is meant
+> +This document describes the ideas underlying the LKMM, but excluding
+> +the modeling of bare C (or plain) shared memory accesses.  It is meant
+>  for people who want to understand how the model was designed.  It does
+>  not go into the details of the code in the .bell and .cat files;
+>  rather, it explains in English what the code expresses symbolically.
+> @@ -354,31 +355,25 @@ be extremely complex.
+>  Optimizing compilers have great freedom in the way they translate
+>  source code to object code.  They are allowed to apply transformations
+>  that add memory accesses, eliminate accesses, combine them, split them
+> -into pieces, or move them around.  Faced with all these possibilities,
+> -the LKMM basically gives up.  It insists that the code it analyzes
+> -must contain no ordinary accesses to shared memory; all accesses must
+> -be performed using READ_ONCE(), WRITE_ONCE(), or one of the other
+> -atomic or synchronization primitives.  These primitives prevent a
+> -large number of compiler optimizations.  In particular, it is
+> -guaranteed that the compiler will not remove such accesses from the
+> -generated code (unless it can prove the accesses will never be
+> -executed), it will not change the order in which they occur in the
+> -code (within limits imposed by the C standard), and it will not
+> -introduce extraneous accesses.
+> -
+> -This explains why the MP and SB examples above used READ_ONCE() and
+> -WRITE_ONCE() rather than ordinary memory accesses.  Thanks to this
+> -usage, we can be certain that in the MP example, P0's write event to
+> -buf really is po-before its write event to flag, and similarly for the
+> -other shared memory accesses in the examples.
+> -
+> -Private variables are not subject to this restriction.  Since they are
+> -not shared between CPUs, they can be accessed normally without
+> -READ_ONCE() or WRITE_ONCE(), and there will be no ill effects.  In
+> -fact, they need not even be stored in normal memory at all -- in
+> -principle a private variable could be stored in a CPU register (hence
+> -the convention that these variables have names starting with the
+> -letter 'r').
+> +into pieces, or move them around.  The use of READ_ONCE(), WRITE_ONCE(),
+> +or one of the other atomic or synchronization primitives prevents a
+> +large number of compiler optimizations.  In particular, it is guaranteed
+> +that the compiler will not remove such accesses from the generated code
+> +(unless it can prove the accesses will never be executed), it will not
+> +change the order in which they occur in the code (within limits imposed
+> +by the C standard), and it will not introduce extraneous accesses.
+> +
+> +The MP and SB examples above used READ_ONCE() and WRITE_ONCE() rather
+> +than ordinary memory accesses.  Thanks to this usage, we can be certain
+> +that in the MP example, the compiler won't reorder P0's write event to
+> +buf and P0's write event to flag, and similarly for the other shared
+> +memory accesses in the examples.
+> +
+> +Since private variables are not shared between CPUs, they can be
+> +accessed normally without READ_ONCE() or WRITE_ONCE().  In fact, they
+> +need not even be stored in normal memory at all -- in principle a
+> +private variable could be stored in a CPU register (hence the convention
+> +that these variables have names starting with the letter 'r').
+>  
+>  
+>  A WARNING
+> diff --git a/tools/memory-model/README b/tools/memory-model/README
+> index 2b87f3971548c..fc07b52f20286 100644
+> --- a/tools/memory-model/README
+> +++ b/tools/memory-model/README
+> @@ -167,15 +167,15 @@ scripts	Various scripts, see scripts/README.
+>  LIMITATIONS
+>  ===========
+>  
+> -The Linux-kernel memory model has the following limitations:
+> -
+> -1.	Compiler optimizations are not modeled.  Of course, the use
+> -	of READ_ONCE() and WRITE_ONCE() limits the compiler's ability
+> -	to optimize, but there is Linux-kernel code that uses bare C
+> -	memory accesses.  Handling this code is on the to-do list.
+> -	For more information, see Documentation/explanation.txt (in
+> -	particular, the "THE PROGRAM ORDER RELATION: po AND po-loc"
+> -	and "A WARNING" sections).
+> +The Linux-kernel memory model (LKMM) has the following limitations:
+> +
+> +1.	Compiler optimizations are not accurately modeled.  Of course,
+> +	the use of READ_ONCE() and WRITE_ONCE() limits the compiler's
+> +	ability to optimize, but under some circumstances it is possible
+> +	for the compiler to undermine the memory model.  For more
+> +	information, see Documentation/explanation.txt (in particular,
+> +	the "THE PROGRAM ORDER RELATION: po AND po-loc" and "A WARNING"
+> +	sections).
+>  
+>  	Note that this limitation in turn limits LKMM's ability to
+>  	accurately model address, control, and data dependencies.
+> 
+
