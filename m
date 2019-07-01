@@ -2,187 +2,181 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429A6C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E8DC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6872089C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C12822089C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U73ox6N5"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="HbMdosaK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BXvZF4Hv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbfGAJ0b (ORCPT
+        id S1728412AbfGAJ0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 05:26:31 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:55558 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728360AbfGAJ0b (ORCPT
+        Mon, 1 Jul 2019 05:26:35 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:58351 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728345AbfGAJ0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 05:26:31 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190701092629euoutp01efef68b2fbc3daa45e8118e73e4c640d~tPlcDZ5h01745617456euoutp01R
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2019 09:26:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190701092629euoutp01efef68b2fbc3daa45e8118e73e4c640d~tPlcDZ5h01745617456euoutp01R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561973189;
-        bh=bbuHUVPOwiuUpoBROT6LArd3Pa2i2I3orwf6k/+JiqU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=U73ox6N5luo+qrayfNz0hn1fnxVLDucxbXczGxLMYfOUmnPcCnCiG14X+eJg5/AUN
-         Vpj8R3vEaRiRYE9OYiDnThx4yHYy2Q3WC1k7EMJnUZbTbk6caXSFK+D8hJjSzFHHgD
-         UNVZvZUNsV0goe9LywT6pMj5etSjsvVMQxQFLZOc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190701092628eucas1p2fd3557cf8ab6c7d057c68e6fcf26c464~tPlberIQb2678126781eucas1p2u;
-        Mon,  1 Jul 2019 09:26:28 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 79.D8.04298.4C1D91D5; Mon,  1
-        Jul 2019 10:26:28 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190701092627eucas1p147af4474d3a5350784ed8477a42f4f5c~tPlaoaxaQ0549005490eucas1p1X;
-        Mon,  1 Jul 2019 09:26:27 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190701092627eusmtrp10690658903edfcd83d1b8b0dc636b66c~tPlaXrdWy0184801848eusmtrp1q;
-        Mon,  1 Jul 2019 09:26:27 +0000 (GMT)
-X-AuditID: cbfec7f2-3615e9c0000010ca-26-5d19d1c41078
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id CC.3B.04140.3C1D91D5; Mon,  1
-        Jul 2019 10:26:27 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190701092626eusmtip22959c3b011eb595c710ae3aec7cfead6~tPlZ_rKTN1441414414eusmtip29;
-        Mon,  1 Jul 2019 09:26:26 +0000 (GMT)
-Subject: Re: [PATCH] drm: bridge: DRM_SIL_SII8620 should depend on, not
- select INPUT
-From:   Andrzej Hajda <a.hajda@samsung.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Ronald_Tschal=c3=a4r?= <ronald@innovation.ch>
-Cc:     Inki Dae <inki.dae@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Message-ID: <d01a9ad5-edcd-81ec-6528-9b6a4e9a8754@samsung.com>
-Date:   Mon, 1 Jul 2019 11:26:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Mon, 1 Jul 2019 05:26:35 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 67F391926;
+        Mon,  1 Jul 2019 05:26:31 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 01 Jul 2019 05:26:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=f4czRt2dBkv8pN065obux10iigs
+        5H2P/jUH4YPctBX4=; b=HbMdosaKJFUEmlxfPpgvwRPfUZZUnDtXEJSulkXKgRS
+        iq2GM3kPTqhnydLP/Hn1C1SM0wRFzxeqFQeuMY0cl17hHk0C4KQqSIu9e4hM9Nc/
+        1zY63VrUibN3ZqIkqGDzcgcgMLBRU3ezQvgVh+OV6PHp6CvTgFqXjvc7F6h9sS3A
+        s+psyVrnpX+4fRU1CEdKWo4NZTck9e93U1dpLG/+U2oVKS09doU0qqMw9okwRRRY
+        6YSXvr9WPdOAwrycZTB5T9Y54XbrUOasHAvfBpe++hlNwRQei0ErkXozmdjG0kE2
+        ANDFeR7mAs5D6Liz8gJdrSj/lANX4Bwz9Htdki1KOcg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=f4czRt
+        2dBkv8pN065obux10iigs5H2P/jUH4YPctBX4=; b=BXvZF4HvskL2NSVGHZ0Fai
+        pg5j0fHec3NoomL+fMN06PIxdn1g8X6AjhJoax5Q8jGxMrLCDpaWFSdepVlxV/Fa
+        9/yN6jJcMkJj0lBvOjvjfC4uLa7pqMoW30cqqRdZ0DvBXam/RwuUx1dBvhW/r41o
+        opZS+NBFQyPyxIGUTe2rnK4wsyA80nXXE+H4Xbn0O2Psfm9lqvwKecFMkqGpK0jn
+        ZeJKqfLElbOxcX5t46Fa+N5zhyGvzKrySddU3sfs5RVCnn1VGp5RL40vMbqmOu0d
+        uukhWVdWs501gAzAuRSPWubLEk80RDGAQCDuXScXf0on+ITTTdLmSFhquXCCFqUg
+        ==
+X-ME-Sender: <xms:xNEZXZ2Ol1P8OXll-4lgGH7sAy1d0uFZSyHMJ-Es9JVAQyiHZbvw8w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrvdeigddugecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdeftddmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
+    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucfkphepuddvgedrudelrdefuddrgeenucfrrghrrghmpehmrghilhhf
+    rhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:xNEZXcFQV42vo-KmGldRMALNC7NGl2OO0b9N5E_bqmxd0JpnDAmVMQ>
+    <xmx:xNEZXciLWpFKc4Ak5VIpYa2gAJwJGtzduq1hkcjeLPi1SRM0TX3zKA>
+    <xmx:xNEZXVD8xLq-PNaGPYToblU5TA44fwD_xjDHmcubFMuYvWg0YhS7Og>
+    <xmx:x9EZXReMZW3f4q3cfjMzqXuJlFpECY_7lk8QU65JRm-j6WdmfvGskw>
+Received: from localhost (unknown [124.19.31.4])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 63C7F380074;
+        Mon,  1 Jul 2019 05:26:27 -0400 (EDT)
+Date:   Mon, 1 Jul 2019 19:26:25 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Alexander Viro <viro@ftp.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Christopher Lameter <cl@linux.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
+        Andi Kleen <ak@linux.intel.com>,
+        David Chinner <david@fromorbit.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Rik van Riel <riel@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: shrink_dentry_list() logics change (was Re: [RFC PATCH v3 14/15]
+ dcache: Implement partial shrink via Slab Movable Objects)
+Message-ID: <20190701092625.GA9703@ares>
+References: <20190411013441.5415-1-tobin@kernel.org>
+ <20190411013441.5415-15-tobin@kernel.org>
+ <20190411023322.GD2217@ZenIV.linux.org.uk>
+ <20190411024821.GB6941@eros.localdomain>
+ <20190411044746.GE2217@ZenIV.linux.org.uk>
+ <20190411210200.GH2217@ZenIV.linux.org.uk>
+ <20190629040844.GS17978@ZenIV.linux.org.uk>
+ <20190629043803.GT17978@ZenIV.linux.org.uk>
+ <20190629190624.GU17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <a7edece4-fec4-5811-27a9-ca6c275a4c40@samsung.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7djPc7pHLkrGGnx4z2px5et7NotJ9yew
-        WHROXMJucfPTN1aLy7vmsFm8vTOdxeLFvbdMDuwesztmsnpsXqHlMaVTwuN+93Emj74tqxg9
-        Pm+SC2CL4rJJSc3JLEst0rdL4MpYcPYmS8FJvoonr18yNTCe5u5i5OSQEDCReNrzjKWLkYtD
-        SGAFo8SPQ1uZIZwvjBKNF29BZT4zSjx89ZMVpuXu01VMILaQwHJGiXvvyiHst4wSv/tNQWxh
-        gTCJcw1HwWrYBDQl/m6+yQYySERgO6PEjkUf2UEcZoFZjBLL+kCWc3LwCthJ3Diykg3EZhFQ
-        kWhYfRxsm6hAhMTlLbsYIWoEJU7OfAJWzylgL7Fi636wemYBeYntb+cwQ9jiEreezGcCWSAh
-        sItdYueZO4wQZ7tILG1aCfWCsMSr41vYIWwZidOTe1gg7HqJ+ytamCGaOxgltm7YyQyRsJY4
-        fPwiUDMH0AZNifW79CHCjhI/T/1jBwlLCPBJ3HgrCHEDn8SkbdOZIcK8Eh1tQhDVihL3z26F
-        GigusfTCV7YJjEqzkHw2C8k3s5B8Mwth7wJGllWM4qmlxbnpqcWGeanlesWJucWleel6yfm5
-        mxiBqej0v+OfdjB+vZR0iFGAg1GJh7fhjkSsEGtiWXFl7iFGCQ5mJRHe/SskY4V4UxIrq1KL
-        8uOLSnNSiw8xSnOwKInzVjM8iBYSSE8sSc1OTS1ILYLJMnFwSjUwNj5Ss20vvmR2JMt5ctWZ
-        Iv83AYc5j7bM+tkmkqAwdd68q3p9rfJLA3Jyk/e0potJWLTr3Dhq47xnUvD/JBPVA9Y2KxNf
-        Sx8/V8f/Vnm5/GPZ9FsnWFgcXD4FBhoYlTQF7+abectl/gYvdRHuHnnLastIxnXv/9ue6U3o
-        21qne66VSfmhW5oSS3FGoqEWc1FxIgC5yQEMQQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAIsWRmVeSWpSXmKPExsVy+t/xe7qHL0rGGuz8ImRx5et7NotJ9yew
-        WHROXMJucfPTN1aLy7vmsFm8vTOdxeLFvbdMDuwesztmsnpsXqHlMaVTwuN+93Emj74tqxg9
-        Pm+SC2CL0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL
-        0MtYcPYmS8FJvoonr18yNTCe5u5i5OSQEDCRuPt0FVMXIxeHkMBSRom+5Y9ZIRLiErvnv2WG
-        sIUl/lzrYoMoes0osWD7Z/YuRg4OYYEwidYnRSA1bAKaEn833wSrERHYySjxvW8l2FRmgVmM
-        Epdaj7GCNAgJnGSU2KEG0sArYCdx48hKNhCbRUBFomH1cbDFogIREn1ts9kgagQlTs58wgJi
-        cwrYS6zYuh8sziygLvFn3iVmCFteYvvbOVC2uMStJ/OZJjAKzULSPgtJyywkLbOQtCxgZFnF
-        KJJaWpybnltspFecmFtcmpeul5yfu4kRGHvbjv3csoOx613wIUYBDkYlHl6NWxKxQqyJZcWV
-        uYcYJTiYlUR496+QjBXiTUmsrEotyo8vKs1JLT7EaAr03ERmKdHkfGBayCuJNzQ1NLewNDQ3
-        Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwBidWtOYIWo0Y6Hel6LetbK6RdOaTc+K
-        rXvuvNGOM2SVx+bG1257v75iPH9n6SKFpJO+SeafuO8ZNHLOZdz8aebjI/73FbzFBXvtbYLs
-        z9Zkcch07pY69s4wPeeLzt6sV+paa53e6O6+vF7lpzLHde7vwttTuHmM+1d6vYt/s2XS6jPF
-        8XkNUkosxRmJhlrMRcWJANmi8rXTAgAA
-X-CMS-MailID: 20190701092627eucas1p147af4474d3a5350784ed8477a42f4f5c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190701033927epcas2p2d7d0b611a0d32b7b208acc787069a83a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190701033927epcas2p2d7d0b611a0d32b7b208acc787069a83a
-References: <CGME20190701033927epcas2p2d7d0b611a0d32b7b208acc787069a83a@epcas2p2.samsung.com>
-        <8baa25c0-498b-d321-4e6a-fe987a4989ba@infradead.org>
-        <a7edece4-fec4-5811-27a9-ca6c275a4c40@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190629190624.GU17978@ZenIV.linux.org.uk>
+X-Mailer: Mutt 1.9.4 (2018-02-28)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.07.2019 11:23, Andrzej Hajda wrote:
-> On 01.07.2019 05:39, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> A single driver should not enable (select) an entire subsystem,
->> such as INPUT, so change the 'select' to "depends on".
->>
->> Fixes: d6abe6df706c ("drm/bridge: sil_sii8620: do not have a dependency of RC_CORE")
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Inki Dae <inki.dae@samsung.com>
->> Cc: Andrzej Hajda <a.hajda@samsung.com>
->> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
->> Cc: dri-devel@lists.freedesktop.org
->> ---
->> Linus has written this a couple of times in the last 15 years or so,
->> but my search fu cannot find it.  And there are a few drivers in the
->> kernel tree that do this, but we shouldn't be adding more that do so.
->
-> The proper solution has been already posted [1], but it has not been
-> applied yet to input tree?
->
-> Randy are there chances your patchset will appear in ML in near future,
-> or should I merge your sii8620 patch alone?
+On Sat, Jun 29, 2019 at 08:06:24PM +0100, Al Viro wrote:
+> On Sat, Jun 29, 2019 at 05:38:03AM +0100, Al Viro wrote:
+> 
+> > PS: the problem is not gone in the next iteration of the patchset in
+> > question.  The patch I'm proposing (including dput_to_list() and _ONLY_
+> > compile-tested) follows.  Comments?
+> 
+> FWIW, there's another unpleasantness in the whole thing.  Suppose we have
+> picked a page full of dentries, all with refcount 0.  We decide to
+> evict all of them.  As it turns out, they are from two filesystems.
+> Filesystem 1 is NFS on a server, with currently downed hub on the way
+> to it.  Filesystem 2 is local.  We attempt to evict an NFS dentry and
+> get stuck - tons of dirty data with no way to flush them on server.
+> In the meanwhile, admin tries to unmount the local filesystem.  And
+> gets stuck as well, since umount can't do anything to its dentries
+> that happen to sit in our shrink list.
+> 
+> I wonder if the root of problem here isn't in shrink_dcache_for_umount();
+> all it really needs is to have everything on that fs with refcount 0
+> dragged through __dentry_kill().  If something had been on a shrink
+> list, __dentry_kill() will just leave behind a struct dentry completely
+> devoid of any connection to superblock, other dentries, filesystem
+> type, etc. - it's just a piece of memory that won't be freed until
+> the owner of shrink list finally gets around to it.  Which can happen
+> at any point - all they'll do to it is dentry_free(), and that doesn't
+> need any fs-related data structures.
+> 
+> The logics in shrink_dcache_parent() is
+> 	collect everything evictable into a shrink list
+> 	if anything found - kick it out and repeat the scan
+> 	otherwise, if something had been on other's shrink list
+> 		repeat the scan
+> 
+> I wonder if after the "no evictable candidates, but something
+> on other's shrink lists" we ought to do something along the
+> lines of
+> 	rcu_read_lock
+> 	walk it, doing
+> 		if dentry has zero refcount
+> 			if it's not on a shrink list,
+> 				move it to ours
+> 			else
+> 				store its address in 'victim'
+> 				end the walk
+> 	if no victim found
+> 		rcu_read_unlock
+> 	else
+> 		lock victim for __dentry_kill
+> 		rcu_read_unlock
+> 		if it's still alive
+> 			if it's not IS_ROOT
+> 				if parent is not on shrink list
+> 					decrement parent's refcount
+> 					put it on our list
+> 				else
+> 					decrement parent's refcount
+> 			__dentry_kill(victim)
+> 		else
+> 			unlock
+> 	if our list is non-empty
+> 		shrink_dentry_list on it
+> in there...
 
+Thanks for still thinking about this Al.  I don't have a lot of idea
+about what to do with your comments until I can grok them fully but I
+wanted to acknowledge having read them.
 
-Ups, I used wrong surname, I meant Ronald, added him input ML to cc.
-
-
-Regards
-
-Andrzej
-
-
-
->
->
-> [1]:
-> https://lore.kernel.org/lkml/20190419081926.13567-2-ronald@innovation.ch/
->
->
-> Regards
->
-> Andrzej
->
->
->
->>  drivers/gpu/drm/bridge/Kconfig |    3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> --- lnx-52-rc7.orig/drivers/gpu/drm/bridge/Kconfig
->> +++ lnx-52-rc7/drivers/gpu/drm/bridge/Kconfig
->> @@ -83,10 +83,9 @@ config DRM_PARADE_PS8622
->>  
->>  config DRM_SIL_SII8620
->>  	tristate "Silicon Image SII8620 HDMI/MHL bridge"
->> -	depends on OF
->> +	depends on OF && INPUT
->>  	select DRM_KMS_HELPER
->>  	imply EXTCON
->> -	select INPUT
->>  	select RC_CORE
->>  	help
->>  	  Silicon Image SII8620 HDMI/MHL bridge chip driver.
->>
->>
->>
->>
-
+Thanks,
+Tobin.
