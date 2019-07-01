@@ -2,197 +2,145 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 730EBC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E479C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8DC206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD1D206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:09:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="obh3DPXJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbfGALIB (ORCPT
+        id S1728282AbfGALJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 07:08:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:48207 "EHLO mga17.intel.com"
+        Mon, 1 Jul 2019 07:09:01 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48969 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727645AbfGALIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 07:08:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 04:08:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,439,1557212400"; 
-   d="scan'208";a="190214238"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Jul 2019 04:07:58 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        mathieu.poirier@linaro.org, will.deacon@arm.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH v2] perf: Fix exclusive events' grouping
-Date:   Mon,  1 Jul 2019 14:07:55 +0300
-Message-Id: <20190701110755.24646-1-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1727645AbfGALJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 07:09:01 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45cl48276Lz9sPF;
+        Mon,  1 Jul 2019 21:08:56 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561979337;
+        bh=TsIHxcBzCHhZQDVafpPUKveYRycGCR5XtzfjkPEjZRU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=obh3DPXJcRIFLYi1UOmDqNaCNCn6z99jLJR9sybisRxuYYcAIJWS2couB0kgVpKdz
+         G6M8FB8hsaPLhfkMWLRvRNT5UzpDQdFTxST1mC/BYAcArn8YhNrshQ2RFHgMPKQ0sL
+         IJpyETuJ6VBUKVCdMhfO+rfy2TBjAYwLY7yYWnaJZYjYgE8uBq6vE4fDmiTA2pbpv2
+         1sx4EBypVCrMRWxmeSqu2ofQZxgqYlIpJC3aypWcFVonZlgIeEjn6tGkQDexJi/qNm
+         njsFoQnN2rIFu3gxVoMseFNq3tuRHQwzbe/gyABbWcMUkwvB43+3jD+4KN5Jh49DDz
+         NBCB4V7QQZXFA==
+Date:   Mon, 1 Jul 2019 21:08:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nikolay Borisov <nborisov@suse.com>
+Subject: linux-next: build failure after merge of the hmm tree
+Message-ID: <20190701210853.0c72240b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/FKIgdE.+Owqka1kDpKHLUls"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far, we tried to disallow grouping exclusive events for the fear of
-complications they would cause with moving between contexts. Specifically,
-moving a software group to a hardware context would violate the exclusivity
-rules if both groups contain matching exclusive events.
+--Sig_/FKIgdE.+Owqka1kDpKHLUls
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This attempt was, however, unsuccessful: the check that we have in the
-perf_event_open() syscall is both wrong (looks at wrong PMU) and
-insufficient (group leader may still be exclusive), as can be illustrated
-by running
+Hi all,
 
-$ perf record -e '{intel_pt//,cycles}' uname
-$ perf record -e '{cycles,intel_pt//}' uname
+After merging the hmm tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-ultimately successfully.
+mm/hmm.c: In function 'hmm_get_or_create':
+mm/hmm.c:50:2: error: implicit declaration of function 'lockdep_assert_held=
+_exclusive'; did you mean 'lockdep_assert_held_once'? [-Werror=3Dimplicit-f=
+unction-declaration]
+  lockdep_assert_held_exclusive(&mm->mmap_sem);
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  lockdep_assert_held_once
 
-Furthermore, we are completely free to trigger the exclusivity violation
-by -e '{cycles,intel_pt//}' -e '{intel_pt//,instructions}', even though
-the helpful perf record will not allow that, the ABI will. The warning
-later in the perf_event_open() path will also not trigger, because it's
-also wrong.
+Caused by commit
 
-Fix all this by validating the original group before moving, getting rid
-of broken safeguards and placing a useful one to perf_install_in_context().
+  8a9320b7ec5d ("mm/hmm: Simplify hmm_get_or_create and make it reliable")
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: bed5b25ad9c8a ("perf: Add a pmu capability for "exclusive" events")
+interacting with commit
+
+  9ffbe8ac05db ("locking/lockdep: Rename lockdep_assert_held_exclusive() ->=
+ lockdep_assert_held_write()")
+
+from the tip tree.
+
+I have added the following merge fix.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 1 Jul 2019 21:05:59 +1000
+Subject: [PATCH] mm/hmm: fixup for "locking/lockdep: Rename
+ lockdep_assert_held_exclusive() -> lockdep_assert_held_write()"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- include/linux/perf_event.h |  5 +++++
- kernel/events/core.c       | 34 ++++++++++++++++++++++------------
- 2 files changed, 27 insertions(+), 12 deletions(-)
+ mm/hmm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 2ddae518dce6..201cc93cec32 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1054,6 +1054,11 @@ static inline int in_software_context(struct perf_event *event)
- 	return event->ctx->pmu->task_ctx_nr == perf_sw_context;
- }
- 
-+static inline int is_exclusive_pmu(struct pmu *pmu)
-+{
-+	return pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE;
-+}
-+
- extern struct static_key perf_swevent_enabled[PERF_COUNT_SW_MAX];
- 
- extern void ___perf_sw_event(u32, u64, struct pt_regs *, u64);
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 23efe6792abc..8cfb721bb284 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2553,6 +2553,9 @@ static int  __perf_install_in_context(void *info)
- 	return ret;
- }
- 
-+static bool exclusive_event_installable(struct perf_event *event,
-+					struct perf_event_context *ctx);
-+
- /*
-  * Attach a performance event to a context.
-  *
-@@ -2567,6 +2570,8 @@ perf_install_in_context(struct perf_event_context *ctx,
- 
- 	lockdep_assert_held(&ctx->mutex);
- 
-+	WARN_ON_ONCE(!exclusive_event_installable(event, ctx));
-+
- 	if (event->cpu != -1)
- 		event->cpu = cpu;
- 
-@@ -4360,7 +4365,7 @@ static int exclusive_event_init(struct perf_event *event)
+diff --git a/mm/hmm.c b/mm/hmm.c
+index c1bdcef403ee..2ddbd589b207 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -47,7 +47,7 @@ static struct hmm *hmm_get_or_create(struct mm_struct *mm)
  {
- 	struct pmu *pmu = event->pmu;
- 
--	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
-+	if (!is_exclusive_pmu(pmu))
- 		return 0;
- 
- 	/*
-@@ -4391,7 +4396,7 @@ static void exclusive_event_destroy(struct perf_event *event)
+ 	struct hmm *hmm;
+=20
+-	lockdep_assert_held_exclusive(&mm->mmap_sem);
++	lockdep_assert_held_write(&mm->mmap_sem);
+=20
+ 	/* Abuse the page_table_lock to also protect mm->hmm. */
+ 	spin_lock(&mm->page_table_lock);
+@@ -248,7 +248,7 @@ static const struct mmu_notifier_ops hmm_mmu_notifier_o=
+ps =3D {
+  */
+ int hmm_mirror_register(struct hmm_mirror *mirror, struct mm_struct *mm)
  {
- 	struct pmu *pmu = event->pmu;
- 
--	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
-+	if (!is_exclusive_pmu(pmu))
- 		return;
- 
- 	/* see comment in exclusive_event_init() */
-@@ -4411,14 +4416,15 @@ static bool exclusive_event_match(struct perf_event *e1, struct perf_event *e2)
- 	return false;
- }
- 
--/* Called under the same ctx::mutex as perf_install_in_context() */
- static bool exclusive_event_installable(struct perf_event *event,
- 					struct perf_event_context *ctx)
- {
- 	struct perf_event *iter_event;
- 	struct pmu *pmu = event->pmu;
- 
--	if (!(pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE))
-+	lockdep_assert_held(&ctx->mutex);
-+
-+	if (!is_exclusive_pmu(pmu))
- 		return true;
- 
- 	list_for_each_entry(iter_event, &ctx->event_list, event_entry) {
-@@ -10917,11 +10923,6 @@ SYSCALL_DEFINE5(perf_event_open,
- 		goto err_alloc;
- 	}
- 
--	if ((pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE) && group_leader) {
--		err = -EBUSY;
--		goto err_context;
--	}
--
- 	/*
- 	 * Look up the group leader (we will attach this event to it):
- 	 */
-@@ -11009,6 +11010,18 @@ SYSCALL_DEFINE5(perf_event_open,
- 				move_group = 0;
- 			}
- 		}
-+
-+		/*
-+		 * Failure to create exclusive events returns -EBUSY.
-+		 */
-+		err = -EBUSY;
-+		if (!exclusive_event_installable(group_leader, ctx))
-+			goto err_locked;
-+
-+		for_each_sibling_event(sibling, group_leader) {
-+			if (!exclusive_event_installable(sibling, ctx))
-+				goto err_locked;
-+		}
- 	} else {
- 		mutex_lock(&ctx->mutex);
- 	}
-@@ -11045,9 +11058,6 @@ SYSCALL_DEFINE5(perf_event_open,
- 	 * because we need to serialize with concurrent event creation.
- 	 */
- 	if (!exclusive_event_installable(event, ctx)) {
--		/* exclusive and group stuff are assumed mutually exclusive */
--		WARN_ON_ONCE(move_group);
--
- 		err = -EBUSY;
- 		goto err_locked;
- 	}
--- 
+-	lockdep_assert_held_exclusive(&mm->mmap_sem);
++	lockdep_assert_held_write(&mm->mmap_sem);
+=20
+ 	/* Sanity check */
+ 	if (!mm || !mirror || !mirror->ops)
+--=20
 2.20.1
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/FKIgdE.+Owqka1kDpKHLUls
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0Z6cUACgkQAVBC80lX
+0Gw/+Af9Env8AG0K0JMrb9vaNnUgMUBVs3sNfcg9nWHC8j6zRtIpiUJNHyp7zUGZ
+MAoPXvRkmhWz+L5pZFh2CJYebrWC0THTpMu5my81MQJJaPphA+lS6qYCTBfi+xHD
+25gmNOt/IEGzLrJrkLOIEO2aag0hpuUkhueUxApKkQzN4xBnLUuFevaAA5mVTnoc
+t8qFYFtkCsZxt/NnWmp1DNllGOSIx5T2HfAu3i3hcM/UJeQUvBhEchpMF+tlI6Nf
+UA8tmYNoiUVd8lUDnU2SHlz9ObTCb4Ral7tbo8aSr9wxGRyGu5bnNtCHq0rBcLvq
+LEKls0F1F6iDij49wT9TC7Ia2PNBOQ==
+=6/YF
+-----END PGP SIGNATURE-----
+
+--Sig_/FKIgdE.+Owqka1kDpKHLUls--
