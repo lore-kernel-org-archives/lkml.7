@@ -2,106 +2,111 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE51C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E356DC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C28A21721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562003982;
-	bh=DsHI/m07YpEcZgC7xPGFegDzLNU9Ym90S4GPPlMOnb8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=qGgkGxBkUca1ppIta60ySnqhnpynDbd5pRrNNCicTIRO6C0IHUuAS4LpAUxM3eCyv
-	 1gewPwBrxTa1uw6ld2tkMUPBQ9KF6Saw01u9jOJ9vbtd8X2UUqsEjRcEZA7X+IW6Mt
-	 Z+rRbbJzFeIjBa2QAut1nZibq3fQN+4S4uQesi6M=
+	by mail.kernel.org (Postfix) with ESMTP id BD15C2146F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:00:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QP3emyhE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbfGAR7k (ORCPT
+        id S1730354AbfGASAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 13:59:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728121AbfGAR7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 13:59:40 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95B4D2146F;
-        Mon,  1 Jul 2019 17:59:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562003979;
-        bh=DsHI/m07YpEcZgC7xPGFegDzLNU9Ym90S4GPPlMOnb8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Qb3iEy8kisEnhRNPGd0KZQkzLJvogMXuN1kDhXtpXfoW6JkY4P3pm4imBDKJHe6CP
-         AyeMyrm/Ynf+BjHqVAbS25avVg4oM3ijomOX8WXQq5FCLymN3pIwXHQFSSci/tM8mZ
-         cWNa7dcMFKiO50xKFd4154ZQ7YwsS0T8iD6Vu3oU=
-Subject: Re: [PATCH][next] selftests/x86: fix spelling mistake "FAILT" ->
- "FAIL"
-To:     wharms@bfs.de, Colin King <colin.king@canonical.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kselftest@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190701130431.13391-1-colin.king@canonical.com>
- <5D1A06CE.6000405@bfs.de>
-From:   shuah <shuah@kernel.org>
-Message-ID: <63f05151-bc25-b19b-61de-7f907fd1c282@kernel.org>
-Date:   Mon, 1 Jul 2019 11:59:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Mon, 1 Jul 2019 14:00:05 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45876 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfGASAF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 14:00:05 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r1so6926340pfq.12;
+        Mon, 01 Jul 2019 11:00:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=fA4z/zGO1uoPnsV4YhTNRfiYI2+JEgtpBRkd7XtEqQI=;
+        b=QP3emyhEAtXYs0ZZiN3gCElkYGW/ksK1CsZvpzVNUMAuZDzvXUeb0AwP4qLUvmcehE
+         blIpnOBNH0napTkztZ8aDlzH5JVhlvsvWosmmXM9mP3qb/DGaUI3rP29tWxJKYPYDWcq
+         KuOVqZLYtl0eeA1JddMDPvkWhpGhKublYPdWMSPcMnTEVsMtOkKHM+zhfyH5RmJ7wtHt
+         wDyoHQayrWGfHkP/aceEzkac5n/FeGmBta0bcD58X2oUIHmHZMSNPHPCBacQxdqJYY5S
+         2snL9tm+LySaBUwpiaDWcURjMNf2kePHBeh9SrbytLmDJGhbxSLhClzrfzqbAISbOTt0
+         HiUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=fA4z/zGO1uoPnsV4YhTNRfiYI2+JEgtpBRkd7XtEqQI=;
+        b=pTh7U0LYNicK03djyfOgyjCjJV+fkTKfrQ6Gc0gCetOHHBrGJS/42tZ+1PL8ed1qm2
+         oYUkGW0jE9IvI4/ra5v+u0qAlVjSUcK3NpYRBHbkNtv+blpBACOjwxMZo/diHRh3scHj
+         KEzKI7+JHCgy6YAeAg2A+O/esQwaL+8U61MEqRafR5+LzSjNlG8Z/MjW8sefWO2L+e0j
+         41myH248lVjax0yMQS+g3x28QU119qIsW5dtWH83R2lFzErCFOvnCrjQlblXNsnwjLV5
+         aSKFSoR2bor+CKnM3btXVMTj2vAFgHco63dYz4oxg6VhqwSREwzK+PVtImhEcNEnZX6u
+         FL3Q==
+X-Gm-Message-State: APjAAAWx/bdrOfLyqc2cSW7Wo3C5bdcl96SD+EiseK9XMWX+YW/lQtBg
+        2oKz2x6XFzuPjADQsAoQNnQDGndE
+X-Google-Smtp-Source: APXvYqwWosEezqY7s9Ok6BPumLsi0DGPkHooJZkD80ZEvV2H3g7y/L8hNHOsAAbhb5X75/61hKz2xA==
+X-Received: by 2002:a63:1208:: with SMTP id h8mr25004406pgl.377.1562004004356;
+        Mon, 01 Jul 2019 11:00:04 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id i36sm11608512pgl.70.2019.07.01.11.00.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 11:00:03 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 23:29:58 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Oliver Neukum <oliver@neukum.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: image: microtek: Unneeded variable: "err". Return "0"
+ on line 616
+Message-ID: <20190701175958.GA9826@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <5D1A06CE.6000405@bfs.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/19 7:12 AM, walter harms wrote:
-> 
-> 
-> Am 01.07.2019 15:04, schrieb Colin King:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> There is an spelling mistake in an a test error message. Fix it.
->>
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>   tools/testing/selftests/x86/test_vsyscall.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
->> index 4602326b8f5b..a4f4d4cf22c3 100644
->> --- a/tools/testing/selftests/x86/test_vsyscall.c
->> +++ b/tools/testing/selftests/x86/test_vsyscall.c
->> @@ -451,7 +451,7 @@ static int test_vsys_x(void)
->>   		printf("[OK]\tExecuting the vsyscall page failed: #PF(0x%lx)\n",
->>   		       segv_err);
->>   	} else {
->> -		printf("[FAILT]\tExecution failed with the wrong error: #PF(0x%lx)\n",
->> +		printf("[FAIL]\tExecution failed with the wrong error: #PF(0x%lx)\n",
->>   		       segv_err);
->>   		return 1;
->>   	}
-> 
-> 
-> "wrong error" sounds like scratching table, perhaps "error" is here sufficient ?
-> Bomus points when user is expected to report this.
-> 
+Fix below issue reported by coccicheck
+drivers/usb/image/microtek.c:569:5-8: Unneeded variable: "err". Return
+"0" on line 616
 
-Just "error" would not accurate her. I think the intent is to say
-that syscall returned an invalid error code. "Invalid error code"
-would be accurate.
+We can not change return type of mts_scsi_queuecommand_lck as it is part
+of DEF_SCSI_QCMD
 
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/usb/image/microtek.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-It would be helpful to report the expected error code.
+diff --git a/drivers/usb/image/microtek.c b/drivers/usb/image/microtek.c
+index 0a57c2c..ebe1362 100644
+--- a/drivers/usb/image/microtek.c
++++ b/drivers/usb/image/microtek.c
+@@ -566,7 +566,6 @@ static int
+ mts_scsi_queuecommand_lck(struct scsi_cmnd *srb, mts_scsi_cmnd_callback callback)
+ {
+ 	struct mts_desc* desc = (struct mts_desc*)(srb->device->host->hostdata[0]);
+-	int err = 0;
+ 	int res;
+ 
+ 	MTS_DEBUG_GOT_HERE();
+@@ -613,7 +612,7 @@ mts_scsi_queuecommand_lck(struct scsi_cmnd *srb, mts_scsi_cmnd_callback callback
+ 
+ 	}
+ out:
+-	return err;
++	return 0;
+ }
+ 
+ static DEF_SCSI_QCMD(mts_scsi_queuecommand)
+-- 
+2.7.4
 
-thanks,
--- Shuah
