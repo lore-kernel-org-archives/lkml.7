@@ -2,138 +2,227 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B990EC06508
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEF1C06508
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976AC2145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F6020881
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:38:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QOtDhaS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfGAB3u (ORCPT
+        id S1727249AbfGABiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 21:29:50 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:57351 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727159AbfGAB3t (ORCPT
+        Sun, 30 Jun 2019 21:38:00 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:33335 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfGABh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 21:29:49 -0400
-X-UUID: d29bdff237594c7c81a1686025d435ae-20190701
-X-UUID: d29bdff237594c7c81a1686025d435ae-20190701
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 872957804; Mon, 01 Jul 2019 09:29:35 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 1 Jul 2019 09:29:25 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 1 Jul 2019 09:29:23 +0800
-Message-ID: <1561944562.17120.1.camel@mtksdaap41>
-Subject: Re: [v5 4/7] drm/mediatek: add frame size control
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Thierry Reding" <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        "Inki Dae" <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        "Sean Paul" <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        "Andy Yan" <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Mon, 1 Jul 2019 09:29:22 +0800
-In-Reply-To: <20190627080116.40264-5-jitao.shi@mediatek.com>
-References: <20190627080116.40264-1-jitao.shi@mediatek.com>
-         <20190627080116.40264-5-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 30 Jun 2019 21:37:59 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190701013756epoutp03ec3ff9a89593fdd520ffcadaccbf5ffe~tJMWZblYG3189431894epoutp03T
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2019 01:37:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190701013756epoutp03ec3ff9a89593fdd520ffcadaccbf5ffe~tJMWZblYG3189431894epoutp03T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561945076;
+        bh=I6yDit6hDl9CUc82epoNHbW07NKafEsEnHWMJA3FK9o=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=QOtDhaS/+bqlbh6TIUQlRbgvW5/V4CgCilhvnzQNkoYWyPS826IjAraipuOUrAEFb
+         d2AdkEl00VUZXfg1yJSFce7Gkjiv/fYpCVXpsbZqG/jVLf7yc1jnfl3efroJslK4Mi
+         Ez4LraAe9k9GOK/w7cjXmp7JTSgZY0mmT8biFOM4=
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.157]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190701013753epcas1p31b5728e396a67b8ea09b7c10dc9dccb4~tJMTcuWIi1608616086epcas1p3Z;
+        Mon,  1 Jul 2019 01:37:53 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        3C.C8.04143.BE3691D5; Mon,  1 Jul 2019 10:37:48 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190701013747epcas1p461980512af566420e1318c9d2d51e784~tJMN06tCG0332803328epcas1p4K;
+        Mon,  1 Jul 2019 01:37:47 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190701013747epsmtrp2249004d149bc3c74e3d594ac9480ea13~tJMNz-p4_0833908339epsmtrp2W;
+        Mon,  1 Jul 2019 01:37:47 +0000 (GMT)
+X-AuditID: b6c32a37-f31ff7000000102f-7d-5d1963ebd05c
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        38.1D.03692.BE3691D5; Mon,  1 Jul 2019 10:37:47 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190701013747epsmtip26605b414f56a5f0fdab066e06a41776f~tJMNmLaWX2446024460epsmtip2Y;
+        Mon,  1 Jul 2019 01:37:47 +0000 (GMT)
+Subject: Re: [PATCH 41/43] docs: extcon: convert it to ReST and move to acpi
+ dir
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <9abe1885-2252-82c3-caaa-1f7f09191399@samsung.com>
+Date:   Mon, 1 Jul 2019 10:40:33 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24732.000
-X-TM-AS-Result: No-12.337600-8.000000-10
-X-TMASE-MatchedRID: zGP2F0O7j/vmLzc6AOD8DfHkpkyUphL9xXRDKEyu2zF+SLLtNOiBhmmd
-        1p2wVSdNRw3fpQHgw3t0pmQclXiHl4UJf3YQjB6CiJwEp8weVXwxXH/dlhvLv2q646qiEnRz7yL
-        x17DX9aet2gtuWr1Lmt52diAVzqN2Z/mERv8EXlX754IB1tyKcqg3Fm19nZrJ0u/U/L+rNlES99
-        dUV0LYkjvFiNq8G3M5EiVVgKqFXk5Nfs8n85Te8oMbH85DUZXyseWplitmp0j6C0ePs7A07RRAJ
-        C2k3BZ6qjisAJ9xR93/FHz8N5NA/ciiN6rHv+xKGCY6L4Z1ACk=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--12.337600-8.000000
-X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24732.000
-X-TM-SNTS-SMTP: A90BCEAADDCB8D640566EAD2CCD718AC8B8A63ED6C117C0EF66499DE0C7667252000:8
-X-MTK:  N
+In-Reply-To: <bce6d8c98a188ec5f0efe78962aa12839c7442e9.1561723980.git.mchehab+samsung@kernel.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMJsWRmVeSWpSXmKPExsWy7bCmnu6bZMlYgw/fmCyeHGhntNj58C2b
+        xfJ9/YwWC9uWsFhc3jWHzeL9p04mix2nFjFb3G5cwWZx5vQlVgdOj80rtDw2repk81jcN5nV
+        Y8vVdhaPvi2rGD0+b5ILYIvKtslITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshL
+        zE21VXLxCdB1y8wBOkpJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BZoFecmFtc
+        mpeul5yfa2VoYGBkClSYkJ3RfU2qYKpSxdSPG5kaGJ9JdzFyckgImEicbH7C0sXIxSEksINR
+        4sXqa4wQzidGiTP/f7FCON8YJT5P+84M0zL1/Qk2iMReRol3R9+zgiSEBN4zSjSd5wWxhQWC
+        JBYf+cAGYosI5EjsXt/CDNLALNDEJDGt+SJYgk1AS2L/ixtgNr+AosTVH48ZQWxeATuJ6a/+
+        MIHYLAIqEo+frmcBsUUFIiQub9kFVSMocXLmE7A4p0CixLKrR8DizALiEreezGeCsOUlmrfO
+        BlssIdDOLvGudSoTxAsuEo8enWOBsIUlXh3fwg5hS0l8freXDcKullh58ggbRHMHo8SW/RdY
+        IRLGEvuXTgYaxAG0QVNi/S59iLCixM7fc6GO4JN497WHFaREQoBXoqNNCKJEWeLyg7tQJ0hK
+        LG7vZJvAqDQLyTuzkLwwC8kLsxCWLWBkWcUollpQnJueWmxYYIwc25sYwQlWy3wH44ZzPocY
+        BTgYlXh4G+5IxAqxJpYVV+YeYpTgYFYS4Z17GCjEm5JYWZValB9fVJqTWnyI0RQY2hOZpUST
+        84HJP68k3tDUyNjY2MLE0MzU0FBJnDee+2aMkEB6YklqdmpqQWoRTB8TB6dUA6NE2tGj9rcs
+        9wb8mmic+0xT0WStjMFE03p2X8tVIvK7+Y8VX4hw31P5qXhB3T/hiu8vUtKdngV3s7NL7Ndc
+        Zyt7RyP6ZN4vuZpderN8e0ss+i9JZ66/FbXvwcdNVgUTFh4K+SNeYJc7/TaXVNJurcQfu/x7
+        Z/fKtt49nH3DpV/SduPx6NLnRUosxRmJhlrMRcWJANdbhDXGAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsWy7bCSvO7rZMlYg43HVCyeHGhntNj58C2b
+        xfJ9/YwWC9uWsFhc3jWHzeL9p04mix2nFjFb3G5cwWZx5vQlVgdOj80rtDw2repk81jcN5nV
+        Y8vVdhaPvi2rGD0+b5ILYIvisklJzcksSy3St0vgyui+JlUwVali6seNTA2Mz6S7GDk5JARM
+        JKa+P8HWxcjFISSwm1Hi4/Vp7BAJSYlpF48ydzFyANnCEocPF0PUvGWU+NHawwxSIywQJLH4
+        yAc2EFtEIEei7dx3VpAiZoEWJollXXcZITpeMErM+P2GBaSKTUBLYv+LG2Ad/AKKEld/PGYE
+        sXkF7CSmv/rDBGKzCKhIPH66HqxeVCBCoq9tNhtEjaDEyZlPwOKcAokSy64eAetlFlCX+DPv
+        EjOELS5x68l8JghbXqJ562zmCYzCs5C0z0LSMgtJyywkLQsYWVYxSqYWFOem5xYbFhjmpZbr
+        FSfmFpfmpesl5+duYgTHmpbmDsbLS+IPMQpwMCrx8DbckYgVYk0sK67MPcQowcGsJMI79zBQ
+        iDclsbIqtSg/vqg0J7X4EKM0B4uSOO/TvGORQgLpiSWp2ampBalFMFkmDk6pBsYc7Y8RE0rM
+        2AUmcHctabViPG//kTv7/3QdrT0XdV8fXi6T/WSjypnAihcXN2jylDw7Nefctry+Y+ZVb492
+        6YtsPn5fK7B9uY4um86SSpOTuZ8mzXvjOTevPsLxf9Eti4T7osU2MrsN+TYs7uxme/So+lbt
+        RHWVcycOfM9T7Zvw4nPu3I95168qsRRnJBpqMRcVJwIAhz02vrECAAA=
+X-CMS-MailID: 20190701013747epcas1p461980512af566420e1318c9d2d51e784
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190628122052epcas4p4a7ca381ae6c3bb7c83c09db3057728ec
+References: <cover.1561723979.git.mchehab+samsung@kernel.org>
+        <CGME20190628122052epcas4p4a7ca381ae6c3bb7c83c09db3057728ec@epcas4p4.samsung.com>
+        <bce6d8c98a188ec5f0efe78962aa12839c7442e9.1561723980.git.mchehab+samsung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
+Hi Mauro,
 
-On Thu, 2019-06-27 at 16:01 +0800, Jitao Shi wrote:
-> Our new DSI chip has frame size control.
-> So add the driver data to control for different chips.
+On 19. 6. 28. 오후 9:20, Mauro Carvalho Chehab wrote:
+> The intel-int3496.txt file is a documentation for an ACPI driver.
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-This version is different than previous version, so you should remove
-the reviewed-by tag. For this version, I still give you a
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
+> There's no reason to keep it on a separate directory.
+> 
+> So, instead of keeping it on some random location, move it
+> to a sub-directory inside the ACPI documentation dir,
+> renaming it to .rst.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 > ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../acpi/extcon-intel-int3496.rst}                 | 14 ++++++++++----
+>  Documentation/firmware-guide/acpi/index.rst        |  1 +
+>  MAINTAINERS                                        |  6 +++---
+>  3 files changed, 14 insertions(+), 7 deletions(-)
+>  rename Documentation/{extcon/intel-int3496.txt => firmware-guide/acpi/extcon-intel-int3496.rst} (66%)
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index 6b6550926db6..45e331055842 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -78,6 +78,7 @@
->  #define DSI_VBP_NL		0x24
->  #define DSI_VFP_NL		0x28
->  #define DSI_VACT_NL		0x2C
-> +#define DSI_SIZE_CON		0x38
->  #define DSI_HSA_WC		0x50
->  #define DSI_HBP_WC		0x54
->  #define DSI_HFP_WC		0x58
-> @@ -162,6 +163,7 @@ struct phy;
->  struct mtk_dsi_driver_data {
->  	const u32 reg_cmdq_off;
->  	bool has_shadow_ctl;
-> +	bool has_size_ctl;
->  };
+> diff --git a/Documentation/extcon/intel-int3496.txt b/Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+> similarity index 66%
+> rename from Documentation/extcon/intel-int3496.txt
+> rename to Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+> index 8155dbc7fad3..5137ca834b54 100644
+> --- a/Documentation/extcon/intel-int3496.txt
+> +++ b/Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+> @@ -1,5 +1,6 @@
+> +=====================================================
+>  Intel INT3496 ACPI device extcon driver documentation
+> ------------------------------------------------------
+> +=====================================================
 >  
->  struct mtk_dsi {
-> @@ -430,6 +432,10 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->  	writel(vm->vfront_porch, dsi->regs + DSI_VFP_NL);
->  	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
+>  The Intel INT3496 ACPI device extcon driver is a driver for ACPI
+>  devices with an acpi-id of INT3496, such as found for example on
+> @@ -13,15 +14,20 @@ between an USB host and an USB peripheral controller.
+>  The ACPI devices exposes this functionality by returning an array with up
+>  to 3 gpio descriptors from its ACPI _CRS (Current Resource Settings) call:
 >  
-> +	if (dsi->driver_data->has_size_ctl)
-> +		writel(vm->vactive << 16 | vm->hactive,
-> +		       dsi->regs + DSI_SIZE_CON);
+> -Index 0: The input gpio for the id-pin, this is always present and valid
+> -Index 1: The output gpio for enabling Vbus output from the device to the otg
+> +=======  =====================================================================
+> +Index 0  The input gpio for the id-pin, this is always present and valid
+> +Index 1  The output gpio for enabling Vbus output from the device to the otg
+>           port, write 1 to enable the Vbus output (this gpio descriptor may
+>           be absent or invalid)
+> -Index 2: The output gpio for muxing of the data pins between the USB host and
+> +Index 2  The output gpio for muxing of the data pins between the USB host and
+>           the USB peripheral controller, write 1 to mux to the peripheral
+>           controller
+> +=======  =====================================================================
+>  
+>  There is a mapping between indices and GPIO connection IDs as follows
 > +
->  	horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
+> +	======= =======
+>  	id	index 0
+>  	vbus	index 1
+>  	mux	index 2
+> +	======= =======
+> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+> index ae609eec4679..90c90d42d9ad 100644
+> --- a/Documentation/firmware-guide/acpi/index.rst
+> +++ b/Documentation/firmware-guide/acpi/index.rst
+> @@ -24,3 +24,4 @@ ACPI Support
+>     acpi-lid
+>     lpit
+>     video_extension
+> +   extcon-intel-int3496
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index fd6fab0dec77..2cf8abf6d48e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -321,7 +321,7 @@ F:	drivers/pnp/pnpacpi/
+>  F:	include/linux/acpi.h
+>  F:	include/linux/fwnode.h
+>  F:	include/acpi/
+> -F:	Documentation/acpi/
+> +F:	Documentation/firmware-guide/acpi/
+>  F:	Documentation/ABI/testing/sysfs-bus-acpi
+>  F:	Documentation/ABI/testing/configfs-acpi
+>  F:	drivers/pci/*acpi*
+> @@ -4896,7 +4896,7 @@ S:	Maintained
+>  F:	Documentation/
+>  F:	scripts/kernel-doc
+>  X:	Documentation/ABI/
+> -X:	Documentation/acpi/
+> +X:	Documentation/firmware-guide/acpi/
+>  X:	Documentation/devicetree/
+>  X:	Documentation/i2c/
+>  X:	Documentation/media/
+> @@ -6073,7 +6073,7 @@ S:	Maintained
+>  F:	drivers/extcon/
+>  F:	include/linux/extcon/
+>  F:	include/linux/extcon.h
+> -F:	Documentation/extcon/
+> +F:	Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+>  F:	Documentation/devicetree/bindings/extcon/
 >  
->  	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
+>  EXYNOS DP DRIVER
+> 
 
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
