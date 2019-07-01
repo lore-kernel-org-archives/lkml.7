@@ -2,160 +2,137 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DBBC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE70AC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96D621479
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6AB921479
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:42:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="T5Wxgwrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfGAWlx (ORCPT
+        id S1726960AbfGAWmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 18:41:53 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42414 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfGAWlx (ORCPT
+        Mon, 1 Jul 2019 18:42:51 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38140 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfGAWmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 18:41:53 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hi4zV-0004Dh-BP; Tue, 02 Jul 2019 00:41:41 +0200
-Date:   Tue, 2 Jul 2019 00:41:40 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Rong Chen <rong.a.chen@intel.com>
-cc:     Feng Tang <feng.tang@intel.com>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "tipbuild@zytor.com" <tipbuild@zytor.com>,
-        "lkp@01.org" <lkp@01.org>, Ingo Molnar <mingo@kernel.org>,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: [BUG] kvm: APIC emulation problem - was Re: [LKP] [x86/hotplug]
- ...
-In-Reply-To: <d08d55c5-bb02-f832-4306-9daf234428a8@intel.com>
-Message-ID: <alpine.DEB.2.21.1907012011460.1802@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1906250821220.32342@nanos.tec.linutronix.de> <f5c36f89-61bf-a82e-3d3b-79720b2da2ef@intel.com> <alpine.DEB.2.21.1906251330330.32342@nanos.tec.linutronix.de> <20190628063231.GA7766@shbuild999.sh.intel.com>
- <alpine.DEB.2.21.1906280929010.32342@nanos.tec.linutronix.de> <alpine.DEB.2.21.1906290912390.1802@nanos.tec.linutronix.de> <alpine.DEB.2.21.1906301334290.1802@nanos.tec.linutronix.de> <20190630130347.GB93752@shbuild999.sh.intel.com>
- <alpine.DEB.2.21.1906302021320.1802@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907010829590.1802@nanos.tec.linutronix.de> <20190701083654.GB12486@shbuild999.sh.intel.com> <alpine.DEB.2.21.1907011123220.1802@nanos.tec.linutronix.de>
- <d08d55c5-bb02-f832-4306-9daf234428a8@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 1 Jul 2019 18:42:51 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so4313700wro.5;
+        Mon, 01 Jul 2019 15:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TG7WWB3lc3BPx5FG8dO3TIxLT0YfJ51715wfOfLXzjQ=;
+        b=T5Wxgwrms3KLGReGHlwzTm5Mul15wvFJJSk0VFFNa+Q6//0DYJiyakj5yjRNrq+W7B
+         /GDpBBqrYBK8CYcCQ5oESw7BdCxDIkEs4buUoiJnDm2MRcFzLaqQktaxTCkrWhU0xgsq
+         h2yUShZcPyYtQPZ+edVbFohhIp708yduOWe0eoQpVgKROAgRK8vCQv/V7zh6MD7GzqZH
+         3QmudLqgVRQDR7Ux1GfqTJGWPtqDbOf91QQwUZ0BYn0GMxdPLKEQr0ZseVy5CObg6j4D
+         EfkoUmjv6odiZwLzVj9GrZYbh56ptUTTL2x20RVwtT3M/REDzbebpaR2kvJIsoLTj48E
+         ZvOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TG7WWB3lc3BPx5FG8dO3TIxLT0YfJ51715wfOfLXzjQ=;
+        b=ugD7WEnrJhP5u6ulfdZWXw4opk9H/a8Xn7HPkfjUE84+/PpYfoGd0b7N4UbdIIA6A6
+         b2MQRp4s3Fix0VXoQLYGkU0QCr5vuvYl2geFPB/ElekhE12u7ektL0g8uPXkO7ze1Y6Q
+         +MpCy9G5Bhr58aGp87UL7ZjbssIhhJAfChxRzDY/xEiVQ0D1xoESYoPkmj4p0SFLk14q
+         xiX7Ll/r5DmxrJ7BmvwSvlyXOXwhl8Y9hWYGiy3S8MYawVgJBmPbIJgNbzyZWcOasGnt
+         dicZeG0kImaA0Zv78sX4BPWeRj13IW9WCpl/FpW8cqwbLS41ENPM0x+Q/8lHP7u1KxYJ
+         Pztg==
+X-Gm-Message-State: APjAAAV04jtXbQrk0BjKhqKXRCX1ns0cB2syv1RtC56ZVFmqlWcMPoGG
+        e5djQtjvC86S0ExslP+enFNYkUYY
+X-Google-Smtp-Source: APXvYqxqieuIsfPGN7KpgIU60C0J3+zTqMhptvL/dVoBjEqwAqMxYmd+wA9rGlO4+B//2gj75LEEmA==
+X-Received: by 2002:a5d:5008:: with SMTP id e8mr588448wrt.147.1562020968754;
+        Mon, 01 Jul 2019 15:42:48 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133FCEE00B45C38AFF5505594.dip0.t-ipconnect.de. [2003:f1:33fc:ee00:b45c:38af:f550:5594])
+        by smtp.googlemail.com with ESMTPSA id v5sm13201632wre.50.2019.07.01.15.42.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 15:42:48 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org,
+        colin.king@canonical.com
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH] net: stmmac: make "snps,reset-delays-us" optional again
+Date:   Tue,  2 Jul 2019 00:42:25 +0200
+Message-Id: <20190701224225.19701-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Folks,
+Commit 760f1dc2958022 ("net: stmmac: add sanity check to
+device_property_read_u32_array call") introduced error checking of the
+device_property_read_u32_array() call in stmmac_mdio_reset().
+This results in the following error when the "snps,reset-delays-us"
+property is not defined in devicetree:
+  invalid property snps,reset-delays-us
 
-after chasing a 0-day test failure for a couple of days, I was finally able
-to reproduce the issue.
+This sanity check made sense until commit 84ce4d0f9f55b4 ("net: stmmac:
+initialize the reset delay array") ensured that there are fallback
+values for the reset delay if the "snps,reset-delays-us" property is
+absent. That was at the cost of making that property mandatory though.
 
-Background:
+Drop the sanity check for device_property_read_u32_array() and thus make
+the "snps,reset-delays-us" property optional again (avoiding the error
+message while loading the stmmac driver with a .dtb where the property
+is absent).
 
-   In preparation of supporting IPI shorthands I changed the CPU offline
-   code to software disable the local APIC instead of just masking it.
-   That's done by clearing the APIC_SPIV_APIC_ENABLED bit in the APIC_SPIV
-   register.
+Fixes: 760f1dc2958022 ("net: stmmac: add sanity check to device_property_read_u32_array call")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+This is a fix for a patch in net-next and should either go into net-next
+or 5.3-rcX.
 
-Failure:
 
-   When the CPU comes back online the startup code triggers occasionally
-   the warning in apic_pending_intr_clear(). That complains that the IRRs
-   are not empty.
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-   The offending vector is the local APIC timer vector who's IRR bit is set
-   and stays set.
-
-It took me quite some time to reproduce the issue locally, but now I can
-see what happens.
-
-It requires apicv_enabled=0, i.e. full apic emulation. With apicv_enabled=1
-(and hardware support) it behaves correctly.
-
-Here is the series of events:
-
-    Guest CPU
-
-    goes down
-
-      native_cpu_disable()		
-
-	apic_soft_disable();
-
-    play_dead()
-
-    ....
-
-    startup()
-
-      if (apic_enabled())
-        apic_pending_intr_clear()	<- Not taken
-
-     enable APIC
-
-        apic_pending_intr_clear()	<- Triggers warning because IRR is stale
-
-When this happens then the deadline timer or the regular APIC timer -
-happens with both, has fired shortly before the APIC is disabled, but the
-interrupt was not serviced because the guest CPU was in an interrupt
-disabled region at that point.
-
-The state of the timer vector ISR/IRR bits:
-
-    	     	       	      ISR     IRR
-before apic_soft_disable()    0	      1
-after apic_soft_disable()     0	      1
-
-On startup		      0	      1
-
-Now one would assume that the IRR is cleared after the INIT reset, but this
-happens only on CPU0.
-
-Why?
-
-Because our CPU0 hotplug is just for testing to make sure nothing breaks
-and goes through an NMI wakeup vehicle because INIT would send it through
-the boots-trap code which is not really working if that CPU was not
-physically unplugged.
-
-Now looking at a real world APIC the situation in that case is:
-
-    	     	       	      ISR     IRR
-before apic_soft_disable()    0	      1
-after apic_soft_disable()     0	      1
-
-On startup		      0	      0
-
-Why?
-
-Once the dying CPU reenables interrupts the pending interrupt gets
-delivered as a spurious interupt and then the state is clear.
-
-While that CPU0 hotplug test case is surely an esoteric issue, the APIC
-emulation is still wrong, Even if the play_dead() code would not enable
-interrupts then the pending IRR bit would turn into an ISR .. interrupt
-when the APIC is reenabled on startup.
-
-Thanks,
-
-	tglx
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+index f8061e34122f..18cadf0b0d66 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -242,7 +242,6 @@ int stmmac_mdio_reset(struct mii_bus *bus)
+ 	if (priv->device->of_node) {
+ 		struct gpio_desc *reset_gpio;
+ 		u32 delays[3] = { 0, 0, 0 };
+-		int ret;
  
+ 		reset_gpio = devm_gpiod_get_optional(priv->device,
+ 						     "snps,reset",
+@@ -250,15 +249,9 @@ int stmmac_mdio_reset(struct mii_bus *bus)
+ 		if (IS_ERR(reset_gpio))
+ 			return PTR_ERR(reset_gpio);
+ 
+-		ret = device_property_read_u32_array(priv->device,
+-						     "snps,reset-delays-us",
+-						     delays,
+-						     ARRAY_SIZE(delays));
+-		if (ret) {
+-			dev_err(ndev->dev.parent,
+-				"invalid property snps,reset-delays-us\n");
+-			return -EINVAL;
+-		}
++		device_property_read_u32_array(priv->device,
++					       "snps,reset-delays-us",
++					       delays, ARRAY_SIZE(delays));
+ 
+ 		if (delays[0])
+ 			msleep(DIV_ROUND_UP(delays[0], 1000));
+-- 
+2.22.0
 
-
-
-
-	
-     
-    
-   
