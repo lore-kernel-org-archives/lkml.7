@@ -2,119 +2,127 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318A1C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF57DC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 23:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0603A21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C108A20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 23:09:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="deNzpoVE"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Uons06qY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfGAWuA (ORCPT
+        id S1726908AbfGAXJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 18:50:00 -0400
-Received: from mail-eopbgr40085.outbound.protection.outlook.com ([40.107.4.85]:20965
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726362AbfGAWuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 18:50:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vxr9ve+pG365E35Pap88t0tzxc0hVMCk2wGueDeElqs=;
- b=deNzpoVEKum3LKsJN2IlwfQ8aIMiO3ubcLpjpHG18+/9a2MG08pM6+jDdo+PI+4ZwIlJoyf9sqagut9FG7RUAIz7kygPuf/pGmRI0ixuIr2+lqFLytMCkIN3XTjukawAJ3uELfzYdAqegSSm+CBmepWmF6lGUcY1n8wgjwG1eAs=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6000.eurprd05.prod.outlook.com (20.178.127.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Mon, 1 Jul 2019 22:49:54 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
- 22:49:54 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     wangxi <wangxi11@huawei.com>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Doug Ledford <dledford@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Mon, 1 Jul 2019 19:09:32 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48867 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbfGAXJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 19:09:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45d33W5HBVz9s00;
+        Tue,  2 Jul 2019 09:09:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562022568;
+        bh=US0LjfjVcnRZoZU6p2IS6+DprGUL5L327gB/z/lazTw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Uons06qYdTZkktHRBeo5dSwIl8dTfs8JZbKKKt7RA3ZLHmN0IAryVW0PeO4OnulOY
+         hziZFB1e29FiHHc8x4Ze7zyB2ogrXZdesSrnYFuCBFFBIw+HHWwvp3tB+/fIG6j4Ak
+         4UTMQ+nze/nUKsLsvHNEhJw3W9lC4rvW3r+XMNcqPDNX+6VhApMMk5X3oPWgNwoJo4
+         fPGdOH3NevGknIIEUH1t2stzOYt4q6ztwtxqU+7/hjPgZOlBF24zo8lnTyiKGGqmnp
+         ZSdFKXSaS7tzxUrG6nRSyqkxoO7lH3etod9PyIyOSp3viSafc26gJSH3xFZgHo19LC
+         +smU3nJ+gW2Xw==
+Date:   Tue, 2 Jul 2019 09:09:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg Ungerer <gerg@snapgear.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lijun Ou <oulijun@huawei.com>
-Subject: Re: linux-next: build failure after merge of the rdma tree
-Thread-Topic: linux-next: build failure after merge of the rdma tree
-Thread-Index: AQHVL8OActCQCeCYN0akJ9eSFAjYnKa1ZOUAgAD6KAA=
-Date:   Mon, 1 Jul 2019 22:49:54 +0000
-Message-ID: <20190701224950.GA23718@mellanox.com>
-References: <20190701141431.5cba95c3@canb.auug.org.au>
- <bbd5fbc9-2dac-ae1b-7cae-68790b6ea878@huawei.com>
-In-Reply-To: <bbd5fbc9-2dac-ae1b-7cae-68790b6ea878@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BL0PR0102CA0020.prod.exchangelabs.com
- (2603:10b6:207:18::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0386a983-3d83-4f11-753e-08d6fe766ed3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6000;
-x-ms-traffictypediagnostic: VI1PR05MB6000:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <VI1PR05MB600015DFAA12D6EBFFC53C8BCFF90@VI1PR05MB6000.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2276;
-x-forefront-prvs: 00851CA28B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(376002)(396003)(366004)(199004)(189003)(256004)(4326008)(81156014)(6506007)(8676002)(81166006)(25786009)(7736002)(478600001)(229853002)(102836004)(66946007)(71200400001)(5660300002)(386003)(6486002)(446003)(71190400001)(73956011)(305945005)(316002)(33656002)(76176011)(26005)(186003)(1076003)(54906003)(64756008)(66446008)(66476007)(2906002)(8936002)(66556008)(6246003)(6306002)(4744005)(11346002)(486006)(53936002)(36756003)(2616005)(6512007)(52116002)(99286004)(966005)(6436002)(6916009)(14454004)(66066001)(3846002)(68736007)(6116002)(476003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6000;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: SMrKB2lTma+NJAhViJPHup9cnr3v9+iGObH8cAUDaXoQADbHUXM/8ExXDfRze1E/yZ+gKO/NtbbdpBwNe6tcgY9JoVh7onjoK71Bc6ekEdhTCe6XfH6ejn5o1vS/1mL2dO6b0YKkJ12Tlt/TD7gf3hHwK9NHSnCrcI8/V3By7ruKTDLgbvfVHzdwdv6X8W8hol7wF4RZ/wSIloh+EKdh9e40f1rPamEFX9wIyPhUe2CDCf2q/+QAMSCEB+GVotzOQQ9CSrgXN4IMALzJkfygOWX1zB7FfiaXQQ5eNoL7/T4JtmxkgDIvO/CHoQdbQTscsD0X9qZgQn/6jaY17WGn678ANjP3fPw9aR91NxCcYQJgj+UMJxlmrlXkBSwlngVfg4q1MSrFEl8/et7w3SBXZIqi0mLHqhWA5cC4nLb8yQo=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DA77DEFE19AE89468A08F9AD106F07B2@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: manual merge of the m68knommu tree with the m68k tree
+Message-ID: <20190702090912.6a9db396@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0386a983-3d83-4f11-753e-08d6fe766ed3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 22:49:54.1010
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6000
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/oI4OoWPyq8Ce_6oUSklHnyv"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 03:54:30PM +0800, wangxi wrote:
-> > Presumably caused by commit
-> >=20
-> >   e9816ddf2a33 ("RDMA/hns: Cleanup unnecessary exported symbols")
->=20
-> I have confirmed the latest code in
-> https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git.  I
-> found that the changes to Makefile and Kconfig in the original patch
-> have been lost.
+--Sig_/oI4OoWPyq8Ce_6oUSklHnyv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-What does that mean?
+Hi all,
 
-Commit e9816ddf2a33f3afdf3dfc35c21aafad389ee482 looks the same as=20
-https://patchwork.kernel.org/patch/11003547/
+Today's linux-next merge of the m68knommu tree got a conflict in:
 
-To me
+  arch/m68k/Kconfig
 
-Please send a fixup patch.
+between commits:
 
-This looks wrong:
+  34dc63a5fb9b ("m68k: Use the generic dma coherent remap allocator")
+  69878ef47562 ("m68k: Implement arch_dma_prep_coherent()")
 
-obj-$(CONFIG_INFINIBAND_HNS) +=3D hns-roce-hw-v1.o $(hns-roce-objs)
+from the m68k tree and commit:
 
-Jason
+  bdd15a288492 ("binfmt_flat: replace flat_argvp_envp_on_stack with a Kconf=
+ig variable")
+  aef0f78e7460 ("binfmt_flat: add a ARCH_HAS_BINFMT_FLAT option")
+
+from the m68knommu tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/m68k/Kconfig
+index 00f5c98a5e05,c0c43c624afa..000000000000
+--- a/arch/m68k/Kconfig
++++ b/arch/m68k/Kconfig
+@@@ -3,13 -3,12 +3,15 @@@ config M68
+  	bool
+  	default y
+  	select ARCH_32BIT_OFF_T
++ 	select ARCH_HAS_BINFMT_FLAT
+ +	select ARCH_HAS_DMA_MMAP_PGPROT if MMU && !COLDFIRE
+ +	select ARCH_HAS_DMA_PREP_COHERENT
+  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE if HAS_DMA
+  	select ARCH_MIGHT_HAVE_PC_PARPORT if ISA
+  	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+  	select ARCH_NO_PREEMPT if !COLDFIRE
++ 	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
+ +	select DMA_DIRECT_REMAP if HAS_DMA && MMU && !COLDFIRE
+  	select HAVE_IDE
+  	select HAVE_AOUT if MMU
+  	select HAVE_DEBUG_BUGVERBOSE
+
+--Sig_/oI4OoWPyq8Ce_6oUSklHnyv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0akpgACgkQAVBC80lX
+0GzFfQf+PKe+PEA58frDxjnGZtJwDGHK4NtvxPs/wMwvc2rPtfA4a97eEg6GzCpZ
+BpTyx9XEylvAnAEt2U8xLzy6/a79lQ4kXP2L62rA9GzchVeHRK1pcrHnl0xQG4np
+6jp4YnXHp7L+5AFdhb4NIKbQuCVBNsIIq3W0O1jEEtrW+jSUbEpB6Ioh9ESpPuP5
+DcBfKr0pLMaGK8Sf7Yz1lwbnP60EJi933vh/qxiYtBeTh5M7wfNsI4WpnwDze/6S
+MVqvtprWyN2fwQtTDjBsDH5KYzVlsREl+5Zswuh2b3PBYyCiCr5FI2I0o9sVgk7t
+6mOdTgR7FkEndCVWvmMg5KxRw+mVtg==
+=iuL3
+-----END PGP SIGNATURE-----
+
+--Sig_/oI4OoWPyq8Ce_6oUSklHnyv--
