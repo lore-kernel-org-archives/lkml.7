@@ -4,313 +4,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23135C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E42C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC57208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E8721743
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfGAI4s (ORCPT
+        id S1728206AbfGAI5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:56:48 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:50160 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfGAI4s (ORCPT
+        Mon, 1 Jul 2019 04:57:43 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37607 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfGAI5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:56:48 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: by mail.steuer-voss.de (Postfix, from userid 1000)
-        id 9AE16440A7; Mon,  1 Jul 2019 10:56:46 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id 99AB343D57;
-        Mon,  1 Jul 2019 10:56:46 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 10:56:46 +0200 (CEST)
-From:   Nikolaus Voss <nv@vosn.de>
-X-X-Sender: nv@fox.voss.local
-To:     "Andrew F. Davis" <afd@ti.com>
-cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] sound/soc/codecs/tas5720.c: add ACPI support
-In-Reply-To: <ec84d05f-af14-33dd-5f04-6e5525baf138@ti.com>
-Message-ID: <alpine.DEB.2.20.1907011056070.2390@fox.voss.local>
-References: <20190628123416.16298-1-nikolaus.voss@loewensteinmedical.de> <ec84d05f-af14-33dd-5f04-6e5525baf138@ti.com>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        Mon, 1 Jul 2019 04:57:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v14so12850120wrr.4;
+        Mon, 01 Jul 2019 01:57:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=09spr0ZmtbhAtAbGTHnLA1YvhBQiMyELYNMxkams4ns=;
+        b=qMEbd6oNJKhl32M55VZOrp8onAZ0C1xnxEsoX/yVBHUyDOpZfJY56bM9RZlqAMuQmb
+         MN/veqIajiK2UdFhouIZVM/nDW4fI9dWzOiyFkSnTrRuaHkcnw8kPAPg76N/AMVyhXzP
+         guLfJHkWJ9zbkoRv6DQR+xHluW++35MM2jQDFZ3zmuwcy5Lim/zQVBMtBRAlewrUpppa
+         0kRKT/bHkmUA/6EEDhwruJgArBx8vZj2lvqt5/S/eDzE+GDXrqn/PmahhRGas9VbZJux
+         6ttfinDeqU2rBVClk/ocayhan7ajKstVYYGj/R+BNIf+ymIE22/fi6o1ywWc75W3P16e
+         xSiw==
+X-Gm-Message-State: APjAAAUkbYTtVYnd8w+rBCuNePQQzLsrUy+I+HNpRO9H5dWkBinFmIec
+        2M8ur9uTUpwVsMm/pN6eXYhaW9zt
+X-Google-Smtp-Source: APXvYqwLZXIukHMUE71kj7NAmIY8QDt9Kht04zLskEt9xg/nyu14uz5+DxcGhuZwOPEkNp0wTDq12w==
+X-Received: by 2002:a5d:6b90:: with SMTP id n16mr7324350wrx.206.1561971459414;
+        Mon, 01 Jul 2019 01:57:39 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id o24sm12138063wmh.2.2019.07.01.01.57.37
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 01:57:38 -0700 (PDT)
+Subject: Re: [PATCH] ipv6_sockglue: Fix a missing-check bug in
+ ip6_ra_control()
+To:     Gen Zhang <blackgod016574@gmail.com>, davem@davemloft.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190524031946.GA6463@zhanggen-UX430UQ>
+From:   Jiri Slaby <jslaby@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1b5f82ae-31a7-db36-dc9d-efc46cda2af3@suse.cz>
+Date:   Mon, 1 Jul 2019 10:57:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+In-Reply-To: <20190524031946.GA6463@zhanggen-UX430UQ>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019, Andrew F. Davis wrote:
-> On 6/28/19 8:34 AM, Nikolaus Voss wrote:
->> Add support for ACPI enumeration for tas5720 and tas5722.
->> Use device_match API to unify access to driver data for DT and ACPI.
->> Aggregate variant stuff into its own struct and directly reference
->> it in variant data for i2c/of/acpi_device_id.
->>
->> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
->> ---
->>  sound/soc/codecs/tas5720.c | 215 +++++++++++++++++--------------------
->>  1 file changed, 99 insertions(+), 116 deletions(-)
->>
->> diff --git a/sound/soc/codecs/tas5720.c b/sound/soc/codecs/tas5720.c
->> index 37fab8f22800..ea973764c745 100644
->> --- a/sound/soc/codecs/tas5720.c
->> +++ b/sound/soc/codecs/tas5720.c
->> @@ -7,6 +7,7 @@
->>   * Author: Andreas Dannenberg <dannenberg@ti.com>
->>   */
->>
->> +#include <linux/acpi.h>
->>  #include <linux/module.h>
->>  #include <linux/errno.h>
->>  #include <linux/device.h>
->> @@ -28,9 +29,10 @@
->>  /* Define how often to check (and clear) the fault status register (in ms) */
->>  #define TAS5720_FAULT_CHECK_INTERVAL		200
->>
->> -enum tas572x_type {
->> -	TAS5720,
->> -	TAS5722,
->> +struct tas5720_variant {
->> +	const int device_id;
->> +	const struct regmap_config reg_config;
->> +	const struct snd_soc_component_driver comp_drv;
->>  };
->>
->>  static const char * const tas5720_supply_names[] = {
->> @@ -44,7 +46,7 @@ struct tas5720_data {
->>  	struct snd_soc_component *component;
->>  	struct regmap *regmap;
->>  	struct i2c_client *tas5720_client;
->> -	enum tas572x_type devtype;
->> +	const struct tas5720_variant *variant;
->>  	struct regulator_bulk_data supplies[TAS5720_NUM_SUPPLIES];
->>  	struct delayed_work fault_check_work;
->>  	unsigned int last_fault;
->> @@ -179,17 +181,13 @@ static int tas5720_set_dai_tdm_slot(struct snd_soc_dai *dai,
->>  		goto error_snd_soc_component_update_bits;
->>
->>  	/* Configure TDM slot width. This is only applicable to TAS5722. */
->> -	switch (tas5720->devtype) {
->> -	case TAS5722:
->> +	if (tas5720->variant->device_id == TAS5722_DEVICE_ID) {
->>  		ret = snd_soc_component_update_bits(component, TAS5722_DIGITAL_CTRL2_REG,
->>  						    TAS5722_TDM_SLOT_16B,
->>  						    slot_width == 16 ?
->>  						    TAS5722_TDM_SLOT_16B : 0);
->>  		if (ret < 0)
->>  			goto error_snd_soc_component_update_bits;
->> -		break;
->> -	default:
->> -		break;
->>  	}
->>
->>  	return 0;
->> @@ -277,7 +275,7 @@ static void tas5720_fault_check_work(struct work_struct *work)
->>  static int tas5720_codec_probe(struct snd_soc_component *component)
->>  {
->>  	struct tas5720_data *tas5720 = snd_soc_component_get_drvdata(component);
->> -	unsigned int device_id, expected_device_id;
->> +	unsigned int device_id;
->>  	int ret;
->>
->>  	tas5720->component = component;
->> @@ -301,21 +299,9 @@ static int tas5720_codec_probe(struct snd_soc_component *component)
->>  		goto probe_fail;
->>  	}
->>
->> -	switch (tas5720->devtype) {
->> -	case TAS5720:
->> -		expected_device_id = TAS5720_DEVICE_ID;
->> -		break;
->> -	case TAS5722:
->> -		expected_device_id = TAS5722_DEVICE_ID;
->> -		break;
->> -	default:
->> -		dev_err(component->dev, "unexpected private driver data\n");
->> -		return -EINVAL;
->> -	}
->> -
->> -	if (device_id != expected_device_id)
->> +	if (device_id != tas5720->variant->device_id)
->>  		dev_warn(component->dev, "wrong device ID. expected: %u read: %u\n",
->> -			 expected_device_id, device_id);
->> +			 tas5720->variant->device_id, device_id);
->>
->>  	/* Set device to mute */
->>  	ret = snd_soc_component_update_bits(component, TAS5720_DIGITAL_CTRL2_REG,
->> @@ -462,24 +448,6 @@ static bool tas5720_is_volatile_reg(struct device *dev, unsigned int reg)
->>  	}
->>  }
->>
->> -static const struct regmap_config tas5720_regmap_config = {
->> -	.reg_bits = 8,
->> -	.val_bits = 8,
->> -
->> -	.max_register = TAS5720_MAX_REG,
->> -	.cache_type = REGCACHE_RBTREE,
->> -	.volatile_reg = tas5720_is_volatile_reg,
->> -};
->> -
->> -static const struct regmap_config tas5722_regmap_config = {
->> -	.reg_bits = 8,
->> -	.val_bits = 8,
->> -
->> -	.max_register = TAS5722_MAX_REG,
->> -	.cache_type = REGCACHE_RBTREE,
->> -	.volatile_reg = tas5720_is_volatile_reg,
->> -};
->> -
->>  /*
->>   * DAC analog gain. There are four discrete values to select from, ranging
->>   * from 19.2 dB to 26.3dB.
->> @@ -558,40 +526,6 @@ static const struct snd_soc_dapm_route tas5720_audio_map[] = {
->>  	{ "OUT", NULL, "DAC" },
->>  };
->>
->> -static const struct snd_soc_component_driver soc_component_dev_tas5720 = {
->> -	.probe			= tas5720_codec_probe,
->> -	.remove			= tas5720_codec_remove,
->> -	.suspend		= tas5720_suspend,
->> -	.resume			= tas5720_resume,
->> -	.controls		= tas5720_snd_controls,
->> -	.num_controls		= ARRAY_SIZE(tas5720_snd_controls),
->> -	.dapm_widgets		= tas5720_dapm_widgets,
->> -	.num_dapm_widgets	= ARRAY_SIZE(tas5720_dapm_widgets),
->> -	.dapm_routes		= tas5720_audio_map,
->> -	.num_dapm_routes	= ARRAY_SIZE(tas5720_audio_map),
->> -	.idle_bias_on		= 1,
->> -	.use_pmdown_time	= 1,
->> -	.endianness		= 1,
->> -	.non_legacy_dai_naming	= 1,
->> -};
->> -
->> -static const struct snd_soc_component_driver soc_component_dev_tas5722 = {
->> -	.probe = tas5720_codec_probe,
->> -	.remove = tas5720_codec_remove,
->> -	.suspend = tas5720_suspend,
->> -	.resume = tas5720_resume,
->> -	.controls = tas5722_snd_controls,
->> -	.num_controls = ARRAY_SIZE(tas5722_snd_controls),
->> -	.dapm_widgets = tas5720_dapm_widgets,
->> -	.num_dapm_widgets = ARRAY_SIZE(tas5720_dapm_widgets),
->> -	.dapm_routes = tas5720_audio_map,
->> -	.num_dapm_routes = ARRAY_SIZE(tas5720_audio_map),
->> -	.idle_bias_on		= 1,
->> -	.use_pmdown_time	= 1,
->> -	.endianness		= 1,
->> -	.non_legacy_dai_naming	= 1,
->> -};
->> -
->>  /* PCM rates supported by the TAS5720 driver */
->>  #define TAS5720_RATES	(SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000 |\
->>  			 SNDRV_PCM_RATE_88200 | SNDRV_PCM_RATE_96000)
->> @@ -637,29 +571,25 @@ static int tas5720_probe(struct i2c_client *client,
->>  {
->>  	struct device *dev = &client->dev;
->>  	struct tas5720_data *data;
->> -	const struct regmap_config *regmap_config;
->> +	const struct tas5720_variant *type;
->>  	int ret;
->>  	int i;
->>
->> +	type = device_get_match_data(&client->dev);
->> +	if (!type && id)
->> +		type = (const struct tas5720_variant *)id->driver_data;
->> +
->> +	if (!type)
->> +		return -EINVAL;
->> +
->>  	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->>  	if (!data)
->>  		return -ENOMEM;
->>
->>  	data->tas5720_client = client;
->> -	data->devtype = id->driver_data;
->> +	data->variant = type;
->>
->> -	switch (id->driver_data) {
->> -	case TAS5720:
->> -		regmap_config = &tas5720_regmap_config;
->> -		break;
->> -	case TAS5722:
->> -		regmap_config = &tas5722_regmap_config;
->> -		break;
->> -	default:
->> -		dev_err(dev, "unexpected private driver data\n");
->> -		return -EINVAL;
->> -	}
->> -	data->regmap = devm_regmap_init_i2c(client, regmap_config);
->> +	data->regmap = devm_regmap_init_i2c(client, &type->reg_config);
->>  	if (IS_ERR(data->regmap)) {
->>  		ret = PTR_ERR(data->regmap);
->>  		dev_err(dev, "failed to allocate register map: %d\n", ret);
->> @@ -678,51 +608,104 @@ static int tas5720_probe(struct i2c_client *client,
->>
->>  	dev_set_drvdata(dev, data);
->>
->> -	switch (id->driver_data) {
->> -	case TAS5720:
->> -		ret = devm_snd_soc_register_component(&client->dev,
->> -					&soc_component_dev_tas5720,
->> -					tas5720_dai,
->> -					ARRAY_SIZE(tas5720_dai));
->> -		break;
->> -	case TAS5722:
->> -		ret = devm_snd_soc_register_component(&client->dev,
->> -					&soc_component_dev_tas5722,
->> -					tas5720_dai,
->> -					ARRAY_SIZE(tas5720_dai));
->> -		break;
->> -	default:
->> -		dev_err(dev, "unexpected private driver data\n");
->> -		return -EINVAL;
->> -	}
->> -	if (ret < 0) {
->> -		dev_err(dev, "failed to register component: %d\n", ret);
->> -		return ret;
->> -	}
->> +	ret = devm_snd_soc_register_component(&client->dev,
->> +					      &type->comp_drv,
->> +					      tas5720_dai,
->> +					      ARRAY_SIZE(tas5720_dai));
->>
->> -	return 0;
->> +	if (ret < 0)
->> +		dev_err(dev, "failed to register component: %d\n", ret);
->> +
->> +	return ret;
->>  }
->>
->> +static const struct tas5720_variant variant[] = {
->> +	{
->> +		.device_id = TAS5720_DEVICE_ID,
->> +		.reg_config = {
->
->
-> This patch would be a lot more simple if you leave the regmap_config and
-> snd_soc_component_driver definitions where they are above and just store
-> a pointer to them down here in this new struct. That also would allow
-> for new devices to use them in this list should they ever match.
->
-> If you really want to move the data down here for some reason, do it in
-> a separate patch at least, this isn't needed as part of adding ACPI support.
+On 24. 05. 19, 5:19, Gen Zhang wrote:
+> In function ip6_ra_control(), the pointer new_ra is allocated a memory 
+> space via kmalloc(). And it is used in the following codes. However, 
+> when there is a memory allocation error, kmalloc() fails. Thus null 
+> pointer dereference may happen. And it will cause the kernel to crash. 
+> Therefore, we should check the return value and handle the error.
+> 
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> 
+> ---
+> diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+> index 40f21fe..0a3d035 100644
+> --- a/net/ipv6/ipv6_sockglue.c
+> +++ b/net/ipv6/ipv6_sockglue.c
+> @@ -68,6 +68,8 @@ int ip6_ra_control(struct sock *sk, int sel)
+>  		return -ENOPROTOOPT;
+>  
+>  	new_ra = (sel >= 0) ? kmalloc(sizeof(*new_ra), GFP_KERNEL) : NULL;
+> +	if (sel >= 0 && !new_ra)
+> +		return -ENOMEM;
+>  
+>  	write_lock_bh(&ip6_ra_lock);
+>  	for (rap = &ip6_ra_chain; (ra = *rap) != NULL; rap = &ra->next) {
+> 
 
-Ok, thanks for the feedback, I'll prepare a series.
+Was this really an omission? There is (!new_ra) handling below the for loop:
+        if (!new_ra) {
+                write_unlock_bh(&ip6_ra_lock);
+                return -ENOBUFS;
+        }
 
-Nikolaus
+It used to handle both (sel >= 0) and (sel == 0) cases and it used to
+return ENOBUFS in case of failure. For (sel >= 0) it also could at least
+return EADDRINUSE when a collision was found -- even if memory was
+exhausted.
 
->
-> Andrew
+In anyway, how could this lead to a pointer dereference? And why/how did
+this get a CVE number?
 
-[...]
+thanks,
+-- 
+js
+suse labs
