@@ -2,102 +2,114 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E518C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9206CC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42642206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692D82183F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:43:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnUrJklG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbfGARlk (ORCPT
+        id S1729579AbfGARnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 13:41:40 -0400
-Received: from mga17.intel.com ([192.55.52.151]:11112 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727130AbfGARlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 13:41:39 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 10:41:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,440,1557212400"; 
-   d="scan'208";a="246988339"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 01 Jul 2019 10:41:37 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hi0J6-0009f4-Fc; Tue, 02 Jul 2019 01:41:36 +0800
-Date:   Tue, 2 Jul 2019 01:40:50 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Gabriel Beauchamp <beauchampgabriel@gmail.com>
-Cc:     kbuild-all@01.org, gregkh@linuxfoundation.org,
-        christian.gromm@microchip.com, colin.king@canonical.com,
-        gustavo@embeddedor.com, joe@perches.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Gabriel Beauchamp <beauchampgabriel@gmail.com>
-Subject: Re: [PATCH v3] Staging: most: fix coding style issues
-Message-ID: <201907020151.4hvM1eTo%lkp@intel.com>
-References: <20190630165604.2452-1-beauchampgabriel@gmail.com>
+        Mon, 1 Jul 2019 13:43:40 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44887 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727130AbfGARnk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 13:43:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so6906580pfe.11;
+        Mon, 01 Jul 2019 10:43:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HhNv+wbN0VpJBBUB5um1iIUQWl9GFxBZ8169m9nMh1Q=;
+        b=QnUrJklGkONB4oUCSDM4a5/B9AjR3Ueaf5s+tdYxalrXDIZ0GhwPNWh42efZy+I5Xn
+         92xwnF53ODnXP+9sgmpHBhOOjpqV26b7+42ZRPRk6xmPRdVvaelDyd3gdjMqsdRq/vVa
+         8YXYcTOWru/z0aXw/rgdkrtxHNhCM+U+r4yigeD0tzmNZQ3ULfNBd8aAMi0i3695b5nT
+         F1HwO7xsHq4XhurMKHyvX1NEG99wq6nwqu60ustJ17VW/xG90UOMVfp7Ho4LClGJSQ0Z
+         QXENjnc9l7y8HixsJptV+PVZ60bswk6qfv+VYe/owAsnVnEH+PPu3khpsm9JBrEGafVn
+         zoAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HhNv+wbN0VpJBBUB5um1iIUQWl9GFxBZ8169m9nMh1Q=;
+        b=Pdwqst5IZUyB/qj30WXsKnaUB/5QzOyk8QJHuNpdKn4YQ8UpDpNnNvLC8zHV7tGqOY
+         M1HDgbxTyHMYbyNyqCIHSyawl0DAKcxgX2EjCqe6/2g4VMrTTZT4ZN2CH6cWXvv6P91/
+         sybdsdIgFvHfrsLN01iyq5Jl5O2hSIz2eW6pgKlmfzkeuqXgx+jYlpuOMR15TaxiowFQ
+         SrT/KA0UvRTjH+iTlVb8wAiVrIgsUsFfUnOKwvRLG3Vso6xH03bc4EXbzej3AoK7895r
+         jPOcdEU8TUaTb82xKtFF430re9gUbFAKQ9AAw9sbya3fv/5kvPw9NaBBNoDM9zVAD4db
+         g2gQ==
+X-Gm-Message-State: APjAAAX3a5DjOCuZtpe2B3dUpnfS0c0ZXmAA362UQs/J19OYJ3ryxCx2
+        AMfl+N1YGdP9ma/sspyni6Y=
+X-Google-Smtp-Source: APXvYqyplVhpDW5rDBLRdETRKZqEF+2npSCxstRykGDoDFKPjD1Lu6ZctfD97RsU9C2mhJ/QiLiPig==
+X-Received: by 2002:a17:90a:2008:: with SMTP id n8mr536465pjc.4.1562003019392;
+        Mon, 01 Jul 2019 10:43:39 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x1sm182418pjo.4.2019.07.01.10.43.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 10:43:38 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 10:43:37 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-mips@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sh: stub out pud_page
+Message-ID: <20190701174336.GA24848@roeck-us.net>
+References: <20190701151818.32227-1-hch@lst.de>
+ <20190701151818.32227-2-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190630165604.2452-1-beauchampgabriel@gmail.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190701151818.32227-2-hch@lst.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gabriel,
+On Mon, Jul 01, 2019 at 05:18:17PM +0200, Christoph Hellwig wrote:
+> There wasn't any actual need to add a real pud_page, as pud_huge
+> always returns false on sh.  Just stub it out to fix the sh3
+> compile failure.
+> 
+> Fixes: 937b4e1d6471 ("sh: add the missing pud_page definition")
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Thank you for the patch! Perhaps something to improve:
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-[auto build test WARNING on staging/staging-testing]
-[also build test WARNING on v5.2-rc6 next-20190625]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Gabriel-Beauchamp/Staging-most-fix-coding-style-issues/20190701-203804
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
-
-vim +308 drivers/staging/most/core.c
-
-   296	
-   297	static ssize_t set_datatype_show(struct device *dev,
-   298					 struct device_attribute *attr,
-   299					 char *buf)
-   300	{
-   301		int i;
-   302		char *type = "unconfigured\n";
-   303	
-   304		struct most_channel *c = to_channel(dev);
-   305	
-   306		for (i = 0; i < ARRAY_SIZE(ch_data_type); i++) {
-   307			if (c->cfg.data_type & ch_data_type[i].most_ch_data_type) {
- > 308				type = ch_data_type[i].name;
-   309				break;
-   310			}
-   311		}
-   312		return snprintf(buf, PAGE_SIZE, "%s", type);
-   313	}
-   314	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> ---
+>  arch/sh/include/asm/pgtable-3level.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/sh/include/asm/pgtable-3level.h b/arch/sh/include/asm/pgtable-3level.h
+> index 3c7ff20f3f94..779260b721ca 100644
+> --- a/arch/sh/include/asm/pgtable-3level.h
+> +++ b/arch/sh/include/asm/pgtable-3level.h
+> @@ -37,7 +37,9 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
+>  {
+>  	return pud_val(pud);
+>  }
+> -#define pud_page(pud)		pfn_to_page(pud_pfn(pud))
+> +
+> +/* only used by the stubbed out hugetlb gup code, should never be called */
+> +#define pud_page(pud)		NULL
+>  
+>  #define pmd_index(address)	(((address) >> PMD_SHIFT) & (PTRS_PER_PMD-1))
+>  static inline pmd_t *pmd_offset(pud_t *pud, unsigned long address)
+> -- 
+> 2.20.1
+> 
