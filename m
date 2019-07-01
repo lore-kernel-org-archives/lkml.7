@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E932C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD029C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D773720659
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B5C20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:28:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sxo+grIw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZ0/toRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbfGAP2s (ORCPT
+        id S1729131AbfGAP2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:28:48 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35682 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGAP2s (ORCPT
+        Mon, 1 Jul 2019 11:28:55 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43769 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbfGAP2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:28:48 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a25so9117905lfg.2;
-        Mon, 01 Jul 2019 08:28:46 -0700 (PDT)
+        Mon, 1 Jul 2019 11:28:54 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 16so13612637ljv.10;
+        Mon, 01 Jul 2019 08:28:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kUd6oC4CwkGinXIZBT21shD4mEDfRTY5MFw4kwCcA7A=;
-        b=sxo+grIwj+RDKTj5IQga0vgl0SUNb60398r0MGLEWRrLcnQMSZbyd9lpMBYIyndTDn
-         lfC4N4B3RL3JwrKcqIxzemHHg4ZmG8qpA5kyZ4DXwxU2H7AHlcUz/8Aih5B1gL3wxiYM
-         FDLHVOfDGK6LehxteO/R/TsPkmzOoTHl9lJEul2zjFE6hMJsMWccO+ssQcbUIJmyZMiv
-         SHUVxhHA9vVrJJSY+nI0+e5Ckv2f6UuaqauAlWDCV6v/DFA9NlCljrzfVuMMLx6AV9GV
-         R0wjb+P2ZORQsRqWhQztJXuuWq8ER6wophYRZ4wZTOT3b3bV6DZYvEG+z3eOIizTzJjh
-         wLwg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7R/PTq1FrTJQOZMaMuQLuy0eR9eOHzUISgHDr8CtHHY=;
+        b=tZ0/toRXFe0dk6BKIOkw4bvQ1LSvJ7B8hrxoMtWWUxBO7OhB8qycIDVtiiQ6Ac38s8
+         SKj0CJGNLQtgIwX0iDmAC53leMFn74+Nt1ZCLFy0ycxzai4aj6qnFdqBwU7J4sCJJ1oZ
+         bN2Rr9XdxaS0eSghYjXyhnlOjy0NI+0FuRvz4xMbr3+gGh/bnDokgwX6funU9ZbNGZ1l
+         OqXVWRLrJs5svOSsNpc0FkIeYj3nBUcMA1voWyx+tenGLupcCkW0upf/CMTKy58spt0u
+         P6edl/y0c4pZ/MXyRTN+opSbRBLdbn0EtZvMONejEkjzWQ2JRaAltpkNKVJhlKUAOpJj
+         0LMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kUd6oC4CwkGinXIZBT21shD4mEDfRTY5MFw4kwCcA7A=;
-        b=sQ2HkKY5ltVQ2MqazxvExEbIJV7YPpK+cHxgmTVTKKbISEejBVq+WKACsXgkN5TAiE
-         /loHrhCxF2K1MxiyRhtbAVEW/45erzSMLWrRfoN6gH2GsxZ40os3Ls/mKE1WPMQnBELv
-         KCCHYT54ZezxrRpI60hBz2A2aWjzMD2fWAlUkI3pv0ibAhU+UbV3wCMBPMXgERb/9jAS
-         ZTA7oHA5ELh5DQCp6PvrZk2Ac5j9iD+4KiQztiaeMULT/wEe6qM2fNDehhHEaKVdctBF
-         Ttr+oPWhHr+3Xj0RNhfqy86IDb3xlM84JZ9rK0niazlLYxQh7qKjMbZDKNmscXlM2ctc
-         HGJg==
-X-Gm-Message-State: APjAAAWXLI2/N8rlirQejT4gTp5TZOIEVe04L/FTG8ajWItSFrR0DpVL
-        Z0ZcXVEkiKo1pqnJ03Gj5pc=
-X-Google-Smtp-Source: APXvYqxDTii3yJ4bBdiHt9sIlPIY5iGYZ62DDU86Mw1IpkpA9xguaiRzVZOW1HsLB8ExJlCiH/8pUQ==
-X-Received: by 2002:a19:230f:: with SMTP id j15mr11609319lfj.122.1561994925933;
-        Mon, 01 Jul 2019 08:28:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7R/PTq1FrTJQOZMaMuQLuy0eR9eOHzUISgHDr8CtHHY=;
+        b=iZPDWrVQ8odizXrgxNq2HVBtjgxz+kU1y/aacyhKwdbjWVwxi95Jwu9iFMVxiUhvSK
+         05kQqHsJ4gs6yatY6GSX3txym08wwlOieUE4Zz8HX8nHoksmOYYZkJqktXe+Q+2I3XEv
+         dOUWSc5nAgQKPkmTb6ZlKpuqaXRiB0aH0jaS6sV8NwmBl2fYUu53OuVxJ4bcXfadeuzc
+         KsbeeepqrLbw4YIHK7gG72fcrwOZbLSnGnqvPupACsoC0AR0JDJpU1qCLHzXeJLSAc2B
+         wl0CgKHt5XEzg6PR/CSs1eALTGEMNbILJF+KPSiTH92fAkOigaqQkzvzlGTy6MWJmL1U
+         6lJg==
+X-Gm-Message-State: APjAAAU/VlYl+Bs0T8yb6pKQ9DNCvlv0h6ddxvaYXsZFvZHDYRpuTXrd
+        +0j+XALcu7NA8khZcT26Yhw=
+X-Google-Smtp-Source: APXvYqxydb3LQTTnZLV/Ae+tkX41rpe5+CuCF9HE+PL+JKMMs7BXPBSf+/nZXBvCXyqfkXEozJ92lw==
+X-Received: by 2002:a2e:7d03:: with SMTP id y3mr188073ljc.240.1561994931947;
+        Mon, 01 Jul 2019 08:28:51 -0700 (PDT)
 Received: from localhost.localdomain ([91.238.216.6])
-        by smtp.gmail.com with ESMTPSA id e12sm2561626lfb.66.2019.07.01.08.28.44
+        by smtp.gmail.com with ESMTPSA id e12sm2561626lfb.66.2019.07.01.08.28.50
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 08:28:45 -0700 (PDT)
+        Mon, 01 Jul 2019 08:28:51 -0700 (PDT)
 From:   Pawel Dembicki <paweldembicki@gmail.com>
 Cc:     linus.walleij@linaro.org, paweldembicki@gmail.com,
         Andrew Lunn <andrew@lunn.ch>,
@@ -66,10 +66,12 @@ Cc:     linus.walleij@linaro.org, paweldembicki@gmail.com,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] net: dsa: Change DT bindings for Vitesse VSC73xx switches
-Date:   Mon,  1 Jul 2019 17:27:20 +0200
-Message-Id: <20190701152723.624-1-paweldembicki@gmail.com>
+Subject: [PATCH 4/4] net: dsa: vsc73xx: Assert reset if iCPU is enabled
+Date:   Mon,  1 Jul 2019 17:27:23 +0200
+Message-Id: <20190701152723.624-4-paweldembicki@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190701152723.624-1-paweldembicki@gmail.com>
+References: <20190701152723.624-1-paweldembicki@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
@@ -78,123 +80,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit document changes after split vsc73xx driver into core and
-spi part. The change of DT bindings is required for support the same
-vsc73xx chip, which need PI bus to communicate with CPU. It also
-introduce how to use vsc73xx platform driver.
+Driver allow to use devices with disabled iCPU only.
+
+Some devices have pre-initialised iCPU by bootloader.
+That state make switch unmanaged. This patch force reset
+if device is in unmanaged state. In the result chip lost
+internal firmware from RAM and it can be managed.
 
 Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 ---
- .../bindings/net/dsa/vitesse,vsc73xx.txt      | 74 ++++++++++++++++---
- 1 file changed, 64 insertions(+), 10 deletions(-)
+ drivers/net/dsa/vitesse-vsc73xx-core.c | 36 ++++++++++++--------------
+ 1 file changed, 17 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-index ed4710c40641..c6a4cd85891c 100644
---- a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-@@ -2,8 +2,8 @@ Vitesse VSC73xx Switches
- ========================
+diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
+index 9975446cdc66..5cdf91849b5d 100644
+--- a/drivers/net/dsa/vitesse-vsc73xx-core.c
++++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
+@@ -405,22 +405,8 @@ static int vsc73xx_detect(struct vsc73xx *vsc)
+ 	}
  
- This defines device tree bindings for the Vitesse VSC73xx switch chips.
--The Vitesse company has been acquired by Microsemi and Microsemi in turn
--acquired by Microchip but retains this vendor branding.
-+The Vitesse company has been acquired by Microsemi and Microsemi has
-+been acquired Microchip but retains this vendor branding.
+ 	if (val == 0xffffffff) {
+-		dev_info(vsc->dev, "chip seems dead, assert reset\n");
+-		gpiod_set_value_cansleep(vsc->reset, 1);
+-		/* Reset pulse should be 20ns minimum, according to datasheet
+-		 * table 245, so 10us should be fine
+-		 */
+-		usleep_range(10, 100);
+-		gpiod_set_value_cansleep(vsc->reset, 0);
+-		/* Wait 20ms according to datasheet table 245 */
+-		msleep(20);
+-
+-		ret = vsc->ops->read(vsc, VSC73XX_BLOCK_SYSTEM, 0,
+-				   VSC73XX_ICPU_MBOX_VAL, &val);
+-		if (val == 0xffffffff) {
+-			dev_err(vsc->dev, "seems not to help, giving up\n");
+-			return -ENODEV;
+-		}
++		dev_info(vsc->dev, "chip seems dead.\n");
++		return -EAGAIN;
+ 	}
  
- The currently supported switch chips are:
- Vitesse VSC7385 SparX-G5 5+1-port Integrated Gigabit Ethernet Switch
-@@ -11,16 +11,26 @@ Vitesse VSC7388 SparX-G8 8-port Integrated Gigabit Ethernet Switch
- Vitesse VSC7395 SparX-G5e 5+1-port Integrated Gigabit Ethernet Switch
- Vitesse VSC7398 SparX-G8e 8-port Integrated Gigabit Ethernet Switch
+ 	ret = vsc->ops->read(vsc, VSC73XX_BLOCK_SYSTEM, 0,
+@@ -471,9 +457,8 @@ static int vsc73xx_detect(struct vsc73xx *vsc)
+ 	}
+ 	if (icpu_si_boot_en && !icpu_pi_en) {
+ 		dev_err(vsc->dev,
+-			"iCPU enabled boots from SI, no external memory\n");
+-		dev_err(vsc->dev, "no idea how to deal with this\n");
+-		return -ENODEV;
++			"iCPU enabled boots from PI/SI, no external memory\n");
++		return -EAGAIN;
+ 	}
+ 	if (!icpu_si_boot_en && icpu_pi_en) {
+ 		dev_err(vsc->dev,
+@@ -1147,6 +1132,19 @@ int vsc73xx_probe(struct vsc73xx *vsc)
+ 		msleep(20);
  
--The device tree node is an SPI device so it must reside inside a SPI bus
--device tree node, see spi/spi-bus.txt
-+This switch could have two different management interface.
-+
-+If SPI interface is used, the device tree node is an SPI device so it must
-+reside inside a SPI bus device tree node, see spi/spi-bus.txt
-+
-+If Platform driver is used, the device tree node is an platform device so it
-+must reside inside a platform bus device tree node.
- 
- Required properties:
- 
--- compatible: must be exactly one of:
--	"vitesse,vsc7385"
--	"vitesse,vsc7388"
--	"vitesse,vsc7395"
--	"vitesse,vsc7398"
-+- compatible (SPI): must be exactly one of:
-+	"vitesse,vsc7385-spi"
-+	"vitesse,vsc7388-spi"
-+	"vitesse,vsc7395-spi"
-+	"vitesse,vsc7398-spi"
-+- compatible (Platform): must be exactly one of:
-+	"vitesse,vsc7385-platform"
-+	"vitesse,vsc7388-platform"
-+	"vitesse,vsc7395-platform"
-+	"vitesse,vsc7398-platform"
- - gpio-controller: indicates that this switch is also a GPIO controller,
-   see gpio/gpio.txt
- - #gpio-cells: this must be set to <2> and indicates that we are a twocell
-@@ -38,8 +48,9 @@ and subnodes of DSA switches.
- 
- Examples:
- 
-+SPI:
- switch@0 {
--	compatible = "vitesse,vsc7395";
-+	compatible = "vitesse,vsc7395-spi";
- 	reg = <0>;
- 	/* Specified for 2.5 MHz or below */
- 	spi-max-frequency = <2500000>;
-@@ -79,3 +90,46 @@ switch@0 {
- 		};
- 	};
- };
-+
-+Platform:
-+switch@2,0 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "vitesse,vsc7385-platform";
-+	reg = <0x2 0x0 0x20000>;
-+	reset-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			label = "lan1";
-+		};
-+		port@1 {
-+			reg = <1>;
-+			label = "lan2";
-+		};
-+		port@2 {
-+			reg = <2>;
-+			label = "lan3";
-+		};
-+		port@3 {
-+			reg = <3>;
-+			label = "lan4";
-+		};
-+		vsc: port@6 {
-+			reg = <6>;
-+			label = "cpu";
-+			ethernet = <&enet0>;
-+			phy-mode = "rgmii";
-+			fixed-link {
-+				speed = <1000>;
-+				full-duplex;
-+				pause;
-+			};
-+		};
-+	};
-+
-+};
+ 	ret = vsc73xx_detect(vsc);
++	if (ret == -EAGAIN) {
++		dev_err(vsc->dev,
++			"Chip seams to be out of control. Assert reset and try again.\n");
++		gpiod_set_value_cansleep(vsc->reset, 1);
++		/* Reset pulse should be 20ns minimum, according to datasheet
++		 * table 245, so 10us should be fine
++		 */
++		usleep_range(10, 100);
++		gpiod_set_value_cansleep(vsc->reset, 0);
++		/* Wait 20ms according to datasheet table 245 */
++		msleep(20);
++		ret = vsc73xx_detect(vsc);
++	}
+ 	if (ret) {
+ 		dev_err(vsc->dev, "no chip found (%d)\n", ret);
+ 		return -ENODEV;
 -- 
 2.20.1
 
