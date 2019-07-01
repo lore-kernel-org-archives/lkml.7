@@ -2,133 +2,123 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072E1C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 02:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76E7C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41A020B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 02:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FBBD2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MKHZDli9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUQnKNr5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfGAC7l (ORCPT
+        id S1727302AbfGADDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 22:59:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54944 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfGAC7l (ORCPT
+        Sun, 30 Jun 2019 23:03:35 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39360 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfGADDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 22:59:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IHOctcrnamPZlDOqkWx9gP7HKz6z4cfFnI1BHiO0w78=; b=MKHZDli96OWvWZf7Ml4qTTeTS
-        ADyGVjgEjt6ySSV9VdCosU1hi/21jcTscAC72nDZep1VKznI9fOx5A3N3iQPcPQy90pnC1WC+eC1S
-        Rr7xFMdssx1hm0W+7gNoMx1ZjX+NiaShGwa47IjtziyeHwzGGep8ZAN86u3cCfovTY2F7wuumVf87
-        txn5FMi7ZWCH/Z/lgAMKc90KP7QwzvTaqGRrZNGra+ZSPqK40+DWONlvWDTT8RVbu20a0hZVH3uxk
-        H2OilOPm03NJt7KIxOKf2aPx1YW4NfG8NGsQC+FAYu1tdnITXha3MxrdrMgG9/RcGNspO6MR5oPXD
-        8OeSFCLlA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhmXZ-0007q7-Pi; Mon, 01 Jul 2019 02:59:37 +0000
-Subject: Re: [PATCH 2/6] Adjust watch_queue documentation to mention mount and
- superblock watches. [ver #5]
-To:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <156173701358.15650.8735203424342507015.stgit@warthog.procyon.org.uk>
- <156173703546.15650.14319137940607993268.stgit@warthog.procyon.org.uk>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7a288c2c-11a1-87df-9550-b247d6ce3010@infradead.org>
-Date:   Sun, 30 Jun 2019 19:59:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 30 Jun 2019 23:03:35 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 196so5268802pgc.6;
+        Sun, 30 Jun 2019 20:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X70VFLfWIhqBoUXWsH6RXmb+76ghGZZQltBE94Cn00k=;
+        b=RUQnKNr5tkW/tmbhj2GyHk7SqQ3L+BpO/wxhjgZRlkNR6Co8j6pbEbSuFk+ZZ+SR2+
+         kfcYCQJ84IDDWBdj5mt+jkJmC/IlTJzjL0X9Xy6EIB9KvOh/dZxXGviDVsCoZdGVTQOX
+         f65PTD/dqibdHw4RHkrWmxjj7Z5XLeljxXH9eFjTppcFYLX7Cltb/Y7qofUVx8hSzuQF
+         fucGgJybqUWq3i46UZcsqLtA0lFq6YufZc0GqPHqvjYy3407FHBP44CPK/cdQh60V+kj
+         HvmsjamYaxWQzhmTwxXrDwnvIG9vUhx2sr1DMzTOKbmCMjYyd+QxguCnxSW4gUq/8SBZ
+         NL3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X70VFLfWIhqBoUXWsH6RXmb+76ghGZZQltBE94Cn00k=;
+        b=mtcidk3yoMJ0NoPGTqC3hvwxZe1HZ3mSecGq0eleQYfLsjx7UN1cX6cqvj+1ZH/Ug8
+         s4BXavSsZi8OPTffOC9K+SZUJJIsx80AqGHnOzTcV9l5VkptAHMwaySS3uhOId0VZ9tE
+         Dn9PxpO7Yw7vm9FTnKac5Djfa2789ATkQfwF2WJ8a9Qkbq6vsrHK5SVYx4XPkE219bAj
+         NevmTzWbAmaDJDNoU/XjBSt0Snfi3K1KcAkUSCFicL62DXwiopMTjb4SogcChiRggbLe
+         0MrB/RXI7BlX0UmvMErLERRlGBqMwr11DQLqQh7HF2HNGELgkuHzf3uku2QoLYKXYMxV
+         o9sA==
+X-Gm-Message-State: APjAAAU7/dvGmhiJC6pq1Ktu8yOMoUmXJkl0UBCORtAqm1PWy8uYL2wa
+        ABHCqaWgPC8zl2FLWgVF8b4=
+X-Google-Smtp-Source: APXvYqxnReXQASm+dckD/j+P3INcLw9259b9GEc58UmCwJsaFlBj2HX0qcl25lPDvr+Y6s1EinFUVQ==
+X-Received: by 2002:a63:d755:: with SMTP id w21mr22411206pgi.311.1561950214346;
+        Sun, 30 Jun 2019 20:03:34 -0700 (PDT)
+Received: from localhost.localdomain ([110.70.47.183])
+        by smtp.gmail.com with ESMTPSA id y16sm9756704pff.89.2019.06.30.20.03.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 30 Jun 2019 20:03:33 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Steve French <sfrench@samba.org>
+Cc:     linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCH] cifs: fix build by selecting CONFIG_KEYS
+Date:   Mon,  1 Jul 2019 12:03:25 +0900
+Message-Id: <20190701030325.18188-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <156173703546.15650.14319137940607993268.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+CONFIG_CIFS_ACL had a dependency "depends on KEYS" which was
+dropped with the removal of CONFIG_CIFS_ACL. This breaks the
+build on systems which don't have CONFIG_KEYS in .config:
 
-On 6/28/19 8:50 AM, David Howells wrote:
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> ---
-> 
->  Documentation/watch_queue.rst |   20 +++++++++++++++++++-
->  drivers/misc/Kconfig          |    5 +++--
->  2 files changed, 22 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/watch_queue.rst b/Documentation/watch_queue.rst
-> index 4087a8e670a8..1bec2018d549 100644
-> --- a/Documentation/watch_queue.rst
-> +++ b/Documentation/watch_queue.rst
-> @@ -13,6 +13,10 @@ receive notifications from the kernel.  This can be used in conjunction with::
->  
->      * USB subsystem event notifications
->  
-> +  * Mount topology change notifications
-> +
-> +  * Superblock event notifications
-> +
->  
->  The notifications buffers can be enabled by:
->  
-> @@ -324,6 +328,19 @@ Any particular buffer can be fed from multiple sources.  Sources include:
->      for buses and devices.  Watchpoints of this type are set on the global
->      device watch list.
->  
-> +  * WATCH_TYPE_MOUNT_NOTIFY
-> +
-> +    Notifications of this type indicate mount tree topology changes and mount
-> +    attribute changes.  A watch can be set on a particular file or directory
-> +    and notifications from the path subtree rooted at that point will be
-> +    intercepted.
-> +
-> +  * WATCH_TYPE_SB_NOTIFY
-> +
-> +    Notifications of this type indicate superblock events, such as quota limits
-> +    being hit, I/O errors being produced or network server loss/reconnection.
-> +    Watches of this type are set directly on superblocks.
-> +
->  
->  Event Filtering
->  ===============
-> @@ -365,7 +382,8 @@ Where:
->  	(watch.info & info_mask) == info_filter
->  
->      This could be used, for example, to ignore events that are not exactly on
-> -    the watched point in a mount tree.
-> +    the watched point in a mount tree by specifying NOTIFY_MOUNT_IN_SUBTREE
-> +    must be 0.
+cifsacl.c:37:15: error: variable ‘cifs_idmap_key_acl’ has
+                 initializer but incomplete type
+   37 | static struct key_acl cifs_idmap_key_acl = {
+      |               ^~~~~~~
+cifsacl.c:38:3: error: ‘struct key_acl’ has no member
+                named ‘usage’
+   38 |  .usage = REFCOUNT_INIT(1),
+      |   ^~~~~
+[..]
 
-I'm having a little trouble parsing that sentence.
-Could you clarify it or maybe rewrite/modify it?
-Thanks.
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+---
+ fs/cifs/Kconfig   | 1 +
+ fs/cifs/cifsacl.c | 1 +
+ 2 files changed, 2 insertions(+)
 
->  
->    * ``subtype_filter`` is a bitmask indicating the subtypes that are of
->      interest.  Bit 0 of subtype_filter[0] corresponds to subtype 0, bit 1 to
-
-
-
+diff --git a/fs/cifs/Kconfig b/fs/cifs/Kconfig
+index 3eee73449bdd..5912751e6f09 100644
+--- a/fs/cifs/Kconfig
++++ b/fs/cifs/Kconfig
+@@ -17,6 +17,7 @@ config CIFS
+ 	select CRYPTO_ECB
+ 	select CRYPTO_AES
+ 	select CRYPTO_DES
++	select KEYS
+ 	help
+ 	  This is the client VFS module for the SMB3 family of NAS protocols,
+ 	  (including support for the most recent, most secure dialect SMB3.1.1)
+diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+index 78eed72f3af0..8ca479caf902 100644
+--- a/fs/cifs/cifsacl.c
++++ b/fs/cifs/cifsacl.c
+@@ -24,6 +24,7 @@
+ #include <linux/fs.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
++#include <linux/key.h>
+ #include <linux/keyctl.h>
+ #include <linux/key-type.h>
+ #include <keys/user-type.h>
 -- 
-~Randy
+2.22.0
+
