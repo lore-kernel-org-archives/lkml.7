@@ -2,202 +2,141 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC1BC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 05:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9590EC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 05:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E0F20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 05:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C005208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 05:46:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kfh5vicc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfGAFkC (ORCPT
+        id S1727373AbfGAFqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 01:40:02 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:45845 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfGAFkB (ORCPT
+        Mon, 1 Jul 2019 01:46:07 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42844 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfGAFqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 01:40:01 -0400
-Received: by mail-io1-f69.google.com with SMTP id b197so13948659iof.12
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 22:40:00 -0700 (PDT)
+        Mon, 1 Jul 2019 01:46:07 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t28so11696807lje.9;
+        Sun, 30 Jun 2019 22:46:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=8yYaeGYH1lk4dhqKXsvPRW0fUGxbl4jEGeDfKa2Ty6Y=;
+        b=kfh5vicc77Conm69He5+G8+PaZuy/aFnTfW7eGf/0g7by8v+gTDKKa3E0WWlj69uu5
+         xcSMYJhYj+K+94FeYJGSkPWVpC4WMpWgxUmu+NyOxZYY1+dfW9U4Mi4l+CGMbzF4Jctb
+         3iBKTJAGhcDfRwEwkkp0m9jC1QQf1O0Q40g5kLxOvAS52UpwPlVOiwZ9Z82ZGbLISm/J
+         i7/lBRwJkWMYEESXHHM3il3VcBySiIlyxHLJYq4Z2iE9sdgBueKyM3Rt6c0E3ac2HSSN
+         2juMxi+rr3EHPPfx/X1onWMfWZmBfYyr9c4njFBxxIkLofQwY5uKm5hTiIyLfZef6KKB
+         ox7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=ptsMXgNaVhslud9hqVayVuxLWUP4eJpRRHdiW1OrvIE=;
-        b=mS6g9fajFhmt8cIhQX98agGt/ZtnXhOwF8bVf/vdrAbMKBb98r1t73ZXz46rO+gtP+
-         inBjf4WzfZPOfoVfZ1j/hqbNbQnTRoA8mID2naV635tEA5HKaOL37oEyQYLy7FCcqBRt
-         b0C8DlhHRd+Nrd/xJVPdFjHJ6zVK8sg0OrPsHU3p1J3YZjMzA5474/cFWQilQTmYE/uZ
-         ZhgUqMBMt1wi9ck6bUybMhaK4ffQguVNZn2pd83gXIVKEF4P4UrHWA7Vkt4zxFIVMI4J
-         8umCmt6unJwiIs+lyYbUpKdYusD+ExLpNxDDuYuFK/K4JWURl1ydKduNwDwssrNiwVGZ
-         yRpQ==
-X-Gm-Message-State: APjAAAWivqj5OJ4lhwuUfy8nWr1zfzUmbCJjsuXOObuGYkHHWHVlhS/s
-        /p3FsF4TQ8BpsWD0LAhgW0JwbUsB2VMcy/Ky3j3OAyMbQ27z
-X-Google-Smtp-Source: APXvYqx4h2M+CVjiTqKY30se1fgbpSi69aMuAdEwcUB+0tkIGtLUtx/ZujFOHRNGIzM+gtR6Hsrz+GIyDcu5efl/FlABcSYjUPA2
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=8yYaeGYH1lk4dhqKXsvPRW0fUGxbl4jEGeDfKa2Ty6Y=;
+        b=RTxVBV7eK6Y8e2aNN3vOJu231R/kaZPKFhgONVmno0REfdT1csvtb8NQIfh+abHCsW
+         FJWtRJQjaaRQBLf23T2MORR6ANy165VQqJRlT2xjkov/Sr1c28BI4xnp/i72yPO4DGGH
+         oktzpRKKVQ0PKYL8JVABp1dRJ/sQqjCfc4phX1dqyowU38sP/qYKDBC3qMhVMUw7UXRr
+         /rD0Q9NxL+yJxVfRCYuGXFmer/DADpuVf+caqV89JnNHcvVFY4VYyhZkUwU9KpG2lkL1
+         cbQH//Gc7mvo/8MScSouSelhbYc0eQ1Z+UpU9FOYP2Hxbrrv4mAC0O77FwQfy5rieDKH
+         zfbA==
+X-Gm-Message-State: APjAAAVHBvvukSRq6U+BEPT72vXuRE7KuoLAET/cH5q828I/upIj4v2u
+        WSaj+wxk3WHq/uPunOtGxUY=
+X-Google-Smtp-Source: APXvYqz6tnhd9uDkTCwEyyQMlwXFBa/szeO/kbZD0HykwS+epBivubnP5CszJLpw3z7J7a1pcp4Jgg==
+X-Received: by 2002:a2e:89ca:: with SMTP id c10mr12904311ljk.106.1561959965169;
+        Sun, 30 Jun 2019 22:46:05 -0700 (PDT)
+Received: from [10.17.182.20] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
+        by smtp.gmail.com with ESMTPSA id w15sm3395418ljh.0.2019.06.30.22.46.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 30 Jun 2019 22:46:04 -0700 (PDT)
+Subject: Re: [Xen-devel] [PATCH] ALSA: xen-front: fix unintention integer
+ overflow on left shifts
+To:     Takashi Iwai <tiwai@suse.de>, Colin King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        xen-devel@lists.xenproject.org
+References: <20190627165853.21864-1-colin.king@canonical.com>
+ <s5hv9wq6qrg.wl-tiwai@suse.de>
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+Message-ID: <de93db15-c85f-3108-22c3-75b89a3a2e59@gmail.com>
+Date:   Mon, 1 Jul 2019 08:46:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:f406:: with SMTP id i6mr23856819iog.110.1561959600575;
- Sun, 30 Jun 2019 22:40:00 -0700 (PDT)
-Date:   Sun, 30 Jun 2019 22:40:00 -0700
-In-Reply-To: <5d1999ff323f_18a42abda71925b4cf@john-XPS-13-9370.notmuch>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000255dbd058c980f22@google.com>
-Subject: Re: memory leak in create_ctx
-From:   syzbot <syzbot+06537213db7ba2745c4a@syzkaller.appspotmail.com>
-To:     aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
-        davejwatson@fb.com, davem@davemloft.net, john.fastabend@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <s5hv9wq6qrg.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-memory leak in create_ctx
-
-2019/07/01 05:38:26 executed programs: 23
-BUG: memory leak
-unreferenced object 0xffff888102914e00 (size 512):
-   comm "syz-executor.4", pid 7333, jiffies 4294944085 (age 13.950s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000002f2bb8be>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<000000002f2bb8be>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000002f2bb8be>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000002f2bb8be>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000b76aef16>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000b76aef16>] kzalloc include/linux/slab.h:742 [inline]
-     [<00000000b76aef16>] create_ctx+0x25/0x70 net/tls/tls_main.c:648
-     [<00000000dc9c9d2e>] tls_init net/tls/tls_main.c:837 [inline]
-     [<00000000dc9c9d2e>] tls_init+0x97/0x1f0 net/tls/tls_main.c:819
-     [<000000009d663c39>] __tcp_set_ulp net/ipv4/tcp_ulp.c:126 [inline]
-     [<000000009d663c39>] tcp_set_ulp+0xe2/0x190 net/ipv4/tcp_ulp.c:147
-     [<00000000551f7621>] do_tcp_setsockopt.isra.0+0x19a/0xd60  
-net/ipv4/tcp.c:2789
-     [<00000000d02c41d7>] tcp_setsockopt+0x71/0x80 net/ipv4/tcp.c:3103
-     [<0000000085d221c1>] sock_common_setsockopt+0x38/0x50  
-net/core/sock.c:3129
-     [<00000000d294eeda>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
-     [<00000000f1f1d607>] __do_sys_setsockopt net/socket.c:2083 [inline]
-     [<00000000f1f1d607>] __se_sys_setsockopt net/socket.c:2080 [inline]
-     [<00000000f1f1d607>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
-     [<00000000fbd4f794>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000007383b736>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff888103860c00 (size 512):
-   comm "syz-executor.0", pid 7342, jiffies 4294944115 (age 13.650s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000002f2bb8be>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<000000002f2bb8be>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000002f2bb8be>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000002f2bb8be>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000b76aef16>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000b76aef16>] kzalloc include/linux/slab.h:742 [inline]
-     [<00000000b76aef16>] create_ctx+0x25/0x70 net/tls/tls_main.c:648
-     [<00000000dc9c9d2e>] tls_init net/tls/tls_main.c:837 [inline]
-     [<00000000dc9c9d2e>] tls_init+0x97/0x1f0 net/tls/tls_main.c:819
-     [<000000009d663c39>] __tcp_set_ulp net/ipv4/tcp_ulp.c:126 [inline]
-     [<000000009d663c39>] tcp_set_ulp+0xe2/0x190 net/ipv4/tcp_ulp.c:147
-     [<00000000551f7621>] do_tcp_setsockopt.isra.0+0x19a/0xd60  
-net/ipv4/tcp.c:2789
-     [<00000000d02c41d7>] tcp_setsockopt+0x71/0x80 net/ipv4/tcp.c:3103
-     [<0000000085d221c1>] sock_common_setsockopt+0x38/0x50  
-net/core/sock.c:3129
-     [<00000000d294eeda>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
-     [<00000000f1f1d607>] __do_sys_setsockopt net/socket.c:2083 [inline]
-     [<00000000f1f1d607>] __se_sys_setsockopt net/socket.c:2080 [inline]
-     [<00000000f1f1d607>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
-     [<00000000fbd4f794>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000007383b736>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88810e3e1c00 (size 512):
-   comm "syz-executor.5", pid 7384, jiffies 4294944151 (age 13.290s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000002f2bb8be>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<000000002f2bb8be>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000002f2bb8be>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000002f2bb8be>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000b76aef16>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000b76aef16>] kzalloc include/linux/slab.h:742 [inline]
-     [<00000000b76aef16>] create_ctx+0x25/0x70 net/tls/tls_main.c:648
-     [<00000000dc9c9d2e>] tls_init net/tls/tls_main.c:837 [inline]
-     [<00000000dc9c9d2e>] tls_init+0x97/0x1f0 net/tls/tls_main.c:819
-     [<000000009d663c39>] __tcp_set_ulp net/ipv4/tcp_ulp.c:126 [inline]
-     [<000000009d663c39>] tcp_set_ulp+0xe2/0x190 net/ipv4/tcp_ulp.c:147
-     [<00000000551f7621>] do_tcp_setsockopt.isra.0+0x19a/0xd60  
-net/ipv4/tcp.c:2789
-     [<00000000d02c41d7>] tcp_setsockopt+0x71/0x80 net/ipv4/tcp.c:3103
-     [<0000000085d221c1>] sock_common_setsockopt+0x38/0x50  
-net/core/sock.c:3129
-     [<00000000d294eeda>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
-     [<00000000f1f1d607>] __do_sys_setsockopt net/socket.c:2083 [inline]
-     [<00000000f1f1d607>] __se_sys_setsockopt net/socket.c:2080 [inline]
-     [<00000000f1f1d607>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
-     [<00000000fbd4f794>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000007383b736>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811a0a7200 (size 512):
-   comm "syz-executor.0", pid 7423, jiffies 4294944702 (age 7.780s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000002f2bb8be>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<000000002f2bb8be>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000002f2bb8be>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000002f2bb8be>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000b76aef16>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000b76aef16>] kzalloc include/linux/slab.h:742 [inline]
-     [<00000000b76aef16>] create_ctx+0x25/0x70 net/tls/tls_main.c:648
-     [<00000000dc9c9d2e>] tls_init net/tls/tls_main.c:837 [inline]
-     [<00000000dc9c9d2e>] tls_init+0x97/0x1f0 net/tls/tls_main.c:819
-     [<000000009d663c39>] __tcp_set_ulp net/ipv4/tcp_ulp.c:126 [inline]
-     [<000000009d663c39>] tcp_set_ulp+0xe2/0x190 net/ipv4/tcp_ulp.c:147
-     [<00000000551f7621>] do_tcp_setsockopt.isra.0+0x19a/0xd60  
-net/ipv4/tcp.c:2789
-     [<00000000d02c41d7>] tcp_setsockopt+0x71/0x80 net/ipv4/tcp.c:3103
-     [<0000000085d221c1>] sock_common_setsockopt+0x38/0x50  
-net/core/sock.c:3129
-     [<00000000d294eeda>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
-     [<00000000f1f1d607>] __do_sys_setsockopt net/socket.c:2083 [inline]
-     [<00000000f1f1d607>] __se_sys_setsockopt net/socket.c:2080 [inline]
-     [<00000000f1f1d607>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
-     [<00000000fbd4f794>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000007383b736>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
-Tested on:
-
-commit:         0b58d013 bpf: tls, implement unhash to avoid transition ou..
-git tree:       git://github.com/cilium/linux ktls-unhash
-console output: https://syzkaller.appspot.com/x/log.txt?x=134f2e0ba00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3bd5897d1df43b97
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+On 6/28/19 11:46 AM, Takashi Iwai wrote:
+> On Thu, 27 Jun 2019 18:58:53 +0200,
+> Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> Shifting the integer value 1 is evaluated using 32-bit
+>> arithmetic and then used in an expression that expects a 64-bit
+>> value, so there is potentially an integer overflow. Fix this
+>> by using the BIT_ULL macro to perform the shift.
+>>
+>> Addresses-Coverity: ("Unintentional integer overflow")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Thank you for you patch,
+Oleksandr
+> The fix is correct, but luckily we didn't hit the integer overflow, as
+> all passed values are less than 32bit.
+>
+> In anyway, applied now.  Thanks.
+>
+>
+> Takashi
+>
+>> ---
+>>   sound/xen/xen_snd_front_alsa.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/sound/xen/xen_snd_front_alsa.c b/sound/xen/xen_snd_front_alsa.c
+>> index b14ab512c2ce..e01631959ed8 100644
+>> --- a/sound/xen/xen_snd_front_alsa.c
+>> +++ b/sound/xen/xen_snd_front_alsa.c
+>> @@ -196,7 +196,7 @@ static u64 to_sndif_formats_mask(u64 alsa_formats)
+>>   	mask = 0;
+>>   	for (i = 0; i < ARRAY_SIZE(ALSA_SNDIF_FORMATS); i++)
+>>   		if (pcm_format_to_bits(ALSA_SNDIF_FORMATS[i].alsa) & alsa_formats)
+>> -			mask |= 1 << ALSA_SNDIF_FORMATS[i].sndif;
+>> +			mask |= BIT_ULL(ALSA_SNDIF_FORMATS[i].sndif);
+>>   
+>>   	return mask;
+>>   }
+>> @@ -208,7 +208,7 @@ static u64 to_alsa_formats_mask(u64 sndif_formats)
+>>   
+>>   	mask = 0;
+>>   	for (i = 0; i < ARRAY_SIZE(ALSA_SNDIF_FORMATS); i++)
+>> -		if (1 << ALSA_SNDIF_FORMATS[i].sndif & sndif_formats)
+>> +		if (BIT_ULL(ALSA_SNDIF_FORMATS[i].sndif) & sndif_formats)
+>>   			mask |= pcm_format_to_bits(ALSA_SNDIF_FORMATS[i].alsa);
+>>   
+>>   	return mask;
+>> -- 
+>> 2.20.1
+>>
+>>
+> _______________________________________________
+> Xen-devel mailing list
+> Xen-devel@lists.xenproject.org
+> https://lists.xenproject.org/mailman/listinfo/xen-devel
 
