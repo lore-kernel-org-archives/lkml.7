@@ -2,78 +2,71 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0834C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EF4C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95052133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:23:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561976580;
-	bh=zbvDsAnFL+cU5JhA5SVIXDMBU4oh+3kSy0SRKAckKV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tG70jVilwFGEP40V40D9mFQTubV+6d6yR/hgS4W6eYruk8YMtPI4cyfwtmIB0n5tP
-	 1952TMbmlJJKGaOcOBuDUwxkN4UXE13ruZpanHeTxAYp/c2X6SNifhQmgheLNF8rbY
-	 GW8jbBNdZrZRm8Y6plRM8tteC74wS0KtBVvrHWO0=
+	by mail.kernel.org (Postfix) with ESMTP id C95B82133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:24:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbfGAKW7 (ORCPT
+        id S1728864AbfGAKYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 06:22:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36526 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726076AbfGAKW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 06:22:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7BEA0AEE6;
-        Mon,  1 Jul 2019 10:22:57 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 12:22:56 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
+        Mon, 1 Jul 2019 06:24:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40098 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfGAKYv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 06:24:51 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hhtUI-0002kx-SR; Mon, 01 Jul 2019 12:24:43 +0200
+Date:   Mon, 1 Jul 2019 12:24:42 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Scott Wood <swood@redhat.com>,
         Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v3 0/5] Introduce MADV_COLD and MADV_PAGEOUT
-Message-ID: <20190701102256.GN6376@dhcp22.suse.cz>
-References: <20190627115405.255259-1-minchan@kernel.org>
- <20190701073848.GB136163@google.com>
+        Steven Rostedt <rostedt@goodmis.org>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Message-ID: <20190701102442.35grdpcsbrwyyaco@linutronix.de>
+References: <20190627173831.GW26519@linux.ibm.com>
+ <20190627181638.GA209455@google.com>
+ <20190627184107.GA26519@linux.ibm.com>
+ <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
+ <20190627203612.GD26519@linux.ibm.com>
+ <20190628141522.GF3402@hirez.programming.kicks-ass.net>
+ <20190628155404.GV26519@linux.ibm.com>
+ <20190628160408.GH32547@worktop.programming.kicks-ass.net>
+ <20190628172056.GW26519@linux.ibm.com>
+ <20190701094215.GR3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190701073848.GB136163@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190701094215.GR3402@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 01-07-19 16:38:48, Minchan Kim wrote:
+On 2019-07-01 11:42:15 [+0200], Peter Zijlstra wrote:
+> I'm not sure if smp_send_reschedule() can be used as self-IPI, some
+> hardware doesn't particularly like that IIRC. That is, hardware might
+> only have interfaces to IPI _other_ CPUs, but not self.
 > 
-> Hi Folks,
-> 
-> Do you guys have comments? I think it would be long enough to be
-> pending. If there is no further comments, I want to ask to merge.
+> The normal scheduler code takes care to not call smp_send_reschedule()
+> to self.
 
-This is definitely on my todo list for this week. But please be patient.
-It's been _one_ work day since you posted this last version so I do not
-think this is stalling for too long. Sure the current version is
-probably not too much different from the previous but I didn't get to
-review it in the depth yet. All the code duplication doesn't make it
-much easier but I understand your reasoning that sharing more code is
-not really straightforward.
--- 
-Michal Hocko
-SUSE Labs
+and irq_work:
+  471ba0e686cb1 ("irq_work: Do not raise an IPI when queueing work on the local CPU")
+
+Sebastian
