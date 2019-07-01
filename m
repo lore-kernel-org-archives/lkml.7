@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E312DC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD65C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A9B2175B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB1C2175B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:11:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IH7IK3ZX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e0eQTdyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbfGAOKv (ORCPT
+        id S1729438AbfGAOLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:10:51 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35548 "EHLO
+        Mon, 1 Jul 2019 10:11:54 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35568 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729372AbfGAOKu (ORCPT
+        with ESMTP id S1729190AbfGAOLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:10:50 -0400
+        Mon, 1 Jul 2019 10:11:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ND3leTtyQHL/47K3vzIhUCuphz+1LPNb9J1HXn7CNbc=; b=IH7IK3ZXhq0ixk2oUfkz6uCEF
-        HMUZCXPAqlfGDvsKEmZHHboNrh9Nb5fjoc2rQasTCIIgIqOhMQASuvG7oYDlu4UG9cOI7+D9r4TU7
-        m+9PG09VKkxYJBFtGqCKdeudta5L6LVOh7i0wsTNzxnJEzPT5gIuQVBymXWAFygobiYnJqNmkIQuY
-        SV7WcQBaSGGQ9Z2JcuaOdt2LBpD+0GSCEVKvq423krhlfZOPKBg65py1oYyLDhN0/AWA/IBh5yRM5
-        kDkH8i5VXFw2ywJ3QyMBtvG7w1isj6uEMzd/mVhkYqfmwHz1Ba03yLIQLl3M9+pKCLVedWV8hS1TU
-        oCrBNPRng==;
+         bh=1VgSGVjpsEKQCpHjQPsE3k7/QPeWcXfFA1BNcMXYV+k=; b=e0eQTdypu+j4ID+vC5noLGjR8
+        hIdOqtE5Vhg4YXsOxyt9W8Hv+3ptW1lb78iDHgUP9l9RdAAKUUsvslOKH0gs55A4jLxSQkIT3cZlc
+        oWMIuung6+0CdxofzWYO6RM8/EEiala4WYHO8esaryRpat9KkXiJd++9MLx0O+XZJaFrX1Zl2O/04
+        ar6hftauRih1j9TBEGCol/nbK1CoyrjrBHboeq3lvjjH+KlWCJn7TOeqkFrAYqIu0seQ0rba7tfTZ
+        1MU4w3HrEk11TxIHL62NvW6UkzcPdG+AuBtAe8ZfY+yjM7E9AQU6BU3YNuZ5lejLTuOOMnMyw4bon
+        evJWDMoig==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhx0w-0008IZ-F8; Mon, 01 Jul 2019 14:10:39 +0000
+        id 1hhx21-0008JF-FH; Mon, 01 Jul 2019 14:11:46 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 25DC020963E3D; Mon,  1 Jul 2019 16:10:37 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 16:10:37 +0200
+        id 2E24820A18920; Mon,  1 Jul 2019 16:11:44 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 16:11:44 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     John Ogness <john.ogness@linutronix.de>
 Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
@@ -52,7 +52,7 @@ Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer
  implementation
-Message-ID: <20190701141037.GY3402@hirez.programming.kicks-ass.net>
+Message-ID: <20190701141144.GZ3402@hirez.programming.kicks-ass.net>
 References: <20190607162349.18199-1-john.ogness@linutronix.de>
  <20190607162349.18199-2-john.ogness@linutronix.de>
  <20190618114747.GQ3436@hirez.programming.kicks-ass.net>
@@ -72,12 +72,12 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, Jul 01, 2019 at 12:39:35PM +0200, John Ogness wrote:
+> On 2019-06-28, Peter Zijlstra <peterz@infradead.org> wrote:
+> > (Note that the qspinlock has a queue not unlike this, but that again
+> > doesn't have to bother with NMIs)
+> 
+> Thank you for pointing this out! I will look to qspinlock for some
+> naming guidelines.
 
-> Thanks. I overlooked that subtle detail. Can I assume NMIs do not exist
-> on architectures that need to implement locking for cmpxchg()? Or did I
-> just hit a major obstacle?
-
-I think that is a fair assumption, I'm not aware of anybody having NMIs
-_and_ 'broken' atomics.
-
-Then again, we also have ARCH_HAVE_NMI_SAFE_CMPXCHG.
+Fair warning: qspinlock might hurt your brain; but if you do look and
+are unsure; let me know and I'll try and improve its comments.
