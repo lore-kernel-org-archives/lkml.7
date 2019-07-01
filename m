@@ -2,135 +2,142 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F40C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376DEC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91729208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:13:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iIFbBqyg"
+	by mail.kernel.org (Postfix) with ESMTP id 09BA720B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561961708;
+	bh=ilZV0SIdnC6KQqrECJ2dASQKpsEhCCtdERzUguOYjcA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KMw3ICNh1Kbag+2dNPU95AG9kv/DCD8hGsCtDpsem0o7+AFroE0cOQe3D+XpdzfBN
+	 pEvr63qgR18dQJVVGPFg5K/8XmNsNx4Di2M96M+rQnk0DqpyXYVx4aXmkmOjqerk14
+	 4Nh2q62KJw0L7Q0bRLZ5BOINidP/khCXt8puct0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfGAGN6 (ORCPT
+        id S1727446AbfGAGPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:13:58 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33034 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbfGAGN5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 02:13:57 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m4so5494170pgk.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 23:13:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=D1O1X/cTjxSpLefdIwUl4AWn9m/5Z78Sy8Rbpsos6/M=;
-        b=iIFbBqyg8V2wneFFrpr2exGWqjbsn3ThWYCBhBhZRZ6ymKyyUZit3oLo0dOOvDCCil
-         RjmYVY7tNPApoNx4F61sVAQDeTq6q16CCYyL02sNMSaQweS38H4AqdWd7m3zkbz5lpA6
-         KkpiCTYtJKuLOWXsrMDh+B9tdkjIcISwbYhH1Ld+ZH22YTWzHxq+DOfHui/0lJhKU2aL
-         ypRIXEE3YVygNHOwWh+mlB/KaiLwE8HTZOLhFbJmNJ1u2uf3QKDzzAeTTpGleyxA662d
-         ifjW5GDFUl/BaZNwI88ziq0uUJVcFu4IC/0ZuIl6X0od1ncov7xvnNyUhBrPi2rCu9gN
-         FcBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D1O1X/cTjxSpLefdIwUl4AWn9m/5Z78Sy8Rbpsos6/M=;
-        b=kA24oiCrmXLljMkak8kGPaQQBg0RfTXD3OKkClPOm+IIDv5+hyCoBxqo5ySQJe1A43
-         2pF9noJtc/lduFCepjTEP/vQ0A7YhD9NEbq2njon9n3PM7STT4osn6MHUUdcb9UF/532
-         swXR6idSTCUM2aop4bY3Jtmalk2cRrBagpFC8WWBgY200bET5Q9J6FDL+VpdVYETcPkK
-         lo4iWBdfaS3+2/qYZscZ6Yjc83CG5uyzRc2ikTsOp0eUrqvzyfKc8QEALeL6lW2u6i9V
-         K0cmm3G4FkuFQ0ZD6rRxvDkMDI1k4tVWyjlh/IBmFPhY4+yuxcwsuqlcHFue9oAN41tS
-         uDLA==
-X-Gm-Message-State: APjAAAUUd4p2lEpc7F3Qs9Z+ZpQPZJ9EHFPhAEkCw9f+r+0LNJsiSYoZ
-        66UngLH/b0mLHqj90Am2DId1jw==
-X-Google-Smtp-Source: APXvYqw7HLuQ5++wNVoa6Twp44LTfQ9finOPfEkCayL9iiS7L7GZKdW++Q+goB1qmibmWMRR81zVVw==
-X-Received: by 2002:a63:e40a:: with SMTP id a10mr22792178pgi.277.1561961636948;
-        Sun, 30 Jun 2019 23:13:56 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c10sm8513453pjq.14.2019.06.30.23.13.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 30 Jun 2019 23:13:55 -0700 (PDT)
-Date:   Sun, 30 Jun 2019 23:13:53 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Xiang Xiao <xiaoxiang781216@gmail.com>, ohad@wizery.com,
-        wendy.liang@xilinx.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiang Xiao <xiaoxiang@xiaomi.com>
-Subject: Re: [PATCH 0/3] Enhance virtio rpmsg bus driver buffer allocation
-Message-ID: <20190701061353.GE1263@builder>
-References: <1548949280-31794-1-git-send-email-xiaoxiang@xiaomi.com>
- <20190605043452.GI22737@tuxbook-pro>
- <2d60dd1e-f7a0-ea63-9fda-0ea97aab0406@st.com>
+        Mon, 1 Jul 2019 02:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727242AbfGAGPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 02:15:05 -0400
+Received: from localhost (unknown [122.167.76.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9C3E208C4;
+        Mon,  1 Jul 2019 06:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561961704;
+        bh=ilZV0SIdnC6KQqrECJ2dASQKpsEhCCtdERzUguOYjcA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GAf+PQ1aK5gG8O9JVySIOpgQEJ8f9g9ZfUmlv6r8WjKTMOjeULrpPNIVfq15xlQ1V
+         NOR2z3AxNvyc5pI0OaLi2fNPY6mV2Nq4axdv83Vuh6qDDv2WIC99gjUr++chXDzvwV
+         4ne8obQJ3drV7hN9RcgP4oJHZlHUwzrVrkTbSoig=
+Date:   Mon, 1 Jul 2019 11:41:55 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        bgoswami@quicinc.com
+Subject: Re: [RFC PATCH 1/5] dt-bindings: soundwire: add slave bindings
+Message-ID: <20190701061155.GJ2911@vkoul-mobl>
+References: <20190611104043.22181-1-srinivas.kandagatla@linaro.org>
+ <20190611104043.22181-2-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2d60dd1e-f7a0-ea63-9fda-0ea97aab0406@st.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+In-Reply-To: <20190611104043.22181-2-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 05 Jun 00:33 PDT 2019, Arnaud Pouliquen wrote:
-
-> Hi Bjorn,
+On 11-06-19, 11:40, Srinivas Kandagatla wrote:
+> This patch adds bindings for Soundwire Slave devices which includes how
+> SoundWire enumeration address is represented in SoundWire slave device
+> tree nodes.
 > 
-> On 6/5/19 6:34 AM, Bjorn Andersson wrote:
-> > On Thu 31 Jan 07:41 PST 2019, Xiang Xiao wrote:
-> > 
-> >> Hi,
-> >> This series enhance the buffer allocation by:
-> >> 1.Support the different buffer number in rx/tx direction
-> >> 2.Get the individual rx/tx buffer size from config space
-> >>
-> >> Here is the related OpenAMP change:
-> >> https://github.com/OpenAMP/open-amp/pull/155
-> >>
-> > 
-> > This looks pretty reasonable, but can you confirm that it's possible to
-> > use new firmware with an old Linux kernel when introducing this?
-> > 
-> > 
-> > But ever since we discussed Loic's similar proposal earlier I've been
-> > questioning if the fixed buffer size isn't just an artifact of how we
-> > preallocate our buffers. The virtqueue seems to support arbitrary sizes
-> > of buffers and I see that the receive function in OpenAMP has been fixed
-> > to put back the buffer of the size that was received, rather than 512
-> > bytes. So it seems like Linux would be able to send whatever size
-> > messages to OpenAMP it would handle it.
-> > 
-> > The question is if we could do the same in the other direction, perhaps
-> > by letting the OpenAMP side do it's message allocation when it's
-> > sending, rather than Linux pushing inbufs to be filled by the remote.
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../devicetree/bindings/soundwire/bus.txt     | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soundwire/bus.txt
 > 
-> IMHO, both could be useful and could be not correlated.
-> On-the fly buffer allocation seems more efficient but needs an
-> allocator.This can be a generic allocator (with a va to da) for system
-> where large amount of memories are accessible from both side.
-> 
-> Now what about system with small shared memory? In this case you have to
-> deal with a limited/optimized memory chunk. To avoid memory
-> fragmentation the allocator should have a pre-reserved buffers pool(so
-> similar to existing implementation). This serie seems useful to optimize
-> the size of the pre-reserved pool.
-> 
+> diff --git a/Documentation/devicetree/bindings/soundwire/bus.txt b/Documentation/devicetree/bindings/soundwire/bus.txt
+> new file mode 100644
+> index 000000000000..19a672b0d528
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soundwire/bus.txt
 
-Having an implementation that uses small fixed size buffers seems very
-reasonable and I'm in favour of making the message size configurable.
+The bindings are for slave right and the file is bus.txt?
 
-I would however prefer to have this implemented in a way where the
-remote side should not be receiving messages in a way that's based on
-the remote side's allocation parameters.
+> @@ -0,0 +1,48 @@
+> +SoundWire bus bindings.
+> +
+> +SoundWire is a 2-pin multi-drop interface with data and clock line.
+> +It facilitates development of low cost, efficient, high performance systems.
+> +
+> +SoundWire controller bindings are very much specific to vendor.
+> +
+> +Child nodes(SLAVE devices):
+> +Every SoundWire controller node can contain zero or more child nodes
+> +representing slave devices on the bus. Every SoundWire slave device is
+> +uniquely determined by the enumeration address containing 5 fields:
+> +SoundWire Version, Instance ID, Manufacturer ID, Part ID and Class ID
+> +for a device. Addition to below required properties, child nodes can
+> +have device specific bindings.
+> +
+> +Required property for SoundWire child node if it is present:
+> +- compatible:	 "sdwVER,MFD,PID,CID". The textual representation of
+> +		  SoundWire Enumeration address comprising SoundWire
+> +		  Version, Manufacturer ID, Part ID and Class ID,
+> +		  shall be in lower-case hexadecimal with leading
+> +		  zeroes suppressed.
+> +		  Version number '0x10' represents SoundWire 1.0
+> +		  Version number '0x11' represents SoundWire 1.1
+> +		  ex: "sdw10,0217,2010,0"
 
+any reason why we want to code version number and not say sdw,1.0,...
+and so on?
 
-I don't think this series prevents the introduction of such isolation,
-but it would render this code unnecessary.
+> +
+> +- sdw-instance-id: Should be ('Instance ID') from SoundWire
+> +		  Enumeration Address. Instance ID is for the cases
+> +		  where multiple Devices of the same type or Class
+> +		  are attached to the bus.
 
-Regards,
-Bjorn
+instance id is part of the 48bit device id, so wont it make sense to add
+that to compatible as well?
+
+> +
+> +SoundWire example for Qualcomm's SoundWire controller:
+> +
+> +soundwire@c2d0000 {
+> +	compatible = "qcom,soundwire-v1.5.0"
+> +	reg = <0x0c2d0000 0x2000>;
+> +
+> +	spkr_left:wsa8810-left{
+> +		compatible = "sdw10,0217,2010,0";
+> +		sdw-instance-id = <1>;
+> +		...
+> +	};
+> +
+> +	spkr_right:wsa8810-right{
+> +		compatible = "sdw10,0217,2010,0";
+> +		sdw-instance-id = <2>;
+> +		...
+> +	};
+> +};
+> -- 
+> 2.21.0
+
+-- 
+~Vinod
