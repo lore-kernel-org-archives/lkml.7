@@ -2,94 +2,175 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EADC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE8AC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B942208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B1E212F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SMUqxFM4"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="DElwOE2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfGAI2H (ORCPT
+        id S1728133AbfGAI2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:28:07 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:33220 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727128AbfGAI2H (ORCPT
+        Mon, 1 Jul 2019 04:28:11 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40129 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728117AbfGAI2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:28:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=oszolt4orpn1bZybcUau2wyUN6L/sUDbXOH91rXVyy0=; b=SMUqxFM4P4C2UiBbKHy3FMNb6
-        MnhsZZ01N/kzN5zFGsMVT6qgPyH9/IO47w8NTvhHeRGGD+ogjJtk472nfTLeo1IJpwmsHmlxfiHJH
-        DUBqGijMNHXcOlEQxexGVeEZWdbbqYegkQX+Nnse4YcY7ncJmkPtQYwbkzmz5iyP+vrAIbDA8gacT
-        zKIdqHIxvD3troqQPGpzNEPSmQhIm1eZN/6dBcWXldfR44nFGip/EghWtubw/AdQkE6kOs2cDWFio
-        l41aY1itmzf24lKJvMPMwHQyk4RUPrXTg8CB88kXARQaCnWaXq331uuROsc6alK47JBSbl1dluQiN
-        rqYH0XfFg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhreu-0004an-HB; Mon, 01 Jul 2019 08:27:32 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1268320963E24; Mon,  1 Jul 2019 10:27:31 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 10:27:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     mingo@redhat.com, rostedt@goodmis.org, tj@kernel.org,
-        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        claudio@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
-        bristot@redhat.com, mathieu.poirier@linaro.org, lizefan@huawei.com,
-        cgroups@vger.kernel.org, Prateek Sood <prsood@codeaurora.org>
-Subject: Re: [PATCH v8 6/8] cgroup/cpuset: Change cpuset_rwsem and hotplug
- lock order
-Message-ID: <20190701082731.GP3402@hirez.programming.kicks-ass.net>
-References: <20190628080618.522-1-juri.lelli@redhat.com>
- <20190628080618.522-7-juri.lelli@redhat.com>
- <20190628130308.GU3419@hirez.programming.kicks-ass.net>
- <20190701065233.GA26005@localhost.localdomain>
+        Mon, 1 Jul 2019 04:28:08 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a15so13715562qtn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 01:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QasTTaprmLYP8lu+OAIAZ4qDWXTMLVjKiiW3eSvYcPg=;
+        b=DElwOE2FVy8WGouInPBiLUdX//ZPDkOt68rwSbXsDRXYvjYCDDwuSl9qtiBJsOMo3u
+         BnaD5RHWgFidR4gNfrTI8pbPKRUPKE/VkHqVuUybCONlNhmNrcPD02Bg1aSVy07qQAiG
+         GeK/a425RkCz+UaDwTzANbF6XxooFBQfoti8ZY8QD6BTglcBxv0Zw/40genT/VOYp/dP
+         XQ8xeLoUQeYCxNcNSrRSpWnPL6iuc88I5qg8xu22qM/pMh5f+7h+M4bBTFOeSU0H0AZX
+         N2AjJdGg/iZLXL1c5ePvTo8T04aSB17EBDPd7/z5YMhvdOxV6FCb+2IG1fsUVwGIWdiW
+         IIaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QasTTaprmLYP8lu+OAIAZ4qDWXTMLVjKiiW3eSvYcPg=;
+        b=Y4nu4rmSs73RtkRe9fZnM02iWUqur4si+uDK7sdaZYRo4Y218qcbuX00qJ2tHuRZ1t
+         onlte72g2pBehWooEDkhW+MRqggNnIb5K5AeiUerljT7TFRYvjEuzx20Xr51QKNE8mqa
+         Vm0m6dO0co6j+ZEvZouQ1Vmz0BVYEoKzEWBiyCmnhNd8ePtgq/xqxg1EwQcd1SaQzCmD
+         gEXNIOiCtPulIdOBN04JIi5psuromalQAfa3lUd/jazI6Uz72LAViW7CDEMuALaJ68Ck
+         WaZgwfPGTIFLn4S4fGtanjhkvMpey03q/FHvZD1ZgH/JxdoejTG2dJdHcsMyT9GvTHbv
+         B3Hg==
+X-Gm-Message-State: APjAAAWF8XyQKXdL45rCNX6roIhGuXxt3JU6+5bcVjBmHCdSVY5mt5hE
+        0/bvSF9vQaPkBOO2UoyrCH+90cO/SNTdV7frA+QN/A==
+X-Google-Smtp-Source: APXvYqzVHPWiWEbrcd2gL7Cn7r79vE5x4Z5GHfD3ruh9NhVQD6G+qgPXkeuauOxShyujHZfTdjwHnpMYUVZe7DLcBaE=
+X-Received: by 2002:aed:36c5:: with SMTP id f63mr19693568qtb.239.1561969687300;
+ Mon, 01 Jul 2019 01:28:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701065233.GA26005@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190627095247.8792-1-chiu@endlessm.com>
+In-Reply-To: <20190627095247.8792-1-chiu@endlessm.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Mon, 1 Jul 2019 16:27:56 +0800
+Message-ID: <CAD8Lp44R0a1=fVi=fGv69w1ppdcaFV01opkdkhaX-eJ=K=tYeA@mail.gmail.com>
+Subject: Re: [PATCH] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 08:52:33AM +0200, Juri Lelli wrote:
-> Hi,
-> 
-> On 28/06/19 15:03, Peter Zijlstra wrote:
-> > On Fri, Jun 28, 2019 at 10:06:16AM +0200, Juri Lelli wrote:
-> > > cpuset_rwsem is going to be acquired from sched_setscheduler() with a
-> > > following patch. There are however paths (e.g., spawn_ksoftirqd) in
-> > > which sched_scheduler() is eventually called while holding hotplug lock;
-> > > this creates a dependecy between hotplug lock (to be always acquired
-> > > first) and cpuset_rwsem (to be always acquired after hotplug lock).
-> > > 
-> > > Fix paths which currently take the two locks in the wrong order (after
-> > > a following patch is applied).
-> > > Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-> > 
-> > This all reminds me of this:
-> > 
-> >   https://lkml.kernel.org/r/1510755615-25906-1-git-send-email-prsood@codeaurora.org
-> > 
-> > Which sadly got reverted again. If we do this now (I've always been a
-> > proponent), then we can make that rebuild synchronous again, which
-> > should also help here IIRC.
-> 
-> Why was that reverted? Perf regression of some type?
+Hi Chris,
 
-IIRC TJ figured it wasn't strictly required to fix the lock invertion at
-that time and they sorted it differently. If I (re)read the thread
-correctly the other day, he didn't have fundamental objections against
-it, but wanted the simpler fix.
+On Thu, Jun 27, 2019 at 5:53 PM Chris Chiu <chiu@endlessm.com> wrote:
+> The WiFi tx power of RTL8723BU is extremely low after booting. So
+> the WiFi scan gives very limited AP list and it always fails to
+> connect to the selected AP. This module only supports 1x1 antenna
+> and the antenna is switched to bluetooth due to some incorrect
+> register settings.
+>
+> This commit hand over the antenna control to PTA, the wifi signal
+> will be back to normal and the bluetooth scan can also work at the
+> same time. However, the btcoexist still needs to be handled under
+> different circumstances. If there's a BT connection established,
+> the wifi still fails to connect until disconneting the BT.
+>
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+
+Really nice work finding this!
+
+I know that after this change, you plan to bring over the btcoexist
+code from the vendor driver (or at least the minimum required code)
+for a more complete fix, but I'm curious how you found these magic
+register values and how they compare to the values used by the vendor
+driver with btcoexist?
+
+What's PTA? A type of firmware-implemented btcoexist that works for
+scanning but doesn't work when a BT connection is actually
+established?
+
+> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+> index 3adb1d3d47ac..6c3c70d93ac1 100644
+> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+> @@ -1525,7 +1525,7 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
+>         /*
+>          * WLAN action by PTA
+>          */
+> -       rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x04);
+> +       rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x0c);
+
+The comment above this still says "WLAN action by PTA" and the vendor
+driver has:
+        //set wlan_act control by PTA
+        pBtCoexist->fBtcWrite1Byte(pBtCoexist, 0x76e, 0x4);
+
+but then also:
+            //set wlan_act control by PTA
+            pBtCoexist->fBtcWrite1Byte(pBtCoexist, 0x76e, 0xc);
+
+So this change seems to be at least consistent with ambiguity of the
+vendor driver, do you have any understanding of the extra bit that is
+now set here?
+
+It's not easy to follow the code flow of the vendor driver to see what
+actually happens, have you checked that, does it end up using the 0xc
+value?
+
+> -        * 0x280, 0x00, 0x200, 0x80 - not clear
+> +        * Different settings per different antenna position.
+> +        * Antenna switch to BT: 0x280, 0x00 (inverse)
+> +        * Antenna switch to WiFi: 0x0, 0x280 (inverse)
+> +        * Antenna controlled by PTA: 0x200, 0x80 (inverse)
+>          */
+> -       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
+> +       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
+
+I don't quite follow the comment here. Why are there 2 values listed
+for each possibility, what do you mean by inverse? You say the
+register settings were incorrect, but the previous value was 0x00
+which you now document as "antenna switch to wifi" which sounds like
+it was already correct?
+
+Which value does the vendor driver use?
+
+>         /*
+>          * Software control, antenna at WiFi side
+> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> index 8136e268b4e6..87b2179a769e 100644
+> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> @@ -3891,12 +3891,13 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
+>
+>         /* Check if MAC is already powered on */
+>         val8 = rtl8xxxu_read8(priv, REG_CR);
+> +       val16 = rtl8xxxu_read16(priv, REG_SYS_CLKR);
+>
+>         /*
+>          * Fix 92DU-VC S3 hang with the reason is that secondary mac is not
+>          * initialized. First MAC returns 0xea, second MAC returns 0x00
+>          */
+> -       if (val8 == 0xea)
+> +       if (val8 == 0xea || !(val16 & BIT(11)))
+>                 macpower = false;
+>         else
+>                 macpower = true;
+
+At a glance I can't see which code this corresponds to in the vendor
+driver, can you point that out?
+
+Thanks
+Daniel
