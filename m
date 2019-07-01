@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F91C5B578
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5293C46478
 	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FB620663
+	by mail.kernel.org (Postfix) with ESMTP id C898E208C4
 	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727424AbfGAHLg convert rfc822-to-8bit (ORCPT
+        id S1727538AbfGAHL7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 03:11:36 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:50109 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727206AbfGAHLf (ORCPT
+        Mon, 1 Jul 2019 03:11:59 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:44023 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727206AbfGAHL7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 03:11:35 -0400
+        Mon, 1 Jul 2019 03:11:59 -0400
+X-Originating-IP: 86.250.200.211
 Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8BDFD240009;
-        Mon,  1 Jul 2019 07:11:29 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 09:11:28 +0200
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 95BAEC0009;
+        Mon,  1 Jul 2019 07:11:53 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 09:11:52 +0200
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Christophe Kerello <christophe.kerello@st.com>
 Cc:     <richard@nod.at>, <dwmw2@infradead.org>,
         <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
-        <vigneshr@ti.com>, <bbrezillon@kernel.org>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
+        <vigneshr@ti.com>, bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>
 Subject: Re: [PATCH] mtd: rawnand: stm32_fmc2: avoid warnings when building
  with W=1 option
-Message-ID: <20190701091128.4e67f1de@xps13>
+Message-ID: <20190701091152.189ab62e@xps13>
 In-Reply-To: <1561128189-14411-1-git-send-email-christophe.kerello@st.com>
 References: <1561128189-14411-1-git-send-email-christophe.kerello@st.com>
 Organization: Bootlin
