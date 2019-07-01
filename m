@@ -2,117 +2,344 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455D3C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B06C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF842054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC1020B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 16:35:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YvitIodt"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iNpgrhSi";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BhjpE3eA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbfGAQdC (ORCPT
+        id S1729229AbfGAQfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 12:33:02 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:43507 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727261AbfGAQdC (ORCPT
+        Mon, 1 Jul 2019 12:35:05 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57392 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727782AbfGAQfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 12:33:02 -0400
-Received: by mail-yb1-f193.google.com with SMTP id f18so188139ybr.10
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 09:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+iebLtLWu418k95Kx2ofdTbul5h9LD/QgsmaJTNXUic=;
-        b=YvitIodt8pObBJlcMj4/I4OBo2yXXRz78udE0mjFcaBpi15LhVR8eDKvR8c4d/aozS
-         gIeQTDIzxUIkPZFNJHhMvD7vkxzCWxEyImFdPkW42dNX2PLGPmNW1FC7W2ByuMZjuys8
-         fiLXkxNh9hJAIodVeGtVQBF5FSCDPBC9NtUZY0kjrwwFf58uv35aTkTEVzX1UTUk6r8a
-         aslpezN1dBGILoh2tr9s1CzxMkSev+SOujMjsQgQgvCKyD+Ov6bHftOpFQt2t6/ty9e9
-         iXD4gyRw5qAfZiiihfJNy0VBEMqBh7F51Fo94qJhSKSM6u2C3hVGQq8heqb3Uu7WvBMn
-         zeEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+iebLtLWu418k95Kx2ofdTbul5h9LD/QgsmaJTNXUic=;
-        b=YGYak7GEjDPiUr5hdRKDc0F9EupnsQDakS34C+NHxfA5dwL0NaB8BMSGIdyKNPzCzt
-         S0Vho6N0v6bpv598hO2dR91nXN8WRHC6vdbvvqGYmViXUQ+hYgITI5VqJsmGLe9Kc8QT
-         Z2Q4GT/mQv/rw0k5huEgHpWKW4MazXz265TBu1aq+vsE+4k7YLTJKFcLzg5txbdPEZq5
-         6i4iPTpCPx/t3lf4mAYrLNX9/Tfva8MjYu+ZEl/blFevQMSuFYcsDaiDdBZgZKyatNgy
-         kSBgxBJiLhm/gYP6LdkxRtaNGJOS6/8YoFOpNpNHh13a7hPKHJUIru+WnU29wMgiB5YP
-         CaqA==
-X-Gm-Message-State: APjAAAVExHSXpLyYj6EPv3whKVmp0XE13H8CurynXkIKDIWYCNkIJRsX
-        RNLfnVxHX87e5vUz48R5XyenZaW/xrAOfaMf62ZtFA==
-X-Google-Smtp-Source: APXvYqzgtEr9wX8WYSeyGwFxuZx2a50Hfm6Semoiiegi0woZ+2ZMYhI8rCjxozwhaJd1CrJIL57CcLPEfAfpBDz4OeY=
-X-Received: by 2002:a25:1854:: with SMTP id 81mr16323730yby.152.1561998781066;
- Mon, 01 Jul 2019 09:33:01 -0700 (PDT)
+        Mon, 1 Jul 2019 12:35:05 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 563D1609CD; Mon,  1 Jul 2019 16:35:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561998903;
+        bh=jZp0t/cawdeTmQZClVIxAeCh2F6TIuiqyuk74l+7jXQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iNpgrhSiTtGl9QjXUT8+MK7TUzPIaInmDgN7skl0BZM9usWZ94s7zO1NB3lZZNRNJ
+         BFwko82NZrGKpUbwuK5+yTktB5f7Scuv0oNNFHFsAfsO3ZKLE5eVWBRczpMWT2I/Q1
+         rs4mc8VGRcl0HHFIYIOxeGzaWxgyURUc+3Ay2r2k=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DEE53602EF;
+        Mon,  1 Jul 2019 16:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561998900;
+        bh=jZp0t/cawdeTmQZClVIxAeCh2F6TIuiqyuk74l+7jXQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BhjpE3eAcf9BYJMMSWU+zoZlCxpJkzyJHDtIaIIGyt8pgfULdrUCWtNys711kEfrx
+         OnFdB5QfIoN2k3PKa1gBhvxwSb+8tn9nyQmt9VnYCVTxl6/W/GxKeZ2UIMUgAkvQsY
+         T8qhMs9oBAW5u4OR+lWjBmyn9EyDATVl0BpofSrc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DEE53602EF
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 1 Jul 2019 10:34:57 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        Rajesh Yadav <ryadav@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] gpu: Use dev_get_drvdata()
+Message-ID: <20190701163456.GA10188@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Fuqian Huang <huangfq.daxian@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        Rajesh Yadav <ryadav@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20190701032245.25906-1-huangfq.daxian@gmail.com>
 MIME-Version: 1.0
-References: <20190701155208.211815-1-zwisler@google.com>
-In-Reply-To: <20190701155208.211815-1-zwisler@google.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Mon, 1 Jul 2019 09:32:49 -0700
-Message-ID: <CABXOdTdD1vWigFBEeQ5-O2myOVGAY-_oTf94Pgj3CxxEH8XE4g@mail.gmail.com>
-Subject: Re: [PATCH] Revert "x86/build: Move _etext to actual end of .text"
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ross Zwisler <zwisler@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Hirte <johannes.hirte@datenkhaos.de>,
-        Klaus Kusche <klaus.kusche@computerix.info>,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701032245.25906-1-huangfq.daxian@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 8:52 AM Ross Zwisler <zwisler@chromium.org> wrote:
->
-> This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
->
-> Per the discussion here:
->
-> https://lkml.org/lkml/2019/6/20/830
->
-> the above referenced commit breaks kernel compilation with old GCC
-> toolchains as well as current versions of the Gold linker.  Revert it so
-> we don't regress and lose the ability to compile the kernel with these
-> tools.
->
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
+On Mon, Jul 01, 2019 at 11:22:35AM +0800, Fuqian Huang wrote:
+> Using dev_get_drvdata directly.
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
+msm parts LGTM.  If you split the patches feel free to add my
 
+Acked-by: Jordan Crouse <jcrouse@codeaurora.org>
+
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 > ---
->  arch/x86/kernel/vmlinux.lds.S | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index 0850b5149345..4d1517022a14 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -141,10 +141,10 @@ SECTIONS
->                 *(.text.__x86.indirect_thunk)
->                 __indirect_thunk_end = .;
->  #endif
-> -       } :text = 0x9090
->
-> -       /* End of text section */
-> -       _etext = .;
-> +               /* End of text section */
-> +               _etext = .;
-> +       } :text = 0x9090
->
->         NOTES :text :note
->
-> --
-> 2.20.1
+>  drivers/gpu/drm/msm/adreno/adreno_device.c      |  6 ++----
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c         | 13 +++++--------
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c        |  6 ++----
+>  drivers/gpu/drm/msm/dsi/dsi_host.c              |  6 ++----
+>  drivers/gpu/drm/msm/msm_drv.c                   |  3 +--
+>  drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c | 15 +++++----------
+>  drivers/gpu/drm/panfrost/panfrost_device.c      |  6 ++----
+>  7 files changed, 19 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> index b3deb346a42b..fafd00d2574a 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> @@ -403,16 +403,14 @@ static const struct of_device_id dt_match[] = {
+>  #ifdef CONFIG_PM
+>  static int adreno_resume(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct msm_gpu *gpu = platform_get_drvdata(pdev);
+> +	struct msm_gpu *gpu = dev_get_drvdata(dev);
+>  
+>  	return gpu->funcs->pm_resume(gpu);
+>  }
+>  
+>  static int adreno_suspend(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct msm_gpu *gpu = platform_get_drvdata(pdev);
+> +	struct msm_gpu *gpu = dev_get_drvdata(dev);
+>  
+>  	return gpu->funcs->pm_suspend(gpu);
+>  }
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> index ae885e5dd07d..6c6f8ca9380f 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> @@ -1025,16 +1025,15 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
+>  
+>  static void dpu_unbind(struct device *dev, struct device *master, void *data)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+> +	struct dpu_kms *dpu_kms = dev_get_drvdata(dev);
+>  	struct dss_module_power *mp = &dpu_kms->mp;
+>  
+>  	msm_dss_put_clk(mp->clk_config, mp->num_clk);
+> -	devm_kfree(&pdev->dev, mp->clk_config);
+> +	devm_kfree(dev, mp->clk_config);
+>  	mp->num_clk = 0;
+>  
+>  	if (dpu_kms->rpm_enabled)
+> -		pm_runtime_disable(&pdev->dev);
+> +		pm_runtime_disable(dev);
+>  }
+>  
+>  static const struct component_ops dpu_ops = {
+> @@ -1056,8 +1055,7 @@ static int dpu_dev_remove(struct platform_device *pdev)
+>  static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+>  {
+>  	int rc = -1;
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+> +	struct dpu_kms *dpu_kms = dev_get_drvdata(dev);
+>  	struct drm_device *ddev;
+>  	struct dss_module_power *mp = &dpu_kms->mp;
+>  
+> @@ -1077,8 +1075,7 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+>  static int __maybe_unused dpu_runtime_resume(struct device *dev)
+>  {
+>  	int rc = -1;
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+> +	struct dpu_kms *dpu_kms = dev_get_drvdata(dev);
+>  	struct drm_encoder *encoder;
+>  	struct drm_device *ddev;
+>  	struct dss_module_power *mp = &dpu_kms->mp;
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> index 901009e1f219..25d1ebb32e73 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> @@ -1052,8 +1052,7 @@ static int mdp5_dev_remove(struct platform_device *pdev)
+>  
+>  static __maybe_unused int mdp5_runtime_suspend(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct mdp5_kms *mdp5_kms = platform_get_drvdata(pdev);
+> +	struct mdp5_kms *mdp5_kms = dev_get_drvdata(dev);
+>  
+>  	DBG("");
+>  
+> @@ -1062,8 +1061,7 @@ static __maybe_unused int mdp5_runtime_suspend(struct device *dev)
+>  
+>  static __maybe_unused int mdp5_runtime_resume(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct mdp5_kms *mdp5_kms = platform_get_drvdata(pdev);
+> +	struct mdp5_kms *mdp5_kms = dev_get_drvdata(dev);
+>  
+>  	DBG("");
+>  
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> index dbf490176c2c..882f13725819 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> @@ -477,8 +477,7 @@ static void dsi_bus_clk_disable(struct msm_dsi_host *msm_host)
+>  
+>  int msm_dsi_runtime_suspend(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct msm_dsi *msm_dsi = platform_get_drvdata(pdev);
+> +	struct msm_dsi *msm_dsi = dev_get_drvdata(dev);
+>  	struct mipi_dsi_host *host = msm_dsi->host;
+>  	struct msm_dsi_host *msm_host = to_msm_dsi_host(host);
+>  
+> @@ -492,8 +491,7 @@ int msm_dsi_runtime_suspend(struct device *dev)
+>  
+>  int msm_dsi_runtime_resume(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct msm_dsi *msm_dsi = platform_get_drvdata(pdev);
+> +	struct msm_dsi *msm_dsi = dev_get_drvdata(dev);
+>  	struct mipi_dsi_host *host = msm_dsi->host;
+>  	struct msm_dsi_host *msm_host = to_msm_dsi_host(host);
+>  
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index f38d7367bd3b..0d9e46561609 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -241,8 +241,7 @@ static int vblank_ctrl_queue_work(struct msm_drm_private *priv,
+>  
+>  static int msm_drm_uninit(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct drm_device *ddev = platform_get_drvdata(pdev);
+> +	struct drm_device *ddev = dev_get_drvdata(dev);
+>  	struct msm_drm_private *priv = ddev->dev_private;
+>  	struct msm_kms *kms = priv->kms;
+>  	struct msm_mdss *mdss = priv->mdss;
+> diff --git a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
+> index 8edef8ef23b0..53240da139b1 100644
+> --- a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
+> +++ b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
+> @@ -407,8 +407,7 @@ static const struct backlight_ops dsicm_bl_ops = {
+>  static ssize_t dsicm_num_errors_show(struct device *dev,
+>  		struct device_attribute *attr, char *buf)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
+> +	struct panel_drv_data *ddata = dev_get_drvdata(dev);
+>  	struct omap_dss_device *src = ddata->src;
+>  	u8 errors = 0;
+>  	int r;
+> @@ -439,8 +438,7 @@ static ssize_t dsicm_num_errors_show(struct device *dev,
+>  static ssize_t dsicm_hw_revision_show(struct device *dev,
+>  		struct device_attribute *attr, char *buf)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
+> +	struct panel_drv_data *ddata = dev_get_drvdata(dev);
+>  	struct omap_dss_device *src = ddata->src;
+>  	u8 id1, id2, id3;
+>  	int r;
+> @@ -506,8 +504,7 @@ static ssize_t dsicm_show_ulps(struct device *dev,
+>  		struct device_attribute *attr,
+>  		char *buf)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
+> +	struct panel_drv_data *ddata = dev_get_drvdata(dev);
+>  	unsigned int t;
+>  
+>  	mutex_lock(&ddata->lock);
+> @@ -521,8 +518,7 @@ static ssize_t dsicm_store_ulps_timeout(struct device *dev,
+>  		struct device_attribute *attr,
+>  		const char *buf, size_t count)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
+> +	struct panel_drv_data *ddata = dev_get_drvdata(dev);
+>  	struct omap_dss_device *src = ddata->src;
+>  	unsigned long t;
+>  	int r;
+> @@ -553,8 +549,7 @@ static ssize_t dsicm_show_ulps_timeout(struct device *dev,
+>  		struct device_attribute *attr,
+>  		char *buf)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
+> +	struct panel_drv_data *ddata = dev_get_drvdata(dev);
+>  	unsigned int t;
+>  
+>  	mutex_lock(&ddata->lock);
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> index 3b2bced1b015..ed187648e6d8 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> @@ -227,8 +227,7 @@ const char *panfrost_exception_name(struct panfrost_device *pfdev, u32 exception
+>  #ifdef CONFIG_PM
+>  int panfrost_device_resume(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct panfrost_device *pfdev = platform_get_drvdata(pdev);
+> +	struct panfrost_device *pfdev = dev_get_drvdata(dev);
+>  
+>  	panfrost_gpu_soft_reset(pfdev);
+>  
+> @@ -243,8 +242,7 @@ int panfrost_device_resume(struct device *dev)
+>  
+>  int panfrost_device_suspend(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct panfrost_device *pfdev = platform_get_drvdata(pdev);
+> +	struct panfrost_device *pfdev = dev_get_drvdata(dev);
+>  
+>  	if (!panfrost_job_is_idle(pfdev))
+>  		return -EBUSY;
+> -- 
+> 2.11.0
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
