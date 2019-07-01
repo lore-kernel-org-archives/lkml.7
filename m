@@ -2,291 +2,147 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2282C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E504C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87017206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C332173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:18:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="loyuPKYL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Al/aLvhu";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="fUaChbDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfGAUPt (ORCPT
+        id S1726811AbfGAUSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 16:15:49 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35130 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfGAUPs (ORCPT
+        Mon, 1 Jul 2019 16:18:48 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:62971 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfGAUSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 16:15:48 -0400
-Received: by mail-pg1-f194.google.com with SMTP id s27so6542231pgl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 13:15:47 -0700 (PDT)
+        Mon, 1 Jul 2019 16:18:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1562012336; x=1593548336;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=N8FdXl9fQhVeMl/osm7KAlS6gPFgaAA9xTyaCj4BAvw=;
+  b=Al/aLvhu2cAJL5K8inDZD4SalS6MM7y6fankehpwkJF8Y2NBkUEGoKT/
+   TAOLCCOjrl+OrV1xlC+3LJVcyBp5cMNq0kL6evl9Ay17NliTumrq18YG1
+   vtg9kyiVkP6q39/klVWfxj/mMtEjms6G+8x6C5iMCbf7gF9IpV0djYU3n
+   EaOI0i/crSdvg9nChRkpO+uuA7jldUjj4e9oa/reV3hY5pmxG+3lcKKlz
+   /577DYXizRWEghZ2tHf967DTV+nQ8/7xS3ef7n7tbxFnwdLsLgqulJDrC
+   NBIkE4W8Y729mCkcLVOYzsGMekhUc+UMjq6jpf1NGL2BF/zYJgqTKbISM
+   A==;
+X-IronPort-AV: E=Sophos;i="5.63,440,1557158400"; 
+   d="scan'208";a="211832433"
+Received: from mail-by2nam03lp2056.outbound.protection.outlook.com (HELO NAM03-BY2-obe.outbound.protection.outlook.com) ([104.47.42.56])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Jul 2019 04:18:55 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=pUF1T8YosBJ3xSBN/42gppxPrNAbk2wJaDAAwR8fY4o=;
-        b=loyuPKYLikazGc5HJLPsKrOh6SiuV2L2ADgtcqoTgA2KJrZ6hkNMReykxDO0Edw116
-         f2TsgRnGSFbOJwg7rCfZuGuBqr+bXFWCg0OhrZTUsY58zhaQpHbLQ2pJTWBOkSggUhEh
-         th/EXNtrbcsvXx7loxWS4sE1HCe4yQieZ4CHw6c+Gis8o2/AKIFykZ5BpzSfBRe5oABH
-         40+tiMfaiaT16ZrAzcGGQSZjrWxZMEYQRp0IP/q4G2NASX65BQqpgU1BTP5ZGPquwTdg
-         1+Ifd81E69xN0pCAwHkBjX2YvyyJfJGLdGYnORLxAGxI52t4+a+xsaEJxAJMtuRpd7YB
-         V7VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=pUF1T8YosBJ3xSBN/42gppxPrNAbk2wJaDAAwR8fY4o=;
-        b=MJW1SoRcwqqzalKxXMMUA31T0uB0rVDA4WRwnGAP6B/WypEX3zNn2DnWkS+Gaeocqi
-         v6ZNvPPd1w/JwbeoBXMI+lu4Yf8moteO84HqIdW9Di9mg7ZQJXMUlV1G36ZOX26XiQt4
-         A7hzyxA2SNziejClVvIA0HSlmwOOqZVNCE8gbxIqiVkKqrysa1qe1sLAUbxxpZ4wZVVC
-         TCkZsR6dfuBJGPaBviF1Bqrr7QIVNXn47neP/hGgJ4vcIUiYNQm38XAXSdtvbumv3/u8
-         4mf8mDgKZ8UiCJvnELoxmsBR7ZPyopQthNRk1ZINVoc43PL6YBaWBc4SRkCtIAOztgSq
-         Zf5A==
-X-Gm-Message-State: APjAAAU2at+p1mUd6n9SQe8O/BLUiYZtQkggsq0CFc8J/mxtpU5jlaDu
-        j+FVcLtXgdfGXfdKYVowGg/cxw==
-X-Google-Smtp-Source: APXvYqz/f5okR0/1uArrmL95QeBoc/0K9RJuEaqe9lJG32VRI0BmZ5htaBEYKSq6Ovvx9xCTCG2JVw==
-X-Received: by 2002:a63:b46:: with SMTP id a6mr212520pgl.235.1562012146904;
-        Mon, 01 Jul 2019 13:15:46 -0700 (PDT)
-Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
-        by smtp.gmail.com with ESMTPSA id q63sm21742450pfb.81.2019.07.01.13.15.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 13:15:45 -0700 (PDT)
-From:   bsegall@google.com
-To:     Dave Chiluk <chiluk+linux@indeed.com>
-Cc:     Pqhil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
-        Kyle Anderson <kwa@yelp.com>,
-        Gabriel Munos <gmunoz@netflix.com>,
-        John Hammond <jhammond@indeed.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Paul Turner <pjt@google.com>
-Subject: Re: [PATCH v5 1/1] sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices
-References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
-        <1561664970-1555-1-git-send-email-chiluk+linux@indeed.com>
-        <1561664970-1555-2-git-send-email-chiluk+linux@indeed.com>
-Date:   Mon, 01 Jul 2019 13:15:44 -0700
-In-Reply-To: <1561664970-1555-2-git-send-email-chiluk+linux@indeed.com> (Dave
-        Chiluk's message of "Thu, 27 Jun 2019 14:49:30 -0500")
-Message-ID: <xm26lfxhwlxr.fsf@bsegall-linux.svl.corp.google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N8FdXl9fQhVeMl/osm7KAlS6gPFgaAA9xTyaCj4BAvw=;
+ b=fUaChbDyboOJkSkpFbOeD6ynlDJk3hv5TXEFgpEXSHjJ4Szj4f1xiw4DH6HGUMATnS585m3k1VXdlqfQOziVg30gOiGGwf88/18iAwoXBWFxg6OVVuCnNyNRPzqmwtampVfXnGNRiynkbfq3e9UjSlYinVOhTjnadOw8rJ2wq84=
+Received: from BYAPR04MB3782.namprd04.prod.outlook.com (52.135.214.142) by
+ BYAPR04MB5509.namprd04.prod.outlook.com (20.178.232.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Mon, 1 Jul 2019 20:18:45 +0000
+Received: from BYAPR04MB3782.namprd04.prod.outlook.com
+ ([fe80::65e3:6069:d7d5:90a2]) by BYAPR04MB3782.namprd04.prod.outlook.com
+ ([fe80::65e3:6069:d7d5:90a2%5]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
+ 20:18:45 +0000
+From:   Atish Patra <Atish.Patra@wdc.com>
+To:     "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+CC:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "morten.rasmussen@arm.com" <morten.rasmussen@arm.com>,
+        "ottosabart@seberm.com" <ottosabart@seberm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "jeremy.linton@arm.com" <jeremy.linton@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "johan@kernel.org" <johan@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>
+Subject: Re: [PATCH v8 0/7] Unify CPU topology across ARM & RISC-V
+Thread-Topic: [PATCH v8 0/7] Unify CPU topology across ARM & RISC-V
+Thread-Index: AQHVLSJGz+hI7exIqkGm7p6W+lzWB6a2H8CAgAACBYCAAAEiAIAAFy+A
+Date:   Mon, 1 Jul 2019 20:18:44 +0000
+Message-ID: <daaf6f4e6512402bd8b6fcefc3dba9c045921b38.camel@wdc.com>
+References: <20190627195302.28300-1-atish.patra@wdc.com>
+         <alpine.DEB.2.21.9999.1907011143520.3867@viisi.sifive.com>
+         <5f31cb3c576bdbd89665614582af66d04ece8f29.camel@wdc.com>
+         <alpine.DEB.2.21.9999.1907011154310.3867@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1907011154310.3867@viisi.sifive.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Atish.Patra@wdc.com; 
+x-originating-ip: [199.255.45.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 392baa72-e3fe-4abc-8622-08d6fe615186
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB5509;
+x-ms-traffictypediagnostic: BYAPR04MB5509:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR04MB5509E1C8D65A9917F7C2D528FAF90@BYAPR04MB5509.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 00851CA28B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(396003)(366004)(376002)(136003)(51914003)(199004)(189003)(478600001)(76176011)(118296001)(25786009)(102836004)(99286004)(54906003)(26005)(5660300002)(6306002)(6512007)(6246003)(66476007)(5640700003)(316002)(72206003)(6506007)(68736007)(66446008)(6486002)(66556008)(64756008)(6916009)(73956011)(229853002)(7416002)(66946007)(76116006)(6436002)(86362001)(486006)(446003)(11346002)(2616005)(476003)(81156014)(81166006)(2906002)(36756003)(66066001)(966005)(3846002)(6116002)(14454004)(2501003)(8936002)(71190400001)(186003)(2351001)(53936002)(71200400001)(4326008)(4744005)(7736002)(305945005)(8676002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5509;H:BYAPR04MB3782.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: DmK/3pHc9Bd04sX1oPOoOSDuOu9s7ntx/WZT3Mizz7c47m29yOQe6UjfIzZz2IMXnEILYkg5h+GGCzZmnm6CMXHQtDsB212OpPb0pl2GM7WwVi/Liwei84bfApPMHiilt4lkniFuOgrLzE9lxyux7ClpwqKeUqoZV9ksizKHgctG7hhWKV8nhKpdnjn4IKmgdcSu0c3z+DlNwiaLdxP/lbpCKpNnE6EofBTzfNUQVC8ZcpSi+ilpT39pXFiv74DoMIVxNDJIuoPgDvpZTcJHAKXzuxGzYpp7MBfKN9mhVm9DS4sArjNgjK6pAcQhBr805YeZVifxKJ3hK8D+pPaYAMoEgncSMgXl4AByAt12tnlDPMDjkx/J5b67+8vdP7uGqqs185LyhGUesXJkrIngUdRzMqH9K/YBwVUt14cxZtc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <19593EB42262524DBDC8DEE9233E70C3@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 392baa72-e3fe-4abc-8622-08d6fe615186
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 20:18:44.9279
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Atish.Patra@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5509
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alright, this prototype of "maybe we should just 100% avoid stranding
-runtime for a full period" appears to fix the fibtest synthetic example,
-and seems like a theoretically-reasonable approach.
-
-Things that may want improvement or at least thought (but it's a holiday
-week in the US and I wanted any opinions on the basic approach):
-
-- I don't like cfs_rq->slack_list, since logically it's mutually
-  exclusive with throttled_list, but we have to iterate without
-  locks, so I don't know that we can avoid it.
-
-- I previously was using _rcu for the slack list, like throttled, but
-  there is no list_for_each_entry_rcu_safe, so the list_del_init would
-  be invalid and we'd have to use another flag or opencode the
-  equivalent.
-
-- (Actually, this just made me realize that distribute is sorta wrong if
-  the unthrottled task immediately runs and rethrottles; this would just
-  mean that we effectively restart the loop)
-
-- We unconditionally start the slack timer, even if nothing is
-  throttled. We could instead have throttle start the timer in this case
-  (setting the timeout some definition of "appropriately"), but this
-  bookkeeping would be a big hassle.
-
-- We could try to do better about deciding what cfs_rqs are idle than
-  "nr_running == 0", possibly requiring that to have been true for N<5
-  ms, and restarting the slack timer if we didn't clear everything.
-
-- Taking up-to-every rq->lock is bad and expensive and 5ms may be too
-  short a delay for this. I haven't tried microbenchmarks on the cost of
-  this vs min_cfs_rq_runtime = 0 vs baseline.
-
-- runtime_expires vs expires_seq choice is basically rand(), much like
-  the existing code. (I think the most consistent with existing code
-  would be runtime_expires, since cfs_b lock is held; I think most
-  consistent in general would change most of the existing ones as well
-  to be seq)
-
-
--- >8 --
-Subject: [PATCH] sched: avoid stranding cfs_bandwidth runtime
-
-We avoid contention on the per-tg cfs_b->lock by keeping 1ms of runtime on a
-cfs_rq even when all tasks in that cfs_rq dequeue. This way tasks doing frequent
-wake/sleep can't hit this cross-cpu lock more than once per ms. This however
-means that up to 1ms of runtime per cpu can be lost if no task does wake up on
-that cpu, which is leading to issues on cgroups with low quota, many available
-cpus, and a combination of threads that run for very little time and ones that
-want to run constantly.
-
-This was previously hidden by runtime expiration being broken, which allowed
-this stranded runtime to be kept indefinitely across period resets. Thus after
-an initial period or two any long-running tasks could use an appropriate portion
-of their group's quota. The issue was that the group could also potentially
-burst for 1ms * cpus more than their quota allowed, and in these situations this
-is a significant increase.
-
-Fix this by having the group's slack timer (which runs at most once per 5ms)
-remove all runtime from empty cfs_rqs, not just redistribute any runtime above
-that 1ms that was returned immediately.
-
-Signed-off-by: Ben Segall <bsegall@google.com>
----
- kernel/sched/fair.c  | 66 +++++++++++++++++++++++++++++++++++---------
- kernel/sched/sched.h |  2 ++
- 2 files changed, 55 insertions(+), 13 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 300f2c54dea5..80b2198d9b29 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4745,23 +4745,32 @@ static void __return_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- 	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
- 	s64 slack_runtime = cfs_rq->runtime_remaining - min_cfs_rq_runtime;
- 
--	if (slack_runtime <= 0)
-+	if (cfs_rq->runtime_remaining <= 0)
-+		return;
-+
-+	if (slack_runtime <= 0 && !list_empty(&cfs_rq->slack_list))
- 		return;
- 
- 	raw_spin_lock(&cfs_b->lock);
- 	if (cfs_b->quota != RUNTIME_INF &&
--	    cfs_rq->runtime_expires == cfs_b->runtime_expires) {
--		cfs_b->runtime += slack_runtime;
-+	    cfs_rq->expires_seq == cfs_b->expires_seq) {
-+		if (slack_runtime > 0)
-+			cfs_b->runtime += slack_runtime;
-+		if (list_empty(&cfs_rq->slack_list))
-+			list_add(&cfs_rq->slack_list, &cfs_b->slack_cfs_rq);
- 
--		/* we are under rq->lock, defer unthrottling using a timer */
--		if (cfs_b->runtime > sched_cfs_bandwidth_slice() &&
--		    !list_empty(&cfs_b->throttled_cfs_rq))
--			start_cfs_slack_bandwidth(cfs_b);
-+		/*
-+		 * After a timeout, gather our remaining runtime so it can't get
-+		 * stranded. We need a timer anyways to distribute any of the
-+		 * runtime due to locking issues.
-+		 */
-+		start_cfs_slack_bandwidth(cfs_b);
- 	}
- 	raw_spin_unlock(&cfs_b->lock);
- 
--	/* even if it's not valid for return we don't want to try again */
--	cfs_rq->runtime_remaining -= slack_runtime;
-+	if (slack_runtime > 0)
-+		/* even if it's not valid for return we don't want to try again */
-+		cfs_rq->runtime_remaining -= slack_runtime;
- }
- 
- static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq)
-@@ -4781,12 +4790,41 @@ static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq)
-  */
- static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
- {
--	u64 runtime = 0, slice = sched_cfs_bandwidth_slice();
-+	u64 runtime = 0;
- 	unsigned long flags;
- 	u64 expires;
-+	struct cfs_rq *cfs_rq, *temp;
-+	LIST_HEAD(temp_head);
-+
-+	local_irq_save(flags);
-+
-+	raw_spin_lock(&cfs_b->lock);
-+	cfs_b->slack_started = false;
-+	list_splice_init(&cfs_b->slack_cfs_rq, &temp_head);
-+	raw_spin_unlock(&cfs_b->lock);
-+
-+
-+	/* Gather all left over runtime from all rqs */
-+	list_for_each_entry_safe(cfs_rq, temp, &temp_head, slack_list) {
-+		struct rq *rq = rq_of(cfs_rq);
-+		struct rq_flags rf;
-+
-+		rq_lock(rq, &rf);
-+
-+		raw_spin_lock(&cfs_b->lock);
-+		list_del_init(&cfs_rq->slack_list);
-+		if (!cfs_rq->nr_running && cfs_rq->runtime_remaining > 0 &&
-+		    cfs_rq->runtime_expires == cfs_b->runtime_expires) {
-+			cfs_b->runtime += cfs_rq->runtime_remaining;
-+			cfs_rq->runtime_remaining = 0;
-+		}
-+		raw_spin_unlock(&cfs_b->lock);
-+
-+		rq_unlock(rq, &rf);
-+	}
- 
- 	/* confirm we're still not at a refresh boundary */
--	raw_spin_lock_irqsave(&cfs_b->lock, flags);
-+	raw_spin_lock(&cfs_b->lock);
- 	cfs_b->slack_started = false;
- 	if (cfs_b->distribute_running) {
- 		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
-@@ -4798,7 +4836,7 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
- 		return;
- 	}
- 
--	if (cfs_b->quota != RUNTIME_INF && cfs_b->runtime > slice)
-+	if (cfs_b->quota != RUNTIME_INF)
- 		runtime = cfs_b->runtime;
- 
- 	expires = cfs_b->runtime_expires;
-@@ -4946,6 +4984,7 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
- 	cfs_b->period = ns_to_ktime(default_cfs_period());
- 
- 	INIT_LIST_HEAD(&cfs_b->throttled_cfs_rq);
-+	INIT_LIST_HEAD(&cfs_b->slack_cfs_rq);
- 	hrtimer_init(&cfs_b->period_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
- 	cfs_b->period_timer.function = sched_cfs_period_timer;
- 	hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-@@ -4958,6 +4997,7 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- {
- 	cfs_rq->runtime_enabled = 0;
- 	INIT_LIST_HEAD(&cfs_rq->throttled_list);
-+	INIT_LIST_HEAD(&cfs_rq->slack_list);
- }
- 
- void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index b08dee29ef5e..3b272ee894fb 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -345,6 +345,7 @@ struct cfs_bandwidth {
- 	struct hrtimer		period_timer;
- 	struct hrtimer		slack_timer;
- 	struct list_head	throttled_cfs_rq;
-+	struct list_head	slack_cfs_rq;
- 
- 	/* Statistics: */
- 	int			nr_periods;
-@@ -566,6 +567,7 @@ struct cfs_rq {
- 	int			throttled;
- 	int			throttle_count;
- 	struct list_head	throttled_list;
-+	struct list_head	slack_list;
- #endif /* CONFIG_CFS_BANDWIDTH */
- #endif /* CONFIG_FAIR_GROUP_SCHED */
- };
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+T24gTW9uLCAyMDE5LTA3LTAxIGF0IDExOjU1IC0wNzAwLCBQYXVsIFdhbG1zbGV5IHdyb3RlOg0K
+PiBPbiBNb24sIDEgSnVsIDIwMTksIEF0aXNoIFBhdHJhIHdyb3RlOg0KPiANCj4gPiBPbiBNb24s
+IDIwMTktMDctMDEgYXQgMTE6NDQgLTA3MDAsIFBhdWwgV2FsbXNsZXkgd3JvdGU6DQo+ID4gPiBM
+b29rcyBsaWtlIHBhdGNoZXMgMSwgNiwgYW5kIDcgYXJlIG1pc3NpbmcgeW91ciBTaWduZWQtb2Zm
+LQ0KPiA+ID4gYnk6LiAgQ2FuIEkgDQo+ID4gPiBhZGQgdGhvc2U/DQo+ID4gPiANCj4gPiBTdXJl
+LiANCj4gPiANCj4gPiBJcyBpdCBhIGNvbW1vbiBwcmFjdGljZSB0byBhZGQgIlNpZ25lZC1vZmYt
+Ynk6IiB0aGUgc2VuZGVyIGV2ZW4gaWYNCj4gPiB0aGUNCj4gPiBzZW5kZXIgaGFzIG5vdCB0b3Vj
+aGVkIHRoZSBwYXRjaCBhdCBhbGw/DQo+IA0KPiBZZXMsIHNlZSBzZWN0aW9uIDExKGMpIGhlcmU6
+DQo+IA0KPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90
+b3J2YWxkcy9saW51eC5naXQvdHJlZS9Eb2N1bWVudGF0aW9uL3Byb2Nlc3Mvc3VibWl0dGluZy1w
+YXRjaGVzLnJzdCNuNDE4DQo+IA0KPiBUaGUgbWFpbiBmYWN0b3IgaGVyZSBpcyB0aGF0IHlvdSBj
+b2xsZWN0ZWQgYW5kIHJlc2VudCB0aGUgcGF0Y2hlcyAtDQo+IHRodXMgDQo+IHlvdSdyZSBpbiB0
+aGUgcGF0Y2ggc3VibWlzc2lvbiBjaGFpbi4NCj4gDQoNCkFoaCBva2F5LiBUaGFua3MgZm9yIHRo
+ZSBsaW5rLiBJIHdpbGwga2VlcCB0aGlzIGluIG1pbmQgaW4gZnV0dXJlLg0KDQpSZWdhcmRzLA0K
+QXRpc2gNCj4gDQo+IC0gUGF1bA0KDQo=
