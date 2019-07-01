@@ -2,123 +2,136 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA6BC06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF6BC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57D8214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1752053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfGAMn0 (ORCPT
+        id S1727897AbfGAMnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 08:43:26 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33403 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfGAMn0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 08:43:26 -0400
-Received: by mail-oi1-f195.google.com with SMTP id u15so9697678oiv.0;
-        Mon, 01 Jul 2019 05:43:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=0ZbxY3O8o2NP9TexAMOwwfSs+xrQAQGyizd11XhK8Uk=;
-        b=TIgRyR0LA86uJoZTcDD5dBk/CNS5MM8HUecDdf9mvRhh+N3CUyuJnM6lXDyGzupcbI
-         29DXSpm6yE9T7vd1gO8F27XB7FcBJO7NGu8IljyJo2+nPMJupYTkJDpjoplL1xpn1dkE
-         WiIxzQBUHGgOB4VjzzNlVxvpbEa07dWEozIZVBRx/dhP6NKpsR+2mSYYE3EvttTtX7Da
-         68AucV46Lm4FkNK7u1+gxf63CzA6HEsfzVHwk45gUV5buXuNJiR/uCklzvZcyZtewzwm
-         0yqitgYS7FIDBebnOyncR7wMESum1Ox5s484yb6M2vgTS4H0UkqNTuGdKSUWitOylLT/
-         DqVQ==
-X-Gm-Message-State: APjAAAXGFha8aLUadTfGmb2nHg3CpYOtO5U0ZvbneQmjXvI12Jpo8gOK
-        QwndgKV5/zSY6So3cP1nqHbYPQwmsuEK+/5GgJ4=
-X-Google-Smtp-Source: APXvYqyblOS/qtfu8kJg+Wvk3SX2O68dr4THZP1KeL8DXVnYrMO7nsHTasiHahYQ+V+HrFxwliyZczCQoa9yogvWNJI=
-X-Received: by 2002:aca:bd43:: with SMTP id n64mr6147488oif.148.1561985005437;
- Mon, 01 Jul 2019 05:43:25 -0700 (PDT)
+        Mon, 1 Jul 2019 08:43:52 -0400
+Received: from sauhun.de ([88.99.104.3]:55662 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726912AbfGAMnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 08:43:51 -0400
+Received: from localhost (p54B3346F.dip0.t-ipconnect.de [84.179.52.111])
+        by pokefinder.org (Postfix) with ESMTPSA id CEEF92C360B;
+        Mon,  1 Jul 2019 14:43:48 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 14:43:48 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Eduardo Valentin <eduval@amazon.com>,
+        Haiyue Wang <haiyue.wang@linux.intel.com>,
+        jarkko.nikula@linux.intel.com, andriy.shevchenko@intel.com,
+        brendanhiggins@google.com, Mark Rutland <mark.rutland@arm.com>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 1/3] dt-bindings: i2c: document bindings for
+ i2c-slave-mqueue
+Message-ID: <20190701124348.GB4399@kunai>
+References: <20190605164651.15991-1-eduval@amazon.com>
+ <20190605164651.15991-2-eduval@amazon.com>
+ <20190611231425.GA29500@bogus>
 MIME-Version: 1.0
-References: <48BA4A6E-5E2A-478E-A96E-A31FA959964C@internode.on.net>
- <CAFLxGvwnKKHOnM2w8i9hn7LTVYKh5PQP2zYMBmma2k9z7HBpzw@mail.gmail.com>
- <20190511220659.GB8507@mit.edu> <09D87554-6795-4AEA-B8D0-FEBCB45673A9@internode.on.net>
- <850EDDE2-5B82-4354-AF1C-A2D0B8571093@internode.on.net> <17C30FA3-1AB3-4DAD-9B86-9FA9088F11C9@internode.on.net>
- <20190515045717.GB5394@mit.edu> <CAMuHMdV=63MwLdOB2kcX0=23itHg+_q22wXCycTvH3yn4zsfWw@mail.gmail.com>
-In-Reply-To: <CAMuHMdV=63MwLdOB2kcX0=23itHg+_q22wXCycTvH3yn4zsfWw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 1 Jul 2019 14:43:14 +0200
-Message-ID: <CAMuHMdU-vfWjomDpttYTqgp4YzBu7z__p48r7rq6TSUwx7uFqQ@mail.gmail.com>
-Subject: Re: ext3/ext4 filesystem corruption under post 5.1.0 kernels
-To:     "Theodore Ts'o" <tytso@mit.edu>,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+Content-Disposition: inline
+In-Reply-To: <20190611231425.GA29500@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
 
-On Fri, May 17, 2019 at 6:44 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Wed, May 15, 2019 at 6:57 AM Theodore Ts'o <tytso@mit.edu> wrote:
-> > Ah, I think I see the problem.  Sorry, this one was my fault.  Does
-> > this fix things for you?
->
-> Thanks!
-> Sorry for missing this patch in the thread before.
->
-> > From 0c72924ef346d54e8627440e6d71257aa5b56105 Mon Sep 17 00:00:00 2001
-> > From: Theodore Ts'o <tytso@mit.edu>
-> > Date: Wed, 15 May 2019 00:51:19 -0400
-> > Subject: [PATCH] ext4: fix block validity checks for journal inodes using indirect blocks
-> >
-> > Commit 345c0dbf3a30 ("ext4: protect journal inode's blocks using
-> > block_validity") failed to add an exception for the journal inode in
-> > ext4_check_blockref(), which is the function used by ext4_get_branch()
-> > for indirect blocks.  This caused attempts to read from the ext3-style
-> > journals to fail with:
-> >
-> > [  848.968550] EXT4-fs error (device sdb7): ext4_get_branch:171: inode #8: block 30343695: comm jbd2/sdb7-8: invalid block
-> >
-> > Fix this by adding the missing exception check.
-> >
-> > Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
-> > Reported-by: Arthur Marsh <arthur.marsh@internode.on.net>
-> > Signed-off-by: Theodore Ts'o <tytso@mit.edu>
->
-> Intermittent issue no more seen in 10 test boots, so
-> Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+--ftEhullJWpWg/VHq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Despite this fix having been applied upstream,  the kernel prints from
-time to time:
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +Device Tree for I2C slave message queue backend
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +Some protocols over I2C/SMBus are designed for bi-directional transfer=
+ring
+> > +messages by using I2C Master Write protocol. This requires that both s=
+ides
+> > +of the communication have slave addresses.
+>=20
+> So the address 0x10 in the example below is the address of the I2C=20
+> controller?
 
-    EXT4-fs (sda1): error count since last fsck: 5
-    EXT4-fs (sda1): initial error at time 1557931133:
-ext4_get_branch:171: inode 1980: block 27550
-    EXT4-fs (sda1): last error at time 1558114349:
-ext4_get_branch:171: inode 1980: block 27550
+Yes.
 
-This happens even after a manual run of "e2fsck -f" (while it's mounted
-RO), which reports a clean file system.
+> > +This I2C slave mqueue (message queue) is used to receive and queue
+> > +messages from the remote i2c intelligent device; and it will add the t=
+arget
+> > +slave address (with R/W# bit is always 0) into the message at the firs=
+t byte.
+> > +
+> > +Links
+> > +----
+> > +`Intelligent Platform Management Bus
+> > +Communications Protocol Specification
+> > +<https://www.intel.com/content/dam/www/public/us/en/documents/product-=
+briefs/ipmp-spec-v1.0.pdf>`_
+> > +
+> > +`Management Component Transport Protocol (MCTP)
+> > +SMBus/I2C Transport Binding Specification
+> > +<https://www.dmtf.org/sites/default/files/standards/documents/DSP0237_=
+1.1.0.pdf>`_
+> > +
+> > +Required Properties:
+> > +- compatible		: should be "i2c-slave-mqueue"
+>=20
+> There is no mention of mqueue (or queue) in these specs. Where does that=
+=20
+> come from? Perhaps something more closely matching the protocol would be=
+=20
+> better name.
+>=20
+> > +- reg			: slave address
+> > +
+> > +Example:
+> > +
+> > +i2c {
+>=20
+> Would there be other slaves?=20
+>=20
+> The common binding states 'multi-master' property should be present.=20
+>=20
+> I need a more complete example.
 
-The inode and block numbers match the numbers printed due to the
-previous bug.
+Ack. Either that or a bit more explanation, e.g. if sending
+packets is planned from userspace?
 
-Do you have an idea what's wrong?
-Note that I run a very old version of e2fsck (from a decade ago).
 
-Thanks!
+--ftEhullJWpWg/VHq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Gr{oetje,eeting}s,
+-----BEGIN PGP SIGNATURE-----
 
-                        Geert
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0aAAQACgkQFA3kzBSg
+KbZ/QBAAkSzIqB/uGF/Tr9iNOztFzpvwsxxTiilAetN7QxstgOe3e4oHtQkZ8AEP
+/gqs+gGHoUip0F/0BEuG0CHeoRAx0zM86ZxK4vIWQUpbQIzGgdjZvR1Z0ktPOIQW
+7FoNRcwKDadsEowvrMefwHs8fR4Z1qWAgxUEd7BkBFSQPu/SxguQII6xbk3wtoj5
+iJmYb+X9z9Hv/IjsfDdGh6ExEg+8qFXGftw4ObFD755QjqmoqXwDMiTgv0JRqkHz
+tiMZDoSLLYcSwHZ4t2wjAbnX3Ar05svdZCEnpELpV67QXQLlZqJ3CG+rMER6iadh
+EI4u6h9LCBG6yM5dW1M9P6c3d50pZ4l9nz0YpeH0yDihX7t91S1h5hNQ6P9n+om1
+pR3bcAln7p1TZnM+J4vNezxquA9JfizlPgtcjFyfQiaHAySN6qgQyGfrlhS7rl8P
+DBRSKiFbAbzdZAva9YGBI8Mx7exoWTqxseantcRcyuj6hpeiFPekqJOClAdMOEAJ
+OdVKP6csDLiD9teNyX264VZt0c8yr9C3a/LMSKB2xsGpm+y1bX/EkQBp/P7pt4oO
+g9tuc2KQHfnbRBUJuxX1IBHKTT7IX6eopW1JgwAczMRV6hZ0CyhxS/vcqrRcdEm/
+pOVOvz54R9FPmIey6auWqetueEXs1kXYuVwtn2f7KSRUIj7AYfQ=
+=OoKw
+-----END PGP SIGNATURE-----
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--ftEhullJWpWg/VHq--
