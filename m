@@ -2,140 +2,107 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BF9C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF258C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4846721479
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9013B20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 22:24:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="riEb/0iH"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="b1pYdXjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfGAWOr (ORCPT
+        id S1726878AbfGAWYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 18:14:47 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58708 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfGAWOr (ORCPT
+        Mon, 1 Jul 2019 18:24:43 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45379 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726468AbfGAWYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 18:14:47 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61M90wO042017;
-        Mon, 1 Jul 2019 22:14:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=en4SXX022hwvX0x9G0+SnC+PnaP8ULXzHBhOeJ5wAfo=;
- b=riEb/0iHU4DXypD8J+7SMIGCa9AdG//i4jdeiMmo8To4sgCcO28Ik0Lz0JZrZ4KqsGCM
- QGIy/DNuQqpDiFO0txlZkRqg06IZxFWAd0zbK+Wg30lyVmcU8uPUpcExXuReeoDh5R5g
- AXVDJPLa9eZ+kDJCFsheVK19WeAAkKQyPRg4m8GX1M8yN1twpXWwW0u4zL9N9XOPEAFW
- 13CXQrCbkKzGVxzguEpOUNqcOgDvv+5leNHbImAF4ImYvqohkaRFim43Hl0eVytTEzJ6
- 8x4nk/qgYU7aLhM1NByhw9tgKHCfRBrWq4ep2GBEDkJHRmx2oIxiasPB7aUxsqsvbkIj 3A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2te61e050p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Jul 2019 22:14:00 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61MCxh2098486;
-        Mon, 1 Jul 2019 22:13:59 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2tebqg5w2n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Jul 2019 22:13:59 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x61MDwgS024959;
-        Mon, 1 Jul 2019 22:13:58 GMT
-Received: from [10.132.91.175] (/10.132.91.175)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Jul 2019 15:13:58 -0700
-Subject: Re: [PATCH V3 2/2] sched/fair: Fallback to sched-idle CPU if idle CPU
- isn't found
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        quentin.perret@linaro.org, chris.redpath@arm.com,
-        steven.sistare@oracle.com, songliubraving@fb.com
-References: <cover.1561523542.git.viresh.kumar@linaro.org>
- <eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org>
- <32bd769c-b692-8896-5cc9-d19ab0a23abb@oracle.com>
- <20190701080349.homlsgia4fuaitek@vireshk-i7>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <aeaa0dd5-8512-1b60-eb10-6a4aecfaaca3@oracle.com>
-Date:   Mon, 1 Jul 2019 15:08:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 1 Jul 2019 18:24:41 -0400
+Received: by mail-io1-f68.google.com with SMTP id e3so32417248ioc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 15:24:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XMyri1Kc2uUO6xCU2IcO24Tpe83UI0VvKrQ6KZuOhAU=;
+        b=b1pYdXjvGR6IJz3r7vcZ/W10d9xEy0Q1egU4/nIpgqiWZSCQGbmC0Yj2PgA+Jj+bpk
+         xourNJKMfRItRibpvw2EtaCtOQbu0FOHAJboaMi002paWpVJAnjCFZpnuE8CKKZilMs2
+         Lo0iBT68D/W/toSa6E9HDhMCZFjL/m1FrSqqmabPVOyg2JqAQDA7EK66D5jvzklgtj5h
+         0WFkjFOVDU5kRYDhqRhDcFkAlfg2TpVCKGyOLHEM4LM9Pd5PH2TAkgyj1shjYGPmHGEs
+         8Vgv4Q3Wnpmqih2V29LcCNXhSb5YPBNp+9voq7pM3E52O1JLvLz05kLYFARm6Rcatk1/
+         rC2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XMyri1Kc2uUO6xCU2IcO24Tpe83UI0VvKrQ6KZuOhAU=;
+        b=d09YqNMPiHqlX6lP6IR3JCaaJpTbpKU7OMy/c+iJlt4CB1gbmiuRQDKkhoU8zjBqUo
+         2hU2XQnBtD6OrAyI7UmhkXiGJsYcSu9RnPgAr5KMGnRHan82y+Sis3/x1W/pnfMPJgXF
+         +UKq4LIIgvv3DBevhrmTrG3p+cuWNrEDLKfWnvK3zA6RD3mlgQ8/EZm8PTm9FuTOAV6t
+         hzdCRR7ag3ouTYjY+sPJRT5Kae6FNgiEHTJSwRCBK0dyNi1n7vF8UWl3KZt9UKSAC1hC
+         XVGjvswkDXyGsbFTez562PTsQuVO7JowsxvGH6IftFkHjjTgTTqphdm2Ne0kBwdoZvnM
+         qqyQ==
+X-Gm-Message-State: APjAAAUSpSTg1HUmuY0OX9qklEBt5bXgeSVNlM177ACYPJv236uBJtLX
+        20O1xjfOfYJbVu8jV5i67omKTjNaYoN6D7NisqktCw==
+X-Google-Smtp-Source: APXvYqy0De/UfjY18/K1X7cMzz6lbB+XBq2gow9/0FqRHaaXvxyzPvE5Fls4BG2oJGxMFbwvX3/fSGu32V+4cDt83OM=
+X-Received: by 2002:a5d:915a:: with SMTP id y26mr20178482ioq.207.1562019880815;
+ Mon, 01 Jul 2019 15:24:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190701080349.homlsgia4fuaitek@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907010258
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907010257
+References: <20190617130149.1782930-1-arnd@arndb.de> <7a96a4d2-25e7-f9cf-1109-23c5495325a8@oracle.com>
+In-Reply-To: <7a96a4d2-25e7-f9cf-1109-23c5495325a8@oracle.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 1 Jul 2019 15:24:29 -0700
+Message-ID: <CAOesGMi5urJPF3cKfF+UB_KrK50_VQw+MMS5w_UqKzEMYKeXFA@mail.gmail.com>
+Subject: Re: [PATCH] soc: ti: fix irq-ti-sci link error
+To:     Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 1, 2019 at 10:36 AM <santosh.shilimkar@oracle.com> wrote:
+>
+> On 6/17/19 6:01 AM, Arnd Bergmann wrote:
+> > The irqchip driver depends on the SoC specific driver, but we want
+> > to be able to compile-test it elsewhere:
+> >
+> > WARNING: unmet direct dependencies detected for TI_SCI_INTA_MSI_DOMAIN
+> >    Depends on [n]: SOC_TI [=n]
+> >    Selected by [y]:
+> >    - TI_SCI_INTA_IRQCHIP [=y] && TI_SCI_PROTOCOL [=y]
+> >
+> > drivers/irqchip/irq-ti-sci-inta.o: In function `ti_sci_inta_irq_domain_probe':
+> > irq-ti-sci-inta.c:(.text+0x204): undefined reference to `ti_sci_inta_msi_create_irq_domain'
+> >
+> > Rearrange the Kconfig and Makefile so we build the soc driver whenever
+> > its users are there, regardless of the SOC_TI option.
+> >
+> > Fixes: 49b323157bf1 ("soc: ti: Add MSI domain bus support for Interrupt Aggregator")
+> > Fixes: f011df6179bd ("irqchip/ti-sci-inta: Add msi domain support")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> Thanks Arnd. Will you be able to add it to your fixes queue.
+>
+> FWIW, Acked-by: Santosh Shilimkar <ssantosh@kernle.org>
 
-On 7/1/19 1:03 AM, Viresh Kumar wrote:
-> On 28-06-19, 18:16, Subhra Mazumdar wrote:
->> On 6/25/19 10:06 PM, Viresh Kumar wrote:
->>> We try to find an idle CPU to run the next task, but in case we don't
->>> find an idle CPU it is better to pick a CPU which will run the task the
->>> soonest, for performance reason.
->>>
->>> A CPU which isn't idle but has only SCHED_IDLE activity queued on it
->>> should be a good target based on this criteria as any normal fair task
->>> will most likely preempt the currently running SCHED_IDLE task
->>> immediately. In fact, choosing a SCHED_IDLE CPU over a fully idle one
->>> shall give better results as it should be able to run the task sooner
->>> than an idle CPU (which requires to be woken up from an idle state).
->>>
->>> This patch updates both fast and slow paths with this optimization.
->>>
->>> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->>> ---
->>>    kernel/sched/fair.c | 43 +++++++++++++++++++++++++++++++++----------
->>>    1 file changed, 33 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>> index 1277adc3e7ed..2e0527fd468c 100644
->>> --- a/kernel/sched/fair.c
->>> +++ b/kernel/sched/fair.c
->>> @@ -5376,6 +5376,15 @@ static struct {
->>>    #endif /* CONFIG_NO_HZ_COMMON */
->>> +/* CPU only has SCHED_IDLE tasks enqueued */
->>> +static int sched_idle_cpu(int cpu)
->>> +{
->>> +	struct rq *rq = cpu_rq(cpu);
->>> +
->>> +	return unlikely(rq->nr_running == rq->cfs.idle_h_nr_running &&
->>> +			rq->nr_running);
->>> +}
->>> +
->> Shouldn't this check if rq->curr is also sched idle?
-> Why wouldn't the current set of checks be enough to guarantee that ?
-I thought nr_running does not include the on-cpu thread.
->
->> And why not drop the rq->nr_running non zero check?
-> Because CPU isn't sched-idle if nr_running and idle_h_nr_running are both 0,
-> i.e. it is an IDLE cpu in that case. And so I thought it is important to have
-> this check as well.
->
-idle_cpu() not only checks nr_running is 0 but also rq->curr == rq->idle
+Cc:ing to arm@kernel.org is the best way to make sure it surfaces.
+
+Also, please do Acked-by on separate line so the tools catch it next
+time (also, check for typos. :)
+
+Applying to fixes.
+
+
+-Olof
