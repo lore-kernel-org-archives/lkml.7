@@ -2,162 +2,94 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9DCC06508
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281D0C06508
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73F08208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:47:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uY0r6/je"
+	by mail.kernel.org (Postfix) with ESMTP id 06E93212F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfGABq6 (ORCPT
+        id S1727320AbfGABs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 21:46:58 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:58013 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbfGABq6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 21:46:58 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190701014653epoutp040de0808a4962a89d59255c48896d6e6c~tJUKKzEBV0468404684epoutp04F
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2019 01:46:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190701014653epoutp040de0808a4962a89d59255c48896d6e6c~tJUKKzEBV0468404684epoutp04F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561945613;
-        bh=m+eqQbrZSo3RuVkRuZSW5PciV5T0jFZBN5eKTO8g78w=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=uY0r6/jeUFZ8oyxuOV5MWGuGpiIaCyJ/CPDZOPjUyAuFD4GQpt6axfxq/i/F9uInF
-         YNmC1qplxMVs5ERB7BDWnGLLW+EdpsZUF5KDR5X8y+Xtmj0UxHhToSsAdHFZFCgGi2
-         ukMRNT2AjE5P9EhxZZP1UPV4HqPQZ12d08sV1xn0=
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190701014650epcas1p205b2e10822aa586ed41da46e00186d32~tJUH0gaa10786807868epcas1p2z;
-        Mon,  1 Jul 2019 01:46:50 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        39.EE.04142.406691D5; Mon,  1 Jul 2019 10:46:44 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190701014643epcas1p35762284cf05bfb0796cddf271faf1e00~tJUBPV5-Q1319013190epcas1p39;
-        Mon,  1 Jul 2019 01:46:43 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190701014643epsmtrp22add956dc07b0f6e466080cbd030acc2~tJUBOe7iJ1483114831epsmtrp2L;
-        Mon,  1 Jul 2019 01:46:43 +0000 (GMT)
-X-AuditID: b6c32a36-cf9ff7000000102e-5a-5d196604b896
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        44.E8.03662.306691D5; Mon,  1 Jul 2019 10:46:43 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190701014643epsmtip2d6ab49c6c09dd3c6c55c15c7bb9c9b23~tJUBF2iuE3067230672epsmtip2W;
-        Mon,  1 Jul 2019 01:46:43 +0000 (GMT)
-Subject: Re: [PATCH] devfreq: tegra20: add COMMON_CLK dependency
-To:     Arnd Bergmann <arnd@arndb.de>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <87564032-015a-323f-6d15-0abc67f6cc60@samsung.com>
-Date:   Mon, 1 Jul 2019 10:49:29 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Sun, 30 Jun 2019 21:48:57 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:48764 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726667AbfGABs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Jun 2019 21:48:57 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x611lk0l020239
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Sun, 30 Jun 2019 18:48:01 -0700
+Received: from pek-lpggp6.wrs.com (128.224.153.40) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.40) with Microsoft SMTP Server id 14.3.439.0; Sun, 30 Jun 2019
+ 18:47:47 -0700
+From:   Yongxin Liu <yongxin.liu@windriver.com>
+To:     <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>
+CC:     <bskeggs@redhat.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/nouveau: fix memory leak in nouveau_conn_reset()
+Date:   Mon, 1 Jul 2019 09:46:22 +0800
+Message-ID: <20190701014622.13199-1-yongxin.liu@windriver.com>
+X-Mailer: git-send-email 2.14.4
 MIME-Version: 1.0
-In-Reply-To: <20190628103232.2467959-1-arnd@arndb.de>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBJsWRmVeSWpSXmKPExsWy7bCmgS5LmmSsQedvIYu/k46xW6z++JjR
-        4mzTG3aLy7vmsFl87j3CaHG7cQWbA5vH71+TGD12zrrL7tG3ZRWjx+dNcgEsUdk2GamJKalF
-        Cql5yfkpmXnptkrewfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUDLlRTKEnNKgUIBicXF
-        Svp2NkX5pSWpChn5xSW2SqkFKTkFlgV6xYm5xaV56XrJ+blWhgYGRqZAhQnZGY37ZjMVzOKu
-        eLPxD2MD42rOLkZODgkBE4m3Vy4zdzFycQgJ7GCU6H/VwAbhfGKUOHVkIZTzjVGi5cpdRriW
-        LxvZIRJ7GSVO/77AAuG8Z5SY2vAbKMPBISzgIHHonDJIg4hAucTH32tZQcLMAgkS65rCQMJs
-        AloS+1/cYAOx+QUUJa7+eAw2n1fATmLZnyawOIuAisTRh5/AbFGBCInLW3ZB1QhKnJz5hAVk
-        JKeAqcTMOakgYWYBcYlbT+YzQdjyEs1bZzNDnPyYTeLtvUoI20Xi9v+DTBC2sMSr41vYIWwp
-        ic/v9rJB2NUSK08eAftdQqCDUWLL/gusEAljif1LJzNBvKIpsX6XPkRYUWLn77mMEHv5JN59
-        7QH7VkKAV6KjTQiiRFni8oO7UGslJRa3d7JNYFSaheSZWUg+mIXkg1kIyxYwsqxiFEstKM5N
-        Ty02LDBCjupNjOBUqWW2g3HROZ9DjAIcjEo8vA13JGKFWBPLiitzDzFKcDArifDOPQwU4k1J
-        rKxKLcqPLyrNSS0+xGgKDOuJzFKiyfnANJ5XEm9oamRsbGxhYmhmamioJM4bz30zRkggPbEk
-        NTs1tSC1CKaPiYNTqoHRSYZnofjcDh9ljk2LNG5cV3v0J7z+1b+bD6SOTmHcp/e8KeZnUN2C
-        TaUyrqv4Wt72NW462P67dOvZA8xRK1TenHVfuy+0Yo5o1IzIkz8/3VDKytj3cLp2kLn4Jf77
-        fdVKrPNUvn8uzPRa8KDKhsvD4cIO5bLJD1SLV/Nsd4u88KqkuaDuzXFTJZbijERDLeai4kQA
-        jYuA0KsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42LZdlhJXpc5TTLWYOV2Y4u/k46xW6z++JjR
-        4mzTG3aLy7vmsFl87j3CaHG7cQWbA5vH71+TGD12zrrL7tG3ZRWjx+dNcgEsUVw2Kak5mWWp
-        Rfp2CVwZjftmMxXM4q54s/EPYwPjas4uRk4OCQETibdfNrJ3MXJxCAnsZpR4MnMuM0RCUmLa
-        xaNANgeQLSxx+HAxRM1bRonJa+ezgcSFBRwkDp1TBikXESiXmHa1kQkkzCyQIPHyWxVEeQej
-        xPZ3LawgNWwCWhL7X9xgA7H5BRQlrv54zAhi8wrYSSz70wQWZxFQkTj68BOYLSoQIdHXNpsN
-        okZQ4uTMJywg8zkFTCVmzkkFCTMLqEv8mXeJGcIWl7j1ZD4ThC0v0bx1NvMERuFZSLpnIWmZ
-        haRlFpKWBYwsqxglUwuKc9Nziw0LjPJSy/WKE3OLS/PS9ZLzczcxgqNGS2sH44kT8YcYBTgY
-        lXh4NW5JxAqxJpYVV+YeYpTgYFYS4Z17GCjEm5JYWZValB9fVJqTWnyIUZqDRUmcVz7/WKSQ
-        QHpiSWp2ampBahFMlomDU6qB0cOj82jdrGtCyz+/WcPSrGxzV3d1XMn7kKD0HTZby+beuJa3
-        Yupfhxn6uU5zje6wdAuoXZzwaLVRtdaFreXdv2cGH9j1bcvlBwf9H0z4sGz7yjX/P+jsrK6e
-        W14v0DPl9sldTU4W2de3KHmUFTioHqzsEru6fFGE4Jkkdumnn/ZdfuOQpWVTPl2JpTgj0VCL
-        uag4EQBsZt+ElgIAAA==
-X-CMS-MailID: 20190701014643epcas1p35762284cf05bfb0796cddf271faf1e00
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190628103243epcas4p133102dfa6709970b1dd49296f82425b2
-References: <CGME20190628103243epcas4p133102dfa6709970b1dd49296f82425b2@epcas4p1.samsung.com>
-        <20190628103232.2467959-1-arnd@arndb.de>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+In nouveau_conn_reset(), if connector->state is true,
+__drm_atomic_helper_connector_destroy_state() will be called,
+but the memory pointed by asyc isn't freed. Memory leak happens
+in the following function __drm_atomic_helper_connector_reset(),
+where newly allocated asyc->state will be assigned to connector->state.
 
-Thanks for fixup.
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+So using nouveau_conn_atomic_destroy_state() instead of
+__drm_atomic_helper_connector_destroy_state to free the "old" asyc.
 
+Here the is the log showing memory leak.
 
+unreferenced object 0xffff8c5480483c80 (size 192):
+  comm "kworker/0:2", pid 188, jiffies 4294695279 (age 53.179s)
+  hex dump (first 32 bytes):
+    00 f0 ba 7b 54 8c ff ff 00 00 00 00 00 00 00 00  ...{T...........
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000005005c0d0>] kmem_cache_alloc_trace+0x195/0x2c0
+    [<00000000a122baed>] nouveau_conn_reset+0x25/0xc0 [nouveau]
+    [<000000004fd189a2>] nouveau_connector_create+0x3a7/0x610 [nouveau]
+    [<00000000c73343a8>] nv50_display_create+0x343/0x980 [nouveau]
+    [<000000002e2b03c3>] nouveau_display_create+0x51f/0x660 [nouveau]
+    [<00000000c924699b>] nouveau_drm_device_init+0x182/0x7f0 [nouveau]
+    [<00000000cc029436>] nouveau_drm_probe+0x20c/0x2c0 [nouveau]
+    [<000000007e961c3e>] local_pci_probe+0x47/0xa0
+    [<00000000da14d569>] work_for_cpu_fn+0x1a/0x30
+    [<0000000028da4805>] process_one_work+0x27c/0x660
+    [<000000001d415b04>] worker_thread+0x22b/0x3f0
+    [<0000000003b69f1f>] kthread+0x12f/0x150
+    [<00000000c94c29b7>] ret_from_fork+0x3a/0x50
 
-Hi Myungjoo,
-This patch have to be merged for linux 5.3 before sending pull-request
-because it fixed the build error of merged patch[1] on devfreq.git.
+Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
+---
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=028b3793284fa1bb4db73a90608d7cb24664480c
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
+index 4116ee62adaf..f69ff22beee0 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -252,7 +252,7 @@ nouveau_conn_reset(struct drm_connector *connector)
+ 		return;
+ 
+ 	if (connector->state)
+-		__drm_atomic_helper_connector_destroy_state(connector->state);
++		nouveau_conn_atomic_destroy_state(connector, connector->state);
+ 	__drm_atomic_helper_connector_reset(connector, &asyc->state);
+ 	asyc->dither.mode = DITHERING_MODE_AUTO;
+ 	asyc->dither.depth = DITHERING_DEPTH_AUTO;
+-- 
+2.14.4
 
-Best Regards,
-Chanwoo Choi
-
-On 19. 6. 28. 오후 7:32, Arnd Bergmann wrote:
-> Compile-testing the new driver on platforms without CONFIG_COMMON_CLK
-> leads to a link error:
-> 
-> drivers/devfreq/tegra20-devfreq.o: In function `tegra_devfreq_target':
-> tegra20-devfreq.c:(.text+0x288): undefined reference to `clk_set_min_rate'
-> 
-> Add a dependency on COMMON_CLK to avoid this.
-> 
-> Fixes: 1d39ee8dad6d ("PM / devfreq: Introduce driver for NVIDIA Tegra20")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/devfreq/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index f3b242987fd9..defe1d438710 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -107,6 +107,7 @@ config ARM_TEGRA_DEVFREQ
->  config ARM_TEGRA20_DEVFREQ
->  	tristate "NVIDIA Tegra20 DEVFREQ Driver"
->  	depends on (TEGRA_MC && TEGRA20_EMC) || COMPILE_TEST
-> +	depends on COMMON_CLK
->  	select DEVFREQ_GOV_SIMPLE_ONDEMAND
->  	select PM_OPP
->  	help
-> 
