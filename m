@@ -2,92 +2,111 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3380C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24157C06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1ACB20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0309020B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:45:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lGdboEtC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTEwuu7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfGATor (ORCPT
+        id S1726757AbfGATpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 15:44:47 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45291 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfGATor (ORCPT
+        Mon, 1 Jul 2019 15:45:55 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45774 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfGATpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 15:44:47 -0400
-Received: by mail-io1-f65.google.com with SMTP id e3so31471252ioc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 12:44:46 -0700 (PDT)
+        Mon, 1 Jul 2019 15:45:55 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a14so24919748edv.12;
+        Mon, 01 Jul 2019 12:45:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=au5bHTFzFyS+PnKfWAZmJzOM/aBWyQsp9x8rTigTLlY=;
-        b=lGdboEtC8HEdmH1B/LWLni/Cqr0geuKsZamAD0yg3HRnx4a9P6fnOslhKVLyP1nBor
-         MQxAbFQB/0VoCn340vrLbrDUS15lHm3cQ23cFn8FPjUCLMFxFmMbYQkIv34IrDqhiMpr
-         znxksifhGACTACHTARKoSO7yk/Ny5iDKQzZmOBtBe5uDf32jwEz9xnhDyGtnEUJg7zkN
-         DXl2gR+Sl+Oq8P0YH+Ku69ud5fAu5DpjfSgpRjHbg6abL1qdtZRcDKhmjBdW2r9Waj90
-         W+J7If66Pyc2Xwufjr4B4/lf+esLbDSpuO6HKhoWXn6/MOzsdNTujxQNYLjoi3Jv3Mm8
-         Fiow==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wYt+ewXSszrhV0/c2X8NnRDiNI3d5oiddfdOVtTGEv4=;
+        b=OTEwuu7vihjB71E/nIGCfIEuAUae12z379sL2OcZplfhBCkJ/5py4ReiPBH3cOGMcC
+         wSbZsO2UpnITz4pleUww2L0E48/p3edkgBngqpQNrigk/GfTILqWzT6hblKHq2gFqjpC
+         ZURhOgAcj4++trVqK9lWHNPhdwYVWZIVc3ZHDOq7HXgrBANMYzyJrPYQxwScRoQjD+7K
+         gWJ6JFpAhoAyNe6DFinGjvg4MhF7N/9roWXA8yCzip8uK83RsuZHDqNqrE8RpA0VypzW
+         SuQeAkaoYTjHsKUCBJZi8TL52/sF3AYgrdjQeC9pGl9r8QSYtzyaliB6XgWqblyo0D8y
+         V1Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=au5bHTFzFyS+PnKfWAZmJzOM/aBWyQsp9x8rTigTLlY=;
-        b=d9HqKhRxaAjL7yZ8Vh/fz1+mwHq+M386C/p+tMdUc9EHs+g7BHj6qHx2R2mc5LdjJf
-         mBNWmpjfEneY/RHKZiieEB4UGTO0OYb+1VEBHqUhXrfeRpWIUNEzEn85mv6srxlWptLn
-         oSjY9OYNQnf5tKEWBBA8vBVjSMH8umpP6n9FNxwP5JlvqnuwAcgRy6IwyxJgtputMKft
-         DbCLOk1d1l48A+8q9JYASgYL2atoApjiTjSxntuO85NnSQ5Xx+mSWOJ1VskDg2T4cmnN
-         ECY9Jo4z9tQxtIzemvQpyWOg+ZhW3nBRRI7kzr+WxnZTDMcsQUGd6f9grwn7bzKf+7AR
-         JjOQ==
-X-Gm-Message-State: APjAAAUmnRslzfS1hjCY3PVPnaNvWfSxyocrBYqf26jmUf0qqOes+T/j
-        3RrwnQhYknakMORuQPLQ0iFMj38chH3Qg4aF
-X-Google-Smtp-Source: APXvYqzae2gOwhtXt0DDFyhsuvPSFlr1RhLQTJLS3NT0escC7DHUIgg+Ab3PWa0Jbi8B+BX+8vcW5w==
-X-Received: by 2002:a6b:b602:: with SMTP id g2mr3718121iof.54.1562010285852;
-        Mon, 01 Jul 2019 12:44:45 -0700 (PDT)
-Received: from [192.168.1.158] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id z26sm10564478ioi.85.2019.07.01.12.44.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 12:44:44 -0700 (PDT)
-Subject: Re: [PATCH 1/1] sbitmap: Replace cmpxchg with xchg
-To:     "Pavel Begunkov (Silence)" <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <722e1d561f0a49dc464d3a2b1be4c077f7502726.1558625912.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <77f4ee3b-a190-5708-f30b-0c5f2b933b3e@kernel.dk>
-Date:   Mon, 1 Jul 2019 13:44:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wYt+ewXSszrhV0/c2X8NnRDiNI3d5oiddfdOVtTGEv4=;
+        b=HBhrflUx//3WH+5J2nmWrYCSJD3VtP2jZaBIsMmLQ/3sU3E2TvnUpM8aufSOoLYuzT
+         hjo3lqzf7n1fAAh1WzsAPa1zfQ+iOS6z3v9HOG82j2Y1IhRpEi7iGl4HHIgz+9GQbwR4
+         l4+frBEVL9eYUYhvfAtjo3miyq+hBb8ttFOuSFXipCTcAgOiCUfvQ6FV6rxxEIUxdO93
+         JP4Hh4pXgrN4bFAdc7AnNrKtVa0OYWIHR6CgagF9dK48wbnY/zmKjpzNLQ4QbGXoTo3v
+         TEzUYv8OR7B8dnLIspQn2n6sDGdG2RN8xDYKEWSeLXfGhwdsHwVUbrC45hOfxRwR7w9q
+         dQgw==
+X-Gm-Message-State: APjAAAUM5b84wUxyf1qgPMMLsWqX2XGeIfgUdfdxDACKTa7fxrFQrmzl
+        bEFlbgCkEApE+Udqe2RQbm7iRU2KGeqbFKIAMIM=
+X-Google-Smtp-Source: APXvYqzmQmIl2B93LwDgt2BUXvj32T8pqLfXA1PfXNu7QlmdutC1F2lXsilw4UmzTuobGJsgzukwDitPiyJKtGG6OpY=
+X-Received: by 2002:a50:8bfd:: with SMTP id n58mr31055135edn.272.1562010353531;
+ Mon, 01 Jul 2019 12:45:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <722e1d561f0a49dc464d3a2b1be4c077f7502726.1558625912.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190701173907.15494-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20190701173907.15494-1-jeffrey.l.hugo@gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 1 Jul 2019 12:45:38 -0700
+Message-ID: <CAF6AEGu=Pv5mCKA7QDVGPjhFShmD2cfKWNZk26PTQSSQzbzKXA@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/mdp5: Use drm_device for creating gem address space
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/19 9:39 AM, Pavel Begunkov (Silence) wrote:
-> From: Pavel Begunkov <asml.silence@gmail.com>
-> 
-> cmpxchg() with an immediate value could be replaced with less expensive
-> xchg(). The same true if new value don't _depend_ on the old one.
-> 
-> In the second block, atomic_cmpxchg() return value isn't checked, so
-> after atomic_cmpxchg() ->  atomic_xchg() conversion it could be replaced
-> with atomic_set(). Comparison with atomic_read() in the second chunk was
-> left as an optimisation (if that was the initial intention).
+On Mon, Jul 1, 2019 at 10:39 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> Creating the msm gem address space requires a reference to the dev where
+> the iommu is located.  The driver currently assumes this is the same as
+> the platform device, which breaks when the iommu is outside of the
+> platform device.  Use the drm_device instead, which happens to always have
+> a reference to the proper device.
+>
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> index 4a60f5fca6b0..1347a5223918 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> @@ -702,7 +702,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+>         mdelay(16);
+>
+>         if (config->platform.iommu) {
+> -               aspace = msm_gem_address_space_create(&pdev->dev,
+> +               aspace = msm_gem_address_space_create(dev->dev,
+>                                 config->platform.iommu, "mdp5");
 
-Applied, thanks.
+hmm, do you have a tree somewhere with your dt files?  This makes me
+think the display iommu is hooked up somewhere differently compared
+to, say, msm8916.dtsi
 
--- 
-Jens Axboe
+BR,
+-R
 
+>                 if (IS_ERR(aspace)) {
+>                         ret = PTR_ERR(aspace);
+> --
+> 2.17.1
+>
