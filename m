@@ -2,170 +2,95 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BBFC06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B81C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352C021721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:31:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SYl2HFPL"
+	by mail.kernel.org (Postfix) with ESMTP id 7C59421721
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562002309;
+	bh=u3SppgTway+eXuflscf2TzQ5lfnG2J1fw1rm6YMFVMM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=jPsEC5A+942Xd8I3y/Fy6NB5c8hyK1o+bmnOpBaaQBgCUt4UAxJHC06lfP5saaA1n
+	 Lqg9ZBo91E8XQC0MLzJq86J6EyuhS+X1t9QA7jEjJJqSBfjddmynH+J4+nD4Vnmz/v
+	 oP/7pM1ELU/S+/1wqtfqEYKObfyX/bNhhfURK/jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729670AbfGARbR (ORCPT
+        id S1729742AbfGARbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 13:31:17 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:40169 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbfGARbR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 13:31:17 -0400
-Received: by mail-qt1-f202.google.com with SMTP id z6so13977517qtj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 10:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=57FXAe/wgMHkImrRgxBMfz6F69lw3WXfZi6uoGW6nJo=;
-        b=SYl2HFPLHC4vO1l86HKGG+KsnA3p3ugT/bhNQ/ORJtqVZc8wQfosqv55sqkPjCue2f
-         7e+f0w+fwy4nCLJm+aSX0gjcTPTFuslk7RJ2coLvl4tv42WYnQaSVWoyeshxUbGcyoO4
-         hhD0T0RPIoAUdBGs62mRr5atpiOg14m1NCtJjHk47BVcRRY/tyaLMM7grU8ZMoLNJZwx
-         IcepxW70TRfXeKJAeFoYS7BQzeBLr9pEERYN8p01Y1/ZagLCW5l8l5vOesfkxnJcd8au
-         EhxOm/nyih6HRvFbzX+vkO9xWXLQ+vCqk6tmWeWdmKAGMqonEnvKkeksITidwsCJDq9F
-         iQEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=57FXAe/wgMHkImrRgxBMfz6F69lw3WXfZi6uoGW6nJo=;
-        b=JNDex+O0k9ILV0t7OSn65rvPnzkrXxnj8DOlWdOymQ45dVMJWB0YO9jnpVXh/EeaXa
-         65i1PUw3gbYftnmkfYpq0Bvwni2uY/IHtfv/9iw+J+wxJEy74EdxGOgehprKueGMjlW3
-         bw40gBvz8g4Vh/QDZ0j17YqpwwtG/vdi2CpN3YgYd39QW1vS6ZW+FHCMGpqr10+5liPJ
-         h87kJayR/yTdYfwwVXY1GnXgVUkn9bDJGEFO2D8T7+QVEHf1vxr/QsMRa/pGdC7xFGro
-         i/WVDa8+XVgSkFJYDPhjI51pIZfWtap1F6RGKQuuXYd7gLCERH5M0/Eh9PsHqkDeDHNn
-         VM4g==
-X-Gm-Message-State: APjAAAX7mFbpJgkMyFrtWRJbdJo/KtiFA+DKhktv/UFQDmGH7i0veNzL
-        vYj0CEYfRDOdXLE5zaMhMka0lWlPtno4vj6x
-X-Google-Smtp-Source: APXvYqwzE7/6t/styf6kTpX++BJRIsoo5TiY7JuE7+CzfD2WEAoCByH3gCWAWT1gJmZrbbugH9SfdK0LrtM8ZHGQ
-X-Received: by 2002:ac8:fbb:: with SMTP id b56mr2584122qtk.324.1562002276640;
- Mon, 01 Jul 2019 10:31:16 -0700 (PDT)
-Date:   Mon,  1 Jul 2019 10:30:42 -0700
-Message-Id: <20190701173042.221453-1-henryburns@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH] mm/z3fold: Fix z3fold_buddy_slots use after free
-From:   Henry Burns <henryburns@google.com>
-To:     Vitaly Wool <vitalywool@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Matthew Wilcox <mawilcox@microsoft.com>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Xidong Wang <wangxidong_97@163.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Henry Burns <henryburns@google.com>
+        Mon, 1 Jul 2019 13:31:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727849AbfGARbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 13:31:48 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2466521479;
+        Mon,  1 Jul 2019 17:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562002306;
+        bh=u3SppgTway+eXuflscf2TzQ5lfnG2J1fw1rm6YMFVMM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=VwTaLep0ifiWwbXmbblVYjQkPd82by4O+ikcgxPN+f5zQ+4ymF77KBbM+2DnOpW5T
+         Lu+6oHbSgnwbQiwvJMkRFj5j1xEaFXKSc9CEaIDQfBdgigyNMuC0BMDOIJ4ZuTvwNG
+         AfboPV/hlDoi4b6TKZP2krnjXVGx3OiUbnD3onIQ=
+Message-ID: <af6b83143e56f803b6a9293a3138165317efbdbf.camel@kernel.org>
+Subject: Re: [PATCH] ceph: fix end offset in truncate_inode_pages_range call
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Cc:     zhengbin <zhengbin13@huawei.com>, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 01 Jul 2019 13:31:44 -0400
+In-Reply-To: <20190701171634.20290-1-lhenriques@suse.com>
+References: <20190701171634.20290-1-lhenriques@suse.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running z3fold stress testing with address sanitization
-showed zhdr->slots was being used after it was freed.
+On Mon, 2019-07-01 at 18:16 +0100, Luis Henriques wrote:
+> Commit e450f4d1a5d6 ("ceph: pass inclusive lend parameter to
+> filemap_write_and_wait_range()") fixed the end offset parameter used to
+> call filemap_write_and_wait_range and invalidate_inode_pages2_range.
+> Unfortunately it missed truncate_inode_pages_range, introducing a
+> regression that is easily detected by xfstest generic/130.
+> 
+> The problem is that when doing direct IO it is possible that an extra page
+> is truncated from the page cache when the end offset is page aligned.
+> This can cause data loss if that page hasn't been sync'ed to the OSDs.
+> 
+> While there, change code to use PAGE_ALIGN macro instead.
+> 
+> Fixes: e450f4d1a5d6 ("ceph: pass inclusive lend parameter to filemap_write_and_wait_range()")
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+>  fs/ceph/file.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index 183c37c0a8fc..7a57db8e2fa9 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -1007,7 +1007,7 @@ 	(struct kiocb *iocb, struct iov_iter *iter,
+>  			 * may block.
+>  			 */
+>  			truncate_inode_pages_range(inode->i_mapping, pos,
+> -					(pos+len) | (PAGE_SIZE - 1));
+> +						   PAGE_ALIGN(pos + len) - 1);
+>  
+>  			req->r_mtime = mtime;
+>  		}
 
-z3fold_free(z3fold_pool, handle)
-  free_handle(handle)
-    kmem_cache_free(pool->c_handle, zhdr->slots)
-  release_z3fold_page_locked_list(kref)
-    __release_z3fold_page(zhdr, true)
-      zhdr_to_pool(zhdr)
-        slots_to_pool(zhdr->slots)  *BOOM*
-
-Instead we split free_handle into two functions, release_handle()
-and free_slots(). We use release_handle() in place of free_handle(),
-and use free_slots() to call kmem_cache_free() after
-__release_z3fold_page() is done.
-
-Fixes: 7c2b8baa61fe  ("mm/z3fold.c: add structure for buddy handles")
-Signed-off-by: Henry Burns <henryburns@google.com>
----
- mm/z3fold.c | 33 ++++++++++++++-------------------
- 1 file changed, 14 insertions(+), 19 deletions(-)
-
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index f7993ff778df..e174d1549734 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -213,31 +213,24 @@ static inline struct z3fold_buddy_slots *handle_to_slots(unsigned long handle)
- 	return (struct z3fold_buddy_slots *)(handle & ~(SLOTS_ALIGN - 1));
- }
- 
--static inline void free_handle(unsigned long handle)
-+static inline void release_handle(unsigned long handle)
- {
--	struct z3fold_buddy_slots *slots;
--	int i;
--	bool is_free;
--
- 	if (handle & (1 << PAGE_HEADLESS))
- 		return;
- 
- 	WARN_ON(*(unsigned long *)handle == 0);
- 	*(unsigned long *)handle = 0;
--	slots = handle_to_slots(handle);
--	is_free = true;
--	for (i = 0; i <= BUDDY_MASK; i++) {
--		if (slots->slot[i]) {
--			is_free = false;
--			break;
--		}
--	}
-+}
- 
--	if (is_free) {
--		struct z3fold_pool *pool = slots_to_pool(slots);
-+/* At this point all of the slots should be empty */
-+static inline void free_slots(struct z3fold_buddy_slots *slots)
-+{
-+	struct z3fold_pool *pool = slots_to_pool(slots);
-+	int i;
- 
--		kmem_cache_free(pool->c_handle, slots);
--	}
-+	for (i = 0; i <= BUDDY_MASK; i++)
-+		VM_BUG_ON(slots->slot[i]);
-+	kmem_cache_free(pool->c_handle, slots);
- }
- 
- static struct dentry *z3fold_do_mount(struct file_system_type *fs_type,
-@@ -431,7 +424,8 @@ static inline struct z3fold_pool *zhdr_to_pool(struct z3fold_header *zhdr)
- static void __release_z3fold_page(struct z3fold_header *zhdr, bool locked)
- {
- 	struct page *page = virt_to_page(zhdr);
--	struct z3fold_pool *pool = zhdr_to_pool(zhdr);
-+	struct z3fold_buddy_slots *slots = zhdr->slots;
-+	struct z3fold_pool *pool = slots_to_pool(slots);
- 
- 	WARN_ON(!list_empty(&zhdr->buddy));
- 	set_bit(PAGE_STALE, &page->private);
-@@ -442,6 +436,7 @@ static void __release_z3fold_page(struct z3fold_header *zhdr, bool locked)
- 	spin_unlock(&pool->lock);
- 	if (locked)
- 		z3fold_page_unlock(zhdr);
-+	free_slots(slots);
- 	spin_lock(&pool->stale_lock);
- 	list_add(&zhdr->buddy, &pool->stale);
- 	queue_work(pool->release_wq, &pool->work);
-@@ -1009,7 +1004,7 @@ static void z3fold_free(struct z3fold_pool *pool, unsigned long handle)
- 		return;
- 	}
- 
--	free_handle(handle);
-+	release_handle(handle);
- 	if (kref_put(&zhdr->refcount, release_z3fold_page_locked_list)) {
- 		atomic64_dec(&pool->pages_nr);
- 		return;
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
