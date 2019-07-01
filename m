@@ -2,175 +2,100 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE8AC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DFAC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B1E212F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:28:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="DElwOE2F"
+	by mail.kernel.org (Postfix) with ESMTP id D09DB212F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:28:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561969696;
+	bh=VA7edMDdwxFSaRG0IcUd5SjoTcBPI34Q3YvdIxNtTpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=giMEhOTgWuPK7GtuTiuUnCEGL9SlvhH4AbAF4ikP4Ps1xLFo8TfbQMWNtTSjWOP3m
+	 wxRYET+wD+lhyLQopznOq8CPsqsYkgE7yp7aWXx7ykGcUZQv1t8/0vHMOuR0voxFuG
+	 LC6puqO6gTgX9l32zHLANiGPsXxvAnoW+kRmyypc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbfGAI2L (ORCPT
+        id S1728145AbfGAI2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:28:11 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40129 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbfGAI2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:28:08 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a15so13715562qtn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 01:28:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QasTTaprmLYP8lu+OAIAZ4qDWXTMLVjKiiW3eSvYcPg=;
-        b=DElwOE2FVy8WGouInPBiLUdX//ZPDkOt68rwSbXsDRXYvjYCDDwuSl9qtiBJsOMo3u
-         BnaD5RHWgFidR4gNfrTI8pbPKRUPKE/VkHqVuUybCONlNhmNrcPD02Bg1aSVy07qQAiG
-         GeK/a425RkCz+UaDwTzANbF6XxooFBQfoti8ZY8QD6BTglcBxv0Zw/40genT/VOYp/dP
-         XQ8xeLoUQeYCxNcNSrRSpWnPL6iuc88I5qg8xu22qM/pMh5f+7h+M4bBTFOeSU0H0AZX
-         N2AjJdGg/iZLXL1c5ePvTo8T04aSB17EBDPd7/z5YMhvdOxV6FCb+2IG1fsUVwGIWdiW
-         IIaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QasTTaprmLYP8lu+OAIAZ4qDWXTMLVjKiiW3eSvYcPg=;
-        b=Y4nu4rmSs73RtkRe9fZnM02iWUqur4si+uDK7sdaZYRo4Y218qcbuX00qJ2tHuRZ1t
-         onlte72g2pBehWooEDkhW+MRqggNnIb5K5AeiUerljT7TFRYvjEuzx20Xr51QKNE8mqa
-         Vm0m6dO0co6j+ZEvZouQ1Vmz0BVYEoKzEWBiyCmnhNd8ePtgq/xqxg1EwQcd1SaQzCmD
-         gEXNIOiCtPulIdOBN04JIi5psuromalQAfa3lUd/jazI6Uz72LAViW7CDEMuALaJ68Ck
-         WaZgwfPGTIFLn4S4fGtanjhkvMpey03q/FHvZD1ZgH/JxdoejTG2dJdHcsMyT9GvTHbv
-         B3Hg==
-X-Gm-Message-State: APjAAAWF8XyQKXdL45rCNX6roIhGuXxt3JU6+5bcVjBmHCdSVY5mt5hE
-        0/bvSF9vQaPkBOO2UoyrCH+90cO/SNTdV7frA+QN/A==
-X-Google-Smtp-Source: APXvYqzVHPWiWEbrcd2gL7Cn7r79vE5x4Z5GHfD3ruh9NhVQD6G+qgPXkeuauOxShyujHZfTdjwHnpMYUVZe7DLcBaE=
-X-Received: by 2002:aed:36c5:: with SMTP id f63mr19693568qtb.239.1561969687300;
- Mon, 01 Jul 2019 01:28:07 -0700 (PDT)
+        Mon, 1 Jul 2019 04:28:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727667AbfGAI2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 04:28:12 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FB05208C4;
+        Mon,  1 Jul 2019 08:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561969691;
+        bh=VA7edMDdwxFSaRG0IcUd5SjoTcBPI34Q3YvdIxNtTpc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LFxuos+Z/2a0YjDDcJRC7XZY/mCtH3+PCtm9X557iA/Z16aYYDReA9p4fgKQeIxZu
+         pSERArKKEzOykrNrhNpf7mq528eLZSRxrILKvY34p2s/4tOlzZdMmw1889YCCRAUSs
+         6cNfbrXg8MwhnXn7BMlpEimqIahF4v1vNuHuQ+aM=
+Date:   Mon, 1 Jul 2019 09:28:06 +0100
+From:   Will Deacon <will@kernel.org>
+To:     "Saidi, Ali" <alisaidi@amazon.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Matt Mackall <mpm@selenic.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rindjunsky, Ron" <ronrindj@amazon.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>
+Subject: Re: [PATCH 0/3] Add support for Graviton TRNG
+Message-ID: <20190701082805.pifv4attux4mddld@willie-the-truck>
+References: <20190604203100.15050-1-alisaidi@amazon.com>
+ <20190605122031.GK15030@fuggles.cambridge.arm.com>
+ <7EC45708-38A1-4826-BC82-298EFAAE30B1@amazon.com>
+ <3104F396-094F-454C-8308-BF651FAB99AB@amazon.com>
 MIME-Version: 1.0
-References: <20190627095247.8792-1-chiu@endlessm.com>
-In-Reply-To: <20190627095247.8792-1-chiu@endlessm.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Mon, 1 Jul 2019 16:27:56 +0800
-Message-ID: <CAD8Lp44R0a1=fVi=fGv69w1ppdcaFV01opkdkhaX-eJ=K=tYeA@mail.gmail.com>
-Subject: Re: [PATCH] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3104F396-094F-454C-8308-BF651FAB99AB@amazon.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+[Note: this was in my spam folder]
 
-On Thu, Jun 27, 2019 at 5:53 PM Chris Chiu <chiu@endlessm.com> wrote:
-> The WiFi tx power of RTL8723BU is extremely low after booting. So
-> the WiFi scan gives very limited AP list and it always fails to
-> connect to the selected AP. This module only supports 1x1 antenna
-> and the antenna is switched to bluetooth due to some incorrect
-> register settings.
->
-> This commit hand over the antenna control to PTA, the wifi signal
-> will be back to normal and the bluetooth scan can also work at the
-> same time. However, the btcoexist still needs to be handled under
-> different circumstances. If there's a BT connection established,
-> the wifi still fails to connect until disconneting the BT.
->
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+On Fri, Jun 28, 2019 at 06:05:10PM +0000, Saidi, Ali wrote:
+> On 6/7/19, 7:59 AM, " Ali Saidi" <alisaidi@amazon.com> wrote:
+>     On 6/5/19, 7:20 AM, "Will Deacon" <will.deacon@arm.com> wrote:
+>         On Tue, Jun 04, 2019 at 08:30:57PM +0000, Ali Saidi wrote:
+>         > AWS Graviton based systems provide an Arm SMC call in the vendor defined
+>         > hypervisor region to read random numbers from a HW TRNG and return them to the
+>         > guest. 
+>         > 
+>         > We've observed slower guest boot and especially reboot times due to lack of
+>         > entropy and providing access to a TRNG is meant to address this. 
+>         
+>         Curious, but why this over something like virtio-rng?
+>         
+>     This interface allows us to provide the functionality from both EL2
+>     and EL3 and support multiple different types of our instances which we
+>     unfortunately can't do with virt-io.
+>     
+> Any additional comments?
+> Do you know when you'll have a chance to rebase arm64/smccc-cleanup?
 
-Really nice work finding this!
+Sorry, Ali, this slipped through the cracks. Marc and I will chat today and
+look at respinning what we had before; it should then hopefully be
+straightforward enough for you to take that as a base for what you want to
+do.
 
-I know that after this change, you plan to bring over the btcoexist
-code from the vendor driver (or at least the minimum required code)
-for a more complete fix, but I'm curious how you found these magic
-register values and how they compare to the values used by the vendor
-driver with btcoexist?
-
-What's PTA? A type of firmware-implemented btcoexist that works for
-scanning but doesn't work when a BT connection is actually
-established?
-
-> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> index 3adb1d3d47ac..6c3c70d93ac1 100644
-> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> @@ -1525,7 +1525,7 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
->         /*
->          * WLAN action by PTA
->          */
-> -       rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x04);
-> +       rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x0c);
-
-The comment above this still says "WLAN action by PTA" and the vendor
-driver has:
-        //set wlan_act control by PTA
-        pBtCoexist->fBtcWrite1Byte(pBtCoexist, 0x76e, 0x4);
-
-but then also:
-            //set wlan_act control by PTA
-            pBtCoexist->fBtcWrite1Byte(pBtCoexist, 0x76e, 0xc);
-
-So this change seems to be at least consistent with ambiguity of the
-vendor driver, do you have any understanding of the extra bit that is
-now set here?
-
-It's not easy to follow the code flow of the vendor driver to see what
-actually happens, have you checked that, does it end up using the 0xc
-value?
-
-> -        * 0x280, 0x00, 0x200, 0x80 - not clear
-> +        * Different settings per different antenna position.
-> +        * Antenna switch to BT: 0x280, 0x00 (inverse)
-> +        * Antenna switch to WiFi: 0x0, 0x280 (inverse)
-> +        * Antenna controlled by PTA: 0x200, 0x80 (inverse)
->          */
-> -       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
-> +       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
-
-I don't quite follow the comment here. Why are there 2 values listed
-for each possibility, what do you mean by inverse? You say the
-register settings were incorrect, but the previous value was 0x00
-which you now document as "antenna switch to wifi" which sounds like
-it was already correct?
-
-Which value does the vendor driver use?
-
->         /*
->          * Software control, antenna at WiFi side
-> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> index 8136e268b4e6..87b2179a769e 100644
-> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> @@ -3891,12 +3891,13 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
->
->         /* Check if MAC is already powered on */
->         val8 = rtl8xxxu_read8(priv, REG_CR);
-> +       val16 = rtl8xxxu_read16(priv, REG_SYS_CLKR);
->
->         /*
->          * Fix 92DU-VC S3 hang with the reason is that secondary mac is not
->          * initialized. First MAC returns 0xea, second MAC returns 0x00
->          */
-> -       if (val8 == 0xea)
-> +       if (val8 == 0xea || !(val16 & BIT(11)))
->                 macpower = false;
->         else
->                 macpower = true;
-
-At a glance I can't see which code this corresponds to in the vendor
-driver, can you point that out?
-
-Thanks
-Daniel
+Will
