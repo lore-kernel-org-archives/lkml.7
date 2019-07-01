@@ -2,127 +2,155 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C538C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C81C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0885921721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862F221721
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:50:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="ceu3NKwh"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mhumOQ+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbfGARti (ORCPT
+        id S1729140AbfGARus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 13:49:38 -0400
-Received: from mail-eopbgr700071.outbound.protection.outlook.com ([40.107.70.71]:17249
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727446AbfGARti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 13:49:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/r4AxFYcFNtY8HmC6iyBN4XWX1u08kh3Kacovbkwmcw=;
- b=ceu3NKwhTfIqTC16sCdq82KZkTWtbRdDzOZqD3MH4SKsjjXznZEbuTg6QrDUsr7ZfxyNArfG9BFMVPr+JAbn0THFrUQ07LlsSsrjz3aXlQtBTyWOfsLUmFaySDqGH1RsSu12VYAtDFSnCIsrE9m4yo8Qt4gxDOe9CNdVb6uKvJk=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4437.namprd05.prod.outlook.com (52.135.203.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.14; Mon, 1 Jul 2019 17:49:35 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2052.010; Mon, 1 Jul 2019
- 17:49:35 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH] x86/ldt: Initialize the context lock for init_mm
-Thread-Topic: [PATCH] x86/ldt: Initialize the context lock for init_mm
-Thread-Index: AQHVMDMsFZ2Oh1rNP0yNtHzPaQvKzqa2CkqA
-Date:   Mon, 1 Jul 2019 17:49:35 +0000
-Message-ID: <D552F5D9-26A0-4584-8CEA-6E6E321D63E6@vmware.com>
-References: <20190701173354.2pe62hhliok2afea@linutronix.de>
-In-Reply-To: <20190701173354.2pe62hhliok2afea@linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 038ef42a-e921-494b-0df4-08d6fe4c7b47
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4437;
-x-ms-traffictypediagnostic: BYAPR05MB4437:
-x-microsoft-antispam-prvs: <BYAPR05MB44374A268E43F34D719C7512D0F90@BYAPR05MB4437.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00851CA28B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(366004)(396003)(376002)(199004)(189003)(4326008)(14454004)(86362001)(26005)(36756003)(6486002)(68736007)(316002)(81166006)(71190400001)(102836004)(6506007)(8936002)(478600001)(6916009)(81156014)(2906002)(71200400001)(446003)(486006)(33656002)(53546011)(25786009)(256004)(186003)(8676002)(2616005)(476003)(14444005)(76116006)(6246003)(66556008)(64756008)(66446008)(5660300002)(66946007)(66476007)(6436002)(73956011)(6512007)(3846002)(305945005)(66066001)(6116002)(229853002)(99286004)(7736002)(76176011)(53936002)(54906003)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4437;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 109UOjF7H1jDK8a8Itt9HFbVpsxHinKQ4FNSL5DpSVqQJfR0mh9nQ2XYiJsq6P4i9w/m6n1SaZlDb9jwY6VHBRqR7tYiWj184gJaSkErx/V/sjqm+ggEO40Rel1PLdMpjHGWULy9ir7FO6tXJAANrxQT5OyqxhYxQFzN5THf0Y8yEnYcjMEUwG25OxsHdNUeRS58AZVuMp6huYkFOBmIz1mlFtktsk5PhWGOS2rG2E9QA4ckC6UoKXCdvlnO2l9HeQyyPWKEu8+1xgvqBJ/oXbrWoB0e0VrsoE9G1GIejW1DOBx7PcRHohrMUv5IrGyKeoNNrFq74voyVsmpKC/gQ7BcQoKLVLuQYn2VU31s+EsLmd30JIMninXurao3ZCRG8vCOVmc3wRL3mdOWojzqqCgCQqSLXwMD/bxSCEMz4rA=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <659F74EEF4D4E04784D1D61F162E2EA7@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Jul 2019 13:50:48 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:16637 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727270AbfGARur (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 13:50:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1a47f50001>; Mon, 01 Jul 2019 10:50:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 01 Jul 2019 10:50:46 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 01 Jul 2019 10:50:46 -0700
+Received: from [10.24.70.16] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jul
+ 2019 17:50:44 +0000
+Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     <cohuck@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <156199271955.1646.13321360197612813634.stgit@gimli.home>
+ <08597ab4-cc37-3973-8927-f1bc430f6185@nvidia.com>
+ <20190701112442.176a8407@x1.home>
+X-Nvconfidentiality: public
+From:   Kirti Wankhede <kwankhede@nvidia.com>
+Message-ID: <3b338e73-7929-df20-ca2b-3223ba4ead39@nvidia.com>
+Date:   Mon, 1 Jul 2019 23:20:35 +0530
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 038ef42a-e921-494b-0df4-08d6fe4c7b47
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 17:49:35.6968
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4437
+In-Reply-To: <20190701112442.176a8407@x1.home>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562003446; bh=DBWgF3pGUCaBsjSxYbWQx/22PeKlBCN37/iCIS1y6gg=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=mhumOQ+gZPsB3h7k+ArAOBCvneeHVMuEanzf85P0rDHmwEneD6pLBW7Ucl/2D5Wy9
+         gTCOWB45BPcYWnNwE0Hd8cc9+V+VBtsRARP3CrBIVJV+60qzqvkzy7OmIRtmJaLsyj
+         2SEFn9KaxHj+fLokMaJwiomoUUHYmmJjn9dDZPhKFS0QAL1vUK82BkBImOmIEEvDhV
+         rVNr0RDztrimN5CFS8PRPs5kh+B3x8QXdxu5PgQZwgzd29qEeBZoQZKe/ln5p4UBL7
+         Iww+UgxohIwflcluolnlZ0qycnsEmXpBBI1EN0aTNcDXPtKyVJ0qTscErszjemoY+b
+         HpyAHAr2rtQTQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jul 1, 2019, at 10:33 AM, Sebastian Andrzej Siewior <bigeasy@linutroni=
-x.de> wrote:
->=20
-> The mutex mm->context->lock for init_mm is not initialized for init_mm.
-> This wasn't a problem because it remained unused. This changed however
-> since commit
-> 	4fc19708b165c ("x86/alternatives: Initialize temporary mm for patching")
->=20
-> Initialize the mutex for init_mm.
->=20
-> Fixes: 4fc19708b165c ("x86/alternatives: Initialize temporary mm for patc=
-hing")
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->=20
-> The rwsem `ldt_usr_sem' is also not initialized for init_mm. No idea if
-> we want this.
 
-I cannot see why not (but it would need to depend on CONFIG_MODIFY_LDT_SYSC=
-ALL)
 
->=20
-> arch/x86/include/asm/mmu.h | 1 +
-> 1 file changed, 1 insertion(+)
->=20
-> diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
-> index 5ff3e8af2c205..e78c7db878018 100644
-> --- a/arch/x86/include/asm/mmu.h
-> +++ b/arch/x86/include/asm/mmu.h
-> @@ -59,6 +59,7 @@ typedef struct {
-> #define INIT_MM_CONTEXT(mm)						\
-> 	.context =3D {							\
-> 		.ctx_id =3D 1,						\
-> +		.lock =3D __MUTEX_INITIALIZER(mm.context.lock),		\
+On 7/1/2019 10:54 PM, Alex Williamson wrote:
+> On Mon, 1 Jul 2019 22:43:10 +0530
+> Kirti Wankhede <kwankhede@nvidia.com> wrote:
+> 
+>> On 7/1/2019 8:24 PM, Alex Williamson wrote:
+>>> This allows udev to trigger rules when a parent device is registered
+>>> or unregistered from mdev.
+>>>
+>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+>>> ---
+>>>
+>>> v2: Don't remove the dev_info(), Kirti requested they stay and
+>>>     removing them is only tangential to the goal of this change.
+>>>   
+>>
+>> Thanks.
+>>
+>>
+>>>  drivers/vfio/mdev/mdev_core.c |    8 ++++++++
+>>>  1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+>>> index ae23151442cb..7fb268136c62 100644
+>>> --- a/drivers/vfio/mdev/mdev_core.c
+>>> +++ b/drivers/vfio/mdev/mdev_core.c
+>>> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>>>  {
+>>>  	int ret;
+>>>  	struct mdev_parent *parent;
+>>> +	char *env_string = "MDEV_STATE=registered";
+>>> +	char *envp[] = { env_string, NULL };
+>>>  
+>>>  	/* check for mandatory ops */
+>>>  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
+>>> @@ -197,6 +199,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>>>  	mutex_unlock(&parent_list_lock);
+>>>  
+>>>  	dev_info(dev, "MDEV: Registered\n");
+>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+>>> +
+>>>  	return 0;
+>>>  
+>>>  add_dev_err:
+>>> @@ -220,6 +224,8 @@ EXPORT_SYMBOL(mdev_register_device);
+>>>  void mdev_unregister_device(struct device *dev)
+>>>  {
+>>>  	struct mdev_parent *parent;
+>>> +	char *env_string = "MDEV_STATE=unregistered";
+>>> +	char *envp[] = { env_string, NULL };
+>>>  
+>>>  	mutex_lock(&parent_list_lock);
+>>>  	parent = __find_parent_device(dev);
+>>> @@ -243,6 +249,8 @@ void mdev_unregister_device(struct device *dev)
+>>>  	up_write(&parent->unreg_sem);
+>>>  
+>>>  	mdev_put_parent(parent);
+>>> +
+>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);  
+>>
+>> mdev_put_parent() calls put_device(dev). If this is the last instance
+>> holding device, then on put_device(dev) dev would get freed.
+>>
+>> This event should be before mdev_put_parent()
+> 
+> So you're suggesting the vendor driver is calling
+> mdev_unregister_device() without a reference to the struct device that
+> it's passing to unregister?  Sounds bogus to me.  We take a
+> reference to the device so that it can't disappear out from under us,
+> the caller cannot rely on our reference and the caller provided the
+> struct device.  Thanks,
+> 
 
-Sorry for my mistake. Thanks for fixing it up. I find it useful to know how
-the problem was found or what the impact was - helps me sometimes to avoid
-causing similar bugs in the future.
+1. Register uevent is sent after mdev holding reference to device, then
+ideally, unregister path should be mirror of register path, send uevent
+and then release the reference to device.
 
-Reviewed-by: Nadav Amit <namit@vmware.com>=
+2. I agree that vendor driver shouldn't call mdev_unregister_device()
+without holding reference to device. But to be on safer side, if ever
+such case occur, to avoid any segmentation fault in kernel, better to
+send event before mdev release the reference to device.
+
+Thanks,
+Kirti
