@@ -2,82 +2,86 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFE2C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02AEC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867792064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9CE2064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:53:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kVu6XHBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbfGAOxj (ORCPT
+        id S1729905AbfGAOxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:53:39 -0400
-Received: from mga05.intel.com ([192.55.52.43]:17881 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbfGAOxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:53:38 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 07:53:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,439,1557212400"; 
-   d="scan'208";a="174246309"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga002.jf.intel.com with ESMTP; 01 Jul 2019 07:53:36 -0700
-Date:   Mon, 1 Jul 2019 07:53:08 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Li Wang <liwang@redhat.com>, tglx@linutronix.de,
-        kernellwp@gmail.com, ricardo.neri@intel.com, pengfei.xu@intel.com,
-        LTP List <ltp@lists.linux.it>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ping Fang <pifang@redhat.com>
-Subject: Re: [Kernel BUG?] SMSW operation get success on UMIP KVM guest
-Message-ID: <20190701145308.GA19368@ranerica-svr.sc.intel.com>
-References: <CAEemH2cg01cdz=amrCWU00Xof9+cxmfR_DqCBaQe36QoGsakmA@mail.gmail.com>
- <5622c0ac-236f-4e3e-a132-c8d3bd8fadc4@redhat.com>
+        Mon, 1 Jul 2019 10:53:45 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35946 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbfGAOxp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 10:53:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AzAObMLhgIAN7TtItfsf2xFqs7oc6ydaRdn60wfX0pQ=; b=kVu6XHBfiekyeSau+zoOK7AFg
+        7l9gOGg4X1eevMDcVQs91JelMMH4SNZbEmCq48XHabxYZBrYEM5R9eg2mtK6SsSsfadcC6xvCA/ko
+        Wk+XfU51IkFvtha8ND9ygt8FP0xIqmM//EIfCzlVYKR9S4Afc7leMXB/ldlThWv2Wl3A0kNKju166
+        qkX8Yj8UCIU8ypqwe1V8L9MrOnmh9g73PgVN9EqK+bjNW9MSVeck8OmRcvmxaTxQdyps0lBooHKHQ
+        Ug3eqZdBln4cVEa4/FmSL5ufg9mG9X/1NbftZzy2r1y85dA3jChzgHxcPoFEsnGXpLRvMArPmD6LZ
+        52y8YNTbw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hhxgb-0000D1-QH; Mon, 01 Jul 2019 14:53:42 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 44FE6201F98F5; Mon,  1 Jul 2019 16:53:40 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 16:53:40 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [patch V2 2/6] genirq: Fix misleading synchronize_irq()
+ documentation
+Message-ID: <20190701145340.GB3402@hirez.programming.kicks-ass.net>
+References: <20190628111148.828731433@linutronix.de>
+ <20190628111440.189241552@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5622c0ac-236f-4e3e-a132-c8d3bd8fadc4@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190628111440.189241552@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 02:02:35PM +0200, Paolo Bonzini wrote:
-> On 01/07/19 09:50, Li Wang wrote:
-> > Hello there,
-> > 
-> > LTP/umip_basic_test get failed on KVM UMIP
-> > system(kernel-v5.2-rc4.x86_64). The test is only trying to do
-> >      asm volatile("smsw %0\n" : "=m" (val));
-> > and expect to get SIGSEGV in this SMSW operation, but it exits with 0
-> > unexpectedly.
+On Fri, Jun 28, 2019 at 01:11:50PM +0200, Thomas Gleixner wrote:
+> The function might sleep, so it cannot be called from interrupt
+> context. Not even with care.
 > 
-> In addition to what Thomas said, perhaps you are using a host that does
-> *not* have UMIP, and configuring KVM to emulate it(*).  In that case, it
-> is not possible to intercept SMSW, and therefore it will incorrectly
-> succeed.
-
-Also, emulation for SMSW, SIDT, and SGDT is done only for 32-bit
-processes. As Thomas said, the purpose is not on break Wine. In 64-bit
-processes, we sould always see a #GP exception.
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  kernel/irq/manage.c |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Paolo
-> 
-> (*) before the x86 people jump at me, this won't happen unless you
-> explicitly pass an option to QEMU, such as "-cpu host,+umip". :)  The
-> incorrect emulation of SMSW when CR4.UMIP=1 is why.
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -96,7 +96,8 @@ EXPORT_SYMBOL(synchronize_hardirq);
+>   *	to complete before returning. If you use this function while
+>   *	holding a resource the IRQ handler may need you will deadlock.
+>   *
+> - *	This function may be called - with care - from IRQ context.
+> + *	Can only be called from preemptible code as it might sleep when
+> + *	an interrupt thread is associated to @irq.
+>   */
+>  void synchronize_irq(unsigned int irq)
+>  {
 
-Paolo, what do you mean by the incorrect emulation of SMSW?
++	might_sleep();
 
-Thanks and BR,
-Ricardo
+?
