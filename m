@@ -2,128 +2,200 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063BCC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A297CC4646D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90D32145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A72C214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfGAGng (ORCPT
+        id S1727498AbfGAGoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:43:36 -0400
-Received: from verein.lst.de ([213.95.11.211]:58657 "EHLO verein.lst.de"
+        Mon, 1 Jul 2019 02:44:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:58897 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727318AbfGAGng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 02:43:36 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 831C568B20; Mon,  1 Jul 2019 08:43:33 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 08:43:33 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        id S1727093AbfGAGoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 02:44:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jun 2019 23:39:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,437,1557212400"; 
+   d="scan'208";a="361731239"
+Received: from hao-dev.bj.intel.com ([10.238.157.65])
+  by fmsmga005.fm.intel.com with ESMTP; 30 Jun 2019 23:39:00 -0700
+From:   Wu Hao <hao.wu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/12] iomap: move the xfs writeback code to iomap.c
-Message-ID: <20190701064333.GA20778@lst.de>
-References: <20190624055253.31183-1-hch@lst.de> <20190624055253.31183-12-hch@lst.de> <20190624234304.GD7777@dread.disaster.area> <20190625101020.GI1462@lst.de> <20190628004542.GJ7777@dread.disaster.area> <20190628053320.GA26902@lst.de> <20190701000859.GL7777@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701000859.GL7777@dread.disaster.area>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Cc:     linux-api@vger.kernel.org, gregkh@linuxfoundation.org,
+        atull@kernel.org, Wu Hao <hao.wu@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: [PATCH v2 05/15] Documentation: fpga: dfl: add descriptions for virtualization and new interfaces.
+Date:   Mon,  1 Jul 2019 14:22:12 +0800
+Message-Id: <1561962132-3782-1-git-send-email-hao.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 10:08:59AM +1000, Dave Chinner wrote:
-> > Why do you assume you have to test it?  Back when we shared
-> > generic_file_read with everyone you also didn't test odd change to
-> > it with every possible fs.
-> 
-> I'm not sure what function you are referring to here. Can you
-> clarify?
+This patch adds virtualization support description for DFL based
+FPGA devices (based on PCIe SRIOV), and introductions to new
+interfaces added by new dfl private feature drivers.
 
-Right now it is generic_file_read_iter(), but before iter it was
-generic_file_readv, generic_file_read, etc.
+[mdf@kernel.org: Fixed up to make it work with new reStructuredText docs]
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+Signed-off-by: Wu Hao <hao.wu@intel.com>
+Acked-by: Alan Tull <atull@kernel.org>
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
+---
+v2: fix issues during rebasing (doc format change txt -> rst).
+---
+ Documentation/fpga/dfl.rst | 105 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
 
-> > If you change iomap.c, you'll test it
-> > with XFS, and Cc other maintainers so that they get a chance to
-> > also test it and comment on it, just like we do with other shared
-> > code in the kernel.
-> 
-> Which is why we've had problems with the generic code paths in the
-> past and other filesystems just copy and paste then before making
-> signficant modifications. e.g. both ext4 and btrfs re-implement
-> write_cache_pages() rather than use the generic writeback code
-> because they have slightly different requirements and those
-> developers don't want to have to worry about other filesystems every
-> time there is an internal filesystem change that affects their
-> writeback constraints...
-> 
-> That's kinda what I'm getting at here: writeback isn't being shared
-> by any of the major filesystems for good reasons...
+diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
+index 2f125ab..6fa483f 100644
+--- a/Documentation/fpga/dfl.rst
++++ b/Documentation/fpga/dfl.rst
+@@ -87,6 +87,8 @@ The following functions are exposed through ioctls:
+ - Get driver API version (DFL_FPGA_GET_API_VERSION)
+ - Check for extensions (DFL_FPGA_CHECK_EXTENSION)
+ - Program bitstream (DFL_FPGA_FME_PORT_PR)
++- Assign port to PF (DFL_FPGA_FME_PORT_ASSIGN)
++- Release port from PF (DFL_FPGA_FME_PORT_RELEASE)
+ 
+ More functions are exposed through sysfs
+ (/sys/class/fpga_region/regionX/dfl-fme.n/):
+@@ -102,6 +104,10 @@ More functions are exposed through sysfs
+      one FPGA device may have more than one port, this sysfs interface indicates
+      how many ports the FPGA device has.
+ 
++ Global error reporting management (errors/)
++     error reporting sysfs interfaces allow user to read errors detected by the
++     hardware, and clear the logged errors.
++
+ 
+ FIU - PORT
+ ==========
+@@ -143,6 +149,10 @@ More functions are exposed through sysfs:
+  Read Accelerator GUID (afu_id)
+      afu_id indicates which PR bitstream is programmed to this AFU.
+ 
++ Error reporting (errors/)
++     error reporting sysfs interfaces allow user to read port/afu errors
++     detected by the hardware, and clear the logged errors.
++
+ 
+ DFL Framework Overview
+ ======================
+@@ -218,6 +228,101 @@ the compat_id exposed by the target FPGA region. This check is usually done by
+ userspace before calling the reconfiguration IOCTL.
+ 
+ 
++FPGA virtualization - PCIe SRIOV
++================================
++This section describes the virtualization support on DFL based FPGA device to
++enable accessing an accelerator from applications running in a virtual machine
++(VM). This section only describes the PCIe based FPGA device with SRIOV support.
++
++Features supported by the particular FPGA device are exposed through Device
++Feature Lists, as illustrated below:
++
++::
++
++    +-------------------------------+  +-------------+
++    |              PF               |  |     VF      |
++    +-------------------------------+  +-------------+
++        ^            ^         ^              ^
++        |            |         |              |
++  +-----|------------|---------|--------------|-------+
++  |     |            |         |              |       |
++  |  +-----+     +-------+ +-------+      +-------+   |
++  |  | FME |     | Port0 | | Port1 |      | Port2 |   |
++  |  +-----+     +-------+ +-------+      +-------+   |
++  |                  ^         ^              ^       |
++  |                  |         |              |       |
++  |              +-------+ +------+       +-------+   |
++  |              |  AFU  | |  AFU |       |  AFU  |   |
++  |              +-------+ +------+       +-------+   |
++  |                                                   |
++  |            DFL based FPGA PCIe Device             |
++  +---------------------------------------------------+
++
++FME is always accessed through the physical function (PF).
++
++Ports (and related AFUs) are accessed via PF by default, but could be exposed
++through virtual function (VF) devices via PCIe SRIOV. Each VF only contains
++1 Port and 1 AFU for isolation. Users could assign individual VFs (accelerators)
++created via PCIe SRIOV interface, to virtual machines.
++
++The driver organization in virtualization case is illustrated below:
++::
++
++    +-------++------++------+             |
++    | FME   || FME  || FME  |             |
++    | FPGA  || FPGA || FPGA |             |
++    |Manager||Bridge||Region|             |
++    +-------++------++------+             |
++    +-----------------------+  +--------+ |             +--------+
++    |          FME          |  |  AFU   | |             |  AFU   |
++    |         Module        |  | Module | |             | Module |
++    +-----------------------+  +--------+ |             +--------+
++          +-----------------------+       |       +-----------------------+
++          | FPGA Container Device |       |       | FPGA Container Device |
++          |  (FPGA Base Region)   |       |       |  (FPGA Base Region)   |
++          +-----------------------+       |       +-----------------------+
++            +------------------+          |         +------------------+
++            | FPGA PCIE Module |          | Virtual | FPGA PCIE Module |
++            +------------------+   Host   | Machine +------------------+
++   -------------------------------------- | ------------------------------
++             +---------------+            |          +---------------+
++             | PCI PF Device |            |          | PCI VF Device |
++             +---------------+            |          +---------------+
++
++FPGA PCIe device driver is always loaded first once a FPGA PCIe PF or VF device
++is detected. It:
++
++* Finishes enumeration on both FPGA PCIe PF and VF device using common
++  interfaces from DFL framework.
++* Supports SRIOV.
++
++The FME device driver plays a management role in this driver architecture, it
++provides ioctls to release Port from PF and assign Port to PF. After release
++a port from PF, then it's safe to expose this port through a VF via PCIe SRIOV
++sysfs interface.
++
++To enable accessing an accelerator from applications running in a VM, the
++respective AFU's port needs to be assigned to a VF using the following steps:
++
++#. The PF owns all AFU ports by default. Any port that needs to be
++   reassigned to a VF must first be released through the
++   DFL_FPGA_FME_PORT_RELEASE ioctl on the FME device.
++
++#. Once N ports are released from PF, then user can use command below
++   to enable SRIOV and VFs. Each VF owns only one Port with AFU.
++
++   ::
++
++      echo N > $PCI_DEVICE_PATH/sriov_numvfs
++
++#. Pass through the VFs to VMs
++
++#. The AFU under VF is accessible from applications in VM (using the
++   same driver inside the VF).
++
++Note that an FME can't be assigned to a VF, thus PR and other management
++functions are only available via the PF.
++
+ Device enumeration
+ ==================
+ This section introduces how applications enumerate the fpga device from
+-- 
+2.7.4
 
-I very fundamentally disagree.  It is not shared for a bad reasons,
-and that is people not understanding the mess that the buffer head
-based code is, and not wanting to understand it.  So they come up
-with their own piecemeal "improvements" for it making the situation
-worse.  Writeback is fundamentally not fs specific in any way.  Different
-file system might use different optional features like unwrittent
-extents, delalloc, data checksums, but once they implement them the
-behavior should be uniform.
-
-And I'd much rather fix this than going down the copy an paste and
-slightly tweak it while fucking up something else route.
-
-> > stone age.  Very little is about XFS itself, most of it has been
-> > about not being stupid in a fairly generic way.  And every since
-> > I got rid of buffer heads xfs_aops.c has been intimately tied
->   ^^^^^^^^^^^^^^^^^^^^^^^^^
-> 
-> *cough*
-> 
-> Getting rid of bufferheads in writeback was largely a result of work
-> I did over a period of several years, thank you very much. Yes, work
-> you did over the same time period also got us there, but it's not
-> all your work.
-
-Sorry Dave - this isn't avoud taking credit of past work.  But ever
-since I finally got rid of bufferhads and introduced struct iomap_page
-we have this intimate tie up, which is the point here.
-
-> e.g. XFS requires COW fork manipulation on ioend submission
-> (xfs_submit_ioend() calls xfs_reflink_convert_cow()) and this has
-> some nasty memory allocation requirements (potential deadlock
-> situation). So the generic code has a hook for this XFS specific
-> functionality, even though no other filesystem if likely to ever
-> need this. And this is something we've been discussion getting rid
-> of from the XFS writeback path. i.e. reworking how we do all
-> the COW fork interactions in writeback. So some of these hooks are
-> suspect even now, and we're already trying to work out how to
-> re-work the XFS writeback path to sort out problems we have with it.
-
-Every file system that writes out of place will need some sort of
-hook here with the same issue, no matter if they call it COW fork
-or manipulate some all integrated data structure like btrfs.  Moreover
-btrfs will also have to deal with their data checksum in exactly this
-place.
-
-> That's the point I'm trying to make - the whole "generic" iomap
-> writeback API proposal is based around exactly the functionality XFS
-> - and only XFS - requires at this point in time. There are no other
-> users of this API and until there are, we've got no idea how
-> generic this functionality really is and just how much overhead
-> making fundamental changes to the XFS writeback code are going to
-> entail in future.
-
-No, it is based around generalizing what we have in xfs so that we
-can use it elsewhere.  With zonefs and gfs2 as the prime users
-initially, and other like btrfs hopefully to not far away.
