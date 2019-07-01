@@ -2,197 +2,123 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739A2C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA28C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45882208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889D82133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:40:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Bs9P3wHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbfGAKjr (ORCPT
+        id S1729018AbfGAKkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 06:39:47 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40131 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727701AbfGAKjq (ORCPT
+        Mon, 1 Jul 2019 06:40:53 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42546 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729005AbfGAKkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 06:39:46 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1hhtij-0002uW-7P; Mon, 01 Jul 2019 12:39:37 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer implementation
-References: <20190607162349.18199-1-john.ogness@linutronix.de>
-        <20190607162349.18199-2-john.ogness@linutronix.de>
-        <20190618114747.GQ3436@hirez.programming.kicks-ass.net>
-        <87k1df28x4.fsf@linutronix.de>
-        <20190626224034.GK2490@worktop.programming.kicks-ass.net>
-        <87mui2ujh2.fsf@linutronix.de>
-        <20190628154435.GZ7905@worktop.programming.kicks-ass.net>
-Date:   Mon, 01 Jul 2019 12:39:35 +0200
-In-Reply-To: <20190628154435.GZ7905@worktop.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Fri, 28 Jun 2019 17:44:35 +0200")
-Message-ID: <877e92f388.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Mon, 1 Jul 2019 06:40:52 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so6376183pff.9
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 03:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=J9c7HLFHB/6MQXAk9nbKdUnuKhx+YpHKq1KxJgKxyP8=;
+        b=Bs9P3wHB2+j7xXbfUlkbZGeesB4uPleYuRpo/LZxWgX7auhEjYET5rsTqxsrsgHDvz
+         Ak9ruswEkL+P/ohuhQ6IQrrdeMmgKs38Di6rb7bpxGdg24zaIsayOFSHsx0aP4/HYqua
+         +KodY6PunVNqp8+GtnzrqFoc9TXb8Pkw31QPVKcjpcUzt+eqE623oc82A3pWGT7jtuhi
+         dlO+aJ8AoTQADZHRmQeX9tNGrn3qB5TMeS1ih4Lf1/CzOR6vtDZ763oRUjvxStmXph7Z
+         BT2uXEa9AeDxh7BBebcOV6wDWPWhyttKxVmgPlP0OyyrhwnoDxvh77Gj0rDyUl2zOgtD
+         rypg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=J9c7HLFHB/6MQXAk9nbKdUnuKhx+YpHKq1KxJgKxyP8=;
+        b=klSfRWNS541tqRdDVYeCVSt7SKEqrkFbgiKGmAd6/TEpouBnBd/iNIx4ZQzOKWOhIS
+         CbMP9+STsm+vlvUoNyhJkc82wxlwmL1s5j5rcppEvMVTud4FJOu5tf/2dAw59nPjQ9vE
+         YmnGYTEVv3XsN4NOc3yzFJJ63Ko7mSAvlwKHIM8feNRndfNDzpiPujDJavjFvbrT8IUL
+         +V1LBy/MIO99QNmLMGweo2DtgAhP0P0KS2r1rRvBM4fnp9MtpskuNVOY5CBscSRKvw2k
+         STbJ1bCE1yIejSN2SlOzdWwpTa+YLT+hCzqwCaPYVECwjO9CNL4miKt9T7xeeWVHvRnG
+         68XA==
+X-Gm-Message-State: APjAAAVL3ssmY0jeanzslyyZynmNBHhaasZjKezjc3hfXQwaWeHRHLmT
+        pktwBt4fO4fe7tFd3bFj8smFLw==
+X-Google-Smtp-Source: APXvYqxRbbkcM3EC4AAooXtro5KK4p2N7RlMCFLz7OVdz7IN7Z9Yh+tGOL9jDwil84AW7t3NWSN6bA==
+X-Received: by 2002:a17:90a:d814:: with SMTP id a20mr30532666pjv.48.1561977652141;
+        Mon, 01 Jul 2019 03:40:52 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id g62sm10410755pje.11.2019.07.01.03.40.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 01 Jul 2019 03:40:51 -0700 (PDT)
+From:   Yash Shah <yash.shah@sifive.com>
+To:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        paul.walmsley@sifive.com
+Cc:     palmer@sifive.com, aou@eecs.berkeley.edu, sachin.ghadi@sifive.com,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v2] riscv: ccache: Remove unused variable
+Date:   Mon,  1 Jul 2019 16:10:30 +0530
+Message-Id: <1561977630-32309-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-28, Peter Zijlstra <peterz@infradead.org> wrote:
->> I have implemented and tested these changes. I also added setting the
->> list terminator to this function, since all callers would have to do
->> it anyway. Also, I spent a lot of time trying to put in comments that
->> I think are _understandable_ and _acceptable_.
->> 
->> @Peter: I expect they are way too long for you.
->> 
->> @Andrea: Is this starting to become something that you would like to
->> see?
->> 
->> /**
->>  * add_descr_list() - Add a descriptor to the descriptor list.
->>  *
->>  * @e: An entry that has already reserved data.
->>  *
->>  * The provided entry contains a pointer to a descriptor that has already
->>  * been reserved for this entry. However, the reserved descriptor is not
->>  * yet on the list. Add this descriptor as the newest item.
->>  *
->>  * A descriptor is added in two steps. The first step is to make this
->>  * descriptor the newest. The second step is to update @next of the former
->>  * newest descriptor to point to this one (or set @oldest to this one if
->>  * this will be the first descriptor on the list).
->>  */
->
-> I still think it might be useful to explicitly call out the data
-> structure more. Even if you cannot use a fully abtracted queue.
+Reading the count register clears the interrupt signal. Currently, the
+count registers are read into 'regval' variable but the variable is
+never used. Therefore remove it. V2 of this patch add comments to
+justify the readl calls without checking the return value.
 
-Agreed. It needs to be clear that the queue management is separate from
-the data management.
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+---
+ arch/riscv/mm/sifive_l2_cache.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-> Also, newest/oldest just looks weird to me; I'm expecting head/tail.
+diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
+index 4eb6461..2e637ad 100644
+--- a/arch/riscv/mm/sifive_l2_cache.c
++++ b/arch/riscv/mm/sifive_l2_cache.c
+@@ -109,13 +109,14 @@ int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
+ 
+ static irqreturn_t l2_int_handler(int irq, void *device)
+ {
+-	unsigned int regval, add_h, add_l;
++	unsigned int add_h, add_l;
+ 
+ 	if (irq == g_irq[DIR_CORR]) {
+ 		add_h = readl(l2_base + SIFIVE_L2_DIRECCFIX_HIGH);
+ 		add_l = readl(l2_base + SIFIVE_L2_DIRECCFIX_LOW);
+ 		pr_err("L2CACHE: DirError @ 0x%08X.%08X\n", add_h, add_l);
+-		regval = readl(l2_base + SIFIVE_L2_DIRECCFIX_COUNT);
++		/* Reading this register clears the DirError interrupt sig */
++		readl(l2_base + SIFIVE_L2_DIRECCFIX_COUNT);
+ 		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
+ 					   "DirECCFix");
+ 	}
+@@ -123,7 +124,8 @@ static irqreturn_t l2_int_handler(int irq, void *device)
+ 		add_h = readl(l2_base + SIFIVE_L2_DATECCFIX_HIGH);
+ 		add_l = readl(l2_base + SIFIVE_L2_DATECCFIX_LOW);
+ 		pr_err("L2CACHE: DataError @ 0x%08X.%08X\n", add_h, add_l);
+-		regval = readl(l2_base + SIFIVE_L2_DATECCFIX_COUNT);
++		/* Reading this register clears the DataError interrupt sig */
++		readl(l2_base + SIFIVE_L2_DATECCFIX_COUNT);
+ 		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
+ 					   "DatECCFix");
+ 	}
+@@ -131,7 +133,8 @@ static irqreturn_t l2_int_handler(int irq, void *device)
+ 		add_h = readl(l2_base + SIFIVE_L2_DATECCFAIL_HIGH);
+ 		add_l = readl(l2_base + SIFIVE_L2_DATECCFAIL_LOW);
+ 		pr_err("L2CACHE: DataFail @ 0x%08X.%08X\n", add_h, add_l);
+-		regval = readl(l2_base + SIFIVE_L2_DATECCFAIL_COUNT);
++		/* Reading this register clears the DataFail interrupt sig */
++		readl(l2_base + SIFIVE_L2_DATECCFAIL_COUNT);
+ 		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_UE,
+ 					   "DatECCFail");
+ 	}
+-- 
+1.9.1
 
-I will rename it to head/tail.
-
->>> You have a single linked list going from the tail to the head, while
->>> adding to the head and removing from the tail. And that sounds like
->>> a FIFO queue:
->> 
->> Yes, but with one important feature: the nodes in the FIFO queue are
->> labeled with ordered sequence numbers. This is important for
->> printk. I talk more about this below.
->
-> But nowhere did/do you say what the actual data structure is, with what
-> modification for which reason.
-
-When you dive into the reader code you will see that the sequence
-numbers are necessary for readers to recognize that they have missed
-records. This means that the sequence numbers must be ordered, and
-AFAICT that is only possible if the queue management code is assigning
-it.
-
->>> 		/*
->>> 		 * xchg() implies ACQUIRE; and thereby ensures @tail is
->>> 		 * written after @head, see lqueue_pop()'s smp_rmb().
->>> 		 */
->>> 		if (prev)
->>> 			WRITE_ONCE(prev->next, n);
->> 
->> This needs to be a store_release() so that a reader cannot read @n
->> but the store to @next is not yet visible. The memory barriers of the
->> above xchg() do not apply here because readers never read @head.
->
-> Confused, all stores to @n are before the xchg() so the barrier from
-> xchg() also order those stores and this store.
-
-Sorry. Yes, you are correct. I was confusing your suggested
-implementation with mine. I'm starting to overthink things and confuse
-myself about memory barriers. I need to be more careful.
-
-> (Note that the qspinlock has a queue not unlike this, but that again
-> doesn't have to bother with NMIs)
-
-Thank you for pointing this out! I will look to qspinlock for some
-naming guidelines.
-
->>> Now, you appear to be using desc_ids instead of pointers, but since
->>> you're not using the actual wrap value; I don't see the benefit of
->>> using those IDs over straight pointers. That is, unless I've
->>> overlooked some subtle ABA issue, but then, your code doesn't seem
->>> to mention that, and I think we're good because if we re-use an
->>> entry, it can never get back in the same location, since we never
->>> allow an empty list
->> 
->> I do not understand what you mean here. If a reader has a pointer to
->> an entry, the entry behind that pointer can certainly change. But
->> that isn't a problem. The reader will recognize that.
->
-> ABA is where a cmpxchg has a false positive due to values matching but
-> not the structure.
-
-Thanks for the clarification. And it reminds me why I chose to use
-desc_ids. If we are using pointers instead of desc_ids, assuming we have
-a queue with currently only 1 node, the following should cause the ABA
-problem. CPU0 is perfoming an lqueue_push() to add a 2nd node to the
-queue.
-
-  CPU0                                  CPU1
-  ----                                  ----
-  head = READ_ONCE(h->head);
-  seq = READ_ONCE(head->seq);
-  WRITE_ONCE(n->seq, seq + 1);
-  WRITE_ONCE(n->next, NULL);
-                                        lqueue_push();
-                                        lqueue_pop();
-                                        lqueue_push();
-  cmpxchg_release(&h->head, head, n);
-  WRITE_ONCE(head->next, n);
-
-The queue itself will still be intact, but the sequence numbers are now
-wrong. For this to happen using desc_ids, the above set of calls from
-CPU1 would need to occur "LONG_MAX/desc_max_count" times in that
-window. Basically I am using tagged state references with probably >40
-bits for the tag (on 64-bit systems).
-
-The effect for readers is that they will see a sequence number that is
-less or equal to the previous seen sequence number. Worthy of a warn
-message.
-
-My code needs to mention all this.
-
->>> That said, the above has cmpxchg() vs WRITE_ONCE() and is therefore
->>> not safe on a number of our architectures. We can either not care
->>> about performance and use xchg() for the ->tail store, or use
->>> atomic_long_t and suffer ugly casting.
->> 
->> cmpxchg_release() vs WRITE_ONCE() is not safe?! Can you point me to
->> documentation about this?
->
-> Documentation/atomic_t.txt has this, see the SEMANTICS section on
-> atomic-set.
-
-Thanks. I overlooked that subtle detail. Can I assume NMIs do not exist
-on architectures that need to implement locking for cmpxchg()? Or did I
-just hit a major obstacle?
-
-I would prefer to replace the affected WRITE_ONCE() with xchg_relaxed()
-(like qspinlock is doing). Or are there some other subtle advantages of
-atomic_long_t?
-
-John Ogness
