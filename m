@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F40C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9BAC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79C7208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371A8208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="k7J1KRmm"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FCOSJaFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfGAKr7 (ORCPT
+        id S1727864AbfGAKsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 06:47:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38175 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727514AbfGAKrc (ORCPT
+        Mon, 1 Jul 2019 06:48:03 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38169 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbfGAKrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 06:47:32 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s15so15357133wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 03:47:31 -0700 (PDT)
+        Mon, 1 Jul 2019 06:47:31 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s15so15357014wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 03:47:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ece299ytvP7yN78Hs02gs2k+yzKLtb8C246cXyy/J10=;
-        b=k7J1KRmmgFun4BA2i3oPlYksUUldqwyXSzFEhn00YyT8XIVG6XB+qXAU8Hi2QMZ4Z0
-         7vOaind+maxmRIWY137zaYsHUcioYdfao9s6PLYT8Uwttz9DnHrDPH7Ux25iM2r325Ll
-         Jbiz3btaa6V/PQgR3lZDwvVbKOPt4Z8dlTw2pA/rQrOsqKz5a1B4YiIshCzS9axDrrSF
-         f+h4Cbngn/F4CIq5Shuni2vo0SFw6QC5kqbIYi26ZJuj+UsvWGGtyRKdRfFyAw6Ul0mA
-         6pzxCsIVnE1YnlndNf8o0kZxiNa1wlF9s+SRh7W2zjdFQ4sxEJ1tuoa9V//6Dli37Sle
-         o4CQ==
+        bh=Gb9XGzqLE+vLkGx+5lxuMEkb6+fi6KbX8z9nRVd90Qs=;
+        b=FCOSJaFGS/PSPpM76IRF348a1175FaD6DXtgM7VYPyNd+LwhQafERGEkHo0191x1Qz
+         77CHLda6ahMbX+pymTJigIoZzknRy1rDEG4EMrOUqYTJpZ+cUbdNbCsm/KAUYaBPIAkS
+         na50hsFStu4/tzoUq0Xfs6f8z0ciov3Qu+N/tHQs+GdBEIPPKp1PUjNVJHd1wTEwqX59
+         5KkYuSonl+bEUN9oRr5w0ONBejGBC98B1l4vTvcWqTGaT9B7F+YN7XHwo7Hk8CUC2wcj
+         8Ftzd/2+mymgJnxYT5R3e7zh4bQWpAhkDw2vcffHa7c30TH9dv95s3q3IAfn5YfKP7y5
+         AWMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ece299ytvP7yN78Hs02gs2k+yzKLtb8C246cXyy/J10=;
-        b=Re+7aX3vCUewk5VLoHLLvEtbDxSXMr1qWwUL4bUcpnYZIAaVaJBuVA+nyRPrL05CuQ
-         8HC5NTUb4JrktmWpusgDQlZTlPZfIG0zk0IpN55yBQAwPSacoblyBEXHe+L+s73n0qfW
-         eRs9+KRG1FOqG/pVpa6TbUw/vNSgyWVSgDiNCGYPY//4Yclv3+1G72w7FsiZyuM/Uuwa
-         Dk54r6eBGrSWGfF/joyZxrTh46/mS/ZU7syObXtoTlbfwmboHWDgFkjvXUplTrDcxoei
-         bM2/tvvj9C07E834TDrMn9qiDXkU3lui+Lij5DXpUvj5BINyq8xqOzRc8rF7JQHWwf1x
-         wqlg==
-X-Gm-Message-State: APjAAAUlwS+IdrjTa6G0nZLvS9y9xCBXC7P6ZrxnRwU6N1NwZuQwzWtY
-        qxkE3m5uHoJgurzMLFlmopNWExrAOrE=
-X-Google-Smtp-Source: APXvYqzsGce5jNbvLbcHrXoHvxuJP3qpQf1e3M0Kf/Sn3O+drlZC31NhDKiyko0NuEJvs932xrzHsA==
-X-Received: by 2002:a05:600c:2383:: with SMTP id m3mr16467107wma.20.1561978050501;
-        Mon, 01 Jul 2019 03:47:30 -0700 (PDT)
+        bh=Gb9XGzqLE+vLkGx+5lxuMEkb6+fi6KbX8z9nRVd90Qs=;
+        b=szHqQ3xPsGYHeQGQxkNIrXObUGGFk6CZqks8koBUdKG+1BXlZqAYq28j+39AusG5nk
+         +m0jUTBCc8ybaaD0bPqI+VwnchOJ1fQjm9+Li3LqCRbPL1rMe1EGveFGkrcyNjAgA0D0
+         gL80r5PDSgVrE0NIIyAdU8+8Qx354q/jq5OUnSoELLI4MGt51MmR6wI6C5bNaolVWemF
+         QFW/cd2u1GDYlitZLUNMCdeYOUFCClvxCQooM9I3jTzlchOyz9exqBDbAZZp7sjCaBfa
+         xPSLjS3XbXtL55LQAcEec/xnmG0+AQvc4LqsqrKdQAnNJB+dXlIE4jQMwNlOC9Su4f05
+         P6VA==
+X-Gm-Message-State: APjAAAU57svA68GtaKel6xJRTDWx3S4toey1+kqxgdYYuUSQy8owpXpR
+        rUQaXvBfYhDoEUV9wVYPGoUcWg==
+X-Google-Smtp-Source: APXvYqxA+apBe3W5Wb0iLkD6SH/jYBE0dzWsbSKFqfaorUeQ4pethRQZyDE6JXJtxVptB/LGjMsKvQ==
+X-Received: by 2002:a1c:9a53:: with SMTP id c80mr15877315wme.173.1561978048382;
+        Mon, 01 Jul 2019 03:47:28 -0700 (PDT)
 Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id d24sm11658802wra.43.2019.07.01.03.47.29
+        by smtp.gmail.com with ESMTPSA id d24sm11658802wra.43.2019.07.01.03.47.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 01 Jul 2019 03:47:29 -0700 (PDT)
+        Mon, 01 Jul 2019 03:47:27 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     jbrunet@baylibre.com, khilman@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC 06/11] soc: amlogic: clk-measure: Add support for SM1
-Date:   Mon,  1 Jul 2019 12:47:00 +0200
-Message-Id: <20190701104705.18271-7-narmstrong@baylibre.com>
+Subject: [RFC 04/11] soc: amlogic: Add support for SM1 power controller
+Date:   Mon,  1 Jul 2019 12:46:58 +0200
+Message-Id: <20190701104705.18271-5-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190701104705.18271-1-narmstrong@baylibre.com>
 References: <20190701104705.18271-1-narmstrong@baylibre.com>
@@ -74,165 +74,299 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the clk-measurer clocks IDs for the Amlogic SM1 SoC family.
+Add support for the General Purpose Amlogic SM1 Power controller,
+dedicated to the PCIe, USB, NNA and GE2D Power Domains.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/soc/amlogic/meson-clk-measure.c | 134 ++++++++++++++++++++++++
- 1 file changed, 134 insertions(+)
+ drivers/soc/amlogic/Kconfig          |  11 ++
+ drivers/soc/amlogic/Makefile         |   1 +
+ drivers/soc/amlogic/meson-sm1-pwrc.c | 245 +++++++++++++++++++++++++++
+ 3 files changed, 257 insertions(+)
+ create mode 100644 drivers/soc/amlogic/meson-sm1-pwrc.c
 
-diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-index f09b404b39d3..e32e97613000 100644
---- a/drivers/soc/amlogic/meson-clk-measure.c
-+++ b/drivers/soc/amlogic/meson-clk-measure.c
-@@ -357,6 +357,136 @@ static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
- 	CLK_MSR_ID(122, "audio_pdm_dclk"),
- };
+diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
+index 5501ad5650b2..596f1afef1a7 100644
+--- a/drivers/soc/amlogic/Kconfig
++++ b/drivers/soc/amlogic/Kconfig
+@@ -36,6 +36,17 @@ config MESON_GX_PM_DOMAINS
+ 	  Say yes to expose Amlogic Meson GX Power Domains as
+ 	  Generic Power Domains.
  
-+static struct meson_msr_id clk_msr_sm1[CLK_MSR_MAX] = {
-+	CLK_MSR_ID(0, "ring_osc_out_ee_0"),
-+	CLK_MSR_ID(1, "ring_osc_out_ee_1"),
-+	CLK_MSR_ID(2, "ring_osc_out_ee_2"),
-+	CLK_MSR_ID(3, "ring_osc_out_ee_3"),
-+	CLK_MSR_ID(4, "gp0_pll"),
-+	CLK_MSR_ID(5, "gp1_pll"),
-+	CLK_MSR_ID(6, "enci"),
-+	CLK_MSR_ID(7, "clk81"),
-+	CLK_MSR_ID(8, "encp"),
-+	CLK_MSR_ID(9, "encl"),
-+	CLK_MSR_ID(10, "vdac"),
-+	CLK_MSR_ID(11, "eth_tx"),
-+	CLK_MSR_ID(12, "hifi_pll"),
-+	CLK_MSR_ID(13, "mod_tcon"),
-+	CLK_MSR_ID(14, "fec_0"),
-+	CLK_MSR_ID(15, "fec_1"),
-+	CLK_MSR_ID(16, "fec_2"),
-+	CLK_MSR_ID(17, "sys_pll_div16"),
-+	CLK_MSR_ID(18, "sys_cpu_div16"),
-+	CLK_MSR_ID(19, "lcd_an_ph2"),
-+	CLK_MSR_ID(20, "rtc_osc_out"),
-+	CLK_MSR_ID(21, "lcd_an_ph3"),
-+	CLK_MSR_ID(22, "eth_phy_ref"),
-+	CLK_MSR_ID(23, "mpll_50m"),
-+	CLK_MSR_ID(24, "eth_125m"),
-+	CLK_MSR_ID(25, "eth_rmii"),
-+	CLK_MSR_ID(26, "sc_int"),
-+	CLK_MSR_ID(27, "in_mac"),
-+	CLK_MSR_ID(28, "sar_adc"),
-+	CLK_MSR_ID(29, "pcie_inp"),
-+	CLK_MSR_ID(30, "pcie_inn"),
-+	CLK_MSR_ID(31, "mpll_test_out"),
-+	CLK_MSR_ID(32, "vdec"),
-+	CLK_MSR_ID(34, "eth_mpll_50m"),
-+	CLK_MSR_ID(35, "mali"),
-+	CLK_MSR_ID(36, "hdmi_tx_pixel"),
-+	CLK_MSR_ID(37, "cdac"),
-+	CLK_MSR_ID(38, "vdin_meas"),
-+	CLK_MSR_ID(39, "bt656"),
-+	CLK_MSR_ID(40, "arm_ring_osc_out_4"),
-+	CLK_MSR_ID(41, "eth_rx_or_rmii"),
-+	CLK_MSR_ID(42, "mp0_out"),
-+	CLK_MSR_ID(43, "fclk_div5"),
-+	CLK_MSR_ID(44, "pwm_b"),
-+	CLK_MSR_ID(45, "pwm_a"),
-+	CLK_MSR_ID(46, "vpu"),
-+	CLK_MSR_ID(47, "ddr_dpll_pt"),
-+	CLK_MSR_ID(48, "mp1_out"),
-+	CLK_MSR_ID(49, "mp2_out"),
-+	CLK_MSR_ID(50, "mp3_out"),
-+	CLK_MSR_ID(51, "sd_emmc_c"),
-+	CLK_MSR_ID(52, "sd_emmc_b"),
-+	CLK_MSR_ID(53, "sd_emmc_a"),
-+	CLK_MSR_ID(54, "vpu_clkc"),
-+	CLK_MSR_ID(55, "vid_pll_div_out"),
-+	CLK_MSR_ID(56, "wave420l_a"),
-+	CLK_MSR_ID(57, "wave420l_c"),
-+	CLK_MSR_ID(58, "wave420l_b"),
-+	CLK_MSR_ID(59, "hcodec"),
-+	CLK_MSR_ID(40, "arm_ring_osc_out_5"),
-+	CLK_MSR_ID(61, "gpio_msr"),
-+	CLK_MSR_ID(62, "hevcb"),
-+	CLK_MSR_ID(63, "dsi_meas"),
-+	CLK_MSR_ID(64, "spicc_1"),
-+	CLK_MSR_ID(65, "spicc_0"),
-+	CLK_MSR_ID(66, "vid_lock"),
-+	CLK_MSR_ID(67, "dsi_phy"),
-+	CLK_MSR_ID(68, "hdcp22_esm"),
-+	CLK_MSR_ID(69, "hdcp22_skp"),
-+	CLK_MSR_ID(70, "pwm_f"),
-+	CLK_MSR_ID(71, "pwm_e"),
-+	CLK_MSR_ID(72, "pwm_d"),
-+	CLK_MSR_ID(73, "pwm_c"),
-+	CLK_MSR_ID(74, "arm_ring_osc_out_6"),
-+	CLK_MSR_ID(75, "hevcf"),
-+	CLK_MSR_ID(74, "arm_ring_osc_out_7"),
-+	CLK_MSR_ID(77, "rng_ring_osc_0"),
-+	CLK_MSR_ID(78, "rng_ring_osc_1"),
-+	CLK_MSR_ID(79, "rng_ring_osc_2"),
-+	CLK_MSR_ID(80, "rng_ring_osc_3"),
-+	CLK_MSR_ID(81, "vapb"),
-+	CLK_MSR_ID(82, "ge2d"),
-+	CLK_MSR_ID(83, "co_rx"),
-+	CLK_MSR_ID(84, "co_tx"),
-+	CLK_MSR_ID(85, "arm_ring_osc_out_8"),
-+	CLK_MSR_ID(86, "arm_ring_osc_out_9"),
-+	CLK_MSR_ID(87, "mipi_dsi_phy"),
-+	CLK_MSR_ID(88, "cis2_adapt"),
-+	CLK_MSR_ID(89, "hdmi_todig"),
-+	CLK_MSR_ID(90, "hdmitx_sys"),
-+	CLK_MSR_ID(91, "nna_core"),
-+	CLK_MSR_ID(92, "nna_axi"),
-+	CLK_MSR_ID(93, "vad"),
-+	CLK_MSR_ID(94, "eth_phy_rx"),
-+	CLK_MSR_ID(95, "eth_phy_pll"),
-+	CLK_MSR_ID(96, "vpu_b"),
-+	CLK_MSR_ID(97, "cpu_b_tmp"),
-+	CLK_MSR_ID(98, "ts"),
-+	CLK_MSR_ID(99, "arm_ring_osc_out_10"),
-+	CLK_MSR_ID(100, "arm_ring_osc_out_11"),
-+	CLK_MSR_ID(101, "arm_ring_osc_out_12"),
-+	CLK_MSR_ID(102, "arm_ring_osc_out_13"),
-+	CLK_MSR_ID(103, "arm_ring_osc_out_14"),
-+	CLK_MSR_ID(104, "arm_ring_osc_out_15"),
-+	CLK_MSR_ID(105, "arm_ring_osc_out_16"),
-+	CLK_MSR_ID(106, "ephy_test"),
-+	CLK_MSR_ID(107, "au_dac_g128x"),
-+	CLK_MSR_ID(108, "audio_locker_out"),
-+	CLK_MSR_ID(109, "audio_locker_in"),
-+	CLK_MSR_ID(110, "audio_tdmout_c_sclk"),
-+	CLK_MSR_ID(111, "audio_tdmout_b_sclk"),
-+	CLK_MSR_ID(112, "audio_tdmout_a_sclk"),
-+	CLK_MSR_ID(113, "audio_tdmin_lb_sclk"),
-+	CLK_MSR_ID(114, "audio_tdmin_c_sclk"),
-+	CLK_MSR_ID(115, "audio_tdmin_b_sclk"),
-+	CLK_MSR_ID(116, "audio_tdmin_a_sclk"),
-+	CLK_MSR_ID(117, "audio_resample"),
-+	CLK_MSR_ID(118, "audio_pdm_sys"),
-+	CLK_MSR_ID(119, "audio_spdifout_b"),
-+	CLK_MSR_ID(120, "audio_spdifout"),
-+	CLK_MSR_ID(121, "audio_spdifin"),
-+	CLK_MSR_ID(122, "audio_pdm_dclk"),
-+	CLK_MSR_ID(123, "audio_resampled"),
-+	CLK_MSR_ID(124, "earcrx_pll"),
-+	CLK_MSR_ID(125, "earcrx_pll_test"),
-+	CLK_MSR_ID(126, "csi_phy0"),
-+	CLK_MSR_ID(127, "csi2_data"),
++config MESON_SM1_PM_DOMAINS
++	bool "Amlogic Meson SM1 Power Domains driver"
++	depends on ARCH_MESON || COMPILE_TEST
++	depends on PM && OF
++	default ARCH_MESON
++	select PM_GENERIC_DOMAINS
++	select PM_GENERIC_DOMAINS_OF
++	help
++	  Say yes to expose Amlogic Meson SM1 Power Domains as
++	  Generic Power Domains.
++
+ config MESON_MX_SOCINFO
+ 	bool "Amlogic Meson MX SoC Information driver"
+ 	depends on ARCH_MESON || COMPILE_TEST
+diff --git a/drivers/soc/amlogic/Makefile b/drivers/soc/amlogic/Makefile
+index bf2d109f61e9..f99935499ee6 100644
+--- a/drivers/soc/amlogic/Makefile
++++ b/drivers/soc/amlogic/Makefile
+@@ -3,3 +3,4 @@ obj-$(CONFIG_MESON_CLK_MEASURE) += meson-clk-measure.o
+ obj-$(CONFIG_MESON_GX_SOCINFO) += meson-gx-socinfo.o
+ obj-$(CONFIG_MESON_GX_PM_DOMAINS) += meson-gx-pwrc-vpu.o
+ obj-$(CONFIG_MESON_MX_SOCINFO) += meson-mx-socinfo.o
++obj-$(CONFIG_MESON_SM1_PM_DOMAINS) += meson-sm1-pwrc.o
+diff --git a/drivers/soc/amlogic/meson-sm1-pwrc.c b/drivers/soc/amlogic/meson-sm1-pwrc.c
+new file mode 100644
+index 000000000000..9ece1d06f417
+--- /dev/null
++++ b/drivers/soc/amlogic/meson-sm1-pwrc.c
+@@ -0,0 +1,245 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (c) 2017 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/pm_domain.h>
++#include <linux/bitfield.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of_device.h>
++#include <dt-bindings/power/meson-sm1-power.h>
++
++/* AO Offsets */
++
++#define AO_RTI_GEN_PWR_SLEEP0		(0x3a << 2)
++#define AO_RTI_GEN_PWR_ISO0		(0x3b << 2)
++
++/* HHI Offsets */
++
++#define HHI_MEM_PD_REG0			(0x40 << 2)
++#define HHI_NANOQ_MEM_PD_REG0		(0x46 << 2)
++#define HHI_NANOQ_MEM_PD_REG1		(0x47 << 2)
++
++struct meson_sm1_pwrc;
++
++struct meson_sm1_pwrc_mem_domain {
++	unsigned int reg;
++	unsigned int mask;
 +};
 +
- static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 			       unsigned int duration)
- {
-@@ -545,6 +675,10 @@ static const struct of_device_id meson_msr_match_table[] = {
- 		.compatible = "amlogic,meson-g12a-clk-measure",
- 		.data = (void *)clk_msr_g12a,
- 	},
++struct meson_sm1_pwrc_domain_desc {
++	char *name;
++	unsigned int sleep_reg;
++	unsigned int sleep_bit;
++	unsigned int iso_reg;
++	unsigned int iso_bit;
++	unsigned int mem_pd_count;
++	struct meson_sm1_pwrc_mem_domain *mem_pd;
++};
++
++struct meson_sm1_pwrc_domain_data {
++	unsigned int count;
++	struct meson_sm1_pwrc_domain_desc *domains;
++};
++
++static struct meson_sm1_pwrc_mem_domain sm1_pwrc_mem_nna[] = {
++	{ HHI_NANOQ_MEM_PD_REG0, 0xff },
++	{ HHI_NANOQ_MEM_PD_REG1, 0xff },
++};
++
++static struct meson_sm1_pwrc_mem_domain sm1_pwrc_mem_usb[] = {
++	{ HHI_MEM_PD_REG0, GENMASK(31, 30) },
++};
++
++static struct meson_sm1_pwrc_mem_domain sm1_pwrc_mem_pcie[] = {
++	{ HHI_MEM_PD_REG0, GENMASK(29, 26) },
++};
++
++static struct meson_sm1_pwrc_mem_domain sm1_pwrc_mem_ge2d[] = {
++	{ HHI_MEM_PD_REG0, GENMASK(25, 18) },
++};
++
++#define SM1_PD(__name, __bit, __mem) \
++	{ \
++		.name = __name, \
++		.sleep_reg = AO_RTI_GEN_PWR_SLEEP0, \
++		.sleep_bit = __bit, \
++		.iso_reg = AO_RTI_GEN_PWR_ISO0, \
++		.iso_bit = __bit, \
++		.mem_pd_count = ARRAY_SIZE(__mem), \
++		.mem_pd = __mem, \
++	}
++
++static struct meson_sm1_pwrc_domain_desc sm1_pwrc_domains[] = {
++	[PWRC_SM1_NNA_ID]  = SM1_PD("NNA", 16, sm1_pwrc_mem_nna),
++	[PWRC_SM1_USB_ID]  = SM1_PD("USB", 17, sm1_pwrc_mem_usb),
++	[PWRC_SM1_PCIE_ID] = SM1_PD("PCI", 18, sm1_pwrc_mem_pcie),
++	[PWRC_SM1_GE2D_ID] = SM1_PD("GE2D", 19, sm1_pwrc_mem_ge2d),
++};
++
++struct meson_sm1_pwrc_domain {
++	struct generic_pm_domain base;
++	bool enabled;
++	struct meson_sm1_pwrc *pwrc;
++	struct meson_sm1_pwrc_domain_desc desc;
++};
++
++struct meson_sm1_pwrc {
++	struct regmap *regmap_ao;
++	struct regmap *regmap_hhi;
++	struct meson_sm1_pwrc_domain *domains;
++	struct genpd_onecell_data xlate;
++};
++
++static int meson_sm1_pwrc_off(struct generic_pm_domain *domain)
++{
++	struct meson_sm1_pwrc_domain *pwrc_domain =
++		container_of(domain, struct meson_sm1_pwrc_domain, base);
++	int i;
++
++	regmap_update_bits(pwrc_domain->pwrc->regmap_ao,
++			   pwrc_domain->desc.sleep_reg,
++			   pwrc_domain->desc.sleep_bit,
++			   pwrc_domain->desc.sleep_bit);
++	udelay(20);
++
++	for (i = 0 ; i < pwrc_domain->desc.mem_pd_count ; ++i)
++		regmap_update_bits(pwrc_domain->pwrc->regmap_hhi,
++				   pwrc_domain->desc.mem_pd[i].reg,
++				   pwrc_domain->desc.mem_pd[i].mask,
++				   pwrc_domain->desc.mem_pd[i].mask);
++
++	udelay(20);
++
++	regmap_update_bits(pwrc_domain->pwrc->regmap_ao,
++			   pwrc_domain->desc.iso_reg,
++			   pwrc_domain->desc.iso_bit,
++			   pwrc_domain->desc.iso_bit);
++
++	return 0;
++}
++
++static int meson_sm1_pwrc_on(struct generic_pm_domain *domain)
++{
++	struct meson_sm1_pwrc_domain *pwrc_domain =
++		container_of(domain, struct meson_sm1_pwrc_domain, base);
++	int i;
++
++	regmap_update_bits(pwrc_domain->pwrc->regmap_ao,
++			   pwrc_domain->desc.sleep_reg,
++			   pwrc_domain->desc.sleep_bit, 0);
++	udelay(20);
++
++	for (i = 0 ; i < pwrc_domain->desc.mem_pd_count ; ++i)
++		regmap_update_bits(pwrc_domain->pwrc->regmap_hhi,
++				   pwrc_domain->desc.mem_pd[i].reg,
++				   pwrc_domain->desc.mem_pd[i].mask, 0);
++
++	udelay(20);
++
++	regmap_update_bits(pwrc_domain->pwrc->regmap_ao,
++			   pwrc_domain->desc.iso_reg,
++			   pwrc_domain->desc.iso_bit, 0);
++
++	return 0;
++}
++
++static int meson_sm1_pwrc_probe(struct platform_device *pdev)
++{
++	const struct meson_sm1_pwrc_domain_data *match;
++	struct regmap *regmap_ao, *regmap_hhi;
++	struct meson_sm1_pwrc *sm1_pwrc;
++	int i;
++
++	match = of_device_get_match_data(&pdev->dev);
++	if (!match) {
++		dev_err(&pdev->dev, "failed to get match data\n");
++		return -ENODEV;
++	}
++
++	sm1_pwrc = devm_kzalloc(&pdev->dev, sizeof(*sm1_pwrc), GFP_KERNEL);
++	if (!sm1_pwrc)
++		return -ENOMEM;
++
++	sm1_pwrc->xlate.domains =
++		devm_kcalloc(&pdev->dev,
++			     match->count,
++			     sizeof(*sm1_pwrc->xlate.domains),
++			     GFP_KERNEL);
++	if (!sm1_pwrc->xlate.domains)
++		return -ENOMEM;
++
++	sm1_pwrc->domains =
++		devm_kcalloc(&pdev->dev,
++			     match->count,
++			     sizeof(*sm1_pwrc->domains),
++			     GFP_KERNEL);
++	if (!sm1_pwrc->domains)
++		return -ENOMEM;
++
++	sm1_pwrc->xlate.num_domains = match->count;
++
++	regmap_ao = syscon_node_to_regmap(of_get_parent(pdev->dev.of_node));
++	if (IS_ERR(regmap_ao)) {
++		dev_err(&pdev->dev, "failed to get regmap\n");
++		return PTR_ERR(regmap_ao);
++	}
++
++	regmap_hhi = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
++						     "amlogic,hhi-sysctrl");
++	if (IS_ERR(regmap_hhi)) {
++		dev_err(&pdev->dev, "failed to get HHI regmap\n");
++		return PTR_ERR(regmap_hhi);
++	}
++
++	sm1_pwrc->regmap_ao = regmap_ao;
++	sm1_pwrc->regmap_hhi = regmap_hhi;
++
++	platform_set_drvdata(pdev, sm1_pwrc);
++
++	for (i = 0 ; i < match->count ; ++i) {
++		struct meson_sm1_pwrc_domain *dom = &sm1_pwrc->domains[i];
++
++		dom->pwrc = sm1_pwrc;
++
++		memcpy(&dom->desc, &match->domains[i], sizeof(dom->desc));
++
++		dom->base.name = dom->desc.name;
++		dom->base.power_on = meson_sm1_pwrc_on;
++		dom->base.power_off = meson_sm1_pwrc_off;
++
++		pm_genpd_init(&dom->base, NULL, true);
++
++		sm1_pwrc->xlate.domains[i] = &dom->base;
++	}
++
++	of_genpd_add_provider_onecell(pdev->dev.of_node, &sm1_pwrc->xlate);
++
++	return 0;
++}
++
++static struct meson_sm1_pwrc_domain_data meson_sm1_pwrc_data = {
++	.count = ARRAY_SIZE(sm1_pwrc_domains),
++	.domains = sm1_pwrc_domains,
++};
++
++static const struct of_device_id meson_sm1_pwrc_match_table[] = {
 +	{
-+		.compatible = "amlogic,meson-sm1-clk-measure",
-+		.data = (void *)clk_msr_sm1,
++		.compatible = "amlogic,meson-sm1-pwrc",
++		.data = &meson_sm1_pwrc_data,
 +	},
- 	{ /* sentinel */ }
- };
- 
++	{ /* sentinel */ }
++};
++
++static struct platform_driver meson_sm1_pwrc_driver = {
++	.probe	= meson_sm1_pwrc_probe,
++	.driver = {
++		.name		= "meson_sm1_pwrc",
++		.of_match_table	= meson_sm1_pwrc_match_table,
++	},
++};
++builtin_platform_driver(meson_sm1_pwrc_driver);
 -- 
 2.21.0
 
