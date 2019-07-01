@@ -6,40 +6,40 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A83C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBC9C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE8442173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C0620665
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:07:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WtVTo9Em"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ioVP/qgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbfGAOFN (ORCPT
+        id S1729373AbfGAOHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:05:13 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35486 "EHLO
+        Mon, 1 Jul 2019 10:07:18 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35516 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729294AbfGAOFN (ORCPT
+        with ESMTP id S1729271AbfGAOHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:05:13 -0400
+        Mon, 1 Jul 2019 10:07:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SotD5xDKU4tAQXDc312orTzyiKC6J1IO6NGGg0le4bM=; b=WtVTo9Em9Pu8gmifFDUAIT37b
-        vcWRO1Kssa1aPIOcf/s/1IwKqmzznPjIajojzRLdV7Usylbqe6kxR3S6FZG4KxQdWxSxs7n+AK4lK
-        1E1+KTlvd35g37f9qOh37+gtYxwOu79XifNjm7TRzoe9KptSYlo2A0X0vurGj5D85zn75ffm+lLlt
-        enza0nWDc4d6eU61HQDPd5FrcVZdCAl53MUU6OV0libZZA51syAu8S21ixjyYSZcDjYMoug3qnKvE
-        ICrIJSnP7quBALtKcZlt8zDeR/L2Hl+Bh4yMT37J7mMhqDaXa6QTzXFRrlQlJqW6uxzA5pJ8KZl7J
-        Etk0Tv9xQ==;
+         bh=URdBZnltUJZp8y8LciA/5TX5//edmZzvDOigSBMpLjU=; b=ioVP/qgb4wgD61BLSMnXNliQI
+        TYswZ3tVTVCZooE8UbMDOzTtdXKNZnLk5wzuf5zLi6EudwS0N1LmuCs4tcKeLtT+D+NPCcHoHfyMi
+        C2/d0UhIHrNwZxpNtasLWhr8xecSGhgxKv6EDr/zhK5lvJIFEdOCWS0T7gzra5HkhHB6o3GV4ns7E
+        ge4jFL4ONu87rJfFms1mQ4v4IaynxXcf/UHVTF/yCKXAZVq5lUQMVcL8s/cc0CTklEDZX7UjaqRFc
+        ebfEzvEmVA/YGR9M2zFPvxlnj7yoRPPU2MEZsEyO6BVeFZjIW5s1oAH5Bp9lt60cVh3j6ppAVDUh5
+        Y+Uie8DlQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhwv7-0008G4-L9; Mon, 01 Jul 2019 14:04:37 +0000
+        id 1hhwxA-0008Gx-0s; Mon, 01 Jul 2019 14:06:44 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 84A2A209C957E; Mon,  1 Jul 2019 16:04:34 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 16:04:34 +0200
+        id AF220209C957E; Mon,  1 Jul 2019 16:06:42 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 16:06:42 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Patrick Bellasi <patrick.bellasi@arm.com>
 Cc:     subhra mazumdar <subhra.mazumdar@oracle.com>,
@@ -50,7 +50,7 @@ Cc:     subhra mazumdar <subhra.mazumdar@oracle.com>,
         mgorman@techsingularity.net, Paul Turner <pjt@google.com>,
         riel@surriel.com, morten.rasmussen@arm.com
 Subject: Re: [RESEND PATCH v3 0/7] Improve scheduler scalability for fast path
-Message-ID: <20190701140434.GW3402@hirez.programming.kicks-ass.net>
+Message-ID: <20190701140642.GX3402@hirez.programming.kicks-ass.net>
 References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
  <20190701090204.GQ3402@hirez.programming.kicks-ass.net>
  <20190701135552.kb4os6bxxhh2lyw6@e110439-lin>
@@ -67,14 +67,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Mon, Jul 01, 2019 at 02:55:52PM +0100, Patrick Bellasi wrote:
 > On 01-Jul 11:02, Peter Zijlstra wrote:
 
-> > Some of the things we could tie to this would be:
-> > 
-> >   - select_idle_siblings; -nice would scan more than +nice,
+> > Hmmm?
 > 
-> Just to be sure, you are not proposing to use the nice value we
-> already have, i.e.
->   p->{static,normal}_prio
-> but instead a new similar concept, right?
+> Just one more requirement I think it's worth to consider since the
+> beginning: CGroups support
+> 
+> That would be very welcome interface. Just because is so much more
+> convenient (and safe) to set these bias on a group of tasks depending
+> on their role in the system.
+> 
+> Do you have any idea on how we can expose such a "lantency-nice"
+> property via CGroups? It's very similar to cpu.shares but it does not
+> represent a resource which can be partitioned.
 
-Correct; a new sched_attr::sched_latency_nice value, which is like
-sched_nice, but controls a different dimmension of behaviour.
+If the latency_nice idea lives; exactly like the normal nice? That is;
+IIRC cgroupv2 has a nice value interface (see cpu_weight_nice_*()).
+
+But yes, this isn't a resource per se; just a shared attribute like
+thing.
