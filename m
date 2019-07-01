@@ -2,293 +2,133 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 515B4C06508
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 02:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072E1C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 02:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E492089C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 02:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41A020B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 02:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digidescorp.com header.i=@digidescorp.com header.b="JyW0iPAS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MKHZDli9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfGACj4 (ORCPT
+        id S1727151AbfGAC7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 22:39:56 -0400
-Received: from mail-io1-f51.google.com ([209.85.166.51]:38419 "EHLO
-        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfGACjz (ORCPT
+        Sun, 30 Jun 2019 22:59:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54944 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfGAC7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 22:39:55 -0400
-Received: by mail-io1-f51.google.com with SMTP id j6so25260858ioa.5
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 19:39:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digidescorp.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=J470OwdmSpa0rN0oGsbs5IwY5SMMvVOyGiR0ZPlF5nk=;
-        b=JyW0iPASpbT/2m+MTGgDg8snxkKoMuwVA5zg+jgo5dmGugAQNRcKWMPq2H5D2Xq0Xs
-         yCOSNi0+s5Nl3K+WlqIfRS7YJjbwQk/58DKwCRe/FC9vwJWFUn36tY3yvskKPZPL6ODR
-         ZOHlgQ51MlmU1w97Ux4+6f/wZm9UCHsrOlcNo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=J470OwdmSpa0rN0oGsbs5IwY5SMMvVOyGiR0ZPlF5nk=;
-        b=AlE85FDoYnwZfTu1yQRL4B4/biUHaRBKzOvPq8XuT/5TqMhPMZqLvT1T9MQAShIdjH
-         9PbM0jK3+UGhqv4A4MEQb8GUFaMxGChhdc+I6EU+HE1rNa/WqhAiBNKeSA39/g/nhXXS
-         nPzM8N98xb9hmqbWtBl0YWh/nZ/eDDCo9PyIwAqShHLkeocBbDFqlLt3QGIKpHLWUwGI
-         W/Hd698Tw0en9aKQg2UHM2ak8U13OAkl6ZmmHWChtxPIM/r5HpI2lQaZxuuLnuFxccuu
-         bYYEDqUOdvFHhbVHo716rCU1+H++E5JhVgsWTZi0Cgm6+46CRuLze8P2HsKJBna1kRCF
-         D0xw==
-X-Gm-Message-State: APjAAAXTAWJ1Oe/jpgn+Fjv9bJzL0xqZXI88JaiTh0LHE+Wden+NgDbP
-        q+1gQNn9A6yleRUhqL7YLR45fcZCqbs=
-X-Google-Smtp-Source: APXvYqyXqKbR0ybOE3fdrtqJaC9CBGROxmxDpo8dahySVfCZw4Qe+xb5qA2wOnPRJnD618Gu5n3GcQ==
-X-Received: by 2002:a6b:641a:: with SMTP id t26mr7056687iog.3.1561948794232;
-        Sun, 30 Jun 2019 19:39:54 -0700 (PDT)
-Received: from teton.8.8.8.8 ([50.73.98.161])
-        by smtp.googlemail.com with ESMTPSA id s2sm7884553ioj.8.2019.06.30.19.39.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 30 Jun 2019 19:39:53 -0700 (PDT)
-From:   "Steven J. Magnani" <steve.magnani@digidescorp.com>
-X-Google-Original-From: "Steven J. Magnani" <steve@digidescorp.com>
-To:     Jan Kara <jack@suse.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Steven J . Magnani" <steve@digidescorp.com>
-Subject: [PATCH v2] udf: Fix incorrect final NOT_ALLOCATED (hole) extent length
-Date:   Sun, 30 Jun 2019 21:39:35 -0500
-Message-Id: <1561948775-5878-1-git-send-email-steve@digidescorp.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 30 Jun 2019 22:59:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IHOctcrnamPZlDOqkWx9gP7HKz6z4cfFnI1BHiO0w78=; b=MKHZDli96OWvWZf7Ml4qTTeTS
+        ADyGVjgEjt6ySSV9VdCosU1hi/21jcTscAC72nDZep1VKznI9fOx5A3N3iQPcPQy90pnC1WC+eC1S
+        Rr7xFMdssx1hm0W+7gNoMx1ZjX+NiaShGwa47IjtziyeHwzGGep8ZAN86u3cCfovTY2F7wuumVf87
+        txn5FMi7ZWCH/Z/lgAMKc90KP7QwzvTaqGRrZNGra+ZSPqK40+DWONlvWDTT8RVbu20a0hZVH3uxk
+        H2OilOPm03NJt7KIxOKf2aPx1YW4NfG8NGsQC+FAYu1tdnITXha3MxrdrMgG9/RcGNspO6MR5oPXD
+        8OeSFCLlA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hhmXZ-0007q7-Pi; Mon, 01 Jul 2019 02:59:37 +0000
+Subject: Re: [PATCH 2/6] Adjust watch_queue documentation to mention mount and
+ superblock watches. [ver #5]
+To:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <156173701358.15650.8735203424342507015.stgit@warthog.procyon.org.uk>
+ <156173703546.15650.14319137940607993268.stgit@warthog.procyon.org.uk>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <7a288c2c-11a1-87df-9550-b247d6ce3010@infradead.org>
+Date:   Sun, 30 Jun 2019 19:59:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <156173703546.15650.14319137940607993268.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some cases, using the 'truncate' command to extend a UDF file results
-in a mismatch between the length of the file's extents (specifically, due
-to incorrect length of the final NOT_ALLOCATED extent) and the information
-(file) length. The discrepancy can prevent other operating systems
-(i.e., Windows 10) from opening the file.
+Hi David,
 
-Two particular errors have been observed when extending a file:
+On 6/28/19 8:50 AM, David Howells wrote:
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> ---
+> 
+>  Documentation/watch_queue.rst |   20 +++++++++++++++++++-
+>  drivers/misc/Kconfig          |    5 +++--
+>  2 files changed, 22 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/watch_queue.rst b/Documentation/watch_queue.rst
+> index 4087a8e670a8..1bec2018d549 100644
+> --- a/Documentation/watch_queue.rst
+> +++ b/Documentation/watch_queue.rst
+> @@ -13,6 +13,10 @@ receive notifications from the kernel.  This can be used in conjunction with::
+>  
+>      * USB subsystem event notifications
+>  
+> +  * Mount topology change notifications
+> +
+> +  * Superblock event notifications
+> +
+>  
+>  The notifications buffers can be enabled by:
+>  
+> @@ -324,6 +328,19 @@ Any particular buffer can be fed from multiple sources.  Sources include:
+>      for buses and devices.  Watchpoints of this type are set on the global
+>      device watch list.
+>  
+> +  * WATCH_TYPE_MOUNT_NOTIFY
+> +
+> +    Notifications of this type indicate mount tree topology changes and mount
+> +    attribute changes.  A watch can be set on a particular file or directory
+> +    and notifications from the path subtree rooted at that point will be
+> +    intercepted.
+> +
+> +  * WATCH_TYPE_SB_NOTIFY
+> +
+> +    Notifications of this type indicate superblock events, such as quota limits
+> +    being hit, I/O errors being produced or network server loss/reconnection.
+> +    Watches of this type are set directly on superblocks.
+> +
+>  
+>  Event Filtering
+>  ===============
+> @@ -365,7 +382,8 @@ Where:
+>  	(watch.info & info_mask) == info_filter
+>  
+>      This could be used, for example, to ignore events that are not exactly on
+> -    the watched point in a mount tree.
+> +    the watched point in a mount tree by specifying NOTIFY_MOUNT_IN_SUBTREE
+> +    must be 0.
 
-1. The final extent is larger than it should be, having been rounded up
-   to a multiple of the block size.
+I'm having a little trouble parsing that sentence.
+Could you clarify it or maybe rewrite/modify it?
+Thanks.
 
-B. The final extent is not shorter than it should be, due to not having
-   been updated when the file's information length was increased.
+>  
+>    * ``subtype_filter`` is a bitmask indicating the subtypes that are of
+>      interest.  Bit 0 of subtype_filter[0] corresponds to subtype 0, bit 1 to
 
-Change since v1:
-Simplified udf_do_extend_file() API, partially by factoring out its
-handling of the "extending within the last file block" corner case.
 
-Fixes: 2c948b3f86e5 ("udf: Avoid IO in udf_clear_inode")
-Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
 
---- a/fs/udf/inode.c	2019-05-24 21:17:33.659704533 -0500
-+++ b/fs/udf/inode.c	2019-06-29 21:10:48.938562957 -0500
-@@ -470,13 +470,15 @@ static struct buffer_head *udf_getblk(st
- 	return NULL;
- }
- 
--/* Extend the file by 'blocks' blocks, return the number of extents added */
-+/* Extend the file with new blocks totaling 'new_block_bytes',
-+ * return the number of extents added
-+ */
- static int udf_do_extend_file(struct inode *inode,
- 			      struct extent_position *last_pos,
- 			      struct kernel_long_ad *last_ext,
--			      sector_t blocks)
-+			      loff_t new_block_bytes)
- {
--	sector_t add;
-+	unsigned long add;
- 	int count = 0, fake = !(last_ext->extLength & UDF_EXTENT_LENGTH_MASK);
- 	struct super_block *sb = inode->i_sb;
- 	struct kernel_lb_addr prealloc_loc = {};
-@@ -486,7 +488,7 @@ static int udf_do_extend_file(struct ino
- 
- 	/* The previous extent is fake and we should not extend by anything
- 	 * - there's nothing to do... */
--	if (!blocks && fake)
-+	if (!new_block_bytes && fake)
- 		return 0;
- 
- 	iinfo = UDF_I(inode);
-@@ -517,13 +519,12 @@ static int udf_do_extend_file(struct ino
- 	/* Can we merge with the previous extent? */
- 	if ((last_ext->extLength & UDF_EXTENT_FLAG_MASK) ==
- 					EXT_NOT_RECORDED_NOT_ALLOCATED) {
--		add = ((1 << 30) - sb->s_blocksize -
--			(last_ext->extLength & UDF_EXTENT_LENGTH_MASK)) >>
--			sb->s_blocksize_bits;
--		if (add > blocks)
--			add = blocks;
--		blocks -= add;
--		last_ext->extLength += add << sb->s_blocksize_bits;
-+		add = (1 << 30) - sb->s_blocksize -
-+			(last_ext->extLength & UDF_EXTENT_LENGTH_MASK);
-+		if (add > new_block_bytes)
-+			add = new_block_bytes;
-+		new_block_bytes -= add;
-+		last_ext->extLength += add;
- 	}
- 
- 	if (fake) {
-@@ -544,28 +545,27 @@ static int udf_do_extend_file(struct ino
- 	}
- 
- 	/* Managed to do everything necessary? */
--	if (!blocks)
-+	if (!new_block_bytes)
- 		goto out;
- 
- 	/* All further extents will be NOT_RECORDED_NOT_ALLOCATED */
- 	last_ext->extLocation.logicalBlockNum = 0;
- 	last_ext->extLocation.partitionReferenceNum = 0;
--	add = (1 << (30-sb->s_blocksize_bits)) - 1;
--	last_ext->extLength = EXT_NOT_RECORDED_NOT_ALLOCATED |
--				(add << sb->s_blocksize_bits);
-+	add = (1 << 30) - sb->s_blocksize;
-+	last_ext->extLength = EXT_NOT_RECORDED_NOT_ALLOCATED | add;
- 
- 	/* Create enough extents to cover the whole hole */
--	while (blocks > add) {
--		blocks -= add;
-+	while (new_block_bytes > add) {
-+		new_block_bytes -= add;
- 		err = udf_add_aext(inode, last_pos, &last_ext->extLocation,
- 				   last_ext->extLength, 1);
- 		if (err)
- 			return err;
- 		count++;
- 	}
--	if (blocks) {
-+	if (new_block_bytes) {
- 		last_ext->extLength = EXT_NOT_RECORDED_NOT_ALLOCATED |
--			(blocks << sb->s_blocksize_bits);
-+			new_block_bytes;
- 		err = udf_add_aext(inode, last_pos, &last_ext->extLocation,
- 				   last_ext->extLength, 1);
- 		if (err)
-@@ -596,6 +596,44 @@ out:
- 	return count;
- }
- 
-+/* Extend the final block of the file to final_block_len bytes */
-+static int udf_do_extend_final_block(struct inode *inode,
-+				     struct extent_position *last_pos,
-+				     struct kernel_long_ad *last_ext,
-+				     unsigned long final_block_len)
-+{
-+	struct super_block *sb = inode->i_sb;
-+	struct kernel_lb_addr tmploc;
-+	uint32_t tmplen;
-+	struct udf_inode_info *iinfo;
-+	unsigned long added_bytes;
-+
-+	iinfo = UDF_I(inode);
-+
-+	added_bytes = final_block_len -
-+		      (last_ext->extLength & (sb->s_blocksize - 1));
-+	last_ext->extLength += added_bytes;
-+	iinfo->i_lenExtents += added_bytes;
-+
-+	udf_write_aext(inode, last_pos, &last_ext->extLocation,
-+			last_ext->extLength, 1);
-+	/*
-+	 * We've rewritten the last extent but there may be empty
-+	 * indirect extent after it - enter it.
-+	 */
-+	udf_next_aext(inode, last_pos, &tmploc, &tmplen, 0);
-+
-+	/* last_pos should point to the last written extent... */
-+	if (iinfo->i_alloc_type == ICBTAG_FLAG_AD_SHORT)
-+		last_pos->offset -= sizeof(struct short_ad);
-+	else if (iinfo->i_alloc_type == ICBTAG_FLAG_AD_LONG)
-+		last_pos->offset -= sizeof(struct long_ad);
-+	else
-+		return -EIO;
-+
-+	return 0;
-+}
-+
- static int udf_extend_file(struct inode *inode, loff_t newsize)
- {
- 
-@@ -605,10 +643,12 @@ static int udf_extend_file(struct inode
- 	int8_t etype;
- 	struct super_block *sb = inode->i_sb;
- 	sector_t first_block = newsize >> sb->s_blocksize_bits, offset;
-+	unsigned long partial_final_block;
- 	int adsize;
- 	struct udf_inode_info *iinfo = UDF_I(inode);
- 	struct kernel_long_ad extent;
- 	int err;
-+	int within_final_block;
- 
- 	if (iinfo->i_alloc_type == ICBTAG_FLAG_AD_SHORT)
- 		adsize = sizeof(struct short_ad);
-@@ -618,18 +658,8 @@ static int udf_extend_file(struct inode
- 		BUG();
- 
- 	etype = inode_bmap(inode, first_block, &epos, &eloc, &elen, &offset);
-+	within_final_block = (etype != -1);
- 
--	/* File has extent covering the new size (could happen when extending
--	 * inside a block)? */
--	if (etype != -1)
--		return 0;
--	if (newsize & (sb->s_blocksize - 1))
--		offset++;
--	/* Extended file just to the boundary of the last file block? */
--	if (offset == 0)
--		return 0;
--
--	/* Truncate is extending the file by 'offset' blocks */
- 	if ((!epos.bh && epos.offset == udf_file_entry_alloc_offset(inode)) ||
- 	    (epos.bh && epos.offset == sizeof(struct allocExtDesc))) {
- 		/* File has no extents at all or has empty last
-@@ -643,7 +673,22 @@ static int udf_extend_file(struct inode
- 				      &extent.extLength, 0);
- 		extent.extLength |= etype << 30;
- 	}
--	err = udf_do_extend_file(inode, &epos, &extent, offset);
-+
-+	partial_final_block = newsize & (sb->s_blocksize - 1);
-+
-+	/* File has extent covering the new size (could happen when extending
-+	 * inside a block)?
-+	 */
-+	if (within_final_block) {
-+		/* Extending file within the last file block */
-+		err = udf_do_extend_final_block(inode, &epos, &extent,
-+						partial_final_block);
-+	} else {
-+		loff_t add = (offset << sb->s_blocksize_bits) |
-+			     partial_final_block;
-+		err = udf_do_extend_file(inode, &epos, &extent, add);
-+	}
-+
- 	if (err < 0)
- 		goto out;
- 	err = 0;
-@@ -745,6 +790,7 @@ static sector_t inode_getblk(struct inod
- 	/* Are we beyond EOF? */
- 	if (etype == -1) {
- 		int ret;
-+		loff_t hole_len;
- 		isBeyondEOF = true;
- 		if (count) {
- 			if (c)
-@@ -760,7 +806,8 @@ static sector_t inode_getblk(struct inod
- 			startnum = (offset > 0);
- 		}
- 		/* Create extents for the hole between EOF and offset */
--		ret = udf_do_extend_file(inode, &prev_epos, laarr, offset);
-+		hole_len = offset << inode->i_sb->s_blocksize_bits;
-+		ret = udf_do_extend_file(inode, &prev_epos, laarr, hole_len);
- 		if (ret < 0) {
- 			*err = ret;
- 			newblock = 0;
+-- 
+~Randy
