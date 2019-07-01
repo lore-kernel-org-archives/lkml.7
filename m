@@ -2,144 +2,138 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E36C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B990EC06508
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC9C62146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:27:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KeerZoGr"
+	by mail.kernel.org (Postfix) with ESMTP id 976AC2145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfGABYm (ORCPT
+        id S1727220AbfGAB3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 21:24:42 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:25877 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfGABYl (ORCPT
+        Sun, 30 Jun 2019 21:29:50 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:57351 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727159AbfGAB3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 21:24:41 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190701012438epoutp02fc8e5260dc3a6353bc9128f3cd20f5fa~tJAvMMQaK0782207822epoutp02d
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2019 01:24:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190701012438epoutp02fc8e5260dc3a6353bc9128f3cd20f5fa~tJAvMMQaK0782207822epoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561944278;
-        bh=LTF7GLbOV/sLEYbnK81j+o/pFOF7izsWGUeXSMtoTXc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=KeerZoGrmvh2q1P/XwAK10Rl9TOsyCk090dYNLb2iwtFXu8VXG3Jmwk8AmXmvPExU
-         Sg6I/jLe14Au0lsDE/7kab4ImKXTFNhTkqMBerpRO85zHsZ2D8q6rWk1E9g8CdzpIz
-         K/M7owwUg03gfT5g1TJnvd9f9zSRpQlEggZFJtnM=
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.153]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190701012436epcas1p44a606629cb7d52c81ddb8c416e7eb701~tJAs4ynGz2703727037epcas1p4w;
-        Mon,  1 Jul 2019 01:24:36 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B2.58.04139.FC0691D5; Mon,  1 Jul 2019 10:24:31 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190701012430epcas1p4b40cec12a0797f691166877670995ec9~tJAnuAHuT2009720097epcas1p4h;
-        Mon,  1 Jul 2019 01:24:30 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190701012430epsmtrp10007494aeceabc6d075eadf6881bcf78~tJAntR2Hw0366303663epsmtrp1D;
-        Mon,  1 Jul 2019 01:24:30 +0000 (GMT)
-X-AuditID: b6c32a35-973ff7000000102b-e3-5d1960cfac05
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E8.6C.03692.EC0691D5; Mon,  1 Jul 2019 10:24:30 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190701012430epsmtip27515a266b35faabd18d5638914427df6~tJAniEj1-1755717557epsmtip2I;
-        Mon,  1 Jul 2019 01:24:30 +0000 (GMT)
-Subject: Re: [PATCH] misc: fsa9480: Delete this driver
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <49002e6c-5c70-e70d-3eaa-618407cfd33b@samsung.com>
-Date:   Mon, 1 Jul 2019 10:27:16 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Sun, 30 Jun 2019 21:29:49 -0400
+X-UUID: d29bdff237594c7c81a1686025d435ae-20190701
+X-UUID: d29bdff237594c7c81a1686025d435ae-20190701
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 872957804; Mon, 01 Jul 2019 09:29:35 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 1 Jul 2019 09:29:25 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 1 Jul 2019 09:29:23 +0800
+Message-ID: <1561944562.17120.1.camel@mtksdaap41>
+Subject: Re: [v5 4/7] drm/mediatek: add frame size control
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Thierry Reding" <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        "Inki Dae" <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        "Sean Paul" <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        "Andy Yan" <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Mon, 1 Jul 2019 09:29:22 +0800
+In-Reply-To: <20190627080116.40264-5-jitao.shi@mediatek.com>
+References: <20190627080116.40264-1-jitao.shi@mediatek.com>
+         <20190627080116.40264-5-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20190630140302.16245-1-linus.walleij@linaro.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUwTURj09dhd0OpaQD8x0bL6QxuBLlAsKsYDTYMkknjGSOoGVkroZbcF
-        0UQbMXJo8KpGVgHjRcQDRVRAsbEggkZUsAYJxgPvxCMqalDUrluVf/PNm8m8ee8jpMpSLJzI
-        sjhYu4UxUViw7ELTZE3k7VVj0jQX3QrdwK4WXJd/uBrTuX9USnSdDQcw3bfrJdJZcv33/l1I
-        X88/xPU99y9jek/ZSVz/qWZcqnxF9gwjy2SwdhVrSbdmZFkyE6kFiwxzDdp4DR1JJ+imUioL
-        Y2YTqaSU1Mj5WSZ/OKXKYUxOP5XKcBwVPXOG3ep0sCqjlXMkUqwtw2RLsEVxjJlzWjKj0q3m
-        abRGE6P1C1dlGzsedchse/C1l18Md6E2eTEKIoCMg94nbXgxCiaUZB2Ck7WtcnH4iOBdYw8S
-        hy8IvANn/1lu9vRLxINGBJtdJTJxeI/Ad2OzRFCFkPFw79CmP45QshzBjm2OYkQQUnIO3DyX
-        JNAYqQbPqy5MwCPICPB960UCVpAzobndiwtyGTkRqvaZBDqMXA6dtQ0ByUhoK30mE3CQX36s
-        ZjsuYCk5GrqfVUhEPB7yz++XClcDsheDQ3dOS8QCSfDTtTWAQ+DN9VpcxOHwevuWAF4Px9ua
-        MdFciKDWcyfQPhY8R3dLxC6TobohWqQjoP57GRKDh8O7vm1yQQKkAgq3KEXJBOh8/DAQOwYO
-        FxRhOxDFD6rDD6rAD6rA/w87iGRVaBRr48yZLEfb6MF/XYP+rKVaW4fc7SleRBKIGqZw9UCa
-        Us7kcHlmLwJCSoUqypr8lCKDyVvH2q0Gu9PEcl6k9T/2Tml4WLrVv+QWh4HWxsTGxuri6Hgt
-        TVOjFYahD1YqyUzGwWazrI21//VJiKBwFxrycfayvIEod1f+hmTftbeff7nP8L767vgTS6qn
-        L2w/0Mc77z7eOPalqqxybB/5dPW8p3Ljzhj1pdD8hpTCgeBhIQWt/U9yj/NOX3NKUfmk560J
-        3UnrjnT/KtpbUTEF77hlyy3XL/3aUhJ8Sg5X0rvWpOrYD7fa867ylQXqKm2yZzEl44wMrZba
-        OeY3zbZGY6wDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42LZdlhJXvdcgmSswf/nuhZ/Jx1jt2hevJ7N
-        Ysqf5UwWl3fNYbP4cbyP2YHV4/evSYweO2fdZfe4c20Pm8f+uWvYPT5vkgtgjeKySUnNySxL
-        LdK3S+DKuHT/EkvBVPaKPc/4GhhPsnYxcnJICJhInL7zi6mLkYtDSGA3o8TGZfuZIRKSEtMu
-        HgWyOYBsYYnDh4tBwkICbxkl7p0MALGFBcwkrixqYgXpFRGYxyhxd/tZFpB6ZgEnidObXSBm
-        TmSU+HHxICNIA5uAlsT+FzfYQGx+AUWJqz8eg8V5Bewkjpw7xA7SyyKgIrFqRg5IWFQgQqKv
-        bTYbRImgxMmZT1hAbE6g8mWb+tlBbGYBdYk/8y4xQ9jiEreezGeCsOUlmrfOZp7AKDwLSfss
-        JC2zkLTMQtKygJFlFaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcNRoae5gvLwk/hCj
-        AAejEg9vwx2JWCHWxLLiytxDjBIczEoivHMPA4V4UxIrq1KL8uOLSnNSiw8xSnOwKInzPs07
-        FikkkJ5YkpqdmlqQWgSTZeLglGpgVBKzM+U+u/YIkyXLrYVbV66vi3hv0vLql/p2g6sc5xUW
-        bb1YfXlrO2NXrdz3cIOed3qbtdnMdnqx3jKu0tbuindl3aBhaGyuxaZj9+GOs2lwT3Nvp8pW
-        JtVkVk1ZU6epGWzR6mLSNyZxxugem+908MHaC76L3kp/Z3JtvdzZEN9pH+1/q02JpTgj0VCL
-        uag4EQBCPsARlgIAAA==
-X-CMS-MailID: 20190701012430epcas1p4b40cec12a0797f691166877670995ec9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190630140521epcas3p4f9a3ee4d4ef3a1f6f57a855ef0eedb40
-References: <CGME20190630140521epcas3p4f9a3ee4d4ef3a1f6f57a855ef0eedb40@epcas3p4.samsung.com>
-        <20190630140302.16245-1-linus.walleij@linaro.org>
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24732.000
+X-TM-AS-Result: No-12.337600-8.000000-10
+X-TMASE-MatchedRID: zGP2F0O7j/vmLzc6AOD8DfHkpkyUphL9xXRDKEyu2zF+SLLtNOiBhmmd
+        1p2wVSdNRw3fpQHgw3t0pmQclXiHl4UJf3YQjB6CiJwEp8weVXwxXH/dlhvLv2q646qiEnRz7yL
+        x17DX9aet2gtuWr1Lmt52diAVzqN2Z/mERv8EXlX754IB1tyKcqg3Fm19nZrJ0u/U/L+rNlES99
+        dUV0LYkjvFiNq8G3M5EiVVgKqFXk5Nfs8n85Te8oMbH85DUZXyseWplitmp0j6C0ePs7A07RRAJ
+        C2k3BZ6qjisAJ9xR93/FHz8N5NA/ciiN6rHv+xKGCY6L4Z1ACk=
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--12.337600-8.000000
+X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24732.000
+X-TM-SNTS-SMTP: A90BCEAADDCB8D640566EAD2CCD718AC8B8A63ED6C117C0EF66499DE0C7667252000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi, Jitao:
 
-On 19. 6. 30. 오후 11:03, Linus Walleij wrote:
-> The FSA9480 has a new driver more appropriately located
-> in the drivers/extcon subsystem. It is also more complete
-> and includes device tree support. Delete the old misc
-> driver.
+On Thu, 2019-06-27 at 16:01 +0800, Jitao Shi wrote:
+> Our new DSI chip has frame size control.
+> So add the driver data to control for different chips.
 > 
-> Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+This version is different than previous version, so you should remove
+the reviewed-by tag. For this version, I still give you a
+
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
 > ---
->  drivers/misc/Kconfig                  |   9 -
->  drivers/misc/Makefile                 |   1 -
->  drivers/misc/fsa9480.c                | 547 --------------------------
->  include/linux/platform_data/fsa9480.h |  24 --
->  4 files changed, 581 deletions(-)
->  delete mode 100644 drivers/misc/fsa9480.c
->  delete mode 100644 include/linux/platform_data/fsa9480.h
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index 6b6550926db6..45e331055842 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -78,6 +78,7 @@
+>  #define DSI_VBP_NL		0x24
+>  #define DSI_VFP_NL		0x28
+>  #define DSI_VACT_NL		0x2C
+> +#define DSI_SIZE_CON		0x38
+>  #define DSI_HSA_WC		0x50
+>  #define DSI_HBP_WC		0x54
+>  #define DSI_HFP_WC		0x58
+> @@ -162,6 +163,7 @@ struct phy;
+>  struct mtk_dsi_driver_data {
+>  	const u32 reg_cmdq_off;
+>  	bool has_shadow_ctl;
+> +	bool has_size_ctl;
+>  };
+>  
+>  struct mtk_dsi {
+> @@ -430,6 +432,10 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+>  	writel(vm->vfront_porch, dsi->regs + DSI_VFP_NL);
+>  	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
+>  
+> +	if (dsi->driver_data->has_size_ctl)
+> +		writel(vm->vactive << 16 | vm->hactive,
+> +		       dsi->regs + DSI_SIZE_CON);
+> +
+>  	horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
+>  
+>  	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-
-Best Regards,
-Chanwoo Choi
 
