@@ -2,118 +2,123 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C72C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE97EC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7E320B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9746A20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="L0jw6WvQ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Hl//A+Q+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbfGAPtu (ORCPT
+        id S1730023AbfGAPvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:49:50 -0400
-Received: from ozlabs.org ([203.11.71.1]:47459 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727373AbfGAPtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:49:50 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45csJC5Q7Vz9s3Z;
-        Tue,  2 Jul 2019 01:49:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561996187;
-        bh=uYN0y0aQlZBTgN0OvRy1quf4Tph3kiuWeHujYKyUaAI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=L0jw6WvQosv77PO5PxCyIFnTxFLX77Lw6t7ErOWGoZjTGUPXHbWgEim0YTp9jgzkQ
-         ABsODXtFxtD9yTOwqDMJb7G5sj2pgmM3v6cLkkdZ0XX2fx/JM/y1yfYadyi+JmcPVA
-         hx7aDzpsC4X1AIq5Ne2vC1OjF6VWzINgg1zCzX67WCE+1rqzbfBF6hP/K/JRSJ1SQ4
-         MW6eCWzD2nsZxLSrknJNoLvQhU99syiPisOpreGSHtfTRk9HS+lxa2v1aRBAkZ3fgq
-         DiOHhmevMkxwizM8NeURxxE0XXRQSMOLmDHB0h0ovMlAaQVv/LXuTO5sMISNnncGCa
-         Hxa4IMOTJSpoQ==
-Date:   Tue, 2 Jul 2019 01:49:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+        Mon, 1 Jul 2019 11:51:52 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34540 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728053AbfGAPvv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 11:51:51 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61FnOW5041009;
+        Mon, 1 Jul 2019 15:51:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=v58nZ4sOVzUxsIgxzLPHYMiDCb/PQf8nA8zBdMZYPrM=;
+ b=Hl//A+Q++nOy6N2C6J/YeboBCJa9RqC3jBie72QOtCUy1Ovr8FbsyqQLSRdm1hmgZCtm
+ KG6N38+KyRFnzqWEMu9ezz4KwaDoq2/uOZHuXolks2GYCt7LXiHxBjVccLLk/FpeVZIw
+ mY2nNkDvTbQpAXpAFy9eKfTl3nM0wK9tc6XP3S8hcxZHMon3GiTI7y7x5kLfAPYc4A8b
+ yBEdelu0iS6f+r5McYvVvsNZyvmGr6Th8xHBYNcemBWSI5RW2zPnRixPwuOSjs8QZX20
+ hWFHGWtAV0QwgNGaXeQgBF0e+wsfHY/JExgfIak7JLoxjvf5SYbYP8D45PZThHaN8SZQ mg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2te5tbehd4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 15:51:46 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61FmBc2126248;
+        Mon, 1 Jul 2019 15:49:46 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2tebak8gvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 15:49:46 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x61Fnjx4014393;
+        Mon, 1 Jul 2019 15:49:45 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 01 Jul 2019 08:49:45 -0700
+Date:   Mon, 1 Jul 2019 08:49:44 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
 Cc:     linux-xfs@vger.kernel.org,
         Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Subject: Re: Adding some trees to linux-next?
-Message-ID: <20190702014944.79bd326a@canb.auug.org.au>
-In-Reply-To: <20190701153552.GJ1404256@magnolia>
+Message-ID: <20190701154944.GL1404256@magnolia>
 References: <20190701110603.5abcbb2c@canb.auug.org.au>
-        <20190701153552.GJ1404256@magnolia>
+ <20190701153552.GJ1404256@magnolia>
+ <20190702014210.1c95f9f1@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/fev+fzqjHW.N7FIhhlClsrz"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702014210.1c95f9f1@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907010190
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907010191
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/fev+fzqjHW.N7FIhhlClsrz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 02, 2019 at 01:42:10AM +1000, Stephen Rothwell wrote:
+> Hi Darrick,
+> 
+> On Mon, 1 Jul 2019 08:35:52 -0700 "Darrick J. Wong" <darrick.wong@oracle.com> wrote:
+> >
+> > Could you add my iomap-for-next and vfs-for-next branches to linux-next,
+> > please?  They can be found here:
+> > 
+> > git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git#iomap-for-next
+> > git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git#vfs-for-next
+> > 
+> > I've decided that trying to munge all that through the xfs for-next
+> > branch is too much insanity and splitting them up will help me prevent
+> > my head from falling off.
+> 
+> Just out of interest, do you intend to send these directly to Linus, or
+> via another tree?
 
-Hi Darrick,
+The iomap stuff I'd definitely send directly to Linus.
 
-On Mon, 1 Jul 2019 08:35:52 -0700 "Darrick J. Wong" <darrick.wong@oracle.co=
-m> wrote:
->
-> Could you add my iomap-for-next and vfs-for-next branches to linux-next,
-> please?  They can be found here:
->=20
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git#iomap-for-next
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git#vfs-for-next
->=20
-> I've decided that trying to munge all that through the xfs for-next
-> branch is too much insanity and splitting them up will help me prevent
-> my head from falling off.
+For vfs stuff, it depends.  For work in the core vfs I'll probably just
+keep sending patches through Al, but for treewide things like ioctl
+cleanups I suspect it'll be easier to let them soak in -next and then
+send them directly.
 
-Added from today.
+I also dropped the f2fs parts of the setflags/fssetxattr patches because
+while I think your fix from yesterday's for-next is correct, I prefer to
+let Eric Biggers' cleanup land through the f2fs tree before I try to
+clean up f2fs again.  There shouldn't be any harm in letting that lag a
+little while longer.
 
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
+--D
 
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
+> -- 
+> Cheers,
+> Stephen Rothwell
 
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
 
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
-
---Sig_/fev+fzqjHW.N7FIhhlClsrz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0aK5gACgkQAVBC80lX
-0GwmMQf8CnI5xnqYrX8x9t5LBtRJq5gPcLukCc+FjM8GkphUoE/T8Xa2yPMyxnGs
-6vpp/nGVX+UyYmvOkRbRNZfnIWY9WlBaXAfxK+If2jHjJy34Dmdm/yTu4WWgcCZu
-Ji+/GSpH02b9J/Zn4DuVYymLtVLEPFgaWEVjWxm5nbYMgwrq6b+wMKvn2ybPHuOU
-IDNFkRv33y1XN1o6m/AiMNK1J0ywcAJX3D4/qkUz4lAReQTPCZmWjAHbEBAVkOaL
-2tdJcV03DFORsoiIzxYqEX5Sict5+r4Dph2nw5ysVPJ8Mz8DrZrj8btjhGJcXUq8
-G+me/aG3McL+Js3NfdbaE/J25d8VqQ==
-=lykB
------END PGP SIGNATURE-----
-
---Sig_/fev+fzqjHW.N7FIhhlClsrz--
