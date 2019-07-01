@@ -3,153 +3,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40802C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAAEC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F22A2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9755D2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfGAMyh (ORCPT
+        id S1727654AbfGAM4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 08:54:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16168 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727256AbfGAMye (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 08:54:34 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61Cq3eI104227
-        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 08:54:33 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfhy9jca9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 08:54:33 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 1 Jul 2019 13:54:30 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Jul 2019 13:54:26 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61CsEID36503890
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 12:54:14 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 193E752051;
-        Mon,  1 Jul 2019 12:54:25 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.110.66])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E8AB55204E;
-        Mon,  1 Jul 2019 12:54:22 +0000 (GMT)
-Subject: Re: [PATCH v4 2/3] initramfs: read metadata from special file
- METADATA!!!
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>, viro@zeniv.linux.org.uk
-Cc:     linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bug-cpio@gnu.org,
-        zohar@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com,
-        dmitry.kasatkin@huawei.com, takondra@cisco.com, kamensky@cisco.com,
-        hpa@zytor.com, arnd@arndb.de, rob@landley.net,
-        james.w.mcmechan@gmail.com, niveditas98@gmail.com
-Date:   Mon, 01 Jul 2019 08:54:12 -0400
-In-Reply-To: <20190523121803.21638-3-roberto.sassu@huawei.com>
-References: <20190523121803.21638-1-roberto.sassu@huawei.com>
-         <20190523121803.21638-3-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070112-0016-0000-0000-0000028E22EC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070112-0017-0000-0000-000032EBAFDE
-Message-Id: <1561985652.4049.24.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010159
+        Mon, 1 Jul 2019 08:56:22 -0400
+Received: from sauhun.de ([88.99.104.3]:55766 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727249AbfGAM4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 08:56:22 -0400
+Received: from localhost (p54B3346F.dip0.t-ipconnect.de [84.179.52.111])
+        by pokefinder.org (Postfix) with ESMTPSA id 486CD2C360B;
+        Mon,  1 Jul 2019 14:56:19 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 14:56:19 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Eduardo Valentin <eduval@amazon.com>
+Cc:     Haiyue Wang <haiyue.wang@linux.intel.com>,
+        jarkko.nikula@linux.intel.com, andriy.shevchenko@intel.com,
+        brendanhiggins@google.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 2/3] i2c: slave-mqueue: add a slave backend to receive
+ and queue messages
+Message-ID: <20190701125619.GC4399@kunai>
+References: <20190605164651.15991-1-eduval@amazon.com>
+ <20190605164651.15991-3-eduval@amazon.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
+Content-Disposition: inline
+In-Reply-To: <20190605164651.15991-3-eduval@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roberto,
 
-> diff --git a/init/initramfs.c b/init/initramfs.c
-> index 5de396a6aac0..862c03123de8 100644
-> --- a/init/initramfs.c
-> +++ b/init/initramfs.c
+--XMCwj5IQnwKtuyBG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +static int __init do_process_metadata(char *buf, int len, bool last)
-> +{
+Hi Eduardo,
 
-Part of the problem in upstreaming CPIO xattr support has been the
-difficulty in reading and understanding the initramfs code due to a
-lack of comments.  At least for any new code, let's add some comments
-to simplify the review.  In this case, understanding "last", before
-reading the code, would help.
+thanks for stepping up and pushing this further!
 
-Mimi
+On Wed, Jun 05, 2019 at 09:46:50AM -0700, Eduardo Valentin wrote:
+> From: Haiyue Wang <haiyue.wang@linux.intel.com>
+>=20
+> Some protocols over I2C are designed for bi-directional transferring
+> messages by using I2C Master Write protocol. Like the MCTP (Management
+> Component Transport Protocol) and IPMB (Intelligent Platform Management
+> Bus), they both require that the userspace can receive messages from
+> I2C dirvers under slave mode.
+>=20
+> This new slave mqueue backend is used to receive and queue messages, it
+> will exposes these messages to userspace by sysfs bin file.
 
-> +	int ret = 0;
-> +
-> +	if (!metadata_buf) {
-> +		metadata_buf_ptr = metadata_buf = kmalloc(body_len, GFP_KERNEL);
-> +		if (!metadata_buf_ptr) {
-> +			ret = -ENOMEM;
-> +			goto out;
-> +		}
-> +
-> +		metadata_len = body_len;
-> +	}
-> +
-> +	if (metadata_buf_ptr + len > metadata_buf + metadata_len) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	memcpy(metadata_buf_ptr, buf, len);
-> +	metadata_buf_ptr += len;
-> +
-> +	if (last)
-> +		do_parse_metadata(previous_name_buf);
-> +out:
-> +	if (ret < 0 || last) {
-> +		kfree(metadata_buf);
-> +		metadata_buf = NULL;
-> +		metadata = 0;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int __init do_copy(void)
->  {
->  	if (byte_count >= body_len) {
->  		if (xwrite(wfd, victim, body_len) != body_len)
->  			error("write error");
-> +		if (metadata)
-> +			do_process_metadata(victim, body_len, true);
->  		ksys_close(wfd);
->  		do_utime(vcollected, mtime);
->  		kfree(vcollected);
-> @@ -458,6 +500,8 @@ static int __init do_copy(void)
->  	} else {
->  		if (xwrite(wfd, victim, byte_count) != byte_count)
->  			error("write error");
-> +		if (metadata)
-> +			do_process_metadata(victim, byte_count, false);
->  		body_len -= byte_count;
->  		eat(byte_count);
->  		return 1;
-> 
+So, this is a read-only bin file. Sending is done via the standard
+i2c-dev driver? Or not needed at all?
 
+Regarding, IPMB, how does this related to the recently merged IPMB slave
+driver?
+
+http://patchwork.ozlabs.org/patch/1113278/
+
+>=20
+> Note: DT interface and a couple of minor fixes here and there
+> by Eduardo, so I kept the original authorship here.
+>=20
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Cc: linux-i2c@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Haiyue Wang <haiyue.wang@linux.intel.com>
+> Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+
+> +I2C SLAVE MQUEUE DRIVER
+> +M:	Eduardo Valentin <eduval@amazon.com>
+
+Cool, thanks!
+
+> +config I2C_SLAVE_MQUEUE_MESSAGE_SIZE
+> +	int "The message size of I2C mqueue slave"
+> +	depends on I2C_SLAVE_MQUEUE
+> +	default 120
+> +
+> +config I2C_SLAVE_MQUEUE_QUEUE_SIZE
+> +	int "The queue size of I2C mqueue slave"
+> +	depends on I2C_SLAVE_MQUEUE
+> +	default 32
+> +	help
+> +	  This number MUST be power of 2.
+
+I am not happy with this being a Kconfig option. Best would be a
+per-instance configuration, so we could have differently sized mqueues
+at runtime. I could think of another sysfs-file like
+"mqueue-slave-config" which would appear after writing to 'new_device'.
+And only after writing to 'mqueue-slave-config', the bin file to read
+=66rom would show up. But it is just a quick brainstorming, maybe you have
+a better idea?
+
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2017 - 2018, Intel Corporation.
+
+A short description what this driver does would be nice.
+
+Rest looks decent from a glimpse. I haven't looked into the gory details
+yet, though, because I want to get the high level things straight first.
+
+Kind regards,
+
+   Wolfram
+
+
+--XMCwj5IQnwKtuyBG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0aAvIACgkQFA3kzBSg
+KbZHHBAAhj0zApTWfO1ifL64ykk+MUyKkgwwOboj5C4k8bbUZIapXHN0VaWbceJD
+icCv9zkojTLNkUf1f1RTdiY/gFZvpIsLOAuWLhrLZi/2BhUi82BVzuqo/KO6LQc/
+I6DDCHohHYX4CgqGNCou81bir0LZ9QEBUp8QzEWKmnbcE0IVQmnT18HHXUW6D7Qn
+qiKB8kuZGLv6M/AjBlrfhkKphafmk27PMN3dL1W2n/6SqKYdTUwPKM05W2FiP0ZR
+pWIPpcsWcQSeRUw+uEqpkohZbNgv67crjjFQAofm7bVCgxMVI8SwZ1qHZWAJtMgX
+d2ySWt0cwDpoTD795j0LR1txKOVZ/4ZdXMFTQUKyofEZacfkLOUQjK33HywAnlz8
+6Uw6WIbfhgYOJhGqzXUZmZD/QQhM2VpFqx5/5H/kjNInlHlz4F80Oacyt6D2oVT5
+WHnM37F48jdBqFXEkQtRX6ZPnuX4+mXMqHzoM/6yjo41xY+Ed44MI2g/nmde22lf
+B+46ujovmiE48YPw7bJOhXLOHAqbML4ZCTa58s4lzpCN4QgtVv7VWw/xfyOgP0mx
+jLZWX0M5oIyFlyo3D2jUZmSISRDLoy+OHndWSz6qgf6XWJfUU82bi/y9zz5Y5yLu
+f0lYrIUzrF1k5OWpxSYaFUzaPZB2RVb9CkvZau68B3i35eF+e+0=
+=eaxR
+-----END PGP SIGNATURE-----
+
+--XMCwj5IQnwKtuyBG--
