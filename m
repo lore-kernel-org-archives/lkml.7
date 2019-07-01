@@ -2,121 +2,129 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35764C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7DFC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 087E821721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5711D21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="HbzLSATl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnI0hNv+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbfGASzq (ORCPT
+        id S1726961AbfGAS6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 14:55:46 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36973 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfGASzq (ORCPT
+        Mon, 1 Jul 2019 14:58:33 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38649 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfGAS6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 14:55:46 -0400
-Received: by mail-io1-f67.google.com with SMTP id e5so31227917iok.4
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 11:55:45 -0700 (PDT)
+        Mon, 1 Jul 2019 14:58:33 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r12so24799257edo.5;
+        Mon, 01 Jul 2019 11:58:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=RJ0nEuxA5ZfGEtI2ORfLwcWi8vWMBFVOAlEHomBChyQ=;
-        b=HbzLSATlu0bOPE6tk/xnT9HDbbVtyy45AYUGmkUYAX6YsI55Lpn71MXmredYkGWMbq
-         1VDR9JEMs83A5H6kwLxkMrdr44fypQJHUNuTDthZLSWTaTyEibYd0g2IUL2UbrIo1tcN
-         vXYVBHOzPTaZlFut6jN8aNqd4M2DQbXo0H2btfX9eCdhG1WbruSR2gRKWR38BsjypdHc
-         2sLzgCevrNW8pEQM6BKC4Fr9c+vwXxv6Lw202eSNQgMQB4RNLkGrVAa2JfAzn6+a1oND
-         fX186svC9PpMypUq4VhzVOmMN0oIsPB/0BdKcPV2A9uIUyNo+FksHyv5Qu0Sl/eP4FUs
-         L9OA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pHrGNQ49AaGKJ3l+4A7hkHqbH10XRgFjiNEVRByexR0=;
+        b=KnI0hNv+Jm46TmYLlPKsmbOgIdkFU9NMS+sxpx73WzhyzihHn8mGQa6KhunsFLfIBp
+         5zCQKX5e9B7ggcGBQ0Zy4ZTX7E02YVQs25zw2xE3BhCZOoMWxtB4OEXaclCyDiyF8cio
+         9SyP7Sh22xPwcZ9IH1Bv7zEpU1Yq36dPnsqHZaq69dHddDoS3/5CLzEH2vul0Va9kU7h
+         28S1oRGwKughSArRM+yc7SXpbYuzxptwaUbrKZlybcH61HEYKYx7xR5S98Aidkd0U4U1
+         gcJqV+5YulFaz2eAE/DI58LLwVW7NN1Nv1z1lVNXwcyvTR03LFmrLTVlQ18dtGjOVJ2l
+         1bIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=RJ0nEuxA5ZfGEtI2ORfLwcWi8vWMBFVOAlEHomBChyQ=;
-        b=gbu3MMsugQnGFlqSMpzBp2l72LOOmqehIT0HY5ehtzo87FPs2FWb+n93GsHf8JVDz+
-         wJnIjdD3ZOAyKlwyJW2MO1Elt+MH1+u9UgN+//hAT8E7xyN3GRH3h7lRD3MJ1ESPa0aF
-         /mhITvpeKqx81N7ayTq+Tr4qZp/UbWzyjAqyPc8k2UY0w+3fEm6X6GnXDLEUYahNAzJS
-         YOaGNqLCdK6zaeWxzMOeeIM4/HARnl47UaKf9rgaqA530qpKdv6tyng2h5/HYGMZXBKg
-         EomndTqba28lagxsg5zTa2UBccLWsjZw5vieBw3ZN3MTlsEZ92XycaYpAIbTbYEHF4/p
-         gnhQ==
-X-Gm-Message-State: APjAAAWDeQbTgyu4ETN4QjXW3l/GqFfnHzkiQ3wjDCWZPCLIXUiEU2ec
-        0fgU0bQYIv12aJyMEIHG4LSVlQ==
-X-Google-Smtp-Source: APXvYqwL+eY8ECnhe7jn5wjvS3/54CfYE6LIGPJ7PbOYEamcU5iLZxD/gx7lxHGv1GuBLS9usOFDKA==
-X-Received: by 2002:a02:bb08:: with SMTP id y8mr2038974jan.51.1562007345538;
-        Mon, 01 Jul 2019 11:55:45 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id r139sm24862445iod.61.2019.07.01.11.55.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 11:55:45 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 11:55:44 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Atish Patra <Atish.Patra@wdc.com>
-cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "jeremy.linton@arm.com" <jeremy.linton@arm.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "morten.rasmussen@arm.com" <morten.rasmussen@arm.com>,
-        "ottosabart@seberm.com" <ottosabart@seberm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "johan@kernel.org" <johan@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "anup@brainfault.org" <anup@brainfault.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v8 0/7] Unify CPU topology across ARM & RISC-V
-In-Reply-To: <5f31cb3c576bdbd89665614582af66d04ece8f29.camel@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1907011154310.3867@viisi.sifive.com>
-References: <20190627195302.28300-1-atish.patra@wdc.com>  <alpine.DEB.2.21.9999.1907011143520.3867@viisi.sifive.com> <5f31cb3c576bdbd89665614582af66d04ece8f29.camel@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pHrGNQ49AaGKJ3l+4A7hkHqbH10XRgFjiNEVRByexR0=;
+        b=UsnxbttqtLncS/ZEe1Mhec0jW02EHvBOSVEHgir1+wMsDTPT6CmuYH9ZmQnTZYCZOD
+         R5Impga3eIMlg6f15+oLFhEp/LxY1mliW04ijkJg28L47xHtMOJBw/ZZ5cQUoawgC9OE
+         YxSrU4ctJiBYoUReeNgH9Q5YnJ00w2scSkURyGZzIvDnqiYDOXxHUQR7hq1pq4yMbYVL
+         nA/IVWSuDNRckQIzjwszDnb25BWD1pGa3RQlygfxg4VqW6K2yy1509xw4j5qUOVMNLa4
+         nbL6Ha07l6NzpNeJScL1qaj9Az1czPeZ0F39GACIYPjIcTxdBlnpzJ/H8qyKhEfo+jer
+         dAAw==
+X-Gm-Message-State: APjAAAX3h0TSCzgCknfqU2ozmDsrGvcT6l49cHSF297kcZFsKcv/ZxeD
+        3+x1kakmdvB2josJevSLEISqTnqiCDSLxoktHTo=
+X-Google-Smtp-Source: APXvYqzhC/tCEZRsc1qoqKg7EL/JrVWW6MNVjwUBvBb2XXRmNeXSLdtLZYZZI/uiz/r5f8hCOEQfk3YI7X84V9/1daE=
+X-Received: by 2002:a50:9468:: with SMTP id q37mr30780649eda.163.1562007510992;
+ Mon, 01 Jul 2019 11:58:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190630150230.7878-1-robdclark@gmail.com> <20190630150230.7878-5-robdclark@gmail.com>
+ <75a2921d-bf1a-c4c1-6d9a-122474eface4@codeaurora.org>
+In-Reply-To: <75a2921d-bf1a-c4c1-6d9a-122474eface4@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 1 Jul 2019 11:58:15 -0700
+Message-ID: <CAF6AEGufiSU_sFZFdLH=KT5iCQGwccszURqAQCHd=dhuZafvZg@mail.gmail.com>
+Subject: Re: [PATCH 4/5] drm/msm/dsi: get the clocks into OFF state at init
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Archit Taneja <architt@codeaurora.org>,
+        Rajesh Yadav <ryadav@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Jul 2019, Atish Patra wrote:
+On Mon, Jul 1, 2019 at 11:37 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>
+> On 6/30/2019 9:01 AM, Rob Clark wrote:
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > Do an extra enable/disable cycle at init, to get the clks into disabled
+> > state in case bootloader left them enabled.
+> >
+> > In case they were already enabled, the clk_prepare_enable() has no real
+> > effect, other than getting the enable_count/prepare_count into the right
+> > state so that we can disable clocks in the correct order.  This way we
+> > avoid having stuck clocks when we later want to do a modeset and set the
+> > clock rates.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >   drivers/gpu/drm/msm/dsi/dsi_host.c         | 18 +++++++++++++++---
+> >   drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c |  1 +
+> >   2 files changed, 16 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+> > index aabab6311043..d0172d8db882 100644
+> > --- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+> > +++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+> > @@ -354,6 +354,7 @@ static int dsi_pll_10nm_lock_status(struct dsi_pll_10nm *pll)
+> >       if (rc)
+> >               pr_err("DSI PLL(%d) lock failed, status=0x%08x\n",
+> >                      pll->id, status);
+> > +rc = 0; // HACK, this will fail if PLL already running..
+>
+> Umm, why?  Is this intentional?
+>
 
-> On Mon, 2019-07-01 at 11:44 -0700, Paul Walmsley wrote:
-> > 
-> > Looks like patches 1, 6, and 7 are missing your Signed-off-by:.  Can I 
-> > add those?
-> > 
-> Sure. 
-> 
-> Is it a common practice to add "Signed-off-by:" the sender even if the
-> sender has not touched the patch at all?
+I need to sort out a proper solution for this.. but PLL lock will fail
+if the clk is already running (which, in that case, is fine since it
+is already running and locked), which will cause the clk_enable to
+fail..
 
-Yes, see section 11(c) here:
+I guess there is some way that I can check that clk is already running
+and skip this check..
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n418
-
-The main factor here is that you collected and resent the patches - thus 
-you're in the patch submission chain.
-
-
-- Paul
+BR,
+-R
