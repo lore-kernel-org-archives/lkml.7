@@ -2,191 +2,300 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6D6C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBD0C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9995A206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:38:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="hiX5G4NW"
+	by mail.kernel.org (Postfix) with ESMTP id 2920E206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfGASid (ORCPT
+        id S1726908AbfGASjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 14:38:33 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35984 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbfGASic (ORCPT
+        Mon, 1 Jul 2019 14:39:08 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4890 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726658AbfGASjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 14:38:32 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so6993760pfl.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 11:38:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=09Ktx8SRlDlib2xj7zk4KAYeMpzwO1i+IOtw940mWQQ=;
-        b=hiX5G4NW2/x8ybGy2xJKQ9H59kChFfsCqJbe5RmbN67UXqRYX5J5Zjs8ZsMmpflmeh
-         2PEqHpR4FCHXvdxGn8gtkk55OJSno9oibIi8YgUSE5imbaPmOf0jfnqZMP6EeOSKvaMA
-         ABh5C7UUxa8/Lc0TvYyxcdqdV/sfhOjuYNwPo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=09Ktx8SRlDlib2xj7zk4KAYeMpzwO1i+IOtw940mWQQ=;
-        b=av8n/pbPzua7kVL6yRgKAxPIw2S6p+jvEDzbmX02JyTDP5YXIqap8WPHX1qQ0nLmwQ
-         idOaqln+kg6X2Kz5GDucJDc9rNeXKnr2WsIc2rV/IAVfoaVDEylJ1Gp4YUxFoEsHu+YA
-         4p6Uxs+zmDl30c0VGbbBVgmvD86l+PS+ze5RnoYCrmNKVwEQbO3iDpNEQfMOgZCY6o5m
-         0QUgfJENgd0zPdZiFO2Q80lWLV4fOBrKji13Ib4P2ocVe9jRj+1DNCVMsgeI8O+g5dSN
-         BYsjDKguVPrcrq0uZSt0ShlCC3f4RtsNo1C1AuRS213TNxz+G5WiCAMahBSkA4XXJMXz
-         XZqA==
-X-Gm-Message-State: APjAAAVo3kHgBfL25hlXDRJDean4gi7h19KtNOLq8PIZAkJfk4XDXAXY
-        PhaeapnaSLV3bMW65fQmwIhFSVDrO74=
-X-Google-Smtp-Source: APXvYqxDzHanhaPJoMYxc4oZsdGYSeKoPsg6AidbrkQIg+4OHXqZq9ag+h0i+3wU4qHU3muUOcxzdw==
-X-Received: by 2002:a65:51c8:: with SMTP id i8mr2839745pgq.116.1562006311732;
-        Mon, 01 Jul 2019 11:38:31 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id r7sm15717087pfl.134.2019.07.01.11.38.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 11:38:30 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        mathieu.desnoyers@efficios.com, willy@infradead.org,
-        peterz@infradead.org, will.deacon@arm.com,
-        paulmck@linux.vnet.ibm.com, elena.reshetova@intel.com,
-        keescook@chromium.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        kernel-team@android.com, kernel-hardening@lists.openwall.com,
-        jannh@google.com, Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        KJ Tsanaktsidis <ktsanaktsidis@zendesk.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: [PATCH v3] Convert struct pid count to refcount_t
-Date:   Mon,  1 Jul 2019 14:38:26 -0400
-Message-Id: <20190701183826.191936-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        Mon, 1 Jul 2019 14:39:07 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61IbarG004313
+        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 14:39:05 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfnn3dm5w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 14:39:05 -0400
+Received: from localhost
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
+        Mon, 1 Jul 2019 19:39:04 +0100
+Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 1 Jul 2019 19:39:00 +0100
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61IcxDG20644208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 1 Jul 2019 18:38:59 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 41FBE78060;
+        Mon,  1 Jul 2019 18:38:59 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C802C7805E;
+        Mon,  1 Jul 2019 18:38:57 +0000 (GMT)
+Received: from [9.85.191.166] (unknown [9.85.191.166])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  1 Jul 2019 18:38:57 +0000 (GMT)
+Subject: Re: [PATCH v3 5/8] drivers/soc: xdma: Add PCI device configuration
+ sysfs
+To:     Eduardo Valentin <eduval@amazon.com>
+Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au
+References: <1559153408-31190-1-git-send-email-eajames@linux.ibm.com>
+ <1559153408-31190-6-git-send-email-eajames@linux.ibm.com>
+ <20190531034502.GH17772@u40b0340c692b58f6553c.ant.amazon.com>
+From:   Eddie James <eajames@linux.ibm.com>
+Date:   Mon, 1 Jul 2019 13:38:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190531034502.GH17772@u40b0340c692b58f6553c.ant.amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19070118-8235-0000-0000-00000EB115B9
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011361; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01226012; UDB=6.00645408; IPR=6.01007225;
+ MB=3.00027540; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-01 18:39:03
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070118-8236-0000-0000-0000463BB197
+Message-Id: <358d0c5b-1473-bb6a-810d-45230b890a55@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907010219
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct pid's count is an atomic_t field used as a refcount. Use
-refcount_t for it which is basically atomic_t but does additional
-checking to prevent use-after-free bugs.
 
-For memory ordering, the only change is with the following:
- -	if ((atomic_read(&pid->count) == 1) ||
- -	     atomic_dec_and_test(&pid->count)) {
- +	if (refcount_dec_and_test(&pid->count)) {
- 		kmem_cache_free(ns->pid_cachep, pid);
+On 5/30/19 10:45 PM, Eduardo Valentin wrote:
+> On Wed, May 29, 2019 at 01:10:05PM -0500, Eddie James wrote:
+>> The AST2500 has two PCI devices embedded. The XDMA engine can use either
+>> device to perform DMA transfers. Users need the capability to choose
+>> which device to use. This commit therefore adds two sysfs files that
+>> toggle the AST2500 and XDMA engine between the two PCI devices.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>>   drivers/soc/aspeed/aspeed-xdma.c | 103 +++++++++++++++++++++++++++++++++++++--
+>>   1 file changed, 100 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
+>> index 39f6545..ddd5e1e 100644
+>> --- a/drivers/soc/aspeed/aspeed-xdma.c
+>> +++ b/drivers/soc/aspeed/aspeed-xdma.c
+>> @@ -143,6 +143,7 @@ struct aspeed_xdma {
+>>   	void *cmdq_vga_virt;
+>>   	struct gen_pool *vga_pool;
+>>   
+>> +	char pcidev[4];
+>>   	struct miscdevice misc;
+>>   };
+>>   
+>> @@ -165,6 +166,10 @@ struct aspeed_xdma_client {
+>>   	SCU_PCIE_CONF_VGA_EN_IRQ | SCU_PCIE_CONF_VGA_EN_DMA |
+>>   	SCU_PCIE_CONF_RSVD;
+>>   
+>> +static char *_pcidev = "vga";
+>> +module_param_named(pcidev, _pcidev, charp, 0600);
+>> +MODULE_PARM_DESC(pcidev, "Default PCI device used by XDMA engine for DMA ops");
+>> +
+>>   static void aspeed_scu_pcie_write(struct aspeed_xdma *ctx, u32 conf)
+>>   {
+>>   	u32 v = 0;
+>> @@ -512,7 +517,7 @@ static int aspeed_xdma_release(struct inode *inode, struct file *file)
+>>   	.release		= aspeed_xdma_release,
+>>   };
+>>   
+>> -static int aspeed_xdma_init_mem(struct aspeed_xdma *ctx)
+>> +static int aspeed_xdma_init_mem(struct aspeed_xdma *ctx, u32 conf)
+>>   {
+>>   	int rc;
+>>   	u32 scu_conf = 0;
+>> @@ -522,7 +527,7 @@ static int aspeed_xdma_init_mem(struct aspeed_xdma *ctx)
+>>   	const u32 vga_sizes[4] = { 0x800000, 0x1000000, 0x2000000, 0x4000000 };
+>>   	void __iomem *sdmc_base = ioremap(0x1e6e0000, 0x100);
+>>   
+>> -	aspeed_scu_pcie_write(ctx, aspeed_xdma_vga_pcie_conf);
+>> +	aspeed_scu_pcie_write(ctx, conf);
+>>   
+>>   	regmap_read(ctx->scu, SCU_STRAP, &scu_conf);
+>>   	ctx->vga_size = vga_sizes[FIELD_GET(SCU_STRAP_VGA_MEM, scu_conf)];
+>> @@ -598,10 +603,91 @@ static int aspeed_xdma_init_mem(struct aspeed_xdma *ctx)
+>>   	return rc;
+>>   }
+>>   
+>> +static int aspeed_xdma_change_pcie_conf(struct aspeed_xdma *ctx, u32 conf)
+>> +{
+>> +	int rc;
+>> +
+>> +	mutex_lock(&ctx->start_lock);
+>> +	rc = wait_event_interruptible_timeout(ctx->wait,
+>> +					      !test_bit(XDMA_IN_PRG,
+>> +							&ctx->flags),
+>> +					      msecs_to_jiffies(1000));
+>> +	if (rc < 0) {
+>> +		mutex_unlock(&ctx->start_lock);
+>> +		return -EINTR;
+>> +	}
+>> +
+>> +	/* previous op didn't complete, wake up waiters anyway */
+>> +	if (!rc)
+>> +		wake_up_interruptible_all(&ctx->wait);
+>> +
+>> +	reset_control_assert(ctx->reset);
+>> +	msleep(10);
+>> +
+>> +	aspeed_scu_pcie_write(ctx, conf);
+>> +	msleep(10);
+>> +
+>> +	reset_control_deassert(ctx->reset);
+>> +	msleep(10);
+>> +
+>> +	aspeed_xdma_init_eng(ctx);
+>> +
+>> +	mutex_unlock(&ctx->start_lock);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int aspeed_xdma_pcidev_to_conf(struct aspeed_xdma *ctx,
+>> +				      const char *pcidev, u32 *conf)
+>> +{
+>> +	if (!strcasecmp(pcidev, "vga")) {
+>> +		*conf = aspeed_xdma_vga_pcie_conf;
+>> +		return 0;
+>> +	}
+>> +
+>> +	if (!strcasecmp(pcidev, "bmc")) {
+>> +		*conf = aspeed_xdma_bmc_pcie_conf;
+>> +		return 0;
+>> +	}
+> strncasecmp()?
 
-Here the change is from:
-Fully ordered --> RELEASE + ACQUIRE (as per refcount-vs-atomic.rst)
-This ACQUIRE should take care of making sure the free happens after the
-refcount_dec_and_test().
 
-The above hunk also removes atomic_read() since it is not needed for the
-code to work and it is unclear how beneficial it is. The removal lets
-refcount_dec_and_test() check for cases where get_pid() happened before
-the object was freed.
+Yes, will change, and below.
 
-Cc: mathieu.desnoyers@efficios.com
-Cc: willy@infradead.org
-Cc: peterz@infradead.org
-Cc: will.deacon@arm.com
-Cc: paulmck@linux.vnet.ibm.com
-Cc: elena.reshetova@intel.com
-Cc: keescook@chromium.org
-Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc: kernel-team@android.com
-Cc: kernel-hardening@lists.openwall.com
-Cc: jannh@google.com
-Reviewed-by: keescook@chromium.org
-Reviewed-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
----
-v1->v2 is to get rid of the atomic_read().
-v2->v3 replaces ATOMIC_INIT with REFCOUNT_INIT
+>
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static ssize_t aspeed_xdma_show_pcidev(struct device *dev,
+>> +				       struct device_attribute *attr,
+>> +				       char *buf)
+>> +{
+>> +	struct aspeed_xdma *ctx = dev_get_drvdata(dev);
+>> +
+>> +	return snprintf(buf, PAGE_SIZE - 1, "%s", ctx->pcidev);
+>> +}
+>> +
+>> +static ssize_t aspeed_xdma_store_pcidev(struct device *dev,
+>> +					struct device_attribute *attr,
+>> +					const char *buf, size_t count)
+>> +{
+>> +	u32 conf;
+>> +	struct aspeed_xdma *ctx = dev_get_drvdata(dev);
+>> +	int rc = aspeed_xdma_pcidev_to_conf(ctx, buf, &conf);
+>> +
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	rc = aspeed_xdma_change_pcie_conf(ctx, conf);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	strcpy(ctx->pcidev, buf);
+> should we use strncpy() instead?
+>
+>> +	return count;
+>> +}
+>> +static DEVICE_ATTR(pcidev, 0644, aspeed_xdma_show_pcidev,
+>> +		   aspeed_xdma_store_pcidev);
+>> +
+>>   static int aspeed_xdma_probe(struct platform_device *pdev)
+>>   {
+>>   	int irq;
+>>   	int rc;
+>> +	u32 conf;
+>>   	struct resource *res;
+>>   	struct device *dev = &pdev->dev;
+>>   	struct aspeed_xdma *ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+>> @@ -657,7 +743,14 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
+>>   
+>>   	msleep(10);
+>>   
+>> -	rc = aspeed_xdma_init_mem(ctx);
+>> +	if (aspeed_xdma_pcidev_to_conf(ctx, _pcidev, &conf)) {
+>> +		conf = aspeed_xdma_vga_pcie_conf;
+>> +		strcpy(ctx->pcidev, "vga");
+>> +	} else {
+>> +		strcpy(ctx->pcidev, _pcidev);
+>> +	}
+> same...
+>
+>> +
+>> +	rc = aspeed_xdma_init_mem(ctx, conf);
+>>   	if (rc) {
+>>   		reset_control_assert(ctx->reset);
+>>   		return rc;
+>> @@ -682,6 +775,8 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
+>>   		return rc;
+>>   	}
+>>   
+>> +	device_create_file(dev, &dev_attr_pcidev);
+> Should we consider using one of the default attributes here instead of device_create_file()?
+> http://kroah.com/log/blog/2013/06/26/how-to-create-a-sysfs-file-correctly/
 
- include/linux/pid.h | 5 +++--
- kernel/pid.c        | 9 ++++-----
- 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 14a9a39da9c7..8cb86d377ff5 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -3,6 +3,7 @@
- #define _LINUX_PID_H
- 
- #include <linux/rculist.h>
-+#include <linux/refcount.h>
- 
- enum pid_type
- {
-@@ -56,7 +57,7 @@ struct upid {
- 
- struct pid
- {
--	atomic_t count;
-+	refcount_t count;
- 	unsigned int level;
- 	/* lists of tasks that use this pid */
- 	struct hlist_head tasks[PIDTYPE_MAX];
-@@ -69,7 +70,7 @@ extern struct pid init_struct_pid;
- static inline struct pid *get_pid(struct pid *pid)
- {
- 	if (pid)
--		atomic_inc(&pid->count);
-+		refcount_inc(&pid->count);
- 	return pid;
- }
- 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 20881598bdfa..86b526bd59e1 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -37,12 +37,12 @@
- #include <linux/init_task.h>
- #include <linux/syscalls.h>
- #include <linux/proc_ns.h>
--#include <linux/proc_fs.h>
-+#include <linux/refcount.h>
- #include <linux/sched/task.h>
- #include <linux/idr.h>
- 
- struct pid init_struct_pid = {
--	.count 		= ATOMIC_INIT(1),
-+	.count		= REFCOUNT_INIT(1),
- 	.tasks		= {
- 		{ .first = NULL },
- 		{ .first = NULL },
-@@ -106,8 +106,7 @@ void put_pid(struct pid *pid)
- 		return;
- 
- 	ns = pid->numbers[pid->level].ns;
--	if ((atomic_read(&pid->count) == 1) ||
--	     atomic_dec_and_test(&pid->count)) {
-+	if (refcount_dec_and_test(&pid->count)) {
- 		kmem_cache_free(ns->pid_cachep, pid);
- 		put_pid_ns(ns);
- 	}
-@@ -210,7 +209,7 @@ struct pid *alloc_pid(struct pid_namespace *ns)
- 	}
- 
- 	get_pid_ns(ns);
--	atomic_set(&pid->count, 1);
-+	refcount_set(&pid->count, 1);
- 	for (type = 0; type < PIDTYPE_MAX; ++type)
- 		INIT_HLIST_HEAD(&pid->tasks[type]);
- 
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Doesn't seem to be any way to create attributes per device with that 
+method. Setting the device->groups in probe() doesn't do it.
+
+
+>
+> BTW, was this ABI documented? Is this the same file documented in patch 2?
+
+
+Patch 4, but yes.
+
+
+>
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> @@ -689,6 +784,8 @@ static int aspeed_xdma_remove(struct platform_device *pdev)
+>>   {
+>>   	struct aspeed_xdma *ctx = platform_get_drvdata(pdev);
+>>   
+>> +	device_remove_file(ctx->dev, &dev_attr_pcidev);
+>> +
+>>   	misc_deregister(&ctx->misc);
+>>   	gen_pool_free(ctx->vga_pool, (unsigned long)ctx->cmdq_vga_virt,
+>>   		      XDMA_CMDQ_SIZE);
+>> -- 
+>> 1.8.3.1
+>>
+
