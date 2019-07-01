@@ -2,83 +2,105 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2724AC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DA1C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00932173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:38:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xs2mvCXi"
+	by mail.kernel.org (Postfix) with ESMTP id 6DED92173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729754AbfGAOid (ORCPT
+        id S1728074AbfGAOjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:38:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34315 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfGAOid (ORCPT
+        Mon, 1 Jul 2019 10:39:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4060 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727064AbfGAOjW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:38:33 -0400
-Received: by mail-io1-f66.google.com with SMTP id k8so29409458iot.1;
-        Mon, 01 Jul 2019 07:38:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BboFdGHXMhlaYC4iuvduLO/5CvlIjMoquBv/OOaryQs=;
-        b=Xs2mvCXij/B0cjG+9x2jqnjo7G5b7NncqEbx407htiIM2JVVMDL5bqrXZR4jbsEfS+
-         fHPrjbKU8y29xAEbVaDx9lUMLzTJuH2SCRdwoGuPxYNboUykOuWgtErbrYD7Xa4sS19I
-         DqTnwuZnXKxuCJLkTLP8GTFnRP+IJKS6DbuhJMSYLkj3Zsrn8uif4GllWI1eQnbv8FSP
-         cOUih2tOs1z4ttqqLFsaUatDcjdcVMl9UutEEG6ZoEi0WJlP7AA0NyWtEdUdnmRodiLb
-         aBrqgwEMLfvHj35rt6GLMAFELNwWp3Ba62T34J5NxGvp+TIlgcdl+cpiF49H/tydFRDE
-         viAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BboFdGHXMhlaYC4iuvduLO/5CvlIjMoquBv/OOaryQs=;
-        b=EAf8ySaJhQgAKKyuacRUed2O3GtsSIQPRDXqfrhzau+IlWRL2gNi2c56zZRRVNOhym
-         JStWMsu9ihSf7dWwyBgdSqajjT1q++bWP3R5vds8K9db7PXvSFtML2GJrV1ZqSGdclSH
-         /FSwOol9OG6mYBEpx1kIG3d7QgrMELQGpbLMXavBaZ7W3Hy1frjwVRTFtTQgaGJKAePm
-         8QhcowItahF0p+kp9gWOE/2UmjwFWoTDjIdyfYHbTbJzrihh9/cFA4vFOiDY8GuLdtcR
-         4pmRPfWRZpHLI8MagXcj8JS0DCUApI61fLKuVBmv9xxRNnF0lzHfXmQaqJlzOLmREFvQ
-         Ox/A==
-X-Gm-Message-State: APjAAAUh336CuPD8c8wc6mV9mUz8WWrUPku1+06toID5xMZe5KO/xxsg
-        Arh4z5ml3LN3sfD0EVrzfUuDTeBl0S6IziyW3oM=
-X-Google-Smtp-Source: APXvYqwmhxVZxfrlhxAT4/GgUIry7NOKNUNk1Hwt4xtv2zqtRmNRksI3W6jLfHQj0rLenk7CsSoVouOaVn8CUINJp+Q=
-X-Received: by 2002:a02:b10b:: with SMTP id r11mr28042785jah.140.1561991912468;
- Mon, 01 Jul 2019 07:38:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190622012146.19719-1-bjorn.andersson@linaro.org> <20190622012146.19719-2-bjorn.andersson@linaro.org>
-In-Reply-To: <20190622012146.19719-2-bjorn.andersson@linaro.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 1 Jul 2019 08:38:22 -0600
-Message-ID: <CAOCk7No9bZ4AoGwZCoJtz9TOnBHryNnpMpzYoQ2GjC-BvDGcJA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] soc: qcom: mdt_loader: Support loading non-split images
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
+        Mon, 1 Jul 2019 10:39:22 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61EdK8k131870
+        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 10:39:21 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfm2606sc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 10:39:20 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 1 Jul 2019 15:39:13 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 1 Jul 2019 15:39:08 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61Ed71s22806580
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 1 Jul 2019 14:39:07 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3AE3A11C058;
+        Mon,  1 Jul 2019 14:39:07 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E9E411C050;
+        Mon,  1 Jul 2019 14:39:05 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.81.204])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  1 Jul 2019 14:39:05 +0000 (GMT)
+Subject: Re: [PATCH v12 00/11] Appended signatures support for IMA appraisal
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
+Date:   Mon, 01 Jul 2019 10:38:54 -0400
+In-Reply-To: <20190628021934.4260-1-bauerman@linux.ibm.com>
+References: <20190628021934.4260-1-bauerman@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070114-0012-0000-0000-0000032E3548
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070114-0013-0000-0000-000021677F70
+Message-Id: <1561991934.4067.17.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907010180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 7:22 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> In some software releases the firmware images are not split up with each
-> loadable segment in it's own file. Check the size of the loaded firmware
-> to see if it still contains each segment to be loaded, before falling
-> back to the split-out segments.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Thu, 2019-06-27 at 23:19 -0300, Thiago Jung Bauermann wrote:
+> Hello,
+> 
+> This version is essentially identical to the last one.
+> 
+> It is only a rebase on top of today's linux-integrity/next-queued-testing,
+> prompted by conflicts with Prakhar Srivastava's patches to measure the
+> kernel command line. It also drops two patches that are already present in
+> that branch.
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Thanks, Thiago.  These patches are now in next-queued-testing waiting
+for some additional reviews/acks.
+
+Mimi
+
