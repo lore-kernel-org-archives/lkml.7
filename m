@@ -2,112 +2,128 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20E3C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3992C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F3821473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562000566;
-	bh=II2Jf2pNDbd0s5JMhTlbcxwH6Bk/SNuU/ykYA4KIAZA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rbpmSYVOUuL7i1TQ7+Gu0wTb9hR8Z1cERa85bUMmIkCtlwZUs/lvWE1KVvfdWvlqo
-	 o4Ksj/Xf19QzrNT9BYN5QEPPK4YgT+Krkn1zSKwreI2iXNjTflGDevXheL4G69Zf0e
-	 GbM/6jD8LBTgXg0zUB7I4qLHoHDzCtyaSaeAPLDo=
+	by mail.kernel.org (Postfix) with ESMTP id 85AAB21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbfGARCp (ORCPT
+        id S1729874AbfGAREF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 13:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbfGARCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 13:02:44 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B8E621721;
-        Mon,  1 Jul 2019 17:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562000563;
-        bh=II2Jf2pNDbd0s5JMhTlbcxwH6Bk/SNuU/ykYA4KIAZA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ammzUlm18IxuOBkz97uLHm/H+2wb6OsJECZHOpVn8+4aAYGv6rV37Q1dIloW9uUq8
-         4IpLok2//Ii7+v2TMx2WpendWYZiDoiKNraL+lAFuswmAGYxQ59isq9I1htEn4GCw/
-         DVMLnzr9wOSK+I+Iknby1fiV8sNez+1h7K37G2CA=
-Date:   Mon, 1 Jul 2019 18:02:38 +0100
-From:   Will Deacon <will@kernel.org>
-To:     "Saidi, Ali" <alisaidi@amazon.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Matt Mackall <mpm@selenic.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rindjunsky, Ron" <ronrindj@amazon.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>, marc.zyngier@arm.com
-Subject: Re: [PATCH 0/3] Add support for Graviton TRNG
-Message-ID: <20190701170237.druloljv4yoanv5i@willie-the-truck>
-References: <20190604203100.15050-1-alisaidi@amazon.com>
- <20190605122031.GK15030@fuggles.cambridge.arm.com>
- <7EC45708-38A1-4826-BC82-298EFAAE30B1@amazon.com>
- <3104F396-094F-454C-8308-BF651FAB99AB@amazon.com>
- <20190701082805.pifv4attux4mddld@willie-the-truck>
+        Mon, 1 Jul 2019 13:04:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38692 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727302AbfGARED (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 13:04:03 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s15so282492wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 10:04:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ld/S+VVZs8pmZedqdnP/S9bHBpKYWy8WRk/m3Q5+2LI=;
+        b=nOSxcIWZKYaa0Txvh0YUqnaNH8uZ3ZFnXOwCN1KpT90CyIV1nrYYmpSdALVXoZMW+V
+         0g6ND8+yNMhNhhPvCzAKmCqq8y3OLii9L8hdFpKOL5fLJYoiU8HldbYWQKPBPeWnHYoA
+         iWv6SmBNhY1KtN+tBwsYxgR7sA+6jkTrZ19xtHgOLPtpExzb1BN+xkONdazk8TUbg9QT
+         WwencRWDOHGhsUZ07nQD063Yn/kt8rD7gNXVWLNbAz7gvbGf0eZUpJPeRZawVKhpEMA0
+         pvriy6qdJ1KFv2wlG8WwXK8i7R+NMwoDUJfERkXJYP2626vZtico9ZkAakviyj4eZqbL
+         l9dQ==
+X-Gm-Message-State: APjAAAVhcjw//XKwmMFnUZv9Dt8UgI5K/80OJ3hw94IM4fKJRMb5E04W
+        PapRJcIYQmF/bH0x1jjFVdRePw==
+X-Google-Smtp-Source: APXvYqwBOYSxwelsum2oddoo+4pw1dZnLt7m1hYtVtolWxEgwL2beWLJsaejVTIBg02GC95ss28lWA==
+X-Received: by 2002:a1c:7503:: with SMTP id o3mr183987wmc.170.1562000640687;
+        Mon, 01 Jul 2019 10:04:00 -0700 (PDT)
+Received: from steredhat (host21-207-dynamic.52-79-r.retail.telecomitalia.it. [79.52.207.21])
+        by smtp.gmail.com with ESMTPSA id q18sm9950224wrj.65.2019.07.01.10.03.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 10:04:00 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 19:03:57 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/3] vsock/virtio: several fixes in the .probe() and
+ .remove()
+Message-ID: <20190701170357.jtuhy3ank7mv6izb@steredhat>
+References: <20190628123659.139576-1-sgarzare@redhat.com>
+ <20190701151113.GE11900@stefanha-x1.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190701082805.pifv4attux4mddld@willie-the-truck>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190701151113.GE11900@stefanha-x1.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+Marc]
-
-On Mon, Jul 01, 2019 at 09:28:06AM +0100, Will Deacon wrote:
-> [Note: this was in my spam folder]
+On Mon, Jul 01, 2019 at 04:11:13PM +0100, Stefan Hajnoczi wrote:
+> On Fri, Jun 28, 2019 at 02:36:56PM +0200, Stefano Garzarella wrote:
+> > During the review of "[PATCH] vsock/virtio: Initialize core virtio vsock
+> > before registering the driver", Stefan pointed out some possible issues
+> > in the .probe() and .remove() callbacks of the virtio-vsock driver.
+> > 
+> > This series tries to solve these issues:
+> > - Patch 1 adds RCU critical sections to avoid use-after-free of
+> >   'the_virtio_vsock' pointer.
+> > - Patch 2 stops workers before to call vdev->config->reset(vdev) to
+> >   be sure that no one is accessing the device.
+> > - Patch 3 moves the works flush at the end of the .remove() to avoid
+> >   use-after-free of 'vsock' object.
+> > 
+> > v2:
+> > - Patch 1: use RCU to protect 'the_virtio_vsock' pointer
+> > - Patch 2: no changes
+> > - Patch 3: flush works only at the end of .remove()
+> > - Removed patch 4 because virtqueue_detach_unused_buf() returns all the buffers
+> >   allocated.
+> > 
+> > v1: https://patchwork.kernel.org/cover/10964733/
 > 
-> On Fri, Jun 28, 2019 at 06:05:10PM +0000, Saidi, Ali wrote:
-> > On 6/7/19, 7:59 AM, " Ali Saidi" <alisaidi@amazon.com> wrote:
-> >     On 6/5/19, 7:20 AM, "Will Deacon" <will.deacon@arm.com> wrote:
-> >         On Tue, Jun 04, 2019 at 08:30:57PM +0000, Ali Saidi wrote:
-> >         > AWS Graviton based systems provide an Arm SMC call in the vendor defined
-> >         > hypervisor region to read random numbers from a HW TRNG and return them to the
-> >         > guest. 
-> >         > 
-> >         > We've observed slower guest boot and especially reboot times due to lack of
-> >         > entropy and providing access to a TRNG is meant to address this. 
-> >         
-> >         Curious, but why this over something like virtio-rng?
-> >         
-> >     This interface allows us to provide the functionality from both EL2
-> >     and EL3 and support multiple different types of our instances which we
-> >     unfortunately can't do with virt-io.
-> >     
-> > Any additional comments?
-> > Do you know when you'll have a chance to rebase arm64/smccc-cleanup?
+> This looks good to me.
+
+Thanks for the review!
+
 > 
-> Sorry, Ali, this slipped through the cracks. Marc and I will chat today and
-> look at respinning what we had before; it should then hopefully be
-> straightforward enough for you to take that as a base for what you want to
-> do.
+> Did you run any stress tests?  For example an SMP guest constantly
+> connecting and sending packets together with a script that
+> hotplug/unplugs vhost-vsock-pci from the host side.
 
-Ok, I hacked on this a bit today and hopefully you can use this as a
-starting point:
+Yes, I started an SMP guest (-smp 4 -monitor tcp:127.0.0.1:1234,server,nowait)
+and I run these scripts to stress the .probe()/.remove() path:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=kvm/hvc
+- guest
+  while true; do
+      cat /dev/urandom | nc-vsock -l 4321 > /dev/null &
+      cat /dev/urandom | nc-vsock -l 5321 > /dev/null &
+      cat /dev/urandom | nc-vsock -l 6321 > /dev/null &
+      cat /dev/urandom | nc-vsock -l 7321 > /dev/null &
+      wait
+  done
 
-I haven't given it any real testing, so apologies for the bugs.
+- host
+  while true; do
+      cat /dev/urandom | nc-vsock 3 4321 > /dev/null &
+      cat /dev/urandom | nc-vsock 3 5321 > /dev/null &
+      cat /dev/urandom | nc-vsock 3 6321 > /dev/null &
+      cat /dev/urandom | nc-vsock 3 7321 > /dev/null &
+      sleep 2
+      echo "device_del v1" | nc 127.0.0.1 1234
+      sleep 1
+      echo "device_add vhost-vsock-pci,id=v1,guest-cid=3" | nc 127.0.0.1 1234
+      sleep 1
+  done
 
-Will
+Do you think is enough or is better to have a test more accurate?
+
+Thanks,
+Stefano
