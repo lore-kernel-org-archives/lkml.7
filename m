@@ -7,72 +7,70 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF54C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C29C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14748214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B8520665
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TxlqhtvX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IeRPdVJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfGANZM (ORCPT
+        id S1728714AbfGAN22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 09:25:12 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35867 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbfGANZM (ORCPT
+        Mon, 1 Jul 2019 09:28:28 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44103 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbfGAN22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 09:25:12 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c13so6061404pgg.3;
-        Mon, 01 Jul 2019 06:25:11 -0700 (PDT)
+        Mon, 1 Jul 2019 09:28:28 -0400
+Received: by mail-pf1-f195.google.com with SMTP id t16so6580638pfe.11
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 06:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BolpC+dvtytKXBbmWUIWGyQQJiFM1T9QVGgjh2h+lAo=;
-        b=TxlqhtvXlBkFShE/qZ8R9tm4M3nUuRiTjrYLm75CyhKIhhjXqb+XF5m/QlU6L+14vj
-         sYfiDhy+wjHZ9xgpWYmjlxscArq7ukM0x17EGGMfhYP2SGCNmKs3cIjdf4DO9hYoIfgi
-         LK6fD0GL+Idt5W7wmHXdED0HS4Zzi3nY8v1RY2zBGSYxdKgLGyuQWEc89wt72oClaptC
-         IarTvPRPvyKLqWgCYSjWtpaotDyZL8qGPveBKBUhLUHax2Nn43hltTURPuX2Zlax44X1
-         x4vmmY8BR6lAW99uRfWkqIuhlXR+lOHVsKU+D+KWL6qMTIdC12oO4IXCkvmbGay3BPdX
-         Vo1Q==
+        bh=7fFS7CBBJ6K/lBDuZXPcMufUo/6BGNy9crfvHh0NbbM=;
+        b=IeRPdVJBoWbnSyS26xvoi5mbhQ7m5XCpw0Q7WKg3b0NtlZCQPO7EcvichFBDU4fNOX
+         83QEd46hoFA3KOSEvxJ1TUya9ayUBj+1T9Pzfbylhcyv6fHqBX/DIDQbUWnQHaUO1ZvE
+         9g1qGwvpEcTBf3ClFKgyX7+DeLTNWMDNW3yKJu/BvCjteoCorTkx9GrhsAuTj/3VKre0
+         4vEmz2ZVQgvPXKlSAG2QobsE3BLO+/MDe9SS0AH9m0EasioQYUih+URImQV9KILL5uyE
+         ETN8PYxgsf1TTLU8RewFhH0/3eQxNksI+ebuSIV9MZNE9J94BAbLQzGD+MhHofMpJngw
+         qBBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=BolpC+dvtytKXBbmWUIWGyQQJiFM1T9QVGgjh2h+lAo=;
-        b=E8d7jxpi6FelVhZVzGWHRdwON7vg4H8IRWsVVGfAKDPnS1QtSmoVbfJSLhRHutMZcD
-         ecwMuH8gtFR+N41YrpnDtxn/vq8hxfuv9E1XKZUtKG/SWD1smKJnwnfwCiKyxhGeIu/d
-         wXoqG2QUR01iOWWcADn49QipIeKO+cmBM+6N1uwo2kladdYh10kohCCqchaTquO4u9dS
-         9AC8mFetQvBb4Vy1OPNXfuZEJlIHKaidEpSY903DzJ+EKEtL8OJ1LMLEAtufY7tI3e+a
-         iZL2gFYcCXRjAmpg6esTAZoC7CPQjr40dZx9KIfEapffZedKnhBqebfR12+bh9Mkg5g/
-         e+uA==
-X-Gm-Message-State: APjAAAXq6e0VKf4NRAICKDlYVfaRNFvCsXguZ84wvRW92m0/hc/zby1C
-        oXa0vIbgjB0TjZBwaRmQpOs=
-X-Google-Smtp-Source: APXvYqwIzQ+pX6RKn7hsE9FVpbH8GC+fPYeUoyuhg5wMqA0a5MF9CJbPvm2ZsnOp/shT/hBLjN00KA==
-X-Received: by 2002:a17:90a:ba94:: with SMTP id t20mr32463290pjr.116.1561987511013;
-        Mon, 01 Jul 2019 06:25:11 -0700 (PDT)
+        bh=7fFS7CBBJ6K/lBDuZXPcMufUo/6BGNy9crfvHh0NbbM=;
+        b=fl3cD/KkOZeTp7xHE2H0oKE55/388kQH4FgmpEuxjReop/XUp/4zZeyCYSGmjUX507
+         papdqzq8etIIM4KKkTLI3uuUC2o58ujkj+j8hsXwjHfvO1s907RS6SPKwq7LwIPgYboj
+         x4K08r7b/iG35VjCuv4tnNutXuAmPao8Q+2FwUszQzTvDPwur9v0JIF3n+aCUs58U1Uo
+         tp2V+ZnTVNxvJ3euwTzc6py6Wx4z1Cu3XzFsayV5gNjRztuDmxDCqxOg7FWA9YZL8tF2
+         ydeyWQkXSFgzayRQtFN/eDqmLryHMqKc4uzXgOoMw0hNdZqjob8/F2V/zht0pb43tfJ2
+         u48A==
+X-Gm-Message-State: APjAAAX1OoHmgEPlEiA5OrXWE8zqsPIe8+FXkBT8UCDALL0VmGl2uQ7R
+        Y3U1wxyMVHO5jh0wQ6gAa4c=
+X-Google-Smtp-Source: APXvYqygZLR4ZfbUnJui6h2p8nQ4787Mguc4o/YCnowgcOVlKYiKalv5OIVvsRUYdfWwtkFxRkw9qw==
+X-Received: by 2002:a63:58c:: with SMTP id 134mr22959255pgf.106.1561987707260;
+        Mon, 01 Jul 2019 06:28:27 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s20sm10260979pfe.169.2019.07.01.06.25.09
+        by smtp.gmail.com with ESMTPSA id o12sm9507030pjr.22.2019.07.01.06.28.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 06:25:10 -0700 (PDT)
-Subject: Re: [PATCH v5 3/3] fpga: dfl: fme: add power management support
-To:     Wu Hao <hao.wu@intel.com>, mdf@kernel.org,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux-api@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        jdelvare@suse.com, atull@kernel.org, gregkh@linuxfoundation.org,
-        Luwei Kang <luwei.kang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-References: <1561963027-4213-1-git-send-email-hao.wu@intel.com>
- <1561963027-4213-4-git-send-email-hao.wu@intel.com>
+        Mon, 01 Jul 2019 06:28:26 -0700 (PDT)
+Subject: Re: [DRAFT] mm/kprobes: Add generic kprobe_fault_handler() fallback
+ definition
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org
+References: <78863cd0-8cb5-c4fd-ed06-b1136bdbb6ef@arm.com>
+ <1561973757-5445-1-git-send-email-anshuman.khandual@arm.com>
 From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <af2d0724-ac7d-c35a-b640-3f8c3fb35ad4@roeck-us.net>
-Date:   Mon, 1 Jul 2019 06:25:08 -0700
+Message-ID: <8c6b9525-5dc5-7d17-cee1-b75d5a5121d6@roeck-us.net>
+Date:   Mon, 1 Jul 2019 06:28:25 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <1561963027-4213-4-git-send-email-hao.wu@intel.com>
+In-Reply-To: <1561973757-5445-1-git-send-email-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -81,364 +79,250 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/30/19 11:37 PM, Wu Hao wrote:
-> This patch adds support for power management private feature under
-> FPGA Management Engine (FME). This private feature driver registers
-> a hwmon for power (power1_input), thresholds information, e.g.
-> (power1_max / crit / max_alarm / crit_alarm) and also read-only sysfs
-> interfaces for other power management information. For configuration,
-> user could write threshold values via above power1_max / crit sysfs
-> interface under hwmon too.
+On 7/1/19 2:35 AM, Anshuman Khandual wrote:
+> Architectures like parisc enable CONFIG_KROBES without having a definition
+> for kprobe_fault_handler() which results in a build failure. Arch needs to
+> provide kprobe_fault_handler() as it is platform specific and cannot have
+> a generic working alternative. But in the event when platform lacks such a
+> definition there needs to be a fallback.
 > 
-> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
-> v2: create a dfl_fme_power hwmon to expose power sysfs interfaces.
->      move all sysfs interfaces under hwmon
->          consumed          --> hwmon power1_input
->          threshold1        --> hwmon power1_cap
->          threshold2        --> hwmon power1_crit
->          threshold1_status --> hwmon power1_cap_status
->          threshold2_status --> hwmon power1_crit_status
->          xeon_limit        --> hwmon power1_xeon_limit
->          fpga_limit        --> hwmon power1_fpga_limit
->          ltr               --> hwmon power1_ltr
-> v3: rename some hwmon sysfs interfaces to follow hwmon ABI.
-> 	power1_cap         --> power1_max
-> 	power1_cap_status  --> power1_max_alarm
-> 	power1_crit_status --> power1_crit_alarm
->      update sysfs doc for above sysfs interface changes.
->      replace scnprintf with sprintf in sysfs interface.
-> v4: use HWMON_CHANNEL_INFO.
->      update date in sysfs doc.
-> v5: clamp threshold inputs in power_hwmon_write function.
->      update sysfs doc as threshold inputs are clamped now.
->      add more descriptions to ltr sysfs interface.
-> ---
->   Documentation/ABI/testing/sysfs-platform-dfl-fme |  68 +++++++
->   drivers/fpga/dfl-fme-main.c                      | 216 +++++++++++++++++++++++
->   2 files changed, 284 insertions(+)
+> This adds a stub kprobe_fault_handler() definition which not only prevents
+> a build failure but also makes sure that kprobe_page_fault() if called will
+> always return negative in absence of a sane platform specific alternative.
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> index 2cd17dc..5c2e49d 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> @@ -127,6 +127,7 @@ Contact:	Wu Hao <hao.wu@intel.com>
->   Description:	Read-Only. Read this file to get the name of hwmon device, it
->   		supports values:
->   		    'dfl_fme_thermal' - thermal hwmon device name
-> +		    'dfl_fme_power'   - power hwmon device name
->   
->   What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_input
->   Date:		June 2019
-> @@ -183,3 +184,70 @@ Description:	Read-Only. Read this file to get the policy of hardware threshold1
->   		(see 'temp1_max'). It only supports two values (policies):
->   		    0 - AP2 state (90% throttling)
->   		    1 - AP1 state (50% throttling)
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_input
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-Only. It returns current FPGA power consumption in uW.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_max
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-Write. Read this file to get current hardware power
-> +		threshold1 in uW. If power consumption rises at or above
-> +		this threshold, hardware starts 50% throttling.
-> +		Write this file to set current hardware power threshold1 in uW.
-> +		As hardware only accepts values in Watts, so input value will
-> +		be round down per Watts (< 1 watts part will be discarded) and
-> +		clamped within the range from 0 to 127 Watts. Write fails with
-> +		-EINVAL if input parsing fails.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_crit
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-Write. Read this file to get current hardware power
-> +		threshold2 in uW. If power consumption rises at or above
-> +		this threshold, hardware starts 90% throttling.
-> +		Write this file to set current hardware power threshold2 in uW.
-> +		As hardware only accepts values in Watts, so input value will
-> +		be round down per Watts (< 1 watts part will be discarded) and
-> +		clamped within the range from 0 to 127 Watts. Write fails with
-> +		-EINVAL if input parsing fails.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_max_alarm
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. It returns 1 if power consumption is currently at or
-> +		above hardware threshold1 (see 'power1_max'), otherwise 0.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_crit_alarm
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. It returns 1 if power consumption is currently at or
-> +		above hardware threshold2 (see 'power1_crit'), otherwise 0.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_xeon_limit
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-Only. It returns power limit for XEON in uW.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_fpga_limit
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-Only. It returns power limit for FPGA in uW.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_ltr
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. Read this file to get current Latency Tolerance
-> +		Reporting (ltr) value. It returns 1 if all Accelerated
-> +		Function Units (AFUs) can tolerate latency >= 40us for memory
-> +		access or 0 if any AFU is latency sensitive (< 40us).
-> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> index 59ff9f1..1ff386d 100644
-> --- a/drivers/fpga/dfl-fme-main.c
-> +++ b/drivers/fpga/dfl-fme-main.c
-> @@ -400,6 +400,218 @@ static void fme_thermal_mgmt_uinit(struct platform_device *pdev,
->   	.uinit = fme_thermal_mgmt_uinit,
+> While here wrap kprobe_page_fault() in CONFIG_KPROBES. This enables stud
+> definitions for generic kporbe_fault_handler() and kprobes_built_in() can
+> just be dropped. Only on x86 it needs to be added back locally as it gets
+> used in a !CONFIG_KPROBES function do_general_protection().
+> 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> I am planning to go with approach unless we just want to implement a stub
+> definition for parisc to get around the build problem for now.
+> 
+> Hello Guenter,
+> 
+> Could you please test this in your parisc setup. Thank you.
+> 
+
+With this patch applied on top of next-20190628, parisc:allmodconfig builds
+correctly. I scheduled a full build for tonight for all architectures.
+
+Guenter
+
+> - Anshuman
+> 
+>   arch/arc/include/asm/kprobes.h     |  1 +
+>   arch/arm/include/asm/kprobes.h     |  1 +
+>   arch/arm64/include/asm/kprobes.h   |  1 +
+>   arch/ia64/include/asm/kprobes.h    |  1 +
+>   arch/mips/include/asm/kprobes.h    |  1 +
+>   arch/powerpc/include/asm/kprobes.h |  1 +
+>   arch/s390/include/asm/kprobes.h    |  1 +
+>   arch/sh/include/asm/kprobes.h      |  1 +
+>   arch/sparc/include/asm/kprobes.h   |  1 +
+>   arch/x86/include/asm/kprobes.h     |  6 ++++++
+>   include/linux/kprobes.h            | 32 ++++++++++++++++++------------
+>   11 files changed, 34 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/arc/include/asm/kprobes.h b/arch/arc/include/asm/kprobes.h
+> index 2134721dce44..ee8efe256675 100644
+> --- a/arch/arc/include/asm/kprobes.h
+> +++ b/arch/arc/include/asm/kprobes.h
+> @@ -45,6 +45,7 @@ struct kprobe_ctlblk {
+>   	struct prev_kprobe prev_kprobe;
 >   };
 >   
-> +#define FME_PWR_STATUS		0x8
-> +#define FME_LATENCY_TOLERANCE	BIT_ULL(18)
-> +#define PWR_CONSUMED		GENMASK_ULL(17, 0)
-> +
-> +#define FME_PWR_THRESHOLD	0x10
-> +#define PWR_THRESHOLD1		GENMASK_ULL(6, 0)	/* in Watts */
-> +#define PWR_THRESHOLD2		GENMASK_ULL(14, 8)	/* in Watts */
-> +#define PWR_THRESHOLD_MAX	0x7f			/* in Watts */
-> +#define PWR_THRESHOLD1_STATUS	BIT_ULL(16)
-> +#define PWR_THRESHOLD2_STATUS	BIT_ULL(17)
-> +
-> +#define FME_PWR_XEON_LIMIT	0x18
-> +#define XEON_PWR_LIMIT		GENMASK_ULL(14, 0)	/* in 0.1 Watts */
-> +#define XEON_PWR_EN		BIT_ULL(15)
-> +#define FME_PWR_FPGA_LIMIT	0x20
-> +#define FPGA_PWR_LIMIT		GENMASK_ULL(14, 0)	/* in 0.1 Watts */
-> +#define FPGA_PWR_EN		BIT_ULL(15)
-> +
-> +static int power_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> +			    u32 attr, int channel, long *val)
-> +{
-> +	struct dfl_feature *feature = dev_get_drvdata(dev);
-> +	u64 v;
-> +
-> +	switch (attr) {
-> +	case hwmon_power_input:
-> +		v = readq(feature->ioaddr + FME_PWR_STATUS);
-> +		*val = (long)(FIELD_GET(PWR_CONSUMED, v) * 1000000);
-> +		break;
-> +	case hwmon_power_max:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		*val = (long)(FIELD_GET(PWR_THRESHOLD1, v) * 1000000);
-> +		break;
-> +	case hwmon_power_crit:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		*val = (long)(FIELD_GET(PWR_THRESHOLD2, v) * 1000000);
-> +		break;
-> +	case hwmon_power_max_alarm:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		*val = (long)FIELD_GET(PWR_THRESHOLD1_STATUS, v);
-> +		break;
-> +	case hwmon_power_crit_alarm:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		*val = (long)FIELD_GET(PWR_THRESHOLD2_STATUS, v);
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int power_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
-> +			     u32 attr, int channel, long val)
-> +{
-> +	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev->parent);
-> +	struct dfl_feature *feature = dev_get_drvdata(dev);
-> +	int ret = 0;
-> +	u64 v;
-> +
-> +	val = clamp_val(val / 1000000, 0, PWR_THRESHOLD_MAX);
-> +
-> +	mutex_lock(&pdata->lock);
-> +
-> +	switch (attr) {
-> +	case hwmon_power_max:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		v &= ~PWR_THRESHOLD1;
-> +		v |= FIELD_PREP(PWR_THRESHOLD1, val);
-> +		writeq(v, feature->ioaddr + FME_PWR_THRESHOLD);
-> +		break;
-> +	case hwmon_power_crit:
-> +		v = readq(feature->ioaddr + FME_PWR_THRESHOLD);
-> +		v &= ~PWR_THRESHOLD2;
-> +		v |= FIELD_PREP(PWR_THRESHOLD2, val);
-> +		writeq(v, feature->ioaddr + FME_PWR_THRESHOLD);
-> +		break;
-> +	default:
-> +		ret = -EOPNOTSUPP;
-> +		break;
-> +	}
-> +
-> +	mutex_unlock(&pdata->lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static umode_t power_hwmon_attrs_visible(const void *drvdata,
-> +					 enum hwmon_sensor_types type,
-> +					 u32 attr, int channel)
-> +{
-> +	switch (attr) {
-> +	case hwmon_power_input:
-> +	case hwmon_power_max_alarm:
-> +	case hwmon_power_crit_alarm:
-> +		return 0444;
-> +	case hwmon_power_max:
-> +	case hwmon_power_crit:
-> +		return 0644;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct hwmon_ops power_hwmon_ops = {
-> +	.is_visible = power_hwmon_attrs_visible,
-> +	.read = power_hwmon_read,
-> +	.write = power_hwmon_write,
-> +};
-> +
-> +static const struct hwmon_channel_info *power_hwmon_info[] = {
-> +	HWMON_CHANNEL_INFO(power, HWMON_P_INPUT |
-> +				  HWMON_P_MAX   | HWMON_P_MAX_ALARM |
-> +				  HWMON_P_CRIT  | HWMON_P_CRIT_ALARM),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_chip_info power_hwmon_chip_info = {
-> +	.ops = &power_hwmon_ops,
-> +	.info = power_hwmon_info,
-> +};
-> +
-> +static ssize_t power1_xeon_limit_show(struct device *dev,
-> +				      struct device_attribute *attr, char *buf)
-> +{
-> +	struct dfl_feature *feature = dev_get_drvdata(dev);
-> +	u16 xeon_limit = 0;
-> +	u64 v;
-> +
-> +	v = readq(feature->ioaddr + FME_PWR_XEON_LIMIT);
-> +
-> +	if (FIELD_GET(XEON_PWR_EN, v))
-> +		xeon_limit = FIELD_GET(XEON_PWR_LIMIT, v);
-> +
-> +	return sprintf(buf, "%u\n", xeon_limit * 100000);
-> +}
-> +
-> +static ssize_t power1_fpga_limit_show(struct device *dev,
-> +				      struct device_attribute *attr, char *buf)
-> +{
-> +	struct dfl_feature *feature = dev_get_drvdata(dev);
-> +	u16 fpga_limit = 0;
-> +	u64 v;
-> +
-> +	v = readq(feature->ioaddr + FME_PWR_FPGA_LIMIT);
-> +
-> +	if (FIELD_GET(FPGA_PWR_EN, v))
-> +		fpga_limit = FIELD_GET(FPGA_PWR_LIMIT, v);
-> +
-> +	return sprintf(buf, "%u\n", fpga_limit * 100000);
-> +}
-> +
-> +static ssize_t power1_ltr_show(struct device *dev,
-> +			       struct device_attribute *attr, char *buf)
-> +{
-> +	struct dfl_feature *feature = dev_get_drvdata(dev);
-> +	u64 v;
-> +
-> +	v = readq(feature->ioaddr + FME_PWR_STATUS);
-> +
-> +	return sprintf(buf, "%u\n",
-> +		       (unsigned int)FIELD_GET(FME_LATENCY_TOLERANCE, v));
-> +}
-> +
-> +static DEVICE_ATTR_RO(power1_xeon_limit);
-> +static DEVICE_ATTR_RO(power1_fpga_limit);
-> +static DEVICE_ATTR_RO(power1_ltr);
-> +
-> +static struct attribute *power_extra_attrs[] = {
-> +	&dev_attr_power1_xeon_limit.attr,
-> +	&dev_attr_power1_fpga_limit.attr,
-> +	&dev_attr_power1_ltr.attr,
-> +	NULL
-> +};
-> +
-> +ATTRIBUTE_GROUPS(power_extra);
-> +
-> +static int fme_power_mgmt_init(struct platform_device *pdev,
-> +			       struct dfl_feature *feature)
-> +{
-> +	struct device *hwmon;
-> +
-> +	dev_dbg(&pdev->dev, "FME Power Management Init.\n");
-> +
-> +	hwmon = devm_hwmon_device_register_with_info(&pdev->dev,
-> +						     "dfl_fme_power", feature,
-> +						     &power_hwmon_chip_info,
-> +						     power_extra_groups);
-> +	if (IS_ERR(hwmon)) {
-> +		dev_err(&pdev->dev, "Fail to register power hwmon\n");
-> +		return PTR_ERR(hwmon);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void fme_power_mgmt_uinit(struct platform_device *pdev,
-> +				 struct dfl_feature *feature)
-> +{
-> +	dev_dbg(&pdev->dev, "FME Power Management UInit.\n");
-> +}
-> +
-> +static const struct dfl_feature_id fme_power_mgmt_id_table[] = {
-> +	{.id = FME_FEATURE_ID_POWER_MGMT,},
-> +	{0,}
-> +};
-> +
-> +static const struct dfl_feature_ops fme_power_mgmt_ops = {
-> +	.init = fme_power_mgmt_init,
-> +	.uinit = fme_power_mgmt_uinit,
-> +};
-> +
->   static struct dfl_feature_driver fme_feature_drvs[] = {
->   	{
->   		.id_table = fme_hdr_id_table,
-> @@ -418,6 +630,10 @@ static void fme_thermal_mgmt_uinit(struct platform_device *pdev,
->   		.ops = &fme_thermal_mgmt_ops,
->   	},
->   	{
-> +		.id_table = fme_power_mgmt_id_table,
-> +		.ops = &fme_power_mgmt_ops,
-> +	},
-> +	{
->   		.ops = NULL,
->   	},
+> +#define kprobe_fault_handler kprobe_fault_handler
+>   int kprobe_fault_handler(struct pt_regs *regs, unsigned long cause);
+>   void kretprobe_trampoline(void);
+>   void trap_is_kprobe(unsigned long address, struct pt_regs *regs);
+> diff --git a/arch/arm/include/asm/kprobes.h b/arch/arm/include/asm/kprobes.h
+> index 213607a1f45c..660f877b989f 100644
+> --- a/arch/arm/include/asm/kprobes.h
+> +++ b/arch/arm/include/asm/kprobes.h
+> @@ -38,6 +38,7 @@ struct kprobe_ctlblk {
+>   	struct prev_kprobe prev_kprobe;
 >   };
+>   
+> +#define kprobe_fault_handler kprobe_fault_handler
+>   void arch_remove_kprobe(struct kprobe *);
+>   int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
+>   int kprobe_exceptions_notify(struct notifier_block *self,
+> diff --git a/arch/arm64/include/asm/kprobes.h b/arch/arm64/include/asm/kprobes.h
+> index 97e511d645a2..667773f75616 100644
+> --- a/arch/arm64/include/asm/kprobes.h
+> +++ b/arch/arm64/include/asm/kprobes.h
+> @@ -42,6 +42,7 @@ struct kprobe_ctlblk {
+>   	struct kprobe_step_ctx ss_ctx;
+>   };
+>   
+> +#define kprobe_fault_handler kprobe_fault_handler
+>   void arch_remove_kprobe(struct kprobe *);
+>   int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
+>   int kprobe_exceptions_notify(struct notifier_block *self,
+> diff --git a/arch/ia64/include/asm/kprobes.h b/arch/ia64/include/asm/kprobes.h
+> index c5cf5e4fb338..c321e8585089 100644
+> --- a/arch/ia64/include/asm/kprobes.h
+> +++ b/arch/ia64/include/asm/kprobes.h
+> @@ -106,6 +106,7 @@ struct arch_specific_insn {
+>   	unsigned short slot;
+>   };
+>   
+> +#define kprobe_fault_handler kprobe_fault_handler
+>   extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+>   extern int kprobe_exceptions_notify(struct notifier_block *self,
+>   				    unsigned long val, void *data);
+> diff --git a/arch/mips/include/asm/kprobes.h b/arch/mips/include/asm/kprobes.h
+> index 68b1e5d458cf..d1efe991ea22 100644
+> --- a/arch/mips/include/asm/kprobes.h
+> +++ b/arch/mips/include/asm/kprobes.h
+> @@ -40,6 +40,7 @@ do {									\
+>   
+>   #define kretprobe_blacklist_size 0
+>   
+> +#define kprobe_fault_handler kprobe_fault_handler
+>   void arch_remove_kprobe(struct kprobe *p);
+>   int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+>   
+> diff --git a/arch/powerpc/include/asm/kprobes.h b/arch/powerpc/include/asm/kprobes.h
+> index 66b3f2983b22..c94f375ec957 100644
+> --- a/arch/powerpc/include/asm/kprobes.h
+> +++ b/arch/powerpc/include/asm/kprobes.h
+> @@ -84,6 +84,7 @@ struct arch_optimized_insn {
+>   	kprobe_opcode_t *insn;
+>   };
+>   
+> +#define kprobe_fault_handler kprobe_fault_handler
+>   extern int kprobe_exceptions_notify(struct notifier_block *self,
+>   					unsigned long val, void *data);
+>   extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+> diff --git a/arch/s390/include/asm/kprobes.h b/arch/s390/include/asm/kprobes.h
+> index b106aa29bf55..0ecaebb78092 100644
+> --- a/arch/s390/include/asm/kprobes.h
+> +++ b/arch/s390/include/asm/kprobes.h
+> @@ -73,6 +73,7 @@ struct kprobe_ctlblk {
+>   void arch_remove_kprobe(struct kprobe *p);
+>   void kretprobe_trampoline(void);
+>   
+> +#define kprobe_fault_handler kprobe_fault_handler
+>   int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+>   int kprobe_exceptions_notify(struct notifier_block *self,
+>   	unsigned long val, void *data);
+> diff --git a/arch/sh/include/asm/kprobes.h b/arch/sh/include/asm/kprobes.h
+> index 6171682f7798..637a698393c0 100644
+> --- a/arch/sh/include/asm/kprobes.h
+> +++ b/arch/sh/include/asm/kprobes.h
+> @@ -45,6 +45,7 @@ struct kprobe_ctlblk {
+>   	struct prev_kprobe prev_kprobe;
+>   };
+>   
+> +#define kprobe_fault_handler kprobe_fault_handler
+>   extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+>   extern int kprobe_exceptions_notify(struct notifier_block *self,
+>   				    unsigned long val, void *data);
+> diff --git a/arch/sparc/include/asm/kprobes.h b/arch/sparc/include/asm/kprobes.h
+> index bfcaa6326c20..9aa4d25a45a8 100644
+> --- a/arch/sparc/include/asm/kprobes.h
+> +++ b/arch/sparc/include/asm/kprobes.h
+> @@ -47,6 +47,7 @@ struct kprobe_ctlblk {
+>   	struct prev_kprobe prev_kprobe;
+>   };
+>   
+> +#define kprobe_fault_handler kprobe_fault_handler
+>   int kprobe_exceptions_notify(struct notifier_block *self,
+>   			     unsigned long val, void *data);
+>   int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+> diff --git a/arch/x86/include/asm/kprobes.h b/arch/x86/include/asm/kprobes.h
+> index 5dc909d9ad81..1af2b6db13bd 100644
+> --- a/arch/x86/include/asm/kprobes.h
+> +++ b/arch/x86/include/asm/kprobes.h
+> @@ -101,11 +101,17 @@ struct kprobe_ctlblk {
+>   	struct prev_kprobe prev_kprobe;
+>   };
+>   
+> +#define kprobe_fault_handler kprobe_fault_handler
+>   extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+>   extern int kprobe_exceptions_notify(struct notifier_block *self,
+>   				    unsigned long val, void *data);
+>   extern int kprobe_int3_handler(struct pt_regs *regs);
+>   extern int kprobe_debug_handler(struct pt_regs *regs);
+> +#else
+> +static inline int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+> +{
+> +	return 0;
+> +}
+>   
+>   #endif /* CONFIG_KPROBES */
+>   #endif /* _ASM_X86_KPROBES_H */
+> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+> index 04bdaf01112c..e106f3018804 100644
+> --- a/include/linux/kprobes.h
+> +++ b/include/linux/kprobes.h
+> @@ -182,11 +182,19 @@ DECLARE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+>   /*
+>    * For #ifdef avoidance:
+>    */
+> -static inline int kprobes_built_in(void)
+> +
+> +/*
+> + * Architectures need to override this with their own implementation
+> + * if they care to call kprobe_page_fault(). This will just ensure
+> + * that kprobe_page_fault() returns false when called without having
+> + * a proper platform specific definition for kprobe_fault_handler().
+> + */
+> +#ifndef kprobe_fault_handler
+> +static inline int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+>   {
+> -	return 1;
+> +	return 0;
+>   }
+> -
+> +#endif
+>   #ifdef CONFIG_KRETPROBES
+>   extern void arch_prepare_kretprobe(struct kretprobe_instance *ri,
+>   				   struct pt_regs *regs);
+> @@ -375,14 +383,6 @@ void free_insn_page(void *page);
+>   
+>   #else /* !CONFIG_KPROBES: */
+>   
+> -static inline int kprobes_built_in(void)
+> -{
+> -	return 0;
+> -}
+> -static inline int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+> -{
+> -	return 0;
+> -}
+>   static inline struct kprobe *get_kprobe(void *addr)
+>   {
+>   	return NULL;
+> @@ -458,12 +458,11 @@ static inline bool is_kprobe_optinsn_slot(unsigned long addr)
+>   }
+>   #endif
+>   
+> +#ifdef CONFIG_KPROBES
+>   /* Returns true if kprobes handled the fault */
+>   static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+>   					      unsigned int trap)
+>   {
+> -	if (!kprobes_built_in())
+> -		return false;
+>   	if (user_mode(regs))
+>   		return false;
+>   	/*
+> @@ -476,5 +475,12 @@ static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+>   		return false;
+>   	return kprobe_fault_handler(regs, trap);
+>   }
+> +#else
+> +static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+> +					      unsigned int trap)
+> +{
+> +	return false;
+> +}
+> +#endif
+>   
+>   #endif /* _LINUX_KPROBES_H */
 > 
 
