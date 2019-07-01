@@ -2,91 +2,107 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CA4C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BB0C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D4A20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1066A208C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B8zOfMOL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L/M6Ab2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfGAPTC (ORCPT
+        id S1727676AbfGAPVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:19:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59166 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728474AbfGAPS7 (ORCPT
+        Mon, 1 Jul 2019 11:21:34 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50282 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbfGAPVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:18:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3Ba+Jb98yVS5mZ3n94oGXQBYD6fv7eSFwFd2YiewCW0=; b=B8zOfMOLAu59NaUvSy8QYch5Jh
-        NskcwR4SmdPEjEvWY+1ydPBApZywsDWMb5u4PEb5VzW92AySwlrysI5iqPnkp3omLj25ThQsOC8OQ
-        VhpVvsHnGevdZJh5uci2lEnl3+OnEZs+hB8YdhBvjqdmhe8uaZ3GTURjRS9se6y1zC6uTlifH6Duz
-        jQGnrj1ElyoefePcSMTTs0ZEzU/YG5oQFbDmjs4gOMgXnfoIaInv2X4QwXyvuepYtI15agNcO8hpv
-        vQQCvAGi87ceTgfl8rtDBr32iVm1vSdz7dsEndDPWwZ3k9U1ghjO+iHrZ4ion4SiXsUNgC4FwnmyB
-        jV4wmmCw==;
-Received: from [38.98.37.141] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hhy4q-0003zx-QI; Mon, 01 Jul 2019 15:18:46 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>
-Cc:     linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] MIPS: don't select ARCH_HAS_PTE_SPECIAL
-Date:   Mon,  1 Jul 2019 17:18:18 +0200
-Message-Id: <20190701151818.32227-3-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190701151818.32227-1-hch@lst.de>
-References: <20190701151818.32227-1-hch@lst.de>
+        Mon, 1 Jul 2019 11:21:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x61FLPgv080598;
+        Mon, 1 Jul 2019 10:21:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561994485;
+        bh=auzATPVyNKdOnTHoDAScy5Y6lvxrhGQU3UFJL70OEVY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=L/M6Ab2fDX4e9H3F84f3eLLiimlHMgKCY3PzYN1zgwNPWL7DSX+G/RkCOE5ayc/0f
+         hCTOtBLBE91AzP8PJQFclbU4OaVFmPP030NXFx4SRHnXnNU5BQUbgAMAcdm+t+nJ4I
+         RBNtJKDHyo3HF0BIGWgMNnxqvB0QfdZv7MGHakcY=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x61FLPTr063483
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 1 Jul 2019 10:21:25 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Jul
+ 2019 10:21:25 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 1 Jul 2019 10:21:25 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x61FLOJ7014304;
+        Mon, 1 Jul 2019 10:21:24 -0500
+Subject: Re: [PATCH 2/4] devicetree: Update led binding
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
+        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <tomi.valkeinen@ti.com>,
+        <devicetree@vger.kernel.org>
+References: <20190701151423.30768-1-jjhiblot@ti.com>
+ <20190701151423.30768-3-jjhiblot@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <837afe49-18f3-722e-aa63-7d47d3a8bea0@ti.com>
+Date:   Mon, 1 Jul 2019 10:20:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190701151423.30768-3-jjhiblot@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MIPS doesn't really have a proper pte_special implementation, just
-stubs.  It turns out they were not enough to make get_user_pages_fast
-work, so drop the select.  This means get_user_pages_fast won't
-actually use the fast path for non-hugepage mappings, so someone who
-actually knows about mips page table management should look into
-adding real pte_special support.
+JJ
 
-Fixes: eb9488e58bbc ("MIPS: use the generic get_user_pages_fast code")
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/mips/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+On 7/1/19 10:14 AM, Jean-Jacques Hiblot wrote:
+> Update the led binding to describe the possibility to add a "compatible"
+> option to create a child-device, user of the LED.
+>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>   Documentation/devicetree/bindings/leds/common.txt | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 70876ac11367..2f7882528d97 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -11,6 +11,9 @@ have to be tightly coupled with the LED device binding. They are represented
+>   by child nodes of the parent LED device binding.
+>   
+>   Optional properties for child nodes:
+> +- compatible : driver name for a child-device. This child-device is the user
+> +               of the LED. It is created when the LED is registered and
+> +	       destroyed when the LED is unregistered.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index b1e42f0e4ed0..7957d3457156 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -6,7 +6,6 @@ config MIPS
- 	select ARCH_BINFMT_ELF_STATE if MIPS_FP_SUPPORT
- 	select ARCH_CLOCKSOURCE_DATA
- 	select ARCH_HAS_ELF_RANDOMIZE
--	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
- 	select ARCH_SUPPORTS_UPROBES
--- 
-2.20.1
+Can you update the example to show usage?
 
+Dan
+
+
+>   - led-sources : List of device current outputs the LED is connected to. The
+>   		outputs are identified by the numbers that must be defined
+>   		in the LED device binding documentation.
