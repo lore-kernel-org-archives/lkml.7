@@ -2,134 +2,261 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F25C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B773FC06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6612620881
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:33:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A72xlDkg"
+	by mail.kernel.org (Postfix) with ESMTP id 8D1BB20881
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:35:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbfGAPd5 (ORCPT
+        id S1729293AbfGAPf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:33:57 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41340 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbfGAPd4 (ORCPT
+        Mon, 1 Jul 2019 11:35:29 -0400
+Received: from mail.steuer-voss.de ([85.183.69.95]:54190 "EHLO
+        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727208AbfGAPf3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:33:56 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so14362364wrm.8;
-        Mon, 01 Jul 2019 08:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=wpaGBMR0ZnPZyn/D/Sm+4RGXSfbYpu+boXZvyCO/ODI=;
-        b=A72xlDkgu71h7IfQmWnshd+7BB2J0hu16RQ587WNfdDxAg/KZJsP+9WO6hoRAWLfal
-         xv4KcYpzmwCkzAqAAGXd0ZRSBMEYkJb50Y+zbjlXDrHjuyr/zDY65UHADADQG3HSzLtD
-         qiNJlX9302oGNp3j1OihV+UPWXC1jTirZDG0zbTf6lrfRofA/z9rNZ6lM4o5J+gAuB9W
-         Aj3V+7vHD9wdCFyNHgIrWdf6u0CrH7rEQ64b0q16QoihxNoY2dtgNrLc/a0ih8CraDPM
-         k0Sx+d2dAPPcV2jjxRgVtiwzyT1srA4gRYHAsgpzfErdmtR0xzkl+VDLCowS1vya/ohS
-         F2kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=wpaGBMR0ZnPZyn/D/Sm+4RGXSfbYpu+boXZvyCO/ODI=;
-        b=qmYSFMaMwpw6Pa2JYUJ4nHfZYGuDtk5Wy+Iz6e5tYz426DqMCbSo+JoKjGK9Len+IJ
-         UzlpdZGIKQEUaTzn1X1QhHi7ePGY56p1pG0CfY1d/pV/gjdMpM4VellBizRcXQGyrSbO
-         K35bl4v1WGlgqOSLlcozi72Ix0n6/xCA5/On7Fd5a+/aCUvr1qLXu1M5tGdjBNZFZtSo
-         rN1wbWj1fJtCNKRylJr0meqbawXQGzHu2+MffCOxZpW8gIumloDCzeF5rNPRo/TE/0UB
-         2DHlIegUe2ZCQf0Z1xpvG4StKekfisxy5fGzc86qWdSG/pt5ChFanAopdi2sdDTBPYNI
-         cKxA==
-X-Gm-Message-State: APjAAAXITVgrLFsDIJCPvdoXIlqsDwnC0QBljHLwBo1bUkgbjVyccqKf
-        0mASQsCv9FI+5bxAFcaRmEjJyEtV
-X-Google-Smtp-Source: APXvYqyuVuGCiK73ZnHWiEMsO7p5DGBpwkr+3ofW91YbXyDRrqVTPsSOz+oahhoYIvkBgMIrZvEaXA==
-X-Received: by 2002:adf:da47:: with SMTP id r7mr3707425wrl.56.1561995233880;
-        Mon, 01 Jul 2019 08:33:53 -0700 (PDT)
-Received: from [172.16.1.192] (host-89-243-246-11.as13285.net. [89.243.246.11])
-        by smtp.gmail.com with ESMTPSA id t14sm9268449wrr.33.2019.07.01.08.33.52
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 08:33:52 -0700 (PDT)
-From:   Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Subject: NO_HZ_IDLE causes consistently low cpu "iowait" time (and higher cpu
- "idle" time)
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <2ff025f1-9a3e-3eae-452b-ef84824009b4@gmail.com>
-Date:   Mon, 1 Jul 2019 16:33:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 1 Jul 2019 11:35:29 -0400
+X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
+Received: by mail.steuer-voss.de (Postfix, from userid 1000)
+        id 07BE64D360; Mon,  1 Jul 2019 17:35:27 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.steuer-voss.de (Postfix) with ESMTP id 04B454D35D;
+        Mon,  1 Jul 2019 17:35:27 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 17:35:27 +0200 (CEST)
+From:   Nikolaus Voss <nv@vosn.de>
+X-X-Sender: nv@fox.voss.local
+To:     "Andrew F. Davis" <afd@ti.com>
+cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] ASoC: tas5720.c: cleanup variant management
+In-Reply-To: <80af3fca-f71b-c118-e5d8-fde8b7d21705@ti.com>
+Message-ID: <alpine.DEB.2.20.1907011633310.4353@fox.voss.local>
+References: <20190628143037.GH5379@sirena.org.uk> <cover.1561988282.git.nikolaus.voss@loewensteinmedical.de> <c79df50175d59265a37c5e7c8a0cfbf8119bcf78.1561988282.git.nikolaus.voss@loewensteinmedical.de> <80af3fca-f71b-c118-e5d8-fde8b7d21705@ti.com>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Mon, 1 Jul 2019, Andrew F. Davis wrote:
+> On 7/1/19 9:42 AM, Nikolaus Voss wrote:
+>> Replace enum tas572x_type with struct tas5720_variant which aggregates
+>> variant specific stuff and can be directly referenced from an id table.
+>>
+>> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+>> ---
+>>  sound/soc/codecs/tas5720.c | 98 +++++++++++++-------------------------
+>>  1 file changed, 33 insertions(+), 65 deletions(-)
+>>
+>> diff --git a/sound/soc/codecs/tas5720.c b/sound/soc/codecs/tas5720.c
+>> index 37fab8f22800..b2e897f094b4 100644
+>> --- a/sound/soc/codecs/tas5720.c
+>> +++ b/sound/soc/codecs/tas5720.c
+>> @@ -28,9 +28,10 @@
+>>  /* Define how often to check (and clear) the fault status register (in ms) */
+>>  #define TAS5720_FAULT_CHECK_INTERVAL		200
+>>
+>> -enum tas572x_type {
+>> -	TAS5720,
+>> -	TAS5722,
+>> +struct tas5720_variant {
+>> +	const int device_id;
+>> +	const struct regmap_config *reg_config;
+>> +	const struct snd_soc_component_driver *comp_drv;
+>>  };
+>>
+>>  static const char * const tas5720_supply_names[] = {
+>> @@ -44,7 +45,7 @@ struct tas5720_data {
+>>  	struct snd_soc_component *component;
+>>  	struct regmap *regmap;
+>>  	struct i2c_client *tas5720_client;
+>> -	enum tas572x_type devtype;
+>> +	const struct tas5720_variant *variant;
+>
+> Why add a new struct? Actually I don't see the need for this patch at
+> all, the commit message only explains the 'what' not the 'why'. We can
+> and do already build this info from the tas572x_type.
 
-I tried running a simple test:
+As the commit message says, the purpose is to aggregate the variant 
+specifics and make it accessible via one pointer. This is a standard 
+approach for of/acpi_device_id tables and thus makes the code simpler and 
+improves readability. This is a maintenance patch to prepare using the 
+device match API in a proper way.
 
-     dd if=testfile iflag=direct bs=1M of=/dev/null
+>
+> Also below are several functional changes, the cover letter says this is
+> not a functional change, yet the driver behaves differently now.
 
-With my default settings, `vmstat 10` shows something like 85% idle time 
-to 15% iowait time. I have 4 CPUs, so this is much less than one CPU 
-worth of iowait time.
+Can you be a little bit more specific? The code should behave exactly as 
+before.
 
-If I boot with "nohz=off", I see idle time fall to 75% or below, and 
-iowait rise to about 25%, equivalent to one CPU.  That is what I had 
-originally expected.
+Niko
 
-(I can also see my expected numbers, if I disable *all* C-states and 
-force polling using `pm_qos_resume_latency_us` in sysfs).
-
-The numbers above are from a kernel somewhere around v5.2-rc5.  I saw 
-the "wrong" results on some previous kernels as well.  I just now 
-realized the link to NO_HZ_IDLE.[1]
-
-[1] 
-https://unix.stackexchange.com/questions/517757/my-basic-assumption-about-system-iowait-does-not-hold/527836#527836
-
-I did not find any information about this high level of inaccuracy. Can 
-anyone explain, is this behaviour expected?
-
-I found several patches that mentioned "iowait" and NO_HZ_IDLE. But if 
-they described this problem, it was not clear to me.
-
-I thought this might also be affecting the "IO pressure" values from the 
-new "pressure stall information"... but I am too confused already, so I 
-am only asking about iowait at the moment :-).[2]
-
-[2] 
-https://unix.stackexchange.com/questions/527342/why-does-the-new-linux-pressure-stall-information-for-io-not-show-as-100/527347#527347
-
-I have seen the disclaimers for iowait in 
-Documentation/filesystems/proc.txt, and the derived man page. 
-Technically, the third disclaimer might cover anything.  But I was 
-optimistic; I hoped it was talking about relatively small glitches :-).  
-I didn't think it would mean a large systematic undercounting, which 
-applied to the vast majority of current systems (which are not tuned for 
-realtime use).
-
-|
-
-> - iowait: In a word, iowait stands for waiting for I/O to complete. But there
->  are several problems:
->  1. Cpu will not wait for I/O to complete, iowait is the time that a task is
->     waiting for I/O to complete. When cpu goes into idle state for
->     outstanding task io, another task will be scheduled on this CPU.
->  2. In a multi-core CPU, the task waiting for I/O to complete is not running
->     on any CPU, so the iowait of each CPU is difficult to calculate.
->  3. The value of iowait field in /proc/stat will decrease in certain
->     conditions|
-
-
-Thanks for all the power-saving code
-Alan
+>
+> Andrew
+>
+>>  	struct regulator_bulk_data supplies[TAS5720_NUM_SUPPLIES];
+>>  	struct delayed_work fault_check_work;
+>>  	unsigned int last_fault;
+>> @@ -179,17 +180,13 @@ static int tas5720_set_dai_tdm_slot(struct snd_soc_dai *dai,
+>>  		goto error_snd_soc_component_update_bits;
+>>
+>>  	/* Configure TDM slot width. This is only applicable to TAS5722. */
+>> -	switch (tas5720->devtype) {
+>> -	case TAS5722:
+>> +	if (tas5720->variant->device_id == TAS5722_DEVICE_ID) {
+>>  		ret = snd_soc_component_update_bits(component, TAS5722_DIGITAL_CTRL2_REG,
+>>  						    TAS5722_TDM_SLOT_16B,
+>>  						    slot_width == 16 ?
+>>  						    TAS5722_TDM_SLOT_16B : 0);
+>>  		if (ret < 0)
+>>  			goto error_snd_soc_component_update_bits;
+>> -		break;
+>> -	default:
+>> -		break;
+>>  	}
+>>
+>>  	return 0;
+>> @@ -277,7 +274,7 @@ static void tas5720_fault_check_work(struct work_struct *work)
+>>  static int tas5720_codec_probe(struct snd_soc_component *component)
+>>  {
+>>  	struct tas5720_data *tas5720 = snd_soc_component_get_drvdata(component);
+>> -	unsigned int device_id, expected_device_id;
+>> +	unsigned int device_id;
+>>  	int ret;
+>>
+>>  	tas5720->component = component;
+>> @@ -301,21 +298,9 @@ static int tas5720_codec_probe(struct snd_soc_component *component)
+>>  		goto probe_fail;
+>>  	}
+>>
+>> -	switch (tas5720->devtype) {
+>> -	case TAS5720:
+>> -		expected_device_id = TAS5720_DEVICE_ID;
+>> -		break;
+>> -	case TAS5722:
+>> -		expected_device_id = TAS5722_DEVICE_ID;
+>> -		break;
+>> -	default:
+>> -		dev_err(component->dev, "unexpected private driver data\n");
+>> -		return -EINVAL;
+>> -	}
+>> -
+>> -	if (device_id != expected_device_id)
+>> +	if (device_id != tas5720->variant->device_id)
+>>  		dev_warn(component->dev, "wrong device ID. expected: %u read: %u\n",
+>> -			 expected_device_id, device_id);
+>> +			 tas5720->variant->device_id, device_id);
+>>
+>>  	/* Set device to mute */
+>>  	ret = snd_soc_component_update_bits(component, TAS5720_DIGITAL_CTRL2_REG,
+>> @@ -637,7 +622,6 @@ static int tas5720_probe(struct i2c_client *client,
+>>  {
+>>  	struct device *dev = &client->dev;
+>>  	struct tas5720_data *data;
+>> -	const struct regmap_config *regmap_config;
+>>  	int ret;
+>>  	int i;
+>>
+>> @@ -646,20 +630,10 @@ static int tas5720_probe(struct i2c_client *client,
+>>  		return -ENOMEM;
+>>
+>>  	data->tas5720_client = client;
+>> -	data->devtype = id->driver_data;
+>>
+>> -	switch (id->driver_data) {
+>> -	case TAS5720:
+>> -		regmap_config = &tas5720_regmap_config;
+>> -		break;
+>> -	case TAS5722:
+>> -		regmap_config = &tas5722_regmap_config;
+>> -		break;
+>> -	default:
+>> -		dev_err(dev, "unexpected private driver data\n");
+>> -		return -EINVAL;
+>> -	}
+>> -	data->regmap = devm_regmap_init_i2c(client, regmap_config);
+>> +	data->variant = (const struct tas5720_variant *)id->driver_data;
+>> +
+>> +	data->regmap = devm_regmap_init_i2c(client, data->variant->reg_config);
+>>  	if (IS_ERR(data->regmap)) {
+>>  		ret = PTR_ERR(data->regmap);
+>>  		dev_err(dev, "failed to allocate register map: %d\n", ret);
+>> @@ -678,42 +652,36 @@ static int tas5720_probe(struct i2c_client *client,
+>>
+>>  	dev_set_drvdata(dev, data);
+>>
+>> -	switch (id->driver_data) {
+>> -	case TAS5720:
+>> -		ret = devm_snd_soc_register_component(&client->dev,
+>> -					&soc_component_dev_tas5720,
+>> -					tas5720_dai,
+>> -					ARRAY_SIZE(tas5720_dai));
+>> -		break;
+>> -	case TAS5722:
+>> -		ret = devm_snd_soc_register_component(&client->dev,
+>> -					&soc_component_dev_tas5722,
+>> -					tas5720_dai,
+>> -					ARRAY_SIZE(tas5720_dai));
+>> -		break;
+>> -	default:
+>> -		dev_err(dev, "unexpected private driver data\n");
+>> -		return -EINVAL;
+>> -	}
+>> -	if (ret < 0) {
+>> -		dev_err(dev, "failed to register component: %d\n", ret);
+>> -		return ret;
+>> -	}
+>> -
+>> -	return 0;
+>> +	ret = devm_snd_soc_register_component(&client->dev,
+>> +					      data->variant->comp_drv,
+>> +					      tas5720_dai,
+>> +					      ARRAY_SIZE(tas5720_dai));
+>> +	return ret;
+>>  }
+>>
+>> +static const struct tas5720_variant tas5720 = {
+>> +	.device_id = TAS5720_DEVICE_ID,
+>> +	.reg_config = &tas5720_regmap_config,
+>> +	.comp_drv = &soc_component_dev_tas5720,
+>> +};
+>> +
+>> +static const struct tas5720_variant tas5722 = {
+>> +	.device_id = TAS5722_DEVICE_ID,
+>> +	.reg_config = &tas5722_regmap_config,
+>> +	.comp_drv = &soc_component_dev_tas5722,
+>> +};
+>> +
+>>  static const struct i2c_device_id tas5720_id[] = {
+>> -	{ "tas5720", TAS5720 },
+>> -	{ "tas5722", TAS5722 },
+>> +	{ "tas5720", (kernel_ulong_t)&tas5720 },
+>> +	{ "tas5722", (kernel_ulong_t)&tas5722 },
+>>  	{ }
+>>  };
+>>  MODULE_DEVICE_TABLE(i2c, tas5720_id);
+>>
+>>  #if IS_ENABLED(CONFIG_OF)
+>>  static const struct of_device_id tas5720_of_match[] = {
+>> -	{ .compatible = "ti,tas5720", },
+>> -	{ .compatible = "ti,tas5722", },
+>> +	{ .compatible = "ti,tas5720", .data = &tas5720, },
+>> +	{ .compatible = "ti,tas5722", .data = &tas5722, },
+>>  	{ },
+>>  };
+>>  MODULE_DEVICE_TABLE(of, tas5720_of_match);
+>>
+>
