@@ -1,136 +1,115 @@
 Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32ADFC4646D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9B3C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0917A20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561967779;
-	bh=B4TUnaGWg8VUcduUA3qEJifzurj0GdDrPtgXHngOP9o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=De4QbgqGJf3yTPuYzuQfwwmXJ/iPzJo/WexRUzShDIeGXz0uICm3qQvSR2GACyDZo
-	 2BVyJWMSj6I4uG5IrwvhHcV2WpmYgQVbLZkTEbzBblhNmh/RizBKDAYvg+A3AMkaje
-	 oDVgHkjVi0wgzFEqoReIzVaSd1iVx5SMv4LKpnXs=
+	by mail.kernel.org (Postfix) with ESMTP id D045E20652
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 07:56:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NCUYHS0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfGAH4R (ORCPT
+        id S1727597AbfGAH4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 03:56:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54224 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726036AbfGAH4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 03:56:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9AD85AEBD;
-        Mon,  1 Jul 2019 07:56:15 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 09:56:15 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3 05/11] drivers/base/memory: Pass a block_id to
- init_memory_block()
-Message-ID: <20190701075615.GE6376@dhcp22.suse.cz>
-References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-6-david@redhat.com>
+        Mon, 1 Jul 2019 03:56:39 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43963 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfGAH4j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 03:56:39 -0400
+Received: by mail-pl1-f193.google.com with SMTP id cl9so6892885plb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 00:56:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+twzjYVpRVjpacx4trZB94509DTZgYQcQMDYuMNcsR4=;
+        b=NCUYHS0PUlBnq+9KUz6uY9duejMIwMu4rMg9X7onsD0fH/oIyThXHJHPrtnSc1V48K
+         mwOXzdoJWMRsV/Nmapl5JdfEmmamY6OPDUoObkcs5JkIjL3NgtN2ASgrklfejqb7wpWm
+         R/w9aVDSUub8VCFUBjyCa1wlgeejhnwrI+6NI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+twzjYVpRVjpacx4trZB94509DTZgYQcQMDYuMNcsR4=;
+        b=Z+A3/6/16T0e9/xIxssME8UuzUtxoesmjR02GO8qqITNlNErkmUIOVNmXQxxvQ3h5K
+         w9DEEH0mo+GW8s1TGU6elwxRGfrnDVCjhakdBJzdCDWBbn/JeGRNZlYQEOMqYQFPJ2Pd
+         +0XR/fPS7SPI5dE7uKIuMW9BhqpXLHSLfKkls5HKGg+Bvf1dTx/+08XeEavgdWer3n2w
+         ABYt/frl/R54IS+cCYpVBORDUvyqFYF0sXDnoCLNUzYBe0pDNEFRYYrJhuDbN0hJyRJ5
+         lJa4f+AZiwsG/V01nfUSGoxYxBPvR6V9juAVp31llIFpNYVzYssHBe6l+Oaby2aDuKxb
+         kP1Q==
+X-Gm-Message-State: APjAAAXOppBoSXEAVF7A8Go8GQw9oe7uNVm1O21yZOSrFTvSykrZipg1
+        eafqBh3Fzi8yWPofXRp2ebOY
+X-Google-Smtp-Source: APXvYqysC4YyV+eiee73csmXAhFAB6RLW8rCAw1OyNcYhUuZizAOjeak5niISZrBjh6iF1wgIBW1dw==
+X-Received: by 2002:a17:902:968c:: with SMTP id n12mr28901036plp.59.1561967798535;
+        Mon, 01 Jul 2019 00:56:38 -0700 (PDT)
+Received: from google.com ([2401:fa00:1:b:d89e:cfa6:3c8:e61b])
+        by smtp.gmail.com with ESMTPSA id m13sm8127237pgv.89.2019.07.01.00.56.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 00:56:37 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 15:56:35 +0800
+From:   Kuo-Hsin Yang <vovoy@chromium.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2] mm: vmscan: fix not scanning anonymous pages when
+ detecting file refaults
+Message-ID: <20190701075635.GA79748@google.com>
+References: <20190619080835.GA68312@google.com>
+ <20190628111627.GA107040@google.com>
+ <20190628143201.GB17212@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190527111152.16324-6-david@redhat.com>
+In-Reply-To: <20190628143201.GB17212@cmpxchg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 27-05-19 13:11:46, David Hildenbrand wrote:
-> We'll rework hotplug_memory_register() shortly, so it no longer consumes
-> pass a section.
+On Fri, Jun 28, 2019 at 10:32:01AM -0400, Johannes Weiner wrote:
+> On Fri, Jun 28, 2019 at 07:16:27PM +0800, Kuo-Hsin Yang wrote:
+> > Commit 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in cache
+> > workingset transition") introduced actual_reclaim parameter.  When file
+> > refaults are detected, inactive_list_is_low() may return different
+> > values depends on the actual_reclaim parameter.  Vmscan would only scan
+> > active/inactive file lists at file thrashing state when the following 2
+> > conditions are satisfied.
+> > 
+> > 1) inactive_list_is_low() returns false in get_scan_count() to trigger
+> >    scanning file lists only.
+> > 2) inactive_list_is_low() returns true in shrink_list() to allow
+> >    scanning active file list.
+> > 
+> > This patch makes the return value of inactive_list_is_low() independent
+> > of actual_reclaim and rename the parameter back to trace.
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  drivers/base/memory.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
+> This is not. The root cause for the problem you describe isn't the
+> patch you point to. The root cause is our decision to force-scan the
+> file LRU based on relative inactive:active size alone, without taking
+> file thrashing into account at all. This is a much older problem.
 > 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index f180427e48f4..f914fa6fe350 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -651,21 +651,18 @@ int register_memory(struct memory_block *memory)
->  	return ret;
->  }
->  
-> -static int init_memory_block(struct memory_block **memory,
-> -			     struct mem_section *section, unsigned long state)
-> +static int init_memory_block(struct memory_block **memory, int block_id,
-> +			     unsigned long state)
->  {
->  	struct memory_block *mem;
->  	unsigned long start_pfn;
-> -	int scn_nr;
->  	int ret = 0;
->  
->  	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
->  	if (!mem)
->  		return -ENOMEM;
->  
-> -	scn_nr = __section_nr(section);
-> -	mem->start_section_nr =
-> -			base_memory_block_id(scn_nr) * sections_per_block;
-> +	mem->start_section_nr = block_id * sections_per_block;
->  	mem->end_section_nr = mem->start_section_nr + sections_per_block - 1;
->  	mem->state = state;
->  	start_pfn = section_nr_to_pfn(mem->start_section_nr);
-> @@ -694,7 +691,8 @@ static int add_memory_block(int base_section_nr)
->  
->  	if (section_count == 0)
->  		return 0;
-> -	ret = init_memory_block(&mem, __nr_to_section(section_nr), MEM_ONLINE);
-> +	ret = init_memory_block(&mem, base_memory_block_id(base_section_nr),
-> +				MEM_ONLINE);
->  	if (ret)
->  		return ret;
->  	mem->section_count = section_count;
-> @@ -707,6 +705,7 @@ static int add_memory_block(int base_section_nr)
->   */
->  int hotplug_memory_register(int nid, struct mem_section *section)
->  {
-> +	int block_id = base_memory_block_id(__section_nr(section));
->  	int ret = 0;
->  	struct memory_block *mem;
->  
-> @@ -717,7 +716,7 @@ int hotplug_memory_register(int nid, struct mem_section *section)
->  		mem->section_count++;
->  		put_device(&mem->dev);
->  	} else {
-> -		ret = init_memory_block(&mem, section, MEM_OFFLINE);
-> +		ret = init_memory_block(&mem, block_id, MEM_OFFLINE);
->  		if (ret)
->  			goto out;
->  		mem->section_count++;
-> -- 
-> 2.20.1
+> After the referenced patch, we're taking thrashing into account when
+> deciding whether to deactivate active file pages or not. To solve the
+> problem pointed out here, we can extend that same principle to the
+> decision whether to force-scan files and skip the anon LRUs.
+> 
+> The patch you're pointing to isn't the culprit. On the contrary, it
+> provides the infrastructure to solve a much older problem.
+> 
+> > Fixes: 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in cache workingset transition")
+> 
+> Please replace this line with the two Fixes: lines that I provided
+> earlier in this thread.
 
--- 
-Michal Hocko
-SUSE Labs
+Thanks for your clarification, I will update the changelog.
