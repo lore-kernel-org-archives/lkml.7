@@ -2,107 +2,94 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04836C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F9AC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA893214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561963706;
-	bh=vkthgdF/kKuKoMxa+wMdGLMvroNlFfYu/zU+JAvGcgw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ApifMs3CYkcCM0tSZaEaqVydHt4D8abqxqrGBtGoksg95qGKKvbBdaTk5rxj8EI71
-	 t1jN4FoM1PGK/CPEJ13qt+aDbiaOffPQrBm5mc/wkBtYxv97yZsza+ejyoEpFugKis
-	 aOizB06Cj7cOG9dH0N75kAGCmJG5hOwPx0xBcHRk=
+	by mail.kernel.org (Postfix) with ESMTP id 7D72F212F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfGAGsZ (ORCPT
+        id S1727615AbfGAGwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbfGAGsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 02:48:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBB172145D;
-        Mon,  1 Jul 2019 06:48:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561963704;
-        bh=vkthgdF/kKuKoMxa+wMdGLMvroNlFfYu/zU+JAvGcgw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ek9e05ew3xF9NZT3gU+NHTIxZPkX+5j6bP34zKrOiXzaRwfeZ9HVQQyS0otbAseVf
-         4ghaUrus3rRNBUJiBmKv5LkBqBvjnWVE1PpHu/Zb1Nt078Dq/PUjttBWYogqgMCj/T
-         qadi79BTdRFkHCSGqX/yCYrNHoavjG4EjDRweqic=
-Date:   Mon, 1 Jul 2019 08:48:21 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gabriel Beauchamp <beauchampgabriel@gmail.com>
-Cc:     christian.gromm@microchip.com, colin.king@canonical.com,
-        gustavo@embeddedor.com, joe@perches.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Staging: most: fix coding style issues
-Message-ID: <20190701064821.GA12135@kroah.com>
-References: <dbe411be6aa32a32aafc5a5b77f08e8507b45da3.camel@perches.com>
- <20190630152726.21092-1-beauchampgabriel@gmail.com>
+        Mon, 1 Jul 2019 02:52:39 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:32972 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbfGAGwi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 02:52:38 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h19so13817370wme.0
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 23:52:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZanPqiEPVMdySHonMbQBl/5/VvjKUDnA16ZAnUCifwo=;
+        b=qdSWVW2TSjRVT4hqR5Q1Un6Uov090iDyqZzRmHFRNfGjwcwJIEwnkhublC7h7Qr+vY
+         M34ry4zO0B73wKNSZ2E6L0uY9/H72ZHMSf1nhnKWC5iadxSwEFNU0uL3Wdhn/iDazWt6
+         hDkStCYDG0JJtnLcrAK8DBtIVrJmBAmp0b3e/upEQ2k2fzbNNX2lKebYneuN3l30cZM5
+         uudrfc28TYm7vqCg+8jxW6p3u4TVapSkAsaApUp7BH2CZkKlLrf85Smt8/UIWcmbz6Ic
+         rN4YOO9Jm6N2eN3Vy9YP+qzi4uQ0NI7ixZNUT7sBXDkVv7cKS3HvABv/2kgPCNFHCfbn
+         6k2w==
+X-Gm-Message-State: APjAAAWlyw+6vn3glGHGARCAFpssO02ns5xmG3nlcPhTwGh+0h0fGevH
+        DVJ+WHNPE6DjeAb2NCutPnOmmA==
+X-Google-Smtp-Source: APXvYqyAJZ4botdtSJ3zU9ORTAwwQRPjpGAfhDs9AIdatmN70PBO8LqjP2idy/zV96eTgzly1dbG3w==
+X-Received: by 2002:a1c:dc07:: with SMTP id t7mr16638183wmg.164.1561963956698;
+        Sun, 30 Jun 2019 23:52:36 -0700 (PDT)
+Received: from localhost.localdomain ([151.15.224.253])
+        by smtp.gmail.com with ESMTPSA id h21sm10492932wmb.47.2019.06.30.23.52.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 30 Jun 2019 23:52:35 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 08:52:33 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, rostedt@goodmis.org, tj@kernel.org,
+        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        claudio@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
+        bristot@redhat.com, mathieu.poirier@linaro.org, lizefan@huawei.com,
+        cgroups@vger.kernel.org, Prateek Sood <prsood@codeaurora.org>
+Subject: Re: [PATCH v8 6/8] cgroup/cpuset: Change cpuset_rwsem and hotplug
+ lock order
+Message-ID: <20190701065233.GA26005@localhost.localdomain>
+References: <20190628080618.522-1-juri.lelli@redhat.com>
+ <20190628080618.522-7-juri.lelli@redhat.com>
+ <20190628130308.GU3419@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190630152726.21092-1-beauchampgabriel@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190628130308.GU3419@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 08:27:26AM -0700, Gabriel Beauchamp wrote:
-> This is a patch for the core.[ch] files that fixes up warnings
-> found with the checkpatch.pl tool.
-> 
-> Signed-off-by: Gabriel Beauchamp <beauchampgabriel@gmail.com>
-
 Hi,
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+On 28/06/19 15:03, Peter Zijlstra wrote:
+> On Fri, Jun 28, 2019 at 10:06:16AM +0200, Juri Lelli wrote:
+> > cpuset_rwsem is going to be acquired from sched_setscheduler() with a
+> > following patch. There are however paths (e.g., spawn_ksoftirqd) in
+> > which sched_scheduler() is eventually called while holding hotplug lock;
+> > this creates a dependecy between hotplug lock (to be always acquired
+> > first) and cpuset_rwsem (to be always acquired after hotplug lock).
+> > 
+> > Fix paths which currently take the two locks in the wrong order (after
+> > a following patch is applied).
+> > Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+> 
+> This all reminds me of this:
+> 
+>   https://lkml.kernel.org/r/1510755615-25906-1-git-send-email-prsood@codeaurora.org
+> 
+> Which sadly got reverted again. If we do this now (I've always been a
+> proponent), then we can make that rebuild synchronous again, which
+> should also help here IIRC.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+Why was that reverted? Perf regression of some type?
 
-- Your patch did many different things all at once, making it difficult
-  to review.  All Linux kernel patches need to only do one thing at a
-  time.  If you need to do multiple things (such as clean up all coding
-  style issues in a file/driver), do it in a sequence of patches, each
-  one doing only one thing.  This will make it easier to review the
-  patches to ensure that they are correct, and to help alleviate any
-  merge issues that larger patches can cause.
+Thanks,
 
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what is needed in order to
-  properly describe the change.
-
-- You did not write a descriptive Subject: for the patch, allowing Greg,
-  and everyone else, to know what this patch is all about.  Please read
-  the section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what a proper Subject: line should
-  look like.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+Juri
