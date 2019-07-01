@@ -2,122 +2,146 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38140C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30874C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0404120663
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05CE020663
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:44:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="S8hTTQ4Y"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SsxZW8vk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfGAUnb (ORCPT
+        id S1726866AbfGAUoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 16:43:31 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45111 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfGAUnb (ORCPT
+        Mon, 1 Jul 2019 16:44:30 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:55822 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfGAUoa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 16:43:31 -0400
-Received: by mail-io1-f67.google.com with SMTP id e3so31863804ioc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 13:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aAHYEpAwmFfykw4UsHqlxHV8LEbj/P9Jk/ruDIlZAEI=;
-        b=S8hTTQ4Yv+QWKNdV9zonpCua6hSUSWbkSIpRpYvKM7PA6gqfiIB2pFk0FVLrIMDVeT
-         UpyQboZIXvc6NWF6NY4CiF/ZperHfBl1mpziMP1FGD4KLrtHZXc0x+OZfYY/3SiudjUf
-         8QoxzdhwCe8j3+eJ84bCHV5oiUHsatYhfm0rv9o1wYggzySHoJsLHrr5A3RF0PGScoC5
-         gRfc9VI5YCXaLwwgaFLR45pfp+P4rOF6YraAXLcSnXy3avDHDsepwJfwWGJiofFg9O+k
-         b0gvJvgQhjvF3nZU3TLNdofmpLbeMI9SaRrXuD6QxF4fxTjtMsCFcViXg3Q85SwYZjuk
-         N5fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aAHYEpAwmFfykw4UsHqlxHV8LEbj/P9Jk/ruDIlZAEI=;
-        b=pHX0sUByxUXEuVig+nt8rsdi1bMVZ+uJnMfTzjfM8Upop699htY6dRqSzz1LXm7Vra
-         SVbiv0lZwlh7l+J2YaHTESgo6Pa5edNz2zgUwLtJBmLf1HXJudSVBh+ir+0mwdNXlaap
-         DU3idnFBMZ8X00/SACLdRomJHRxVu63Sa/X0NikHLpyETvUKtQUUFAo3w1m1W399WnWD
-         GtS00oOTw3kSDgKeWZtm3l+7L88YJn3mCw0Ew9s8sYeiyCylT7g+q5r/ECG5wXpCeRTn
-         YjEpUPf8WkOj6YZssmcOyqtmcNTyVuNR18gCKLy7v/xREkSxIuMvPoOmzLVCHmTmsG9n
-         QnVA==
-X-Gm-Message-State: APjAAAUlFchkowCTmleeObrfegq6cdeUjIP6MhSbzWhDH/fs+LfUB8p/
-        EUM9VKrgdLheGNepqEM74fRV4A==
-X-Google-Smtp-Source: APXvYqzF5o60A5qeHHxcOxgsNO5bJ8Npeh4wXwP+G+CaK8cmAiMBoKhra/XQ1iqIYhF77nJyzJTikw==
-X-Received: by 2002:a6b:14c2:: with SMTP id 185mr29942445iou.69.1562013807868;
-        Mon, 01 Jul 2019 13:43:27 -0700 (PDT)
-Received: from minyard.net ([2001:470:b8f6:1b:9575:16b6:1dd6:2173])
-        by smtp.gmail.com with ESMTPSA id s2sm9598124ioj.8.2019.07.01.13.43.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Jul 2019 13:43:27 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 15:43:25 -0500
-From:   Corey Minyard <cminyard@mvista.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Corey Minyard <minyard@acm.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de
-Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
-Message-ID: <20190701204325.GD5041@minyard.net>
-Reply-To: cminyard@mvista.com
-References: <20190509193320.21105-1-minyard@acm.org>
- <20190510103318.6cieoifz27eph4n5@linutronix.de>
- <20190628214903.6f92a9ea@oasis.local.home>
- <20190701190949.GB4336@minyard.net>
- <20190701161840.1a53c9e4@gandalf.local.home>
+        Mon, 1 Jul 2019 16:44:30 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61KdMCi173574;
+        Mon, 1 Jul 2019 20:42:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=+aeZDe3jwT4xvYHZCTEN4awdr90rYxW4YlVpN9V8bnY=;
+ b=SsxZW8vkxaV0FOgr/oB+4IDVriQsdttQulNAKfHz/eIdV3+xXXbuQvbXv+3xUpbRbfZF
+ lCnuKifwFQrgRihYoa98czn/XI+0nG7cDvWDaFdMNz+6eHAlw6tq9ecovjA3CHu7CVyJ
+ 9zw6q7qXKoEG4SPtCY0hzcEVAiO4ERyk+8uScZbJFZn9kGYQvDHqdg9qB1hR9DQluT4N
+ J3VlQnTavPWuqBT4msf5qWEEhGNmxmc/aavjCecmKTFmVUOEoSqRs0Q2lXxC6ahREbze
+ Baek17LPUNnfj8KKZT3iwwFTwvFubbnYJPT5J8dYLgXHR+hJV2nSXirx2yq1uF0xT1d6 YQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2te61dyufg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 20:42:37 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61Kbsuj160590;
+        Mon, 1 Jul 2019 20:42:36 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2tebbjd124-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 20:42:36 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x61KgSHW009452;
+        Mon, 1 Jul 2019 20:42:28 GMT
+Received: from [10.132.91.175] (/10.132.91.175)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 01 Jul 2019 13:42:27 -0700
+Subject: Re: [PATCH v3 5/7] sched: SIS_CORE to disable idle core search
+To:     Parth Shah <parth@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net
+References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
+ <20190627012919.4341-6-subhra.mazumdar@oracle.com>
+ <0e0f3347-c262-2917-76d7-88dddf4e9122@linux.ibm.com>
+ <59ab08d5-8b7c-00b9-230b-7c0b307a675f@oracle.com>
+ <be91602a-0243-e094-8c8f-ceed314d10ce@linux.ibm.com>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <12402fea-7b87-8c4d-9485-53f973c38654@oracle.com>
+Date:   Mon, 1 Jul 2019 13:37:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701161840.1a53c9e4@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <be91602a-0243-e094-8c8f-ceed314d10ce@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907010239
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907010240
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 04:18:40PM -0400, Steven Rostedt wrote:
-> On Mon, 1 Jul 2019 14:09:49 -0500
-> Corey Minyard <minyard@acm.org> wrote:
-> 
-> > On Fri, Jun 28, 2019 at 09:49:03PM -0400, Steven Rostedt wrote:
-> > > On Fri, 10 May 2019 12:33:18 +0200
-> > > Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-> 
-> > > 
-> > > When I applied this patch to 4.19-rt, I get the following lock up:  
-> > 
-> > I was unable to reproduce, and I looked at the code and I can't really
-> > see a connection between this change and this crash.
-> > 
-> > Can you reproduce at will?  If so, can you send a testcase?
-> > 
-> 
-> Yes, it wont boot. There is no testcase as I don't even make it to a
-> boot prompt. I applied the patch and it crashes, I remove the patch and
-> it boots without issue.
-> 
-> Attached is the full dmesg and the config used. I applied it to
-> 
->   ae97a0ba0197fb424008a317b79bebacd6a50213
->   Linux 4.19.56-rt23
-> 
-> It works fine for 5.0.14-rt9 where it was added.
-> 
-> -- Steve
 
-I show that patch is already applied at
+>>> Also, systems like POWER9 has sd_llc as a pair of core only. So it
+>>> won't benefit from the limits and hence also hiding your code in select_idle_cpu
+>>> behind static keys will be much preferred.
+>> If it doesn't hurt then I don't see the point.
+>>
+> So these is the result from POWER9 system with your patches:
+> System configuration: 2 Socket, 44 cores, 176 CPUs
+>
+> Experiment setup:
+> ===========
+> => Setup 1:
+> - 44 tasks doing just while(1), this is to make select_idle_core return -1 most times
+> - perf bench sched messaging -g 1 -l 1000000
+> +-----------+--------+--------------+--------+
+> | Baseline  | stddev |    Patch     | stddev |
+> +-----------+--------+--------------+--------+
+> |       135 |   3.21 | 158(-17.03%) |   4.69 |
+> +-----------+--------+--------------+--------+
+>
+> => Setup 2:
+> - schbench -m44 -t 1
+> +=======+==========+=========+=========+==========+
+> | %ile  | Baseline | stddev  |  patch  |  stddev  |
+> +=======+==========+=========+=========+==========+
+> |    50 |       10 |    3.49 |      10 |     2.29 |
+> +-------+----------+---------+---------+----------+
+> |    95 |      467 |    4.47 |     469 |     0.81 |
+> +-------+----------+---------+---------+----------+
+> |    99 |      571 |   21.32 |     584 |    18.69 |
+> +-------+----------+---------+---------+----------+
+> |  99.5 |      629 |   30.05 |     641 |    20.95 |
+> +-------+----------+---------+---------+----------+
+> |  99.9 |      780 |   40.38 |     773 |     44.2 |
+> +-------+----------+---------+---------+----------+
+>
+> I guess it doesn't make much difference in schbench results but hackbench (perf bench)
+> seems to have an observable regression.
+>
+>
+> Best,
+> Parth
+>
+If POWER9 sd_llc has only 2 cores, the behavior shouldn't change much with
+the select_idle_cpu changes as the limits are 1 and 2 core. Previously the
+lower bound was 4 cpus and upper bound calculated by the prop. Now it is
+1 core (4 cpus on SMT4) and upper bound 2 cores. Could it be the extra
+computation of cpumask_weight causing the regression rather than the
+sliding window itself (one way to check this would be hardcode 4 in place
+of topology_sibling_weight)? Or is it the L1 cache coherency? I am a bit
+suprised because SPARC SMT8 which has more cores in sd_llc and L1 cache per
+core showed improvement with Hackbench.
 
-    1921ea799b7dc561c97185538100271d88ee47db
-    sched/completion: Fix a lockup in wait_for_completion()
-
-git describe --contains 1921ea799b7dc561c97185538100271d88ee47db
-v4.19.37-rt20~1
-
-So I'm not sure what is going on.
-
--corey
+Thanks,
+Subhra
