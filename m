@@ -2,95 +2,94 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C830C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64FCC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A9B208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:18:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tX1mNaJk"
+	by mail.kernel.org (Postfix) with ESMTP id 6CF5420659
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 09:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561972840;
+	bh=zzoyBMVq6fGZIND8NYFZmL6/hTHNSybu/Z5psT7nHeY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xjfe1JPrKg0mxaQvJvL8Jmu9TSmNBBu3As+7HmOrHzqBESxLLgdAZ3eREwLmkOlIF
+	 sc0XNFMPmIYR/h4cF9PIaDl3L+bOmJFjuKwPKHpEUSxpqE9wZKdtbrQ9lBRMznJxqk
+	 aAaJW0lJBgkiHno91UHooOxwFpoYAXn4a1Uh2278=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbfGAJSy (ORCPT
+        id S1728385AbfGAJUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 05:18:54 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:53754 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728284AbfGAJSy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 05:18:54 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x619BYrY020146;
-        Mon, 1 Jul 2019 11:18:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=KIy5BakllxdZ3xXg+Q83R/MpzH9X3aj4n2maKUHUR+w=;
- b=tX1mNaJkfexbL9sT+Gk8U/rMpCocwcqwlpNbazhIYaMZcoM7+yUdfDOKZKsubVrj/4ht
- 3NSgReFCRAF50ozCrjv8J5yBFSlAk3u4UgAgGemGCYd4Bdeo6eESFzD6h+PWI/DTp1dO
- E4Gsud7dhy8Vt3N/kOWftwAZIZaC1dpLf/WCfzkdJDUP8NtVdn82jGyREDh578Q7lBx/
- 1FTHz5bKWCQlZghhHBYzbFPDgwaXMlXQ5jp/tTV5HQsefnQ10yllsLs3CtVmIbs/Dlvl
- sGb4FNaQoMNkUrhCtiT91vGgFZUqQjNhUAHvTharYk/v1UppsnPGh0lrouDkVdpgB2ZW gA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2tdxvhktqf-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 01 Jul 2019 11:18:38 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5405F34;
-        Mon,  1 Jul 2019 09:18:37 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2B88E24EC;
-        Mon,  1 Jul 2019 09:18:37 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 1 Jul 2019
- 11:18:37 +0200
-Received: from localhost (10.201.23.31) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 1 Jul 2019 11:18:36
- +0200
-From:   Erwan Le Ray <erwan.leray@st.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erwan.leray@st.com>, <bich.hemon@st.com>
-Subject: [PATCH] ARM: dts: stm32: fix -Wall W=1 compilation warnings for can1_sleep pinctrl
-Date:   Mon, 1 Jul 2019 11:18:06 +0200
-Message-ID: <1561972686-23281-1-git-send-email-erwan.leray@st.com>
-X-Mailer: git-send-email 1.9.1
+        Mon, 1 Jul 2019 05:20:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49304 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728184AbfGAJUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 05:20:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 98C0EB02C;
+        Mon,  1 Jul 2019 09:20:37 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 11:20:37 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pengfei Li <lpf.vector@gmail.com>
+Cc:     akpm@linux-foundation.org, peterz@infradead.org, urezki@gmail.com,
+        rpenyaev@suse.de, guro@fb.com, aryabinin@virtuozzo.com,
+        rppt@linux.ibm.com, mingo@kernel.org, rick.p.edgecombe@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] mm/vmalloc.c: improve readability and rewrite
+ vmap_area
+Message-ID: <20190701092037.GL6376@dhcp22.suse.cz>
+References: <20190630075650.8516-1-lpf.vector@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.31]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_07:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190630075650.8516-1-lpf.vector@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix compilations warnings detected by -Wall W=1 compilation option:
-- node has a unit name, but no reg property
+On Sun 30-06-19 15:56:45, Pengfei Li wrote:
+> Hi,
+> 
+> This series of patches is to reduce the size of struct vmap_area.
+> 
+> Since the members of struct vmap_area are not being used at the same time,
+> it is possible to reduce its size by placing several members that are not
+> used at the same time in a union.
+> 
+> The first 4 patches did some preparatory work for this and improved
+> readability.
+> 
+> The fifth patch is the main patch, it did the work of rewriting vmap_area.
+> 
+> More details can be obtained from the commit message.
 
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+None of the commit messages talk about the motivation. Why do we want to
+add quite some code to achieve this? How much do we save? This all
+should be a part of the cover letter.
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index 140a983..ce98fd8 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -427,7 +427,7 @@
- 				};
- 			};
- 
--			m_can1_sleep_pins_a: m_can1-sleep@0 {
-+			m_can1_sleep_pins_a: m_can1-sleep-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('H', 13, ANALOG)>, /* CAN1_TX */
- 						 <STM32_PINMUX('I', 9, ANALOG)>; /* CAN1_RX */
+> Thanks,
+> 
+> Pengfei
+> 
+> Pengfei Li (5):
+>   mm/vmalloc.c: Introduce a wrapper function of insert_vmap_area()
+>   mm/vmalloc.c: Introduce a wrapper function of
+>     insert_vmap_area_augment()
+>   mm/vmalloc.c: Rename function __find_vmap_area() for readability
+>   mm/vmalloc.c: Modify function merge_or_add_vmap_area() for readability
+>   mm/vmalloc.c: Rewrite struct vmap_area to reduce its size
+> 
+>  include/linux/vmalloc.h |  28 +++++---
+>  mm/vmalloc.c            | 144 +++++++++++++++++++++++++++-------------
+>  2 files changed, 117 insertions(+), 55 deletions(-)
+> 
+> -- 
+> 2.21.0
+
 -- 
-1.9.1
-
+Michal Hocko
+SUSE Labs
