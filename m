@@ -2,213 +2,112 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27984C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A719C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065552089C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B632089C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 11:43:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fGzO/KE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbfGALlX (ORCPT
+        id S1728571AbfGALnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 07:41:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47834 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbfGALlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 07:41:23 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EAFF230917AA;
-        Mon,  1 Jul 2019 11:41:07 +0000 (UTC)
-Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D3C6219732;
-        Mon,  1 Jul 2019 11:41:00 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 13:40:59 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
-        ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, brouer@redhat.com
-Subject: Re: [PATCH v5 net-next 1/6] xdp: allow same allocator usage
-Message-ID: <20190701134059.71757892@carbon>
-In-Reply-To: <20190630172348.5692-2-ivan.khoronzhuk@linaro.org>
-References: <20190630172348.5692-1-ivan.khoronzhuk@linaro.org>
-        <20190630172348.5692-2-ivan.khoronzhuk@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 01 Jul 2019 11:41:23 +0000 (UTC)
+        Mon, 1 Jul 2019 07:43:00 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33087 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbfGALnA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 07:43:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so13514770wru.0;
+        Mon, 01 Jul 2019 04:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=768bW+NBh3+M3cU3i7aWM2KWkFJQXIv+KDZnW0aUxDw=;
+        b=fGzO/KE1PbbBO3YoNBTkiFv/0lPAPJa3G3huWilN2bh+A3xomDymBTf4zszJ+u0cZ0
+         /S5oKrJuHTH6SakpJwUIWYQcbOtB7vEceOocdTcm2r/o7Kz4AxjT4UemrxQtpyy9JD+6
+         FiUwDnLdoxK60gHOCvP2AkR0zaDZkgSdGO/16LODcKc/yQOPc1oR7ZSjJgGiB2R+tf5w
+         k5YvWHfxNUbmrs0i+gQLcNUWpsVI0IZ7Uq+lDSLEGtSiq9liZZ/WWOjnDXztzrQT1TyR
+         mzcJK6kvBKNS4KMQQVUase2Q3XiwXxWdkSLI25unSrJYj7tgAnUph5CaCvRL91G1qie3
+         stug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=768bW+NBh3+M3cU3i7aWM2KWkFJQXIv+KDZnW0aUxDw=;
+        b=mOq+mf1avmmFUubXBVOlY1UCvm7mJS3MM6MIJqTtR1zjHACijz9RhX8cB9plWiHYTE
+         7vg9Fq17KBHjTp5SUaFIFysMqnrl1vTAnzbLrxwkutmZ1+vQb/kHHt3iE/jmLZcxw+pq
+         Ll81JH4KEkcKkQiIVppdzBoFas/s2DOlv43aD/Bvxos8W2O47V405oanqm/8VIfLiEwE
+         zEX/eJYVCNp1qlOwu4FCbvZsCMp9mqOt6Jr9Hh/SHbajU8B7A83/AzvysSSEPPYnZzq4
+         0CWqudaAcP8HE0ANy20Ehps7T5w1cmj9FuEAo8yagKLoE6oT0VHr77L9jhCLdnXQpBnY
+         J6pw==
+X-Gm-Message-State: APjAAAXxuaX2rb34IluEwMkQKSHzAbjvCw+W1HTLX6iuc8bq3bX647FA
+        sOVZpms8gj5w8FD32LsfCOo=
+X-Google-Smtp-Source: APXvYqz97AjjKDd/aHt72illIwPvryzQx9js81DBV6FxfQtGr3jfKNEQRfUKkH6Iy5kVOpm/dxXJOA==
+X-Received: by 2002:a5d:6449:: with SMTP id d9mr871439wrw.192.1561981377568;
+        Mon, 01 Jul 2019 04:42:57 -0700 (PDT)
+Received: from localhost ([193.47.161.132])
+        by smtp.gmail.com with ESMTPSA id f12sm23658907wrg.5.2019.07.01.04.42.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 01 Jul 2019 04:42:56 -0700 (PDT)
+From:   Oliver Graute <oliver.graute@gmail.com>
+X-Google-Original-From: Oliver Graute <oliver.graute@kococonnector.com>
+To:     aisheng.dong@nxp.com
+Cc:     sboyd@kernel.org, mturquette@baylibre.com,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Sriram Dash <sriram.dash@nxp.com>,
+        Pramod Kumar <pramod.kumar_1@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCHv2 0/2] arm64: dts: add basic DTS for imx8qm-rom7720 board
+Date:   Mon,  1 Jul 2019 13:42:44 +0200
+Message-Id: <20190701114253.1538-1-oliver.graute@kococonnector.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset is ontop of Aisheng Dongs clock driver changes for the imx8qm
 
-I'm very skeptical about this approach.
+https://patchwork.kernel.org/cover/10824537/
 
-On Sun, 30 Jun 2019 20:23:43 +0300
-Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+This patchset is based on next-20190222
 
-> XDP rxqs can be same for ndevs running under same rx napi softirq.
-> But there is no ability to register same allocator for both rxqs,
-> by fact it can same rxq but has different ndev as a reference.
+I need information about the status of the integration of the imx8qm clock
+driver into mainline. Is this ongoing?
 
-This description is not very clear. It can easily be misunderstood.
+I need some hints why the imx8qm-rom7720 do NOT boot with the following
+changes. It stops at "Starting kernel ..."
 
-It is an absolute requirement that each RX-queue have their own
-page_pool object/allocator. (This where the performance comes from) as
-the page_pool have NAPI protected array for alloc and XDP_DROP recycle.
+Oliver Graute (2):
+  arm64: add gpio4 and gpio5 to basic DTS for i.MX8MQ
+  arm64: dts: add basic DTS for imx8qm-rom7720-a1 board
 
-Your driver/hardware seems to have special case, where a single
-RX-queue can receive packets for two different net_device'es.
-
-Do you violate this XDP devmap redirect assumption[1]?
-[1] https://github.com/torvalds/linux/blob/v5.2-rc7/kernel/bpf/devmap.c#L324-L329
-
-
-> Due to last changes allocator destroy can be defered till the moment
-> all packets are recycled by destination interface, afterwards it's
-> freed. In order to schedule allocator destroy only after all users are
-> unregistered, add refcnt to allocator object and schedule to destroy
-> only it reaches 0.
-
-The guiding principles when designing an API, is to make it easy to
-use, but also make it hard to misuse.
-
-Your API change makes it easy to misuse the API.  As it make it easy to
-(re)use the allocator pointer (likely page_pool) for multiple
-xdp_rxq_info structs.  It is only valid for your use-case, because you
-have hardware where a single RX-queue delivers to two different
-net_devices.  For other normal use-cases, this will be a violation.
-
-If I was a user of this API, and saw your xdp_allocator_get(), then I
-would assume that this was the normal case.  As minimum, we need to add
-a comment in the code, about this specific/intended use-case.  I
-through about detecting the misuse, by adding a queue_index to
-xdp_mem_allocator, that can be checked against, when calling
-xdp_rxq_info_reg_mem_model() with another xdp_rxq_info struct (to catch
-the obvious mistake where queue_index mismatch).
-
-
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> ---
->  include/net/xdp_priv.h |  1 +
->  net/core/xdp.c         | 46 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 47 insertions(+)
-> 
-> diff --git a/include/net/xdp_priv.h b/include/net/xdp_priv.h
-> index 6a8cba6ea79a..995b21da2f27 100644
-> --- a/include/net/xdp_priv.h
-> +++ b/include/net/xdp_priv.h
-> @@ -18,6 +18,7 @@ struct xdp_mem_allocator {
->  	struct rcu_head rcu;
->  	struct delayed_work defer_wq;
->  	unsigned long defer_warn;
-> +	unsigned long refcnt;
->  };
->  
->  #endif /* __LINUX_NET_XDP_PRIV_H__ */
-> diff --git a/net/core/xdp.c b/net/core/xdp.c
-> index b29d7b513a18..a44621190fdc 100644
-> --- a/net/core/xdp.c
-> +++ b/net/core/xdp.c
-> @@ -98,6 +98,18 @@ bool __mem_id_disconnect(int id, bool force)
->  		WARN(1, "Request remove non-existing id(%d), driver bug?", id);
->  		return true;
->  	}
-> +
-> +	/* to avoid calling hash lookup twice, decrement refcnt here till it
-> +	 * reaches zero, then it can be called from workqueue afterwards.
-> +	 */
-> +	if (xa->refcnt)
-> +		xa->refcnt--;
-> +
-> +	if (xa->refcnt) {
-> +		mutex_unlock(&mem_id_lock);
-> +		return true;
-> +	}
-> +
->  	xa->disconnect_cnt++;
->  
->  	/* Detects in-flight packet-pages for page_pool */
-> @@ -312,6 +324,33 @@ static bool __is_supported_mem_type(enum xdp_mem_type type)
->  	return true;
->  }
->  
-> +static struct xdp_mem_allocator *xdp_allocator_get(void *allocator)
-
-API wise, when you have "get" operation, you usually also have a "put"
-operation...
-
-> +{
-> +	struct xdp_mem_allocator *xae, *xa = NULL;
-> +	struct rhashtable_iter iter;
-> +
-> +	mutex_lock(&mem_id_lock);
-> +	rhashtable_walk_enter(mem_id_ht, &iter);
-> +	do {
-> +		rhashtable_walk_start(&iter);
-> +
-> +		while ((xae = rhashtable_walk_next(&iter)) && !IS_ERR(xae)) {
-> +			if (xae->allocator == allocator) {
-> +				xae->refcnt++;
-> +				xa = xae;
-> +				break;
-> +			}
-> +		}
-> +
-> +		rhashtable_walk_stop(&iter);
-> +
-> +	} while (xae == ERR_PTR(-EAGAIN));
-> +	rhashtable_walk_exit(&iter);
-> +	mutex_unlock(&mem_id_lock);
-> +
-> +	return xa;
-> +}
-> +
->  int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
->  			       enum xdp_mem_type type, void *allocator)
->  {
-> @@ -347,6 +386,12 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
->  		}
->  	}
->  
-> +	xdp_alloc = xdp_allocator_get(allocator);
-> +	if (xdp_alloc) {
-> +		xdp_rxq->mem.id = xdp_alloc->mem.id;
-> +		return 0;
-> +	}
-> +
-
-The allocator pointer (in-practice) becomes the identifier for the
-mem.id (which rhashtable points to xdp_mem_allocator object).
-
-
->  	xdp_alloc = kzalloc(sizeof(*xdp_alloc), gfp);
->  	if (!xdp_alloc)
->  		return -ENOMEM;
-> @@ -360,6 +405,7 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
->  	xdp_rxq->mem.id = id;
->  	xdp_alloc->mem  = xdp_rxq->mem;
->  	xdp_alloc->allocator = allocator;
-> +	xdp_alloc->refcnt = 1;
->  
->  	/* Insert allocator into ID lookup table */
->  	ptr = rhashtable_insert_slow(mem_id_ht, &id, &xdp_alloc->node);
-
-
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/imx8qm-rom7720-a1.dts  | 221 ++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8qm.dtsi     |  19 ++
+ 3 files changed, 241 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
 
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+2.17.1
+
