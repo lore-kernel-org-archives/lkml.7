@@ -2,135 +2,154 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671A5C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BDFC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCF121721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:55:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ANePV6iG"
+	by mail.kernel.org (Postfix) with ESMTP id 8237621721
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:55:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbfGANzG (ORCPT
+        id S1729221AbfGANz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 09:55:06 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34929 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727536AbfGANzG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 09:55:06 -0400
-Received: by mail-lj1-f196.google.com with SMTP id x25so13325096ljh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 06:55:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GDqlS+iTEVHotTd99IcnQ2mj3jUGLi7G64t1i3CAPUM=;
-        b=ANePV6iGdESy7GaaZwaMRe543+rV4IinPY75cCZGjtlCHn2KEBA+sQiXngBae9Fx2k
-         z4xN6FEReyFt8TCKbnnOvMuNbGAZ0b51/zy4uAcibk+NxuFA9hcSU5pcAk5xOZUMWV+2
-         o8UwPbL8ydAm+etpVjqRVFqxopJpiwSzCg5ZQx1e5NLlwNjjCg71Fy298T5wES+atB7V
-         KXvMaw4cKEILd+e5dfjlzRIeq8Pv+kijFr8QPGng0ZtDRMtfsEin32kJA3/mFi00CRJW
-         fW61HBWjgSY8YXoTc0bsMmevvMBuvzUzEa081bGDGQ7tKu9qYvAaigfRbaTw8alGR/2V
-         +/UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GDqlS+iTEVHotTd99IcnQ2mj3jUGLi7G64t1i3CAPUM=;
-        b=c2XTi+nrNHGxO/x1RNg6yMuDP3zMJDE/5PWgentmJvnLcCmze0E8YZ46AVoZ652rBm
-         TfsNSzN0+cGtk8afyRxkMNN//fORGGfcHNW9wJTNgujPT4r7Jdj3WpKyZYLUWl0Y+DAW
-         cmCdMnL7kjnN9w2AOBmmVAcwVmr+gvsVYfIoUhwRPCsuGMA5PWrbTRoET5AakSergurn
-         fOMh0DBrNkpE8CRisk6Ymtd4N3ykVAcY+2bbGHqAt6GgzREa6C6Cq+scTqIj6s37jgai
-         vDva+1ZfDgviSBDfHLAKn4BLl29lDv/XdvrJiPLgemOyBqGJoU/2kN41cw08GAmK8awm
-         d3IQ==
-X-Gm-Message-State: APjAAAX3pX7WxD/BByYV1pMOyC43cBQI6KR4533wDeP34CDB29lCTV6w
-        mbdvTrXeI5CDagKoqsOXRdiZ69bBt2I=
-X-Google-Smtp-Source: APXvYqwlEhzuDfkZtWLw6k6i4EtwipJ+2QR5CjUOBwdS66jnC+HePX9Zt7SgUdP+w9Errj27tFVyZQ==
-X-Received: by 2002:a2e:9cd4:: with SMTP id g20mr12509939ljj.205.1561989304568;
-        Mon, 01 Jul 2019 06:55:04 -0700 (PDT)
-Received: from [192.168.27.209] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id l25sm3221678lja.76.2019.07.01.06.55.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 06:55:03 -0700 (PDT)
-Subject: Re: [PATCH v3 3/4] media: venus: Add interface for load per core
-To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org
-References: <1561480044-11834-1-git-send-email-amasule@codeaurora.org>
- <1561480044-11834-4-git-send-email-amasule@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <87d41362-d86f-8da4-30ca-06390c9ceeff@linaro.org>
-Date:   Mon, 1 Jul 2019 16:55:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Mon, 1 Jul 2019 09:55:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:35482 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727736AbfGANz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 09:55:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E40F3344;
+        Mon,  1 Jul 2019 06:55:56 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 066623F246;
+        Mon,  1 Jul 2019 06:55:54 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 14:55:52 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     subhra mazumdar <subhra.mazumdar@oracle.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, Paul Turner <pjt@google.com>,
+        riel@surriel.com, morten.rasmussen@arm.com
+Subject: Re: [RESEND PATCH v3 0/7] Improve scheduler scalability for fast path
+Message-ID: <20190701135552.kb4os6bxxhh2lyw6@e110439-lin>
+References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
+ <20190701090204.GQ3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <1561480044-11834-4-git-send-email-amasule@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701090204.GQ3402@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aniket,
-
-On 6/25/19 7:27 PM, Aniket Masule wrote:
-> Add and interface to calculate load per core. Also,
-> add an interface to get maximum cores available with
-> video. This interface is preparation for updating core
-> selection.
+On 01-Jul 11:02, Peter Zijlstra wrote:
+> On Wed, Jun 26, 2019 at 06:29:12PM -0700, subhra mazumdar wrote:
+> > Hi,
+> > 
+> > Resending this patchset, will be good to get some feedback. Any suggestions
+> > that will make it more acceptable are welcome. We have been shipping this
+> > with Unbreakable Enterprise Kernel in Oracle Linux.
+> > 
+> > Current select_idle_sibling first tries to find a fully idle core using
+> > select_idle_core which can potentially search all cores and if it fails it
+> > finds any idle cpu using select_idle_cpu. select_idle_cpu can potentially
+> > search all cpus in the llc domain. This doesn't scale for large llc domains
+> > and will only get worse with more cores in future.
+> > 
+> > This patch solves the scalability problem by:
+> >  - Setting an upper and lower limit of idle cpu search in select_idle_cpu
+> >    to keep search time low and constant
+> >  - Adding a new sched feature SIS_CORE to disable select_idle_core
+> > 
+> > Additionally it also introduces a new per-cpu variable next_cpu to track
+> > the limit of search so that every time search starts from where it ended.
+> > This rotating search window over cpus in LLC domain ensures that idle
+> > cpus are eventually found in case of high load.
 > 
-> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-> ---
->  drivers/media/platform/qcom/venus/helpers.c    | 19 +++++++++++++++++++
->  drivers/media/platform/qcom/venus/hfi_helper.h |  1 +
->  drivers/media/platform/qcom/venus/hfi_parser.h |  5 +++++
->  3 files changed, 25 insertions(+)
+> Right, so we had a wee conversation about this patch series at OSPM, and
+> I don't see any of that reflected here :-(
 > 
-> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-> index e1a0247..b79e83a 100644
-> --- a/drivers/media/platform/qcom/venus/helpers.c
-> +++ b/drivers/media/platform/qcom/venus/helpers.c
-> @@ -26,6 +26,7 @@
->  #include "helpers.h"
->  #include "hfi_helper.h"
->  #include "hfi_venus_io.h"
-> +#include "hfi_parser.h"
->  
->  struct intbuf {
->  	struct list_head list;
-> @@ -331,6 +332,24 @@ static u32 load_per_instance(struct venus_inst *inst)
->  	return mbs * inst->fps;
->  }
->  
-> +static u32 load_per_core(struct venus_core *core, u32 core_id)
-> +{
-> +	struct venus_inst *inst = NULL;
-> +	u32 mbs_per_sec = 0, load = 0;
-> +
-> +	mutex_lock(&core->lock);
-> +	list_for_each_entry(inst, &core->instances, list) {
-> +		if (!(inst->clk_data.core_id == core_id))
-> +			continue;
-> +
-> +		mbs_per_sec = load_per_instance(inst);
-> +		load = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
-> +	}
-> +	mutex_unlock(&core->lock);
-> +
-> +	return load;
-> +}
-> +
+> Specifically, given that some people _really_ want the whole L3 mask
+> scanned to reduce tail latency over raw throughput, while you guys
+> prefer the other way around, it was proposed to extend the task model.
+> 
+> Specifically something like a latency-nice was mentioned (IIRC) where a
 
-Please squash this patch with the next one where load_per_core() is used
-to avoid compiler warnings.
+Right, AFAIR PaulT suggested to add support for the concept of a task
+being "latency tolerant": meaning we can spend more time to search for
+a CPU and/or avoid preempting the current task.
+
+> task can give a bias but not specify specific behaviour. This is very
+> important since we don't want to be ABI tied to specific behaviour.
+
+I like the idea of biasing, especially considering we are still in the
+domain of the FAIR scheduler. If something more mandatory should be
+required there are other classes which are likely more appropriate.
+
+> Some of the things we could tie to this would be:
+> 
+>   - select_idle_siblings; -nice would scan more than +nice,
+
+Just to be sure, you are not proposing to use the nice value we
+already have, i.e.
+  p->{static,normal}_prio
+but instead a new similar concept, right?
+
+Otherwise, pros would be we don't touch userspace, but as a cons we
+would have side effects, i.e. bandwidth allocation.
+While I think we don't want to mix "specific behaviors" with "biases".
+
+>   - wakeup preemption; when the wakee has a relative smaller
+>     latency-nice value than the current running task, it might preempt
+>     sooner and the other way around of course.
+
+I think we currently have a single system-wide parameter for that now:
+
+   sched_wakeup_granularity_ns ==> sysctl_sched_min_granularity
+
+which is used in:
+
+   wakeup_gran()                for the wakeup path
+   check_preempt_tick()         for the periodic tick
+
+that's where it should be possible to extend the heuristics with some
+biasing based on the latency-nice attribute of a task, right?
+
+>   - pack-vs-spread; +nice would pack more with like tasks (since we
+>     already spread by default [0] I don't think -nice would affect much
+>     here).
+
+That will be very useful for the Android case too.
+In Android we used to call it "prefer_idle", but that's probably not
+the best name, conceptually similar however.
+
+In Android we would use a latency-nice concept to go for either the
+fast (select_idle_siblings) or the slow (energy aware) path.
+
+> Hmmm?
+
+Just one more requirement I think it's worth to consider since the
+beginning: CGroups support
+
+That would be very welcome interface. Just because is so much more
+convenient (and safe) to set these bias on a group of tasks depending
+on their role in the system.
+
+Do you have any idea on how we can expose such a "lantency-nice"
+property via CGroups? It's very similar to cpu.shares but it does not
+represent a resource which can be partitioned.
+
+Best,
+Patrick
 
 -- 
-regards,
-Stan
+#include <best/regards.h>
+
+Patrick Bellasi
