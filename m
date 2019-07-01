@@ -2,143 +2,80 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B5BC06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964A5C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9582146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 690342173C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561986388;
+	bh=0X0xr4A7yYrG88nxD8R2S/Y/4CZFGGbMeK7o6zhraFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=plODVEoSqKttGUXhBd2n4pg617gRwgp46bzPTrznQ4T9JbnO60q6laQDrcj8XApti
+	 Bh71GNwLF7JQ1oUYHc9A1U2REq7wjqHurfnldWxrFYJtL9d+nS87jihGIfcPGXCx40
+	 4Z6JSVUEdMvaZVmjtLNyxcsIvdighTOuw/bD/B9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfGANFV (ORCPT
+        id S1728239AbfGANG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 09:05:21 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49366 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGANFU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 09:05:20 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 4CFB326394C
-Subject: Re: [PATCH v3 1/1] iio: common: cros_ec_sensors: determine protocol
- version
-To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Cc:     gwendal@chromium.org, egranata@chromium.org, kernel@collabora.com,
-        Nick Vaccaro <nvaccaro@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1561968653.git.fabien.lahoudere@collabora.com>
- <e74cb88645a02a3e84445b0567d72e8b90f18335.1561968653.git.fabien.lahoudere@collabora.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <22f8d62a-b36e-fd96-cb6d-ddac642b34a6@collabora.com>
-Date:   Mon, 1 Jul 2019 15:05:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 1 Jul 2019 09:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55864 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfGANG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 09:06:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B5E82173C;
+        Mon,  1 Jul 2019 13:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561986386;
+        bh=0X0xr4A7yYrG88nxD8R2S/Y/4CZFGGbMeK7o6zhraFw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fq5iKGr574swSgHzgPoMk3E/2hgbWtd2u/3USny8p5dKiUWJditre/gmizKGMOhaX
+         3w0xeQTmuE2MqBYWIkmCeyJmOWU2DHQaV4r6RshKTvh0K9ukMv8KwMwWPjsVHn6YKB
+         2VijRdELCMEmYpow2KNWfnfL2zj1CeDBN7z3ruZw=
+Date:   Mon, 1 Jul 2019 15:05:56 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] PHY: For 5.3
+Message-ID: <20190701130556.GA14021@kroah.com>
+References: <20190701103001.21235-1-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <e74cb88645a02a3e84445b0567d72e8b90f18335.1561968653.git.fabien.lahoudere@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701103001.21235-1-kishon@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/7/19 10:14, Fabien Lahoudere wrote:
-> This patch adds a function to determine which version of the
-> protocol is used to communicate with EC.
+On Mon, Jul 01, 2019 at 04:00:01PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Greg,
 > 
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
-> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> Tested-by: Gwendal Grignou <gwendal@chromium.org>
-
-For my own reference and for if the patch ends going through the platform-chrome
-tree:
-
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-Just need the ack and the ok from Jonathan.
-
-Thanks,
-~ Enric
-
-
-> ---
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 36 ++++++++++++++++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
+> Please find the pull request for 5.3 merge window below. It adds couple
+> of new PHY drivers and other misc driver fixes. Please see the tag message
+> for complete list of changes.
 > 
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 130362ca421b..2e0f97448e64 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -25,6 +25,31 @@ static char *cros_ec_loc[] = {
->  	[MOTIONSENSE_LOC_MAX] = "unknown",
->  };
->  
-> +static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
-> +					     u16 cmd_offset, u16 cmd, u32 *mask)
-> +{
-> +	int ret;
-> +	struct {
-> +		struct cros_ec_command msg;
-> +		union {
-> +			struct ec_params_get_cmd_versions params;
-> +			struct ec_response_get_cmd_versions resp;
-> +		};
-> +	} __packed buf = {
-> +		.msg = {
-> +			.command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
-> +			.insize = sizeof(struct ec_response_get_cmd_versions),
-> +			.outsize = sizeof(struct ec_params_get_cmd_versions)
-> +			},
-> +		.params = {.cmd = cmd}
-> +	};
-> +
-> +	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-> +	if (ret >= 0)
-> +		*mask = buf.resp.version_mask;
-> +	return ret;
-> +}
-> +
->  int cros_ec_sensors_core_init(struct platform_device *pdev,
->  			      struct iio_dev *indio_dev,
->  			      bool physical_device)
-> @@ -33,6 +58,8 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
->  	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
->  	struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
-> +	u32 ver_mask;
-> +	int ret;
->  
->  	platform_set_drvdata(pdev, indio_dev);
->  
-> @@ -47,8 +74,15 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  
->  	mutex_init(&state->cmd_lock);
->  
-> +	ret = cros_ec_get_host_cmd_version_mask(state->ec,
-> +						ec->cmd_offset,
-> +						EC_CMD_MOTION_SENSE_CMD,
-> +						&ver_mask);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	/* Set up the host command structure. */
-> -	state->msg->version = 2;
-> +	state->msg->version = fls(ver_mask) - 1;;
->  	state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
->  	state->msg->outsize = sizeof(struct ec_params_motion_sense);
->  
+> Let me know if I have to change something.
 > 
+> Thanks
+> Kishon
+> 
+> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+> 
+>   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.3
+
+Now pulled and pushed out, thanks.
+
+greg k-h
