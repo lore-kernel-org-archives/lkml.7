@@ -2,256 +2,150 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880E3C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC26C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60BF0214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6427B20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:45:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DJ3zwEyE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="x/SdHBcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbfGAPpY (ORCPT
+        id S1729896AbfGAPpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:45:24 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41222 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727373AbfGAPpX (ORCPT
+        Mon, 1 Jul 2019 11:45:55 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38790 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727373AbfGAPpy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:45:23 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 136so9117106lfa.8
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 08:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ImGPcfrTaxEgEgkx65mt0ofrgVu0PRsPNy18Ds0mkaY=;
-        b=DJ3zwEyEiuc0ibdOqvlPD77n0POZywfOmkhuiKrjmpUkv/CUdB7OAvyi8F3WIrr9c7
-         1XJXiToXr0WVG76FIprtNBZJQ7Oosvjrx2NseXQUdzeXBJZB27n9fHUyYdCjMQeZEwhI
-         3pNdNprHm0a4E/6PNk0Jq2BUeph/Qyy4zcT4sF15duqYle1Vm8DzD6FtfD+P4cMRVRG8
-         VhTyZCy5xt1rJu5kcV/bE0bZrDYsRMnCEZpNp2sl5GhB3MkqcCQvZ8jL2wL/xKsp/bFx
-         volPESdFR5/agT5n5MRrBlXQxL1FFXCaqiVUhUgeBokXm2SqtZwROS/LfBtUavelQ+SO
-         c+FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ImGPcfrTaxEgEgkx65mt0ofrgVu0PRsPNy18Ds0mkaY=;
-        b=CTKIFWVXZoxWd7JnKHrIka/EZCchkuimne9d1kcjsYLrkFqn1P3kbyj/+E18z/kvZJ
-         /DpMnIuUs8lmsw/qw5PyKZd+ynmm4s3PsiIL+Lym8QNXdj39JId9gDHxeGVVw58gGH5c
-         rZglGgQc9+KPIya4apgmMMFlbQRl0GYJhw7GU21gH71fQtGzJatWt75WW9mYTZB+IMu8
-         hKCwlw7bwpQLjy9g9aUwhp1B9uUljpGrij3nzPu0L9gyBBFJsPbKbdC8VnFc5afLRhyZ
-         wDd16l3nAKzPjcTtOT46VfNPgROMOjZIEbjzuWrw8lkPdzypIvt0Vlk5ZufXwZpceUCC
-         L2yw==
-X-Gm-Message-State: APjAAAVe9MMkXgqgdqM3v7XQAU7JRDoMuKbkKrxshcoCcuovOcEiGbrS
-        q51SV200ypZ6I/SCn7q4L/r+lA==
-X-Google-Smtp-Source: APXvYqzk0XOCZg21kyRORRVSjb0/8YorIcCUA+32A0b0dNQUMjDUYn6pNRk78iQwOuVc652c8JW+rg==
-X-Received: by 2002:ac2:4a6e:: with SMTP id q14mr12179312lfp.154.1561995921133;
-        Mon, 01 Jul 2019 08:45:21 -0700 (PDT)
-Received: from [192.168.27.209] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id d4sm2609795lfi.91.2019.07.01.08.45.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 08:45:20 -0700 (PDT)
-Subject: Re: [PATCH] media: venus: Update to bitrate based clock scaling
-To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org
-References: <1561537416-2067-1-git-send-email-amasule@codeaurora.org>
- <1561537416-2067-2-git-send-email-amasule@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <00818fe7-95e6-b43f-fca8-c4669ffad947@linaro.org>
-Date:   Mon, 1 Jul 2019 18:45:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Mon, 1 Jul 2019 11:45:54 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61Fd1eX135390;
+        Mon, 1 Jul 2019 15:44:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=pYgOiYG9niz5w5j2Xs2uAj2RGhsP9dEqiFiqy+v2SHk=;
+ b=x/SdHBcYO8s8zWcphUBtW0vaxMhmfi55Tc3O1uqVw5wFQoSV0TdcaQrd5DCa4/j3leVl
+ afbReE/QG5U9d5RMDtBeMdXqUXH0ZjmvMBZR4Bqmxg/kAljEVFLfyeY/NtPkYHmHYr9X
+ LYGxft84ZgeBGOpFpDLQVRFORBGkrIKz998fNMkSDSFhU9OkEimNW4ZMMNbmgLHWe6Wa
+ H32awHJIcTvxMIApJV/pr3XFucA4iWiPO5eUtLjVkO8Vi1P6W9rEo/9vB6C/HmqfVy1z
+ wSoSDGjT9hh0PbsVNlgPWgfY33Zl0N02nGKztDfgCPOv1W9YyXHHcQeRRazJE5zmpoPz vg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2te61ppf40-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 15:44:09 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x61FcFES032310;
+        Mon, 1 Jul 2019 15:42:09 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2tebbj8db7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 01 Jul 2019 15:42:09 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x61Fg9hp040678;
+        Mon, 1 Jul 2019 15:42:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2tebbj8dap-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jul 2019 15:42:09 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x61Fg3SU026276;
+        Mon, 1 Jul 2019 15:42:04 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 01 Jul 2019 08:42:02 -0700
+Date:   Mon, 1 Jul 2019 08:42:00 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        ard.biesheuvel@linaro.org, josef@toxicpanda.com, hch@infradead.org,
+        clm@fb.com, adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk,
+        jack@suse.com, dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org
+Cc:     reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: [PATCH v2 4/4] vfs: don't allow most setxattr to immutable files
+Message-ID: <20190701154200.GK1404256@magnolia>
+References: <156174687561.1557469.7505651950825460767.stgit@magnolia>
+ <156174690758.1557469.9258105121276292687.stgit@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <1561537416-2067-2-git-send-email-amasule@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156174690758.1557469.9258105121276292687.stgit@magnolia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=991 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907010188
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aniket,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-On 6/26/19 11:23 AM, Aniket Masule wrote:
-> Introduced clock scaling using bitrate, current
-> calculations consider only the cycles per mb.
-> Also, clock scaling is now triggered before every
-> buffer being queued to the device. This helps in
-> deciding precise clock cycles required.
-> 
-> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-> ---
->  drivers/media/platform/qcom/venus/core.c    | 16 +++++------
->  drivers/media/platform/qcom/venus/core.h    |  1 +
->  drivers/media/platform/qcom/venus/helpers.c | 43 +++++++++++++++++++++++++----
->  3 files changed, 47 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-> index f1597d6..ad6bb74 100644
-> --- a/drivers/media/platform/qcom/venus/core.c
-> +++ b/drivers/media/platform/qcom/venus/core.c
-> @@ -474,14 +474,14 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
->  };
->  
->  static struct codec_freq_data sdm845_codec_freq_data[] =  {
-> -	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675 },
-> -	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675 },
-> -	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675 },
-> -	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200 },
-> -	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200 },
-> -	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200 },
-> -	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200 },
-> -	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200 },
-> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
-> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
-> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
-> +	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
-> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
-> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
-> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
-> +	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
->  };
->  
->  static const struct venus_resources sdm845_res = {
-> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-> index 2ed6496..b964b7c 100644
-> --- a/drivers/media/platform/qcom/venus/core.h
-> +++ b/drivers/media/platform/qcom/venus/core.h
-> @@ -39,6 +39,7 @@ struct codec_freq_data {
->  	u32 pixfmt;
->  	u32 session_type;
->  	unsigned int vpp_freq;
-> +	unsigned int vsp_freq;
+The chattr manpage has this to say about immutable files:
 
-unsigned long?
+"A file with the 'i' attribute cannot be modified: it cannot be deleted
+or renamed, no link can be created to this file, most of the file's
+metadata can not be modified, and the file can not be opened in write
+mode."
 
->  };
->  
->  struct venus_resources {
-> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-> index ef35fd8..634778a 100644
-> --- a/drivers/media/platform/qcom/venus/helpers.c
-> +++ b/drivers/media/platform/qcom/venus/helpers.c
-> @@ -379,6 +379,9 @@ static int scale_clocks(struct venus_inst *inst)
->  	unsigned int i;
->  	int ret;
->  
-> +	if (inst->state == INST_START)
-> +		return 0;
+However, we don't actually check the immutable flag in the setattr code,
+which means that we can update inode flags and project ids and extent
+size hints on supposedly immutable files.  Therefore, reject setflags
+and fssetxattr calls on an immutable file if the file is immutable and
+will remain that way.
 
-This condition is related (probably) to the change in
-venus_helper_vb2_buf_queue() but shouldn't it be copied in
-scale_clocks_v4 too?
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+v2: use memcmp instead of open coding a bunch of checks
+---
+ fs/inode.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-> +
->  	mbs_per_sec = load_per_type(core, VIDC_SESSION_TYPE_ENC) +
->  		      load_per_type(core, VIDC_SESSION_TYPE_DEC);
->  
-> @@ -418,17 +421,26 @@ static int scale_clocks(struct venus_inst *inst)
->  	return ret;
->  }
->  
-> -static unsigned long calculate_vpp_freq(struct venus_inst *inst)
-> +static unsigned long calculate_inst_freq(struct venus_inst *inst,
-> +					 unsigned long filled_len)
->  {
-> -	unsigned long vpp_freq = 0;
-> +	unsigned long vpp_freq = 0, vsp_freq = 0;
-> +	u64 fps = inst->fps;
->  	u32 mbs_per_sec;
->  
->  	mbs_per_sec = load_per_instance(inst);
->  	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
->  	/* 21 / 20 is overhead factor */
->  	vpp_freq += vpp_freq / 20;
-> +	vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vsp_freq;
-
-this calculation is not used below. Is that intentional?
-
-> +
-> +	/* 10 / 7 is overhead factor */
-> +	if (inst->session_type == VIDC_SESSION_TYPE_ENC)
-> +		vsp_freq = (inst->controls.enc.bitrate * 10) / 7;
-> +	else
-> +		vsp_freq = ((fps * filled_len * 8) * 10) / 7;
->  
-> -	return vpp_freq;
-> +	return max(vpp_freq, vsp_freq);
->  }
->  
->  static int scale_clocks_v4(struct venus_inst *inst)
-> @@ -436,14 +448,30 @@ static int scale_clocks_v4(struct venus_inst *inst)
->  	struct venus_core *core = inst->core;
->  	const struct freq_tbl *table = core->res->freq_tbl;
->  	unsigned int num_rows = core->res->freq_tbl_size;
-> -
-> +	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
->  	struct clk *clk = core->clks[0];
->  	struct device *dev = core->dev;
-> +
-
-drop this addition of blank line.
-
->  	unsigned int i;
->  	unsigned long freq = 0, freq_core0 = 0, freq_core1 = 0;
-> +	unsigned long filled_len = 0;
-> +	struct venus_buffer *buf, *n;
-> +	struct vb2_buffer *vb;
->  	int ret;
->  
-> -	freq = calculate_vpp_freq(inst);
-> +	mutex_lock(&inst->lock);
-> +	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
-> +		vb = &buf->vb.vb2_buf;
-> +		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
-> +	}
-> +	mutex_unlock(&inst->lock);
-> +
-> +	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len) {
-> +		dev_dbg(dev, "%s: No input to the session\n", __func__);
-
-please drop this debug message, if the user pushes empty buffers
-something will blow up earlier.
-
-> +		return 0;
-> +	}
-> +
-> +	freq = calculate_inst_freq(inst, filled_len);
->  
->  	if (freq > table[0].freq)
->  		goto err;
-> @@ -471,6 +499,9 @@ static int scale_clocks_v4(struct venus_inst *inst)
->  
->  	freq = max(freq_core0, freq_core1);
->  
-> +	if (clk_get_rate(clk) == freq)
-> +		return 0;
-> +
-
-above check is included in clk_set_rate(), you don't need it.
-
->  	ret = clk_set_rate(clk, freq);
->  	if (ret)
->  		goto err;
-> @@ -1150,6 +1181,8 @@ void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
->  	if (ret)
->  		goto unlock;
->  
-> +	load_scale_clocks(inst);
-> +
->  	ret = session_process_buf(inst, vbuf);
->  	if (ret)
->  		return_buf_error(inst, vbuf);
-> 
-
--- 
-regards,
-Stan
+diff --git a/fs/inode.c b/fs/inode.c
+index cf07378e5731..31f694e405fe 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -2214,6 +2214,14 @@ int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
+ 	    !capable(CAP_LINUX_IMMUTABLE))
+ 		return -EPERM;
+ 
++	/*
++	 * We aren't allowed to change any other flags if the immutable flag is
++	 * already set and is not being unset.
++	 */
++	if ((oldflags & FS_IMMUTABLE_FL) && (flags & FS_IMMUTABLE_FL) &&
++	    oldflags != flags)
++		return -EPERM;
++
+ 	/*
+ 	 * Now that we're done checking the new flags, flush all pending IO and
+ 	 * dirty mappings before setting S_IMMUTABLE on an inode via
+@@ -2284,6 +2292,15 @@ int vfs_ioc_fssetxattr_check(struct inode *inode, const struct fsxattr *old_fa,
+ 	    !(S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode)))
+ 		return -EINVAL;
+ 
++	/*
++	 * We aren't allowed to change any fields if the immutable flag is
++	 * already set and is not being unset.
++	 */
++	if ((old_fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
++	    (fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
++	    memcmp(fa, old_fa, offsetof(struct fsxattr, fsx_pad)))
++		return -EPERM;
++
+ 	/* Extent size hints of zero turn off the flags. */
+ 	if (fa->fsx_extsize == 0)
+ 		fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
