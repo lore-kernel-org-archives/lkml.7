@@ -2,147 +2,144 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C5BC06508
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E36C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E972145D
+	by mail.kernel.org (Postfix) with ESMTP id AC9C62146E
 	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 01:27:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KeerZoGr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfGABWO (ORCPT
+        id S1727149AbfGABYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 21:22:14 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7376 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726040AbfGABWO (ORCPT
+        Sun, 30 Jun 2019 21:24:42 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:25877 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfGABYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 21:22:14 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x611Lpoj092066
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 21:22:12 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tf6h5u6ty-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 21:22:12 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Mon, 1 Jul 2019 02:22:11 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Jul 2019 02:22:08 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x611M7fK56492262
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 01:22:07 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C580B4203F;
-        Mon,  1 Jul 2019 01:22:07 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7190D42049;
-        Mon,  1 Jul 2019 01:22:07 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Jul 2019 01:22:07 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2FDB1A0194;
-        Mon,  1 Jul 2019 11:22:06 +1000 (AEST)
-Subject: Re: [PATCH 22/39] docs: ocxl.rst: add it to the uAPI book
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
- <ee63ec4412f2f8c87da877f67f693f2cd85c1a37.1561724493.git.mchehab+samsung@kernel.org>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Mon, 1 Jul 2019 11:21:58 +1000
+        Sun, 30 Jun 2019 21:24:41 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190701012438epoutp02fc8e5260dc3a6353bc9128f3cd20f5fa~tJAvMMQaK0782207822epoutp02d
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2019 01:24:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190701012438epoutp02fc8e5260dc3a6353bc9128f3cd20f5fa~tJAvMMQaK0782207822epoutp02d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561944278;
+        bh=LTF7GLbOV/sLEYbnK81j+o/pFOF7izsWGUeXSMtoTXc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=KeerZoGrmvh2q1P/XwAK10Rl9TOsyCk090dYNLb2iwtFXu8VXG3Jmwk8AmXmvPExU
+         Sg6I/jLe14Au0lsDE/7kab4ImKXTFNhTkqMBerpRO85zHsZ2D8q6rWk1E9g8CdzpIz
+         K/M7owwUg03gfT5g1TJnvd9f9zSRpQlEggZFJtnM=
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.153]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190701012436epcas1p44a606629cb7d52c81ddb8c416e7eb701~tJAs4ynGz2703727037epcas1p4w;
+        Mon,  1 Jul 2019 01:24:36 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B2.58.04139.FC0691D5; Mon,  1 Jul 2019 10:24:31 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190701012430epcas1p4b40cec12a0797f691166877670995ec9~tJAnuAHuT2009720097epcas1p4h;
+        Mon,  1 Jul 2019 01:24:30 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190701012430epsmtrp10007494aeceabc6d075eadf6881bcf78~tJAntR2Hw0366303663epsmtrp1D;
+        Mon,  1 Jul 2019 01:24:30 +0000 (GMT)
+X-AuditID: b6c32a35-973ff7000000102b-e3-5d1960cfac05
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E8.6C.03692.EC0691D5; Mon,  1 Jul 2019 10:24:30 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190701012430epsmtip27515a266b35faabd18d5638914427df6~tJAniEj1-1755717557epsmtip2I;
+        Mon,  1 Jul 2019 01:24:30 +0000 (GMT)
+Subject: Re: [PATCH] misc: fsa9480: Delete this driver
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <49002e6c-5c70-e70d-3eaa-618407cfd33b@samsung.com>
+Date:   Mon, 1 Jul 2019 10:27:16 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <ee63ec4412f2f8c87da877f67f693f2cd85c1a37.1561724493.git.mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070101-0028-0000-0000-0000037F25DE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070101-0029-0000-0000-0000243F590A
-Message-Id: <7ac03678-3395-cdcf-6401-7856da4287c7@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-30_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010016
+In-Reply-To: <20190630140302.16245-1-linus.walleij@linaro.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUwTURj09dhd0OpaQD8x0bL6QxuBLlAsKsYDTYMkknjGSOoGVkroZbcF
+        0UQbMXJo8KpGVgHjRcQDRVRAsbEggkZUsAYJxgPvxCMqalDUrluVf/PNm8m8ee8jpMpSLJzI
+        sjhYu4UxUViw7ELTZE3k7VVj0jQX3QrdwK4WXJd/uBrTuX9USnSdDQcw3bfrJdJZcv33/l1I
+        X88/xPU99y9jek/ZSVz/qWZcqnxF9gwjy2SwdhVrSbdmZFkyE6kFiwxzDdp4DR1JJ+imUioL
+        Y2YTqaSU1Mj5WSZ/OKXKYUxOP5XKcBwVPXOG3ep0sCqjlXMkUqwtw2RLsEVxjJlzWjKj0q3m
+        abRGE6P1C1dlGzsedchse/C1l18Md6E2eTEKIoCMg94nbXgxCiaUZB2Ck7WtcnH4iOBdYw8S
+        hy8IvANn/1lu9vRLxINGBJtdJTJxeI/Ad2OzRFCFkPFw79CmP45QshzBjm2OYkQQUnIO3DyX
+        JNAYqQbPqy5MwCPICPB960UCVpAzobndiwtyGTkRqvaZBDqMXA6dtQ0ByUhoK30mE3CQX36s
+        ZjsuYCk5GrqfVUhEPB7yz++XClcDsheDQ3dOS8QCSfDTtTWAQ+DN9VpcxOHwevuWAF4Px9ua
+        MdFciKDWcyfQPhY8R3dLxC6TobohWqQjoP57GRKDh8O7vm1yQQKkAgq3KEXJBOh8/DAQOwYO
+        FxRhOxDFD6rDD6rAD6rA/w87iGRVaBRr48yZLEfb6MF/XYP+rKVaW4fc7SleRBKIGqZw9UCa
+        Us7kcHlmLwJCSoUqypr8lCKDyVvH2q0Gu9PEcl6k9T/2Tml4WLrVv+QWh4HWxsTGxuri6Hgt
+        TVOjFYahD1YqyUzGwWazrI21//VJiKBwFxrycfayvIEod1f+hmTftbeff7nP8L767vgTS6qn
+        L2w/0Mc77z7eOPalqqxybB/5dPW8p3Ljzhj1pdD8hpTCgeBhIQWt/U9yj/NOX3NKUfmk560J
+        3UnrjnT/KtpbUTEF77hlyy3XL/3aUhJ8Sg5X0rvWpOrYD7fa867ylQXqKm2yZzEl44wMrZba
+        OeY3zbZGY6wDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42LZdlhJXvdcgmSswf/nuhZ/Jx1jt2hevJ7N
+        Ysqf5UwWl3fNYbP4cbyP2YHV4/evSYweO2fdZfe4c20Pm8f+uWvYPT5vkgtgjeKySUnNySxL
+        LdK3S+DKuHT/EkvBVPaKPc/4GhhPsnYxcnJICJhInL7zi6mLkYtDSGA3o8TGZfuZIRKSEtMu
+        HgWyOYBsYYnDh4tBwkICbxkl7p0MALGFBcwkrixqYgXpFRGYxyhxd/tZFpB6ZgEnidObXSBm
+        TmSU+HHxICNIA5uAlsT+FzfYQGx+AUWJqz8eg8V5Bewkjpw7xA7SyyKgIrFqRg5IWFQgQqKv
+        bTYbRImgxMmZT1hAbE6g8mWb+tlBbGYBdYk/8y4xQ9jiEreezGeCsOUlmrfOZp7AKDwLSfss
+        JC2zkLTMQtKygJFlFaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcNRoae5gvLwk/hCj
+        AAejEg9vwx2JWCHWxLLiytxDjBIczEoivHMPA4V4UxIrq1KL8uOLSnNSiw8xSnOwKInzPs07
+        FikkkJ5YkpqdmlqQWgSTZeLglGpgVBKzM+U+u/YIkyXLrYVbV66vi3hv0vLql/p2g6sc5xUW
+        bb1YfXlrO2NXrdz3cIOed3qbtdnMdnqx3jKu0tbuindl3aBhaGyuxaZj9+GOs2lwT3Nvp8pW
+        JtVkVk1ZU6epGWzR6mLSNyZxxugem+908MHaC76L3kp/Z3JtvdzZEN9pH+1/q02JpTgj0VCL
+        uag4EQBCPsARlgIAAA==
+X-CMS-MailID: 20190701012430epcas1p4b40cec12a0797f691166877670995ec9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190630140521epcas3p4f9a3ee4d4ef3a1f6f57a855ef0eedb40
+References: <CGME20190630140521epcas3p4f9a3ee4d4ef3a1f6f57a855ef0eedb40@epcas3p4.samsung.com>
+        <20190630140302.16245-1-linus.walleij@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/6/19 10:30 pm, Mauro Carvalho Chehab wrote:
-> The content of this file is user-faced.
+Hi Linus,
+
+On 19. 6. 30. 오후 11:03, Linus Walleij wrote:
+> The FSA9480 has a new driver more appropriately located
+> in the drivers/extcon subsystem. It is also more complete
+> and includes device tree support. Delete the old misc
+> driver.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
-
+> Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->   Documentation/{ => userspace-api}/accelerators/ocxl.rst | 2 --
->   Documentation/userspace-api/index.rst                   | 1 +
->   MAINTAINERS                                             | 2 +-
->   3 files changed, 2 insertions(+), 3 deletions(-)
->   rename Documentation/{ => userspace-api}/accelerators/ocxl.rst (99%)
-> 
-> diff --git a/Documentation/accelerators/ocxl.rst b/Documentation/userspace-api/accelerators/ocxl.rst
-> similarity index 99%
-> rename from Documentation/accelerators/ocxl.rst
-> rename to Documentation/userspace-api/accelerators/ocxl.rst
-> index b1cea19a90f5..14cefc020e2d 100644
-> --- a/Documentation/accelerators/ocxl.rst
-> +++ b/Documentation/userspace-api/accelerators/ocxl.rst
-> @@ -1,5 +1,3 @@
-> -:orphan:
-> -
->   ========================================================
->   OpenCAPI (Open Coherent Accelerator Processor Interface)
->   ========================================================
-> diff --git a/Documentation/userspace-api/index.rst b/Documentation/userspace-api/index.rst
-> index a3233da7fa88..ad494da40009 100644
-> --- a/Documentation/userspace-api/index.rst
-> +++ b/Documentation/userspace-api/index.rst
-> @@ -20,6 +20,7 @@ place where this information is gathered.
->      seccomp_filter
->      unshare
->      spec_ctrl
-> +   accelerators/ocxl
->   
->   .. only::  subproject and html
->   
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 29d1498ad39d..f723371dccd0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11483,7 +11483,7 @@ F:	arch/powerpc/include/asm/pnv-ocxl.h
->   F:	drivers/misc/ocxl/
->   F:	include/misc/ocxl*
->   F:	include/uapi/misc/ocxl.h
-> -F:	Documentation/accelerators/ocxl.rst
-> +F:	Documentation/userspace-api/accelerators/ocxl.rst
->   
->   OMAP AUDIO SUPPORT
->   M:	Peter Ujfalusi <peter.ujfalusi@ti.com>
+>  drivers/misc/Kconfig                  |   9 -
+>  drivers/misc/Makefile                 |   1 -
+>  drivers/misc/fsa9480.c                | 547 --------------------------
+>  include/linux/platform_data/fsa9480.h |  24 --
+>  4 files changed, 581 deletions(-)
+>  delete mode 100644 drivers/misc/fsa9480.c
+>  delete mode 100644 include/linux/platform_data/fsa9480.h
 > 
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+Best Regards,
+Chanwoo Choi
 
