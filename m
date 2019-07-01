@@ -2,162 +2,119 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA706C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D6CC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3992089F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12239208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BmqZP4N4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbfGANRI (ORCPT
+        id S1728341AbfGANUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 09:17:08 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:54456 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfGANRI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 09:17:08 -0400
-Received: by mail-io1-f70.google.com with SMTP id n8so15098150ioo.21
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 06:17:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=tstkKwEY4CPkaozMUdkgXJDuYpws5/cbs4UFbhfKbG4=;
-        b=LjOznWB+mwk2rnaq5DcTBh+ISA3EUIwNGtdFjv8npoqUGAn2sQn2SDsXFj9pcdMZ3L
-         j4+oKpxpHPP10HlwNkHixXg5gzze1yjqKzrSGAw9MyyEAERmtfu/jMi50c8bg2NkSizX
-         wCEM0qpQ79fLiTJk9r+PdGw+NR2/CTk4yjkxzp3lvC8dmP181h1wxYG2awPKM5ifSIck
-         mEPTOVW3QEMZ3f5PFYkQW1QuUmtVRWnLw3qmgktZAK63tPqVgxAQL2IHU4n4f8cixZMN
-         /F/NwReuOjwhxw+BHmlqqyUu/O5wNjVDQPLkxeK9YFqyIc5gaISsP32aiOgfI6SKF23Z
-         5UjQ==
-X-Gm-Message-State: APjAAAXlMx1k1f1b9HrmoTEZx66EO1NrIe6m5P07K2ZzRmr6+xQ5uU9g
-        9gQLyadufNzG7+4iQUBn6TZsUfAKwNdgJ78o0O8t9cOF8UTO
-X-Google-Smtp-Source: APXvYqwPbSJK13gyooT2AAQAJajswUbeeHfdJMexvsUAXXhBi8bopgeR85lr8uG0x4w2/0T26oKn3rIw5pb+EFq038tS301o+cKv
+        Mon, 1 Jul 2019 09:20:53 -0400
+Received: from mail-eopbgr40068.outbound.protection.outlook.com ([40.107.4.68]:60671
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726329AbfGANUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 09:20:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OaUAOPXohnVzqkJWmyYjhVRxTzpR9ETGSfw0coirnpU=;
+ b=BmqZP4N45I/2fHOuCtgjfLP3ZAJet3nMAo+14RhKTh0uxm5AoT7GLIxlr/ZQjoVTiUH8rMwpb+W/OhXrm0WMY4vhQAub9M6s4qdVqOW1mt9d833ln8iCntkmxgB1nMoT50decNxniXVdZhlUjBM29UCIr/KCeR50Z/itUMNyIZQ=
+Received: from VI1PR04MB5055.eurprd04.prod.outlook.com (20.177.50.140) by
+ VI1PR04MB5133.eurprd04.prod.outlook.com (20.177.50.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Mon, 1 Jul 2019 13:20:49 +0000
+Received: from VI1PR04MB5055.eurprd04.prod.outlook.com
+ ([fe80::d83:14c4:dedb:213b]) by VI1PR04MB5055.eurprd04.prod.outlook.com
+ ([fe80::d83:14c4:dedb:213b%5]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
+ 13:20:49 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V2 1/2] arm64: dts: imx8mm: Correct OPP table according to
+ latest datasheet
+Thread-Topic: [PATCH V2 1/2] arm64: dts: imx8mm: Correct OPP table according
+ to latest datasheet
+Thread-Index: AQHVLmXFrcvuT+m33U+Utu0uFxLfsA==
+Date:   Mon, 1 Jul 2019 13:20:49 +0000
+Message-ID: <VI1PR04MB5055B324BD963A50698A0AA9EEF90@VI1PR04MB5055.eurprd04.prod.outlook.com>
+References: <20190629102157.8026-1-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [82.144.34.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 87341a7a-cb93-4da3-a19e-08d6fe26ef54
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5133;
+x-ms-traffictypediagnostic: VI1PR04MB5133:
+x-microsoft-antispam-prvs: <VI1PR04MB51337C39C1D510A69D7404B6EEF90@VI1PR04MB5133.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 00851CA28B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(396003)(346002)(376002)(136003)(199004)(189003)(66476007)(66556008)(66446008)(66946007)(64756008)(44832011)(66066001)(446003)(86362001)(81156014)(53936002)(55016002)(8676002)(81166006)(25786009)(6246003)(316002)(73956011)(486006)(52536014)(54906003)(478600001)(14454004)(71190400001)(71200400001)(76116006)(91956017)(476003)(33656002)(9686003)(110136005)(7416002)(76176011)(53546011)(6506007)(102836004)(229853002)(5660300002)(26005)(186003)(2501003)(256004)(4744005)(99286004)(7696005)(6436002)(4326008)(8936002)(305945005)(7736002)(6116002)(3846002)(74316002)(68736007)(2906002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5133;H:VI1PR04MB5055.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: SItNQtVosjwD7wxDstdr9fpgogvf1z9tMFPOFSKY9ie2CqihiE9AQJrVGVrg2Q5g43Q0EVClLvpDmYXyowYupni8sabTO4SMGj+BK+/o37M1p3BGQVOxqHWp6om703LXwHLyV76DsL55eXCsvjB/caWKUpsIkvB176AZISZJyOsEpAhIUnYobAwfw7/z/daSJtLgv1o26ky0pLBw9+dMZKMoquKWiTi8fgjW0rqko+zBb7qGLRlKR6BB92azR8JiULgmsh+vlR40vpjzBKtLlcTTkMX51dWdzlGiD5qIuab36MbR1M7iuWasP+KW/Cv3TvApqrh9C8AuqaNG63hMsf5cdJlGKwgyovDj1UGu8Aw3EBrua+yd41AScq0iN2dZ5nIE4IbWPYpdT61YiGT9/z14yAopUNfl3xilS8no/Uo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a6b:fb10:: with SMTP id h16mr5392419iog.195.1561987026832;
- Mon, 01 Jul 2019 06:17:06 -0700 (PDT)
-Date:   Mon, 01 Jul 2019 06:17:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e0dc0d058c9e7142@google.com>
-Subject: general protection fault in get_task_pid
-From:   syzbot <syzbot+002e636502bc4b64eb5c@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, arunks@codeaurora.org,
-        christian@brauner.io, ebiederm@xmission.com,
-        elena.reshetova@intel.com, gregkh@linuxfoundation.org, guro@fb.com,
-        jannh@google.com, ktsanaktsidis@zendesk.com,
-        linux-kernel@vger.kernel.org, mhocko@suse.com, mingo@kernel.org,
-        peterz@infradead.org, riel@surriel.com, rppt@linux.vnet.ibm.com,
-        scuttimmy@gmail.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, viro@zeniv.linux.org.uk, willy@infradead.org,
-        yuehaibing@huawei.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87341a7a-cb93-4da3-a19e-08d6fe26ef54
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 13:20:49.5638
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leonard.crestez@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    556e2f60 Merge tag 'clk-fixes-for-linus' of git://git.kern..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=112a45a9a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31528e58cc12e2
-dashboard link: https://syzkaller.appspot.com/bug?extid=002e636502bc4b64eb5c
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1716d35ba00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1489f565a00000
-
-The bug was bisected to:
-
-commit 6fd2fe494b17bf2dec37b610d23a43a72b16923a
-Author: Al Viro <viro@zeniv.linux.org.uk>
-Date:   Thu Jun 27 02:22:09 2019 +0000
-
-     copy_process(): don't use ksys_close() on cleanups
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=135a66f9a00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=10da66f9a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=175a66f9a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+002e636502bc4b64eb5c@syzkaller.appspotmail.com
-Fixes: 6fd2fe494b17 ("copy_process(): don't use ksys_close() on cleanups")
-
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007ffc15fbb0ff R14: 00007ff07e47e9c0 R15: 0000000000000000
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 7990 Comm: syz-executor290 Not tainted 5.2.0-rc6+ #9
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
-RIP: 0010:get_task_pid+0xe1/0x210 kernel/pid.c:372
-Code: 89 ff e8 62 27 5f 00 49 8b 07 44 89 f1 4c 8d bc c8 90 01 00 00 eb 0c  
-e8 0d fe 25 00 49 81 c7 38 05 00 00 4c 89 f8 48 c1 e8 03 <80> 3c 18 00 74  
-08 4c 89 ff e8 31 27 5f 00 4d 8b 37 e8 f9 47 12 00
-RSP: 0018:ffff88808a4a7d78 EFLAGS: 00010203
-RAX: 00000000000000a7 RBX: dffffc0000000000 RCX: ffff888088180600
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffff88808a4a7d90 R08: ffffffff814fb3a8 R09: ffffed1015d66bf8
-R10: ffffed1015d66bf8 R11: 1ffff11015d66bf7 R12: 0000000000041ffc
-R13: 1ffff11011494fbc R14: 0000000000000000 R15: 000000000000053d
-FS:  00007ff07e47e700(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004b5100 CR3: 0000000094df2000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  _do_fork+0x1b9/0x5f0 kernel/fork.c:2360
-  __do_sys_clone kernel/fork.c:2454 [inline]
-  __se_sys_clone kernel/fork.c:2448 [inline]
-  __x64_sys_clone+0xc1/0xd0 kernel/fork.c:2448
-  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446649
-Code: e8 bc b5 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 2b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ff07e47ddb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000038
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 0000000000446649
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000041ffc
-RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007ffc15fbb0ff R14: 00007ff07e47e9c0 R15: 0000000000000000
-Modules linked in:
----[ end trace 403a74d6aeda7e67 ]---
-RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
-RIP: 0010:get_task_pid+0xe1/0x210 kernel/pid.c:372
-Code: 89 ff e8 62 27 5f 00 49 8b 07 44 89 f1 4c 8d bc c8 90 01 00 00 eb 0c  
-e8 0d fe 25 00 49 81 c7 38 05 00 00 4c 89 f8 48 c1 e8 03 <80> 3c 18 00 74  
-08 4c 89 ff e8 31 27 5f 00 4d 8b 37 e8 f9 47 12 00
-RSP: 0018:ffff88808a4a7d78 EFLAGS: 00010203
-RAX: 00000000000000a7 RBX: dffffc0000000000 RCX: ffff888088180600
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffff88808a4a7d90 R08: ffffffff814fb3a8 R09: ffffed1015d66bf8
-R10: ffffed1015d66bf8 R11: 1ffff11015d66bf7 R12: 0000000000041ffc
-R13: 1ffff11011494fbc R14: 0000000000000000 R15: 000000000000053d
-FS:  00007ff07e47e700(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004b5100 CR3: 0000000094df2000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+On 6/29/2019 1:31 PM, Anson.Huang@nxp.com wrote:=0A=
+> From: Anson Huang <Anson.Huang@nxp.com>=0A=
+> =0A=
+> According to latest datasheet (Rev.0.2, 04/2019) from below links,=0A=
+> 1.8GHz is ONLY available for consumer part, so the market segment=0A=
+> bits for 1.8GHz opp should ONLY available for consumer part accordingly.=
+=0A=
+>  > Fixes: f403a26c865b (arm64: dts: imx8mm: Add cpu speed grading and =0A=
+all OPPs)=0A=
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>=0A=
+=0A=
+For both:=0A=
+Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
+=0A=
+The vendor tree goes through a lot of testing so switching to the exact =0A=
+speed grading interpretation from there does make sense.=0A=
