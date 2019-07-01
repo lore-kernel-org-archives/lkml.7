@@ -2,167 +2,79 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B40C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A83C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9099D2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561989816;
-	bh=T2w/j8sYKdqu+6ydzrypjQS9JVeaNU+szoI9ecA6Qvw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WC3PMK9yfNLotcUAbVZ3C4y0TJJQHv3RCW9qtp83BzRjR3h56kMpJsEW2XhuRf+VQ
-	 7Z9hqoXl5FQVhpKP0mWqU9UlClVj7pTZmc1fHi6kZ8+ZfslS4cifg4wQqBPo1jYqN4
-	 w1/jIaAAon9jBJiQfFiQUrAtRMuRI5hQ3zQclo80=
+	by mail.kernel.org (Postfix) with ESMTP id BE8442173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:05:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WtVTo9Em"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbfGAODf (ORCPT
+        id S1729347AbfGAOFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:03:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbfGAODe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:03:34 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 381CE2175B;
-        Mon,  1 Jul 2019 14:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561989813;
-        bh=T2w/j8sYKdqu+6ydzrypjQS9JVeaNU+szoI9ecA6Qvw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=r4pN9Zh75V00tchT8/xeABJC+L4MWPT1MZxTHZGEWDk2wcRsBdcXAwSDWisLoSTNI
-         1VgJ5sax1mLkviCHWwO/rLIep7TekqS6eWtrl/URRYivEc7ViMfsKkIswa/TRjs494
-         IKgcJMbLBIr3w9aBduRa2S/eDEAD4MsMY8QFkyFw=
-Received: by mail-qt1-f176.google.com with SMTP id h21so14696904qtn.13;
-        Mon, 01 Jul 2019 07:03:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAWk8ztL2Zb2ktTdsO4ETipED5CHLW16g4rNTm5TtpYjaIweMTBy
-        b/g+yf0/FHhOy+sQ+8zzO8QEHDyYXYj/0wzwAg==
-X-Google-Smtp-Source: APXvYqxIe3KvpivdXVekQQyi1JMul6lzbVRgVZQlo8hDS8fSl7EpRCjBjbxVicvn9Xjlwji3WRPz4NFznBekQ59zdyY=
-X-Received: by 2002:aed:3f10:: with SMTP id p16mr20698288qtf.110.1561989812384;
- Mon, 01 Jul 2019 07:03:32 -0700 (PDT)
+        Mon, 1 Jul 2019 10:05:13 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35486 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729294AbfGAOFN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 10:05:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SotD5xDKU4tAQXDc312orTzyiKC6J1IO6NGGg0le4bM=; b=WtVTo9Em9Pu8gmifFDUAIT37b
+        vcWRO1Kssa1aPIOcf/s/1IwKqmzznPjIajojzRLdV7Usylbqe6kxR3S6FZG4KxQdWxSxs7n+AK4lK
+        1E1+KTlvd35g37f9qOh37+gtYxwOu79XifNjm7TRzoe9KptSYlo2A0X0vurGj5D85zn75ffm+lLlt
+        enza0nWDc4d6eU61HQDPd5FrcVZdCAl53MUU6OV0libZZA51syAu8S21ixjyYSZcDjYMoug3qnKvE
+        ICrIJSnP7quBALtKcZlt8zDeR/L2Hl+Bh4yMT37J7mMhqDaXa6QTzXFRrlQlJqW6uxzA5pJ8KZl7J
+        Etk0Tv9xQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hhwv7-0008G4-L9; Mon, 01 Jul 2019 14:04:37 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 84A2A209C957E; Mon,  1 Jul 2019 16:04:34 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 16:04:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     subhra mazumdar <subhra.mazumdar@oracle.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, Paul Turner <pjt@google.com>,
+        riel@surriel.com, morten.rasmussen@arm.com
+Subject: Re: [RESEND PATCH v3 0/7] Improve scheduler scalability for fast path
+Message-ID: <20190701140434.GW3402@hirez.programming.kicks-ass.net>
+References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
+ <20190701090204.GQ3402@hirez.programming.kicks-ass.net>
+ <20190701135552.kb4os6bxxhh2lyw6@e110439-lin>
 MIME-Version: 1.0
-References: <20190630203614.5290-1-robdclark@gmail.com> <20190630203614.5290-2-robdclark@gmail.com>
-In-Reply-To: <20190630203614.5290-2-robdclark@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 1 Jul 2019 08:03:20 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
-Message-ID: <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: chosen: document panel-id binding
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        aarch64-laptops@lists.linaro.org,
-        Rob Clark <robdclark@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701135552.kb4os6bxxhh2lyw6@e110439-lin>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 2:36 PM Rob Clark <robdclark@gmail.com> wrote:
->
-> From: Rob Clark <robdclark@chromium.org>
->
-> The panel-id property in chosen can be used to communicate which panel,
-> of multiple possibilities, is installed.
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  Documentation/devicetree/bindings/chosen.txt | 69 ++++++++++++++++++++
->  1 file changed, 69 insertions(+)
+On Mon, Jul 01, 2019 at 02:55:52PM +0100, Patrick Bellasi wrote:
+> On 01-Jul 11:02, Peter Zijlstra wrote:
 
-I need to update this file to say it's moved to the schema repository...
+> > Some of the things we could tie to this would be:
+> > 
+> >   - select_idle_siblings; -nice would scan more than +nice,
+> 
+> Just to be sure, you are not proposing to use the nice value we
+> already have, i.e.
+>   p->{static,normal}_prio
+> but instead a new similar concept, right?
 
-But I don't think that will matter...
-
-> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> index 45e79172a646..d502e6489b8b 100644
-> --- a/Documentation/devicetree/bindings/chosen.txt
-> +++ b/Documentation/devicetree/bindings/chosen.txt
-> @@ -68,6 +68,75 @@ on PowerPC "stdout" if "stdout-path" is not found.  However, the
->  "linux,stdout-path" and "stdout" properties are deprecated. New platforms
->  should only use the "stdout-path" property.
->
-> +panel-id
-> +--------
-> +
-> +For devices that have multiple possible display panels (multi-sourcing the
-> +display panels is common on laptops, phones, tablets), this allows the
-> +bootloader to communicate which panel is installed, e.g.
-
-How does the bootloader figure out which panel? Why can't the kernel
-do the same thing?
-
-> +
-> +/ {
-> +       chosen {
-> +               panel-id = <0xc4>;
-> +       };
-> +
-> +       ivo_panel {
-> +               compatible = "ivo,m133nwf4-r0";
-> +               power-supply = <&vlcm_3v3>;
-> +               no-hpd;
-> +
-> +               ports {
-> +                       port {
-> +                               ivo_panel_in_edp: endpoint {
-> +                                       remote-endpoint = <&sn65dsi86_out_ivo>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       boe_panel {
-> +               compatible = "boe,nv133fhm-n61";
-
-Both panels are going to probe. So the bootloader needs to disable the
-not populated panel setting 'status' (or delete the node). If you do
-that, do you even need 'panel-id'?
-
-> +               power-supply = <&vlcm_3v3>;
-> +               no-hpd;
-> +
-> +               ports {
-> +                       port {
-> +                               boe_panel_in_edp: endpoint {
-> +                                       remote-endpoint = <&sn65dsi86_out_boe>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       display_or_bridge_device {
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       ...
-> +
-> +                       port@0 {
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +                               reg = <0>;
-> +
-> +                               endpoint@c4 {
-> +                                       reg = <0xc4>;
-
-What does this number represent? It is supposed to be defined by the
-display_or_bridge_device, not a specific panel.
-
-We also need to consider how the DSI case with panels as children of
-the DSI controller would work and how this would work with multiple
-displays each having multiple panel options.
-
-Rob
+Correct; a new sched_attr::sched_latency_nice value, which is like
+sched_nice, but controls a different dimmension of behaviour.
