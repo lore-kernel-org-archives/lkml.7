@@ -2,57 +2,126 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3DBC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28348C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A408521721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0240F21721
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:00:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfGASAN (ORCPT
+        id S1726738AbfGASAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 14:00:13 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:46360 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbfGASAN (ORCPT
+        Mon, 1 Jul 2019 14:00:22 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:57587 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfGASAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 14:00:13 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 74C9B14C1A62F;
-        Mon,  1 Jul 2019 11:00:12 -0700 (PDT)
-Date:   Mon, 01 Jul 2019 11:00:11 -0700 (PDT)
-Message-Id: <20190701.110011.200125223653333509.davem@davemloft.net>
-To:     bnvandana@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] net:gue.h:Fix shifting signed 32-bit value by 31 bits
- problem
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190701141610.3681-1-bnvandana@gmail.com>
-References: <20190701141610.3681-1-bnvandana@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 01 Jul 2019 11:00:12 -0700 (PDT)
+        Mon, 1 Jul 2019 14:00:22 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 60561240008;
+        Mon,  1 Jul 2019 18:00:12 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Hanjun Guo <guohanjun@huawei.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org
+Cc:     Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v3 1/2] x86, arm64: Move ARCH_WANT_HUGE_PMD_SHARE config in arch/Kconfig
+Date:   Mon,  1 Jul 2019 13:58:59 -0400
+Message-Id: <20190701175900.4034-2-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190701175900.4034-1-alex@ghiti.fr>
+References: <20190701175900.4034-1-alex@ghiti.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vandana BN <bnvandana@gmail.com>
-Date: Mon,  1 Jul 2019 19:46:10 +0530
+ARCH_WANT_HUGE_PMD_SHARE config was declared in both architectures:
+move this declaration in arch/Kconfig and make those architectures
+select it.
 
-> Fix GUE_PFLAG_REMCSUM to use "U" cast to avoid shifting signed
-> 32-bit value by 31 bits problem.
-> 
-> Signed-off-by: Vandana BN <bnvandana@gmail.com>
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+---
+ arch/Kconfig       | 3 +++
+ arch/arm64/Kconfig | 4 +---
+ arch/x86/Kconfig   | 4 +---
+ 3 files changed, 5 insertions(+), 6 deletions(-)
 
-Applied.
+diff --git a/arch/Kconfig b/arch/Kconfig
+index c47b328eada0..d2f212dc8e72 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -577,6 +577,9 @@ config HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+ config HAVE_ARCH_HUGE_VMAP
+ 	bool
+ 
++config ARCH_WANT_HUGE_PMD_SHARE
++	bool
++
+ config HAVE_ARCH_SOFT_DIRTY
+ 	bool
+ 
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 697ea0510729..c862575decd3 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -71,6 +71,7 @@ config ARM64
+ 	select ARCH_SUPPORTS_NUMA_BALANCING
+ 	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION if COMPAT
+ 	select ARCH_WANT_FRAME_POINTERS
++	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
+ 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+ 	select ARM_AMBA
+ 	select ARM_ARCH_TIMER
+@@ -901,9 +902,6 @@ config HW_PERF_EVENTS
+ config SYS_SUPPORTS_HUGETLBFS
+ 	def_bool y
+ 
+-config ARCH_WANT_HUGE_PMD_SHARE
+-	def_bool y if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
+-
+ config ARCH_HAS_CACHE_LINE_SIZE
+ 	def_bool y
+ 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 2bbbd4d1ba31..fa021ec38803 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -93,6 +93,7 @@ config X86
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+ 	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+ 	select ARCH_WANTS_DYNAMIC_TASK_STRUCT
++	select ARCH_WANT_HUGE_PMD_SHARE
+ 	select ARCH_WANTS_THP_SWAP		if X86_64
+ 	select BUILDTIME_EXTABLE_SORT
+ 	select CLKEVT_I8253
+@@ -301,9 +302,6 @@ config ARCH_HIBERNATION_POSSIBLE
+ config ARCH_SUSPEND_POSSIBLE
+ 	def_bool y
+ 
+-config ARCH_WANT_HUGE_PMD_SHARE
+-	def_bool y
+-
+ config ARCH_WANT_GENERAL_HUGETLB
+ 	def_bool y
+ 
+-- 
+2.20.1
+
