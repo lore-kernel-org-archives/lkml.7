@@ -2,84 +2,107 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CC2C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F48C06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6EA20673
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C7520673
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfGAIGi (ORCPT
+        id S1727740AbfGAIGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:06:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38436 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727080AbfGAIGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:06:38 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 11C73308FB82;
-        Mon,  1 Jul 2019 08:06:38 +0000 (UTC)
-Received: from gondolin (ovpn-117-220.ams2.redhat.com [10.36.117.220])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EAC43BA4D;
-        Mon,  1 Jul 2019 08:06:34 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 10:06:32 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kwankhede@nvidia.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mdev: Send uevents around parent device registration
-Message-ID: <20190701100632.31fe96db.cohuck@redhat.com>
-In-Reply-To: <20190628095608.7762d6d0@x1.home>
-References: <156155924767.11505.11457229921502145577.stgit@gimli.home>
-        <20190627101914.32829440.cohuck@redhat.com>
-        <20190628095608.7762d6d0@x1.home>
-Organization: Red Hat GmbH
+        Mon, 1 Jul 2019 04:06:42 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41782 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727080AbfGAIGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 04:06:40 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2F55DB8DA46031B0CC6B;
+        Mon,  1 Jul 2019 16:06:37 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 1 Jul 2019
+ 16:06:29 +0800
+Subject: Re: [PATCH next] sysctl: add proc_dointvec_jiffies_minmax to limit
+ the min/max write value
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+To:     Kees Cook <keescook@chromium.org>, <akpm@linux-foundation.org>
+CC:     <mcgrof@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <ebiederm@xmission.com>,
+        <pbonzini@redhat.com>, <viro@zeniv.linux.org.uk>,
+        <adobriyan@gmail.com>, <mingfangsen@huawei.com>,
+        <wangxiaogang3@huawei.com>, "Zhoukang (A)" <zhoukang7@huawei.com>,
+        <netdev@vger.kernel.org>
+References: <032e024f-2b1b-a980-1b53-d903bc8db297@huawei.com>
+ <3e421384-a9cb-e534-3370-953c56883516@huawei.com>
+ <d5138655-41a8-0177-ae0d-c4674112bf56@huawei.com>
+ <201905150945.C9D1F811F@keescook>
+ <dd40ae3b-8e0a-2d55-d402-6f261a6c0e09@huawei.com>
+Message-ID: <20d5857e-de44-4f02-5465-7febc57f0a20@huawei.com>
+Date:   Mon, 1 Jul 2019 16:06:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <dd40ae3b-8e0a-2d55-d402-6f261a6c0e09@huawei.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 01 Jul 2019 08:06:38 +0000 (UTC)
+X-Originating-IP: [10.184.225.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019 09:56:08 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+friendly ping ...
 
-> On Thu, 27 Jun 2019 10:19:14 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
+On 2019/6/4 23:27, Zhiqiang Liu wrote:
+>> On Wed, May 15, 2019 at 10:53:55PM +0800, Zhiqiang Liu wrote:
+>>
+>> (Please include akpm on CC for next versions of this, as he's likely
+>> the person to take this patch.)
+> Thanks for your advice. And sorry to reply you so late.
 > 
-> > On Wed, 26 Jun 2019 08:27:58 -0600
-> > Alex Williamson <alex.williamson@redhat.com> wrote:
+>>>>> In proc_dointvec_jiffies func, the write value is only checked
+>>>>> whether it is larger than INT_MAX. If the write value is less
+>>>>> than zero, it can also be successfully writen in the data.
+>>
+>> This appears to be "be design", but I see many "unsigned int" users
+>> that might be tricked into giant values... (for example, see
+>> net/netfilter/nf_conntrack_standalone.c)
+>>
+>> Should proc_dointvec_jiffies() just be fixed to disallow negative values
+>> entirely? Looking at the implementation, it seems to be very intentional
+>> about accepting negative values.
+>>
+>> However, when I looked through a handful of proc_dointvec_jiffies()
+>> users, it looks like they're all expecting a positive value. Many in the
+>> networking subsystem are, in fact, writing to unsigned long variables,
+>> as I mentioned.
+>>
+> I totally agree with you. And I also cannot find an scenario that expects
+> negative values. Consideing the "negative" scenario may be exist, I add the
+> proc_dointvec_jiffies_minmax like proc_dointvec_minmax.
+> 
+>> Are there real-world cases of wanting to set a negative jiffie value
+>> via proc_dointvec_jiffies()?
+> Until now, I do not find such cases.
+> 
+>>>>>
+>>>>> Here, we add a new func, proc_dointvec_jiffies_minmax, to limit the
+>>>>> min/max write value, which is similar to the proc_dointvec_minmax func.
+>>>>>
+>>
+>> If proc_dointvec_jiffies() can't just be fixed, where will the new
+>> function get used? It seems all the "unsigned int" users could benefit.
+>>
+> I tend to add the proc_dointvec_jiffies_minmax func to provide more choices and
+> not change the previous use of proc_dointvec_jiffies func.
+> 
+> Thanks for your reply again.
+> 
+> 
+> .
+> 
 
-> > > @@ -243,6 +247,8 @@ void mdev_unregister_device(struct device *dev)
-> > >  	up_write(&parent->unreg_sem);
-> > >  
-> > >  	mdev_put_parent(parent);
-> > > +
-> > > +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);    
-> > 
-> > I'm wondering whether we should indicate this uevent earlier: Once we
-> > have detached from the parent list, we're basically done for all
-> > practical purposes. So maybe move this right before we grab the
-> > unreg_sem?  
-> 
-> That would make it a "this thing is about to go away" (ie.
-> "unregistering") rather than "this thing is gone" ("unregistered").  I
-> was aiming for the latter as the former just seems like it might make
-> userspace race to remove devices.  Note that I don't actually make use
-> of this event in mdevctl currently, so we could maybe save it for
-> later, but the symmetry seemed preferable.  Thanks,
-> 
-> Alex
-
-Fair enough. I was thinking about signaling that it does not make much
-sense to register new devices after that point, but if that might
-trigger userspace to actually try and remove devices, not much is
-gained.
