@@ -2,132 +2,120 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF803C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0511EC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE402146F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:21:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=plexistor-com.20150623.gappssmtp.com header.i=@plexistor-com.20150623.gappssmtp.com header.b="1wUdmopY"
+	by mail.kernel.org (Postfix) with ESMTP id E02C721479
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfGARVA (ORCPT
+        id S1729446AbfGARYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 13:21:00 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:32769 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727302AbfGARU7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 13:20:59 -0400
-Received: by mail-wm1-f66.google.com with SMTP id h19so521792wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 10:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=plexistor-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RMtO9zTMwULPwpFiTkeooNGzR9zKo/UB7YgL+t4fgzA=;
-        b=1wUdmopYsOTGEBPctCCQBJNp/Weny3U0OdMAgIX7XMpDLNjX7yi2BQKVOeIOZfgf1b
-         I2dQPvs1YcMd4MKfGasxoR1vUF57n1uWvGfOwCBn+dFFXqdtzk7+nDTMfgxaIC1cMqAd
-         CyXSD5wWJrsSE7f66iNNQpS8suPAgj9SNlBFoRgvaYPLl2O9hulyvjxbO8s6Guhj4y1S
-         Nf6nnLqhsslQUJQ8lQjHCR002MedRLPvKNFje/NywIlwBVxr1dbYLS/Ag6d45MoLEFLA
-         TB43Jl9ECXn6C3ClznsgSlBckfDR8AQM1se/327D0FreZlmY9S9DkHpcHai8gVFUiAbk
-         jAnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RMtO9zTMwULPwpFiTkeooNGzR9zKo/UB7YgL+t4fgzA=;
-        b=fspZUb+Lw+iRV0Taf6BWkNL72NWqN0lvVb/z2HzJsEZYQaGTwiK84fqU8T18WE1BBf
-         c67uZw4XkOO1nxsOO9N9kJDBijI09uSI9r6MesBn/+FIngoTPqwFvADcT5RreA8ZpNOd
-         2rwvH4xWAh3Ya5lQpkEPPHCZ8N5L94wq+w259d7y5aQias3QNhwQ6x6he1TFvWxRppL4
-         z9lB09LGegrOUGhKpZ+T6DBeTNmurwjklN3RJuaQGIZeBu7MVSw1ERMohKv6t8xxQdNc
-         BPDpLMJERKHBEwkEwREDICFLh1NSIXJtGTB4i2VQu56szQIIKZP6g9eeItCzvykOGh6R
-         tRiQ==
-X-Gm-Message-State: APjAAAXvTDAxIglX6ij8ajhmaviSJJAIISafOWYKVgGy85YZgIbxNVnL
-        AZytgs05LDAx2CBs8qPCBQs47Q==
-X-Google-Smtp-Source: APXvYqyJIZEjZ99B+K6R50DPm7lq0IHr/E/1lfJMHdrHDPCDWuYMn1JV6lQAB5xdWdZjMaq23hnwbA==
-X-Received: by 2002:a1c:f009:: with SMTP id a9mr234245wmb.32.1562001657000;
-        Mon, 01 Jul 2019 10:20:57 -0700 (PDT)
-Received: from [10.68.217.182] ([217.70.211.18])
-        by smtp.googlemail.com with ESMTPSA id q193sm269299wme.8.2019.07.01.10.20.53
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 10:20:56 -0700 (PDT)
-Subject: Re: [PATCH v6 0/4] vfs: make immutable files actually immutable
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, hch@infradead.org,
-        clm@fb.com, adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk,
-        jack@suse.com, dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org
-Cc:     reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-References: <156174687561.1557469.7505651950825460767.stgit@magnolia>
-From:   Boaz Harrosh <boaz@plexistor.com>
-Message-ID: <72f01c73-a1eb-efde-58fa-7667221255c7@plexistor.com>
-Date:   Mon, 1 Jul 2019 20:20:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 1 Jul 2019 13:24:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33350 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727702AbfGARYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 13:24:43 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1ACDDC057F2E;
+        Mon,  1 Jul 2019 17:24:43 +0000 (UTC)
+Received: from x1.home (ovpn-116-83.phx2.redhat.com [10.3.116.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C25185D70D;
+        Mon,  1 Jul 2019 17:24:42 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 11:24:42 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Kirti Wankhede <kwankhede@nvidia.com>
+Cc:     <cohuck@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
+Message-ID: <20190701112442.176a8407@x1.home>
+In-Reply-To: <08597ab4-cc37-3973-8927-f1bc430f6185@nvidia.com>
+References: <156199271955.1646.13321360197612813634.stgit@gimli.home>
+        <08597ab4-cc37-3973-8927-f1bc430f6185@nvidia.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <156174687561.1557469.7505651950825460767.stgit@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 01 Jul 2019 17:24:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/06/2019 21:34, Darrick J. Wong wrote:
-> Hi all,
+On Mon, 1 Jul 2019 22:43:10 +0530
+Kirti Wankhede <kwankhede@nvidia.com> wrote:
+
+> On 7/1/2019 8:24 PM, Alex Williamson wrote:
+> > This allows udev to trigger rules when a parent device is registered
+> > or unregistered from mdev.
+> > 
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > ---
+> > 
+> > v2: Don't remove the dev_info(), Kirti requested they stay and
+> >     removing them is only tangential to the goal of this change.
+> >   
 > 
-> The chattr(1) manpage has this to say about the immutable bit that
-> system administrators can set on files:
+> Thanks.
 > 
-> "A file with the 'i' attribute cannot be modified: it cannot be deleted
-> or renamed, no link can be created to this file, most of the file's
-> metadata can not be modified, and the file can not be opened in write
-> mode."
 > 
-> Given the clause about how the file 'cannot be modified', it is
-> surprising that programs holding writable file descriptors can continue
-> to write to and truncate files after the immutable flag has been set,
-> but they cannot call other things such as utimes, fallocate, unlink,
-> link, setxattr, or reflink.
+> >  drivers/vfio/mdev/mdev_core.c |    8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> > index ae23151442cb..7fb268136c62 100644
+> > --- a/drivers/vfio/mdev/mdev_core.c
+> > +++ b/drivers/vfio/mdev/mdev_core.c
+> > @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+> >  {
+> >  	int ret;
+> >  	struct mdev_parent *parent;
+> > +	char *env_string = "MDEV_STATE=registered";
+> > +	char *envp[] = { env_string, NULL };
+> >  
+> >  	/* check for mandatory ops */
+> >  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
+> > @@ -197,6 +199,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+> >  	mutex_unlock(&parent_list_lock);
+> >  
+> >  	dev_info(dev, "MDEV: Registered\n");
+> > +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+> > +
+> >  	return 0;
+> >  
+> >  add_dev_err:
+> > @@ -220,6 +224,8 @@ EXPORT_SYMBOL(mdev_register_device);
+> >  void mdev_unregister_device(struct device *dev)
+> >  {
+> >  	struct mdev_parent *parent;
+> > +	char *env_string = "MDEV_STATE=unregistered";
+> > +	char *envp[] = { env_string, NULL };
+> >  
+> >  	mutex_lock(&parent_list_lock);
+> >  	parent = __find_parent_device(dev);
+> > @@ -243,6 +249,8 @@ void mdev_unregister_device(struct device *dev)
+> >  	up_write(&parent->unreg_sem);
+> >  
+> >  	mdev_put_parent(parent);
+> > +
+> > +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);  
 > 
-> Since the immutable flag is only settable by administrators, resolve
-> this inconsistent behavior in favor of the documented behavior -- once
-> the flag is set, the file cannot be modified, period.  We presume that
-> administrators must be trusted to know what they're doing, and that
-> cutting off programs with writable fds will probably break them.
+> mdev_put_parent() calls put_device(dev). If this is the last instance
+> holding device, then on put_device(dev) dev would get freed.
 > 
+> This event should be before mdev_put_parent()
 
-This effort sounds very logical to me and sound. But are we allowed to
-do it? IE: Is it not breaking ABI. I do agree previous ABI was evil but
-are we allowed to break it?
+So you're suggesting the vendor driver is calling
+mdev_unregister_device() without a reference to the struct device that
+it's passing to unregister?  Sounds bogus to me.  We take a
+reference to the device so that it can't disappear out from under us,
+the caller cannot rely on our reference and the caller provided the
+struct device.  Thanks,
 
-I would not mind breaking it if %99.99 of the time the immutable bit
-was actually set manually by a human administrator. But what if there
-are automated systems that set it relying on the current behaviour?
-
-For example I have a very distant and vague recollection of a massive
-camera capture system, that was DMAing directly to file (splice). And setting
-the immutable bit right away on start. Then once the capture is done
-(capture file recycled) the file becomes immutable. Such program is now
-broken. Who's fault is it?
-
-I'm totally not sure and maybe you are right. But have you made a
-survey of the majority of immutable uses, and are positive that
-the guys are not broken after this change?
-
-For me this is kind of scary. Yes I am known to be a SW coward ;-)
-
-Thanks
-Boaz
+Alex
