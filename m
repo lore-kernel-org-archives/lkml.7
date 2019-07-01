@@ -2,141 +2,126 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9590EC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 05:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620EDC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 05:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C005208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 05:46:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kfh5vicc"
+	by mail.kernel.org (Postfix) with ESMTP id 417E4208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 05:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfGAFqH (ORCPT
+        id S1727420AbfGAFvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 01:46:07 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42844 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfGAFqH (ORCPT
+        Mon, 1 Jul 2019 01:51:03 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:56658 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727395AbfGAFvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 01:46:07 -0400
-Received: by mail-lj1-f193.google.com with SMTP id t28so11696807lje.9;
-        Sun, 30 Jun 2019 22:46:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=8yYaeGYH1lk4dhqKXsvPRW0fUGxbl4jEGeDfKa2Ty6Y=;
-        b=kfh5vicc77Conm69He5+G8+PaZuy/aFnTfW7eGf/0g7by8v+gTDKKa3E0WWlj69uu5
-         xcSMYJhYj+K+94FeYJGSkPWVpC4WMpWgxUmu+NyOxZYY1+dfW9U4Mi4l+CGMbzF4Jctb
-         3iBKTJAGhcDfRwEwkkp0m9jC1QQf1O0Q40g5kLxOvAS52UpwPlVOiwZ9Z82ZGbLISm/J
-         i7/lBRwJkWMYEESXHHM3il3VcBySiIlyxHLJYq4Z2iE9sdgBueKyM3Rt6c0E3ac2HSSN
-         2juMxi+rr3EHPPfx/X1onWMfWZmBfYyr9c4njFBxxIkLofQwY5uKm5hTiIyLfZef6KKB
-         ox7g==
+        Mon, 1 Jul 2019 01:51:01 -0400
+Received: by mail-io1-f72.google.com with SMTP id u25so13931138iol.23
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 22:51:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=8yYaeGYH1lk4dhqKXsvPRW0fUGxbl4jEGeDfKa2Ty6Y=;
-        b=RTxVBV7eK6Y8e2aNN3vOJu231R/kaZPKFhgONVmno0REfdT1csvtb8NQIfh+abHCsW
-         FJWtRJQjaaRQBLf23T2MORR6ANy165VQqJRlT2xjkov/Sr1c28BI4xnp/i72yPO4DGGH
-         oktzpRKKVQ0PKYL8JVABp1dRJ/sQqjCfc4phX1dqyowU38sP/qYKDBC3qMhVMUw7UXRr
-         /rD0Q9NxL+yJxVfRCYuGXFmer/DADpuVf+caqV89JnNHcvVFY4VYyhZkUwU9KpG2lkL1
-         cbQH//Gc7mvo/8MScSouSelhbYc0eQ1Z+UpU9FOYP2Hxbrrv4mAC0O77FwQfy5rieDKH
-         zfbA==
-X-Gm-Message-State: APjAAAVHBvvukSRq6U+BEPT72vXuRE7KuoLAET/cH5q828I/upIj4v2u
-        WSaj+wxk3WHq/uPunOtGxUY=
-X-Google-Smtp-Source: APXvYqz6tnhd9uDkTCwEyyQMlwXFBa/szeO/kbZD0HykwS+epBivubnP5CszJLpw3z7J7a1pcp4Jgg==
-X-Received: by 2002:a2e:89ca:: with SMTP id c10mr12904311ljk.106.1561959965169;
-        Sun, 30 Jun 2019 22:46:05 -0700 (PDT)
-Received: from [10.17.182.20] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
-        by smtp.gmail.com with ESMTPSA id w15sm3395418ljh.0.2019.06.30.22.46.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 30 Jun 2019 22:46:04 -0700 (PDT)
-Subject: Re: [Xen-devel] [PATCH] ALSA: xen-front: fix unintention integer
- overflow on left shifts
-To:     Takashi Iwai <tiwai@suse.de>, Colin King <colin.king@canonical.com>
-Cc:     alsa-devel@alsa-project.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        xen-devel@lists.xenproject.org
-References: <20190627165853.21864-1-colin.king@canonical.com>
- <s5hv9wq6qrg.wl-tiwai@suse.de>
-From:   Oleksandr Andrushchenko <andr2000@gmail.com>
-Message-ID: <de93db15-c85f-3108-22c3-75b89a3a2e59@gmail.com>
-Date:   Mon, 1 Jul 2019 08:46:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=qCv6O8PlYg+ZT3/7zG6DuN2UhJzRl942UxJbgb+Ot2U=;
+        b=ZoUfDdB+jQ4HjGpIJZcP8jwXu7vqvPbigsztpgsAVBgJ/YOQs5ggC2Ow0/9bprIT+g
+         gQb6Apb0fnKkH36VrCnDUIQs5MQhGWquTWyjup5x78QetYt3GzchAZY9KYaNpN3a58UB
+         I+G4I0iClZXCOOZKgGRce2WsOne+AtzQj8j9ymlYpyb6oSHQmgWz6aqTxi9pO6v3nNH2
+         p+925if2CFnG35CRpUPGY1Bx6+gUvfW2uCZv7U8UzrWsib1OAvRsAi3Jwh93B26wWnFo
+         e0jFEhedHrhOF1VkfCNpORFWIQok3v5PTQh+QpAsnGbAINDS+gD2qZMjbsJytGxbIa2Z
+         0y1g==
+X-Gm-Message-State: APjAAAXCjo9Q7QGKXohPXn0raxc//mu+1OrZdWm+lsMrZplYkqdm2cKH
+        liGwodf3kKyDvuLNNd2//pBIl3+0tg/A2To5QMOq/IoA0wLg
+X-Google-Smtp-Source: APXvYqz9w2zVcH6kNVua0uWx+iYzOLbIPZQ+5rE5IxWvE2bRVxNupp6tM2dPKMXEakSe0K50uQHi7ZAYlzPAfHaFjnJqyTIn5ocg
 MIME-Version: 1.0
-In-Reply-To: <s5hv9wq6qrg.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Received: by 2002:a05:6638:3e4:: with SMTP id s4mr27121967jaq.141.1561960260741;
+ Sun, 30 Jun 2019 22:51:00 -0700 (PDT)
+Date:   Sun, 30 Jun 2019 22:51:00 -0700
+In-Reply-To: <5d199ad457036_1dd62b219ced25b86e@john-XPS-13-9370.notmuch>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007eb42d058c9836ac@google.com>
+Subject: Re: WARNING in mark_lock
+From:   syzbot <syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com>
+To:     bpf@vger.kernel.org, ebiggers@kernel.org, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/19 11:46 AM, Takashi Iwai wrote:
-> On Thu, 27 Jun 2019 18:58:53 +0200,
-> Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Shifting the integer value 1 is evaluated using 32-bit
->> arithmetic and then used in an expression that expects a 64-bit
->> value, so there is potentially an integer overflow. Fix this
->> by using the BIT_ULL macro to perform the shift.
->>
->> Addresses-Coverity: ("Unintentional integer overflow")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Thank you for you patch,
-Oleksandr
-> The fix is correct, but luckily we didn't hit the integer overflow, as
-> all passed values are less than 32bit.
->
-> In anyway, applied now.  Thanks.
->
->
-> Takashi
->
->> ---
->>   sound/xen/xen_snd_front_alsa.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/sound/xen/xen_snd_front_alsa.c b/sound/xen/xen_snd_front_alsa.c
->> index b14ab512c2ce..e01631959ed8 100644
->> --- a/sound/xen/xen_snd_front_alsa.c
->> +++ b/sound/xen/xen_snd_front_alsa.c
->> @@ -196,7 +196,7 @@ static u64 to_sndif_formats_mask(u64 alsa_formats)
->>   	mask = 0;
->>   	for (i = 0; i < ARRAY_SIZE(ALSA_SNDIF_FORMATS); i++)
->>   		if (pcm_format_to_bits(ALSA_SNDIF_FORMATS[i].alsa) & alsa_formats)
->> -			mask |= 1 << ALSA_SNDIF_FORMATS[i].sndif;
->> +			mask |= BIT_ULL(ALSA_SNDIF_FORMATS[i].sndif);
->>   
->>   	return mask;
->>   }
->> @@ -208,7 +208,7 @@ static u64 to_alsa_formats_mask(u64 sndif_formats)
->>   
->>   	mask = 0;
->>   	for (i = 0; i < ARRAY_SIZE(ALSA_SNDIF_FORMATS); i++)
->> -		if (1 << ALSA_SNDIF_FORMATS[i].sndif & sndif_formats)
->> +		if (BIT_ULL(ALSA_SNDIF_FORMATS[i].sndif) & sndif_formats)
->>   			mask |= pcm_format_to_bits(ALSA_SNDIF_FORMATS[i].alsa);
->>   
->>   	return mask;
->> -- 
->> 2.20.1
->>
->>
-> _______________________________________________
-> Xen-devel mailing list
-> Xen-devel@lists.xenproject.org
-> https://lists.xenproject.org/mailman/listinfo/xen-devel
+Hello,
+
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+KASAN: use-after-free Read in class_equal
+
+==================================================================
+BUG: KASAN: use-after-free in class_equal+0x40/0x50  
+kernel/locking/lockdep.c:1527
+Read of size 8 at addr ffff88808a268ba0 by task syz-executor.1/9270
+
+CPU: 0 PID: 9270 Comm: syz-executor.1 Not tainted 5.2.0-rc3+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+
+Allocated by task 2647419968:
+BUG: unable to handle page fault for address: ffffffff8c00b020
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 8a70067 P4D 8a70067 PUD 8a71063 PMD 0
+Thread overran stack, or stack corrupted
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9270 Comm: syz-executor.1 Not tainted 5.2.0-rc3+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:stack_depot_fetch+0x10/0x30 lib/stackdepot.c:203
+Code: e9 7b fd ff ff 4c 89 ff e8 8d b4 62 fe e9 e6 fd ff ff 90 90 90 90 90  
+90 90 90 89 f8 c1 ef 11 25 ff ff 1f 00 81 e7 f0 3f 00 00 <48> 03 3c c5 20  
+6c 04 8b 48 8d 47 18 48 89 06 8b 47 0c c3 0f 1f 00
+RSP: 0018:ffff88808a2688e8 EFLAGS: 00010006
+RAX: 00000000001f8880 RBX: ffff88808a269304 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff88808a2688f0 RDI: 0000000000003ff0
+RBP: ffff88808a268908 R08: 0000000000000020 R09: ffffed1015d044fa
+R10: ffffed1015d044f9 R11: ffff8880ae8227cf R12: ffffea0002289a00
+R13: ffff88808a268ba0 R14: ffff8880aa58ec40 R15: ffff88808a269300
+FS:  00005555570ba940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffff8c00b020 CR3: 000000008dd00000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+Modules linked in:
+CR2: ffffffff8c00b020
+---[ end trace 4acfe4b59fbc9cdb ]---
+RIP: 0010:stack_depot_fetch+0x10/0x30 lib/stackdepot.c:203
+Code: e9 7b fd ff ff 4c 89 ff e8 8d b4 62 fe e9 e6 fd ff ff 90 90 90 90 90  
+90 90 90 89 f8 c1 ef 11 25 ff ff 1f 00 81 e7 f0 3f 00 00 <48> 03 3c c5 20  
+6c 04 8b 48 8d 47 18 48 89 06 8b 47 0c c3 0f 1f 00
+RSP: 0018:ffff88808a2688e8 EFLAGS: 00010006
+RAX: 00000000001f8880 RBX: ffff88808a269304 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff88808a2688f0 RDI: 0000000000003ff0
+RBP: ffff88808a268908 R08: 0000000000000020 R09: ffffed1015d044fa
+R10: ffffed1015d044f9 R11: ffff8880ae8227cf R12: ffffea0002289a00
+R13: ffff88808a268ba0 R14: ffff8880aa58ec40 R15: ffff88808a269300
+FS:  00005555570ba940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffff8c00b020 CR3: 000000008dd00000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+Tested on:
+
+commit:         0b58d013 bpf: tls, implement unhash to avoid transition ou..
+git tree:       git://github.com/cilium/linux ktls-unhash
+console output: https://syzkaller.appspot.com/x/log.txt?x=153368a3a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2cc918d28ebd06b4
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
