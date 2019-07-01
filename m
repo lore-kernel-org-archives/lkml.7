@@ -2,141 +2,302 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9DFC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C726C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9D0214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:41:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="X1IDdAFQ"
+	by mail.kernel.org (Postfix) with ESMTP id E938B214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbfGAMlg (ORCPT
+        id S1729116AbfGAMll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 08:41:36 -0400
-Received: from mout.web.de ([217.72.192.78]:49405 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727128AbfGAMlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 08:41:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1561984859;
-        bh=LQ55hwCCQ2FoTP2QGEKErwY6kt8vAGzxOs6SmA7nYGY=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=X1IDdAFQKzi660dsrJWh3D3Jv2tvygD2nAQ3tDG4Y0VzPbnR2WlM+RCy5ATkVqdbl
-         RqfrCSFNIgzdPwtYFG6wm5hfybpcA/nNVJNncaHjP3s6JXStXQL/rBWdqqe/8kZtLp
-         /Y2r7sOgX/Cjrw0OWr8DwQEHJ/AgL/ShtTgEF5d4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.131.202]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MDP6H-1hkt5q1wp3-00Gs1X; Mon, 01
- Jul 2019 14:40:59 +0200
-Subject: Re: [v2] Coccinelle: Suppression of warnings?
-To:     Enrico Weigelt <lkml@metux.net>, kernel-janitors@vger.kernel.org
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <05d85182-7ec3-8fc1-4bcd-fd2528de3a40@web.de>
- <2744a3fc-9e67-8113-1dd9-43669e06386a@web.de>
- <0b48a5c5-0814-6414-39ba-beb1b8b5253a@metux.net>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <eb95005d-e685-0a8f-416c-1a30ad3fbaa0@web.de>
-Date:   Mon, 1 Jul 2019 14:40:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 1 Jul 2019 08:41:41 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15777 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727128AbfGAMlj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 08:41:39 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d19ff810000>; Mon, 01 Jul 2019 05:41:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 01 Jul 2019 05:41:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 01 Jul 2019 05:41:38 -0700
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jul
+ 2019 12:41:38 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 1 Jul 2019 12:41:38 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d19ff7c0000>; Mon, 01 Jul 2019 05:41:37 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
+CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V12 09/12] dt-bindings: PCI: tegra: Add device tree support for Tegra194
+Date:   Mon, 1 Jul 2019 18:10:07 +0530
+Message-ID: <20190701124010.7484-10-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190701124010.7484-1-vidyas@nvidia.com>
+References: <20190701124010.7484-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <0b48a5c5-0814-6414-39ba-beb1b8b5253a@metux.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:ydQQuOaMKrrPNBxNI2I3+74fCb+1kGiptO3tfChLT3ZEQoyulwE
- VCAhoo7BuKMDByeQQJ8Hvs8+EjynWyypzMnUAPY2okMsOi5DZ45xQ5kuRK3/DVoUtcEBLsS
- FD35tiIas8jC6ROLqfXfJl2bAWohcL6o8dBtjOsMIEHnDuoKtsDuJcNPjza6Dm7dN1Ipd7y
- bh1K9lH0NdGX8ht1KzT3w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0AOVUaSr0H4=:8k9UO0GwcaGwlcFRU3/amX
- cMXTxKW9vzZsrOrw7CYOEu6zvoMVLtWRz2cQ8DaAwf2qjjKK7TG6jG/pJ6nH1cxm87rVmm3BD
- 9iHKhXvzcFNfVrbfHGZzvrbY6gwAZAj5CMX64OIDEQdtv7AXS2c4CHHZyjPjmQj42wjfBDC4D
- 0gZOS2A9ZoOmG43nNh56S72moP5CFgCSkhJBUoWl5Bu/ZPvbh5KfJvURFMjw7cMcfDl4JrO8r
- SC/CYzl6V8O0X1ikiAVprASYWFG98wMimf6Cfs4dt1kRP/OEDlPnqvRCZqKzrYHElUWY8b6Xe
- fG5b/l3xjq1GJzDQ6ofYNZPeL6tb2SBWcfsVIa1GXtWrw1KrCye/gwEV0tbGkFDDWln54mWJi
- x5NKD/p2QRXbeKvmzHSznZCTIbuPRRJ4P3dtEWDw5+ZXE4aYZn2bbl552RNZd/VfnFiLOmr6D
- e+GI2868ERZRmISjAL/asWEmpF7Ap7kqg8/AXCILnpeRhC82QpnmmhvCxuk5rex9Sfq533GdY
- k1SFZtbSN+1fogKoFs+oE65Z9RXKj2mvbJM90Ls22wJd3N9sMyKjn37FbWRrHc1Pz40juzq0C
- mzJVsbBX3twJw+OiVNpFr/vbAELaDksrZ4bmzrhb6bv91lHn0LgT+5TL/LAf+DQ70367LaUsA
- B4FoO4kafZPRPsgQKh2r5pLHnef5396Bbcf6Vt55ivgrdXKewPn+htDlg2LEg+kzhfbK/LOeB
- jz4WV6szhnzPiQDgFXPMNMi1aleJ4aFfxLVxTl/99jpOmz5d8rwzffV16BalPdouNHU/OXi6N
- fHU6YZI0FmUfmVoVTiqqEdEDG5mbZHQwSdWYMBs2YiSWT7RNpTPVxuzViiUc86ILv/MmnLQwV
- FQPA9tPS1hY7MxZpMWJ7LHSJJbwv14ZOzL7XyAVFCZ6ky5jqL2J+dd8IfGx4sDbtIfvs/qMCG
- w0jdW/t4tcp1kjlLZxtBqkd42tvkCsjubO0j0AcqdyEhTXO2DRZ0DiZM5H3cCGbCNd4KKmACM
- ka/XR4CppLOkKidMUyGRLtnbk4Syz6A6e4BRhrxds3AY67B5v58It4CdlOhpLAQxG3BX/rXJc
- aFx9EHnP+L4PFxAjkewM4127Pfcu7Eie7rF
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> By the way: do we have any mechanism for explicitly suppressing
-> individual warnings (some kind of annotation),
+Add support for Tegra194 PCIe controllers. These controllers are based
+on Synopsys DesignWare core IP.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+	t=1561984897; bh=SatwB927mzd7rncXv8QPKhwoP5yCvHNiedxQcFowAP0=;
+	h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+	 Content-Type;
+	b=TwYl6guw1NSy2U0469jClHKOS11Rg3sgDd9xFRmPrjAoDhqsG8J3c3utHnH3MQ7cc
+	 ESPcFKKlEkaFfrc/KGXfnaQF2jSLEPbGmjn34Nce32I6lTrX97BUOo4yrqcLA0N5gC
+	 MPG7nrDtnb/h2kkht+DYSoXcvmMFQFLjnY/B4c7YiscUhIsY4LFdxS8LDjqzWMhVrJ
+	 a3orEv+/zCyOqc3D8CN/8iKfbGRUvnpfSC+q1RFQk2/3TRClh0PWNZpA1QnH0xpM7g
+	 jotT6QPY73hzd/iTeIZw+msQIoVobpqHkfAmFN+5bwwfhDn7BIc25KAlkUHhD6Sh5J
+	 gCw97hPz47fAw==
 
-I do not know such an accepted specification interface
-(for the handling together with SmPL scripts) so far.
-How would you identify possibly unwanted messages in a safe way?
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+Changes since [v11]:
+* None
 
+Changes since [v10]:
+* None
 
-> when the maintainer is sure that some particular case is a false-positive ?
+Changes since [v9]:
+* None
 
-Do you know any specific source code places already where you would get
-concerned about the confidence and relevance of the provided information?
+Changes since [v8]:
+* Added Acked-by from Thierry
 
-Regards,
-Markus
+Changes since [v7]:
+* Addressed review comments from Thierry
+* Modified DT example to reflect new changes
+
+Changes since [v6]:
+* Changed description of the property "nvidia,bpmp".
+* Removed property "nvidia,disable-aspm-states".
+
+Changes since [v5]:
+* Removed 'max-link-speed' as it is going to be a common sub-system property
+* Removed 'nvidia,init-link-speed' as there isn't much value addition
+* Removed 'nvidia,wake-gpios' for now
+* Addressed review comments from Thierry and Rob in general
+
+Changes since [v4]:
+* None
+
+Changes since [v3]:
+* None
+
+Changes since [v2]:
+* Using only 'Cx' (x-being controller number) format to represent a controller
+* Changed to 'value: description' format where applicable
+* Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
+* Provided more documentation for 'nvidia,init-link-speed' property
+* Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
+
+Changes since [v1]:
+* Added documentation for 'power-domains' property
+* Removed 'window1' and 'window2' properties
+* Removed '_clk' and '_rst' from clock and reset names
+* Dropped 'pcie' from phy-names
+* Added entry for BPMP-FW handle
+* Removed offsets for some of the registers and added them in code and would be pickedup based on
+  controller ID
+* Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an optional
+* Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with inverted operation
+* Added more documentation for 'nvidia,update-fc-fixup' property
+* Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
+* Added '-us' to all properties that represent time in microseconds
+* Moved P2U documentation to a separate file
+
+ .../bindings/pci/nvidia,tegra194-pcie.txt     | 155 ++++++++++++++++++
+ 1 file changed, 155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+new file mode 100644
+index 000000000000..674e5adb2895
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+@@ -0,0 +1,155 @@
++NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
++
++This PCIe host controller is based on the Synopsis Designware PCIe IP
++and thus inherits all the common properties defined in designware-pcie.txt.
++
++Required properties:
++- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
++- device_type: Must be "pci"
++- power-domains: A phandle to the node that controls power to the respective
++  PCIe controller and a specifier name for the PCIe controller. Following are
++  the specifiers for the different PCIe controllers
++    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
++    TEGRA194_POWER_DOMAIN_PCIEX1A: C1
++    TEGRA194_POWER_DOMAIN_PCIEX1A: C2
++    TEGRA194_POWER_DOMAIN_PCIEX1A: C3
++    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
++    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
++  these specifiers are defined in
++  "include/dt-bindings/power/tegra194-powergate.h" file.
++- reg: A list of physical base address and length pairs for each set of
++  controller registers. Must contain an entry for each entry in the reg-names
++  property.
++- reg-names: Must include the following entries:
++  "appl": Controller's application logic registers
++  "config": As per the definition in designware-pcie.txt
++  "atu_dma": iATU and DMA registers. This is where the iATU (internal Address
++             Translation Unit) registers of the PCIe core are made available
++             for SW access.
++  "dbi": The aperture where root port's own configuration registers are
++         available
++- interrupts: A list of interrupt outputs of the controller. Must contain an
++  entry for each entry in the interrupt-names property.
++- interrupt-names: Must include the following entries:
++  "intr": The Tegra interrupt that is asserted for controller interrupts
++  "msi": The Tegra interrupt that is asserted when an MSI is received
++- bus-range: Range of bus numbers associated with this controller
++- #address-cells: Address representation for root ports (must be 3)
++  - cell 0 specifies the bus and device numbers of the root port:
++    [23:16]: bus number
++    [15:11]: device number
++  - cell 1 denotes the upper 32 address bits and should be 0
++  - cell 2 contains the lower 32 address bits and is used to translate to the
++    CPU address space
++- #size-cells: Size representation for root ports (must be 2)
++- ranges: Describes the translation of addresses for root ports and standard
++  PCI regions. The entries must be 7 cells each, where the first three cells
++  correspond to the address as described for the #address-cells property
++  above, the fourth and fifth cells are for the physical CPU address to
++  translate to and the sixth and seventh cells are as described for the
++  #size-cells property above.
++  - Entries setup the mapping for the standard I/O, memory and
++    prefetchable PCI regions. The first cell determines the type of region
++    that is setup:
++    - 0x81000000: I/O memory region
++    - 0x82000000: non-prefetchable memory region
++    - 0xc2000000: prefetchable memory region
++  Please refer to the standard PCI bus binding document for a more detailed
++  explanation.
++- #interrupt-cells: Size representation for interrupts (must be 1)
++- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
++  Please refer to the standard PCI bus binding document for a more detailed
++  explanation.
++- clocks: Must contain an entry for each entry in clock-names.
++  See ../clocks/clock-bindings.txt for details.
++- clock-names: Must include the following entries:
++  - core
++- resets: Must contain an entry for each entry in reset-names.
++  See ../reset/reset.txt for details.
++- reset-names: Must include the following entries:
++  - apb
++  - core
++- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
++- phy-names: Must include an entry for each active lane.
++  "p2u-N": where N ranges from 0 to one less than the total number of lanes
++- nvidia,bpmp: Must contain a pair of phandle to BPMP controller node followed
++  by controller-id. Following are the controller ids for each controller.
++    0: C0
++    1: C1
++    2: C2
++    3: C3
++    4: C4
++    5: C5
++- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
++
++Optional properties:
++- supports-clkreq: Refer to Documentation/devicetree/bindings/pci/pci.txt
++- nvidia,update-fc-fixup: This is a boolean property and needs to be present to
++    improve performance when a platform is designed in such a way that it
++    satisfies at least one of the following conditions thereby enabling root
++    port to exchange optimum number of FC (Flow Control) credits with
++    downstream devices
++    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and MPS)
++    2. If C0/C1/C2/C3/C4/C5 operate at their respective max link widths and
++       a) speed is Gen-2 and MPS is 256B
++       b) speed is >= Gen-3 with any MPS
++- nvidia,aspm-cmrt-us: Common Mode Restore Time for proper operation of ASPM
++   to be specified in microseconds
++- nvidia,aspm-pwr-on-t-us: Power On time for proper operation of ASPM to be
++   specified in microseconds
++- nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to be
++   specified in microseconds
++
++Examples:
++=========
++
++Tegra194:
++--------
++
++	pcie@14180000 {
++		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
++		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
++		       0x00 0x38040000 0x0 0x00040000>; /* iATU_DMA reg space (256K)  */
++		reg-names = "appl", "config", "atu_dma";
++
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++		num-lanes = <8>;
++		linux,pci-domain = <0>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,	/* controller interrupt */
++			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
++		interrupt-names = "intr", "msi";
++
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 0>;
++		interrupt-map = <0 0 0 0 &gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
++
++		nvidia,bpmp = <&bpmp 0>;
++
++		supports-clkreq;
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++
++		bus-range = <0x0 0xff>;
++		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000    /* downstream I/O (1MB) */
++			  0x82000000 0x0  0x38200000 0x0  0x38200000 0x0 0x01E00000    /* non-prefetchable memory (30MB) */
++			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* prefetchable memory (16GB) */
++
++		vddio-pex-ctl-supply = <&vdd_1v8ao>;
++
++		phys = <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
++		       <&p2u_hsio_5>;
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3";
++	};
+-- 
+2.17.1
+
