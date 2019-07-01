@@ -2,126 +2,201 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620EDC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 05:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F783C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 417E4208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 05:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63532089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:00:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QTO2aEfz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfGAFvD (ORCPT
+        id S1727354AbfGAGAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 01:51:03 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:56658 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727395AbfGAFvB (ORCPT
+        Mon, 1 Jul 2019 02:00:43 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39612 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbfGAGAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 01:51:01 -0400
-Received: by mail-io1-f72.google.com with SMTP id u25so13931138iol.23
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 22:51:01 -0700 (PDT)
+        Mon, 1 Jul 2019 02:00:43 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b7so6741203pls.6
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 23:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Sg6AW5CSqanpjYZH3U5Z/ukrtDxL0FdU1gA0efXYK0A=;
+        b=QTO2aEfzi+A3HebhY7g/ZgvkJUcXa3vAiESzBq8/GpxefC8hHHKW1weAYnL9RurIRC
+         eB4mQaIkZN8U+uCAHQ0gxKhc71mpoGo7tG9c5Z7UGTR76/w98eZqSjCsGP/qLMbt/pLp
+         JO93Yul0TEW/VhJv3oJSloY/mML5blyvDQ5XfXM/eXwXAlkhs6rGvdOtYJnsPpYQiOLE
+         zBT+aUk2/QPUk10GQs5Tea+BytLTgdOCje/6qslcdWzm4PJ4CBe/3qxU471pKpnjzQr4
+         yKUBfu2t50wT03EYggRyqXAmichUFKS97Yb67hprGOfAoJXSJ3uI5mbHn+yleb8Lttay
+         fgMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=qCv6O8PlYg+ZT3/7zG6DuN2UhJzRl942UxJbgb+Ot2U=;
-        b=ZoUfDdB+jQ4HjGpIJZcP8jwXu7vqvPbigsztpgsAVBgJ/YOQs5ggC2Ow0/9bprIT+g
-         gQb6Apb0fnKkH36VrCnDUIQs5MQhGWquTWyjup5x78QetYt3GzchAZY9KYaNpN3a58UB
-         I+G4I0iClZXCOOZKgGRce2WsOne+AtzQj8j9ymlYpyb6oSHQmgWz6aqTxi9pO6v3nNH2
-         p+925if2CFnG35CRpUPGY1Bx6+gUvfW2uCZv7U8UzrWsib1OAvRsAi3Jwh93B26wWnFo
-         e0jFEhedHrhOF1VkfCNpORFWIQok3v5PTQh+QpAsnGbAINDS+gD2qZMjbsJytGxbIa2Z
-         0y1g==
-X-Gm-Message-State: APjAAAXCjo9Q7QGKXohPXn0raxc//mu+1OrZdWm+lsMrZplYkqdm2cKH
-        liGwodf3kKyDvuLNNd2//pBIl3+0tg/A2To5QMOq/IoA0wLg
-X-Google-Smtp-Source: APXvYqz9w2zVcH6kNVua0uWx+iYzOLbIPZQ+5rE5IxWvE2bRVxNupp6tM2dPKMXEakSe0K50uQHi7ZAYlzPAfHaFjnJqyTIn5ocg
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Sg6AW5CSqanpjYZH3U5Z/ukrtDxL0FdU1gA0efXYK0A=;
+        b=jONfqDLXbVEmm3urdkU6MUZHcuFzuCry6mOc8LqgipK5kFuGWb35vW8py+keakQpmS
+         TM+Tspi1zT4NYWQAY/s5qCgawTVJW/F4Qll4TbecGb4QPl8KaMTEWacQ4WPZoZ8hgwvR
+         84iQozg2i45+oyJSmme548G3zvdf4BX/dQw74dopSY/MHqZbun3cr2caL18HFY/CVmrN
+         hdS6dlvCXs35IBlYbwCIUPynwmrjDrb2I3lGj37M7qw5ylcXlDaB4rP92/YXXcUwscS2
+         HbfyNr6hKGRxaHlYwr4ydNE1bNiZSs73FO1B8e1QZBGuXzTig4EO9tBBFmqNzKLzk7o8
+         y00g==
+X-Gm-Message-State: APjAAAWsHzfzUiWSf0fgDffhUl1XzYFc46jw9udXdjLknKvBvDaq95w8
+        4T7vgS/H+n9nhAw3OSKg4oNnkg==
+X-Google-Smtp-Source: APXvYqxxnVbUx2Y7NhWR1fhPFR5nH7JgIMmZ37hT57LCoxkhPrg7BsR5QVJt+o8s1K3nGQKhB7uWUA==
+X-Received: by 2002:a17:902:246:: with SMTP id 64mr26301451plc.311.1561960842206;
+        Sun, 30 Jun 2019 23:00:42 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f14sm9253392pfn.53.2019.06.30.23.00.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 30 Jun 2019 23:00:41 -0700 (PDT)
+Date:   Sun, 30 Jun 2019 23:00:39 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        xiang xiao <xiaoxiang781216@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Fabien DESSENNE <fabien.dessenne@st.com>
+Subject: Re: [PATCH v2 2/2] tty: add rpmsg driver
+Message-ID: <20190701060039.GD1263@builder>
+References: <1557500577-22366-1-git-send-email-arnaud.pouliquen@st.com>
+ <1557500577-22366-3-git-send-email-arnaud.pouliquen@st.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3e4:: with SMTP id s4mr27121967jaq.141.1561960260741;
- Sun, 30 Jun 2019 22:51:00 -0700 (PDT)
-Date:   Sun, 30 Jun 2019 22:51:00 -0700
-In-Reply-To: <5d199ad457036_1dd62b219ced25b86e@john-XPS-13-9370.notmuch>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007eb42d058c9836ac@google.com>
-Subject: Re: WARNING in mark_lock
-From:   syzbot <syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com>
-To:     bpf@vger.kernel.org, ebiggers@kernel.org, john.fastabend@gmail.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557500577-22366-3-git-send-email-arnaud.pouliquen@st.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri 10 May 08:02 PDT 2019, Arnaud Pouliquen wrote:
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-KASAN: use-after-free Read in class_equal
+> This driver exposes a standard tty interface on top of the rpmsg
+> framework through the "rpmsg-tty-channel" rpmsg service.
+> 
+> This driver supports multi-instances, offering a /dev/ttyRPMSGx entry
+> per rpmsg endpoint.
+> 
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+>  Documentation/serial/tty_rpmsg.txt |  38 +++
+>  drivers/tty/Kconfig                |   9 +
+>  drivers/tty/Makefile               |   1 +
+>  drivers/tty/rpmsg_tty.c            | 479 +++++++++++++++++++++++++++++++++++++
+>  4 files changed, 527 insertions(+)
+>  create mode 100644 Documentation/serial/tty_rpmsg.txt
+>  create mode 100644 drivers/tty/rpmsg_tty.c
+> 
+> diff --git a/Documentation/serial/tty_rpmsg.txt b/Documentation/serial/tty_rpmsg.txt
+> new file mode 100644
+> index 000000000000..e069ed268a2b
+> --- /dev/null
+> +++ b/Documentation/serial/tty_rpmsg.txt
+> @@ -0,0 +1,38 @@
+> +
+> +			The rpmsg TTY
+> +
+> +The rpmsg tty driver implements a serial communication on the rpmsg bus,
+> +to communicate with a remote processor devices in asymmetric multiprocessing
+> +(AMP) configurations.
+> +
+> +The remote processor can instantiate a new tty by requesting a new "rpmsg-tty-channel" RPMsg service. Information related to the RPMsg and
+> +associated tty device is available in /sys/bus/rpmsg/devices/virtio0.rpmsg-tty-channel.-1.<X>, with
+> +<X> corresponding to the ttyRPMSG instance.
+> +
+> +RPMsg data/control structure
+> +----------------------------
+> +
+> +The RPMsg is used to send data or control messages. Differentiation between the
+> +stream and the control messages is done thanks to the first byte of the
+> +RPMsg payload:
+> +
+> +
+> +RPMSG_DATA	- rest of messages contains data
+> +
+> +RPMSG_CTRL 	- message contains control.
+> +
+> +
+> +To be compliant with this driver, the remote firmware has to respect this RPMsg
+> +payload structure. At least the RPMSG_DATA type has to be supported. The
+> +RPMSG_CTRL is optional.
+> +
 
-==================================================================
-BUG: KASAN: use-after-free in class_equal+0x40/0x50  
-kernel/locking/lockdep.c:1527
-Read of size 8 at addr ffff88808a268ba0 by task syz-executor.1/9270
+This scheme prevents us from using this driver to expose any existing
+tty-like channels without having to modify such firmware.
 
-CPU: 0 PID: 9270 Comm: syz-executor.1 Not tainted 5.2.0-rc3+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
+> +Flow control type
+> +-----------------
+> +
+> +A minimum flow control can be implemented to allow/block communication with the remote processor.
+> +
+> +DATA_TERM_READY	-	one parameter:
+> +			- u8 state
+> +				Set to indicate to remote side that terminal is
+> +				ready for communication.
+> +				Reset to block communication with remote side.
 
-Allocated by task 2647419968:
-BUG: unable to handle page fault for address: ffffffff8c00b020
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 8a70067 P4D 8a70067 PUD 8a71063 PMD 0
-Thread overran stack, or stack corrupted
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9270 Comm: syz-executor.1 Not tainted 5.2.0-rc3+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:stack_depot_fetch+0x10/0x30 lib/stackdepot.c:203
-Code: e9 7b fd ff ff 4c 89 ff e8 8d b4 62 fe e9 e6 fd ff ff 90 90 90 90 90  
-90 90 90 89 f8 c1 ef 11 25 ff ff 1f 00 81 e7 f0 3f 00 00 <48> 03 3c c5 20  
-6c 04 8b 48 8d 47 18 48 89 06 8b 47 0c c3 0f 1f 00
-RSP: 0018:ffff88808a2688e8 EFLAGS: 00010006
-RAX: 00000000001f8880 RBX: ffff88808a269304 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff88808a2688f0 RDI: 0000000000003ff0
-RBP: ffff88808a268908 R08: 0000000000000020 R09: ffffed1015d044fa
-R10: ffffed1015d044f9 R11: ffff8880ae8227cf R12: ffffea0002289a00
-R13: ffff88808a268ba0 R14: ffff8880aa58ec40 R15: ffff88808a269300
-FS:  00005555570ba940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffff8c00b020 CR3: 000000008dd00000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-Modules linked in:
-CR2: ffffffff8c00b020
----[ end trace 4acfe4b59fbc9cdb ]---
-RIP: 0010:stack_depot_fetch+0x10/0x30 lib/stackdepot.c:203
-Code: e9 7b fd ff ff 4c 89 ff e8 8d b4 62 fe e9 e6 fd ff ff 90 90 90 90 90  
-90 90 90 89 f8 c1 ef 11 25 ff ff 1f 00 81 e7 f0 3f 00 00 <48> 03 3c c5 20  
-6c 04 8b 48 8d 47 18 48 89 06 8b 47 0c c3 0f 1f 00
-RSP: 0018:ffff88808a2688e8 EFLAGS: 00010006
-RAX: 00000000001f8880 RBX: ffff88808a269304 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff88808a2688f0 RDI: 0000000000003ff0
-RBP: ffff88808a268908 R08: 0000000000000020 R09: ffffed1015d044fa
-R10: ffffed1015d044f9 R11: ffff8880ae8227cf R12: ffffea0002289a00
-R13: ffff88808a268ba0 R14: ffff8880aa58ec40 R15: ffff88808a269300
-FS:  00005555570ba940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffff8c00b020 CR3: 000000008dd00000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+And as shown in discussions following Qualcomm's proposed flow-control
+addition to the rpmsg API the need for flow control is not limited to
+this custom tty like interface. 
 
 
-Tested on:
+So I really would like to see an implementation of a side-band flow
+control mechanism in the virtio rpmsg bus.
 
-commit:         0b58d013 bpf: tls, implement unhash to avoid transition ou..
-git tree:       git://github.com/cilium/linux ktls-unhash
-console output: https://syzkaller.appspot.com/x/log.txt?x=153368a3a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2cc918d28ebd06b4
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+> index e0a04bfc873e..d7b426939f69 100644
+> --- a/drivers/tty/Kconfig
+> +++ b/drivers/tty/Kconfig
+> @@ -442,6 +442,15 @@ config VCC
+>  	help
+>  	  Support for Sun logical domain consoles.
+>  
+> +config RPMSG_TTY
+> +	tristate "RPMSG tty driver"
+> +	depends on RPMSG
+> +	help
+> +	  Say y here to export rpmsg endpoints as tty devices, usually found
+> +	  in /dev/ttyRPMSGx.
+> +	  This makes it possible for user-space programs to send and receive
+> +	  rpmsg messages as a standard tty protocol.
+> +
+>  config LDISC_AUTOLOAD
+>  	bool "Automatically load TTY Line Disciplines"
+>  	default y
+> diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
+> index c72cafdf32b4..90a98a20714d 100644
+> --- a/drivers/tty/Makefile
+> +++ b/drivers/tty/Makefile
+> @@ -33,5 +33,6 @@ obj-$(CONFIG_PPC_EPAPR_HV_BYTECHAN) += ehv_bytechan.o
+>  obj-$(CONFIG_GOLDFISH_TTY)	+= goldfish.o
+>  obj-$(CONFIG_MIPS_EJTAG_FDC_TTY) += mips_ejtag_fdc.o
+>  obj-$(CONFIG_VCC)		+= vcc.o
+> +obj-$(CONFIG_RPMSG_TTY)		+= rpmsg_tty.o
+>  
+>  obj-y += ipwireless/
+> diff --git a/drivers/tty/rpmsg_tty.c b/drivers/tty/rpmsg_tty.c
+[..]
+> +static struct rpmsg_device_id rpmsg_driver_tty_id_table[] = {
+> +	{ .name	= "rpmsg-tty-channel" },
 
+I really would like a mechanism that does not depend on a fixed channel
+name, as this required that firmware is written specifically for being
+paired with this driver.
+
+In other words this is exactly the same problem that we worked around in
+rpmsg_char.
+
+Regards,
+Bjorn
