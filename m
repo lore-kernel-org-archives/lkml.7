@@ -2,91 +2,110 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0948EC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C2FC06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E104721473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5161320B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:15:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="oumzWBQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbfGAPPL (ORCPT
+        id S1730190AbfGAPOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:15:11 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:32821 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728764AbfGAPPI (ORCPT
+        Mon, 1 Jul 2019 11:14:38 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:57458 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730158AbfGAPOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:15:08 -0400
-Received: by mail-qt1-f193.google.com with SMTP id h24so11993362qto.0;
-        Mon, 01 Jul 2019 08:15:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SWzGaJ3K1m5MITaG47DyN8fuDrDuFeO4EBg8cfltv6A=;
-        b=hQ5leNLM8zxOlu0xsEq+CpBBF+yONRHMazzmXgQLZJgzPUrIhv3SqKdZHn0TthjDRf
-         2+EZ1PV5SayL37HNJkFiSF3YChEPRaieqPDrGtd2+1zr9pI4nnrE/MbO5pNjg3zWcvSH
-         jS3d4lRakpMjcM0E3GH3ok6qBYtARCJ4NdSDzkZ5N9l+oPaSAr+1tlrg8YMKA95YGYPy
-         zTyInKt2ata0phwGhrq4uNQUTSYImaZNouGYToCVA/YoDXppDdz7sz7zfnwODOUB7Wtq
-         HgsJn4yXw8q+mLwRnI8umKsBZFBVhkdnuuTPIS0IMbHX/osrvVAKzbUq0y1cCew6Hq4I
-         QkGA==
-X-Gm-Message-State: APjAAAVUP0vb2G8h1jSw9Rk6s1rRnBeWm5ruBHyutSGuIWrx+Vcd8+YT
-        KgPHFLDm+L09OMH/Wi6uiAL4hfiLaVLbA9igh02wV5bE
-X-Google-Smtp-Source: APXvYqx2fcdlEPw8crNsDt0x8PrIMzIH0ySrWp/sigjo3EdA1jcH64351orRTGa3HS4+P7B9/E6V6IaUYuj0wxQf3YU=
-X-Received: by 2002:aed:33a4:: with SMTP id v33mr20640020qtd.18.1561994107714;
- Mon, 01 Jul 2019 08:15:07 -0700 (PDT)
+        Mon, 1 Jul 2019 11:14:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1561994072; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aLvkOWpaGwYIPSbPYXR/ChKcMO6iOuKXjXEy153vqMk=;
+        b=oumzWBQmm3/SIQdqUDn0Tze/2KiN05qoFS4si4GLeYYC8QO9V9he3/Tyk0XjkvX3XvXCrx
+        oc+AsjGMBPLhvcz9KVhzTMhavTZYdXsd8U2Q9VM2l2GBx9Q/f51WmmCGyAM3imSDWTADIC
+        GRaVJHc05rFZZxRtTy97eRbMkNuIX8U=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Artur Rojek <contact@artur-rojek.eu>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v14 08/13] clk: jz4740: Add TCU clock
+Date:   Mon,  1 Jul 2019 17:14:05 +0200
+Message-Id: <20190701151410.23127-9-paul@crapouillou.net>
+In-Reply-To: <20190701151410.23127-1-paul@crapouillou.net>
+References: <20190701151410.23127-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20190604160944.4058-1-christian@brauner.io> <20190604160944.4058-2-christian@brauner.io>
- <20190620184451.GA28543@roeck-us.net> <20190620221003.ciuov5fzqxrcaykp@brauner.io>
- <CAK8P3a2iV7=HkHBVL_puvCQN0DmdKEnVs2aG9MQV_8Q58JSfTA@mail.gmail.com>
- <20190621111839.v5yqlws6iw7mx4aa@brauner.io> <CAK8P3a0T1=eg5ONbMFhHi=vmk1K5uogZ+5=wpsXvjVDzn6vS=Q@mail.gmail.com>
- <20190621153012.fxwhx25mzmzueqh7@brauner.io>
-In-Reply-To: <20190621153012.fxwhx25mzmzueqh7@brauner.io>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 1 Jul 2019 17:14:51 +0200
-Message-ID: <CAK8P3a0f_=q88JB=t7fbmweAbZ2E2_uCMt+2JoBYx3od_M6fHQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Ley Foon Tan <lftan@altera.com>,
-        "moderated list:NIOS2 ARCHITECTURE" 
-        <nios2-dev@lists.rocketboards.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 5:30 PM Christian Brauner <christian@brauner.io> wrote:
-> On Fri, Jun 21, 2019 at 04:20:15PM +0200, Arnd Bergmann wrote:
-> > On Fri, Jun 21, 2019 at 1:18 PM Christian Brauner <christian@brauner.io> wrote:
-> Hm, if you believe that this is fine and want to "vouch" for it by
-> whipping up a patch that replaces the wiring up done in [1] I'm happy to
-> take it. :) Otherwise I'd feel more comfortable not adding all arches at
-> once.
->
-> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=clone
+Add the missing TCU clock to the list of clocks supplied by the CGU for
+the JZ4740 SoC.
 
-Sorry for my late reply. I had actually looked at the implementations
-in a little
-more detail and I think you are right that adding these are better
-left to the arch
-maintainers in case of clone3.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-      Arnd
+Notes:
+    v5: New patch
+    
+    v6-v14: No change
+
+ drivers/clk/ingenic/jz4740-cgu.c       | 6 ++++++
+ include/dt-bindings/clock/jz4740-cgu.h | 1 +
+ 2 files changed, 7 insertions(+)
+
+diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
+index c77f4e1506dc..176d911b5839 100644
+--- a/drivers/clk/ingenic/jz4740-cgu.c
++++ b/drivers/clk/ingenic/jz4740-cgu.c
+@@ -203,6 +203,12 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
+ 		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
+ 		.gate = { CGU_REG_CLKGR, 5 },
+ 	},
++
++	[JZ4740_CLK_TCU] = {
++		"tcu", CGU_CLK_GATE,
++		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 1 },
++	},
+ };
+ 
+ static void __init jz4740_cgu_init(struct device_node *np)
+diff --git a/include/dt-bindings/clock/jz4740-cgu.h b/include/dt-bindings/clock/jz4740-cgu.h
+index 6ed83f926ae7..e82d77028581 100644
+--- a/include/dt-bindings/clock/jz4740-cgu.h
++++ b/include/dt-bindings/clock/jz4740-cgu.h
+@@ -34,5 +34,6 @@
+ #define JZ4740_CLK_ADC		19
+ #define JZ4740_CLK_I2C		20
+ #define JZ4740_CLK_AIC		21
++#define JZ4740_CLK_TCU		22
+ 
+ #endif /* __DT_BINDINGS_CLOCK_JZ4740_CGU_H__ */
+-- 
+2.21.0.593.g511ec345e18
+
