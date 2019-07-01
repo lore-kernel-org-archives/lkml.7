@@ -2,133 +2,75 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8B0C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40398C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6DE206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:50:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="UZI7933+"
+	by mail.kernel.org (Postfix) with ESMTP id 1FBD22064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbfGAOuY (ORCPT
+        id S1729790AbfGAOvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:50:24 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38352 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728190AbfGAOuX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:50:23 -0400
-Received: by mail-io1-f65.google.com with SMTP id j6so29445236ioa.5
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 07:50:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=32BiaEJGsuJx0m9YwhU75QHnhvLcQMif5khswsN0yaw=;
-        b=UZI7933+UPxzhbXr0ioPXp34wE1gOlkdLNLG/Fo90Hw4P8MxTEwjgqiaotaQOaX1Hc
-         6g51NJXorp8+YREaai1YaoqL+qFX5Adl1Iy18tN5w+abrf4KXZP51ScTIDCI6dhwGJJH
-         zKHAXYYMSMOkvXWt85jg+swXM3D6agOVSHScsFEPw7yKulhXmpoUtjgnayuIQXBbxMxm
-         8X6B9i12ZYLb9kxjYfhyjikDEJ+lwr+vrjgcZenRJiyOKYpCiPxpRUQ+fNV5mpV4GkeG
-         e/LZ9fT6VyLsgiDfhIV99K3fJCKhnwtz6i8aD91SDIbgQotQjJ8DwAcjLr4mj+m+Ae47
-         J28g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=32BiaEJGsuJx0m9YwhU75QHnhvLcQMif5khswsN0yaw=;
-        b=aYm5INakuOtDgcgPeR6QzcFfVh4nAxIPnXrPzT9OUg1COlPTuzkgzSvZIsHUo+m+ik
-         1L9vfPt4x8LwF6jrGR41cQCL8YyUPb8GYdk4EDxndNNT3IxnfpqharAn/qWeNqD0vxuZ
-         8yoaqAPzCh4ezm3DAM0YBo7KDLH+4s7YxApLp3tDjSR4eogvHHgjBG1igcD1DiwL7s0J
-         o65HwCh/CY4zTRPggKfAvAOPcQB1kK43Y0HxdlBG0rGeACM0nIB0TJCcTgWvibwTp31i
-         uwpe7OGyhK2EStsUGwPIukRmRE828de6Kh8pM1dtV5RCm1dj+uKL2nYKyRy5FLvu9r1X
-         321Q==
-X-Gm-Message-State: APjAAAV867Y2oRuV4gCHFe62VsGm4xseTD6apgf0ss581CpDhmsoRSGN
-        bNG23KimdAlOKT2AedzxAnF3mQ==
-X-Google-Smtp-Source: APXvYqxiS2P3eieRwds62YvuvWTLfDrc1y4M5yVwgRrK0V0G5G40nntFsnOywoDyuuol3a0JosKnDQ==
-X-Received: by 2002:a02:1087:: with SMTP id 129mr30757059jay.131.1561992622191;
-        Mon, 01 Jul 2019 07:50:22 -0700 (PDT)
-Received: from brauner.io ([208.54.80.252])
-        by smtp.gmail.com with ESMTPSA id b6sm9161956iok.71.2019.07.01.07.50.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 07:50:21 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 16:50:12 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     syzbot+002e636502bc4b64eb5c@syzkaller.appspotmail.com,
-        viro@zeniv.linux.org.uk, jannh@google.com
-Cc:     akpm@linux-foundation.org, arunks@codeaurora.org,
-        ebiederm@xmission.com, elena.reshetova@intel.com,
-        gregkh@linuxfoundation.org, guro@fb.com, ktsanaktsidis@zendesk.com,
-        linux-kernel@vger.kernel.org, mhocko@suse.com, mingo@kernel.org,
-        peterz@infradead.org, riel@surriel.com, rppt@linux.vnet.ibm.com,
-        scuttimmy@gmail.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, willy@infradead.org, yuehaibing@huawei.com
-Subject: Re: [PATCH] fork: return proper negative error code
-Message-ID: <20190701145011.tzwsndwzj5y5fc6s@brauner.io>
-References: <000000000000e0dc0d058c9e7142@google.com>
- <20190701144808.6804-1-christian@brauner.io>
+        Mon, 1 Jul 2019 10:51:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:36418 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728354AbfGAOvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 10:51:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D8A4344;
+        Mon,  1 Jul 2019 07:51:08 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B3D73F246;
+        Mon,  1 Jul 2019 07:51:06 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 15:51:04 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Raphael Gault <raphael.gault@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jpoimboe@redhat.com, peterz@infradead.org, will.deacon@arm.com,
+        julien.thierry@arm.com
+Subject: Re: [RFC V3 11/18] arm64: alternative: Mark .altinstr_replacement as
+ containing executable instructions
+Message-ID: <20190701145104.GE21774@arrakis.emea.arm.com>
+References: <20190624095548.8578-1-raphael.gault@arm.com>
+ <20190624095548.8578-12-raphael.gault@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190701144808.6804-1-christian@brauner.io>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190624095548.8578-12-raphael.gault@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 04:48:08PM +0200, Christian Brauner wrote:
-> Make sure to return a proper negative error code from copy_process()
-> when anon_inode_getfile() fails with CLONE_PIDFD.
-> Otherwise _do_fork() will not detect an error and get_task_pid() will
-> operator on a nonsensical pointer:
+On Mon, Jun 24, 2019 at 10:55:41AM +0100, Raphael Gault wrote:
+> Until now, the section .altinstr_replacement wasn't marked as containing
+> executable instructions on arm64. This patch changes that so that it is
+> coherent with what is done on x86.
 > 
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-> R13: 00007ffc15fbb0ff R14: 00007ff07e47e9c0 R15: 0000000000000000
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 1 PID: 7990 Comm: syz-executor290 Not tainted 5.2.0-rc6+ #9
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
-> RIP: 0010:get_task_pid+0xe1/0x210 kernel/pid.c:372
-> Code: 89 ff e8 62 27 5f 00 49 8b 07 44 89 f1 4c 8d bc c8 90 01 00 00 eb 0c
-> e8 0d fe 25 00 49 81 c7 38 05 00 00 4c 89 f8 48 c1 e8 03 <80> 3c 18 00 74
-> 08 4c 89 ff e8 31 27 5f 00 4d 8b 37 e8 f9 47 12 00
-> RSP: 0018:ffff88808a4a7d78 EFLAGS: 00010203
-> RAX: 00000000000000a7 RBX: dffffc0000000000 RCX: ffff888088180600
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: ffff88808a4a7d90 R08: ffffffff814fb3a8 R09: ffffed1015d66bf8
-> R10: ffffed1015d66bf8 R11: 1ffff11015d66bf7 R12: 0000000000041ffc
-> R13: 1ffff11011494fbc R14: 0000000000000000 R15: 000000000000053d
-> FS:  00007ff07e47e700(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000004b5100 CR3: 0000000094df2000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   _do_fork+0x1b9/0x5f0 kernel/fork.c:2360
->   __do_sys_clone kernel/fork.c:2454 [inline]
->   __se_sys_clone kernel/fork.c:2448 [inline]
->   __x64_sys_clone+0xc1/0xd0 kernel/fork.c:2448
->   do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:301
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+> ---
+>  arch/arm64/include/asm/alternative.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Link: https://lore.kernel.org/lkml/000000000000e0dc0d058c9e7142@google.com
-> Reported-and-tested-by: syzbot+002e636502bc4b64eb5c@syzkaller.appspotmail.com
-> Fixes: 6fd2fe494b17 ("copy_process(): don't use ksys_close() on cleanups")
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Christian Brauner <christian@brauner.io>
+> diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
+> index b9f8d787eea9..e9e6b81e3eb4 100644
+> --- a/arch/arm64/include/asm/alternative.h
+> +++ b/arch/arm64/include/asm/alternative.h
+> @@ -71,7 +71,7 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+>  	ALTINSTR_ENTRY(feature,cb)					\
+>  	".popsection\n"							\
+>  	" .if " __stringify(cb) " == 0\n"				\
+> -	".pushsection .altinstr_replacement, \"a\"\n"			\
+> +	".pushsection .altinstr_replacement, \"ax\"\n"			\
+>  	"663:\n\t"							\
+>  	newinstr "\n"							\
+>  	"664:\n\t"							\
 
-syzkaller has verified that this fixes the bug. The patch is sitting in
-my fixes branch. I'm sending a PR for this in a little bit to get this
-out of the way.
+I guess that's an inconsistency we missed since the asm macro has "ax".
 
-Thanks!
-Christian
+-- 
+Catalin
