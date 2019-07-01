@@ -2,690 +2,236 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 679BEC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC858C06508
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DC7208CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95605208CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:13:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="qC88D4Em"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfGADNH (ORCPT
+        id S1727355AbfGADNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 23:13:07 -0400
-Received: from aclms3.advantech.com.tw ([125.252.70.86]:21750 "EHLO
-        ACLMS3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbfGADNH (ORCPT
+        Sun, 30 Jun 2019 23:13:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42822 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727197AbfGADNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 23:13:07 -0400
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS3.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Td8b9a5c15eac1401c81238@ACLMS3.advantech.com.tw>;
- Mon, 1 Jul 2019 11:13:03 +0800
-From:   <Amy.Shih@advantech.com.tw>
-To:     <she90122@gmail.com>
-CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
-        <jia.sui@advantech.com.cn>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [v2 3/3] hwmon: (nct7904) Add extra sysfs support for fan, voltage and temperature.
-Date:   Mon, 1 Jul 2019 03:12:09 +0000
-Message-ID: <1c5f45e5df7ec0fe092fb3aa74727fb1536e5e5c.1561950110.git.amy.shih@advantech.com.tw>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1561950110.git.amy.shih@advantech.com.tw>
-References: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1561950110.git.amy.shih@advantech.com.tw>
+        Sun, 30 Jun 2019 23:13:36 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t132so1911362pgb.9
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 20:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kVkjGGqt9wojni4rTKt7M3GknPat6w4KsGam7lc3LbM=;
+        b=qC88D4EmW5gzz7MBB72BbrxJkVXMN+FdkQN5WF8/32XSd1hG3gZzzm4tZck4mmSz+I
+         58AM91vcxLWEx4ISKBfNRFrBunRHNyjycJJmCQ7ijsXA0zz7pPmtqgvy1qQNbwy88qdv
+         cL4WyMU4HJ5X4ChUrtRtcWVyrcvMjKWLlGATLwNRerNzZDUpgS5kfu2kYm5eOps7zaK4
+         5Ru5m7rsS8IuUXPPBT43sIxHyRogzv9RfTuRq2NFGQPfdH7GHSOLzX45BGfvzd/D0Bok
+         k2T8W8pbWFuq4FAeGelN0i/Q8z9JGiw/zJgcItW8UpLCE4/HEtlib/oMGmnnU5oJM3G9
+         PKGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=kVkjGGqt9wojni4rTKt7M3GknPat6w4KsGam7lc3LbM=;
+        b=LojUTPZhFwoFI6fWdOat7AOnpU9h5WupBOVbmHuv7lDh6zDXTlQcWIsUDOmN1obOQ+
+         XjkxrmdN/387I1EM8IpiN1ZPLkgVsJfPYVgwaDrMuU3ja7J5eRODjmShggIXkCs5iYCv
+         FfMgNEel7mOc05xPDx+KUhi00vP+3j/gpe0i62D1B6iVVENvUVF8fRMOn/Hc4EMspZ2o
+         WqK/FADlvnqSf74yfFLRqBBiX26ud7+vGbMGQ0m4lHFiCV+RCCnaEDDPf/7MOXKHCVu3
+         O3h6NYzHFJ1DGn0U6bwltOi8WI+3/0/ZSQodq2BMJ1I1Put0a0a9oYnXmkNZjp+euYCb
+         K/Xw==
+X-Gm-Message-State: APjAAAWE/BJG9WkFuSlJITnd/euNYSFnuguzl6XPzm7psVQTvPe5HABp
+        b/2yt7mxbs+azWJZbGO576yLUw==
+X-Google-Smtp-Source: APXvYqyhgGAOaMmlMYxGC8nTRkUx/vLDR1Cx/i1vdP7xhLKYO7noIsWUZ/7g17PhVF0dLrKaEmu36g==
+X-Received: by 2002:a63:e015:: with SMTP id e21mr21803573pgh.172.1561950815570;
+        Sun, 30 Jun 2019 20:13:35 -0700 (PDT)
+Received: from [10.61.2.175] ([122.99.82.10])
+        by smtp.gmail.com with ESMTPSA id b8sm19072723pff.20.2019.06.30.20.13.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 30 Jun 2019 20:13:34 -0700 (PDT)
+Subject: Re: [RFC PATCH 03/12] powerpc/prom_init: Add the ESM call to
+ prom_init
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>
+References: <20190521044912.1375-1-bauerman@linux.ibm.com>
+ <20190521044912.1375-4-bauerman@linux.ibm.com>
+ <3b45cc84-273b-b333-831c-85c501b7e78e@ozlabs.ru>
+ <87mui1732j.fsf@morokweng.localdomain>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Openpgp: preference=signencrypt
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <d53256fe-678b-12d8-ca7e-6a5beea0c155@ozlabs.ru>
+Date:   Mon, 1 Jul 2019 13:13:29 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.17.10.28]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- taipei08.ADVANTECH.CORP (172.20.0.235)
-X-StopIT: No
+In-Reply-To: <87mui1732j.fsf@morokweng.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "amy.shih" <amy.shih@advantech.com.tw>
 
-NCT-7904D also supports reading of channel limitation registers
-and SMI status registers for fan, voltage and temperature monitoring,
-and also supports reading of temperature sensor type which is thermal diode,
-thermistor, AMD SB-TSI or Intel PECI, thus add below sysfs nodes:
 
--fan[1-*]_min
--fan[1-*]_alarm
--in[1-*]_min
--in[1-*]_max
--in[1-*]_alarm
--temp[1-*]_max
--temp[1-*]_max_hyst
--temp[1-*]_emergency
--temp[1-*]_emergency_hyst
--temp[1-*]_alarm
--temp[1-*]_type
+On 29/06/2019 08:33, Thiago Jung Bauermann wrote:
+> 
+> Hello Alexey,
+> 
+> Thanks for reviewing this patch!
+> 
+> Alexey Kardashevskiy <aik@ozlabs.ru> writes:
+> 
+>> On 21/05/2019 14:49, Thiago Jung Bauermann wrote:
+>>> @@ -1707,6 +1723,43 @@ static void __init prom_close_stdin(void)
+>>>  	}
+>>>  }
+>>>  
+>>> +#ifdef CONFIG_PPC_SVM
+>>> +static int prom_rtas_os_term_hcall(uint64_t args)
+>>
+>>
+>> This is just an rtas hcall, nothing special about "os-term".
+> 
+> Sorry, unfortunately I don't understand how we're treating os-term
+> especially. Do you mean that we should inline this function directly
+> into prom_rtas_os_term()?
 
-Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
----
-Changes in v2:
-- Fix bad fallthrough in various switch statements.
-- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
-- Fix incorrect register setting of voltage.
-- Fix incorrect register bit mapping of temperature alarm.
-- Fix wrong return code 0x1fff in function nct7904_write_fan.
-- Delete wrong comment in function nct7904_write_in.
-- Fix wrong attribute names for temperature.
-- Fix wrong registers setting for temperature.
----
- drivers/hwmon/nct7904.c | 469 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 424 insertions(+), 45 deletions(-)
+I meant the function name - prom_rtas_os_term_hcall - should rather be
+prom_rtas_hcall.
 
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 710c30562fc1..d842c10ba11f 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -46,10 +46,33 @@
- #define DTS_T_CTRL1_REG		0x27
- #define VT_ADC_MD_REG		0x2E
- 
-+#define VSEN1_HV_LL_REG		0x02	/* Bank 1; 2 regs (HV/LV) per sensor */
-+#define VSEN1_LV_LL_REG		0x03	/* Bank 1; 2 regs (HV/LV) per sensor */
-+#define VSEN1_HV_HL_REG		0x00	/* Bank 1; 2 regs (HV/LV) per sensor */
-+#define VSEN1_LV_HL_REG		0x01	/* Bank 1; 2 regs (HV/LV) per sensor */
-+#define SMI_STS1_REG		0xC1	/* Bank 0; SMI Status Register */
-+#define SMI_STS5_REG		0xC5	/* Bank 0; SMI Status Register */
-+#define SMI_STS7_REG		0xC7	/* Bank 0; SMI Status Register */
-+#define SMI_STS8_REG		0xC8	/* Bank 0; SMI Status Register */
-+
- #define VSEN1_HV_REG		0x40	/* Bank 0; 2 regs (HV/LV) per sensor */
- #define TEMP_CH1_HV_REG		0x42	/* Bank 0; same as VSEN2_HV */
- #define LTD_HV_REG		0x62	/* Bank 0; 2 regs in VSEN range */
-+#define LTD_HV_HL_REG		0x44	/* Bank 1; 1 reg for LTD */
-+#define LTD_LV_HL_REG		0x45	/* Bank 1; 1 reg for LTD */
-+#define LTD_HV_LL_REG		0x46	/* Bank 1; 1 reg for LTD */
-+#define LTD_LV_LL_REG		0x47	/* Bank 1; 1 reg for LTD */
-+#define TEMP_CH1_CH_REG		0x05	/* Bank 1; 1 reg for LTD */
-+#define TEMP_CH1_W_REG		0x06	/* Bank 1; 1 reg for LTD */
-+#define TEMP_CH1_WH_REG		0x07	/* Bank 1; 1 reg for LTD */
-+#define TEMP_CH1_C_REG		0x04	/* Bank 1; 1 reg per sensor */
-+#define DTS_T_CPU1_C_REG	0x90	/* Bank 1; 1 reg per sensor */
-+#define DTS_T_CPU1_CH_REG	0x91	/* Bank 1; 1 reg per sensor */
-+#define DTS_T_CPU1_W_REG	0x92	/* Bank 1; 1 reg per sensor */
-+#define DTS_T_CPU1_WH_REG	0x93	/* Bank 1; 1 reg per sensor */
- #define FANIN1_HV_REG		0x80	/* Bank 0; 2 regs (HV/LV) per sensor */
-+#define FANIN1_HV_HL_REG	0x60	/* Bank 1; 2 regs (HV/LV) per sensor */
-+#define FANIN1_LV_HL_REG	0x61	/* Bank 1; 2 regs (HV/LV) per sensor */
- #define T_CPU1_HV_REG		0xA0	/* Bank 0; 2 regs (HV/LV) per sensor */
- 
- #define PRTS_REG		0x03	/* Bank 2 */
-@@ -58,6 +81,8 @@
- #define FANCTL1_FMR_REG		0x00	/* Bank 3; 1 reg per channel */
- #define FANCTL1_OUT_REG		0x10	/* Bank 3; 1 reg per channel */
- 
-+#define ENABLE_TSI	BIT(1)
-+
- static const unsigned short normal_i2c[] = {
- 	0x2d, 0x2e, I2C_CLIENT_END
- };
-@@ -72,6 +97,7 @@ struct nct7904_data {
- 	u8 fan_mode[FANCTL_MAX];
- 	u8 enable_dts;
- 	u8 has_dts;
-+	u8 temp_mode; /* 0: TR mode, 1: TD mode */
- };
- 
- /* Access functions */
-@@ -170,6 +196,25 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
- 			rpm = 1350000 / cnt;
- 		*val = rpm;
- 		return 0;
-+	case hwmon_fan_min:
-+		ret = nct7904_read_reg16(data, BANK_1,
-+					 FANIN1_HV_HL_REG + channel * 2);
-+		if (ret < 0)
-+			return ret;
-+		cnt = ((ret & 0xff00) >> 3) | (ret & 0x1f);
-+		if (cnt == 0x1fff)
-+			rpm = 0;
-+		else
-+			rpm = 1350000 / cnt;
-+		*val = rpm;
-+		return 0;
-+	case hwmon_fan_alarm:
-+		ret = nct7904_read_reg(data, BANK_0,
-+				       SMI_STS7_REG + (channel >> 3));
-+		if (ret < 0)
-+			return ret;
-+		*val = (ret >> (channel & 0x07)) & 1;
-+		return 0;
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -179,8 +224,20 @@ static umode_t nct7904_fan_is_visible(const void *_data, u32 attr, int channel)
- {
- 	const struct nct7904_data *data = _data;
- 
--	if (attr == hwmon_fan_input && data->fanin_mask & (1 << channel))
--		return 0444;
-+	switch (attr) {
-+	case hwmon_fan_input:
-+	case hwmon_fan_alarm:
-+		if (data->fanin_mask & (1 << channel))
-+			return 0444;
-+		break;
-+	case hwmon_fan_min:
-+		if (data->fanin_mask & (1 << channel))
-+			return 0644;
-+		break;
-+	default:
-+		break;
-+	}
-+
- 	return 0;
- }
- 
-@@ -211,6 +268,37 @@ static int nct7904_read_in(struct device *dev, u32 attr, int channel,
- 			volt *= 6; /* 0.006V scale */
- 		*val = volt;
- 		return 0;
-+	case hwmon_in_min:
-+		ret = nct7904_read_reg16(data, BANK_1,
-+					 VSEN1_HV_LL_REG + index * 4);
-+		if (ret < 0)
-+			return ret;
-+		volt = ((ret & 0xff00) >> 5) | (ret & 0x7);
-+		if (index < 14)
-+			volt *= 2; /* 0.002V scale */
-+		else
-+			volt *= 6; /* 0.006V scale */
-+		*val = volt;
-+		return 0;
-+	case hwmon_in_max:
-+		ret = nct7904_read_reg16(data, BANK_1,
-+					 VSEN1_HV_HL_REG + index * 4);
-+		if (ret < 0)
-+			return ret;
-+		volt = ((ret & 0xff00) >> 5) | (ret & 0x7);
-+		if (index < 14)
-+			volt *= 2; /* 0.002V scale */
-+		else
-+			volt *= 6; /* 0.006V scale */
-+		*val = volt;
-+		return 0;
-+	case hwmon_in_alarm:
-+		ret = nct7904_read_reg(data, BANK_0,
-+				       SMI_STS1_REG + (index >> 3));
-+		if (ret < 0)
-+			return ret;
-+		*val = (ret >> (index & 0x07)) & 1;
-+		return 0;
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -221,9 +309,20 @@ static umode_t nct7904_in_is_visible(const void *_data, u32 attr, int channel)
- 	const struct nct7904_data *data = _data;
- 	int index = nct7904_chan_to_index[channel];
- 
--	if (channel > 0 && attr == hwmon_in_input &&
--	    (data->vsen_mask & BIT(index)))
--		return 0444;
-+	switch (attr) {
-+	case hwmon_in_input:
-+	case hwmon_in_alarm:
-+		if (channel > 0 && (data->vsen_mask & BIT(index)))
-+			return 0444;
-+		break;
-+	case hwmon_in_min:
-+	case hwmon_in_max:
-+		if (channel > 0 && (data->vsen_mask & BIT(index)))
-+			return 0644;
-+		break;
-+	default:
-+		break;
-+	}
- 
- 	return 0;
- }
-@@ -233,6 +332,7 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
- {
- 	struct nct7904_data *data = dev_get_drvdata(dev);
- 	int ret, temp;
-+	unsigned int reg1, reg2, reg3;
- 
- 	switch (attr) {
- 	case hwmon_temp_input:
-@@ -250,16 +350,100 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
- 		temp = ((ret & 0xff00) >> 5) | (ret & 0x7);
- 		*val = sign_extend32(temp, 10) * 125;
- 		return 0;
-+	case hwmon_temp_alarm:
-+		if (channel < 5) {
-+			ret = nct7904_read_reg(data, BANK_0,
-+					       SMI_STS1_REG);
-+			if (ret < 0)
-+				return ret;
-+			*val = (ret >> (((channel * 2) + 1) & 0x07)) & 1;
-+		} else {
-+			if ((channel - 5) < 4) {
-+				ret = nct7904_read_reg(data, BANK_0,
-+						       SMI_STS7_REG +
-+						       ((channel - 5) >> 3));
-+				if (ret < 0)
-+					return ret;
-+				*val = (ret >> ((channel - 5) & 0x07)) & 1;
-+			} else {
-+				ret = nct7904_read_reg(data, BANK_0,
-+						       SMI_STS8_REG +
-+						       ((channel - 5) >> 3));
-+				if (ret < 0)
-+					return ret;
-+				*val = (ret >> (((channel - 5) & 0x07) - 4))
-+							& 1;
-+			}
-+		}
-+		return 0;
-+	case hwmon_temp_type:
-+		if (channel < 5) {
-+			if ((data->tcpu_mask >> channel) & 0x01) {
-+				if ((data->temp_mode >> channel) & 0x01)
-+					*val = 3; /* TD */
-+				else
-+					*val = 4; /* TR */
-+			} else {
-+				*val = 0;
-+			}
-+		} else {
-+			if ((data->has_dts >> (channel - 5)) & 0x01) {
-+				if (data->enable_dts & ENABLE_TSI)
-+					*val = 5; /* TSI */
-+				else
-+					*val = 6; /* PECI */
-+			} else {
-+				*val = 0;
-+			}
-+		}
-+		return 0;
-+	case hwmon_temp_max:
-+		reg1 = LTD_HV_HL_REG;
-+		reg2 = TEMP_CH1_W_REG;
-+		reg3 = DTS_T_CPU1_W_REG;
-+		break;
-+	case hwmon_temp_max_hyst:
-+		reg1 = LTD_LV_HL_REG;
-+		reg2 = TEMP_CH1_WH_REG;
-+		reg3 = DTS_T_CPU1_WH_REG;
-+		break;
-+	case hwmon_temp_crit:
-+		reg1 = LTD_HV_LL_REG;
-+		reg2 = TEMP_CH1_C_REG;
-+		reg3 = DTS_T_CPU1_C_REG;
-+		break;
-+	case hwmon_temp_crit_hyst:
-+		reg1 = LTD_LV_LL_REG;
-+		reg2 = TEMP_CH1_CH_REG;
-+		reg3 = DTS_T_CPU1_CH_REG;
-+		break;
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-+
-+	if (channel == 4)
-+		ret = nct7904_read_reg(data, BANK_1, reg1);
-+	else if (channel < 5)
-+		ret = nct7904_read_reg(data, BANK_1,
-+				       reg2 + channel * 8);
-+	else
-+		ret = nct7904_read_reg(data, BANK_1,
-+				       reg3 + (channel - 5) * 4);
-+
-+	if (ret < 0)
-+		return ret;
-+	*val = ret * 1000;
-+	return 0;
- }
- 
- static umode_t nct7904_temp_is_visible(const void *_data, u32 attr, int channel)
- {
- 	const struct nct7904_data *data = _data;
- 
--	if (attr == hwmon_temp_input) {
-+	switch (attr) {
-+	case hwmon_temp_input:
-+	case hwmon_temp_alarm:
-+	case hwmon_temp_type:
- 		if (channel < 5) {
- 			if (data->tcpu_mask & BIT(channel))
- 				return 0444;
-@@ -267,6 +451,21 @@ static umode_t nct7904_temp_is_visible(const void *_data, u32 attr, int channel)
- 			if (data->has_dts & BIT(channel - 5))
- 				return 0444;
- 		}
-+		break;
-+	case hwmon_temp_max:
-+	case hwmon_temp_max_hyst:
-+	case hwmon_temp_crit:
-+	case hwmon_temp_crit_hyst:
-+		if (channel < 5) {
-+			if (data->tcpu_mask & BIT(channel))
-+				return 0644;
-+		} else {
-+			if (data->has_dts & BIT(channel - 5))
-+				return 0644;
-+		}
-+		break;
-+	default:
-+		break;
- 	}
- 
- 	return 0;
-@@ -297,6 +496,137 @@ static int nct7904_read_pwm(struct device *dev, u32 attr, int channel,
- 	}
- }
- 
-+static int nct7904_write_temp(struct device *dev, u32 attr, int channel,
-+			      long val)
-+{
-+	struct nct7904_data *data = dev_get_drvdata(dev);
-+	int ret;
-+	unsigned int reg1, reg2, reg3;
-+
-+	val = clamp_val(val / 1000, -128, 127);
-+
-+	switch (attr) {
-+	case hwmon_temp_max:
-+		reg1 = LTD_HV_HL_REG;
-+		reg2 = TEMP_CH1_W_REG;
-+		reg3 = DTS_T_CPU1_W_REG;
-+		break;
-+	case hwmon_temp_max_hyst:
-+		reg1 = LTD_LV_HL_REG;
-+		reg2 = TEMP_CH1_WH_REG;
-+		reg3 = DTS_T_CPU1_WH_REG;
-+		break;
-+	case hwmon_temp_crit:
-+		reg1 = LTD_HV_LL_REG;
-+		reg2 = TEMP_CH1_C_REG;
-+		reg3 = DTS_T_CPU1_C_REG;
-+		break;
-+	case hwmon_temp_crit_hyst:
-+		reg1 = LTD_LV_LL_REG;
-+		reg2 = TEMP_CH1_CH_REG;
-+		reg3 = DTS_T_CPU1_CH_REG;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+	if (channel == 4)
-+		ret = nct7904_write_reg(data, BANK_1, reg1, val);
-+	else if (channel < 5)
-+		ret = nct7904_write_reg(data, BANK_1,
-+					reg2 + channel * 8, val);
-+	else
-+		ret = nct7904_write_reg(data, BANK_1,
-+					reg3 + (channel - 5) * 4, val);
-+
-+	return ret;
-+}
-+
-+static int nct7904_write_fan(struct device *dev, u32 attr, int channel,
-+			     long val)
-+{
-+	struct nct7904_data *data = dev_get_drvdata(dev);
-+	int ret;
-+	u8 tmp;
-+
-+	switch (attr) {
-+	case hwmon_fan_min:
-+		if (val <= 0)
-+			return 0;
-+
-+		val = clamp_val((1350000 + (val >> 1)) / val, 1, 0x1fff);
-+		tmp = (val >> 5) & 0xff;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					FANIN1_HV_HL_REG + channel * 2, tmp);
-+		if (ret < 0)
-+			return ret;
-+		tmp = val & 0x1f;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					FANIN1_LV_HL_REG + channel * 2, tmp);
-+		return ret;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int nct7904_write_in(struct device *dev, u32 attr, int channel,
-+			    long val)
-+{
-+	struct nct7904_data *data = dev_get_drvdata(dev);
-+	int ret, index, tmp;
-+
-+	index = nct7904_chan_to_index[channel];
-+
-+	if (index < 14)
-+		val = val / 2; /* 0.002V scale */
-+	else
-+		val = val / 6; /* 0.006V scale */
-+
-+	val = clamp_val(val, 0, 0x7ff);
-+
-+	switch (attr) {
-+	case hwmon_in_min:
-+		tmp = nct7904_read_reg(data, BANK_1,
-+				       VSEN1_LV_LL_REG + index * 4);
-+		if (tmp < 0)
-+			return tmp;
-+		tmp &= ~0x7;
-+		tmp |= val & 0x7;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					VSEN1_LV_LL_REG + index * 4, tmp);
-+		if (ret < 0)
-+			return ret;
-+		tmp = nct7904_read_reg(data, BANK_1,
-+				       VSEN1_HV_LL_REG + index * 4);
-+		if (tmp < 0)
-+			return tmp;
-+		tmp = (val >> 3) & 0xff;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					VSEN1_HV_LL_REG + index * 4, tmp);
-+		return ret;
-+	case hwmon_in_max:
-+		tmp = nct7904_read_reg(data, BANK_1,
-+				       VSEN1_LV_HL_REG + index * 4);
-+		if (tmp < 0)
-+			return tmp;
-+		tmp &= ~0x7;
-+		tmp |= val & 0x7;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					VSEN1_LV_HL_REG + index * 4, tmp);
-+		if (ret < 0)
-+			return ret;
-+		tmp = nct7904_read_reg(data, BANK_1,
-+				       VSEN1_HV_HL_REG + index * 4);
-+		if (tmp < 0)
-+			return tmp;
-+		tmp = (val >> 3) & 0xff;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					VSEN1_HV_HL_REG + index * 4, tmp);
-+		return ret;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
- static int nct7904_write_pwm(struct device *dev, u32 attr, int channel,
- 			     long val)
- {
-@@ -354,8 +684,14 @@ static int nct7904_write(struct device *dev, enum hwmon_sensor_types type,
- 			 u32 attr, int channel, long val)
- {
- 	switch (type) {
-+	case hwmon_in:
-+		return nct7904_write_in(dev, attr, channel, val);
-+	case hwmon_fan:
-+		return nct7904_write_fan(dev, attr, channel, val);
- 	case hwmon_pwm:
- 		return nct7904_write_pwm(dev, attr, channel, val);
-+	case hwmon_temp:
-+		return nct7904_write_temp(dev, attr, channel, val);
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -404,51 +740,91 @@ static int nct7904_detect(struct i2c_client *client,
- 
- static const struct hwmon_channel_info *nct7904_info[] = {
- 	HWMON_CHANNEL_INFO(in,
--			   HWMON_I_INPUT, /* dummy, skipped in is_visible */
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT),
-+			   /* dummy, skipped in is_visible */
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM),
- 	HWMON_CHANNEL_INFO(fan,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT),
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM),
- 	HWMON_CHANNEL_INFO(pwm,
- 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
- 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
- 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
- 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
- 	HWMON_CHANNEL_INFO(temp,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT),
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST),
- 	NULL
- };
- 
-@@ -530,11 +906,14 @@ static int nct7904_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		return ret;
- 
-+	data->temp_mode = 0;
- 	for (i = 0; i < 4; i++) {
- 		val = (ret & (0x03 << i)) >> (i * 2);
- 		bit = (1 << i);
- 		if (val == 0)
- 			data->tcpu_mask &= ~bit;
-+		else if (val == 0x1 || val == 0x2)
-+			data->temp_mode |= bit;
- 	}
- 
- 	/* PECI */
-@@ -557,7 +936,7 @@ static int nct7904_probe(struct i2c_client *client,
- 		if (ret < 0)
- 			return ret;
- 		data->has_dts = ret & 0xF;
--		if (data->enable_dts & 0x2) {
-+		if (data->enable_dts & ENABLE_TSI) {
- 			ret = nct7904_read_reg(data, BANK_0, DTS_T_CTRL1_REG);
- 			if (ret < 0)
- 				return ret;
+
+
+> 
+>>> +{
+>>> +	register uint64_t arg1 asm("r3") = 0xf000;
+>>> +	register uint64_t arg2 asm("r4") = args;
+>>> +
+>>> +	asm volatile("sc 1\n" : "=r" (arg1) :
+>>> +			"r" (arg1),
+>>> +			"r" (arg2) :);
+>>> +	return arg1;
+>>> +}
+>>> +
+>>> +static struct rtas_args __prombss os_term_args;
+>>> +
+>>> +static void __init prom_rtas_os_term(char *str)
+>>> +{
+>>> +	phandle rtas_node;
+>>> +	__be32 val;
+>>> +	u32 token;
+>>> +
+>>> +	prom_printf("%s: start...\n", __func__);
+>>> +	rtas_node = call_prom("finddevice", 1, 1, ADDR("/rtas"));
+>>> +	prom_printf("rtas_node: %x\n", rtas_node);
+>>> +	if (!PHANDLE_VALID(rtas_node))
+>>> +		return;
+>>> +
+>>> +	val = 0;
+>>> +	prom_getprop(rtas_node, "ibm,os-term", &val, sizeof(val));
+>>> +	token = be32_to_cpu(val);
+>>> +	prom_printf("ibm,os-term: %x\n", token);
+>>> +	if (token == 0)
+>>> +		prom_panic("Could not get token for ibm,os-term\n");
+>>> +	os_term_args.token = cpu_to_be32(token);
+>>> +	prom_rtas_os_term_hcall((uint64_t)&os_term_args);
+>>> +}
+>>> +#endif /* CONFIG_PPC_SVM */
+>>> +
+>>>  /*
+>>>   * Allocate room for and instantiate RTAS
+>>>   */
+> 
+
 -- 
-2.17.1
-
+Alexey
