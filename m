@@ -2,76 +2,156 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A46FC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FC1C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560B120B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33AAF20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:20:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DGmE2t0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfGAMTS (ORCPT
+        id S1728101AbfGAMU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 08:19:18 -0400
-Received: from 8bytes.org ([81.169.241.247]:33632 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727243AbfGAMTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 08:19:17 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id B9E84229; Mon,  1 Jul 2019 14:19:15 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 14:19:14 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Will Deacon <will.deacon@arm.com>,
-        virtualization@lists.linux-foundation.org,
-        David Brown <david.brown@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH v4 0/5] iommu/amd: Convert the AMD iommu driver to the
- dma-iommu api
-Message-ID: <20190701121914.GD8166@8bytes.org>
-References: <20190613223901.9523-1-murphyt7@tcd.ie>
- <20190624061945.GA4912@infradead.org>
+        Mon, 1 Jul 2019 08:20:56 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42683 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727243AbfGAMUz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 08:20:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x17so13586051wrl.9;
+        Mon, 01 Jul 2019 05:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wDK+VGNLOh5xPyZh6wAjqtdgmRlRlNiDvHJYuCNXtQI=;
+        b=DGmE2t0LmdkCDNwjx/jVMYLqQGB9FcnDRaBOVKqAZX077VZuX92c5e0iTPy4Cr3aTo
+         pwvh9lcYW3jrw0dt0eKg/BGzryj9CRirOXTPyAeqZ+TQOSCmBThRSAMKcV6VTgyn7Qnm
+         uFF7SzS6zmvNJO5larxrkPcaco+TjJuykfzz7clS5iJPYQ/pXGoTD6khn2OgTtKsNJ7x
+         IIUBxIW/AQ8vczIQJTZuSIG5DqY4SUIfGFBHxgQ4tZKym4HGnBJr9gc4TKQwmM3O0Llv
+         2pMJUDam/OLPrXrG5fRt9c4w4+qEktF4LUyVNLXeyfCeZ01ZVyjyM/oUOdR6g4KTSXxG
+         qh2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wDK+VGNLOh5xPyZh6wAjqtdgmRlRlNiDvHJYuCNXtQI=;
+        b=rwMSWYtIvtxcWk7BqAo0Obz3zEMGtoY3ptavyTWlEWRVLX+p26/wTv9/yC7fBQ+J13
+         SQZ/8V6gG5EwpQuKWHwKAk34kfeNsd7CvWDrPKI8mvqTLQF3KI+flcD9t41u9Sddbv7x
+         Dvbktxh6dbxpOCcBydF/unh2oGv1f5kNIQqp6u3zLzSe168g2uoTVcydCu27NANSKFGY
+         s/GLKlwxWpS3z8ngwK+oh35+00hoaOaqKaApkt7SJ1JO/24ab60mbPdUfBNosuq3HX/I
+         9jHEMltSk8rtlGXhfd2BKxbODckJeFLKntvFDv3pngAPsQKQ0+NLmMaEoUgU+zKit17w
+         qtQQ==
+X-Gm-Message-State: APjAAAXvuzJGuhqxSSucNqt00Q1TxOlv57+2+iXP69dcxBCnyGRh3Lx4
+        tXS7KMAjK8lMW7ybNxfmVrcZQWm3
+X-Google-Smtp-Source: APXvYqyQ7atvdEI+wUbwck5kAALCn2WuV1fSHPqK0zpVspqgBezpseLvGFdydiRzCtyK24pLPQ7xBA==
+X-Received: by 2002:adf:ab0f:: with SMTP id q15mr3238025wrc.325.1561983652973;
+        Mon, 01 Jul 2019 05:20:52 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id h19sm19567752wrb.81.2019.07.01.05.20.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 05:20:52 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 14:20:50 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     jacmet@sunsite.dk, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG] net: dm9600: false link status
+Message-ID: <20190701122050.GA11021@Red>
+References: <20190627132137.GB29016@Red>
+ <20190627144339.GG31189@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624061945.GA4912@infradead.org>
+In-Reply-To: <20190627144339.GG31189@lunn.ch>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-	
-On Sun, Jun 23, 2019 at 11:19:45PM -0700, Christoph Hellwig wrote:
-> Joerg, any chance you could review this?  Toms patches to convert the
-> AMD and Intel IOMMU drivers to the dma-iommu code are going to make my
-> life in DMA land significantly easier, so I have a vested interest
-> in this series moving forward :)
+On Thu, Jun 27, 2019 at 04:43:39PM +0200, Andrew Lunn wrote:
+> On Thu, Jun 27, 2019 at 03:21:37PM +0200, Corentin Labbe wrote:
+> > Hello
+> > 
+> > I own an USB dongle which is a "Davicom DM96xx USB 10/100 Ethernet".
+> > According to the CHIP_ID, it is a DM9620.
+> > 
+> > Since I needed for bringing network to uboot for a board, I have started to create its uboot's driver.
+> > My uboot driver is based on the dm9600 Linux driver.
+> > 
+> > The dongle was working but very very slowy (24Kib/s).
+> > After some debug i found that the main problem was that it always link to 10Mbit/s Half-duplex. (according to the MAC registers)
+> > 
+> > For checking the status of the dongle I have plugged it on a Linux box which give me:
+> > dm9601 6-2:1.0 enp0s29f0u2: link up, 100Mbps, full-duplex, lpa 0xFFFF
+> > 
+> > But in fact the Linux driver is tricked.
+> > 
+> > I have added debug of MDIO write/read and got:
+> > [157550.926974] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_write() phy_id=0x00, loc=0x00, val=0x8000
+> 
+> Writing the reset bit. Ideally you should read back the register and
+> wait for this bit to clear. Try adding this, and see if this helps, or
+> you get 0xffff.
+> 
 
-I really appreciate Toms work on this. Tom, please rebase and resubmit
-this series after the next merge window and I will do more performance
-testing on it. If all goes well I and no other issues show up I can
-apply it for v5.4.
+I get 0xFFFF
 
-Regards,
+> > [157550.931962] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_write() phy_id=0x00, loc=0x04, val=0x05e1
+> 
+> Advertisement control register.  
+> 
+> > [157550.951967] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_read() phy_id=0x00, loc=0x00, returns=0xffff
+> 
+> And now things are bad. In theory, the power down bit is set, and some
+> PHYs don't respond properly when powered down. However, it is unclear
+> how it got into this state. Did the reset kill it, or setting the
+> advertisement? Or is the PHY simply not responding at all. The MDIO
+> data lines have a pull up, so if the device does not respond, reads
+> give 0xffff.
+> 
+> Maybe also check register 0, bit 7, EXT_PHY. Is it 0, indicating the
+> internal PHY should be used?
+> 
+> You could also try reading PHY registers 2 and 3 and see if you can
+> get a valid looking PHY ID. Maybe try that before hitting the reset
+> bit?
+> 
 
-	Joerg
+Always get 0xFFFF before and after
 
+Note that the eeprom dump via ethtool -e suffer the same problem.
+
+> > So it exsists two problem:
+> > - Linux saying 100Mbps, full-duplex even if it is false.
+> 
+> The driver is using the old mii code, not a phy driver. So i cannot
+> help too much with linux. But if you can get the MDIO bus working
+> reliably, it should be possible to move this over to phylib. The
+> internal PHY appears to have all the standard registers, so the
+> generic PHY driver has a good chance of working.
+> 
+
+I have investigated more and in fact I dont have a dm9620.
+I own another diferent dongle in my stock that i never used and fun fact, it has the same VID/PID and the same bug.
+I opened both dongle and all chips have no marking and got only 4x8 pins.
+Since dm9620 have 64 pins, my dongles are clearly not such hw.
+
+I googled the inscription written on the second case and found a dm9620 clone/counterfeiting named qf9700/sr9700.
+But thoses chips should have marking (according to some photos on the web), so I probably own a counterfeiting of a clone/counterfeiting.
+
+Note that the sr9700 driver is mainline but fail to work with my dongle.
+
+At least, now i know that have a chip not designed to work with an external PHY, so all EXTPHY registers could be ignored.
+My last ressort is to brute force all values until something happen.
+
+My simple tries, write 0xsomeval everywhere, lead to something, phy/eeprom return now 0x000y.
+Probably, this chip doesnt have any PHY...
+
+Regards
