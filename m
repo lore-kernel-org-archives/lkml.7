@@ -2,166 +2,119 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC59C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB15C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D2120659
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9836208CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:34:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dead10ck.com header.i=@dead10ck.com header.b="aD9v0GWC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MWat1hzZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbfGAOdk convert rfc822-to-8bit (ORCPT
+        id S1729721AbfGAOeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:33:40 -0400
-Received: from mail-oln040092255099.outbound.protection.outlook.com ([40.92.255.99]:55296
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727064AbfGAOdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:33:40 -0400
-Received: from SG2APC01FT116.eop-APC01.prod.protection.outlook.com
- (10.152.250.58) by SG2APC01HT206.eop-APC01.prod.protection.outlook.com
- (10.152.251.157) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2032.15; Mon, 1 Jul
- 2019 14:33:34 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.250.59) by
- SG2APC01FT116.mail.protection.outlook.com (10.152.250.216) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2032.15 via Frontend Transport; Mon, 1 Jul 2019 14:33:34 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::9d2d:391f:5f49:c806]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::9d2d:391f:5f49:c806%6]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
- 14:33:34 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v6 0/4] PCI: Patch series to support Thunderbolt without
- any BIOS support
-Thread-Topic: [PATCH v6 0/4] PCI: Patch series to support Thunderbolt without
- any BIOS support
-Thread-Index: AQHVEKroekXmwO/8K0mZzVmJDM4t6aadR3aAgBjLFwA=
-Date:   Mon, 1 Jul 2019 14:33:34 +0000
-Message-ID: <SL2P216MB0187E8F8592C37936D074B0F80F90@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-References: <PS2P216MB0642AD5BCA377FDC5DCD8A7B80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
- <20190615195604.GW13533@google.com>
-In-Reply-To: <20190615195604.GW13533@google.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SY2PR01CA0015.ausprd01.prod.outlook.com
- (2603:10c6:1:14::27) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:02F495DEDE9055371D4FF902BE9356D8A98945D611E9C3882DEC9BEB48EA05F6;UpperCasedChecksum:A685D2D3236C1CEBF2087A34EA8DFB59867388B2BFAD7A6FD613DCCA1F0BD0D1;SizeAsReceived:7891;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [GEFd3h9WTYzJFL1RIVZ02oOUp5ugg58pFsNtGi4cUGX67mOAbQfA1Uv5PZ/U0jb7yWpbcH6TRJs=]
-x-microsoft-original-message-id: <20190701143323.GA5356@nicholas-usb>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:SG2APC01HT206;
-x-ms-traffictypediagnostic: SG2APC01HT206:
-x-microsoft-antispam-message-info: MoJ3+bqS2Xns/n5LHjhN4yip3zJboiFzzdQYn0TiUtxse3CSd1Djv6J3ZAenjOmX9Ng3VRT2VDUJgSOpXawIIFPdN9cjzaYI4MQPpZbquwnXQUmsrtX6uDr9ZjexYULwi0xYjITmL8UouLe+fR7IiAJ4dJIy1cQrF29uCYVkaY4ZqbsaAD5C14ITed4ht276
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <249187F61F1CD342A915EDAD3DBD0A58@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Mon, 1 Jul 2019 10:34:15 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:38021 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727064AbfGAOeP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 10:34:15 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id AA39621FC1;
+        Mon,  1 Jul 2019 10:34:13 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 01 Jul 2019 10:34:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dead10ck.com; h=
+        message-id:subject:from:to:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        W71MN8JnqffLQ5MZmuiO5lF4wUj46V9qQyxbK4q2Jm8=; b=aD9v0GWC3W5rGJ0N
+        hZrs6CE3D3Ghop3TDwsx6S8MFMwVgqcGbPF08Al22+9pR8bxmDSxyKd14CsjHcJS
+        nwIg9371XXXuyIHqRlKvxnEzXnXjW6leYkcLTAFanR+AaZ90BFlDJFDOjkqaRl02
+        p8nbK2DnK/Jniogy5uEaXQ2LXcOFCZu5AefuI26xL5rLBR1kNkuvJ6mRTBau6WnA
+        B7JEL0Nvm0cILzSis5bSsvbLsrUrvMFvItWi+7Rs54vrHoY0Ch4vLDYAsLMdseE4
+        H3p1aLcudIo+nqtnLz9+PpIi4ekznW0iod8hAtf67D7EtFI0TI3BxwIkJVb1aOK8
+        x08QHQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=W71MN8JnqffLQ5MZmuiO5lF4wUj46V9qQyxbK4q2J
+        m8=; b=MWat1hzZ8ewg4/ly7nL+MXVdJHBrDNAwPUp5CclsqLGYbSPXYLRgcQICR
+        VfFcLK0d/0wJY9bZACcJFwhUvBCxc3/Nc7xQcZ11QmGqV8qqHCHupKCAXVuZyLbF
+        bsrktldB4daL9BSpEWULhM0rXEpdaZXZ7XnfPaXXgzve5O6wB476zeXbKB9n3Fmq
+        DxfwfkqmyfHP8jacxnRTRLolN4emXqz0P1gAfScE2vRBWDhHOK7lZwrcVfGfLBD4
+        U7P5PmbAIgmG7/jfBvOg5r1hY8abdt7jiFAaDtTS6bJAnDptfZHcVHU09uX/hB0t
+        eNxsOtuhkSHa56O42pEyjzrFDFSKA==
+X-ME-Sender: <xms:5RkaXeg9zFJyhL7d9fKp2jec9rAX-rQvX5B-6xAeakVDu8XPikKSXQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrvdeigdejkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepkffuhffvffgjfhgtfggggfesthejre
+    dttderjeenucfhrhhomhepufhkhihlvghrucfjrgifthhhohhrnhgvuceoshhkhihlvghr
+    seguvggrugdutdgtkhdrtghomheqnecukfhppedujedurdeikedrvdeggedrheejnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehskhihlhgvrhesuggvrgguuddttghkrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:5RkaXU5Pe4SgI3dTU7x5NY8mkn58j_AR93gUg0sylnp5esnz9VX2IQ>
+    <xmx:5RkaXRRvMQo00SfWTo1q8IoZXKdwcIay2H8yDcj_bQ_6X8Duq27OOA>
+    <xmx:5RkaXRXIXdeb3tEH260c58h3it14WZSPq-SC2hPHfoqygeSzHNPFDw>
+    <xmx:5RkaXSmDSuf2P6dLd62S_tXTMWsr0MDUpw7p-PKcIU8fOscZci3nBg>
+Received: from fedora-x1-dead10ck (unknown [171.68.244.57])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9E362380087;
+        Mon,  1 Jul 2019 10:34:12 -0400 (EDT)
+Message-ID: <7cc8efb985c2e770a328919e1b99d93f30d7295a.camel@dead10ck.com>
+Subject: Re: iwl_mvm_add_new_dqa_stream_wk BUG in lib/list_debug.c:56
+From:   Skyler Hawthorne <skyler@dead10ck.com>
+To:     Marc Haber <mh+netdev@zugschlus.de>, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Date:   Mon, 01 Jul 2019 07:34:11 -0700
+In-Reply-To: <20190625130317.GB31363@torres.zugschlus.de>
+References: <20190530081257.GA26133@torres.zugschlus.de>
+         <20190602134842.GC3249@torres.zugschlus.de>
+         <20190625130317.GB31363@torres.zugschlus.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12778708-7e96-4f8c-07a1-08d6fe3118d6
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 14:33:34.6278
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT206
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 03:56:19AM +0800, Bjorn Helgaas wrote:
-> [+cc Ben, Logan]
-> 
-> Ben, Logan, since you're looking at the resource code, maybe you'd be
-> interested in this as well?
-> 
-> On Wed, May 22, 2019 at 02:30:30PM +0000, Nicholas Johnson wrote:
-> > Rebase patches to apply cleanly to 5.2-rc1 source. Remove patch for 
-> > comment style cleanup as this has already been applied.
-> 
-> Thanks for rebasing these.
-> 
-> They do apply cleanly, but they seem to be base64-encoded MIME
-> attachments, and I don't know how to make mutt extract them easily.  I
-> had to save each patch attachment individually, apply it, insert the
-> commit log manually, etc.
-> 
-> Is there any chance you could send the next series as plain-text
-> patches?  That would be a lot easier for me.
-> 
-> > Anybody interested in testing, you can do so with:
-> > 
-> > a) Intel system with Thunderbolt 3 and native enumeration. The Gigabyte 
-> > Z390 Designare is one of the most perfect for this that I have never had 
-> > the opportunity to use - it does not even have the option for BIOS 
-> > assisted enumeration present in the BIOS.
-> > 
-> > b) Any system with PCIe and the Gigabyte GC-TITAN RIDGE add-in card, 
-> > jump the header as described and use kernel parameters like:
-> > 
-> > pci=assign-busses,hpbussize=0x33,realloc,hpmemsize=128M,hpmemprefsize=1G,nocrs 
-> > pcie_ports=native
-> > 
-> > [optional] pci.dyndbg
-> > 
-> >     ___
-> >  __/   \__
-> > |o o o o o| When looking into the receptacle on back of PCIe card.
-> > |_________| Jump pins 3 and 5.
-> > 
-> >  1 2 3 4 5
-> > 
-> > The Intel system is nice in that it should just work. The add-in card 
-> > setup is nice in that you can go nuts and assign copious amounts of 
-> > MMIO_PREF - can anybody show a Xeon Phi coprocessor with 16G BAR working 
-> > in an eGPU enclosure with these patches?
-> > 
-> > However, if you specify the above kernel parameters on the Intel system, 
-> > you should be able to override it to allocate more space.
-> > 
-> > Nicholas Johnson (4):
-> >   PCI: Consider alignment of hot-added bridges when distributing
-> >     available resources
-> >   PCI: Modify extend_bridge_window() to set resource size directly
-> >   PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
-> >     window
-> >   PCI: Add pci=hpmemprefsize parameter to set MMIO_PREF size
-> >     independently
-> > 
-> >  .../admin-guide/kernel-parameters.txt         |   7 +-
-> >  drivers/pci/pci.c                             |  18 +-
-> >  drivers/pci/setup-bus.c                       | 265 ++++++++++--------
-> >  include/linux/pci.h                           |   3 +-
-> >  4 files changed, 167 insertions(+), 126 deletions(-)
-> > 
-> > -- 
-> > 2.20.1
-> > 
-I posted PATCH v7, finally. I needed a place to announce that the 
-patches 1-2/8 which were made by Bjorn would not send with him as the 
-"from" which seems to attribute the author.
+Hello, I'm also still experiencing this issue on 5.1.15. It's making it
+very difficult to use my work laptop in my office, since it has many
+access points and frequently has to reauthenticate. I hit this bug 1-3
+times per day, and the only way to fix it is a hard shutdown. Has there
+been any effort to identify and/or fix the cause?
 
-Credits go to Bjorn for PATCH v7 1-2/8 (the first two patches) but to
-send them I had to put myself in that field.
+-- 
+Skyler
 
-When applying them, I guess you will have to modify that field, Bjorn. 
-My apologies if there was a way around it.
+On Tue, 2019-06-25 at 15:03 +0200, Marc Haber wrote:
+> On Sun, Jun 02, 2019 at 03:48:42PM +0200, Marc Haber wrote:
+> > On Thu, May 30, 2019 at 10:12:57AM +0200, Marc Haber wrote:
+> > > on my primary notebook, a Lenovo X260, with an Intel Wireless
+> > > 8260
+> > > (8086:24f3), running Debian unstable, I have started to see
+> > > network
+> > > hangs since upgrading to kernel 5.1. In this situation, I cannot
+> > > restart Network-Manager (the call just hangs), I can log out of
+> > > X, but
+> > > the system does not cleanly shut down and I need to Magic SysRq
+> > > myself
+> > > out of the running system. This happens about once every two
+> > > days.
+> > 
+> > The issue is also present in 5.1.5 and 5.1.6.
+> 
+> Almost a month later, 5.1.15 still crashes about twice a day on my
+> Notebook. The error message seems pretty clear to me, how can I go on
+> from there and may be identify a line number outside of a library?
+> 
+> Greetings
+> Marc
+> 
+> 
 
-Thanks for all the comments and feedback from everybody.
