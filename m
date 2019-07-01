@@ -2,150 +2,97 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAAEC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB80C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9755D2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9173214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:02:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561986139;
+	bh=sItSBS86bM2QNimkExoFDOGOIdfJCF4iAiVQ1BjkyoE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=WlHm0zfO4LTA9gp0SciTtf7gxWywdlMFsi2mFG1SUuYQUmyl8WaCf26ipejXS0uld
+	 4Rw8l24VcRf5bSIfRQz5JryyJ8X+MM/Vj0tf5F5kNYs+RlqRlrHqfkC1R768KuTuhU
+	 OaxfKoNzby+1ZjsRhi3Y6PuDaxPSpAw5l0UfcRr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbfGAM4W (ORCPT
+        id S1727848AbfGANCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 08:56:22 -0400
-Received: from sauhun.de ([88.99.104.3]:55766 "EHLO pokefinder.org"
+        Mon, 1 Jul 2019 09:02:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727249AbfGAM4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 08:56:22 -0400
-Received: from localhost (p54B3346F.dip0.t-ipconnect.de [84.179.52.111])
-        by pokefinder.org (Postfix) with ESMTPSA id 486CD2C360B;
-        Mon,  1 Jul 2019 14:56:19 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 14:56:19 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Eduardo Valentin <eduval@amazon.com>
-Cc:     Haiyue Wang <haiyue.wang@linux.intel.com>,
-        jarkko.nikula@linux.intel.com, andriy.shevchenko@intel.com,
-        brendanhiggins@google.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv7 2/3] i2c: slave-mqueue: add a slave backend to receive
- and queue messages
-Message-ID: <20190701125619.GC4399@kunai>
-References: <20190605164651.15991-1-eduval@amazon.com>
- <20190605164651.15991-3-eduval@amazon.com>
+        id S1726329AbfGANCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 09:02:17 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2BD22146E;
+        Mon,  1 Jul 2019 13:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561986136;
+        bh=sItSBS86bM2QNimkExoFDOGOIdfJCF4iAiVQ1BjkyoE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=EJFUkOTG3HOWhlO/+BTxJj3RFt0AwzSyh3aqBLlxVmMdH/OboCg8fgEftN+mX6Bbm
+         Nzw1YnjEYn5H8T99SVPcXwxyNUFjXSlcAayBNmvZgib6frWVLYTryE480htoRoOa0B
+         Zu2UaFQfQC32lqR1qQ9UzhVvlMx8jx2HMnOeioYY=
+Date:   Mon, 1 Jul 2019 14:02:12 +0100
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        catalin.marinas@arm.com, gregkh@linuxfoundation.org
+Subject: [GIT PULL] arm64: fixes for 5.2
+Message-ID: <20190701130212.ifn7d7p2mqvquq6u@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190605164651.15991-3-eduval@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---XMCwj5IQnwKtuyBG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When you get a chance, please can you pull these two arm64 fixes for 5.2?
+They fix a build failure with the LLVM linker and a module allocation
+failure when KASLR is active.
 
-Hi Eduardo,
+Thanks,
 
-thanks for stepping up and pushing this further!
+Will
 
-On Wed, Jun 05, 2019 at 09:46:50AM -0700, Eduardo Valentin wrote:
-> From: Haiyue Wang <haiyue.wang@linux.intel.com>
->=20
-> Some protocols over I2C are designed for bi-directional transferring
-> messages by using I2C Master Write protocol. Like the MCTP (Management
-> Component Transport Protocol) and IPMB (Intelligent Platform Management
-> Bus), they both require that the userspace can receive messages from
-> I2C dirvers under slave mode.
->=20
-> This new slave mqueue backend is used to receive and queue messages, it
-> will exposes these messages to userspace by sysfs bin file.
+--->8
 
-So, this is a read-only bin file. Sending is done via the standard
-i2c-dev driver? Or not needed at all?
+The following changes since commit 615c48ad8f4275b4d39fa57df68d4015078be201:
 
-Regarding, IPMB, how does this related to the recently merged IPMB slave
-driver?
+  arm64/mm: don't initialize pgd_cache twice (2019-06-18 14:37:28 +0100)
 
-http://patchwork.ozlabs.org/patch/1113278/
+are available in the git repository at:
 
->=20
-> Note: DT interface and a couple of minor fixes here and there
-> by Eduardo, so I kept the original authorship here.
->=20
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Cc: linux-i2c@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Haiyue Wang <haiyue.wang@linux.intel.com>
-> Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
 
-> +I2C SLAVE MQUEUE DRIVER
-> +M:	Eduardo Valentin <eduval@amazon.com>
+for you to fetch changes up to aa69fb62bea15126e744af2e02acc0d6cf3ed4da:
 
-Cool, thanks!
+  arm64/efi: Mark __efistub_stext_offset as an absolute symbol explicitly (2019-06-26 11:40:20 +0100)
 
-> +config I2C_SLAVE_MQUEUE_MESSAGE_SIZE
-> +	int "The message size of I2C mqueue slave"
-> +	depends on I2C_SLAVE_MQUEUE
-> +	default 120
-> +
-> +config I2C_SLAVE_MQUEUE_QUEUE_SIZE
-> +	int "The queue size of I2C mqueue slave"
-> +	depends on I2C_SLAVE_MQUEUE
-> +	default 32
-> +	help
-> +	  This number MUST be power of 2.
+----------------------------------------------------------------
+arm64 fixes for 5.2
 
-I am not happy with this being a Kconfig option. Best would be a
-per-instance configuration, so we could have differently sized mqueues
-at runtime. I could think of another sysfs-file like
-"mqueue-slave-config" which would appear after writing to 'new_device'.
-And only after writing to 'mqueue-slave-config', the bin file to read
-=66rom would show up. But it is just a quick brainstorming, maybe you have
-a better idea?
+- Fix module allocation when running with KASLR enabled
 
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2017 - 2018, Intel Corporation.
+- Fix broken build due to bug in LLVM linker (ld.lld)
 
-A short description what this driver does would be nice.
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      arm64: kaslr: keep modules inside module region when KASAN is enabled
 
-Rest looks decent from a glimpse. I haven't looked into the gory details
-yet, though, because I want to get the high level things straight first.
+Nathan Chancellor (1):
+      arm64/efi: Mark __efistub_stext_offset as an absolute symbol explicitly
 
-Kind regards,
-
-   Wolfram
-
-
---XMCwj5IQnwKtuyBG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0aAvIACgkQFA3kzBSg
-KbZHHBAAhj0zApTWfO1ifL64ykk+MUyKkgwwOboj5C4k8bbUZIapXHN0VaWbceJD
-icCv9zkojTLNkUf1f1RTdiY/gFZvpIsLOAuWLhrLZi/2BhUi82BVzuqo/KO6LQc/
-I6DDCHohHYX4CgqGNCou81bir0LZ9QEBUp8QzEWKmnbcE0IVQmnT18HHXUW6D7Qn
-qiKB8kuZGLv6M/AjBlrfhkKphafmk27PMN3dL1W2n/6SqKYdTUwPKM05W2FiP0ZR
-pWIPpcsWcQSeRUw+uEqpkohZbNgv67crjjFQAofm7bVCgxMVI8SwZ1qHZWAJtMgX
-d2ySWt0cwDpoTD795j0LR1txKOVZ/4ZdXMFTQUKyofEZacfkLOUQjK33HywAnlz8
-6Uw6WIbfhgYOJhGqzXUZmZD/QQhM2VpFqx5/5H/kjNInlHlz4F80Oacyt6D2oVT5
-WHnM37F48jdBqFXEkQtRX6ZPnuX4+mXMqHzoM/6yjo41xY+Ed44MI2g/nmde22lf
-B+46ujovmiE48YPw7bJOhXLOHAqbML4ZCTa58s4lzpCN4QgtVv7VWw/xfyOgP0mx
-jLZWX0M5oIyFlyo3D2jUZmSISRDLoy+OHndWSz6qgf6XWJfUU82bi/y9zz5Y5yLu
-f0lYrIUzrF1k5OWpxSYaFUzaPZB2RVb9CkvZau68B3i35eF+e+0=
-=eaxR
------END PGP SIGNATURE-----
-
---XMCwj5IQnwKtuyBG--
+ arch/arm64/kernel/image.h  | 6 +++++-
+ arch/arm64/kernel/module.c | 8 ++++++--
+ 2 files changed, 11 insertions(+), 3 deletions(-)
