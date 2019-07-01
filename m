@@ -2,114 +2,352 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,WEIRD_QUOTING
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F500C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396B6C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3503420881
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:12:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="0V0eoBZL"
+	by mail.kernel.org (Postfix) with ESMTP id 0963E205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbfGANMy (ORCPT
+        id S1729116AbfGANNY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 09:12:54 -0400
-Received: from mx01-fr.bfs.de ([193.174.231.67]:60889 "EHLO mx01-fr.bfs.de"
+        Mon, 1 Jul 2019 09:13:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46100 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfGANMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 09:12:54 -0400
-Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
-        by mx01-fr.bfs.de (Postfix) with ESMTPS id 67D032035D;
-        Mon,  1 Jul 2019 15:12:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1561986767; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9t9pBivaBS8etNTZ6qCGnieNPfZCLTos1wsuQiVM89M=;
-        b=0V0eoBZL9Eb2zvugOYhC+QpYytevRxSId7mkpgf9xAUlUsTez+6ox6KH7i/87bPBx8R0q7
-        6r/JWqkcDCk8hUL/wYJnmRHa1laeapmE57UABwudzarRgBWNqB2+PHavOq1Rb7b2SvjWyE
-        IphI/XmIKwLPcXHdkibnGBqb9dweIx8d9DlrVmUYojWxOzmnrDXYoVu9xW86R8/A4SSvpp
-        PSd+RoPPz5kjahiiLCLo6gapt9dZiP6dgF35b1iSgaZjvH9EkGPaJ7/LpL0SwaGmm3WDlP
-        yHLz840yit2QYCvxxH01LE1BtVfy9t5+I0QioFAauRAnwI0pE94nmfC4WNxRZg==
-Received: from [134.92.181.33] (unknown [134.92.181.33])
-        by mail-fr.bfs.de (Postfix) with ESMTPS id C3CF7BEEBD;
-        Mon,  1 Jul 2019 15:12:46 +0200 (CEST)
-Message-ID: <5D1A06CE.6000405@bfs.de>
-Date:   Mon, 01 Jul 2019 15:12:46 +0200
-From:   walter harms <wharms@bfs.de>
-Reply-To: wharms@bfs.de
-User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
+        id S1726329AbfGANNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 09:13:23 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EAEBF308FEC0;
+        Mon,  1 Jul 2019 13:13:20 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B90601001B20;
+        Mon,  1 Jul 2019 13:13:17 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190701104048.c2t5aful2sabngmr@brauner.io>
+References: <20190701104048.c2t5aful2sabngmr@brauner.io> <156173661696.14042.17822154531324224780.stgit@warthog.procyon.org.uk> <156173662509.14042.3867242748127323502.stgit@warthog.procyon.org.uk>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
+        mszeredi@redhat.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH 01/11] vfs: syscall: Add fsinfo() to query filesystem information [ver #15]
 MIME-Version: 1.0
-To:     Colin King <colin.king@canonical.com>
-CC:     Shuah Khan <shuah@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kselftest@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] selftests/x86: fix spelling mistake "FAILT" ->
- "FAIL"
-References: <20190701130431.13391-1-colin.king@canonical.com>
-In-Reply-To: <20190701130431.13391-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: mx01-fr.bfs.de
-X-Spamd-Result: default: False [-3.10 / 7.00];
-         ARC_NA(0.00)[];
-         HAS_REPLYTO(0.00)[wharms@bfs.de];
-         BAYES_HAM(-3.00)[100.00%];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         REPLYTO_ADDR_EQ_FROM(0.00)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         NEURAL_HAM(-0.00)[-0.999,0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         RCVD_TLS_ALL(0.00)[]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <27311.1561986796.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Mon, 01 Jul 2019 14:13:16 +0100
+Message-ID: <27313.1561986796@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 01 Jul 2019 13:13:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Christian Brauner <christian@brauner.io> wrote:
 
-
-Am 01.07.2019 15:04, schrieb Colin King:
-> From: Colin Ian King <colin.king@canonical.com>
+> > +config FSINFO
 > 
-> There is an spelling mistake in an a test error message. Fix it.
+> Hm, any reason why we would hide that syscalls under a config option?
+
+Rasmus Villemoes asked for it to be made conditional.
+
+https://lore.kernel.org/lkml/f3646774-ee9e-d5b7-8a11-670012034d59@rasmusvillemoes.dk/
+
+> Do we, not have any dumb helpers for scenarios like this?:
 > 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  tools/testing/selftests/x86/test_vsyscall.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> #define strlen_literal(x) (sizeof(""x"") - 1)
+> #define strlen_array(x) (sizeof(x) - 1)
+
+git grep doesn't find them under this name.
+
+> > +	while (!signal_pending(current)) {
+> > +		params->usage = 0;
+> > +		ret = fsinfo(path, params);
+> > +		if (IS_ERR_VALUE((long)ret))
+> > +			return ret; /* Error */
+> > +		if ((unsigned int)ret <= params->buf_size)
 > 
-> diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
-> index 4602326b8f5b..a4f4d4cf22c3 100644
-> --- a/tools/testing/selftests/x86/test_vsyscall.c
-> +++ b/tools/testing/selftests/x86/test_vsyscall.c
-> @@ -451,7 +451,7 @@ static int test_vsys_x(void)
->  		printf("[OK]\tExecuting the vsyscall page failed: #PF(0x%lx)\n",
->  		       segv_err);
->  	} else {
-> -		printf("[FAILT]\tExecution failed with the wrong error: #PF(0x%lx)\n",
-> +		printf("[FAIL]\tExecution failed with the wrong error: #PF(0x%lx)\n",
->  		       segv_err);
->  		return 1;
->  	}
+> if ((size_t)ret ...? Just for the sake of clarity if for nothing else.
+> 
+> > +			return ret; /* It fitted */
+> 
+> Ok, a little confused here, tbh. params->buf_size is size_t
 
+It's "unsigned int".
 
-"wrong error" sounds like scratching table, perhaps "error" is here sufficient ?
-Bomus points when user is expected to report this.
+> and this function returns an int. Forgot whether you mentioned this before,
+> buf_size exceed can't exceed INT_MAX?
 
-re,
- wh
+It's mentioned in the documentation (ie. fsinfo.rst).  I'll mention it in the
+comments adjacent to the attribute definition table also.
+
+> Is it really wort it to have this code generating stuff in there?
+
+From a readability PoV, yes, tabulation is awesome, IMO;-).  Up to 5 lines per
+attribute is too much vertical space and expanding it makes the whole thing
+much less readable.  Add to that that not all attributes will be the same
+number of lines.
+
+It would be easier if the I could get away with making the constant names
+lower case, but the thou-shalt-capitalise-constantists dislike that, so, given
+that I don't know of a way to make the C preprocessor change the case of a
+symbol, I have to include both parts.
+
+I have four pieces of information: type, depth, constant name, struct name (if
+applicable), and I can fit them on one line this way.
+
+You really find this:
+
+static const struct fsinfo_attr_info fsinfo_buffer_info[FSINFO_ATTR__NR] = {
+	[FSINFO_ATTR_STATFS] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_SINGLE,
+		.size	= sizeof(struct fsinfo_statfs)
+	},
+	[FSINFO_ATTR_FSINFO] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_SINGLE,
+		.size	= sizeof(struct fsinfo_fsinfo)
+	},
+	[FSINFO_ATTR_IDS] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_SINGLE,
+		.size	= sizeof(struct fsinfo_ids)
+	},
+	[FSINFO_ATTR_LIMITS] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_SINGLE,
+		.size	= sizeof(struct fsinfo_limits)
+	},
+	[FSINFO_ATTR_CAPABILITIES] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_SINGLE,
+		.size	= sizeof(struct fsinfo_capabilities)
+	},
+	[FSINFO_ATTR_SUPPORTS] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_SINGLE,
+		.size	= sizeof(struct fsinfo_supports)
+	},
+	[FSINFO_ATTR_TIMESTAMP_INFO] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_SINGLE,
+		.size	= sizeof(struct fsinfo_timestamp_info)
+	},
+	[FSINFO_ATTR_VOLUME_ID] = {
+		.type	= __FSINFO_STRING,
+		.flags	= __FSINFO_SINGLE,
+	},
+	[FSINFO_ATTR_VOLUME_UUID] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_SINGLE,
+		.size	= sizeof(struct fsinfo_volume_uuid)
+	},
+	[FSINFO_ATTR_VOLUME_NAME] = {
+		.type	= __FSINFO_STRING,
+		.flags	= __FSINFO_SINGLE,
+	},
+	[FSINFO_ATTR_NAME_ENCODING] = {
+		.type	= __FSINFO_STRING,
+		.flags	= __FSINFO_SINGLE,
+	},
+	[FSINFO_ATTR_NAME_CODEPAGE] = {
+		.type	= __FSINFO_STRING,
+		.flags	= __FSINFO_SINGLE,
+	},
+	[FSINFO_ATTR_PARAM_DESCRIPTION] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_SINGLE,
+		.size	= sizeof(struct fsinfo_param_description)
+	},
+	[FSINFO_ATTR_PARAM_SPECIFICATION] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_N,
+		.size	= sizeof(struct fsinfo_param_specification)
+	},
+	[FSINFO_ATTR_PARAM_ENUM] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_N,
+		.size	= sizeof(struct fsinfo_param_enum)
+	},
+	[FSINFO_ATTR_PARAMETERS] = {
+		.type	= __FSINFO_OPAQUE,
+		.flags	= __FSINFO_SINGLE,
+	},
+	[FSINFO_ATTR_LSM_PARAMETERS] = {
+		.type	= __FSINFO_OPAQUE,
+		.flags	= __FSINFO_SINGLE,
+	},
+	[FSINFO_ATTR_SERVER_NAME] = {
+		.type	= __FSINFO_STRING,
+		.flags	= __FSINFO_N,
+	},
+	[FSINFO_ATTR_SERVER_ADDRESS] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_NM,
+		.size	= sizeof(struct fsinfo_server_address)
+	},
+	[FSINFO_ATTR_AFS_CELL_NAME] = {
+		.type	= __FSINFO_STRING,
+		.flags	= __FSINFO_SINGLE,
+	},
+	[FSINFO_ATTR_MOUNT_INFO] = {
+		.type	= __FSINFO_STRUCT,
+		.flags	= __FSINFO_SINGLE,
+		.size	= sizeof(struct fsinfo_mount_info)
+	},
+	[FSINFO_ATTR_MOUNT_DEVNAME] = {
+		.type	= __FSINFO_STRING,
+		.flags	= __FSINFO_SINGLE,
+	},
+	[FSINFO_ATTR_MOUNT_CHILDREN] = {
+		.type	= __FSINFO_STRUCT_ARRAY,
+		.flags	= __FSINFO_SINGLE,
+		.size	= sizeof(struct fsinfo_mount_child)
+	},
+	[FSINFO_ATTR_MOUNT_SUBMOUNT] = {
+		.type	= __FSINFO_STRING,
+		.flags	= __FSINFO_N,
+	},
+};
+
+is easier to read than this?:
+
+static const struct fsinfo_attr_info fsinfo_buffer_info[FSINFO_ATTR__NR] = {
+	FSINFO_STRUCT		(STATFS,		statfs),
+	FSINFO_STRUCT		(FSINFO,		fsinfo),
+	FSINFO_STRUCT		(IDS,			ids),
+	FSINFO_STRUCT		(LIMITS,		limits),
+	FSINFO_STRUCT		(CAPABILITIES,		capabilities),
+	FSINFO_STRUCT		(SUPPORTS,		supports),
+	FSINFO_STRUCT		(TIMESTAMP_INFO,	timestamp_info),
+	FSINFO_STRING		(VOLUME_ID),
+	FSINFO_STRUCT		(VOLUME_UUID,		volume_uuid),
+	FSINFO_STRING		(VOLUME_NAME),
+	FSINFO_STRING		(NAME_ENCODING),
+	FSINFO_STRING		(NAME_CODEPAGE),
+	FSINFO_STRUCT		(PARAM_DESCRIPTION,	param_description),
+	FSINFO_STRUCT_N		(PARAM_SPECIFICATION,	param_specification),
+	FSINFO_STRUCT_N		(PARAM_ENUM,		param_enum),
+	FSINFO_OPAQUE		(PARAMETERS),
+	FSINFO_OPAQUE		(LSM_PARAMETERS),
+	FSINFO_STRING_N		(SERVER_NAME),
+	FSINFO_STRUCT_NM	(SERVER_ADDRESS,	server_address),
+	FSINFO_STRING		(AFS_CELL_NAME),
+	FSINFO_STRUCT		(MOUNT_INFO,		mount_info),
+	FSINFO_STRING		(MOUNT_DEVNAME),
+	FSINFO_STRUCT_ARRAY	(MOUNT_CHILDREN,	mount_child),
+	FSINFO_STRING_N		(MOUNT_SUBMOUNT),
+};
+
+The latter also has the advantage that I can take this and drop it into the
+test program and change the helper macros to make it do other things.  With
+the fully expanded code, that isn't possible.
+
+One thing I will grant you, though, I can simplify:
+
+#define __FSINFO_STRUCT		0
+#define __FSINFO_STRING		1
+#define __FSINFO_OPAQUE		2
+#define __FSINFO_STRUCT_ARRAY	3
+#define __FSINFO_0		0
+#define __FSINFO_N		0x0001
+#define __FSINFO_NM		0x0002
+
+#define _Z(T, F, S) { .type = __FSINFO_##T, .flags = __FSINFO_##F, .size = S }
+#define FSINFO_STRING(X)	 [FSINFO_ATTR_##X] = _Z(STRING, 0, 0)
+#define FSINFO_STRUCT(X,Y)	 [FSINFO_ATTR_##X] = _Z(STRUCT, 0, sizeof(struct fsinfo_##Y))
+#define FSINFO_STRING_N(X)	 [FSINFO_ATTR_##X] = _Z(STRING, N, 0)
+#define FSINFO_STRUCT_N(X,Y)	 [FSINFO_ATTR_##X] = _Z(STRUCT, N, sizeof(struct fsinfo_##Y))
+#define FSINFO_STRING_NM(X)	 [FSINFO_ATTR_##X] = _Z(STRING, NM, 0)
+#define FSINFO_STRUCT_NM(X,Y)	 [FSINFO_ATTR_##X] = _Z(STRUCT, NM, sizeof(struct fsinfo_##Y))
+#define FSINFO_OPAQUE(X)	 [FSINFO_ATTR_##X] = _Z(OPAQUE, 0, 0)
+#define FSINFO_STRUCT_ARRAY(X,Y) [FSINFO_ATTR_##X] = _Z(STRUCT_ARRAY, 0, sizeof(struct fsinfo_##Y))
+
+a bit:
+
+#define __FSINFO_STRUCT		0
+#define __FSINFO_STRING		1
+#define __FSINFO_OPAQUE		2
+#define __FSINFO_STRUCT_ARRAY	3
+#define __FSINFO_N		0x01
+#define __FSINFO_NM		0x02
+
+#define _Z(T, S)    { .type = __FSINFO_##T, .flags = 0,		  .size = S }
+#define _Z_N(T, S)  { .type = __FSINFO_##T, .flags = __FSINFO_N,  .size = S }
+#define _Z_NM(T, S) { .type = __FSINFO_##T, .flags = __FSINFO_NM, .size = S }
+#define FSINFO_STRING(X)	 [FSINFO_ATTR_##X] = _Z(STRING, 0)
+#define FSINFO_STRUCT(X,Y)	 [FSINFO_ATTR_##X] = _Z(STRUCT, sizeof(struct fsinfo_##Y))
+#define FSINFO_STRING_N(X)	 [FSINFO_ATTR_##X] = _Z_N(STRING, 0)
+#define FSINFO_STRUCT_N(X,Y)	 [FSINFO_ATTR_##X] = _Z_N(STRUCT, sizeof(struct fsinfo_##Y))
+#define FSINFO_STRING_NM(X)	 [FSINFO_ATTR_##X] = _Z_NM(STRING, 0)
+#define FSINFO_STRUCT_NM(X,Y)	 [FSINFO_ATTR_##X] = _Z_NM(STRUCT, sizeof(struct fsinfo_##Y))
+#define FSINFO_OPAQUE(X)	 [FSINFO_ATTR_##X] = _Z(OPAQUE, 0)
+#define FSINFO_STRUCT_ARRAY(X,Y) [FSINFO_ATTR_##X] = _Z(STRUCT_ARRAY, sizeof(struct fsinfo_##Y))
+
+> I urge you to think about git grep users. For them this is an absolute
+> nightmare. :)
+
+That's a valid point, but it's a problem all over the kernel.  We use
+macroisation everywhere.  See all the declaration and define macros that nest
+layers deep.
+
+If that's your main worry, The attribute type name could be fully expanded in
+the table, eg.:
+
+	FSINFO_STRUCT		(FSINFO_ATTR_CAPABILITIES,	capabilities),
+	FSINFO_STRING_N		(FSINFO_ATTR_MOUNT_SUBMOUNT),
+
+> > +	unsigned int result_size;
+> 
+> Wouldn't it be better if this could be a size_t?
+
+Why?  size_t takes more space on a 64-bit system, but I'm not allowing the
+filesystem to return that much data, mainly because I don't really want to be
+allocating a >2G buffer.
+
+In fact, for large objects there's something to be said for writing directly
+to userspace rather than going through a buffer, but for the fact that I want
+to hold, say, the RCU readlock across the entire transaction in some
+instances.
+
+> > +	if (!user_buffer || !user_buf_size) {
+> 
+> Maybe we could be a little more strict and require both be set to their
+> respective zero values, i.e. only support reporting the size if
+> !user_buffer && user_buf_size = 0 for that to work. If only one of them
+> is set to their zero value we report EINVAL.
+
+That's an option, certainly.
+
+> Hm, I'm not sure that "capabilities" is a good name here. This is
+> potentially misleading because of other uses of "capabilities" we
+> already have. Like, I don't want thes capabilities to pop up when I do
+> git grep capabilities. Just a short way until someone also speaks of
+> "fscaps" or "fsinfocaps" and then confusion is basically guaranteed. :)
+> 
+> Maybe "features" would be better?
+
+Yeah - that's probably better.  The only issue is that it doesn't have a nice
+short hypocoristicon like "cap", though I could use "feat" I guess.
+
+> > +#define _ATFILE_SOURCE
+> 
+> nit: Defining fsinfoat() implicitly or what's that supposed to do? If that's
+> the case wouldn't it be nicer to just explicitly declare fsinfoat()
+
+Um...  fsinfo() takes AT_* flags.  It's fsinfoat(), ffsinfo() and lfsinfo()
+all rolled into one, plus a couple of extra bits.  It doesn't really need an
+at-suffix on the name as there's no at-less original.
+
+David
