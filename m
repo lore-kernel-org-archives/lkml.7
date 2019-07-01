@@ -2,283 +2,104 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BDDC06508
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B597C06508
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D602208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D41F208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 03:24:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IvWQhGsm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8MepicQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfGADYQ (ORCPT
+        id S1727310AbfGADYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Jun 2019 23:24:16 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34607 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfGADYQ (ORCPT
+        Sun, 30 Jun 2019 23:24:22 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45976 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfGADYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Jun 2019 23:24:16 -0400
-Received: by mail-qt1-f194.google.com with SMTP id m29so13189881qtu.1
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 20:24:15 -0700 (PDT)
+        Sun, 30 Jun 2019 23:24:22 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bi6so6537617plb.12
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2019 20:24:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=K3NuKdFEgq5BVV5xPgHvrMD/faP4K7WOl8ZJ9WIj/Xk=;
-        b=IvWQhGsm+FpCtynl/Y11txgTCNs/79JiJ3qwpzrawy3ctdoxx71HYmtq5iuDvf3HjM
-         XVahi85PQv/zWxtzctSAZ0W8gplW2mEHBS7NgoZb8BrP4MyRLqt0Eri1Njxp1IKAj7gr
-         BWCLifrNNigi87hshqwmhgyLgn4XwfpjI9xt3LGhCgaemkICwhk7RmT+mvZnDMyExooo
-         bMhJEaM8154joJ1MB7ZqvPNV5yBmqWdwFJcQKDAA8wLjtr3lHuaSJEeQIzV0Di+KKT8A
-         HXMQfwrDmgcqHXcecfeTnYpgzyxXhjoCQvucC5f9RC9K/TSpyqThOvE+CcDfMZhUUOY1
-         THbA==
+        h=from:to:cc:subject:date:message-id;
+        bh=eYA3vKTta6LKS1D/XK4ZvRYQaXSF2BIW0Hf1nNsZli4=;
+        b=D8MepicQN9u84HY/PmIe5HLoyHz6T4kQZZz8+uVOmBlwJh1NlN+OqWy5FNLX71wRLh
+         ZO2g1VAETronF87ceXs5GHvyAb9tQzayvWI6Wl0TjmTQgL5gtaNl4e4Pw9IgiB/+Domz
+         uV0ZrhdAucZeM0qVGqG5Ll6Gpqe78C8Zoz09i14knUkIkg3hbHZ9q4AQtOBO/ophn4lm
+         W/Jq+CEM2HCum7xXsaKyumlz7YamGcAiX8i9n7JkiY7pRZvFJnPSPhhe00cSNGDrz0Nz
+         NS0pZTycYNta0xcGoTWmdOR/SOa754zl+m2qqb5efqIYIsJqLpxuO/YmxWrx65+Dkd0H
+         gkAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K3NuKdFEgq5BVV5xPgHvrMD/faP4K7WOl8ZJ9WIj/Xk=;
-        b=BYXRSVNiRrjzxtVNG2CiiBikygvHs3nTlntwzJ+JZIYwfmE8G3TiBeuEIZE508dAqV
-         F802tfRP1+74Lskn7OdqsA+yNYbsT3apZCIDL/X1O6frnItXi9UVrG4rWBRY3rp61kkq
-         BNsModR9EbzCrNvwveWbkU7ZNn8ECV1ChPYW1FQgzsTg03l+tZ3twpNpMAKaUHzj7mei
-         M4Y08jvSYItcWh9Gbq/dfOzZJTCNYVx02mPP7gOp2ozk98jGnaxJtLzHvssggkpX7FEs
-         6cQ1GZ6wc7/0HC5y7QxdpK/ba9QK1oE3891WH4NkUyaO1MQzbc7pGzPyLop3N/d11jpY
-         Mbow==
-X-Gm-Message-State: APjAAAWDvqgjwlWyYew/W26lHHOys+mo98NKlarz5HL3u3Hkp1hVKkgj
-        aTdqsiLU3gLgQCfF8pJ17ywoXAvQ
-X-Google-Smtp-Source: APXvYqzoNHdmQbwyteQnjItCSSCXAPmKX7z63t8UiKZy+sQ9oeM6hrklQWS1C2vZ3eHIPWlgspHSDw==
-X-Received: by 2002:a05:6214:10c5:: with SMTP id r5mr18310561qvs.224.1561951454954;
-        Sun, 30 Jun 2019 20:24:14 -0700 (PDT)
-Received: from smtp.gmail.com ([187.121.151.22])
-        by smtp.gmail.com with ESMTPSA id f19sm667745qtq.5.2019.06.30.20.24.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 30 Jun 2019 20:24:14 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 00:24:10 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Daniel Vetter <daniel@ffwll.ch>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Simon Ser <contact@emersion.fr>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] drm/vkms: Add enable/disable functions per connector
-Message-ID: <f5b654ec89aa754d5f572f9fc983fbd0d861e1ce.1561950553.git.rodrigosiqueiramelo@gmail.com>
-References: <cover.1561950553.git.rodrigosiqueiramelo@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1561950553.git.rodrigosiqueiramelo@gmail.com>
-User-Agent: NeoMutt/20180716
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eYA3vKTta6LKS1D/XK4ZvRYQaXSF2BIW0Hf1nNsZli4=;
+        b=p4U+ep6e5HYVw0qBJ+JnO4vcqeXlLOmw/0pSoDwBb5Al4HFsGn3w/H7BJIP4kZAzhg
+         ae4atBWljW/Vg/d5bPaygUCZkG1koZ6nuR/keQgG+yHEhjoX21K5q3fWQckBD42g3ZVT
+         vot9edHbtZLlcS0lMMLZWsV9x8t5ZzvcpKS7bVO0sJLRwP+k3Leah0mDHs9z+0D9nwlk
+         9Gq7m2PLzl8QWfoQ8cefCYTnOaKEpolrkuTBUYP/9Elv/xclkfuko9zWAK2dT2ieSW9S
+         DhkKSNkDqAF5OZQbgPyVoC5jJ40/eqenn9XOaR+ElV8UTF+op/+EXzuxQkGHF3A5W4h7
+         fuPQ==
+X-Gm-Message-State: APjAAAWRt64oRsZkVXSGGXEDxuvg+7n4tPstikyokgY1Td5SumE75tEH
+        gjRYGL78GXMvHBtKZbw+8fI9c5JkoTA=
+X-Google-Smtp-Source: APXvYqySLGQhmtjaHuYtuPGDI1mFSZeQ7R5YkDextsKVLlbJcd1QzM84G8X4iolRiaEyBJqVrxD6jA==
+X-Received: by 2002:a17:902:e40f:: with SMTP id ci15mr26319595plb.103.1561951461685;
+        Sun, 30 Jun 2019 20:24:21 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id u134sm9373816pfc.19.2019.06.30.20.24.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 30 Jun 2019 20:24:21 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] mailbox: Use dev_get_drvdata()
+Date:   Mon,  1 Jul 2019 11:24:13 +0800
+Message-Id: <20190701032413.26073-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, virtual and writeback connectors have the code responsible
-for initialization and cleanup spread around different places in vkms.
-This patch creates an enable and disable function per connector which
-allows vkms to hotplug connectors easily.
+Using dev_get_drvdata directly.
 
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/gpu/drm/vkms/vkms_drv.h       |  5 ++
- drivers/gpu/drm/vkms/vkms_output.c    | 84 +++++++++++++++++----------
- drivers/gpu/drm/vkms/vkms_writeback.c | 31 ++++++++--
- 3 files changed, 83 insertions(+), 37 deletions(-)
+ drivers/mailbox/bcm-flexrm-mailbox.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index 9ff2cd4ebf81..a1ca5c658355 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -152,7 +152,12 @@ int vkms_verify_crc_source(struct drm_crtc *crtc, const char *source_name,
- /* Composer Support */
- void vkms_composer_worker(struct work_struct *work);
+diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
+index a64116586b4c..0cfdd53d04a1 100644
+--- a/drivers/mailbox/bcm-flexrm-mailbox.c
++++ b/drivers/mailbox/bcm-flexrm-mailbox.c
+@@ -1165,8 +1165,7 @@ static int flexrm_process_completions(struct flexrm_ring *ring)
  
-+/* Virtual connector */
-+int enable_virtual_connector(struct vkms_device *vkmsdev);
-+void disable_virtual_connector(struct vkms_device *vkmsdev);
-+
- /* Writeback */
- int enable_writeback_connector(struct vkms_device *vkmsdev);
-+void disable_writeback_connector(struct vkms_device *connector);
- 
- #endif /* _VKMS_DRV_H_ */
-diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-index aea1d4410864..26ecab52e82e 100644
---- a/drivers/gpu/drm/vkms/vkms_output.c
-+++ b/drivers/gpu/drm/vkms/vkms_output.c
-@@ -6,6 +6,7 @@
- 
- static void vkms_connector_destroy(struct drm_connector *connector)
+ static int flexrm_debugfs_conf_show(struct seq_file *file, void *offset)
  {
-+	drm_connector_unregister(connector);
- 	drm_connector_cleanup(connector);
- }
+-	struct platform_device *pdev = to_platform_device(file->private);
+-	struct flexrm_mbox *mbox = platform_get_drvdata(pdev);
++	struct flexrm_mbox *mbox = dev_get_drvdata(file->private);
  
-@@ -35,37 +36,19 @@ static const struct drm_connector_helper_funcs vkms_conn_helper_funcs = {
- 	.get_modes    = vkms_conn_get_modes,
- };
+ 	/* Write config in file */
+ 	flexrm_write_config_in_seqfile(mbox, file);
+@@ -1176,8 +1175,7 @@ static int flexrm_debugfs_conf_show(struct seq_file *file, void *offset)
  
--int vkms_output_init(struct vkms_device *vkmsdev, int index)
-+int enable_virtual_connector(struct vkms_device *vkmsdev)
+ static int flexrm_debugfs_stats_show(struct seq_file *file, void *offset)
  {
- 	struct vkms_output *output = &vkmsdev->output;
--	struct drm_device *dev = &vkmsdev->drm;
- 	struct drm_connector *connector = &output->connector;
- 	struct drm_encoder *encoder = &output->encoder;
--	struct drm_crtc *crtc = &output->crtc;
--	struct drm_plane *primary, *cursor = NULL;
-+	struct drm_device *dev = &vkmsdev->drm;
- 	int ret;
+-	struct platform_device *pdev = to_platform_device(file->private);
+-	struct flexrm_mbox *mbox = platform_get_drvdata(pdev);
++	struct flexrm_mbox *mbox = dev_get_drvdata(file->private);
  
--	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY, index);
--	if (IS_ERR(primary))
--		return PTR_ERR(primary);
--
--	if (enable_cursor) {
--		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR, index);
--		if (IS_ERR(cursor)) {
--			ret = PTR_ERR(cursor);
--			goto err_cursor;
--		}
--	}
--
--	ret = vkms_crtc_init(dev, crtc, primary, cursor);
--	if (ret)
--		goto err_crtc;
--
- 	ret = drm_connector_init(dev, connector, &vkms_connector_funcs,
- 				 DRM_MODE_CONNECTOR_VIRTUAL);
- 	if (ret) {
- 		DRM_ERROR("Failed to init connector\n");
--		goto err_connector;
-+		return ret;
- 	}
- 
- 	drm_connector_helper_add(connector, &vkms_conn_helper_funcs);
-@@ -84,17 +67,7 @@ int vkms_output_init(struct vkms_device *vkmsdev, int index)
- 		goto err_attach;
- 	}
- 
--	if (enable_writeback) {
--		ret = enable_writeback_connector(vkmsdev);
--		if (!ret) {
--			output->composer_enabled = true;
--			DRM_INFO("Writeback connector enabled");
--		} else {
--			DRM_ERROR("Failed to init writeback connector\n");
--		}
--	}
--
--	drm_mode_config_reset(dev);
-+	drm_connector_register(connector);
- 
- 	return 0;
- 
-@@ -104,6 +77,53 @@ int vkms_output_init(struct vkms_device *vkmsdev, int index)
- err_encoder:
- 	drm_connector_cleanup(connector);
- 
-+	return ret;
-+}
-+
-+void disable_virtual_connector(struct vkms_device *vkmsdev)
-+{
-+	struct vkms_output *output = &vkmsdev->output;
-+
-+	drm_connector_unregister(&output->connector);
-+	drm_connector_cleanup(&output->connector);
-+	drm_encoder_cleanup(&output->encoder);
-+}
-+
-+int vkms_output_init(struct vkms_device *vkmsdev, int index)
-+{
-+	struct vkms_output *output = &vkmsdev->output;
-+	struct drm_device *dev = &vkmsdev->drm;
-+	struct drm_crtc *crtc = &output->crtc;
-+	struct drm_plane *primary, *cursor = NULL;
-+	int ret;
-+
-+	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY, index);
-+	if (IS_ERR(primary))
-+		return PTR_ERR(primary);
-+
-+	if (enable_cursor) {
-+		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR, index);
-+		if (IS_ERR(cursor)) {
-+			ret = PTR_ERR(cursor);
-+			goto err_cursor;
-+		}
-+	}
-+
-+	ret = vkms_crtc_init(dev, crtc, primary, cursor);
-+	if (ret)
-+		goto err_crtc;
-+
-+	ret = enable_virtual_connector(vkmsdev);
-+	if (ret)
-+		goto err_connector;
-+
-+	if (enable_writeback)
-+		enable_writeback_connector(vkmsdev);
-+
-+	drm_mode_config_reset(dev);
-+
-+	return 0;
-+
- err_connector:
- 	drm_crtc_cleanup(crtc);
- 
-diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
-index 34dad37a0236..6a3f37d60c1d 100644
---- a/drivers/gpu/drm/vkms/vkms_writeback.c
-+++ b/drivers/gpu/drm/vkms/vkms_writeback.c
-@@ -125,17 +125,38 @@ static const struct drm_connector_helper_funcs vkms_wb_conn_helper_funcs = {
- 	.atomic_commit = vkms_wb_atomic_commit,
- };
- 
-+void disable_writeback_connector(struct vkms_device *vkmsdev)
-+{
-+	struct vkms_output *output = &vkmsdev->output;
-+
-+	output->composer_enabled = false;
-+	drm_connector_unregister(&output->wb_connector.base);
-+	drm_connector_cleanup(&output->wb_connector.base);
-+	drm_encoder_cleanup(&output->wb_connector.encoder);
-+}
-+
- int enable_writeback_connector(struct vkms_device *vkmsdev)
- {
- 	struct drm_writeback_connector *wb = &vkmsdev->output.wb_connector;
-+	int ret;
- 
- 	vkmsdev->output.wb_connector.encoder.possible_crtcs = 1;
- 	drm_connector_helper_add(&wb->base, &vkms_wb_conn_helper_funcs);
- 
--	return drm_writeback_connector_init(&vkmsdev->drm, wb,
--					    &vkms_wb_connector_funcs,
--					    &vkms_wb_encoder_helper_funcs,
--					    vkms_wb_formats,
--					    ARRAY_SIZE(vkms_wb_formats));
-+	ret = drm_writeback_connector_init(&vkmsdev->drm, wb,
-+					   &vkms_wb_connector_funcs,
-+					   &vkms_wb_encoder_helper_funcs,
-+					   vkms_wb_formats,
-+					   ARRAY_SIZE(vkms_wb_formats));
-+	if (!ret) {
-+		vkmsdev->output.composer_enabled = true;
-+		DRM_INFO("Writeback connector enabled");
-+	} else {
-+		DRM_ERROR("Failed to init writeback connector\n");
-+	}
-+
-+	drm_connector_register(&wb->base);
-+
-+	return ret;
- }
- 
+ 	/* Write stats in file */
+ 	flexrm_write_stats_in_seqfile(mbox, file);
 -- 
-2.21.0
+2.11.0
+
