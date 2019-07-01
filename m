@@ -2,116 +2,95 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ABDC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C64C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D4321721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36C9D2175B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:16:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="P0m+0Pg5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lO3wmrJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbfGAOOG (ORCPT
+        id S1729478AbfGAOQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:14:06 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37919 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfGAOOG (ORCPT
+        Mon, 1 Jul 2019 10:16:19 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34205 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbfGAOQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:14:06 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y15so6662897pfn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 07:14:05 -0700 (PDT)
+        Mon, 1 Jul 2019 10:16:19 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c85so6666675pfc.1;
+        Mon, 01 Jul 2019 07:16:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YINPfktv7kA/rIjO+Od90qPPmCseH3mnLZRR1IdPF7U=;
-        b=P0m+0Pg5zUKQchHletu/G/Y+dNejGuQsWLqu87B4A6eMz/sjyy81hitHFOR6fXzhPz
-         AMN5nlo6Uy6MMzsJaLz8vgHnGDnk+5OwHIB/wFbp5UlRcnXkTQap8n1x6/809h8GnhKJ
-         4W1Ny7IBkYis2w/3iZ1w5tLUKuOdOoRUjJPI8=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=aU81YLmtNxqWZklfwNAkUBvxOdz2ODKbjR3KAUMEhlQ=;
+        b=lO3wmrJpC6g9zZD+1L5/ejH39084n8XF2JiLQ3DoGhfguS1cm3qszgP8Hn8OhqMImn
+         8vbvTveK4rPUtXlPTB6U9JKnKcy9YeFgbo1xwl15MuLzcjMglsQZGxVgP46B3BLDYu3x
+         fsJDSLHwUPXD1W7aOpRNkSCHd+IVpBGGkRIcZliEyaZez8H+YzhUSlFlnXn4ad3eTGfR
+         m/jWRsM6ubP+KPK+AeMDyfKDC85REVwFolhWbBA97xbs9BLluwcJq/rNytgk+TRVDr5B
+         kb24AphWGSXzjpddnIHPHgjRt6bZYRgz1da6epdCM38UxNmAKyYzR/9fwM2R9IfXAFiE
+         NJGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YINPfktv7kA/rIjO+Od90qPPmCseH3mnLZRR1IdPF7U=;
-        b=nxi3O+UnfMJOOIoZ54KdeRjXcB5FDIhESKXRK/VcNAzpi8HmTnxAPpAfhAHCtsX2xv
-         dG4Xie059WYMUR5wUQSYBkZ1B2MBQuHhdq32fGVHz2o39prVXjz2QnHtPtcl5hf3STMb
-         rbKw/YDVyUj0C7g1xYraazLplWGjz+kJwqpY1/+XKBd/C/+2PYSPPU0OKI2yxZgihigA
-         3sbWFVkpeO+2MPWZkSdCHNfQg6cdYkH+sopBMnlZqLMj+3JbaSVmyA9IxaooVtC/hUL/
-         IDEYqhXZBiBMIlGMYC8b6FIccd0JVwX988SnWuZNvKlEL+dzfxHked2a4AgKtudmI9ho
-         RXwQ==
-X-Gm-Message-State: APjAAAXwv07Mw1oCfqheOOmupgQxXY3Q2wdpKUTdXCKP111P6/o/87Ra
-        oQvDkMuDI08xW0EygRh47EHDDw==
-X-Google-Smtp-Source: APXvYqyj27gOPZDN0GjUTiTvjHFulxKrQi1/lS6qeYFZf+9M3Eo6w5AY65wlDwexnpHe3Y9i+UCHXA==
-X-Received: by 2002:a17:90a:d681:: with SMTP id x1mr30838291pju.13.1561990445430;
-        Mon, 01 Jul 2019 07:14:05 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a16sm16528335pfd.68.2019.07.01.07.14.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aU81YLmtNxqWZklfwNAkUBvxOdz2ODKbjR3KAUMEhlQ=;
+        b=o2rXPmf29XWctFKKaY9Y55vjBVG6R6aBJd9Nkj0HweuDQfrtawqgUeyPdbW0VC+yEt
+         IaKgLrkISUW46XWJ66nQbldbSbP5mATLp5bIxt0AiPosU+nt0vC2fPhfrD+I+9IsipoK
+         4Gl8zcVyCta4Sjl3OksXuHX9ySK18XVJ4asXJMm/SoXW4W0JJad2XtAd78GWeJPnPEk8
+         mw9lngVsO45+o9W/V+dSepUNxMfRua31gznP/erKjinLad98Hlo++8xV/vhguxSSqSpz
+         7qwtCOLGWWrudV8rpKutD49FlFDDjk7/VGRnOB+TmGU8NHVPXQo6CFAsT+guMlSOOg6c
+         RywQ==
+X-Gm-Message-State: APjAAAXCBPtqac57CHzzb9OeBtaA8sH5arZZXFMSkKd0l74/V3c8ZOYe
+        0vwFNkIWdbBOrEF99jW8yFQ=
+X-Google-Smtp-Source: APXvYqyXnijCB5EGBO8i0ckMnvz0NKunjw+peIQzJVg2w7ejSGl9lKH2gy1mgzYCv1ZmMq6ll2rB9w==
+X-Received: by 2002:a63:6ec4:: with SMTP id j187mr7271663pgc.420.1561990578513;
+        Mon, 01 Jul 2019 07:16:18 -0700 (PDT)
+Received: from bnva-HP-Pavilion-g6-Notebook-PC.domain.name ([117.248.64.59])
+        by smtp.gmail.com with ESMTPSA id s15sm12015991pfd.183.2019.07.01.07.16.15
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 07:14:04 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 10:14:03 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kselftest@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, dvyukov@google.com
-Subject: Re: [RFC 3/3] Revert "rcutorture: Tweak kvm options"
-Message-ID: <20190701141403.GA246562@google.com>
-References: <20190701040415.219001-1-joel@joelfernandes.org>
- <20190701040415.219001-3-joel@joelfernandes.org>
- <20190701122358.nzebpuunp6o5jxhx@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701122358.nzebpuunp6o5jxhx@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 01 Jul 2019 07:16:17 -0700 (PDT)
+From:   Vandana BN <bnvandana@gmail.com>
+To:     "David S . Miller " <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Vandana BN <bnvandana@gmail.com>
+Subject: [PATCH] net:gue.h:Fix shifting signed 32-bit value by 31 bits problem
+Date:   Mon,  1 Jul 2019 19:46:10 +0530
+Message-Id: <20190701141610.3681-1-bnvandana@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 02:23:58PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-07-01 00:04:15 [-0400], Joel Fernandes (Google) wrote:
-> > This reverts commit a6fda6dab93c2c06ef4b8cb4b9258df6674d2438 which
-> > causes kvm.sh to not run on my machines. The qemu-system-x86_64 command
-> > runs but does nothing.
-> 
-> Nope. I would like to know *why* you need 'noapic' to work. Is it a
-> brand new or old qemu-system-x86_64?
+Fix GUE_PFLAG_REMCSUM to use "U" cast to avoid shifting signed
+32-bit value by 31 bits problem.
 
-I did not have time to debug yesterday and I posted this particular revert as
-an 'RFC' just to make aware of this problem.
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
+---
+ include/net/gue.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I spent some more time just now, it looks like this has nothing to do with
-'noapic' and appears to be a problem on debian distros with the e1000e NIC.
-May be this NIC was added to the virtual hardware because of -machine in the
-patch?
+diff --git a/include/net/gue.h b/include/net/gue.h
+index fdad41469b65..3a6595bfa641 100644
+--- a/include/net/gue.h
++++ b/include/net/gue.h
+@@ -60,7 +60,7 @@ struct guehdr {
 
-Any if I add the following to the qemu command that kvm.sh runs, it works again:
--net nic,model=e1000
+ /* Private flags in the private option extension */
 
-Without it I get:
- qemu-system-x86_64: Initialization of device e1000e failed: failed to find romfile "efi-e1000e.rom"
+-#define GUE_PFLAG_REMCSUM	htonl(1 << 31)
++#define GUE_PFLAG_REMCSUM	htonl(1U << 31)
+ #define GUE_PLEN_REMCSUM	4
 
-Seems to be mentioned here:
-https://bugs.launchpad.net/ubuntu/+source/ipxe/+bug/1737211
-
-And in syzkaller as well:
-https://github.com/google/syzkaller/blob/master/vm/qemu/qemu.go#L88
-
-Adding Dmitry who is syzkaller owner for any thoughts as well.
-
-I'm happy to write a patch to set the nic model as e1000 and send it out if
-we agree this solution is good enough.
-
- - Joel
+ #define GUE_PFLAGS_ALL	(GUE_PFLAG_REMCSUM)
+--
+2.17.1
 
