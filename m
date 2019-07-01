@@ -2,34 +2,36 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA68AC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C200C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F36A20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E3F20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:14:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="cRCvg6L0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="yDU7EiBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbfGAPOT (ORCPT
+        id S1730137AbfGAPO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:14:19 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:57160 "EHLO
+        Mon, 1 Jul 2019 11:14:26 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:57234 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727652AbfGAPOS (ORCPT
+        with ESMTP id S1730034AbfGAPOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:14:18 -0400
+        Mon, 1 Jul 2019 11:14:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1561994055; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1561994063; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=trQukpoD76EMuG9zgz5EGRmnNs/XLZ7ZjzLFF89DSQk=;
-        b=cRCvg6L071xvaTc7ikBWQD5w2yHmpUkKZOzr+BqKW5KfvNCOza8zEDcgjeANafKi14hNwW
-        /rl8a5XorTary5os2frno2y18GEC7Dbk4HiAIlYMq4Ib9irzVlC9iLqE+omSifp3dGXmgm
-        ffbxz7ycoj7RmC7RUSF4y5LarKEh0OA=
+         in-reply-to:in-reply-to:references:references;
+        bh=Uryfw9U8SmKvnHxnQWlxJhPNG3f35bnvG5+AO3xEJjo=;
+        b=yDU7EiBIK9yQyn3c64TUCqfLj5w7mEkXWR+KE3BVc6eCz3F0qYD9fJrYBs9QNTkLRLx02U
+        e6kD32oBWLizgYjvd728poYFcydSpabQVpnYQe73GIT8nf88K30LjAXeMFeJXlWPm4jRpm
+        U5F5RaxLvbF44Jw3LsfQV0cguiiW6Iw=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
         Ralf Baechle <ralf@linux-mips.org>,
@@ -42,10 +44,13 @@ To:     Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
 Cc:     Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH v14 00/13] Ingenic TCU patchset v14
-Date:   Mon,  1 Jul 2019 17:13:57 +0200
-Message-Id: <20190701151410.23127-1-paul@crapouillou.net>
+        linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v14 04/13] mfd: Add Ingenic TCU driver
+Date:   Mon,  1 Jul 2019 17:14:01 +0200
+Message-Id: <20190701151410.23127-5-paul@crapouillou.net>
+In-Reply-To: <20190701151410.23127-1-paul@crapouillou.net>
+References: <20190701151410.23127-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,20 +58,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This driver will provide a regmap that can be retrieved very early in
+the boot process through the API function ingenic_tcu_get_regmap().
 
-Changelog from v13:
+Additionally, it will call devm_of_platform_populate() so that all the
+children devices will be probed.
 
-- [02/13]: The documentation has been converted to ReStructured Text.
-- [04/13]: - Use ERR_CAST() instead of ERR_PTR(PTR_ERR())
-           - Remove ingenic_tcu_can_use_pwm().
-- [05/13]: Use %d instead of %i in messages
-- [06/13]: Remove empty lines in structure definitions
-- [07/13]: Remove empty lines in structure definitions
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
+Reviewed-by: Paul Burton <paul.burton@mips.com>
+---
 
-The patches that are not listed above did not see any change since v13.
+Notes:
+    v12: New patch
+    
+    v13: No change
+    
+    v14:
+     - Use ERR_CAST() instead of ERR_PTR(PTR_ERR())
+     - Remove ingenic_tcu_can_use_pwm(); it belongs in the PWM driver.
 
-Regards,
--Paul
+ drivers/mfd/Kconfig             |  8 +++
+ drivers/mfd/Makefile            |  1 +
+ drivers/mfd/ingenic-tcu.c       | 87 +++++++++++++++++++++++++++++++++
+ include/linux/mfd/ingenic-tcu.h |  6 +++
+ 4 files changed, 102 insertions(+)
+ create mode 100644 drivers/mfd/ingenic-tcu.c
 
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index a17d275bf1d4..f3ed22613cbc 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -495,6 +495,14 @@ config HTC_I2CPLD
+ 	  This device provides input and output GPIOs through an I2C
+ 	  interface to one or more sub-chips.
+ 
++config INGENIC_TCU
++	bool "Ingenic Timer/Counter Unit (TCU) support"
++	depends on MIPS || COMPILE_TEST
++	select REGMAP_MMIO
++	help
++	  Say yes here to support the Timer/Counter Unit (TCU) IP present
++	  in the JZ47xx SoCs from Ingenic.
++
+ config MFD_INTEL_QUARK_I2C_GPIO
+ 	tristate "Intel Quark MFD I2C GPIO"
+ 	depends on PCI
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 52b1a90ff515..fb89e131ae98 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -180,6 +180,7 @@ obj-$(CONFIG_AB8500_CORE)	+= ab8500-core.o ab8500-sysctrl.o
+ obj-$(CONFIG_MFD_TIMBERDALE)    += timberdale.o
+ obj-$(CONFIG_PMIC_ADP5520)	+= adp5520.o
+ obj-$(CONFIG_MFD_KEMPLD)	+= kempld-core.o
++obj-$(CONFIG_INGENIC_TCU)	+= ingenic-tcu.o
+ obj-$(CONFIG_MFD_INTEL_QUARK_I2C_GPIO)	+= intel_quark_i2c_gpio.o
+ obj-$(CONFIG_LPC_SCH)		+= lpc_sch.o
+ obj-$(CONFIG_LPC_ICH)		+= lpc_ich.o
+diff --git a/drivers/mfd/ingenic-tcu.c b/drivers/mfd/ingenic-tcu.c
+new file mode 100644
+index 000000000000..2d12bebd5430
+--- /dev/null
++++ b/drivers/mfd/ingenic-tcu.c
+@@ -0,0 +1,87 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * JZ47xx SoCs TCU MFD driver
++ * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
++ */
++
++#include <linux/mfd/ingenic-tcu.h>
++#include <linux/of_address.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++static struct regmap *tcu_regmap __initdata;
++
++static const struct regmap_config ingenic_tcu_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++	.max_register = TCU_REG_OST_CNTHBUF,
++};
++
++static const struct of_device_id ingenic_tcu_of_match[] = {
++	{ .compatible = "ingenic,jz4740-tcu" },
++	{ .compatible = "ingenic,jz4725b-tcu" },
++	{ .compatible = "ingenic,jz4770-tcu" },
++	{ /* sentinel */ }
++};
++
++static struct regmap * __init ingenic_tcu_create_regmap(struct device_node *np)
++{
++	struct resource res;
++	void __iomem *base;
++	struct regmap *map;
++
++	if (!of_match_node(ingenic_tcu_of_match, np))
++		return ERR_PTR(-EINVAL);
++
++	base = of_io_request_and_map(np, 0, "TCU");
++	if (IS_ERR(base))
++		return ERR_CAST(base);
++
++	map = regmap_init_mmio(NULL, base, &ingenic_tcu_regmap_config);
++	if (IS_ERR(map))
++		goto err_iounmap;
++
++	return map;
++
++err_iounmap:
++	iounmap(base);
++	of_address_to_resource(np, 0, &res);
++	release_mem_region(res.start, resource_size(&res));
++
++	return map;
++}
++
++static int __init ingenic_tcu_probe(struct platform_device *pdev)
++{
++	struct regmap *map = ingenic_tcu_get_regmap(pdev->dev.of_node);
++
++	platform_set_drvdata(pdev, map);
++
++	regmap_attach_dev(&pdev->dev, map, &ingenic_tcu_regmap_config);
++
++	return devm_of_platform_populate(&pdev->dev);
++}
++
++static struct platform_driver ingenic_tcu_driver = {
++	.driver = {
++		.name = "ingenic-tcu",
++		.of_match_table = ingenic_tcu_of_match,
++	},
++};
++
++static int __init ingenic_tcu_platform_init(void)
++{
++	return platform_driver_probe(&ingenic_tcu_driver,
++				     ingenic_tcu_probe);
++}
++subsys_initcall(ingenic_tcu_platform_init);
++
++struct regmap * __init ingenic_tcu_get_regmap(struct device_node *np)
++{
++	if (!tcu_regmap)
++		tcu_regmap = ingenic_tcu_create_regmap(np);
++
++	return tcu_regmap;
++}
+diff --git a/include/linux/mfd/ingenic-tcu.h b/include/linux/mfd/ingenic-tcu.h
+index 2083fa20821d..045fb90c57fd 100644
+--- a/include/linux/mfd/ingenic-tcu.h
++++ b/include/linux/mfd/ingenic-tcu.h
+@@ -6,6 +6,10 @@
+ #define __LINUX_MFD_INGENIC_TCU_H_
+ 
+ #include <linux/bitops.h>
++#include <linux/init.h>
++
++struct device_node;
++struct regmap;
+ 
+ #define TCU_REG_WDT_TDR		0x00
+ #define TCU_REG_WDT_TCER	0x04
+@@ -53,4 +57,6 @@
+ #define TCU_REG_TCNTc(c)	(TCU_REG_TCNT0 + ((c) * TCU_CHANNEL_STRIDE))
+ #define TCU_REG_TCSRc(c)	(TCU_REG_TCSR0 + ((c) * TCU_CHANNEL_STRIDE))
+ 
++struct regmap * __init ingenic_tcu_get_regmap(struct device_node *np);
++
+ #endif /* __LINUX_MFD_INGENIC_TCU_H_ */
+-- 
+2.21.0.593.g511ec345e18
 
