@@ -2,202 +2,188 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B73C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F8CC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6BB020663
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1ED20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 20:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ct2xqmpi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfGAUDP (ORCPT
+        id S1726866AbfGAUEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 16:03:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49148 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726678AbfGAUDO (ORCPT
+        Mon, 1 Jul 2019 16:04:24 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33273 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfGAUEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 16:03:14 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61Jx3a8070604
-        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 16:03:13 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfp83ewgy-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 16:03:13 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 1 Jul 2019 21:03:12 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Jul 2019 21:03:08 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61K37AU53936414
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 20:03:07 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3FC97B205F;
-        Mon,  1 Jul 2019 20:03:07 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 111EAB2064;
-        Mon,  1 Jul 2019 20:03:07 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Jul 2019 20:03:07 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 270A716C2BD7; Mon,  1 Jul 2019 13:03:10 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 13:03:10 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        kernel-team@android.com, Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kselftest@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC 2/3] rcu: Simplify rcu_note_context_switch exit from
- critical section
-Reply-To: paulmck@linux.ibm.com
-References: <20190701040415.219001-1-joel@joelfernandes.org>
- <20190701040415.219001-2-joel@joelfernandes.org>
+        Mon, 1 Jul 2019 16:04:24 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i11so25042610edq.0;
+        Mon, 01 Jul 2019 13:04:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0CNlL2851Davn61YeptnodzyoCmUGyYI2pFnwzHbujc=;
+        b=Ct2xqmpiDioDNvC1/rWVs5RKGxNlA1Hmo3t3hT0xj9LJ96i2zqnT4UsuZCzysmoxoW
+         AR1UCtkeOXGkbgcfapHvXIyzl2kJVrWuDXVexpjvQEjx0omgJdiH4nMB/5MQdyCq2yRo
+         Jr2Jwf2uW0/aa923alAGrd4w/DcGShRggcBCPPcNS7c2J3+FHR+ZvIpENvzHWwf07c30
+         CMOyL2OM+RQnUNp+lc88PPBkfLkDhA6o4/qTJuPalVbukNJ4K+bI9WVSnabMuddVeo1O
+         WzwL+xJ/9NXuPJXRbLDtoyxLTF/MmB30uOTw8uyw8PnPFrGpyh53nuKEvQZ69Jp+GE6p
+         U/pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0CNlL2851Davn61YeptnodzyoCmUGyYI2pFnwzHbujc=;
+        b=uOob0xppoAvyyxzFVEIuYMRTlQ2Jc7EELea4HuuuKfQBMjXtKVaojLSS1DyIu7nx9T
+         jWEbTCQWe0g4oiv6JIX4nvb4mRJ3hz01DAmAJznYRtkQGzNzSKxEJToFT1MFhqk7WF9X
+         sb92Gs7NkSd5w5FqPPkO2iqvv8clxJV8XUiennO+qHbxOEiPro/XLwYCfBa1OYZ39TQ+
+         0Iyngxy5RDfjMAo4nE4dQ7wNG9TbgQbWoce6Q4cAknL+bSkHtvMzXZ/O82olAjEl8o3R
+         4SiQTO3lN7/epTM0u/x5fSKDCFthEo9oia0uBAyThASoByhpdiiqsFzrphxPhXpGyJcL
+         CTtQ==
+X-Gm-Message-State: APjAAAUdtrQ+cC+RLrmcn4jBHSpCEI769ytxvBa1x/Mk1RD74OlUd7S2
+        Ut0C4BOuMdZg5Df5S/NQdU4=
+X-Google-Smtp-Source: APXvYqynmODX3+4y9DBQ6o12oB8g4QKxrkK8depi9Ok2HREdfQFM+i27KmEnVK2HWmioyZvBE6H43A==
+X-Received: by 2002:a17:907:2091:: with SMTP id pv17mr24937125ejb.152.1562011461601;
+        Mon, 01 Jul 2019 13:04:21 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id v47sm4058590edc.80.2019.07.01.13.04.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 13:04:20 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 13:04:18 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: linux-next: manual merge of the char-misc tree with the
+ driver-core tree
+Message-ID: <20190701200418.GA72724@archlinux-epyc>
+References: <20190701190940.7f23ac15@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="yrj/dFKFPuw6o+aM"
 Content-Disposition: inline
-In-Reply-To: <20190701040415.219001-2-joel@joelfernandes.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19070120-0052-0000-0000-000003D90CE8
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011361; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01226040; UDB=6.00645424; IPR=6.01007252;
- MB=3.00027541; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-01 20:03:11
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070120-0053-0000-0000-00006187F46E
-Message-Id: <20190701200310.GP26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010231
+In-Reply-To: <20190701190940.7f23ac15@canb.auug.org.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 12:04:14AM -0400, Joel Fernandes (Google) wrote:
-> The rcu_preempt_note_context_switch() tries to handle cases where
-> __rcu_read_unlock() got preempted and then the context switch path does
-> the reporting of the quiscent state along with clearing any bits in the
-> rcu_read_unlock_special union.
+
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jul 01, 2019 at 07:09:40PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> This can be handled by just calling rcu_deferred_qs() which was added
-> during the RCU consolidation work and already does these checks.
+> Today's linux-next merge of the char-misc tree got a conflict in:
 > 
-> Tested RCU config TREE03 for an hour which succeeds.
+>   drivers/hwtracing/coresight/of_coresight.c
 > 
-> Cc: rcu@vger.kernel.org
-> Cc: kernel-team@android.com
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> between commit:
+> 
+>   418e3ea157ef ("bus_find_device: Unify the match callback with class_find_device")
+> 
+> from the driver-core tree and commits:
+> 
+>   22aa495a6477 ("coresight: Rename of_coresight to coresight-platform")
+>   20961aea982e ("coresight: platform: Use fwnode handle for device search")
+> 
+> from the char-misc tree.
+> 
+> I fixed it up (I removed the file and added the following merge fix patch)
+> and can carry the fix as necessary. This is now fixed as far as linux-next
+> is concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the conflicting
+> tree to minimise any particularly complex conflicts.
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 1 Jul 2019 19:07:20 +1000
+> Subject: [PATCH] coresight: fix for "bus_find_device: Unify the match callback
+>  with class_find_device"
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/hwtracing/coresight/coresight-platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index 3c5ceda8db24..fc67f6ae0b3e 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -37,7 +37,7 @@ static int coresight_alloc_conns(struct device *dev,
+>  	return 0;
+>  }
+>  
+> -int coresight_device_fwnode_match(struct device *dev, void *fwnode)
+> +int coresight_device_fwnode_match(struct device *dev, const void *fwnode)
+>  {
+>  	return dev_fwnode(dev) == fwnode;
+>  }
+> -- 
+> 2.20.1
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
-My first reaction was "that cannot possibly work", but after a bit of
-digging, it really does appear to work just fine.  I therefore expanded
-the commit log a bit, so please check it to catch any messups on my part.
+Hi Stephen and Michael,
 
-Very cool, thank you very much!  ;-)
+It looks like a similar fix is needed for the vhost tree because of
+commit edcd69ab9a32 ("iommu: Add virtio-iommu driver") interacting with
+commit 92ce7e83b4e5 ("driver_find_device: Unify the match function with
+class_find_device()") in the driver-core tree (my patch is attached).
 
-							Thanx, Paul
+Cheers,
+Nathan
 
-------------------------------------------------------------------------
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-iommu-virtio-Constify-data-parameter-in-viommu_match.patch"
 
-commit ce547cb41ed7662f70d0b07d4c7f7555ba130c61
-Author: Joel Fernandes (Google) <joel@joelfernandes.org>
-Date:   Mon Jul 1 00:04:14 2019 -0400
+From 347a1bbeb8ba757648ceeed1839df101417a3d9f Mon Sep 17 00:00:00 2001
+From: Nathan Chancellor <natechancellor@gmail.com>
+Date: Mon, 1 Jul 2019 12:54:28 -0700
+Subject: [PATCH] iommu/virtio: Constify data parameter in viommu_match_node
 
-    rcu: Simplify rcu_note_context_switch exit from critical section
-    
-    Because __rcu_read_unlock() can be preempted just before the call to
-    rcu_read_unlock_special(), it is possible for a task to be preempted just
-    before it would have fully exited its RCU read-side critical section.
-    This would result in a needless extension of that critical section until
-    that task was resumed, which might in turn result in a needlessly
-    long grace period, needless RCU priority boosting, and needless
-    force-quiescent-state actions.  Therefore, rcu_note_context_switch()
-    invokes __rcu_read_unlock() followed by rcu_preempt_deferred_qs() when
-    it detects this situation.  This action by rcu_note_context_switch()
-    ends the RCU read-side critical section immediately.
-    
-    Of course, once the task resumes, it will invoke rcu_read_unlock_special()
-    redundantly.  This is harmless because the fact that a preemption
-    happened means that interrupts, preemption, and softirqs cannot
-    have been disabled, so there would be no deferred quiescent state.
-    While ->rcu_read_lock_nesting remains less than zero, none of the
-    ->rcu_read_unlock_special.b bits can be set, and they were all zeroed by
-    the call to rcu_note_context_switch() at task-preemption time.  Therefore,
-    setting ->rcu_read_unlock_special.b.exp_hint to false has no effect.
-    
-    Therefore, the extra call to rcu_preempt_deferred_qs_irqrestore()
-    would return immediately.  With one possible exception, which is
-    if an expedited grace period started just as the task was being
-    resumed, which could leave ->exp_deferred_qs set.  This will cause
-    rcu_preempt_deferred_qs_irqrestore() to invoke rcu_report_exp_rdp(),
-    reporting the quiescent state, just as it should.  (Such an expedited
-    grace period won't affect the preemption code path due to interrupts
-    having already been disabled.)
-    
-    But when rcu_note_context_switch() invokes __rcu_read_unlock(), it
-    is doing so with preemption disabled, hence __rcu_read_unlock() will
-    unconditionally defer the quiescent state, only to immediately invoke
-    rcu_preempt_deferred_qs(), thus immediately reporting the deferred
-    quiescent state.  It turns out to be safe (and faster) to instead
-    just invoke rcu_preempt_deferred_qs() without the __rcu_read_unlock()
-    middleman.
-    
-    Because this is the invocation during the preemption (as opposed to
-    the invocation just after the resume), at least one of the bits in
-    ->rcu_read_unlock_special.b must be set and ->rcu_read_lock_nesting
-    must be negative.  This means that rcu_preempt_need_deferred_qs() must
-    return true, avoiding the early exit from rcu_preempt_deferred_qs().
-    Thus, rcu_preempt_deferred_qs_irqrestore() will be invoked immediately,
-    as required.
-    
-    This commit therefore simplifies the CONFIG_PREEMPT=y version of
-    rcu_note_context_switch() by removing the "else if" branch of its
-    "if" statement.  This change means that all callers that would have
-    invoked rcu_read_unlock_special() followed by rcu_preempt_deferred_qs()
-    will now simply invoke rcu_preempt_deferred_qs(), thus avoiding the
-    rcu_read_unlock_special() middleman when __rcu_read_unlock() is preempted.
-    
-    Cc: rcu@vger.kernel.org
-    Cc: kernel-team@android.com
-    Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+After commit 92ce7e83b4e5 ("driver_find_device: Unify the match
+function with class_find_device()") in the driver-core tree.
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 187dc076c497..214e4689c29d 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -313,15 +313,6 @@ void rcu_note_context_switch(bool preempt)
- 				       ? rnp->gp_seq
- 				       : rcu_seq_snap(&rnp->gp_seq));
- 		rcu_preempt_ctxt_queue(rnp, rdp);
--	} else if (t->rcu_read_lock_nesting < 0 &&
--		   t->rcu_read_unlock_special.s) {
--
--		/*
--		 * Complete exit from RCU read-side critical section on
--		 * behalf of preempted instance of __rcu_read_unlock().
--		 */
--		rcu_read_unlock_special(t);
--		rcu_preempt_deferred_qs(t);
- 	} else {
- 		rcu_preempt_deferred_qs(t);
- 	}
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/iommu/virtio-iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
+index 4620dd221ffd..433f4d2ee956 100644
+--- a/drivers/iommu/virtio-iommu.c
++++ b/drivers/iommu/virtio-iommu.c
+@@ -839,7 +839,7 @@ static void viommu_put_resv_regions(struct device *dev, struct list_head *head)
+ static struct iommu_ops viommu_ops;
+ static struct virtio_driver virtio_iommu_drv;
+ 
+-static int viommu_match_node(struct device *dev, void *data)
++static int viommu_match_node(struct device *dev, const void *data)
+ {
+ 	return dev->parent->fwnode == data;
+ }
+-- 
+2.22.0
+
+
+--yrj/dFKFPuw6o+aM--
