@@ -2,71 +2,101 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B95C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 233E4C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3C121721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF96B206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:54:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="aXdwDTzL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbfGARwu (ORCPT
+        id S1730258AbfGARy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 13:52:50 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56669 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbfGARwt (ORCPT
+        Mon, 1 Jul 2019 13:54:27 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33950 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727700AbfGARy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 13:52:49 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hi0Tu-00021l-Ub; Mon, 01 Jul 2019 17:52:47 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Daniel Drake <drake@endlessm.com>, linux-mmc@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: alcor: remove a redundant greater or equal to zero comparison
-Date:   Mon,  1 Jul 2019 18:52:46 +0100
-Message-Id: <20190701175246.32270-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 1 Jul 2019 13:54:27 -0400
+Received: by mail-oi1-f196.google.com with SMTP id l12so10680851oil.1;
+        Mon, 01 Jul 2019 10:54:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cz+aP0Ec5W7R8dkKPE9rRkbojDWe1GP+xoyo98aB624=;
+        b=aXdwDTzLcSPbI2Lrr8dU7FM1m4VFK1T1c/k30ysqQbij/rr8UirpNLFPsmhhefWVww
+         EU2HLTeyyt0MxCJpyBAkP0jV7numoiQaVKUDKwMwaFn4ty/pkBbHzGiAWa+TVpZXRTiu
+         yyqFRaYaDA/IMLAkMq7GFIYr9ahiqb9X6ejDchJS1S7z87p8fTf6rNOO0Ry7zZtHGWGf
+         8xrWjfXPfSioLgNokSRXnJTaSW6hed2PDPOjs6Qf0NVIdFTGxzx5EV2YPV5Ec6Fvdrvr
+         PLA3TCqKau+kGLlfAY6Tsnjs3JLSFxnHq7bK/1L7Yu6vX0k/urwLFBceyeOOMUwTej/U
+         BfBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cz+aP0Ec5W7R8dkKPE9rRkbojDWe1GP+xoyo98aB624=;
+        b=eEyWmUA01zVqcS4i7SnpIsJuHzxepLENBv59JOjU1XTGYlg8akt/VLL6PBCNChRzmC
+         jN2AGceynwNl6WqqCJpNE5Vz57TJl8de/bsbJW+2WX2hFBqVvpgpR+x2of5Ae2LUXkeg
+         nUKBEYQsIqKaqQnzjj0Fze0AcmPm0ZTalMK2U6z4f2dIQZluE9XGI0wAneAFMfVWnQU0
+         JnUogYE+A3duXgNkDceR1aChKm7Pgrt8FSqnNZ4SHgrAsvak9qo+w5b2dvNXmqolyf6s
+         QaTGpni6cpBkoP0CLcb3ItcXQ3nfKrg3N76U8UolhkmJFScp2MGZEtJPt2VowpliTCbv
+         As5w==
+X-Gm-Message-State: APjAAAXAoORLfG0Fl/RWl4+g6Phv4yq4KG2NNEespOPiXEyL8HgV6eTY
+        5l2PVMt/ZUGAYVQBzH5JjPckauiBRFa6xJwGqqdX1w==
+X-Google-Smtp-Source: APXvYqyEauAoV4qo/po0ya18tTktkLvsFYl7paAkp55icsJikdBjZ8AIiKm0nhrTKHEu0ccb1YyGdzYFFMLFrU/XgLQ=
+X-Received: by 2002:a05:6808:3d6:: with SMTP id o22mr330425oie.140.1562003666003;
+ Mon, 01 Jul 2019 10:54:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20190620175022.29348-1-martin.blumenstingl@googlemail.com> <a7647aea-b3e6-b785-8476-1851f50beff1@synopsys.com>
+In-Reply-To: <a7647aea-b3e6-b785-8476-1851f50beff1@synopsys.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 1 Jul 2019 19:54:15 +0200
+Message-ID: <CAFBinCDDyG_CxW+PB_OrUXfy-aDKSoewC2OyCfGh18N=omSgcQ@mail.gmail.com>
+Subject: Re: [PATCH] usb: dwc2: use a longer AHB idle timeout in dwc2_core_reset()
+To:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, Jun 24, 2019 at 7:41 AM Minas Harutyunyan
+<Minas.Harutyunyan@synopsys.com> wrote:
+>
+> On 6/20/2019 9:51 PM, Martin Blumenstingl wrote:
+> > Use a 10000us AHB idle timeout in dwc2_core_reset() and make it
+> > consistent with the other "wait for AHB master IDLE state" ocurrences.
+> >
+> > This fixes a problem for me where dwc2 would not want to initialize when
+> > updating to 4.19 on a MIPS Lantiq VRX200 SoC. dwc2 worked fine with
+> > 4.14.
+> > Testing on my board shows that it takes 180us until AHB master IDLE
+> > state is signalled. The very old vendor driver for this SoC (ifxhcd)
+> > used a 1 second timeout.
+> > Use the same timeout that is used everywhere when polling for
+> > GRSTCTL_AHBIDLE instead of using a timeout that "works for one board"
+> > (180us in my case) to have consistent behavior across the dwc2 driver.
+> >
+> > Cc: linux-stable <stable@vger.kernel.org> # 4.19+
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+>
+> Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+thank you for reviewing this!
 
-A greater or equal comparison on the unsigned int variable tmp_diff
-is always true as unsigned ints are never negative.  Hence the
-comparison is redundant and can be removed.
+is there any chance we can get this fix into Linux 5.3? I know that
+it's too late for 5.2 so I'm fine with skipping that.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/mmc/host/alcor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/alcor.c b/drivers/mmc/host/alcor.c
-index e481535cba2b..1aee485d56d4 100644
---- a/drivers/mmc/host/alcor.c
-+++ b/drivers/mmc/host/alcor.c
-@@ -672,7 +672,7 @@ static void alcor_set_clock(struct alcor_sdmmc_host *host, unsigned int clock)
- 		tmp_clock = DIV_ROUND_UP(cfg->clk_src_freq, tmp_div);
- 		tmp_diff = abs(clock - tmp_clock);
- 
--		if (tmp_diff >= 0 && tmp_diff < diff) {
-+		if (tmp_diff < diff) {
- 			diff = tmp_diff;
- 			clk_src = cfg->clk_src_reg;
- 			clk_div = tmp_div;
--- 
-2.20.1
-
+Martin
