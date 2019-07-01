@@ -2,97 +2,176 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2745C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A32C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BB520B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DB220B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:09:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpRQXslQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r26eGlI1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfGASIt (ORCPT
+        id S1727152AbfGASJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 14:08:49 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45051 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfGASIt (ORCPT
+        Mon, 1 Jul 2019 14:09:56 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38030 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbfGASJx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 14:08:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id s7so30813262iob.11;
-        Mon, 01 Jul 2019 11:08:48 -0700 (PDT)
+        Mon, 1 Jul 2019 14:09:53 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p11so3649431wro.5
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 11:09:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uy3GzDC/3O8U5MnHDFB01vcThhGk4+LpUii33EoT0mU=;
-        b=CpRQXslQJ4GcU66JWYXcgsogIOovk4Oj5BbQvT1mVf4Dt4EhIA8xkGp8g5r/aT6MwC
-         2veX2Qf67yFZ9At1kXc2JXytLmodk0droxpumi42GNd8fRqrcbQ/bLLUWXO9GzyqUMMy
-         iyw5xGUu/UeKDlul40NjhRVv2XG3/+FL2LW3Qo6YEooqmR5W7AClmwrQ/FgyHGoBL0Yx
-         PCL7voVxS3VCUx0ml2exh075XNYbgTY1e8lKa/wm4SfSeV4yb2otxX66LMcgBzbH2bV8
-         hyPnoAjhw3rljtZIgVgulRBpu/b+CeiJLRVSEXJbt+EcT0CMZVhv4Xmh9I7IzoBgvQrV
-         je1Q==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Tom75Cnwd9KKAYGdXJ7Or9I0viw4ifzUP1kVH1ESMr8=;
+        b=r26eGlI1oqCOpnXCm4AsDUOM5RswG8gCYs0bjgpUBI0fKoIHZg+WqZxRT1aAsgRSAk
+         8kH2SyOCSTp0UduPVOs8QBX0rTJ6o3eGX+oZaYir7F0LxaxU8XXC1mF4U1Vdxub6/Y6g
+         S+tOsv4kgy1/rRzES+rFtF0O0jPss2QqcA8D+cC4KtV/TOfrvymqGWL9AA3D/6treW0D
+         oClgF5W0X1xWymCtw0qO6uONaqOEylA1/ccMb1yb32Yxrgg2G1yylJRwcYH/TgrbSXga
+         rrZYncxZJsEQPyqQwRWNKfRzcq+qY9p5UFfM9TpGA/qvd8ueef+iXyj+L5QFNBGPDj1M
+         XI5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uy3GzDC/3O8U5MnHDFB01vcThhGk4+LpUii33EoT0mU=;
-        b=bckOwN4uUa80O5561+ZceR7eYtif609Ig8K9MTx8RIsrPH+DrGXPLdiCciuX7YceeV
-         YUbfj0UpNwSIU7Ig6dk2m6HBBNDU+rzuXr5rpCgd8WU5tN6kwECpc0Ka+5yCRKYOBU/0
-         A/0JQB9wMMc90LBy7YT7D6ZaiPwJFJBJls3JDinNF0eO0Bp4EGZscFq1vvZaTgj3z14B
-         JVmb1xW4Kd287wG73wTjRBEy9U4Of9BAjXdRPIqHss5bsM61PD5X/kZ6u90SvhORk/qP
-         G4lfTn45H97IibkvIBxsNOxYTT0gs25vgLqHcFkEPUb2102CR6T4LR+XIVV0GvSVNSia
-         Z1wQ==
-X-Gm-Message-State: APjAAAUmleflRW6nsi8NJTcjJ1YF0KYJODFjFHFHGbcTMmEhIb9efqjw
-        Hzaf+sRCZKzvldNwJpdvQ3sNoOcTM/qS0ibWN/c=
-X-Google-Smtp-Source: APXvYqxgBnVoTGZWK95i22k6Cou8FFFimKn7TGZnM12vGsyAr9w5HBXwXBtcghJbIHbdMWpoLX5nmxpLrurw/H/MjRc=
-X-Received: by 2002:a6b:3b89:: with SMTP id i131mr16212349ioa.33.1562004528091;
- Mon, 01 Jul 2019 11:08:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tom75Cnwd9KKAYGdXJ7Or9I0viw4ifzUP1kVH1ESMr8=;
+        b=WvQLgpKxwsKjx1Fbm15Q723qQ/4ckrOFqgqe2w8CURDyhWhSzz1ZSVdTHbPo3ALwiJ
+         HQo35x2/fitqevBZz574hlesq+26CqTmnnLDMpugxh7u8JNsYPPnIVpfVxdxLPo/xoKv
+         gfCFNNAVGuXDum4CiaXLrZIzifv/wlX6iHxkdYpYADcO5Sd4bVxexNHOjMyTkFgWcBFF
+         x7A8d0SnSLvpP7qBXsEiCyPRaarj3bjHLmTv1NWoBHSHZU8Xx3Qxz8A5+oAvsoqM1rf/
+         PvLDUp0ojbepXkOdQ+SIbmy34kg0l/MiEC23pSA5UCSvK8ws613USi5V+k4w0XQ5MEyn
+         KVrg==
+X-Gm-Message-State: APjAAAWelecb+Gvdsd7oseb00wM+xHbX2W6OSGEvn9ywMoK3n2ZIh+Bm
+        V99RXhfjGj3Rs9Zv7bp+PZYWrQ==
+X-Google-Smtp-Source: APXvYqyqnPEBYWJD2HDs73mHTpLrCMSCr8+1moM/RFyoqZCzx7VQioeT7CTQ9oag+wGFtPQeWyajcg==
+X-Received: by 2002:adf:fb47:: with SMTP id c7mr19185842wrs.116.1562004590929;
+        Mon, 01 Jul 2019 11:09:50 -0700 (PDT)
+Received: from apalos (athedsl-4461147.home.otenet.gr. [94.71.2.75])
+        by smtp.gmail.com with ESMTPSA id n1sm9267934wrx.39.2019.07.01.11.09.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 11:09:50 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 21:09:47 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+Subject: Re: [PATCH v5 net-next 6/6] net: ethernet: ti: cpsw: add XDP support
+Message-ID: <20190701180947.GA11915@apalos>
+References: <20190630172348.5692-1-ivan.khoronzhuk@linaro.org>
+ <20190630172348.5692-7-ivan.khoronzhuk@linaro.org>
+ <20190701181901.150c0b71@carbon>
 MIME-Version: 1.0
-References: <20190630150230.7878-1-robdclark@gmail.com> <20190630150230.7878-3-robdclark@gmail.com>
-In-Reply-To: <20190630150230.7878-3-robdclark@gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 1 Jul 2019 12:08:38 -0600
-Message-ID: <CAOCk7NpOK60ipDzD1Sn+VT_eO3jFikVJ0kCO4T18UBZOGcCFaA@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH 2/5] genpd/gdsc: inherit display powerdomain
- from bootloader
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        aarch64-laptops@lists.linaro.org,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701181901.150c0b71@carbon>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 9:02 AM Rob Clark <robdclark@gmail.com> wrote:
+On Mon, Jul 01, 2019 at 06:19:01PM +0200, Jesper Dangaard Brouer wrote:
+> On Sun, 30 Jun 2019 20:23:48 +0300
+> Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+> 
+> > +static int cpsw_ndev_create_xdp_rxq(struct cpsw_priv *priv, int ch)
+> > +{
+> > +	struct cpsw_common *cpsw = priv->cpsw;
+> > +	int ret, new_pool = false;
+> > +	struct xdp_rxq_info *rxq;
+> > +
+> > +	rxq = &priv->xdp_rxq[ch];
+> > +
+> > +	ret = xdp_rxq_info_reg(rxq, priv->ndev, ch);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (!cpsw->page_pool[ch]) {
+> > +		ret =  cpsw_create_rx_pool(cpsw, ch);
+> > +		if (ret)
+> > +			goto err_rxq;
+> > +
+> > +		new_pool = true;
+> > +	}
+> > +
+> > +	ret = xdp_rxq_info_reg_mem_model(rxq, MEM_TYPE_PAGE_POOL,
+> > +					 cpsw->page_pool[ch]);
+> > +	if (!ret)
+> > +		return 0;
+> > +
+> > +	if (new_pool) {
+> > +		page_pool_free(cpsw->page_pool[ch]);
+> > +		cpsw->page_pool[ch] = NULL;
+> > +	}
+> > +
+> > +err_rxq:
+> > +	xdp_rxq_info_unreg(rxq);
+> > +	return ret;
+> > +}
+> 
+> Looking at this, and Ilias'es XDP-netsec error handling path, it might
+> be a mistake that I removed page_pool_destroy() and instead put the
+> responsibility on xdp_rxq_info_unreg().
+> 
+> As here, we have to detect if page_pool_create() was a success, and then
+> if xdp_rxq_info_reg_mem_model() was a failure, explicitly call
+> page_pool_free() because the xdp_rxq_info_unreg() call cannot "free"
+> the page_pool object given it was not registered.  
+> 
+> Ivan's patch in[1], might be a better approach, which forced all
+> drivers to explicitly call page_pool_free(), even-though it just
+> dec-refcnt and the real call to page_pool_free() happened via
+> xdp_rxq_info_unreg().
+We did discuss that xdp_XXXXX naming might be confusing.
+That being said since Ivan's approach serves 'special' hardware and fixes the
+naming irregularity, i perfectly fine doing that as long as we clearly document
+that the API is supposed to serve a pool per queue (unless the hardware needs to
+deal with it differently)
+> 
+> To better handle error path, I would re-introduce page_pool_destroy(),
+> as a driver API, that would gracefully handle NULL-pointer case, and
+> then call page_pool_free() with the atomic_dec_and_test().  (It should
+> hopefully simplify the error handling code a bit)
+> 
+> [1] https://lore.kernel.org/netdev/20190625175948.24771-2-ivan.khoronzhuk@linaro.org/
+> 
 >
-> From: Rob Clark <robdclark@chromium.org>
->
-> Mark power domains that may be enabled by bootloader, and which should
-> not be disabled until a driver takes them over.
->
-> This keeps efifb alive until the real driver can be probed.  In a distro
-> kernel, the driver will most likely built as a module, and not probed
-> until we get to userspace (after late_initcall)
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Thanks
+/Ilias
+> > +void cpsw_ndev_destroy_xdp_rxqs(struct cpsw_priv *priv)
+> > +{
+> > +	struct cpsw_common *cpsw = priv->cpsw;
+> > +	struct xdp_rxq_info *rxq;
+> > +	int i;
+> > +
+> > +	for (i = 0; i < cpsw->rx_ch_num; i++) {
+> > +		rxq = &priv->xdp_rxq[i];
+> > +		if (xdp_rxq_info_is_reg(rxq))
+> > +			xdp_rxq_info_unreg(rxq);
+> > +	}
+> > +}
+> 
+> Are you sure you need to test xdp_rxq_info_is_reg() here?
+> 
+> You should just call xdp_rxq_info_unreg(rxq), if you know that this rxq
+> should be registered.  If your assumption failed, you will get a
+> WARNing, and discover your driver level bug.  This is one of the ways
+> the API is designed to "detect" misuse of the API.  (I found this
+> rather useful, when I converted the approx 12 drivers using this
+> xdp_rxq_info API).
+> 
+> -- 
+> Best regards,
+>   Jesper Dangaard Brouer
+>   MSc.CS, Principal Kernel Engineer at Red Hat
+>   LinkedIn: http://www.linkedin.com/in/brouer
