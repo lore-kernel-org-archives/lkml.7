@@ -2,249 +2,273 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C54C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45430C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82D3821851
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9D7214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:26:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eVpIGSj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbfGAOZ4 convert rfc822-to-8bit (ORCPT
+        id S1729649AbfGAOZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 1 Jul 2019 10:25:58 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52532 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729532AbfGAOZ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Jul 2019 10:25:56 -0400
-Received: from mail-oln040092253106.outbound.protection.outlook.com ([40.92.253.106]:34721
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727687AbfGAOZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:25:54 -0400
-Received: from PU1APC01FT027.eop-APC01.prod.protection.outlook.com
- (10.152.252.53) by PU1APC01HT121.eop-APC01.prod.protection.outlook.com
- (10.152.253.60) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2032.15; Mon, 1 Jul
- 2019 14:25:48 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.60) by
- PU1APC01FT027.mail.protection.outlook.com (10.152.252.232) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2032.15 via Frontend Transport; Mon, 1 Jul 2019 14:25:48 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::9d2d:391f:5f49:c806]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::9d2d:391f:5f49:c806%6]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
- 14:25:48 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: [PATCH v7 7/8] PCI: Add hp_mmio_size and hp_mmio_pref_size parameters
-Thread-Topic: [PATCH v7 7/8] PCI: Add hp_mmio_size and hp_mmio_pref_size
- parameters
-Thread-Index: AQHVMBjgPnEXmKRAdkyaQ9Bk0tjoOA==
-Date:   Mon, 1 Jul 2019 14:25:48 +0000
-Message-ID: <SL2P216MB0187F24201B6C6A2A1D466B080F90@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SY2PR01CA0023.ausprd01.prod.outlook.com
- (2603:10c6:1:14::35) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:AE65CB97516F9CA21DE0B73C9B05FE76D3F4FA9FCB658CC5D90B5E881BEC7E44;UpperCasedChecksum:042D3BECB0325DD5AAA83456F8ADD61F76D8F27987928FBE04025CDB037C82AD;SizeAsReceived:7674;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [UsL19qhXSguCqt73BFCi48a1BfmMagVwg6Mu0jhLNObxiLKYBm95gG0AwyqxUeD2]
-x-microsoft-original-message-id: <20190701142533.GA5319@nicholas-usb>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:PU1APC01HT121;
-x-ms-traffictypediagnostic: PU1APC01HT121:
-x-microsoft-antispam-message-info: FQ7PuA0lGESrGAahg+nSWdPkRMgzaxX39fzbbj9fli0lek/DJu+r5kvSCOIHHiZ/QvQhrW6wPKKqAuJI0c+XeHnTQHNODW3PKZdLivl8R1WWSCpvxXV7pJPb09JRKY1Aw4Q48Cyfu4CLECSfzkjRdZ51bXnj0rEWPF+ccnuDjb8FT3YFGAqs7Xt5i+m4wuEO
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <268416731237D64B906E823ADB7DE961@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x61EP5sx120080;
+        Mon, 1 Jul 2019 09:25:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561991105;
+        bh=suqhGlKu09i4bHSG5nwK6itb8XxQsF0NeEzzxpNaGkA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eVpIGSj98fC4TDHIu49z+fkYkfsd0RcXPbecRkhAswRSnDlkkfUwkaaQ4MjMqF5zw
+         1OFfE3FtS16XYpv2/bXmnlqACRozPWWLsVxIPjyjv/cakmsIyLnXa2OU29iYrRR7x8
+         KQvFkOBKtEDRC2HsU4rmoqJ8youpxAE3OUtqVcqs=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x61EP53W046247
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 1 Jul 2019 09:25:05 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Jul
+ 2019 09:25:05 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 1 Jul 2019 09:25:05 -0500
+Received: from [10.250.68.219] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x61EP4Qh124077;
+        Mon, 1 Jul 2019 09:25:04 -0500
+Subject: Re: [PATCH v2 1/2] ASoC: tas5720.c: cleanup variant management
+To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <nv@vosn.de>
+References: <20190628143037.GH5379@sirena.org.uk>
+ <cover.1561988282.git.nikolaus.voss@loewensteinmedical.de>
+ <c79df50175d59265a37c5e7c8a0cfbf8119bcf78.1561988282.git.nikolaus.voss@loewensteinmedical.de>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <80af3fca-f71b-c118-e5d8-fde8b7d21705@ti.com>
+Date:   Mon, 1 Jul 2019 10:25:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 538fa49c-ccc9-4dae-df53-08d6fe300319
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 14:25:48.7039
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT121
+In-Reply-To: <c79df50175d59265a37c5e7c8a0cfbf8119bcf78.1561988282.git.nikolaus.voss@loewensteinmedical.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add kernel parameter pci=hpmmiosize=nn[KMG] to set MMIO bridge window
-size for hotplug bridges.
+On 7/1/19 9:42 AM, Nikolaus Voss wrote:
+> Replace enum tas572x_type with struct tas5720_variant which aggregates
+> variant specific stuff and can be directly referenced from an id table.
+> 
+> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+> ---
+>  sound/soc/codecs/tas5720.c | 98 +++++++++++++-------------------------
+>  1 file changed, 33 insertions(+), 65 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/tas5720.c b/sound/soc/codecs/tas5720.c
+> index 37fab8f22800..b2e897f094b4 100644
+> --- a/sound/soc/codecs/tas5720.c
+> +++ b/sound/soc/codecs/tas5720.c
+> @@ -28,9 +28,10 @@
+>  /* Define how often to check (and clear) the fault status register (in ms) */
+>  #define TAS5720_FAULT_CHECK_INTERVAL		200
+>  
+> -enum tas572x_type {
+> -	TAS5720,
+> -	TAS5722,
+> +struct tas5720_variant {
+> +	const int device_id;
+> +	const struct regmap_config *reg_config;
+> +	const struct snd_soc_component_driver *comp_drv;
+>  };
+>  
+>  static const char * const tas5720_supply_names[] = {
+> @@ -44,7 +45,7 @@ struct tas5720_data {
+>  	struct snd_soc_component *component;
+>  	struct regmap *regmap;
+>  	struct i2c_client *tas5720_client;
+> -	enum tas572x_type devtype;
+> +	const struct tas5720_variant *variant;
 
-Add kernel parameter pci=hpmmioprefsize=nn[KMG] to set MMIO_PREF bridge
-window size for hotplug bridges.
+Why add a new struct? Actually I don't see the need for this patch at
+all, the commit message only explains the 'what' not the 'why'. We can
+and do already build this info from the tas572x_type.
 
-Leave pci=hpmemsize=nn[KMG] unchanged, to prevent disruptions to
-existing users. This sets both MMIO and MMIO_PREF to the same size.
+Also below are several functional changes, the cover letter says this is
+not a functional change, yet the driver behaves differently now.
 
-The two new parameters conform to the style of pci=hpiosize=nn[KMG].
+Andrew
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- .../admin-guide/kernel-parameters.txt         |  9 ++++++-
- drivers/pci/pci.c                             | 17 ++++++++++---
- drivers/pci/setup-bus.c                       | 25 +++++++++++--------
- include/linux/pci.h                           |  3 ++-
- 4 files changed, 38 insertions(+), 16 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 138f6664b..f3cda0b07 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3438,8 +3438,15 @@
- 		hpiosize=nn[KMG]	The fixed amount of bus space which is
- 				reserved for hotplug bridge's IO window.
- 				Default size is 256 bytes.
-+		hpmmiosize=nn[KMG]	The fixed amount of bus space which is
-+				reserved for hotplug bridge's MMIO window.
-+				Default size is 2 megabytes.
-+		hpmmioprefsize=nn[KMG]	The fixed amount of bus space which is
-+				reserved for hotplug bridge's MMIO_PREF window.
-+				Default size is 2 megabytes.
- 		hpmemsize=nn[KMG]	The fixed amount of bus space which is
--				reserved for hotplug bridge's memory window.
-+				reserved for hotplug bridge's MMIO and
-+				MMIO_PREF window.
- 				Default size is 2 megabytes.
- 		hpbussize=nn	The minimum amount of additional bus numbers
- 				reserved for buses below a hotplug bridge.
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 8abc843b1..4ee1aaf5b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -85,10 +85,12 @@ unsigned long pci_cardbus_io_size = DEFAULT_CARDBUS_IO_SIZE;
- unsigned long pci_cardbus_mem_size = DEFAULT_CARDBUS_MEM_SIZE;
- 
- #define DEFAULT_HOTPLUG_IO_SIZE		(256)
--#define DEFAULT_HOTPLUG_MEM_SIZE	(2*1024*1024)
-+#define DEFAULT_HOTPLUG_MMIO_SIZE	(2*1024*1024)
-+#define DEFAULT_HOTPLUG_MMIO_PREF_SIZE	(2*1024*1024)
- /* pci=hpmemsize=nnM,hpiosize=nn can override this */
- unsigned long pci_hotplug_io_size  = DEFAULT_HOTPLUG_IO_SIZE;
--unsigned long pci_hotplug_mem_size = DEFAULT_HOTPLUG_MEM_SIZE;
-+unsigned long pci_hotplug_mmio_size = DEFAULT_HOTPLUG_MMIO_SIZE;
-+unsigned long pci_hotplug_mmio_pref_size = DEFAULT_HOTPLUG_MMIO_PREF_SIZE;
- 
- #define DEFAULT_HOTPLUG_BUS_SIZE	1
- unsigned long pci_hotplug_bus_size = DEFAULT_HOTPLUG_BUS_SIZE;
-@@ -6231,8 +6233,17 @@ static int __init pci_setup(char *str)
- 				pcie_ecrc_get_policy(str + 5);
- 			} else if (!strncmp(str, "hpiosize=", 9)) {
- 				pci_hotplug_io_size = memparse(str + 9, &str);
-+			} else if (!strncmp(str, "hpmmiosize=", 11)) {
-+				pci_hotplug_mmio_size =
-+					memparse(str + 11, &str);
-+			} else if (!strncmp(str, "hpmmioprefsize=", 15)) {
-+				pci_hotplug_mmio_pref_size =
-+					memparse(str + 15, &str);
- 			} else if (!strncmp(str, "hpmemsize=", 10)) {
--				pci_hotplug_mem_size = memparse(str + 10, &str);
-+				pci_hotplug_mmio_size =
-+					memparse(str + 10, &str);
-+				pci_hotplug_mmio_pref_size =
-+					memparse(str + 10, &str);
- 			} else if (!strncmp(str, "hpbussize=", 10)) {
- 				pci_hotplug_bus_size =
- 					simple_strtoul(str + 10, &str, 0);
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 9064fd964..873df5482 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1178,7 +1178,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- {
- 	struct pci_dev *dev;
- 	unsigned long mask, prefmask, type2 = 0, type3 = 0;
--	resource_size_t additional_mem_size = 0, additional_io_size = 0;
-+	resource_size_t additional_io_size = 0, additional_mmio_size = 0,
-+		additional_mmio_pref_size = 0;
- 	struct resource *b_res;
- 	int ret;
- 
-@@ -1212,7 +1213,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		pci_bridge_check_ranges(bus);
- 		if (bus->self->is_hotplug_bridge) {
- 			additional_io_size  = pci_hotplug_io_size;
--			additional_mem_size = pci_hotplug_mem_size;
-+			additional_mmio_size = pci_hotplug_mmio_size;
-+			additional_mmio_pref_size = pci_hotplug_mmio_pref_size;
- 		}
- 		/* Fall through */
- 	default:
-@@ -1230,9 +1232,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		if (b_res[2].flags & IORESOURCE_MEM_64) {
- 			prefmask |= IORESOURCE_MEM_64;
- 			ret = pbus_size_mem(bus, prefmask, prefmask,
--				  prefmask, prefmask,
--				  realloc_head ? 0 : additional_mem_size,
--				  additional_mem_size, realloc_head);
-+				prefmask, prefmask,
-+				realloc_head ? 0 : additional_mmio_pref_size,
-+				additional_mmio_pref_size, realloc_head);
- 
- 			/*
- 			 * If successful, all non-prefetchable resources
-@@ -1254,9 +1256,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		if (!type2) {
- 			prefmask &= ~IORESOURCE_MEM_64;
- 			ret = pbus_size_mem(bus, prefmask, prefmask,
--					 prefmask, prefmask,
--					 realloc_head ? 0 : additional_mem_size,
--					 additional_mem_size, realloc_head);
-+				prefmask, prefmask,
-+				realloc_head ? 0 : additional_mmio_pref_size,
-+				additional_mmio_pref_size, realloc_head);
- 
- 			/*
- 			 * If successful, only non-prefetchable resources
-@@ -1265,7 +1267,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 			if (ret == 0)
- 				mask = prefmask;
- 			else
--				additional_mem_size += additional_mem_size;
-+				additional_mmio_size +=
-+					additional_mmio_pref_size;
- 
- 			type2 = type3 = IORESOURCE_MEM;
- 		}
-@@ -1285,8 +1288,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		 * prefetchable resource in a 64-bit prefetchable window.
- 		 */
- 		pbus_size_mem(bus, mask, IORESOURCE_MEM, type2, type3,
--				realloc_head ? 0 : additional_mem_size,
--				additional_mem_size, realloc_head);
-+			realloc_head ? 0 : additional_mmio_size,
-+			additional_mmio_size, realloc_head);
- 		break;
- 	}
- }
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index dd436da7e..e9641a127 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1973,7 +1973,8 @@ extern u8 pci_dfl_cache_line_size;
- extern u8 pci_cache_line_size;
- 
- extern unsigned long pci_hotplug_io_size;
--extern unsigned long pci_hotplug_mem_size;
-+extern unsigned long pci_hotplug_mmio_size;
-+extern unsigned long pci_hotplug_mmio_pref_size;
- extern unsigned long pci_hotplug_bus_size;
- 
- /* Architecture-specific versions may override these (weak) */
--- 
-2.20.1
-
+>  	struct regulator_bulk_data supplies[TAS5720_NUM_SUPPLIES];
+>  	struct delayed_work fault_check_work;
+>  	unsigned int last_fault;
+> @@ -179,17 +180,13 @@ static int tas5720_set_dai_tdm_slot(struct snd_soc_dai *dai,
+>  		goto error_snd_soc_component_update_bits;
+>  
+>  	/* Configure TDM slot width. This is only applicable to TAS5722. */
+> -	switch (tas5720->devtype) {
+> -	case TAS5722:
+> +	if (tas5720->variant->device_id == TAS5722_DEVICE_ID) {
+>  		ret = snd_soc_component_update_bits(component, TAS5722_DIGITAL_CTRL2_REG,
+>  						    TAS5722_TDM_SLOT_16B,
+>  						    slot_width == 16 ?
+>  						    TAS5722_TDM_SLOT_16B : 0);
+>  		if (ret < 0)
+>  			goto error_snd_soc_component_update_bits;
+> -		break;
+> -	default:
+> -		break;
+>  	}
+>  
+>  	return 0;
+> @@ -277,7 +274,7 @@ static void tas5720_fault_check_work(struct work_struct *work)
+>  static int tas5720_codec_probe(struct snd_soc_component *component)
+>  {
+>  	struct tas5720_data *tas5720 = snd_soc_component_get_drvdata(component);
+> -	unsigned int device_id, expected_device_id;
+> +	unsigned int device_id;
+>  	int ret;
+>  
+>  	tas5720->component = component;
+> @@ -301,21 +298,9 @@ static int tas5720_codec_probe(struct snd_soc_component *component)
+>  		goto probe_fail;
+>  	}
+>  
+> -	switch (tas5720->devtype) {
+> -	case TAS5720:
+> -		expected_device_id = TAS5720_DEVICE_ID;
+> -		break;
+> -	case TAS5722:
+> -		expected_device_id = TAS5722_DEVICE_ID;
+> -		break;
+> -	default:
+> -		dev_err(component->dev, "unexpected private driver data\n");
+> -		return -EINVAL;
+> -	}
+> -
+> -	if (device_id != expected_device_id)
+> +	if (device_id != tas5720->variant->device_id)
+>  		dev_warn(component->dev, "wrong device ID. expected: %u read: %u\n",
+> -			 expected_device_id, device_id);
+> +			 tas5720->variant->device_id, device_id);
+>  
+>  	/* Set device to mute */
+>  	ret = snd_soc_component_update_bits(component, TAS5720_DIGITAL_CTRL2_REG,
+> @@ -637,7 +622,6 @@ static int tas5720_probe(struct i2c_client *client,
+>  {
+>  	struct device *dev = &client->dev;
+>  	struct tas5720_data *data;
+> -	const struct regmap_config *regmap_config;
+>  	int ret;
+>  	int i;
+>  
+> @@ -646,20 +630,10 @@ static int tas5720_probe(struct i2c_client *client,
+>  		return -ENOMEM;
+>  
+>  	data->tas5720_client = client;
+> -	data->devtype = id->driver_data;
+>  
+> -	switch (id->driver_data) {
+> -	case TAS5720:
+> -		regmap_config = &tas5720_regmap_config;
+> -		break;
+> -	case TAS5722:
+> -		regmap_config = &tas5722_regmap_config;
+> -		break;
+> -	default:
+> -		dev_err(dev, "unexpected private driver data\n");
+> -		return -EINVAL;
+> -	}
+> -	data->regmap = devm_regmap_init_i2c(client, regmap_config);
+> +	data->variant = (const struct tas5720_variant *)id->driver_data;
+> +
+> +	data->regmap = devm_regmap_init_i2c(client, data->variant->reg_config);
+>  	if (IS_ERR(data->regmap)) {
+>  		ret = PTR_ERR(data->regmap);
+>  		dev_err(dev, "failed to allocate register map: %d\n", ret);
+> @@ -678,42 +652,36 @@ static int tas5720_probe(struct i2c_client *client,
+>  
+>  	dev_set_drvdata(dev, data);
+>  
+> -	switch (id->driver_data) {
+> -	case TAS5720:
+> -		ret = devm_snd_soc_register_component(&client->dev,
+> -					&soc_component_dev_tas5720,
+> -					tas5720_dai,
+> -					ARRAY_SIZE(tas5720_dai));
+> -		break;
+> -	case TAS5722:
+> -		ret = devm_snd_soc_register_component(&client->dev,
+> -					&soc_component_dev_tas5722,
+> -					tas5720_dai,
+> -					ARRAY_SIZE(tas5720_dai));
+> -		break;
+> -	default:
+> -		dev_err(dev, "unexpected private driver data\n");
+> -		return -EINVAL;
+> -	}
+> -	if (ret < 0) {
+> -		dev_err(dev, "failed to register component: %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	return 0;
+> +	ret = devm_snd_soc_register_component(&client->dev,
+> +					      data->variant->comp_drv,
+> +					      tas5720_dai,
+> +					      ARRAY_SIZE(tas5720_dai));
+> +	return ret;
+>  }
+>  
+> +static const struct tas5720_variant tas5720 = {
+> +	.device_id = TAS5720_DEVICE_ID,
+> +	.reg_config = &tas5720_regmap_config,
+> +	.comp_drv = &soc_component_dev_tas5720,
+> +};
+> +
+> +static const struct tas5720_variant tas5722 = {
+> +	.device_id = TAS5722_DEVICE_ID,
+> +	.reg_config = &tas5722_regmap_config,
+> +	.comp_drv = &soc_component_dev_tas5722,
+> +};
+> +
+>  static const struct i2c_device_id tas5720_id[] = {
+> -	{ "tas5720", TAS5720 },
+> -	{ "tas5722", TAS5722 },
+> +	{ "tas5720", (kernel_ulong_t)&tas5720 },
+> +	{ "tas5722", (kernel_ulong_t)&tas5722 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, tas5720_id);
+>  
+>  #if IS_ENABLED(CONFIG_OF)
+>  static const struct of_device_id tas5720_of_match[] = {
+> -	{ .compatible = "ti,tas5720", },
+> -	{ .compatible = "ti,tas5722", },
+> +	{ .compatible = "ti,tas5720", .data = &tas5720, },
+> +	{ .compatible = "ti,tas5722", .data = &tas5722, },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, tas5720_of_match);
+> 
