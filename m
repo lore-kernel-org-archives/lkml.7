@@ -2,130 +2,94 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B96FC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C23C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7E2208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ADB2208C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 08:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U9zpQEOj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XTAilpBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbfGAIT6 (ORCPT
+        id S1728021AbfGAIWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 04:19:58 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45235 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfGAIT6 (ORCPT
+        Mon, 1 Jul 2019 04:22:31 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:33170 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbfGAIWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:19:58 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bi6so6936536plb.12;
-        Mon, 01 Jul 2019 01:19:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5RAq9uYszW22W7U67V/4aDozO9ynSRPC2gwD5Pz0Hy8=;
-        b=U9zpQEOjsvJX//DXmuEHQlEU+zgOiUqln+U1b9OxAfBXMRZ3k77UT9DjKt6cu52zYN
-         gEBlv559tlGf3044EoG7nS5WmGjFebc3IlHvcsIb/RXitQ6drGbAGfGctgl3PxXHYmdT
-         mMfmI8O7eNp262T61M8a2nM7RWWrsiLchbYReaOusmGe+EswBNPY9J7j2y1Vb6/ng9gs
-         BEOSzIoJKGtDX9QQQfQ0BowezkhyGBxcX++pngTnnGcqoQ0m0RUQXHw47NgXQF+v/Ye3
-         z5RFFjY5FsiMon6d3BC6NThvKzt1RmlbT9vYTajQh8TCdyXCBzPdbP+xk5faCr1IzL0z
-         Ji+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5RAq9uYszW22W7U67V/4aDozO9ynSRPC2gwD5Pz0Hy8=;
-        b=GwayWtz3OBgK31pobmI11F2gUkjGHiZ+IVsq37ltajtyyLl9yjMotdTXaAiEWHAmIf
-         ESwLQE1xrvj1MaxbkWYizVn0OWcIP+FiK+2fGKhSmCO3KhJH2LOPHzXevp05Pxh7AsVJ
-         FqwqBM8m9nwFIxCnACPRwPr7EKsVnNrls0w8LYU8h2tBhynP8Tn5fBAdIJpaDHW08ES9
-         MaXSvau+83k2xCWXpp2qDeSG2D3NM4iGWCiGz8QYCH3iHqSEn3ybJmNnkrWbvTzbdXuC
-         ApcbfPMsI7xhRkj/9SlVH7GKOeEHlEN5zryp0eRVPTe6H/5QNmN/1lvROO34ypuNMlXc
-         7eDw==
-X-Gm-Message-State: APjAAAWWphiefuHVz0QjEjyX4uFZyi5qVr0qmQ1u2/PFPhCXZXXlH57T
-        zlfkjTkV0cU8JRWu76Y/ikg=
-X-Google-Smtp-Source: APXvYqym92cXfSAWMcsu160Ed9dT8cm0pCmt2LCJ9Ax1e9Aj6FS68f3xj7aWhLOKmTX+Qipt4e+tPA==
-X-Received: by 2002:a17:902:d20a:: with SMTP id t10mr26960233ply.52.1561969197422;
-        Mon, 01 Jul 2019 01:19:57 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id x26sm11504811pfq.69.2019.07.01.01.19.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 01:19:56 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 01:19:55 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Huckleberry <nhuck@google.com>, nick@shmanahar.org,
-        linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2] Input: atmel_mxt_ts - fix -Wunused-const-variable
-Message-ID: <20190701081955.GF172968@dtor-ws>
-References: <CAKwvOdnjTxzXgPHQcC7K8N5YkTvh66sy86oorPJZc07b7UBhGw@mail.gmail.com>
- <20190613182326.237391-1-nhuck@google.com>
- <CAKwvOd=252Ak-VQ20XtsGaRXEfraxtNTNjhjYfdrsWv_7OHsoQ@mail.gmail.com>
+        Mon, 1 Jul 2019 04:22:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hHxh7hxf/C/2tThRjcvY3tDwP0bpGNzg5vvFRY9dbkM=; b=XTAilpBMYs8Tjbgyb9pk9hVYc
+        2435zWi+B8kTuiJ9D2a/oqmBMwLzvZygPOJf85+xEvGgZYXQNz+9vNldxE3U+w/sxQxnBS1zUEOJH
+        v1n4p48hiBJ0U2LQXEXnt09rhBBFYljwR0os4TDBYkcXrOK/AQzQGozg2+IXZZFLBrIWC7U5XXtgh
+        Jru8UuojQtFyqUsJ/gPFA0ROTENRHLx+L3eAYgMPhQ8/hNqZ8xk1Ld2gt11wl9yKgv0BEmTF+htkX
+        sKsDPW98YLq1PE4uvB8+bBKYls1ldZDN/Ki0ZTJSiF9QgzEUQaN66jxhiuIe6XxYw6/qX8Caaz2l4
+        oAmma9fBA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hhrZO-0004Z8-Gk; Mon, 01 Jul 2019 08:21:51 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D653F20963E24; Mon,  1 Jul 2019 10:21:48 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 10:21:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Phillips, Kim" <kim.phillips@amd.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Martin Liska <mliska@suse.cz>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>,
+        "Hook, Gary" <Gary.Hook@amd.com>, Pu Wen <puwen@hygon.cn>,
+        Stephane Eranian <eranian@google.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH 1/2 RESEND3] perf/x86/amd/uncore: Do not set ThreadMask
+ and SliceMask for non-L3 PMCs
+Message-ID: <20190701082148.GN3402@hirez.programming.kicks-ass.net>
+References: <20190628215906.4276-1-kim.phillips@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOd=252Ak-VQ20XtsGaRXEfraxtNTNjhjYfdrsWv_7OHsoQ@mail.gmail.com>
+In-Reply-To: <20190628215906.4276-1-kim.phillips@amd.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:26:41AM -0700, Nick Desaulniers wrote:
-> On Thu, Jun 13, 2019 at 11:24 AM 'Nathan Huckleberry' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
-> > Changes from v1 -> v2
-> > * Moved definition of mxt_video_fops into existing ifdef
+On Fri, Jun 28, 2019 at 09:59:20PM +0000, Phillips, Kim wrote:
+> From: Kim Phillips <kim.phillips@amd.com>
 > 
-> Thanks for the v2.
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Applied, thank you.
-
+> Commit d7cbbe49a930 ("perf/x86/amd/uncore: Set ThreadMask and SliceMask
+> for L3 Cache perf events") enables L3 PMC events for all threads and
+> slices by writing 1s in ChL3PmcCfg (L3 PMC PERF_CTL) register fields.
 > 
-> > --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> > +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> > @@ -256,16 +256,6 @@ enum v4l_dbg_inputs {
-> >         MXT_V4L_INPUT_MAX,
-> >  };
-> >
-> > -static const struct v4l2_file_operations mxt_video_fops = {
-> > -       .owner = THIS_MODULE,
-> > -       .open = v4l2_fh_open,
-> > -       .release = vb2_fop_release,
-> > -       .unlocked_ioctl = video_ioctl2,
-> > -       .read = vb2_fop_read,
-> > -       .mmap = vb2_fop_mmap,
-> > -       .poll = vb2_fop_poll,
-> > -};
-> > -
-> >  enum mxt_suspend_mode {
-> >         MXT_SUSPEND_DEEP_SLEEP  = 0,
-> >         MXT_SUSPEND_T9_CTRL     = 1,
-> > @@ -2218,6 +2208,16 @@ static int mxt_init_t7_power_cfg(struct mxt_data *data)
-> >  }
-> >
-> >  #ifdef CONFIG_TOUCHSCREEN_ATMEL_MXT_T37
-> > +static const struct v4l2_file_operations mxt_video_fops = {
-> > +       .owner = THIS_MODULE,
-> > +       .open = v4l2_fh_open,
-> > +       .release = vb2_fop_release,
-> > +       .unlocked_ioctl = video_ioctl2,
-> > +       .read = vb2_fop_read,
-> > +       .mmap = vb2_fop_mmap,
-> > +       .poll = vb2_fop_poll,
-> > +};
-> > +
+> Those bitfields overlap with high order event select bits in the Data
+> Fabric PMC control register, however.
 > 
-> -- 
-> Thanks,
-> ~Nick Desaulniers
+> So when a user requests raw Data Fabric events (-e amd_df/event=0xYYY/),
+> the two highest order bits get inadvertently set, changing the counter
+> select to events that don't exist, and for which no counts are read.
+> 
+> This patch changes the logic to write the L3 masks only when dealing
+> with L3 PMC counters.
+> 
+> AMD Family 16h and below Northbridge (NB) counters were not affected.
 
--- 
-Dmitry
+
+Thanks!
