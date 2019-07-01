@@ -2,200 +2,216 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A297CC4646D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7353C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A72C214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E572145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 06:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="G9Ybu7jn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfGAGoL (ORCPT
+        id S1727523AbfGAGpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 02:44:11 -0400
-Received: from mga07.intel.com ([134.134.136.100]:58897 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbfGAGoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 02:44:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jun 2019 23:39:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,437,1557212400"; 
-   d="scan'208";a="361731239"
-Received: from hao-dev.bj.intel.com ([10.238.157.65])
-  by fmsmga005.fm.intel.com with ESMTP; 30 Jun 2019 23:39:00 -0700
-From:   Wu Hao <hao.wu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-api@vger.kernel.org, gregkh@linuxfoundation.org,
-        atull@kernel.org, Wu Hao <hao.wu@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: [PATCH v2 05/15] Documentation: fpga: dfl: add descriptions for virtualization and new interfaces.
-Date:   Mon,  1 Jul 2019 14:22:12 +0800
-Message-Id: <1561962132-3782-1-git-send-email-hao.wu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 1 Jul 2019 02:45:19 -0400
+Received: from mail-eopbgr80049.outbound.protection.outlook.com ([40.107.8.49]:35653
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727093AbfGAGpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 02:45:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ff1DEoveWsrkW2zwHfrkt5HKs8CDNaRYm1QJ/KSKFik=;
+ b=G9Ybu7jn/rtTK1FVbLKsMUo5QaMq2C238U5mbW+c2szvlsi9PGJgjNsBvxPY0oUmPZD4Rj0USjkwH/OsSS0hvzxyc4T2pAbVUiVxAUwIelKNWLm0sMCFT2jRjwoabxzbETM66SAhdVlwdrGzpydbMtGvz80m7DvIOeaC5sXO8Qc=
+Received: from VI1PR08MB5488.eurprd08.prod.outlook.com (52.133.246.150) by
+ VI1PR08MB3023.eurprd08.prod.outlook.com (52.133.14.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Mon, 1 Jul 2019 06:45:10 +0000
+Received: from VI1PR08MB5488.eurprd08.prod.outlook.com
+ ([fe80::390b:b8a9:542b:9ef9]) by VI1PR08MB5488.eurprd08.prod.outlook.com
+ ([fe80::390b:b8a9:542b:9ef9%3]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
+ 06:45:09 +0000
+From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>
+CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: [PATCH] drm/komeda: Adds power management support
+Thread-Topic: [PATCH] drm/komeda: Adds power management support
+Thread-Index: AQHVL9iGaXKk/2R3BkO83ATLMrxlow==
+Date:   Mon, 1 Jul 2019 06:45:09 +0000
+Message-ID: <1561963458-12941-1-git-send-email-lowry.li@arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0PR01CA0015.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:92::27) To VI1PR08MB5488.eurprd08.prod.outlook.com
+ (2603:10a6:803:137::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Lowry.Li@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.9.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 07f8bcce-8ffb-4805-f71b-08d6fdefa902
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB3023;
+x-ms-traffictypediagnostic: VI1PR08MB3023:
+x-ms-exchange-purlcount: 2
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VI1PR08MB302374D9F0F8109833F343129FF90@VI1PR08MB3023.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 00851CA28B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(396003)(39850400004)(346002)(136003)(199004)(189003)(478600001)(54906003)(6486002)(110136005)(25786009)(26005)(5660300002)(2501003)(7736002)(2616005)(36756003)(14454004)(55236004)(476003)(186003)(6512007)(6636002)(6306002)(73956011)(86362001)(4326008)(66556008)(64756008)(66446008)(66476007)(2201001)(66946007)(316002)(14444005)(305945005)(50226002)(99286004)(71200400001)(53936002)(6116002)(8936002)(966005)(256004)(81166006)(72206003)(486006)(8676002)(3846002)(2906002)(68736007)(81156014)(6436002)(52116002)(71190400001)(66066001)(6506007)(102836004)(386003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3023;H:VI1PR08MB5488.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: v3rwcDjEZDMPPkoP4pQUuj0HILc67493UUqq6b4ys/G8I4vMt1hqLJv6vianNe7xT4LMPjD+R87AfCIsyqsMrG5EG3WabZVT8phnVu9fzz+QUOXUYMl/OU0/rl1Omye1Za6tMslIbF4KGZNiwga9SaYqiIGMNzANzjTVvmo4bpTObXyjGTESCxDjfQMOi3vcdpzYYeX+Er5cQRYyZMgFRm/PFZCG17djQCsX4+fr8owIXdFJStP/wfrOWc2UrdNhI14P+5RADln6UuOWzxpLjBQ4vgcN0W4ckPQhyGIz+1ejpXUCRdX+l/wk0cuQLbNSMEFmoeP9QHEh8vo2+x48vOvItEdEv52XoyqwU3R9AsXg3uji4gWdUFwUPexpX3BsNYesCmDYAy/N69ZOAAbnMNDYB8gR2ZMhBQ1ABsvc51k=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07f8bcce-8ffb-4805-f71b-08d6fdefa902
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 06:45:09.7351
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Lowry.Li@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3023
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds virtualization support description for DFL based
-FPGA devices (based on PCIe SRIOV), and introductions to new
-interfaces added by new dfl private feature drivers.
-
-[mdf@kernel.org: Fixed up to make it work with new reStructuredText docs]
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Acked-by: Alan Tull <atull@kernel.org>
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
----
-v2: fix issues during rebasing (doc format change txt -> rst).
----
- Documentation/fpga/dfl.rst | 105 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 105 insertions(+)
-
-diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
-index 2f125ab..6fa483f 100644
---- a/Documentation/fpga/dfl.rst
-+++ b/Documentation/fpga/dfl.rst
-@@ -87,6 +87,8 @@ The following functions are exposed through ioctls:
- - Get driver API version (DFL_FPGA_GET_API_VERSION)
- - Check for extensions (DFL_FPGA_CHECK_EXTENSION)
- - Program bitstream (DFL_FPGA_FME_PORT_PR)
-+- Assign port to PF (DFL_FPGA_FME_PORT_ASSIGN)
-+- Release port from PF (DFL_FPGA_FME_PORT_RELEASE)
- 
- More functions are exposed through sysfs
- (/sys/class/fpga_region/regionX/dfl-fme.n/):
-@@ -102,6 +104,10 @@ More functions are exposed through sysfs
-      one FPGA device may have more than one port, this sysfs interface indicates
-      how many ports the FPGA device has.
- 
-+ Global error reporting management (errors/)
-+     error reporting sysfs interfaces allow user to read errors detected by the
-+     hardware, and clear the logged errors.
-+
- 
- FIU - PORT
- ==========
-@@ -143,6 +149,10 @@ More functions are exposed through sysfs:
-  Read Accelerator GUID (afu_id)
-      afu_id indicates which PR bitstream is programmed to this AFU.
- 
-+ Error reporting (errors/)
-+     error reporting sysfs interfaces allow user to read port/afu errors
-+     detected by the hardware, and clear the logged errors.
-+
- 
- DFL Framework Overview
- ======================
-@@ -218,6 +228,101 @@ the compat_id exposed by the target FPGA region. This check is usually done by
- userspace before calling the reconfiguration IOCTL.
- 
- 
-+FPGA virtualization - PCIe SRIOV
-+================================
-+This section describes the virtualization support on DFL based FPGA device to
-+enable accessing an accelerator from applications running in a virtual machine
-+(VM). This section only describes the PCIe based FPGA device with SRIOV support.
-+
-+Features supported by the particular FPGA device are exposed through Device
-+Feature Lists, as illustrated below:
-+
-+::
-+
-+    +-------------------------------+  +-------------+
-+    |              PF               |  |     VF      |
-+    +-------------------------------+  +-------------+
-+        ^            ^         ^              ^
-+        |            |         |              |
-+  +-----|------------|---------|--------------|-------+
-+  |     |            |         |              |       |
-+  |  +-----+     +-------+ +-------+      +-------+   |
-+  |  | FME |     | Port0 | | Port1 |      | Port2 |   |
-+  |  +-----+     +-------+ +-------+      +-------+   |
-+  |                  ^         ^              ^       |
-+  |                  |         |              |       |
-+  |              +-------+ +------+       +-------+   |
-+  |              |  AFU  | |  AFU |       |  AFU  |   |
-+  |              +-------+ +------+       +-------+   |
-+  |                                                   |
-+  |            DFL based FPGA PCIe Device             |
-+  +---------------------------------------------------+
-+
-+FME is always accessed through the physical function (PF).
-+
-+Ports (and related AFUs) are accessed via PF by default, but could be exposed
-+through virtual function (VF) devices via PCIe SRIOV. Each VF only contains
-+1 Port and 1 AFU for isolation. Users could assign individual VFs (accelerators)
-+created via PCIe SRIOV interface, to virtual machines.
-+
-+The driver organization in virtualization case is illustrated below:
-+::
-+
-+    +-------++------++------+             |
-+    | FME   || FME  || FME  |             |
-+    | FPGA  || FPGA || FPGA |             |
-+    |Manager||Bridge||Region|             |
-+    +-------++------++------+             |
-+    +-----------------------+  +--------+ |             +--------+
-+    |          FME          |  |  AFU   | |             |  AFU   |
-+    |         Module        |  | Module | |             | Module |
-+    +-----------------------+  +--------+ |             +--------+
-+          +-----------------------+       |       +-----------------------+
-+          | FPGA Container Device |       |       | FPGA Container Device |
-+          |  (FPGA Base Region)   |       |       |  (FPGA Base Region)   |
-+          +-----------------------+       |       +-----------------------+
-+            +------------------+          |         +------------------+
-+            | FPGA PCIE Module |          | Virtual | FPGA PCIE Module |
-+            +------------------+   Host   | Machine +------------------+
-+   -------------------------------------- | ------------------------------
-+             +---------------+            |          +---------------+
-+             | PCI PF Device |            |          | PCI VF Device |
-+             +---------------+            |          +---------------+
-+
-+FPGA PCIe device driver is always loaded first once a FPGA PCIe PF or VF device
-+is detected. It:
-+
-+* Finishes enumeration on both FPGA PCIe PF and VF device using common
-+  interfaces from DFL framework.
-+* Supports SRIOV.
-+
-+The FME device driver plays a management role in this driver architecture, it
-+provides ioctls to release Port from PF and assign Port to PF. After release
-+a port from PF, then it's safe to expose this port through a VF via PCIe SRIOV
-+sysfs interface.
-+
-+To enable accessing an accelerator from applications running in a VM, the
-+respective AFU's port needs to be assigned to a VF using the following steps:
-+
-+#. The PF owns all AFU ports by default. Any port that needs to be
-+   reassigned to a VF must first be released through the
-+   DFL_FPGA_FME_PORT_RELEASE ioctl on the FME device.
-+
-+#. Once N ports are released from PF, then user can use command below
-+   to enable SRIOV and VFs. Each VF owns only one Port with AFU.
-+
-+   ::
-+
-+      echo N > $PCI_DEVICE_PATH/sriov_numvfs
-+
-+#. Pass through the VFs to VMs
-+
-+#. The AFU under VF is accessible from applications in VM (using the
-+   same driver inside the VF).
-+
-+Note that an FME can't be assigned to a VF, thus PR and other management
-+functions are only available via the PF.
-+
- Device enumeration
- ==================
- This section introduces how applications enumerate the fpga device from
--- 
-2.7.4
-
+RnJvbTogIkxvd3J5IExpIChBcm0gVGVjaG5vbG9neSBDaGluYSkiIDxMb3dyeS5MaUBhcm0uY29t
+Pg0KDQpBZGRzIHN5c3RlbSBwb3dlciBtYW5hZ2VtZW50IHN1cHBvcnQgaW4gS01TIGtlcm5lbCBk
+cml2ZXIuDQoNCkRlcGVuZHMgb246DQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9y
+Zy9zZXJpZXMvNjE2NTAvDQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJp
+ZXMvNjAwODMvDQoNCkNoYW5nZXMgc2luY2UgdjE6DQpTaW5jZSB3ZSBoYXZlIHVuaWZpZWQgbWNs
+ay9wY2xrL3BpcGVsaW5lLT5hY2xrIHRvIG9uZSBtY2xrLCB3aGljaCB3aWxsDQpiZSB0dXJuZWQg
+b24vb2ZmIHdoZW4gY3J0YyBhdG9taWMgZW5hYmxlL2Rpc2FibGUsIHJlbW92ZWQgcnVudGltZSBw
+b3dlcg0KbWFuYWdlbWVudC4NClJlbW92ZXMgcnVuIHRpbWUgZ2V0L3B1dCByZWxhdGVkIGZsb3cu
+DQpBZGRzIHRvIGRpc2FibGUgdGhlIGFjbGsgd2hlbiByZWdpc3RlciBhY2Nlc3MgZmluaXNoZWQu
+DQoNClNpZ25lZC1vZmYtYnk6IExvd3J5IExpIChBcm0gVGVjaG5vbG9neSBDaGluYSkgPGxvd3J5
+LmxpQGFybS5jb20+DQotLS0NCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tv
+bWVkYV9jcnRjLmMgfCAgMSAtDQogZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9r
+b21lZGFfZGV2LmMgIHwgNjUgKysrKysrKysrKysrKysrKysrKysrLS0tDQogZHJpdmVycy9ncHUv
+ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2LmggIHwgIDIgKw0KIGRyaXZlcnMvZ3B1
+L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rydi5jICB8IDMwICsrKysrKysrKystDQog
+NCBmaWxlcyBjaGFuZ2VkLCA5MCBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQ0KDQpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfY3J0Yy5j
+IGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfY3J0Yy5jDQppbmRl
+eCBjYWZiNDQ1Li5kMTRlN2YzIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNw
+bGF5L2tvbWVkYS9rb21lZGFfY3J0Yy5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3Bs
+YXkva29tZWRhL2tvbWVkYV9jcnRjLmMNCkBAIC01LDcgKzUsNiBAQA0KICAqDQogICovDQogI2lu
+Y2x1ZGUgPGxpbnV4L2Nsay5oPg0KLSNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+DQogI2lu
+Y2x1ZGUgPGxpbnV4L3NwaW5sb2NrLmg+DQogDQogI2luY2x1ZGUgPGRybS9kcm1fYXRvbWljLmg+
+DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFf
+ZGV2LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kZXYuYw0K
+aW5kZXggZTFhYTU4ZS4uYTgyZjY3YiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0v
+ZGlzcGxheS9rb21lZGEva29tZWRhX2Rldi5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rp
+c3BsYXkva29tZWRhL2tvbWVkYV9kZXYuYw0KQEAgLTIwOSw3ICsyMDksNyBAQCBzdHJ1Y3Qga29t
+ZWRhX2RldiAqa29tZWRhX2Rldl9jcmVhdGUoc3RydWN0IGRldmljZSAqZGV2KQ0KIAkJCSAgcHJv
+ZHVjdC0+cHJvZHVjdF9pZCwNCiAJCQkgIE1BTElEUF9DT1JFX0lEX1BST0RVQ1RfSUQobWRldi0+
+Y2hpcC5jb3JlX2lkKSk7DQogCQllcnIgPSAtRU5PREVWOw0KLQkJZ290byBlcnJfY2xlYW51cDsN
+CisJCWdvdG8gZGlzYWJsZV9jbGs7DQogCX0NCiANCiAJRFJNX0lORk8oIkZvdW5kIEFSTSBNYWxp
+LUQleCB2ZXJzaW9uIHIlZHAlZFxuIiwNCkBAIC0yMjIsMTkgKzIyMiwxOSBAQCBzdHJ1Y3Qga29t
+ZWRhX2RldiAqa29tZWRhX2Rldl9jcmVhdGUoc3RydWN0IGRldmljZSAqZGV2KQ0KIAllcnIgPSBt
+ZGV2LT5mdW5jcy0+ZW51bV9yZXNvdXJjZXMobWRldik7DQogCWlmIChlcnIpIHsNCiAJCURSTV9F
+UlJPUigiZW51bWVyYXRlIGRpc3BsYXkgcmVzb3VyY2UgZmFpbGVkLlxuIik7DQotCQlnb3RvIGVy
+cl9jbGVhbnVwOw0KKwkJZ290byBkaXNhYmxlX2NsazsNCiAJfQ0KIA0KIAllcnIgPSBrb21lZGFf
+cGFyc2VfZHQoZGV2LCBtZGV2KTsNCiAJaWYgKGVycikgew0KIAkJRFJNX0VSUk9SKCJwYXJzZSBk
+ZXZpY2UgdHJlZSBmYWlsZWQuXG4iKTsNCi0JCWdvdG8gZXJyX2NsZWFudXA7DQorCQlnb3RvIGRp
+c2FibGVfY2xrOw0KIAl9DQogDQogCWVyciA9IGtvbWVkYV9hc3NlbWJsZV9waXBlbGluZXMobWRl
+dik7DQogCWlmIChlcnIpIHsNCiAJCURSTV9FUlJPUigiYXNzZW1ibGUgZGlzcGxheSBwaXBlbGlu
+ZXMgZmFpbGVkLlxuIik7DQotCQlnb3RvIGVycl9jbGVhbnVwOw0KKwkJZ290byBkaXNhYmxlX2Ns
+azsNCiAJfQ0KIA0KIAlkZXYtPmRtYV9wYXJtcyA9ICZtZGV2LT5kbWFfcGFybXM7DQpAQCAtMjQ3
+LDExICsyNDcsMTQgQEAgc3RydWN0IGtvbWVkYV9kZXYgKmtvbWVkYV9kZXZfY3JlYXRlKHN0cnVj
+dCBkZXZpY2UgKmRldikNCiAJaWYgKG1kZXYtPmlvbW11ICYmIG1kZXYtPmZ1bmNzLT5jb25uZWN0
+X2lvbW11KSB7DQogCQllcnIgPSBtZGV2LT5mdW5jcy0+Y29ubmVjdF9pb21tdShtZGV2KTsNCiAJ
+CWlmIChlcnIpIHsNCisJCQlEUk1fRVJST1IoImNvbm5lY3QgaW9tbXUgZmFpbGVkLlxuIik7DQog
+CQkJbWRldi0+aW9tbXUgPSBOVUxMOw0KLQkJCWdvdG8gZXJyX2NsZWFudXA7DQorCQkJZ290byBk
+aXNhYmxlX2NsazsNCiAJCX0NCiAJfQ0KIA0KKwljbGtfZGlzYWJsZV91bnByZXBhcmUobWRldi0+
+YWNsayk7DQorDQogCWVyciA9IHN5c2ZzX2NyZWF0ZV9ncm91cCgmZGV2LT5rb2JqLCAma29tZWRh
+X3N5c2ZzX2F0dHJfZ3JvdXApOw0KIAlpZiAoZXJyKSB7DQogCQlEUk1fRVJST1IoImNyZWF0ZSBz
+eXNmcyBncm91cCBmYWlsZWQuXG4iKTsNCkBAIC0yNjQsNiArMjY3LDggQEAgc3RydWN0IGtvbWVk
+YV9kZXYgKmtvbWVkYV9kZXZfY3JlYXRlKHN0cnVjdCBkZXZpY2UgKmRldikNCiANCiAJcmV0dXJu
+IG1kZXY7DQogDQorZGlzYWJsZV9jbGs6DQorCWNsa19kaXNhYmxlX3VucHJlcGFyZShtZGV2LT5h
+Y2xrKTsNCiBlcnJfY2xlYW51cDoNCiAJa29tZWRhX2Rldl9kZXN0cm95KG1kZXYpOw0KIAlyZXR1
+cm4gRVJSX1BUUihlcnIpOw0KQEAgLTI4MSw4ICsyODYsMTIgQEAgdm9pZCBrb21lZGFfZGV2X2Rl
+c3Ryb3koc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYpDQogCWRlYnVnZnNfcmVtb3ZlX3JlY3Vyc2l2
+ZShtZGV2LT5kZWJ1Z2ZzX3Jvb3QpOw0KICNlbmRpZg0KIA0KKwlpZiAobWRldi0+YWNsaykNCisJ
+CWNsa19wcmVwYXJlX2VuYWJsZShtZGV2LT5hY2xrKTsNCisNCiAJaWYgKG1kZXYtPmlvbW11ICYm
+IG1kZXYtPmZ1bmNzLT5kaXNjb25uZWN0X2lvbW11KQ0KLQkJbWRldi0+ZnVuY3MtPmRpc2Nvbm5l
+Y3RfaW9tbXUobWRldik7DQorCQlpZiAobWRldi0+ZnVuY3MtPmRpc2Nvbm5lY3RfaW9tbXUobWRl
+dikpDQorCQkJRFJNX0VSUk9SKCJkaXNjb25uZWN0IGlvbW11IGZhaWxlZC5cbiIpOw0KIAltZGV2
+LT5pb21tdSA9IE5VTEw7DQogDQogCWZvciAoaSA9IDA7IGkgPCBtZGV2LT5uX3BpcGVsaW5lczsg
+aSsrKSB7DQpAQCAtMzA4LDMgKzMxNyw0NyBAQCB2b2lkIGtvbWVkYV9kZXZfZGVzdHJveShzdHJ1
+Y3Qga29tZWRhX2RldiAqbWRldikNCiANCiAJZGV2bV9rZnJlZShkZXYsIG1kZXYpOw0KIH0NCisN
+CitpbnQga29tZWRhX2Rldl9yZXN1bWUoc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYpDQorew0KKwlp
+bnQgcmV0ID0gMDsNCisNCisJY2xrX3ByZXBhcmVfZW5hYmxlKG1kZXYtPmFjbGspOw0KKw0KKwlp
+ZiAobWRldi0+aW9tbXUgJiYgbWRldi0+ZnVuY3MtPmNvbm5lY3RfaW9tbXUpIHsNCisJCXJldCA9
+IG1kZXYtPmZ1bmNzLT5jb25uZWN0X2lvbW11KG1kZXYpOw0KKwkJaWYgKHJldCA8IDApIHsNCisJ
+CQlEUk1fRVJST1IoImNvbm5lY3QgaW9tbXUgZmFpbGVkLlxuIik7DQorCQkJZ290byBkaXNhYmxl
+X2NsazsNCisJCX0NCisJfQ0KKw0KKwlyZXQgPSBtZGV2LT5mdW5jcy0+ZW5hYmxlX2lycShtZGV2
+KTsNCisNCitkaXNhYmxlX2NsazoNCisJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG1kZXYtPmFjbGsp
+Ow0KKw0KKwlyZXR1cm4gcmV0Ow0KK30NCisNCitpbnQga29tZWRhX2Rldl9zdXNwZW5kKHN0cnVj
+dCBrb21lZGFfZGV2ICptZGV2KQ0KK3sNCisJaW50IHJldCA9IDA7DQorDQorCWNsa19wcmVwYXJl
+X2VuYWJsZShtZGV2LT5hY2xrKTsNCisNCisJaWYgKG1kZXYtPmlvbW11ICYmIG1kZXYtPmZ1bmNz
+LT5kaXNjb25uZWN0X2lvbW11KSB7DQorCQlyZXQgPSBtZGV2LT5mdW5jcy0+ZGlzY29ubmVjdF9p
+b21tdShtZGV2KTsNCisJCWlmIChyZXQgPCAwKSB7DQorCQkJRFJNX0VSUk9SKCJkaXNjb25uZWN0
+IGlvbW11IGZhaWxlZC5cbiIpOw0KKwkJCWdvdG8gZGlzYWJsZV9jbGs7DQorCQl9DQorCX0NCisN
+CisJcmV0ID0gbWRldi0+ZnVuY3MtPmRpc2FibGVfaXJxKG1kZXYpOw0KKw0KK2Rpc2FibGVfY2xr
+Og0KKwljbGtfZGlzYWJsZV91bnByZXBhcmUobWRldi0+YWNsayk7DQorDQorCXJldHVybiByZXQ7
+DQorfQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29t
+ZWRhX2Rldi5oIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2
+LmgNCmluZGV4IGQxYzg2YjYuLjA5NmY5ZjcgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0v
+YXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kZXYuaA0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2Fy
+bS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2LmgNCkBAIC0yMDcsNCArMjA3LDYgQEAgc3RydWN0
+IGtvbWVkYV9kZXYgew0KIA0KIHN0cnVjdCBrb21lZGFfZGV2ICpkZXZfdG9fbWRldihzdHJ1Y3Qg
+ZGV2aWNlICpkZXYpOw0KIA0KK2ludCBrb21lZGFfZGV2X3Jlc3VtZShzdHJ1Y3Qga29tZWRhX2Rl
+diAqbWRldik7DQoraW50IGtvbWVkYV9kZXZfc3VzcGVuZChzdHJ1Y3Qga29tZWRhX2RldiAqbWRl
+dik7DQogI2VuZGlmIC8qX0tPTUVEQV9ERVZfSF8qLw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
+L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL2Fy
+bS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZHJ2LmMNCmluZGV4IGNmYTUwNjguLjM5NTA1MmIgMTAw
+NjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kcnYu
+Yw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZHJ2LmMN
+CkBAIC04LDYgKzgsNyBAQA0KICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCiAjaW5jbHVkZSA8
+bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQogI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPg0K
+KyNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+DQogI2luY2x1ZGUgPGRybS9kcm1fb2YuaD4N
+CiAjaW5jbHVkZSAia29tZWRhX2Rldi5oIg0KICNpbmNsdWRlICJrb21lZGFfa21zLmgiDQpAQCAt
+MTM0LDEzICsxMzUsNDAgQEAgc3RhdGljIGludCBrb21lZGFfcGxhdGZvcm1fcmVtb3ZlKHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogDQogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwga29t
+ZWRhX29mX21hdGNoKTsNCiANCitzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGtvbWVkYV9wbV9z
+dXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCit7DQorCXN0cnVjdCBrb21lZGFfZHJ2ICptZHJ2
+ID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQorCXN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSAmbWRy
+di0+a21zLT5iYXNlOw0KKwlpbnQgcmVzOw0KKw0KKwlyZXMgPSBkcm1fbW9kZV9jb25maWdfaGVs
+cGVyX3N1c3BlbmQoZHJtKTsNCisNCisJa29tZWRhX2Rldl9zdXNwZW5kKG1kcnYtPm1kZXYpOw0K
+Kw0KKwlyZXR1cm4gcmVzOw0KK30NCisNCitzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGtvbWVk
+YV9wbV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KK3sNCisJc3RydWN0IGtvbWVkYV9kcnYg
+Km1kcnYgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCisJc3RydWN0IGRybV9kZXZpY2UgKmRybSA9
+ICZtZHJ2LT5rbXMtPmJhc2U7DQorDQorCWtvbWVkYV9kZXZfcmVzdW1lKG1kcnYtPm1kZXYpOw0K
+Kw0KKwlyZXR1cm4gZHJtX21vZGVfY29uZmlnX2hlbHBlcl9yZXN1bWUoZHJtKTsNCit9DQorDQor
+c3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGtvbWVkYV9wbV9vcHMgPSB7DQorCVNFVF9T
+WVNURU1fU0xFRVBfUE1fT1BTKGtvbWVkYV9wbV9zdXNwZW5kLCBrb21lZGFfcG1fcmVzdW1lKQ0K
+K307DQorDQogc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIga29tZWRhX3BsYXRmb3JtX2Ry
+aXZlciA9IHsNCiAJLnByb2JlCT0ga29tZWRhX3BsYXRmb3JtX3Byb2JlLA0KIAkucmVtb3ZlCT0g
+a29tZWRhX3BsYXRmb3JtX3JlbW92ZSwNCiAJLmRyaXZlcgk9IHsNCiAJCS5uYW1lID0gImtvbWVk
+YSIsDQogCQkub2ZfbWF0Y2hfdGFibGUJPSBrb21lZGFfb2ZfbWF0Y2gsDQotCQkucG0gPSBOVUxM
+LA0KKwkJLnBtID0gJmtvbWVkYV9wbV9vcHMsDQogCX0sDQogfTsNCiANCi0tIA0KMS45LjENCg0K
