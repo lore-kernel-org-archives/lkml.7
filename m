@@ -7,39 +7,37 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB89CC06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4123FC06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEDC221721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248E021721
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 13:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbfGAN4f (ORCPT
+        id S1728844AbfGAN6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 09:56:35 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:43214 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbfGAN4f (ORCPT
+        Mon, 1 Jul 2019 09:58:31 -0400
+Received: from albert.telenet-ops.be ([195.130.137.90]:46454 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727707AbfGAN6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 09:56:35 -0400
+        Mon, 1 Jul 2019 09:58:31 -0400
 Received: from ramsan ([84.194.98.4])
-        by xavier.telenet-ops.be with bizsmtp
-        id XRwY2000t05gfCL01RwYvt; Mon, 01 Jul 2019 15:56:33 +0200
+        by albert.telenet-ops.be with bizsmtp
+        id XRyU2000L05gfCL06RyUH2; Mon, 01 Jul 2019 15:58:29 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hhwnI-0007vo-So; Mon, 01 Jul 2019 15:56:32 +0200
+        id 1hhwpA-0007wQ-LC; Mon, 01 Jul 2019 15:58:28 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hhwnI-00065l-QJ; Mon, 01 Jul 2019 15:56:32 +0200
+        id 1hhwpA-000685-Jb; Mon, 01 Jul 2019 15:58:28 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org,
+To:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] Documentation: ABI: iio: Add missing newline at end of file
-Date:   Mon,  1 Jul 2019 15:56:31 +0200
-Message-Id: <20190701135631.23376-1-geert+renesas@glider.be>
+Subject: [PATCH v2] Documentation: ABI: power: Add missing newline at end of file
+Date:   Mon,  1 Jul 2019 15:58:27 +0200
+Message-Id: <20190701135827.23520-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,20 +55,20 @@ Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 v2:
   - Split patches per maintainer.
 ---
- Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32 | 2 +-
+ Documentation/ABI/testing/sysfs-power | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32 b/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
-index da9822309f0757bd..0e66ae9b0071e80b 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
-@@ -13,4 +13,4 @@ Description:
- 			error on writing
- 		If DFSDM input is SPI Slave:
- 			Reading returns value previously set.
--			Writing value before starting conversions.
+diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+index 18b7dc929234f625..3c51303550118474 100644
+--- a/Documentation/ABI/testing/sysfs-power
++++ b/Documentation/ABI/testing/sysfs-power
+@@ -300,4 +300,4 @@ Description:
+ 		attempt.
+ 
+ 		Using this sysfs file will override any values that were
+-		set using the kernel command line for disk offset.
 \ No newline at end of file
-+			Writing value before starting conversions.
++		set using the kernel command line for disk offset.
 -- 
 2.17.1
 
