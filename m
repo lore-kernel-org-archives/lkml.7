@@ -2,147 +2,122 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6147C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80E1C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB4B21530
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04D12089F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 10:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lO6GFAb2"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="b8Tx8s5L";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="lxHJJNBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbfGAKTU (ORCPT
+        id S1728800AbfGAKT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 06:19:20 -0400
-Received: from mail-eopbgr40089.outbound.protection.outlook.com ([40.107.4.89]:15171
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726076AbfGAKTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 06:19:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+        Mon, 1 Jul 2019 06:19:59 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:52604 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726076AbfGAKT7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 06:19:59 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A43A4C122C;
+        Mon,  1 Jul 2019 10:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561976398; bh=1QlwBCmFpAUv2XW87rQ3tryYxk8Y4ZSRdZNZC1mJwt0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=b8Tx8s5LDSqvXz//zD+oMmpWbcgbeqmr4xN2r+VXYsyxAykHC4BaDwYp1FZFpPk2y
+         wvEomTH1vaDhtoBdfSCK8hTlanS1+KfTcwpIq1hILukCa+/PaJgUBk2h5RWux2/Y7p
+         Fcuo5UQW63BYcUd1P8rrK2rwiuKOxVPdLk3PExGjFx49+ctSsnEneZWoLePKySe1vP
+         oSRQwcN7bWk4YeuzdJX3NpV8nv4PUZSoLNXzpS4zkJpLHeFsKxaMNTZA5Kn9TWUrdh
+         sVa5Sl+3JM6u2iDaTtdVAnsAoLeZeadYZJIKw4C8mzLsqYHkA/kRmIVJ8t1RR3UVA5
+         LPQl+2ASXUylA==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 5B9F9A0067;
+        Mon,  1 Jul 2019 10:19:58 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 1 Jul 2019 03:19:57 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 1 Jul 2019 03:19:57 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0XhAfId3MqzHmx1ScgWqLCuRLGCj68DTrsNvi+P5H/I=;
- b=lO6GFAb2medFcbTUsWXH+Of4/3XurUTtXbby/M39bODXHWvCHDhRpmBu0oYXBTiO3GVGDfTjdiYq15qzhnBPoTC2ertXCNMJ8Vx6WFWuuzbhiwxKuhAwK5Mk5tgfGMAKyhWy4+pe6u1VfNZLiyukhadQ1SlnnXV9Dqi94IRTICM=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB6348.eurprd04.prod.outlook.com (10.255.170.27) with Microsoft SMTP
+ bh=1QlwBCmFpAUv2XW87rQ3tryYxk8Y4ZSRdZNZC1mJwt0=;
+ b=lxHJJNBA8NevcWGZLc/H7JqNL3MUShuajHmeJnAeoU8eZUsV6zPZhh7as8u8oHCHOECCw8yu8e65/IZtuXbOYx/TcteJDqqFLMY/I8GnIMEhw0nCMR5+1mHX6bThfb+vbgVu8F/D4gWAtMWqLckRim0xTkyi2EKK5rfPlgkXMWM=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
+ BN8PR12MB3249.namprd12.prod.outlook.com (20.179.66.28) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Mon, 1 Jul 2019 10:18:35 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::93a:4344:1120:4ca0]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::93a:4344:1120:4ca0%6]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
- 10:18:35 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv5 08/20] PCI: mobiveil: Use the 1st inbound window for MEM
- inbound transactions
-Thread-Topic: [PATCHv5 08/20] PCI: mobiveil: Use the 1st inbound window for
- MEM inbound transactions
-Thread-Index: AQHU8QrC2oaNOTxwc0KYfHKro/AvVaaxs5sAgARUBCA=
-Date:   Mon, 1 Jul 2019 10:18:35 +0000
-Message-ID: <DB8PR04MB67476D1CB2BC5C6C1779012284F90@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-9-Zhiqiang.Hou@nxp.com>
- <20190628160212.GB21829@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190628160212.GB21829@e121166-lin.cambridge.arm.com>
-Accept-Language: zh-CN, en-US
+ 15.20.2032.20; Mon, 1 Jul 2019 10:19:56 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::61ef:5598:59e0:fc9d]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::61ef:5598:59e0:fc9d%5]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
+ 10:19:55 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     David Miller <davem@davemloft.net>,
+        "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
+        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>
+Subject: RE: [PATCH net-next v2 00/10] net: stmmac: 10GbE using XGMAC
+Thread-Topic: [PATCH net-next v2 00/10] net: stmmac: 10GbE using XGMAC
+Thread-Index: AQHVLYNK1lmnq+s43E69mlApv5Y1IKaxQNSAgARQQxA=
+Date:   Mon, 1 Jul 2019 10:19:55 +0000
+Message-ID: <BN8PR12MB32662DA0B5733E93D88E7D7DD3F90@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <cover.1561706800.git.joabreu@synopsys.com>
+ <20190628.092415.219171929303857748.davem@davemloft.net>
+In-Reply-To: <20190628.092415.219171929303857748.davem@davemloft.net>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [119.31.174.73]
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7e2cd95a-40ca-4b93-9f42-08d6fe0d79fd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB6348;
-x-ms-traffictypediagnostic: DB8PR04MB6348:
-x-microsoft-antispam-prvs: <DB8PR04MB63484FAB4D0C9D6AB72EF8C584F90@DB8PR04MB6348.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
+x-ms-office365-filtering-correlation-id: b6e37b29-0aa2-427d-99d7-08d6fe0da9ff
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB3249;
+x-ms-traffictypediagnostic: BN8PR12MB3249:
+x-microsoft-antispam-prvs: <BN8PR12MB324971304A3A25C928BED911D3F90@BN8PR12MB3249.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
 x-forefront-prvs: 00851CA28B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(346002)(376002)(396003)(366004)(189003)(199004)(40224003)(13464003)(54534003)(14444005)(33656002)(305945005)(99286004)(86362001)(55016002)(229853002)(316002)(66946007)(66476007)(4326008)(66446008)(64756008)(66556008)(68736007)(2906002)(7696005)(71190400001)(6436002)(102836004)(6506007)(73956011)(81156014)(74316002)(8936002)(53936002)(53546011)(71200400001)(6116002)(6916009)(486006)(8676002)(3846002)(256004)(66066001)(81166006)(54906003)(5660300002)(26005)(25786009)(478600001)(76176011)(6246003)(186003)(52536014)(7416002)(9686003)(76116006)(476003)(11346002)(7736002)(446003)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6348;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(376002)(39860400002)(366004)(76094002)(199004)(189003)(4326008)(2501003)(6436002)(55016002)(66946007)(66476007)(66556008)(64756008)(66446008)(73956011)(5660300002)(2906002)(53936002)(6246003)(9686003)(52536014)(316002)(25786009)(86362001)(558084003)(446003)(76116006)(229853002)(54906003)(33656002)(6636002)(26005)(102836004)(186003)(486006)(11346002)(110136005)(476003)(8936002)(8676002)(81166006)(478600001)(81156014)(99286004)(7696005)(6506007)(76176011)(256004)(66066001)(14454004)(68736007)(71200400001)(74316002)(6116002)(3846002)(71190400001)(305945005)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3249;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: llmTq5Joe2SGhANHv6rvnqsvSbbAFdUk2//toW0sW6hzdLLyrUOUUIo08+uuKHmEY66wZ6YJcHNDP5WXt7fsVFr+492xf02pm2vlmZHdksfBomIElo39O5g6gI5PWdvjadE8bbnHOp+7u6qEtK+jZvlRzNpFhWwd/kn0VKBK5+0jpiBcIWLOToJtdzQG9DgXntNdGOWcNdJS5CAxv/jPok605JSDjXsinKNIAa5u+e5KAcwf1TiMvqQiJiHY4hJ1Lpk9h/R/V8qK30qdpLY1kSXLhAHXWI6oKV1LJPX12BNNoJiafMFGZDbh1+UIgMzaUltn3ETGBbYiH2TvwgxnSaiyqAqaOWtAcVNaAihaUPYhFPrupZ35c2uMvHfWHBBAqD5BWDUOKp0nwoj4jdotNSQfB74CTzmTRGMgPmqYhyI=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: 9GIMFJ6bBUn2J3PwkOICONqvoh9eNisLum5KpkcuzFbn4cY+a6TGrgqYexehIvfBY0E7iFuMEOj4+PiPl1p7XLXixSQUq701KVRBKg9y118Y6YfLU0FS9QQ6f+0B20GdvQi3aeFIeTmIfSA8r1/7NPo/dAgyWR/y/ZcCu2fVYUi24UbO1r14tjZnZW+mfc0eOTGYPcOkJa4qHOpdzVLYy4QcF1Y3JFcMVzMkZZAVbOk18gLMksEIkQ3NhTiNdresAp469RdshppB3oaOeyXr8F63ACtshnJSMp5yE9wgHDuf/eVozrbZ+aNAjYdG2fp8r5/xMAa3SCsY2HKHTmoeFr+wLnizUPW0EpEjnVC95B8WmYbhr2gzTeehhDTGVtnbVws6tKjc9cD63oxLIds5cVgf8+fF+VMe+NWcbj98VCo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e2cd95a-40ca-4b93-9f42-08d6fe0d79fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 10:18:35.3029
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6e37b29-0aa2-427d-99d7-08d6fe0da9ff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 10:19:55.8455
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zhiqiang.hou@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6348
+X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3249
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3Jlbnpv
-LnBpZXJhbGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo21MIyOcjVIDA6MDINCj4gVG86IFou
-cS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxn
-YWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207
-DQo+IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExl
-byBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdp
-bGwuZGVhY29uQGFybS5jb207DQo+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0u
-aC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsNCj4gWGlhb3dlaSBCYW8gPHhpYW93ZWku
-YmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NSAwOC8yMF0gUENJOiBtb2JpdmVp
-bDogVXNlIHRoZSAxc3QgaW5ib3VuZCB3aW5kb3cgZm9yDQo+IE1FTSBpbmJvdW5kIHRyYW5zYWN0
-aW9ucw0KPiANCj4gT24gRnJpLCBBcHIgMTIsIDIwMTkgYXQgMDg6MzY6MDBBTSArMDAwMCwgWi5x
-LiBIb3Ugd3JvdGU6DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNv
-bT4NCj4gPg0KPiA+IFRoZSBpbmJvdW5kIHdpbmRvd3MgaGF2ZSBpbmRlcGVuZGVudCByZWdpc3Rl
-ciBzZXQgYWdhaW5zdCBvdXRib3VuZA0KPiB3aW5kb3dzLg0KPiA+IFRoaXMgcGF0Y2ggY2hhbmdl
-IHRoZSBNRU0gaW5ib3VuZCB3aW5kb3cgdG8gdGhlIGZpcnN0IG9uZS4NCj4gDQo+IFlvdSBtZWFu
-IHRoYXQgd2luZG93cyAwIGNhbiBiZSB1c2VkIGFzIHdlbGwgYXMgd2luZG93IDEgZm9yIGluYm91
-bmQNCj4gd2luZG93cyBzbyBpdCBpcyBiZXR0ZXIgdG8gb3B0IGZvciB3aW5kb3cgMCBmb3IgY29u
-c2lzdGVuY3kgPw0KDQpJIG1lYW4gdGhlIGluYm91bmQgd2luZG93cyBhbmQgb3V0Ym91bmQgd2lu
-ZG93cyBhcmUgaW5kZXBlbmRlbnQsIHRoZXkNCmhhdmUgdGhlbXNlbHZlcycgcmVnaXN0ZXJzLCBh
-bmQgYm90aCBzZXJpYWwgbnVtYmVyIHN0YXJ0cyBmcm9tIDA6DQpJbmJvdW5kIHdpbmRvd3M6ICMw
-LCAjMSwgIzIuLi4NCk91dGJvdW5kIHdpbmRvd3M6ICMwLCAjMSwgIzIuLi4gDQoNClRoYW5rcywN
-ClpoaXFpYW5nDQoNCj4gTG9yZW56bw0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlh
-bmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBNaW5naHVhbiBMaWFu
-IDxNaW5naHVhbi5MaWFuQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFN1YnJhaG1hbnlhIExp
-bmdhcHBhIDxsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluPg0KPiA+IC0tLQ0KPiA+IFY1Og0K
-PiA+ICAtIENvcnJlY3RlZCBhbmQgcmV0b3VjaGVkIHRoZSBzdWJqZWN0IGFuZCBjaGFuZ2Vsb2cu
-DQo+ID4NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMgfCAyICst
-DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+
-DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5j
-DQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+IGluZGV4
-IGRmNzFjMTFiNDgxMC4uZTg4YWZjNzkyYTVjIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJv
-bGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiBAQCAtNjE2LDcgKzYxNiw3IEBAIHN0YXRpYyBpbnQg
-bW9iaXZlaWxfaG9zdF9pbml0KHN0cnVjdCBtb2JpdmVpbF9wY2llDQo+ICpwY2llKQ0KPiA+ICAJ
-CQkgICBDRkdfV0lORE9XX1RZUEUsIHJlc291cmNlX3NpemUocGNpZS0+b2JfaW9fcmVzKSk7DQo+
-ID4NCj4gPiAgCS8qIG1lbW9yeSBpbmJvdW5kIHRyYW5zbGF0aW9uIHdpbmRvdyAqLw0KPiA+IC0J
-cHJvZ3JhbV9pYl93aW5kb3dzKHBjaWUsIFdJTl9OVU1fMSwgMCwgTUVNX1dJTkRPV19UWVBFLA0K
-PiBJQl9XSU5fU0laRSk7DQo+ID4gKwlwcm9ncmFtX2liX3dpbmRvd3MocGNpZSwgV0lOX05VTV8w
-LCAwLCBNRU1fV0lORE9XX1RZUEUsDQo+ID4gK0lCX1dJTl9TSVpFKTsNCj4gPg0KPiA+ICAJLyog
-R2V0IHRoZSBJL08gYW5kIG1lbW9yeSByYW5nZXMgZnJvbSBEVCAqLw0KPiA+ICAJcmVzb3VyY2Vf
-bGlzdF9mb3JfZWFjaF9lbnRyeSh3aW4sICZwY2llLT5yZXNvdXJjZXMpIHsNCj4gPiAtLQ0KPiA+
-IDIuMTcuMQ0KPiA+DQo=
+From: David Miller <davem@davemloft.net>
+
+> About the Kconfig change, maybe it just doesn't make sense to list all
+> of the various speeds the chip supports... just a thought.
+
+What about: "STMicroelectronics Multi-Gigabit Ethernet driver" ?
+
+Or, just "STMicroelectronics Ethernet driver" ?
