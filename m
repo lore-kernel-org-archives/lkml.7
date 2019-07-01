@@ -2,138 +2,165 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86919C06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB38C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A25E214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07770214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:25:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arAwgdST"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbfGAOZ3 convert rfc822-to-8bit (ORCPT
+        id S1729622AbfGAOZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:25:29 -0400
-Received: from mail-oln040092254061.outbound.protection.outlook.com ([40.92.254.61]:22656
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727687AbfGAOZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:25:28 -0400
-Received: from PU1APC01FT027.eop-APC01.prod.protection.outlook.com
- (10.152.252.60) by PU1APC01HT051.eop-APC01.prod.protection.outlook.com
- (10.152.253.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2032.15; Mon, 1 Jul
- 2019 14:25:24 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.60) by
- PU1APC01FT027.mail.protection.outlook.com (10.152.252.232) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2032.15 via Frontend Transport; Mon, 1 Jul 2019 14:25:24 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::9d2d:391f:5f49:c806]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::9d2d:391f:5f49:c806%6]) with mapi id 15.20.2032.019; Mon, 1 Jul 2019
- 14:25:24 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: [PATCH v7 6/8] PCI: Allow extend_bridge_window() to shrink resource
- if necessary
-Thread-Topic: [PATCH v7 6/8] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Thread-Index: AQHVMBjSFu30TOdswEyjNEb8yk6Glw==
-Date:   Mon, 1 Jul 2019 14:25:24 +0000
-Message-ID: <SL2P216MB01871D142278DE5C7FA610B480F90@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SY3PR01CA0097.ausprd01.prod.outlook.com
- (2603:10c6:0:19::30) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:78B69A352EE2D48EE966902C7BE31E9D2695E685278EE4228767415B952D10DA;UpperCasedChecksum:3709DA5CBC05F479832E249D673D1A94F83452C4D7CEB6C0132E9E56FCDF4C3E;SizeAsReceived:7703;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [Jy811Bkp+qp8vQM4tGhjmijTLwXczcgQn0IWdPFEsgjVuqDkfxyuAuYakF6urMCJ1fHws5/17hs=]
-x-microsoft-original-message-id: <20190701142508.GA5301@nicholas-usb>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:PU1APC01HT051;
-x-ms-traffictypediagnostic: PU1APC01HT051:
-x-microsoft-antispam-message-info: VOTRK/O2oW/4VL9oE/Y7hOE0wOJMIn2ZCZMNMLDndu8SjKE/0amgHTJscJ2FVb+K3N87cdCf6/Iyh9uH6lssC3uEgophYqN+PJqvaPs2F8yS+OftuZsfMy5lf7AUN1K8IYVV92mXnPD/7Cwz+jwpanm3k8l7Q1B9GCtQ2bpzu2Un/eLL0PIL7vepc39mCFQi
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B6F253F81B5C904CBC5A649532F2BA3E@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Mon, 1 Jul 2019 10:25:52 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:38831 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729532AbfGAOZw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 10:25:52 -0400
+Received: by mail-vs1-f68.google.com with SMTP id k9so9021339vso.5;
+        Mon, 01 Jul 2019 07:25:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=prX1E0RG7UeUBzCLq0Q5Oi12RHYXNZyfW5bTMLlL8JI=;
+        b=arAwgdST9DjY9vxXrFWg7C4mcvo7W/JT82sW+gnGtZsku0jghjgd5ceLmlW/DD9MeW
+         SXkWG25P0KqPSmuIRtC+91B/URngWnXzXO8GJCmxhhbMGJQqlEiWIiugydsHUWvn4xMP
+         fLUMKKSyPDRVGraoestBcMoB/SGklheTHS1bG1NorskLUwMXCHe8BQZPTckzxHVWrkH0
+         dSgyjWmIUs2c0Togy+4bsvPsYEpRzGGfMHrKl0nRw4vnMSAFdwJFAi62yo8VoJYFgkFK
+         k+mbzCq1HV6m3HieHAh0vw3OvFpjQBSH70WCR/VZt+fI0mNEPME9QrW2RFWol/gfdiYe
+         BMAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=prX1E0RG7UeUBzCLq0Q5Oi12RHYXNZyfW5bTMLlL8JI=;
+        b=fWcH1c2e2BWsgAVqJBzDq1uO+5UTSeiEbml5rmhhoubanbWfTubZtiL3jkVVYSaMNB
+         FjoSUcYxXhhGiYrwLEsZjRKmr5tv/T3oNXnpXr/BY91NEXkFI3okG2oRrr41oMpElMHw
+         Lhe/Oo0MpEj10dS5lL3EN/WCVgz4LVLXDTFYoVQGQpGewst0JX/0OJh2Dp/zXeGB4f84
+         ht3c0LWh6YsBAk3RSfqM4bnWWSKvY3MjFhbZLIPGpLvE0zxzZvq899mSJQyDmVSAUZx/
+         Ymag80MuDT7k9NWyiAM1SS8+rXGGJkJoDZ4ynFCzMectXmauiizmseYMbstShiwwTCh7
+         i9+Q==
+X-Gm-Message-State: APjAAAVBVg5PzvajzcbhHHbD8uK6k+A8clL/MMEIjsyomqGVQuMILCU0
+        wmIOO2Inm3alzqRMl8Yaj98cwcgz9epZ1yYtGtI=
+X-Google-Smtp-Source: APXvYqzWTG5NkVuWmj3+DO56fz33iIrbZisyvuVAbbQwtuyydaLXGbJH3yLGRx0Z49Q2eGRBQaNkmTqk5JK8s6+zHXM=
+X-Received: by 2002:a67:3195:: with SMTP id x143mr15188071vsx.144.1561991151262;
+ Mon, 01 Jul 2019 07:25:51 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: eed832f3-fab8-4ef1-4d1c-08d6fe2ff46e
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2019 14:25:24.0313
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT051
+References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
+ <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
+ <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
+ <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com>
+ <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com>
+ <CAOMZO5ADK1L5UMM9XZetHvmjTvmvUg99G7VPdeXitgpctGLCkw@mail.gmail.com>
+ <CAOuPNLhZhgN26rquLQq9zHBct1QxK-7hXAza0xk-0QooPGYLNw@mail.gmail.com>
+ <CAOMZO5BsJWTw0nCeUboam4kuKyCO3N_Ch5ZW8k5Y9KFtQBanhQ@mail.gmail.com>
+ <CAOuPNLjrAU_C_TUKFMs1d0eGsw=AxuG6d6FhNHtHFwVhfYZGgA@mail.gmail.com>
+ <CAOuPNLhstoCjxijrnKNmV1iKWjAXvSZ38Z13tfd5bvGbYSqPAA@mail.gmail.com>
+ <CAOMZO5CD-QQaZwNfiX6mOLAup4J8dBiqEb_V_6jz_z5jXZ5cEw@mail.gmail.com> <CAOuPNLj=L_3RoC=9ws4yn1Q7QLoS3OEZ8FLRrF04HRQtQvc0Jg@mail.gmail.com>
+In-Reply-To: <CAOuPNLj=L_3RoC=9ws4yn1Q7QLoS3OEZ8FLRrF04HRQtQvc0Jg@mail.gmail.com>
+From:   Pintu Agarwal <pintu.ping@gmail.com>
+Date:   Mon, 1 Jul 2019 19:55:39 +0530
+Message-ID: <CAOuPNLg5A1bB-Tmndm4PvsJ40tj0yn-bJ2mfifEpjAF-t84wiQ@mail.gmail.com>
+Subject: Re: [IMX] [DRM]: suspend/resume support
+To:     Fabio Estevam <festevam@gmail.com>, s.hauer@pengutronix.de,
+        p.zabel@pengutronix.de
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove checks for resource size in extend_bridge_window(). This is
-necessary to allow the pci_bus_distribute_available_resources() to
-function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-allocate resources. Because the kernel parameter sets the size of all
-hotplug bridges to be the same, there are problems when nested hotplug
-bridges are encountered. Fitting a downstream hotplug bridge with size X
-and normal bridges with size Y into parent hotplug bridge with size X is
-impossible, and hence the downstream hotplug bridge needs to shrink to
-fit into its parent.
+On Sat, Jun 22, 2019 at 1:43 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
+>
+> On Fri, Jun 21, 2019 at 9:09 PM Fabio Estevam <festevam@gmail.com> wrote:
+> >
+> > On Fri, Jun 21, 2019 at 12:13 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
+> >
+> > > Okay there is some update on the 2nd part.
+> > > Now I am able to successfully install all imx modules after the resume
+> > > (no hang).
+> > > But, I got some errors after install finish:
+> > > [drm] disabling vblank on crtc 1
+> > > [IMX]: imx_drm_disable_vblank - called
+> > > [drm:drm_atomic_helper_commit_cleanup_done] *ERROR* [CRTC:24:crtc-0]
+> > > flip_done timed out
+> > >
+> > > Also I am able to start the weston successfully.
+> > > But I see LCD/HDMI display is not working (only some backlight is visible).
+> > >
+> > > And, I noticed, weston also reports the following errors:
+> > > imx-ipuv3 2400000.ipu: DC stop timeout after 50 ms
+> > > [IMX]: drm_crtc_vblank_off - called
+> > > [IMX]: imx_drm_disable_vblank - called
+> > > INFO: rcu_preempt detected stalls on CPUs/tasks: { 1} (detected by 0,
+> > > t=6002 jiffies, g=289, c=288, q=8)
+> > > Task dump for CPU 1:
+> > > weston          R running      0   306      1 0x00000000
+> > > [<c05282d8>] (__schedule) from [<00080193>] (0x80193)
+> > >
+> > > Do you have any clue about these errors ?
+> >
+> > Which kernel version is this?
+>
 
-Add check for if bridge is extended or shrunken and adjust pci_dbg to
-reflect this.
+Now, I am using Kernel 4.9 (custom) with some internal changes.
+After the hibernate-resume, I am trying to install the modules in
+following order:
+insmod imxdrm.ko
+insmod parallel-display.ko
+insmod dw-hdmi.ko
+insmod dw_hdmi-imx.ko
+insmod imx-ipu-v3.ko
+insmod imx-ipuv3-crtc.ko
+insmod imx-ldb.ko
 
-Reset the resource if its new size is zero (if we have run out of a
-bridge window resource). If it is set to zero size and left, it can
-cause significant problems when it comes to enabling devices.
+I noticed that if I don't install the "crtc" or "ldb" module at last,
+then system will hang.
+Otherwise, the modules are installed successfully.
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- drivers/pci/setup-bus.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+But, I get following errors:
+[drm:drm_atomic_helper_wait_for_flip_done] *ERROR* [CRTC:24:crtc-0]
+flip_done timed out
+[drm:drm_atomic_helper_commit_cleanup_done] *ERROR* [CRTC:24:crtc-0]
+flip_done timed out
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index d65982438..9064fd964 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1818,13 +1818,19 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
- 	if (res->parent)
- 		return;
- 
--	if (resource_size(res) >= new_size)
--		return;
--
--	add_size = new_size - resource_size(res);
--	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
-+	if (new_size > resource_size(res)) {
-+		add_size = new_size - resource_size(res);
-+		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-+			&add_size);
-+	} else if (new_size < resource_size(res)) {
-+		add_size = resource_size(res) - new_size;
-+		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
-+			&add_size);
-+	}
- 	res->end = res->start + new_size - 1;
- 	remove_from_list(add_list, res);
-+	if (!new_size)
-+		reset_resource(res);
- }
- 
- static void pci_bus_distribute_available_resources(struct pci_bus *bus,
--- 
-2.20.1
+But, hdmi could be detected from the logs:
+dwhdmi-imx 120000.hdmi: Detected HDMI controller 0x13:0x1a:0xa0:0xc1
 
+However, after I start weston, there is no display in LCD and HDMI.
+I can only see the backlight.
+
+One more thing, I observed that, there was a huge delay after
+component_bind_all():
+[IMX]: imx_drm_driver_load - component_bind_all - DONE
+<-------------- delay --------------->
+Then we get flip_done timeout.
+
+So, my question is:
+1) If we have to test hibernation on iMX6/7 then which is the suitable way?
+2) Is it possible to support this feature by performing module
+installation after resume?
+3) If yes, then which modules should be chosen as loadable, and which
+can be in-built?
+    (So, we don't have to implement suspend/resume for each module)
+
+4) I also compared clock_summary in normal boot and after resume (with
+module installed).
+    I found below difference in clock frequency (pll5, pll4)
+    Example:
+-    pll5                        1           1            1188000007
++    pll5                        1           1            1040000015
+
+what does this indicates? Is there any issue?
