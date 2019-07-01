@@ -2,105 +2,146 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138EFC06510
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A30C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0DDA208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:53:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KvGvhaCn";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KvGvhaCn"
+	by mail.kernel.org (Postfix) with ESMTP id 12CFE214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 15:54:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561996480;
+	bh=1zihmX/CeCCBAQPpaVn1PcXKAG2allN/sqwNfBi5PfQ=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=RoknCQh9+6PSxTOBvFCcWrfEw0GeG93sai2emZkddrdnmYSGojSDHshw8KCRjxMJ/
+	 gcJSoQgERni6FZLUCnHORa5GQBPBOkxIjlloEA2jYuLuf3ov+AwauPpIOzWiOMWZIN
+	 lgxAl/M8Q1k6K9rVs0vMVzTbh0iw3U+biRLSJ9dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfGAPxw (ORCPT
+        id S1730125AbfGAPyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 11:53:52 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39546 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfGAPxw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 11:53:52 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D3D83607B9; Mon,  1 Jul 2019 15:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561996430;
-        bh=ZHFRcUfkmA8gyffOLFCQIwfLpo0nfmJ6jPhQbS4fLaU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KvGvhaCnraYanqxrjT2yQxDTXekQzXoGCmt4ugzgSHdiQFodZjHAsgiG/cqL5zenC
-         rvNhfOdFep0zCV4tR/KuZ+r8R4m56FN8dZdPXgNj9yVMpz/4Ess2WOP+HY/mvb1f/D
-         U3K78oJldlovACDp03FrHsCl6FrIPdb4bzuoSTcM=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 1 Jul 2019 11:54:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727589AbfGAPyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 11:54:38 -0400
+Received: from [192.168.1.25] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D3C9602F8;
-        Mon,  1 Jul 2019 15:53:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561996430;
-        bh=ZHFRcUfkmA8gyffOLFCQIwfLpo0nfmJ6jPhQbS4fLaU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KvGvhaCnraYanqxrjT2yQxDTXekQzXoGCmt4ugzgSHdiQFodZjHAsgiG/cqL5zenC
-         rvNhfOdFep0zCV4tR/KuZ+r8R4m56FN8dZdPXgNj9yVMpz/4Ess2WOP+HY/mvb1f/D
-         U3K78oJldlovACDp03FrHsCl6FrIPdb4bzuoSTcM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D3C9602F8
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Mon, 1 Jul 2019 09:53:49 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, swboyd@chromium.org,
-        dianders@chromium.org, mkshah@codeaurora.org
-Subject: Re: [PATCH 2/2] drivers: qcom: rpmh-rsc: fix read back of trigger
- register
-Message-ID: <20190701155349.GD24030@codeaurora.org>
-References: <20190701152907.16407-1-ilina@codeaurora.org>
- <20190701152907.16407-2-ilina@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6594A208C4;
+        Mon,  1 Jul 2019 15:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561996477;
+        bh=1zihmX/CeCCBAQPpaVn1PcXKAG2allN/sqwNfBi5PfQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=rd8KdXtazQA86QYQlfLw7Im09KV00yPPU1zIq4LyjqXjSTImfKbIXh4kyyv4+fMew
+         zM6v3hTUcc2itTkY6KcXKcidJwLUOXd6oF6lzMUSN8d4eailTGtrJYXB67RWU1lQmX
+         Pfq/V+fagzzhCu+nT+EhhLoDOJfGN7q6pFV2mNss=
+Subject: Re: [PATCHv1] ARM64: defconfig: Add LEDS_TRIGGERS_TIMER for blinking
+ leds
+To:     "Ong, Hean Loong" <hean.loong.ong@intel.com>,
+        Thor Thayer <thor.thayer@intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        chin.liang.see@intel.com
+References: <20190627140709.707-1-hean.loong.ong@intel.com>
+ <20190627140709.707-2-hean.loong.ong@intel.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <722335f6-1c39-5f1e-d5f5-8aa32626dc6c@kernel.org>
+Date:   Mon, 1 Jul 2019 10:54:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190701152907.16407-2-ilina@codeaurora.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190627140709.707-2-hean.loong.ong@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switching Andy's email address.
 
-On Mon, Jul 01 2019 at 09:32 -0600, Lina Iyer wrote:
->When triggering a TCS to send its contents, reading back the trigger
->value may return an incorrect value. That is because, writing the
->trigger may raise an interrupt which could be handled immediately and
->the trigger value could be reset in the interrupt handler. By doing a
->read back we may end up spinning waiting for the value we wrote.
->
->Fixes: 658628 ("drivers: qcom: rpmh-rsc: add RPMH controller for QCOM
->SoCs")
->Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->---
-> drivers/soc/qcom/rpmh-rsc.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
->index 92461311aef3..2fc2fa879480 100644
->--- a/drivers/soc/qcom/rpmh-rsc.c
->+++ b/drivers/soc/qcom/rpmh-rsc.c
->@@ -300,7 +300,7 @@ static void __tcs_trigger(struct rsc_drv *drv, int tcs_id)
-> 	enable = TCS_AMC_MODE_ENABLE;
-> 	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-> 	enable |= TCS_AMC_MODE_TRIGGER;
->-	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
->+	write_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id, enable);
-> }
->
-> static int check_for_req_inflight(struct rsc_drv *drv, struct tcs_group *tcs,
->--
->The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->a Linux Foundation Collaborative Project
->
+
+On 6/27/19 9:07 AM, Ong, Hean Loong wrote:
+> Adding LED Triggers Timers for LED blinking support on ARM devices
+> 
+> Signed-off-by: Ong, Hean Loong <hean.loong.ong@intel.com>
+> ---
+>  arch/arm64/configs/defconfig |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 4d58351..6fbd651 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -595,6 +595,7 @@ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+>  CONFIG_LEDS_TRIGGER_CPU=y
+>  CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
+>  CONFIG_LEDS_TRIGGER_PANIC=y
+> +CONFIG_LEDS_TRIGGER_TIMER=y
+>  CONFIG_EDAC=y
+>  CONFIG_EDAC_GHES=y
+>  CONFIG_RTC_CLASS=y
+> 
+
+I've applied this patch with this change:
+
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -590,6 +590,7 @@ CONFIG_LEDS_CLASS=y
+ CONFIG_LEDS_GPIO=y
+ CONFIG_LEDS_PWM=y
+ CONFIG_LEDS_SYSCON=y
++CONFIG_LEDS_TRIGGER_TIMER=y
+ CONFIG_LEDS_TRIGGER_DISK=y defconfig
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+ CONFIG_LEDS_TRIGGER_CPU=y
+
+Also, the commit header should be "arm64: defconfig".
+
+Dinh
