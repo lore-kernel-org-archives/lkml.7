@@ -2,143 +2,121 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B06C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CEAC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EE12064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2422064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:49:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Amh80EQI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K3yJdL9M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbfGAOsb (ORCPT
+        id S1729836AbfGAOs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:48:31 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36964 "EHLO
+        Mon, 1 Jul 2019 10:48:58 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35424 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727714AbfGAOsa (ORCPT
+        with ESMTP id S1728213AbfGAOs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:48:30 -0400
-Received: by mail-io1-f68.google.com with SMTP id e5so29436705iok.4
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 07:48:30 -0700 (PDT)
+        Mon, 1 Jul 2019 10:48:58 -0400
+Received: by mail-io1-f68.google.com with SMTP id m24so29471958ioo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 07:48:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wSejyUTe512azskM/IpIonqmiTNyrrIhcYfEz7ZQPjg=;
-        b=Amh80EQIE49mNx9Nt5N0ylXvUZ2MrcRTYm2KR2D157wXvQyeSLVA8VlKOo6HCYlsVv
-         W23eGT61hICOIQ3bjR5NKp4fjdId/wptUd05Q033kzuhFonOb6/Yva2M/n5TYLQ6ppkN
-         k9B7LaBCd48qj/mcNSE2lOgvBUgCE2zuhvJ738SARcfmBrEISS7YU+ngISeIfODKaYDQ
-         9DRieGXqOYlNXVpyS/jOzNXbrDR2vC1N1DTD3jTmdtU+GaskNmiV+1ZlzdsASB+jCaIe
-         7YVd29gjERVWMNSYt9DbYW5ZWibrT1S0BRbku1fpZ2VuwhEXmQRC2uHN7Ez3VYiCjf47
-         aixw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y6YcGWfOU8rFsr47ij/9QYJL9sEYCWLhNptNeqOoAi0=;
+        b=K3yJdL9Mr0Yzp2bwDn4QsngYGZhC7It+tkAQHGbENhMnb5nJgOc+dBhfWsO4MEO3oV
+         bEIRkF/DHhsgx8UZG61pxaFBAwfW2Hq3lWsz+jpL+xRjw+ZlO+/vP01a6jagyZvUjq5l
+         elKNn0FjpSrZIWzxJC4mlCEmvA+A6/8relqbSewIKsE9/NvCfpQIszJjQjJ3tChT9AIR
+         iDn42aHRugRGyx5xmmG+EfeNMc3jtdFJLguFYEwV+MrZQ83jX+3r+WndNyingUFBqpjn
+         9JGESWuEfHjWmjaa/Avn1P1EZV9TOvOdSxemkqdfGLbFqDW3Ss5byq2ECe5hHgrgj9Q3
+         KDuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wSejyUTe512azskM/IpIonqmiTNyrrIhcYfEz7ZQPjg=;
-        b=Jk60f1bNymjD1q9mdJNii/CVttvPM/j87oD0rFhNsRMCuMy3MbPl2Qe+j5fSffrDyl
-         IiXMbY1DEXa0f4e60E1NuNcEPAkHrmjWNKGn4DvJhu/SPhAD0YT8t3tU1WBLTAue0HbV
-         XZcR5p9SLNIvDHJwl/dfPadUQ3WQ2O1Mnw201d0twebEWCtRrR3m9KDZ0wFlWF9JpF06
-         J50BsepZyg/6Mftr2NXLuFhiZFJivFZSJ4HUV8d4DPx+yzXg+u/jQ3r6C5aU4DGx5gGf
-         MRPRL1Ps7o1GaUDf2sXxYJlVaD+WdSkPyXnBJM7teQvg+9FxUgb5I8fwOmHXSZR/tXqo
-         9+Cg==
-X-Gm-Message-State: APjAAAUU8HBOAUSmAbOpqunTAoEiVx1MEiIAOZgKMq16iCDdlc+HPq6U
-        dIAhHFR/SVR1W170ML/BPwZO7w==
-X-Google-Smtp-Source: APXvYqzbfDnQnpkfPgPHbXwJBjPBvfaGSnyg+u7fbDEbY7QzQOovqTakzB10tVcti/gaNb7cYVW1lg==
-X-Received: by 2002:a02:b798:: with SMTP id f24mr17183838jam.97.1561992509632;
-        Mon, 01 Jul 2019 07:48:29 -0700 (PDT)
-Received: from localhost.localdomain ([208.54.80.252])
-        by smtp.gmail.com with ESMTPSA id x22sm9062178iob.84.2019.07.01.07.48.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 07:48:28 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     syzbot+002e636502bc4b64eb5c@syzkaller.appspotmail.com,
-        viro@zeniv.linux.org.uk, jannh@google.com
-Cc:     akpm@linux-foundation.org, arunks@codeaurora.org,
-        ebiederm@xmission.com, elena.reshetova@intel.com,
-        gregkh@linuxfoundation.org, guro@fb.com, ktsanaktsidis@zendesk.com,
-        linux-kernel@vger.kernel.org, mhocko@suse.com, mingo@kernel.org,
-        peterz@infradead.org, riel@surriel.com, rppt@linux.vnet.ibm.com,
-        scuttimmy@gmail.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, willy@infradead.org, yuehaibing@huawei.com,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH] fork: return proper negative error code
-Date:   Mon,  1 Jul 2019 16:48:08 +0200
-Message-Id: <20190701144808.6804-1-christian@brauner.io>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <000000000000e0dc0d058c9e7142@google.com>
-References: <000000000000e0dc0d058c9e7142@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y6YcGWfOU8rFsr47ij/9QYJL9sEYCWLhNptNeqOoAi0=;
+        b=pxpGutDh3v3ewIdZ3DZMRNKsj1kAdzCxmHp9pazNhnTL1XEpw95JkRtwQ1oMRVnXEW
+         Cgb6vNQZIVMhcbn9XxOZnDNDH42s6Bsd0zt/C/LGxRdSuvHXF3M3ZY70tg1/fPRepCN4
+         GYETU/VFg6svF2+sn3Ht983WEGp+EBNZ3+Bq8nk36o0qCawqgfTC8o+nyehu95EP7Xu8
+         VuOaS9yhinh32MdGmyyA++IpLA6uh0FFIo30nY0UVbNpE5RSEQ/mrbgulVw7/bVoCNMa
+         1B4rMTWGKx6jFj8xEi86QJ5ATHZptTgQrFw5PAKLhcV92vKILQNAd2fkqKtpN9DpUU5E
+         OMqQ==
+X-Gm-Message-State: APjAAAUwzNMQre7k7UgMBNQzvMpTFTgbaxm8WR1ZyyKUc2Wtqj2gYBER
+        aIeUwe3zJQxe4FZEPRsbUuFn1SZxuDSAc+59IYp7YA==
+X-Google-Smtp-Source: APXvYqzUJmuBYuVAjhf6yTj6LxkHzZwqx0Qg+4XKjRCmyODJb1NLbenuAlb8zq4pZoQb4hDAW3FIQstcxFk6dedV10k=
+X-Received: by 2002:a02:22c6:: with SMTP id o189mr28192020jao.35.1561992537157;
+ Mon, 01 Jul 2019 07:48:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190701040415.219001-1-joel@joelfernandes.org>
+ <20190701040415.219001-3-joel@joelfernandes.org> <20190701122358.nzebpuunp6o5jxhx@linutronix.de>
+ <20190701141403.GA246562@google.com>
+In-Reply-To: <20190701141403.GA246562@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 1 Jul 2019 16:48:43 +0200
+Message-ID: <CACT4Y+bJ-tNvMsfHcFEsWdjtBnaLTP9q=u7PCk4VMVPvW51WLQ@mail.gmail.com>
+Subject: Re: [RFC 3/3] Revert "rcutorture: Tweak kvm options"
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure to return a proper negative error code from copy_process()
-when anon_inode_getfile() fails with CLONE_PIDFD.
-Otherwise _do_fork() will not detect an error and get_task_pid() will
-operator on a nonsensical pointer:
+On Mon, Jul 1, 2019 at 4:14 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> On Mon, Jul 01, 2019 at 02:23:58PM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2019-07-01 00:04:15 [-0400], Joel Fernandes (Google) wrote:
+> > > This reverts commit a6fda6dab93c2c06ef4b8cb4b9258df6674d2438 which
+> > > causes kvm.sh to not run on my machines. The qemu-system-x86_64 command
+> > > runs but does nothing.
+> >
+> > Nope. I would like to know *why* you need 'noapic' to work. Is it a
+> > brand new or old qemu-system-x86_64?
+>
+> I did not have time to debug yesterday and I posted this particular revert as
+> an 'RFC' just to make aware of this problem.
+>
+> I spent some more time just now, it looks like this has nothing to do with
+> 'noapic' and appears to be a problem on debian distros with the e1000e NIC.
+> May be this NIC was added to the virtual hardware because of -machine in the
+> patch?
+>
+> Any if I add the following to the qemu command that kvm.sh runs, it works again:
+> -net nic,model=e1000
+>
+> Without it I get:
+>  qemu-system-x86_64: Initialization of device e1000e failed: failed to find romfile "efi-e1000e.rom"
+>
+> Seems to be mentioned here:
+> https://bugs.launchpad.net/ubuntu/+source/ipxe/+bug/1737211
+>
+> And in syzkaller as well:
+> https://github.com/google/syzkaller/blob/master/vm/qemu/qemu.go#L88
+>
+> Adding Dmitry who is syzkaller owner for any thoughts as well.
 
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007ffc15fbb0ff R14: 00007ff07e47e9c0 R15: 0000000000000000
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 7990 Comm: syz-executor290 Not tainted 5.2.0-rc6+ #9
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
-RIP: 0010:get_task_pid+0xe1/0x210 kernel/pid.c:372
-Code: 89 ff e8 62 27 5f 00 49 8b 07 44 89 f1 4c 8d bc c8 90 01 00 00 eb 0c
-e8 0d fe 25 00 49 81 c7 38 05 00 00 4c 89 f8 48 c1 e8 03 <80> 3c 18 00 74
-08 4c 89 ff e8 31 27 5f 00 4d 8b 37 e8 f9 47 12 00
-RSP: 0018:ffff88808a4a7d78 EFLAGS: 00010203
-RAX: 00000000000000a7 RBX: dffffc0000000000 RCX: ffff888088180600
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffff88808a4a7d90 R08: ffffffff814fb3a8 R09: ffffed1015d66bf8
-R10: ffffed1015d66bf8 R11: 1ffff11015d66bf7 R12: 0000000000041ffc
-R13: 1ffff11011494fbc R14: 0000000000000000 R15: 000000000000053d
-FS:  00007ff07e47e700(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004b5100 CR3: 0000000094df2000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  _do_fork+0x1b9/0x5f0 kernel/fork.c:2360
-  __do_sys_clone kernel/fork.c:2454 [inline]
-  __se_sys_clone kernel/fork.c:2448 [inline]
-  __x64_sys_clone+0xc1/0xd0 kernel/fork.c:2448
-  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+I don't have many thoughts on this. That particular error looked like
+a bug in the package in the particular distro/version.
 
-Link: https://lore.kernel.org/lkml/000000000000e0dc0d058c9e7142@google.com
-Reported-and-tested-by: syzbot+002e636502bc4b64eb5c@syzkaller.appspotmail.com
-Fixes: 6fd2fe494b17 ("copy_process(): don't use ksys_close() on cleanups")
-Cc: Jann Horn <jannh@google.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Christian Brauner <christian@brauner.io>
----
- kernel/fork.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 61667909ce83..fe83343da24b 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2036,6 +2036,7 @@ static __latent_entropy struct task_struct *copy_process(
- 					      O_RDWR | O_CLOEXEC);
- 		if (IS_ERR(pidfile)) {
- 			put_unused_fd(pidfd);
-+			retval = PTR_ERR(pidfile);
- 			goto bad_fork_free_pid;
- 		}
- 		get_pid(pid);	/* held by pidfile now */
--- 
-2.22.0
-
+> I'm happy to write a patch to set the nic model as e1000 and send it out if
+> we agree this solution is good enough.
+>
+>  - Joel
+>
