@@ -2,122 +2,78 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0C6C06511
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E0FC06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12E16214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:37:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qYcY/7lQ"
+	by mail.kernel.org (Postfix) with ESMTP id E10CC214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 12:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfGAMhV (ORCPT
+        id S1728874AbfGAMj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 08:37:21 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:39047 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727372AbfGAMhU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 08:37:20 -0400
-Received: by mail-ua1-f66.google.com with SMTP id j8so4979326uan.6;
-        Mon, 01 Jul 2019 05:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q8qXk/n+3rdVBDEavtXjY7etsHzDiYEiRL3WTtVL85Y=;
-        b=qYcY/7lQy1CgNd8mir2T92J/oON5i+/nuKlFXZbwntSuvuJwOcgd5/nbtSfY9c5wyK
-         68U+Qg0FMSB07vB2zreh5uJ0/057ANxLNDTzaNtIrRod8+E8PUmEPV8zB+CyzVbpetdi
-         7iLYej+bNrBSeIEdu8AAmmE5MKztobYW4JAHWauvGIyDL+MwSB+suBGxZWFFm7GNDOsR
-         S21Vix2PC5KtrjI8V2uUHvM9QtzqcruXKJNC+NJa45roazBRj7xNp/nyhnu4HpBejhjt
-         d/giHHUifsBkWTZgsFQ8ijJ0gfMLmtv6aEYpOpU1sK5cz5fRdo/cjdLoRrpsbiD15LSf
-         DNTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q8qXk/n+3rdVBDEavtXjY7etsHzDiYEiRL3WTtVL85Y=;
-        b=Gql5f/tFtNM1yPkVJFZjrcSsIYGuQqWVobVKxS7FD1JEfN4LigmSvgbK7T+vy3e0Hc
-         ViyERjieNMbspAF1Ir+neETA1i4q8Y2jSgvM9TnvjebfiLO2hvy7t0V0oxXIBpkqHSaV
-         baY9hlPWIB3/hxwsiiOUgi/7t83ds0gKr+42HjR+k4knmP8PHWx3FXm54Kgf+V+7MsTY
-         Xbe6tKuWF9iyZW1A0IBMyuaJjvMzGdIR67aQb3GJwuFYVexVCm2I8UztBWfS/j5BzAij
-         seOe7Hw10VxR/3iqEp59amVMyhyo+JrzJxUU4GGWXJVcUdOJgu7gD5/tQAq+NSEhym8b
-         m7Sg==
-X-Gm-Message-State: APjAAAVSIJ2aUlTxXGdDO8HYFqWsKq0nxEhVM3wZ72ZI8HTZVixRMJL+
-        CdyPvZ/0fyjN0GNc8iT9XTx/9RbX0GANQVfRag4=
-X-Google-Smtp-Source: APXvYqwX1A2Ge22hNk0sNPWU4E1Kc+5pDoUd7KJF6Ltzx2z+GBS1+2EbBnnCCdTqd/lxfujquNJ3jA9QZRjJxZN2nr4=
-X-Received: by 2002:ab0:5973:: with SMTP id o48mr5077380uad.19.1561984639288;
- Mon, 01 Jul 2019 05:37:19 -0700 (PDT)
+        Mon, 1 Jul 2019 08:39:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:34000 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727320AbfGAMj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 08:39:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90907344;
+        Mon,  1 Jul 2019 05:39:57 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 043783F246;
+        Mon,  1 Jul 2019 05:39:56 -0700 (PDT)
+Subject: Re: [PATCH] iommu/dma: Fix calculation overflow in __finalise_sg()
+To:     Joerg Roedel <joro@8bytes.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20190622043814.5003-1-nicoleotsuka@gmail.com>
+ <20190701122158.GE8166@8bytes.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <91a389be-fd76-c87f-7613-8cc972b69685@arm.com>
+Date:   Mon, 1 Jul 2019 13:39:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190701032245.25906-1-huangfq.daxian@gmail.com>
-In-Reply-To: <20190701032245.25906-1-huangfq.daxian@gmail.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Mon, 1 Jul 2019 13:37:33 +0100
-Message-ID: <CACvgo52N7c3mtAvfH-98pkgHC6UpdKPNH+cYozb4yRsMetMhkg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] gpu: Use dev_get_drvdata()
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        freedreno@lists.freedesktop.org,
-        Rajesh Yadav <ryadav@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sean Paul <sean@poorly.run>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Enrico Weigelt <info@metux.net>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190701122158.GE8166@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fuqian,
+On 01/07/2019 13:21, Joerg Roedel wrote:
+> On Fri, Jun 21, 2019 at 09:38:14PM -0700, Nicolin Chen wrote:
+>> The max_len is a u32 type variable so the calculation on the
+>> left hand of the last if-condition will potentially overflow
+>> when a cur_len gets closer to UINT_MAX -- note that there're
+>> drivers setting max_seg_size to UINT_MAX:
+>>    drivers/dma/dw-edma/dw-edma-core.c:745:
+>>      dma_set_max_seg_size(dma->dev, U32_MAX);
+>>    drivers/dma/dma-axi-dmac.c:871:
+>>      dma_set_max_seg_size(&pdev->dev, UINT_MAX);
+>>    drivers/mmc/host/renesas_sdhi_internal_dmac.c:338:
+>>      dma_set_max_seg_size(dev, 0xffffffff);
+>>    drivers/nvme/host/pci.c:2520:
+>>      dma_set_max_seg_size(dev->dev, 0xffffffff);
+>>
+>> So this patch just casts the cur_len in the calculation to a
+>> size_t type to fix the overflow issue, as it's not necessary
+>> to change the type of cur_len after all.
+>>
+>> Fixes: 809eac54cdd6 ("iommu/dma: Implement scatterlist segment merging")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> 
+> Looks good to me, but I let Robin take a look too before I apply it,
+> Robin?
+I'll need to take a closer look at how exactly an overflow would happen 
+here (just got back off some holiday), but my immediate thought is that 
+if this is a real problem, then what about 32-bit builds where size_t 
+would still overflow?
 
-On Mon, 1 Jul 2019 at 08:13, Fuqian Huang <huangfq.daxian@gmail.com> wrote:
->
-> Using dev_get_drvdata directly.
->
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> ---
->  drivers/gpu/drm/msm/adreno/adreno_device.c      |  6 ++----
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c         | 13 +++++--------
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c        |  6 ++----
->  drivers/gpu/drm/msm/dsi/dsi_host.c              |  6 ++----
->  drivers/gpu/drm/msm/msm_drv.c                   |  3 +--
->  drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c | 15 +++++----------
->  drivers/gpu/drm/panfrost/panfrost_device.c      |  6 ++----
-As far as i can see the patch is spot on, thanks for that.
-
-Can you split this in three since it covers 3 separate drivers.
-For each one you can get a smaller CC list - patches with 20+ people
-tend to get blocked :-(
-
-We can pick the PANFROST entries from the get_maintainer.pl output,
-and add them to the commit message.
-Thus git send-email will parse the commit message and automatically CC
-the people ;-)
-
-Cc: Rob Herring <robh@kernel.org> (supporter:ARM MALI PANFROST DRM DRIVER)
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com> (supporter:ARM MALI
-PANFROST DRM DRIVER)
-Cc: dri-devel@lists.freedesktop.org (open list:ARM MALI PANFROST DRM DRIVER)
-
-HTH
--Emil
+Robin.
