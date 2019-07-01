@@ -2,76 +2,275 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1FDC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FE1C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99C820B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4333E20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:49:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fKuyOYw9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfGATsA (ORCPT
+        id S1726734AbfGATtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 15:48:00 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33616 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfGATr7 (ORCPT
+        Mon, 1 Jul 2019 15:49:43 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38878 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfGATtm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 15:47:59 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c14so7878495plo.0;
-        Mon, 01 Jul 2019 12:47:59 -0700 (PDT)
+        Mon, 1 Jul 2019 15:49:42 -0400
+Received: by mail-ed1-f66.google.com with SMTP id r12so24957324edo.5;
+        Mon, 01 Jul 2019 12:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YRhvmoa+Oy4clWnpyPs9dVidY7HOSkLeqggg/V87Tuc=;
+        b=fKuyOYw9lSz0tNn0LbaZHVZWeaM7pv4JWWOOjsBjyTsQIkiI5kMB3MVyreN/xWy/1a
+         xDF+EGskfgy3uAaWp/uczs2x29Nr3liAY2aVXmZSXRdS8/46tfksInlgPSrQ9IqmJBiy
+         MCIMcKwJd76v6KSaPTYFv/EPA8XObiXAEe7BxQrjDDHkVbiFSvACp0cteT0jAq6JfLvO
+         F96zu0rc0lakuvlmFUevaUcPBJB8LIv25BWEvWHm7iEsMZ+JetKa8qwZiQ0IRu8yIpsZ
+         Au6IIYxydOqS/0F+cE3uk6NFDdmMs4hEehjsG3jjLggm1dF+fNXu7b/LvXEhf8Yhn6hH
+         YWfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zTwBmiZYlx6Byko5skKuUp6sRWScJXH828IxIIwVctM=;
-        b=mYNoDGBpYxl8VW8bAN1YOmG4uQlrNA9bk8FcMpBDE39LEBdus7xHUfxecqTuwDCOPP
-         GXMaTP+VL7G59ym/EwMIZ1dCUQLiq8ux7pSBqO/5zqAYN0lkmiaeLLrqNn2nn8n97sdT
-         6Nk9C4iiddaraoCDc/JRfKyemN2u/vqj4cE3JGQ42eae5w1EiLFy9lW6LdjqHbrqzmV4
-         MjA5I8JIOlNnhYAjp8Ji2BNDeuNhHjkXtI5DFeQtxDo/Ay+uxupO/8+4mZeDD94OVeHf
-         +f1Mexd4WRvIlOwdq3yNL0e93DlsX1cu44k6zbHszQnLLGayDWnrjbiSjkYuwYanNr3z
-         7qfQ==
-X-Gm-Message-State: APjAAAWmVSxuw06IUZ6b6QFn3gN5ZbBUIjMTtOHZr4XJPNNxFNoDcKcd
-        zJZI/GXP5pjfa5WKX1TA+pvXT0/R
-X-Google-Smtp-Source: APXvYqycHFFoAZg//afyYx/iI7zy31VEKKiG6yuQy5yImToi9cJjBaH720oBd8VFuEi+lZ5WqzQTKA==
-X-Received: by 2002:a17:902:2869:: with SMTP id e96mr29689729plb.203.1562010478643;
-        Mon, 01 Jul 2019 12:47:58 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id m16sm13335140pfd.127.2019.07.01.12.47.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 12:47:57 -0700 (PDT)
-Subject: Re: [PATCH] blk-mq: Use seq_puts() in __blk_mq_debugfs_rq_show()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <81847ca5-fac5-710c-29d5-f70b58f6437d@web.de>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <e2a06dfd-4a03-2f56-59e6-abce261653d6@acm.org>
-Date:   Mon, 1 Jul 2019 12:47:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YRhvmoa+Oy4clWnpyPs9dVidY7HOSkLeqggg/V87Tuc=;
+        b=mCQjG8N5qsgXWh1xmaGFaRsdkqU+NJPo4FTaa+M1Zy5svCqkz+kGs9accOi2mAO+XA
+         O7ituPptFBWlvxZosbklcs45vR2W57j//Gp8Tox/x8LzuQYpAL4CmlPKgxoC2yxdICsA
+         Ugyn5jds4UXAvEH+8NA53mCTAO8S75AFzfRTTAlavfq4xbi4tG8eMm1cYqCiNjkiGdgC
+         rdR8XWSCQj+CzOl/VqOKcmiqllK9nyaseCBrRS6ssc7AjTEFai4l3VuhSt7wzWasCsH4
+         AGPbjg3D0L4xA4Ez6/gsKAruWJLaaKD5Eig4lIzlxvcHesGZF5UmeacvmacWhDdjPavm
+         dQvQ==
+X-Gm-Message-State: APjAAAUAZVrmT6Libe9y/nQhLRFX/QxIQxG1w0dzANJda+pfAf5fI9le
+        nJhz0lSQfsyWUqAAx9YMZrli4Df2FC+csm6oN0c=
+X-Google-Smtp-Source: APXvYqwqKH0scD9sHXpSfVcQP0xH7IncHT9TlGCaw3TocU70cA+8GfMyM9QiX+Lr5RtQXuEAIvd1ZPeCIj+APELoECI=
+X-Received: by 2002:a50:9203:: with SMTP id i3mr31845841eda.302.1562010580198;
+ Mon, 01 Jul 2019 12:49:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <81847ca5-fac5-710c-29d5-f70b58f6437d@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190701174506.15625-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20190701174506.15625-1-jeffrey.l.hugo@gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 1 Jul 2019 12:49:24 -0700
+Message-ID: <CAF6AEGs5wgi8Y11ghYR5cmP2YS5YTJhH9uz8Lu7buG+cVmzLYw@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/mdp5: Add msm8998 support
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/19 12:27 PM, Markus Elfring wrote:
-> A string which did not contain a data format specification should be put
-> into a sequence. Thus use the corresponding function “seq_puts”.
+On Mon, Jul 1, 2019 at 10:45 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> Add support for MDP5 version v3.0 found on msm8998.
+>
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>
+> 8998 support could probably be MDP5 or DPU.  This MDP5 support works,
+> but may not support all of the features that 8998 supports.  However,
+> DPU seems to only support 845 (MDP v4.0) with fundamental assumptions
+> about the base level a features supported, some of which 8998 does not
+> infact support, so DPU would likely need significant re-writes to
+> support 8998.  I'm not sure the effort is worth it since MDP5 needs so
+> little effort to support 8998.
 
-"should"? Why should this be done? Or in other words, what is wrong with 
-the current code other than that it is slightly verbose and slightly 
-slower than seq_puts()? Do you think this matters for debugfs code?
+yeah, the dividing line between mdp5 and dpu is not bright.. it has
+changed significantly since the first mdp5 things to the point where a
+break was probably justified, but the evolution has been spread over
+time.  I think it's fine to go w/ the easy route
 
-Thanks,
+Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-Bart.
+>
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c | 132 ++++++++++++++++++++++-
+>  1 file changed, 128 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+> index dd1daf0e305a..fb4762cec4f1 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+> @@ -630,7 +630,115 @@ const struct mdp5_cfg_hw msm8917_config = {
+>         .max_clk = 320000000,
+>  };
+>
+> -static const struct mdp5_cfg_handler cfg_handlers[] = {
+> +const struct mdp5_cfg_hw msm8998_config = {
+> +       .name = "msm8998",
+> +       .mdp = {
+> +               .count = 1,
+> +               .caps = MDP_CAP_DSC |
+> +                       MDP_CAP_CDM |
+> +                       MDP_CAP_SRC_SPLIT |
+> +                       0,
+> +       },
+> +       .ctl = {
+> +               .count = 5,
+> +               .base = { 0x01000, 0x01200, 0x01400, 0x01600, 0x01800 },
+> +               .flush_hw_mask = 0xf7ffffff,
+> +       },
+> +       .pipe_vig = {
+> +               .count = 4,
+> +               .base = { 0x04000, 0x06000, 0x08000, 0x0a000 },
+> +               .caps = MDP_PIPE_CAP_HFLIP      |
+> +                       MDP_PIPE_CAP_VFLIP      |
+> +                       MDP_PIPE_CAP_SCALE      |
+> +                       MDP_PIPE_CAP_CSC        |
+> +                       MDP_PIPE_CAP_DECIMATION |
+> +                       MDP_PIPE_CAP_SW_PIX_EXT |
+> +                       0,
+> +       },
+> +       .pipe_rgb = {
+> +               .count = 4,
+> +               .base = { 0x14000, 0x16000, 0x18000, 0x1a000 },
+> +               .caps = MDP_PIPE_CAP_HFLIP      |
+> +                       MDP_PIPE_CAP_VFLIP      |
+> +                       MDP_PIPE_CAP_SCALE      |
+> +                       MDP_PIPE_CAP_DECIMATION |
+> +                       MDP_PIPE_CAP_SW_PIX_EXT |
+> +                       0,
+> +       },
+> +       .pipe_dma = {
+> +               .count = 2, /* driver supports max of 2 currently */
+> +               .base = { 0x24000, 0x26000, 0x28000, 0x2a000 },
+> +               .caps = MDP_PIPE_CAP_HFLIP      |
+> +                       MDP_PIPE_CAP_VFLIP      |
+> +                       MDP_PIPE_CAP_SW_PIX_EXT |
+> +                       0,
+> +       },
+> +       .pipe_cursor = {
+> +               .count = 2,
+> +               .base = { 0x34000, 0x36000 },
+> +               .caps = MDP_PIPE_CAP_HFLIP      |
+> +                       MDP_PIPE_CAP_VFLIP      |
+> +                       MDP_PIPE_CAP_SW_PIX_EXT |
+> +                       MDP_PIPE_CAP_CURSOR     |
+> +                       0,
+> +       },
+> +
+> +       .lm = {
+> +               .count = 6,
+> +               .base = { 0x44000, 0x45000, 0x46000, 0x47000, 0x48000, 0x49000 },
+> +               .instances = {
+> +                               { .id = 0, .pp = 0, .dspp = 0,
+> +                                 .caps = MDP_LM_CAP_DISPLAY |
+> +                                         MDP_LM_CAP_PAIR, },
+> +                               { .id = 1, .pp = 1, .dspp = 1,
+> +                                 .caps = MDP_LM_CAP_DISPLAY, },
+> +                               { .id = 2, .pp = 2, .dspp = -1,
+> +                                 .caps = MDP_LM_CAP_DISPLAY |
+> +                                         MDP_LM_CAP_PAIR, },
+> +                               { .id = 3, .pp = -1, .dspp = -1,
+> +                                 .caps = MDP_LM_CAP_WB, },
+> +                               { .id = 4, .pp = -1, .dspp = -1,
+> +                                 .caps = MDP_LM_CAP_WB, },
+> +                               { .id = 5, .pp = 3, .dspp = -1,
+> +                                 .caps = MDP_LM_CAP_DISPLAY, },
+> +                            },
+> +               .nb_stages = 8,
+> +               .max_width = 2560,
+> +               .max_height = 0xFFFF,
+> +       },
+> +       .dspp = {
+> +               .count = 2,
+> +               .base = { 0x54000, 0x56000 },
+> +       },
+> +       .ad = {
+> +               .count = 3,
+> +               .base = { 0x78000, 0x78800, 0x79000 },
+> +       },
+> +       .pp = {
+> +               .count = 4,
+> +               .base = { 0x70000, 0x70800, 0x71000, 0x71800 },
+> +       },
+> +       .cdm = {
+> +               .count = 1,
+> +               .base = { 0x79200 },
+> +       },
+> +       .dsc = {
+> +               .count = 2,
+> +               .base = { 0x80000, 0x80400 },
+> +       },
+> +       .intf = {
+> +               .base = { 0x6a000, 0x6a800, 0x6b000, 0x6b800, 0x6c000 },
+> +               .connect = {
+> +                       [0] = INTF_eDP,
+> +                       [1] = INTF_DSI,
+> +                       [2] = INTF_DSI,
+> +                       [3] = INTF_HDMI,
+> +               },
+> +       },
+> +       .max_clk = 412500000,
+> +};
+> +
+> +static const struct mdp5_cfg_handler cfg_handlers_v1[] = {
+>         { .revision = 0, .config = { .hw = &msm8x74v1_config } },
+>         { .revision = 2, .config = { .hw = &msm8x74v2_config } },
+>         { .revision = 3, .config = { .hw = &apq8084_config } },
+> @@ -640,6 +748,10 @@ static const struct mdp5_cfg_handler cfg_handlers[] = {
+>         { .revision = 15, .config = { .hw = &msm8917_config } },
+>  };
+>
+> +static const struct mdp5_cfg_handler cfg_handlers_v3[] = {
+> +       { .revision = 0, .config = { .hw = &msm8998_config } },
+> +};
+> +
+>  static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev);
+>
+>  const struct mdp5_cfg_hw *mdp5_cfg_get_hw_config(struct mdp5_cfg_handler *cfg_handler)
+> @@ -668,8 +780,9 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
+>         struct drm_device *dev = mdp5_kms->dev;
+>         struct platform_device *pdev = to_platform_device(dev->dev);
+>         struct mdp5_cfg_handler *cfg_handler;
+> +       const struct mdp5_cfg_handler *cfg_handlers;
+>         struct mdp5_cfg_platform *pconfig;
+> -       int i, ret = 0;
+> +       int i, ret = 0, num_handlers;
+>
+>         cfg_handler = kzalloc(sizeof(*cfg_handler), GFP_KERNEL);
+>         if (unlikely(!cfg_handler)) {
+> @@ -677,15 +790,26 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
+>                 goto fail;
+>         }
+>
+> -       if (major != 1) {
+> +       if (major != 1 && major != 3) {
+>                 DRM_DEV_ERROR(dev->dev, "unexpected MDP major version: v%d.%d\n",
+>                                 major, minor);
+>                 ret = -ENXIO;
+>                 goto fail;
+>         }
+>
+> +       switch (major) {
+> +       case 1:
+> +               cfg_handlers = cfg_handlers_v1;
+> +               num_handlers = ARRAY_SIZE(cfg_handlers_v1);
+> +               break;
+> +       case 3:
+> +               cfg_handlers = cfg_handlers_v3;
+> +               num_handlers = ARRAY_SIZE(cfg_handlers_v3);
+> +               break;
+> +       };
+> +
+>         /* only after mdp5_cfg global pointer's init can we access the hw */
+> -       for (i = 0; i < ARRAY_SIZE(cfg_handlers); i++) {
+> +       for (i = 0; i < num_handlers; i++) {
+>                 if (cfg_handlers[i].revision != minor)
+>                         continue;
+>                 mdp5_cfg = cfg_handlers[i].config.hw;
+> --
+> 2.17.1
+>
