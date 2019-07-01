@@ -2,157 +2,137 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CABC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9B3C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C166821721
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="md3MkgWY"
+	by mail.kernel.org (Postfix) with ESMTP id 8556C21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 19:54:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfGATwm (ORCPT
+        id S1726869AbfGATyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 15:52:42 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45199 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfGATwd (ORCPT
+        Mon, 1 Jul 2019 15:54:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61642 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726652AbfGATyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 15:52:33 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r1so7056723pfq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 12:52:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HAYVgFrVyDEWW2kNMp3bRnTvQ9QblfVV1v8XIkrYm00=;
-        b=md3MkgWYd9QIP3p2MmWnvrUvBzm99KGfssPqgfPa6k4JMEh9NKrI6Nk9yhJaYtunNJ
-         VKLTVCTBAkGA6DAB0gtRI6byTewFkDnwSJEJXy4ftSVw5uPtJ2hx6zlz2xnwlDlVxK9l
-         Yve3yGn9fvm/tLGAblJm3gVchSbYM57oi8mdU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HAYVgFrVyDEWW2kNMp3bRnTvQ9QblfVV1v8XIkrYm00=;
-        b=Vx509wlvMT6GYooCqvTCK7d5UMgxhbezFu2/4qkMbdL0kg5ARk0qZqU4xNsD+p2YOV
-         hAR7CSmj//ZpgO7OCBL3sJsx/AwjLqoztYmdTX2kj8WZN+RZav3jwouaXAmgZqk1304S
-         4BCZGfMYpx7SqdTR3ydkfkFnfR0bSyPh2gDYO/ek7GKmszI96xuxlISv8b5wijGFZMQY
-         IsAJaS/vOn7cu2DYnlnQ2N7xU5skH/KSujwyDskG1k+rEX1inknqjHIF+2OrlBcvXes7
-         5gFfi+bE2uHddlfGAGXtaq34+b5gZ+WVtgi9rZbT9EngricbHPDAyURNbrX/HZTIjstY
-         HnxA==
-X-Gm-Message-State: APjAAAVZvPzw73EGK0RIUyunkBKCgPhvYn7u0QFdmAXbJh70QcFQdDNX
-        SYjwxSi9ubndJtM+RQPp0YQQbig3AVM=
-X-Google-Smtp-Source: APXvYqw31m0prNXo5zqWrfyoNPVVsfqH9E3kf7BjlmUv7dGnkfIM1MGNRGL73hYzPIggSDT1kBD7og==
-X-Received: by 2002:a17:90a:206a:: with SMTP id n97mr1147365pjc.10.1562010753344;
-        Mon, 01 Jul 2019 12:52:33 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id p68sm13020863pfb.80.2019.07.01.12.52.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 12:52:32 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 3/3] net: phy: realtek: Support SSC for the RTL8211E
-Date:   Mon,  1 Jul 2019 12:52:25 -0700
-Message-Id: <20190701195225.120808-3-mka@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190701195225.120808-1-mka@chromium.org>
-References: <20190701195225.120808-1-mka@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 1 Jul 2019 15:54:08 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61JbAXv005864
+        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 15:54:07 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfpme5fs5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 15:54:07 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
+        Mon, 1 Jul 2019 20:54:06 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 1 Jul 2019 20:54:03 +0100
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61Js2hM50200990
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 1 Jul 2019 19:54:02 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1DEB26E04E;
+        Mon,  1 Jul 2019 19:54:02 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8318C6E052;
+        Mon,  1 Jul 2019 19:54:01 +0000 (GMT)
+Received: from talon7.ibm.com (unknown [9.41.179.222])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  1 Jul 2019 19:54:01 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org, joel@jms.id.au,
+        eduval@amazon.com, Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH v4 0/8] drivers/soc: Add Aspeed XDMA Engine Driver
+Date:   Mon,  1 Jul 2019 14:53:51 -0500
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19070119-0016-0000-0000-000009C96864
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011361; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01226037; UDB=6.00645423; IPR=6.01007249;
+ MB=3.00027541; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-01 19:54:05
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070119-0017-0000-0000-000043DBA21B
+Message-Id: <1562010839-1113-1-git-send-email-eajames@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907010230
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default Spread-Spectrum Clocking (SSC) is disabled on the RTL8211E.
-Enable it if the device tree property 'realtek,enable-ssc' exists.
+The XDMA engine embedded in the AST2500 SOC performs PCI DMA operations
+between the SOC (acting as a BMC) and a host processor in a server.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
- drivers/net/phy/realtek.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+This series adds a driver to control the XDMA engine in order to easily
+perform DMA operations to and from the host processor.
 
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index dfc2e20ef335..b617169ccc8c 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -9,8 +9,10 @@
-  * Copyright (c) 2004 Freescale Semiconductor, Inc.
-  */
- #include <linux/bitops.h>
--#include <linux/phy.h>
-+#include <linux/device.h>
-+#include <linux/of.h>
- #include <linux/module.h>
-+#include <linux/phy.h>
- 
- #define RTL821x_PHYSR				0x11
- #define RTL821x_PHYSR_DUPLEX			BIT(13)
-@@ -28,6 +30,8 @@
- 
- #define RTL8211E_EXT_PAGE			7
- #define RTL8211E_EPAGSR				0x1e
-+#define RTL8211E_SCR				0x1a
-+#define RTL8211E_SCR_DISABLE_RXC_SSC		BIT(2)
- 
- #define RTL8211F_INSR				0x1d
- 
-@@ -87,8 +91,8 @@ static int rtl821e_restore_page(struct phy_device *phydev, int oldpage, int ret)
- 	return ret;
- }
- 
--static int __maybe_unused rtl8211e_modify_ext_paged(struct phy_device *phydev,
--				    int page, u32 regnum, u16 mask, u16 set)
-+static int rtl8211e_modify_ext_paged(struct phy_device *phydev, int page,
-+				     u32 regnum, u16 mask, u16 set)
- {
- 	int ret = 0;
- 	int oldpage;
-@@ -114,6 +118,22 @@ static int __maybe_unused rtl8211e_modify_ext_paged(struct phy_device *phydev,
- 	return rtl821e_restore_page(phydev, oldpage, ret);
- }
- 
-+static int rtl8211e_probe(struct phy_device *phydev)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	int err;
-+
-+	if (of_property_read_bool(dev->of_node, "realtek,enable-ssc")) {
-+		err = rtl8211e_modify_ext_paged(phydev, 0xa0, RTL8211E_SCR,
-+						RTL8211E_SCR_DISABLE_RXC_SSC,
-+						0);
-+		if (err)
-+			dev_err(dev, "failed to enable SSC on RXC: %d\n", err);
-+	}
-+
-+	return 0;
-+}
-+
- static int rtl8201_ack_interrupt(struct phy_device *phydev)
- {
- 	int err;
-@@ -372,6 +392,7 @@ static struct phy_driver realtek_drvs[] = {
- 		.config_init	= &rtl8211e_config_init,
- 		.ack_interrupt	= &rtl821x_ack_interrupt,
- 		.config_intr	= &rtl8211e_config_intr,
-+		.probe          = rtl8211e_probe,
- 		.suspend	= genphy_suspend,
- 		.resume		= genphy_resume,
- 		.read_page	= rtl821x_read_page,
+Changes since v3:
+ - Added a few comments.
+ - Change DMA reservation/allocation/mmap to iomap operations.
+ - Change miscdevice to "aspeed-xdma".
+ - Change default PCI device to the BMC device, not the VGA.
+ - Use length-limited string functions (strncpy, strncasecmp)
+ - Added more debugfs registers
+
+Changes since v2:
+ - Switch to one pci device config sysfs file
+ - Add documentation for pci device config sysfs file
+ - Add module parameter for pci device config
+ - Switch to genalloc instead of custom allocator
+ - Fix alignment of user structure
+ - Cleaned up debugfs functions
+
+I previously sent this series v1 to drivers/misc, but I'm now fairly certain
+it belongs in drivers/soc, especially since the other Aspeed drivers have been
+moved to soc.
+
+Changes since v1:
+ - Correct the XDMA command pitch
+ - Don't use packed for the aspeed_xdma_op structure
+ - Correct the SCU PCI config change
+
+Eddie James (8):
+  dt-bindings: soc: Add Aspeed XDMA engine binding documentation
+  drivers/soc: Add Aspeed XDMA Engine Driver
+  drivers/soc: xdma: Add user interface
+  Documentation: ABI: Add aspeed-xdma sysfs documentation
+  drivers/soc: xdma: Add PCI device configuration sysfs
+  drivers/soc: xdma: Add debugfs entries
+  ARM: dts: aspeed: Add XDMA Engine
+  ARM: dts: aspeed: witherspoon: Enable XDMA Engine
+
+ .../ABI/testing/sysfs-devices-platform-aspeed-xdma |  11 +
+ .../devicetree/bindings/soc/aspeed/xdma.txt        |  23 +
+ MAINTAINERS                                        |   9 +
+ arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts   |   4 +
+ arch/arm/boot/dts/aspeed-g5.dtsi                   |   8 +
+ drivers/soc/aspeed/Kconfig                         |   8 +
+ drivers/soc/aspeed/Makefile                        |   1 +
+ drivers/soc/aspeed/aspeed-xdma.c                   | 953 +++++++++++++++++++++
+ include/uapi/linux/aspeed-xdma.h                   |  26 +
+ 9 files changed, 1043 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-platform-aspeed-xdma
+ create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+ create mode 100644 drivers/soc/aspeed/aspeed-xdma.c
+ create mode 100644 include/uapi/linux/aspeed-xdma.h
+
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+1.8.3.1
 
