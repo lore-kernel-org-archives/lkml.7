@@ -3,134 +3,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4656CC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C97C06511
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2272820665
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C08F2175B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 14:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbfGAOI0 (ORCPT
+        id S1729392AbfGAOJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 10:08:26 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34826 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbfGAOIZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 10:08:25 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j19so13624742otq.2;
-        Mon, 01 Jul 2019 07:08:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=7d4aozfprbFNEPiJb3m+1zVikqgEXOkjz3OhZ1mdyOA=;
-        b=RIhpRvsatpnn+X/Olov3rn7PvL13zhYG9N9//SY+DrDKLwNULHKorKCODwiwvLdc4t
-         WzrJ/afAi+bEJiskEyaRHqhvzrCIPFIi7/qyWk+yV4ARz7i/DeUUhc1aUdXMQjOne10V
-         Rm/YOAZs/wIbnJ5MHNQ4ejxbpCyOPS/7ZuIPb7n3x57kCE5pDrtr7Hu/BpX2M5Dwb9wp
-         8YpXHo6IyeQo5OMo5WcQNMrUwtdS5XdzWFFFIDx1kvryQhTDbkxIs3FG0Oer2V7y5ZMR
-         IsPybMzwxSrUcJ+H6C3KKg3Jr0OKo66nMhfbL5w3gQMk+KtQneeCpChUOvqPpnvBI+0e
-         ygJw==
-X-Gm-Message-State: APjAAAVXc7bMHiH9Q3NZrfBcFyZpuw0tTJanI+ERFl8hqgbyGcFl8tpK
-        l7c4uTN5rd1okxjuZ0P+B0lefftjT8mvoVnZAjM=
-X-Google-Smtp-Source: APXvYqywEkY5gIDjlSC+YCgH2xLXFtfJbmo18y30nP9yxPrPoW51cgqOZyEP8PhlLhu4MoQ/juVa8bUSJCfZQDc+tGk=
-X-Received: by 2002:a9d:529:: with SMTP id 38mr16744827otw.145.1561990104779;
- Mon, 01 Jul 2019 07:08:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <48BA4A6E-5E2A-478E-A96E-A31FA959964C@internode.on.net>
- <CAFLxGvwnKKHOnM2w8i9hn7LTVYKh5PQP2zYMBmma2k9z7HBpzw@mail.gmail.com>
- <20190511220659.GB8507@mit.edu> <09D87554-6795-4AEA-B8D0-FEBCB45673A9@internode.on.net>
- <850EDDE2-5B82-4354-AF1C-A2D0B8571093@internode.on.net> <17C30FA3-1AB3-4DAD-9B86-9FA9088F11C9@internode.on.net>
- <20190515045717.GB5394@mit.edu> <CAMuHMdV=63MwLdOB2kcX0=23itHg+_q22wXCycTvH3yn4zsfWw@mail.gmail.com>
- <CAMuHMdU-vfWjomDpttYTqgp4YzBu7z__p48r7rq6TSUwx7uFqQ@mail.gmail.com> <20190701135607.GB6549@mit.edu>
-In-Reply-To: <20190701135607.GB6549@mit.edu>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 1 Jul 2019 16:08:13 +0200
-Message-ID: <CAMuHMdVn9zMsas47CZpWdrFMTu0htn11Dhk459bosFxW7YZv_A@mail.gmail.com>
-Subject: Re: ext3/ext4 filesystem corruption under post 5.1.0 kernels
-To:     "Theodore Ts'o" <tytso@mit.edu>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 1 Jul 2019 10:09:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49432 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728016AbfGAOJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 10:09:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8653FB016;
+        Mon,  1 Jul 2019 14:08:59 +0000 (UTC)
+Date:   Mon, 01 Jul 2019 16:08:54 +0200
+Message-ID: <s5hlfxh6e4p.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Evan Green" <evgreen@chromium.org>
+Cc:     <alsa-devel@alsa-project.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Amadeusz S*awi*ski" <amadeuszx.slawinski@linux.intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Jaroslav Kysela" <perex@perex.cz>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] ALSA: hda: Fix widget_mutex incomplete protection
+In-Reply-To: <20190626212220.239897-2-evgreen@chromium.org>
+References: <20190626212220.239897-1-evgreen@chromium.org>
+        <20190626212220.239897-2-evgreen@chromium.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
+On Wed, 26 Jun 2019 23:22:19 +0200,
+Evan Green wrote:
+> 
+> The widget_mutex was introduced to serialize callers to
+> hda_widget_sysfs_{re}init. However, its protection of the sysfs widget array
+> is incomplete. For example, it is acquired around the call to
+> hda_widget_sysfs_reinit(), which actually creates the new array, but isn't
+> still acquired when codec->num_nodes and codec->start_nid is updated. So
+> the lock ensures one thread sets up the new array at a time, but doesn't
+> ensure which thread's value will end up in codec->num_nodes. If a larger
+> num_nodes wins but a smaller array was set up, the next call to
+> refresh_widgets() will touch free memory as it iterates over codec->num_nodes
+> that aren't there.
+> 
+> The widget_lock really protects both the tree as well as codec->num_nodes,
+> start_nid, and end_nid, so make sure it's held across that update. It should
+> also be held during snd_hdac_get_sub_nodes(), so that a very old read from that
+> function doesn't end up clobbering a later update.
 
-On Mon, Jul 1, 2019 at 3:56 PM Theodore Ts'o <tytso@mit.edu> wrote:
-> On Mon, Jul 01, 2019 at 02:43:14PM +0200, Geert Uytterhoeven wrote:
-> > Despite this fix having been applied upstream,  the kernel prints from
-> > time to time:
-> >
-> >     EXT4-fs (sda1): error count since last fsck: 5
-> >     EXT4-fs (sda1): initial error at time 1557931133:
-> > ext4_get_branch:171: inode 1980: block 27550
-> >     EXT4-fs (sda1): last error at time 1558114349:
-> > ext4_get_branch:171: inode 1980: block 27550
-> >
-> > This happens even after a manual run of "e2fsck -f" (while it's mounted
-> > RO), which reports a clean file system.
->
-> What's happening is this.  When the kernel detects a corruption, newer
-> kernels will set these superblock fields:
->
->         __le32  s_error_count;          /* number of fs errors */
->         __le32  s_first_error_time;     /* first time an error happened */
->         __le32  s_first_error_ino;      /* inode involved in first error */
->         __le64  s_first_error_block;    /* block involved of first error */
->         __u8    s_first_error_func[32] __nonstring;     /* function where the error happened */
->         __le32  s_first_error_line;     /* line number where error happened */
->         __le32  s_last_error_time;      /* most recent time of an error */
->         __le32  s_last_error_ino;       /* inode involved in last error */
->         __le32  s_last_error_line;      /* line number where error happened */
->         __le64  s_last_error_block;     /* block involved of last error */
->         __u8    s_last_error_func[32] __nonstring;      /* function where the error happened */
->
-> When newer versions of e2fsck *fix* the corruption, it will clear
-> these fields.  It's basically a safety check because *way* too many
-> ext4 users run with errors=continue (aka, "don't worry, be happy"
-> mode), and so this is a poke in the system logs that the file system
-> is corrupted, and they, really, *REALLY* should fix it before they
-> lose (more) data.
+OK, right, this fix is needed no matter whether to take my other
+change to skip hda_widget_sysfs_init() call in
+hda_widget_sysfs_reinit().
 
-Thanks for the explanation, much appreciated!
+However...
 
-> > The inode and block numbers match the numbers printed due to the
-> > previous bug.
->
-> You can also see when the last file system error was detected via:
->
-> % date -d @1558114349
-> Fri 17 May 2019 01:32:29 PM EDT
+> While in there, move the exit mutex call inside the function. This moves the
+> mutex closer to the data structure it protects and removes a requirement of
+> acquiring the somewhat internal widget_lock before calling sysfs_exit.
 
-Good. So no new errors detected after the fix.
+... this doesn't look better from consistency POV.  The whole code in
+hdac_sysfs.c doesn't take any lock in itself.  The protection is
+supposed to be done in the caller side.  So, let's keep as is now.
 
-> > Do you have an idea what's wrong?
-> > Note that I run a very old version of e2fsck (from a decade ago).
->
-> ... and that's the problem.  If you're going to be using newer
-> versions of the kernel, you really should be using newer versions of
-> e2fsprogs.
->
-> There have been a lot of bug fixes in the last 10 years, and some of
-> them can be data corruption bugs....
+Also...
 
-Yeah, one day I'll have to change the winning horse...
+>  	codec->num_nodes = nums;
+>  	codec->start_nid = start_nid;
+>  	codec->end_nid = start_nid + nums;
+> +	mutex_unlock(&codec->widget_lock);
+>  	return 0;
+> +
+> +unlock:
+> +	mutex_unlock(&codec->widget_lock);
+> +	return err;
 
-Gr{oetje,eeting}s,
+There is no need of two mutex_unlock() here.  They can be unified,
 
-                        Geert
+  	codec->num_nodes = nums;
+  	codec->start_nid = start_nid;
+  	codec->end_nid = start_nid + nums;
+  unlock:
+	mutex_unlock(&codec->widget_lock);
+  	return err;
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Could you refresh this and resubmit?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+thanks,
+
+Takashi
