@@ -2,148 +2,263 @@ Return-Path: <SRS0=3QRk=U6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFB0C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818BDC06510
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9579206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A60206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 17:45:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oe4KJUOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbfGARoI (ORCPT
+        id S1729828AbfGARpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 13:44:08 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:50450 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727130AbfGARoH (ORCPT
+        Mon, 1 Jul 2019 13:45:11 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35573 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727130AbfGARpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 13:44:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id m26so15838224ioh.17
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 10:44:07 -0700 (PDT)
+        Mon, 1 Jul 2019 13:45:11 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so7716120plp.2;
+        Mon, 01 Jul 2019 10:45:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=AO2x7+oDzyDn/msjFdHtB7Jf32S85kSlA4Ep+u5MEIY=;
+        b=oe4KJUOZ24RJkPCDcui+GRK7jpx0+s309bJ2W1RNzhZOS35RJIqhxnMMgenbbj9Mjd
+         eIV/LWTbxnfTQAqt801k8LE7acvcvBmUPiOPJrVGofq4oDoCgq2wXMua33MOhcMnOs60
+         hjDOuCSSP7wDLb5ax8IVDwkqIhF8/C4QicSGpszeNKmv7reh1pPD97fbbBqu5HyaU+2s
+         gI6BFai5LbQruDsabnw60DAysYsTIzJfS30KTXtsoT9Y2Obpg2gsfO2E/vg365j3H1ZG
+         sgQj1EZpdollwWoYyai11ZNZ4eXOH585TS5ys4laEVxFsESml65Kvty97UyV6t+h65rE
+         CEIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Dh+QKLYAb7KA80GtNtwXhOg1h09fQw25aUTMLxBCKqU=;
-        b=mKBvchC2k7ERA1g+fU6PFEaFgkpu6SxeUmzVm6/MLkOsLJgfTMocJLS6Br14N+++UB
-         iWHyiaphOV1ZENr8A04uIPyTzKmr6CGxd1IbGlfPOBs7OAC7CYf9L1yfuNajz0lBcmyb
-         DX0vFz14jymf2sKC8/R70jt4h+pHyiB5jnlynC14QNe3JyjZCnJ8Zd790Bo7H8kOYMx/
-         t7DR6HgYRP75alb+2Ifs5Rj1/8dWOAt1hIjFuBzLvaISyPYwRmELmxuDGYT3TklbNfkO
-         WjJP3F69WVO6SynClXw8NiZKZf3DKt0ylWO5GBWNiIffoTrdlmIFYqfWkA3vsZYkiTv0
-         xfww==
-X-Gm-Message-State: APjAAAWuQ0ksxaP4Ej3T0PVCZgOl8R+p8knIX+qoHxomwY6AN9hnGpLL
-        slDhtfQy9VJycfC2iaGN5CbA6F33Di3MNsYI4wPye9qOSHSh
-X-Google-Smtp-Source: APXvYqxnwncqWNlFGAvyuADpXevH9praFT1Twhx6I5DCFArh5mkjeB5hjzdgLs/TNAQogEfrEF5YqLRsHqoGH5UUPzbaVuo4SezZ
-MIME-Version: 1.0
-X-Received: by 2002:a02:1087:: with SMTP id 129mr31750751jay.131.1562003047057;
- Mon, 01 Jul 2019 10:44:07 -0700 (PDT)
-Date:   Mon, 01 Jul 2019 10:44:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c218c4058ca22c33@google.com>
-Subject: kernel BUG at include/linux/kvm_host.h:LINE!
-From:   syzbot <syzbot+bfdba32e6c49af090931@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AO2x7+oDzyDn/msjFdHtB7Jf32S85kSlA4Ep+u5MEIY=;
+        b=o6MvT0+k/H2lL/QX0cjCoaScC+KS0OaJ9PBZ9HVPA+CvJeYh+C9z/W0TVmJYA9tW6K
+         GaQpqJef3tSyWx9LAX/XYsbh9XWIlxOjyTnpSus0XTN5tJ0WSoErli/uN4RyvgZPFQjA
+         sB7yyahxfsDlKdkooTOiDe/4VebAXr36AEs9LBhLWHBjWcQrQU6wwfBwWuj86EUOOn9I
+         1kpjtJgKyw7B7AjYhzmVavF+BG18G0tocA7zc6kRBJhUEMaC2m+pJU/r7SLW/kuNeKKk
+         VkqXnCu9EmINsbEWc/K2JZ74e3DsU/yF6PjHdsg0G1LhNqj0PKid4/IIS0mskQw4UZOm
+         mNqA==
+X-Gm-Message-State: APjAAAUQq1M11uskVWAwq9O3BeObaw4+djraJnz1cgMn7YiDXZx7Uzuu
+        LlooJMuxDSBgVKJP4VPQMC0=
+X-Google-Smtp-Source: APXvYqyWO/3l3ssw66kIcEbpjzILJWpJZV7XigaRPzarLuW9vxBabvjrGSA7Cl7GEMXnoZCyy4spIw==
+X-Received: by 2002:a17:902:36c:: with SMTP id 99mr3180182pld.200.1562003110772;
+        Mon, 01 Jul 2019 10:45:10 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id h11sm11814644pfn.170.2019.07.01.10.45.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 10:45:10 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] drm/msm/mdp5: Add msm8998 support
+Date:   Mon,  1 Jul 2019 10:45:06 -0700
+Message-Id: <20190701174506.15625-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Add support for MDP5 version v3.0 found on msm8998.
 
-syzbot found the following crash on:
-
-HEAD commit:    6fbc7275 Linux 5.2-rc7
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16d8d2cda00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f6451f0da3d42d53
-dashboard link: https://syzkaller.appspot.com/bug?extid=bfdba32e6c49af090931
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+bfdba32e6c49af090931@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-kernel BUG at include/linux/kvm_host.h:579!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 5546 Comm: syz-executor.4 Not tainted 5.2.0-rc7 #65
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:kvm_vcpu_get_idx include/linux/kvm_host.h:579 [inline]
-RIP: 0010:kvm_vcpu_get_idx include/linux/kvm_host.h:571 [inline]
-RIP: 0010:kvm_hv_set_msr arch/x86/kvm/hyperv.c:1082 [inline]
-RIP: 0010:kvm_hv_set_msr_common+0x241d/0x2ab0 arch/x86/kvm/hyperv.c:1303
-Code: fa 48 c1 ea 03 80 3c 02 00 0f 85 c6 03 00 00 48 8b 85 28 ff ff ff 45  
-31 e4 49 89 87 20 2e 00 00 e9 10 dd ff ff e8 53 aa 58 00 <0f> 0b 4c 89 ff  
-e8 29 58 91 00 e9 8d de ff ff 4c 89 ff e8 1c 58 91
-RSP: 0018:ffff88804f8a73d8 EFLAGS: 00010216
-RAX: 0000000000040000 RBX: 0000000000000000 RCX: ffffc9000e83e000
-RDX: 0000000000001051 RSI: ffffffff811818ed RDI: 0000000000000004
-RBP: ffff88804f8a74f0 R08: ffff888061eda0c0 R09: fffff52002c4bb3b
-R10: fffff52002c4bb3a R11: ffffc9001625d9d3 R12: dffffc0000000000
-R13: 0000000000000000 R14: ffffc9001625d9d0 R15: ffff888057209980
-FS:  00007f8cdaf27700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd93ee22db8 CR3: 00000000993e9000 CR4: 00000000001426f0
-Call Trace:
-  kvm_set_msr_common+0xb8f/0x2570 arch/x86/kvm/x86.c:2662
-  vmx_set_msr+0x710/0x21d0 arch/x86/kvm/vmx/vmx.c:2030
-  kvm_set_msr+0x18a/0x370 arch/x86/kvm/x86.c:1359
-  do_set_msr+0xa6/0xf0 arch/x86/kvm/x86.c:1388
-  __msr_io arch/x86/kvm/x86.c:2975 [inline]
-  msr_io+0x1ad/0x2e0 arch/x86/kvm/x86.c:3011
-  kvm_arch_vcpu_ioctl+0x12be/0x3000 arch/x86/kvm/x86.c:4032
-  kvm_vcpu_ioctl+0x8f6/0xf90 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2905
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd5f/0x1380 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459519
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f8cdaf26c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459519
-RDX: 0000000020000280 RSI: 000000004008ae89 RDI: 0000000000000005
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f8cdaf276d4
-R13: 00000000004c249d R14: 00000000004d5708 R15: 00000000ffffffff
-Modules linked in:
----[ end trace 4d93e12c89ced131 ]---
-RIP: 0010:kvm_vcpu_get_idx include/linux/kvm_host.h:579 [inline]
-RIP: 0010:kvm_vcpu_get_idx include/linux/kvm_host.h:571 [inline]
-RIP: 0010:kvm_hv_set_msr arch/x86/kvm/hyperv.c:1082 [inline]
-RIP: 0010:kvm_hv_set_msr_common+0x241d/0x2ab0 arch/x86/kvm/hyperv.c:1303
-Code: fa 48 c1 ea 03 80 3c 02 00 0f 85 c6 03 00 00 48 8b 85 28 ff ff ff 45  
-31 e4 49 89 87 20 2e 00 00 e9 10 dd ff ff e8 53 aa 58 00 <0f> 0b 4c 89 ff  
-e8 29 58 91 00 e9 8d de ff ff 4c 89 ff e8 1c 58 91
-RSP: 0018:ffff88804f8a73d8 EFLAGS: 00010216
-RAX: 0000000000040000 RBX: 0000000000000000 RCX: ffffc9000e83e000
-RDX: 0000000000001051 RSI: ffffffff811818ed RDI: 0000000000000004
-RBP: ffff88804f8a74f0 R08: ffff888061eda0c0 R09: fffff52002c4bb3b
-R10: fffff52002c4bb3a R11: ffffc9001625d9d3 R12: dffffc0000000000
-R13: 0000000000000000 R14: ffffc9001625d9d0 R15: ffff888057209980
-FS:  00007f8cdaf27700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffdcaa36dec CR3: 00000000993e9000 CR4: 00000000001426f0
-
-
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+8998 support could probably be MDP5 or DPU.  This MDP5 support works,
+but may not support all of the features that 8998 supports.  However,
+DPU seems to only support 845 (MDP v4.0) with fundamental assumptions
+about the base level a features supported, some of which 8998 does not
+infact support, so DPU would likely need significant re-writes to
+support 8998.  I'm not sure the effort is worth it since MDP5 needs so
+little effort to support 8998.
+
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c | 132 ++++++++++++++++++++++-
+ 1 file changed, 128 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+index dd1daf0e305a..fb4762cec4f1 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+@@ -630,7 +630,115 @@ const struct mdp5_cfg_hw msm8917_config = {
+ 	.max_clk = 320000000,
+ };
+ 
+-static const struct mdp5_cfg_handler cfg_handlers[] = {
++const struct mdp5_cfg_hw msm8998_config = {
++	.name = "msm8998",
++	.mdp = {
++		.count = 1,
++		.caps = MDP_CAP_DSC |
++			MDP_CAP_CDM |
++			MDP_CAP_SRC_SPLIT |
++			0,
++	},
++	.ctl = {
++		.count = 5,
++		.base = { 0x01000, 0x01200, 0x01400, 0x01600, 0x01800 },
++		.flush_hw_mask = 0xf7ffffff,
++	},
++	.pipe_vig = {
++		.count = 4,
++		.base = { 0x04000, 0x06000, 0x08000, 0x0a000 },
++		.caps = MDP_PIPE_CAP_HFLIP	|
++			MDP_PIPE_CAP_VFLIP	|
++			MDP_PIPE_CAP_SCALE	|
++			MDP_PIPE_CAP_CSC	|
++			MDP_PIPE_CAP_DECIMATION	|
++			MDP_PIPE_CAP_SW_PIX_EXT	|
++			0,
++	},
++	.pipe_rgb = {
++		.count = 4,
++		.base = { 0x14000, 0x16000, 0x18000, 0x1a000 },
++		.caps = MDP_PIPE_CAP_HFLIP	|
++			MDP_PIPE_CAP_VFLIP	|
++			MDP_PIPE_CAP_SCALE	|
++			MDP_PIPE_CAP_DECIMATION	|
++			MDP_PIPE_CAP_SW_PIX_EXT	|
++			0,
++	},
++	.pipe_dma = {
++		.count = 2, /* driver supports max of 2 currently */
++		.base = { 0x24000, 0x26000, 0x28000, 0x2a000 },
++		.caps = MDP_PIPE_CAP_HFLIP	|
++			MDP_PIPE_CAP_VFLIP	|
++			MDP_PIPE_CAP_SW_PIX_EXT	|
++			0,
++	},
++	.pipe_cursor = {
++		.count = 2,
++		.base = { 0x34000, 0x36000 },
++		.caps = MDP_PIPE_CAP_HFLIP	|
++			MDP_PIPE_CAP_VFLIP	|
++			MDP_PIPE_CAP_SW_PIX_EXT	|
++			MDP_PIPE_CAP_CURSOR	|
++			0,
++	},
++
++	.lm = {
++		.count = 6,
++		.base = { 0x44000, 0x45000, 0x46000, 0x47000, 0x48000, 0x49000 },
++		.instances = {
++				{ .id = 0, .pp = 0, .dspp = 0,
++				  .caps = MDP_LM_CAP_DISPLAY |
++					  MDP_LM_CAP_PAIR, },
++				{ .id = 1, .pp = 1, .dspp = 1,
++				  .caps = MDP_LM_CAP_DISPLAY, },
++				{ .id = 2, .pp = 2, .dspp = -1,
++				  .caps = MDP_LM_CAP_DISPLAY |
++					  MDP_LM_CAP_PAIR, },
++				{ .id = 3, .pp = -1, .dspp = -1,
++				  .caps = MDP_LM_CAP_WB, },
++				{ .id = 4, .pp = -1, .dspp = -1,
++				  .caps = MDP_LM_CAP_WB, },
++				{ .id = 5, .pp = 3, .dspp = -1,
++				  .caps = MDP_LM_CAP_DISPLAY, },
++			     },
++		.nb_stages = 8,
++		.max_width = 2560,
++		.max_height = 0xFFFF,
++	},
++	.dspp = {
++		.count = 2,
++		.base = { 0x54000, 0x56000 },
++	},
++	.ad = {
++		.count = 3,
++		.base = { 0x78000, 0x78800, 0x79000 },
++	},
++	.pp = {
++		.count = 4,
++		.base = { 0x70000, 0x70800, 0x71000, 0x71800 },
++	},
++	.cdm = {
++		.count = 1,
++		.base = { 0x79200 },
++	},
++	.dsc = {
++		.count = 2,
++		.base = { 0x80000, 0x80400 },
++	},
++	.intf = {
++		.base = { 0x6a000, 0x6a800, 0x6b000, 0x6b800, 0x6c000 },
++		.connect = {
++			[0] = INTF_eDP,
++			[1] = INTF_DSI,
++			[2] = INTF_DSI,
++			[3] = INTF_HDMI,
++		},
++	},
++	.max_clk = 412500000,
++};
++
++static const struct mdp5_cfg_handler cfg_handlers_v1[] = {
+ 	{ .revision = 0, .config = { .hw = &msm8x74v1_config } },
+ 	{ .revision = 2, .config = { .hw = &msm8x74v2_config } },
+ 	{ .revision = 3, .config = { .hw = &apq8084_config } },
+@@ -640,6 +748,10 @@ static const struct mdp5_cfg_handler cfg_handlers[] = {
+ 	{ .revision = 15, .config = { .hw = &msm8917_config } },
+ };
+ 
++static const struct mdp5_cfg_handler cfg_handlers_v3[] = {
++	{ .revision = 0, .config = { .hw = &msm8998_config } },
++};
++
+ static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev);
+ 
+ const struct mdp5_cfg_hw *mdp5_cfg_get_hw_config(struct mdp5_cfg_handler *cfg_handler)
+@@ -668,8 +780,9 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
+ 	struct drm_device *dev = mdp5_kms->dev;
+ 	struct platform_device *pdev = to_platform_device(dev->dev);
+ 	struct mdp5_cfg_handler *cfg_handler;
++	const struct mdp5_cfg_handler *cfg_handlers;
+ 	struct mdp5_cfg_platform *pconfig;
+-	int i, ret = 0;
++	int i, ret = 0, num_handlers;
+ 
+ 	cfg_handler = kzalloc(sizeof(*cfg_handler), GFP_KERNEL);
+ 	if (unlikely(!cfg_handler)) {
+@@ -677,15 +790,26 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
+ 		goto fail;
+ 	}
+ 
+-	if (major != 1) {
++	if (major != 1 && major != 3) {
+ 		DRM_DEV_ERROR(dev->dev, "unexpected MDP major version: v%d.%d\n",
+ 				major, minor);
+ 		ret = -ENXIO;
+ 		goto fail;
+ 	}
+ 
++	switch (major) {
++	case 1:
++		cfg_handlers = cfg_handlers_v1;
++		num_handlers = ARRAY_SIZE(cfg_handlers_v1);
++		break;
++	case 3:
++		cfg_handlers = cfg_handlers_v3;
++		num_handlers = ARRAY_SIZE(cfg_handlers_v3);
++		break;
++	};
++
+ 	/* only after mdp5_cfg global pointer's init can we access the hw */
+-	for (i = 0; i < ARRAY_SIZE(cfg_handlers); i++) {
++	for (i = 0; i < num_handlers; i++) {
+ 		if (cfg_handlers[i].revision != minor)
+ 			continue;
+ 		mdp5_cfg = cfg_handlers[i].config.hw;
+-- 
+2.17.1
+
