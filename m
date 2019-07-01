@@ -6,99 +6,67 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE032C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC0FC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC152146F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129882146F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jul 2019 18:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfGASB5 (ORCPT
+        id S1727023AbfGASCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 14:01:57 -0400
-Received: from mail.us.es ([193.147.175.20]:45080 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfGASB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 14:01:57 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id A24D811F021
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2019 20:01:55 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 8DE2FDA3F4
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2019 20:01:55 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 82E15DA801; Mon,  1 Jul 2019 20:01:55 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 7C068DA704;
-        Mon,  1 Jul 2019 20:01:53 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Mon, 01 Jul 2019 20:01:53 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 414634265A2F;
-        Mon,  1 Jul 2019 20:01:53 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 20:01:52 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     David Ahern <dsahern@gmail.com>,
-        "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>
-Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjRdIG5l?= =?utf-8?Q?t=3A?=
- netfilter: Fix rpfilter dropping vrf packets by mistake
-Message-ID: <20190701180152.65ajqxmht56dxmxi@salvia>
-References: <2213b3e722a14ee48768ecc7118efc46@huawei.com>
- <08740476-acfb-d35a-50b7-3aee42f23bfa@gmail.com>
- <cef929f9a14f462f9f7d3fa475f84e76@huawei.com>
+        Mon, 1 Jul 2019 14:02:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41986 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfGASCK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 14:02:10 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hi0cy-0006Ee-HZ; Mon, 01 Jul 2019 20:02:08 +0200
+Date:   Mon, 1 Jul 2019 20:02:07 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Robert Hodaszi <Robert.Hodaszi@digi.com>
+Subject: Re: [patch V2 3/6] genirq: Add optional hardware synchronization
+ for shutdown
+In-Reply-To: <20190701145628.GC3402@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.DEB.2.21.1907012001550.1802@nanos.tec.linutronix.de>
+References: <20190628111148.828731433@linutronix.de> <20190628111440.279463375@linutronix.de> <20190701145628.GC3402@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cef929f9a14f462f9f7d3fa475f84e76@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 02:13:59PM +0000, linmiaohe wrote:
-> On 6/29/19 20:20 PM, David Ahern wrote:
-> > On 6/28/19 8:13 PM, linmiaohe wrote:
-> > > You're right. Fib rules code would set FLOWI_FLAG_SKIP_NH_OIF flag.  
-> > > But I set it here for distinguish with the flags & XT_RPFILTER_LOOSE 
-> > > branch. Without this, they do the same work and maybe should be  
-> > > combined. I don't want to do that as that makes code confusing.
-> > > Is this code snipet below ok ? If so, I would delete this flag setting.
-> > >  
-> > >        } else if (netif_is_l3_master(dev) || netif_is_l3_slave(dev)) {
-> > >                fl6.flowi6_oif = dev->ifindex;
-> > >         } else if ((flags & XT_RPFILTER_LOOSE) == 0)
-> > >                 fl6.flowi6_oif = dev->ifindex;
-> 
-> > that looks fine to me, but it is up to Pablo.
-> 
-> @David Ahern  Many thanks for your valuable advice.
-> 
-> @ Pablo Hi, could you please tell me if this code snipet is ok?
-> If not, which code would you prefer? It's very nice of you to
-> figure it out for me. Thanks a lot.
+On Mon, 1 Jul 2019, Peter Zijlstra wrote:
 
-Probably this?
+> On Fri, Jun 28, 2019 at 01:11:51PM +0200, Thomas Gleixner wrote:
+> > But that does not catch the case where the interrupt is on flight at the
+> > hardware level but not yet serviced by the target CPU. That creates an
+> > interesing race condition:
+> 
+> > + *	It does not check whether there is an interrupt on flight at the
+> > + *	hardware level, but not serviced yet, as this might deadlock when
+> > + *	called with interrupts disabled and the target CPU of the interrupt
+> > + *	is the current CPU.
+> 
+> > +	/*
+> > +	 * Make sure it's not being used on another CPU and if the chip
+> > +	 * supports it also make sure that there is no (not yet serviced)
+> > +	 * interrupt on flight at the hardware level.
+> > +	 */
+> > +	__synchronize_hardirq(desc, true);
+> 
+> s/on flight/in flight/ ?
 
-        } else if (netif_is_l3_master(dev) || netif_is_l3_slave(dev) ||
-                   (flags & XT_RPFILTER_LOOSE) == 0) {
-                fl6.flowi6_oif = dev->ifindex;
-        }
+yes
 
-Thanks.
