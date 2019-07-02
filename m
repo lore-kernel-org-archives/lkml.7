@@ -2,52 +2,50 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BBEC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8C0C06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8422053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2A721850
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054584;
-	bh=8NSgKZxTWmWUF8pmUzhakLWr3ssJicyhNk8pH+WBQgA=;
+	s=default; t=1562054587;
+	bh=pilKMYlTiwamuYx57A5kVWVrG8sar5JjJhKOHSt7ncM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fIWQhdSRec+VQd3fnEMltw8qRrgN0sXHkFGiWz/nTgYVCBMQVdejzr+kmIEIryQtb
-	 LpLcwLUviwg29x8HTaKXxBS0bus5cxW/0aKVhd9MDYA2/YkDgvHCDf3I6GCDVT+I9F
-	 Y/F9PrZN4/A4jnN8LiOS/vDEhM2cTiZqk7qphF3c=
+	b=vMEQY0Ek/Bd9fOzbKh+cPHdoBAVjb4NWE/r3BURyo507p+whFg5vSyRH3oumJS4kG
+	 8JntQDy7EY4XgO873mVbAfHhqx0zzziuX5+Cgf2qaf9uGOJOWKFjtCY5MGodROTImL
+	 RUchc3czaBtH3vLtOUlsxRGanwTx2qFujfjF8A0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfGBIDD (ORCPT
+        id S1727299AbfGBIDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47722 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:03:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727253AbfGBIC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:02:59 -0400
+        id S1727035AbfGBIDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:03:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA29121841;
-        Tue,  2 Jul 2019 08:02:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3086821850;
+        Tue,  2 Jul 2019 08:03:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054578;
-        bh=8NSgKZxTWmWUF8pmUzhakLWr3ssJicyhNk8pH+WBQgA=;
+        s=default; t=1562054583;
+        bh=pilKMYlTiwamuYx57A5kVWVrG8sar5JjJhKOHSt7ncM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVMzBuPw9G+e+8QbFu+FqF+FvaWCu54Jzsvu3Tt6srn41/He+IFcn1DLWFrtxpWom
-         KgQYGQL+9czzdPXxvsN7vhJAl3UHYe0AqOnfc7aCrUZ00DZAGCmA6VA/f6SSCPInBI
-         lPd/vzi6A4O4b4Shg8ll2+HS+ML1BEe1bjAy1Wy0=
+        b=VGd+A8pOT4FEjFW1ruBjW/mau5C/e5rkVfnJfrJ1cQmXdAvXQpexaxj/NcZHrHos9
+         lzE6L41M/n+sy51H8v1DhfsUgW74B8hTyiAyk0sIQgptPWcXiFrYmmy0l3w8n+5nti
+         x6wO5oub6qL7qQUGcTMrYwgQJQbImpAQ+sQy4eFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.1 18/55] dm log writes: make sure super sector log updates are written in order
-Date:   Tue,  2 Jul 2019 10:01:26 +0200
-Message-Id: <20190702080125.001290277@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 02/55] Revert "x86/uaccess, ftrace: Fix ftrace_likely_update() vs. SMAP"
+Date:   Tue,  2 Jul 2019 10:01:10 +0200
+Message-Id: <20190702080124.204331150@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -60,106 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+This reverts commit b65b70ba068b7cdbfeb65eee87cce84a74618603, which was
+upstream commit 4a6c91fbdef846ec7250b82f2eeeb87ac5f18cf9.
 
-commit 211ad4b733037f66f9be0a79eade3da7ab11cbb8 upstream.
+On Tue, Jun 25, 2019 at 09:39:45AM +0200, Sebastian Andrzej Siewior wrote:
+>Please backport commit e74deb11931ff682b59d5b9d387f7115f689698e to
+>stable _or_ revert the backport of commit 4a6c91fbdef84 ("x86/uaccess,
+>ftrace: Fix ftrace_likely_update() vs. SMAP"). It uses
+>user_access_{save|restore}() which has been introduced in the following
+>commit.
 
-Currently, although we submit super bios in order (and super.nr_entries
-is incremented by each logged entry), submit_bio() is async so each
-super sector may not be written to log device in order and then the
-final nr_entries may be smaller than it should be.
-
-This problem can be reproduced by the xfstests generic/455 with ext4:
-
-  QA output created by 455
- -Silence is golden
- +mark 'end' does not exist
-
-Fix this by serializing submission of super sectors to make sure each
-is written to the log disk in order.
-
-Fixes: 0e9cebe724597 ("dm: add log writes target")
-Cc: stable@vger.kernel.org
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Suggested-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-log-writes.c |   23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ kernel/trace/trace_branch.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/drivers/md/dm-log-writes.c
-+++ b/drivers/md/dm-log-writes.c
-@@ -60,6 +60,7 @@
- 
- #define WRITE_LOG_VERSION 1ULL
- #define WRITE_LOG_MAGIC 0x6a736677736872ULL
-+#define WRITE_LOG_SUPER_SECTOR 0
- 
- /*
-  * The disk format for this is braindead simple.
-@@ -115,6 +116,7 @@ struct log_writes_c {
- 	struct list_head logging_blocks;
- 	wait_queue_head_t wait;
- 	struct task_struct *log_kthread;
-+	struct completion super_done;
- };
- 
- struct pending_block {
-@@ -180,6 +182,14 @@ static void log_end_io(struct bio *bio)
- 	bio_put(bio);
+diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
+index 3ea65cdff30d..4ad967453b6f 100644
+--- a/kernel/trace/trace_branch.c
++++ b/kernel/trace/trace_branch.c
+@@ -205,8 +205,6 @@ void trace_likely_condition(struct ftrace_likely_data *f, int val, int expect)
+ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 			  int expect, int is_constant)
+ {
+-	unsigned long flags = user_access_save();
+-
+ 	/* A constant is always correct */
+ 	if (is_constant) {
+ 		f->constant++;
+@@ -225,8 +223,6 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 		f->data.correct++;
+ 	else
+ 		f->data.incorrect++;
+-
+-	user_access_restore(flags);
  }
+ EXPORT_SYMBOL(ftrace_likely_update);
  
-+static void log_end_super(struct bio *bio)
-+{
-+	struct log_writes_c *lc = bio->bi_private;
-+
-+	complete(&lc->super_done);
-+	log_end_io(bio);
-+}
-+
- /*
-  * Meant to be called if there is an error, it will free all the pages
-  * associated with the block.
-@@ -215,7 +225,8 @@ static int write_metadata(struct log_wri
- 	bio->bi_iter.bi_size = 0;
- 	bio->bi_iter.bi_sector = sector;
- 	bio_set_dev(bio, lc->logdev->bdev);
--	bio->bi_end_io = log_end_io;
-+	bio->bi_end_io = (sector == WRITE_LOG_SUPER_SECTOR) ?
-+			  log_end_super : log_end_io;
- 	bio->bi_private = lc;
- 	bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
- 
-@@ -418,11 +429,18 @@ static int log_super(struct log_writes_c
- 	super.nr_entries = cpu_to_le64(lc->logged_entries);
- 	super.sectorsize = cpu_to_le32(lc->sectorsize);
- 
--	if (write_metadata(lc, &super, sizeof(super), NULL, 0, 0)) {
-+	if (write_metadata(lc, &super, sizeof(super), NULL, 0,
-+			   WRITE_LOG_SUPER_SECTOR)) {
- 		DMERR("Couldn't write super");
- 		return -1;
- 	}
- 
-+	/*
-+	 * Super sector should be writen in-order, otherwise the
-+	 * nr_entries could be rewritten incorrectly by an old bio.
-+	 */
-+	wait_for_completion_io(&lc->super_done);
-+
- 	return 0;
- }
- 
-@@ -531,6 +549,7 @@ static int log_writes_ctr(struct dm_targ
- 	INIT_LIST_HEAD(&lc->unflushed_blocks);
- 	INIT_LIST_HEAD(&lc->logging_blocks);
- 	init_waitqueue_head(&lc->wait);
-+	init_completion(&lc->super_done);
- 	atomic_set(&lc->io_blocks, 0);
- 	atomic_set(&lc->pending_blocks, 0);
- 
+-- 
+2.20.1
+
 
 
