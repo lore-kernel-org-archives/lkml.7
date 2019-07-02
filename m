@@ -2,234 +2,194 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8844BC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A7EC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5705B21473
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4BF921479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:46:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oX61GCS4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETbJAtbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfGBNll (ORCPT
+        id S1726917AbfGBNqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:41:41 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:18603 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGBNlk (ORCPT
+        Tue, 2 Jul 2019 09:46:09 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35500 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfGBNqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:41:40 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1b5f110001>; Tue, 02 Jul 2019 06:41:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 02 Jul 2019 06:41:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 02 Jul 2019 06:41:38 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
- 2019 13:41:35 +0000
-Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190627194728.8948-1-digetx@gmail.com>
- <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
- <3a5403fe-b81f-993c-e7c0-407387e001d9@gmail.com>
- <b50045f9-7d8f-d91a-8629-625bcd7057bc@nvidia.com>
- <ed84cc7d-08de-dbd7-40e2-bc84c5debe1a@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <e7199039-c4e5-304d-3d60-58ecd6648771@nvidia.com>
-Date:   Tue, 2 Jul 2019 14:41:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 2 Jul 2019 09:46:08 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d23so18482317qto.2;
+        Tue, 02 Jul 2019 06:46:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=A5dZq2nQ324KEj+MevmqkAz8NKDu5TbeDuq4xGo1kzQ=;
+        b=ETbJAtbxQfuTWHUHiZAW8r49xrIwSouErNyrxn+V6c8abTJiG6tdgpIxySIG0vw2/S
+         orI1rKvRA8znkISvr+M90Ezwmbe/g/TXUKXpaCt8DXPai7xJzTMPnkSH4DXXoK9TSb5z
+         fbhOi7CGXaavTNL3M7yElwbhIm84aiZ+43AWBZ5FM1jqhP6KhhvpNz17pNxibBF23E5D
+         HXiliAm81IYg28pLOXTX6XEG/Rh+nt2hnNlGh6oxrwb4sfCmP2tluTRIrXsMquHF432j
+         eqDaJUxj0b3UoBXbO/sAReUCva8hqqbVMMgaQqwDx0ETvVZEZy14hmIRqpA27JbCqx6F
+         44oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=A5dZq2nQ324KEj+MevmqkAz8NKDu5TbeDuq4xGo1kzQ=;
+        b=qRTe1GpK+F4dRhCS2zO/GKI/9w9RuRJpyV5mK6w9WxpNPKMx0kZNWebleGvNS7Vsge
+         rZA0izPgpWCJMkp9QbK5wWUG6fnRJEJVai7q+mxDDglPhtm+uvr0mQKhZHNAaXey4L++
+         OqTIvkJtn44178tDPz41lBQFfHGxR49MKwnCFDYpuRcZ0b0ifzlwpXvzHVdua8JONy7Z
+         d2jYv5bJrTSjnX15sHy7vdFRIjPQh6VAuCIdTtAJ7OAfGy2qMK5sYYcgJ0ekQMthK0DO
+         fgsQmcUNoakpvGIXAhbZG5uuHYrybdECBMsCFMoQfU4ewB43evRXl4Q71shpTEdXs437
+         sOGA==
+X-Gm-Message-State: APjAAAVq7HruaMxbMn67Xd2AcM5v2BT+ywhy0EyOBinSPd0FGUciMtmb
+        eA5gCEXObNjStutyP9JamEU=
+X-Google-Smtp-Source: APXvYqzl8f47zaSGAVkoM+LmyB4UZETobt2thkWQOgwpuV5TE3sJECsdUB1olmuGCb0MZFDwzNRmJA==
+X-Received: by 2002:a0c:8722:: with SMTP id 31mr26644808qvh.164.1562075167657;
+        Tue, 02 Jul 2019 06:46:07 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id e52sm6697360qtk.20.2019.07.02.06.46.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 06:46:06 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D23F241153; Tue,  2 Jul 2019 10:46:03 -0300 (-03)
+Date:   Tue, 2 Jul 2019 10:46:03 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?iso-8859-1?Q?Andr=E9?= Goddard Rosa <andre.goddard@gmail.com>
+Subject: Re: [PATCH 23/43] tools lib: Adopt skip_spaces() from the kernel
+ sources
+Message-ID: <20190702134603.GA15462@kernel.org>
+References: <20190702022616.1259-1-acme@kernel.org>
+ <20190702022616.1259-24-acme@kernel.org>
+ <20190702121240.GB12694@krava>
 MIME-Version: 1.0
-In-Reply-To: <ed84cc7d-08de-dbd7-40e2-bc84c5debe1a@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562074897; bh=oUgLhVtZt+epnYVVZmnX84R+rFX+CGt8GGlI2/HhW4k=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=oX61GCS4lX8/4mID96beL2doeqzWM/L61oxnIEXDzmKyO4T9rQKQVow59wE2od7fX
-         my3/lmtVJrNh8wzRNlDu6RXNXByJwII2Ml87fZmJ5FtiN8F55itL6Ok/aZG7AQIvFz
-         JREX6h2x/9gWdBPzFCDfPpfDXQa+8wCcLx/lP8hH1MSw1FNZ+hsN3pxBAnsynLY3yp
-         DSFmhoTe8QroFakLd1nw5u/jyOfjUgGBiMtLZg7C1yXAY94aJodR4gxfIT8JiolReL
-         5YP/8w9MMePAgkQUf1W4zZHHgRzrXRkgVA5ZagrpDyqruaX8usycy3tqLtke1pW1C4
-         70elBu6cYlMtQ==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190702121240.GB12694@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Tue, Jul 02, 2019 at 02:12:40PM +0200, Jiri Olsa escreveu:
+> On Mon, Jul 01, 2019 at 11:25:56PM -0300, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > Same implementation, will be used to replace ad-hoc equivalent code in
+> > tools/.
+> > 
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: André Goddard Rosa <andre.goddard@gmail.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Link: https://lkml.kernel.org/n/tip-dig691cg9ripvoiprpidthw7@git.kernel.org
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/include/linux/string.h |  4 +++-
+> >  tools/lib/string.c           | 14 ++++++++++++++
+> >  2 files changed, 17 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
+> > index 6c3e2cc274c5..cee239350a6b 100644
+> > --- a/tools/include/linux/string.h
+> > +++ b/tools/include/linux/string.h
+> > @@ -29,4 +29,6 @@ static inline bool strstarts(const char *str, const char *prefix)
+> >  	return strncmp(str, prefix, strlen(prefix)) == 0;
+> >  }
+> >  
+> > -#endif /* _LINUX_STRING_H_ */
+> > +extern char * __must_check skip_spaces(const char *);
+> > +
+> > +#endif /* _TOOLS_LINUX_STRING_H_ */
+> > diff --git a/tools/lib/string.c b/tools/lib/string.c
+> > index 93b3d4b6feac..50d400822bb3 100644
+> > --- a/tools/lib/string.c
+> > +++ b/tools/lib/string.c
+> > @@ -17,6 +17,7 @@
+> >  #include <string.h>
+> >  #include <errno.h>
+> >  #include <linux/string.h>
+> > +#include <linux/ctype.h>
+> >  #include <linux/compiler.h>
+> >  
+> >  /**
+> > @@ -106,3 +107,16 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
+> >  	}
+> >  	return ret;
+> >  }
+> > +
+> > +/**
+> > + * skip_spaces - Removes leading whitespace from @str.
+> > + * @str: The string to be stripped.
+> > + *
+> > + * Returns a pointer to the first non-whitespace character in @str.
+> > + */
+> > +char *skip_spaces(const char *str)
+> > +{
+> > +	while (isspace(*str))
+> > +		++str;
+> > +	return (char *)str;
+> > +}
+> > -- 
+> > 2.20.1
+> > 
+> 
+> this breaks objtool build, because it adds _ctype dependency via isspace call
+> patch below fixes it for me
 
-On 02/07/2019 14:22, Dmitry Osipenko wrote:
-> 02.07.2019 15:54, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> On 02/07/2019 12:37, Dmitry Osipenko wrote:
->>> 02.07.2019 14:20, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>
->>>> On 27/06/2019 20:47, Dmitry Osipenko wrote:
->>>>> Tegra's APB DMA engine updates words counter after each transferred b=
-urst
->>>>> of data, hence it can report transfer's residual with more fidelity w=
-hich
->>>>> may be required in cases like audio playback. In particular this fixe=
-s
->>>>> audio stuttering during playback in a chromium web browser. The patch=
- is
->>>>> based on the original work that was made by Ben Dooks and a patch fro=
-m
->>>>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
->>>>>
->>>>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@c=
-odethink.co.uk/
->>>>> Link: https://nv-tegra.nvidia.com/gitweb/?p=3Dlinux-4.4.git;a=3Dcommi=
-t;h=3Dc7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
->>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>> ---
->>>>>
->>>>> Changelog:
->>>>>
->>>>> v3:  Added workaround for a hardware design shortcoming that results
->>>>>      in a words counter wraparound before end-of-transfer bit is set
->>>>>      in a cyclic mode.
->>>>>
->>>>> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
->>>>>      to get words count if dma_desc is on free list as it will result
->>>>>      in a NULL dereference because this case wasn't handled properly.
->>>>>
->>>>>      The residual value is now updated properly, avoiding potential
->>>>>      integer overflow by adding the "bytes" to the "bytes_transferred=
-"
->>>>>      instead of the subtraction.
->>>>>
->>>>>  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++--=
---
->>>>>  1 file changed, 62 insertions(+), 7 deletions(-)
->>>>>
->>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-=
-dma.c
->>>>> index 79e9593815f1..71473eda28ee 100644
->>>>> --- a/drivers/dma/tegra20-apb-dma.c
->>>>> +++ b/drivers/dma/tegra20-apb-dma.c
->>>>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
->>>>>  	bool				last_sg;
->>>>>  	struct list_head		node;
->>>>>  	struct tegra_dma_desc		*dma_desc;
->>>>> +	unsigned int			words_xferred;
->>>>>  };
->>>>> =20
->>>>>  /*
->>>>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct t=
-egra_dma_channel *tdc,
->>>>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
->>>>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
->>>>>  	nsg_req->configured =3D true;
->>>>> +	nsg_req->words_xferred =3D 0;
->>>>> =20
->>>>>  	tegra_dma_resume(tdc);
->>>>>  }
->>>>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_c=
-hannel *tdc)
->>>>>  					typeof(*sg_req), node);
->>>>>  	tegra_dma_start(tdc, sg_req);
->>>>>  	sg_req->configured =3D true;
->>>>> +	sg_req->words_xferred =3D 0;
->>>>>  	tdc->busy =3D true;
->>>>>  }
->>>>> =20
->>>>> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_ch=
-an *dc)
->>>>>  	return 0;
->>>>>  }
->>>>> =20
->>>>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_chan=
-nel *tdc,
->>>>> +					       struct tegra_dma_sg_req *sg_req)
->>>>> +{
->>>>> +	unsigned long status, wcount =3D 0;
->>>>> +
->>>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->>>>> +		return 0;
->>>>> +
->>>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
->>>>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->>>>> +
->>>>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->>>>> +
->>>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->>>>> +		wcount =3D status;
->>>>> +
->>>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->>>>> +		return sg_req->req_len;
->>>>> +
->>>>> +	wcount =3D get_current_xferred_count(tdc, sg_req, wcount);
->>>>> +
->>>>> +	if (!wcount) {
->>>>> +		/*
->>>>> +		 * If wcount wasn't ever polled for this SG before, then
->>>>> +		 * simply assume that transfer hasn't started yet.
->>>>> +		 *
->>>>> +		 * Otherwise it's the end of the transfer.
->>>>> +		 *
->>>>> +		 * The alternative would be to poll the status register
->>>>> +		 * until EOC bit is set or wcount goes UP. That's so
->>>>> +		 * because EOC bit is getting set only after the last
->>>>> +		 * burst's completion and counter is less than the actual
->>>>> +		 * transfer size by 4 bytes. The counter value wraps around
->>>>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
->>>>> +		 * distinguish start of transfer from its end.
->>>>> +		 */
->>>>> +		if (sg_req->words_xferred)
->>>>> +			wcount =3D sg_req->req_len - 4;
->>>>> +
->>>>> +	} else if (wcount < sg_req->words_xferred) {
->>>>> +		/*
->>>>> +		 * This case shall not ever happen because EOC bit
->>>>> +		 * must be set once next cyclic transfer is started.
->>>>
->>>> I am not sure I follow this and why this condition cannot happen for
->>>> cyclic transfers. What about non-cyclic transfers?
->>>
->>> It cannot happen because the EOC bit will be set in that case. The coun=
-ter wraps
->>> around when the transfer of a last burst happens, EOC bit is guaranteed=
- to be set
->>> after completion of the last burst. That's my observation after a thoro=
-ugh testing,
->>> it will be very odd if EOC setting happened completely asynchronously.
->>
->> I see how you know that the EOC is set. Anyway, you check if the EOC is
->> set before and if so return sg_req->req_len prior to this test.
->>
->> Maybe I am missing something, but what happens if we are mid block when
->> dmaengine_tx_status() is called? That happen asynchronously right?
->=20
->=20
-> Do you mean asynchronously in regards to the ISR? Or something else?
+Thanks for  spotting this, I'll have it in my next pull request.
 
-In the sense that the client can call dmaengine_tx_status() at anytime
-to check the status of a transfer.
+- Arnaldo
+ 
+> jirka
+> 
+> 
+> ---
+> diff --git a/tools/objtool/Build b/tools/objtool/Build
+> index 749becdf5b90..8dc4f0848362 100644
+> --- a/tools/objtool/Build
+> +++ b/tools/objtool/Build
+> @@ -9,6 +9,7 @@ objtool-y += special.o
+>  objtool-y += objtool.o
+>  
+>  objtool-y += libstring.o
+> +objtool-y += libctype.o
+>  objtool-y += str_error_r.o
+>  
+>  CFLAGS += -I$(srctree)/tools/lib
+> @@ -17,6 +18,10 @@ $(OUTPUT)libstring.o: ../lib/string.c FORCE
+>  	$(call rule_mkdir)
+>  	$(call if_changed_dep,cc_o_c)
+>  
+> +$(OUTPUT)libctype.o: ../lib/ctype.c FORCE
+> +	$(call rule_mkdir)
+> +	$(call if_changed_dep,cc_o_c)
+> +
+>  $(OUTPUT)str_error_r.o: ../lib/str_error_r.c FORCE
+>  	$(call rule_mkdir)
+>  	$(call if_changed_dep,cc_o_c)
 
-Cheers
-Jon
+-- 
 
---=20
-nvpublic
+- Arnaldo
