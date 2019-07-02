@@ -2,209 +2,187 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72884C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B2FC06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBFC2184E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:15:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562091346;
-	bh=edidt6q3V/8wPli7YYyCa1ugOfMbWrYdtWTACKbLcPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jLpVfiGdfl3kSYv2oY98+VzUgGTWPDZU371evKNwl81gdvRDAd/GBKxnUzPOM2fv6
-	 fpeF1lzQoYcJ94ipddkSy7Niu1oawb+TsReoROESezP7F/UhNLJbEIo0mUuqTaSL2O
-	 XoxHK4/rqhN0VJAGqErZmet3fmDJhz5136IxYFbQ=
+	by mail.kernel.org (Postfix) with ESMTP id 704762184C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:15:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzVO+nNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfGBSPo (ORCPT
+        id S1727049AbfGBSPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 14:15:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbfGBSPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:15:43 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC7FA20989;
-        Tue,  2 Jul 2019 18:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562091342;
-        bh=edidt6q3V/8wPli7YYyCa1ugOfMbWrYdtWTACKbLcPE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ngon/H5/9TjNBudpX/AhFNJ1EQWzCtYwqMLG2y1leW+Zi0QlMhmoMqsfmi2Orxe/y
-         O+UbAwpp+8j3h78ctsOyE4nQO7H2zvr0FJXdo1f1ZEN2DlqXTIPPMkU1WEoFET0aoG
-         H2jIcem6v3SjnDg4nJpZWjNxxvDwq1Sut1uP6OUU=
-Date:   Tue, 2 Jul 2019 11:15:40 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, raven@themaw.net, mszeredi@redhat.com,
-        christian@brauner.io, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/11] VFS: Introduce filesystem information query
- syscall [ver #15]
-Message-ID: <20190702181539.GA110306@gmail.com>
-References: <156173661696.14042.17822154531324224780.stgit@warthog.procyon.org.uk>
+        Tue, 2 Jul 2019 14:15:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39868 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfGBSPw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 14:15:52 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 196so8075343pgc.6;
+        Tue, 02 Jul 2019 11:15:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=DxOUvXm8PNrI3FnpXmI93iJZ669glLcrN8+sl606Vzo=;
+        b=CzVO+nNLbPllxoJSeWpK2BzAWjshDfcdvDMua1IC5sYF6s7Xn/K8TNi9DnqBVo68Fx
+         cb//ZSOn/y6OmS1ekJVl6aQSD8+K55m5nEIKaj4H1Z3OPlV3oZm6j7SLB6TEMAGoIo1h
+         Vd62nu4SH4i2XEg+GURoN8BEPnrYd4pdgqvj8JwMW4oYxIWbkngzzEnXzq22roxJsyTL
+         9h5qT91X25zEqWU9zX8/DnK/dczg/nfva8eCKPA6Cw0Uxk4wByyDw5ycphJpe/b7Thw4
+         zClSZcAXk4o/74nxp5CHWl8rjgsOfnBOmkmO7SSbYCeItcI7kKdBsV63sVN5LczXi1u2
+         Xmqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=DxOUvXm8PNrI3FnpXmI93iJZ669glLcrN8+sl606Vzo=;
+        b=tkUkW+z+M/KSc4y+5gpsL34L2lc5yX9oAyWo6+xpKXE60ZladsddvXL6woHgq6rFA6
+         Imlok114NGSAB0lsxXiX5MamehdeEJesHREeGpj7luP5MTBlaO3aHS1vZPGJ4MaTL74X
+         07Sqq8O1X/j4bsQRNrikFX1GDu3ycj7iO3LRe7IH3HnfdkD0p6eSD04AWmSVA3XIr+nX
+         jSVYTOjthneivjmxJHqHhG14VeOsPHyuvDzONsvDyUI7Eve/Bm5hJwJKZv01c0PrJjhT
+         4XlOdAatnxl9+BA8N0+pIa39e/AoqAtjB607kTSMHmcEc1SbSnoy2dZcNWjikby+ojtE
+         STyQ==
+X-Gm-Message-State: APjAAAW6PjGvdfwHg9tFNjJ7T9oJMNBAogydxYhM52b7Vl0mPknhosZf
+        YMMSOGbVqOh1qOTum+QNUQY=
+X-Google-Smtp-Source: APXvYqwVQlC/FW+sbrMn2V0B2Ksokr49iVLxwe3ctfAlOi8fgHulMFAIrzzcUqEHghzSXodxC0hpsw==
+X-Received: by 2002:a63:f146:: with SMTP id o6mr31297134pgk.179.1562091351993;
+        Tue, 02 Jul 2019 11:15:51 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id y133sm15016889pfb.28.2019.07.02.11.15.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 11:15:51 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 23:45:47 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: xfs: xfs_log: Change return type from int to void
+Message-ID: <20190702181547.GA11316@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156173661696.14042.17822154531324224780.stgit@warthog.procyon.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 04:43:37PM +0100, David Howells wrote:
-> 
-> Here are a set of patches that adds a syscall, fsinfo(), that allows
-> attributes of a filesystem/superblock to be queried.  Attribute values are
-> of four basic types:
-> 
->  (1) Version dependent-length structure (size defined by type).
-> 
->  (2) Variable-length string (up to 4096, no NUL).
-> 
->  (3) Array of fixed-length structures (up to INT_MAX size).
-> 
->  (4) Opaque blob (up to INT_MAX size).
-> 
-> Attributes can have multiple values either as a sequence of values or a
-> sequence-of-sequences of values and all the values of a particular
-> attribute must be of the same type.
-> 
-> Note that the values of an attribute *are* allowed to vary between dentries
-> within a single superblock, depending on the specific dentry that you're
-> looking at.
-> 
-> I've tried to make the interface as light as possible, so integer/enum
-> attribute selector rather than string and the core does all the allocation
-> and extensibility support work rather than leaving that to the filesystems.
-> That means that for the first two attribute types, sb->s_op->fsinfo() may
-> assume that the provided buffer is always present and always big enough.
-> 
-> Further, this removes the possibility of the filesystem gaining access to the
-> userspace buffer.
-> 
-> 
-> fsinfo() allows a variety of information to be retrieved about a filesystem
-> and the mount topology:
-> 
->  (1) General superblock attributes:
-> 
->       - The amount of space/free space in a filesystem (as statfs()).
->       - Filesystem identifiers (UUID, volume label, device numbers, ...)
->       - The limits on a filesystem's capabilities
->       - Information on supported statx fields and attributes and IOC flags.
->       - A variety single-bit flags indicating supported capabilities.
->       - Timestamp resolution and range.
->       - Sources (as per mount(2), but fsconfig() allows multiple sources).
->       - In-filesystem filename format information.
->       - Filesystem parameters ("mount -o xxx"-type things).
->       - LSM parameters (again "mount -o xxx"-type things).
-> 
->  (2) Filesystem-specific superblock attributes:
-> 
->       - Server names and addresses.
->       - Cell name.
-> 
->  (3) Filesystem configuration metadata attributes:
-> 
->       - Filesystem parameter type descriptions.
->       - Name -> parameter mappings.
->       - Simple enumeration name -> value mappings.
-> 
->  (4) Information about what the fsinfo() syscall itself supports, including
->      the number of attibutes supported and the number of capability bits
->      supported.
-> 
->  (5) Future patches will include information about the mount topology.
-> 
-> The system is extensible:
-> 
->  (1) New attributes can be added.  There is no requirement that a
->      filesystem implement every attribute.  Note that the core VFS keeps a
->      table of types and sizes so it can handle future extensibility rather
->      than delegating this to the filesystems.
-> 
->  (2) Version length-dependent structure attributes can be made larger and
->      have additional information tacked on the end, provided it keeps the
->      layout of the existing fields.  If an older process asks for a shorter
->      structure, it will only be given the bits it asks for.  If a newer
->      process asks for a longer structure on an older kernel, the extra
->      space will be set to 0.  In all cases, the size of the data actually
->      available is returned.
-> 
->      In essence, the size of a structure is that structure's version: a
->      smaller size is an earlier version and a later version includes
->      everything that the earlier version did.
-> 
->  (3) New single-bit capability flags can be added.  This is a structure-typed
->      attribute and, as such, (2) applies.  Any bits you wanted but the kernel
->      doesn't support are automatically set to 0.
-> 
-> If a filesystem-specific attribute is added, it should just take up the next
-> number in the enumeration.  Currently, I do not intend that the number space
-> should be subdivided between interested parties.
-> 
-> 
-> fsinfo() may be called like the following, for example:
-> 
-> 	struct fsinfo_params params = {
-> 		.at_flags	= AT_SYMLINK_NOFOLLOW,
-> 		.request	= FSINFO_ATTR_SERVER_ADDRESS;
-> 		.Nth		= 2;
-> 		.Mth		= 1;
-> 	};
-> 	struct fsinfo_server_address address;
-> 
-> 	len = fsinfo(AT_FDCWD, "/afs/grand.central.org/doc", &params,
-> 		     &address, sizeof(address));
-> 
-> The above example would query a network filesystem, such as AFS or NFS, and
-> ask what the 2nd address (Mth) of the 3rd server (Nth) that the superblock is
-> using is.  Whereas:
-> 
-> 	struct fsinfo_params params = {
-> 		.at_flags	= AT_SYMLINK_NOFOLLOW,
-> 		.request	= FSINFO_ATTR_AFS_CELL_NAME;
-> 	};
-> 	char cell_name[256];
-> 
-> 	len = fsinfo(AT_FDCWD, "/afs/grand.central.org/doc", &params,
-> 		     &cell_name, sizeof(cell_name));
-> 
-> would retrieve the name of an AFS cell as a string.
-> 
-> fsinfo() can also be used to query a context from fsopen() or fspick():
-> 
-> 	fd = fsopen("ext4", 0);
-> 	struct fsinfo_params params = {
-> 		.request	= FSINFO_ATTR_PARAM_DESCRIPTION;
-> 	};
-> 	struct fsinfo_param_description desc;
-> 	fsinfo(fd, NULL, &params, &desc, sizeof(desc));
-> 
-> even if that context doesn't currently have a superblock attached (though if
-> there's no superblock attached, only filesystem-specific things like parameter
-> descriptions can be accessed).
-> 
-> The patches can be found here also:
-> 
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
-> 
-> on branch:
-> 
-> 	fsinfo-core
-> 
-> 
+Change return types of below functions as they never fails
+xfs_log_mount_cancel
+xlog_recover_cancel
+xlog_recover_cancel_intents
 
-Where are the tests and man page for this system call?  "Tests" meaning actual
-automated tests in a commonly used test suite (e.g. LTP, kselftests, or
-xfstests), not just a sample program.
+fix below issue reported by coccicheck
+fs/xfs/xfs_log_recover.c:4886:7-12: Unneeded variable: "error". Return
+"0" on line 4926
 
-- Eric
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ fs/xfs/xfs_log.c         |  8 ++------
+ fs/xfs/xfs_log.h         |  2 +-
+ fs/xfs/xfs_log_priv.h    |  2 +-
+ fs/xfs/xfs_log_recover.c | 12 +++---------
+ 4 files changed, 7 insertions(+), 17 deletions(-)
+
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index cbaf348..00e9f5c 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -769,16 +769,12 @@ xfs_log_mount_finish(
+  * The mount has failed. Cancel the recovery if it hasn't completed and destroy
+  * the log.
+  */
+-int
++void
+ xfs_log_mount_cancel(
+ 	struct xfs_mount	*mp)
+ {
+-	int			error;
+-
+-	error = xlog_recover_cancel(mp->m_log);
++	xlog_recover_cancel(mp->m_log);
+ 	xfs_log_unmount(mp);
+-
+-	return error;
+ }
+ 
+ /*
+diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
+index f27b1cb..84e0680 100644
+--- a/fs/xfs/xfs_log.h
++++ b/fs/xfs/xfs_log.h
+@@ -117,7 +117,7 @@ int	  xfs_log_mount(struct xfs_mount	*mp,
+ 			xfs_daddr_t		start_block,
+ 			int		 	num_bblocks);
+ int	  xfs_log_mount_finish(struct xfs_mount *mp);
+-int	xfs_log_mount_cancel(struct xfs_mount *);
++void	xfs_log_mount_cancel(struct xfs_mount *);
+ xfs_lsn_t xlog_assign_tail_lsn(struct xfs_mount *mp);
+ xfs_lsn_t xlog_assign_tail_lsn_locked(struct xfs_mount *mp);
+ void	  xfs_log_space_wake(struct xfs_mount *mp);
+diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+index 8acacbc..b880c23 100644
+--- a/fs/xfs/xfs_log_priv.h
++++ b/fs/xfs/xfs_log_priv.h
+@@ -418,7 +418,7 @@ xlog_recover(
+ extern int
+ xlog_recover_finish(
+ 	struct xlog		*log);
+-extern int
++extern void
+ xlog_recover_cancel(struct xlog *);
+ 
+ extern __le32	 xlog_cksum(struct xlog *log, struct xlog_rec_header *rhead,
+diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+index 1fc70ac..13d1d3e 100644
+--- a/fs/xfs/xfs_log_recover.c
++++ b/fs/xfs/xfs_log_recover.c
+@@ -4875,12 +4875,11 @@ xlog_recover_process_intents(
+  * A cancel occurs when the mount has failed and we're bailing out.
+  * Release all pending log intent items so they don't pin the AIL.
+  */
+-STATIC int
++STATIC void
+ xlog_recover_cancel_intents(
+ 	struct xlog		*log)
+ {
+ 	struct xfs_log_item	*lip;
+-	int			error = 0;
+ 	struct xfs_ail_cursor	cur;
+ 	struct xfs_ail		*ailp;
+ 
+@@ -4920,7 +4919,6 @@ xlog_recover_cancel_intents(
+ 
+ 	xfs_trans_ail_cursor_done(&cur);
+ 	spin_unlock(&ailp->ail_lock);
+-	return error;
+ }
+ 
+ /*
+@@ -5779,16 +5777,12 @@ xlog_recover_finish(
+ 	return 0;
+ }
+ 
+-int
++void
+ xlog_recover_cancel(
+ 	struct xlog	*log)
+ {
+-	int		error = 0;
+-
+ 	if (log->l_flags & XLOG_RECOVERY_NEEDED)
+-		error = xlog_recover_cancel_intents(log);
+-
+-	return error;
++		xlog_recover_cancel_intents(log);
+ }
+ 
+ #if defined(DEBUG)
+-- 
+2.7.4
+
