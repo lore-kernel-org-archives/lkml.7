@@ -2,112 +2,129 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDC7C06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32E3C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF5521721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11B721721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ZiOw17Oa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQ31jsiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfGBRq7 (ORCPT
+        id S1727054AbfGBRr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 13:46:59 -0400
-Received: from mail-eopbgr680041.outbound.protection.outlook.com ([40.107.68.41]:31008
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726193AbfGBRq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:46:58 -0400
+        Tue, 2 Jul 2019 13:47:29 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40323 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfGBRr3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 13:47:29 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p184so8614694pfp.7;
+        Tue, 02 Jul 2019 10:47:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JKrxzGEfgC/NFJCq6+fmtSWANUJEAldqOq1UQ2lA/xQ=;
- b=ZiOw17Oa9ynZHDMUx6RiEulW7DxPd2FEVvAUePXGQ9G1l879OZHCimmq7Rygrp/20AI3tKZwuu5Z0Liy0KM8VFHfnR8CVoy+7B9bTfEAgt+LymTlfqGD8vBTm5mtkFQjMByX+z1kCw1Ou94WyrM2Lvo9a74Q7GmxUqRhy+xrUTE=
-Received: from DM5PR12MB1449.namprd12.prod.outlook.com (10.172.40.14) by
- DM5PR12MB1420.namprd12.prod.outlook.com (10.168.239.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Tue, 2 Jul 2019 17:46:54 +0000
-Received: from DM5PR12MB1449.namprd12.prod.outlook.com
- ([fe80::180c:ff0c:37e6:a482]) by DM5PR12MB1449.namprd12.prod.outlook.com
- ([fe80::180c:ff0c:37e6:a482%10]) with mapi id 15.20.2032.019; Tue, 2 Jul 2019
- 17:46:54 +0000
-From:   Gary R Hook <ghook@amd.com>
-To:     Cfir Cohen <cfir@google.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Hook, Gary" <Gary.Hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        David Rientjes <rientjes@google.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] crypto: ccp/gcm - use const time tag comparison.
-Thread-Topic: [PATCH v2] crypto: ccp/gcm - use const time tag comparison.
-Thread-Index: AQHVMPw13VShZb2ZG0mtCEYORUtnoKa3mkoA
-Date:   Tue, 2 Jul 2019 17:46:53 +0000
-Message-ID: <aa19bd59-7b76-b8ad-3f25-42efbfb7fd29@amd.com>
-References: <20190702173256.50485-1-cfir@google.com>
-In-Reply-To: <20190702173256.50485-1-cfir@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR04CA0020.namprd04.prod.outlook.com
- (2603:10b6:805:3e::33) To DM5PR12MB1449.namprd12.prod.outlook.com
- (2603:10b6:4:10::14)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Gary.Hook@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e50e804a-1b8e-49de-b36e-08d6ff1544ea
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1420;
-x-ms-traffictypediagnostic: DM5PR12MB1420:
-x-microsoft-antispam-prvs: <DM5PR12MB142050A723D046C9C3672BB4FDF80@DM5PR12MB1420.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 008663486A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(199004)(189003)(66556008)(66946007)(66476007)(73956011)(68736007)(3846002)(99286004)(66446008)(64756008)(6116002)(4744005)(7736002)(478600001)(66066001)(72206003)(36756003)(305945005)(8936002)(31686004)(81156014)(5660300002)(81166006)(4326008)(25786009)(54906003)(76176011)(2906002)(11346002)(6512007)(186003)(6436002)(446003)(14444005)(486006)(53936002)(256004)(102836004)(6506007)(386003)(53546011)(2616005)(476003)(26005)(8676002)(6486002)(71190400001)(52116002)(229853002)(14454004)(31696002)(6246003)(71200400001)(316002)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1420;H:DM5PR12MB1449.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Z+Yntg6EzFCNnvQX+L8Jtnw8J1z4q/dpq8kBLudSBCPOwjvQr6heESzRjLzvKoOcLrEoCLVyj4OVnLkYLSCBoW+J52CIQJNHdODYVN6QVtyvBkf7GvVMSrmJiwSldZW3zCFTmJTBFyuYuI+EnnU4gI6i14PFz2E5YWq29+nbKfs98o7jmtlD6lw7pUt1FJIdJ91b55p/Q1By8fz0CJno90DVt8rJLpHF8iGb6pE00oPzk6mQY9IVufdchgq41K/km0jx+RocpB53cDVFIfVhGwSBxYK+uuNF0ZIaA8nOqtH+sfqB7Ttn9dOOouIeGXJfJH7isMfbDxgYO3wQZ8IOFHDgo8uYRIDJSC2oCPTDTa0Iz/1w2vznDC0kxk8MWxqvXY8Vtf/o/Nf1OyQDXli4hkfWnBZd84xuQkmlC0ZXgHw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3383CC4B34FCFC47B2A45BEA5C4D5FD2@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Jzz759w5WsLp9Pj0z8kof2AyohkrQmdR6AqTftOfq00=;
+        b=YQ31jsiSplK9q6mCpGc6wFd64eZZ+z83KgJaX9GpWwnud5QdIq6cqI1rRa9vrKG6ek
+         Ry8kcx6GtktkY8TvZwvd95PuQsq/wVS2PdeLUfAe8CfNhxDrCp94snQALcJ+Oc2e7ITx
+         OyhfK9Feg7T62HYLWKmmNkx5u8l3eLaN/ASexTTGYx9DtTciFfZVL0QO7BlE4LTc535c
+         AF3ytE6ZByz61/fsKdcNvLyZwjdYBlYMZW+aFQTmaiQ4GeP9x1QNK7DUQTQ9wtll0HUN
+         vIBaenuQbOAwM63CpfH3UPe+p9T+DUEwq5qdqbmpaXHnA+Y0gdvybzxcMwF4fwA5htVt
+         G6mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Jzz759w5WsLp9Pj0z8kof2AyohkrQmdR6AqTftOfq00=;
+        b=j0o/zy6WelaI5ru+mfwZ9kZKtGwGnzBzSix0XbYQwcj/4Q/1tYND/HP/yKfsOMrFtR
+         K5BuhWN5maFY2zD3O3wyDk5GjV9Z9oHgvvKirRv6e1Qa2dh/hYrNAxeQrtDtfA0GnLH2
+         3ucqS0vutY2cefQP9tC/WeBVsATYoKSU9jFFp9IUIgdArZGv/ef8OXuILTFV2ynN58QK
+         /61at+WFegDOkOkyUZLZn82VkNlPlHMe8HrtmpLTJigQUIeIY/5/uPE1W960HC9AXD5v
+         xIWuFCchU3Few8Hac4whE5EQtWvQSGT8tmDoDAAK+K+PMBRHjftW/hskgYcz7ER7V+JC
+         AqiQ==
+X-Gm-Message-State: APjAAAWdFJKky+JvsuL/3bcq8+gPFIc2mQz6/OUmx3p8+fMgxpu4V15v
+        2ELF07dsNNfJZiekpTC2WQz19bYR
+X-Google-Smtp-Source: APXvYqwz0zwLa3IlOQ4JSqtuLImuRigLw7gEoDSMcqXXago9XIpqzQlQon7bsspoB1no9QsA9x+60g==
+X-Received: by 2002:a17:90a:d997:: with SMTP id d23mr6638752pjv.84.1562089648449;
+        Tue, 02 Jul 2019 10:47:28 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id i3sm15303855pfo.138.2019.07.02.10.47.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 10:47:27 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 23:17:24 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Tyler Hicks <tyhicks@canonical.com>, ecryptfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: ecryptfs: crypto: Change return type of
+ ecryptfs_process_flags
+Message-ID: <20190702174723.GA4600@hari-Inspiron-1545>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e50e804a-1b8e-49de-b36e-08d6ff1544ea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2019 17:46:53.8955
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ghook@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1420
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8yLzE5IDEyOjMyIFBNLCBDZmlyIENvaGVuIHdyb3RlOg0KPiBBdm9pZCBsZWFraW5nIEdD
-TSB0YWcgdGhyb3VnaCB0aW1pbmcgc2lkZSBjaGFubmVsLg0KPiANCj4gRml4ZXM6IDM2Y2Y1MTVi
-OWJiZSAoImNyeXB0bzogY2NwIC0gRW5hYmxlIHN1cHBvcnQgZm9yIEFFUyBHQ00gb24gdjUgQ0NQ
-cyIpDQo+IENjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4gIyB2NC4xMisNCj4gU2lnbmVkLW9m
-Zi1ieTogQ2ZpciBDb2hlbiA8Y2ZpckBnb29nbGUuY29tPg0KDQpBY2tlZC1ieTogR2FyeSBSIEhv
-b2sgPGdob29rQGFtZC5jb20+DQoNCj4gLS0tDQo+ICAgZHJpdmVycy9jcnlwdG8vY2NwL2NjcC1v
-cHMuYyB8IDMgKystDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
-dGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3J5cHRvL2NjcC9jY3Atb3BzLmMg
-Yi9kcml2ZXJzL2NyeXB0by9jY3AvY2NwLW9wcy5jDQo+IGluZGV4IGRiOGRlODlkOTkwZi4uNjMz
-NjcwMjIwZjZjIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2NyeXB0by9jY3AvY2NwLW9wcy5jDQo+
-ICsrKyBiL2RyaXZlcnMvY3J5cHRvL2NjcC9jY3Atb3BzLmMNCj4gQEAgLTg0MCw3ICs4NDAsOCBA
-QCBzdGF0aWMgaW50IGNjcF9ydW5fYWVzX2djbV9jbWQoc3RydWN0IGNjcF9jbWRfcXVldWUgKmNt
-ZF9xLA0KPiAgIAkJaWYgKHJldCkNCj4gICAJCQlnb3RvIGVfdGFnOw0KPiAgIA0KPiAtCQlyZXQg
-PSBtZW1jbXAodGFnLmFkZHJlc3MsIGZpbmFsX3dhLmFkZHJlc3MsIEFFU19CTE9DS19TSVpFKTsN
-Cj4gKwkJcmV0ID0gY3J5cHRvX21lbW5lcSh0YWcuYWRkcmVzcywgZmluYWxfd2EuYWRkcmVzcywN
-Cj4gKwkJCQkgICAgQUVTX0JMT0NLX1NJWkUpID8gLUVCQURNU0cgOiAwOw0KPiAgIAkJY2NwX2Rt
-X2ZyZWUoJnRhZyk7DQo+ICAgCX0NCj4gICANCj4gDQoNCg==
+Change return type of ecryptfs_process_flags from int to void. As it
+never fails.
+
+fixes below issue reported by coccicheck
+
+s/ecryptfs/crypto.c:870:5-7: Unneeded variable: "rc". Return "0" on line
+883
+
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ fs/ecryptfs/crypto.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
+index 509a767..55a633e 100644
+--- a/fs/ecryptfs/crypto.c
++++ b/fs/ecryptfs/crypto.c
+@@ -864,10 +864,9 @@ static struct ecryptfs_flag_map_elem ecryptfs_flag_map[] = {
+  *
+  * Returns zero on success; non-zero if the flag set is invalid
+  */
+-static int ecryptfs_process_flags(struct ecryptfs_crypt_stat *crypt_stat,
++static void ecryptfs_process_flags(struct ecryptfs_crypt_stat *crypt_stat,
+ 				  char *page_virt, int *bytes_read)
+ {
+-	int rc = 0;
+ 	int i;
+ 	u32 flags;
+ 
+@@ -880,7 +879,6 @@ static int ecryptfs_process_flags(struct ecryptfs_crypt_stat *crypt_stat,
+ 	/* Version is in top 8 bits of the 32-bit flag vector */
+ 	crypt_stat->file_version = ((flags >> 24) & 0xFF);
+ 	(*bytes_read) = 4;
+-	return rc;
+ }
+ 
+ /**
+@@ -1306,12 +1304,9 @@ static int ecryptfs_read_headers_virt(char *page_virt,
+ 	if (!(crypt_stat->flags & ECRYPTFS_I_SIZE_INITIALIZED))
+ 		ecryptfs_i_size_init(page_virt, d_inode(ecryptfs_dentry));
+ 	offset += MAGIC_ECRYPTFS_MARKER_SIZE_BYTES;
+-	rc = ecryptfs_process_flags(crypt_stat, (page_virt + offset),
++	ecryptfs_process_flags(crypt_stat, (page_virt + offset),
+ 				    &bytes_read);
+-	if (rc) {
+-		ecryptfs_printk(KERN_WARNING, "Error processing flags\n");
+-		goto out;
+-	}
++
+ 	if (crypt_stat->file_version > ECRYPTFS_SUPPORTED_FILE_VERSION) {
+ 		ecryptfs_printk(KERN_WARNING, "File version is [%d]; only "
+ 				"file version [%d] is supported by this "
+-- 
+2.7.4
+
