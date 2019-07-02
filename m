@@ -2,147 +2,342 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1E8C46478
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCBCC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0A52054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:06:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TmcjfCcx"
+	by mail.kernel.org (Postfix) with ESMTP id 5A8E521721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfGBKGv (ORCPT
+        id S1727113AbfGBKMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 06:06:51 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38813 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfGBKGu (ORCPT
+        Tue, 2 Jul 2019 06:12:30 -0400
+Received: from mail.steuer-voss.de ([85.183.69.95]:36800 "EHLO
+        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfGBKMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 06:06:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s15so304881wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:06:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=IPhxNdYQv1IO45V1N89WkeYw72yq7YkYbzXa74/qLm8=;
-        b=TmcjfCcxp9A8p09QuoZGu11Tfov1i2w+va27tjKlP+UMLAP9yOMJJmoYEsh6iIKPXW
-         msQS1R0Vph9Wj+ScXIqkevVlPoxzL1HHYEnL0H2gqmnJ7GS8yuphQVdojxjDby/fnzqh
-         iIKFUsFtpKGPWwSUsSgmtl07V6KTaUluSQ5tQYCKwUwjc3Q5IQfEJBVH6DJYu/677awV
-         IlHuPJslNPQamm0aYo9JmdAJhR+kyipkS/zZM93qGpMREddffT/vUybnRw+4iSTpjxOC
-         8zyfIrQE+miGNfNstjUZCVlvoYaIGoEeAVlmi724OpGlxR6bdJYkAvraWA3+o22qkLzb
-         LxBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=IPhxNdYQv1IO45V1N89WkeYw72yq7YkYbzXa74/qLm8=;
-        b=sbtUsFWB6skFAUiAPnadmI3tt5Emad5dNGwucDVmuFSqAoPwqZDtXferWJ2H3TWuh7
-         KLg0cehTlQdyL4YhRuSfni2ar3lAnqMWeLCYbn4HgOIEcv8LTWOYcCz6F2lrr4DOVa4X
-         RS98NEmdv4Ihl4c6DHFxN9BA6+MJ4YX3KfFHFrDVL1WGs/pomqAUSOFZAl0rmJ3af8QN
-         1DWdmLxvbPd2wVCOYSuScnpHKc73U3HmFSmmZiHNs6OgKMdcYL0X8WtGaOCK3Urakvkb
-         XzLWiqzdGiCnwDh52h6Qb3ytb48VBDzhyxdv/eLduUbdEPSTvFlQQKzrGmWhzuu3xMsj
-         nVyw==
-X-Gm-Message-State: APjAAAUWakyXCJTST8PqW5G2QZkDMNFw5hY27P+La7CFpYFCHLH+MZ29
-        OSR8VnHPMPzpqMjtIeWPar0tlA==
-X-Google-Smtp-Source: APXvYqwdjByD+ebiA2jaUAfMZ0F44rSTtYAIiX/eLfpUiDzg2avALCgxqEFC+Vkzsv/GOweWWbSJqA==
-X-Received: by 2002:a1c:a654:: with SMTP id p81mr2771343wme.36.1562062008717;
-        Tue, 02 Jul 2019 03:06:48 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id m24sm2055652wmi.39.2019.07.02.03.06.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 03:06:48 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 11:06:46 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kevin Hilman <khilman@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Lechner <david@lechnology.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 00/12] ARM: davinci: da850-evm: remove more legacy GPIO
- calls
-Message-ID: <20190702100646.q3wgzgacvp67m6xv@holly.lan>
-References: <20190625163434.13620-1-brgl@bgdev.pl>
- <fe42c0e1-2bfb-2b1c-2c38-0e176e88ec6e@ti.com>
- <20190702063653.GC4652@dell>
+        Tue, 2 Jul 2019 06:12:30 -0400
+X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
+Received: by mail.steuer-voss.de (Postfix, from userid 1000)
+        id 9301844FB1; Tue,  2 Jul 2019 12:12:26 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.steuer-voss.de (Postfix) with ESMTP id 8FB3643D57;
+        Tue,  2 Jul 2019 12:12:26 +0200 (CEST)
+Date:   Tue, 2 Jul 2019 12:12:26 +0200 (CEST)
+From:   Nikolaus Voss <nv@vosn.de>
+X-X-Sender: nv@fox.voss.local
+To:     "Andrew F. Davis" <afd@ti.com>
+cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] ASoC: tas5720.c: cleanup variant management
+In-Reply-To: <074d4df3-51d8-6e20-869d-5f88b46cc172@ti.com>
+Message-ID: <alpine.DEB.2.20.1907020855240.10248@fox.voss.local>
+References: <20190628143037.GH5379@sirena.org.uk> <cover.1561988282.git.nikolaus.voss@loewensteinmedical.de> <c79df50175d59265a37c5e7c8a0cfbf8119bcf78.1561988282.git.nikolaus.voss@loewensteinmedical.de> <80af3fca-f71b-c118-e5d8-fde8b7d21705@ti.com>
+ <alpine.DEB.2.20.1907011633310.4353@fox.voss.local> <074d4df3-51d8-6e20-869d-5f88b46cc172@ti.com>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190702063653.GC4652@dell>
-User-Agent: NeoMutt/20180716
+Content-Type: multipart/mixed; BOUNDARY="8323329-910944831-1562061656=:10248"
+Content-ID: <alpine.DEB.2.20.1907021201360.11292@fox.voss.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 07:36:53AM +0100, Lee Jones wrote:
-> On Mon, 01 Jul 2019, Sekhar Nori wrote:
-> 
-> > Hi Lee, Daniel, Jingoo,
-> > 
-> > On 25/06/19 10:04 PM, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > 
-> > > This is another small step on the path to liberating davinci from legacy
-> > > GPIO API calls and shrinking the davinci GPIO driver by not having to
-> > > support the base GPIO number anymore.
-> > > 
-> > > This time we're removing the legacy calls used indirectly by the LCDC
-> > > fbdev driver.
-> > > 
-> > > The first three patches modify the GPIO backlight driver. The first
-> > > of them adds the necessary functionality, the other two are just
-> > > tweaks and cleanups.
-> > 
-> > Can you take the first three patches for v5.3 - if its not too late? I
-> > think that will make it easy for rest of patches to make into subsequent
-> > kernel releases.
-> 
-> It's already too late in the cycle (-rc7) for that.  I require patches
-> of this nature to have a good soak in -next before being merged. There
-> shouldn't be an issue with getting them into v5.4 though.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On the other hand I think we did take a patch that did much the same 
-thing as patch 1/12 in this series:
-https://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git/commit/?h=for-backlight-next&id=98b7404eb7d64e55f8fdd419cb3965a8abf0e217
+--8323329-910944831-1562061656=:10248
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 8BIT
+Content-ID: <alpine.DEB.2.20.1907021201361.11292@fox.voss.local>
 
-I'm not 100% sure but I think that might allow the patchset to be split
-into two that are independent (one for Davinci and one for gpio
-backlight improvements).
+On Mon, 1 Jul 2019, Andrew F. Davis wrote:
+> On 7/1/19 11:35 AM, Nikolaus Voss wrote:
+>> On Mon, 1 Jul 2019, Andrew F. Davis wrote:
+>>> On 7/1/19 9:42 AM, Nikolaus Voss wrote:
+>>>> Replace enum tas572x_type with struct tas5720_variant which aggregates
+>>>> variant specific stuff and can be directly referenced from an id table.
+>>>>
+>>>> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+>>>> ---
+>>>>  sound/soc/codecs/tas5720.c | 98 +++++++++++++-------------------------
+>>>>  1 file changed, 33 insertions(+), 65 deletions(-)
+>>>>
+>>>> diff --git a/sound/soc/codecs/tas5720.c b/sound/soc/codecs/tas5720.c
+>>>> index 37fab8f22800..b2e897f094b4 100644
+>>>> --- a/sound/soc/codecs/tas5720.c
+>>>> +++ b/sound/soc/codecs/tas5720.c
+>>>> @@ -28,9 +28,10 @@
+>>>>  /* Define how often to check (and clear) the fault status register
+>>>> (in ms) */
+>>>>  #define TAS5720_FAULT_CHECK_INTERVAL        200
+>>>>
+>>>> -enum tas572x_type {
+>>>> -    TAS5720,
+>>>> -    TAS5722,
+>>>> +struct tas5720_variant {
+>>>> +    const int device_id;
+>>>> +    const struct regmap_config *reg_config;
+>>>> +    const struct snd_soc_component_driver *comp_drv;
+>>>>  };
+>>>>
+>>>>  static const char * const tas5720_supply_names[] = {
+>>>> @@ -44,7 +45,7 @@ struct tas5720_data {
+>>>>      struct snd_soc_component *component;
+>>>>      struct regmap *regmap;
+>>>>      struct i2c_client *tas5720_client;
+>>>> -    enum tas572x_type devtype;
+>>>> +    const struct tas5720_variant *variant;
+>>>
+>>> Why add a new struct? Actually I don't see the need for this patch at
+>>> all, the commit message only explains the 'what' not the 'why'. We can
+>>> and do already build this info from the tas572x_type.
+>>
+>> As the commit message says, the purpose is to aggregate the variant
+>> specifics and make it accessible via one pointer. This is a standard
+>> approach for of/acpi_device_id tables and thus makes the code simpler
+>> and improves readability. This is a maintenance patch to prepare using
+>> the device match API in a proper way.
+>>
+>
+>
+> "make it accessible via one pointer" is again a "what", the "why" is:
+>
+> "This is a standard approach"
+> "makes the code simpler and improves readability"
+>
+> Those are valid reasons and should be what you put in the commit message.
 
+ok
 
-Daniel.
+>
+>
+>>>
+>>> Also below are several functional changes, the cover letter says this is
+>>> not a functional change, yet the driver behaves differently now.
+>>
+>> Can you be a little bit more specific? The code should behave exactly as
+>> before.
+>>
+>
+>
+> Sure, for instance the line "unexpected private driver data" is removed,
+> this can now never happen, that is a functional change. The phrase "no
+> functional change", should be reserved for only changes to spelling,
+> formatting, code organizing, etc..
 
-> 
-> > > Next two patches enable the GPIO backlight driver in
-> > > davinci_all_defconfig.
-> > > 
-> > > Patch 6/12 models the backlight GPIO as an actual GPIO backlight device.
-> > > 
-> > > Patches 7-9 extend the fbdev driver with regulator support and convert
-> > > the da850-evm board file to using it.
-> > > 
-> > > Last three patches are improvements to the da8xx fbdev driver since
-> > > we're already touching it in this series.
-> > 
-> > Thanks,
-> > Sekhar
-> > 
-> 
-> -- 
-> Lee Jones [æŽç¼æ–¯]
-> Linaro Services Technical Lead
-> Linaro.org â”‚ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+"unexpected private driver data" was unreachable code before, but you're 
+right, debug output has changed a little, but the functional part is 
+exactly the same.
+
+>
+>
+>> Niko
+>>
+>>>
+>>> Andrew
+>>>
+>>>>      struct regulator_bulk_data supplies[TAS5720_NUM_SUPPLIES];
+>>>>      struct delayed_work fault_check_work;
+>>>>      unsigned int last_fault;
+>>>> @@ -179,17 +180,13 @@ static int tas5720_set_dai_tdm_slot(struct
+>>>> snd_soc_dai *dai,
+>>>>          goto error_snd_soc_component_update_bits;
+>>>>
+>>>>      /* Configure TDM slot width. This is only applicable to TAS5722. */
+>>>> -    switch (tas5720->devtype) {
+>>>> -    case TAS5722:
+>>>> +    if (tas5720->variant->device_id == TAS5722_DEVICE_ID) {
+>
+>
+> I also don't like this, TAS5722_DEVICE_ID is the expected contents of a
+> register, you are using it like the enum tas572x_type that you removed.
+> I'd leave that enum, the device ID register itself is not guaranteed to
+> be correct or unique, which is why we warn about mismatches below but
+> then continue to use the user provided device type anyway.
+
+Strange, with me it's the other way round, I don't like the enum. The 
+mismatch behavior hasn't changed a bit, the same warning is printed. 
+If the device ID is no longer unique in the future (apparently it is 
+for now) the driver should explicitly handle this instead of printing a 
+warning, because warnings should be reserved for an indication of any 
+kind of misconfiguration and not of expected behavior.
+
+That said the variant struct can of course replace the enum in every 
+aspect, even for what you describe above. The enum was an ordinal 
+representation of the user-selected i2c_device_id, the variant struct* is
+a pointer representation of the user-selected i2c/of/acpi_device_id. The 
+only difference is that it directly points to the variant specific parts 
+of the driver instead of resolving those via multiple switch/case 
+statements.
+
+Niko
+
+>
+> Andrew
+>
+>
+>>>>          ret = snd_soc_component_update_bits(component,
+>>>> TAS5722_DIGITAL_CTRL2_REG,
+>>>>                              TAS5722_TDM_SLOT_16B,
+>>>>                              slot_width == 16 ?
+>>>>                              TAS5722_TDM_SLOT_16B : 0);
+>>>>          if (ret < 0)
+>>>>              goto error_snd_soc_component_update_bits;
+>>>> -        break;
+>>>> -    default:
+>>>> -        break;
+>>>>      }
+>>>>
+>>>>      return 0;
+>>>> @@ -277,7 +274,7 @@ static void tas5720_fault_check_work(struct
+>>>> work_struct *work)
+>>>>  static int tas5720_codec_probe(struct snd_soc_component *component)
+>>>>  {
+>>>>      struct tas5720_data *tas5720 =
+>>>> snd_soc_component_get_drvdata(component);
+>>>> -    unsigned int device_id, expected_device_id;
+>>>> +    unsigned int device_id;
+>>>>      int ret;
+>>>>
+>>>>      tas5720->component = component;
+>>>> @@ -301,21 +298,9 @@ static int tas5720_codec_probe(struct
+>>>> snd_soc_component *component)
+>>>>          goto probe_fail;
+>>>>      }
+>>>>
+>>>> -    switch (tas5720->devtype) {
+>>>> -    case TAS5720:
+>>>> -        expected_device_id = TAS5720_DEVICE_ID;
+>>>> -        break;
+>>>> -    case TAS5722:
+>>>> -        expected_device_id = TAS5722_DEVICE_ID;
+>>>> -        break;
+>>>> -    default:
+>>>> -        dev_err(component->dev, "unexpected private driver data\n");
+>>>> -        return -EINVAL;
+>>>> -    }
+>>>> -
+>>>> -    if (device_id != expected_device_id)
+>>>> +    if (device_id != tas5720->variant->device_id)
+>>>>          dev_warn(component->dev, "wrong device ID. expected: %u
+>>>> read: %u\n",
+>>>> -             expected_device_id, device_id);
+>>>> +             tas5720->variant->device_id, device_id);
+>>>>
+>>>>      /* Set device to mute */
+>>>>      ret = snd_soc_component_update_bits(component,
+>>>> TAS5720_DIGITAL_CTRL2_REG,
+>>>> @@ -637,7 +622,6 @@ static int tas5720_probe(struct i2c_client *client,
+>>>>  {
+>>>>      struct device *dev = &client->dev;
+>>>>      struct tas5720_data *data;
+>>>> -    const struct regmap_config *regmap_config;
+>>>>      int ret;
+>>>>      int i;
+>>>>
+>>>> @@ -646,20 +630,10 @@ static int tas5720_probe(struct i2c_client
+>>>> *client,
+>>>>          return -ENOMEM;
+>>>>
+>>>>      data->tas5720_client = client;
+>>>> -    data->devtype = id->driver_data;
+>>>>
+>>>> -    switch (id->driver_data) {
+>>>> -    case TAS5720:
+>>>> -        regmap_config = &tas5720_regmap_config;
+>>>> -        break;
+>>>> -    case TAS5722:
+>>>> -        regmap_config = &tas5722_regmap_config;
+>>>> -        break;
+>>>> -    default:
+>>>> -        dev_err(dev, "unexpected private driver data\n");
+>>>> -        return -EINVAL;
+>>>> -    }
+>>>> -    data->regmap = devm_regmap_init_i2c(client, regmap_config);
+>>>> +    data->variant = (const struct tas5720_variant *)id->driver_data;
+>>>> +
+>>>> +    data->regmap = devm_regmap_init_i2c(client,
+>>>> data->variant->reg_config);
+>>>>      if (IS_ERR(data->regmap)) {
+>>>>          ret = PTR_ERR(data->regmap);
+>>>>          dev_err(dev, "failed to allocate register map: %d\n", ret);
+>>>> @@ -678,42 +652,36 @@ static int tas5720_probe(struct i2c_client
+>>>> *client,
+>>>>
+>>>>      dev_set_drvdata(dev, data);
+>>>>
+>>>> -    switch (id->driver_data) {
+>>>> -    case TAS5720:
+>>>> -        ret = devm_snd_soc_register_component(&client->dev,
+>>>> -                    &soc_component_dev_tas5720,
+>>>> -                    tas5720_dai,
+>>>> -                    ARRAY_SIZE(tas5720_dai));
+>>>> -        break;
+>>>> -    case TAS5722:
+>>>> -        ret = devm_snd_soc_register_component(&client->dev,
+>>>> -                    &soc_component_dev_tas5722,
+>>>> -                    tas5720_dai,
+>>>> -                    ARRAY_SIZE(tas5720_dai));
+>>>> -        break;
+>>>> -    default:
+>>>> -        dev_err(dev, "unexpected private driver data\n");
+>>>> -        return -EINVAL;
+>>>> -    }
+>>>> -    if (ret < 0) {
+>>>> -        dev_err(dev, "failed to register component: %d\n", ret);
+>>>> -        return ret;
+>>>> -    }
+>>>> -
+>>>> -    return 0;
+>>>> +    ret = devm_snd_soc_register_component(&client->dev,
+>>>> +                          data->variant->comp_drv,
+>>>> +                          tas5720_dai,
+>>>> +                          ARRAY_SIZE(tas5720_dai));
+>>>> +    return ret;
+>>>>  }
+>>>>
+>>>> +static const struct tas5720_variant tas5720 = {
+>>>> +    .device_id = TAS5720_DEVICE_ID,
+>>>> +    .reg_config = &tas5720_regmap_config,
+>>>> +    .comp_drv = &soc_component_dev_tas5720,
+>>>> +};
+>>>> +
+>>>> +static const struct tas5720_variant tas5722 = {
+>>>> +    .device_id = TAS5722_DEVICE_ID,
+>>>> +    .reg_config = &tas5722_regmap_config,
+>>>> +    .comp_drv = &soc_component_dev_tas5722,
+>>>> +};
+>>>> +
+>>>>  static const struct i2c_device_id tas5720_id[] = {
+>>>> -    { "tas5720", TAS5720 },
+>>>> -    { "tas5722", TAS5722 },
+>>>> +    { "tas5720", (kernel_ulong_t)&tas5720 },
+>>>> +    { "tas5722", (kernel_ulong_t)&tas5722 },
+>>>>      { }
+>>>>  };
+>>>>  MODULE_DEVICE_TABLE(i2c, tas5720_id);
+>>>>
+>>>>  #if IS_ENABLED(CONFIG_OF)
+>>>>  static const struct of_device_id tas5720_of_match[] = {
+>>>> -    { .compatible = "ti,tas5720", },
+>>>> -    { .compatible = "ti,tas5722", },
+>>>> +    { .compatible = "ti,tas5720", .data = &tas5720, },
+>>>> +    { .compatible = "ti,tas5722", .data = &tas5722, },
+>>>>      { },
+>>>>  };
+>>>>  MODULE_DEVICE_TABLE(of, tas5720_of_match);
+>>>>
+>>>
+>
+--8323329-910944831-1562061656=:10248--
