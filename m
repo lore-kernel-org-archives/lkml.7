@@ -2,121 +2,135 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82C2C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68281C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4CB2089C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:46:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jqGCSlZ3"
+	by mail.kernel.org (Postfix) with ESMTP id 3DC7A2146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:46:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562064372;
+	bh=dOb4MTdKAgRzGQ+yE9sL+9KKQb2/t5teCLbYFvKOmYg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p/NbUErrerMdEPJ4iVDaBr/D4VKc64iJbOsrViOMg+uva0yUnxKXwKxzyE3CSTmmN
+	 AEAAAsecRLA7TWV1g4NbLmC1pHrWmJm65ijXg7uvaaAXT77LiAWiL6BJy0rUP/vtIr
+	 j53I9+RfzoEmjVRCk9echA4GX3TT+i1YbH4tEl6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfGBKqE (ORCPT
+        id S1727059AbfGBKqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 06:46:04 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39490 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfGBKqE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 06:46:04 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x4so17220888wrt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:46:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=hO+sbYk0/T3jqctI9JR6vxxLVs1uBzFmGyJcEcM/u7Y=;
-        b=jqGCSlZ3S2DRiKfYs7CyPMFx3xD5pgHjSkZEFir+NedOMLTobyr7ozdm1t2GT34K2f
-         PUxMk87jPfURZEPfak7QFdtwvU9GSpZxLr//SV8PZv2WyZ+icEHNCESjpHeyAAvGHVMt
-         5OvKmg6cjgRQaSxB58O7OQOXWyTbri0M7Hm/jTFcKezt9FFvKAUCkebVUzmr7paluaPu
-         cXEP2NXz5TZZURRxHgTWUIPKxxw8Ccyr0hUGXm4WL3e6AGvsXEWKVvX8K9sLPv4Gpdev
-         PVQLYhvbngH92sZNcsqtgAhCIV/2p6D9dkkUQgtrNKq+FBvDU0n2ZskRiPZ/nFT4gnTG
-         IZ6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=hO+sbYk0/T3jqctI9JR6vxxLVs1uBzFmGyJcEcM/u7Y=;
-        b=gqdBtSV2PukLw6Wno6jA9du6zpWCebVGLQ3cqfM1vrgb0ARu/LwE2gFjp9MBe008pt
-         6r/W2dx8iYQt0WfZkiGmR5qohYjXMb83W0tTfMzAMd1bk+D+Ucvy1KP5n9TU1hoFO3uH
-         /6G1goi3BCEfryii3gkO5rAtmKjkR3PWsle9IN6P58j4fNw2OVCicicH41q3E/NNEjio
-         s9WMa+t13Mm6LjkaGJgbHD/M//8PJ4yDD32yNLtl5Sps9V0Aq5jrI7DHbGodlxIeYrh0
-         /i/pWIXrH62dRI1bWU+ZGOHPlEPOBYSqFcsJtlMDV913esiTQPOWiLyucWgY7sBmsoyG
-         kDNg==
-X-Gm-Message-State: APjAAAVmisnE+N4PMhBMN9/bzeeqYC/0BcsKthP3OGLoJeek/FuB8mPf
-        SIMHXrQ6jZluTkg3z1q1Ask6mEmjeog=
-X-Google-Smtp-Source: APXvYqwvBhx5ZJSggS8b1mH+WYdJHochpCwgOtEjyu9ydzm4KH+ZNxKOcOGbvkkK/2G8B2Kzc6Z2wA==
-X-Received: by 2002:a5d:4d10:: with SMTP id z16mr10442850wrt.112.1562064362257;
-        Tue, 02 Jul 2019 03:46:02 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id o20sm33429611wrh.8.2019.07.02.03.46.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 03:46:01 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 11:46:00 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, t-kristo@ti.com
-Subject: [GIT PULL v2] Immutable branch between MFD and Regulator due for the
- v5.3 merge window
-Message-ID: <20190702104600.GE4652@dell>
-References: <20190612144620.28331-1-j-keerthy@ti.com>
- <20190617070341.GC16364@dell>
+        Tue, 2 Jul 2019 06:46:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726291AbfGBKqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 06:46:10 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49912089C;
+        Tue,  2 Jul 2019 10:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562064369;
+        bh=dOb4MTdKAgRzGQ+yE9sL+9KKQb2/t5teCLbYFvKOmYg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lmOIvgqYnhG6gcE4s/cT6vnAWChkKch0CdTkyDJV0+BS7qniUrgc23Phe5RJbw6LA
+         WhbJFIEyA/+cY8ckrjvDHQ2okIpABjtyaPYorAnbvD8RfKiWkEWOHxbebbCC1LUVS4
+         SgcDDwf0jt386rr72W5xAUO/Cy5BS4FWTKNGlAYY=
+Date:   Tue, 2 Jul 2019 11:46:04 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: single copy atomicity for double load/stores on 32-bit systems
+Message-ID: <20190702104603.g3qssgfhfhvryhnu@willie-the-truck>
+References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
+ <20190531082112.GH2623@hirez.programming.kicks-ass.net>
+ <73510bc7-8386-746c-ed1e-422fb5adaec5@synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190617070341.GC16364@dell>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <73510bc7-8386-746c-ed1e-422fb5adaec5@synopsys.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark,
+On Mon, Jul 01, 2019 at 08:05:51PM +0000, Vineet Gupta wrote:
+> On 5/31/19 1:21 AM, Peter Zijlstra wrote:
+> > On Thu, May 30, 2019 at 11:22:42AM -0700, Vineet Gupta wrote:
+> >> Had an interesting lunch time discussion with our hardware architects pertinent to
+> >> "minimal guarantees expected of a CPU" section of memory-barriers.txt
+> >>
+> >>
+> >> |  (*) These guarantees apply only to properly aligned and sized scalar
+> >> |     variables.  "Properly sized" currently means variables that are
+> >> |     the same size as "char", "short", "int" and "long".  "Properly
+> >> |     aligned" means the natural alignment, thus no constraints for
+> >> |     "char", two-byte alignment for "short", four-byte alignment for
+> >> |     "int", and either four-byte or eight-byte alignment for "long",
+> >> |     on 32-bit and 64-bit systems, respectively.
+> >>
+> >>
+> >> I'm not sure how to interpret "natural alignment" for the case of double
+> >> load/stores on 32-bit systems where the hardware and ABI allow for 4 byte
+> >> alignment (ARCv2 LDD/STD, ARM LDRD/STRD ....)
+> > 
+> > Natural alignment: !((uintptr_t)ptr % sizeof(*ptr))
+> > 
+> > For any u64 type, that would give 8 byte alignment. the problem
+> > otherwise being that your data spans two lines/pages etc..
+> > 
+> >> I presume (and the question) that lkmm doesn't expect such 8 byte load/stores to
+> >> be atomic unless 8-byte aligned
+> >>
+> >> ARMv7 arch ref manual seems to confirm this. Quoting
+> >>
+> >> | LDM, LDC, LDC2, LDRD, STM, STC, STC2, STRD, PUSH, POP, RFE, SRS, VLDM, VLDR,
+> >> | VSTM, and VSTR instructions are executed as a sequence of word-aligned word
+> >> | accesses. Each 32-bit word access is guaranteed to be single-copy atomic. A
+> >> | subsequence of two or more word accesses from the sequence might not exhibit
+> >> | single-copy atomicity
+> >>
+> >> While it seems reasonable form hardware pov to not implement such atomicity by
+> >> default it seems there's an additional burden on application writers. They could
+> >> be happily using a lockless algorithm with just a shared flag between 2 threads
+> >> w/o need for any explicit synchronization.
+> > 
+> > If you're that careless with lockless code, you deserve all the pain you
+> > get.
+> > 
+> >> But upgrade to a new compiler which
+> >> aggressively "packs" struct rendering long long 32-bit aligned (vs. 64-bit before)
+> >> causing the code to suddenly stop working. Is the onus on them to declare such
+> >> memory as c11 atomic or some such.
+> > 
+> > When a programmer wants guarantees they already need to know wth they're
+> > doing.
+> > 
+> > And I'll stand by my earlier conviction that any architecture that has a
+> > native u64 (be it a 64bit arch or a 32bit with double-width
+> > instructions) but has an ABI that allows u32 alignment on them is daft.
+> 
+> So I agree with Paul's assertion that it is strange for 8-byte type being 4-byte
+> aligned on a 64-bit system, but is it totally broken even if the ISA of the said
+> 64-bit arch allows LD/ST to be augmented with acq/rel respectively.
+> 
+> Say the ISA guarantees single-copy atomicity for aligned cases (i.e. for 8-byte
+> data only if it is naturally aligned) and in lack thereof programmer needs to use
+> the proper acq/release
 
-This is a subsequent pull which contains the /* fall-through */ fix.
+Apologies if I'm missing some context here, but it's not clear to me why the
+use of acquire/release instructions has anything to do with single-copy
+atomicity of unaligned accesses. The ordering they provide doesn't
+necessarily prevent tearing, although a CPU architecture could obviously
+provide that guarantee if it wanted to. Generally though, I wouldn't expect
+the two to go hand-in-hand like you're suggesting.
 
-Enjoy!
-
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regulator-v5.3-1
-
-for you to fetch changes up to f3f4363b1239584efc1a22c5ca0f2308e5693c38:
-
-  regulator: lp87565: Fix missing break in switch statement (2019-07-02 11:41:23 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD and Regulator due for the v5.3 merge window
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      regulator: lp87565: Fix missing break in switch statement
-
-Keerthy (3):
-      dt-bindings: mfd: lp87565: Add LP87561 configuration
-      mfd: lp87565: Add support for 4-phase LP87561 combination
-      regulator: lp87565: Add 4-phase lp87561 regulator support
-
- Documentation/devicetree/bindings/mfd/lp87565.txt | 36 +++++++++++++++++++++++
- drivers/mfd/lp87565.c                             |  4 +++
- drivers/regulator/lp87565-regulator.c             | 18 +++++++++++-
- include/linux/mfd/lp87565.h                       |  2 ++
- 4 files changed, 59 insertions(+), 1 deletion(-)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Will
