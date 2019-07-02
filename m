@@ -2,106 +2,95 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08714C06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EE5C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA07920989
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F21320989
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vOcEnw18"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+tny0zm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfGBRXo (ORCPT
+        id S1726762AbfGBR0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 13:23:44 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45793 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfGBRXo (ORCPT
+        Tue, 2 Jul 2019 13:26:33 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33205 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfGBR0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:23:44 -0400
-Received: by mail-io1-f65.google.com with SMTP id e3so38779403ioc.12;
-        Tue, 02 Jul 2019 10:23:44 -0700 (PDT)
+        Tue, 2 Jul 2019 13:26:32 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so18810838wru.0;
+        Tue, 02 Jul 2019 10:26:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9TPe1WZsk5JII2uLTZByej7kWvrQvfzpP+5IqNRqtRY=;
-        b=vOcEnw18V4YTII1N0thEq0xS9oHbklSy1elc9OV680vGSJdWoikVhrHgoILnPtEH9f
-         YKSjdQGRpAao5qPJP4d+sXuSorYCBgOcY21ov/B+RSj8d41QFWujdByF0nyIw+sBf3Qg
-         00ZgBKqVrHOCAK7yPDDU5Qy7gx8v4c8IJnEUzyI8akPsLoNjSPO97sEKhgNUS1g8ELIs
-         Plyv3w7jDLRdFpS1hY8mkjG8zREUTq+7gy3nVkhMxPl9MGpiCP8+nddagcDlcuEkJ5hh
-         6TDsxcuUgk0LfORGK32UHXx6WOlxr4B0xtmXQZQIPD1WkrFmFYS7tmR8NJ47o71BxDJH
-         KFKA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GJQWdYjGRJbWGQyVM/pVQ8ZoWrqzt0Iwb6wDU6NZk2g=;
+        b=O+tny0zmZLUocyLGuzn577ZQeQVqyE3IVzVoF5ClP1sMNqM3CmWSRE4DR3QvA1BGmv
+         0LEmxDnJYQ/+nLk/aCAR8MsPwAleyo06XvyhWiyAh77rTCWL1ObF9kSyoxvCty4/GrOb
+         rLeINNDhVgwvCSw05cv+UnLNJZtJbxZxpCdx+ufK8prvVHLS+pmEad6ykSmqLtl3Vw/f
+         iDx5tMCkb1sA5CzLkn/5p4xHRx6DXSo++Gvnn0ranBCmUKuonBGE76kU/ozvhLmhw7uc
+         mSR5SbuMLIAoddU3Zk6+CyxAUuqaRdpsDoYN8HUyIK9AnRnqxJo17rD5BDb9/tIhdLyZ
+         wQ8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9TPe1WZsk5JII2uLTZByej7kWvrQvfzpP+5IqNRqtRY=;
-        b=P7TPVbZmbp9rcHg1mKRmh2beRvQml1/iuNY08f8+P15qPobL9pdyvQ+C1CAoo6hLkr
-         Acqsm0aVjPS1DUlGQY27OnQFXUqStnz3uXcwUR2G/Vq1H1clnWM/BgcfK9eA4DVGQXUA
-         QPONiqd8Ej01PQtaSU0eqwgH+Neg0098fxstKWku8jrMhLVEHNmNejByJyrZ/O+CqCC2
-         8pX0EUbdvkt5vHfxNC6Glewr2oYsiMsRM//jwQv1cfgcuqZ3vmWjBxGuCY1N6GOVN5yY
-         12SjXQci2ubnphurdrfEQchkwHfV7FFJuZzl+a4FpVZ64nmVUaY7LPBwQ9jXyKMRJDWf
-         cemw==
-X-Gm-Message-State: APjAAAVrMHJ9HAtgEqvqEdtXlkSHgmxmnqb6qIZgm1VWWbgc/tY6fqWo
-        7nf/NaA2X2FW0wN9spzN9tqtcSsuBZtshzCVbG4=
-X-Google-Smtp-Source: APXvYqz105hEkDA6XCLEt80eTUJ3TwKxaueqvTovVQyU+1ub+0a/WHbeSrXKzUOmhNG5ooVFsfbTaMyWOHQV3/MVkyc=
-X-Received: by 2002:a6b:3b89:: with SMTP id i131mr368509ioa.33.1562088223667;
- Tue, 02 Jul 2019 10:23:43 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GJQWdYjGRJbWGQyVM/pVQ8ZoWrqzt0Iwb6wDU6NZk2g=;
+        b=PbR1O0Q5TcHYwQYf9T0exynGm7TCviZlMMNJjdhzBdZVAXcLb4wphEO+dj15Hbtd8v
+         a/4Q3ELttbs+foxuVflJi31GQwJEpjVSLW0SFVrZldd7AkoFP+EapUD7vxk7bHG/MJdf
+         30mUJn2wZOJcqHkQgpkySmHEpmA8PA944ajRC1FqnYQrqbud69xtJVYhwubCfdCT3Z9v
+         AZmvzelRKyORTaO/ISbfyYzP4NUyX2dryTUbnWFbp3Q/GpeWbuIgMatQqzmd6xXvJ2OF
+         S+brZrTEUY0IdfUyFWzhakK7Ezr21OZ29WbILhOoQBeyif9iBHSQq+IJALIpRrvPYhwV
+         kLEw==
+X-Gm-Message-State: APjAAAWM+1SwCzwt2WrVQswU54/b8y1E+YW0b0Rl1i22CwcmQkCoV4uF
+        Ca3WeXRRMMD6e6UeEmIRw/A=
+X-Google-Smtp-Source: APXvYqxJuQ0kjRWoYunRRlB7QJFYv0FpgfdFcDJ22PBoD8/5tt472sT0BHd+Y3eG4bgBajESQWs2iQ==
+X-Received: by 2002:adf:de8e:: with SMTP id w14mr26028921wrl.130.1562088390364;
+        Tue, 02 Jul 2019 10:26:30 -0700 (PDT)
+Received: from [192.168.2.202] (pD9E5A169.dip0.t-ipconnect.de. [217.229.161.105])
+        by smtp.gmail.com with ESMTPSA id p26sm18738909wrp.58.2019.07.02.10.26.28
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 10:26:29 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Support for buttons on newer MS Surface devices
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+References: <20190702003740.75970-1-luzmaximilian@gmail.com>
+ <CAHp75Ve-f-piRxwG2u2djWGt2fUKkvZSDJ+XkjGKLmMZeLEYsw@mail.gmail.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <c50dbd58-c0d4-1a93-b292-68df209749b9@gmail.com>
+Date:   Tue, 2 Jul 2019 19:26:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190702154419.20812-1-robdclark@gmail.com> <20190702154419.20812-4-robdclark@gmail.com>
- <CAOCk7NrXko8xR1Ovg6HrP2ZpS83mjZoOWdae-mq_QJMRzeENLQ@mail.gmail.com> <CAF6AEGsUve1NnzF2kEeW0jwgXnxZTgFaHbq-c-+CKru1jS9tWg@mail.gmail.com>
-In-Reply-To: <CAF6AEGsUve1NnzF2kEeW0jwgXnxZTgFaHbq-c-+CKru1jS9tWg@mail.gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 2 Jul 2019 11:23:33 -0600
-Message-ID: <CAOCk7Nq91abTQ02dUNY=8_mgY_kuwU4MFxdO71AjWz1nwUkBGA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] drm/bridge: ti-sn65dsi86: correct dsi mode_flags
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHp75Ve-f-piRxwG2u2djWGt2fUKkvZSDJ+XkjGKLmMZeLEYsw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 11:12 AM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Tue, Jul 2, 2019 at 10:09 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> >
-> > On Tue, Jul 2, 2019 at 9:46 AM Rob Clark <robdclark@gmail.com> wrote:
-> > >
-> > > -       dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-> > > -                         MIPI_DSI_MODE_EOT_PACKET | MIPI_DSI_MODE_VIDEO_HSE;
-> > > +       dsi->mode_flags = MIPI_DSI_MODE_VIDEO;
-> >
-> > Did you check this against the datasheet?  Per my reading, EOT_PACKET
-> > and VIDEO_HSE appear valid.  I don't know about VIDEO_SYNC_PULSE.
->
-> The EOT flat is badly named:
->
-> /* disable EoT packets in HS mode */
-> #define MIPI_DSI_MODE_EOT_PACKET    BIT(9)
->
-> I can double check out HSE, but this was one of the setting
-> differences between bootloader and kernel
+On 7/2/19 7:13 PM, Andy Shevchenko wrote:
+> I re-pushed to my queue, though if you are going to send a new
+> version, check my repository for the titles of the patches (you need
+> to use correct templates for the subsystems).
 
-Ah yeah, you are right.  My eyes apparently skipped over the "disable".
+Got it, sorry for the inconvenience.
 
-If the bootloader is not setting the HSE, then I can't think of a
-reason why we would be having an issue also not setting it.
-
-Seems good to me
-
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Thank you!
+Maximilian
