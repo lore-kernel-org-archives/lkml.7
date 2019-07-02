@@ -2,267 +2,236 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65CEC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFC5C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1332054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D77121479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:50:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U4vb5pB7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGU4kucx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfGBMsA (ORCPT
+        id S1726930AbfGBMuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 08:48:00 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:17418 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfGBMsA (ORCPT
+        Tue, 2 Jul 2019 08:50:55 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42666 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfGBMuz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 08:48:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1b52810000>; Tue, 02 Jul 2019 05:48:01 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 02 Jul 2019 05:47:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 02 Jul 2019 05:47:57 -0700
-Received: from [10.24.70.16] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
- 2019 12:47:51 +0000
-Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
-To:     Parav Pandit <parav@mellanox.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     "cohuck@redhat.com" <cohuck@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <156199271955.1646.13321360197612813634.stgit@gimli.home>
- <08597ab4-cc37-3973-8927-f1bc430f6185@nvidia.com>
- <20190701112442.176a8407@x1.home>
- <3b338e73-7929-df20-ca2b-3223ba4ead39@nvidia.com>
- <20190701140436.45eabf07@x1.home>
- <14783c81-0236-2f25-6193-c06aa83392c9@nvidia.com>
- <20190701234201.47b6f23a@x1.home>
- <AM0PR05MB48669DA5993C68765397AF1BD1F80@AM0PR05MB4866.eurprd05.prod.outlook.com>
-X-Nvconfidentiality: public
-From:   Kirti Wankhede <kwankhede@nvidia.com>
-Message-ID: <b6afb6a7-0bd8-dff3-4a4b-a6bb34ccb61d@nvidia.com>
-Date:   Tue, 2 Jul 2019 18:17:41 +0530
+        Tue, 2 Jul 2019 08:50:55 -0400
+Received: by mail-ed1-f65.google.com with SMTP id z25so27154945edq.9;
+        Tue, 02 Jul 2019 05:50:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ulgxsWYV0nRrSUUXQ81nMXkgbPlxNsLtNUXfKf0CzW0=;
+        b=PGU4kucx1w6t8Ox8ljAkdvrxOgUTPzE/S0MVdvgINUOYMysVco2JNbgT5tERMLSo2g
+         OgPPtEAqHYzRuTuPBcC/k/TLysjg8dY5B62NOZ9xct4buKZ5vhlwfDSypMuQA1GTu5Eo
+         kqLMe+vENyooNGCRqiy57KK66QMzCRce3dlLulnTVZwDbk015cp7KMcsUi6pSR9vFWqX
+         OsqhtKgcU8eAkeeyvIQwLRzAGd9Omwgv6yMZmlq3nZANX54VJKju91mECkopi1oxjH76
+         zDyOLpsq9pp/PQib0G5hDvMvcPYZucwHCaOAGDYNeVdAGZkrHAnzZQmD0L1DUc/YiVT9
+         +TyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ulgxsWYV0nRrSUUXQ81nMXkgbPlxNsLtNUXfKf0CzW0=;
+        b=fGPImvYbiat6g0+iVVSFF9K8LpI8+xjUXG5WIfDBeFZIfQEbYc1FSVWniyt32l+Hek
+         Z3T5zbJRvDJabJMIVRdJsmFRovZuwGJ85nYcz84Ir3YncJic0qc6/88KZQWpIcLOv6IS
+         NJGOIV3DxVL/SCQ4r20oiScVReTvSSqkKGSshnvW4/S/RoxibQPWcxPd3mE/cmSK5ydq
+         w8BfflCMP9FkN2+LeWFgrzlqtuJ1qk4bNPWLUk7wa73ksEjHV2940JWslAV8gS4MFAG9
+         ApYttNSd7ssfSTnMmZlSbzMEuPK3TkK0/5K6piEPh2XLo3/hxPO1I/7HMklvH/DvtsRf
+         ovjA==
+X-Gm-Message-State: APjAAAVNBLtw58jR3ErlLgFrVFF+Er+7mCzzGwMWLF02W1sX/G+ZwUNJ
+        Jw6tojBYj8LmIG28Ph6+Q9TFCfOezaoMKEsMIVw=
+X-Google-Smtp-Source: APXvYqzkF+v7ZHn3YweY8uh0aG6jvfG865tKiirrQBWYXNuB/WA54ejTgSuxnWSEab0XYlhvVgeDpY68t3sALVFaa/A=
+X-Received: by 2002:a17:906:3612:: with SMTP id q18mr29032681ejb.278.1562071852310;
+ Tue, 02 Jul 2019 05:50:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <AM0PR05MB48669DA5993C68765397AF1BD1F80@AM0PR05MB4866.eurprd05.prod.outlook.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562071681; bh=QFqGAwMIsHGGtBPBnOvo50744kDSorV5Tle+D/3Dojo=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=U4vb5pB7jZcWFlC5ABbXH6cXuT9L/87QUHdS48jMfdLoWszrW3i7FYEjCQE76+QBO
-         a4BetUb+cz8Ml3Nwbc4Twfbc4RNNqhgTXWX5s+QFHQsJipdqCB0BhlxoYctVoC3tj3
-         Dkz2r8/8g/b8d6FHVk3y6to58d/iWiacA+dwCi4ISLSnPRt+XAJeXZyryH4lIo1yh8
-         f0NnXXXJAe6UXuTS47wETJRWqryIqZZiL2nf882yeORKgiMahArC22KPYVmawJyDO2
-         wuWnLToDTaGckyUoK2kY35i84ZyoXq4LSMwNF4ihN7oBxKpF/ChNmUyxQzCoJgN5hC
-         wtlczNRQIW11Q==
+References: <20190630203614.5290-1-robdclark@gmail.com>
+In-Reply-To: <20190630203614.5290-1-robdclark@gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 2 Jul 2019 05:50:36 -0700
+Message-ID: <CAF6AEGv8EJPmje_8bpK8LmLdLFkOSQVJOg_CTS7C_HwVB6i9eQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] drm+dt+efi: support devices with multiple possible panels
+To:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" 
+        <linux-efi@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jun 30, 2019 at 1:36 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> From: Rob Clark <robdclark@chromium.org>
+>
+> Now that we can deal gracefully with bootloader (firmware) initialized
+> display on aarch64 laptops[1], the next step is to deal with the fact
+> that the same model of laptop can have one of multiple different panels.
+> (For the yoga c630 that I have, I know of at least two possible panels,
+> there might be a third.)
+>
+> This is actually a scenario that comes up frequently in phones and
+> tablets as well, so it is useful to have an upstream solution for this.
+>
+> The basic idea is to add a 'panel-id' property in dt chosen node, and
+> use that to pick the endpoint we look at when loading the panel driver,
+> e.g.
+>
+> / {
+>         chosen {
+>                 panel-id = <0xc4>;
+>         };
+>
+>         ivo_panel {
+>                 compatible = "ivo,m133nwf4-r0";
+>                 power-supply = <&vlcm_3v3>;
+>                 no-hpd;
+>
+>                 ports {
+>                         port {
+>                                 ivo_panel_in_edp: endpoint {
+>                                         remote-endpoint = <&sn65dsi86_out_ivo>;
+>                                 };
+>                         };
+>                 };
+>         };
+>
+>         boe_panel {
+>                 compatible = "boe,nv133fhm-n61";
+>                 power-supply = <&vlcm_3v3>;
+>                 no-hpd;
+>
+>                 ports {
+>                         port {
+>                                 boe_panel_in_edp: endpoint {
+>                                         remote-endpoint = <&sn65dsi86_out_boe>;
+>                                 };
+>                         };
+>                 };
+>         };
+>
+>         sn65dsi86: bridge@2c {
+>                 compatible = "ti,sn65dsi86";
+>
+>                 ...
+>
+>                 ports {
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+>
+>                         ...
+>
+>                         port@1 {
+>                                 #address-cells = <1>;
+>                                 #size-cells = <0>;
+>                                 reg = <1>;
+>
+>                                 endpoint@c4 {
+>                                         reg = <0xc4>;
+>                                         remote-endpoint = <&boe_panel_in_edp>;
+>                                 };
+>
+>                                 endpoint@c5 {
+>                                         reg = <0xc5>;
+>                                         remote-endpoint = <&ivo_panel_in_edp>;
+>                                 };
+>                         };
+>                 };
+>         }
+> };
+>
+
+Just to put out an alternative idea for how to handle this in DT
+(since Laurent seemed unhappy with the idea of using endpoints to
+describe multiple connections between ports that *might* exist.
+
+This approach would require of_drm_find_panel() to check the
+device_node to see if it is a special "panel-select" thing.  (I think
+we could use device_node::data to recover the actual selected panel.)
+
+On the plus side, it would work for cases that aren't using of_graph
+to connect display/bridge to panel, so it would be pretty much
+transparent to drivers and bridges.
+
+And I guess it could be extended to cases where gpio's are used to
+detect which panel is attached..  not sure how far down that road I
+want to go, as jhugo mentioned elsewhere on this patchset, in some
+cases dsi is used to select (which could be problematic to do from
+kernel if display is already active in video mode scanout), or efuses
+which aren't accessible from kernel.
 
 
-On 7/2/2019 12:43 PM, Parav Pandit wrote:
-> 
-> 
->> -----Original Message-----
->> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
->> owner@vger.kernel.org> On Behalf Of Alex Williamson
->> Sent: Tuesday, July 2, 2019 11:12 AM
->> To: Kirti Wankhede <kwankhede@nvidia.com>
->> Cc: cohuck@redhat.com; kvm@vger.kernel.org; linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
->>
->> On Tue, 2 Jul 2019 10:25:04 +0530
->> Kirti Wankhede <kwankhede@nvidia.com> wrote:
->>
->>> On 7/2/2019 1:34 AM, Alex Williamson wrote:
->>>> On Mon, 1 Jul 2019 23:20:35 +0530
->>>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
->>>>
->>>>> On 7/1/2019 10:54 PM, Alex Williamson wrote:
->>>>>> On Mon, 1 Jul 2019 22:43:10 +0530
->>>>>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
->>>>>>
->>>>>>> On 7/1/2019 8:24 PM, Alex Williamson wrote:
->>>>>>>> This allows udev to trigger rules when a parent device is
->>>>>>>> registered or unregistered from mdev.
->>>>>>>>
->>>>>>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
->>>>>>>> ---
->>>>>>>>
->>>>>>>> v2: Don't remove the dev_info(), Kirti requested they stay and
->>>>>>>>     removing them is only tangential to the goal of this change.
->>>>>>>>
->>>>>>>
->>>>>>> Thanks.
->>>>>>>
->>>>>>>
->>>>>>>>  drivers/vfio/mdev/mdev_core.c |    8 ++++++++
->>>>>>>>  1 file changed, 8 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/drivers/vfio/mdev/mdev_core.c
->>>>>>>> b/drivers/vfio/mdev/mdev_core.c index ae23151442cb..7fb268136c62
->>>>>>>> 100644
->>>>>>>> --- a/drivers/vfio/mdev/mdev_core.c
->>>>>>>> +++ b/drivers/vfio/mdev/mdev_core.c
->>>>>>>> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev,
->>>>>>>> const struct mdev_parent_ops *ops)  {
->>>>>>>>  	int ret;
->>>>>>>>  	struct mdev_parent *parent;
->>>>>>>> +	char *env_string = "MDEV_STATE=registered";
->>>>>>>> +	char *envp[] = { env_string, NULL };
->>>>>>>>
->>>>>>>>  	/* check for mandatory ops */
->>>>>>>>  	if (!ops || !ops->create || !ops->remove ||
->>>>>>>> !ops->supported_type_groups) @@ -197,6 +199,8 @@ int
->> mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
->>>>>>>>  	mutex_unlock(&parent_list_lock);
->>>>>>>>
->>>>>>>>  	dev_info(dev, "MDEV: Registered\n");
->>>>>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
->>>>>>>> +
->>>>>>>>  	return 0;
->>>>>>>>
->>>>>>>>  add_dev_err:
->>>>>>>> @@ -220,6 +224,8 @@ EXPORT_SYMBOL(mdev_register_device);
->>>>>>>>  void mdev_unregister_device(struct device *dev)  {
->>>>>>>>  	struct mdev_parent *parent;
->>>>>>>> +	char *env_string = "MDEV_STATE=unregistered";
->>>>>>>> +	char *envp[] = { env_string, NULL };
->>>>>>>>
->>>>>>>>  	mutex_lock(&parent_list_lock);
->>>>>>>>  	parent = __find_parent_device(dev); @@ -243,6 +249,8 @@
->> void
->>>>>>>> mdev_unregister_device(struct device *dev)
->>>>>>>>  	up_write(&parent->unreg_sem);
->>>>>>>>
->>>>>>>>  	mdev_put_parent(parent);
->>>>>>>> +
->>>>>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
->>>>>>>
->>>>>>> mdev_put_parent() calls put_device(dev). If this is the last
->>>>>>> instance holding device, then on put_device(dev) dev would get freed.
->>>>>>>
->>>>>>> This event should be before mdev_put_parent()
->>>>>>
->>>>>> So you're suggesting the vendor driver is calling
->>>>>> mdev_unregister_device() without a reference to the struct device
->>>>>> that it's passing to unregister?  Sounds bogus to me.  We take a
->>>>>> reference to the device so that it can't disappear out from under
->>>>>> us, the caller cannot rely on our reference and the caller
->>>>>> provided the struct device.  Thanks,
->>>>>>
->>>>>
->>>>> 1. Register uevent is sent after mdev holding reference to device,
->>>>> then ideally, unregister path should be mirror of register path,
->>>>> send uevent and then release the reference to device.
->>>>
->>>> I don't see the relevance here.  We're marking an event, not
->>>> unwinding state of the device from the registration process.
->>>> Additionally, the event we're trying to mark is the completion of
->>>> each process, so the notion that we need to mirror the ordering between
->> the two is invalid.
->>>>
->>>>> 2. I agree that vendor driver shouldn't call
->>>>> mdev_unregister_device() without holding reference to device. But
->>>>> to be on safer side, if ever such case occur, to avoid any
->>>>> segmentation fault in kernel, better to send event before mdev release the
->> reference to device.
->>>>
->>>> I know that get_device() and put_device() are GPL symbols and that's
->>>> a bit of an issue, but I don't think we should be kludging the code
->>>> for a vendor driver that might have problems with that.  A) we're
->>>> using the caller provided device  for the uevent, B) we're only
->>>> releasing our own reference to the device that was acquired during
->>>> registration, the vendor driver must have other references,
->>>
->>> Are you going to assume that someone/vendor driver is always going to
->>> do right thing?
->>
->> mdev is a kernel driver, we make reasonable assumptions that other drivers
->> interact with it correctly.
->>
-> That is right.
-> Vendor drivers must invoke mdev_register_device() and mdev_unregister_device() only once.
-> And it must have a valid reference to the device for which it is invoking it.
-> This is basic programming practice that a given driver has to follow.
-> mdev_register_device() has a loop to check. It needs to WARN_ON there if there are duplicate registration.
-> Similarly on mdev_unregister_device() to have WARN_ON if device is not found.
+    chosen {
+        panel-id = <0xc4>;
+    };
 
-If assumption is vendor driver is always going to do right way, then why
-need check for duplicate registration? vendor driver is always going to
-do it right way, right?
+    panel_select {
+        compatible = "linux,panel-select";
+        #address-cells = <1>;
+        #size-cells = <0>;
 
+        boe_panel {
+            compatible = "boe,nv133fhm-n61";
+            reg = <0xc4>;
+            power-supply = <&vlcm_3v3>;
+            no-hpd;
+        };
 
-> It was in my TODO list to submit those patches.
-> I was still thinking to that mdev_register_device() should return mdev_parent and mdev_unregister_device() should accept mdev_parent pointer, instead of WARN_ON on unregister().
-> 
-> 
->>>> C) the parent device
->>>> generally lives on a bus, with a vendor driver, there's an entire
->>>> ecosystem of references to the device below mdev.  Is this a
->>>> paranoia request or are you really concerned that your PCI device suddenly
->>>> disappears when mdev's reference to it disappears.
->>>
->>> mdev infrastructure is not always used by PCI devices. It is designed
->>> to be generic, so that other devices (other than PCI devices) can also
->>> use this framework.
->>
->> Obviously mdev is not PCI specific, I only mention it because I'm asking if you
->> have a specific concern in mind.  If you did, I'd assume it's related to a PCI
->> backed vGPU.
+        ivo_panel {
+            compatible = "ivo,m133nwf4-r0";
+            reg = <0xc5>;
+            power-supply = <&vlcm_3v3>;
+            no-hpd;
+        };
 
-Its not always good to assume certain things.
+        ports {
+            port {
+                panel_in_edp: endpoint {
+                    remote-endpoint = <&sn65dsi86_out>;
+                };
+            };
+        };
+    };
 
->> Any physical parent device of an mdev is likely to have some sort
->> of bus infrastructure behind it holding references to the device (ie. a probe and
->> release where an implicit reference is held between these points).  A virtual
->> device would be similar, it's created as part of a module init and destroyed as
->> part of a module exit, where mdev registration would exist between these
->> points.
->>
->>> If there is a assumption that user of mdev framework or vendor drivers
->>> are always going to use mdev in right way, then there is no need for
->>> mdev core to held reference of the device?
->>> This is not a "paranoia request". This is more of a ideal scenario,
->>> mdev should use device by holding its reference rather than assuming
->>> (or relying on) someone else holding the reference of device.
->>
->> In fact, at one point Parav was proposing removing these references entirely,
->> but Connie and I both felt uncomfortable about that.  I think it's good practice
->> that mdev indicates the use of the parent device by incrementing the reference
->> count, with each child mdev device also taking a reference, but those
->> references balance out within the mdev core.  Their purpose is not to maintain
->> the device for outside callers, nor should outside callers assume mdev's use of
->> references to release their own.  I don't think it's unreasonable to assume that
->> the caller should have a legitimate reference to the object it's providing to this
->> function and therefore we should be able to use it after mdev's internal
->> references are balanced out.  Thanks,
->>
+    dsi_controller_or_bridge {
+        ...
+        ports {
+            ...
+            port@1 {
+                reg = <1>;
+                sn65dsi86_out: endpoint {
+                    remote-endpoint = <&panel_in_edp>;
+                };
+            };
+        };
+    };
 
-I'm not fully convinced with what is the advantage of sending uevent
-after releasing reference to device or disadvantage of sending uevent
-before releasing reference to device.
+Personally I find my original proposal more natural (which is why I
+went with it, this second idea is more similar to what I initially had
+in mind before looking at of_graph).  And it seems to be a bit weird
+to have a panel_select thing which isn't really hardware.
 
-Still if you want to go ahead with this change, please add a check or
-assert if (dev != NULL) and add an comment highlighting the assumption.
-
-Thanks,
-Kirti
+BR,
+-R
