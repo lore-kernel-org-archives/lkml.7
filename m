@@ -2,192 +2,260 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D89BC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A83BC06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DB1208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17CE62146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:59:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QIrRc4Zn"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EH5NTaxo";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h3Ta2SLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfGBEzU (ORCPT
+        id S1726102AbfGBE7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 00:55:20 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8794 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfGBEzU (ORCPT
+        Tue, 2 Jul 2019 00:59:12 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60652 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfGBE7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 00:55:20 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1ae3b90000>; Mon, 01 Jul 2019 21:55:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 01 Jul 2019 21:55:18 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 01 Jul 2019 21:55:18 -0700
-Received: from [10.24.70.16] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
- 2019 04:55:14 +0000
-Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     <cohuck@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <156199271955.1646.13321360197612813634.stgit@gimli.home>
- <08597ab4-cc37-3973-8927-f1bc430f6185@nvidia.com>
- <20190701112442.176a8407@x1.home>
- <3b338e73-7929-df20-ca2b-3223ba4ead39@nvidia.com>
- <20190701140436.45eabf07@x1.home>
-X-Nvconfidentiality: public
-From:   Kirti Wankhede <kwankhede@nvidia.com>
-Message-ID: <14783c81-0236-2f25-6193-c06aa83392c9@nvidia.com>
-Date:   Tue, 2 Jul 2019 10:25:04 +0530
+        Tue, 2 Jul 2019 00:59:12 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 13CE1607DF; Tue,  2 Jul 2019 04:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562043551;
+        bh=HlBgcWJfLH6tBKexfCh53i9VEnoSJ9mvKfmC1cDITKs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EH5NTaxoWidpgrsa5p2PUhX+1WCW+kPGAKNEoP7PSryrrrpE6PInf02Vcb4Zbuf/U
+         zvz3SIMcOy6YVBdSjYLj2j0c4Zpw6fdqV8FIm7UxegeGxLwsC/TSG3TfSBJ8pirxPb
+         HWObzGNXlt9YlSSuM+oB/smBCJB1FP2GBkPYP3Vc=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 1C117602BC;
+        Tue,  2 Jul 2019 04:59:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562043550;
+        bh=HlBgcWJfLH6tBKexfCh53i9VEnoSJ9mvKfmC1cDITKs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=h3Ta2SLMWeJcOt6kXM0LCkvCwT046gOOmcB8bPxhDb7oHdaGIHLBbaopzG9R5/bN8
+         szxUy6shIdZfoqZuHDk8fUZzfZ81zKwVmkoJhDN9jEaN6Dnfz8gsUbIMG8pWKTzOP9
+         SPpL9zzykXmi0NUAT0cL01zJc/JHGkpGoatpD9So=
 MIME-Version: 1.0
-In-Reply-To: <20190701140436.45eabf07@x1.home>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562043321; bh=CZdkaj0XFhhMmhaSOWFllFY14IofOj9ERRNjXuWdkfg=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=QIrRc4ZnpGTLVdr9l5Wjq+vybQ4zVvZMBW5EsWqoAQQnsO7IfBggAnJHVeCemexGA
-         V1XJdaFuT+hrBxWpf+ePfP7gt/nag0d9V4XTJ1bKEuXWy+PC54Mo0HiFzX8E36oBpR
-         S8P15hTvlWPSW9I38n2/nCX6p+Y08dUmet0CbpmDTaZ4I7E7/wkMa65vrQBM7QBX4b
-         kJPe0dzyqFQGa8kbwb3y14MFxYPqBTiBYnFol+pbHj9gNL36Chp35Kj7HuAH+xG95Z
-         YPsuozpHiEKs0ESkxoR9XD4OU+DiKdCXGz2qtlEjZeuoCdA5u+kHpdN9nkWCoi1H1k
-         HzDvy8hIs7PqA==
+Date:   Tue, 02 Jul 2019 10:29:10 +0530
+From:   amasule@codeaurora.org
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org
+Subject: Re: [PATCH v3 2/4] media: venus: Update clock scaling
+In-Reply-To: <69610fc3-5333-ccc6-316f-aee96dc11150@linaro.org>
+References: <1561480044-11834-1-git-send-email-amasule@codeaurora.org>
+ <1561480044-11834-3-git-send-email-amasule@codeaurora.org>
+ <69610fc3-5333-ccc6-316f-aee96dc11150@linaro.org>
+Message-ID: <84a42501461f4aee29815a0609fdef8d@codeaurora.org>
+X-Sender: amasule@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stan,
 
-
-On 7/2/2019 1:34 AM, Alex Williamson wrote:
-> On Mon, 1 Jul 2019 23:20:35 +0530
-> Kirti Wankhede <kwankhede@nvidia.com> wrote:
+On 2019-07-01 18:41, Stanimir Varbanov wrote:
+> On 6/25/19 7:27 PM, Aniket Masule wrote:
+>> Current clock scaling calculations are same for vpu4 and
+>> previous versions. For vpu4, Clock scaling calculations
+>> are updated with cycles/mb. This helps in getting precise
+>> clock required.
+>> 
+>> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+>> ---
+>>  drivers/media/platform/qcom/venus/helpers.c | 111 
+>> ++++++++++++++++++++++++----
+>>  drivers/media/platform/qcom/venus/helpers.h |   2 +-
+>>  drivers/media/platform/qcom/venus/vdec.c    |   2 +-
+>>  drivers/media/platform/qcom/venus/venc.c    |   2 +-
+>>  4 files changed, 99 insertions(+), 18 deletions(-)
+>> 
+>> diff --git a/drivers/media/platform/qcom/venus/helpers.c 
+>> b/drivers/media/platform/qcom/venus/helpers.c
+>> index f7f724b..e1a0247 100644
+>> --- a/drivers/media/platform/qcom/venus/helpers.c
+>> +++ b/drivers/media/platform/qcom/venus/helpers.c
+>> @@ -348,8 +348,9 @@ static u32 load_per_type(struct venus_core *core, 
+>> u32 session_type)
+>>  	return mbs_per_sec;
+>>  }
+>> 
+>> -static int load_scale_clocks(struct venus_core *core)
+>> +static int scale_clocks(struct venus_inst *inst)
+>>  {
+>> +	struct venus_core *core = inst->core;
+>>  	const struct freq_tbl *table = core->res->freq_tbl;
+>>  	unsigned int num_rows = core->res->freq_tbl_size;
+>>  	unsigned long freq = table[0].freq;
+>> @@ -398,6 +399,86 @@ static int load_scale_clocks(struct venus_core 
+>> *core)
+>>  	return ret;
+>>  }
+>> 
+>> +static unsigned long calculate_vpp_freq(struct venus_inst *inst)
+>> +{
+>> +	unsigned long vpp_freq = 0;
+>> +	u32 mbs_per_sec;
+>> +
+>> +	mbs_per_sec = load_per_instance(inst);
+>> +	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
+>> +	/* 21 / 20 is overhead factor */
+>> +	vpp_freq += vpp_freq / 20;
+>> +
+>> +	return vpp_freq;
+>> +}
+>> +
+>> +static int scale_clocks_v4(struct venus_inst *inst)
+>> +{
+>> +	struct venus_core *core = inst->core;
+>> +	const struct freq_tbl *table = core->res->freq_tbl;
+>> +	unsigned int num_rows = core->res->freq_tbl_size;
+>> +
 > 
->> On 7/1/2019 10:54 PM, Alex Williamson wrote:
->>> On Mon, 1 Jul 2019 22:43:10 +0530
->>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
->>>   
->>>> On 7/1/2019 8:24 PM, Alex Williamson wrote:  
->>>>> This allows udev to trigger rules when a parent device is registered
->>>>> or unregistered from mdev.
->>>>>
->>>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
->>>>> ---
->>>>>
->>>>> v2: Don't remove the dev_info(), Kirti requested they stay and
->>>>>     removing them is only tangential to the goal of this change.
->>>>>     
->>>>
->>>> Thanks.
->>>>
->>>>  
->>>>>  drivers/vfio/mdev/mdev_core.c |    8 ++++++++
->>>>>  1 file changed, 8 insertions(+)
->>>>>
->>>>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
->>>>> index ae23151442cb..7fb268136c62 100644
->>>>> --- a/drivers/vfio/mdev/mdev_core.c
->>>>> +++ b/drivers/vfio/mdev/mdev_core.c
->>>>> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
->>>>>  {
->>>>>  	int ret;
->>>>>  	struct mdev_parent *parent;
->>>>> +	char *env_string = "MDEV_STATE=registered";
->>>>> +	char *envp[] = { env_string, NULL };
->>>>>  
->>>>>  	/* check for mandatory ops */
->>>>>  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
->>>>> @@ -197,6 +199,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
->>>>>  	mutex_unlock(&parent_list_lock);
->>>>>  
->>>>>  	dev_info(dev, "MDEV: Registered\n");
->>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
->>>>> +
->>>>>  	return 0;
->>>>>  
->>>>>  add_dev_err:
->>>>> @@ -220,6 +224,8 @@ EXPORT_SYMBOL(mdev_register_device);
->>>>>  void mdev_unregister_device(struct device *dev)
->>>>>  {
->>>>>  	struct mdev_parent *parent;
->>>>> +	char *env_string = "MDEV_STATE=unregistered";
->>>>> +	char *envp[] = { env_string, NULL };
->>>>>  
->>>>>  	mutex_lock(&parent_list_lock);
->>>>>  	parent = __find_parent_device(dev);
->>>>> @@ -243,6 +249,8 @@ void mdev_unregister_device(struct device *dev)
->>>>>  	up_write(&parent->unreg_sem);
->>>>>  
->>>>>  	mdev_put_parent(parent);
->>>>> +
->>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);    
->>>>
->>>> mdev_put_parent() calls put_device(dev). If this is the last instance
->>>> holding device, then on put_device(dev) dev would get freed.
->>>>
->>>> This event should be before mdev_put_parent()  
->>>
->>> So you're suggesting the vendor driver is calling
->>> mdev_unregister_device() without a reference to the struct device that
->>> it's passing to unregister?  Sounds bogus to me.  We take a
->>> reference to the device so that it can't disappear out from under us,
->>> the caller cannot rely on our reference and the caller provided the
->>> struct device.  Thanks,
->>>   
->>
->> 1. Register uevent is sent after mdev holding reference to device, then
->> ideally, unregister path should be mirror of register path, send uevent
->> and then release the reference to device.
+> please remove this blank line.
 > 
-> I don't see the relevance here.  We're marking an event, not unwinding
-> state of the device from the registration process.  Additionally, the
-> event we're trying to mark is the completion of each process, so the
-> notion that we need to mirror the ordering between the two is invalid.
+>> +	struct clk *clk = core->clks[0];
+>> +	struct device *dev = core->dev;
+>> +	unsigned int i;
+>> +	unsigned long freq = 0, freq_core0 = 0, freq_core1 = 0;
 > 
->> 2. I agree that vendor driver shouldn't call mdev_unregister_device()
->> without holding reference to device. But to be on safer side, if ever
->> such case occur, to avoid any segmentation fault in kernel, better to
->> send event before mdev release the reference to device.
+> could you count the cores as it is done for VIDC_CORE_ID_ ?
+> i.e. start counting from one.
 > 
-> I know that get_device() and put_device() are GPL symbols and that's a
-> bit of an issue, but I don't think we should be kludging the code for a
-> vendor driver that might have problems with that.  A) we're using the
-> caller provided device  for the uevent, B) we're only releasing our own
-> reference to the device that was acquired during registration, the
-> vendor driver must have other references,
-
-Are you going to assume that someone/vendor driver is always going to do
-right thing?
-
-> C) the parent device
-> generally lives on a bus, with a vendor driver, there's an entire
-> ecosystem of references to the device below mdev.  Is this a paranoia
-> request or are you really concerned that your PCI device suddenly
-> disappears when mdev's reference to it disappears. 
-
-mdev infrastructure is not always used by PCI devices. It is designed to
-be generic, so that other devices (other than PCI devices) can also use
-this framework.
-If there is a assumption that user of mdev framework or vendor drivers
-are always going to use mdev in right way, then there is no need for
-mdev core to held reference of the device?
-This is not a "paranoia request". This is more of a ideal scenario, mdev
-should use device by holding its reference rather than assuming (or
-relying on) someone else holding the reference of device.
+Sure, I was aligning it with clock handle name in core, but
+aligning it with VIDC_CORE_ID_ would give good readability.
+>> +	int ret;
+>> +
+>> +	freq = calculate_vpp_freq(inst);
+>> +
+>> +	if (freq > table[0].freq)
+>> +		goto err;
+> 
+> if the goto is triggered the error message will be wrong. Infact the
+> dev_err message is targeted for clk_set_rate failure.
+> 
+I will add separate exit for this.
+>> +
+>> +	for (i = 0; i < num_rows; i++) {
+>> +		if (freq > table[i].freq)
+>> +			break;
+>> +		freq = table[i].freq;
+>> +	}
+>> +
+>> +	inst->clk_data.freq = freq;
+>> +
+>> +	mutex_lock(&core->lock);
+>> +	list_for_each_entry(inst, &core->instances, list) {
+>> +		if (inst->clk_data.core_id == VIDC_CORE_ID_1) {
+>> +			freq_core0 += inst->clk_data.freq;
+>> +		} else if (inst->clk_data.core_id == VIDC_CORE_ID_2) {
+>> +			freq_core1 += inst->clk_data.freq;
+>> +		} else if (inst->clk_data.core_id == VIDC_CORE_ID_3) {
+>> +			freq_core0 += inst->clk_data.freq;
+>> +			freq_core1 += inst->clk_data.freq;
+>> +		}
+>> +	}
+>> +	mutex_unlock(&core->lock);
+>> +
+>> +	freq = max(freq_core0, freq_core1);
+>> +
+>> +	ret = clk_set_rate(clk, freq);
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	ret = clk_set_rate(core->core0_clk, freq);
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	ret = clk_set_rate(core->core1_clk, freq);
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	return 0;
+>> +
+>> +err:
+>> +	dev_err(dev, "failed to set clock rate %lu (%d)\n", freq, ret);
+>> +	return ret;
+>> +}
+>> +
+>> +static int load_scale_clocks(struct venus_inst *inst)
+>> +{
+>> +	if (IS_V4(inst->core))
+>> +		return scale_clocks_v4(inst);
+>> +
+>> +	return scale_clocks(inst);
+>> +}
+>> +
+>>  static void fill_buffer_desc(const struct venus_buffer *buf,
+>>  			     struct hfi_buffer_desc *bd, bool response)
+>>  {
+>> @@ -715,35 +796,36 @@ int venus_helper_set_core_usage(struct 
+>> venus_inst *inst, u32 usage)
+>>  }
+>>  EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
+>> 
+>> -int venus_helper_init_codec_data(struct venus_inst *inst)
+>> +int venus_helper_init_codec_freq_data(struct venus_inst *inst)
+>>  {
+>> -	const struct codec_data *codec_data;
+>> -	unsigned int i, codec_data_size;
+> 
+> those deletions shouldn't exist once you fix the git rebase issue.
+> 
+>> +	const struct codec_freq_data *codec_freq_data;
+>> +	unsigned int i, codec_freq_data_size;
+> 
+> could you rename the variables to shorter?
+> 
+Yes
+>>  	u32 pixfmt;
+>>  	int ret = 0;
+>> 
+>>  	if (!IS_V4(inst->core))
+>>  		return 0;
+>> 
+>> -	codec_data = inst->core->res->codec_data;
+>> -	codec_data_size = inst->core->res->codec_data_size;
+>> +	codec_freq_data = inst->core->res->codec_freq_data;
+>> +	codec_freq_data_size = inst->core->res->codec_freq_data_size;
+>>  	pixfmt = inst->session_type == VIDC_SESSION_TYPE_DEC ?
+>>  			inst->fmt_out->pixfmt : inst->fmt_cap->pixfmt;
+>> 
+>> -	for (i = 0; i < codec_data_size; i++) {
+>> -		if (codec_data[i].pixfmt == pixfmt &&
+>> -		    codec_data[i].session_type == inst->session_type) {
+>> -			inst->clk_data.codec_data = &codec_data[i];
+>> +	for (i = 0; i < codec_freq_data_size; i++) {
+>> +		if (codec_freq_data[i].pixfmt == pixfmt &&
+>> +		    codec_freq_data[i].session_type == inst->session_type) {
+>> +			inst->clk_data.codec_freq_data =
+>> +				&codec_freq_data[i];
+>>  			break;
+>>  		}
+>>  	}
+>> 
+>> -	if (!inst->clk_data.codec_data)
+>> +	if (!inst->clk_data.codec_freq_data)
+>>  		ret = -EINVAL;
+>> 
+>>  	return ret;
+>>  }
+>> -EXPORT_SYMBOL_GPL(venus_helper_init_codec_data);
+>> +EXPORT_SYMBOL_GPL(venus_helper_init_codec_freq_data);
+>> 
 
 Thanks,
-Kirti
+Aniket
