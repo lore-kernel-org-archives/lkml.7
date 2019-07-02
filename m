@@ -2,101 +2,101 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4172C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78117C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3EF32146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B892146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfGBPJ7 (ORCPT
+        id S1726430AbfGBPKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:09:59 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58158 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfGBPJ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:09:59 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 2 Jul 2019 11:10:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59412 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726252AbfGBPKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 11:10:49 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E4CB9283DB4;
-        Tue,  2 Jul 2019 16:09:56 +0100 (BST)
-Date:   Tue, 2 Jul 2019 17:09:54 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Noralf =?UTF-8?B?VHLDuG5uZXM=?= <noralf@tronnes.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Ramalingam C <ramalingam.c@intel.com>,
-        Radhakrishna Sripada <radhakrishna.sripada@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: connector: remove bogus NULL check
-Message-ID: <20190702170954.4594bb21@collabora.com>
-In-Reply-To: <20190628103925.2686249-1-arnd@arndb.de>
-References: <20190628103925.2686249-1-arnd@arndb.de>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 232C981DE5;
+        Tue,  2 Jul 2019 15:10:39 +0000 (UTC)
+Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 955155D9D3;
+        Tue,  2 Jul 2019 15:10:30 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 17:10:29 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        grygorii.strashko@ti.com, jakub.kicinski@netronome.com,
+        daniel@iogearbox.net, john.fastabend@gmail.com, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        brouer@redhat.com
+Subject: Re: [PATCH] net: core: page_pool: add user refcnt and reintroduce
+ page_pool_destroy
+Message-ID: <20190702171029.76c60538@carbon>
+In-Reply-To: <20190702145612.GF4510@khorivan>
+References: <20190702153902.0e42b0b2@carbon>
+        <156207778364.29180.5111562317930943530.stgit@firesoul>
+        <20190702144426.GD4510@khorivan>
+        <20190702165230.6caa36e3@carbon>
+        <20190702145612.GF4510@khorivan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 02 Jul 2019 15:10:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019 12:39:05 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
+On Tue, 2 Jul 2019 17:56:13 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-> mode->name is a character array in a structure, checking it's
-> address is pointless and causes a warning with some compilers:
-> 
-> drivers/gpu/drm/drm_connector.c:144:15: error: address of array 'mode->name' will always evaluate to 'true'
->       [-Werror,-Wpointer-bool-conversion]
->                       mode->name ? mode->name : "",
->                       ~~~~~~^~~~ ~
-> include/drm/drm_print.h:366:29: note: expanded from macro 'DRM_DEBUG_KMS'
->         drm_dbg(DRM_UT_KMS, fmt, ##__VA_ARGS__)
->                                    ^~~~~~~~~~~
-> 
-> Remove the check here.
-> 
-> Fixes: 3aeeb13d8996 ("drm/modes: Support modes names on the command line")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> On Tue, Jul 02, 2019 at 04:52:30PM +0200, Jesper Dangaard Brouer wrote:
+> >On Tue, 2 Jul 2019 17:44:27 +0300
+> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+> >  
+> >> On Tue, Jul 02, 2019 at 04:31:39PM +0200, Jesper Dangaard Brouer wrote:  
+> >> >From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> >> >
+> >> >Jesper recently removed page_pool_destroy() (from driver invocation) and
+> >> >moved shutdown and free of page_pool into xdp_rxq_info_unreg(), in-order to
+> >> >handle in-flight packets/pages. This created an asymmetry in drivers
+> >> >create/destroy pairs.
+> >> >
+> >> >This patch add page_pool user refcnt and reintroduce page_pool_destroy.
+> >> >This serves two purposes, (1) simplify drivers error handling as driver now
+> >> >drivers always calls page_pool_destroy() and don't need to track if
+> >> >xdp_rxq_info_reg_mem_model() was unsuccessful. (2) allow special cases
+> >> >where a single RX-queue (with a single page_pool) provides packets for two
+> >> >net_device'es, and thus needs to register the same page_pool twice with two
+> >> >xdp_rxq_info structures.  
+> >>
+> >> As I tend to use xdp level patch there is no more reason to mention (2) case
+> >> here. XDP patch serves it better and can prevent not only obj deletion but also
+> >> pool flush, so, this one patch I could better leave only for (1) case.  
+> >
+> >I don't understand what you are saying.
+> >
+> >Do you approve this patch, or do you reject this patch?
+> >  
+> It's not reject, it's proposition to use both, XDP and page pool patches,
+> each having its goal.
 
-Queued to drm-misc-next-fixes.
+Just to be clear, if you want this patch to get accepted you have to
+reply with your Signed-off-by (as I wrote).
 
-Thanks,
+Maybe we should discuss it in another thread, about why you want two
+solutions to the same problem.
 
-Boris
-
-> ---
->  drivers/gpu/drm/drm_connector.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-> index 3afed5677946..b3f2cf7eae9c 100644
-> --- a/drivers/gpu/drm/drm_connector.c
-> +++ b/drivers/gpu/drm/drm_connector.c
-> @@ -141,7 +141,7 @@ static void drm_connector_get_cmdline_mode(struct drm_connector *connector)
->  
->  	DRM_DEBUG_KMS("cmdline mode for connector %s %s %dx%d@%dHz%s%s%s\n",
->  		      connector->name,
-> -		      mode->name ? mode->name : "",
-> +		      mode->name,
->  		      mode->xres, mode->yres,
->  		      mode->refresh_specified ? mode->refresh : 60,
->  		      mode->rb ? " reduced blanking" : "",
-
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
