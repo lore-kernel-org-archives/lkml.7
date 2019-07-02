@@ -2,212 +2,156 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ECAC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B090BC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA2421721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7123A21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:40:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="M/zho78z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfGBSjW (ORCPT
+        id S1727066AbfGBSkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 14:39:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44150 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfGBSjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:39:22 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 51EB93082AC3;
-        Tue,  2 Jul 2019 18:39:19 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 67891414C;
-        Tue,  2 Jul 2019 18:39:15 +0000 (UTC)
-Subject: Re: [PATCH] mm, slab: Extend slab/shrink to shrink all the memcg
- caches
-To:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc:     linux-mm@kvack.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-References: <20190702183730.14461-1-longman@redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <f52bebe1-e3be-f52c-e301-4d6fb1cc87d7@redhat.com>
-Date:   Tue, 2 Jul 2019 14:39:14 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190702183730.14461-1-longman@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 02 Jul 2019 18:39:21 +0000 (UTC)
+        Tue, 2 Jul 2019 14:40:06 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42588 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfGBSkF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 14:40:05 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t132so4739171pgb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 11:40:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=hG1JsQUy046szRFDOIEOc0GrqgtZ4N9C6eAqGmFMcZg=;
+        b=M/zho78zeJOQugBcdoK7P7W4WUEDOlNbsVIincCdzc7egd5SueogZzrbLrF9qFqxIf
+         zUuXIONh6LZN8s6e87uNdUj2AJp2KzRUirGiAl1Y7YW3J5ZPIa/KgyvZtGTuB0Hr6LbA
+         +vmf1fMprr5qs2SgZf1NbEMO+7lbfI9GIMLESzki905WvFh1ELaBYDQZxGM5a1rdM/T9
+         ztveeivAxZt0qeBazc9JAWkCR8zh77uqMArfEwhtdwvqe+EFAxEVuQeWNUqLTDAXIPtT
+         sOA5EdfthaVkfPc5v5AeIvevLh5/s5A4R1IxC0wnZTfkeiPGL+o+Rmk/CG6JcqZCBPwE
+         ZPqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hG1JsQUy046szRFDOIEOc0GrqgtZ4N9C6eAqGmFMcZg=;
+        b=qV21vFUD3xDeHg4yYI02iDe/RIEMZmB3ul1ecBw+PI1oTVTEzhDA69BQnKkZTssPWF
+         /NMBQvBU7kagD5r4m6CANZDj5cYQ24LdDUi8JXSwYUFfzdm0p88siovpS+0KWrsbqdsh
+         CAK6nIDjRRTzXNGTVaEC2wH4BGisczMjkkluChYbYp+cUrh3n1wfEAfgaKg2NSzn2PAD
+         2WZaDCpGMuHH68k8wsFAjIbFdXXD6mBU++zEVvcNmkiS0TRrKW5byb3PYAgJMtoBUDQ8
+         CF8IyvQn5DjuRkzbn8cnr0NfRgPzcwaR+MGeWyml+Zyufn9sIAyG6x38n+BCWsfy9jWD
+         V32A==
+X-Gm-Message-State: APjAAAXUsCE7tb19rb7rUnO9ZUadJx18T0205K59Zfe8vX5Y/5zveZxO
+        omHnICTRuujQPbkAxDbxC44/bQ==
+X-Google-Smtp-Source: APXvYqzsMlaSyc7pZIJYDjprnLyGQKCrS/C/7bgqbvBj63BhfUiyhW4J4JPtfydDsSsZis7KAagqgA==
+X-Received: by 2002:a63:1e0b:: with SMTP id e11mr9709204pge.402.1562092804922;
+        Tue, 02 Jul 2019 11:40:04 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id e10sm15065327pfi.173.2019.07.02.11.40.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 02 Jul 2019 11:40:04 -0700 (PDT)
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com
+Cc:     palmer@sifive.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Subject: [PATCH v7 0/4] mtd: spi-nor: add support for is25wp256 spi-nor flash
+Date:   Wed,  3 Jul 2019 00:09:01 +0530
+Message-Id: <1562092745-11541-1-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 2:37 PM, Waiman Long wrote:
-> Currently, a value of '1" is written to /sys/kernel/slab/<slab>/shrink
-> file to shrink the slab by flushing all the per-cpu slabs and free
-> slabs in partial lists. This applies only to the root caches, though.
->
-> Extends this capability by shrinking all the child memcg caches and
-> the root cache when a value of '2' is written to the shrink sysfs file.
->
-> On a 4-socket 112-core 224-thread x86-64 system after a parallel kernel
-> build, the the amount of memory occupied by slabs before shrinking
-> slabs were:
->
->  # grep task_struct /proc/slabinfo
->  task_struct         7114   7296   7744    4    8 : tunables    0    0
->  0 : slabdata   1824   1824      0
->  # grep "^S[lRU]" /proc/meminfo
->  Slab:            1310444 kB
->  SReclaimable:     377604 kB
->  SUnreclaim:       932840 kB
->
-> After shrinking slabs:
->
->  # grep "^S[lRU]" /proc/meminfo
->  Slab:             695652 kB
->  SReclaimable:     322796 kB
->  SUnreclaim:       372856 kB
->  # grep task_struct /proc/slabinfo
->  task_struct         2262   2572   7744    4    8 : tunables    0    0
->  0 : slabdata    643    643      0
->
-> Signed-off-by: Waiman Long <longman@redhat.com>
+The patch series adds support for 32MiB spi-nor is25wp256 present on HiFive
+Unleashed A00 board. The flash device gets BFPT_DWORD1_ADDRESS_BYTES_3_ONLY
+from BFPT table for address width, whereas the flash can support 4 byte
+address width, so the address width is configured by using the post bfpt
+fixup hook as done for is25lp256 device in
+commit cf580a924005 ("mtd: spi-nor: fix nor->addr_width when its value
+configured from SFDP does not match the actual width") queued in
+spi-nor/next branch [1].
 
-This is a follow-up of my previous patch "mm, slab: Extend
-vm/drop_caches to shrink kmem slabs". It is based on the linux-next tree.
+Patches 1 and 3 are based on original work done by Wesley Terpstra and/or
+Palmer Dabbelt:
+https://github.com/riscv/riscv-linux/commit/c94e267766d62bc9a669611c3d0c8ed5ea26569b
 
--Longman
+Erase/Read/Write operations are verified on HiFive Unleashed board using  mtd and
+flash utils (v1.5.2):
+1. mtd_debug  	: Options available are : erase/read/write.
+2. flashcp	: Single utility that erases flash, writes a file to flash and verifies the data back.
+3. flash_unlock : Unlock flash memory blocks. Arguments: are offset and number of blocks.
+3. flash_lock   : Lock flash memory blocks. Arguments: are offset and number of blocks. 
 
-> ---
->  Documentation/ABI/testing/sysfs-kernel-slab | 10 +++--
->  mm/slab.h                                   |  1 +
->  mm/slab_common.c                            | 43 +++++++++++++++++++++
->  mm/slub.c                                   |  2 +
->  4 files changed, 52 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-slab b/Documentation/ABI/testing/sysfs-kernel-slab
-> index 29601d93a1c2..2a3d0fc4b4ac 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-slab
-> +++ b/Documentation/ABI/testing/sysfs-kernel-slab
-> @@ -429,10 +429,12 @@ KernelVersion:	2.6.22
->  Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
->  		Christoph Lameter <cl@linux-foundation.org>
->  Description:
-> -		The shrink file is written when memory should be reclaimed from
-> -		a cache.  Empty partial slabs are freed and the partial list is
-> -		sorted so the slabs with the fewest available objects are used
-> -		first.
-> +		A value of '1' is written to the shrink file when memory should
-> +		be reclaimed from a cache.  Empty partial slabs are freed and
-> +		the partial list is sorted so the slabs with the fewest
-> +		available objects are used first.  When a value of '2' is
-> +		written, all the corresponding child memory cgroup caches
-> +		should be shrunk as well.  All other values are invalid.
->  
->  What:		/sys/kernel/slab/cache/slab_size
->  Date:		May 2007
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 3b22931bb557..a16b2c7ff4dd 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -174,6 +174,7 @@ int __kmem_cache_shrink(struct kmem_cache *);
->  void __kmemcg_cache_deactivate(struct kmem_cache *s);
->  void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s);
->  void slab_kmem_cache_release(struct kmem_cache *);
-> +int kmem_cache_shrink_all(struct kmem_cache *s);
->  
->  struct seq_file;
->  struct file;
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 464faaa9fd81..493697ba1da5 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -981,6 +981,49 @@ int kmem_cache_shrink(struct kmem_cache *cachep)
->  }
->  EXPORT_SYMBOL(kmem_cache_shrink);
->  
-> +/**
-> + * kmem_cache_shrink_all - shrink a cache and all its memcg children
-> + * @s: The root cache to shrink.
-> + *
-> + * Return: 0 if successful, -EINVAL if not a root cache
-> + */
-> +int kmem_cache_shrink_all(struct kmem_cache *s)
-> +{
-> +	struct kmem_cache *c;
-> +
-> +	if (!IS_ENABLED(CONFIG_MEMCG_KMEM)) {
-> +		kmem_cache_shrink(s);
-> +		return 0;
-> +	}
-> +	if (!is_root_cache(s))
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * The caller should have a reference to the root cache and so
-> +	 * we don't need to take the slab_mutex. We have to take the
-> +	 * slab_mutex, however, to iterate the memcg caches.
-> +	 */
-> +	get_online_cpus();
-> +	get_online_mems();
-> +	kasan_cache_shrink(s);
-> +	__kmem_cache_shrink(s);
-> +
-> +	mutex_lock(&slab_mutex);
-> +	for_each_memcg_cache(c, s) {
-> +		/*
-> +		 * Don't need to shrink deactivated memcg caches.
-> +		 */
-> +		if (s->flags & SLAB_DEACTIVATED)
-> +			continue;
-> +		kasan_cache_shrink(c);
-> +		__kmem_cache_shrink(c);
-> +	}
-> +	mutex_unlock(&slab_mutex);
-> +	put_online_mems();
-> +	put_online_cpus();
-> +	return 0;
-> +}
-> +
->  bool slab_is_available(void)
->  {
->  	return slab_state >= UP;
-> diff --git a/mm/slub.c b/mm/slub.c
-> index a384228ff6d3..5d7b0004c51f 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -5298,6 +5298,8 @@ static ssize_t shrink_store(struct kmem_cache *s,
->  {
->  	if (buf[0] == '1')
->  		kmem_cache_shrink(s);
-> +	else if (buf[0] == '2')
-> +		kmem_cache_shrink_all(s);
->  	else
->  		return -EINVAL;
->  	return length;
+The Unlock scheme clears the protection bits of all blocks in the Status register.
 
+Lock scheme:
+A basic implementation based on the stm_lock scheme and is validated for a different
+number of blocks passed to flash_lock. ISSI devices have top/bottom area selection
+in function register which is OTP memory. so we are not updating the OTP section
+of function register.
+
+The changes along are available under branch v5.2-rc1-mtd-spi-nor/next at:
+https://github.com/sagsifive/riscv-linux-hifive 
+ 
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git/log/?h=spi-nor/next
+
+Revision history:
+V6<->V7:
+-Incorporated review comments from Vignesh.
+-Used post bfpt fixup hook as suggested by Vignesh.
+-Introduce SPI_NOR_HAS_BP3 to identify whether the flash has 4th bit protect bit.
+-Prefix generic flash access functions with spi_nor_xxxx.
+
+V5<->V6:
+-Incorporated review comments from Vignesh.
+-Set addr width based on device size and if SPI_NOR_4B_OPCODES is set.
+-Added 4th block protect identifier (SPI_NOR_HAS_BP3) to flash_info structure 
+-Changed flash_info: flag from u16 to u32 to accommodate SPI_NOR_HAS_BP3
+-Prefix newly added function with spi_nor_xxx.
+-Dropped write_fr function, as updating OTP bit's present in function register doesn't seem to be a good idea.
+-Set lock/unlock schemes based on whether the ISSI device has locking support and  BP3 bit present.
+
+V4<->V5:
+-Rebased to linux version v5.2-rc1.
+-Updated heading of this cover letter with sub-system, instead of just plain "add support for is25wp256..."
+
+V3<->V4:
+-Extracted comman code and renamed few stm functions so that it can be reused for issi lock implementation.
+-Added function's to read and write FR register, for selecting Top/Bottom area.
+
+V2<->V3:
+-Rebased patch to mainline v5.1 from earlier v5.1-rc5.
+-Updated commit messages, and cover letter with reference to git URL and author information.
+-Deferred flash_lock mechanism and can go as separate patch. 
+
+V1<-> V2:
+-Incorporated changes suggested by reviewers regarding patch/cover letter versioning, references of patch.
+-Updated cover letter with description for flash operations verified with these changes.
+-Add support for unlocking is25xxxxxx device.
+-Add support for locking is25xxxxxx device.
+
+v1:
+-Add support for is25wp256 device.
+
+Sagar Shrikant Kadam (4):
+  mtd: spi-nor: add support for is25wp256
+  mtd: spi-nor: fix nor->addr_width for is25wp256
+  mtd: spi-nor: add support to unlock the flash device
+  mtd: spi-nor: add locking support for is25wp256 device
+
+ drivers/mtd/spi-nor/spi-nor.c | 343 +++++++++++++++++++++++++++++++++++-------
+ include/linux/mtd/spi-nor.h   |   8 +
+ 2 files changed, 300 insertions(+), 51 deletions(-)
+
+-- 
+1.9.1
 
