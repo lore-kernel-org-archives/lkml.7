@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C34EC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773B6C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2574221841
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB99216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054600;
-	bh=4gKGw1J2PXubqLIA0ppPWMBfclGqzmPg3zzOTk6+L2U=;
+	s=default; t=1562054605;
+	bh=FWX6yoUmqpeNc3UXbOoiOv73WGfgMq7r2DRCslZmUHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uveb9TL0p1DV51+IYzwTg+htaxBaOCNFD6AAoyVur3yPD0B9emsD7C1HlpVp8oYMS
-	 WEfz8IhTnahXOwizwMlvYynVkSJW/TbOkovCyUYK2+jX9rhz0IViclCSfnpjapZy1f
-	 W0AnljUjrfISiAX+wtHTGNs8+wSOxMKvWUdSNPLY=
+	b=PpimFSzmZtLSxULf50h+vP7jgtuXYk+CX6AekXuUHa4xOpz45GdgqXXLIrrFCuX+h
+	 O8Vxyud5m10qlVWAi9CPx7KZEgr2xTSb11j7DvWNOEqorI2EOFENfei0DXNjDP6iED
+	 T82o1RY9tpuCbG9AjJ/yg0vBXSkU7BJqLivH6LT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfGBIDT (ORCPT
+        id S1727420AbfGBIDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:03:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48172 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727379AbfGBIDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:03:16 -0400
+        id S1727399AbfGBIDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:03:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C033E216C8;
-        Tue,  2 Jul 2019 08:03:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B823C21841;
+        Tue,  2 Jul 2019 08:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054595;
-        bh=4gKGw1J2PXubqLIA0ppPWMBfclGqzmPg3zzOTk6+L2U=;
+        s=default; t=1562054601;
+        bh=FWX6yoUmqpeNc3UXbOoiOv73WGfgMq7r2DRCslZmUHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+w4PhFeazL2uZJn1QwzDjLFsE3ib5YBchM24Y6OkWPNeEpK+zWPGhr2q5naQccrk
-         NSIJFT/JDUk1GMfam/xrPzTDuYgWqpB3CJNGojh93rJW0EIw3i2TXyVDyWQoZdOM4x
-         sOeM4mKCAqJiIk5uOM0UsMvGwCCnjfimYDysfnic=
+        b=byqQbkwwIW/3aHxCXxjoOwLbGJXfJLjIz3/cvVLLYBsCHsAN86/XsDldBiPQ4KEjG
+         8TYZ9AHrJZlsUPb5gM+ffGy3g0G9ot08TZ7O9HZFk6GeuKQByro8y4ipxS3t3tZAdY
+         Q73i9R2H2zrWMbEflzTgt/Kv8VDey8Ej51ZqJitQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>
-Subject: [PATCH 5.1 23/55] x86/resctrl: Prevent possible overrun during bitmap operations
-Date:   Tue,  2 Jul 2019 10:01:31 +0200
-Message-Id: <20190702080125.255952865@linuxfoundation.org>
+        Jonathan Richardson <jonathan.richardson@broadcom.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [PATCH 5.1 25/55] efi/memreserve: deal with memreserve entries in unmapped memory
+Date:   Tue,  2 Jul 2019 10:01:33 +0200
+Message-Id: <20190702080125.373828717@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -64,119 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reinette Chatre <reinette.chatre@intel.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 32f010deab575199df4ebe7b6aec20c17bb7eccd upstream.
+commit 18df7577adae6c6c778bf774b3aebcacbc1fb439 upstream.
 
-While the DOC at the beginning of lib/bitmap.c explicitly states that
-"The number of valid bits in a given bitmap does _not_ need to be an
-exact multiple of BITS_PER_LONG.", some of the bitmap operations do
-indeed access BITS_PER_LONG portions of the provided bitmap no matter
-the size of the provided bitmap.
+Ensure that the EFI memreserve entries can be accessed, even if they
+are located in memory that the kernel (e.g., a crashkernel) omits from
+the linear map.
 
-For example, if find_first_bit() is provided with an 8 bit bitmap the
-operation will access BITS_PER_LONG bits from the provided bitmap. While
-the operation ensures that these extra bits do not affect the result,
-the memory is still accessed.
-
-The capacity bitmasks (CBMs) are typically stored in u32 since they
-can never exceed 32 bits. A few instances exist where a bitmap_*
-operation is performed on a CBM by simply pointing the bitmap operation
-to the stored u32 value.
-
-The consequence of this pattern is that some bitmap_* operations will
-access out-of-bounds memory when interacting with the provided CBM.
-
-This same issue has previously been addressed with commit 49e00eee0061
-("x86/intel_rdt: Fix out-of-bounds memory access in CBM tests")
-but at that time not all instances of the issue were fixed.
-
-Fix this by using an unsigned long to store the capacity bitmask data
-that is passed to bitmap functions.
-
-Fixes: e651901187ab ("x86/intel_rdt: Introduce "bit_usage" to display cache allocations details")
-Fixes: f4e80d67a527 ("x86/intel_rdt: Resctrl files reflect pseudo-locked information")
-Fixes: 95f0b77efa57 ("x86/intel_rdt: Initialize new resource group with sane defaults")
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: stable <stable@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/58c9b6081fd9bf599af0dfc01a6fdd335768efef.1560975645.git.reinette.chatre@intel.com
+Fixes: 80424b02d42b ("efi: Reduce the amount of memblock reservations ...")
+Cc: <stable@vger.kernel.org> # 5.0+
+Reported-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
+Reviewed-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
+Tested-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c |   35 +++++++++++++++------------------
- 1 file changed, 16 insertions(+), 19 deletions(-)
+ drivers/firmware/efi/efi.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -804,8 +804,12 @@ static int rdt_bit_usage_show(struct ker
- 			      struct seq_file *seq, void *v)
- {
- 	struct rdt_resource *r = of->kn->parent->priv;
--	u32 sw_shareable = 0, hw_shareable = 0;
--	u32 exclusive = 0, pseudo_locked = 0;
-+	/*
-+	 * Use unsigned long even though only 32 bits are used to ensure
-+	 * test_bit() is used safely.
-+	 */
-+	unsigned long sw_shareable = 0, hw_shareable = 0;
-+	unsigned long exclusive = 0, pseudo_locked = 0;
- 	struct rdt_domain *dom;
- 	int i, hwb, swb, excl, psl;
- 	enum rdtgrp_mode mode;
-@@ -850,10 +854,10 @@ static int rdt_bit_usage_show(struct ker
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -1007,14 +1007,16 @@ int __ref efi_mem_reserve_persistent(phy
+ 
+ 	/* first try to find a slot in an existing linked list entry */
+ 	for (prsv = efi_memreserve_root->next; prsv; prsv = rsv->next) {
+-		rsv = __va(prsv);
++		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
+ 		index = atomic_fetch_add_unless(&rsv->count, 1, rsv->size);
+ 		if (index < rsv->size) {
+ 			rsv->entry[index].base = addr;
+ 			rsv->entry[index].size = size;
+ 
++			memunmap(rsv);
+ 			return 0;
  		}
- 		for (i = r->cache.cbm_len - 1; i >= 0; i--) {
- 			pseudo_locked = dom->plr ? dom->plr->cbm : 0;
--			hwb = test_bit(i, (unsigned long *)&hw_shareable);
--			swb = test_bit(i, (unsigned long *)&sw_shareable);
--			excl = test_bit(i, (unsigned long *)&exclusive);
--			psl = test_bit(i, (unsigned long *)&pseudo_locked);
-+			hwb = test_bit(i, &hw_shareable);
-+			swb = test_bit(i, &sw_shareable);
-+			excl = test_bit(i, &exclusive);
-+			psl = test_bit(i, &pseudo_locked);
- 			if (hwb && swb)
- 				seq_putc(seq, 'X');
- 			else if (hwb && !swb)
-@@ -2494,26 +2498,19 @@ out_destroy:
-  */
- static void cbm_ensure_valid(u32 *_val, struct rdt_resource *r)
- {
--	/*
--	 * Convert the u32 _val to an unsigned long required by all the bit
--	 * operations within this function. No more than 32 bits of this
--	 * converted value can be accessed because all bit operations are
--	 * additionally provided with cbm_len that is initialized during
--	 * hardware enumeration using five bits from the EAX register and
--	 * thus never can exceed 32 bits.
--	 */
--	unsigned long *val = (unsigned long *)_val;
-+	unsigned long val = *_val;
- 	unsigned int cbm_len = r->cache.cbm_len;
- 	unsigned long first_bit, zero_bit;
++		memunmap(rsv);
+ 	}
  
--	if (*val == 0)
-+	if (val == 0)
- 		return;
+ 	/* no slot found - allocate a new linked list entry */
+@@ -1022,7 +1024,13 @@ int __ref efi_mem_reserve_persistent(phy
+ 	if (!rsv)
+ 		return -ENOMEM;
  
--	first_bit = find_first_bit(val, cbm_len);
--	zero_bit = find_next_zero_bit(val, cbm_len, first_bit);
-+	first_bit = find_first_bit(&val, cbm_len);
-+	zero_bit = find_next_zero_bit(&val, cbm_len, first_bit);
- 
- 	/* Clear any remaining bits to ensure contiguous region */
--	bitmap_clear(val, zero_bit, cbm_len - zero_bit);
-+	bitmap_clear(&val, zero_bit, cbm_len - zero_bit);
-+	*_val = (u32)val;
- }
- 
- /**
+-	rsv->size = EFI_MEMRESERVE_COUNT(PAGE_SIZE);
++	/*
++	 * The memremap() call above assumes that a linux_efi_memreserve entry
++	 * never crosses a page boundary, so let's ensure that this remains true
++	 * even when kexec'ing a 4k pages kernel from a >4k pages kernel, by
++	 * using SZ_4K explicitly in the size calculation below.
++	 */
++	rsv->size = EFI_MEMRESERVE_COUNT(SZ_4K);
+ 	atomic_set(&rsv->count, 1);
+ 	rsv->entry[0].base = addr;
+ 	rsv->entry[0].size = size;
 
 
