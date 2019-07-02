@@ -2,170 +2,128 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8143C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7E5C06513
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778E02082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F0A21848
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:40:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="V79aRUpa"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="EXC0a6fl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfGBPkj (ORCPT
+        id S1727017AbfGBPkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 2 Jul 2019 11:40:40 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41763 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGBPkj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jul 2019 11:40:39 -0400
-Received: from mout.web.de ([212.227.15.14]:50095 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbfGBPki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:40:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1562082023;
-        bh=jbQnila/Ly8Ah5+VhWkppnndDp+owZQcXoRR4Iy+/Jw=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=V79aRUpaV8EuRewQhjXvROH+er02lkhxsTz09+dbCxf+AHHjsfR/79B2uQJN7qv5y
-         DN3sJ1UzP6LdO/gHbpwzQgAEND1cqN2/GbUzIw9RmkdVcfpY3sZtudPu7Aer4kYKkI
-         2xTLh1+MgxIa2ZiI7FxoIOcwIp64jUVRNhRjYoec=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.11.114]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M8L3a-1iUEQ115iU-00w0uU; Tue, 02
- Jul 2019 17:40:23 +0200
-To:     kernel-janitors@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] openpromfs: Adjust three seq_printf() calls in
- property_show()
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Message-ID: <22563348-fefa-8540-9d71-de37764f0596@web.de>
-Date:   Tue, 2 Jul 2019 17:40:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Received: by mail-io1-f65.google.com with SMTP id w25so37972731ioc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 08:40:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AuMos9aOQM3cxcuhv1W60RSW7KPJmo8XlBPpXo9DwCM=;
+        b=EXC0a6fl270PfkwfxWzCHOx4R/6yhlO7DJ1l9JUMGtuVKq/y1rC1kLXwgNQzLEEVX9
+         GXFXuCSjEmgmkRMe22VN8Si9ND41RT9/KzZzdgDXlCAw4zDfk1zOI/z46qkjn/kGwM46
+         b6soIF2xiVhwujyt4rbqlkDPEeXgmw6xb1yJI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AuMos9aOQM3cxcuhv1W60RSW7KPJmo8XlBPpXo9DwCM=;
+        b=FLtx+Qlv0dSUr4j6V5sxbfZWqfJpv1Vv8wCEdUZhv0qlGTiq6cSJfNrF1ikp38kGXU
+         bLNnA3W6BHFmLGk9BbhYRNC4q19r5hVq2t/1GKAMxoR5Q8VpYZOtyXGkCi7uCN/w7Gb0
+         ipFHJd3z/EdqWbgaSmM5C1AJkefpgBOnzvmcFwrWSSm5+lMKt8trRPfnkGoII64aN2GZ
+         KD+D6xKhFj4udyJaGFPd6puNtcCU6UmzWhqn9ubwJQFzqUJ9JSoy339tWEMWqA842pIA
+         jhfkAbmKTcJVDVl6KLmDeu0tqJJb9/VCM0/WGnowVyJlzR80U7WL8BhVGtzyYb2wWWbI
+         ug4w==
+X-Gm-Message-State: APjAAAVVZWGscjDQwXWlKaWrcj7SjM+ssCgc0Bd9RkLGR3IU89pexVtr
+        4Z/A6QHv7UWFAr+8KpZwKlPsMalTlCG4hi2Rx2yDUg==
+X-Google-Smtp-Source: APXvYqyQn4ELrVQ+31mi6vxiW6KfqbigRcLe+LAxPCqbDf7gQDuzyI9WP9loYa7CyZvrX79HFV3MP0xrrvEDEhK+XbE=
+X-Received: by 2002:a05:6638:3d6:: with SMTP id r22mr35517516jaq.71.1562082037872;
+ Tue, 02 Jul 2019 08:40:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JxiWIYXw9gmhR5r6woOTjGVR6MjO2eh4EujnnpT0chsKLzSsGWH
- B2mCJnGEY4HGjFkaldkJKEejp52mp36rN04WdlcTSOyNx+Q1SHqnWTnPS4Zi8je9Z8M+n7M
- JgXr2jJ4P3qnzOWQ+qVfAsLTn9iEuxkS7HVof4ZJI3vQQlur3ju/FXTzun338MkeLCl/Yl7
- inH2GvjKi4g2oOHVTAeJA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:J6dmmI/s+y8=:AGCapRw8MW69tokZVkYyPC
- KdB5Gq6dQpOM2aS95rbkh8DvS/jmWHso1Ze8PdqTQk4qZTtnf/lGxA89SFb1hRLO4xfWOpURA
- AYGZVhOCYqFVXa3hkuD5cVzd4VzgPDYdaBcR8fJ8LTHld2A64wE+DXqsafO4jfAbH65dUeVXo
- 2DIXCHsPlYYsPkt1k9iqOn5p1K5eKmiq7J8/tpkLmaQ/JpYvM1uzl/8Uir6L0oPnZRT6DCEYI
- kji0mLsQy7+KOPU2yY/6EYAgB3F8DQodKVDA/mUuy6BhCp0ffDkPcsDyfDO8E10khBZNKzU9C
- g235n07NeQOndwIKdfZqcWqAO2u2usYgoHVVX7UPhA/6mom1eJ77RoZxEggkRyREDWNR3kUu6
- APaC2tRYICy5+u8t2UeODclmfD6UxOb6fqyXlPeAjkN039YOJPz55RrbOmmLmQowimK/yqAsn
- UkCZBu7A80hyExbDOEdYmOA/dcaWElPK+BFa1rBkHyIGVidMujedLBUMPXzSCR99n2BUwlXbU
- RkTgO1eEbDUN3xA/G5L9c4fTRg76TEw4rv6hwmZTKNJgw0kDqEnZSrpjusdwyxqC+MpiIQoZH
- JOaiewLNd03tusylEeiM4HIaXM9Zu618ZEMSwlLLiB3+y5gy/WGZuLwtGOudshtAGVajoNF7G
- n431ZjfgYWTQUiFxxD4GB69r/mCdFjgpN3V5oLvNzrbTvMR5mzTg2KX1ExhnU0PGL+hbjXwCB
- sIzDyu6NEbAPhHt3uDqJldywJMYNYRH3NiTtg+UHJqSZrjStIXv1SXipV2FEPUrUGC20O1eMT
- RKwrc4x7wj9odgxIocRru79UvHhFLFd7TDo5ymMnBA1IrJ3tQh5+i05i2OK4omQ3gn7IbYL8J
- QVJHfv51H5A289V1SUdvwNTUET46Fp4dajfO6JItbnLhVPwR+wTIoGIqCFidYUUo8nQ+eJerB
- dBEREiNdlvyChb26xWexQTn6tANzGn0ZfA3WQ9/OUGE1h7FivPnkcbqiU49j+aQhe3wZf7LDH
- lfnfeopGAA0DqT04biGMQhlCz1SYcjHx17qYhvETXTW50o7KIg12onAlDX3snJ6Gc0JDi1JRB
- y/PwN0wOLjeHqUU3FooQ1IIPnb9sqgMhjzn
+References: <20190523204823.mx7l4ozklzdh7npn@flea> <CAMty3ZA0S=+8NBrQZvP6sFdzSYWqhNZL_KjkJAQ0jTc2RVivrw@mail.gmail.com>
+ <20190604143016.fcx3ezmga244xakp@flea> <CAMty3ZAAK4RoE6g_LAZ-Q38On_1s_TTOz65YG7PVd88mwp-+4Q@mail.gmail.com>
+ <20190613131626.7zbwvrvd4e7eafrc@flea> <CAMty3ZBDkMJkZm8FudNB1wQ+L-q3XVKa3zR2M0wZ5Uncdy_Ayg@mail.gmail.com>
+ <20190624130442.ww4l3zctykr4i2e2@flea> <CAMty3ZB+eZUh5mr-LMZuEd_wrwLCN0mbf7arcRQHj8=uUNNq=Q@mail.gmail.com>
+ <20190625143747.3czd7sit4waz75b6@flea> <CAMty3ZCh+C9+zgcL633tTw6aPW_WOLnYN7FzJHX+3zu8=8Unpg@mail.gmail.com>
+ <20190702152908.fwwf7smt7nh2lxo2@flea>
+In-Reply-To: <20190702152908.fwwf7smt7nh2lxo2@flea>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Tue, 2 Jul 2019 21:10:26 +0530
+Message-ID: <CAMty3ZCBK__VcdNh6xJESjsX7nGrBHxLY3fOWW=5TxOVrwyVXw@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v10 04/11] drm/sun4i: tcon: Compute DCLK
+ dividers based on format, lanes
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bhushan Shah <bshah@mykolab.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 2 Jul 2019 17:24:27 +0200
+On Tue, Jul 2, 2019 at 8:59 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Tue, Jul 02, 2019 at 12:30:14AM +0530, Jagan Teki wrote:
+> > On Tue, Jun 25, 2019 at 8:07 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > > > > > > BSP has tcon_div and dsi_div. dsi_div is dynamic which depends on
+> > > > > > > > > > bpp/lanes and it indeed depends on PLL computation (not tcon_div),
+> > > > > > > > > > anyway I have explained again on this initial link you mentioned.
+> > > > > > > > > > Please have a look and get back.
+> > > > > > > > >
+> > > > > > > > > I'll have a look, thanks.
+> > > > > > > > >
+> > > > > > > > > I've given your patches a try on my setup though, and this patch
+> > > > > > > > > breaks it with vblank timeouts and some horizontal lines that looks
+> > > > > > > > > like what should be displayed, but blinking and on the right of the
+> > > > > > > > > display. The previous ones are fine though.
+> > > > > > > >
+> > > > > > > > Would you please send me the link of panel driver.
+> > > > > > >
+> > > > > > > It's drivers/gpu/drm/panel/panel-ronbo-rb070d30.c
+> > > > > >
+> > > > > > Look like this panel work even w/o any vendor sequence. it's similar
+> > > > > > to the 4-lane panel I have with RGB888, so the dclk div is 6, is it
+> > > > > > working with this divider?
+> > > > >
+> > > > > It works with 4, it doesn't work with 6.
+> > > >
+> > > > Can be the pixel clock with associated timings can make this diff.
+> > > > Would you send me the pixel clock, pll_rate and timings this panel
+> > > > used it from BSP?
+> > >
+> > > This board never had an Allwinner BSP
+> >
+> > Running on BSP would help to understand some clue, anyway would you
+> > send me the the value PLL_MIPI register (devme 0x1c20040) on this
+> > board. I'm trying to understand how it value in your case.
+>
+> I'm sorry, but I'm not going to port a whole BSP on that board,
+> especially for something I haven't been convinced it's the right fix.
 
-A bit of information should be put into a sequence.
-Thus improve the execution speed for this data output by better usage
-of corresponding functions.
+Look like a dead lock here, this change has a conclusive evidence from
+BSP (which is AW datasheet or open code to outside world) and it is
+working with A33, A64 and R40 which was tested in 4 different panels
+and I don't understand the reason for not going with this (atleast
+check with respect to BSP).
 
-This issue was detected by using the Coccinelle software.
+Please suggest, what I can do further, your suggestion is very helpful here.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- fs/openpromfs/inode.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/fs/openpromfs/inode.c b/fs/openpromfs/inode.c
-index e6cb7689fec4..2234103fd8ee 100644
-=2D-- a/fs/openpromfs/inode.c
-+++ b/fs/openpromfs/inode.c
-@@ -76,14 +76,14 @@ static int property_show(struct seq_file *f, void *v)
- 		while (len > 0) {
- 			int n =3D strlen(pval);
-
--			seq_printf(f, "%s", (char *) pval);
-+			seq_puts(f, (char *) pval);
-
- 			/* Skip over the NULL byte too.  */
- 			pval +=3D n + 1;
- 			len -=3D n + 1;
-
- 			if (len > 0)
--				seq_printf(f, " + ");
-+				seq_puts(f, " + ");
- 		}
- 	} else {
- 		if (len & 3) {
-@@ -111,8 +111,7 @@ static int property_show(struct seq_file *f, void *v)
- 			}
- 		}
- 	}
--	seq_printf(f, "\n");
--
-+	seq_putc(f, '\n');
- 	return 0;
- }
-
-=2D-
-2.22.0
-
+Jagan.
