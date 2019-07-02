@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C37C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51BBC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6D9205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0E58205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055408;
-	bh=c43FvKQyIGggJWe3cFvt6aywY7QSwZwhDAgmHHoL9gM=;
+	s=default; t=1562055413;
+	bh=DDWDCe5pXoo9Ostrrinsk/Zyhxnf6QK84gQMrSEiTRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uAUbUjdsBf4x0JoigsIS6iRVR6QP+apxKf+Mchv8OoGl6QyQHB9BL+0Sz9h2KTMEZ
-	 Y8umGjjUGJlGylUubvzYLdIjBYNFEKhdnQ6dFnaji8B6/FhpCkQPenZwo6xCUZxVOU
-	 mbXIruzC2Py0eh/s3NemCcsREV55eq2jwlqLgGlU=
+	b=x5IvMxxHoVlUSuZdRkvbImjpHYFhPPvEHMBocVnpnOgN4vT+kQgXjwRMCn4EiYZfT
+	 zv53yk2Jz3Hm7pK55Y6LOijb7PVHIzmqgh9hlwRyYid2BzFVxufqJ/bQVd4vS2CeLo
+	 4bj5b7Fg3ZLXfWI69J35A8GT/+BTrDq8yw6T/gM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfGBIDa (ORCPT
+        id S1727407AbfGBIDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:03:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48450 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:03:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727434AbfGBID1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:03:27 -0400
+        id S1727391AbfGBIDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:03:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DF2321479;
-        Tue,  2 Jul 2019 08:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E60C21479;
+        Tue,  2 Jul 2019 08:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054606;
-        bh=c43FvKQyIGggJWe3cFvt6aywY7QSwZwhDAgmHHoL9gM=;
+        s=default; t=1562054598;
+        bh=DDWDCe5pXoo9Ostrrinsk/Zyhxnf6QK84gQMrSEiTRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I3kFQ6YW2UK8ffvRLSVQrJZc+ZPqceCtVy3nJDqRfWwJ8jt/OfSspdxofDw+Vvy3A
-         DVbOqrsDCz/0zjZHSO0KziXm+bZMJzTLU9uSV0Nrn1lmDoqukErgNbmnE2lRTXvg+w
-         zkEpahrU9jUk/nZhfHIXFvoKmF+bU7CfjTFnjAwg=
+        b=pnIsc+hQS9X+79wJbxGnsscfa2iBTyLDKxTUqUlcSnuioRPLQRlCGkbW2iNE/J+2W
+         XfM68VkWBmR9ijAe0n+hQgFrVumTGNViEFXWllrB/PZVaZKeN6HSIEVbJBCsM82rdX
+         rzopBPp9JQN4FP9Bj1RyysKGKq9nL9OajEpy9Ng4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 5.1 27/55] cpu/speculation: Warn on unsupported mitigations= parameter
-Date:   Tue,  2 Jul 2019 10:01:35 +0200
-Message-Id: <20190702080125.502302944@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Subject: [PATCH 5.1 24/55] mm: fix page cache convergence regression
+Date:   Tue,  2 Jul 2019 10:01:32 +0200
+Message-Id: <20190702080125.306608913@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -63,47 +60,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-commit 1bf72720281770162c87990697eae1ba2f1d917a upstream.
+commit 7b785645e8f13e17cbce492708cf6e7039d32e46 upstream.
 
-Currently, if the user specifies an unsupported mitigation strategy on the
-kernel command line, it will be ignored silently.  The code will fall back
-to the default strategy, possibly leaving the system more vulnerable than
-expected.
+Since a28334862993 ("page cache: Finish XArray conversion"), on most
+major Linux distributions, the page cache doesn't correctly transition
+when the hot data set is changing, and leaves the new pages thrashing
+indefinitely instead of kicking out the cold ones.
 
-This may happen due to e.g. a simple typo, or, for a stable kernel release,
-because not all mitigation strategies have been backported.
+On a freshly booted, freshly ssh'd into virtual machine with 1G RAM
+running stock Arch Linux:
 
-Inform the user by printing a message.
+[root@ham ~]# ./reclaimtest.sh
++ dd of=workingset-a bs=1M count=0 seek=600
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ ./mincore workingset-a
+153600/153600 workingset-a
++ dd of=workingset-b bs=1M count=0 seek=600
++ cat workingset-b
++ cat workingset-b
++ cat workingset-b
++ cat workingset-b
++ ./mincore workingset-a workingset-b
+104029/153600 workingset-a
+120086/153600 workingset-b
++ cat workingset-b
++ cat workingset-b
++ cat workingset-b
++ cat workingset-b
++ ./mincore workingset-a workingset-b
+104029/153600 workingset-a
+120268/153600 workingset-b
 
-Fixes: 98af8452945c5565 ("cpu/speculation: Add 'mitigations=' cmdline option")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ben Hutchings <ben@decadent.org.uk>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190516070935.22546-1-geert@linux-m68k.org
+workingset-b is a 600M file on a 1G host that is otherwise entirely
+idle. No matter how often it's being accessed, it won't get cached.
+
+While investigating, I noticed that the non-resident information gets
+aggressively reclaimed - /proc/vmstat::workingset_nodereclaim. This is
+a problem because a workingset transition like this relies on the
+non-resident information tracked in the page cache tree of evicted
+file ranges: when the cache faults are refaults of recently evicted
+cache, we challenge the existing active set, and that allows a new
+workingset to establish itself.
+
+Tracing the shrinker that maintains this memory revealed that all page
+cache tree nodes were allocated to the root cgroup. This is a problem,
+because 1) the shrinker sizes the amount of non-resident information
+it keeps to the size of the cgroup's other memory and 2) on most major
+Linux distributions, only kernel threads live in the root cgroup and
+everything else gets put into services or session groups:
+
+[root@ham ~]# cat /proc/self/cgroup
+0::/user.slice/user-0.slice/session-c1.scope
+
+As a result, we basically maintain no non-resident information for the
+workloads running on the system, thus breaking the caching algorithm.
+
+Looking through the code, I found the culprit in the above-mentioned
+patch: when switching from the radix tree to xarray, it dropped the
+__GFP_ACCOUNT flag from the tree node allocations - the flag that
+makes sure the allocated memory gets charged to and tracked by the
+cgroup of the calling process - in this case, the one doing the fault.
+
+To fix this, allow xarray users to specify per-tree flag that makes
+xarray allocate nodes using __GFP_ACCOUNT. Then restore the page cache
+tree annotation to request such cgroup tracking for the cache nodes.
+
+With this patch applied, the page cache correctly converges on new
+workingsets again after just a few iterations:
+
+[root@ham ~]# ./reclaimtest.sh
++ dd of=workingset-a bs=1M count=0 seek=600
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ cat workingset-a
++ ./mincore workingset-a
+153600/153600 workingset-a
++ dd of=workingset-b bs=1M count=0 seek=600
++ cat workingset-b
++ ./mincore workingset-a workingset-b
+124607/153600 workingset-a
+87876/153600 workingset-b
++ cat workingset-b
++ ./mincore workingset-a workingset-b
+81313/153600 workingset-a
+133321/153600 workingset-b
++ cat workingset-b
++ ./mincore workingset-a workingset-b
+63036/153600 workingset-a
+153600/153600 workingset-b
+
+Cc: stable@vger.kernel.org # 4.20+
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cpu.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/inode.c             |    2 +-
+ include/linux/xarray.h |    1 +
+ lib/xarray.c           |   12 ++++++++++--
+ 3 files changed, 12 insertions(+), 3 deletions(-)
 
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2315,6 +2315,9 @@ static int __init mitigations_parse_cmdl
- 		cpu_mitigations = CPU_MITIGATIONS_AUTO;
- 	else if (!strcmp(arg, "auto,nosmt"))
- 		cpu_mitigations = CPU_MITIGATIONS_AUTO_NOSMT;
-+	else
-+		pr_crit("Unsupported mitigations=%s, system may still be vulnerable\n",
-+			arg);
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -349,7 +349,7 @@ EXPORT_SYMBOL(inc_nlink);
  
- 	return 0;
- }
+ static void __address_space_init_once(struct address_space *mapping)
+ {
+-	xa_init_flags(&mapping->i_pages, XA_FLAGS_LOCK_IRQ);
++	xa_init_flags(&mapping->i_pages, XA_FLAGS_LOCK_IRQ | XA_FLAGS_ACCOUNT);
+ 	init_rwsem(&mapping->i_mmap_rwsem);
+ 	INIT_LIST_HEAD(&mapping->private_list);
+ 	spin_lock_init(&mapping->private_lock);
+--- a/include/linux/xarray.h
++++ b/include/linux/xarray.h
+@@ -265,6 +265,7 @@ enum xa_lock_type {
+ #define XA_FLAGS_TRACK_FREE	((__force gfp_t)4U)
+ #define XA_FLAGS_ZERO_BUSY	((__force gfp_t)8U)
+ #define XA_FLAGS_ALLOC_WRAPPED	((__force gfp_t)16U)
++#define XA_FLAGS_ACCOUNT	((__force gfp_t)32U)
+ #define XA_FLAGS_MARK(mark)	((__force gfp_t)((1U << __GFP_BITS_SHIFT) << \
+ 						(__force unsigned)(mark)))
+ 
+--- a/lib/xarray.c
++++ b/lib/xarray.c
+@@ -298,6 +298,8 @@ bool xas_nomem(struct xa_state *xas, gfp
+ 		xas_destroy(xas);
+ 		return false;
+ 	}
++	if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
++		gfp |= __GFP_ACCOUNT;
+ 	xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
+ 	if (!xas->xa_alloc)
+ 		return false;
+@@ -325,6 +327,8 @@ static bool __xas_nomem(struct xa_state
+ 		xas_destroy(xas);
+ 		return false;
+ 	}
++	if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
++		gfp |= __GFP_ACCOUNT;
+ 	if (gfpflags_allow_blocking(gfp)) {
+ 		xas_unlock_type(xas, lock_type);
+ 		xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
+@@ -358,8 +362,12 @@ static void *xas_alloc(struct xa_state *
+ 	if (node) {
+ 		xas->xa_alloc = NULL;
+ 	} else {
+-		node = kmem_cache_alloc(radix_tree_node_cachep,
+-					GFP_NOWAIT | __GFP_NOWARN);
++		gfp_t gfp = GFP_NOWAIT | __GFP_NOWARN;
++
++		if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
++			gfp |= __GFP_ACCOUNT;
++
++		node = kmem_cache_alloc(radix_tree_node_cachep, gfp);
+ 		if (!node) {
+ 			xas_set_err(xas, -ENOMEM);
+ 			return NULL;
 
 
