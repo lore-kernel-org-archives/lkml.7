@@ -2,123 +2,103 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8172C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFECC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B81072089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7730521874
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:07:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKHMxKvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfGCBHq convert rfc822-to-8bit (ORCPT
+        id S1727378AbfGCBHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:07:46 -0400
-Received: from mga09.intel.com ([134.134.136.24]:48400 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727179AbfGCBHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:07:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 15:45:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,444,1557212400"; 
-   d="scan'208";a="171943496"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by FMSMGA003.fm.intel.com with ESMTP; 02 Jul 2019 15:45:36 -0700
-Received: from fmsmsx152.amr.corp.intel.com (10.18.125.5) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 2 Jul 2019 15:45:36 -0700
-Received: from crsmsx104.amr.corp.intel.com (172.18.63.32) by
- FMSMSX152.amr.corp.intel.com (10.18.125.5) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 2 Jul 2019 15:45:36 -0700
-Received: from crsmsx101.amr.corp.intel.com ([169.254.1.124]) by
- CRSMSX104.amr.corp.intel.com ([169.254.6.189]) with mapi id 14.03.0439.000;
- Tue, 2 Jul 2019 16:45:34 -0600
-From:   "Weiny, Ira" <ira.weiny@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>, Christoph Hellwig <hch@lst.de>
-CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: dev_pagemap related cleanups v4
-Thread-Topic: dev_pagemap related cleanups v4
-Thread-Index: AQHVL9UWGRaDoyThvUmAcd/teNbddKa10fGAgAI+rID//8OxIA==
-Date:   Tue, 2 Jul 2019 22:45:34 +0000
-Message-ID: <2807E5FD2F6FDA4886F6618EAC48510E79DEA747@CRSMSX101.amr.corp.intel.com>
-References: <20190701062020.19239-1-hch@lst.de>
- <20190701082517.GA22461@lst.de> <20190702184201.GO31718@mellanox.com>
-In-Reply-To: <20190702184201.GO31718@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjc2ZTdhMmQtMWM5Zi00ZTAzLWJmY2UtNGZjYTkyNTYxNjZjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiV2VKQ1gzZk1WV2hvSmx0bEFBUjRyWFNOT0JNemtQSkdVaHlIbkdveVFhVFdxSlh0T2h3ZytucCt4dWx6djFPTSJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [172.18.205.10]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Tue, 2 Jul 2019 21:07:50 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42537 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbfGCBHs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:07:48 -0400
+Received: by mail-io1-f66.google.com with SMTP id u19so784448ior.9;
+        Tue, 02 Jul 2019 18:07:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vLtFV7QdcKPiMrP0cqycBzD9PcFJ3VgNlGMx4ns+VN4=;
+        b=EKHMxKvzvgGTNXwn/RBpbz6aIPmxjz3xQqiEf6ofrsoWvRfaX4SjLj18+5ZL2Byv2o
+         3P5vZdXWBWg1r3QnYbgMIhCiTloWI9Ao7Xt9BiD3/0rlMJNWVZA/A7VqjsLcpTljrNYu
+         4sJ/SXRzR5xb1oYT/qYHpIohRK4WHuK2SqWTzEPTL5oTdb2STMFMZCTGvALtCuUwEFNT
+         xXRKkrfgx9+d4RTL2RC6mUR8+gSkQBB/zNr98tpGBREhAEorEsvFzklkmw1ssdfkH2Vp
+         lYr4r2BgZ3bK4JWbzneA/PuzINBLUhsOPwTM3+bY52BjUQrJVrsncKI+P58blRrRlyIA
+         Z0gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vLtFV7QdcKPiMrP0cqycBzD9PcFJ3VgNlGMx4ns+VN4=;
+        b=a+FiBEOkvL8h7c7xpRQAGX4MnkAWkm/QesNNO6cHLj75cCVdU6agddLbprru4zoo8x
+         +I3QUQPoeWCbWu08WAbrk4x1wpj3nNg6OdkSzwAGZ9lxG+uNRgQYjZ20Ppt7/1PKMAAO
+         NFAnBqcMXF/xkv6g63Ru4POD/f4b/TRhfRzmhZ1rXeiaCZsZs2JfjJP7DQvFtaDuJj8H
+         PGSd0Yyw5eW1H20FaR3RJpO0plqF6dSr+JEf9xWMW7YeP86DznuWn2R60EChVHUKrCLc
+         2sUA0XPWkzBQ1Fxmixo01PtjCxqnJSRpCXCP/j5S6IK9pT4sW1tE6IJCdlQGd5kdX4W0
+         HPfg==
+X-Gm-Message-State: APjAAAW8p5xskyF+MTAermB2IWPhC1D1JNlbRwhrskHhkZOZ/TA5IwZj
+        TisWcLACf0UPvDu9Q3exjF4yK5SOGQUEMg==
+X-Google-Smtp-Source: APXvYqwiCb0xm7iQRReoMsSVNFqrs90ckKeqF8zYFScw3R8LqDJuJm3bQ23aPAT4ifFGaqv3cYNmMg==
+X-Received: by 2002:a5d:9bc6:: with SMTP id d6mr5061258ion.160.1562101850084;
+        Tue, 02 Jul 2019 14:10:50 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id t5sm38951iol.55.2019.07.02.14.10.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 14:10:49 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 15:10:48 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/43] 4.14.132-stable review
+Message-ID: <20190702211047.GC2368@JATN>
+References: <20190702080123.904399496@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 02, 2019 at 10:01:40AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.132 release.
+> There are 43 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> On Mon, Jul 01, 2019 at 10:25:17AM +0200, Christoph Hellwig wrote:
-> > And I've demonstrated that I can't send patch series..  While this has
-> > all the right patches, it also has the extra patches already in the
-> > hmm tree, and four extra patches I wanted to send once this series is
-> > merged.  I'll give up for now, please use the git url for anything
-> > serious, as it contains the right thing.
+> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
+> Anything received after that time might be too late.
 > 
-> Okay, I sorted it all out and temporarily put it here:
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.132-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
 > 
-> https://github.com/jgunthorpe/linux/commits/hmm
+> thanks,
 > 
-> Bit involved job:
-> - Took Ira's v4 patch into hmm.git and confirmed it matches what
->   Andrew has in linux-next after all the fixups
+> greg k-h
+> 
 
-Looking at the final branch seems good.
+Compiled, booted, and no regressions on my system.
 
-Ira
+Cheers,
+Kelsey
 
-> - Checked your github v4 and the v3 that hit the mailing list were
->   substantially similar (I never did get a clean v4) and largely
->   went with the github version
-> - Based CH's v4 series on -rc7 and put back the removal hunk in swap.c
->   so it compiles
-> - Merge'd CH's series to hmm.git and fixed all the conflicts with Ira
->   and Ralph's patches (such that swap.c remains unchanged)
-> - Added Dan's ack's and tested-by's
-> 
-> I think this fairly closely follows what was posted to the mailing list.
-> 
-> As it was more than a simple 'git am', I'll let it sit on github until I hear OK's
-> then I'll move it to kernel.org's hmm.git and it will hit linux-next. 0-day
-> should also run on this whole thing from my github.
-> 
-> What I know is outstanding:
->  - The conflicting ARM patches, I understand Andrew will handle these
->    post-linux-next
->  - The conflict with AMD GPU in -next, I am waiting to hear from AMD
-> 
-> Otherwise I think we are done with hmm.git for this cycle.
-> 
-> Unfortunately this is still not enough to progress rdma's ODP, so we will need
-> to do this again next cycle :( I'll be working on patches once I get all the
-> merge window prep I have to do done.
-> 
-> Regards,
-> Jason
