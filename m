@@ -2,192 +2,132 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2A0C4646D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3ED1C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0AAD206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885E021721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:29:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sG9XQqeb"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="dNqLerig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfGBP3U (ORCPT
+        id S1727086AbfGBP3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:29:20 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14115 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfGBP3U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:29:20 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1b784a0002>; Tue, 02 Jul 2019 08:29:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 02 Jul 2019 08:29:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 02 Jul 2019 08:29:17 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
- 2019 15:29:15 +0000
-Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190627194728.8948-1-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f60059ec-c9ed-7294-f975-25e71a273f69@nvidia.com>
-Date:   Tue, 2 Jul 2019 16:29:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190627194728.8948-1-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 2 Jul 2019 11:29:31 -0400
+Received: from mail-eopbgr710066.outbound.protection.outlook.com ([40.107.71.66]:40517
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726401AbfGBP3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 11:29:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jaGLpITlyDt6F8ESbhGdAWJFbp3uniLwL7WWp3B+T8o=;
+ b=dNqLerigGtU9Y/Pah0VN0McCw2dEQUwo+j+jZU0tTafYOzg9TKDxGti58RTLpSyKpiZY8ZOXVsI7nTRtU3gJ2pCImxj4hjyuevunOGr1RRfZJoLtby0Iy8RO3G1XEJ8umm9B5fwP/mw1uhBm3BIZXzw3NyKgmxo/5Va+kf/NFLo=
+Received: from DM6PR12MB3241.namprd12.prod.outlook.com (20.179.105.153) by
+ DM6PR12MB3769.namprd12.prod.outlook.com (10.255.172.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Tue, 2 Jul 2019 15:29:27 +0000
+Received: from DM6PR12MB3241.namprd12.prod.outlook.com
+ ([fe80::c6d:3ac2:8785:dd09]) by DM6PR12MB3241.namprd12.prod.outlook.com
+ ([fe80::c6d:3ac2:8785:dd09%7]) with mapi id 15.20.2032.019; Tue, 2 Jul 2019
+ 15:29:27 +0000
+From:   "Liu, Shaoyun" <Shaoyun.Liu@amd.com>
+To:     Colin King <colin.king@canonical.com>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/amdkfd: fix potential null pointer dereference on
+ pointer peer_dev
+Thread-Topic: [PATCH] drm/amdkfd: fix potential null pointer dereference on
+ pointer peer_dev
+Thread-Index: AQHVL93opeQz06mKNEKONaZnBlSNVqa3diCA
+Date:   Tue, 2 Jul 2019 15:29:27 +0000
+Message-ID: <66e161b2-dc6e-f8e1-c1f4-dbd15e06040a@amd.com>
+References: <20190629133114.14271-1-colin.king@canonical.com>
+In-Reply-To: <20190629133114.14271-1-colin.king@canonical.com>
+Accept-Language: en-CA, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562081354; bh=x3KM9V9YhmSlG4yMJ8Mw1XHf+gB0G0vidlYB4QwG7aU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=sG9XQqeb9hZ6qI0FC0XhpB2PaAsgi+Wiv/FhKRMdX7CAvC3tqVXNHwo2HDcMWsFhN
-         uxpa31vD0GnnhCMNO0T77wXFjOoFi5hsTqQAMr0kZE4WyGepPbMVD7Q06cTinboOXP
-         ThJy4T85o/nNSTPIMBMIFuKEUGI1uqB75vMX8Ig8G8F3a7k+RDW21C5xS8psZ7tte3
-         nk85BucH9pmqWFp7gWMUFBs+cmMEe7bZk+mdAd5LObWP4DwG/capxPWzhQpvWxRTzU
-         jRqO6IHknA+NWg4VrFAhVoF9rTbK3PqRZ/rhHFz2l/oY8LI0SEuaeI8qvQASL6NiBq
-         iyjeJ9hoIt2hQ==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.251]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+x-clientproxiedby: YTBPR01CA0018.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::31) To DM6PR12MB3241.namprd12.prod.outlook.com
+ (2603:10b6:5:186::25)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Shaoyun.Liu@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 757ecf26-e31e-4c08-738b-08d6ff0211e4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3769;
+x-ms-traffictypediagnostic: DM6PR12MB3769:
+x-microsoft-antispam-prvs: <DM6PR12MB37695B7E22C51F2D2EA1DC7CF4F80@DM6PR12MB3769.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 008663486A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(396003)(346002)(366004)(189003)(199004)(6436002)(58126008)(6506007)(316002)(229853002)(4326008)(66476007)(36756003)(6486002)(54906003)(53936002)(72206003)(110136005)(486006)(66066001)(5660300002)(6512007)(478600001)(66946007)(65806001)(65956001)(68736007)(25786009)(2906002)(64126003)(73956011)(14454004)(11346002)(3846002)(64756008)(6116002)(66556008)(2616005)(31686004)(52116002)(65826007)(476003)(66446008)(26005)(256004)(14444005)(446003)(71190400001)(71200400001)(2501003)(7736002)(2201001)(76176011)(186003)(31696002)(81156014)(99286004)(86362001)(6246003)(305945005)(8936002)(53546011)(102836004)(386003)(81166006)(8676002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3769;H:DM6PR12MB3241.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: WUDA4MJy6tlJpk++6X9cQxBt0NgSwKFOZWLM+wOth/UMzX2K5SOj5LiQ/z4G6Ag0wDllxZJc6kGRq+W4goLNDOlKjH/p5tTbYFoEDubO00TgGp6DGHPnrz+rKeGx/te6e4BycwjNVREY9v7xwFF2j4Xcln4xmTyZM80y00394w2cD6ldQDtS3IOVnEA1EOSL5JtaP9L72DpHZfQmAGY7PlJfOtT/FDeGgTFOcxCKauCCNcYSObN3XQPILColzD6xQOZT3baF2dP2h8uEHAYWy9ZggDDo/2kfBrEMsxlOMCTFd2xhvc0bvp3C+vnSO5BDg4+UmlYx3qmyjP1nM3YEwtDq/CNGYWuu5+1c/AAkapQWHVk8GmYR9xOzYcaOI5vZWv8KHwt1bXNVYb4PwvPnfqPlm0vizrdtPB2O8Ui15Mw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F0CB789EF2E3774883C7EE5C744DAE61@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 757ecf26-e31e-4c08-738b-08d6ff0211e4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2019 15:29:27.7444
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ShaoyunL@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3769
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 27/06/2019 20:47, Dmitry Osipenko wrote:
-> Tegra's APB DMA engine updates words counter after each transferred burst
-> of data, hence it can report transfer's residual with more fidelity which
-> may be required in cases like audio playback. In particular this fixes
-> audio stuttering during playback in a chromium web browser. The patch is
-> based on the original work that was made by Ben Dooks and a patch from
-> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
-> 
-> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
-> Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
-> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
-> 
-> Changelog:
-> 
-> v3:  Added workaround for a hardware design shortcoming that results
->      in a words counter wraparound before end-of-transfer bit is set
->      in a cyclic mode.
-> 
-> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
->      to get words count if dma_desc is on free list as it will result
->      in a NULL dereference because this case wasn't handled properly.
-> 
->      The residual value is now updated properly, avoiding potential
->      integer overflow by adding the "bytes" to the "bytes_transferred"
->      instead of the subtraction.
-> 
->  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++----
->  1 file changed, 62 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 79e9593815f1..71473eda28ee 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
->  	bool				last_sg;
->  	struct list_head		node;
->  	struct tegra_dma_desc		*dma_desc;
-> +	unsigned int			words_xferred;
->  };
->  
->  /*
-> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
->  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
->  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
->  	nsg_req->configured = true;
-> +	nsg_req->words_xferred = 0;
->  
->  	tegra_dma_resume(tdc);
->  }
-> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
->  					typeof(*sg_req), node);
->  	tegra_dma_start(tdc, sg_req);
->  	sg_req->configured = true;
-> +	sg_req->words_xferred = 0;
->  	tdc->busy = true;
->  }
->  
-> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->  	return 0;
->  }
->  
-> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
-> +					       struct tegra_dma_sg_req *sg_req)
-> +{
-> +	unsigned long status, wcount = 0;
-> +
-> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
-> +		return 0;
-> +
-> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
-> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
-> +
-> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
-> +
-> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
-> +		wcount = status;
-> +
-> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
-> +		return sg_req->req_len;
-> +
-> +	wcount = get_current_xferred_count(tdc, sg_req, wcount);
-> +
-> +	if (!wcount) {
-> +		/*
-> +		 * If wcount wasn't ever polled for this SG before, then
-> +		 * simply assume that transfer hasn't started yet.
-> +		 *
-> +		 * Otherwise it's the end of the transfer.
-> +		 *
-> +		 * The alternative would be to poll the status register
-> +		 * until EOC bit is set or wcount goes UP. That's so
-> +		 * because EOC bit is getting set only after the last
-> +		 * burst's completion and counter is less than the actual
-> +		 * transfer size by 4 bytes. The counter value wraps around
-> +		 * in a cyclic mode before EOC is set(!), so we can't easily
-> +		 * distinguish start of transfer from its end.
-> +		 */
-> +		if (sg_req->words_xferred)
-> +			wcount = sg_req->req_len - 4;
-> +
-> +	} else if (wcount < sg_req->words_xferred) {
-
-Minor comment, why not ...
-
-	} else if WARN_ON_ONCE(wcount < sg_req->words_xferred) {
-
-Otherwise ...
-
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
--- 
-nvpublic
+IEZyb20gdGhlIGNvbW1lbnRzICwgIndlIHdpbGzCoCBsb29wIEdQVXMgdGhhdCBhbHJlYWR5IGJl
+IHByb2Nlc3NlZCAod2l0aCANCmxvd2VyIHZhbHVlIG9mIHByb3hpbWl0eV9kb21haW4pICIswqAg
+dGhlIGRldmljZSBzaG91bGQgYWxyZWFkeSBiZWVuIA0KYWRkZWQgaW50byB0aGXCoCB0b3BvbG9n
+eV9kZXZpY2VfbGlzdC7CoCBTbyBpbiB0aGlzIGNhc2UgLCANCmtmZF90b3BvbG9neV9kZXZpY2Vf
+YnlfcHJveGltaXR5X2RvbWFpbiB3aWxsIG5vdCByZXR1cm4gYSBOVUxMIHBvaW50ZXIuwqAgDQpJ
+ZiB5b3UgcmVhbGx5IGdldCB0aGUgbnVsbCBwb2ludGVyIGRlcmVmZXJlbmNlcyBoZXJlICwgd2Ug
+bXVzdCBoYXZlwqAgDQpzb21lIGJpZ2dlciBwcm9ibGVtIGFuZMKgIGNhbiBub3Qgc29sdmVkIGJ5
+IGFkZGVkIHRoZSBudWxsIGNoZWNrIGhlcmUuDQoNClJlZ2FyZHMNCg0Kc2hhb3l1bi5saXUNCg0K
+T24gMjAxOS0wNi0yOSA5OjMxIGEubS4sIENvbGluIEtpbmcgd3JvdGU6DQo+IEZyb206IENvbGlu
+IElhbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+DQo+IFRoZSBjYWxsIHRvIGtm
+ZF90b3BvbG9neV9kZXZpY2VfYnlfcHJveGltaXR5X2RvbWFpbiBjYW4gcmV0dXJuIGEgTlVMTA0K
+PiBwb2ludGVyIHNvIGFkZCBhIG51bGwgcG9pbnRlciBjaGVjayBvbiBwZWVyX2RldiB0byB0aGUg
+ZXhpc3RpbmcgbnVsbA0KPiBwb2ludGVyIGNoZWNrIG9uIHBlZXJfZGV2LT5ncHUgdG8gYXZvaWQg
+YW55IHBvdGVudGlhbCBudWxsIHBvaW50ZXINCj4gZGVyZWZlcmVuY2VzLg0KPg0KPiBBZGRyZXNz
+ZXMtQ292ZXJpdHk6ICgiRGVyZWZlcmVuY2Ugb24gbnVsbCByZXR1cm4gdmFsdWUiKQ0KPiBGaXhl
+czogYWU5YTI1YWVhN2YzICgiZHJtL2FtZGtmZDogR2VuZXJhdGUgeEdNSSBkaXJlY3QgaW9saW5r
+IikNCj4gU2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2Fs
+LmNvbT4NCj4gLS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRrZmQva2ZkX2NyYXQuYyB8
+IDIgKy0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkN
+Cj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1ka2ZkL2tmZF9jcmF0LmMg
+Yi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9rZmRfY3JhdC5jDQo+IGluZGV4IDRlM2ZjMjg0
+ZjZhYy4uY2I2YjQ2Y2ZhNmMyIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Ft
+ZGtmZC9rZmRfY3JhdC5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1ka2ZkL2tmZF9j
+cmF0LmMNCj4gQEAgLTEyOTMsNyArMTI5Myw3IEBAIHN0YXRpYyBpbnQga2ZkX2NyZWF0ZV92Y3Jh
+dF9pbWFnZV9ncHUodm9pZCAqcGNyYXRfaW1hZ2UsDQo+ICAgCWlmIChrZGV2LT5oaXZlX2lkKSB7
+DQo+ICAgCQlmb3IgKG5pZCA9IDA7IG5pZCA8IHByb3hpbWl0eV9kb21haW47ICsrbmlkKSB7DQo+
+ICAgCQkJcGVlcl9kZXYgPSBrZmRfdG9wb2xvZ3lfZGV2aWNlX2J5X3Byb3hpbWl0eV9kb21haW4o
+bmlkKTsNCj4gLQkJCWlmICghcGVlcl9kZXYtPmdwdSkNCj4gKwkJCWlmICghcGVlcl9kZXYgfHwg
+IXBlZXJfZGV2LT5ncHUpDQo+ICAgCQkJCWNvbnRpbnVlOw0KPiAgIAkJCWlmIChwZWVyX2Rldi0+
+Z3B1LT5oaXZlX2lkICE9IGtkZXYtPmhpdmVfaWQpDQo+ICAgCQkJCWNvbnRpbnVlOw0K
