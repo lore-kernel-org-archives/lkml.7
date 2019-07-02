@@ -2,201 +2,180 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2DFC06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC856C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD1C2089C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 819BF2089C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:02:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kNZfMLh0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfGBI4m (ORCPT
+        id S1727034AbfGBJCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:56:42 -0400
-Received: from lgeamrelo11.lge.com ([156.147.23.51]:36979 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfGBI4m (ORCPT
+        Tue, 2 Jul 2019 05:02:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37075 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGBJCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:56:42 -0400
-Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
-        by 156.147.23.51 with ESMTP; 2 Jul 2019 17:56:39 +0900
-X-Original-SENDERIP: 156.147.1.121
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.121 with ESMTP; 2 Jul 2019 17:56:39 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Tue, 2 Jul 2019 17:55:54 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com
-Subject: Re: [PATCH v3] rcu: Change return type of
- rcu_spawn_one_boost_kthread()
-Message-ID: <20190702085554.GB13132@X58A-UD3R>
-References: <1561941639-14318-1-git-send-email-byungchul.park@lge.com>
- <20190701201216.GQ26519@linux.ibm.com>
- <20190702051103.GA13132@X58A-UD3R>
- <20190702084502.GL26519@linux.ibm.com>
+        Tue, 2 Jul 2019 05:02:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v14so16835452wrr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 02:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UYqevnI0spcyedfiOLJ3vdJN7KeUhPxc6owycWTRKgQ=;
+        b=kNZfMLh00xnDEGdyC0iMBLY3n5hKUNwtHEhscIYyRu5QdBU8iXikuYKclzZ4F+RGCK
+         S6LNIhsKN0ymzqyVPrK9D4krSgW29DhsBIMN8qLF13phqddvbHbk3QsIowLUof5CiE3W
+         Adhoe3+1xqurjhsFfPGGjmFerkhGU8fxZHZZ83yVnrtCXpMli/vgDurTNBYZYzIrK189
+         ll8jNF8I6Ry98ZCfRnt3Luin+fFFYxhHCS3vDGnefmmSsVhe7w42q0IRzxQ3DrWrWBSy
+         6Wv5vwS9v8z/uz7RDdfqT/GI1sdH96WAO0YFRg960KbLyx3V81mfc5Y2fr5RzWHcdzym
+         nZdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UYqevnI0spcyedfiOLJ3vdJN7KeUhPxc6owycWTRKgQ=;
+        b=fz9436aCxGzsAZrb0lsQdMFfiEUVKFAnXfjVbeF8iE1x806TqSwmUI72raOZBnaKfF
+         1jSgrGqWfaPPg93umcMUqqHRmDr3EoBnxy/qkgAlXK0HPMqzBYZ5KNWnjjMp3fI2EcdT
+         zTluN40IaprNbHpo6Q2mbr+30NUz36UNH/1k8J/s5xt5wpd+QD/4E7lxto+vLNp8k21G
+         FzbK2GKbms+nOC4zt4m1haBNR//8PFSCD6GN0KzBUcx7GLXpollKnpEcXjSMXrdwXY7e
+         PpDOxWndmL2Jjy4LiftjdV3GMc9Upc8hoSESiDxMBXe4V2DKdxE49UiLF4w1Sf1CqSDb
+         tcjg==
+X-Gm-Message-State: APjAAAVrmmoEEcw80rchH64l34sDzpQRifeXAc59E99J9FqC0U0lp3g5
+        ElCx87IX8Z2gNpUElcwOBPVSDg==
+X-Google-Smtp-Source: APXvYqwe8Sm/0nT25qcnzu4by7nlxEbs2dugrf6wEZ/ThBZTX0iMnPIhJfIGmRRbZlCWJVwSZilmew==
+X-Received: by 2002:a5d:5450:: with SMTP id w16mr13519041wrv.128.1562058125256;
+        Tue, 02 Jul 2019 02:02:05 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.googlemail.com with ESMTPSA id z5sm11056873wrh.16.2019.07.02.02.02.04
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 02:02:04 -0700 (PDT)
+Subject: Re: [PATCH 01/12] backlight: gpio: allow to probe non-pdata devices
+ from board files
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        David Lechner <david@lechnology.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190625163434.13620-1-brgl@bgdev.pl>
+ <20190625163434.13620-2-brgl@bgdev.pl>
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+Message-ID: <57229b83-c876-1042-2866-1a63e6654bd4@linaro.org>
+Date:   Tue, 2 Jul 2019 10:02:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702084502.GL26519@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190625163434.13620-2-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 01:45:02AM -0700, Paul E. McKenney wrote:
-> On Tue, Jul 02, 2019 at 02:11:03PM +0900, Byungchul Park wrote:
-> > On Mon, Jul 01, 2019 at 01:12:16PM -0700, Paul E. McKenney wrote:
-> > > On Mon, Jul 01, 2019 at 09:40:39AM +0900, Byungchul Park wrote:
-> > > > Hello,
-> > > > 
-> > > > I tested again if the WARN_ON_ONCE() is fired with my box.
-> > > > 
-> > > > And it was OK.
-> > > > 
-> > > > Thanks,
-> > > > Byungchul
-> > > 
-> > > And it now applies just fine, so I have queued it, thank you!
-> > > 
-> > > In the future, could you please use something like "git send-email"
-> > > to email a proper patch?  When you do it this way, after I do "git am",
-> > > I have to hand-edit the commit to remove this preamble.
-> > 
-> > Oh! Sorry to hear that. I've been always using "git send-email" with
-> > scissors in the body expecting you do "git am -c". Do you mean it's not
-> > a good way, right? I won't use the scissors again.
+On 25/06/2019 17:34, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Ah.  First I have heard of the "-c" argument to "git am".  OK, now that
-> I know, feel free to continue sending me scissored patches, and thank
-> you for calling my attention to this feature!
-> 
-> Actually, I just updated my git config to make "-c" the default.  That
-> way I don't have to remember.  ;-)
+> Currently we can only probe devices that either use device tree or pass
+> platform data to probe(). Rename gpio_backlight_probe_dt() to
+> gpio_backlight_probe_prop() and use generic device properties instead
+> of OF specific helpers.
 
-OK! Haha~ Thank you!
+This has already been done in (which IIRC did get queued for the next 
+release):
+https://www.spinics.net/lists/dri-devel/msg215050.html
 
-Thanks,
-Byungchul
+> Reverse the logic checking the presence of
+> platform data in probe(). This way we can probe devices() registered
+> from machine code that neither have a DT node nor use platform data.
+
+Andy's patch did not reverse this logic... but it does check 
+pdev->dev.fwnode rather than of_node .
+
+
+Daniel.
+
 
 > 
-> 							Thanx, Paul
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>   drivers/video/backlight/gpio_backlight.c | 24 ++++++++----------------
+>   1 file changed, 8 insertions(+), 16 deletions(-)
 > 
-> > > But while I was doing the hand-editing, I updated the commit log as
-> > > follows:
-> > > 
-> > > 	rcu: Change return type of rcu_spawn_one_boost_kthread()
-> > > 
-> > > 	The return value of rcu_spawn_one_boost_kthread() is not used
-> > > 	any longer.  This commit therefore changes its return type from
-> > > 	int to void, and removes the cast to void from its callers.
-> > > 
-> > > Does that work for you?
-> > 
-> > Sure. Thank you.
-> > 
-> > Thanks,
-> > Byungchul
-> > 
-> > > 						Thanx, Paul
-> > > 
-> > > > Changes from v2
-> > > > -. Port the patch to a1af11a24cb0 (Paul's request)
-> > > > -. Add a few new lines for a better look
-> > > > 
-> > > > Changes from v1
-> > > > -. WARN_ON_ONCE() on failing to create rcu_boost_kthread.
-> > > > -. Changed title and commit message a bit.
-> > > > 
-> > > > ---8<---
-> > > > >From 20c934c5657a7a0f13ebb050ffd350d4174965d0 Mon Sep 17 00:00:00 2001
-> > > > From: Byungchul Park <byungchul.park@lge.com>
-> > > > Date: Mon, 1 Jul 2019 09:27:15 +0900
-> > > > Subject: [PATCH v3] rcu: Change return type of rcu_spawn_one_boost_kthread()
-> > > > 
-> > > > The return value of rcu_spawn_one_boost_kthread() is not used any
-> > > > longer. Change return type of that function from int to void.
-> > > > 
-> > > > Signed-off-by: Byungchul Park <byungchul.park@lge.com>
-> > > > ---
-> > > >  kernel/rcu/tree_plugin.h | 20 +++++++++++---------
-> > > >  1 file changed, 11 insertions(+), 9 deletions(-)
-> > > > 
-> > > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > > > index c588ef9..b8eea22 100644
-> > > > --- a/kernel/rcu/tree_plugin.h
-> > > > +++ b/kernel/rcu/tree_plugin.h
-> > > > @@ -1119,7 +1119,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
-> > > >   * already exist.  We only create this kthread for preemptible RCU.
-> > > >   * Returns zero if all is well, a negated errno otherwise.
-> > > >   */
-> > > > -static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> > > > +static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> > > >  {
-> > > >  	int rnp_index = rnp - rcu_get_root();
-> > > >  	unsigned long flags;
-> > > > @@ -1127,25 +1127,27 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> > > >  	struct task_struct *t;
-> > > >  
-> > > >  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
-> > > > -		return 0;
-> > > > +		return;
-> > > >  
-> > > >  	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
-> > > > -		return 0;
-> > > > +		return;
-> > > >  
-> > > >  	rcu_state.boost = 1;
-> > > > +
-> > > >  	if (rnp->boost_kthread_task != NULL)
-> > > > -		return 0;
-> > > > +		return;
-> > > > +
-> > > >  	t = kthread_create(rcu_boost_kthread, (void *)rnp,
-> > > >  			   "rcub/%d", rnp_index);
-> > > > -	if (IS_ERR(t))
-> > > > -		return PTR_ERR(t);
-> > > > +	if (WARN_ON_ONCE(IS_ERR(t)))
-> > > > +		return;
-> > > > +
-> > > >  	raw_spin_lock_irqsave_rcu_node(rnp, flags);
-> > > >  	rnp->boost_kthread_task = t;
-> > > >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> > > >  	sp.sched_priority = kthread_prio;
-> > > >  	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
-> > > >  	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
-> > > > -	return 0;
-> > > >  }
-> > > >  
-> > > >  /*
-> > > > @@ -1186,7 +1188,7 @@ static void __init rcu_spawn_boost_kthreads(void)
-> > > >  	struct rcu_node *rnp;
-> > > >  
-> > > >  	rcu_for_each_leaf_node(rnp)
-> > > > -		(void)rcu_spawn_one_boost_kthread(rnp);
-> > > > +		rcu_spawn_one_boost_kthread(rnp);
-> > > >  }
-> > > >  
-> > > >  static void rcu_prepare_kthreads(int cpu)
-> > > > @@ -1196,7 +1198,7 @@ static void rcu_prepare_kthreads(int cpu)
-> > > >  
-> > > >  	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
-> > > >  	if (rcu_scheduler_fully_active)
-> > > > -		(void)rcu_spawn_one_boost_kthread(rnp);
-> > > > +		rcu_spawn_one_boost_kthread(rnp);
-> > > >  }
-> > > >  
-> > > >  #else /* #ifdef CONFIG_RCU_BOOST */
-> > > > -- 
-> > > > 1.9.1
-> > > > 
-> > 
+> diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
+> index b9300f3e1ee6..654c19d3a81d 100644
+> --- a/drivers/video/backlight/gpio_backlight.c
+> +++ b/drivers/video/backlight/gpio_backlight.c
+> @@ -54,15 +54,14 @@ static const struct backlight_ops gpio_backlight_ops = {
+>   	.check_fb	= gpio_backlight_check_fb,
+>   };
+>   
+> -static int gpio_backlight_probe_dt(struct platform_device *pdev,
+> -				   struct gpio_backlight *gbl)
+> +static int gpio_backlight_probe_prop(struct platform_device *pdev,
+> +				     struct gpio_backlight *gbl)
+>   {
+>   	struct device *dev = &pdev->dev;
+> -	struct device_node *np = dev->of_node;
+>   	enum gpiod_flags flags;
+>   	int ret;
+>   
+> -	gbl->def_value = of_property_read_bool(np, "default-on");
+> +	gbl->def_value = device_property_read_bool(dev, "default-on");
+>   	flags = gbl->def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
+>   
+>   	gbl->gpiod = devm_gpiod_get(dev, NULL, flags);
+> @@ -86,26 +85,15 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+>   	struct backlight_properties props;
+>   	struct backlight_device *bl;
+>   	struct gpio_backlight *gbl;
+> -	struct device_node *np = pdev->dev.of_node;
+>   	int ret;
+>   
+> -	if (!pdata && !np) {
+> -		dev_err(&pdev->dev,
+> -			"failed to find platform data or device tree node.\n");
+> -		return -ENODEV;
+> -	}
+> -
+>   	gbl = devm_kzalloc(&pdev->dev, sizeof(*gbl), GFP_KERNEL);
+>   	if (gbl == NULL)
+>   		return -ENOMEM;
+>   
+>   	gbl->dev = &pdev->dev;
+>   
+> -	if (np) {
+> -		ret = gpio_backlight_probe_dt(pdev, gbl);
+> -		if (ret)
+> -			return ret;
+> -	} else {
+> +	if (pdata) {
+>   		/*
+>   		 * Legacy platform data GPIO retrieveal. Do not expand
+>   		 * the use of this code path, currently only used by one
+> @@ -126,6 +114,10 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+>   		gbl->gpiod = gpio_to_desc(pdata->gpio);
+>   		if (!gbl->gpiod)
+>   			return -EINVAL;
+> +	} else {
+> +		ret = gpio_backlight_probe_prop(pdev, gbl);
+> +		if (ret)
+> +			return ret;
+>   	}
+>   
+>   	memset(&props, 0, sizeof(props));
+> 
+
