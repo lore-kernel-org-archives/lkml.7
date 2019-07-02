@@ -2,118 +2,101 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C674C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79246C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F337E2064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:18:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562116703;
-	bh=0Mw+7Os5OKZyelS8FwvvKV3593VIkrJ7dJcpLx70TbI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uTuLmJ5nWjWHEhZ0VHGow2K9yfkNdFEiRYFKSQHqOrhuivBxNKDf/VKUkoL/ReP0X
-	 4W0PCkCctkmy/IcaKJri5wCF9kVR7y5AhpOLw3/3robFJBdJA4eJskPtQNnvB3IhOr
-	 I1Wt86+bm88Llqi8+91fYESgVWbO2kfNpr5vz5Vw=
+	by mail.kernel.org (Postfix) with ESMTP id 528D02064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:19:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="hEaxITbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfGCBSV (ORCPT
+        id S1727338AbfGCBTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:18:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726635AbfGCBSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:18:05 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE40F21913;
-        Tue,  2 Jul 2019 22:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562107775;
-        bh=0Mw+7Os5OKZyelS8FwvvKV3593VIkrJ7dJcpLx70TbI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yeymeREMbbnHkItA2QFK0OsQwOJ4S2KY6zwb3yiexMQPK3mYRJ3g1rL4PR773LzRh
-         IoGc92x3+hV6v24eAdWhbNI/hjjLDzKgQ9/f702ro94m4Kiu1LHS57xX0bliPFr6w9
-         c3NhEaSIHmjhkHfQR6smVApNp9irmjk3EPhcjc6k=
-Date:   Tue, 2 Jul 2019 15:49:35 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v2] fat: Add nobarrier to workaround the strange
- behavior of device
-Message-Id: <20190702154935.56f611ce988bf595412faa00@linux-foundation.org>
-In-Reply-To: <87woh5pyqh.fsf@mail.parknet.co.jp>
-References: <87woh5pyqh.fsf@mail.parknet.co.jp>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 2 Jul 2019 21:19:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40580 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbfGCBTF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:19:05 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p11so736231wre.7;
+        Tue, 02 Jul 2019 18:19:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rWLzfbu8j4EYgy/8k30wN0dMRH7MHW+jd6HZ5Ksrd3U=;
+        b=hEaxITbD6g01GU/E4tW0b9uFqAt6dT6NrdnsjGynaCiSDczc3wBtQ6h3N5KDIjVZTs
+         bq+litxweOV0YzLcD+htddP+0KeUARG1QFlrZPaZdPOatV60kjAJGRzibtzNi4tCJ6LB
+         BCx2+cvlgKxvgtol8Y1IZtr2JRmkDwnZqCDzK6DS1vsIUyorzJuuJrPhYZlbwugny5iY
+         iHJYtLyqvTZSz1n2plu+X1bFXa7JU1nQbLEavg2aUj+SUizBeOLnB2hZ3y/LTPqDH9jG
+         44vqaZTTMpgbCGizFvZHtpQ/h3jknSoV3ETZo7RMtxtbEcxrYA2HO32qpbuGGnHhQdbU
+         WFsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rWLzfbu8j4EYgy/8k30wN0dMRH7MHW+jd6HZ5Ksrd3U=;
+        b=g+ZxcVmHJHNHNcsO9GJNMGjyauQ6AOIPzI4VeHw9ikGSKvZGLntv9xG6G9Gv01b08s
+         rlWzoqm5CRVq4a7YiTnJSnyzSGSpDLQlDGgb+77aCLULUy5Jw3IfFhYUsarDZH785nO2
+         muSHqkum5uZ6G8Kpak7XrzrvxN9l7spdxJWaUP7lv3CBkH9abEIQMrOzSCLQ533YGYje
+         NkAkyg+YdpmjtJ3VEPLr0QODq8V3SJlU9UyEvCRAYwKhT3xpR4B6rDhQf0wMlbN8/76H
+         vcOaQ15pQg++l5m5nqoky0VcOC7I5JQCyp/DE147oYVCq9tedjXZvm2wspt9Frj48jDj
+         1Sag==
+X-Gm-Message-State: APjAAAUUtPri8q2NXI3JyTXk0jNSKa3Bora0EOA6KTXm0arccsOX1w5O
+        WeCUR9Pg5O1e4xmDZx9WgrWmtS0G
+X-Google-Smtp-Source: APXvYqy1mj2CZXwhgjct0fF4qSkZ62Tn5IxLxpLT3bp0eyZredMoec+t+UbjgZuFjSB63XicwdQ2Cg==
+X-Received: by 2002:adf:e311:: with SMTP id b17mr6840692wrj.11.1562106792800;
+        Tue, 02 Jul 2019 15:33:12 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
+        by smtp.googlemail.com with ESMTPSA id 18sm253513wmg.43.2019.07.02.15.33.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 15:33:12 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     blogic@openwrt.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org
+Cc:     dev@kresin.me, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 4/4] gpio: stp-xway: allow compile-testing
+Date:   Wed,  3 Jul 2019 00:32:48 +0200
+Message-Id: <20190702223248.31934-5-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
+References: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019 23:32:06 +0900 OGAWA Hirofumi <hirofumi@mail.parknet.co.jp> wrote:
+Enable compile-testing of the stp-xway GPIO driver now that it does not
+depend on any architecture specific includes anymore.
 
-> 
-> v2:
-> Just cleanup, changed the place of options under comment of fat.
-> 
-> ---
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/gpio/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Please be careful with the "^---$" - it denotes "end of changelog", so
-I ended up without a changelog!
-
-
-> There was the report of strange behavior of device with recent
-> blkdev_issue_flush() position change.
-
-A Reported-by: would be nice, but not necessary.
-
-> The following is simplified usbmon trace.
-> 
->  4203   9.160230         host -> 1.25.1       USBMS 95 SCSI: Synchronize Cache(10) LUN: 0x00 (LBA: 0x00000000, Len: 0)
->  4206   9.164911       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Synchronize Cache(10)) (Good)
->  4207   9.323927         host -> 1.25.1       USBMS 95 SCSI: Read(10) LUN: 0x00 (LBA: 0x00279950, Len: 240)
->  4212   9.327138       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Read(10)) (Good)
-> 
-> [...]
-> 
->  7323  10.202167         host -> 1.25.1       USBMS 95 SCSI: Synchronize Cache(10) LUN: 0x00 (LBA: 0x00000000, Len: 0)
->  7326  10.432266       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Synchronize Cache(10)) (Good)
->  7327  10.769092         host -> 1.25.1       USBMS 95 SCSI: Test Unit Ready LUN: 0x00 
->  7330  10.769192       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Test Unit Ready) (Good)
->  7335  12.849093         host -> 1.25.1       USBMS 95 SCSI: Test Unit Ready LUN: 0x00 
->  7338  12.849206       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Test Unit Ready) (Check Condition)
->  7339  12.849209         host -> 1.25.1       USBMS 95 SCSI: Request Sense LUN: 0x00
->  
-> If "Synchronize Cache" command issued then there is idle time, the
-> device stop to process further commands, and behave as like no media.
-> (it returns NOT_READY [MEDIUM NOT PRESENT] for SENSE command, and this
-> happened on Kindle) [just a guess, the device is trying to detect the
-> "safe-unplug" operation of Windows or such?]
-> 
-> To workaround those devices and provide flexibility, this adds
-> "barrier"/"nobarrier" mount options to fat driver.
-
-I think it would be helpful if the changelog were to at least describe
-the longer-term plan which hch described.
-
-> --- linux/fs/fat/fat.h~fat-nobarrier	2019-06-28 21:22:18.146191739 +0900
-> +++ linux-hirofumi/fs/fat/fat.h	2019-06-28 23:26:04.881215721 +0900
-> @@ -51,6 +51,7 @@ struct fat_mount_options {
->  		 tz_set:1,	   /* Filesystem timestamps' offset set */
->  		 rodir:1,	   /* allow ATTR_RO for directory */
->  		 discard:1,	   /* Issue discard requests on deletions */
-> +		 barrier:1,	   /* Issue FLUSH command */
->  		 dos1xfloppy:1;	   /* Assume default BPB for DOS 1.x floppies */
-
-Documentation/filesystems/vfat.txt should be updated to describe this
-new option please.  And perhaps to mention that a device-level quirk should be
-used in preference, if it is available.
-
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index f1f02dac324e..43d7d6a9d9ab 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -489,7 +489,8 @@ config GPIO_STA2X11
+ 
+ config GPIO_STP_XWAY
+ 	bool "XWAY STP GPIOs"
+-	depends on SOC_XWAY
++	depends on SOC_XWAY || COMPILE_TEST
++	depends on OF_GPIO
+ 	help
+ 	  This enables support for the Serial To Parallel (STP) unit found on
+ 	  XWAY SoC. The STP allows the SoC to drive a shift registers cascade,
+-- 
+2.22.0
 
