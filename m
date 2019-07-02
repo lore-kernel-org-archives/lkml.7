@@ -2,102 +2,113 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68700C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1619BC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42EDE20659
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:37:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M1wpP4Lv"
+	by mail.kernel.org (Postfix) with ESMTP id E21192184C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfGBRhZ (ORCPT
+        id S1726605AbfGBRjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 13:37:25 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:40484 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfGBRhY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:37:24 -0400
-Received: by mail-pf1-f201.google.com with SMTP id z1so11259191pfb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 10:37:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=1FAnKetMS6oVEFfaAMdIzJKX0drL1rc4E0VM9rZq68w=;
-        b=M1wpP4LvC86w13Y9yZtd4RaRSscqUQfIQ8ghzT1N29DkC5SgPgrc0DSl5bjo+MPrin
-         byi1CQr7BDUdowtx1lML/VgMRRcpwlOQud8aA5ktnWgIfgOeYvUnKe1azQT9+IJIaIr8
-         KFVNGaByHdpkQdvgTwUnvAhRPwqA3J9aPM+8bHzDuPhXdxNcExvDtvHGaaPdzrNGZWJz
-         46e4rDEYUlToNykFMkfGS3l52lokzGy6gA3UuoOW2ETZfUxhEZt1qZFA8/jJL1s+tdY5
-         QCGZie3X9KnYsZsm+P66r+xI4+TpSNECS45b9s6PioF4NsGskU79uexDIKHL5Eak05l3
-         1oww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=1FAnKetMS6oVEFfaAMdIzJKX0drL1rc4E0VM9rZq68w=;
-        b=Cl6P8rUcLPKA5epx+W+kSEf1vn9vARO3x0JB8SjMklXHG43HxteEyjNKAHkBo6Ywqq
-         SPwsYzF+sTe6YUv6rdAu8iwEQEor9JVayq0XnDrGly+ZQIKgOESABuiDS4xNsURo9Aqs
-         jv/OH5KzPvB1Lk8A+nKDkTB7nG1nqIztYhoGNly6Atgl9pGMAp00zcMLp8EyYbXkAhYU
-         /liZoRqlJ0mh3cecWDiz57tYTIP3mD/Nvukw81KgwZxDrI9wpQWsQvt8eCjAYndb+ul9
-         yzMXbEG4tbyg8AtgAb9yV2TlkyKO77Bbosg6t9HFttKut8dUUWHuIYUEb+Cg664DNynB
-         m2mQ==
-X-Gm-Message-State: APjAAAW0c1Ol8vIHMICIMcIdC95XGhT7THluwTBKJf/imIR/wfbiYMVT
-        o39w+StjCJc8bs3iLZtyetMIQHyY
-X-Google-Smtp-Source: APXvYqzSWOlssB8Os6IHcljkK5kHmI9pPz4N/6iWF86+MCzxSkoUEKAWUlnmWi7SYaNj0t4ST3eTH4HB
-X-Received: by 2002:a65:4b8b:: with SMTP id t11mr23416538pgq.130.1562089043245;
- Tue, 02 Jul 2019 10:37:23 -0700 (PDT)
-Date:   Tue,  2 Jul 2019 10:37:16 -0700
-In-Reply-To: <20190702173716.181223-1-nums@google.com>
-Message-Id: <20190702173716.181223-2-nums@google.com>
-Mime-Version: 1.0
-References: <20190702173716.181223-1-nums@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH 2/2] Fix perf-hooks test
-From:   Numfor Mbiziwo-Tiapo <nums@google.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, songliubraving@fb.com, mbd@fb.com
-Cc:     linux-kernel@vger.kernel.org, irogers@google.com,
-        eranian@google.com, Numfor Mbiziwo-Tiapo <nums@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 2 Jul 2019 13:39:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725996AbfGBRjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 13:39:10 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63B0E20659;
+        Tue,  2 Jul 2019 17:39:08 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 13:39:05 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Eiichi Tsukata <devel@etsukata.com>, edwintorok@gmail.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH] x86/stacktrace: Do not access user space memory
+ unnecessarily
+Message-ID: <20190702133905.1482b87e@gandalf.local.home>
+In-Reply-To: <20190702113355.5be9ebfe@gandalf.local.home>
+References: <20190702053151.26922-1-devel@etsukata.com>
+        <20190702072821.GX3419@hirez.programming.kicks-ass.net>
+        <alpine.DEB.2.21.1907021400350.1802@nanos.tec.linutronix.de>
+        <20190702113355.5be9ebfe@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The perf-hooks test fails with Address Sanitizer and Memory
-Sanitizer builds because it purposefully generates a segfault.
-Checking if these sanitizers are active when running this test
-will allow the perf-hooks test to pass.
+On Tue, 2 Jul 2019 11:33:55 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
----
- tools/perf/tests/perf-hooks.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> On Tue, 2 Jul 2019 16:14:05 +0200 (CEST)
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> > On Tue, 2 Jul 2019, Peter Zijlstra wrote:
+> >   
+> > > On Tue, Jul 02, 2019 at 02:31:51PM +0900, Eiichi Tsukata wrote:    
+> > > > Put the boundary check before it accesses user space to prevent unnecessary
+> > > > access which might crash the machine.
+> > > > 
+> > > > Especially, ftrace preemptirq/irq_disable event with user stack trace
+> > > > option can trigger SEGV in pid 1 which leads to panic.    
+> 
+> Note, I'm only able to trigger this crash with the irq_disable event.
+> The irq_enable and preempt_disable/enable events work just fine. This
+> leads me to believe that the TRACE_IRQS_OFF macro (which uses a thunk
+> trampoline) may have some issues and is probably the place to look at.
 
-diff --git a/tools/perf/tests/perf-hooks.c b/tools/perf/tests/perf-hooks.c
-index a693bcf017ea..524ecba63615 100644
---- a/tools/perf/tests/perf-hooks.c
-+++ b/tools/perf/tests/perf-hooks.c
-@@ -25,7 +25,12 @@ static void the_hook(void *_hook_flags)
- 	*hook_flags = 1234;
+I figured it out.
+
+It's another "corruption of the cr2" register issue. The following
+patch makes the issue go away. I'm not suggesting that we use this
+patch, but it shows where the bug lies.
+
+IIRC, there was patches posted before that fixed this issue. I'll go
+look to see if I can dig them up. Was it Joel that sent them?
+
+-- Steve
+
+diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
+index be36bf4e0957..dd79256badb2 100644
+--- a/arch/x86/entry/thunk_64.S
++++ b/arch/x86/entry/thunk_64.S
+@@ -40,7 +40,7 @@
  
- 	/* Generate a segfault, test perf_hooks__recover */
-+#if defined(ADDRESS_SANITIZER) || defined(MEMORY_SANITIZER) || \
-+defined(THREAD_SANITIZER) || defined(SAFESTACK_SANITIZER)
-+	raise(SIGSEGV);
-+#else
- 	*p = 0;
-+#endif
+ #ifdef CONFIG_TRACE_IRQFLAGS
+ 	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
+-	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
++	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller_cr2,1
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 46df4c6aae46..b42ca3fc569d 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1555,3 +1555,13 @@ do_page_fault(struct pt_regs *regs, unsigned long error_code)
+ 	exception_exit(prev_state);
  }
- 
- int test__perf_hooks(struct test *test __maybe_unused, int subtest __maybe_unused)
--- 
-2.22.0.410.gd8fdbe21b5-goog
+ NOKPROBE_SYMBOL(do_page_fault);
++
++void trace_hardirqs_off_caller(unsigned long addr);
++
++void notrace trace_hardirqs_off_caller_cr2(unsigned long addr)
++{
++	unsigned long address = read_cr2(); /* Get the faulting address */
++
++	trace_hardirqs_off_caller(addr);
++	write_cr2(address);
++}
 
