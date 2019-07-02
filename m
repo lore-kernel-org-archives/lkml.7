@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A016C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2620AC5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D062A2184E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35D221841
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562034503;
-	bh=wcl+CMYcOT3dY6+B4araXSneXx9oiksAP/Bc0cLWKYk=;
+	s=default; t=1562034506;
+	bh=Jr8tGrAxIKCYJdVwkl+TXOArqBDDZZP2yA/eyBGvEJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z8aVh8cHFH0V3lS39qJ5ie/48L2Du2q2qig0eWODb3SIxvjjLtCYcq3vJszTxgJ3I
-	 n9018zx8zB9QP3aG8jdOzxLV0YuQ46sR9I69lKOr4zS3vobCWFIiqsTGgi8SULJ2TQ
-	 cuVbM1FQCNZ4/y/geYlZgmpDO4dFTG0mHCeCi0xc=
+	b=uutmDmowMlw/eLM2iDTgaRlwJeDivlRp1I0OiwAZ/nG87Fz0qr9DqqmjX9eDqoi/1
+	 NOwGtn6MWhuMfdBfphnTxLPypN6JJRT/mW2OgVMWCShSZdJm/OjifpveogV+ldKq94
+	 5G8kYsXYWdHfmpUnnn6jalpBXB/u0dd6gftJtzaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfGBC2W (ORCPT
+        id S1727603AbfGBC2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40778 "EHLO mail.kernel.org"
+        Mon, 1 Jul 2019 22:28:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727174AbfGBC2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:28:20 -0400
+        id S1727591AbfGBC2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:28:23 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89758206A2;
-        Tue,  2 Jul 2019 02:28:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AEE521721;
+        Tue,  2 Jul 2019 02:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562034499;
-        bh=wcl+CMYcOT3dY6+B4araXSneXx9oiksAP/Bc0cLWKYk=;
+        s=default; t=1562034502;
+        bh=Jr8tGrAxIKCYJdVwkl+TXOArqBDDZZP2yA/eyBGvEJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DoAz2Emhuo5N93VI+Ys+m+rZXOeJHXnfLFw3PtOq/g3jJkICHkIbgnKn7tkRFsnio
-         4BOrNw9VAgs9eN6zNfp+DVHTFi5k6LbCR2yNg1W8KyCYECkwqjw0H+aSYFTfAg/7iv
-         +k6WvSa0CZB0B0uDKXRuqJ6VDfkqsv5LOS8EFT5U=
+        b=izxHPHmS54O6Pwe4XOLFxWzbZ1YXMnDyHHwef7xfQ65KOed1gFUeJ6/KII3MLJBqm
+         3gbjF+gM5TYj9ciLnCBp5Miqt6Dh1S3jK7TbAqXZ/wOuul2nZXzr1XyAn8+GTe4pKy
+         BEw0kQt3yXPWnkKtnbJv/oY3kHzuv2uyAlc+KRhw=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 35/43] tools lib: Adopt strreplace() from the kernel
-Date:   Mon,  1 Jul 2019 23:26:08 -0300
-Message-Id: <20190702022616.1259-36-acme@kernel.org>
+Subject: [PATCH 36/43] perf tools: Drop strxfrchar(), use strreplace() equivalent from kernel
+Date:   Mon,  1 Jul 2019 23:26:09 -0300
+Message-Id: <20190702022616.1259-37-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190702022616.1259-1-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
@@ -62,56 +62,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We'll use it to further reduce the size of tools/perf/util/string.c,
-replacing the strxfrchar() equivalent function we have there.
+No change in behaviour intended, just reducing the codebase and using
+something available in tools/lib/.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-x3r61ikjrso1buygxwke8id3@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-oyi6zif3810nwi4uu85odnhv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/linux/string.h |  2 ++
- tools/lib/string.c           | 16 ++++++++++++++++
- 2 files changed, 18 insertions(+)
+ tools/perf/util/dso.c     |  3 ++-
+ tools/perf/util/string.c  | 18 ------------------
+ tools/perf/util/string2.h |  1 -
+ 3 files changed, 2 insertions(+), 20 deletions(-)
 
-diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-index e436f8037c87..a76d4df10435 100644
---- a/tools/include/linux/string.h
-+++ b/tools/include/linux/string.h
-@@ -19,6 +19,8 @@ extern size_t strlcpy(char *dest, const char *src, size_t size);
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 1fb18292c2d3..c7fde04400f7 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <asm/bug.h>
+ #include <linux/kernel.h>
++#include <linux/string.h>
+ #include <sys/time.h>
+ #include <sys/resource.h>
+ #include <sys/types.h>
+@@ -394,7 +395,7 @@ int __kmod_path__parse(struct kmod_path *m, const char *path,
+ 				return -ENOMEM;
+ 		}
  
- char *str_error_r(int errnum, char *buf, size_t buflen);
+-		strxfrchar(m->name, '-', '_');
++		strreplace(m->name, '-', '_');
+ 	}
  
-+char *strreplace(char *s, char old, char new);
-+
- /**
-  * strstarts - does @str start with @prefix?
-  * @str: string to examine
-diff --git a/tools/lib/string.c b/tools/lib/string.c
-index 80472e6b3829..f2ae1b87c719 100644
---- a/tools/lib/string.c
-+++ b/tools/lib/string.c
-@@ -145,3 +145,19 @@ char *strim(char *s)
- 
- 	return skip_spaces(s);
+ 	return 0;
+diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
+index 93a5340424df..9b7fbb0cbecd 100644
+--- a/tools/perf/util/string.c
++++ b/tools/perf/util/string.c
+@@ -300,24 +300,6 @@ int strtailcmp(const char *s1, const char *s2)
+ 	return 0;
  }
-+
-+/**
-+ * strreplace - Replace all occurrences of character in string.
-+ * @s: The string to operate on.
-+ * @old: The character being replaced.
-+ * @new: The character @old is replaced with.
-+ *
-+ * Returns pointer to the nul byte at the end of @s.
-+ */
-+char *strreplace(char *s, char old, char new)
-+{
-+	for (; *s; ++s)
-+		if (*s == old)
-+			*s = new;
-+	return s;
-+}
+ 
+-/**
+- * strxfrchar - Locate and replace character in @s
+- * @s:    The string to be searched/changed.
+- * @from: Source character to be replaced.
+- * @to:   Destination character.
+- *
+- * Return pointer to the changed string.
+- */
+-char *strxfrchar(char *s, char from, char to)
+-{
+-	char *p = s;
+-
+-	while ((p = strchr(p, from)) != NULL)
+-		*p++ = to;
+-
+-	return s;
+-}
+-
+ char *asprintf_expr_inout_ints(const char *var, bool in, size_t nints, int *ints)
+ {
+ 	/*
+diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
+index 6da835ad8f5b..2696c3fcd780 100644
+--- a/tools/perf/util/string2.h
++++ b/tools/perf/util/string2.h
+@@ -21,7 +21,6 @@ static inline bool strisglob(const char *str)
+ 	return strpbrk(str, "*?[") != NULL;
+ }
+ int strtailcmp(const char *s1, const char *s2);
+-char *strxfrchar(char *s, char from, char to);
+ 
+ char *asprintf_expr_inout_ints(const char *var, bool in, size_t nints, int *ints);
+ 
 -- 
 2.20.1
 
