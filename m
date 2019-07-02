@@ -2,93 +2,110 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAEAC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC950C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6B7121841
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SUuiCpEy"
+	by mail.kernel.org (Postfix) with ESMTP id 821092184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562054718;
+	bh=XBgL/AxOnIaiBDWMNPVZmAQbbKZScC6wBMWUyyDEQ0Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UrI0AVuop890ZCkdE7MLXNfx8e3wtrOe49zxSUUrCVrZztOEnDYkIMKgABeyE6PXk
+	 9OEMvD6fgvYEhl1bdvRd/vnvQdwhoVjeZGXpbJOx5BMcyJUeg8ni7LvtydRPSw2AH+
+	 RFTMECpiULaFB0rxj2UYeuEpR/vFownIQL3qfRfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfGBIFN (ORCPT
+        id S1727923AbfGBIFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:05:13 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:34391 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbfGBIFL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:05:11 -0400
-Received: by mail-qk1-f202.google.com with SMTP id h198so16026993qke.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 01:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=NEsgFhBOsHO1SUu/GnNK2DPDOJTChWsbzIPYkeXfosU=;
-        b=SUuiCpEyaak5XfddxqDhgd8CZLbHmyS+aWA9tOcpJKwvJ+lmczEa4pAv2doIL/MNAx
-         oxbvwgOT7JP95TVpHvEKVEhqSCkHTaAIJ2qYLYjYX/sM5EVQ/ehuStA1RZaAx9WKHIu2
-         HOMEvp+RFG18HWtxgTcDEihisRNtMoN4fr51BGqd0Y1aNZ9EUIBxSnArjNTNPZj0qKeC
-         7lDfBfPvpuhQ5dGD+qwIbY14OOVkD/4L9H5Ax829EjB1ByMvbQVVg8/LyR1nThS/JZpC
-         sGyguTYXTlq79AT/k0ECihTxoUZa47U8PBCFXFAtW0FYIKiTXq8syA+AF8rl0mZfO7q0
-         9njw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=NEsgFhBOsHO1SUu/GnNK2DPDOJTChWsbzIPYkeXfosU=;
-        b=XhX4ABfb61piUAR4e+a7WGvlLs6X63A7rFYWnaL5IU46EFudS/v5k9jkisI7rSuTPx
-         6yWDG554XpEhBt3EO1sZcQBBmXWaFRQm2PmEGqnTl6JkQDQYlKqyJiQmnKo6E0+dyCpH
-         +CKBOPPgjdjirMw7In/vuciMJ6LQ9hlbCHCOBKpUbYZdcBiW1Fh0Q15eDIWJOXdulALd
-         IXq1/lPfWAg3w9rk8/sVNuGX0IDwKYInPyeiApGQquCJfc+HIZv3fzQmr1HO7NmiSsXQ
-         6zghCUEOu4/cdCMcoGwCLVNSCSVbLhHnhR59J/GafsyIL5k71t3g5ASvsGGO0bNwy3nf
-         Ur5A==
-X-Gm-Message-State: APjAAAWh10ocJ2o1IMvKqL3C2abUXhJPjwBH1RMmS0pjU/fBF3Z1kD8U
-        CiNh7HEOXH5eiRPvsO5RGwy0XGqPW4EqE+I=
-X-Google-Smtp-Source: APXvYqwrXvbk11TVxxDHQCIkdbAtLKP9A2wasQz4c5X/idjoID/jWMQN/mQNqcB/Hw6wGFCTefiRv8WenyeupcE=
-X-Received: by 2002:a37:ac0a:: with SMTP id e10mr24972711qkm.168.1562054710600;
- Tue, 02 Jul 2019 01:05:10 -0700 (PDT)
-Date:   Tue,  2 Jul 2019 16:05:03 +0800
-Message-Id: <20190702080503.175149-1-oceanchen@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v2] f2fs: avoid out-of-range memory access
-From:   Ocean Chen <oceanchen@google.com>
-To:     jaegeuk@kernel.org, yuchao0@huawei.com,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Cc:     oceanchen@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 2 Jul 2019 04:05:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727400AbfGBIFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:05:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5198221851;
+        Tue,  2 Jul 2019 08:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562054711;
+        bh=XBgL/AxOnIaiBDWMNPVZmAQbbKZScC6wBMWUyyDEQ0Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uqFIXFlpO3wX59mmr+n1k6ozY097JpSAHG7HKxpqPqKt5aVCbgYdmrRUhIz/Ni0ts
+         fqi7OYgaUgG8KXB471Z18WYYr+C9RKstQ/8n2joKi47Uks0Kteh77FMqABh24q+Xqp
+         HnhGG+ra6WTde3HSj2rHgc3t87jPAXnfom3RIFsk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 01/72] perf ui helpline: Use strlcpy() as a shorter form of strncpy() + explicit set nul
+Date:   Tue,  2 Jul 2019 10:01:02 +0200
+Message-Id: <20190702080124.647899315@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
+References: <20190702080124.564652899@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blk_off might over 512 due to fs corrupt.
-Use ENTRIES_IN_SUM to protect invalid memory access.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-v2:
-- fix typo
-Signed-off-by: Ocean Chen <oceanchen@google.com>
+commit 4d0f16d059ddb91424480d88473f7392f24aebdc upstream.
+
+The strncpy() function may leave the destination string buffer
+unterminated, better use strlcpy() that we have a __weak fallback
+implementation for systems without it.
+
+In this case we are actually setting the null byte at the right place,
+but since we pass the buffer size as the limit to strncpy() and not
+it minus one, gcc ends up warning us about that, see below. So, lets
+just switch to the shorter form provided by strlcpy().
+
+This fixes this warning on an Alpine Linux Edge system with gcc 8.2:
+
+  ui/tui/helpline.c: In function 'tui_helpline__push':
+  ui/tui/helpline.c:27:2: error: 'strncpy' specified bound 512 equals destination size [-Werror=stringop-truncation]
+    strncpy(ui_helpline__current, msg, sz)[sz - 1] = '\0';
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  cc1: all warnings being treated as errors
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: e6e904687949 ("perf ui: Introduce struct ui_helpline")
+Link: https://lkml.kernel.org/n/tip-d1wz0hjjsh19xbalw69qpytj@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/f2fs/segment.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/ui/tui/helpline.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 8dee063c833f..a5e8af0bd62e 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3403,6 +3403,8 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+--- a/tools/perf/ui/tui/helpline.c
++++ b/tools/perf/ui/tui/helpline.c
+@@ -24,7 +24,7 @@ static void tui_helpline__push(const cha
+ 	SLsmg_set_color(0);
+ 	SLsmg_write_nstring((char *)msg, SLtt_Screen_Cols);
+ 	SLsmg_refresh();
+-	strncpy(ui_helpline__current, msg, sz)[sz - 1] = '\0';
++	strlcpy(ui_helpline__current, msg, sz);
+ }
  
- 		for (j = 0; j < blk_off; j++) {
- 			struct f2fs_summary *s;
-+			if (j >= ENTRIES_IN_SUM)
-+				return -EFAULT;
- 			s = (struct f2fs_summary *)(kaddr + offset);
- 			seg_i->sum_blk->entries[j] = *s;
- 			offset += SUMMARY_SIZE;
--- 
-2.22.0.410.gd8fdbe21b5-goog
+ static int tui_helpline__show(const char *format, va_list ap)
+
 
