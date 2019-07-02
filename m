@@ -2,179 +2,103 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D713C4647F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EE0C4647E
 	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E1D218A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:24:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HFTZp006"
+	by mail.kernel.org (Postfix) with ESMTP id E988E21851
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562077341;
+	bh=7VY9/9lkdfiiEBbUd+s+IdckOZ37wLIuB/BIMGhoNKo=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=lOJbtnjQpWY6OwTOLxh7YGziMN6tZI2otX1SSHuspLHZlXRlL03AzBDWtVQ8t5lKW
+	 ivBh9ayhe82t9MtA9DnoAXuzcBCBPNCoFqz0JoODItSv026usvVY76Wji7ozQKdD1z
+	 WLbhjEkpZg13zGrBxf7ZBRcP8CcyGI1vXSSXLwp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfGBOYx (ORCPT
+        id S1727198AbfGBOWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 10:24:53 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41735 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfGBOYv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 10:24:51 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 205so17100352ljj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 07:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bSHjqClvRfHK2U9qiOj5LIMtdVJcukiMxcH2n03yaCU=;
-        b=HFTZp006q8TZVX5sIuJIMOkk1C9wJQO4rJGRAiNBk/2WlyfUJ1rdVQY+PYz0ZhQz3Q
-         wT17e2X0kch1+uP8KvE/V1ET2jlNw8aK4cHsN9Zf832n78lQJQUY75gbrep4TC2UbVpA
-         axaAvW+VgyPKfoktsN3yY2BkGI/5aoxuUHGyQG0WSr2OOvsF8q/VePxkmkaj/PJRO9vE
-         rGWXVn0dbCitwyb/iSKcxQgRgC7wf16i4cJRuO/qWn8T4MKiDjladJV35U+7gNDPkgpt
-         /fHPgF/QGWi5AyHp75MflzSGf05Yw5Z8bbdVS03YBHG/wVa/f2iIl+T0k5Bb5yqMYZdq
-         I35A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=bSHjqClvRfHK2U9qiOj5LIMtdVJcukiMxcH2n03yaCU=;
-        b=IzzFaG6en1Lj0pOe/4h92RXvLo5gwlZ2bg5kBfPFDESyueBFgdXTs2zp+S5FVyWwHD
-         do8kTH4EywE7DTdMOZeRh4uUCaBPscouYU6X15B0V09Gt1XW8LbY+Gk3SqZTw8BGPl3i
-         OWKZWWT1P5wgu6lnc0Hhv1GD8RsJRpc/zkkfLepXM12ulKbhDuQlIxIWOpnVykin4XZD
-         aDYBKHYnxM5sEDI+4Q5gpwFU2hsnivo8IQ9f4owgvsh53X+NVMsoW9Caq6qmy7hNKvvM
-         BlpHxthAOw2gut5DrLTr0A7kr9OhIlE+6X5rjd3n/c3VTpm/ymcv0KPbKLnbNh8Bnpq7
-         oGLQ==
-X-Gm-Message-State: APjAAAX2q1j0CPISP0ODlr8DjlffbY9hHNFILSNkQCnFotQgng9UB9fK
-        xgzhUlSBQi9EkbmZFBIyyUYQyQ==
-X-Google-Smtp-Source: APXvYqznUXLZarmJq51xBmcNdfHn/7nzoCiQ/8SROQ+yDmBZCj4RCuLLzIa94kh5HISHvcZ/J8lmOA==
-X-Received: by 2002:a2e:9a96:: with SMTP id p22mr17345327lji.57.1562077488680;
-        Tue, 02 Jul 2019 07:24:48 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id w28sm3817013ljd.12.2019.07.02.07.24.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 07:24:48 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 17:24:46 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com
-Subject: Re: [PATCH v5 net-next 6/6] net: ethernet: ti: cpsw: add XDP support
-Message-ID: <20190702142444.GC4510@khorivan>
-Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
-        grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com
-References: <20190630172348.5692-1-ivan.khoronzhuk@linaro.org>
- <20190630172348.5692-7-ivan.khoronzhuk@linaro.org>
- <20190701181901.150c0b71@carbon>
- <20190702113738.GB4510@khorivan>
- <20190702153902.0e42b0b2@carbon>
+        Tue, 2 Jul 2019 10:22:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbfGBOWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 10:22:19 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1AA02184B;
+        Tue,  2 Jul 2019 14:22:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562077338;
+        bh=7VY9/9lkdfiiEBbUd+s+IdckOZ37wLIuB/BIMGhoNKo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YBrYqtiOlFZT+FoNFhrTO6JXJGZ22xJFKK4arhAdCW8/cfS5GSGgmhoMwzuHnPhjR
+         7Hdb2rGKlfDM8EedaCC7shHBn+mot+hv32amP1/wA4IDZsDymPyhU32lUKWXgDwnvM
+         ZKQSEOP3BzCUq/NQhooBuYhdYaNoshZfSYJbTZPc=
+Subject: Re: [PATCH][next] selftests/x86: fix spelling mistake "FAILT" ->
+ "FAIL"
+To:     Andy Lutomirski <luto@kernel.org>,
+        Colin King <colin.king@canonical.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, shuah <shuah@kernel.org>
+References: <20190701130431.13391-1-colin.king@canonical.com>
+ <CALCETrVo0rJVxsYvo=abDfFCZHBuCiB0coSBXoDeP_emSZgESg@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <6e5a9bed-4f7f-4851-0421-2b440ff1f584@kernel.org>
+Date:   Tue, 2 Jul 2019 08:22:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190702153902.0e42b0b2@carbon>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CALCETrVo0rJVxsYvo=abDfFCZHBuCiB0coSBXoDeP_emSZgESg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 03:39:02PM +0200, Jesper Dangaard Brouer wrote:
->On Tue, 2 Jul 2019 14:37:39 +0300
->Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
->
->> On Mon, Jul 01, 2019 at 06:19:01PM +0200, Jesper Dangaard Brouer wrote:
->> >On Sun, 30 Jun 2019 20:23:48 +0300
->> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
->> >
->> >> +static int cpsw_ndev_create_xdp_rxq(struct cpsw_priv *priv, int ch)
->> >> +{
->> >> +	struct cpsw_common *cpsw = priv->cpsw;
->> >> +	int ret, new_pool = false;
->> >> +	struct xdp_rxq_info *rxq;
->> >> +
->> >> +	rxq = &priv->xdp_rxq[ch];
->> >> +
->> >> +	ret = xdp_rxq_info_reg(rxq, priv->ndev, ch);
->> >> +	if (ret)
->> >> +		return ret;
->> >> +
->> >> +	if (!cpsw->page_pool[ch]) {
->> >> +		ret =  cpsw_create_rx_pool(cpsw, ch);
->> >> +		if (ret)
->> >> +			goto err_rxq;
->> >> +
->> >> +		new_pool = true;
->> >> +	}
->> >> +
->> >> +	ret = xdp_rxq_info_reg_mem_model(rxq, MEM_TYPE_PAGE_POOL,
->> >> +					 cpsw->page_pool[ch]);
->> >> +	if (!ret)
->> >> +		return 0;
->> >> +
->> >> +	if (new_pool) {
->> >> +		page_pool_free(cpsw->page_pool[ch]);
->> >> +		cpsw->page_pool[ch] = NULL;
->> >> +	}
->> >> +
->> >> +err_rxq:
->> >> +	xdp_rxq_info_unreg(rxq);
->> >> +	return ret;
->> >> +}
->> >
->> >Looking at this, and Ilias'es XDP-netsec error handling path, it might
->> >be a mistake that I removed page_pool_destroy() and instead put the
->> >responsibility on xdp_rxq_info_unreg().
+On 7/1/19 11:48 AM, Andy Lutomirski wrote:
+> On Mon, Jul 1, 2019 at 6:04 AM Colin King <colin.king@canonical.com> wrote:
 >>
->> As for me this is started not from page_pool_free, but rather from calling
->> unreg_mem_model from rxq_info_unreg. Then, if page_pool_free is hidden
->> it looks more a while normal to move all chain to be self destroyed.
+>> From: Colin Ian King <colin.king@canonical.com>
 >>
->> >
->> >As here, we have to detect if page_pool_create() was a success, and then
->> >if xdp_rxq_info_reg_mem_model() was a failure, explicitly call
->> >page_pool_free() because the xdp_rxq_info_unreg() call cannot "free"
->> >the page_pool object given it was not registered.
+>> There is an spelling mistake in an a test error message. Fix it.
 >>
->> Yes, it looked a little bit ugly from the beginning, but, frankly,
->> I have got used to this already.
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>   tools/testing/selftests/x86/test_vsyscall.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> >
->> >Ivan's patch in[1], might be a better approach, which forced all
->> >drivers to explicitly call page_pool_free(), even-though it just
->> >dec-refcnt and the real call to page_pool_free() happened via
->> >xdp_rxq_info_unreg().
->> >
->> >To better handle error path, I would re-introduce page_pool_destroy(),
+>> diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
+>> index 4602326b8f5b..a4f4d4cf22c3 100644
+>> --- a/tools/testing/selftests/x86/test_vsyscall.c
+>> +++ b/tools/testing/selftests/x86/test_vsyscall.c
+>> @@ -451,7 +451,7 @@ static int test_vsys_x(void)
+>>                  printf("[OK]\tExecuting the vsyscall page failed: #PF(0x%lx)\n",
+>>                         segv_err);
+>>          } else {
+>> -               printf("[FAILT]\tExecution failed with the wrong error: #PF(0x%lx)\n",
+>> +               printf("[FAIL]\tExecution failed with the wrong error: #PF(0x%lx)\n",
+>>                         segv_err);
+>>                  return 1;
+>>          }
+>> --
+>> 2.20.1
 >>
->> So, you might to do it later as I understand, and not for my special
->> case but becouse it makes error path to look a little bit more pretty.
->> I'm perfectly fine with this, and better you add this, for now my
->> implementation requires only "xdp: allow same allocator usage" patch,
->> but if you insist I can resend also patch in question afterwards my
->> series is applied (with modification to cpsw & netsec & mlx5 & page_pool).
->>
->> What's your choice? I can add to your series patch needed for cpsw to
->> avoid some misuse.
->
->I will try to create a cleaned-up version of your patch[1] and
->re-introduce page_pool_destroy() for drivers to use, then we can build
->your driver on top of that.
+> 
+> Acked-by: Andy Lutomirski <luto@kernel.org>
+> 
 
-I've corrected patch to xdp core and tested. The "page pool API" change
-seems is orthogonal now. So no limits to send v6 that is actually done
-and no more strict dependency on page pool API changes whenever that
-can happen.
+Thanks Andy!
 
--- 
-Regards,
-Ivan Khoronzhuk
+I will queue this up for 5.3
+
+-- Shuah
