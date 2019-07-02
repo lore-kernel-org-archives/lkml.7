@@ -2,143 +2,79 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6E7C06514
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1CDC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4D0206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED4F206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:24:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pH/fs1Tz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfGBNYN (ORCPT
+        id S1727202AbfGBNYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:24:13 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40948 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725922AbfGBNXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:23:52 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 87E0E767180E0E09C15A;
-        Tue,  2 Jul 2019 21:23:49 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
- 21:23:41 +0800
-From:   Hou Tao <houtao1@huawei.com>
-To:     <linux-raid@vger.kernel.org>, <songliubraving@fb.com>
-CC:     <neilb@suse.com>, <linux-block@vger.kernel.org>,
-        <snitzer@redhat.com>, <agk@redhat.com>, <dm-devel@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <houtao1@huawei.com>
-Subject: [RFC PATCH 0/3] md: export internal stats through debugfs
-Date:   Tue, 2 Jul 2019 21:29:15 +0800
-Message-ID: <20190702132918.114818-1-houtao1@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        Tue, 2 Jul 2019 09:24:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49418 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726457AbfGBNYo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 09:24:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7rc1l8xjQcNnJrXX8VO8O/zmAT9H44ILU0t/xygP104=; b=pH/fs1TzCFFcb3NA+/F7YUbRt
+        LThSb9ESP58N/am1uKzfEekzGQ7XIMhsskBViF6GpOcvUjd7Lmt06qqjkIKCsHTC+mye6ssmwplLT
+        +V3JGQGtYrHYzogf+9MTubRaVXfGV0QXtbCLB8HCQj4LUrCKcSNmBbllTJioDeMYFkp0PKibjKBPa
+        s0bAe+uynyUUKCaWCPWjVScMFQJNVeEGd++IjiN40yXiinBO1wWYZN/4JFytZ+EPdePhWusaF0FEV
+        uDU0ruySomRiWJxfEcUsXT4qfnhfBU+cFpQoYy5KeJCdP83zrPwk7DOtrtf49RsO73Q0O7OH9Wcul
+        E9XiFd7HQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hiIle-0005Jj-HX; Tue, 02 Jul 2019 13:24:18 +0000
+Date:   Tue, 2 Jul 2019 06:24:18 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     Hanjun Guo <guohanjun@huawei.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v3 2/2] riscv: Introduce huge page support for 32/64bit
+ kernel
+Message-ID: <20190702132418.GB17480@infradead.org>
+References: <20190701175900.4034-1-alex@ghiti.fr>
+ <20190701175900.4034-3-alex@ghiti.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701175900.4034-3-alex@ghiti.fr>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> +config ARCH_WANT_GENERAL_HUGETLB
+> +	def_bool y
+> +
+> +config SYS_SUPPORTS_HUGETLBFS
+> +	def_bool y
 
-There are so many io counters, stats and flags in md, so I think
-export these info to userspace will be helpful for online-debugging,
-especially when the vmlinux file and the crash utility are not
-available. And these info can also be utilized during code
-understanding.
+In a perfect world these would be in mm/Kconfig and only selected
+by the architectures.  But I don't want to force you to clean up all
+that mess first, so:
 
-MD has already exported some stats through sysfs files under
-/sys/block/mdX/md, but using sysfs file to export more internal
-stats are not a good choice, because we need to create a single
-sysfs file for each internal stat according to the use convention
-of sysfs and there are too many internal stats. Further, the
-newly-created sysfs files would become APIs for userspace tools,
-but that is not we wanted, because these files are related with
-internal stats and internal stats may change from time to time.
-
-And I think debugfs is a better choice. Because we can show multiple
-related stats in a debugfs file, and the debugfs file will never be
-used as an userspace API.
-
-Two debugfs files are created to expose these internal stats:
-* iostat: io counters and io related stats (e.g., mddev->active_io,
-	r1conf->nr_pending, or r1confi->retry_list)
-* stat: normal stats/flags (e.g., mddev->recovery, conf->array_frozen)
-
-Because internal stats are spreaded all over md-core and md-personality,
-so both md-core and md-personality will create these two debugfs files
-under different debugfs directory.
-
-Patch 1 factors out the debugfs files creation routine for md-core and
-md-personality, patch 2 creates two debugfs files: iostat & stat under
-/sys/kernel/debug/block/mdX for md-core, and patch 3 creates two debugfs
-files: iostat & stat under /sys/kernel/debug/block/mdX/raid1 for md-raid1.
-
-The following lines show the hierarchy and the content of these debugfs
-files for a RAID1 device:
-
-$ pwd
-/sys/kernel/debug/block/md0
-$ tree
-.
-├── iostat
-├── raid1
-│   ├── iostat
-│   └── stat
-└── stat
-
-$ cat iostat
-active_io 0
-sb_wait 0 pending_writes 0
-recovery_active 0
-bitmap pending_writes 0
-
-$ cat stat
-flags 0x20
-sb_flags 0x0
-recovery 0x0
-
-$ cat raid1/iostat
-retry_list active 0
-bio_end_io_list active 0
-pending_bio_list active 0 cnt 0
-sync_pending 0
-nr_pending 0
-nr_waiting 0
-nr_queued 0
-barrier 0
-
-$ cat raid1/stat
-array_frozen 0
-
-I'm not sure whether the division of internal stats is appropriate and
-whether the internal stats in debugfs files are sufficient, so questions
-and comments are weclome.
-
-Regards,
-Tao
-
-Hou Tao (3):
-  md-debugfs: add md_debugfs_create_files()
-  md: export inflight io counters and internal stats in debugfs
-  raid1: export inflight io counters and internal stats in debugfs
-
- drivers/md/Makefile     |  2 +-
- drivers/md/md-debugfs.c | 35 ++++++++++++++++++
- drivers/md/md-debugfs.h | 16 +++++++++
- drivers/md/md.c         | 65 ++++++++++++++++++++++++++++++++++
- drivers/md/md.h         |  1 +
- drivers/md/raid1.c      | 78 +++++++++++++++++++++++++++++++++++++++++
- drivers/md/raid1.h      |  1 +
- 7 files changed, 197 insertions(+), 1 deletion(-)
- create mode 100644 drivers/md/md-debugfs.c
- create mode 100644 drivers/md/md-debugfs.h
-
--- 
-2.22.0
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
