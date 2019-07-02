@@ -2,250 +2,508 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FEFC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D73FBC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40ECA20836
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A165620836
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="LNca50U3"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="Oys2sIxC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfGBMZS (ORCPT
+        id S1727069AbfGBMZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 08:25:18 -0400
-Received: from mail-eopbgr680086.outbound.protection.outlook.com ([40.107.68.86]:4280
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726341AbfGBMZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 08:25:17 -0400
+        Tue, 2 Jul 2019 08:25:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35328 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfGBMZ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 08:25:26 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c27so9891761wrb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 05:25:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XPMkIUvDiHI7f3kP3OP9mw2bnBRuZY05EIeALjI5fsQ=;
- b=LNca50U3bqoQ/dioAA0L3CV8EvEFDxHo+Ny8IdiaAUv9+PmSJm3h6qAzDnhTOMCnahI+f2/EL+mHbQUu/iXez9QbeSwgQZVOFIK/3agKxm9KSHxEEZ0AP5xr5/ChkLn5nQI+xiNACgTJCLMBTyRc4seEfTK4roPOn3wqBMTQO8Q=
-Received: from CH2PR02MB6088.namprd02.prod.outlook.com (52.132.228.94) by
- CH2PR02MB6375.namprd02.prod.outlook.com (52.132.231.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Tue, 2 Jul 2019 12:25:11 +0000
-Received: from CH2PR02MB6088.namprd02.prod.outlook.com
- ([fe80::456d:ace7:7c55:8639]) by CH2PR02MB6088.namprd02.prod.outlook.com
- ([fe80::456d:ace7:7c55:8639%3]) with mapi id 15.20.2032.019; Tue, 2 Jul 2019
- 12:25:11 +0000
-From:   Vishal Sagar <vsagar@xilinx.com>
-To:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Vishal Sagar <vishal.sagar@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Subject: RE: [PATCH v9 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
- Subsystem driver
-Thread-Topic: [PATCH v9 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
- Subsystem driver
-Thread-Index: AQHVID4PYfrRtfYgTECjjXwqUQCuJaa02aUAgAKAjsA=
-Date:   Tue, 2 Jul 2019 12:25:10 +0000
-Message-ID: <CH2PR02MB6088AF87A011C148BA07C7AFA7F80@CH2PR02MB6088.namprd02.prod.outlook.com>
-References: <1560247809-117978-1-git-send-email-vishal.sagar@xilinx.com>
- <1560247809-117978-3-git-send-email-vishal.sagar@xilinx.com>
- <b51bdf5d-4002-5ec6-d687-b97b4f8bbd78@lucaceresoli.net>
-In-Reply-To: <b51bdf5d-4002-5ec6-d687-b97b4f8bbd78@lucaceresoli.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vsagar@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8a281673-4e17-4adf-cb42-08d6fee853bb
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6375;
-x-ms-traffictypediagnostic: CH2PR02MB6375:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <CH2PR02MB6375A8784C81078DBBA0BF14A7F80@CH2PR02MB6375.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 008663486A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(396003)(39860400002)(346002)(199004)(189003)(51914003)(13464003)(74316002)(7736002)(66066001)(305945005)(5660300002)(229853002)(966005)(446003)(2501003)(478600001)(110136005)(8936002)(71190400001)(8676002)(11346002)(25786009)(486006)(33656002)(476003)(71200400001)(81156014)(81166006)(2906002)(68736007)(316002)(7416002)(76176011)(102836004)(53546011)(6506007)(7696005)(6246003)(26005)(66556008)(66446008)(64756008)(66476007)(6116002)(73956011)(66946007)(186003)(52536014)(14444005)(86362001)(76116006)(6306002)(256004)(6436002)(9686003)(3846002)(55016002)(2201001)(53936002)(99286004)(14454004)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6375;H:CH2PR02MB6088.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: NFvY5tW9L9gEjBCakKQwdwBfYixOy9sG4TBHJ2MW7kvBMtEEd6V4BR500MkbAyGTIPRiXoDo2kMhSIAC8KdOfHskgGPMmeV7bKS1/oXj5xQ8gMGicNYnJrrjlj6HxOYSdhNPChzhNVeTOCU8M7GYCWW9jS6bmw1OTga9KI+cCyUdmkYb48LKciN92PxXBDHBJZUIKtcYM5D30l6TA/1AbKG97RsLptBnwjifR4ElxGZ6xWqL0RTc3LbIeowbHY8wmUdjqD48WDvRJhX6rU2v4os1eEuVreFH19WWDlsjqNlUBTB1URwNRVt1Hqdg6Cad1AFjlju3Jd6G75Eh4dWfl2E/abRT7OhRrmjWl8/I1O2VH/4eASDQkx8tlHCkR42lYGT4MlD0cml92tTwSvaa1/3SLUPs11PLnza374h/vgk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GbNC8LbnoEPSih6OLqSSkJED98Mu4T6t/hfxB34ZpQ4=;
+        b=Oys2sIxClbSWvyOFXT/ZsaoDXuBxYswfwf2YTsrU5lu3XbEGk6RjQeB6D8F8IyFN01
+         gjwOHWlxFMMZhywIdRHXZJFA3FFSaDd57pA2cEWuZy3dPsUfZyYr8DLr9Vxj2toD1gvj
+         wgf4HDgLMHEWVRZXLq4BIOEVizruiYombSe+0CkA97bPM6g5h4MOt4DvOIpa3xaKxWKV
+         bsbZKXUv2HCGYL7oaA2IdoCoFX2oRlrBNWfpfkJTO/zj2VqJUc8XC+EDJkJKJrvgSNHU
+         yU0l1c7QXJBoEE7JDu6quxn8OeMWk508eSotWvH54LcYPaCtZR/IvwivPmkd/t9ibDrD
+         7ljg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GbNC8LbnoEPSih6OLqSSkJED98Mu4T6t/hfxB34ZpQ4=;
+        b=DjVsu4ij+WjTbWqaETAorIE0tYKw+z1UYdiEdbOTxpqkmxqyANgG0ErZ3sJNK0Iugb
+         qLZJvyPltvImk9DZCp5GmH3OR6vg32uTsugd2tYr8qxlTR/GZFxyV5X7UOrJj6zTBdgw
+         wqApDh+7fJB/QY3pBPY8wnpbksRVWapVw5ECbmiVdqFhKe02cexknFENGj5zVEWCyFn0
+         Ui7/OyhI1QuVO7BTAUFUzydZYKu7c5Um8uk5xPn8KMUsn1FBtuY6w7ystXbDcMJDo6I3
+         u867ouSmRu3WuWphfFsG9YVIfUjo3fi0JOS2w3rOBLbNUbVzhQhxGC9oyhKfS21R4wnH
+         u9RA==
+X-Gm-Message-State: APjAAAWvqb18yWMoT+0LXnXdaOoY4CZs0MZL8Uc/4Y7kx5lO2/aQyDKd
+        s3rPE78RE0Jo5UOAK/ROP8LxyA==
+X-Google-Smtp-Source: APXvYqw3l6t6u4Pd6vxuTN2nH5DY7F6jzrQcecp1q72lmsA+/NpxIWXShnGnrPh1WWVknC0Udm4Ezw==
+X-Received: by 2002:adf:b64b:: with SMTP id i11mr23570713wre.205.1562070322383;
+        Tue, 02 Jul 2019 05:25:22 -0700 (PDT)
+Received: from localhost (ip-213-220-235-213.net.upcbroadband.cz. [213.220.235.213])
+        by smtp.gmail.com with ESMTPSA id z25sm3856126wmf.38.2019.07.02.05.25.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 05:25:21 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 14:25:21 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 04/15] ethtool: introduce ethtool netlink
+ interface
+Message-ID: <20190702122521.GN2250@nanopsycho>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <e7fa3ad7e9cf4d7a8f9a2085e3166f7260845b0a.1562067622.git.mkubecek@suse.cz>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a281673-4e17-4adf-cb42-08d6fee853bb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2019 12:25:10.8159
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vsagar@xilinx.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6375
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e7fa3ad7e9cf4d7a8f9a2085e3166f7260845b0a.1562067622.git.mkubecek@suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTHVjYSwNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+IEZyb206IEx1Y2EgQ2VyZXNvbGkgW21haWx0bzpsdWNhQGx1Y2FjZXJlc29s
-aS5uZXRdDQo+IFNlbnQ6IE1vbmRheSwgSnVseSAwMSwgMjAxOSAzOjE1IEFNDQo+IFRvOiBWaXNo
-YWwgU2FnYXIgPHZpc2hhbC5zYWdhckB4aWxpbnguY29tPjsgSHl1biBLd29uIDxoeXVua0B4aWxp
-bnguY29tPjsNCj4gbGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tOyBtY2hlaGFiQGtl
-cm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IE1p
-Y2hhbCBTaW1law0KPiA8bWljaGFsc0B4aWxpbnguY29tPjsgbGludXgtbWVkaWFAdmdlci5rZXJu
-ZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgaGFucy52ZXJrdWlsQGNpc2Nv
-LmNvbTsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgRGluZXNoIEt1bWFyDQo+IDxkaW5lc2hrQHhpbGlueC5jb20+
-OyBTYW5kaXAgS290aGFyaSA8c2FuZGlwa0B4aWxpbnguY29tPjsgSmFjb3BvIE1vbmRpDQo+IDxq
-YWNvcG9Aam1vbmRpLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2OSAyLzJdIG1lZGlhOiB2
-NGw6IHhpbGlueDogQWRkIFhpbGlueCBNSVBJIENTSS0yIFJ4DQo+IFN1YnN5c3RlbSBkcml2ZXIN
-Cj4gDQo+IEVYVEVSTkFMIEVNQUlMDQo+IA0KPiBIaSBWaXNoYWwsDQo+IA0KPiBhIGZldyBxdWVz
-dGlvbnMgYmVsb3cgYWJvdXQgdGhlIFNMQkYgZXJyb3IgbWFuYWdlbWVudC4NCj4gDQo+IE9uIDEx
-LzA2LzE5IDEyOjEwLCBWaXNoYWwgU2FnYXIgd3JvdGU6DQo+ID4gVGhlIFhpbGlueCBNSVBJIENT
-SS0yIFJ4IFN1YnN5c3RlbSBzb2Z0IElQIGlzIHVzZWQgdG8gY2FwdHVyZSBpbWFnZXMNCj4gPiBm
-cm9tIE1JUEkgQ1NJLTIgY2FtZXJhIHNlbnNvcnMgYW5kIG91dHB1dCBBWEk0LVN0cmVhbSB2aWRl
-byBkYXRhIHJlYWR5DQo+ID4gZm9yIGltYWdlIHByb2Nlc3NpbmcuIFBsZWFzZSByZWZlciB0byBQ
-RzIzMiBmb3IgZGV0YWlscy4NCj4gPg0KPiA+IFRoZSBkcml2ZXIgaXMgdXNlZCB0byBzZXQgdGhl
-IG51bWJlciBvZiBhY3RpdmUgbGFuZXMsIGlmIGVuYWJsZWQNCj4gPiBpbiBoYXJkd2FyZS4gVGhl
-IENTSTIgUnggY29udHJvbGxlciBmaWx0ZXJzIG91dCBhbGwgcGFja2V0cyBleGNlcHQgZm9yDQo+
-ID4gdGhlIHBhY2tldHMgd2l0aCBkYXRhIHR5cGUgZml4ZWQgaW4gaGFyZHdhcmUuIFJBVzggcGFj
-a2V0cyBhcmUgYWx3YXlzDQo+ID4gYWxsb3dlZCB0byBwYXNzIHRocm91Z2guDQo+ID4NCj4gPiBJ
-dCBpcyBhbHNvIHVzZWQgdG8gc2V0dXAgYW5kIGhhbmRsZSBpbnRlcnJ1cHRzIGFuZCBlbmFibGUg
-dGhlIGNvcmUuIEl0DQo+ID4gbG9ncyBhbGwgdGhlIGV2ZW50cyBpbiByZXNwZWN0aXZlIGNvdW50
-ZXJzIGJldHdlZW4gc3RyZWFtaW5nIG9uIGFuZCBvZmYuDQo+ID4NCj4gPiBUaGUgZHJpdmVyIHN1
-cHBvcnRzIG9ubHkgdGhlIHZpZGVvIGZvcm1hdCBicmlkZ2UgZW5hYmxlZCBjb25maWd1cmF0aW9u
-Lg0KPiA+IFNvbWUgZGF0YSB0eXBlcyBsaWtlIFlVViA0MjIgMTBicGMsIFJBVzE2LCBSQVcyMCBh
-cmUgc3VwcG9ydGVkIHdoZW4NCj4gdGhlDQo+ID4gQ1NJIHYyLjAgZmVhdHVyZSBpcyBlbmFibGVk
-IGluIGRlc2lnbi4gV2hlbiB0aGUgVkNYIGZlYXR1cmUgaXMgZW5hYmxlZCwNCj4gPiB0aGUgbWF4
-aW11bSBudW1iZXIgb2YgdmlydHVhbCBjaGFubmVscyBiZWNvbWVzIDE2IGZyb20gNC4NCj4gPg0K
-PiA+IFNpZ25lZC1vZmYtYnk6IFZpc2hhbCBTYWdhciA8dmlzaGFsLnNhZ2FyQHhpbGlueC5jb20+
-DQo+ID4gUmV2aWV3ZWQtYnk6IEh5dW4gS3dvbiA8aHl1bi5rd29uQHhpbGlueC5jb20+DQo+IA0K
-PiAuLi4NCj4gDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxh
-dGZvcm0veGlsaW54L3hpbGlueC1jc2kycnhzcy5jDQo+IA0KPiAuLi4NCj4gPiArLyoqDQo+ID4g
-KyAqIHhjc2kycnhzc19pcnFfaGFuZGxlciAtIEludGVycnVwdCBoYW5kbGVyIGZvciBDU0ktMg0K
-PiA+ICsgKiBAaXJxOiBJUlEgbnVtYmVyDQo+ID4gKyAqIEBkZXZfaWQ6IFBvaW50ZXIgdG8gZGV2
-aWNlIHN0YXRlDQo+ID4gKyAqDQo+ID4gKyAqIEluIHRoZSBpbnRlcnJ1cHQgaGFuZGxlciwgYSBs
-aXN0IG9mIGV2ZW50IGNvdW50ZXJzIGFyZSB1cGRhdGVkIGZvcg0KPiA+ICsgKiBjb3JyZXNwb25k
-aW5nIGludGVycnVwdHMuIFRoaXMgaXMgdXNlZnVsIHRvIGdldCBzdGF0dXMgLyBkZWJ1Zy4NCj4g
-PiArICoNCj4gPiArICogSW4gY2FzZSBvZiBzdHJlYW0gbGluZSBidWZmZXIgZnVsbCBjb25kaXRp
-b24sIHRoZSBJUCBpcyByZXNldCwgc3RvcHBlZCBhbmQNCj4gPiArICogYW4gZXZlbnQgaXMgcmFp
-c2VkLg0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1cm46IElSUV9IQU5ETEVEIGFmdGVyIGhhbmRsaW5n
-IGludGVycnVwdHMNCj4gPiArICogICAgICAgICBJUlFfTk9ORSBpcyBubyBpbnRlcnJ1cHRzDQo+
-ID4gKyAqLw0KPiA+ICtzdGF0aWMgaXJxcmV0dXJuX3QgeGNzaTJyeHNzX2lycV9oYW5kbGVyKGlu
-dCBpcnEsIHZvaWQgKmRldl9pZCkNCj4gPiArew0KPiA+ICsgICAgIHN0cnVjdCB4Y3NpMnJ4c3Nf
-c3RhdGUgKnN0YXRlID0gKHN0cnVjdCB4Y3NpMnJ4c3Nfc3RhdGUgKilkZXZfaWQ7DQo+ID4gKyAg
-ICAgc3RydWN0IHhjc2kycnhzc19jb3JlICpjb3JlID0gJnN0YXRlLT5jb3JlOw0KPiA+ICsgICAg
-IHUzMiBzdGF0dXM7DQo+ID4gKw0KPiA+ICsgICAgIHN0YXR1cyA9IHhjc2kycnhzc19yZWFkKGNv
-cmUsIFhDU0lfSVNSX09GRlNFVCkgJg0KPiBYQ1NJX0lTUl9BTExJTlRSX01BU0s7DQo+ID4gKyAg
-ICAgZGV2X2RiZ19yYXRlbGltaXRlZChjb3JlLT5kZXYsICJpbnRlcnJ1cHQgc3RhdHVzID0gMHgl
-MDh4XG4iLCBzdGF0dXMpOw0KPiA+ICsNCj4gPiArICAgICBpZiAoIXN0YXR1cykNCj4gPiArICAg
-ICAgICAgICAgIHJldHVybiBJUlFfTk9ORTsNCj4gPiArDQo+ID4gKyAgICAgLyogUmVjZWl2ZWQg
-YSBzaG9ydCBwYWNrZXQgKi8NCj4gPiArICAgICBpZiAoc3RhdHVzICYgWENTSV9JU1JfU1BGSUZP
-TkUpIHsNCj4gPiArICAgICAgICAgICAgIGRldl9kYmdfcmF0ZWxpbWl0ZWQoY29yZS0+ZGV2LCAi
-U2hvcnQgcGFja2V0ID0gMHglMDh4XG4iLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB4Y3NpMnJ4c3NfcmVhZChjb3JlLCBYQ1NJX1NQS1RSX09GRlNFVCkpOw0KPiA+ICsg
-ICAgIH0NCj4gPiArDQo+ID4gKyAgICAgLyogU2hvcnQgcGFja2V0IEZJRk8gb3ZlcmZsb3cgKi8N
-Cj4gPiArICAgICBpZiAoc3RhdHVzICYgWENTSV9JU1JfU1BGSUZPRikNCj4gPiArICAgICAgICAg
-ICAgIGRldl9hbGVydF9yYXRlbGltaXRlZChjb3JlLT5kZXYsICJTaG9ydCBwYWNrZXQgRklGTyBv
-dmVyZmxvd2VkXG4iKTsNCj4gPiArDQo+ID4gKyAgICAgLyoNCj4gPiArICAgICAgKiBTdHJlYW0g
-bGluZSBidWZmZXIgZnVsbA0KPiA+ICsgICAgICAqIFRoaXMgbWVhbnMgdGhlcmUgaXMgYSBiYWNr
-cHJlc3N1cmUgZnJvbSBkb3duc3RyZWFtIElQDQo+ID4gKyAgICAgICovDQo+ID4gKyAgICAgaWYg
-KHN0YXR1cyAmIFhDU0lfSVNSX1NMQkYpIHsNCj4gPiArICAgICAgICAgICAgIGRldl9hbGVydF9y
-YXRlbGltaXRlZChjb3JlLT5kZXYsICJTdHJlYW0gTGluZSBCdWZmZXIgRnVsbCFcbiIpOw0KPiA+
-ICsgICAgICAgICAgICAgaWYgKGNvcmUtPnJzdF9ncGlvKSB7DQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgIGdwaW9kX3NldF92YWx1ZShjb3JlLT5yc3RfZ3BpbywgMSk7DQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgIC8qIG1pbmltdW0gNDAgZHBoeV9jbGtfMjAwTSBjeWNsZXMgKi8NCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgbmRlbGF5KDI1MCk7DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgIGdwaW9kX3NldF92YWx1ZShjb3JlLT5yc3RfZ3BpbywgMCk7DQo+ID4gKyAgICAgICAgICAg
-ICB9DQo+ID4gKyAgICAgICAgICAgICB4Y3NpMnJ4c3Nfc3RvcF9zdHJlYW0oc3RhdGUpOw0KPiAN
-Cj4gSSd2ZSBiZWVuIGhpdCBieSB0aGUgZHJlYWRmdWwgIlN0cmVhbSBMaW5lIEJ1ZmZlciBGdWxs
-IiBlcnJvciwgZ2V0dGluZw0KPiB0aGUgQ1NJLTIgUlggY29tcGxldGVseSBzdHVjayBpbiBTTEJG
-IGFuZCBub3QgdHJhbnNtaXR0aW5nIGFueSBmcmFtZXMNCj4gc3BvcmFkaWNhbGx5IGFmdGVyIGds
-aXRjaGVzIGluIHRoZSBpbmNvbWluZyBNSVBJIHN0cmVhbS4gQW5kIEkgZm91bmQNCj4gdGhhdCBh
-ZGRpbmcgeGNzaTJyeHNzX3N0YXJ0X3N0cmVhbSgpIGhlcmUganVzdCBhZnRlcg0KPiB4Y3NpMnJ4
-c3Nfc3RvcF9zdHJlYW0oKSBhbGxvd3MgdG8gY29udGludWUgdGhlIHN0cmVhbSB3aXRoIGFsbW9z
-dCBubw0KPiBpbnRlcnJ1cHRpb24gYW5kIHdpdGhvdXQgdXNlcnNwYWNlIGludGVydmVudGlvbi4N
-Cj4gDQo+IERvIHlvdSB0aGluayB0aGlzIGlzIGEgcmVsaWFibGUgc29sdXRpb24sIG9yIGRvZXMg
-aXQgaGF2ZSBzaWRlLWVmZmVjdHMgSQ0KPiBkaWRuJ3QgZW5jb3VudGVyPyBOb3RlIEknbSBub3Qg
-dXNpbmcgcG0gbm9yIHRoZSBjdHJscywgc28gcmVnaXN0ZXINCj4gd3JpdGVzIGFyZSBsaW1pdGVk
-IHRvIHRoZSBlbmFibGUvZGlzYWJsZSBjb2RlIHBhdGhzLg0KPiANCg0KV2hlbiBhIHN0cmVhbSBs
-aW5lIGJ1ZmZlciBmdWxsIGNvbmRpdGlvbiBvY2N1cnMgaXQgbWVhbnMgdGhhdCB0aGVyZSBpcyBh
-IHJhdGUgbWlzbWF0Y2guDQpJdCBpcyBiZXN0IHRvIHJlY2hlY2sgdGhlIGRlc2lnbi4gSGVuY2Ug
-dGhlIGludGVudGlvbiBvZiB0aGUgY29kZSBpcyB0byBub3RpZnkgYWJvdXQgdGhpcyBlcnJvciBh
-bmQgc3RvcCBzdHJlYW1pbmcuDQoNCklmIHlvdSB3YW50IHRvIHJlc3RhcnQgc3RyZWFtaW5nIHRo
-ZW4gdGhlIGNvcnJlY3Qgc2VxdWVuY2Ugd291bGQgYmUgdG8gDQoxIC0gc3RvcCBzdHJlYW0gDQoy
-IC0gYXBwbHkgdmlkZW9fYXJlc2V0bg0KMyAtIHN0YXJ0IHN0cmVhbQ0KDQpJIHdpbGwgY29ycmVj
-dCBteSBzZXF1ZW5jZSB0byB0byBzdG9wIHRoZSBzdHJlYW0gZmlyc3QgYW5kIHRoZW4gYXBwbHkg
-dmlkZW9fYXJlc2V0bi4NCkJ1dCByZXN0YXJ0aW5nIHRoZSBzdHJlYW0gd2lsbCBvbmx5IG1hc2sg
-dGhlIGRlc2lnbiAvIHN5c3RlbSBpc3N1ZS4NClNvIEkgdGhpbmsgaXQgaXMgYmV0dGVyIHRvIHN0
-b3AgdGhlIHN0cmVhbS4NCg0KPiBEb2VzIHZpZGVvX2FyZXNldG4gYWxzbyByZXNldCByZWdpc3Rl
-cnM/DQo+IA0KDQpBcHBseWluZyB0aGUgdmlkZW9fYXJlc2V0biBvbmx5IHJlc2V0cyB0aGUgSVAg
-bG9naWMgYW5kIG5vdCB0aGUgcmVnaXN0ZXJzLg0KDQo+IEJUVyBpbiBteSBjb2RlIEkgYWxzbyBt
-b3ZlZCB4Y3NpMnJ4c3Nfc3RvcF9zdHJlYW0oKSBiZWZvcmUgdGhlIGlmDQo+IChjb3JlLT5yc3Rf
-Z3Bpbykge30uIFRoZXJlIGlzIG5vIHN0cm9uZyByZWFzb24gZm9yIHRoaXMsIEkgZGlkbid0DQo+
-IG9ic2VydmUgYW55IGZ1bmN0aW9uYWwgZGlmZmVyZW5jZSwgaXQganVzdCBsb29rcw0KPiBtb3Jl
-IGxvZ2ljYWwgdG8gbWUgdG8gc3RvcCB0aGUgSVAgYmVmb3JlIHJlc2V0dGluZyBpdC4NCj4gDQoN
-ClRoYXQgaXMgcmlnaHQuDQoNCj4gLi4uDQo+IA0KPiA+ICtzdGF0aWMgaW50IHhjc2kycnhzc19w
-cm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICt7DQo+ID4gKyAgICAgc3Ry
-dWN0IHY0bDJfc3ViZGV2ICpzdWJkZXY7DQo+ID4gKyAgICAgc3RydWN0IHhjc2kycnhzc19zdGF0
-ZSAqeGNzaTJyeHNzOw0KPiA+ICsgICAgIHN0cnVjdCB4Y3NpMnJ4c3NfY29yZSAqY29yZTsNCj4g
-PiArICAgICBzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4gPiArICAgICBpbnQgcmV0LCBudW1fY3Ry
-bHMsIGk7DQo+ID4gKw0KPiA+ICsgICAgIHhjc2kycnhzcyA9IGRldm1fa3phbGxvYygmcGRldi0+
-ZGV2LCBzaXplb2YoKnhjc2kycnhzcyksIEdGUF9LRVJORUwpOw0KPiA+ICsgICAgIGlmICgheGNz
-aTJyeHNzKQ0KPiA+ICsgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsg
-ICAgIGNvcmUgPSAmeGNzaTJyeHNzLT5jb3JlOw0KPiA+ICsgICAgIGNvcmUtPmRldiA9ICZwZGV2
-LT5kZXY7DQo+ID4gKw0KPiA+ICsgICAgIGNvcmUtPmNsa3MgPSBkZXZtX2ttZW1kdXAoY29yZS0+
-ZGV2LCB4Y3NpMnJ4c3NfY2xrcywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHNpemVvZih4Y3NpMnJ4c3NfY2xrcyksIEdGUF9LRVJORUwpOw0KPiA+ICsgICAgIGlmICghY29y
-ZS0+Y2xrcykNCj4gPiArICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiA+ICsNCj4gPiAr
-ICAgICAvKiBSZXNldCBHUElPICovDQo+ID4gKyAgICAgY29yZS0+cnN0X2dwaW8gPSBkZXZtX2dw
-aW9kX2dldF9vcHRpb25hbChjb3JlLT5kZXYsICJyZXNldCIsDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBHUElPRF9PVVRfSElHSCk7DQo+IA0KPiBJ
-cyBHUElPRF9PVVRfSElHSCBjb3JyZWN0PyB2aWRlb19hcmVzZXRuIGlzIGFjdGl2ZSBsb3cuDQoN
-ClRoaXMgaXMgY29ycmVjdC4gSW4gdGhlIGRldmljZSB0cmVlLCB3ZSBtYXJrIHRoaXMgYXMgcmVz
-ZXQtZ3BpbyB3aXRoIEdQSU9fQUNUSVZFX0xPVy4NClBsZWFzZSByZWZlciB0byBodHRwczovL3d3
-dy5rZXJuZWwub3JnL2RvYy9Eb2N1bWVudGF0aW9uL2dwaW8vYm9hcmQudHh0IHBvd2VyLWdwaW9z
-IGV4YW1wbGUuDQoNCj4gDQo+ID4gKyAgICAgaWYgKElTX0VSUihjb3JlLT5yc3RfZ3BpbykpIHsN
-Cj4gPiArICAgICAgICAgICAgIGlmIChQVFJfRVJSKGNvcmUtPnJzdF9ncGlvKSAhPSAtRVBST0JF
-X0RFRkVSKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKGNvcmUtPmRldiwgIlZp
-ZGVvIFJlc2V0IEdQSU8gbm90IHNldHVwIGluIERUIik7DQo+ID4gKyAgICAgICAgICAgICByZXR1
-cm4gUFRSX0VSUihjb3JlLT5yc3RfZ3Bpbyk7DQo+ID4gKyAgICAgfQ0KPiA+ICsNCj4gPiArICAg
-ICBtdXRleF9pbml0KCZ4Y3NpMnJ4c3MtPmxvY2spOw0KPiA+ICsNCj4gPiArICAgICByZXQgPSB4
-Y3NpMnJ4c3NfcGFyc2Vfb2YoeGNzaTJyeHNzKTsNCj4gPiArICAgICBpZiAocmV0IDwgMCkNCj4g
-PiArICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsgICAgIHJlcyA9IHBsYXRm
-b3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7DQo+ID4gKyAgICAgY29y
-ZS0+aW9tZW0gPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoY29yZS0+ZGV2LCByZXMpOw0KPiA+ICsg
-ICAgIGlmIChJU19FUlIoY29yZS0+aW9tZW0pKQ0KPiA+ICsgICAgICAgICAgICAgcmV0dXJuIFBU
-Ul9FUlIoY29yZS0+aW9tZW0pOw0KPiA+ICsNCj4gPiArICAgICBjb3JlLT5udW1fY2xrcyA9IEFS
-UkFZX1NJWkUoeGNzaTJyeHNzX2Nsa3MpOw0KPiA+ICsNCj4gPiArICAgICByZXQgPSBjbGtfYnVs
-a19nZXQoY29yZS0+ZGV2LCBjb3JlLT5udW1fY2xrcywgY29yZS0+Y2xrcyk7DQo+ID4gKyAgICAg
-aWYgKHJldCkNCj4gPiArICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsgICAg
-IHJldCA9IGNsa19idWxrX3ByZXBhcmVfZW5hYmxlKGNvcmUtPm51bV9jbGtzLCBjb3JlLT5jbGtz
-KTsNCj4gPiArICAgICBpZiAocmV0KQ0KPiA+ICsgICAgICAgICAgICAgZ290byBlcnJfY2xrX3B1
-dDsNCj4gPiArDQo+ID4gKyAgICAgaWYgKHhjc2kycnhzcy0+Y29yZS5yc3RfZ3Bpbykgew0KPiA+
-ICsgICAgICAgICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKHhjc2kycnhzcy0+Y29yZS5y
-c3RfZ3BpbywgMSk7DQo+ID4gKyAgICAgICAgICAgICAvKiBtaW5pbXVtIG9mIDQwIGRwaHlfY2xr
-XzIwME0gY3ljbGVzICovDQo+ID4gKyAgICAgICAgICAgICB1c2xlZXBfcmFuZ2UoMSwgMik7DQo+
-ID4gKyAgICAgICAgICAgICBncGlvZF9zZXRfdmFsdWVfY2Fuc2xlZXAoeGNzaTJyeHNzLT5jb3Jl
-LnJzdF9ncGlvLCAwKTsNCj4gPiArICAgICB9DQo+IA0KPiAieGNzaTJyeHNzLT5jb3JlIiAtPiAi
-Y29yZSIgaW4gdGhlc2UgbGluZXMuDQo+IA0KDQpBZ3JlZS4gSSB3aWxsIGZpeCB0aGlzIGluIG5l
-eHQgdmVyc2lvbi4gDQoNClJlZ2FyZHMNCg0KVmlzaGFsIFNhZ2FyDQoNCj4gVGhhbmtzLA0KPiAt
-LQ0KPiBMdWNhDQo=
+Tue, Jul 02, 2019 at 01:49:59PM CEST, mkubecek@suse.cz wrote:
+>Basic genetlink and init infrastructure for the netlink interface, register
+>genetlink family "ethtool". Add CONFIG_ETHTOOL_NETLINK Kconfig option to
+>make the build optional. Add initial overall interface description into
+>Documentation/networking/ethtool-netlink.txt, further patches will add more
+>detailed information.
+>
+>Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+>---
+> Documentation/networking/ethtool-netlink.txt | 208 +++++++++++++++++++
+> include/linux/ethtool_netlink.h              |   9 +
+> include/uapi/linux/ethtool_netlink.h         |  36 ++++
+> net/Kconfig                                  |   8 +
+> net/ethtool/Makefile                         |   6 +-
+> net/ethtool/netlink.c                        |  33 +++
+> net/ethtool/netlink.h                        |  10 +
+> 7 files changed, 309 insertions(+), 1 deletion(-)
+> create mode 100644 Documentation/networking/ethtool-netlink.txt
+> create mode 100644 include/linux/ethtool_netlink.h
+> create mode 100644 include/uapi/linux/ethtool_netlink.h
+> create mode 100644 net/ethtool/netlink.c
+> create mode 100644 net/ethtool/netlink.h
+>
+>diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
+>new file mode 100644
+>index 000000000000..97c369aa290b
+>--- /dev/null
+>+++ b/Documentation/networking/ethtool-netlink.txt
+>@@ -0,0 +1,208 @@
+>+                        Netlink interface for ethtool
+>+                        =============================
+>+
+>+
+>+Basic information
+>+-----------------
+>+
+>+Netlink interface for ethtool uses generic netlink family "ethtool" (userspace
+>+application should use macros ETHTOOL_GENL_NAME and ETHTOOL_GENL_VERSION
+>+defined in <linux/ethtool_netlink.h> uapi header). This family does not use
+>+a specific header, all information in requests and replies is passed using
+>+netlink attributes.
+>+
+>+The ethtool netlink interface uses extended ACK for error and warning
+>+reporting, userspace application developers are encouraged to make these
+>+messages available to user in a suitable way.
+>+
+>+Requests can be divided into three categories: "get" (retrieving information),
+>+"set" (setting parameters) and "action" (invoking an action).
+>+
+>+All "set" and "action" type requests require admin privileges (CAP_NET_ADMIN
+>+in the namespace). Most "get" type requests are allowed for anyone but there
+>+are exceptions (where the response contains sensitive information). In some
+>+cases, the request as such is allowed for anyone but unprivileged users have
+>+attributes with sensitive information (e.g. wake-on-lan password) omitted.
+>+
+>+
+>+Conventions
+>+-----------
+>+
+>+Attributes which represent a boolean value usually use u8 type so that we can
+>+distinguish three states: "on", "off" and "not present" (meaning the
+>+information is not available in "get" requests or value is not to be changed
+>+in "set" requests). For these attributes, the "true" value should be passed as
+>+number 1 but any non-zero value should be understood as "true" by recipient.
+>+
+>+In the message structure descriptions below, if an attribute name is suffixed
+>+with "+", parent nest can contain multiple attributes of the same type. This
+>+implements an array of entries.
+>+
+>+
+>+Request header
+>+--------------
+>+
+>+Each request or reply message contains a nested attribute with common header.
+>+Structure of this header is
+
+Missing ":"
+
+
+>+
+>+    ETHTOOL_A_HEADER_DEV_INDEX	(u32)		device ifindex
+>+    ETHTOOL_A_HEADER_DEV_NAME	(string)	device name
+>+    ETHTOOL_A_HEADER_INFOMASK	(u32)		info mask
+>+    ETHTOOL_A_HEADER_GFLAGS	(u32)		flags common for all requests
+>+    ETHTOOL_A_HEADER_RFLAGS	(u32)		request specific flags
+>+
+>+ETHTOOL_A_HEADER_DEV_INDEX and ETHTOOL_A_HEADER_DEV_NAME identify the device
+>+message relates to. One of them is sufficient in requests, if both are used,
+>+they must identify the same device. Some requests, e.g. global string sets, do
+>+not require device identification. Most GET requests also allow dump requests
+>+without device identification to query the same information for all devices
+>+providing it (each device in a separate message).
+>+
+>+Optional info mask allows to ask only for a part of data provided by GET
+
+How this "infomask" works? What are the bits related to? Is that request
+specific?
+
+
+>+request types. If omitted or zero, all data is returned. The two flag bitmaps
+>+allow enabling requestoptions; ETHTOOL_A_HEADER_GFLAGS are global flags common
+
+s/requestoptions;/request options./  ?
+
+
+>+for all request types, flags recognized in ETHTOOL_A_HEADER_RFLAGS and their
+>+interpretation are specific for each request type. Global flags are
+>+
+>+    ETHTOOL_RF_COMPACT		use compact format bitsets in reply
+
+Why "RF"? Isn't this "GF"? I would like "ETHTOOL_GFLAG_COMPACT" better.
+
+
+>+    ETHTOOL_RF_REPLY		send optional reply (SET and ACT requests)
+>+
+>+Request specific flags are described with each request type. For both flag
+>+attributes, new flags should follow the general idea that if the flag is not
+>+set, the behaviour is the same as (or closer to) the behaviour before it was
+
+"closer to" ? That would be unfortunate I believe...
+
+
+>+introduced.
+>+
+>+
+>+List of message types
+>+---------------------
+>+
+>+All constants identifying message types use ETHTOOL_CMD_ prefix and suffix
+>+according to message purpose:
+>+
+>+    _GET	userspace request to retrieve data
+>+    _SET	userspace request to set data
+>+    _ACT	userspace request to perform an action
+>+    _GET_REPLY	kernel reply to a GET request
+>+    _SET_REPLY	kernel reply to a SET request
+>+    _ACT_REPLY  kernel reply to an ACT request
+>+    _NTF	kernel notification
+>+
+>+"GET" requests are sent by userspace applications to retrieve device
+>+information. They usually do not contain any message specific attributes.
+>+Kernel replies with corresponding "GET_REPLY" message. For most types, "GET"
+>+request with NLM_F_DUMP and no device identification can be used to query the
+>+information for all devices supporting the request.
+>+
+>+If the data can be also modified, corresponding "SET" message with the same
+>+layout as "GET" reply is used to request changes. Only attributes where
+
+s/"GET" reply"/"GET_REPLY" ?
+Maybe better to emphasize that the "GET_REPLY" is the one corresponding
+with "SET". But perhaps I got this sentence all wrong :/
+
+
+>+a change is requested are included in such request (also, not all attributes
+>+may be changed). Replies to most "SET" request consist only of error code and
+>+extack; if kernel provides additional data, it is sent in the form of
+>+corresponding "SET_REPLY" message (if ETHTOOL_RF_REPLY flag was set in request
+>+header).
+>+
+>+Data modification also triggers sending a "NTF" message with a notification.
+>+These usually bear only a subset of attributes which was affected by the
+>+change. The same notification is issued if the data is modified using other
+>+means (mostly ioctl ethtool interface). Unlike notifications from ethtool
+>+netlink code which are only sent if something actually changed, notifications
+>+triggered by ioctl interface may be sent even if the request did not actually
+>+change any data.
+
+Interesting. What's the reason for that?
+
+
+>+
+>+"ACT" messages request kernel (driver) to perform a specific action. If some
+>+information is reported by kernel (as requested by ETHTOOL_RF_REPLY flag in
+>+request header), the reply takes form of an "ACT_REPLY" message. Performing an
+>+action also triggers a notification ("NTF" message).
+>+
+>+Later sections describe the format and semantics of these messages.
+>+
+>+
+>+Request translation
+>+-------------------
+>+
+>+The following table maps ioctl commands to netlink commands providing their
+>+functionality. Entries with "n/a" in right column are commands which do not
+>+have their netlink replacement yet.
+>+
+>+ioctl command			netlink command
+>+---------------------------------------------------------------------
+>+ETHTOOL_GSET			n/a
+>+ETHTOOL_SSET			n/a
+>+ETHTOOL_GDRVINFO		n/a
+>+ETHTOOL_GREGS			n/a
+>+ETHTOOL_GWOL			n/a
+>+ETHTOOL_SWOL			n/a
+>+ETHTOOL_GMSGLVL			n/a
+>+ETHTOOL_SMSGLVL			n/a
+>+ETHTOOL_NWAY_RST		n/a
+>+ETHTOOL_GLINK			n/a
+>+ETHTOOL_GEEPROM			n/a
+>+ETHTOOL_SEEPROM			n/a
+>+ETHTOOL_GCOALESCE		n/a
+>+ETHTOOL_SCOALESCE		n/a
+>+ETHTOOL_GRINGPARAM		n/a
+>+ETHTOOL_SRINGPARAM		n/a
+>+ETHTOOL_GPAUSEPARAM		n/a
+>+ETHTOOL_SPAUSEPARAM		n/a
+>+ETHTOOL_GRXCSUM			n/a
+>+ETHTOOL_SRXCSUM			n/a
+>+ETHTOOL_GTXCSUM			n/a
+>+ETHTOOL_STXCSUM			n/a
+>+ETHTOOL_GSG			n/a
+>+ETHTOOL_SSG			n/a
+>+ETHTOOL_TEST			n/a
+>+ETHTOOL_GSTRINGS		n/a
+>+ETHTOOL_PHYS_ID			n/a
+>+ETHTOOL_GSTATS			n/a
+>+ETHTOOL_GTSO			n/a
+>+ETHTOOL_STSO			n/a
+>+ETHTOOL_GPERMADDR		rtnetlink RTM_GETLINK
+>+ETHTOOL_GUFO			n/a
+>+ETHTOOL_SUFO			n/a
+>+ETHTOOL_GGSO			n/a
+>+ETHTOOL_SGSO			n/a
+>+ETHTOOL_GFLAGS			n/a
+>+ETHTOOL_SFLAGS			n/a
+>+ETHTOOL_GPFLAGS			n/a
+>+ETHTOOL_SPFLAGS			n/a
+>+ETHTOOL_GRXFH			n/a
+>+ETHTOOL_SRXFH			n/a
+>+ETHTOOL_GGRO			n/a
+>+ETHTOOL_SGRO			n/a
+>+ETHTOOL_GRXRINGS		n/a
+>+ETHTOOL_GRXCLSRLCNT		n/a
+>+ETHTOOL_GRXCLSRULE		n/a
+>+ETHTOOL_GRXCLSRLALL		n/a
+>+ETHTOOL_SRXCLSRLDEL		n/a
+>+ETHTOOL_SRXCLSRLINS		n/a
+>+ETHTOOL_FLASHDEV		n/a
+>+ETHTOOL_RESET			n/a
+>+ETHTOOL_SRXNTUPLE		n/a
+>+ETHTOOL_GRXNTUPLE		n/a
+>+ETHTOOL_GSSET_INFO		n/a
+>+ETHTOOL_GRXFHINDIR		n/a
+>+ETHTOOL_SRXFHINDIR		n/a
+>+ETHTOOL_GFEATURES		n/a
+>+ETHTOOL_SFEATURES		n/a
+>+ETHTOOL_GCHANNELS		n/a
+>+ETHTOOL_SCHANNELS		n/a
+>+ETHTOOL_SET_DUMP		n/a
+>+ETHTOOL_GET_DUMP_FLAG		n/a
+>+ETHTOOL_GET_DUMP_DATA		n/a
+>+ETHTOOL_GET_TS_INFO		n/a
+>+ETHTOOL_GMODULEINFO		n/a
+>+ETHTOOL_GMODULEEEPROM		n/a
+>+ETHTOOL_GEEE			n/a
+>+ETHTOOL_SEEE			n/a
+>+ETHTOOL_GRSSH			n/a
+>+ETHTOOL_SRSSH			n/a
+>+ETHTOOL_GTUNABLE		n/a
+>+ETHTOOL_STUNABLE		n/a
+>+ETHTOOL_GPHYSTATS		n/a
+>+ETHTOOL_PERQUEUE		n/a
+>+ETHTOOL_GLINKSETTINGS		n/a
+>+ETHTOOL_SLINKSETTINGS		n/a
+>+ETHTOOL_PHY_GTUNABLE		n/a
+>+ETHTOOL_PHY_STUNABLE		n/a
+>+ETHTOOL_GFECPARAM		n/a
+>+ETHTOOL_SFECPARAM		n/a
+>diff --git a/include/linux/ethtool_netlink.h b/include/linux/ethtool_netlink.h
+>new file mode 100644
+>index 000000000000..0412adb4f42f
+>--- /dev/null
+>+++ b/include/linux/ethtool_netlink.h
+>@@ -0,0 +1,9 @@
+>+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>+
+>+#ifndef _LINUX_ETHTOOL_NETLINK_H_
+>+#define _LINUX_ETHTOOL_NETLINK_H_
+>+
+>+#include <uapi/linux/ethtool_netlink.h>
+>+#include <linux/ethtool.h>
+>+
+>+#endif /* _LINUX_ETHTOOL_NETLINK_H_ */
+>diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+>new file mode 100644
+>index 000000000000..9a0fbd4f85d9
+>--- /dev/null
+>+++ b/include/uapi/linux/ethtool_netlink.h
+>@@ -0,0 +1,36 @@
+>+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>+/*
+>+ * include/uapi/linux/ethtool_netlink.h - netlink interface for ethtool
+>+ *
+>+ * See Documentation/networking/ethtool-netlink.txt in kernel source tree for
+>+ * doucumentation of the interface.
+>+ */
+>+
+>+#ifndef _UAPI_LINUX_ETHTOOL_NETLINK_H_
+>+#define _UAPI_LINUX_ETHTOOL_NETLINK_H_
+>+
+>+#include <linux/ethtool.h>
+>+
+>+/* message types - userspace to kernel */
+>+enum {
+>+	ETHTOOL_MSG_USER_NONE,
+>+
+>+	/* add new constants above here */
+>+	__ETHTOOL_MSG_USER_CNT,
+>+	ETHTOOL_MSG_USER_MAX = (__ETHTOOL_MSG_USER_CNT - 1)
+>+};
+>+
+>+/* message types - kernel to userspace */
+>+enum {
+>+	ETHTOOL_MSG_KERNEL_NONE,
+>+
+>+	/* add new constants above here */
+>+	__ETHTOOL_MSG_KERNEL_CNT,
+>+	ETHTOOL_MSG_KERNEL_MAX = (__ETHTOOL_MSG_KERNEL_CNT - 1)
+>+};
+>+
+>+/* generic netlink info */
+>+#define ETHTOOL_GENL_NAME "ethtool"
+>+#define ETHTOOL_GENL_VERSION 1
+>+
+>+#endif /* _UAPI_LINUX_ETHTOOL_NETLINK_H_ */
+>diff --git a/net/Kconfig b/net/Kconfig
+>index 57f51a279ad6..65b760d26eec 100644
+>--- a/net/Kconfig
+>+++ b/net/Kconfig
+>@@ -447,6 +447,14 @@ config FAILOVER
+> 	  migration of VMs with direct attached VFs by failing over to the
+> 	  paravirtual datapath when the VF is unplugged.
+> 
+>+config ETHTOOL_NETLINK
+>+	bool "Netlink interface for ethtool"
+>+	default y
+>+	help
+>+	  An alternative userspace interface for ethtool based on generic
+>+	  netlink. It provides better extensibility and some new features,
+>+	  e.g. notification messages.
+>+
+> endif   # if NET
+> 
+> # Used by archs to tell that they support BPF JIT compiler plus which flavour.
+>diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
+>index 3ebfab2bca66..f30e0da88be5 100644
+>--- a/net/ethtool/Makefile
+>+++ b/net/ethtool/Makefile
+>@@ -1,3 +1,7 @@
+> # SPDX-License-Identifier: GPL-2.0
+> 
+>-obj-y		+= ioctl.o
+>+obj-y				+= ioctl.o
+>+
+>+obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
+
+Hmm, I wonder, why not to make this always on? We want users to use
+it, memory savings in case it is off would be minimal. RTNetlink is also
+always on. Ethtool ioctl is also always on.
+
+
+>+
+>+ethtool_nl-y	:= netlink.o
+>diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+>new file mode 100644
+>index 000000000000..3c98b41f04e5
+>--- /dev/null
+>+++ b/net/ethtool/netlink.c
+>@@ -0,0 +1,33 @@
+>+// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+>+
+>+#include <linux/ethtool_netlink.h>
+>+#include "netlink.h"
+>+
+>+/* genetlink setup */
+>+
+>+static const struct genl_ops ethtool_genl_ops[] = {
+>+};
+>+
+>+static struct genl_family ethtool_genl_family = {
+>+	.name		= ETHTOOL_GENL_NAME,
+>+	.version	= ETHTOOL_GENL_VERSION,
+>+	.netnsok	= true,
+>+	.parallel_ops	= true,
+>+	.ops		= ethtool_genl_ops,
+>+	.n_ops		= ARRAY_SIZE(ethtool_genl_ops),
+>+};
+>+
+>+/* module setup */
+>+
+>+static int __init ethnl_init(void)
+>+{
+>+	int ret;
+>+
+>+	ret = genl_register_family(&ethtool_genl_family);
+>+	if (WARN(ret < 0, "ethtool: genetlink family registration failed"))
+
+WARN(ret, ...)
+
+
+>+		return ret;
+>+
+>+	return 0;
+>+}
+>+
+>+subsys_initcall(ethnl_init);
+>diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+>new file mode 100644
+>index 000000000000..257ae55ccc82
+>--- /dev/null
+>+++ b/net/ethtool/netlink.h
+>@@ -0,0 +1,10 @@
+>+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>+
+>+#ifndef _NET_ETHTOOL_NETLINK_H
+>+#define _NET_ETHTOOL_NETLINK_H
+>+
+>+#include <linux/ethtool_netlink.h>
+>+#include <linux/netdevice.h>
+>+#include <net/genetlink.h>
+>+
+>+#endif /* _NET_ETHTOOL_NETLINK_H */
+>-- 
+>2.22.0
+>
