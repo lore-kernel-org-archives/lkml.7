@@ -2,431 +2,117 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB79DC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCC3C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0C72146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B281220836
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfGBI3f (ORCPT
+        id S1726305AbfGBIfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:29:35 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42556 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfGBI3f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:29:35 -0400
-Received: by mail-qk1-f193.google.com with SMTP id b18so13233279qkc.9
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 01:29:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=avPADrNZKD5smM8DxadGc+u4RSiZjwPu6bB+MocXEfM=;
-        b=NgAFaxZ/sfFymMCb/x9wQFSPAH7Tqb7VdG3tjmF/S05xLnS2rjczYT/WgbMYfod4ip
-         MlxrkzqK7Ig93NVntdxutos572HNcoavtAs5t4ApDGf95b9BzeoK8s9fKUxyiGfg4+nw
-         VzHZRefubXvQAPJg3efugIRI1Z7YYULz5RtmA8HNhkXyL98XOQy+Krlsb3xlcEHT8odk
-         R6G6svKfCkeAbJfw3dUMq9fzYDRxUuMBE1WJd/M6aUFzkeDs7goprPE0415sYj0ToAiI
-         w96u/Jud3V0b0zXRLigQbJbkq2O9l/FnF66gzmy4fdiHfx2Mb+rPKeZ8mOH4QtF2XKt0
-         VikA==
-X-Gm-Message-State: APjAAAXMi/vvGYeCgkK+VQun0OgpOMkssEalmmmVHoU3mye/xusV/sYE
-        eVdgbO8HJiFDJCSReZpKx5Q24XN5X9/gH0wGScVvzQ==
-X-Google-Smtp-Source: APXvYqyalmgcKSF/FkPpvrUSvmXRKX2CkN6+c87uGJYUiCH5bAuklsXfR5g/fdGriRHu5RkdGoLaD7KXr1uxcIvoUB8=
-X-Received: by 2002:a37:8145:: with SMTP id c66mr23526293qkd.459.1562056173659;
- Tue, 02 Jul 2019 01:29:33 -0700 (PDT)
+        Tue, 2 Jul 2019 04:35:17 -0400
+Received: from mga01.intel.com ([192.55.52.88]:56562 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfGBIfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:35:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 01:35:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,442,1557212400"; 
+   d="scan'208";a="163948244"
+Received: from xpf-desktop.sh.intel.com (HELO xpf-desktop) ([10.239.13.102])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Jul 2019 01:35:14 -0700
+Date:   Tue, 2 Jul 2019 16:40:18 +0800
+From:   Pengfei Xu <pengfei.xu@intel.com>
+To:     Li Wang <liwang@redhat.com>
+Cc:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, tglx@linutronix.de,
+        kernellwp@gmail.com, ricardo.neri@intel.com,
+        LTP List <ltp@lists.linux.it>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ping Fang <pifang@redhat.com>
+Subject: Re: [Kernel BUG?] SMSW operation get success on UMIP KVM guest
+Message-ID: <20190702084018.tnwefzqzar3xiaww@xpf-desktop>
+References: <CAEemH2cg01cdz=amrCWU00Xof9+cxmfR_DqCBaQe36QoGsakmA@mail.gmail.com>
+ <5622c0ac-236f-4e3e-a132-c8d3bd8fadc4@redhat.com>
+ <CAEemH2fqMpoiBo+asyawHsOWgdXy-ggV0mwQs9A9EJ1kh=uhAA@mail.gmail.com>
+ <20190701160352.GA19921@ranerica-svr.sc.intel.com>
+ <CAEemH2fR98TBHaOM37aGmzbgdZ_XPokJeUNN6dU1r=1WhOSmEw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190701102010.6611-1-hadess@hadess.net>
-In-Reply-To: <20190701102010.6611-1-hadess@hadess.net>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 2 Jul 2019 10:29:21 +0200
-Message-ID: <CAO-hwJ+hHKqZeOfpnWkU57RwzD4m6U9afG7iMND=OGZodzS1GQ@mail.gmail.com>
-Subject: Re: [PATCH v5] HID: sb0540: add support for Creative SB0540 IR receivers
-To:     Bastien Nocera <hadess@hadess.net>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Bastien Nocera <bnocera@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEemH2fR98TBHaOM37aGmzbgdZ_XPokJeUNN6dU1r=1WhOSmEw@mail.gmail.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 12:20 PM Bastien Nocera <hadess@hadess.net> wrote:
->
-> From: Bastien Nocera <bnocera@redhat.com>
->
-> Add a new hid driver for the Creative SB0540 IR receiver. This receiver
-> is usually coupled with an RM-1500 or an RM-1800 remote control.
->
-> The scrollwheels on the RM-1800 remote are not bound, as they are
-> labelled for specific audio controls that don't usually exist on most
-> systems. They can be remapped using standard Linux keyboard
-> remapping tools.
->
-> Signed-off-by: Bastien Nocera <bnocera@redhat.com>
-> ---
->  MAINTAINERS                       |   6 +
->  drivers/hid/Kconfig               |   9 +
->  drivers/hid/Makefile              |   1 +
->  drivers/hid/hid-creative-sb0540.c | 268 ++++++++++++++++++++++++++++++
->  drivers/hid/hid-ids.h             |   1 +
->  5 files changed, 285 insertions(+)
->  create mode 100644 drivers/hid/hid-creative-sb0540.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d0ed735994a5..6fc022d152c8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4227,6 +4227,12 @@ S:       Maintained
->  F:     Documentation/filesystems/cramfs.txt
->  F:     fs/cramfs/
->
-> +CREATIVE SB0540
-> +M:     Bastien Nocera <hadess@hadess.net>
-> +L:     linux-input@vger.kernel.org
-> +S:     Maintained
-> +F:     drivers/hid/hid-creative-sb0540.c
-> +
->  CRYPTO API
->  M:     Herbert Xu <herbert@gondor.apana.org.au>
->  M:     "David S. Miller" <davem@davemloft.net>
-> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-> index 3872e03d9a59..a70999f9c639 100644
-> --- a/drivers/hid/Kconfig
-> +++ b/drivers/hid/Kconfig
-> @@ -273,6 +273,15 @@ config HID_CP2112
->         and gpiochip to expose these functions of the CP2112. The
->         customizable USB descriptor fields are exposed as sysfs attributes.
->
-> +config HID_CREATIVE_SB0540
-> +       tristate "Creative SB0540 infrared receiver"
-> +       depends on USB_HID
-> +       help
-> +       Support for Creative infrared SB0540-compatible remote controls, such
-> +       as the RM-1500 and RM-1800 remotes.
-> +
-> +       Say Y here if you want support for Creative SB0540 infrared receiver.
-> +
->  config HID_CYPRESS
->         tristate "Cypress mouse and barcode readers"
->         depends on HID
-> diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
-> index cc5d827c9164..0c03308cfb08 100644
-> --- a/drivers/hid/Makefile
-> +++ b/drivers/hid/Makefile
-> @@ -27,6 +27,7 @@ obj-$(CONFIG_HID_ALPS)                += hid-alps.o
->  obj-$(CONFIG_HID_ACRUX)                += hid-axff.o
->  obj-$(CONFIG_HID_APPLE)                += hid-apple.o
->  obj-$(CONFIG_HID_APPLEIR)      += hid-appleir.o
-> +obj-$(CONFIG_HID_CREATIVE_SB0540)      += hid-creative-sb0540.o
->  obj-$(CONFIG_HID_ASUS)         += hid-asus.o
->  obj-$(CONFIG_HID_AUREAL)       += hid-aureal.o
->  obj-$(CONFIG_HID_BELKIN)       += hid-belkin.o
-> diff --git a/drivers/hid/hid-creative-sb0540.c b/drivers/hid/hid-creative-sb0540.c
-> new file mode 100644
-> index 000000000000..6b7c81ccf310
-> --- /dev/null
-> +++ b/drivers/hid/hid-creative-sb0540.c
-> @@ -0,0 +1,268 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * HID driver for the Creative SB0540 receiver
-> + *
-> + * Copyright (C) 2019 Red Hat Inc. All Rights Reserved
-> + *
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/hid.h>
-> +#include <linux/module.h>
-> +#include "hid-ids.h"
-> +
-> +MODULE_AUTHOR("Bastien Nocera <hadess@hadess.net>");
-> +MODULE_DESCRIPTION("HID Creative SB0540 receiver");
-> +MODULE_LICENSE("GPL");
-> +
-> +static const unsigned short creative_sb0540_key_table[] = {
-> +       KEY_POWER,
-> +       KEY_RESERVED,           /* text: 24bit */
-> +       KEY_RESERVED,           /* 24bit wheel up */
-> +       KEY_RESERVED,           /* 24bit wheel down */
-> +       KEY_RESERVED,           /* text: CMSS */
-> +       KEY_RESERVED,           /* CMSS wheel Up */
-> +       KEY_RESERVED,           /* CMSS wheel Down */
-> +       KEY_RESERVED,           /* text: EAX */
-> +       KEY_RESERVED,           /* EAX wheel up */
-> +       KEY_RESERVED,           /* EAX wheel down */
-> +       KEY_RESERVED,           /* text: 3D Midi */
-> +       KEY_RESERVED,           /* 3D Midi wheel up */
-> +       KEY_RESERVED,           /* 3D Midi wheel down */
-> +       KEY_MUTE,
-> +       KEY_VOLUMEUP,
-> +       KEY_VOLUMEDOWN,
-> +       KEY_UP,
-> +       KEY_LEFT,
-> +       KEY_RIGHT,
-> +       KEY_REWIND,
-> +       KEY_OK,
-> +       KEY_FASTFORWARD,
-> +       KEY_DOWN,
-> +       KEY_AGAIN,              /* text: Return, symbol: Jump to */
-> +       KEY_PLAY,               /* text: Start */
-> +       KEY_ESC,                /* text: Cancel */
-> +       KEY_RECORD,
-> +       KEY_OPTION,
-> +       KEY_MENU,               /* text: Display */
-> +       KEY_PREVIOUS,
-> +       KEY_PLAYPAUSE,
-> +       KEY_NEXT,
-> +       KEY_SLOW,
-> +       KEY_STOP,
-> +       KEY_NUMERIC_1,
-> +       KEY_NUMERIC_2,
-> +       KEY_NUMERIC_3,
-> +       KEY_NUMERIC_4,
-> +       KEY_NUMERIC_5,
-> +       KEY_NUMERIC_6,
-> +       KEY_NUMERIC_7,
-> +       KEY_NUMERIC_8,
-> +       KEY_NUMERIC_9,
-> +       KEY_NUMERIC_0
-> +};
-> +
-> +/*
-> + * Codes and keys from lirc's
-> + * remotes/creative/lircd.conf.alsa_usb
-> + * order and size must match creative_sb0540_key_table[] above
-> + */
-> +static const unsigned short creative_sb0540_codes[] = {
-> +       0x619E,
-> +       0x916E,
-> +       0x926D,
-> +       0x936C,
-> +       0x718E,
-> +       0x946B,
-> +       0x956A,
-> +       0x8C73,
-> +       0x9669,
-> +       0x9768,
-> +       0x9867,
-> +       0x9966,
-> +       0x9A65,
-> +       0x6E91,
-> +       0x629D,
-> +       0x639C,
-> +       0x7B84,
-> +       0x6B94,
-> +       0x728D,
-> +       0x8778,
-> +       0x817E,
-> +       0x758A,
-> +       0x8D72,
-> +       0x8E71,
-> +       0x8877,
-> +       0x7C83,
-> +       0x738C,
-> +       0x827D,
-> +       0x7689,
-> +       0x7F80,
-> +       0x7986,
-> +       0x7A85,
-> +       0x7D82,
-> +       0x857A,
-> +       0x8B74,
-> +       0x8F70,
-> +       0x906F,
-> +       0x8A75,
-> +       0x847B,
-> +       0x7887,
-> +       0x8976,
-> +       0x837C,
-> +       0x7788,
-> +       0x807F
-> +};
-> +
-> +struct creative_sb0540 {
-> +       struct input_dev *input_dev;
-> +       struct hid_device *hid;
-> +       unsigned short keymap[ARRAY_SIZE(creative_sb0540_key_table)];
-> +};
-> +
-> +static inline u64 reverse(u64 data, int bits)
-> +{
-> +       int i;
-> +       u64 c;
-> +
-> +       c = 0;
-> +       for (i = 0; i < bits; i++) {
-> +               c |= (u64) (((data & (((u64) 1) << i)) ? 1 : 0))
-> +                       << (bits - 1 - i);
-> +       }
-> +       return (c);
-> +}
-> +
-> +static int get_key(struct creative_sb0540 *creative_sb0540, u64 keycode)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(creative_sb0540_codes); i++) {
-> +               if (creative_sb0540_codes[i] == keycode)
-> +                       return creative_sb0540->keymap[i];
-> +       }
-> +
-> +       return 0;
-> +
-> +}
-> +
-> +static int creative_sb0540_raw_event(struct hid_device *hid,
-> +       struct hid_report *report, u8 *data, int len)
-> +{
-> +       struct creative_sb0540 *creative_sb0540 = hid_get_drvdata(hid);
-> +       u64 code, main_code;
-> +       int key;
-> +
-> +       if (len != 6)
-> +               goto out;
+Seems no issue now.
 
-drivers/hid/hid-creative-sb0540.c: In function 'creative_sb0540_raw_event':
-drivers/hid/hid-creative-sb0540.c:157:3: error: label 'out' used but not defined
-  157 |   goto out;
-      |   ^~~~
+Thanks all.
 
-It would have been nice to at least try to compile it in a tree.
-You don't need to compile the whole tree: just clone it, apply your
-patch and then `make -j4 M=drivers/hid`
-
-Cheers,
-Benjamin
-
-
-> +
-> +       /* From daemons/hw_hiddev.c sb0540_rec() in lirc */
-> +       code = reverse(data[5], 8);
-> +       main_code = (code << 8) + ((~code) & 0xff);
-> +
-> +       /*
-> +        * Flip to get values in the same format as
-> +        * remotes/creative/lircd.conf.alsa_usb in lirc
-> +        */
-> +       main_code = ((main_code & 0xff) << 8) +
-> +               ((main_code & 0xff00) >> 8);
-> +
-> +       key = get_key(creative_sb0540, main_code);
-> +       if (key == 0 || key == KEY_RESERVED) {
-> +               hid_err(hid, "Could not get a key for main_code %llX\n",
-> +                       main_code);
-> +               return 0;
-> +       }
-> +
-> +       input_report_key(creative_sb0540->input_dev, key, 1);
-> +       input_report_key(creative_sb0540->input_dev, key, 0);
-> +       input_sync(creative_sb0540->input_dev);
-> +
-> +       /* let hidraw and hiddev handle the report */
-> +       return 0;
-> +}
-> +
-> +static int creative_sb0540_input_configured(struct hid_device *hid,
-> +               struct hid_input *hidinput)
-> +{
-> +       struct input_dev *input_dev = hidinput->input;
-> +       struct creative_sb0540 *creative_sb0540 = hid_get_drvdata(hid);
-> +       int i;
-> +
-> +       creative_sb0540->input_dev = input_dev;
-> +
-> +       input_dev->keycode = creative_sb0540->keymap;
-> +       input_dev->keycodesize = sizeof(unsigned short);
-> +       input_dev->keycodemax = ARRAY_SIZE(creative_sb0540->keymap);
-> +
-> +       input_dev->evbit[0] = BIT(EV_KEY) | BIT(EV_REP);
-> +
-> +       memcpy(creative_sb0540->keymap, creative_sb0540_key_table,
-> +               sizeof(creative_sb0540->keymap));
-> +       for (i = 0; i < ARRAY_SIZE(creative_sb0540_key_table); i++)
-> +               set_bit(creative_sb0540->keymap[i], input_dev->keybit);
-> +       clear_bit(KEY_RESERVED, input_dev->keybit);
-> +
-> +       return 0;
-> +}
-> +
-> +static int creative_sb0540_input_mapping(struct hid_device *hid,
-> +               struct hid_input *hi, struct hid_field *field,
-> +               struct hid_usage *usage, unsigned long **bit, int *max)
-> +{
-> +       /*
-> +        * We are remapping the keys ourselves, so ignore the hid-input
-> +        * keymap processing.
-> +        */
-> +       return -1;
-> +}
-> +
-> +static int creative_sb0540_probe(struct hid_device *hid,
-> +               const struct hid_device_id *id)
-> +{
-> +       int ret;
-> +       struct creative_sb0540 *creative_sb0540;
-> +
-> +       creative_sb0540 = devm_kzalloc(&hid->dev,
-> +               sizeof(struct creative_sb0540), GFP_KERNEL);
-> +
-> +       if (!creative_sb0540)
-> +               return -ENOMEM;
-> +
-> +       creative_sb0540->hid = hid;
-> +
-> +       /* force input as some remotes bypass the input registration */
-> +       hid->quirks |= HID_QUIRK_HIDINPUT_FORCE;
-> +
-> +       hid_set_drvdata(hid, creative_sb0540);
-> +
-> +       ret = hid_parse(hid);
-> +       if (ret) {
-> +               hid_err(hid, "parse failed\n");
-> +               return ret;
-> +       }
-> +
-> +       ret = hid_hw_start(hid, HID_CONNECT_DEFAULT);
-> +       if (ret) {
-> +               hid_err(hid, "hw start failed\n");
-> +               return ret;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct hid_device_id creative_sb0540_devices[] = {
-> +       { HID_USB_DEVICE(USB_VENDOR_ID_CREATIVELABS, USB_DEVICE_ID_CREATIVE_SB0540) },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(hid, creative_sb0540_devices);
-> +
-> +static struct hid_driver creative_sb0540_driver = {
-> +       .name = "creative-sb0540",
-> +       .id_table = creative_sb0540_devices,
-> +       .raw_event = creative_sb0540_raw_event,
-> +       .input_configured = creative_sb0540_input_configured,
-> +       .probe = creative_sb0540_probe,
-> +       .input_mapping = creative_sb0540_input_mapping,
-> +};
-> +module_hid_driver(creative_sb0540_driver);
-> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-> index 826324997686..206b7065da86 100644
-> --- a/drivers/hid/hid-ids.h
-> +++ b/drivers/hid/hid-ids.h
-> @@ -312,6 +312,7 @@
->  #define USB_VENDOR_ID_CREATIVELABS     0x041e
->  #define USB_DEVICE_ID_CREATIVE_SB_OMNI_SURROUND_51     0x322c
->  #define USB_DEVICE_ID_PRODIKEYS_PCMIDI 0x2801
-> +#define USB_DEVICE_ID_CREATIVE_SB0540  0x3100
->
->  #define USB_VENDOR_ID_CVTOUCH          0x1ff7
->  #define USB_DEVICE_ID_CVTOUCH_SCREEN   0x0013
-> --
-> 2.21.0
->
+On 2019-07-02 at 09:52:39 +0800, Li Wang wrote:
+> On Tue, Jul 2, 2019 at 12:04 AM Ricardo Neri <
+> ricardo.neri-calderon@linux.intel.com> wrote:
+> 
+> > On Mon, Jul 01, 2019 at 08:57:28PM +0800, Li Wang wrote:
+> > > On Mon, Jul 1, 2019 at 8:02 PM Paolo Bonzini <pbonzini@redhat.com>
+> > wrote:
+> > >
+> > > > On 01/07/19 09:50, Li Wang wrote:
+> > > > > Hello there,
+> > > > >
+> > > > > LTP/umip_basic_test get failed on KVM UMIP
+> > > > > system(kernel-v5.2-rc4.x86_64). The test is only trying to do
+> > > > >      asm volatile("smsw %0\n" : "=m" (val));
+> > > > > and expect to get SIGSEGV in this SMSW operation, but it exits with 0
+> > > > > unexpectedly.
+> > > >
+> > > > In addition to what Thomas said, perhaps you are using a host that does
+> > > > *not* have UMIP, and configuring KVM to emulate it(*).  In that case,
+> > it
+> > > > is not possible to intercept SMSW, and therefore it will incorrectly
+> > > > succeed.
+> > > >
+> > >
+> > > Right, I checked the host system, and confirmed that CPU doesn't support
+> > > UMIP.
+> > >
+> > > >
+> > > > Paolo
+> > > >
+> > > > (*) before the x86 people jump at me, this won't happen unless you
+> > > > explicitly pass an option to QEMU, such as "-cpu host,+umip". :)  The
+> > > > incorrect emulation of SMSW when CR4.UMIP=1 is why.
+> > > >
+> > > Good to know this, is there any document for that declaration? It seems
+> > > neither LTP issue nor kernel bug here. But anyway we'd better do
+> > something
+> > > to avoid the error in the test.
+> >
+> > The test case already checks for umip in /proc/cpuinfo, right? And in
+> > long mode it always expects a SIGSEGV signal. If you did not add -cpu
+> > host,+umip,
+> > how come umip was present in /proc/cpuinfo?
+> >
+> 
+> Yes, right.
+> 
+> But the KVM guest is not customized in manual, I reserved that system for
+> automation test and did not aware of the '-cpu host,+umip,' parameter until
+> Paolo points it out. In the last email, I was hoping to find a way to
+> recognize this situation for the LTP test intelligently.
+> 
+> Thank you all for a reply to this.
+> 
+> -- 
+> Regards,
+> Li Wang
