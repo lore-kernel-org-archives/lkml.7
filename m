@@ -2,175 +2,81 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0598C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36542C06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787AD20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BEA20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q8PZzJ3e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T127DeqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfGBPoL (ORCPT
+        id S1726975AbfGBPob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:44:11 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44161 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfGBPoK (ORCPT
+        Tue, 2 Jul 2019 11:44:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42490 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGBPob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:44:10 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k18so17359212ljc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 08:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=J/Zq9g98WhFnjJ6y9wBnnlW6K7Ygb2l9Rki+bO5sY+I=;
-        b=Q8PZzJ3eZS8L9ysfK8C6aSAQh4HfqdNWbqXXILy/RbRM+y7YWs2Iw7KBgd9rkNKoC+
-         HxLR7rGe4Iz3iDBYPicAmzpVXipEj74zq0pCzjftJKPn9b1SsdjNDpNKpy7hansSQry0
-         FDt+5PL1G2DBHIhXyApvTjr+vaTqBBa/SqYKSAu9+N82t1otddwa9HjHPkhZMgRqHnkY
-         9HRJCTh/hZpSjlyoz04GUG06eIbKI1zzPnTgEGZvCmmBZQ/bl7OZcOV7mhHhOSPRYWwl
-         m4iOwXGXLClMW3mQ51tl7oDcDm11HjQn82vM/1qG612oQ5G7kW1BCKeXUafGDGguEFQu
-         zufg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=J/Zq9g98WhFnjJ6y9wBnnlW6K7Ygb2l9Rki+bO5sY+I=;
-        b=OMD2M6UeNVUSNQtuFLNcKL+yVxP8ddHULixwS0wuHlvWOI52d/t1c4KmusSIblsH5C
-         icUL/y25dPGTwI9/AsxkkSJhOsczQnvbu+b3IDFUMu9cCI9AvFDiqYaJfhEZT00QaSON
-         0kK89lM/44rykBL3Jql0jZ+mZWeO85lHdLUcEbYpM7f8xDGf+JsSODEBrOePqBjM9vBt
-         Cbb9d7+DV+al30ve7QBOfvs5/f+8T88SHEL0IfgT2WkfG1lX9VOBGzYS1EzYFgUb61mi
-         N5mLwvjKP+fBgCEcdugVrFaJOY9lxGL/SdkFAoWBj8GNQYVYb0aWOa17ycp+QmKaXf8F
-         22zQ==
-X-Gm-Message-State: APjAAAWMtXDKSH9zUtE+TyezPHAOVWH8MQy7Qic1Q9wuKtploUVxlMiH
-        92LmCFf5gEvcXP6j6wlH9GFxs34rNnT1GYJYIyPGfVMItrA=
-X-Google-Smtp-Source: APXvYqxEhb3B1z/H72FVDsDuHgIXwdXzYIWyPbk5VQgwkxwUTrr29cmyE4xym6p4R5jLar9LhfjCRBn3aaLaLsABrpc=
-X-Received: by 2002:a2e:b0f0:: with SMTP id h16mr17941985ljl.21.1562082248436;
- Tue, 02 Jul 2019 08:44:08 -0700 (PDT)
+        Tue, 2 Jul 2019 11:44:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yNPjqLdRTJCzgCZVeC3z+YefMIDSKzflp7zcy3fLwqs=; b=T127DeqEzG8CkEzFsFjGbAebE
+        motUh25iUQewOFQHvknqYG2eDCh0zjdY7q0TCfFwAExGnZPD2C9Qquo0AZgieACMJQRZMVp6246L5
+        sA23h3NrnMxHZTijEXwt/v9JYgGVCR4B40Xflz5mJeU7nQhuaEja8z63y9Gb9PS3GAHAZccaY+cht
+        OYqBCWn40sLRWSVCweGwfZOQdFebYwoUSzKai0IjbTNb54SFw3gjA4Z+GKCOfYXf3Kmrx1xAHl7tV
+        tu4p+fVRKxwAdSY4bWQi6zNb+bowRFQbmDv9VdGxpOekg29NE7yf07YVDhzyswriLKM8dUIuvmf+y
+        Bg4kihsaQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hiKxE-0007gr-E5; Tue, 02 Jul 2019 15:44:24 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 23DB92013A3B6; Tue,  2 Jul 2019 17:44:22 +0200 (CEST)
+Date:   Tue, 2 Jul 2019 17:44:22 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Douglas RAILLARD <douglas.raillard@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        quentin.perret@arm.com, patrick.bellasi@arm.com,
+        dietmar.eggemann@arm.com
+Subject: Re: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
+Message-ID: <20190702154422.GV3436@hirez.programming.kicks-ass.net>
+References: <20190627171603.14767-1-douglas.raillard@arm.com>
 MIME-Version: 1.0
-References: <20190702080123.904399496@linuxfoundation.org>
-In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 2 Jul 2019 21:13:56 +0530
-Message-ID: <CA+G9fYuKoCVAK7C4Urr_LpAb5KNFGusVELUYjVt3PMVU3+=K0w@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/43] 4.14.132-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627171603.14767-1-douglas.raillard@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 at 13:39, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.132 release.
-> There are 43 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.132-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Thu, Jun 27, 2019 at 06:15:58PM +0100, Douglas RAILLARD wrote:
+> Make schedutil cpufreq governor energy-aware.
+> 
+> - patch 1 introduces a function to retrieve a frequency given a base
+>   frequency and an energy cost margin.
+> - patch 2 links Energy Model perf_domain to sugov_policy.
+> - patch 3 updates get_next_freq() to make use of the Energy Model.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> 
+> 1) Selecting the highest possible frequency for a given cost. Some
+>    platforms can have lower frequencies that are less efficient than
+>    higher ones, in which case they should be skipped for most purposes.
+>    They can still be useful to give more freedom to thermal throttling
+>    mechanisms, but not under normal circumstances.
+>    note: the EM framework will warn about such OPPs "hertz/watts ratio
+>    non-monotonically decreasing"
 
-Summary
-------------------------------------------------------------------------
+Humm, for some reason I was thinking we explicitly skipped those OPPs
+and they already weren't used.
 
-kernel: 4.14.132-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 3734933c2330c5fe94ed2724033965b2eb545028
-git describe: v4.14.131-44-g3734933c2330
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.131-44-g3734933c2330
-
-
-No regressions (compared to build v4.14.131)
-
-No fixes (compared to build v4.14.131)
-
-
-Ran 22541 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-timers-tests
-* perf
-* v4l2-compliance
-* libhugetlbfs
-* ltp-commands-tests
-* ltp-cve-tests
-* ltp-math-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* spectre-meltdown-checker-test
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+This isn't in fact so, and these first few patches make it so?
