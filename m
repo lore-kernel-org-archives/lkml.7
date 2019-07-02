@@ -2,155 +2,157 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB31C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 164DEC06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0622A20828
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E12B520828
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562115493;
-	bh=Tlj2RrGNaOqOZ+7sngsROh+dPsr/HURv8KYaqPdX2Tc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=r+O/O9wg11EyMomm6PivCOFAuzeoqH36gEPqaEa9NwtXJ3IyGMQG2vzb5TexbLoMY
-	 bt9wfTDqyoO/EyozCOwJtX5F1s9uoV52IKOJJN5SyuDPKKw5Sta/CP7iVyqaEAT1UY
-	 Gh4Ykn3LZy4xfr8PlHZSymIAB54HINF00E7ggjgY=
+	s=default; t=1562115503;
+	bh=2bbugPbDF5cGeZm4Qp00ViLiAZvE31dYvQi7W3tJP48=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W3p9BKCzgecLpfMdj0aseTS3k9aXjHKt6drnDT046VmGS3GGGdq3jfqgzJb++DjbF
+	 1t+Z9QsVLdez8OEgepymCDzenM+sXtW7TUDHvgb6Ozv9Qxykx7+DTDEEIQddylq/Ay
+	 WJ6b0RaFooviQwgOCrN6wcX6qYZhxwEm6t6holZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfGCA6H (ORCPT
+        id S1727470AbfGCA6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:58:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbfGCA6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:58:05 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E86B218BA;
-        Tue,  2 Jul 2019 21:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562102371;
-        bh=Tlj2RrGNaOqOZ+7sngsROh+dPsr/HURv8KYaqPdX2Tc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mTmZs1yoM8R9sJY0ieO8eIQJr3f8HYOWvQ3AMF5RJaDSv2pSaZaihzF+/IR3zRzS1
-         c1Lo86AgdvNT8xO+Z6NMAKkcwx8Bv9Q2MIOWKOkhIYBQdrBruYLu3rZABrPfWQySrt
-         4Gaz5KQ1vRA5wuFWuTaH2vEnRIcEeE+JF2BKSBmI=
-Date:   Tue, 2 Jul 2019 14:19:30 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Henry Burns <henryburns@google.com>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Vitaly Wool <vitalywool@gmail.com>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Xidong Wang <wangxidong_97@163.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mm/z3fold.c: Lock z3fold page before
- __SetPageMovable()
-Message-Id: <20190702141930.e31bf1c07a77514d976ef6e2@linux-foundation.org>
-In-Reply-To: <CAGQXPTjU0xAWCLTWej8DdZ5TbH91m8GzeiCh5pMJLQajtUGu_g@mail.gmail.com>
-References: <20190702005122.41036-1-henryburns@google.com>
-        <CALvZod5Fb+2mR_KjKq06AHeRYyykZatA4woNt_K5QZNETvw4nw@mail.gmail.com>
-        <CAGQXPTjU0xAWCLTWej8DdZ5TbH91m8GzeiCh5pMJLQajtUGu_g@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 2 Jul 2019 20:58:22 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39114 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfGCA6V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:58:21 -0400
+Received: by mail-oi1-f194.google.com with SMTP id m202so599484oig.6;
+        Tue, 02 Jul 2019 17:58:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DtQmDM1bjxYXcqNKxDIhe3kpTPPYxiOv+5lbfQfOZdE=;
+        b=rdNe1uBrDpAhqLxbcDYjpTEaSwGuI+OGS7FawePaNtE4XaFxFX9LZRkySKagywu96E
+         5elS2OlM2+9SQgOMAHfPsD14tq/9GPSsyXTBQ3v1vpiNeL6mut71AVMzDUmgoKvcaFjG
+         ZkG0TM63qOs8T6VRpCXd6HLvZitCUOj8H6AqM607XGa9sNMZxcj5Tj3Dgs6HVZi8+ESR
+         xkOnd3jnmRURIOnkuqQO34Ubry6C0J+SGZG6KYYpQEfIBOlBi11jTR0PdknRRl+Zli6X
+         R2bK6l6wqZo8BNKUpi7f8TOuuWmeQSAPLRaOIjTworkSmjVLbbO8vJl2DBuaJCC4r6ZZ
+         FONQ==
+X-Gm-Message-State: APjAAAUu5rtSqVJRCWOmfmBKZQ6UUYSPd1ThQtxFvCoFJrs/jqDCbwzs
+        OVV69Bmzj+Eqt4CMigJrY+ILGKuHCGs=
+X-Google-Smtp-Source: APXvYqxgfIVc55JlioUk1yKtSLmO9ntomZUFE6/lH8QIzZr758B9lCLwgU+mAmopE2kMlm4WWSK35A==
+X-Received: by 2002:a63:f342:: with SMTP id t2mr30570356pgj.83.1562101035558;
+        Tue, 02 Jul 2019 13:57:15 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id d26sm16963231pfn.29.2019.07.02.13.57.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 13:57:13 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id DC91A40251; Tue,  2 Jul 2019 20:57:12 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 20:57:12 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Subject: Re: [PATCH v5 07/18] kunit: test: add initial tests
+Message-ID: <20190702205712.GS19023@42.do-not-panic.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-8-brendanhiggins@google.com>
+ <20190625232249.GS19023@42.do-not-panic.com>
+ <CAFd5g46mnd=a0OqFCx0hOHX+DxW+5yA2LXH5Q0gEg8yUZK=4FA@mail.gmail.com>
+ <CAFd5g46=7OQDREdLDTiMgVWq-Xj2zfOw8cRhPJEihSbO89MDyA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFd5g46=7OQDREdLDTiMgVWq-Xj2zfOw8cRhPJEihSbO89MDyA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Jul 2019 18:16:30 -0700 Henry Burns <henryburns@google.com> wrote:
-
-> Cc: Vitaly Wool <vitalywool@gmail.com>, Vitaly Vul <vitaly.vul@sony.com>
-
-Are these the same person?
-
-> Subject: Re: [PATCH v2] mm/z3fold.c: Lock z3fold page before __SetPageMovable()
-> Date: Mon, 1 Jul 2019 18:16:30 -0700
+On Tue, Jul 02, 2019 at 10:52:50AM -0700, Brendan Higgins wrote:
+> On Wed, Jun 26, 2019 at 12:53 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > On Tue, Jun 25, 2019 at 4:22 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > >
+> > > On Mon, Jun 17, 2019 at 01:26:02AM -0700, Brendan Higgins wrote:
+> > > > diff --git a/kunit/example-test.c b/kunit/example-test.c
+> > > > new file mode 100644
+> > > > index 0000000000000..f44b8ece488bb
+> > > > --- /dev/null
+> > > > +++ b/kunit/example-test.c
+> > >
+> > > <-- snip -->
+> > >
+> > > > +/*
+> > > > + * This defines a suite or grouping of tests.
+> > > > + *
+> > > > + * Test cases are defined as belonging to the suite by adding them to
+> > > > + * `kunit_cases`.
+> > > > + *
+> > > > + * Often it is desirable to run some function which will set up things which
+> > > > + * will be used by every test; this is accomplished with an `init` function
+> > > > + * which runs before each test case is invoked. Similarly, an `exit` function
+> > > > + * may be specified which runs after every test case and can be used to for
+> > > > + * cleanup. For clarity, running tests in a test module would behave as follows:
+> > > > + *
+> > >
+> > > To be clear this is not the kernel module init, but rather the kunit
+> > > module init. I think using kmodule would make this clearer to a reader.
+> >
+> > Seems reasonable. Will fix in next revision.
+> >
+> > > > + * module.init(test);
+> > > > + * module.test_case[0](test);
+> > > > + * module.exit(test);
+> > > > + * module.init(test);
+> > > > + * module.test_case[1](test);
+> > > > + * module.exit(test);
+> > > > + * ...;
+> > > > + */
 > 
-> On Mon, Jul 1, 2019 at 6:00 PM Shakeel Butt <shakeelb@google.com> wrote:
-> >
-> > On Mon, Jul 1, 2019 at 5:51 PM Henry Burns <henryburns@google.com> wrote:
-> > >
-> > > __SetPageMovable() expects it's page to be locked, but z3fold.c doesn't
-> > > lock the page. Following zsmalloc.c's example we call trylock_page() and
-> > > unlock_page(). Also makes z3fold_page_migrate() assert that newpage is
-> > > passed in locked, as documentation.
+> Do you think it might be clearer yet to rename `struct kunit_module
+> *module;` to `struct kunit_suite *suite;`?
 
-The changelog still doesn't mention that this bug triggers a
-VM_BUG_ON_PAGE().  It should do so.  I did this:
+Yes. Definitely. Or struct kunit_test. Up to you.
 
-: __SetPageMovable() expects its page to be locked, but z3fold.c doesn't
-: lock the page.  This triggers the VM_BUG_ON_PAGE(!PageLocked(page), page)
-: in __SetPageMovable().
-:
-: Following zsmalloc.c's example we call trylock_page() and unlock_page(). 
-: Also make z3fold_page_migrate() assert that newpage is passed in locked,
-: as per the documentation.
-
-I'll add a cc:stable to this fix.
-
-> > > Signed-off-by: Henry Burns <henryburns@google.com>
-> > > Suggested-by: Vitaly Wool <vitalywool@gmail.com>
-> > > ---
-> > >  Changelog since v1:
-> > >  - Added an if statement around WARN_ON(trylock_page(page)) to avoid
-> > >    unlocking a page locked by a someone else.
-> > >
-> > >  mm/z3fold.c | 6 +++++-
-> > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/mm/z3fold.c b/mm/z3fold.c
-> > > index e174d1549734..6341435b9610 100644
-> > > --- a/mm/z3fold.c
-> > > +++ b/mm/z3fold.c
-> > > @@ -918,7 +918,10 @@ static int z3fold_alloc(struct z3fold_pool *pool, size_t size, gfp_t gfp,
-> > >                 set_bit(PAGE_HEADLESS, &page->private);
-> > >                 goto headless;
-> > >         }
-> > > -       __SetPageMovable(page, pool->inode->i_mapping);
-> > > +       if (!WARN_ON(!trylock_page(page))) {
-> > > +               __SetPageMovable(page, pool->inode->i_mapping);
-> > > +               unlock_page(page);
-> > > +       }
-> >
-> > Can you please comment why lock_page() is not used here?
-
-Shakeel asked "please comment" (ie, please add a code comment), not
-"please comment on".  Subtle ;)
-
-> Since z3fold_alloc can be called in atomic or non atomic context,
-> calling lock_page() could trigger a number of
-> warnings about might_sleep() being called in atomic context. WARN_ON
-> should avoid the problem described
-> above as well, and in any weird condition where someone else has the
-> page lock, we can avoid calling
-> __SetPageMovable().
-
-I think this will suffice:
-
---- a/mm/z3fold.c~mm-z3foldc-lock-z3fold-page-before-__setpagemovable-fix
-+++ a/mm/z3fold.c
-@@ -919,6 +919,9 @@ retry:
- 		set_bit(PAGE_HEADLESS, &page->private);
- 		goto headless;
- 	}
-+	/*
-+	 * z3fold_alloc() can be called from atomic contexts, hence the trylock
-+	 */
- 	if (!WARN_ON(!trylock_page(page))) {
- 		__SetPageMovable(page, pool->inode->i_mapping);
- 		unlock_page(page);
-
-However this code would be more effective if z3fold_alloc() were to be
-told when it is running in non-atomic context so it can perform a
-sleeping lock_page() in that case.  That's an improvement to consider
-for later, please.
-
+  Luis
