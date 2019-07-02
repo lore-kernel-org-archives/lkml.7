@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985FCC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294F5C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA3D2146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3362183F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qmeaKVWd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wEvS8Xbw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfGBKfv (ORCPT
+        id S1727342AbfGBKf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 06:35:51 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39449 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfGBKfu (ORCPT
+        Tue, 2 Jul 2019 06:35:58 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40818 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfGBKf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 06:35:50 -0400
-Received: by mail-oi1-f194.google.com with SMTP id m202so12622923oig.6
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:35:50 -0700 (PDT)
+        Tue, 2 Jul 2019 06:35:58 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e8so16625411otl.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:35:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zTwTfXNgxTmrGRUjBKcfiXIJvV7RcQHKF6DIe75zo+I=;
-        b=qmeaKVWdYJMzo5niBo8eJXFwzM8pytrY9m8n2B5/m28fbL9VJT6KWdOOE86JBx8ntL
-         +vff4tW/HcSWI7kaAKHhD3u+0ivKHodubYbUbLUSilYabfc3gbGl+4nWUvaSCp+zj0ay
-         QqIfGyD6iwhac5mxyv5FSMGGKbIK/XJMfsOKX7YTs0KXvUGx3Xqz2PBqs9avL+DCOH1T
-         u2Rw3lY5ZSgrrfRnnMQ3rc/w8GuoaGJeh8U3W4jhpwrnZBbWCuFQ9EE2Jjd6sudTm7VX
-         aH3e9GH6StNynB4j47dNPlpAEuRgXbbHp7/vr3dv9cCdgf8TtuiNQ3k71NfaNui1NR6/
-         8FrA==
+        bh=oEKxu+SRBR2p4slj10y4/Ir+izytEa7NCXuzbUYce7M=;
+        b=wEvS8XbwFUFKdw+GxKZqyPYxrcjlJT6R7i4Djuo1pSo+8XRmo7dDVof0wJA6PCR3vd
+         qFIwAcP7pDtAB8QbnK8W71bnfDTiUGrGvzNBaQ0BVXdhbpi92FhKXZpRzcCfxHl/1lrQ
+         0cnaFXJ4pGbGcg1Yj4KSf+weubc02b4z+z7aH8vZoygulTfyy1oCju1llcUE2/B5TAxO
+         CBNT+MRWqFb+e57BQqcIPMsbBIg6p2JsXmSoO7EAI5kgLk7RIPuGCzZnvROcdx4biUl9
+         MWos28VX/AKKwLxXLoiRvshrmKgM0HO7EpW4LV9lPKGSBYUH2dyccIMucEgvK6w26lQT
+         61Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=zTwTfXNgxTmrGRUjBKcfiXIJvV7RcQHKF6DIe75zo+I=;
-        b=iRKow5t+3ToaxGjePoa0Davl2rlJmGPDnm4q7veSmBVbm9OxqpeL2sE/Fi7be7o7h+
-         QJeX2hVFV4TIb2S6lxZBEu24fuZIDsq+JJkClrvRfoVUHJ5MVf2qth7O5BO0gk5c7R+6
-         a3170zOLeexo5aXodVpgJHT0h4FxU7QfQlOkbhQbC6yhskSDr8fw9uvylKCQ9RqulcKs
-         x4i7tBVmJPgXhk2r+5LJpfMLS+hsX9m8agIL3zaKoy6HY3J18c0ze7l03CmpX1gx86oY
-         MefbB/jpBKbU7NwNISQCEbcIS7FF9/+j0W3jDBt2XXR+2l1ooEPcfiDKBKKeRaerNJEB
-         glSA==
-X-Gm-Message-State: APjAAAWrpyTKOpDK7hGpfTM8pLpS+pGvBMXWjhG+ZtOATGvAKmIbShWm
-        A7UVxdHru+9Y2TYihU3ben/fjA==
-X-Google-Smtp-Source: APXvYqzadH2JYmTLt475KdiZ+RY+YlPJ1tAhSwr9KnjUX2mXMzimmxW9XG9aSGOZZ3INH1wy364PFg==
-X-Received: by 2002:aca:5241:: with SMTP id g62mr2474775oib.41.1562063749790;
-        Tue, 02 Jul 2019 03:35:49 -0700 (PDT)
+        bh=oEKxu+SRBR2p4slj10y4/Ir+izytEa7NCXuzbUYce7M=;
+        b=GNqSNC1cwK/wKR72ZXJa37YlDHM02vLqOc2GqTno5QLw/LTCeMya2fg0OtkpO7kyA/
+         YarGl+G5JazzwEjeTmKBhDnWvWSc73fanQxrKNsUmM7MacSc8mkDbnuoiXiKhNDhkopZ
+         4DrrX3757WLYRdDlRAk0IJ0Dav9bt68C1vysk8fLImkSflS7N0Qyc4JKIzhCE59scFbi
+         FOERrfenHSsZsVxZgSCNPfICC0wXeam9DUuHwFJzfXjFPY2jM3fNSOY/AB2aC2sivFlD
+         sAtplDg6kgxjknvouajcS9zxOTQj4EB9mQmjB2maTh3aBPG2m6QrHvmMG+ZCxkhiImja
+         EaXg==
+X-Gm-Message-State: APjAAAVvvBf26lcFuV+0K+bIXJDCiCK8umFmdJm+b/LT860dczjMeVf+
+        v7RM1cIBRg2ZSFqsfsvRNIVLjw==
+X-Google-Smtp-Source: APXvYqzv573LaZWJ+oWSjYOyiWtpwFtAqVjEDnjXIEMctJXO5xnl/SqqwZcakrrKfpTXJTxRUb5hOw==
+X-Received: by 2002:a9d:664c:: with SMTP id q12mr21775879otm.175.1562063757276;
+        Tue, 02 Jul 2019 03:35:57 -0700 (PDT)
 Received: from localhost.localdomain (li964-79.members.linode.com. [45.33.10.79])
-        by smtp.gmail.com with ESMTPSA id 61sm5139805otx.8.2019.07.02.03.35.42
+        by smtp.gmail.com with ESMTPSA id 61sm5139805otx.8.2019.07.02.03.35.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 03:35:49 -0700 (PDT)
+        Tue, 02 Jul 2019 03:35:56 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -80,9 +80,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 08/11] perf session: Smatch: Fix potential NULL pointer dereference
-Date:   Tue,  2 Jul 2019 18:34:17 +0800
-Message-Id: <20190702103420.27540-9-leo.yan@linaro.org>
+Subject: [PATCH v1 09/11] perf intel-bts: Smatch: Fix potential NULL pointer dereference
+Date:   Tue,  2 Jul 2019 18:34:18 +0800
+Message-Id: <20190702103420.27540-10-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190702103420.27540-1-leo.yan@linaro.org>
 References: <20190702103420.27540-1-leo.yan@linaro.org>
@@ -94,48 +94,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Based on the following report from Smatch, fix the potential
 NULL pointer dereference check.
 
-  tools/perf/util/session.c:1252
-  dump_read() error: we previously assumed 'evsel' could be null
-  (see line 1249)
+  tools/perf/util/intel-bts.c:898
+  intel_bts_process_auxtrace_info() error: we previously assumed
+  'session->itrace_synth_opts' could be null (see line 894)
 
-tools/perf/util/session.c
-1240 static void dump_read(struct perf_evsel *evsel, union perf_event *event)
-1241 {
-1242         struct read_event *read_event = &event->read;
-1243         u64 read_format;
-1244
-1245         if (!dump_trace)
-1246                 return;
-1247
-1248         printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
-1249                evsel ? perf_evsel__name(evsel) : "FAIL",
-1250                event->read.value);
-1251
-1252         read_format = evsel->attr.read_format;
-                           ^^^^^^^
+  tools/perf/util/intel-bts.c:899
+  intel_bts_process_auxtrace_info() warn: variable dereferenced before
+  check 'session->itrace_synth_opts' (see line 898)
 
-'evsel' could be NULL pointer, for this case this patch directly bails
-out without dumping read_event.
+tools/perf/util/intel-bts.c
+894         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+895                 bts->synth_opts = *session->itrace_synth_opts;
+896         } else {
+897                 itrace_synth_opts__set_default(&bts->synth_opts,
+898                                 session->itrace_synth_opts->default_no_sample);
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+899                 if (session->itrace_synth_opts)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+900                         bts->synth_opts.thread_stack =
+901                                 session->itrace_synth_opts->thread_stack;
+902         }
+
+To dismiss the potential NULL pointer dereference, this patch validates
+the pointer 'session->itrace_synth_opts' before access its elements.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/session.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/intel-bts.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 54cf163347f7..2e61dd6a3574 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1249,6 +1249,9 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
- 	       evsel ? perf_evsel__name(evsel) : "FAIL",
- 	       event->read.value);
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index e32dbffebb2f..332e647fecaa 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -893,11 +893,10 @@ int intel_bts_process_auxtrace_info(union perf_event *event,
  
-+	if (!evsel)
-+		return;
-+
- 	read_format = evsel->attr.read_format;
+ 	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+ 		bts->synth_opts = *session->itrace_synth_opts;
+-	} else {
++	} else if (session->itrace_synth_opts) {
+ 		itrace_synth_opts__set_default(&bts->synth_opts,
+ 				session->itrace_synth_opts->default_no_sample);
+-		if (session->itrace_synth_opts)
+-			bts->synth_opts.thread_stack =
++		bts->synth_opts.thread_stack =
+ 				session->itrace_synth_opts->thread_stack;
+ 	}
  
- 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
 -- 
 2.17.1
 
