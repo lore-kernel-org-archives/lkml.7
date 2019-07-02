@@ -2,130 +2,103 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEE9C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B715C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83B9206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2401F206A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jc6n7jBm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQfg7pH4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfGCBZ7 (ORCPT
+        id S1727355AbfGCB1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:25:59 -0400
-Received: from mail-ed1-f50.google.com ([209.85.208.50]:42922 "EHLO
-        mail-ed1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbfGCBZ6 (ORCPT
+        Tue, 2 Jul 2019 21:27:23 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39608 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfGCB1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:25:58 -0400
-Received: by mail-ed1-f50.google.com with SMTP id z25so371283edq.9;
-        Tue, 02 Jul 2019 18:25:57 -0700 (PDT)
+        Tue, 2 Jul 2019 21:27:22 -0400
+Received: by mail-io1-f67.google.com with SMTP id r185so890971iod.6;
+        Tue, 02 Jul 2019 18:27:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iwz65avk0f/RVYyKHLQjdNvxMZcgy+RzsGyBsM/m87E=;
-        b=Jc6n7jBm97mAvshr0fb/+jJV51H5AJKiJiMbjM/ReftdwufEfb70lK4ZkkbRHUK216
-         rJ5wVZAiPoVRmFxAc/XYVurtEZCjyjKkBCmrOJeVVdKO/B2t2YFzIiNdnROpXW4o/95b
-         SO6+9K/mNErFkxKTr28/Z+4vRwYT0yFsh1QGdl/zj892xmNC+xrEuJH71Q9ogPqxk/6V
-         xrIJHfFep+3lpyhmV7N8d/ni0rEzdl6EP75/kHFINZqep674pizWO3MpAmdOoc54OgEX
-         e2ot/13DMG1Wtu+VZpVYkBwoK8GZw2BdTuSs5XJEeN/r6lJzHwJQQCMT5+za8g4VO7Yu
-         3c+Q==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pAci9weqdgGIQBmNcdVFp+Cps1SlEdfna2ZTHfidk4s=;
+        b=fQfg7pH4Sm1UfYaKtwjCqwOkANJcgpsdEef2Jc0Vnnv6CrjpMAqzINySn3ZsFImMKe
+         T9CzN3e5xprsAsfUp9wzNfa6hrMmvfV5YFwjeMWrH/vZk0utjNGZ8LVwTmXfeM9s9KFV
+         awuVWqFOYH9/vubLgxVHa2piApnGDYbSDwJ6J7YeeFCFW3SKAncrOnHeLd9z2Wl9MqGa
+         vYzUbqeKYE9A+StWlIjF/TL1UnP8TxtHX9INiHIvdM9c7+3nxH/w3lVUaDUGUUHcBeAg
+         wQ7DR+mRbupzYT/9aVthIW/NyhKsrdBh2+E8yhR3mnP0eUY42G3EQsFo2aplRTLF+lnD
+         ib6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iwz65avk0f/RVYyKHLQjdNvxMZcgy+RzsGyBsM/m87E=;
-        b=Sm1h4SZlRtgeHXGx7MjEdZqUQthIQBZh+4tAjq4GgNNT4vr33CadPPZdRsvrRR/Zvj
-         vr8h0e+CtIbn2SYuC/JUehpJxUJOB6b6K/KWZ9OEOy8GI9ouYB6gr9m95dVK0/cEl0Ji
-         V+C7VVMrIEY28NyP2D2ZX/WUZ4OXRzZxxnvTJ07USInGg7gEoZbFoIdQlC/cvX5U/zRG
-         fUJWv/jBW560liyWsBxO/QaLTLxiVNm1p9mb0qmLKrdYMUIMNyI6hSlJCSqlJZwMYLzd
-         jKYC8J280qYzZrlUx8nAlyA5jG96PWOE63lQ9rUj20bRfHW0/Dt+AfyJS3TQkZgqSr3N
-         MHlQ==
-X-Gm-Message-State: APjAAAVVS1n4F4qgNgHHfsnIiEg44anFN0E7kAyMdVO44LLHtBZBLyiO
-        pNhqnQoI+IDttVtLXa0Cm1s=
-X-Google-Smtp-Source: APXvYqwGl54w+Ikuy3dP0wltd7CGiue8snyL34ahEULNWHszDm8iYpLIABCZtv5+e1gtZn6FOx9Uag==
-X-Received: by 2002:a50:a5b7:: with SMTP id a52mr39299193edc.237.1562117156841;
-        Tue, 02 Jul 2019 18:25:56 -0700 (PDT)
-Received: from [10.68.217.182] ([217.70.211.18])
-        by smtp.gmail.com with ESMTPSA id 43sm204196edz.87.2019.07.02.18.25.54
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 18:25:56 -0700 (PDT)
-Subject: Re: pagecache locking
-To:     Patrick Farrell <pfarrell@whamcloud.com>,
-        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190612162144.GA7619@kmo-pixel>
- <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel>
- <20190613235524.GK14363@dread.disaster.area>
- <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
- <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
- <20190617224714.GR14363@dread.disaster.area>
- <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
- <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
- <20190619103838.GB32409@quack2.suse.cz>
- <20190619223756.GC26375@dread.disaster.area>
- <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
- <DM6PR19MB250857CB8A3A1C8279D6F2F3C5FB0@DM6PR19MB2508.namprd19.prod.outlook.com>
-From:   Boaz Harrosh <openosd@gmail.com>
-Message-ID: <9bc50b26-d424-d48a-16db-6fd7e0e88f79@gmail.com>
-Date:   Wed, 3 Jul 2019 04:25:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pAci9weqdgGIQBmNcdVFp+Cps1SlEdfna2ZTHfidk4s=;
+        b=g2sp6uBmTkVx+HwuUTg/MIhzzCI0F9Cd5arg19pYz0sECNrt3xt6TDO7mEbXYrl8Sd
+         krqlghpUlBj7JCrkuQ42cThpJ7WZusAVRdKqwP60R+lJizCaJhsdHzuxUJioan977hWr
+         3HaWARyJWmRTQzdyv5HWTPmtXORlYlv+R6vLG7mpDGpHdproc+J2FxsdUIi8MqIBgFyP
+         ZZGrSYzqWaBfZ9gbkMP/AeO/BGGRzrfhI/vIOiLLoqgZJZsJqHrXMboukLF/dG1WIMHM
+         NAyoHnp7ELu8YTk60iRWQdRJhONmP+YX5FRmtuPjinZmzter83LSLp5ev47ig6gvC9DE
+         iXdA==
+X-Gm-Message-State: APjAAAXMqEkU/ZMNViDCYVmkZ5rN459Dhv37wPrjUhyIro7aCLD8iyFh
+        aXoukf4jrlVXOSR6hfAjTk0s+36gKDeNjg==
+X-Google-Smtp-Source: APXvYqyVaw65phiu70giHYXUIs2ipt+3VtM+wJ6S/zZrZsx+FDh/mt+BJBdInlTIJpHWmlAYGh9HEw==
+X-Received: by 2002:a6b:7602:: with SMTP id g2mr1878572iom.82.1562101796619;
+        Tue, 02 Jul 2019 14:09:56 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id f17sm114199ioc.2.2019.07.02.14.09.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 14:09:55 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 15:09:54 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 00/55] 5.1.16-stable review
+Message-ID: <20190702210953.GB2368@JATN>
+References: <20190702080124.103022729@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <DM6PR19MB250857CB8A3A1C8279D6F2F3C5FB0@DM6PR19MB2508.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/2019 04:07, Patrick Farrell wrote:
-> Recursively read locking is generally unsafe, that’s why lockdep
-> complains about it.  The common RW lock primitives are queued in
-> their implementation, meaning this recursive read lock sequence:
-> P1 - read (gets lock)
-> P2 - write
-> P1 - read
+On Tue, Jul 02, 2019 at 10:01:08AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.16 release.
+> There are 55 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Results not in a successful read lock, but P1 blocking behind P2,
-> which is blocked behind P1.  
-
-> Readers are not allowed to jump past waiting writers.
-
-OK thanks that makes sense. I did not know about that last part. Its a kind
-of a lock fairness I did not know we have.
-
-So I guess I'll keep my two locks than. The write_locker is the SLOW
-path for me anyway, right?
-
-[if we are already at the subject, Do mutexes have the same lock fairness as
- above? Do the write_lock side of rw_sem have same fairness? Something I never
- figured out]
-
-Thanks
-Boaz
-
+> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
+> Anything received after that time might be too late.
 > 
-> - Patrick
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.16-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
+Compiled, booted, and no regressions on my system.
+
+Cheers,
+Kelsey
+
