@@ -2,87 +2,165 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED25C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4238BC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A32206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01314206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:50:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Se8KBEA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfGBJtd (ORCPT
+        id S1727177AbfGBJul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 05:49:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:46874 "EHLO foss.arm.com"
+        Tue, 2 Jul 2019 05:50:41 -0400
+Received: from mout.web.de ([212.227.17.12]:55975 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfGBJtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 05:49:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56C71344;
-        Tue,  2 Jul 2019 02:49:32 -0700 (PDT)
-Received: from [10.1.196.120] (e121650-lin.cambridge.arm.com [10.1.196.120])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 677CC3F718;
-        Tue,  2 Jul 2019 02:49:31 -0700 (PDT)
-Subject: Re: [RFC V3 12/18] arm64: assembler: Add macro to annotate asm
- function having non standard stack-frame.
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jpoimboe@redhat.com, peterz@infradead.org, will.deacon@arm.com,
-        julien.thierry@arm.com
-References: <20190624095548.8578-1-raphael.gault@arm.com>
- <20190624095548.8578-13-raphael.gault@arm.com>
- <20190701144039.GD21774@arrakis.emea.arm.com>
-From:   Raphael Gault <raphael.gault@arm.com>
-Message-ID: <7ddc9d27-e4ea-c07a-ad12-3fac59aeb4fc@arm.com>
-Date:   Tue, 2 Jul 2019 10:49:30 +0100
+        id S1725868AbfGBJuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 05:50:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1562061022;
+        bh=iCyjFEsFbP9E2gjuUs9RhQNMZ4EWNf6g9m5XYPk0YGU=;
+        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
+        b=Se8KBEA4v5YnQn/pjuWWaNKziyu3i5cCnScREsyTf0bD4EUit06VboiJ9SBRiN7s3
+         F9av6xvkDCQh6QVaDnXFVvFJ62mJWdXDldBge0y+3yLNdTIWRN2YhnC84MBBAKOzmM
+         5q22bG4vLE2jc8pdociy+n/FC56IlNXQHNw4nwp4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.11.114]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LvSU3-1ihC3B1Mhf-010YwQ; Tue, 02
+ Jul 2019 11:50:22 +0200
+To:     netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        brcm80211-dev-list@cypress.com,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Wright Feng <wright.feng@cypress.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] brcmfmac: Replace two seq_printf() calls in
+ brcmf_feat_fwcap_debugfs_read()
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Message-ID: <7d96085a-76e8-c290-698a-e1473d3f4be7@web.de>
+Date:   Tue, 2 Jul 2019 11:50:10 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190701144039.GD21774@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:PF5gJ1KYGE6sBYJu6b5K5HpJrPz/0D0L/G08/MsEjt5f3vN/Quq
+ aRlJwgS1CIbVvoA2wAJQe27ocvjpHfm2XIYqG7TqAkVPIdgYX3wAeLjd+BeCpeQM9wejKyD
+ tseU5rMVAffIbQdPxmJFHdlb7NX8Dh34BnG3TaWvhQFkrrkrkT1YXpyA0FCiOdTTCVhbnNM
+ +3sVerSIlrLWrm79Fc/AA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l/G/KTK7KrY=:znOHhRCVTJSCSX1Wk1Ilp+
+ jey+SCa9lIZ3T3+ATGN+0TkSSgWCgAxfXjZv2St2mNT4ioV+tEn/3zkfbwZJ+7levcLDlpuFB
+ 65d9iBrKzHxMI3Zrrw37e91VMqX9TMGgG1OBtmP3q30CXnuduMb1Www8f4/senq/zli0EOBii
+ ukJkvUADsNpaWgDj8cGosVspAUXAP7AoNeVKJ4/jbpLCLxjyf1qq+dSx0VvXtDRBwR5lNryB0
+ N63oI7LifUozTj4INcros69b1MrSCqUaW4lioaAvEwk3pzs/fqsHcue74Pd1cNuNsyRfLH/1c
+ Pn7ZQPmg12ZsBdL8EcSUAVxj8lWQCZE1Ib/FcLRxRoFlzldvJIk7Fl0BkbM4vgG3LgGQ9HAhc
+ OJbI93lj0ig+ldBiUhfnBG/gQYbdatIcmsfgfWobZ1yApX449G5KS31zMPo1oPdMVGI6wyJL2
+ 0LGIH1T9OhMhl2EWgiep8Pk1InVke596hFTboBdGI5q5sGc5D8pFcaOl39sCcfcdoWS+v0DNW
+ 22sN6sqmjHzVU2A8dDo7T+4Athgke21NZ5RoVDB5hhsbiXYa5oeBTGMY3FSR9X07DiHvBAjtF
+ QMs7iI5p41bqUsa7SSDzSToCAPBNXj8s2GNjv5vvWB3eFpFLSH/BamJ1EiMcQh+SYxOrrJTH/
+ xaG+0La8R6qyCcdQFIW4fYktmh7ydmYIMcZot/lIhspHbaX4b/ZW0X0Ia3JLlR6fs6DWFWQVd
+ 9h5H50KREaocdqYc7cdru2EmnP0be35ud3i1xtrfMKkXaL9Azm+QszSQRC8iBCpMhcZ8A2s9N
+ iCO7EEMQrY+CtOKd87J7H7La60sRqStb/Utdc7yQI6rrsEatZjOVabtQT8PtZBDeSrik4wMOZ
+ hO0rTlQ4wWQgFWq72uRBuej4y5u/AatchvmrTvb6LCa4aCSgUSk/ro2Ww6bMIAuaRWc9RbgTJ
+ 14gdJkmASMWSIab62J+HMGOOfbvIUmEEIhDFBD13bahxhfou7tV5/tEw6DWdN6HcY3kOm03Cw
+ eKv2vl6vNguTrj3wEdxvBcjbq5XBLuhg+IRacXHGvMoLUTN2hpfpBWtZgrkwMavek6QLSIPKX
+ aHKFha+hpP2J65zxZgrn0mDSq1F4l3cF1Uw
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 2 Jul 2019 11:31:07 +0200
 
-On 7/1/19 3:40 PM, Catalin Marinas wrote:
-> On Mon, Jun 24, 2019 at 10:55:42AM +0100, Raphael Gault wrote:
->> --- a/arch/arm64/include/asm/assembler.h
->> +++ b/arch/arm64/include/asm/assembler.h
->> @@ -752,4 +752,17 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
->>   .Lyield_out_\@ :
->>   	.endm
->>   
->> +	/*
->> +	 * This macro is the arm64 assembler equivalent of the
->> +	 * macro STACK_FRAME_NON_STANDARD define at
->> +	 * ~/include/linux/frame.h
->> +	 */
->> +	.macro	asm_stack_frame_non_standard	func
->> +#ifdef	CONFIG_STACK_VALIDATION
->> +	.pushsection ".discard.func_stack_frame_non_standard"
->> +	.8byte	\func
-> 
-> Nitpicks:
-> 
-> Does .quad vs .8byte make any difference?
-> 
+A line break and a single string should be put into a sequence.
+Thus use the corresponding output functions.
 
-No it doesn't, I'll use .quad then.
+This issue was detected by using the Coccinelle software.
 
-> Could we place this in include/linux/frame.h directly with a generic
-> name (and some __ASSEMBLY__ guards)? It doesn't look to be arm specific.
-> 
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-It might be more consistent indeed, I'll do that.
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/=
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+index 73aff4e4039d..ec0e80296e43 100644
+=2D-- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+@@ -225,10 +225,10 @@ static int brcmf_feat_fwcap_debugfs_read(struct seq_=
+file *seq, void *data)
+ 	}
 
-Thanks,
+ 	/* Usually there is a space at the end of capabilities string */
+-	seq_printf(seq, "%s", caps);
++	seq_puts(seq, caps);
+ 	/* So make sure we don't print two line breaks */
+ 	if (tmp > caps && *(tmp - 1) !=3D '\n')
+-		seq_printf(seq, "\n");
++		seq_putc(seq, '\n');
 
--- 
-Raphael Gault
+ 	return 0;
+ }
+=2D-
+2.22.0
+
