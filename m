@@ -2,264 +2,103 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B50C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1AEC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0560020881
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:37:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OkWZuKu+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Gz45IP/V"
+	by mail.kernel.org (Postfix) with ESMTP id 52DF820881
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfGBFhN (ORCPT
+        id S1727034AbfGBFjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 01:37:13 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44924 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfGBFhM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 01:37:12 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9463D6083E; Tue,  2 Jul 2019 05:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562045830;
-        bh=JGrBwxHrXS5r9fQsQ/lPKRWZpykoj43FJ6SK6mgEm68=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OkWZuKu+L6bcd/Wiq+Y5TvDeLdhfIkcq9+EGEdmWunpDTtH3Xs2XSZIuI0RGSHRY0
-         QlKAk595VHc+drpbALK1MxduBhtIAtdEWfx0RYDtywbcnPnABAsvTYL3l/gwQxDk2t
-         1FbamrHjr0gHeQsAGgi1YIe2shvehm76xWFRAJR0=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 6DC1A604D4;
-        Tue,  2 Jul 2019 05:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562045829;
-        bh=JGrBwxHrXS5r9fQsQ/lPKRWZpykoj43FJ6SK6mgEm68=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Gz45IP/Vd4/uNN/hJOz9ycUGUixp7/HIWjpttlA/WRf+A5DyANOt750q+hYieu5vX
-         sP4HHv7yjEPlTe5zPSzk4RPpLBbPQVHpGzwfdrXc3KZ42LGjZelhYmpYPafCIWJNC9
-         eDJWo+fYuo4Zq03VCMtRKmbvndKIBOmjbJMh/tvE=
+        Tue, 2 Jul 2019 01:39:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60984 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbfGBFjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 01:39:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 97769ADEC;
+        Tue,  2 Jul 2019 05:39:42 +0000 (UTC)
+Subject: Re: [PATCH] fs: btrfs: extent_map: Change return type of
+ unpin_extent_cache
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190702031043.GA24334@hari-Inspiron-1545>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <fa67e273-1f0a-15ae-c6df-98fc3060dcbe@suse.com>
+Date:   Tue, 2 Jul 2019 08:39:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 02 Jul 2019 11:07:09 +0530
-From:   amasule@codeaurora.org
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH] media: venus: Update to bitrate based clock scaling
-In-Reply-To: <00818fe7-95e6-b43f-fca8-c4669ffad947@linaro.org>
-References: <1561537416-2067-1-git-send-email-amasule@codeaurora.org>
- <1561537416-2067-2-git-send-email-amasule@codeaurora.org>
- <00818fe7-95e6-b43f-fca8-c4669ffad947@linaro.org>
-Message-ID: <2f26245801973b25d0ad3e62ecd1cea1@codeaurora.org>
-X-Sender: amasule@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+In-Reply-To: <20190702031043.GA24334@hari-Inspiron-1545>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stan,
 
-On 2019-07-01 21:15, Stanimir Varbanov wrote:
-> Hi Aniket,
-> 
-> On 6/26/19 11:23 AM, Aniket Masule wrote:
->> Introduced clock scaling using bitrate, current
->> calculations consider only the cycles per mb.
->> Also, clock scaling is now triggered before every
->> buffer being queued to the device. This helps in
->> deciding precise clock cycles required.
->> 
->> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
->> ---
->>  drivers/media/platform/qcom/venus/core.c    | 16 +++++------
->>  drivers/media/platform/qcom/venus/core.h    |  1 +
->>  drivers/media/platform/qcom/venus/helpers.c | 43 
->> +++++++++++++++++++++++++----
->>  3 files changed, 47 insertions(+), 13 deletions(-)
->> 
->> diff --git a/drivers/media/platform/qcom/venus/core.c 
->> b/drivers/media/platform/qcom/venus/core.c
->> index f1597d6..ad6bb74 100644
->> --- a/drivers/media/platform/qcom/venus/core.c
->> +++ b/drivers/media/platform/qcom/venus/core.c
->> @@ -474,14 +474,14 @@ static __maybe_unused int 
->> venus_runtime_resume(struct device *dev)
->>  };
->> 
->>  static struct codec_freq_data sdm845_codec_freq_data[] =  {
->> -	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675 },
->> -	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675 },
->> -	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675 },
->> -	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200 },
->> -	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200 },
->> -	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200 },
->> -	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200 },
->> -	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200 },
->> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
->> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
->> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
->> +	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
->> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
->> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
->> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
->> +	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
->>  };
->> 
->>  static const struct venus_resources sdm845_res = {
->> diff --git a/drivers/media/platform/qcom/venus/core.h 
->> b/drivers/media/platform/qcom/venus/core.h
->> index 2ed6496..b964b7c 100644
->> --- a/drivers/media/platform/qcom/venus/core.h
->> +++ b/drivers/media/platform/qcom/venus/core.h
->> @@ -39,6 +39,7 @@ struct codec_freq_data {
->>  	u32 pixfmt;
->>  	u32 session_type;
->>  	unsigned int vpp_freq;
->> +	unsigned int vsp_freq;
-> 
-> unsigned long?
-> 
-The hard-coded values for both vpp and vsp will in few hundreds.
-So, unsigned int would work fine.
->>  };
->> 
->>  struct venus_resources {
->> diff --git a/drivers/media/platform/qcom/venus/helpers.c 
->> b/drivers/media/platform/qcom/venus/helpers.c
->> index ef35fd8..634778a 100644
->> --- a/drivers/media/platform/qcom/venus/helpers.c
->> +++ b/drivers/media/platform/qcom/venus/helpers.c
->> @@ -379,6 +379,9 @@ static int scale_clocks(struct venus_inst *inst)
->>  	unsigned int i;
->>  	int ret;
->> 
->> +	if (inst->state == INST_START)
->> +		return 0;
-> 
-> This condition is related (probably) to the change in
-> venus_helper_vb2_buf_queue() but shouldn't it be copied in
-> scale_clocks_v4 too?
-> 
-Yes, this is related to change in venus_helper_vb2_buf_queue.
-The intention is trigger clock scaling only in case of v4
-whenever instance is in  INST_START state. This would call scale_clocks
-only when instance is in INST_INIT state, which alignment to earlier
-call flow.
->> +
->>  	mbs_per_sec = load_per_type(core, VIDC_SESSION_TYPE_ENC) +
->>  		      load_per_type(core, VIDC_SESSION_TYPE_DEC);
->> 
->> @@ -418,17 +421,26 @@ static int scale_clocks(struct venus_inst *inst)
->>  	return ret;
->>  }
->> 
->> -static unsigned long calculate_vpp_freq(struct venus_inst *inst)
->> +static unsigned long calculate_inst_freq(struct venus_inst *inst,
->> +					 unsigned long filled_len)
->>  {
->> -	unsigned long vpp_freq = 0;
->> +	unsigned long vpp_freq = 0, vsp_freq = 0;
->> +	u64 fps = inst->fps;
->>  	u32 mbs_per_sec;
->> 
->>  	mbs_per_sec = load_per_instance(inst);
->>  	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
->>  	/* 21 / 20 is overhead factor */
->>  	vpp_freq += vpp_freq / 20;
->> +	vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vsp_freq;
-> 
-> this calculation is not used below. Is that intentional?
-> 
-I will refine this calculations, need to add bitrate with above 
-calculated vsp cycles.
->> +
->> +	/* 10 / 7 is overhead factor */
->> +	if (inst->session_type == VIDC_SESSION_TYPE_ENC)
->> +		vsp_freq = (inst->controls.enc.bitrate * 10) / 7;
->> +	else
->> +		vsp_freq = ((fps * filled_len * 8) * 10) / 7;
->> 
->> -	return vpp_freq;
->> +	return max(vpp_freq, vsp_freq);
->>  }
->> 
->>  static int scale_clocks_v4(struct venus_inst *inst)
->> @@ -436,14 +448,30 @@ static int scale_clocks_v4(struct venus_inst 
->> *inst)
->>  	struct venus_core *core = inst->core;
->>  	const struct freq_tbl *table = core->res->freq_tbl;
->>  	unsigned int num_rows = core->res->freq_tbl_size;
->> -
->> +	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
->>  	struct clk *clk = core->clks[0];
->>  	struct device *dev = core->dev;
->> +
-> 
-> drop this addition of blank line.
-> 
->>  	unsigned int i;
->>  	unsigned long freq = 0, freq_core0 = 0, freq_core1 = 0;
->> +	unsigned long filled_len = 0;
->> +	struct venus_buffer *buf, *n;
->> +	struct vb2_buffer *vb;
->>  	int ret;
->> 
->> -	freq = calculate_vpp_freq(inst);
->> +	mutex_lock(&inst->lock);
->> +	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
->> +		vb = &buf->vb.vb2_buf;
->> +		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
->> +	}
->> +	mutex_unlock(&inst->lock);
->> +
->> +	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len) {
->> +		dev_dbg(dev, "%s: No input to the session\n", __func__);
-> 
-> please drop this debug message, if the user pushes empty buffers
-> something will blow up earlier.
-> 
-Yes.
->> +		return 0;
->> +	}
->> +
->> +	freq = calculate_inst_freq(inst, filled_len);
->> 
->>  	if (freq > table[0].freq)
->>  		goto err;
->> @@ -471,6 +499,9 @@ static int scale_clocks_v4(struct venus_inst 
->> *inst)
->> 
->>  	freq = max(freq_core0, freq_core1);
->> 
->> +	if (clk_get_rate(clk) == freq)
->> +		return 0;
->> +
-> 
-> above check is included in clk_set_rate(), you don't need it.
-> 
-Yes.
->>  	ret = clk_set_rate(clk, freq);
->>  	if (ret)
->>  		goto err;
->> @@ -1150,6 +1181,8 @@ void venus_helper_vb2_buf_queue(struct 
->> vb2_buffer *vb)
->>  	if (ret)
->>  		goto unlock;
->> 
->> +	load_scale_clocks(inst);
->> +
->>  	ret = session_process_buf(inst, vbuf);
->>  	if (ret)
->>  		return_buf_error(inst, vbuf);
->> 
 
-Regards,
-Aniket
+On 2.07.19 г. 6:10 ч., Hariprasad Kelam wrote:
+> As unpin_extent_cache never fails and Caller does not expect return
+> value we can change return value from int to void.
+> 
+> Issue identified with coccicheck
+> fs/btrfs/extent_map.c:284:5-8: Unneeded variable: "ret". Return "0" on
+> line 316
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+
