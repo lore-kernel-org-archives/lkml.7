@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CAFC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C89C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791EA2183F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C3721852
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054668;
-	bh=39pUnFZd9YfXZTHov4rqSLDdJnWtQ3l3w6H9df6BZzQ=;
+	s=default; t=1562054672;
+	bh=emvwUdVW0+nZbV6MltQoEQlRpt9QAeRJY2O4pV29Klw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OwowXitf0dWfMkHbPHrSYHOyhtzNz3BXnRJ/S+UDWipKefAKqzvkohYuP02tqdOzF
-	 W04DL6uwMD/u9vcyzCMVK1PkwU0/1TJW733Vx8aN+Z+lu4t1SKxfnwBs8WC5QkIhSm
-	 v5f23JkuZzlxML+YaxDO5/pnNv34zUl3ivlvB+VM=
+	b=dnt3OG0uOI94RR3p2DiRSKUnzOU/SyY+tfCmVSKW9ba/Ts6EjMTmyISBvXRDn7vlO
+	 Xk0ecX61WMk67xLprtBk+Mih7xzSEvZVS49lisXS/V1uxaunhAI176xXs4HkyibEYj
+	 F9HVu78xTT2ETrjvzak+8r442PWBJBr4tE4rUdiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfGBIE1 (ORCPT
+        id S1727743AbfGBIEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:04:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49814 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:04:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727664AbfGBIEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:04:23 -0400
+        id S1727726AbfGBIE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:04:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7141D20659;
-        Tue,  2 Jul 2019 08:04:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7C6A20659;
+        Tue,  2 Jul 2019 08:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054662;
-        bh=39pUnFZd9YfXZTHov4rqSLDdJnWtQ3l3w6H9df6BZzQ=;
+        s=default; t=1562054668;
+        bh=emvwUdVW0+nZbV6MltQoEQlRpt9QAeRJY2O4pV29Klw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U8GWrLsP7UUDr4sU5HcV+Udh+MAAi1ILeKiSX9FFXEIeaS4EYHaZKoPelVixltrFG
-         NouOOAGSQiwE3PXCO/lFN9UhRoL+J/ARjf2y44OYJRlQacIcBUNdPqwsaVdyFZq7mW
-         yObGedcCgWIYsmeqY3yzcxEmGT/CIm22znRSPDN8=
+        b=eQNgn5IeUXjFIM/aUxnKj4cU4jMlZtGVUB+NTxtdC9RS8NOj7z23+wmJBAOb8771R
+         1/IwbOHoz0EaNmF86cNFfwkrDLx2twgajJqa4Thr24NWdUYGciwTri29xuGoXp3znJ
+         O2wYJBzcCcxNOuRLtqpBRVLHqOHlgHF6kO8SlWrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Herbert <tom@herbertland.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.1 48/55] bpf: udp: Avoid calling reuseports bpf_prog from udp_gro
-Date:   Tue,  2 Jul 2019 10:01:56 +0200
-Message-Id: <20190702080126.575246866@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 5.1 50/55] arm64: futex: Avoid copying out uninitialised stack in failed cmpxchg()
+Date:   Tue,  2 Jul 2019 10:01:58 +0200
+Message-Id: <20190702080126.687857009@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -61,55 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 257a525fe2e49584842c504a92c27097407f778f upstream.
+commit 8e4e0ac02b449297b86498ac24db5786ddd9f647 upstream.
 
-When the commit a6024562ffd7 ("udp: Add GRO functions to UDP socket")
-added udp[46]_lib_lookup_skb to the udp_gro code path, it broke
-the reuseport_select_sock() assumption that skb->data is pointing
-to the transport header.
+Returning an error code from futex_atomic_cmpxchg_inatomic() indicates
+that the caller should not make any use of *uval, and should instead act
+upon on the value of the error code. Although this is implemented
+correctly in our futex code, we needlessly copy uninitialised stack to
+*uval in the error case, which can easily be avoided.
 
-This patch follows an earlier __udp6_lib_err() fix by
-passing a NULL skb to avoid calling the reuseport's bpf_prog.
-
-Fixes: a6024562ffd7 ("udp: Add GRO functions to UDP socket")
-Cc: Tom Herbert <tom@herbertland.com>
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/udp.c |    6 +++++-
- net/ipv6/udp.c |    2 +-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/futex.h |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -503,7 +503,11 @@ static inline struct sock *__udp4_lib_lo
- struct sock *udp4_lib_lookup_skb(struct sk_buff *skb,
- 				 __be16 sport, __be16 dport)
- {
--	return __udp4_lib_lookup_skb(skb, sport, dport, &udp_table);
-+	const struct iphdr *iph = ip_hdr(skb);
+--- a/arch/arm64/include/asm/futex.h
++++ b/arch/arm64/include/asm/futex.h
+@@ -134,7 +134,9 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+ 	: "memory");
+ 	uaccess_disable();
+ 
+-	*uval = val;
++	if (!ret)
++		*uval = val;
 +
-+	return __udp4_lib_lookup(dev_net(skb->dev), iph->saddr, sport,
-+				 iph->daddr, dport, inet_iif(skb),
-+				 inet_sdif(skb), &udp_table, NULL);
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(udp4_lib_lookup_skb);
- 
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -242,7 +242,7 @@ struct sock *udp6_lib_lookup_skb(struct
- 
- 	return __udp6_lib_lookup(dev_net(skb->dev), &iph->saddr, sport,
- 				 &iph->daddr, dport, inet6_iif(skb),
--				 inet6_sdif(skb), &udp_table, skb);
-+				 inet6_sdif(skb), &udp_table, NULL);
- }
- EXPORT_SYMBOL_GPL(udp6_lib_lookup_skb);
  
 
 
