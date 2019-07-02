@@ -2,96 +2,114 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB373C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DA7C06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 800652082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A4020989
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CUJnZ9HI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrW1tDHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbfGBPvY (ORCPT
+        id S1727055AbfGBPvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:51:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50020 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfGBPvV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:51:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KLwUF+icpY+NvjPg4hCU2tdrBb0AljHtBhiYk13AZqw=; b=CUJnZ9HI9SeWFonIC7HtQq1TH
-        r/+EJ0czLxUhbo1zSc6SyubnA2lnVcxBrH/Na7K8zabPBwzM7MLvqT5xmIolyX5Xhjem7C5no90Ze
-        mEu+eBvH/JxsV4E6nhzO/ZunGmGY6gx0ybQOZjL+Rney6LOhL5j3zu7Ce5c7JbGneVozT0kNJ1Agk
-        sr5MqZEEpgJ7gy54PvuRHzdIdQBP+a02Itwda7W1+ZPtIe3JZ8AXY9YGDANy6SRVetoOhLwulyQiw
-        uoBYP6L54Igt22rOLYPvUgOaaX62fT1gHZVlu6mlcUjTPBpzNz7PGMjX32dWuhsso1Z/sU7t4u96F
-        lRhPQ6cDQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiL3t-0003Zu-Dg; Tue, 02 Jul 2019 15:51:17 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D1199203C694A; Tue,  2 Jul 2019 17:51:15 +0200 (CEST)
-Date:   Tue, 2 Jul 2019 17:51:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Douglas RAILLARD <douglas.raillard@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        quentin.perret@arm.com, patrick.bellasi@arm.com,
-        dietmar.eggemann@arm.com
-Subject: Re: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
-Message-ID: <20190702155115.GW3436@hirez.programming.kicks-ass.net>
-References: <20190627171603.14767-1-douglas.raillard@arm.com>
+        Tue, 2 Jul 2019 11:51:46 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39097 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbfGBPvp (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 11:51:45 -0400
+Received: by mail-qk1-f196.google.com with SMTP id i125so14495032qkd.6
+        for <Linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 08:51:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mIWxYRc22+ugt+mOFaGt8B3CI/ZTBy55XFxSUnaUbpU=;
+        b=SrW1tDHkt1EmmC9FfGAf47t51HUD1VVyjv7HBLv1c7zUOIYjubM3QYyqpWV+SkbZ39
+         j7Ug9Rd5u6/FyzY3AOmMDb96rUxwOV7f/biUn+PUYZqVfSx2njY1W5/mcVge4GqefvwC
+         C1FvnBvaB98dIQFwuveo/ODlJ91YF6zIu3y7g+UaOxwdYmhRuFqSogF6Msb0nv8TfVRt
+         eNAFa9I6CK0QpkVe17VGKcajWFagv8g/pkx4Ph9dyjWGefaJUuMNrTFmOCEY8MXuXyii
+         Z1UO18knRVpq2AVdi9AM+eLsylqHgN39s8dMiHtKqBqVux1nTfTaZosECmizLV7LD6sF
+         yTCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mIWxYRc22+ugt+mOFaGt8B3CI/ZTBy55XFxSUnaUbpU=;
+        b=mJ7Yf0k7wxMO0jZyYinz7Ni83xuRf3OBDuN6/3/2Hc0p5Eer4sR+kYc3OfdeHlsRjV
+         yZCCBUzEfwKMo0YNGeuZY02u1sZvj2zDfJFubX1gZJM35hakvVFSqkj5poAjgKzHq/Z3
+         mg0duHQ2C7qZk2AYOTMnopVwX5g4ax3vTp1UeFClYPoEqiKxfwk3bIwCVwhUX2/CJD4n
+         zlLkx+PUviLfPyWto7edbb4CU6ILJOOHRp/Qxl41IViyXQ9H7QZx7xhefm0XlN3oevYM
+         Vbfaw2ZJoVdjc8sJfnPYGrqe43INVZpgJnnZxEv6MEAb6W8kzVBBUsntc/NAXIy76GZ+
+         NCLQ==
+X-Gm-Message-State: APjAAAURyY493G3p32MiOXOMzcUZg0AUrq/ny4Zfg3DcQYNHqdgPMli9
+        algqGBqLxvoQIBqnNxE6Juw=
+X-Google-Smtp-Source: APXvYqwhkQLuFLGmhGuf9I43Lq7LpibYaGe0QFBn0FZo9zBkZy5J6FNAtylba/DPo/zrKoc2VPQcyQ==
+X-Received: by 2002:a37:9a96:: with SMTP id c144mr24614572qke.468.1562082704405;
+        Tue, 02 Jul 2019 08:51:44 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id s44sm8346934qtc.8.2019.07.02.08.51.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 08:51:44 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BBEA241153; Tue,  2 Jul 2019 12:51:38 -0300 (-03)
+Date:   Tue, 2 Jul 2019 12:51:38 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jin Yao <yao.jin@linux.intel.com>, jolsa@kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v6 0/7] perf diff: diff cycles at basic block level
+Message-ID: <20190702155138.GD15462@kernel.org>
+References: <1561713784-30533-1-git-send-email-yao.jin@linux.intel.com>
+ <20190628080255.GA3427@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190627171603.14767-1-douglas.raillard@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190628080255.GA3427@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 06:15:58PM +0100, Douglas RAILLARD wrote:
-> Make schedutil cpufreq governor energy-aware.
-> 
-> - patch 4 adds sugov_cpu_ramp_boost() function.
-> - patch 5 updates sugov_update_(single|shared)() to make use of
->   sugov_cpu_ramp_boost().
-> 
-> The benefits of using the EM in schedutil are twofold:
+Em Fri, Jun 28, 2019 at 10:02:55AM +0200, Jiri Olsa escreveu:
+> On Fri, Jun 28, 2019 at 05:22:57PM +0800, Jin Yao wrote:
+> > In some cases small changes in hot loops can show big differences.
+> > But it's difficult to identify these differences.
+> > 
+> > perf diff currently can only diff symbols (functions). We can also expand
+> > it to diff cycles of individual programs blocks as reported by timed LBR.
+> > This would allow to identify changes in specific code accurately.
+> > 
+> > With this patch set, for example,
+> > 
+> >  $ perf record -b ./div
+> >  $ perf record -b ./div
+> >  $ perf diff -c cycles
+> > 
+> >  # Event 'cycles'
+> >  #
+> >  # Baseline                                       [Program Block Range] Cycles Diff  Shared Object     Symbol
+> >  # ........  ......................................................................  ................  ..................................
+> >  #
+> >      48.75%                                             [div.c:42 -> div.c:45]  147  div               [.] main
+> >      48.75%                                             [div.c:31 -> div.c:40]    4  div               [.] main
+> >      48.75%                                             [div.c:40 -> div.c:40]    0  div               [.] main
+> >      48.75%                                             [div.c:42 -> div.c:42]    0  div               [.] main
+> >      48.75%                                             [div.c:42 -> div.c:44]    0  div               [.] main
+> >      19.02%                                 [random_r.c:357 -> random_r.c:360]    0  libc-2.23.so      [.] __random_r
+ 
+> Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 
-> 2) Driving the frequency selection with power in mind, in addition to
->    maximizing the utilization of the non-idle CPUs in the system.
+Looks really nice, thanks, applied.
 
-> Point 2) is enabled in
-> "sched/cpufreq: Boost schedutil frequency ramp up". It allows using
-> higher frequencies when it is known that the true utilization of
-> currently running tasks is exceeding their previous stable point.
-> The benefits are:
-> 
-> * Boosting the frequency when the behavior of a runnable task changes,
->   leading to an increase in utilization. That shortens the frequency
->   ramp up duration, which in turns allows the utilization signal to
->   reach stable values quicker.  Since the allowed frequency boost is
->   bounded in energy, it will behave consistently across platforms,
->   regardless of the OPP cost range.
-> 
-> * The boost is only transient, and should not impact a lot the energy
->   consumed of workloads with very stable utilization signals.
-
-So you're allowing a higher pick when the EWMA exceeds the enqueue
-thing.
-
-This then obviously has relation to Patrick's patch that makes the EWMA
-asymmetric, but I'm thinking that the interaction is mostly favourable?
-
-I'm not immediately seeing how it is transient; that is, PELT has a
-wobble in it's steady state, is that accounted for?
+- Arnaldo
