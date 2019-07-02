@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF827C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A15BBC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92996218A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBDD218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfGCAdP (ORCPT
+        id S1727333AbfGCAdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:33:15 -0400
+        Tue, 2 Jul 2019 20:33:19 -0400
 Received: from youngberry.canonical.com ([91.189.89.112]:39293 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727227AbfGCAdM (ORCPT
+        with ESMTP id S1727078AbfGCAdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:33:12 -0400
+        Tue, 2 Jul 2019 20:33:13 -0400
 Received: from 1.general.cking.uk.vpn ([10.172.193.212])
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
         (Exim 4.76)
         (envelope-from <colin.king@canonical.com>)
-        id 1hiRTs-0003jV-5l; Tue, 02 Jul 2019 22:42:32 +0000
+        id 1hiRbc-0004Lu-2V; Tue, 02 Jul 2019 22:50:32 +0000
 Subject: Re: [PATCH][next] selftests/x86: fix spelling mistake "FAILT" ->
  "FAIL"
 To:     shuah <shuah@kernel.org>, Andy Lutomirski <luto@kernel.org>
@@ -37,6 +38,8 @@ References: <20190701130431.13391-1-colin.king@canonical.com>
  <CALCETrVo0rJVxsYvo=abDfFCZHBuCiB0coSBXoDeP_emSZgESg@mail.gmail.com>
  <6e5a9bed-4f7f-4851-0421-2b440ff1f584@kernel.org>
  <9ba791d5-0d67-9834-90e9-e1dca307d386@kernel.org>
+ <0031e09b-e309-3976-09b1-dc8d10365aee@canonical.com>
+ <aec8c4b5-a82a-74c0-f60f-869786e4a2fa@kernel.org>
 From:   Colin Ian King <colin.king@canonical.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
@@ -81,12 +84,12 @@ Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
  WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
  QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
  GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
-Message-ID: <0031e09b-e309-3976-09b1-dc8d10365aee@canonical.com>
-Date:   Tue, 2 Jul 2019 23:42:31 +0100
+Message-ID: <4a82a57a-9f36-d525-6271-4da01bfd5241@canonical.com>
+Date:   Tue, 2 Jul 2019 23:50:31 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <9ba791d5-0d67-9834-90e9-e1dca307d386@kernel.org>
+In-Reply-To: <aec8c4b5-a82a-74c0-f60f-869786e4a2fa@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -95,68 +98,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/07/2019 20:25, shuah wrote:
-> On 7/2/19 8:22 AM, shuah wrote:
->> On 7/1/19 11:48 AM, Andy Lutomirski wrote:
->>> On Mon, Jul 1, 2019 at 6:04 AM Colin King <colin.king@canonical.com>
->>> wrote:
+On 02/07/2019 23:48, shuah wrote:
+> On 7/2/19 4:42 PM, Colin Ian King wrote:
+>> On 02/07/2019 20:25, shuah wrote:
+>>> On 7/2/19 8:22 AM, shuah wrote:
+>>>> On 7/1/19 11:48 AM, Andy Lutomirski wrote:
+>>>>> On Mon, Jul 1, 2019 at 6:04 AM Colin King <colin.king@canonical.com>
+>>>>> wrote:
+>>>>>>
+>>>>>> From: Colin Ian King <colin.king@canonical.com>
+>>>>>>
+>>>>>> There is an spelling mistake in an a test error message. Fix it.
+>>>>>>
+>>>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>>>>> ---
+>>>>>>    tools/testing/selftests/x86/test_vsyscall.c | 2 +-
+>>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/tools/testing/selftests/x86/test_vsyscall.c
+>>>>>> b/tools/testing/selftests/x86/test_vsyscall.c
+>>>>>> index 4602326b8f5b..a4f4d4cf22c3 100644
+>>>>>> --- a/tools/testing/selftests/x86/test_vsyscall.c
+>>>>>> +++ b/tools/testing/selftests/x86/test_vsyscall.c
+>>>>>> @@ -451,7 +451,7 @@ static int test_vsys_x(void)
+>>>>>>                   printf("[OK]\tExecuting the vsyscall page failed:
+>>>>>> #PF(0x%lx)\n",
+>>>>>>                          segv_err);
+>>>>>>           } else {
+>>>>>> -               printf("[FAILT]\tExecution failed with the wrong
+>>>>>> error: #PF(0x%lx)\n",
+>>>>>> +               printf("[FAIL]\tExecution failed with the wrong
+>>>>>> error: #PF(0x%lx)\n",
+>>>>>>                          segv_err);
+>>>>>>                   return 1;
+>>>>>>           }
+>>>>>> -- 
+>>>>>> 2.20.1
+>>>>>>
+>>>>>
+>>>>> Acked-by: Andy Lutomirski <luto@kernel.org>
+>>>>>
 >>>>
->>>> From: Colin Ian King <colin.king@canonical.com>
+>>>> Thanks Andy!
 >>>>
->>>> There is an spelling mistake in an a test error message. Fix it.
+>>>> I will queue this up for 5.3
 >>>>
->>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>>> ---
->>>>   tools/testing/selftests/x86/test_vsyscall.c | 2 +-
->>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/tools/testing/selftests/x86/test_vsyscall.c
->>>> b/tools/testing/selftests/x86/test_vsyscall.c
->>>> index 4602326b8f5b..a4f4d4cf22c3 100644
->>>> --- a/tools/testing/selftests/x86/test_vsyscall.c
->>>> +++ b/tools/testing/selftests/x86/test_vsyscall.c
->>>> @@ -451,7 +451,7 @@ static int test_vsys_x(void)
->>>>                  printf("[OK]\tExecuting the vsyscall page failed:
->>>> #PF(0x%lx)\n",
->>>>                         segv_err);
->>>>          } else {
->>>> -               printf("[FAILT]\tExecution failed with the wrong
->>>> error: #PF(0x%lx)\n",
->>>> +               printf("[FAIL]\tExecution failed with the wrong
->>>> error: #PF(0x%lx)\n",
->>>>                         segv_err);
->>>>                  return 1;
->>>>          }
->>>> -- 
->>>> 2.20.1
+>>>> -- Shuah
 >>>>
 >>>
->>> Acked-by: Andy Lutomirski <luto@kernel.org>
+>>> Hi Colin,
 >>>
+>>> Checkpatch warning on this. Probably failed on the original patch.
+>>> Could you please fix the checkpatch warn, and send v2.
 >>
->> Thanks Andy!
+>> If I split the line, I get another checkpatch warning:
 >>
->> I will queue this up for 5.3
+>> "WARNING: quoted string split across lines"
 >>
->> -- Shuah
+>> Either way checkpatch emits a warning. The convention is to not break
+>> literal strings, and the line is only a few chars over the 80 char
+>> boundary, so the V1 of the patch is the way it should be IMHO.
 >>
 > 
-> Hi Colin,
-> 
-> Checkpatch warning on this. Probably failed on the original patch.
-> Could you please fix the checkpatch warn, and send v2.
+> As such this existed before your patch. I will apply v1.
 
-If I split the line, I get another checkpatch warning:
-
-"WARNING: quoted string split across lines"
-
-Either way checkpatch emits a warning. The convention is to not break
-literal strings, and the line is only a few chars over the 80 char
-boundary, so the V1 of the patch is the way it should be IMHO.
-
-Colin
-
-
+Cool, thanks Shuah.
 > 
 > thanks,
 > -- Shuah
