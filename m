@@ -2,119 +2,146 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893E5C06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413DEC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8722082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153C92146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:01:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5MHYzvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfGBQBO (ORCPT
+        id S1727068AbfGBQBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:01:14 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42412 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfGBQBN (ORCPT
+        Tue, 2 Jul 2019 12:01:42 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40553 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfGBQBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:01:13 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ay6so595442plb.9;
-        Tue, 02 Jul 2019 09:01:13 -0700 (PDT)
+        Tue, 2 Jul 2019 12:01:42 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c70so14538704qkg.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 09:01:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=t6Sq8VlsWfMYqpvKp7IaW+M3XXbNjuCkJCX7Z7BRYiM=;
+        b=X5MHYzvzoOVPhATkU6PFr1lh3OWQs2kVmrJIck1jLUJxA/IO6LEjTimckdHFYFdzXR
+         SgdiLYSxlVEQv6o+oXp3p1rvic7oxEazGgXsX/cw2s05UhNFiS6UJ8IjMKYpe/UCqoKa
+         JOSVZFKR6JylGmL+/c7epIfkkNPjDsI19Ame1i4ctb7+mqMlU+nXgxuY7SjRTY+uKGsE
+         6nP3CeGbBwHMCYG+d+PA6gGxCXXb1Ok5qL7NPrc9zGMb1lqZm6ucG41z2Ghnm/L3keLd
+         ZuLWmQNCi1OICUQzSmKFkhBSGlbZUk/VvepkOiFEKK6K++QcgW28m/OisoPRTpM793sN
+         PcSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SW2KCspeft8VbkNrb1bXHhZJO5zB/ZyN0RFjcBu6s8o=;
-        b=lWntlNs6JRlW3zD6WV3jJlFWelqlnUp+toxQTeqYI2O038DhhjdmP6KeSgCVHI1m7m
-         ++sPznkrOo0piaxJyAR8nBKSu/+x9B0MaLEaZ7ge1m4U4BRx13nHqZpRx49+uz0taRDB
-         kL1NaPqIWdfDAPg9Pvl/NqEKCmH1g6Px4tITvhyU1gOm7hygL+2mSXj0eseb5/FUh1Lm
-         5GDlxedT85VCCzT0oN5oayNIezaCxdFYs5OcFZZtbA9tlA3GiSC+sFeDHGFoqrBlPXW9
-         Dn3Hj2xsoYE4qGn+2Pi8JfxjI4bXRt3E3PYfhOs/polloP8fxF6ONShsSNuG39rm1rKn
-         z87w==
-X-Gm-Message-State: APjAAAXcFGlqhaTIxU801Odt8BNdSpcUG0Rgg1l5/hLQeMjY1tQUMK+v
-        YLT5nIJnWlA7vp71Yoi1EZE=
-X-Google-Smtp-Source: APXvYqyHiegsC8VoMu/i/mZZOipM9Wo1gsNDjD6zACvWVF4MEDNMbJgh/wlOaAmIgZeRIZhabrtE0g==
-X-Received: by 2002:a17:902:1e6:: with SMTP id b93mr36020282plb.295.1562083272888;
-        Tue, 02 Jul 2019 09:01:12 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id q198sm22380266pfq.155.2019.07.02.09.01.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 09:01:11 -0700 (PDT)
-Subject: Re: INFO: task hung in blkdev_issue_flush (2)
-To:     syzbot <syzbot+e7624af9c1ef3b617512@syzkaller.appspotmail.com>,
-        axboe@kernel.dk, idryomov@gmail.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sagi@grimberg.me, snitzer@redhat.com,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
-        wgh@torlan.ru, zkabelac@redhat.com
-References: <0000000000009c93d5058cb46073@google.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <6a853698-6244-7c4e-77cd-73e4fd672376@acm.org>
-Date:   Tue, 2 Jul 2019 09:01:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=t6Sq8VlsWfMYqpvKp7IaW+M3XXbNjuCkJCX7Z7BRYiM=;
+        b=bDL4ZOl0pj3OWrZO6dwczFBoeUPZ9/7+EA3MaRC1SI5eKw1URwttTxeKZ8CiYQkFI0
+         ydpQQbM45BDjRGQCVljSEFjIOhZNbUFF1JDw4W2aMBUgMyL5yiYeTwLsdr3Hkayz7O91
+         OhDQ2XS7surR9PzipyGdu0X4RwMLHfkTFAOII9Bj1q6tcf/lTTKbbViI542lQ4lO2Zoq
+         zGf5TO2tl8Be/wS8Zy0m4X9B6Oc9hzVKKuL/JUaxXSFHrjskdVGrmCT4WVlfkXBDSBsl
+         hDHPDVwrVzXqipmbcq4Ic4mQ9GSVS2SJJ8JoP9+HPgPC7YSyCAiedIGCt6vDKyuzVWPH
+         SUIg==
+X-Gm-Message-State: APjAAAV7CM/Sg5Eb9DSR7eEunB7LuGMykuxgAK1pNRDkZKVtSmxDI3OY
+        JstotIH/tyd4nq+dhnfzthE=
+X-Google-Smtp-Source: APXvYqznzIMu+970vyDTiemPvodjeZo3AVygxlhjjX+83Zgkc59DtvvGrFrt6qUaD1MCU0N5RNuMuw==
+X-Received: by 2002:a37:5f82:: with SMTP id t124mr23414604qkb.180.1562083301156;
+        Tue, 02 Jul 2019 09:01:41 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id o5sm6347142qkf.10.2019.07.02.09.01.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 09:01:39 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CDA1F41153; Tue,  2 Jul 2019 13:01:37 -0300 (-03)
+Date:   Tue, 2 Jul 2019 13:01:37 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH] perf tools: Fix bison warnings for pure parser
+Message-ID: <20190702160137.GI15462@kernel.org>
+References: <20190627222021.14980-1-andi@firstfloor.org>
+ <20190628080507.GB3427@krava>
 MIME-Version: 1.0
-In-Reply-To: <0000000000009c93d5058cb46073@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190628080507.GB3427@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 8:27 AM, syzbot wrote:
-> Showing all locks held in the system:
-> 1 lock held by khungtaskd/1043:
->   #0: 00000000f7c610b3 (rcu_read_lock){....}, at: 
-> debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5149
-> 2 locks held by rsyslogd/8451:
->   #0: 00000000dfc1566f (&f->f_pos_lock){+.+.}, at: 
-> __fdget_pos+0xee/0x110 fs/file.c:801
->   #1: 0000000054220207 (&rq->lock){-.-.}, at: rq_lock 
-> kernel/sched/sched.h:1168 [inline]
->   #1: 0000000054220207 (&rq->lock){-.-.}, at: __schedule+0x1f5/0x1560 
-> kernel/sched/core.c:3397
-> 2 locks held by getty/8541:
->   #0: 000000004ff543bd (&tty->ldisc_sem){++++}, at: 
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
->   #1: 000000002a3905f3 (&ldata->atomic_read_lock){+.+.}, at: 
-> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/8542:
->   #0: 000000006e67fcec (&tty->ldisc_sem){++++}, at: 
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
->   #1: 00000000ee71e4f3 (&ldata->atomic_read_lock){+.+.}, at: 
-> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/8543:
->   #0: 00000000bd0907a0 (&tty->ldisc_sem){++++}, at: 
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
->   #1: 000000000876abce (&ldata->atomic_read_lock){+.+.}, at: 
-> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/8544:
->   #0: 00000000710d6f7d (&tty->ldisc_sem){++++}, at: 
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
->   #1: 00000000af289586 (&ldata->atomic_read_lock){+.+.}, at: 
-> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/8545:
->   #0: 000000003399e62d (&tty->ldisc_sem){++++}, at: 
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
->   #1: 00000000ee97f91a (&ldata->atomic_read_lock){+.+.}, at: 
-> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/8546:
->   #0: 00000000ff2274c6 (&tty->ldisc_sem){++++}, at: 
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
->   #1: 00000000b96c5a9f (&ldata->atomic_read_lock){+.+.}, at: 
-> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-> 2 locks held by getty/8547:
->   #0: 000000005165f028 (&tty->ldisc_sem){++++}, at: 
-> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
->   #1: 00000000e89d5b4a (&ldata->atomic_read_lock){+.+.}, at: 
-> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+Em Fri, Jun 28, 2019 at 10:05:07AM +0200, Jiri Olsa escreveu:
+> On Thu, Jun 27, 2019 at 03:20:21PM -0700, Andi Kleen wrote:
+> > From: Andi Kleen <ak@linux.intel.com>
+> > 
+> > bison 3.4.1 complains during a perf build:
+> > 
+> > util/parse-events.y:1.1-12: warning: deprecated directive, use ‘%define api.pure’ [-Wdeprecated]
+> >     1 | %pure-parser
+> >       | ^~~~~~~~~~~~
+> >   CC       /home/andi/lsrc/obj-perf/ui/browsers/map.o
+> > util/parse-events.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+> > 
+> > util/expr.y:13.1-12: warning: deprecated directive, use ‘%define api.pure’ [-Wdeprecated]
+> >    13 | %pure-parser
+> >       | ^~~~~~~~~~~~
+> > util/expr.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+> > 
+> > Change the declarations to %define api.pure
+> > 
+> > Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> 
+> looks good, let's hope it'll pass Arnaldo's build test
 
-Since the tty layer does not call any block layer code, does this mean 
-that the root cause is in the tty code instead of in the block layer?
+starting the tests now...
+ 
+> jirka
+> 
+> > ---
+> >  tools/perf/util/expr.y         | 2 +-
+> >  tools/perf/util/parse-events.y | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+> > index 432b8560cf51..803c0929c205 100644
+> > --- a/tools/perf/util/expr.y
+> > +++ b/tools/perf/util/expr.y
+> > @@ -10,7 +10,7 @@
+> >  #define MAXIDLEN 256
+> >  %}
+> >  
+> > -%pure-parser
+> > +%define api.pure
+> >  %parse-param { double *final_val }
+> >  %parse-param { struct parse_ctx *ctx }
+> >  %parse-param { const char **pp }
+> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> > index 6ad8d4914969..4eb10c27c30f 100644
+> > --- a/tools/perf/util/parse-events.y
+> > +++ b/tools/perf/util/parse-events.y
+> > @@ -1,4 +1,4 @@
+> > -%pure-parser
+> > +%define api.pure
+> >  %parse-param {void *_parse_state}
+> >  %parse-param {void *scanner}
+> >  %lex-param {void* scanner}
+> > -- 
+> > 2.21.0
+> > 
 
-Bart.
+-- 
 
+- Arnaldo
