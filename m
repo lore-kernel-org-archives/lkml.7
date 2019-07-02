@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D63C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F01C0650E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7925B21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338782183F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562034465;
-	bh=MTGr4Wr3O0T6/SeIK/FuiSh+Gq6ZYdpm/3tYuPNiGEU=;
+	s=default; t=1562034468;
+	bh=0gp0hhSKGr51ybaJ2Ay2poQc8sbI4neS9U5RU3MTndo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m4Nf9JDUhOcq34IuEIpa9/6X7AbkXo523emExv8ovAhvHVrSPQdtX0VUdqXqQlURs
-	 m30E6tP6N+baW9UJeSe7aKBQfVfmDNZOM+799RcGqRpYDTybDosG17pEJF7+AxEO3l
-	 1QPehE9i2QDtvESqOxkdBsYJPzBxnwR4O2xid/IM=
+	b=jHGSb4kWn3vhN/KR2lgOmpLLtwtE6KH4rmrnTzMQpcOYk+hiEFXZSWD/q1ORrh/cO
+	 4Cnwatnery8NZhPujjWovM5AKbpLclTLtWm7zHiEwKOs1cWeAhiFwBWIA5bxLPQ+mw
+	 dcr/SVmbfdX0Fle0y7IlA1OBttGH9Vx0/LpuxjI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfGBC1o (ORCPT
+        id S1727491AbfGBC1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40240 "EHLO mail.kernel.org"
+        Mon, 1 Jul 2019 22:27:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727469AbfGBC1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:27:41 -0400
+        id S1727469AbfGBC1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:27:45 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C647B2183F;
-        Tue,  2 Jul 2019 02:27:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 416352184B;
+        Tue,  2 Jul 2019 02:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562034460;
-        bh=MTGr4Wr3O0T6/SeIK/FuiSh+Gq6ZYdpm/3tYuPNiGEU=;
+        s=default; t=1562034464;
+        bh=0gp0hhSKGr51ybaJ2Ay2poQc8sbI4neS9U5RU3MTndo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KbBgubxKb6S0VOlngYkYP5sdrCkmDGp0iBUKJoc8/zUOzkRXiFk4OR85w63iC6Ygq
-         +Jxq/yT9eD8uwnagmmtviVKUcyrKQ14eH7yzcUFeBn9+2oa7Ay6EXIG9jYJ8UgpI+w
-         n4vU1I5FVGYxcaGHkscCd4SbAzEl8/3T6bvU2314=
+        b=EaxmhF5Sx6HRLr2q1LlmMga4t92C213XrTAGMX04+FK88IcQXx8UC9p1pMKFV0Wrh
+         fLNtXM5qz1lHFaC2NoFrMxmITZ/kcqhZDSu8EP2zXTaBpJZWmBY3KXKmYeHeBRK6rp
+         X3d150St4fqwtlWyhtiYB78lOvPB9Ws/HpL+uT1E=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,11 +46,12 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 25/43] perf header: Use skip_spaces() in __write_cpudesc()
-Date:   Mon,  1 Jul 2019 23:25:58 -0300
-Message-Id: <20190702022616.1259-26-acme@kernel.org>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        David Ahern <dsahern@gmail.com>,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH 26/43] perf time-utils: Use skip_spaces()
+Date:   Mon,  1 Jul 2019 23:25:59 -0300
+Message-Id: <20190702022616.1259-27-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190702022616.1259-1-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
@@ -63,42 +64,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-No change in behaviour.
+No change in behaviour intended.
 
-Cc: Stephane Eranian <eranian@google.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-0dbfpi70aa66s6mtd8z6p391@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-cpugv7qd5vzhbtvnlydo90jv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/perf/util/time-utils.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index fca9dbaf61ae..1eb15f7517b0 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -13,6 +13,7 @@
- #include <linux/list.h>
- #include <linux/kernel.h>
- #include <linux/bitops.h>
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 369fa19dd596..c2abc259b51d 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <stdlib.h>
+ #include <string.h>
 +#include <linux/string.h>
- #include <linux/stringify.h>
- #include <sys/stat.h>
- #include <sys/utsname.h>
-@@ -416,10 +417,8 @@ static int __write_cpudesc(struct feat_fd *ff, const char *cpuinfo_proc)
- 	while (*p) {
- 		if (isspace(*p)) {
- 			char *r = p + 1;
--			char *q = r;
-+			char *q = skip_spaces(r);
- 			*p = ' ';
--			while (*q && isspace(*q))
--				q++;
- 			if (q != (p+1))
- 				while ((*r++ = *q++));
- 		}
+ #include <sys/time.h>
+ #include <linux/time64.h>
+ #include <time.h>
+@@ -141,10 +142,7 @@ static int perf_time__parse_strs(struct perf_time_interval *ptime,
+ 	for (i = 0, p = str; i < num - 1; i++) {
+ 		arg = p;
+ 		/* Find next comma, there must be one */
+-		p = strchr(p, ',') + 1;
+-		/* Skip white space */
+-		while (isspace(*p))
+-			p++;
++		p = skip_spaces(strchr(p, ',') + 1);
+ 		/* Skip the value, must not contain space or comma */
+ 		while (*p && !isspace(*p)) {
+ 			if (*p++ == ',') {
 -- 
 2.20.1
 
