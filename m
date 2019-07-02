@@ -2,285 +2,234 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34763C06514
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8844BC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E456821473
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5705B21473
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:41:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="koUEL07D"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oX61GCS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfGBNku (ORCPT
+        id S1727110AbfGBNll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:40:50 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:18556 "EHLO
+        Tue, 2 Jul 2019 09:41:41 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:18603 "EHLO
         hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbfGBNku (ORCPT
+        with ESMTP id S1726430AbfGBNlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:40:50 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1b5edf0000>; Tue, 02 Jul 2019 06:40:47 -0700
+        Tue, 2 Jul 2019 09:41:40 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1b5f110001>; Tue, 02 Jul 2019 06:41:37 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 02 Jul 2019 06:40:48 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 02 Jul 2019 06:41:38 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 02 Jul 2019 06:40:48 -0700
-Received: from [10.24.70.16] (172.20.13.39) by HQMAIL107.nvidia.com
+        by hqpgpgate102.nvidia.com on Tue, 02 Jul 2019 06:41:38 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
- 2019 13:40:40 +0000
-Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     Parav Pandit <parav@mellanox.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <156199271955.1646.13321360197612813634.stgit@gimli.home>
- <08597ab4-cc37-3973-8927-f1bc430f6185@nvidia.com>
- <20190701112442.176a8407@x1.home>
- <3b338e73-7929-df20-ca2b-3223ba4ead39@nvidia.com>
- <20190701140436.45eabf07@x1.home>
- <14783c81-0236-2f25-6193-c06aa83392c9@nvidia.com>
- <20190701234201.47b6f23a@x1.home>
- <AM0PR05MB48669DA5993C68765397AF1BD1F80@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <b6afb6a7-0bd8-dff3-4a4b-a6bb34ccb61d@nvidia.com>
- <20190702070856.75c23a0c@x1.home>
-X-Nvconfidentiality: public
-From:   Kirti Wankhede <kwankhede@nvidia.com>
-Message-ID: <e0ba170b-bd69-d8f7-10f1-c3426355c9c8@nvidia.com>
-Date:   Tue, 2 Jul 2019 19:10:17 +0530
+ 2019 13:41:35 +0000
+Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190627194728.8948-1-digetx@gmail.com>
+ <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
+ <3a5403fe-b81f-993c-e7c0-407387e001d9@gmail.com>
+ <b50045f9-7d8f-d91a-8629-625bcd7057bc@nvidia.com>
+ <ed84cc7d-08de-dbd7-40e2-bc84c5debe1a@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <e7199039-c4e5-304d-3d60-58ecd6648771@nvidia.com>
+Date:   Tue, 2 Jul 2019 14:41:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190702070856.75c23a0c@x1.home>
+In-Reply-To: <ed84cc7d-08de-dbd7-40e2-bc84c5debe1a@gmail.com>
 X-Originating-IP: [172.20.13.39]
 X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
  HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562074847; bh=26+4xHv7O4f2NcDLUkzufjZumJoqUAZygumCLpo06wo=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:MIME-Version:In-Reply-To:X-Originating-IP:
+        t=1562074897; bh=oUgLhVtZt+epnYVVZmnX84R+rFX+CGt8GGlI2/HhW4k=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=koUEL07D/E0nrWCp/yWhZpapHA4FWhpLl5Shz+yI65AnctyfvpMagr+mCnwKDK1yp
-         cfQG4a09nzR6HdcARs81vSB7/AqtcleNGzDFGkiKSyEb2hQY5CEfN3EwMMgjdk8vhu
-         ZM/DEjq8uFMT4QS56gataIBaWwGmLCUKcPB3DHSQWpWtXVLQ9e/MouIj5xF9xusB0s
-         YY5DPM4dvwc6wLuqofxcbRMiR5tfSuvGW8IwZ4bFSfbLYxaQYkGyqWM+2CSIYgpojM
-         hSOnpDdPerl/IFb8BUVSHPqjscv6HZcAy/lrIse7FysM7U+w+fld4Zy42c3YhAHfJc
-         ZFqsHWMf6dJDw==
+        b=oX61GCS4lX8/4mID96beL2doeqzWM/L61oxnIEXDzmKyO4T9rQKQVow59wE2od7fX
+         my3/lmtVJrNh8wzRNlDu6RXNXByJwII2Ml87fZmJ5FtiN8F55itL6Ok/aZG7AQIvFz
+         JREX6h2x/9gWdBPzFCDfPpfDXQa+8wCcLx/lP8hH1MSw1FNZ+hsN3pxBAnsynLY3yp
+         DSFmhoTe8QroFakLd1nw5u/jyOfjUgGBiMtLZg7C1yXAY94aJodR4gxfIT8JiolReL
+         5YP/8w9MMePAgkQUf1W4zZHHgRzrXRkgVA5ZagrpDyqruaX8usycy3tqLtke1pW1C4
+         70elBu6cYlMtQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 7/2/2019 6:38 PM, Alex Williamson wrote:
-> On Tue, 2 Jul 2019 18:17:41 +0530
-> Kirti Wankhede <kwankhede@nvidia.com> wrote:
-> 
->> On 7/2/2019 12:43 PM, Parav Pandit wrote:
->>>
->>>   
->>>> -----Original Message-----
->>>> From: linux-kernel-owner@vger.kernel.org <linux-kernel-  
->>>> owner@vger.kernel.org> On Behalf Of Alex Williamson  
->>>> Sent: Tuesday, July 2, 2019 11:12 AM
->>>> To: Kirti Wankhede <kwankhede@nvidia.com>
->>>> Cc: cohuck@redhat.com; kvm@vger.kernel.org; linux-kernel@vger.kernel.org
->>>> Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
+On 02/07/2019 14:22, Dmitry Osipenko wrote:
+> 02.07.2019 15:54, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 02/07/2019 12:37, Dmitry Osipenko wrote:
+>>> 02.07.2019 14:20, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 >>>>
->>>> On Tue, 2 Jul 2019 10:25:04 +0530
->>>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
->>>>  
->>>>> On 7/2/2019 1:34 AM, Alex Williamson wrote:  
->>>>>> On Mon, 1 Jul 2019 23:20:35 +0530
->>>>>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
->>>>>>  
->>>>>>> On 7/1/2019 10:54 PM, Alex Williamson wrote:  
->>>>>>>> On Mon, 1 Jul 2019 22:43:10 +0530
->>>>>>>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
->>>>>>>>  
->>>>>>>>> On 7/1/2019 8:24 PM, Alex Williamson wrote:  
->>>>>>>>>> This allows udev to trigger rules when a parent device is
->>>>>>>>>> registered or unregistered from mdev.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
->>>>>>>>>> ---
->>>>>>>>>>
->>>>>>>>>> v2: Don't remove the dev_info(), Kirti requested they stay and
->>>>>>>>>>     removing them is only tangential to the goal of this change.
->>>>>>>>>>  
->>>>>>>>>
->>>>>>>>> Thanks.
->>>>>>>>>
->>>>>>>>>  
->>>>>>>>>>  drivers/vfio/mdev/mdev_core.c |    8 ++++++++
->>>>>>>>>>  1 file changed, 8 insertions(+)
->>>>>>>>>>
->>>>>>>>>> diff --git a/drivers/vfio/mdev/mdev_core.c
->>>>>>>>>> b/drivers/vfio/mdev/mdev_core.c index ae23151442cb..7fb268136c62
->>>>>>>>>> 100644
->>>>>>>>>> --- a/drivers/vfio/mdev/mdev_core.c
->>>>>>>>>> +++ b/drivers/vfio/mdev/mdev_core.c
->>>>>>>>>> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev,
->>>>>>>>>> const struct mdev_parent_ops *ops)  {
->>>>>>>>>>  	int ret;
->>>>>>>>>>  	struct mdev_parent *parent;
->>>>>>>>>> +	char *env_string = "MDEV_STATE=registered";
->>>>>>>>>> +	char *envp[] = { env_string, NULL };
->>>>>>>>>>
->>>>>>>>>>  	/* check for mandatory ops */
->>>>>>>>>>  	if (!ops || !ops->create || !ops->remove ||
->>>>>>>>>> !ops->supported_type_groups) @@ -197,6 +199,8 @@ int  
->>>> mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)  
->>>>>>>>>>  	mutex_unlock(&parent_list_lock);
->>>>>>>>>>
->>>>>>>>>>  	dev_info(dev, "MDEV: Registered\n");
->>>>>>>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
->>>>>>>>>> +
->>>>>>>>>>  	return 0;
->>>>>>>>>>
->>>>>>>>>>  add_dev_err:
->>>>>>>>>> @@ -220,6 +224,8 @@ EXPORT_SYMBOL(mdev_register_device);
->>>>>>>>>>  void mdev_unregister_device(struct device *dev)  {
->>>>>>>>>>  	struct mdev_parent *parent;
->>>>>>>>>> +	char *env_string = "MDEV_STATE=unregistered";
->>>>>>>>>> +	char *envp[] = { env_string, NULL };
->>>>>>>>>>
->>>>>>>>>>  	mutex_lock(&parent_list_lock);
->>>>>>>>>>  	parent = __find_parent_device(dev); @@ -243,6 +249,8 @@  
->>>> void  
->>>>>>>>>> mdev_unregister_device(struct device *dev)
->>>>>>>>>>  	up_write(&parent->unreg_sem);
->>>>>>>>>>
->>>>>>>>>>  	mdev_put_parent(parent);
->>>>>>>>>> +
->>>>>>>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);  
->>>>>>>>>
->>>>>>>>> mdev_put_parent() calls put_device(dev). If this is the last
->>>>>>>>> instance holding device, then on put_device(dev) dev would get freed.
->>>>>>>>>
->>>>>>>>> This event should be before mdev_put_parent()  
->>>>>>>>
->>>>>>>> So you're suggesting the vendor driver is calling
->>>>>>>> mdev_unregister_device() without a reference to the struct device
->>>>>>>> that it's passing to unregister?  Sounds bogus to me.  We take a
->>>>>>>> reference to the device so that it can't disappear out from under
->>>>>>>> us, the caller cannot rely on our reference and the caller
->>>>>>>> provided the struct device.  Thanks,
->>>>>>>>  
->>>>>>>
->>>>>>> 1. Register uevent is sent after mdev holding reference to device,
->>>>>>> then ideally, unregister path should be mirror of register path,
->>>>>>> send uevent and then release the reference to device.  
->>>>>>
->>>>>> I don't see the relevance here.  We're marking an event, not
->>>>>> unwinding state of the device from the registration process.
->>>>>> Additionally, the event we're trying to mark is the completion of
->>>>>> each process, so the notion that we need to mirror the ordering between  
->>>> the two is invalid.  
->>>>>>  
->>>>>>> 2. I agree that vendor driver shouldn't call
->>>>>>> mdev_unregister_device() without holding reference to device. But
->>>>>>> to be on safer side, if ever such case occur, to avoid any
->>>>>>> segmentation fault in kernel, better to send event before mdev release the  
->>>> reference to device.  
->>>>>>
->>>>>> I know that get_device() and put_device() are GPL symbols and that's
->>>>>> a bit of an issue, but I don't think we should be kludging the code
->>>>>> for a vendor driver that might have problems with that.  A) we're
->>>>>> using the caller provided device  for the uevent, B) we're only
->>>>>> releasing our own reference to the device that was acquired during
->>>>>> registration, the vendor driver must have other references,  
+>>>> On 27/06/2019 20:47, Dmitry Osipenko wrote:
+>>>>> Tegra's APB DMA engine updates words counter after each transferred b=
+urst
+>>>>> of data, hence it can report transfer's residual with more fidelity w=
+hich
+>>>>> may be required in cases like audio playback. In particular this fixe=
+s
+>>>>> audio stuttering during playback in a chromium web browser. The patch=
+ is
+>>>>> based on the original work that was made by Ben Dooks and a patch fro=
+m
+>>>>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
 >>>>>
->>>>> Are you going to assume that someone/vendor driver is always going to
->>>>> do right thing?  
->>>>
->>>> mdev is a kernel driver, we make reasonable assumptions that other drivers
->>>> interact with it correctly.
->>>>  
->>> That is right.
->>> Vendor drivers must invoke mdev_register_device() and mdev_unregister_device() only once.
->>> And it must have a valid reference to the device for which it is invoking it.
->>> This is basic programming practice that a given driver has to follow.
->>> mdev_register_device() has a loop to check. It needs to WARN_ON there if there are duplicate registration.
->>> Similarly on mdev_unregister_device() to have WARN_ON if device is not found.  
->>
->> If assumption is vendor driver is always going to do right way, then why
->> need check for duplicate registration? vendor driver is always going to
->> do it right way, right?
-> 
-> Are we intentionally misinterpreting "reasonable assumptions" here?
-> 
->>> It was in my TODO list to submit those patches.
->>> I was still thinking to that mdev_register_device() should return mdev_parent and mdev_unregister_device() should accept mdev_parent pointer, instead of WARN_ON on unregister().
->>>
->>>   
->>>>>> C) the parent device
->>>>>> generally lives on a bus, with a vendor driver, there's an entire
->>>>>> ecosystem of references to the device below mdev.  Is this a
->>>>>> paranoia request or are you really concerned that your PCI device suddenly
->>>>>> disappears when mdev's reference to it disappears.  
+>>>>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@c=
+odethink.co.uk/
+>>>>> Link: https://nv-tegra.nvidia.com/gitweb/?p=3Dlinux-4.4.git;a=3Dcommi=
+t;h=3Dc7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+>>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>> ---
 >>>>>
->>>>> mdev infrastructure is not always used by PCI devices. It is designed
->>>>> to be generic, so that other devices (other than PCI devices) can also
->>>>> use this framework.  
+>>>>> Changelog:
+>>>>>
+>>>>> v3:  Added workaround for a hardware design shortcoming that results
+>>>>>      in a words counter wraparound before end-of-transfer bit is set
+>>>>>      in a cyclic mode.
+>>>>>
+>>>>> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
+>>>>>      to get words count if dma_desc is on free list as it will result
+>>>>>      in a NULL dereference because this case wasn't handled properly.
+>>>>>
+>>>>>      The residual value is now updated properly, avoiding potential
+>>>>>      integer overflow by adding the "bytes" to the "bytes_transferred=
+"
+>>>>>      instead of the subtraction.
+>>>>>
+>>>>>  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++--=
+--
+>>>>>  1 file changed, 62 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-=
+dma.c
+>>>>> index 79e9593815f1..71473eda28ee 100644
+>>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
+>>>>>  	bool				last_sg;
+>>>>>  	struct list_head		node;
+>>>>>  	struct tegra_dma_desc		*dma_desc;
+>>>>> +	unsigned int			words_xferred;
+>>>>>  };
+>>>>> =20
+>>>>>  /*
+>>>>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct t=
+egra_dma_channel *tdc,
+>>>>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+>>>>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
+>>>>>  	nsg_req->configured =3D true;
+>>>>> +	nsg_req->words_xferred =3D 0;
+>>>>> =20
+>>>>>  	tegra_dma_resume(tdc);
+>>>>>  }
+>>>>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_c=
+hannel *tdc)
+>>>>>  					typeof(*sg_req), node);
+>>>>>  	tegra_dma_start(tdc, sg_req);
+>>>>>  	sg_req->configured =3D true;
+>>>>> +	sg_req->words_xferred =3D 0;
+>>>>>  	tdc->busy =3D true;
+>>>>>  }
+>>>>> =20
+>>>>> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_ch=
+an *dc)
+>>>>>  	return 0;
+>>>>>  }
+>>>>> =20
+>>>>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_chan=
+nel *tdc,
+>>>>> +					       struct tegra_dma_sg_req *sg_req)
+>>>>> +{
+>>>>> +	unsigned long status, wcount =3D 0;
+>>>>> +
+>>>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>>> +		return 0;
+>>>>> +
+>>>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>>> +
+>>>>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>>> +
+>>>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>> +		wcount =3D status;
+>>>>> +
+>>>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>>> +		return sg_req->req_len;
+>>>>> +
+>>>>> +	wcount =3D get_current_xferred_count(tdc, sg_req, wcount);
+>>>>> +
+>>>>> +	if (!wcount) {
+>>>>> +		/*
+>>>>> +		 * If wcount wasn't ever polled for this SG before, then
+>>>>> +		 * simply assume that transfer hasn't started yet.
+>>>>> +		 *
+>>>>> +		 * Otherwise it's the end of the transfer.
+>>>>> +		 *
+>>>>> +		 * The alternative would be to poll the status register
+>>>>> +		 * until EOC bit is set or wcount goes UP. That's so
+>>>>> +		 * because EOC bit is getting set only after the last
+>>>>> +		 * burst's completion and counter is less than the actual
+>>>>> +		 * transfer size by 4 bytes. The counter value wraps around
+>>>>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
+>>>>> +		 * distinguish start of transfer from its end.
+>>>>> +		 */
+>>>>> +		if (sg_req->words_xferred)
+>>>>> +			wcount =3D sg_req->req_len - 4;
+>>>>> +
+>>>>> +	} else if (wcount < sg_req->words_xferred) {
+>>>>> +		/*
+>>>>> +		 * This case shall not ever happen because EOC bit
+>>>>> +		 * must be set once next cyclic transfer is started.
 >>>>
->>>> Obviously mdev is not PCI specific, I only mention it because I'm asking if you
->>>> have a specific concern in mind.  If you did, I'd assume it's related to a PCI
->>>> backed vGPU.  
+>>>> I am not sure I follow this and why this condition cannot happen for
+>>>> cyclic transfers. What about non-cyclic transfers?
+>>>
+>>> It cannot happen because the EOC bit will be set in that case. The coun=
+ter wraps
+>>> around when the transfer of a last burst happens, EOC bit is guaranteed=
+ to be set
+>>> after completion of the last burst. That's my observation after a thoro=
+ugh testing,
+>>> it will be very odd if EOC setting happened completely asynchronously.
 >>
->> Its not always good to assume certain things.
-> 
-> It was only an attempt to relate to a specific issue that might concern
-> you.
-> 
->>>> Any physical parent device of an mdev is likely to have some sort
->>>> of bus infrastructure behind it holding references to the device (ie. a probe and
->>>> release where an implicit reference is held between these points).  A virtual
->>>> device would be similar, it's created as part of a module init and destroyed as
->>>> part of a module exit, where mdev registration would exist between these
->>>> points.
->>>>  
->>>>> If there is a assumption that user of mdev framework or vendor drivers
->>>>> are always going to use mdev in right way, then there is no need for
->>>>> mdev core to held reference of the device?
->>>>> This is not a "paranoia request". This is more of a ideal scenario,
->>>>> mdev should use device by holding its reference rather than assuming
->>>>> (or relying on) someone else holding the reference of device.  
->>>>
->>>> In fact, at one point Parav was proposing removing these references entirely,
->>>> but Connie and I both felt uncomfortable about that.  I think it's good practice
->>>> that mdev indicates the use of the parent device by incrementing the reference
->>>> count, with each child mdev device also taking a reference, but those
->>>> references balance out within the mdev core.  Their purpose is not to maintain
->>>> the device for outside callers, nor should outside callers assume mdev's use of
->>>> references to release their own.  I don't think it's unreasonable to assume that
->>>> the caller should have a legitimate reference to the object it's providing to this
->>>> function and therefore we should be able to use it after mdev's internal
->>>> references are balanced out.  Thanks,
->>>>  
+>> I see how you know that the EOC is set. Anyway, you check if the EOC is
+>> set before and if so return sg_req->req_len prior to this test.
 >>
->> I'm not fully convinced with what is the advantage of sending uevent
->> after releasing reference to device or disadvantage of sending uevent
->> before releasing reference to device.
-> 
-> If mdev-core still holds a reference to the device, is it fully
-> unregistered?  Why not send the uevent at the point where the
-> notification is actually true?
->
+>> Maybe I am missing something, but what happens if we are mid block when
+>> dmaengine_tx_status() is called? That happen asynchronously right?
+>=20
+>=20
+> Do you mean asynchronously in regards to the ISR? Or something else?
 
-By that time, device is removed from parent list, each child is removed
-and sysfs files related to that parent are removed so that no new child
-can be created, which means device is unregistered, only mdev_parent
-structure is not yet freed which gets freed from mdev_put_parent().
+In the sense that the client can call dmaengine_tx_status() at anytime
+to check the status of a transfer.
 
-Thanks,
-Kirti
+Cheers
+Jon
 
+--=20
+nvpublic
