@@ -2,775 +2,204 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79E1C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139C2C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6FA2173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51B821479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:29:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/eaWFJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfGBF0j (ORCPT
+        id S1726767AbfGBF3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 01:26:39 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38398 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725775AbfGBF0i (ORCPT
+        Tue, 2 Jul 2019 01:29:15 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44158 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfGBF3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 01:26:38 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x625NST1094668
-        for <linux-kernel@vger.kernel.org>; Tue, 2 Jul 2019 01:26:36 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfxgbn5k1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 01:26:35 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Tue, 2 Jul 2019 06:26:34 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 2 Jul 2019 06:26:29 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x625QSSt44040200
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Jul 2019 05:26:28 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C0A844C04E;
-        Tue,  2 Jul 2019 05:26:28 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 168344C04A;
-        Tue,  2 Jul 2019 05:26:27 +0000 (GMT)
-Received: from bangoria.in.ibm.com (unknown [9.124.31.195])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  2 Jul 2019 05:26:26 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au, mikey@neuling.org
-Cc:     benh@kernel.crashing.org, paulus@samba.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, christophe.leroy@c-s.fr,
-        naveen.n.rao@linux.vnet.ibm.com,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH v2 2/2] Powerpc/Watchpoint: Rewrite ptrace-hwbreak.c selftest
-Date:   Tue,  2 Jul 2019 10:56:14 +0530
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190702052614.10408-1-ravi.bangoria@linux.ibm.com>
-References: <20190702052614.10408-1-ravi.bangoria@linux.ibm.com>
+        Tue, 2 Jul 2019 01:29:15 -0400
+Received: by mail-ot1-f65.google.com with SMTP id b7so15903126otl.11;
+        Mon, 01 Jul 2019 22:29:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nMeuKVP5xHWRmp/QJV2LOMXx1ct1Sq9+ppDYbGmyz8M=;
+        b=G/eaWFJgqLZY97MUoeQaDbFgyhg1b86IPIq834i8jCbOmO1k++pSEN8JwvtmIPZ/m8
+         42d76ZRx7T7HAAUWew2uukxjpIcMLXDplGjj3sYLv2ZrRzVB8qdI8x9wO1lI9dYQ28y/
+         ybA8ZfE15GU5OMj134WX9/IAmC6+ZHz3ZiGT+3kLs8b1zI590wgKu5NW6nG/NDpu035c
+         cjlFqu66aof+Sjfbq8xkWN6JL+e1/NgU/JMKcJlQeN6KndiHh8MoViv3jjIQOHdqyy5Y
+         zMzzVPG4GyaV+n1riYdFtrhsLeZ5bK5GuUinaM3DZ/wH337xnFyX7McPrqzA9hSMK4kg
+         xFSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nMeuKVP5xHWRmp/QJV2LOMXx1ct1Sq9+ppDYbGmyz8M=;
+        b=SlahniNbhgOOPfrOhmcr4R/iK6yI5s/tCs7B3ZTjN5oTztZsM0vZzjlfLofrwHd8xO
+         Ej/IPkqtMBudW8G0RUo6L90KHPtYz03Dvyl4F44hyCqwZJrx/kfe70kFlwmmwNkNPVMW
+         OcaEVheZ5R+m9/CYNmcyPKuPitOYoJuokRQQsG+7lWN05Cm4diZ7JYIZ8RHcka5kfk1U
+         7V43+H7FdP1/y427Z3cVqZ+1N7i6yEBUZr4+dICkDBsFCjXdo+uDrbhCXaX/2U3/BRfq
+         IUMi21Mfk8iBJsjaIHv+YgUGkGgatKxrURrxXgvfrDJPxb8So/a8gsWrmhLVcoX6PwVT
+         ul4Q==
+X-Gm-Message-State: APjAAAWIrlWq9G4/kTyMEfFOj3gDNoEnEPvFYvcNxXnJ49qR9Fubgh/b
+        z/lbO60ALrtaUzTZ9hBvtRRMwlpZOPrsEGYglMc=
+X-Google-Smtp-Source: APXvYqw2daIWXI1P0wI1eAPLhykUPS9zWzRXNuHUbiYiFq3TEoffpquAv8QjqIer/hO7uCJqTSPUYzJ9DZ0MvT5KMCQ=
+X-Received: by 2002:a9d:62c4:: with SMTP id z4mr22159415otk.56.1562045354208;
+ Mon, 01 Jul 2019 22:29:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070205-0028-0000-0000-0000037F893D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070205-0029-0000-0000-0000243FC157
-Message-Id: <20190702052614.10408-2-ravi.bangoria@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907020060
+References: <alpine.DEB.2.21.1906250821220.32342@nanos.tec.linutronix.de>
+ <f5c36f89-61bf-a82e-3d3b-79720b2da2ef@intel.com> <alpine.DEB.2.21.1906251330330.32342@nanos.tec.linutronix.de>
+ <20190628063231.GA7766@shbuild999.sh.intel.com> <alpine.DEB.2.21.1906280929010.32342@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1906290912390.1802@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1906301334290.1802@nanos.tec.linutronix.de>
+ <20190630130347.GB93752@shbuild999.sh.intel.com> <alpine.DEB.2.21.1906302021320.1802@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907010829590.1802@nanos.tec.linutronix.de>
+ <20190701083654.GB12486@shbuild999.sh.intel.com> <alpine.DEB.2.21.1907011123220.1802@nanos.tec.linutronix.de>
+ <d08d55c5-bb02-f832-4306-9daf234428a8@intel.com> <alpine.DEB.2.21.1907012011460.1802@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1907012011460.1802@nanos.tec.linutronix.de>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 2 Jul 2019 13:29:06 +0800
+Message-ID: <CANRm+CyQy+=fzY7jn6Q=q6C4ucHS-Z37rq87sOJT-yO0ECiHFw@mail.gmail.com>
+Subject: Re: [BUG] kvm: APIC emulation problem - was Re: [LKP] [x86/hotplug] ...
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rong Chen <rong.a.chen@intel.com>, Feng Tang <feng.tang@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "tipbuild@zytor.com" <tipbuild@zytor.com>,
+        "lkp@01.org" <lkp@01.org>, Ingo Molnar <mingo@kernel.org>,
+        kvm <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ptrace-hwbreak.c selftest is logically broken. On powerpc, when
-watchpoint is created with ptrace, signals are generated before
-executing the instruction and user has to manually singlestep
-the instruction with watchpoint disabled, which selftest never
-does and thus it keeps on getting the signal at the same
-instruction. If we fix it, selftest fails because the logical
-connection between tracer(parent) and tracee(child) is also
-broken. Rewrite the selftest and add new tests for unaligned
-access.
+Hi Thomas,
+On Tue, 2 Jul 2019 at 06:44, Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Folks,
+>
+> after chasing a 0-day test failure for a couple of days, I was finally able
+> to reproduce the issue.
+>
+> Background:
+>
+>    In preparation of supporting IPI shorthands I changed the CPU offline
+>    code to software disable the local APIC instead of just masking it.
+>    That's done by clearing the APIC_SPIV_APIC_ENABLED bit in the APIC_SPIV
+>    register.
+>
+> Failure:
+>
+>    When the CPU comes back online the startup code triggers occasionally
+>    the warning in apic_pending_intr_clear(). That complains that the IRRs
+>    are not empty.
+>
+>    The offending vector is the local APIC timer vector who's IRR bit is set
+>    and stays set.
+>
+> It took me quite some time to reproduce the issue locally, but now I can
+> see what happens.
+>
+> It requires apicv_enabled=0, i.e. full apic emulation. With apicv_enabled=1
+> (and hardware support) it behaves correctly.
+>
+> Here is the series of events:
+>
+>     Guest CPU
+>
+>     goes down
+>
+>       native_cpu_disable()
+>
+>         apic_soft_disable();
+>
+>     play_dead()
+>
+>     ....
+>
+>     startup()
+>
+>       if (apic_enabled())
+>         apic_pending_intr_clear()       <- Not taken
+>
+>      enable APIC
+>
+>         apic_pending_intr_clear()       <- Triggers warning because IRR is stale
+>
+> When this happens then the deadline timer or the regular APIC timer -
+> happens with both, has fired shortly before the APIC is disabled, but the
+> interrupt was not serviced because the guest CPU was in an interrupt
+> disabled region at that point.
+>
+> The state of the timer vector ISR/IRR bits:
+>
+>                               ISR     IRR
+> before apic_soft_disable()    0       1
+> after apic_soft_disable()     0       1
+>
+> On startup                    0       1
+>
+> Now one would assume that the IRR is cleared after the INIT reset, but this
+> happens only on CPU0.
+>
+> Why?
+>
+> Because our CPU0 hotplug is just for testing to make sure nothing breaks
+> and goes through an NMI wakeup vehicle because INIT would send it through
+> the boots-trap code which is not really working if that CPU was not
+> physically unplugged.
+>
+> Now looking at a real world APIC the situation in that case is:
+>
+>                               ISR     IRR
+> before apic_soft_disable()    0       1
+> after apic_soft_disable()     0       1
+>
+> On startup                    0       0
+>
+> Why?
+>
+> Once the dying CPU reenables interrupts the pending interrupt gets
+> delivered as a spurious interupt and then the state is clear.
+>
+> While that CPU0 hotplug test case is surely an esoteric issue, the APIC
+> emulation is still wrong, Even if the play_dead() code would not enable
+> interrupts then the pending IRR bit would turn into an ISR .. interrupt
+> when the APIC is reenabled on startup.
 
-With patch:
-  $ ./tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak
-  test: ptrace-hwbreak
-  tags: git_version:v5.2-rc2-33-ga247a75f90a9-dirty
-  PTRACE_SET_DEBUGREG, WO, len: 1: Ok
-  PTRACE_SET_DEBUGREG, WO, len: 2: Ok
-  PTRACE_SET_DEBUGREG, WO, len: 4: Ok
-  PTRACE_SET_DEBUGREG, WO, len: 8: Ok
-  PTRACE_SET_DEBUGREG, RO, len: 1: Ok
-  PTRACE_SET_DEBUGREG, RO, len: 2: Ok
-  PTRACE_SET_DEBUGREG, RO, len: 4: Ok
-  PTRACE_SET_DEBUGREG, RO, len: 8: Ok
-  PTRACE_SET_DEBUGREG, RW, len: 1: Ok
-  PTRACE_SET_DEBUGREG, RW, len: 2: Ok
-  PTRACE_SET_DEBUGREG, RW, len: 4: Ok
-  PTRACE_SET_DEBUGREG, RW, len: 8: Ok
-  PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO, len: 1: Ok
-  PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RO, len: 1: Ok
-  PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RW, len: 1: Ok
-  PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, WO, len: 6: Ok
-  PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RO, len: 6: Ok
-  PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RW, len: 6: Ok
-  PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW UNALIGNED, WO, len: 6: Ok
-  PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW UNALIGNED, RO, len: 6: Ok
-  PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW UNALIGNED, RW, len: 6: Ok
-  PPC_PTRACE_SETHWDEBUG, DAWR_MAX_LEN, RW, len: 512: Ok
-  success: ptrace-hwbreak
+From SDM 10.4.7.2 Local APIC State After It Has Been Software Disabled
+* Pending interrupts in the IRR and ISR registers are held and require
+masking or handling by the CPU.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- .../selftests/powerpc/ptrace/ptrace-hwbreak.c | 535 +++++++++++-------
- 1 file changed, 325 insertions(+), 210 deletions(-)
+In your testing, hardware cpu will not respect soft disable APIC when
+IRR has already been set or APICv posted-interrupt is in flight, so we
+can skip soft disable APIC checking when clearing IRR and set ISR,
+continue to respect soft disable APIC when attempting to set IRR.
+Could you try below fix?
 
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c b/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c
-index 3066d310f32b..fb1e05d7f77c 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c
-@@ -22,318 +22,433 @@
- #include <sys/wait.h>
- #include "ptrace.h"
- 
--/* Breakpoint access modes */
--enum {
--	BP_X = 1,
--	BP_RW = 2,
--	BP_W = 4,
--};
--
--static pid_t child_pid;
--static struct ppc_debug_info dbginfo;
--
--static void get_dbginfo(void)
--{
--	int ret;
--
--	ret = ptrace(PPC_PTRACE_GETHWDBGINFO, child_pid, NULL, &dbginfo);
--	if (ret) {
--		perror("Can't get breakpoint info\n");
--		exit(-1);
--	}
--}
--
--static bool hwbreak_present(void)
--{
--	return (dbginfo.num_data_bps != 0);
--}
-+/*
-+ * Use volatile on all global var so that compiler doesn't
-+ * optimise their load/stores. Otherwise selftest can fail.
-+ */
-+static volatile __u64 glvar;
- 
--static bool dawr_present(void)
--{
--	return !!(dbginfo.features & PPC_DEBUG_FEATURE_DATA_BP_DAWR);
--}
-+#define DAWR_MAX_LEN 512
-+static volatile __u8 big_var[DAWR_MAX_LEN] __attribute__((aligned(512)));
- 
--static void set_breakpoint_addr(void *addr)
--{
--	int ret;
-+#define A_LEN 6
-+#define B_LEN 6
-+struct gstruct {
-+	__u8 a[A_LEN]; /* double word aligned */
-+	__u8 b[B_LEN]; /* double word unaligned */
-+};
-+static volatile struct gstruct gstruct __attribute__((aligned(512)));
- 
--	ret = ptrace(PTRACE_SET_DEBUGREG, child_pid, 0, addr);
--	if (ret) {
--		perror("Can't set breakpoint addr\n");
--		exit(-1);
--	}
--}
- 
--static int set_hwbreakpoint_addr(void *addr, int range)
-+static void get_dbginfo(pid_t child_pid, struct ppc_debug_info *dbginfo)
- {
--	int ret;
--
--	struct ppc_hw_breakpoint info;
--
--	info.version = 1;
--	info.trigger_type = PPC_BREAKPOINT_TRIGGER_RW;
--	info.addr_mode = PPC_BREAKPOINT_MODE_EXACT;
--	if (range > 0)
--		info.addr_mode = PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE;
--	info.condition_mode = PPC_BREAKPOINT_CONDITION_NONE;
--	info.addr = (__u64)addr;
--	info.addr2 = (__u64)addr + range;
--	info.condition_value = 0;
--
--	ret = ptrace(PPC_PTRACE_SETHWDEBUG, child_pid, 0, &info);
--	if (ret < 0) {
--		perror("Can't set breakpoint\n");
-+	if (ptrace(PPC_PTRACE_GETHWDBGINFO, child_pid, NULL, dbginfo)) {
-+		perror("Can't get breakpoint info");
- 		exit(-1);
- 	}
--	return ret;
- }
- 
--static int del_hwbreakpoint_addr(int watchpoint_handle)
-+static bool dawr_present(struct ppc_debug_info *dbginfo)
- {
--	int ret;
--
--	ret = ptrace(PPC_PTRACE_DELHWDEBUG, child_pid, 0, watchpoint_handle);
--	if (ret < 0) {
--		perror("Can't delete hw breakpoint\n");
--		exit(-1);
--	}
--	return ret;
-+	return !!(dbginfo->features & PPC_DEBUG_FEATURE_DATA_BP_DAWR);
- }
- 
--#define DAWR_LENGTH_MAX 512
--
--/* Dummy variables to test read/write accesses */
--static unsigned long long
--	dummy_array[DAWR_LENGTH_MAX / sizeof(unsigned long long)]
--	__attribute__((aligned(512)));
--static unsigned long long *dummy_var = dummy_array;
--
- static void write_var(int len)
- {
--	long long *plval;
--	char *pcval;
--	short *psval;
--	int *pival;
-+	__u8 *pcvar;
-+	__u16 *psvar;
-+	__u32 *pivar;
-+	__u64 *plvar;
- 
- 	switch (len) {
- 	case 1:
--		pcval = (char *)dummy_var;
--		*pcval = 0xff;
-+		pcvar = (__u8 *)&glvar;
-+		*pcvar = 0xff;
- 		break;
- 	case 2:
--		psval = (short *)dummy_var;
--		*psval = 0xffff;
-+		psvar = (__u16 *)&glvar;
-+		*psvar = 0xffff;
- 		break;
- 	case 4:
--		pival = (int *)dummy_var;
--		*pival = 0xffffffff;
-+		pivar = (__u32 *)&glvar;
-+		*pivar = 0xffffffff;
- 		break;
- 	case 8:
--		plval = (long long *)dummy_var;
--		*plval = 0xffffffffffffffffLL;
-+		plvar = (__u64 *)&glvar;
-+		*plvar = 0xffffffffffffffffLL;
- 		break;
- 	}
- }
- 
- static void read_var(int len)
- {
--	char cval __attribute__((unused));
--	short sval __attribute__((unused));
--	int ival __attribute__((unused));
--	long long lval __attribute__((unused));
-+	__u8 cvar __attribute__((unused));
-+	__u16 svar __attribute__((unused));
-+	__u32 ivar __attribute__((unused));
-+	__u64 lvar __attribute__((unused));
- 
- 	switch (len) {
- 	case 1:
--		cval = *(char *)dummy_var;
-+		cvar = (__u8)glvar;
- 		break;
- 	case 2:
--		sval = *(short *)dummy_var;
-+		svar = (__u16)glvar;
- 		break;
- 	case 4:
--		ival = *(int *)dummy_var;
-+		ivar = (__u32)glvar;
- 		break;
- 	case 8:
--		lval = *(long long *)dummy_var;
-+		lvar = (__u64)glvar;
- 		break;
- 	}
- }
- 
--/*
-- * Do the r/w accesses to trigger the breakpoints. And run
-- * the usual traps.
-- */
--static void trigger_tests(void)
-+static void test_workload(void)
- {
--	int len, ret;
-+	__u8 cvar __attribute__((unused));
-+	int len = 0;
- 
--	ret = ptrace(PTRACE_TRACEME, 0, NULL, 0);
--	if (ret) {
--		perror("Can't be traced?\n");
--		return;
-+	if (ptrace(PTRACE_TRACEME, 0, NULL, 0)) {
-+		perror("Child can't be traced?");
-+		exit(-1);
- 	}
- 
- 	/* Wake up father so that it sets up the first test */
- 	kill(getpid(), SIGUSR1);
- 
--	/* Test write watchpoints */
--	for (len = 1; len <= sizeof(long); len <<= 1)
-+	/* PTRACE_SET_DEBUGREG. WO test */
-+	for (len = 1; len <= sizeof(glvar); len <<= 1)
- 		write_var(len);
- 
--	/* Test read/write watchpoints (on read accesses) */
--	for (len = 1; len <= sizeof(long); len <<= 1)
-+	/* PTRACE_SET_DEBUGREG. RO test */
-+	for (len = 1; len <= sizeof(glvar); len <<= 1)
- 		read_var(len);
- 
--	/* Test when breakpoint is unset */
-+	/* PTRACE_SET_DEBUGREG. RW test */
-+	for (len = 1; len <= sizeof(glvar); len <<= 1) {
-+		if (rand() % 2)
-+			read_var(len);
-+		else
-+			write_var(len);
-+	}
- 
--	/* Test write watchpoints */
--	for (len = 1; len <= sizeof(long); len <<= 1)
--		write_var(len);
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_EXACT. WO test */
-+	write_var(1);
- 
--	/* Test read/write watchpoints (on read accesses) */
--	for (len = 1; len <= sizeof(long); len <<= 1)
--		read_var(len);
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_EXACT. RO test */
-+	read_var(1);
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_EXACT. RW test */
-+	if (rand() % 2)
-+		write_var(1);
-+	else
-+		read_var(1);
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW ALIGNED. WO test */
-+	gstruct.a[rand() % A_LEN] = 'a';
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW ALIGNED. RO test */
-+	cvar = gstruct.a[rand() % A_LEN];
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW ALIGNED. RW test */
-+	if (rand() % 2)
-+		gstruct.a[rand() % A_LEN] = 'a';
-+	else
-+		cvar = gstruct.a[rand() % A_LEN];
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW UNALIGNED. WO test */
-+	gstruct.b[rand() % B_LEN] = 'b';
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW UNALIGNED. RO test */
-+	cvar = gstruct.b[rand() % B_LEN];
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW UNALIGNED. RW test */
-+	if (rand() % 2)
-+		gstruct.b[rand() % B_LEN] = 'b';
-+	else
-+		cvar = gstruct.b[rand() % B_LEN];
-+
-+	/* PPC_PTRACE_SETHWDEBUG. DAWR_MAX_LEN. RW test */
-+	if (rand() % 2)
-+		big_var[rand() % DAWR_MAX_LEN] = 'a';
-+	else
-+		cvar = big_var[rand() % DAWR_MAX_LEN];
- }
- 
--static void check_success(const char *msg)
-+static void
-+check_success(pid_t child_pid, const char *name, const char *type, int len)
- {
--	const char *msg2;
- 	int status;
- 
- 	/* Wait for the child to SIGTRAP */
- 	wait(&status);
-+	if (!WIFSTOPPED(status) || WSTOPSIG(status) != SIGTRAP) {
-+		printf("%s, %s, len: %d: Fail\n", name, type, len);
-+		exit(-1);
-+	}
-+	printf("%s, %s, len: %d: Ok\n", name, type, len);
- 
--	msg2 = "Failed";
-+	/*
-+	 * For ptrace registered watchpoint, signal is generated
-+	 * before executing load/store. Singlestep the instruction
-+	 * and then continue the test.
-+	 */
-+	ptrace(PTRACE_SINGLESTEP, child_pid, NULL, 0);
-+	wait(NULL);
-+}
- 
--	if (WIFSTOPPED(status) && WSTOPSIG(status) == SIGTRAP) {
--		msg2 = "Child process hit the breakpoint";
-+static void ptrace_set_debugreg(pid_t child_pid, unsigned long wp_addr)
-+{
-+	if (ptrace(PTRACE_SET_DEBUGREG, child_pid, 0, wp_addr)) {
-+		perror("PTRACE_SET_DEBUGREG failed");
-+		exit(-1);
- 	}
-+}
-+
-+static int ptrace_sethwdebug(pid_t child_pid, struct ppc_hw_breakpoint *info)
-+{
-+	int wh = ptrace(PPC_PTRACE_SETHWDEBUG, child_pid, 0, info);
- 
--	printf("%s Result: [%s]\n", msg, msg2);
-+	if (wh <= 0) {
-+		perror("PPC_PTRACE_SETHWDEBUG failed");
-+		exit(-1);
-+	}
-+	return wh;
- }
- 
--static void launch_watchpoints(char *buf, int mode, int len,
--			       struct ppc_debug_info *dbginfo, bool dawr)
-+static void ptrace_delhwdebug(pid_t child_pid, int wh)
- {
--	const char *mode_str;
--	unsigned long data = (unsigned long)(dummy_var);
--	int wh, range;
--
--	data &= ~0x7UL;
--
--	if (mode == BP_W) {
--		data |= (1UL << 1);
--		mode_str = "write";
--	} else {
--		data |= (1UL << 0);
--		data |= (1UL << 1);
--		mode_str = "read";
-+	if (ptrace(PPC_PTRACE_DELHWDEBUG, child_pid, 0, wh) < 0) {
-+		perror("PPC_PTRACE_DELHWDEBUG failed");
-+		exit(-1);
- 	}
-+}
- 
--	/* Set DABR_TRANSLATION bit */
--	data |= (1UL << 2);
-+#define DABR_READ_SHIFT		0
-+#define DABR_WRITE_SHIFT	1
-+#define DABR_TRANSLATION_SHIFT	2
- 
--	/* use PTRACE_SET_DEBUGREG breakpoints */
--	set_breakpoint_addr((void *)data);
--	ptrace(PTRACE_CONT, child_pid, NULL, 0);
--	sprintf(buf, "Test %s watchpoint with len: %d ", mode_str, len);
--	check_success(buf);
--	/* Unregister hw brkpoint */
--	set_breakpoint_addr(NULL);
-+static int test_set_debugreg(pid_t child_pid)
-+{
-+	unsigned long wp_addr = (unsigned long)&glvar;
-+	char *name = "PTRACE_SET_DEBUGREG";
-+	int len;
-+
-+	/* PTRACE_SET_DEBUGREG. WO test*/
-+	wp_addr &= ~0x7UL;
-+	wp_addr |= (1UL << DABR_WRITE_SHIFT);
-+	wp_addr |= (1UL << DABR_TRANSLATION_SHIFT);
-+	for (len = 1; len <= sizeof(glvar); len <<= 1) {
-+		ptrace_set_debugreg(child_pid, wp_addr);
-+		ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+		check_success(child_pid, name, "WO", len);
-+	}
-+
-+	/* PTRACE_SET_DEBUGREG. RO test */
-+	wp_addr &= ~0x7UL;
-+	wp_addr |= (1UL << DABR_READ_SHIFT);
-+	wp_addr |= (1UL << DABR_TRANSLATION_SHIFT);
-+	for (len = 1; len <= sizeof(glvar); len <<= 1) {
-+		ptrace_set_debugreg(child_pid, wp_addr);
-+		ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+		check_success(child_pid, name, "RO", len);
-+	}
- 
--	data = (data & ~7); /* remove dabr control bits */
-+	/* PTRACE_SET_DEBUGREG. RW test */
-+	wp_addr &= ~0x7UL;
-+	wp_addr |= (1Ul << DABR_READ_SHIFT);
-+	wp_addr |= (1UL << DABR_WRITE_SHIFT);
-+	wp_addr |= (1UL << DABR_TRANSLATION_SHIFT);
-+	for (len = 1; len <= sizeof(glvar); len <<= 1) {
-+		ptrace_set_debugreg(child_pid, wp_addr);
-+		ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+		check_success(child_pid, name, "RW", len);
-+	}
- 
--	/* use PPC_PTRACE_SETHWDEBUG breakpoint */
--	if (!(dbginfo->features & PPC_DEBUG_FEATURE_DATA_BP_RANGE))
--		return; /* not supported */
--	wh = set_hwbreakpoint_addr((void *)data, 0);
--	ptrace(PTRACE_CONT, child_pid, NULL, 0);
--	sprintf(buf, "Test %s watchpoint with len: %d ", mode_str, len);
--	check_success(buf);
--	/* Unregister hw brkpoint */
--	del_hwbreakpoint_addr(wh);
--
--	/* try a wider range */
--	range = 8;
--	if (dawr)
--		range = 512 - ((int)data & (DAWR_LENGTH_MAX - 1));
--	wh = set_hwbreakpoint_addr((void *)data, range);
--	ptrace(PTRACE_CONT, child_pid, NULL, 0);
--	sprintf(buf, "Test %s watchpoint with len: %d ", mode_str, len);
--	check_success(buf);
--	/* Unregister hw brkpoint */
--	del_hwbreakpoint_addr(wh);
-+	ptrace_set_debugreg(child_pid, 0);
-+	return 0;
- }
- 
--/* Set the breakpoints and check the child successfully trigger them */
--static int launch_tests(bool dawr)
-+static void get_ppc_hw_breakpoint(struct ppc_hw_breakpoint *info, int type,
-+				  unsigned long addr, int len)
- {
--	char buf[1024];
--	int len, i, status;
-+	info->version = 1;
-+	info->trigger_type = type;
-+	info->condition_mode = PPC_BREAKPOINT_CONDITION_NONE;
-+	info->addr = (__u64)addr;
-+	info->addr2 = (__u64)addr + len;
-+	info->condition_value = 0;
-+	if (!len)
-+		info->addr_mode = PPC_BREAKPOINT_MODE_EXACT;
-+	else
-+		info->addr_mode = PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE;
-+}
- 
--	struct ppc_debug_info dbginfo;
-+static void test_sethwdebug_exact(pid_t child_pid)
-+{
-+	struct ppc_hw_breakpoint info;
-+	unsigned long wp_addr = (unsigned long)&glvar;
-+	char *name = "PPC_PTRACE_SETHWDEBUG, MODE_EXACT";
-+	int len = 1; /* hardcoded in kernel */
-+	int wh;
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_EXACT. WO test */
-+	get_ppc_hw_breakpoint(&info, PPC_BREAKPOINT_TRIGGER_WRITE, wp_addr, 0);
-+	wh = ptrace_sethwdebug(child_pid, &info);
-+	ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+	check_success(child_pid, name, "WO", len);
-+	ptrace_delhwdebug(child_pid, wh);
- 
--	i = ptrace(PPC_PTRACE_GETHWDBGINFO, child_pid, NULL, &dbginfo);
--	if (i) {
--		perror("Can't set breakpoint info\n");
--		exit(-1);
--	}
--	if (!(dbginfo.features & PPC_DEBUG_FEATURE_DATA_BP_RANGE))
--		printf("WARNING: Kernel doesn't support PPC_PTRACE_SETHWDEBUG\n");
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_EXACT. RO test */
-+	get_ppc_hw_breakpoint(&info, PPC_BREAKPOINT_TRIGGER_READ, wp_addr, 0);
-+	wh = ptrace_sethwdebug(child_pid, &info);
-+	ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+	check_success(child_pid, name, "RO", len);
-+	ptrace_delhwdebug(child_pid, wh);
- 
--	/* Write watchpoint */
--	for (len = 1; len <= sizeof(long); len <<= 1)
--		launch_watchpoints(buf, BP_W, len, &dbginfo, dawr);
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_EXACT. RW test */
-+	get_ppc_hw_breakpoint(&info, PPC_BREAKPOINT_TRIGGER_RW, wp_addr, 0);
-+	wh = ptrace_sethwdebug(child_pid, &info);
-+	ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+	check_success(child_pid, name, "RW", len);
-+	ptrace_delhwdebug(child_pid, wh);
-+}
- 
--	/* Read-Write watchpoint */
--	for (len = 1; len <= sizeof(long); len <<= 1)
--		launch_watchpoints(buf, BP_RW, len, &dbginfo, dawr);
-+static void test_sethwdebug_range_aligned(pid_t child_pid)
-+{
-+	struct ppc_hw_breakpoint info;
-+	unsigned long wp_addr;
-+	char *name = "PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED";
-+	int len;
-+	int wh;
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW ALIGNED. WO test */
-+	wp_addr = (unsigned long)&gstruct.a;
-+	len = A_LEN;
-+	get_ppc_hw_breakpoint(&info, PPC_BREAKPOINT_TRIGGER_WRITE, wp_addr, len);
-+	wh = ptrace_sethwdebug(child_pid, &info);
-+	ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+	check_success(child_pid, name, "WO", len);
-+	ptrace_delhwdebug(child_pid, wh);
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW ALIGNED. RO test */
-+	wp_addr = (unsigned long)&gstruct.a;
-+	len = A_LEN;
-+	get_ppc_hw_breakpoint(&info, PPC_BREAKPOINT_TRIGGER_READ, wp_addr, len);
-+	wh = ptrace_sethwdebug(child_pid, &info);
-+	ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+	check_success(child_pid, name, "RO", len);
-+	ptrace_delhwdebug(child_pid, wh);
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW ALIGNED. RW test */
-+	wp_addr = (unsigned long)&gstruct.a;
-+	len = A_LEN;
-+	get_ppc_hw_breakpoint(&info, PPC_BREAKPOINT_TRIGGER_RW, wp_addr, len);
-+	wh = ptrace_sethwdebug(child_pid, &info);
-+	ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+	check_success(child_pid, name, "RW", len);
-+	ptrace_delhwdebug(child_pid, wh);
-+}
- 
-+static void test_sethwdebug_range_unaligned(pid_t child_pid)
-+{
-+	struct ppc_hw_breakpoint info;
-+	unsigned long wp_addr;
-+	char *name = "PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW UNALIGNED";
-+	int len;
-+	int wh;
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW UNALIGNED. WO test */
-+	wp_addr = (unsigned long)&gstruct.b;
-+	len = B_LEN;
-+	get_ppc_hw_breakpoint(&info, PPC_BREAKPOINT_TRIGGER_WRITE, wp_addr, len);
-+	wh = ptrace_sethwdebug(child_pid, &info);
-+	ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+	check_success(child_pid, name, "WO", len);
-+	ptrace_delhwdebug(child_pid, wh);
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW UNALIGNED. RO test */
-+	wp_addr = (unsigned long)&gstruct.b;
-+	len = B_LEN;
-+	get_ppc_hw_breakpoint(&info, PPC_BREAKPOINT_TRIGGER_READ, wp_addr, len);
-+	wh = ptrace_sethwdebug(child_pid, &info);
-+	ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+	check_success(child_pid, name, "RO", len);
-+	ptrace_delhwdebug(child_pid, wh);
-+
-+	/* PPC_PTRACE_SETHWDEBUG. MODE_RANGE. DW UNALIGNED. RW test */
-+	wp_addr = (unsigned long)&gstruct.b;
-+	len = B_LEN;
-+	get_ppc_hw_breakpoint(&info, PPC_BREAKPOINT_TRIGGER_RW, wp_addr, len);
-+	wh = ptrace_sethwdebug(child_pid, &info);
- 	ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+	check_success(child_pid, name, "RW", len);
-+	ptrace_delhwdebug(child_pid, wh);
- 
--	/*
--	 * Now we have unregistered the breakpoint, access by child
--	 * should not cause SIGTRAP.
--	 */
-+}
- 
--	wait(&status);
-+static void test_sethwdebug_dawr_max_range(pid_t child_pid)
-+{
-+	struct ppc_hw_breakpoint info;
-+	unsigned long wp_addr;
-+	char *name = "PPC_PTRACE_SETHWDEBUG, DAWR_MAX_LEN";
-+	int len;
-+	int wh;
-+
-+	/* PPC_PTRACE_SETHWDEBUG. DAWR_MAX_LEN. RW test */
-+	wp_addr = (unsigned long)big_var;
-+	len = DAWR_MAX_LEN;
-+	get_ppc_hw_breakpoint(&info, PPC_BREAKPOINT_TRIGGER_RW, wp_addr, len);
-+	wh = ptrace_sethwdebug(child_pid, &info);
-+	ptrace(PTRACE_CONT, child_pid, NULL, 0);
-+	check_success(child_pid, name, "RW", len);
-+	ptrace_delhwdebug(child_pid, wh);
-+}
- 
--	if (WIFSTOPPED(status) && WSTOPSIG(status) == SIGTRAP) {
--		printf("FAIL: Child process hit the breakpoint, which is not expected\n");
--		ptrace(PTRACE_CONT, child_pid, NULL, 0);
--		return TEST_FAIL;
-+/* Set the breakpoints and check the child successfully trigger them */
-+static void
-+run_tests(pid_t child_pid, struct ppc_debug_info *dbginfo, bool dawr)
-+{
-+	test_set_debugreg(child_pid);
-+	if (dbginfo->features & PPC_DEBUG_FEATURE_DATA_BP_RANGE) {
-+		test_sethwdebug_exact(child_pid);
-+		test_sethwdebug_range_aligned(child_pid);
-+		test_sethwdebug_range_unaligned(child_pid);
-+
-+		if (dawr)
-+			test_sethwdebug_dawr_max_range(child_pid);
- 	}
--
--	if (WIFEXITED(status))
--		printf("Child exited normally\n");
--
--	return TEST_PASS;
- }
- 
- static int ptrace_hwbreak(void)
- {
--	pid_t pid;
--	int ret;
-+	pid_t child_pid;
-+	struct ppc_debug_info dbginfo;
- 	bool dawr;
- 
--	pid = fork();
--	if (!pid) {
--		trigger_tests();
-+	child_pid = fork();
-+	if (!child_pid) {
-+		test_workload();
- 		return 0;
- 	}
- 
- 	wait(NULL);
- 
--	child_pid = pid;
--
--	get_dbginfo();
--	SKIP_IF(!hwbreak_present());
--	dawr = dawr_present();
-+	get_dbginfo(child_pid, &dbginfo);
-+	SKIP_IF(dbginfo.num_data_bps == 0);
- 
--	ret = launch_tests(dawr);
-+	dawr = dawr_present(&dbginfo);
-+	run_tests(child_pid, &dbginfo, dawr);
- 
-+	/* Let the child exit first. */
-+	ptrace(PTRACE_CONT, child_pid, NULL, 0);
- 	wait(NULL);
- 
--	return ret;
-+	/*
-+	 * Testcases exits immediately with -1 on any failure. If
-+	 * it has reached here, it means all tests were successful.
-+	 */
-+	return TEST_PASS;
- }
- 
- int main(int argc, char **argv, char **envp)
--- 
-2.20.1
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 05d8934..f857a12 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2376,7 +2376,7 @@ int kvm_apic_has_interrupt(struct kvm_vcpu *vcpu)
+     struct kvm_lapic *apic = vcpu->arch.apic;
+     u32 ppr;
 
+-    if (!apic_enabled(apic))
++    if (!kvm_apic_hw_enabled(apic))
+         return -1;
+
+     __apic_update_ppr(apic, &ppr);
+
+Regards,
+Wanpeng Li
