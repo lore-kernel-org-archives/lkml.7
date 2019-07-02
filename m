@@ -2,224 +2,86 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A02C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B3BC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4984A21841
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054677;
-	bh=eIekVJduXiAY8NR+H9LqVvRCKNuiaPZOxZuEk+pTRJQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GC1fmMkB/4wopGw5fg1M/nAGPSh5l/NwippGA33dX7K8zTR4QW8bqVm0jTVU+Gw0u
-	 3youCaaqp2Vj6qScxePpMA+cUWofUw17rlgdTIuGYWt5gl1HDxPzDEm3oT+9/FR8Yh
-	 x01bZnPon3m8AsFAy+HGmsoQPrQU4oFWsFXVwSf4=
+	by mail.kernel.org (Postfix) with ESMTP id C3C502183F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbfGBIEf (ORCPT
+        id S1727780AbfGBIEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:04:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50016 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:04:38 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:41178 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727117AbfGBIEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:04:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75D8F20659;
-        Tue,  2 Jul 2019 08:04:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054671;
-        bh=eIekVJduXiAY8NR+H9LqVvRCKNuiaPZOxZuEk+pTRJQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g+DPClZsqmXhxsLjLx9vYw2bz8kCCKlx+9ozY19xIECqidW469VnArM1NyMltYaAT
-         JLpbZAR8xU6jxZTlsiDML8ElY9XOmYt9Xp3atTrDIBMXI3IzBol5Oujag4LKuDpqwS
-         tJe4tgW/p5qq4l6aVfhkhkqe7lmi3tSmYy5Su1is=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.1 51/55] bpf, arm64: use more scalable stadd over ldxr / stxr loop in xadd
-Date:   Tue,  2 Jul 2019 10:01:59 +0200
-Message-Id: <20190702080126.728030225@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
-References: <20190702080124.103022729@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1727242AbfGBIEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:04:36 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 685A7200B59;
+        Tue,  2 Jul 2019 10:04:35 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6F47B200155;
+        Tue,  2 Jul 2019 10:04:24 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id ACD804030E;
+        Tue,  2 Jul 2019 16:04:10 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
+        viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com,
+        l.stach@pengutronix.de, abel.vesa@nxp.com,
+        andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca,
+        agx@sigxcpu.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH RESEND V4 4/5] arm64: dts: imx8mq: Add system counter node
+Date:   Tue,  2 Jul 2019 15:55:12 +0800
+Message-Id: <20190702075513.17451-4-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.14.1
+In-Reply-To: <20190702075513.17451-1-Anson.Huang@nxp.com>
+References: <20190702075513.17451-1-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-commit 34b8ab091f9ef57a2bb3c8c8359a0a03a8abf2f9 upstream.
+Add i.MX8MQ system counter node to enable timer-imx-sysctr
+broadcast timer driver.
 
-Since ARMv8.1 supplement introduced LSE atomic instructions back in 2016,
-lets add support for STADD and use that in favor of LDXR / STXR loop for
-the XADD mapping if available. STADD is encoded as an alias for LDADD with
-XZR as the destination register, therefore add LDADD to the instruction
-encoder along with STADD as special case and use it in the JIT for CPUs
-that advertise LSE atomics in CPUID register. If immediate offset in the
-BPF XADD insn is 0, then use dst register directly instead of temporary
-one.
-
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm64/include/asm/insn.h |    8 ++++++++
- arch/arm64/kernel/insn.c      |   40 ++++++++++++++++++++++++++++++++++++++++
- arch/arm64/net/bpf_jit.h      |    4 ++++
- arch/arm64/net/bpf_jit_comp.c |   28 +++++++++++++++++++---------
- 4 files changed, 71 insertions(+), 9 deletions(-)
+No changes.
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/arm64/include/asm/insn.h
-+++ b/arch/arm64/include/asm/insn.h
-@@ -277,6 +277,7 @@ __AARCH64_INSN_FUNCS(adrp,	0x9F000000, 0
- __AARCH64_INSN_FUNCS(prfm,	0x3FC00000, 0x39800000)
- __AARCH64_INSN_FUNCS(prfm_lit,	0xFF000000, 0xD8000000)
- __AARCH64_INSN_FUNCS(str_reg,	0x3FE0EC00, 0x38206800)
-+__AARCH64_INSN_FUNCS(ldadd,	0x3F20FC00, 0xB8200000)
- __AARCH64_INSN_FUNCS(ldr_reg,	0x3FE0EC00, 0x38606800)
- __AARCH64_INSN_FUNCS(ldr_lit,	0xBF000000, 0x18000000)
- __AARCH64_INSN_FUNCS(ldrsw_lit,	0xFF000000, 0x98000000)
-@@ -394,6 +395,13 @@ u32 aarch64_insn_gen_load_store_ex(enum
- 				   enum aarch64_insn_register state,
- 				   enum aarch64_insn_size_type size,
- 				   enum aarch64_insn_ldst_type type);
-+u32 aarch64_insn_gen_ldadd(enum aarch64_insn_register result,
-+			   enum aarch64_insn_register address,
-+			   enum aarch64_insn_register value,
-+			   enum aarch64_insn_size_type size);
-+u32 aarch64_insn_gen_stadd(enum aarch64_insn_register address,
-+			   enum aarch64_insn_register value,
-+			   enum aarch64_insn_size_type size);
- u32 aarch64_insn_gen_add_sub_imm(enum aarch64_insn_register dst,
- 				 enum aarch64_insn_register src,
- 				 int imm, enum aarch64_insn_variant variant,
---- a/arch/arm64/kernel/insn.c
-+++ b/arch/arm64/kernel/insn.c
-@@ -734,6 +734,46 @@ u32 aarch64_insn_gen_load_store_ex(enum
- 					    state);
- }
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 50931da..3187428 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -639,6 +639,14 @@
+ 				#pwm-cells = <2>;
+ 				status = "disabled";
+ 			};
++
++			system_counter: timer@306a0000 {
++				compatible = "nxp,sysctr-timer";
++				reg = <0x306a0000 0x30000>;
++				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++				clock-frequency = <8333333>;
++			};
+ 		};
  
-+u32 aarch64_insn_gen_ldadd(enum aarch64_insn_register result,
-+			   enum aarch64_insn_register address,
-+			   enum aarch64_insn_register value,
-+			   enum aarch64_insn_size_type size)
-+{
-+	u32 insn = aarch64_insn_get_ldadd_value();
-+
-+	switch (size) {
-+	case AARCH64_INSN_SIZE_32:
-+	case AARCH64_INSN_SIZE_64:
-+		break;
-+	default:
-+		pr_err("%s: unimplemented size encoding %d\n", __func__, size);
-+		return AARCH64_BREAK_FAULT;
-+	}
-+
-+	insn = aarch64_insn_encode_ldst_size(size, insn);
-+
-+	insn = aarch64_insn_encode_register(AARCH64_INSN_REGTYPE_RT, insn,
-+					    result);
-+
-+	insn = aarch64_insn_encode_register(AARCH64_INSN_REGTYPE_RN, insn,
-+					    address);
-+
-+	return aarch64_insn_encode_register(AARCH64_INSN_REGTYPE_RS, insn,
-+					    value);
-+}
-+
-+u32 aarch64_insn_gen_stadd(enum aarch64_insn_register address,
-+			   enum aarch64_insn_register value,
-+			   enum aarch64_insn_size_type size)
-+{
-+	/*
-+	 * STADD is simply encoded as an alias for LDADD with XZR as
-+	 * the destination register.
-+	 */
-+	return aarch64_insn_gen_ldadd(AARCH64_INSN_REG_ZR, address,
-+				      value, size);
-+}
-+
- static u32 aarch64_insn_encode_prfm_imm(enum aarch64_insn_prfm_type type,
- 					enum aarch64_insn_prfm_target target,
- 					enum aarch64_insn_prfm_policy policy,
---- a/arch/arm64/net/bpf_jit.h
-+++ b/arch/arm64/net/bpf_jit.h
-@@ -100,6 +100,10 @@
- #define A64_STXR(sf, Rt, Rn, Rs) \
- 	A64_LSX(sf, Rt, Rn, Rs, STORE_EX)
- 
-+/* LSE atomics */
-+#define A64_STADD(sf, Rn, Rs) \
-+	aarch64_insn_gen_stadd(Rn, Rs, A64_SIZE(sf))
-+
- /* Add/subtract (immediate) */
- #define A64_ADDSUB_IMM(sf, Rd, Rn, imm12, type) \
- 	aarch64_insn_gen_add_sub_imm(Rd, Rn, imm12, \
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -365,7 +365,7 @@ static int build_insn(const struct bpf_i
- 	const bool is64 = BPF_CLASS(code) == BPF_ALU64 ||
- 			  BPF_CLASS(code) == BPF_JMP;
- 	const bool isdw = BPF_SIZE(code) == BPF_DW;
--	u8 jmp_cond;
-+	u8 jmp_cond, reg;
- 	s32 jmp_offset;
- 
- #define check_imm(bits, imm) do {				\
-@@ -756,18 +756,28 @@ emit_cond_jmp:
- 			break;
- 		}
- 		break;
-+
- 	/* STX XADD: lock *(u32 *)(dst + off) += src */
- 	case BPF_STX | BPF_XADD | BPF_W:
- 	/* STX XADD: lock *(u64 *)(dst + off) += src */
- 	case BPF_STX | BPF_XADD | BPF_DW:
--		emit_a64_mov_i(1, tmp, off, ctx);
--		emit(A64_ADD(1, tmp, tmp, dst), ctx);
--		emit(A64_LDXR(isdw, tmp2, tmp), ctx);
--		emit(A64_ADD(isdw, tmp2, tmp2, src), ctx);
--		emit(A64_STXR(isdw, tmp2, tmp, tmp3), ctx);
--		jmp_offset = -3;
--		check_imm19(jmp_offset);
--		emit(A64_CBNZ(0, tmp3, jmp_offset), ctx);
-+		if (!off) {
-+			reg = dst;
-+		} else {
-+			emit_a64_mov_i(1, tmp, off, ctx);
-+			emit(A64_ADD(1, tmp, tmp, dst), ctx);
-+			reg = tmp;
-+		}
-+		if (cpus_have_cap(ARM64_HAS_LSE_ATOMICS)) {
-+			emit(A64_STADD(isdw, reg, src), ctx);
-+		} else {
-+			emit(A64_LDXR(isdw, tmp2, reg), ctx);
-+			emit(A64_ADD(isdw, tmp2, tmp2, src), ctx);
-+			emit(A64_STXR(isdw, tmp2, reg, tmp3), ctx);
-+			jmp_offset = -3;
-+			check_imm19(jmp_offset);
-+			emit(A64_CBNZ(0, tmp3, jmp_offset), ctx);
-+		}
- 		break;
- 
- 	default:
-
+ 		bus@30800000 { /* AIPS3 */
+-- 
+2.7.4
 
