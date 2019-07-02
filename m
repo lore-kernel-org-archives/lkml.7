@@ -2,104 +2,120 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C1FC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E95C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2706720989
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802B720989
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XmvpP4bp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esnMLw+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfGBSSm (ORCPT
+        id S1726977AbfGBSTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 14:18:42 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34377 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfGBSSm (ORCPT
+        Tue, 2 Jul 2019 14:19:03 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55328 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfGBSTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:18:42 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s49so28253985edb.1;
-        Tue, 02 Jul 2019 11:18:40 -0700 (PDT)
+        Tue, 2 Jul 2019 14:19:02 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a15so1769911wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 11:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=6FDA9K8Eg0DrYoV6H18cZ4zmwn9YbWUb9dW3L/lchDM=;
-        b=XmvpP4bpmD2ftx2G8tJmGIqF+j0wqzhUqr4xYm3CvOdKAzC95mR4abl5+vdbXvut0c
-         9+gC7S4NoEq/C9Vbpnxryq8emDlq60+IKRu0UUKwcIOlVJSvK3+Idq9uiGg8/xaEgB8X
-         nN1x+ExDkRHvT78ZMpnVV/lzAGTufx40ZD9izY1oL1wDJnMJPR5hgOnSjVk7TM1AVyr2
-         7KNrvOCvVUDuLC+fUkPvTLPWC3Ciia6vUmrTFZIO5MPUWzNWelxklms441wCDObHlUhd
-         cJpaBsCONU79OqZL2ga+x6C+YqYPbl/6EkO2o7+3aJQX9Voxl3bbe2zkcndU+Kj+eufT
-         CA0A==
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:cc:from:to:message-id:user-agent:date;
+        bh=hEU9uNz0FeGZ4kxd0wEk8UwwTQ62JJQ9s9qQBcddhu8=;
+        b=esnMLw+keGA9XQ1HnEGydaI33kpqF5YM1dm7n0bfiBl9pmdyO8Rpf2wVb2Q0LyQAG6
+         ojJP0je2Mn4GBBA1POXJM/7B+f1QTkpFQHBd5sxMqR3wKlM+/5QlIKQH+P5LDEuubdCw
+         qCUgX6AJAJtnBqcUd+FCwkV5HyrzK3Z0PFgxi16Vv02uYkHTu8KC/GWSZE7wAbc2vn4T
+         mAwkchonzA8mVk5QG0XZ+BbJWuyUlQWyGVuaAm4I1q2rVtBLq4SKeIGmvV/yHqG+hize
+         5jKrejWvpx27Nyas5LRbgWflefO2/1+BejN4ydwX/yjbJuwptj5ro1k4cbKucCByCuZg
+         sqig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=6FDA9K8Eg0DrYoV6H18cZ4zmwn9YbWUb9dW3L/lchDM=;
-        b=MFp2WfrlrXFx2cLdB1EGYkxhFpeWGn/xTDb+/O+XPE7JB9mLzsA5y/RJaDEWhAQWD0
-         7/62vPH1qanEInbykvczPZujaC2DtEhOpr3Ip+OJQoIBpKUdR075z6wX7KAdl2fOxE9a
-         FmsJWgNAYL4c5hQjWyCw3ZXBfWTa1LAKO9ybOM94ox6viUhJpCSC9HSahGzq9GGz25ag
-         86GeiIQu2gqakcMKmPOkHOWPAoAVFDBrbDVhJVx83ykTGpIF2Aw7EoDF9CYmlWDQmGPN
-         pNM2QT30IZlX8nhz2GMTEEIQSjAlAgCV+KhaMfDa4yW1TMc5P9h3s+oyKrsD/6cIEsPV
-         0rdQ==
-X-Gm-Message-State: APjAAAUvPv24VefnRdSmyikhSeEM0ljF7Tc0+8buc6dkxLPeBgROm/aC
-        CKEGMxsXWNl/uqn6UmVb7ag=
-X-Google-Smtp-Source: APXvYqxTB811HcYtVYVeo5x+nXbAJILikgNeh0Gur9Y7ztJZkIvOOszbI7RHmnanShh3mT1l8E6xyQ==
-X-Received: by 2002:a50:f599:: with SMTP id u25mr38225155edm.195.1562091519834;
-        Tue, 02 Jul 2019 11:18:39 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id q16sm2890782ejj.85.2019.07.02.11.18.38
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:cc:from:to:message-id:user-agent
+         :date;
+        bh=hEU9uNz0FeGZ4kxd0wEk8UwwTQ62JJQ9s9qQBcddhu8=;
+        b=qy8Si4pUa2vr4Cllny64qo8Cqqjgez03XJnVb5OjyivWt42opuXcRoC2TMtPVucCPB
+         Fl+QuOSW8GOdTyQbHqogr9ZjFoGpPQxhyH/wKpJKmtwSa8238n0TdEoO1B6RdcFd4Jr3
+         cgYqOlIy+VewFYYupyKozNo0v60/wUTBr4CcBjCWUYGLoedSuBkchqIlNa19bXstT0Iw
+         VVheGfjXf83uL9Y0I+zxgWH9wm7XKfbI1uExK2jWQihyFQLDeVo1aFsfKy6e69rHulkE
+         amSskSIjgRosB0yfpVKI09e4ZxCwsXyW5cK3gCvpsSQqLU8GJxSYqjQk11K+u62IcOp1
+         h0Vw==
+X-Gm-Message-State: APjAAAVimChk3bA9R4lpBQnY0pKnQFL8cdVU3acMIgeUs9RJDYbjj95n
+        kvE+hzSM6rM6JsGvJmQ7E4c=
+X-Google-Smtp-Source: APXvYqw5bkzt/DpFLQmrKZqj9GKK+Oiol3+jSArs3mFrvRB2JmQZAOboaUNt0oDpWHQ0ot8Pzea0Hw==
+X-Received: by 2002:a05:600c:2243:: with SMTP id a3mr4150010wmm.83.1562091540477;
+        Tue, 02 Jul 2019 11:19:00 -0700 (PDT)
+Received: from localhost ([151.237.18.226])
+        by smtp.gmail.com with ESMTPSA id f7sm3496945wrp.55.2019.07.02.11.18.59
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 11:18:39 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 11:18:37 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Miaoqing Pan <miaoqing@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: -Wsometimes-uninitialized warning after
- 8b97b055dc9db09b48d5a9a37d847900dd00d3cc
-Message-ID: <20190702181837.GA118849@archlinux-epyc>
+        Tue, 02 Jul 2019 11:18:59 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190702144818.32648-1-ihor.matushchak@foobox.net>
+References: <156207429000.5051.5975712347598980745@silver> <20190702144818.32648-1-ihor.matushchak@foobox.net>
+Subject: Re: [PATCH v2] virtio-mmio: add error check for platform_get_irq
+Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, ihor.matushchak@foobox.net
+From:   "Ivan T. Ivanov" <iivanov.xz@gmail.com>
+To:     Ihor Matushchak <ihor.matushchak@foobox.net>, mst@redhat.com
+Message-ID: <156209153842.6607.13027564854773685120@silver>
+User-Agent: alot/0.8.1
+Date:   Tue, 02 Jul 2019 21:18:58 +0300
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Quoting Ihor Matushchak (2019-07-02 17:48:18)
+> in vm_find_vqs() irq has a wrong type
+> so, in case of no IRQ resource defined,
+> wrong parameter will be passed to request_irq()
+>=20
+> Signed-off-by: Ihor Matushchak <ihor.matushchak@foobox.net>
 
-After commit 8b97b055dc9d ("ath10k: fix failure to set multiple fixed
-rate") in -next, clang warns:
 
-../drivers/net/wireless/ath/ath10k/mac.c:7528:7: warning: variable 'vht_pfr' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-                if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
-                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../drivers/net/wireless/ath/ath10k/mac.c:7551:20: note: uninitialized use occurs here
-                arvif->vht_pfr = vht_pfr;
-                                 ^~~~~~~
-../drivers/net/wireless/ath/ath10k/mac.c:7528:3: note: remove the 'if' if its condition is always true
-                if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
-                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../drivers/net/wireless/ath/ath10k/mac.c:7483:12: note: initialize the variable 'vht_pfr' to silence this warning
-        u8 vht_pfr;
-                  ^
-                   = '\0'
-1 warning generated.
+Reviewed-by: Ivan T. Ivanov <iivanov.xz@gmail.com>
 
-This definitely seems legitimate as the call to
-ath10k_mac_can_set_bitrate_mask might fail and vht_pfr
-won't be initialized. I would fix this myself but I assume
-there is a sane default value for vht_pfr other than just
-0 that should be used?
+Thanks!
 
-Please look into this when you get a chance. Thanks,
-Nathan
+> ---
+> Changes in v2:
+> Don't overwrite error code value.
+>=20
+>  drivers/virtio/virtio_mmio.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index f363fbeb5ab0..e09edb5c5e06 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -463,9 +463,14 @@ static int vm_find_vqs(struct virtio_device *vdev, u=
+nsigned nvqs,
+>                        struct irq_affinity *desc)
+>  {
+>         struct virtio_mmio_device *vm_dev =3D to_virtio_mmio_device(vdev);
+> -       unsigned int irq =3D platform_get_irq(vm_dev->pdev, 0);
+> +       int irq =3D platform_get_irq(vm_dev->pdev, 0);
+>         int i, err, queue_idx =3D 0;
+> =20
+> +       if (irq < 0) {
+> +               dev_err(&vdev->dev, "Cannot get IRQ resource\n");
+> +               return irq;
+> +       }
+> +
+>         err =3D request_irq(irq, vm_interrupt, IRQF_SHARED,
+>                         dev_name(&vdev->dev), vm_dev);
+>         if (err)
+> --=20
+> 2.17.1
+>=20
