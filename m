@@ -6,99 +6,53 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC72C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3218C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F92320989
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E5A20989
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfGBQtG (ORCPT
+        id S1726966AbfGBQtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:49:06 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33252 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfGBQtG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:49:06 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so18682509wru.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 09:49:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=L8PStjvboUT/+LsWfO344ZFdlV2FoYNdqOo4jKO0aLo=;
-        b=DAkkhc4DPlSHD618kS8R6gxaHHtv+tXWrhP9Q+LYqGmeQPFp4e5ZZLo+KHavtPJeqQ
-         5Asui3ZvZupZlwcTyISGQe7/gOFlat3Bnyw1W8BhocUdHxqk/XaN8s3TfFlEjLDrhmP+
-         /3mVFtFfBpGuQke8R1MCM1fQI/oSO3QnB0iFrrTJfwKrhzXWAcFpzJ7RhKNU+YgYwB5i
-         W8zdUjEMgR6DzaL4yiIMGeHnSRQpRSmyCF/DgNnFwTgWeRYjJ0jvMKCpZ47cJ195iG8V
-         yQLkrXmSXogXoCJRYe/80gSg8Iy6S2AjPThB+4sRHEQdoNPiAFxhpvgonX3iu/p37fde
-         O1Iw==
-X-Gm-Message-State: APjAAAVoAbSJu4q9Wr29XfPrJmLW+v5qohc9e+3WbjI2Qp32BGkWfiuY
-        gNbdAdpiJXKnvHpzeMk/jsUMWuR+Ms0=
-X-Google-Smtp-Source: APXvYqwr+enPM4CfxjAPQwVlFShYpATWpOcix3c812+nWUEb4JvmVIMVWPpXgyeOAShcBDM5FO2KTw==
-X-Received: by 2002:adf:efc8:: with SMTP id i8mr24861513wrp.220.1562086144142;
-        Tue, 02 Jul 2019 09:49:04 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b8:794:183e:9e2a? ([2001:b07:6468:f312:b8:794:183e:9e2a])
-        by smtp.gmail.com with ESMTPSA id j189sm3079828wmb.48.2019.07.02.09.49.01
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 09:49:01 -0700 (PDT)
-Subject: Re: [PATCH v4 0/3] KVM: Yield to IPI target if necessary
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <1560255830-8656-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <0b42a3b4-91eb-4cc8-201a-8da0a944403a@redhat.com>
-Date:   Tue, 2 Jul 2019 18:49:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <1560255830-8656-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 2 Jul 2019 12:49:10 -0400
+Received: from gate.crashing.org ([63.228.1.57]:52041 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfGBQtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 12:49:09 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x62Gmp8o023457;
+        Tue, 2 Jul 2019 11:48:51 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x62Gmoa3023452;
+        Tue, 2 Jul 2019 11:48:50 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 2 Jul 2019 11:48:50 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] Replaces long number representation by BIT() macro
+Message-ID: <20190702164850.GP18316@gate.crashing.org>
+References: <20190613180227.29558-1-leonardo@linux.ibm.com> <87imskihvd.fsf@concordia.ellerman.id.au> <20190702161635.GO18316@gate.crashing.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702161635.GO18316@gate.crashing.org>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/06/19 14:23, Wanpeng Li wrote:
-> The idea is from Xen, when sending a call-function IPI-many to vCPUs, 
-> yield if any of the IPI target vCPUs was preempted. 17% performance 
-> increasement of ebizzy benchmark can be observed in an over-subscribe 
-> environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function 
-> IPI-many since call-function is not easy to be trigged by userspace 
-> workload).
+On Tue, Jul 02, 2019 at 11:16:35AM -0500, Segher Boessenkool wrote:
+> On Wed, Jul 03, 2019 at 01:19:34AM +1000, Michael Ellerman wrote:
+> > What we could do is switch to the `UL` macro from include/linux/const.h,
+> > rather than using our own ASM_CONST.
 > 
-> v3 -> v4: 
->  * check map->phys_map[dest_id]
->  * more cleaner kvm_sched_yield()
-> 
-> v2 -> v3:
->  * add bounds-check on dest_id
-> 
-> v1 -> v2:
->  * check map is not NULL
->  * check map->phys_map[dest_id] is not NULL
->  * make kvm_sched_yield static
->  * change dest_id to unsinged long
-> 
-> Wanpeng Li (3):
->   KVM: X86: Yield to IPI target if necessary
->   KVM: X86: Implement PV sched yield hypercall
->   KVM: X86: Expose PV_SCHED_YIELD CPUID feature bit to guest
-> 
->  Documentation/virtual/kvm/cpuid.txt      |  4 ++++
->  Documentation/virtual/kvm/hypercalls.txt | 11 +++++++++++
->  arch/x86/include/uapi/asm/kvm_para.h     |  1 +
->  arch/x86/kernel/kvm.c                    | 21 +++++++++++++++++++++
->  arch/x86/kvm/cpuid.c                     |  3 ++-
->  arch/x86/kvm/x86.c                       | 21 +++++++++++++++++++++
->  include/uapi/linux/kvm_para.h            |  1 +
->  7 files changed, 61 insertions(+), 1 deletion(-)
-> 
+> You need gas 2.28 or later for that though.
 
-Queued, thanks.
+Oh, but apparently I cannot read.  That macro should work fine.
 
-Paolo
+
+Segher
