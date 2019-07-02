@@ -2,187 +2,104 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B2FC06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C1FC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 704762184C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2706720989
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzVO+nNL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XmvpP4bp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfGBSPx (ORCPT
+        id S1726908AbfGBSSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 14:15:53 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39868 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfGBSPw (ORCPT
+        Tue, 2 Jul 2019 14:18:42 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34377 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfGBSSm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:15:52 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 196so8075343pgc.6;
-        Tue, 02 Jul 2019 11:15:52 -0700 (PDT)
+        Tue, 2 Jul 2019 14:18:42 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s49so28253985edb.1;
+        Tue, 02 Jul 2019 11:18:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=DxOUvXm8PNrI3FnpXmI93iJZ669glLcrN8+sl606Vzo=;
-        b=CzVO+nNLbPllxoJSeWpK2BzAWjshDfcdvDMua1IC5sYF6s7Xn/K8TNi9DnqBVo68Fx
-         cb//ZSOn/y6OmS1ekJVl6aQSD8+K55m5nEIKaj4H1Z3OPlV3oZm6j7SLB6TEMAGoIo1h
-         Vd62nu4SH4i2XEg+GURoN8BEPnrYd4pdgqvj8JwMW4oYxIWbkngzzEnXzq22roxJsyTL
-         9h5qT91X25zEqWU9zX8/DnK/dczg/nfva8eCKPA6Cw0Uxk4wByyDw5ycphJpe/b7Thw4
-         zClSZcAXk4o/74nxp5CHWl8rjgsOfnBOmkmO7SSbYCeItcI7kKdBsV63sVN5LczXi1u2
-         Xmqw==
+        bh=6FDA9K8Eg0DrYoV6H18cZ4zmwn9YbWUb9dW3L/lchDM=;
+        b=XmvpP4bpmD2ftx2G8tJmGIqF+j0wqzhUqr4xYm3CvOdKAzC95mR4abl5+vdbXvut0c
+         9+gC7S4NoEq/C9Vbpnxryq8emDlq60+IKRu0UUKwcIOlVJSvK3+Idq9uiGg8/xaEgB8X
+         nN1x+ExDkRHvT78ZMpnVV/lzAGTufx40ZD9izY1oL1wDJnMJPR5hgOnSjVk7TM1AVyr2
+         7KNrvOCvVUDuLC+fUkPvTLPWC3Ciia6vUmrTFZIO5MPUWzNWelxklms441wCDObHlUhd
+         cJpaBsCONU79OqZL2ga+x6C+YqYPbl/6EkO2o7+3aJQX9Voxl3bbe2zkcndU+Kj+eufT
+         CA0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=DxOUvXm8PNrI3FnpXmI93iJZ669glLcrN8+sl606Vzo=;
-        b=tkUkW+z+M/KSc4y+5gpsL34L2lc5yX9oAyWo6+xpKXE60ZladsddvXL6woHgq6rFA6
-         Imlok114NGSAB0lsxXiX5MamehdeEJesHREeGpj7luP5MTBlaO3aHS1vZPGJ4MaTL74X
-         07Sqq8O1X/j4bsQRNrikFX1GDu3ycj7iO3LRe7IH3HnfdkD0p6eSD04AWmSVA3XIr+nX
-         jSVYTOjthneivjmxJHqHhG14VeOsPHyuvDzONsvDyUI7Eve/Bm5hJwJKZv01c0PrJjhT
-         4XlOdAatnxl9+BA8N0+pIa39e/AoqAtjB607kTSMHmcEc1SbSnoy2dZcNWjikby+ojtE
-         STyQ==
-X-Gm-Message-State: APjAAAW6PjGvdfwHg9tFNjJ7T9oJMNBAogydxYhM52b7Vl0mPknhosZf
-        YMMSOGbVqOh1qOTum+QNUQY=
-X-Google-Smtp-Source: APXvYqwVQlC/FW+sbrMn2V0B2Ksokr49iVLxwe3ctfAlOi8fgHulMFAIrzzcUqEHghzSXodxC0hpsw==
-X-Received: by 2002:a63:f146:: with SMTP id o6mr31297134pgk.179.1562091351993;
-        Tue, 02 Jul 2019 11:15:51 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id y133sm15016889pfb.28.2019.07.02.11.15.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 11:15:51 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 23:45:47 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: xfs: xfs_log: Change return type from int to void
-Message-ID: <20190702181547.GA11316@hari-Inspiron-1545>
+        bh=6FDA9K8Eg0DrYoV6H18cZ4zmwn9YbWUb9dW3L/lchDM=;
+        b=MFp2WfrlrXFx2cLdB1EGYkxhFpeWGn/xTDb+/O+XPE7JB9mLzsA5y/RJaDEWhAQWD0
+         7/62vPH1qanEInbykvczPZujaC2DtEhOpr3Ip+OJQoIBpKUdR075z6wX7KAdl2fOxE9a
+         FmsJWgNAYL4c5hQjWyCw3ZXBfWTa1LAKO9ybOM94ox6viUhJpCSC9HSahGzq9GGz25ag
+         86GeiIQu2gqakcMKmPOkHOWPAoAVFDBrbDVhJVx83ykTGpIF2Aw7EoDF9CYmlWDQmGPN
+         pNM2QT30IZlX8nhz2GMTEEIQSjAlAgCV+KhaMfDa4yW1TMc5P9h3s+oyKrsD/6cIEsPV
+         0rdQ==
+X-Gm-Message-State: APjAAAUvPv24VefnRdSmyikhSeEM0ljF7Tc0+8buc6dkxLPeBgROm/aC
+        CKEGMxsXWNl/uqn6UmVb7ag=
+X-Google-Smtp-Source: APXvYqxTB811HcYtVYVeo5x+nXbAJILikgNeh0Gur9Y7ztJZkIvOOszbI7RHmnanShh3mT1l8E6xyQ==
+X-Received: by 2002:a50:f599:: with SMTP id u25mr38225155edm.195.1562091519834;
+        Tue, 02 Jul 2019 11:18:39 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id q16sm2890782ejj.85.2019.07.02.11.18.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 11:18:39 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 11:18:37 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Miaoqing Pan <miaoqing@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: -Wsometimes-uninitialized warning after
+ 8b97b055dc9db09b48d5a9a37d847900dd00d3cc
+Message-ID: <20190702181837.GA118849@archlinux-epyc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change return types of below functions as they never fails
-xfs_log_mount_cancel
-xlog_recover_cancel
-xlog_recover_cancel_intents
+Hi all,
 
-fix below issue reported by coccicheck
-fs/xfs/xfs_log_recover.c:4886:7-12: Unneeded variable: "error". Return
-"0" on line 4926
+After commit 8b97b055dc9d ("ath10k: fix failure to set multiple fixed
+rate") in -next, clang warns:
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- fs/xfs/xfs_log.c         |  8 ++------
- fs/xfs/xfs_log.h         |  2 +-
- fs/xfs/xfs_log_priv.h    |  2 +-
- fs/xfs/xfs_log_recover.c | 12 +++---------
- 4 files changed, 7 insertions(+), 17 deletions(-)
+../drivers/net/wireless/ath/ath10k/mac.c:7528:7: warning: variable 'vht_pfr' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+                if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/wireless/ath/ath10k/mac.c:7551:20: note: uninitialized use occurs here
+                arvif->vht_pfr = vht_pfr;
+                                 ^~~~~~~
+../drivers/net/wireless/ath/ath10k/mac.c:7528:3: note: remove the 'if' if its condition is always true
+                if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/wireless/ath/ath10k/mac.c:7483:12: note: initialize the variable 'vht_pfr' to silence this warning
+        u8 vht_pfr;
+                  ^
+                   = '\0'
+1 warning generated.
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index cbaf348..00e9f5c 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -769,16 +769,12 @@ xfs_log_mount_finish(
-  * The mount has failed. Cancel the recovery if it hasn't completed and destroy
-  * the log.
-  */
--int
-+void
- xfs_log_mount_cancel(
- 	struct xfs_mount	*mp)
- {
--	int			error;
--
--	error = xlog_recover_cancel(mp->m_log);
-+	xlog_recover_cancel(mp->m_log);
- 	xfs_log_unmount(mp);
--
--	return error;
- }
- 
- /*
-diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
-index f27b1cb..84e0680 100644
---- a/fs/xfs/xfs_log.h
-+++ b/fs/xfs/xfs_log.h
-@@ -117,7 +117,7 @@ int	  xfs_log_mount(struct xfs_mount	*mp,
- 			xfs_daddr_t		start_block,
- 			int		 	num_bblocks);
- int	  xfs_log_mount_finish(struct xfs_mount *mp);
--int	xfs_log_mount_cancel(struct xfs_mount *);
-+void	xfs_log_mount_cancel(struct xfs_mount *);
- xfs_lsn_t xlog_assign_tail_lsn(struct xfs_mount *mp);
- xfs_lsn_t xlog_assign_tail_lsn_locked(struct xfs_mount *mp);
- void	  xfs_log_space_wake(struct xfs_mount *mp);
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 8acacbc..b880c23 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -418,7 +418,7 @@ xlog_recover(
- extern int
- xlog_recover_finish(
- 	struct xlog		*log);
--extern int
-+extern void
- xlog_recover_cancel(struct xlog *);
- 
- extern __le32	 xlog_cksum(struct xlog *log, struct xlog_rec_header *rhead,
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 1fc70ac..13d1d3e 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -4875,12 +4875,11 @@ xlog_recover_process_intents(
-  * A cancel occurs when the mount has failed and we're bailing out.
-  * Release all pending log intent items so they don't pin the AIL.
-  */
--STATIC int
-+STATIC void
- xlog_recover_cancel_intents(
- 	struct xlog		*log)
- {
- 	struct xfs_log_item	*lip;
--	int			error = 0;
- 	struct xfs_ail_cursor	cur;
- 	struct xfs_ail		*ailp;
- 
-@@ -4920,7 +4919,6 @@ xlog_recover_cancel_intents(
- 
- 	xfs_trans_ail_cursor_done(&cur);
- 	spin_unlock(&ailp->ail_lock);
--	return error;
- }
- 
- /*
-@@ -5779,16 +5777,12 @@ xlog_recover_finish(
- 	return 0;
- }
- 
--int
-+void
- xlog_recover_cancel(
- 	struct xlog	*log)
- {
--	int		error = 0;
--
- 	if (log->l_flags & XLOG_RECOVERY_NEEDED)
--		error = xlog_recover_cancel_intents(log);
--
--	return error;
-+		xlog_recover_cancel_intents(log);
- }
- 
- #if defined(DEBUG)
--- 
-2.7.4
+This definitely seems legitimate as the call to
+ath10k_mac_can_set_bitrate_mask might fail and vht_pfr
+won't be initialized. I would fix this myself but I assume
+there is a sane default value for vht_pfr other than just
+0 that should be used?
 
+Please look into this when you get a chance. Thanks,
+Nathan
